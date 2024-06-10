@@ -11,11 +11,7 @@ import {
 import { gridRowGroupsToFetchSelector, GridStateInitializer } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import {
-  gridGetRowsParamsSelector,
-  gridDataSourceLoadingSelector,
-  gridDataSourceErrorsSelector,
-} from './gridDataSourceSelector';
+import { gridGetRowsParamsSelector, gridDataSourceErrorsSelector } from './gridDataSourceSelector';
 import { GridDataSourceApi, GridDataSourceApiBase, GridDataSourcePrivateApi } from './interfaces';
 import { runIfServerMode, NestedDataManager, RequestStatus } from './utils';
 
@@ -24,11 +20,7 @@ const INITIAL_STATE = {
   errors: {},
 };
 
-export const dataSourceStateInitializer: GridStateInitializer = (state, _, apiRef) => {
-  apiRef.current.caches.dataSource = {
-    groupKeys: [],
-  };
-
+export const dataSourceStateInitializer: GridStateInitializer = (state) => {
   return {
     ...state,
     dataSource: INITIAL_STATE,
@@ -45,6 +37,9 @@ export const useGridDataSource = (
     | 'filterMode'
     | 'paginationMode'
     | 'treeData'
+    | 'getRowId'
+    | 'loading'
+    | 'rowCount'
   >,
 ) => {
   const nestedDataManager = useLazyRef<NestedDataManager, void>(
@@ -79,7 +74,6 @@ export const useGridDataSource = (
 
       if (cachedData != null) {
         const rows = cachedData.rows;
-        privateApiRef.current.caches.dataSource.groupKeys = [];
         privateApiRef.current.setRows(rows);
         if (cachedData.rowCount) {
           privateApiRef.current.setRowCount(cachedData.rowCount);
@@ -98,7 +92,6 @@ export const useGridDataSource = (
         if (getRowsResponse.rowCount) {
           privateApiRef.current.setRowCount(getRowsResponse.rowCount);
         }
-        privateApiRef.current.caches.dataSource.groupKeys = [];
         privateApiRef.current.setRows(getRowsResponse.rows);
         privateApiRef.current.setLoading(false);
       } catch (error) {
@@ -132,19 +125,15 @@ export const useGridDataSource = (
 
       const cachedData = privateApiRef.current.unstable_dataSourceCache?.get(fetchParams);
 
-      const isLoading = gridDataSourceLoadingSelector(privateApiRef)[id] ?? false;
       if (cachedData != null) {
         const rows = cachedData.rows;
-        privateApiRef.current.caches.dataSource.groupKeys = rowNode.path;
         nestedDataManager.setRequestSettled(id);
-        privateApiRef.current.updateRows(rows, false);
+        privateApiRef.current.updateServerRows(rows, rowNode.path);
         if (cachedData.rowCount) {
           privateApiRef.current.setRowCount(cachedData.rowCount);
         }
         privateApiRef.current.setRowChildrenExpansion(id, true);
-        if (isLoading) {
-          privateApiRef.current.unstable_dataSource.setChildrenLoading(id, false);
-        }
+        privateApiRef.current.unstable_dataSource.setChildrenLoading(id, false);
         return;
       }
 
@@ -170,8 +159,7 @@ export const useGridDataSource = (
         if (getRowsResponse.rowCount) {
           privateApiRef.current.setRowCount(getRowsResponse.rowCount);
         }
-        privateApiRef.current.caches.dataSource.groupKeys = rowNode.path;
-        privateApiRef.current.updateRows(getRowsResponse.rows, false);
+        privateApiRef.current.updateServerRows(getRowsResponse.rows, rowNode.path);
         privateApiRef.current.setRowChildrenExpansion(id, true);
       } catch (error) {
         const e = error as Error;

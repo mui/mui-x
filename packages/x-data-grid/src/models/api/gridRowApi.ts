@@ -61,9 +61,8 @@ export interface GridRowApi {
   /**
    * Allows to update, insert and delete rows.
    * @param {GridRowModelUpdate[]} updates An array of rows with an `action` specifying what to do.
-   * @param {boolean} throttle Whether to throttle the updates or not. (default: `true`)
    */
-  updateRows: (updates: GridRowModelUpdate[], throttle?: boolean) => void;
+  updateRows: (updates: GridRowModelUpdate[]) => void;
   /**
    * Gets the row data with a given id.
    * @param {GridRowId} id The id of the row.
@@ -117,4 +116,11 @@ export interface GridRowProApi {
    * @param {boolean} isExpanded A boolean indicating if the row must be expanded or collapsed.
    */
   setRowChildrenExpansion: (id: GridRowId, isExpanded: boolean) => void;
+  /**
+   * Allows to update, insert and delete rows at a specific nested level.
+   * @param {GridRowModelUpdate[]} updates An array of rows with an `action` specifying what to do.
+   * @param {string[]} groupKeys The group keys of the rows to update.
+   * @param {boolean} throttle Whether to throttle the updates or not. (default: `true`)
+   */
+  updateServerRows: (updates: GridRowModelUpdate[], groupKeys?: string[]) => void;
 }

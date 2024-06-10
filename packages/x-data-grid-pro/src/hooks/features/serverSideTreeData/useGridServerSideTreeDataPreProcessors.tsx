@@ -10,6 +10,7 @@ import {
 } from '@mui/x-data-grid';
 import {
   GridPipeProcessor,
+  GridRowsPartialUpdates,
   GridStrategyProcessor,
   useGridRegisterPipeProcessor,
   useGridRegisterStrategyProcessor,
@@ -141,15 +142,18 @@ export const useGridServerSideTreeDataPreProcessors = (
         throw new Error('MUI X: No `getChildrenCount` method provided with the dataSource.');
       }
 
-      const parentPath = privateApiRef.current.caches.dataSource?.groupKeys || [];
+      const parentPath = (params.updates as GridRowsPartialUpdates).groupKeys ?? [];
 
-      const getRowTreeBuilderNode = (rowId: GridRowId) => ({
-        id: rowId,
-        path: [...parentPath, getGroupKey(params.dataRowIdToModelLookup[rowId])].map(
-          (key): RowTreeBuilderGroupingCriterion => ({ key, field: null }),
-        ),
-        hasServerChildren: getChildrenCount(params.dataRowIdToModelLookup[rowId]) !== 0,
-      });
+      const getRowTreeBuilderNode = (rowId: GridRowId) => {
+        const count = getChildrenCount(params.dataRowIdToModelLookup[rowId]);
+        return {
+          id: rowId,
+          path: [...parentPath, getGroupKey(params.dataRowIdToModelLookup[rowId])].map(
+            (key): RowTreeBuilderGroupingCriterion => ({ key, field: null }),
+          ),
+          hasServerChildren: !!count && count !== 0,
+        };
+      };
 
       const onDuplicatePath: GridTreePathDuplicateHandler = (firstId, secondId, path) => {
         throw new Error(
@@ -190,7 +194,6 @@ export const useGridServerSideTreeDataPreProcessors = (
       props.unstable_dataSource,
       props.defaultGroupingExpansionDepth,
       props.isGroupExpandedByDefault,
-      privateApiRef,
     ],
   );
 

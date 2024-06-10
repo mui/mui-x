@@ -91,7 +91,7 @@ export default function ServerSideErrorHandling() {
         <Button
           onClick={() => {
             setError('');
-            apiRef.current?.fetchTopLevelRows();
+            apiRef.current?.unstable_dataSource.fetchRows();
           }}
         >
           Refetch rows

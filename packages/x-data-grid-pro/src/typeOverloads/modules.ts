@@ -5,7 +5,6 @@ import type {
   GridFetchRowsParams,
 } from '../models';
 import type { GridRenderHeaderFilterProps } from '../components/headerFiltering/GridHeaderFilterCell';
-import type { GridDataSourceInternalCache } from '../hooks/features/dataSource/interfaces';
 import type { GridColumnPinningInternalCache } from '../hooks/features/columnPinning/gridColumnPinningInterface';
 import type { GridCanBeReorderedPreProcessingContext } from '../hooks/features/columnReorder/columnReorderInterfaces';
 import { GridRowPinningInternalCache } from '../hooks/features/rowPinning/gridRowPinningInterface';
@@ -57,7 +56,6 @@ export interface GridPipeProcessingLookupPro {
 export interface GridApiCachesPro {
   columnPinning: GridColumnPinningInternalCache;
   pinnedRows: GridRowPinningInternalCache;
-  dataSource: GridDataSourceInternalCache;
 }
 
 declare module '@mui/x-data-grid' {

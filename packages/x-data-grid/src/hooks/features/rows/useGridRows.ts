@@ -3,12 +3,7 @@ import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowApi, GridRowProApi } from '../../../models/api/gridRowApi';
-import {
-  GridRowId,
-  GridGroupNode,
-  GridLeafNode,
-  GridRowModelUpdate,
-} from '../../../models/gridRows';
+import { GridRowId, GridGroupNode, GridLeafNode } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
@@ -39,6 +34,7 @@ import {
   updateCacheWithNewRows,
   getTopLevelRowCount,
   getRowIdFromRowModel,
+  computeRowsUpdates,
 } from './gridRowsUtils';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 
@@ -196,7 +192,7 @@ export const useGridRows = (
   );
 
   const updateRows = React.useCallback<GridRowApi['updateRows']>(
-    (updates, throttle = true) => {
+    (updates) => {
       if (props.signature === GridSignature.DataGrid && updates.length > 1) {
         throw new Error(
           [
@@ -206,30 +202,7 @@ export const useGridRows = (
         );
       }
 
-      const nonPinnedRowsUpdates: GridRowModelUpdate[] = [];
-
-      updates.forEach((update) => {
-        const id = getRowIdFromRowModel(
-          update,
-          props.getRowId,
-          'A row was provided without id when calling updateRows():',
-        );
-
-        const rowNode = apiRef.current.getRowNode(id);
-        if (rowNode?.type === 'pinnedRow') {
-          // @ts-ignore because otherwise `release:build` doesn't work
-          const pinnedRowsCache = apiRef.current.caches.pinnedRows;
-          const prevModel = pinnedRowsCache.idLookup[id];
-          if (prevModel) {
-            pinnedRowsCache.idLookup[id] = {
-              ...prevModel,
-              ...update,
-            };
-          }
-        } else {
-          nonPinnedRowsUpdates.push(update);
-        }
-      });
+      const nonPinnedRowsUpdates = computeRowsUpdates(apiRef, updates, props.getRowId);
 
       const cache = updateCacheWithNewRows({
         updates: nonPinnedRowsUpdates,
@@ -237,9 +210,25 @@ export const useGridRows = (
         previousCache: apiRef.current.caches.rows,
       });
 
-      throttledRowsChange({ cache, throttle });
+      throttledRowsChange({ cache, throttle: true });
     },
     [props.signature, props.getRowId, throttledRowsChange, apiRef],
+  );
+
+  const updateServerRows = React.useCallback<GridRowProApi['updateServerRows']>(
+    (updates, groupKeys) => {
+      const nonPinnedRowsUpdates = computeRowsUpdates(apiRef, updates, props.getRowId);
+
+      const cache = updateCacheWithNewRows({
+        updates: nonPinnedRowsUpdates,
+        getRowId: props.getRowId,
+        previousCache: apiRef.current.caches.rows,
+        groupKeys: groupKeys || [],
+      });
+
+      throttledRowsChange({ cache, throttle: false });
+    },
+    [props.getRowId, throttledRowsChange, apiRef],
   );
 
   const setLoading = React.useCallback<GridRowApi['setLoading']>(
@@ -502,6 +491,7 @@ export const useGridRows = (
     setRowIndex,
     setRowChildrenExpansion,
     getRowGroupChildren,
+    updateServerRows,
   };
 
   /**

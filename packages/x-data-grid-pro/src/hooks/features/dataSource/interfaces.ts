@@ -1,10 +1,6 @@
 import { GridRowId } from '@mui/x-data-grid';
 import { GridDataSourceCache } from '../../../models';
 
-export interface GridDataSourceInternalCache {
-  groupKeys: any[];
-}
-
 export interface GridDataSourceState {
   loading: Record<GridRowId, boolean>;
   errors: Record<GridRowId, any>;

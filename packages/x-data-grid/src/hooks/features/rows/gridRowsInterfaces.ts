@@ -135,6 +135,7 @@ export interface GridRowsPartialUpdates {
   type: 'partial';
   actions: { [action in GridRowsPartialUpdateAction]: GridRowId[] };
   idToActionLookup: { [id: GridRowId]: GridRowsPartialUpdateAction | undefined };
+  groupKeys?: string[];
 }
 
 export interface GridPinnedRowsState {
