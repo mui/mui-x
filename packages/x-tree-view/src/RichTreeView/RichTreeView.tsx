@@ -7,7 +7,7 @@ import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
 import { RichTreeViewProps, RichTreeViewSlotProps, RichTreeViewSlots } from './RichTreeView.types';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
-import { DEFAULT_TREE_VIEW_PLUGINS } from '../internals/plugins';
+import { DEFAULT_TREE_VIEW_PLUGINS, DefaultTreeViewPluginSignatures } from '../internals/plugins';
 import { TreeItem, TreeItemProps } from '../TreeItem';
 import { buildWarning } from '../internals/utils/warning';
 import { extractPluginParamsFromProps } from '../internals/utils/extractPluginParamsFromProps';
@@ -89,7 +89,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   }
 
   const { pluginParams, slots, slotProps, otherProps } = extractPluginParamsFromProps<
-    typeof DEFAULT_TREE_VIEW_PLUGINS,
+    DefaultTreeViewPluginSignatures,
     RichTreeViewSlots,
     RichTreeViewSlotProps<R, Multiple>,
     RichTreeViewProps<R, Multiple>

@@ -1,9 +1,9 @@
 import { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvider';
-import { SimpleTreeViewPlugins } from '@mui/x-tree-view/SimpleTreeView/SimpleTreeView.plugins';
+import { SimpleTreeViewPluginSignatures } from '@mui/x-tree-view/SimpleTreeView/SimpleTreeView.plugins';
 
 export const getFakeContextValue = (
   features: { checkboxSelection?: boolean } = {},
-): TreeViewContextValue<SimpleTreeViewPlugins> => ({
+): TreeViewContextValue<SimpleTreeViewPluginSignatures> => ({
   instance: {
     isItemExpandable: () => false,
     isItemExpanded: () => false,

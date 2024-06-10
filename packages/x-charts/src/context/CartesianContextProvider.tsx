@@ -1,23 +1,19 @@
 import * as React from 'react';
 import { scaleBand, scalePoint } from 'd3-scale';
 import {
-  getExtremumX as getBarExtremumX,
-  getExtremumY as getBarExtremumY,
-} from '../BarChart/extremums';
-import {
-  getExtremumX as getScatterExtremumX,
-  getExtremumY as getScatterExtremumY,
-} from '../ScatterChart/extremums';
-import {
-  getExtremumX as getLineExtremumX,
-  getExtremumY as getLineExtremumY,
-} from '../LineChart/extremums';
-import { AxisConfig, AxisDefaultized, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
+  AxisConfig,
+  AxisDefaultized,
+  ChartsXAxisProps,
+  ChartsYAxisProps,
+  ScaleName,
+  isBandScaleConfig,
+  isPointScaleConfig,
+} from '../models/axis';
 import { getScale } from '../internals/getScale';
-import { SeriesContext } from './SeriesContextProvider';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import {
   CartesianChartSeriesType,
+  ChartSeriesType,
   ChartSeries,
   DatasetType,
   ExtremumGetter,
@@ -28,6 +24,11 @@ import { getTickNumber } from '../hooks/useTicks';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { SeriesId } from '../models/seriesType/common';
 import { getColorScale, getOrdinalColorScale } from '../internals/colorScale';
+import { useSeries } from '../hooks/useSeries';
+
+export type ExtremumGettersConfig<T extends ChartSeriesType = CartesianChartSeriesType> = {
+  [K in T]?: ExtremumGetter<K>;
+};
 
 export type CartesianContextProviderProps = {
   /**
@@ -35,38 +36,33 @@ export type CartesianContextProviderProps = {
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  xAxis?: MakeOptional<AxisConfig, 'id'>[];
+  xAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[];
   /**
    * The configuration of the y-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  yAxis?: MakeOptional<AxisConfig, 'id'>[];
+  yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[];
   /**
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset?: DatasetType;
+  /**
+   * An object with x-axis extremum getters per series type.
+   */
+  xExtremumGetters: ExtremumGettersConfig;
+  /**
+   * An object with y-axis extremum getters per series type.
+   */
+  yExtremumGetters: ExtremumGettersConfig;
   children: React.ReactNode;
 };
 
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 const DEFAULT_BAR_GAP_RATIO = 0.1;
 
-// TODO: those might be better placed in a distinct file
-const xExtremumGetters: { [T in CartesianChartSeriesType]: ExtremumGetter<T> } = {
-  bar: getBarExtremumX,
-  scatter: getScatterExtremumX,
-  line: getLineExtremumX,
-};
-
-const yExtremumGetters: { [T in CartesianChartSeriesType]: ExtremumGetter<T> } = {
-  bar: getBarExtremumY,
-  scatter: getScatterExtremumY,
-  line: getLineExtremumY,
-};
-
-type DefaultizedAxisConfig = {
-  [axisKey: string]: AxisDefaultized;
+type DefaultizedAxisConfig<AxisProps> = {
+  [axisKey: string]: AxisDefaultized<ScaleName, any, AxisProps>;
 };
 
 export const CartesianContext = React.createContext<{
@@ -74,14 +70,14 @@ export const CartesianContext = React.createContext<{
    * Mapping from x-axis key to scaling configuration.
    */
   xAxis: {
-    DEFAULT_X_AXIS_KEY: AxisDefaultized;
-  } & DefaultizedAxisConfig;
+    DEFAULT_X_AXIS_KEY: AxisDefaultized<ScaleName, any, ChartsXAxisProps>;
+  } & DefaultizedAxisConfig<ChartsXAxisProps>;
   /**
    * Mapping from y-axis key to scaling configuration.
    */
   yAxis: {
-    DEFAULT_X_AXIS_KEY: AxisDefaultized;
-  } & DefaultizedAxisConfig;
+    DEFAULT_X_AXIS_KEY: AxisDefaultized<ScaleName, any, ChartsYAxisProps>;
+  } & DefaultizedAxisConfig<ChartsYAxisProps>;
   /**
    * The x-axes IDs sorted by order they got provided.
    */
@@ -98,8 +94,15 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 function CartesianContextProvider(props: CartesianContextProviderProps) {
-  const { xAxis: inXAxis, yAxis: inYAxis, dataset, children } = props;
-  const formattedSeries = React.useContext(SeriesContext);
+  const {
+    xAxis: inXAxis,
+    yAxis: inYAxis,
+    dataset,
+    xExtremumGetters,
+    yExtremumGetters,
+    children,
+  } = props;
+  const formattedSeries = useSeries();
   const drawingArea = useDrawingArea();
 
   const xAxis = React.useMemo(
@@ -143,17 +146,17 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
       acc: ExtremumGetterResult,
       chartType: T,
       axis: AxisConfig,
-      getters: { [T2 in CartesianChartSeriesType]: ExtremumGetter<T2> },
+      getters: { [T2 in CartesianChartSeriesType]?: ExtremumGetter<T2> },
       isDefaultAxis: boolean,
     ): ExtremumGetterResult => {
       const getter = getters[chartType];
       const series = (formattedSeries[chartType]?.series as Record<SeriesId, ChartSeries<T>>) ?? {};
 
-      const [minChartTypeData, maxChartTypeData] = getter({
+      const [minChartTypeData, maxChartTypeData] = getter?.({
         series,
         axis,
         isDefaultAxis,
-      });
+      }) ?? [null, null];
 
       const [minData, maxData] = acc;
 
@@ -170,7 +173,7 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
 
     const getAxisExtremum = (
       axis: AxisConfig,
-      getters: { [T in CartesianChartSeriesType]: ExtremumGetter<T> },
+      getters: { [T in CartesianChartSeriesType]?: ExtremumGetter<T> },
       isDefaultAxis: boolean,
     ) => {
       const charTypes = Object.keys(getters) as CartesianChartSeriesType[];
@@ -181,15 +184,21 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
       );
     };
 
-    const allXAxis: AxisConfig[] = [
+    const allXAxis = [
       ...(xAxis?.map((axis, index) => ({ id: `defaultized-x-axis-${index}`, ...axis })) ?? []),
       // Allows to specify an axis with id=DEFAULT_X_AXIS_KEY
       ...(xAxis === undefined || xAxis.findIndex(({ id }) => id === DEFAULT_X_AXIS_KEY) === -1
-        ? [{ id: DEFAULT_X_AXIS_KEY, scaleType: 'linear' } as AxisConfig]
+        ? [
+            { id: DEFAULT_X_AXIS_KEY, scaleType: 'linear' } as AxisConfig<
+              ScaleName,
+              any,
+              ChartsXAxisProps
+            >,
+          ]
         : []),
     ];
 
-    const completedXAxis: DefaultizedAxisConfig = {};
+    const completedXAxis: DefaultizedAxisConfig<ChartsXAxisProps> = {};
     allXAxis.forEach((axis, axisIndex) => {
       const isDefaultAxis = axisIndex === 0;
       const [minData, maxData] = getAxisExtremum(axis, xExtremumGetters, isDefaultAxis);
@@ -248,17 +257,23 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
         scale: niceScale.domain(domain),
         tickNumber,
         colorScale: axis.colorMap && getColorScale(axis.colorMap),
-      } as AxisDefaultized<typeof scaleType>;
+      } as AxisDefaultized<typeof scaleType, any, ChartsXAxisProps>;
     });
 
-    const allYAxis: AxisConfig[] = [
+    const allYAxis = [
       ...(yAxis?.map((axis, index) => ({ id: `defaultized-y-axis-${index}`, ...axis })) ?? []),
       ...(yAxis === undefined || yAxis.findIndex(({ id }) => id === DEFAULT_Y_AXIS_KEY) === -1
-        ? [{ id: DEFAULT_Y_AXIS_KEY, scaleType: 'linear' } as AxisConfig]
+        ? [
+            { id: DEFAULT_Y_AXIS_KEY, scaleType: 'linear' } as AxisConfig<
+              ScaleName,
+              any,
+              ChartsYAxisProps
+            >,
+          ]
         : []),
     ];
 
-    const completedYAxis: DefaultizedAxisConfig = {};
+    const completedYAxis: DefaultizedAxisConfig<ChartsYAxisProps> = {};
     allYAxis.forEach((axis, axisIndex) => {
       const isDefaultAxis = axisIndex === 0;
       const [minData, maxData] = getAxisExtremum(axis, yExtremumGetters, isDefaultAxis);
@@ -315,7 +330,7 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
         scale: niceScale.domain(domain),
         tickNumber,
         colorScale: axis.colorMap && getColorScale(axis.colorMap),
-      } as AxisDefaultized<typeof scaleType>;
+      } as AxisDefaultized<typeof scaleType, any, ChartsYAxisProps>;
     });
 
     return {
@@ -331,7 +346,9 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
     drawingArea.width,
     formattedSeries,
     xAxis,
+    xExtremumGetters,
     yAxis,
+    yExtremumGetters,
   ]);
 
   // @ts-ignore

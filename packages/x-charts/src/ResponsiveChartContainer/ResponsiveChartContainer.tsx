@@ -104,6 +104,11 @@ ResponsiveChartContainer.propTypes = {
    */
   onHighlightChange: PropTypes.func,
   /**
+   * An array of plugins defining how to preprocess data.
+   * If not provided, the container supports line, bar, scatter and pie charts.
+   */
+  plugins: PropTypes.arrayOf(PropTypes.object),
+  /**
    * The array of series to display.
    * Each type of series has its own specificity.
    * Please refer to the appropriate docs page to learn more about it.
@@ -173,7 +178,7 @@ ResponsiveChartContainer.propTypes = {
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      position: PropTypes.oneOf(['bottom', 'top']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
@@ -244,7 +249,7 @@ ResponsiveChartContainer.propTypes = {
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      position: PropTypes.oneOf(['left', 'right']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,

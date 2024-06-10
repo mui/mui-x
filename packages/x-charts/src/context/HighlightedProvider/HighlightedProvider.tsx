@@ -12,6 +12,7 @@ import { createIsHighlighted } from './createIsHighlighted';
 import { useSeries } from '../../hooks/useSeries';
 import { ChartSeriesType } from '../../models/seriesType/config';
 import { SeriesId } from '../../models/seriesType/common';
+import { Initializable } from '../context.types';
 
 export type HighlightedProviderProps = {
   children: React.ReactNode;
@@ -67,20 +68,23 @@ function HighlightedProvider({
       ? seriesById.get(highlightedItem.seriesId) ?? undefined
       : undefined;
 
-  const providerValue = React.useMemo<HighlightedState>(() => {
+  const providerValue = React.useMemo<Initializable<HighlightedState>>(() => {
     return {
-      highlightScope,
-      highlightedItem,
-      setHighlighted: (itemData) => {
-        setHighlightedItem(itemData);
-        onHighlightChange?.(itemData);
+      isInitialized: true,
+      data: {
+        highlightScope,
+        highlightedItem,
+        setHighlighted: (itemData) => {
+          setHighlightedItem(itemData);
+          onHighlightChange?.(itemData);
+        },
+        clearHighlighted: () => {
+          setHighlightedItem(null);
+          onHighlightChange?.(null);
+        },
+        isHighlighted: createIsHighlighted(highlightScope, highlightedItem),
+        isFaded: createIsFaded(highlightScope, highlightedItem),
       },
-      clearHighlighted: () => {
-        setHighlightedItem(null);
-        onHighlightChange?.(null);
-      },
-      isHighlighted: createIsHighlighted(highlightScope, highlightedItem),
-      isFaded: createIsFaded(highlightScope, highlightedItem),
     };
   }, [highlightedItem, highlightScope, setHighlightedItem, onHighlightChange]);
 

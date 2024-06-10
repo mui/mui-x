@@ -190,7 +190,7 @@ Please check out the documentation of the [UTC and timezone on Luxon](https://mo
 You can then pass your UTC date to your picker:
 
 ```tsx
-import { DateTime, Settings } from 'luxon';
+import { DateTime } from 'luxon';
 
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -240,7 +240,7 @@ Please check out the documentation of the [UTC and timezone on Luxon](https://mo
 You can then pass your date in the wanted timezone to your picker:
 
 ```tsx
-import { DateTime, Settings } from 'luxon';
+import { DateTime } from 'luxon';
 
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';

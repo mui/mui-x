@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { useTheme } from '@mui/system';
+import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_useControlled as useControlled,
@@ -119,7 +119,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
   });
 
   const now = useNow<TDate>(timezone);
-  const theme = useTheme();
+  const isRtl = useRtl();
   const utils = useUtils<TDate>();
 
   const referenceDate = React.useMemo(
@@ -236,12 +236,12 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
         event.preventDefault();
         break;
       case 'ArrowLeft':
-        focusMonth((monthsInYear + month + (theme.direction === 'ltr' ? -1 : 1)) % monthsInYear);
+        focusMonth((monthsInYear + month + (isRtl ? 1 : -1)) % monthsInYear);
 
         event.preventDefault();
         break;
       case 'ArrowRight':
-        focusMonth((monthsInYear + month + (theme.direction === 'ltr' ? 1 : -1)) % monthsInYear);
+        focusMonth((monthsInYear + month + (isRtl ? -1 : 1)) % monthsInYear);
 
         event.preventDefault();
         break;

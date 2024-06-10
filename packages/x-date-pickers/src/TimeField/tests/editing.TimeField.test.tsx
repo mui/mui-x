@@ -204,6 +204,250 @@ describe('<TimeField /> - Editing', () => {
     });
   });
 
+  describeAdapters('key: PageDown', TimeField, ({ adapter, testFieldKeyPress }) => {
+    describe('24 hours format (PageDown)', () => {
+      describe('Hours field', () => {
+        it('should set hours field to maximal when no default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours24h,
+            key: 'PageDown',
+            expectedValue: '23',
+            selectedSection: 'hours',
+          });
+        });
+
+        it('should decrement hours field by 5 when default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours24h,
+            key: 'PageDown',
+            defaultValue: adapter.date('2024-06-04T10:25:00'),
+            expectedValue: '05',
+            selectedSection: 'hours',
+          });
+        });
+
+        it('should flip hours field when default value is lower than 5', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours24h,
+            key: 'PageDown',
+            defaultValue: adapter.date('2024-06-04T02:25:00'),
+            expectedValue: '21',
+            selectedSection: 'hours',
+          });
+        });
+      });
+
+      describe('Minutes field', () => {
+        it('should set minutes field to maximal when no default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.minutes,
+            key: 'PageDown',
+            expectedValue: '59',
+          });
+        });
+
+        it('should decrement minutes field by 5 when default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.minutes,
+            key: 'PageDown',
+            defaultValue: adapter.date('2024-06-04T10:59:00'),
+            expectedValue: '54',
+          });
+        });
+
+        it('should flip minutes field when default value is lower than 5', () => {
+          testFieldKeyPress({
+            format: adapter.formats.minutes,
+            key: 'PageDown',
+            defaultValue: adapter.date('2024-06-04T02:02:00'),
+            expectedValue: '57',
+          });
+        });
+      });
+    });
+
+    describe('12 hours format (PageDown)', () => {
+      describe('Hours field', () => {
+        it('should set hours field to maximal when no default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours12h,
+            key: 'PageDown',
+            expectedValue: '12',
+          });
+        });
+
+        it('should decrement hours field by 5 when default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours12h,
+            key: 'PageDown',
+            defaultValue: adapter.date('2024-06-04T10:25:00'),
+            expectedValue: '05',
+          });
+        });
+
+        it('should flip hours field when default value is lower than 5', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours12h,
+            key: 'PageDown',
+            defaultValue: adapter.date('2024-06-04T02:25:00'),
+            expectedValue: '09',
+          });
+        });
+      });
+
+      describe('Meridiem field', () => {
+        it('should set meridiem to PM when no default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.meridiem,
+            key: 'PageDown',
+            expectedValue: 'PM',
+            selectedSection: 'meridiem',
+          });
+        });
+
+        it('should switch between AM and PM when meridiem value is not empty', () => {
+          testFieldKeyPress({
+            format: adapter.formats.meridiem,
+            defaultValue: adapter.date('2024-05-30T02:12:25'),
+            key: 'PageDown',
+            expectedValue: 'PM',
+            selectedSection: 'meridiem',
+          });
+          testFieldKeyPress({
+            format: adapter.formats.meridiem,
+            defaultValue: adapter.date('2024-05-30T20:12:25'),
+            key: 'PageDown',
+            expectedValue: 'AM',
+            selectedSection: 'meridiem',
+          });
+        });
+      });
+    });
+  });
+
+  describeAdapters('key: PageUp', TimeField, ({ adapter, testFieldKeyPress }) => {
+    describe('24 hours format (PageUp)', () => {
+      describe('Hours field', () => {
+        it('should set hours field to minimal when no default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours24h,
+            key: 'PageUp',
+            expectedValue: '00',
+            selectedSection: 'hours',
+          });
+        });
+
+        it('should increment hours field by 5 when default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours24h,
+            key: 'PageUp',
+            defaultValue: adapter.date('2024-06-04T10:25:00'),
+            expectedValue: '15',
+            selectedSection: 'hours',
+          });
+        });
+
+        it('should flip hours field when default value is higher than 19', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours24h,
+            key: 'PageUp',
+            defaultValue: adapter.date('2024-06-04T21:25:00'),
+            expectedValue: '02',
+            selectedSection: 'hours',
+          });
+        });
+      });
+
+      describe('Minutes field', () => {
+        it('should set minutes field to minimal when no default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours24h,
+            key: 'PageUp',
+            expectedValue: '00',
+          });
+        });
+
+        it('should increment minutes field by 5 when default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.minutes,
+            key: 'PageUp',
+            defaultValue: adapter.date('2024-06-04T10:25:00'),
+            expectedValue: '30',
+          });
+        });
+
+        it('should flip minutes field when default value is higher than 55', () => {
+          testFieldKeyPress({
+            format: adapter.formats.minutes,
+            key: 'PageUp',
+            defaultValue: adapter.date('2024-06-04T21:56:00'),
+            expectedValue: '01',
+          });
+        });
+      });
+    });
+    describe('12 hours format (PageUp)', () => {
+      describe('Hours field', () => {
+        it('should set hours field to minimal when no default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours12h,
+            key: 'PageUp',
+            expectedValue: '01',
+            selectedSection: 'hours',
+          });
+        });
+
+        it('should increment hours field by 5 when default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours12h,
+            key: 'PageUp',
+            defaultValue: adapter.date('2024-06-04T05:25:00'),
+            expectedValue: '10',
+            selectedSection: 'hours',
+          });
+        });
+
+        it('should flip hours field when default value is higher than 07', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours12h,
+            key: 'PageUp',
+            defaultValue: adapter.date('2024-06-04T08:25:00'),
+            expectedValue: '01',
+            selectedSection: 'hours',
+          });
+        });
+      });
+
+      describe('Meridiem field', () => {
+        it('should set meridiem to AM when no default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.meridiem,
+            key: 'PageUp',
+            expectedValue: 'AM',
+            selectedSection: 'meridiem',
+          });
+        });
+
+        it('should switch between AM and PM when meridiem value is not empty', () => {
+          testFieldKeyPress({
+            format: adapter.formats.meridiem,
+            defaultValue: adapter.date('2024-05-30T02:12:25'),
+            key: 'PageUp',
+            expectedValue: 'PM',
+            selectedSection: 'meridiem',
+          });
+          testFieldKeyPress({
+            format: adapter.formats.meridiem,
+            defaultValue: adapter.date('2024-05-30T20:12:25'),
+            key: 'PageUp',
+            expectedValue: 'AM',
+            selectedSection: 'meridiem',
+          });
+        });
+      });
+    });
+  });
+
   describeAdapters('Digit editing', TimeField, ({ adapter, renderWithProps, testFieldChange }) => {
     it('should set the minute to the digit pressed when no digit no value is provided', () => {
       testFieldChange({
