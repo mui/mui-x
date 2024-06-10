@@ -17,7 +17,7 @@ export default function GridPivotingMovies() {
     return {
       ...movieData,
       columns: [
-        ...movieData.columns,
+        ...movieData.columns.map((col) => ({ ...col, editable: true })),
         { field: 'imdbRating', headerName: 'Rating', type: 'number' },
       ] as GridColDef[],
     };
@@ -36,17 +36,17 @@ export default function GridPivotingMovies() {
   });
 
   const { isPivot, setIsPivot, props } = unstable_useGridPivoting({
-    rows: data.rows,
-    columns: data.columns,
     pivotModel,
     apiRef,
-    initialIsPivot: false,
+    // initialIsPivot: true,
   });
 
   return (
     <div style={{ width: '100%' }}>
       <div style={{ height: isPivot ? undefined : 400, width: '100%' }}>
         <DataGridPremium
+          rows={data.rows}
+          columns={data.columns}
           {...props}
           apiRef={apiRef}
           autoHeight={isPivot}

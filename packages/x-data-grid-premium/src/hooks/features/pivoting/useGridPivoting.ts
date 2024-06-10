@@ -5,17 +5,17 @@ import {
   GridColumnGroupingModel,
   GridColumnNode,
   GridRowModel,
+  gridColumnDefinitionsSelector,
+  gridDataRowIdsSelector,
   gridFilteredRowsLookupSelector,
+  gridRowsLookupSelector,
   gridStringOrNumberComparator,
   isLeaf,
 } from '@mui/x-data-grid-pro';
 import { usePreviousProps } from '@mui/utils';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
-import {
-  DataGridPremiumProps,
-  DataGridPremiumProcessedProps,
-} from '../../../models/dataGridPremiumProps';
+import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridAggregationModel } from '../aggregation';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 
@@ -249,26 +249,35 @@ const getPivotedData = ({
 
 export const useGridPivoting = ({
   initialIsPivot = false,
-  columns,
-  rows,
   pivotModel,
   apiRef,
 }: {
   initialIsPivot?: boolean;
-  rows: GridRowModel[];
-  columns: GridColDef[];
   pivotModel: PivotModel;
   apiRef: React.MutableRefObject<GridApiPremium>;
 }) => {
   const [isPivot, setIsPivot] = React.useState(initialIsPivot);
   const exportedStateRef = React.useRef<GridInitialStatePremium | null>(null);
   const prevProps = usePreviousProps({ isPivot });
+  const nonPivotDataRef = React.useRef<{ rows: GridRowModel[]; columns: GridColDef[] } | null>(
+    null,
+  );
 
   const props = React.useMemo(() => {
     if (isPivot) {
       if (apiRef.current.exportState && prevProps.isPivot === false) {
         exportedStateRef.current = apiRef.current.exportState();
+
+        const rowIds = gridDataRowIdsSelector(apiRef);
+        const rowsLookup = gridRowsLookupSelector(apiRef);
+        const rows = rowIds.map((id) => rowsLookup[id]);
+        const columns = gridColumnDefinitionsSelector(apiRef);
+
+        nonPivotDataRef.current = { rows, columns };
       }
+
+      const { rows, columns } = nonPivotDataRef.current || { rows: [], columns: [] };
+
       return getPivotedData({
         rows,
         columns,
@@ -277,17 +286,20 @@ export const useGridPivoting = ({
       });
     }
 
-    const nonPivotProps: {
-      rows: DataGridPremiumProps['rows'];
-      columns: DataGridPremiumProps['columns'];
-    } = { rows, columns };
-    return nonPivotProps;
-  }, [isPivot, columns, rows, pivotModel, apiRef, prevProps.isPivot]);
+    return nonPivotDataRef.current;
+  }, [isPivot, pivotModel, apiRef, prevProps.isPivot]);
 
   useEnhancedEffect(() => {
-    if (!isPivot && exportedStateRef.current) {
-      apiRef.current.restoreState(exportedStateRef.current);
-      exportedStateRef.current = null;
+    if (!isPivot) {
+      if (nonPivotDataRef.current) {
+        const { rows, columns } = nonPivotDataRef.current;
+        apiRef.current.setRows(rows);
+        apiRef.current.updateColumns(columns);
+      }
+      if (exportedStateRef.current) {
+        apiRef.current.restoreState(exportedStateRef.current);
+        exportedStateRef.current = null;
+      }
     }
   }, [isPivot, apiRef]);
 
