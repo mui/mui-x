@@ -186,13 +186,13 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       containerRef.current.scrollTop = offsetTop - 4;
     });
 
-    const handleBlur = useEventCallback((event: React.FocusEvent<HTMLUListElement>) => {
+    const handleBlur = useEventCallback((event: React.FocusEvent<HTMLElement>) => {
       // handle case when focus is moved to another section (i.e. Shift+Tab => Select)
       // and we want the focus to be reset to the current active item, which wouldn't change as the view stays the same
       const blurParent = event.relatedTarget?.parentElement;
       if (
         previousActive.current &&
-        blurParent instanceof HTMLUListElement &&
+        blurParent?.nodeName === 'UL' &&
         blurParent !== containerRef.current
       ) {
         previousActive.current = null;
