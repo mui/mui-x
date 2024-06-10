@@ -17,7 +17,9 @@
     "exportState": {
       "description": "Generates a serializable object containing the exportable parts of the DataGrid state.<br />These values can then be passed to the <code>initialState</code> prop or injected using the <code>restoreState</code> method."
     },
-    "fetchTopLevelRows": { "description": "Fetch/refetch the top level rows." },
+    "fetchRows": {
+      "description": "Fetches the rows from the server for a given <code>parentId</code>.<br />If no <code>parentId</code> is provided, it fetches the root rows."
+    },
     "forceUpdate": {
       "description": "Forces the grid to rerender. It&#39;s often used after a state update."
     },
@@ -123,7 +125,6 @@
     "isRowSelected": { "description": "Determines if a row is selected or not." },
     "pinColumn": { "description": "Pins a column to the left or right side of the grid." },
     "publishEvent": { "description": "Emits an event." },
-    "queueChildrenFetch": { "description": "Adds the fetch of the children of a row to queue." },
     "removeRowGroupingCriteria": { "description": "Remove the field from the row grouping model." },
     "resetRowHeights": { "description": "Forces the recalculation of the heights of all rows." },
     "resize": {
@@ -247,7 +248,7 @@
     },
     "toggleDetailPanel": { "description": "Expands or collapses the detail panel of a row." },
     "unpinColumn": { "description": "Unpins a column." },
-    "unstable_dataSourceCache": { "description": "Data source cache object." },
+    "unstable_dataSourceCache": { "description": "The data source cache object." },
     "unstable_replaceRows": { "description": "Replace a set of rows with new rows." },
     "unstable_setColumnVirtualization": { "description": "Enable/disable column virtualization." },
     "unstable_setPinnedRows": { "description": "Changes the pinned rows." },

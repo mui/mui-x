@@ -40,8 +40,8 @@
       "type": { "description": "(params?: GridExportStateParams) =&gt; InitialState" },
       "required": true
     },
-    "fetchTopLevelRows": {
-      "type": { "description": "() =&gt; void" },
+    "fetchRows": {
+      "type": { "description": "(parentId?: GridRowId) =&gt; void" },
       "required": true,
       "isProPlan": true
     },
@@ -239,11 +239,6 @@
       "isProPlan": true
     },
     "publishEvent": { "type": { "description": "GridEventPublisher" }, "required": true },
-    "queueChildrenFetch": {
-      "type": { "description": "(id: GridRowId) =&gt; void" },
-      "required": true,
-      "isProPlan": true
-    },
     "removeRowGroupingCriteria": {
       "type": { "description": "(groupingCriteriaField: string) =&gt; void" },
       "required": true,

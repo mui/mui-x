@@ -5,8 +5,8 @@ import {
   gridRowsLoadingSelector,
   useGridApiMethod,
   GridServerSideGroupNode,
-  GridRowId,
   useGridSelector,
+  GridRowId,
 } from '@mui/x-data-grid';
 import { gridRowGroupsToFetchSelector, GridStateInitializer } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
@@ -54,57 +54,60 @@ export const useGridDataSource = (
   const scheduledGroups = React.useRef<number>(0);
   const onError = props.unstable_onDataSourceError;
 
-  const fetchTopLevelRows = React.useCallback(async () => {
-    const getRows = props.unstable_dataSource?.getRows;
-    if (!getRows) {
-      return;
-    }
-
-    nestedDataManager.clear();
-    scheduledGroups.current = 0;
-    const dataSourceState = privateApiRef.current.state.dataSource;
-    if (dataSourceState !== INITIAL_STATE) {
-      privateApiRef.current.resetDataSourceState();
-    }
-
-    const fetchParams = gridGetRowsParamsSelector(privateApiRef);
-
-    const cachedData = privateApiRef.current.unstable_dataSourceCache?.get(fetchParams);
-
-    if (cachedData != null) {
-      const rows = cachedData.rows;
-      privateApiRef.current.caches.dataSource.groupKeys = [];
-      privateApiRef.current.setRows(rows);
-      if (cachedData.rowCount) {
-        privateApiRef.current.setRowCount(cachedData.rowCount);
+  const fetchRows = React.useCallback(
+    async (parentId?: GridRowId) => {
+      const getRows = props.unstable_dataSource?.getRows;
+      if (!getRows) {
+        return;
       }
-      return;
-    }
 
-    const isLoading = gridRowsLoadingSelector(privateApiRef);
-    if (!isLoading) {
-      privateApiRef.current.setLoading(true);
-    }
-
-    try {
-      const getRowsResponse = await getRows(fetchParams);
-      privateApiRef.current.unstable_dataSourceCache?.set(fetchParams, getRowsResponse);
-      if (getRowsResponse.rowCount) {
-        privateApiRef.current.setRowCount(getRowsResponse.rowCount);
+      if (parentId) {
+        nestedDataManager.enqueue([parentId]);
+        return;
       }
-      privateApiRef.current.caches.dataSource.groupKeys = [];
-      privateApiRef.current.setRows(getRowsResponse.rows);
-      privateApiRef.current.setLoading(false);
-    } catch (error) {
-      privateApiRef.current.setRows([]);
-      privateApiRef.current.setLoading(false);
-      onError?.(error as Error, fetchParams);
-    }
-  }, [nestedDataManager, privateApiRef, props.unstable_dataSource?.getRows, onError]);
 
-  const queueChildrenFetch = React.useCallback(
-    (id: GridRowId) => nestedDataManager.enqueue([id]),
-    [nestedDataManager],
+      nestedDataManager.clear();
+      scheduledGroups.current = 0;
+      const dataSourceState = privateApiRef.current.state.dataSource;
+      if (dataSourceState !== INITIAL_STATE) {
+        privateApiRef.current.resetDataSourceState();
+      }
+
+      const fetchParams = gridGetRowsParamsSelector(privateApiRef);
+
+      const cachedData = privateApiRef.current.unstable_dataSourceCache?.get(fetchParams);
+
+      if (cachedData != null) {
+        const rows = cachedData.rows;
+        privateApiRef.current.caches.dataSource.groupKeys = [];
+        privateApiRef.current.setRows(rows);
+        if (cachedData.rowCount) {
+          privateApiRef.current.setRowCount(cachedData.rowCount);
+        }
+        return;
+      }
+
+      const isLoading = gridRowsLoadingSelector(privateApiRef);
+      if (!isLoading) {
+        privateApiRef.current.setLoading(true);
+      }
+
+      try {
+        const getRowsResponse = await getRows(fetchParams);
+        privateApiRef.current.unstable_dataSourceCache?.set(fetchParams, getRowsResponse);
+        if (getRowsResponse.rowCount) {
+          privateApiRef.current.setRowCount(getRowsResponse.rowCount);
+        }
+        privateApiRef.current.caches.dataSource.groupKeys = [];
+        privateApiRef.current.setRows(getRowsResponse.rows);
+        privateApiRef.current.setLoading(false);
+      } catch (error) {
+        privateApiRef.current.setRows([]);
+        privateApiRef.current.setLoading(false);
+        onError?.(error as Error, fetchParams);
+      }
+    },
+    [nestedDataManager, privateApiRef, props.unstable_dataSource?.getRows, onError],
   );
 
   const fetchRowChildren = React.useCallback<GridDataSourcePrivateApi['fetchRowChildren']>(
@@ -222,10 +225,9 @@ export const useGridDataSource = (
   }, [privateApiRef]);
 
   const dataSourceApi: GridDataSourceApi = {
-    queueChildrenFetch,
     setChildrenLoading,
     setChildrenFetchError,
-    fetchTopLevelRows,
+    fetchRows,
   };
 
   const dataSourcePrivateApi: GridDataSourcePrivateApi = {
@@ -242,17 +244,17 @@ export const useGridDataSource = (
   useGridApiEventHandler(
     privateApiRef,
     'sortModelChange',
-    runIfServerMode(props.sortingMode, fetchTopLevelRows),
+    runIfServerMode(props.sortingMode, fetchRows),
   );
   useGridApiEventHandler(
     privateApiRef,
     'filterModelChange',
-    runIfServerMode(props.filterMode, fetchTopLevelRows),
+    runIfServerMode(props.filterMode, fetchRows),
   );
   useGridApiEventHandler(
     privateApiRef,
     'paginationModelChange',
-    runIfServerMode(props.paginationMode, fetchTopLevelRows),
+    runIfServerMode(props.paginationMode, fetchRows),
   );
 
   /*
@@ -261,7 +263,7 @@ export const useGridDataSource = (
   React.useEffect(() => {
     if (props.unstable_dataSource) {
       privateApiRef.current.unstable_dataSourceCache?.clear();
-      privateApiRef.current.fetchTopLevelRows();
+      privateApiRef.current.fetchRows();
     }
   }, [privateApiRef, props.unstable_dataSource]);
 

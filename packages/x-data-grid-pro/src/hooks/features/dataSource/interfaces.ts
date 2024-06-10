@@ -27,20 +27,17 @@ export interface GridDataSourceApi {
    */
   setChildrenFetchError: (parentId: GridRowId, error: Error | null) => void;
   /**
-   * Fetch/refetch the top level rows.
+   * Fetches the rows from the server for a given `parentId`.
+   * If no `parentId` is provided, it fetches the root rows.
+   * @param {string} parentId The id of the group to be fetched.
    */
-  fetchTopLevelRows: () => void;
-  /**
-   * Adds the fetch of the children of a row to queue.
-   * @param {GridRowId} id The id of the rowNode belonging to the group to be fetched.
-   */
-  queueChildrenFetch: (id: GridRowId) => void;
+  fetchRows: (parentId?: GridRowId) => void;
 }
 
 export interface GridDataSourcePrivateApi {
   /**
    * Initiates the fetch of the children of a row.
-   * @param {string} id The id of the rowNode belonging to the group to be fetched.
+   * @param {string} id The id of the group to be fetched.
    */
   fetchRowChildren: (id: GridRowId) => void;
   /**
@@ -54,7 +51,7 @@ export interface GridDataSourcePrivateApi {
  */
 export interface GridDataSourceCacheApi {
   /**
-   * Data source cache object.
+   * The data source cache object.
    */
   unstable_dataSourceCache: GridDataSourceCache | null;
 }
