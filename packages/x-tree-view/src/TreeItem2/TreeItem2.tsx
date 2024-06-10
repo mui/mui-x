@@ -2,12 +2,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import unsupportedProp from '@mui/utils/unsupportedProp';
-import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import MuiCheckbox, { CheckboxProps } from '@mui/material/Checkbox';
 import { useSlotProps } from '@mui/base/utils';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeItem2Props, TreeItem2OwnerState } from './TreeItem2.types';
 import {
   unstable_useTreeItem2 as useTreeItem2,
@@ -17,6 +18,8 @@ import {
 import { getTreeItemUtilityClass } from '../TreeItem';
 import { TreeItem2Icon } from '../TreeItem2Icon';
 import { TreeItem2Provider } from '../TreeItem2Provider';
+
+const useThemeProps = createUseThemeProps('MuiTreeItem2');
 
 export const TreeItem2Root = styled('li', {
   name: 'MuiTreeItem2',
