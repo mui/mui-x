@@ -237,5 +237,19 @@ module.exports = {
       ['x-tree-view', 'x-tree-view-pro'],
       ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW,
     ),
+
+    ...addReactCompilerRule(['x-charts', 'x-charts-pro'], ENABLE_REACT_COMPILER_PLUGIN_CHARTS),
+    ...addReactCompilerRule(
+      ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium', 'x-data-grid-generator'],
+      ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID,
+    ),
+    ...addReactCompilerRule(
+      ['x-date-pickers', 'x-date-pickers-pro'],
+      ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS,
+    ),
+    ...addReactCompilerRule(
+      ['x-tree-view', 'x-tree-view-pro'],
+      ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW,
+    ),
   ],
 };
