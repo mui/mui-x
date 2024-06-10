@@ -68,5 +68,5 @@ export interface ChartsComponents<Theme = unknown> {
 }
 
 declare module '@mui/material/styles' {
-  interface Components extends ChartsComponents {}
+  interface Components<Theme = unknown> extends ChartsComponents<Theme> {}
 }
