@@ -177,18 +177,18 @@ Open info section of the browser console to see the requests being made and the 
 
 The data source caches fetched data by default. This means that if the user navigates to a page or expands a node that has already been fetched, the grid will not call the `getRows` function again to avoid unnecessary calls to the server.
 
-The `GridDataSourceDefaultCache` is used by default which is a simple in-memory cache that stores the data in a plain object. It could be seen in action in the demo below.
+The `GridDataSourceCacheDefault` is used by default which is a simple in-memory cache that stores the data in a plain object. It could be seen in action in the demo below.
 
 {{"demo": "ServerSideDataGrid.js", "bg": "inline"}}
 
 ### Customize the cache lifetime
 
-The `GridDataSourceDefaultCache` has a default Time To Live (`ttl`) of 5 minutes. To customize it, pass the `ttl` option in milliseconds to the `GridDataSourceDefaultCache` constructor, and then pass it as the `unstable_dataSourceCache` prop.
+The `GridDataSourceCacheDefault` has a default Time To Live (`ttl`) of 5 minutes. To customize it, pass the `ttl` option in milliseconds to the `GridDataSourceCacheDefault` constructor, and then pass it as the `unstable_dataSourceCache` prop.
 
 ```tsx
-import { GridDataSourceDefaultCache } from '@mui/x-data-grid-pro';
+import { GridDataSourceCacheDefault } from '@mui/x-data-grid-pro';
 
-const lowTTLCache = new GridDataSourceDefaultCache({ ttl: 1000 * 10 }); // 10 seconds
+const lowTTLCache = new GridDataSourceCacheDefault({ ttl: 1000 * 10 }); // 10 seconds
 
 <DataGridPro
   columns={columns}

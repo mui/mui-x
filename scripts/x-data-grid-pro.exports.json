@@ -222,7 +222,7 @@
   { "name": "GridDataSourceApi", "kind": "Interface" },
   { "name": "GridDataSourceCache", "kind": "Interface" },
   { "name": "GridDataSourceCacheApi", "kind": "Interface" },
-  { "name": "GridDataSourceDefaultCache", "kind": "Class" },
+  { "name": "GridDataSourceCacheDefault", "kind": "Class" },
   { "name": "GridDataSourceInternalCache", "kind": "Interface" },
   { "name": "GridDataSourcePrivateApi", "kind": "Interface" },
   { "name": "GridDataSourceState", "kind": "Interface" },

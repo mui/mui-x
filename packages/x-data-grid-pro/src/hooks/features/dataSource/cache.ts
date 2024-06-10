@@ -1,6 +1,6 @@
 import { GridGetRowsParams, GridGetRowsResponse } from '../../../models';
 
-type GridDataSourceDefaultCacheConfig = {
+type GridDataSourceCacheDefaultConfig = {
   /**
    * Time To Live for each cache entry in milliseconds.
    * After this time the cache entry will become stale and the next query will result in cache miss.
@@ -18,12 +18,12 @@ function getKey(params: GridGetRowsParams) {
   ]);
 }
 
-export class GridDataSourceDefaultCache {
+export class GridDataSourceCacheDefault {
   private cache: Record<string, { value: GridGetRowsResponse; expiry: number }>;
 
   private ttl: number;
 
-  constructor({ ttl = 300000 }: GridDataSourceDefaultCacheConfig) {
+  constructor({ ttl = 300000 }: GridDataSourceCacheDefaultConfig) {
     this.cache = {};
     this.ttl = ttl;
   }

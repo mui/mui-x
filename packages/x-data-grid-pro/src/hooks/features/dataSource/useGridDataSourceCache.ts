@@ -5,14 +5,14 @@ import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridDataSourceCache } from '../../../models';
 import { GridDataSourceCacheApi } from './interfaces';
-import { GridDataSourceDefaultCache } from './cache';
+import { GridDataSourceCacheDefault } from './cache';
 
 export const useGridDataSourceCache = (
   privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<DataGridProProcessedProps, 'unstable_dataSource' | 'unstable_dataSourceCache'>,
 ): void => {
   const defaultCache = useLazyRef<GridDataSourceCache, void>(
-    () => new GridDataSourceDefaultCache({}),
+    () => new GridDataSourceCacheDefault({}),
   ).current;
 
   const [cache, setCache] = React.useState<GridDataSourceCache | null>(
