@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { InteractionContext } from '../context/InteractionProvider';
 import { SeriesItemIdentifier } from '../models';
-import { HighlightedContext } from '../context';
+import { useHighlighted } from '../context';
 
 export const useInteractionItemProps = (skip?: boolean) => {
   const { dispatch: dispatchInteraction } = React.useContext(InteractionContext);
-  const { setHighlighted, clearHighlighted } = React.useContext(HighlightedContext);
+  const { setHighlighted, clearHighlighted } = useHighlighted();
 
   if (skip) {
     return () => ({});

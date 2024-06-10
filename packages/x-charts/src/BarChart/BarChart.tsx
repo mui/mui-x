@@ -51,7 +51,7 @@ export interface BarChartSlotProps
     ChartsOverlaySlotProps {}
 
 export interface BarChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series'>,
+  extends Omit<ResponsiveChartContainerProps, 'series' | 'plugins'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<BarPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -461,7 +461,7 @@ BarChart.propTypes = {
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      position: PropTypes.oneOf(['bottom', 'top']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
@@ -532,7 +532,7 @@ BarChart.propTypes = {
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      position: PropTypes.oneOf(['left', 'right']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,

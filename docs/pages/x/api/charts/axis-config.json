@@ -4,39 +4,18 @@
   "properties": {
     "id": { "type": { "description": "AxisId" }, "required": true },
     "scaleType": { "type": { "description": "'linear'" }, "required": true },
-    "axisId": { "type": { "description": "AxisId" } },
-    "classes": { "type": { "description": "Partial&lt;ChartsAxisClasses&gt;" } },
     "colorMap": { "type": { "description": "ContinuousColorConfig | PiecewiseColorConfig" } },
     "data": { "type": { "description": "V[]" } },
     "dataKey": { "type": { "description": "string" } },
-    "disableLine": { "type": { "description": "boolean" }, "default": "false" },
-    "disableTicks": { "type": { "description": "boolean" }, "default": "false" },
-    "fill": { "type": { "description": "string" }, "default": "'currentColor'" },
     "hideTooltip": { "type": { "description": "boolean" } },
-    "label": { "type": { "description": "string" } },
-    "labelFontSize": { "type": { "description": "number" }, "default": "14" },
-    "labelStyle": { "type": { "description": "ChartsTextProps['style']" } },
     "max": { "type": { "description": "number | Date" } },
     "min": { "type": { "description": "number | Date" } },
-    "position": { "type": { "description": "'top' | 'bottom'" } },
     "reverse": { "type": { "description": "boolean" } },
-    "slotProps": {
-      "type": { "description": "Partial&lt;ChartsAxisSlotProps&gt;" },
-      "default": "{}"
-    },
-    "slots": { "type": { "description": "Partial&lt;ChartsAxisSlots&gt;" }, "default": "{}" },
-    "stroke": { "type": { "description": "string" }, "default": "'currentColor'" },
-    "tickFontSize": { "type": { "description": "number" }, "default": "12" },
     "tickInterval": {
       "type": { "description": "'auto' | ((value: any, index: number) =&gt; boolean) | any[]" },
       "default": "'auto'"
     },
-    "tickLabelInterval": {
-      "type": { "description": "'auto' | ((value: any, index: number) =&gt; boolean)" },
-      "default": "'auto'"
-    },
     "tickLabelPlacement": { "type": { "description": "'middle' | 'tick'" }, "default": "'middle'" },
-    "tickLabelStyle": { "type": { "description": "ChartsTextProps['style']" } },
     "tickMaxStep": { "type": { "description": "number" } },
     "tickMinStep": { "type": { "description": "number" } },
     "tickNumber": { "type": { "description": "number" } },
@@ -44,7 +23,6 @@
       "type": { "description": "'start' | 'end' | 'middle' | 'extremities'" },
       "default": "'extremities'"
     },
-    "tickSize": { "type": { "description": "number" }, "default": "6" },
     "valueFormatter": {
       "type": { "description": "(value: V, context: AxisValueFormatterContext) =&gt; string" }
     }
