@@ -54,6 +54,7 @@ export default function FilteredRowCount() {
   );
 
   React.useEffect(() => {
+    // Calculate the row count for predefined filters
     if (data.rows.length === 0) {
       return;
     }
