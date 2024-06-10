@@ -21,6 +21,16 @@ const isAnyReactCompilerPluginEnabled =
   ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS ||
   ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW;
 
+const addReactCompilerRule = (packagesNames, isEnabled) =>
+  !isEnabled
+    ? []
+    : packagesNames.map((packageName) => ({
+        files: [`packages/${packageName}/src/**/*{.ts,.tsx,.js}`],
+        rules: {
+          'react-compiler/react-compiler': 'error',
+        },
+      }));
+
 // TODO move this helper to @mui/monorepo/.eslintrc
 // It needs to know about the parent "no-restricted-imports" to not override them.
 const buildPackageRestrictedImports = (packageName, root, allowRootImports = true) => [
@@ -247,5 +257,19 @@ module.exports = {
     ...buildPackageRestrictedImports('@mui/x-tree-view', 'x-tree-view', false),
     ...buildPackageRestrictedImports('@mui/x-tree-view-pro', 'x-tree-view-pro', false),
     ...buildPackageRestrictedImports('@mui/x-license', 'x-license'),
+
+    ...addReactCompilerRule(['x-charts', 'x-charts-pro'], ENABLE_REACT_COMPILER_PLUGIN_CHARTS),
+    ...addReactCompilerRule(
+      ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium', 'x-data-grid-generator'],
+      ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID,
+    ),
+    ...addReactCompilerRule(
+      ['x-date-pickers', 'x-date-pickers-pro'],
+      ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS,
+    ),
+    ...addReactCompilerRule(
+      ['x-tree-view', 'x-tree-view-pro'],
+      ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW,
+    ),
   ],
 };
