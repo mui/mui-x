@@ -64,6 +64,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
   useReducedMotion(); // a11y reduce motion (see: https://react-spring.dev/docs/utilities/use-reduced-motion)
 
   return (
+    // TODO: Remove to pro package
     <ZoomProvider>
       <DrawingProvider width={width} height={height} margin={margin} svgRef={svgRef}>
         <ColorProvider colorProcessors={colorProcessors}>
