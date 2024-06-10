@@ -23,17 +23,11 @@ const isAnyReactCompilerPluginEnabled =
 
 // TODO move this helper to @mui/monorepo/.eslintrc
 // It needs to know about the parent "no-restricted-imports" to not override them.
-const buildPackageRestrictedImports = (
-  packageName,
-  root,
-  allowRootImports = true,
-  enableReactCompilerRules = false,
-) => [
+const buildPackageRestrictedImports = (packageName, root, allowRootImports = true) => [
   {
     files: [`packages/${root}/src/**/*{.ts,.tsx,.js}`],
     excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
     rules: {
-      ...(enableReactCompilerRules ? { 'react-compiler/react-compiler': 'error' } : {}),
       'no-restricted-imports': [
         'error',
         {
@@ -241,62 +235,17 @@ module.exports = {
         ],
       },
     },
-    ...buildPackageRestrictedImports(
-      '@mui/x-charts',
-      'x-charts',
-      false,
-      ENABLE_REACT_COMPILER_PLUGIN_CHARTS,
-    ),
-    ...buildPackageRestrictedImports(
-      '@mui/x-charts-pro',
-      'x-charts-pro',
-      false,
-      ENABLE_REACT_COMPILER_PLUGIN_CHARTS,
-    ),
+    ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts', false),
+    ...buildPackageRestrictedImports('@mui/x-charts-pro', 'x-charts-pro', false),
     ...buildPackageRestrictedImports('@mui/x-codemod', 'x-codemod', false),
-    ...buildPackageRestrictedImports(
-      '@mui/x-data-grid',
-      'x-data-grid',
-      true,
-      ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID,
-    ),
-    ...buildPackageRestrictedImports(
-      '@mui/x-data-grid-pro',
-      'x-data-grid-pro',
-      true,
-      ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID,
-    ),
-    ...buildPackageRestrictedImports(
-      '@mui/x-data-grid-premium',
-      'x-data-grid-premium',
-      true,
-      ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID,
-    ),
+    ...buildPackageRestrictedImports('@mui/x-data-grid', 'x-data-grid'),
+    ...buildPackageRestrictedImports('@mui/x-data-grid-pro', 'x-data-grid-pro'),
+    ...buildPackageRestrictedImports('@mui/x-data-grid-premium', 'x-data-grid-premium'),
     ...buildPackageRestrictedImports('@mui/x-data-grid-generator', 'x-data-grid-generator'),
-    ...buildPackageRestrictedImports(
-      '@mui/x-date-pickers',
-      'x-date-pickers',
-      false,
-      ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS,
-    ),
-    ...buildPackageRestrictedImports(
-      '@mui/x-date-pickers-pro',
-      'x-date-pickers-pro',
-      false,
-      ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS,
-    ),
-    ...buildPackageRestrictedImports(
-      '@mui/x-tree-view',
-      'x-tree-view',
-      false,
-      ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW,
-    ),
-    ...buildPackageRestrictedImports(
-      '@mui/x-tree-view-pro',
-      'x-tree-view-pro',
-      false,
-      ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW,
-    ),
-    ...buildPackageRestrictedImports('@mui/x-license', 'x-license', true),
+    ...buildPackageRestrictedImports('@mui/x-date-pickers', 'x-date-pickers', false),
+    ...buildPackageRestrictedImports('@mui/x-date-pickers-pro', 'x-date-pickers-pro', false),
+    ...buildPackageRestrictedImports('@mui/x-tree-view', 'x-tree-view', false),
+    ...buildPackageRestrictedImports('@mui/x-tree-view-pro', 'x-tree-view-pro', false),
+    ...buildPackageRestrictedImports('@mui/x-license', 'x-license'),
   ],
 };
