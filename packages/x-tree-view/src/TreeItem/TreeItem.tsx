@@ -439,6 +439,10 @@ TreeItem.propTypes = {
    */
   onFocus: unsupportedProp,
   /**
+   * Callback fired when a key of the keyboard is pressed on the item.
+   */
+  onKeyDown: PropTypes.func,
+  /**
    * The props used for each component slot.
    * @default {}
    */
