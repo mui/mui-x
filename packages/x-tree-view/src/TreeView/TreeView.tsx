@@ -1,10 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getTreeViewUtilityClass } from './treeViewClasses';
 import { TreeViewProps } from './TreeView.types';
 import { SimpleTreeView, SimpleTreeViewRoot } from '../SimpleTreeView';
+
+const useThemeProps = createUseThemeProps('MuiTreeView');
 
 const useUtilityClasses = <Multiple extends boolean | undefined>(
   ownerState: TreeViewProps<Multiple>,
