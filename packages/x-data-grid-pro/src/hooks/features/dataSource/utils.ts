@@ -64,6 +64,7 @@ export class NestedDataManager {
   public enqueue = async (ids: GridRowId[]) => {
     ids.forEach((id) => {
       this.queuedRequests.add(id);
+      this.api.setChildrenLoading(id, true);
     });
     this.processQueue();
   };

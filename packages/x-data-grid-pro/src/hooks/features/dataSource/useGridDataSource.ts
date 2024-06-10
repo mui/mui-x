@@ -103,11 +103,8 @@ export const useGridDataSource = (
   }, [nestedDataManager, privateApiRef, props.unstable_dataSource?.getRows, onError]);
 
   const queueChildrenFetch = React.useCallback(
-    (id: GridRowId) => {
-      privateApiRef.current.setChildrenLoading(id, true);
-      nestedDataManager.enqueue([id]);
-    },
-    [privateApiRef, nestedDataManager],
+    (id: GridRowId) => nestedDataManager.enqueue([id]),
+    [nestedDataManager],
   );
 
   const fetchRowChildren = React.useCallback<GridDataSourcePrivateApi['fetchRowChildren']>(
@@ -146,10 +143,6 @@ export const useGridDataSource = (
           privateApiRef.current.setChildrenLoading(id, false);
         }
         return;
-      }
-
-      if (!isLoading) {
-        privateApiRef.current.setChildrenLoading(id, true);
       }
 
       const existingError = gridDataSourceErrorsSelector(privateApiRef)[id] ?? null;
