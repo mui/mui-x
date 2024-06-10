@@ -10,7 +10,7 @@ title: Data Grid - Filtering customization recipes
 
 The [Quick Filter](/x/react-data-grid/filtering/quick-filter/) component is typically used in the Data Grid's Toolbar component slot.
 
-Some use cases may call for placing components like the Quick Filter outside of the Grid. 
+Some use cases may call for placing components like the Quick Filter outside of the Grid.
 This requires certain considerations due to the Grid's context structure.
 The following example shows how to accomplish this:
 
