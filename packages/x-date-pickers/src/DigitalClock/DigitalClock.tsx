@@ -113,6 +113,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
 
   const containerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, containerRef);
+  const lastActiveRef = React.useRef<HTMLElement | null>(null);
 
   const props = useThemeProps({
     props: inProps,
@@ -219,7 +220,8 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       return;
     }
     const offsetTop = activeItem.offsetTop;
-    if (autoFocus || !!focusedView) {
+    if ((autoFocus || !!focusedView) && activeItem !== lastActiveRef.current) {
+      lastActiveRef.current = activeItem;
       activeItem.focus();
     }
 
