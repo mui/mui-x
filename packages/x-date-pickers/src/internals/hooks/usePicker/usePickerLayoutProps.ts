@@ -1,3 +1,4 @@
+import { useRtl } from '@mui/system/RtlProvider';
 import { useIsLandscape } from '../useIsLandscape';
 import { UsePickerValueLayoutResponse } from './usePickerValue.types';
 import { UsePickerViewsLayoutResponse } from './usePickerViews';
@@ -23,6 +24,7 @@ export interface UsePickerLayoutPropsResponseLayoutProps<
     UsePickerViewsLayoutResponse<TView>,
     UsePickerLayoutProps {
   isLandscape: boolean;
+  isRtl: boolean;
   wrapperVariant: WrapperVariant;
   isValid: (value: TValue) => boolean;
 }
@@ -49,11 +51,13 @@ export const usePickerLayoutProps = <TValue, TView extends DateOrTimeViewWithMer
 }: UsePickerLayoutPropsParams<TValue, TView>): UsePickerLayoutPropsResponse<TValue, TView> => {
   const { orientation } = props;
   const isLandscape = useIsLandscape(propsFromPickerViews.views, orientation);
+  const isRtl = useRtl();
 
   const layoutProps: UsePickerLayoutPropsResponseLayoutProps<TValue, TView> = {
     ...propsFromPickerViews,
     ...propsFromPickerValue,
     isLandscape,
+    isRtl,
     wrapperVariant,
     disabled: props.disabled,
     readOnly: props.readOnly,

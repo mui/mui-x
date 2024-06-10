@@ -1,3 +1,4 @@
+import { BarLabelClassKey } from '../BarChart';
 import { BarElementClassKey } from '../BarChart/BarElement';
 import { ChartsAxisClassKey } from '../ChartsAxis';
 import { ChartsAxisHighlightClassKey } from '../ChartsAxisHighlight';
@@ -16,6 +17,8 @@ export interface PickersComponentNameToClassKey {
 
   // BarChart components
   MuiBarElement: BarElementClassKey;
+  MuiBarLabel: BarLabelClassKey;
+
   // LineChart components
   
   MuiAreaElement: AreaElementClassKey;

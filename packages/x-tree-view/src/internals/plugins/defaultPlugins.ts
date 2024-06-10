@@ -5,7 +5,7 @@ import { useTreeViewSelection, UseTreeViewSelectionParameters } from './useTreeV
 import { useTreeViewFocus, UseTreeViewFocusParameters } from './useTreeViewFocus';
 import { useTreeViewKeyboardNavigation } from './useTreeViewKeyboardNavigation';
 import { useTreeViewIcons, UseTreeViewIconsParameters } from './useTreeViewIcons';
-import { ConvertPluginsIntoSignatures, MergePluginsProperty } from '../models';
+import { ConvertPluginsIntoSignatures, MergeSignaturesProperty } from '../models';
 
 export const DEFAULT_TREE_VIEW_PLUGINS = [
   useTreeViewId,
@@ -17,12 +17,17 @@ export const DEFAULT_TREE_VIEW_PLUGINS = [
   useTreeViewIcons,
 ] as const;
 
-export type DefaultTreeViewPlugins = ConvertPluginsIntoSignatures<typeof DEFAULT_TREE_VIEW_PLUGINS>;
+export type DefaultTreeViewPluginSignatures = ConvertPluginsIntoSignatures<
+  typeof DEFAULT_TREE_VIEW_PLUGINS
+>;
 
-export type DefaultTreeViewPluginSlots = MergePluginsProperty<DefaultTreeViewPlugins, 'slots'>;
+export type DefaultTreeViewPluginSlots = MergeSignaturesProperty<
+  DefaultTreeViewPluginSignatures,
+  'slots'
+>;
 
-export type DefaultTreeViewPluginSlotProps = MergePluginsProperty<
-  DefaultTreeViewPlugins,
+export type DefaultTreeViewPluginSlotProps = MergeSignaturesProperty<
+  DefaultTreeViewPluginSignatures,
   'slotProps'
 >;
 

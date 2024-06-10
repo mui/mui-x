@@ -13,7 +13,7 @@ import {
   GridCellModes,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, act, userEvent } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, act, userEvent } from '@mui/internal-test-utils';
 import { getCell, spyApi } from 'test/utils/helperFn';
 
 describe('<DataGridPro /> - Cell editing', () => {

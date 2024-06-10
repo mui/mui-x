@@ -48,6 +48,7 @@ export default apiPages;
       rootPath: path.join(process.cwd(), 'packages/x-charts'),
       entryPointPath: 'src/index.ts',
     },
+    // TODO x-charts-pro
     // {
     //   name: 'charts-pro',
     //   rootPath: path.join(process.cwd(), 'packages/x-charts-pro'),

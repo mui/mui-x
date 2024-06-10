@@ -175,6 +175,7 @@
   { "name": "GridColumnHeaderSeparatorSides", "kind": "Enum" },
   { "name": "GridColumnHeaderSortIcon", "kind": "Variable" },
   { "name": "GridColumnHeaderSortIconProps", "kind": "Interface" },
+  { "name": "GridColumnHeadersProps", "kind": "Interface" },
   { "name": "GridColumnHeaderTitle", "kind": "Function" },
   { "name": "GridColumnHeaderTitleProps", "kind": "Interface" },
   { "name": "GridColumnIcon", "kind": "Variable" },

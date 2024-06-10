@@ -3,7 +3,7 @@
 import childProcess from 'child_process';
 import { promises as fs } from 'fs';
 import path from 'path';
-import yargs, { CommandModule } from 'yargs';
+import yargs, { ArgumentsCamelCase, CommandModule } from 'yargs';
 
 const jscodeshiftPackage = require('jscodeshift/package.json');
 
@@ -86,7 +86,7 @@ interface HandlerArgv extends Flags {
   paths: string[];
 }
 
-function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
+function run(argv: ArgumentsCamelCase<HandlerArgv>) {
   const { codemod, paths, _: other, jscodeshift, parser } = argv;
 
   return runTransform(
@@ -97,7 +97,7 @@ function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
   );
 }
 
-yargs
+yargs(process.argv.slice(2))
   .command({
     command: '$0 <codemod> <paths...>',
     describe: 'Applies a `@mui/x-codemod` to the specified paths',

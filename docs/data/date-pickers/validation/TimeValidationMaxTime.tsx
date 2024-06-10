@@ -22,7 +22,7 @@ export default function TimeValidationMaxTime() {
         <DemoItem label="DateTimePicker">
           <DateTimePicker defaultValue={nineAM} maxTime={fiveAM} />
         </DemoItem>
-        <DemoItem label="DateTimeRangePicker">
+        <DemoItem label="DateTimeRangePicker" component="DateTimeRangePicker">
           <DateTimeRangePicker defaultValue={[fiveAM, nineAM]} maxTime={fiveAM} />
         </DemoItem>
       </DemoContainer>

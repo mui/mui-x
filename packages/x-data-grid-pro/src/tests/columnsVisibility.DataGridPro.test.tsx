@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, act } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import {
   DataGridPro,
   DataGridProProps,

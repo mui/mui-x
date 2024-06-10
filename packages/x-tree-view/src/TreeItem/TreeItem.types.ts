@@ -103,4 +103,5 @@ export interface TreeItemOwnerState extends TreeItemProps {
   focused: boolean;
   selected: boolean;
   disabled: boolean;
+  indentationAtItemLevel: boolean;
 }

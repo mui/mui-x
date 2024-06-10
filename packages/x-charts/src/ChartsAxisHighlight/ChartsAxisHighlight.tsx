@@ -132,7 +132,7 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
 ChartsAxisHighlight.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   x: PropTypes.oneOf(['band', 'line', 'none']),
   y: PropTypes.oneOf(['band', 'line', 'none']),
