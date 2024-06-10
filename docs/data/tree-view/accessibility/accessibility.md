@@ -8,7 +8,7 @@ packageName: '@mui/x-tree-view'
 
 # Accessibility
 
-<p class="description">The Tree View has complete accessibility support, including built-in keyboard interactions that follow international standards.</p>
+<p class="description">Learn how the Tree View implements accessibility features and guidelines, including keyboard navigation that follows international standards.</p>
 
 ## Guidelines
 
