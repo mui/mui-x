@@ -4,13 +4,14 @@ import {
   ConvertSignaturesIntoPlugins,
   MergeSignaturesProperty,
 } from '../models';
+import { TreeViewCorePluginSignatures } from '../corePlugins';
 
 /**
  * Implements the same behavior as `useControlled` but for several models.
  * The controlled models are never stored in the state, and the state is only updated if the model is not controlled.
  */
 export const useTreeViewModels = <TSignatures extends readonly TreeViewAnyPluginSignature[]>(
-  plugins: ConvertSignaturesIntoPlugins<TSignatures>,
+  plugins: ConvertSignaturesIntoPlugins<readonly [...TreeViewCorePluginSignatures, ...TSignatures]>,
   props: MergeSignaturesProperty<TSignatures, 'defaultizedParams'>,
 ) => {
   type DefaultizedParams = MergeSignaturesProperty<TSignatures, 'defaultizedParams'>;
