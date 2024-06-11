@@ -73,7 +73,6 @@ export function getXReferenceLineClasses(classes?: Partial<ChartsReferenceLineCl
   );
 }
 
-
 const valueError = buildWarning(
   (value, id) =>
     `MUI X Charts: the value ${value} does not exist in the data of x axis with id ${id}.`,
