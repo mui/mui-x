@@ -8,9 +8,13 @@ title: React Data Grid - Server-side data
 
 ## Introduction
 
-Server-side data management in React can become complex with growing datasets. Challenges include manual data fetching, pagination, sorting, filtering, and performance optimization. A dedicated module can help abstract these complexities, improving user experience.
+Server-side data management in React can become complex with growing datasets.
+Challenges include manual data fetching, pagination, sorting, filtering, and performance optimization.
+A dedicated module can help abstract these complexities, improving user experience.
 
-Consider a Data Grid displaying a list of users. It supports pagination, sorting by column headers, and filtering. The Data Grid fetches data from the server when the user changes the page or updates filtering or sorting.
+Consider a Data Grid displaying a list of users.
+It supports pagination, sorting by column headers, and filtering.
+The Data Grid fetches data from the server when the user changes the page or updates filtering or sorting.
 
 ```tsx
 const [rows, setRows] = React.useState([]);
@@ -128,7 +132,8 @@ The data source changes how the existing server-side features like `filtering`, 
 
 **Without data source**
 
-When there's no data source, the features `filtering`, `sorting`, `pagination` work on `client` by default. In order for them to work with server-side data, you need to set them to `server` explicitly and provide the [`onFilterModelChange`](https://mui.com/x/react-data-grid/filtering/server-side/), [`onSortModelChange`](https://mui.com/x/react-data-grid/sorting/#server-side-sorting), [`onPaginationModelChange`](https://mui.com/x/react-data-grid/pagination/#server-side-pagination) event handlers to fetch the data from the server based on the updated variables.
+When there's no data source, the features `filtering`, `sorting`, `pagination` work on `client` by default.
+In order for them to work with server-side data, you need to set them to `server` explicitly and provide the [`onFilterModelChange`](https://mui.com/x/react-data-grid/filtering/server-side/), [`onSortModelChange`](https://mui.com/x/react-data-grid/sorting/#server-side-sorting), [`onPaginationModelChange`](https://mui.com/x/react-data-grid/pagination/#server-side-pagination) event handlers to fetch the data from the server based on the updated variables.
 
 ```tsx
 <DataGrid
@@ -201,7 +206,8 @@ const lowTTLCache = new GridDataSourceCacheDefault({ ttl: 1000 * 10 }); // 10 se
 
 ### Custom cache
 
-To provide a custom cache, use `unstable_dataSourceCache` prop, which could be either written from scratch or based out of another cache library. This prop accepts a generic interface of type `GridDataSourceCache`.
+To provide a custom cache, use `unstable_dataSourceCache` prop, which could be either written from scratch or based out of another cache library.
+This prop accepts a generic interface of type `GridDataSourceCache`.
 
 ```tsx
 export interface GridDataSourceCache {
@@ -231,7 +237,8 @@ To disable the data source cache, pass `null` to the `unstable_dataSourceCache` 
 
 ## Error handling
 
-You could handle the errors with the data source by providing an error handler function using the `unstable_onDataSourceError`. It will be called whenever there's an error in fetching the data.
+You could handle the errors with the data source by providing an error handler function using the `unstable_onDataSourceError`.
+It will be called whenever there's an error in fetching the data.
 
 The first argument of this function is the error object, and the second argument is the fetch parameters of type `GridGetRowsParams`.
 
@@ -249,7 +256,8 @@ The first argument of this function is the error object, and the second argument
 
 ## Updating data 🚧
 
-This feature is yet to be implemented, when completed, the method `unstable_dataSource.updateRow` will be called with the `GridRowModel` whenever the user edits a row. It will work in a similar way as the `processRowUpdate` prop.
+This feature is yet to be implemented, when completed, the method `unstable_dataSource.updateRow` will be called with the `GridRowModel` whenever the user edits a row.
+It will work in a similar way as the `processRowUpdate` prop.
 
 Feel free to upvote the related GitHub [issue](https://github.com/mui/mui-x/issues/13261) to see this feature land faster.
 
