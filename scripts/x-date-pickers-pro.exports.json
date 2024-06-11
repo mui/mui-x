@@ -213,6 +213,8 @@
   { "name": "MonthCalendarClasses", "kind": "Interface" },
   { "name": "MonthCalendarClassKey", "kind": "TypeAlias" },
   { "name": "MonthCalendarProps", "kind": "Interface" },
+  { "name": "MonthCalendarSlotProps", "kind": "Interface" },
+  { "name": "MonthCalendarSlots", "kind": "Interface" },
   { "name": "MuiPickersAdapter", "kind": "Interface" },
   { "name": "MuiPickersAdapterContext", "kind": "Variable" },
   { "name": "MultiInputDateRangeField", "kind": "Variable" },
@@ -420,5 +422,7 @@
   { "name": "yearCalendarClasses", "kind": "Variable" },
   { "name": "YearCalendarClasses", "kind": "Interface" },
   { "name": "YearCalendarClassKey", "kind": "TypeAlias" },
-  { "name": "YearCalendarProps", "kind": "Interface" }
+  { "name": "YearCalendarProps", "kind": "Interface" },
+  { "name": "YearCalendarSlotProps", "kind": "Interface" },
+  { "name": "YearCalendarSlots", "kind": "Interface" }
 ]

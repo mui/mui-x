@@ -169,6 +169,7 @@
     "inputAdornment": "Component displayed on the start or end input adornment used to open the picker on desktop.",
     "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
     "leftArrowIcon": "Icon displayed in the left view switch button.",
+    "monthButton": "Button displayed to render a single month in the &quot;month&quot; view.",
     "nextIconButton": "Button allowing to switch to the right view.",
     "openPickerButton": "Button to open the picker on desktop.",
     "openPickerIcon": "Icon displayed in the open picker button on desktop.",
@@ -177,8 +178,9 @@
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "shortcuts": "Custom component for the shortcuts.",
     "switchViewButton": "Button displayed to switch between different calendar views.",
-    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
+    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &quot;year&quot;.",
     "textField": "Form control with an input to render the value inside the default field.",
-    "toolbar": "Custom component for the toolbar rendered above the views."
+    "toolbar": "Custom component for the toolbar rendered above the views.",
+    "yearButton": "Button displayed to render a single year in the &quot;year&quot; view."
   }
 }
