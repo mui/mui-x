@@ -54,6 +54,7 @@ Whereas most of the other charts expect an array of axis configuration objects.
 
 You can fix the y-range of the sparkline by providing `min`/`max` values to the `yAxis` configuration.
 
-The following demo shows two sparklines with small and large values, on the first row with the default y-range, and with fixed range on the second row.
+The following demo shows two sparklines, one with small and another with large values.
+The first row has the default y-axis values, while on the second row a fixed range from `0` to `100` has been set.
 
 {{"demo": "CustomYAxis.js"}}
