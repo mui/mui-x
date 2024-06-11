@@ -76,7 +76,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   >({
     plugins: SIMPLE_TREE_VIEW_PLUGINS,
     rootRef: ref,
-    props: { ...props, items: [] },
+    props: { ...props, items: EMPTY_ITEMS },
   });
 
   const { slots, slotProps } = props;
