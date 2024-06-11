@@ -56,7 +56,7 @@ const PickersYearRoot = styled('div', {
   variants: [{ props: { yearsPerRow: 4 }, style: { flexBasis: '25%' } }],
 });
 
-export const PickersYearButton = styled('button', {
+const YearCalendarButton = styled('button', {
   name: 'MuiPickersYear',
   slot: 'YearButton',
   overridesResolver: (_, styles) => [
@@ -64,7 +64,7 @@ export const PickersYearButton = styled('button', {
     { [`&.${pickersYearClasses.disabled}`]: styles.disabled },
     { [`&.${pickersYearClasses.selected}`]: styles.selected },
   ],
-})<{ ownerState?: PickersYearProps }>(({ theme }) => ({
+})<{ ownerState: PickersYearProps }>(({ theme }) => ({
   color: 'unset',
   backgroundColor: 'transparent',
   border: 0,
@@ -140,7 +140,7 @@ export const PickersYear = React.memo(function PickersYear(inProps: PickersYearP
     }
   }, [autoFocus]);
 
-  const YearButton = slots?.yearButton ?? PickersYearButton;
+  const YearButton = slots?.yearButton ?? YearCalendarButton;
   const yearButtonProps = useSlotProps({
     elementType: YearButton,
     externalSlotProps: slotProps?.yearButton,

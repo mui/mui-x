@@ -12,7 +12,7 @@ export interface MonthCalendarSlots {
    * Button displayed to render a single month in the "month" view.
    * @default MonthCalendarButton
    */
-  monthButton?: React.ElementType<React.HTMLAttributes<HTMLButtonElement>, 'button'>;
+  monthButton?: React.ElementType;
 }
 
 export interface MonthCalendarSlotProps {

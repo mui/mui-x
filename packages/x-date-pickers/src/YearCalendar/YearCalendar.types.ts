@@ -12,7 +12,7 @@ export interface YearCalendarSlots {
    * Button displayed to render a single year in the "year" view.
    * @default YearCalendarButton
    */
-  yearButton?: React.ElementType<React.HTMLAttributes<HTMLButtonElement>, 'button'>;
+  yearButton?: React.ElementType;
 }
 
 export interface YearCalendarSlotProps {
