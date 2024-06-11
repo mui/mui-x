@@ -66,7 +66,7 @@ commands:
                 name: Install pnpm package manager
                 command: |
                   corepack enable
-                  corepack prepare pnpm@latest-8 --activate
+                  corepack prepare pnpm@9.2.0 --activate
             - run:
                 name: Prepare playwright hash
                 command: pnpm list --json --filter playwright > /tmp/playwright_info.json
