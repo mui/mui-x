@@ -5,7 +5,7 @@ import { scaleBand } from 'd3-scale';
 import { timeDay } from 'd3-time';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
-import { AxisDefaultized, ScaleName } from '../models/axis';
+import { AxisDefaultized } from '../models/axis';
 import { FormatterResult } from '../models/seriesType/config';
 import { BarItemIdentifier } from '../models';
 import getColor from './getColor';
@@ -121,15 +121,16 @@ const useAggregatedData = (): {
       const bandWidth =
         ((baseScaleConfig as AxisDefaultized<'band'>).scale?.bandwidth?.() ||
           scaleBand(
+            // @ts-expect-error, domain can be fed into range.
             timeDay.range(...baseScaleConfig.scale.domain()),
             baseScaleConfig?.scale?.range(),
           ).bandwidth()) - 1;
 
-      console.log('bandWidth', bandWidth);
+      const numberOfGroups = stackingGroups.length;
 
       const { barWidth, offset } = getBandSize({
         bandWidth,
-        numberOfGroups: stackingGroups.length,
+        numberOfGroups,
         gapRatio:
           baseScaleConfig.scaleType === 'time' || baseScaleConfig.scaleType === 'utc'
             ? 0
@@ -146,21 +147,25 @@ const useAggregatedData = (): {
         const maxValueCoord = Math.round(Math.max(...valueCoordinates));
 
         const stackId = series[seriesId].stack;
+        const height = verticalLayout ? maxValueCoord - minValueCoord : barWidth;
+        const width = verticalLayout ? barWidth : maxValueCoord - minValueCoord;
 
         const result = {
           seriesId,
           dataIndex,
           layout: series[seriesId].layout,
           x: verticalLayout
-            ? xScale(xAxis[xAxisKey].data?.[dataIndex])! + barOffset
-            : minValueCoord,
+            ? xScale(xAxis[xAxisKey].data?.[dataIndex])! + barOffset - (width * numberOfGroups) / 2
+            : minValueCoord - (height * numberOfGroups) / 2,
           y: verticalLayout
             ? minValueCoord
-            : yScale(yAxis[yAxisKey].data?.[dataIndex])! + barOffset,
-          xOrigin: xScale(xAxis[xAxisKey].data?.[0])!,
-          yOrigin: yScale(yAxis[yAxisKey].data?.[0])!,
-          height: verticalLayout ? maxValueCoord - minValueCoord : barWidth,
-          width: verticalLayout ? barWidth : maxValueCoord - minValueCoord,
+            : yScale(yAxis[yAxisKey].data?.[dataIndex])! +
+              barOffset -
+              (height * numberOfGroups) / 2,
+          xOrigin: xScale(0)!,
+          yOrigin: yScale(0)!,
+          height,
+          width,
           color: colorGetter(dataIndex),
           value: series[seriesId].data[dataIndex],
           maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
