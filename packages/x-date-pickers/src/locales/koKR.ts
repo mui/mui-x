@@ -6,7 +6,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   hours: '시간을',
   minutes: '분을',
   seconds: '초를',
-  meridiem: '메리디엠',
+  meridiem: '오전/오후를',
 };
 
 const koKRPickers: Partial<PickersLocaleText<any>> = {
