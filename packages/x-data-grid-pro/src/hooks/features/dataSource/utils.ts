@@ -62,10 +62,21 @@ export class NestedDataManager {
   };
 
   public queue = async (ids: GridRowId[]) => {
+    const loadingIds: Record<GridRowId, boolean> = {};
     ids.forEach((id) => {
       this.queuedRequests.add(id);
-      this.api.unstable_dataSource.setChildrenLoading(id, true);
+      loadingIds[id] = true;
     });
+    this.api.setState((state) => ({
+      ...state,
+      dataSource: {
+        ...state.dataSource,
+        loading: {
+          ...state.dataSource.loading,
+          ...loadingIds,
+        },
+      },
+    }));
     this.processQueue();
   };
 
