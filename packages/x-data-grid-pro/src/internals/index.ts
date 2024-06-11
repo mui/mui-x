@@ -41,7 +41,6 @@ export {
   useGridDataSource,
   dataSourceStateInitializer,
 } from '../hooks/features/dataSource/useGridDataSource';
-export { useGridDataSourceCache } from '../hooks/features/dataSource/useGridDataSourceCache';
 
 export type {
   GridExperimentalProFeatures,

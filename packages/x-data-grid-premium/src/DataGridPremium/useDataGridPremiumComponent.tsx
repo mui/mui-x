@@ -68,7 +68,6 @@ import {
   useGridServerSideTreeDataPreProcessors,
   useGridDataSource,
   dataSourceStateInitializer,
-  useGridDataSourceCache,
 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
@@ -181,7 +180,6 @@ export const useDataGridPremiumComponent = (
   useGridEvents(apiRef, props);
   useGridStatePersistence(apiRef);
   useGridDataSource(apiRef, props);
-  useGridDataSourceCache(apiRef, props);
   useGridVirtualization(apiRef, props);
 
   return apiRef;

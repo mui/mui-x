@@ -14,10 +14,18 @@ import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { gridGetRowsParamsSelector, gridDataSourceErrorsSelector } from './gridDataSourceSelector';
 import { GridDataSourceApi, GridDataSourceApiBase, GridDataSourcePrivateApi } from './interfaces';
 import { runIfServerMode, NestedDataManager, RequestStatus } from './utils';
+import { GridDataSourceCache } from '../../../models';
+import { GridDataSourceCacheDefault } from './cache';
 
 const INITIAL_STATE = {
   loading: {},
   errors: {},
+};
+
+const noopCache = {
+  clear: () => {},
+  get: () => undefined,
+  set: () => {},
 };
 
 export const dataSourceStateInitializer: GridStateInitializer = (state) => {
@@ -32,14 +40,12 @@ export const useGridDataSource = (
   props: Pick<
     DataGridProProcessedProps,
     | 'unstable_dataSource'
+    | 'unstable_dataSourceCache'
     | 'unstable_onDataSourceError'
     | 'sortingMode'
     | 'filterMode'
     | 'paginationMode'
     | 'treeData'
-    | 'getRowId'
-    | 'loading'
-    | 'rowCount'
   >,
 ) => {
   const nestedDataManager = useLazyRef<NestedDataManager, void>(
@@ -48,6 +54,13 @@ export const useGridDataSource = (
   const groupsToAutoFetch = useGridSelector(apiRef, gridRowGroupsToFetchSelector);
   const scheduledGroups = React.useRef<number>(0);
   const onError = props.unstable_onDataSourceError;
+
+  const [cache, setCache] = React.useState<GridDataSourceCache | null>(() => {
+    if (props.unstable_dataSourceCache !== undefined) {
+      return props.unstable_dataSourceCache;
+    }
+    return new GridDataSourceCacheDefault({});
+  });
 
   const fetchRows = React.useCallback(
     async (parentId?: GridRowId) => {
@@ -70,7 +83,7 @@ export const useGridDataSource = (
 
       const fetchParams = gridGetRowsParamsSelector(apiRef);
 
-      const cachedData = apiRef.current.unstable_dataSourceCache.get(fetchParams);
+      const cachedData = apiRef.current.unstable_dataSource.cache.get(fetchParams);
 
       if (cachedData !== undefined) {
         const rows = cachedData.rows;
@@ -88,7 +101,7 @@ export const useGridDataSource = (
 
       try {
         const getRowsResponse = await getRows(fetchParams);
-        apiRef.current.unstable_dataSourceCache.set(fetchParams, getRowsResponse);
+        apiRef.current.unstable_dataSource.cache.set(fetchParams, getRowsResponse);
         if (getRowsResponse.rowCount) {
           apiRef.current.setRowCount(getRowsResponse.rowCount);
         }
@@ -123,7 +136,7 @@ export const useGridDataSource = (
 
       const fetchParams = { ...gridGetRowsParamsSelector(apiRef), groupKeys: rowNode.path };
 
-      const cachedData = apiRef.current.unstable_dataSourceCache.get(fetchParams);
+      const cachedData = apiRef.current.unstable_dataSource.cache.get(fetchParams);
 
       if (cachedData !== undefined) {
         const rows = cachedData.rows;
@@ -154,7 +167,7 @@ export const useGridDataSource = (
           return;
         }
         nestedDataManager.setRequestSettled(id);
-        apiRef.current.unstable_dataSourceCache.set(fetchParams, getRowsResponse);
+        apiRef.current.unstable_dataSource.cache.set(fetchParams, getRowsResponse);
         if (getRowsResponse.rowCount) {
           apiRef.current.setRowCount(getRowsResponse.rowCount);
         }
@@ -216,6 +229,7 @@ export const useGridDataSource = (
       setChildrenLoading,
       setChildrenFetchError,
       fetchRows,
+      cache: cache ?? noopCache,
     },
   };
 
@@ -227,9 +241,6 @@ export const useGridDataSource = (
   useGridApiMethod(apiRef, dataSourceApi, 'public');
   useGridApiMethod(apiRef, dataSourcePrivateApi, 'private');
 
-  /*
-   * EVENTS
-   */
   useGridApiEventHandler(apiRef, 'sortModelChange', runIfServerMode(props.sortingMode, fetchRows));
   useGridApiEventHandler(apiRef, 'filterModelChange', runIfServerMode(props.filterMode, fetchRows));
   useGridApiEventHandler(
@@ -238,12 +249,20 @@ export const useGridDataSource = (
     runIfServerMode(props.paginationMode, fetchRows),
   );
 
-  /*
-   * EFFECTS
-   */
+  const isFirstRender = React.useRef(true);
+  React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (props.unstable_dataSourceCache !== undefined) {
+      setCache(props.unstable_dataSourceCache);
+    }
+  }, [props.unstable_dataSourceCache]);
+
   React.useEffect(() => {
     if (props.unstable_dataSource) {
-      apiRef.current.unstable_dataSourceCache.clear();
+      apiRef.current.unstable_dataSource.cache.clear();
       apiRef.current.unstable_dataSource.fetchRows();
     }
   }, [apiRef, props.unstable_dataSource]);

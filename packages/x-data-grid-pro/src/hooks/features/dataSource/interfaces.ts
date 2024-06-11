@@ -28,6 +28,10 @@ export interface GridDataSourceApiBase {
    * @param {string} parentId The id of the group to be fetched.
    */
   fetchRows: (parentId?: GridRowId) => void;
+  /**
+   * The data source cache object.
+   */
+  cache: GridDataSourceCache;
 }
 
 export interface GridDataSourceApi {
@@ -43,14 +47,4 @@ export interface GridDataSourcePrivateApi {
    * Resets the data source state.
    */
   resetDataSourceState: () => void;
-}
-
-/**
- * The data source cache API interface that is available in the grid [[apiRef]].
- */
-export interface GridDataSourceCacheApi {
-  /**
-   * The data source cache object.
-   */
-  unstable_dataSourceCache: GridDataSourceCache;
 }
