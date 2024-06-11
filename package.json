@@ -130,7 +130,7 @@
     "concurrently": "^8.2.2",
     "cpy-cli": "^5.0.0",
     "cross-env": "^7.0.3",
-    "danger": "^12.3.0",
+    "danger": "^12.3.1",
     "date-fns-jalali-v3": "npm:date-fns-jalali@3.6.0-0",
     "date-fns-v3": "npm:date-fns@3.6.0",
     "enzyme": "^3.11.0",
