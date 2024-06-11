@@ -14,7 +14,7 @@ import {
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { AxisConfig, ChartsXAxisProps, ScaleName } from '../models/axis';
+import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
 import { MakeOptional } from '../models/helpers';
 import { LineSeriesType } from '../models/seriesType/line';
 import { CardinalDirections } from '../models/layout';
@@ -43,9 +43,14 @@ export interface SparkLineChartProps
   extends Omit<ResponsiveChartContainerProps, 'series' | 'xAxis' | 'yAxis' | 'margin' | 'plugins'> {
   /**
    * The xAxis configuration.
-   * Notice it is a single configuration object, not an array of configuration.
+   * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   xAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>;
+  /**
+   * The yAxis configuration.
+   * Notice it is a single [[AxisConfig]] object, not an array of configuration.
+   */
+  yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>;
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
   /**
@@ -129,6 +134,7 @@ const SPARKLINE_DEFAULT_MARGIN = {
 const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLineChartProps, ref) {
   const {
     xAxis,
+    yAxis,
     width,
     height,
     margin = SPARKLINE_DEFAULT_MARGIN,
@@ -176,6 +182,12 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
           data: Array.from({ length: data.length }, (_, index) => index),
           hideTooltip: xAxis === undefined,
           ...xAxis,
+        },
+      ]}
+      yAxis={[
+        {
+          id: DEFAULT_X_AXIS_KEY,
+          ...yAxis,
         },
       ]}
       colors={colors}
@@ -355,7 +367,7 @@ SparkLineChart.propTypes = {
   width: PropTypes.number,
   /**
    * The xAxis configuration.
-   * Notice it is a single configuration object, not an array of configuration.
+   * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   xAxis: PropTypes.shape({
     axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -398,6 +410,68 @@ SparkLineChart.propTypes = {
     max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     position: PropTypes.oneOf(['bottom', 'top']),
+    reverse: PropTypes.bool,
+    scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+    slotProps: PropTypes.object,
+    slots: PropTypes.object,
+    stroke: PropTypes.string,
+    tickFontSize: PropTypes.number,
+    tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
+    tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+    tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+    tickLabelStyle: PropTypes.object,
+    tickMaxStep: PropTypes.number,
+    tickMinStep: PropTypes.number,
+    tickNumber: PropTypes.number,
+    tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+    tickSize: PropTypes.number,
+    valueFormatter: PropTypes.func,
+  }),
+  /**
+   * The yAxis configuration.
+   * Notice it is a single [[AxisConfig]] object, not an array of configuration.
+   */
+  yAxis: PropTypes.shape({
+    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    classes: PropTypes.object,
+    colorMap: PropTypes.oneOfType([
+      PropTypes.shape({
+        colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+        type: PropTypes.oneOf(['ordinal']).isRequired,
+        unknownColor: PropTypes.string,
+        values: PropTypes.arrayOf(
+          PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+            .isRequired,
+        ),
+      }),
+      PropTypes.shape({
+        color: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string.isRequired), PropTypes.func])
+          .isRequired,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        type: PropTypes.oneOf(['continuous']).isRequired,
+      }),
+      PropTypes.shape({
+        colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+        thresholds: PropTypes.arrayOf(
+          PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+        ).isRequired,
+        type: PropTypes.oneOf(['piecewise']).isRequired,
+      }),
+    ]),
+    data: PropTypes.array,
+    dataKey: PropTypes.string,
+    disableLine: PropTypes.bool,
+    disableTicks: PropTypes.bool,
+    fill: PropTypes.string,
+    hideTooltip: PropTypes.bool,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    label: PropTypes.string,
+    labelFontSize: PropTypes.number,
+    labelStyle: PropTypes.object,
+    max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+    min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+    position: PropTypes.oneOf(['left', 'right']),
     reverse: PropTypes.bool,
     scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
     slotProps: PropTypes.object,
