@@ -10,7 +10,7 @@ import { SeriesId } from './common';
 export interface ChartsSeriesConfig {
   bar: {
     /**
-     * Series type when passed to the formatter (some ids are defaultised to simplify the DX)
+     * Series type when passed to the formatter (some ids are given default values to simplify the DX)
      */
     seriesInput: DefaultizedProps<BarSeriesType, 'id'> & { color: string };
     /**

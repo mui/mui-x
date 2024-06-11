@@ -242,7 +242,7 @@
     },
     {
       "name": "switchViewIcon",
-      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.",
+      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is \"year\".",
       "default": "ArrowDropDown",
       "class": null
     },
@@ -274,6 +274,18 @@
       "name": "day",
       "description": "Custom component for day.\nCheck the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.",
       "default": "PickersDay",
+      "class": null
+    },
+    {
+      "name": "monthButton",
+      "description": "Button displayed to render a single month in the \"month\" view.",
+      "default": "MonthCalendarButton",
+      "class": null
+    },
+    {
+      "name": "yearButton",
+      "description": "Button displayed to render a single year in the \"year\" view.",
+      "default": "YearCalendarButton",
       "class": null
     },
     {
