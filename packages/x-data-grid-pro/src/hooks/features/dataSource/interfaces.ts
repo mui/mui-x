@@ -35,6 +35,9 @@ export interface GridDataSourceApiBase {
 }
 
 export interface GridDataSourceApi {
+  /**
+   * The data source API.
+   */
   unstable_dataSource: GridDataSourceApiBase;
 }
 export interface GridDataSourcePrivateApi {
