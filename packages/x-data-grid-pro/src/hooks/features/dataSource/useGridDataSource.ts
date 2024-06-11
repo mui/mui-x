@@ -22,11 +22,18 @@ const INITIAL_STATE = {
   errors: {},
 };
 
-const noopCache = {
+const noopCache: GridDataSourceCache = {
   clear: () => {},
   get: () => undefined,
   set: () => {},
 };
+
+function getCache(cacheProp?: GridDataSourceCache | null) {
+  if (cacheProp === null) {
+    return noopCache;
+  }
+  return cacheProp ?? new GridDataSourceCacheDefault({});
+}
 
 export const dataSourceStateInitializer: GridStateInitializer = (state) => {
   return {
@@ -55,12 +62,9 @@ export const useGridDataSource = (
   const scheduledGroups = React.useRef<number>(0);
   const onError = props.unstable_onDataSourceError;
 
-  const [cache, setCache] = React.useState<GridDataSourceCache | null>(() => {
-    if (props.unstable_dataSourceCache !== undefined) {
-      return props.unstable_dataSourceCache;
-    }
-    return new GridDataSourceCacheDefault({});
-  });
+  const [cache, setCache] = React.useState<GridDataSourceCache>(() =>
+    getCache(props.unstable_dataSourceCache),
+  );
 
   const fetchRows = React.useCallback(
     async (parentId?: GridRowId) => {
@@ -235,7 +239,7 @@ export const useGridDataSource = (
       setChildrenLoading,
       setChildrenFetchError,
       fetchRows,
-      cache: cache ?? noopCache,
+      cache,
     },
   };
 
@@ -261,9 +265,8 @@ export const useGridDataSource = (
       isFirstRender.current = false;
       return;
     }
-    if (props.unstable_dataSourceCache !== undefined) {
-      setCache(props.unstable_dataSourceCache);
-    }
+    const newCache = getCache(props.unstable_dataSourceCache);
+    setCache((prevCache) => (prevCache !== newCache ? newCache : prevCache));
   }, [props.unstable_dataSourceCache]);
 
   React.useEffect(() => {
