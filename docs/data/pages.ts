@@ -367,7 +367,6 @@ const pages: MuiPage[] = [
             title: 'Custom slots and subcomponents',
           },
           { pathname: '/x/react-date-pickers/custom-layout' },
-          { pathname: '/x/react-date-pickers/custom-views' },
           { pathname: '/x/react-date-pickers/custom-field' },
           { pathname: '/x/react-date-pickers/custom-opening-button' },
           { pathname: '/x/react-date-pickers/playground', title: 'Customization playground' },
