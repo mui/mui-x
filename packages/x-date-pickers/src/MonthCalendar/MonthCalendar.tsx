@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
-import {
-  unstable_useControlled as useControlled,
-  unstable_composeClasses as composeClasses,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import useControlled from '@mui/utils/useControlled';
+import composeClasses from '@mui/utils/composeClasses';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { PickersMonth } from './PickersMonth';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
 import { getMonthCalendarUtilityClass } from './monthCalendarClasses';

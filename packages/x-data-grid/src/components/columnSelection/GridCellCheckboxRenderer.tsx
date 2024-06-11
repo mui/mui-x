@@ -1,9 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useForkRef as useForkRef,
-} from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import useForkRef from '@mui/utils/useForkRef';
 import type { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';

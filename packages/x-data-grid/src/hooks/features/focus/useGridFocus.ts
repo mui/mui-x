@@ -1,8 +1,6 @@
 import * as React from 'react';
-import {
-  unstable_ownerDocument as ownerDocument,
-  unstable_useEventCallback as useEventcallback,
-} from '@mui/utils';
+import ownerDocument from '@mui/utils/ownerDocument';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { gridClasses } from '../../../constants/gridClasses';
 import { GridEventListener, GridEventLookup } from '../../../models/events';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -436,7 +434,7 @@ export const useGridFocus = (
     }
   }, [apiRef]);
 
-  const handlePaginationModelChange = useEventcallback(() => {
+  const handlePaginationModelChange = useEventCallback(() => {
     const currentFocusedCell = gridFocusCellSelector(apiRef);
     if (!currentFocusedCell) {
       return;

@@ -1,4 +1,4 @@
-import { ponyfillGlobal } from '@mui/utils';
+import ponyfillGlobal from '@mui/utils/ponyfillGlobal';
 
 /**
  * @ignore - do not document.

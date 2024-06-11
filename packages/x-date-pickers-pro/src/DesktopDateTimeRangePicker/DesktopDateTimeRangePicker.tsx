@@ -10,7 +10,7 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { resolveComponentProps } from '@mui/base/utils';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,

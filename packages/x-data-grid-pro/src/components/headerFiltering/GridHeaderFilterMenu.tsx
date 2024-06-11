@@ -2,7 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
-import { unstable_capitalize as capitalize, HTMLElementType } from '@mui/utils';
+import capitalize from '@mui/utils/capitalize';
+import HTMLElementType from '@mui/utils/HTMLElementType';
 import {
   useGridApiContext,
   GridMenu,

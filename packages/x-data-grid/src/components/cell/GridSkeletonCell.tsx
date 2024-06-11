@@ -1,10 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Skeleton from '@mui/material/Skeleton';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_capitalize as capitalize,
-} from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import capitalize from '@mui/utils/capitalize';
 import { fastMemo } from '../../utils/fastMemo';
 import { randomNumberBetween } from '../../utils/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';

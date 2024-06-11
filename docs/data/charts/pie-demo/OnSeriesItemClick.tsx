@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { PieItemIdentifier, DefaultizedPieValueType } from '@mui/x-charts/models';
-import { Typography, Stack } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 
 const items = [
   { value: 10, label: 'Series A ( no Id )' },

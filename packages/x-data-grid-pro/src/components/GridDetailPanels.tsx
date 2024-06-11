@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { getDataGridUtilityClass, useGridSelector, GridRowId } from '@mui/x-data-grid';
 import { GridDetailPanelsProps, EMPTY_DETAIL_PANELS } from '@mui/x-data-grid/internals';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';

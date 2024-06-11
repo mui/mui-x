@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
-import { unstable_debounce as debounce } from '@mui/utils';
+import debounce from '@mui/utils/debounce';
 import composeClasses from '@mui/utils/composeClasses';
 import { getDataGridUtilityClass } from '../../constants';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';

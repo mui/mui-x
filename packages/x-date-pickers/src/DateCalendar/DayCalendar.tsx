@@ -4,10 +4,8 @@ import Typography from '@mui/material/Typography';
 import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
 import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useControlled as useControlled,
-} from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import useControlled from '@mui/utils/useControlled';
 import clsx from 'clsx';
 import { PickersDay, PickersDayProps, ExportedPickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';

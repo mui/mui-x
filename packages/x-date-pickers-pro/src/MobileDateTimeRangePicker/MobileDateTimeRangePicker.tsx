@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import {
   DIALOG_WIDTH,
   VIEW_HEIGHT,

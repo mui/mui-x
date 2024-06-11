@@ -13,7 +13,7 @@ import JoyBox from '@mui/joy/Box';
 import JoyTypography from '@mui/joy/Typography';
 import JoyCircularProgress from '@mui/joy/CircularProgress';
 import JoyTooltip from '@mui/joy/Tooltip';
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
 import joyIconSlots, { GridKeyboardArrowRight, GridKeyboardArrowLeft } from './icons';
 import type { GridSlotProps, GridSlotsComponent, GridSlotsComponentsProps } from '../models';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';

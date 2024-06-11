@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { FormControlState, useFormControl } from '@mui/material/FormControl';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   pickersFilledInputClasses,

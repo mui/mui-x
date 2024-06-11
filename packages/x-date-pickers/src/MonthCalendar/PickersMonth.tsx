@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { styled, alpha, useThemeProps } from '@mui/material/styles';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useEnhancedEffect as useEnhancedEffect,
-} from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   getPickersMonthUtilityClass,
   pickersMonthClasses,

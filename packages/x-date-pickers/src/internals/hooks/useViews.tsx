@@ -1,6 +1,6 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { unstable_useControlled as useControlled } from '@mui/utils';
+import useControlled from '@mui/utils/useControlled';
 import type { PickerSelectionState } from './usePicker';
 import { MakeOptional } from '../models/helpers';
 import { DateOrTimeViewWithMeridiem } from '../models';

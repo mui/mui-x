@@ -1,10 +1,8 @@
 import * as React from 'react';
-import {
-  unstable_ownerDocument as ownerDocument,
-  unstable_useEnhancedEffect as useEnhancedEffect,
-  unstable_useEventCallback as useEventCallback,
-  unstable_ownerWindow as ownerWindow,
-} from '@mui/utils';
+import ownerDocument from '@mui/utils/ownerDocument';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useEventCallback from '@mui/utils/useEventCallback';
+import ownerWindow from '@mui/utils/ownerWindow';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';

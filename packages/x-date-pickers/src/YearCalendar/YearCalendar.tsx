@@ -3,12 +3,10 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
-import {
-  unstable_useForkRef as useForkRef,
-  unstable_composeClasses as composeClasses,
-  unstable_useControlled as useControlled,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
+import composeClasses from '@mui/utils/composeClasses';
+import useControlled from '@mui/utils/useControlled';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { PickersYear } from './PickersYear';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
 import { getYearCalendarUtilityClass } from './yearCalendarClasses';
