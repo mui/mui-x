@@ -1,9 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
+import { scaleBand } from 'd3-scale';
+import { timeDay } from 'd3-time';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
-import { AxisDefaultized } from '../models/axis';
+import { AxisDefaultized, ScaleName } from '../models/axis';
 import { FormatterResult } from '../models/seriesType/config';
 import { BarItemIdentifier } from '../models';
 import getColor from './getColor';
@@ -12,7 +14,6 @@ import { AnimationData, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
 import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
-import { checkScaleErrors } from './checkScaleErrors';
 import { useBarSeries } from '../hooks/useSeries';
 
 /**
@@ -109,24 +110,32 @@ const useAggregatedData = (): {
 
       const verticalLayout = series[seriesId].layout === 'vertical';
 
-      checkScaleErrors(verticalLayout, seriesId, xAxisKey, xAxis, yAxisKey, yAxis);
+      // checkScaleErrors(verticalLayout, seriesId, xAxisKey, xAxis, yAxisKey, yAxis);
 
-      const baseScaleConfig = (
-        verticalLayout ? xAxisConfig : yAxisConfig
-      ) as AxisDefaultized<'band'>;
+      const baseScaleConfig = verticalLayout ? xAxisConfig : yAxisConfig;
 
       const xScale = xAxisConfig.scale;
       const yScale = yAxisConfig.scale;
 
       const colorGetter = getColor(series[seriesId], xAxis[xAxisKey], yAxis[yAxisKey]);
-      const bandWidth = baseScaleConfig.scale.bandwidth();
+      const bandWidth =
+        ((baseScaleConfig as AxisDefaultized<'band'>).scale?.bandwidth?.() ||
+          scaleBand(
+            timeDay.range(...baseScaleConfig.scale.domain()),
+            baseScaleConfig?.scale?.range(),
+          ).bandwidth()) - 1;
+
+      console.log('bandWidth', bandWidth);
 
       const { barWidth, offset } = getBandSize({
         bandWidth,
         numberOfGroups: stackingGroups.length,
-        gapRatio: baseScaleConfig.barGapRatio,
+        gapRatio:
+          baseScaleConfig.scaleType === 'time' || baseScaleConfig.scaleType === 'utc'
+            ? 0
+            : (baseScaleConfig as AxisDefaultized<'band'>).barGapRatio ?? 0.1,
       });
-      const barOffset = groupIndex * (barWidth + offset);
+      const barOffset = groupIndex * (barWidth + 1);
 
       const { stackedData } = series[seriesId];
 
@@ -148,8 +157,8 @@ const useAggregatedData = (): {
           y: verticalLayout
             ? minValueCoord
             : yScale(yAxis[yAxisKey].data?.[dataIndex])! + barOffset,
-          xOrigin: xScale(0)!,
-          yOrigin: yScale(0)!,
+          xOrigin: xScale(xAxis[xAxisKey].data?.[0])!,
+          yOrigin: yScale(yAxis[yAxisKey].data?.[0])!,
           height: verticalLayout ? maxValueCoord - minValueCoord : barWidth,
           width: verticalLayout ? barWidth : maxValueCoord - minValueCoord,
           color: colorGetter(dataIndex),
