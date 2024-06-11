@@ -13,7 +13,6 @@ import type {
   GridDetailPanelPrivateApi,
   GridDataSourceApi,
   GridDataSourcePrivateApi,
-  GridDataSourceCacheApi,
 } from '../hooks';
 import type { DataGridProProcessedProps } from './dataGridProProps';
 
@@ -27,7 +26,6 @@ export interface GridApiPro
     GridDetailPanelApi,
     GridRowPinningApi,
     GridDataSourceApi,
-    GridDataSourceCacheApi,
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
     GridColumnReorderApi {}

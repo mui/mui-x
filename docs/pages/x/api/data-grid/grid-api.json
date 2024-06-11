@@ -466,11 +466,6 @@
       "required": true,
       "isProPlan": true
     },
-    "unstable_dataSourceCache": {
-      "type": { "description": "GridDataSourceCache | null" },
-      "required": true,
-      "isProPlan": true
-    },
     "unstable_replaceRows": {
       "type": { "description": "(firstRowToReplace: number, newRows: GridRowModel[]) =&gt; void" },
       "required": true
