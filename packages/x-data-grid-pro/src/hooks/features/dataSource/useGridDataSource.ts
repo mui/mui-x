@@ -203,11 +203,17 @@ export const useGridDataSource = (
   const setChildrenFetchError = React.useCallback<GridDataSourceApiBase['setChildrenFetchError']>(
     (parentId, error) => {
       apiRef.current.setState((state) => {
+        const newErrorsState = { ...state.dataSource.errors };
+        if (error === null && newErrorsState[parentId] !== undefined) {
+          delete newErrorsState[parentId];
+        } else {
+          newErrorsState[parentId] = error;
+        }
         return {
           ...state,
           dataSource: {
             ...state.dataSource,
-            errors: { ...state.dataSource.errors, [parentId]: error },
+            errors: newErrorsState,
           },
         };
       });
