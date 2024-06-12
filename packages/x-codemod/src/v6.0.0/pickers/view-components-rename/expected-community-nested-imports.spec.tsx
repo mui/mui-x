@@ -43,6 +43,7 @@ import {
   getDayCalendarSkeletonUtilityClass,
 } from '@mui/x-date-pickers/DayCalendarSkeleton';
 
+// prettier-ignore
 function App() {
   type DateProps = DateCalendarProps<any>;
   type MonthProps = MonthCalendarProps<any>;
