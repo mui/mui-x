@@ -66,7 +66,7 @@
     "clean:node_modules": "rimraf --glob \"**/node_modules\""
   },
   "devDependencies": {
-    "@argos-ci/core": "^1.5.5",
+    "@argos-ci/core": "^2.2.0",
     "@babel/cli": "^7.24.7",
     "@babel/core": "^7.24.7",
     "@babel/node": "^7.24.7",
@@ -90,7 +90,7 @@
     "@mui/internal-markdown": "^1.0.4",
     "@mui/internal-test-utils": "1.0.0",
     "@mui/material": "^5.15.19",
-    "@mui/monorepo": "github:mui/material-ui#f0026ad5bf4e1957cebd65b882bf45219514ca64",
+    "@mui/monorepo": "github:mui/material-ui#22c5206a9e8191b2f81131d6978a0958e55b7032",
     "@mui/utils": "^5.15.14",
     "@next/eslint-plugin-next": "14.2.3",
     "@octokit/plugin-retry": "^6.0.1",
@@ -110,7 +110,7 @@
     "@types/react-dom": "^18.2.25",
     "@types/react-test-renderer": "^18.3.0",
     "@types/requestidlecallback": "^0.3.7",
-    "@types/sinon": "^10.0.20",
+    "@types/sinon": "^17.0.3",
     "@types/yargs": "^17.0.32",
     "@typescript-eslint/eslint-plugin": "^7.12.0",
     "@typescript-eslint/parser": "^7.12.0",

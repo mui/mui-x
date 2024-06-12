@@ -1,119 +1,35 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useForkRef from '@mui/utils/useForkRef';
-import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
-import {
-  SeriesContextProvider,
-  SeriesContextProviderProps,
-} from '../context/SeriesContextProvider';
-import { InteractionProvider } from '../context/InteractionProvider';
-import { ColorProvider } from '../context/ColorProvider';
-import { useReducedMotion } from '../hooks/useReducedMotion';
-import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import {
-  CartesianContextProvider,
-  CartesianContextProviderProps,
-} from '../context/CartesianContextProvider';
-import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
-import {
-  HighlightedProvider,
-  HighlightedProviderProps,
-  ZAxisContextProvider,
-  ZAxisContextProviderProps,
-} from '../context';
-import { ChartsPluginType } from '../models/plugin';
-import { ChartSeriesType } from '../models/seriesType/config';
-import { usePluginsMerge } from './usePluginsMerge';
+import { useLicenseVerifier, Watermark } from '@mui/x-license';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ResponsiveChartContainerProps } from '@mui/x-charts/ResponsiveChartContainer';
+import { ResizableContainer, useChartContainerDimensions } from '@mui/x-charts/internals';
+import { getReleaseInfo } from '../internals/utils/releaseInfo';
 
-export type ChartContainerProps = Omit<
-  ChartsSurfaceProps &
-    Omit<SeriesContextProviderProps, 'seriesFormatters'> &
-    Omit<DrawingProviderProps, 'svgRef'> &
-    Omit<CartesianContextProviderProps, 'xExtremumGetters' | 'yExtremumGetters'> &
-    ZAxisContextProviderProps &
-    HighlightedProviderProps,
-  'children'
-> & {
-  children?: React.ReactNode;
-  /**
-   * An array of plugins defining how to preprocess data.
-   * If not provided, the container supports line, bar, scatter and pie charts.
-   */
-  plugins?: ChartsPluginType<ChartSeriesType>[];
-};
+export interface ResponsiveChartContainerProProps extends ResponsiveChartContainerProps {}
 
-const ChartContainer = React.forwardRef(function ChartContainer(props: ChartContainerProps, ref) {
-  const {
-    width,
-    height,
-    series,
-    margin,
-    xAxis,
-    yAxis,
-    zAxis,
-    colors,
-    dataset,
-    sx,
-    title,
-    desc,
-    disableAxisListener,
-    highlightedItem,
-    onHighlightChange,
-    plugins,
-    children,
-  } = props;
-  const svgRef = React.useRef<SVGSVGElement>(null);
-  const handleRef = useForkRef(ref, svgRef);
+const releaseInfo = getReleaseInfo();
 
-  const { xExtremumGetters, yExtremumGetters, seriesFormatters, colorProcessors } =
-    usePluginsMerge(plugins);
-  useReducedMotion(); // a11y reduce motion (see: https://react-spring.dev/docs/utilities/use-reduced-motion)
+const ResponsiveChartContainerPro = React.forwardRef(function ResponsiveChartContainerPro(
+  props: ResponsiveChartContainerProProps,
+  ref,
+) {
+  const { width: inWidth, height: inHeight, ...other } = props;
+  const [containerRef, width, height] = useChartContainerDimensions(inWidth, inHeight);
+
+  useLicenseVerifier('x-charts-pro', releaseInfo);
 
   return (
-    <DrawingProvider width={width} height={height} margin={margin} svgRef={svgRef}>
-      <ColorProvider colorProcessors={colorProcessors}>
-        <SeriesContextProvider
-          series={series}
-          colors={colors}
-          dataset={dataset}
-          seriesFormatters={seriesFormatters}
-        >
-          <CartesianContextProvider
-            xAxis={xAxis}
-            yAxis={yAxis}
-            dataset={dataset}
-            xExtremumGetters={xExtremumGetters}
-            yExtremumGetters={yExtremumGetters}
-          >
-            <ZAxisContextProvider zAxis={zAxis} dataset={dataset}>
-              <InteractionProvider>
-                <HighlightedProvider
-                  highlightedItem={highlightedItem}
-                  onHighlightChange={onHighlightChange}
-                >
-                  <ChartsSurface
-                    width={width}
-                    height={height}
-                    ref={handleRef}
-                    sx={sx}
-                    title={title}
-                    desc={desc}
-                    disableAxisListener={disableAxisListener}
-                  >
-                    <ChartsAxesGradients />
-                    {children}
-                  </ChartsSurface>
-                </HighlightedProvider>
-              </InteractionProvider>
-            </ZAxisContextProvider>
-          </CartesianContextProvider>
-        </SeriesContextProvider>
-      </ColorProvider>
-    </DrawingProvider>
+    <ResizableContainer ref={containerRef} ownerState={{ width: inWidth, height: inHeight }}>
+      {width && height ? (
+        <ChartContainer {...other} width={width} height={height} ref={ref} />
+      ) : null}
+      <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
+    </ResizableContainer>
   );
 });
 
-ChartContainer.propTypes = {
+ResponsiveChartContainerPro.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -137,9 +53,9 @@ ChartContainer.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
-   * The height of the chart in px.
+   * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
-  height: PropTypes.number.isRequired,
+  height: PropTypes.number,
   /**
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */
@@ -189,9 +105,9 @@ ChartContainer.propTypes = {
     y: PropTypes.number,
   }),
   /**
-   * The width of the chart in px.
+   * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
-  width: PropTypes.number.isRequired,
+  width: PropTypes.number,
   /**
    * The configuration of the x-axes.
    * If not provided, a default axis config is used.
@@ -334,43 +250,6 @@ ChartContainer.propTypes = {
       valueFormatter: PropTypes.func,
     }),
   ),
-  /**
-   * The configuration of the z-axes.
-   */
-  zAxis: PropTypes.arrayOf(
-    PropTypes.shape({
-      colorMap: PropTypes.oneOfType([
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
-        }),
-        PropTypes.shape({
-          color: PropTypes.oneOfType([
-            PropTypes.arrayOf(PropTypes.string.isRequired),
-            PropTypes.func,
-          ]).isRequired,
-          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-          type: PropTypes.oneOf(['continuous']).isRequired,
-        }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          thresholds: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
-          ).isRequired,
-          type: PropTypes.oneOf(['piecewise']).isRequired,
-        }),
-      ]),
-      data: PropTypes.array,
-      dataKey: PropTypes.string,
-      id: PropTypes.string,
-    }),
-  ),
 } as any;
 
-export { ChartContainer };
+export { ResponsiveChartContainerPro };
