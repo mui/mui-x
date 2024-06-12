@@ -314,7 +314,12 @@ export const useGridFilter = (
   );
 
   const getFilterState = React.useCallback<GridFilterApi['getFilterState']>(
-    (filterModel) => {
+    (inputFilterModel) => {
+      const filterModel = sanitizeFilterModel(
+        inputFilterModel,
+        props.disableMultipleColumnsFiltering,
+        apiRef,
+      );
       const isRowMatchingFilters =
         props.filterMode === 'client'
           ? buildAggregatedFilterApplier(filterModel, apiRef, props.disableEval)
@@ -329,7 +334,7 @@ export const useGridFilter = (
         filterModel,
       };
     },
-    [apiRef, props.filterMode, props.disableEval],
+    [props.disableMultipleColumnsFiltering, props.filterMode, props.disableEval, apiRef],
   );
 
   const filterApi: GridFilterApi = {
