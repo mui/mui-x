@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import * as React from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
@@ -74,7 +75,7 @@ export function Scene(props) {
   const { items } = props;
 
   return (
-    <Canvas style={{ height: '400px', backgroundColor: 'gray' }}>
+    <Canvas style={{ height: '300px', backgroundColor: 'gray' }}>
       <PerspectiveCamera makeDefault position={[-3, 2, 3]} fov={60} />
       <Grid
         rotation={[0, 0, 0]}

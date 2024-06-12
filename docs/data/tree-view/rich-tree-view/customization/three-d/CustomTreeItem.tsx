@@ -69,8 +69,7 @@ export const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     setMousePosition(null); // Closes the context menu
   };
 
-  const handleContextMenuItemClick = (action: string) => {
-    console.log(action);
+  const handleContextMenuItemClick = () => {
     handleContextMenuClose();
   };
 

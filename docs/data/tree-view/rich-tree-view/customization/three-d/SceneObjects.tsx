@@ -21,7 +21,7 @@ interface ThreeDLightItem extends ThreeDBaseItem {
 interface ThreeDMeshItem extends ThreeDBaseItem {
   type: 'mesh';
   color: string;
-  size: number[];
+  size: [number, number, number, number?];
 }
 
 export type ThreeDItem = ThreeDCollectionItem | ThreeDLightItem | ThreeDMeshItem;
