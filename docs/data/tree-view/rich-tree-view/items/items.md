@@ -141,6 +141,8 @@ When it's set to true:
 - <kbd class="key">Shift</kbd> + arrow keys will not skip disabled items, but the disabled item will not be selected.
 - Programmatic focus will focus disabled items.
 
+{{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}
+
 ## Imperative API
 
 ### Get an item by ID

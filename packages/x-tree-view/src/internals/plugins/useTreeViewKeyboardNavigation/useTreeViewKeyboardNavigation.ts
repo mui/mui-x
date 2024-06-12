@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import {
@@ -21,8 +21,7 @@ function isPrintableCharacter(string: string) {
 export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   UseTreeViewKeyboardNavigationSignature
 > = ({ instance, params, state }) => {
-  const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
+  const isRtl = useRtl();
   const firstCharMap = React.useRef<TreeViewFirstCharMap>({});
 
   const updateFirstCharMap = useEventCallback(
@@ -171,7 +170,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // If the focused item is expanded, we move the focus to its first child
       // If the focused item is collapsed and has children, we expand it
-      case (key === 'ArrowRight' && !isRTL) || (key === 'ArrowLeft' && isRTL): {
+      case (key === 'ArrowRight' && !isRtl) || (key === 'ArrowLeft' && isRtl): {
         if (instance.isItemExpanded(itemId)) {
           const nextItemId = getNextNavigableItem(instance, itemId);
           if (nextItemId) {
@@ -188,7 +187,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // If the focused item is expanded, we collapse it
       // If the focused item is collapsed and has a parent, we move the focus to this parent
-      case (key === 'ArrowLeft' && !isRTL) || (key === 'ArrowRight' && isRTL): {
+      case (key === 'ArrowLeft' && !isRtl) || (key === 'ArrowRight' && isRtl): {
         if (canToggleItemExpansion(itemId) && instance.isItemExpanded(itemId)) {
           instance.toggleItemExpansion(event, itemId);
           event.preventDefault();

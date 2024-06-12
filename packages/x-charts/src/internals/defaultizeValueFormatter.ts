@@ -1,6 +1,6 @@
 import { SeriesId, SeriesValueFormatter } from '../models/seriesType/common';
 
-function defaultizeValueFormatter<
+export function defaultizeValueFormatter<
   TValue,
   ISeries extends { valueFormatter?: SeriesValueFormatter<TValue> },
 >(
@@ -19,5 +19,3 @@ function defaultizeValueFormatter<
   });
   return defaultizedSeries;
 }
-
-export default defaultizeValueFormatter;

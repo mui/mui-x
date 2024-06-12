@@ -2,20 +2,24 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import unsupportedProp from '@mui/utils/unsupportedProp';
-import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import MuiCheckbox, { CheckboxProps } from '@mui/material/Checkbox';
 import { useSlotProps } from '@mui/base/utils';
-import { shouldForwardProp } from '@mui/system';
+import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeItem2Props, TreeItem2OwnerState } from './TreeItem2.types';
 import {
   unstable_useTreeItem2 as useTreeItem2,
   UseTreeItem2ContentSlotOwnProps,
+  UseTreeItem2Status,
 } from '../useTreeItem2';
-import { getTreeItemUtilityClass, treeItemClasses } from '../TreeItem';
+import { getTreeItemUtilityClass } from '../TreeItem';
 import { TreeItem2Icon } from '../TreeItem2Icon';
 import { TreeItem2Provider } from '../TreeItem2Provider';
+
+const useThemeProps = createUseThemeProps('MuiTreeItem2');
 
 export const TreeItem2Root = styled('li', {
   name: 'MuiTreeItem2',
@@ -32,8 +36,9 @@ export const TreeItem2Content = styled('div', {
   name: 'MuiTreeItem2',
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'status',
-})(({ theme }) => ({
+  shouldForwardProp: (prop) =>
+    shouldForwardProp(prop) && prop !== 'status' && prop !== 'indentationAtItemLevel',
+})<{ status: UseTreeItem2Status; indentationAtItemLevel?: true }>(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
   borderRadius: theme.shape.borderRadius,
   width: '100%',
@@ -50,12 +55,13 @@ export const TreeItem2Content = styled('div', {
       backgroundColor: 'transparent',
     },
   },
-  [`& .${treeItemClasses.groupTransition}`]: {
-    margin: 0,
-    padding: 0,
-    paddingLeft: 12,
-  },
   variants: [
+    {
+      props: { indentationAtItemLevel: true },
+      style: {
+        paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
+      },
+    },
     {
       props: ({ status }: UseTreeItem2ContentSlotOwnProps) => status.disabled,
       style: {
@@ -134,10 +140,17 @@ export const TreeItem2GroupTransition = styled(Collapse, {
   name: 'MuiTreeItem2',
   slot: 'GroupTransition',
   overridesResolver: (props, styles) => styles.groupTransition,
-})({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'indentationAtItemLevel',
+})<{ indentationAtItemLevel?: true }>({
   margin: 0,
   padding: 0,
-  paddingLeft: 12,
+  paddingLeft: 'var(--TreeView-itemChildrenIndentation)',
+  variants: [
+    {
+      props: { indentationAtItemLevel: true },
+      style: { paddingLeft: 0 },
+    },
+  ],
 });
 
 export const TreeItem2Checkbox = styled(
@@ -250,7 +263,6 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
       [classes.disabled]: status.disabled,
     }),
   });
-
   const IconContainer: React.ElementType = slots.iconContainer ?? TreeItem2IconContainer;
   const iconContainerProps = useSlotProps({
     elementType: IconContainer,
@@ -336,10 +348,18 @@ TreeItem2.propTypes = {
    */
   label: PropTypes.node,
   /**
+   * Callback fired when the item root is blurred.
+   */
+  onBlur: PropTypes.func,
+  /**
    * This prop isn't supported.
-   * Use the `onItemFocus` callback on the tree if you need to monitor a item's focus.
+   * Use the `onItemFocus` callback on the tree if you need to monitor an item's focus.
    */
   onFocus: unsupportedProp,
+  /**
+   * Callback fired when a key is pressed on the keyboard and the tree is in focus.
+   */
+  onKeyDown: PropTypes.func,
   /**
    * The props used for each component slot.
    * @default {}

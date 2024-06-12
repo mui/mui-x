@@ -13,7 +13,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, act, userEvent, screen } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, act, userEvent, screen } from '@mui/internal-test-utils';
 import { getCell, getRow, spyApi } from 'test/utils/helperFn';
 
 describe('<DataGridPro /> - Row editing', () => {

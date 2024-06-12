@@ -99,8 +99,7 @@ export interface UsePickerViewsProps<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
   TAdditionalProps extends {},
-> extends UsePickerViewsBaseProps<TValue, TDate, TView, TExternalProps, TAdditionalProps>,
-    UsePickerViewsNonStaticProps {
+> extends UsePickerViewsBaseProps<TValue, TDate, TView, TExternalProps, TAdditionalProps> {
   className?: string;
   sx?: SxProps<Theme>;
 }
@@ -141,8 +140,7 @@ export interface UsePickerViewParams<
 
 export interface UsePickerViewsResponse<TView extends DateOrTimeViewWithMeridiem> {
   /**
-   * Does the picker have at least one view that should be rendered in UI mode ?
-   * If not, we can hide the icon to open the picker.
+   * Indicates if the the picker has at least one view that should be rendered in UI.
    */
   hasUIView: boolean;
   renderCurrentView: () => React.ReactNode;
@@ -185,7 +183,7 @@ export const usePickerViews = <
   TAdditionalProps
 >): UsePickerViewsResponse<TView> => {
   const { onChange, open, onClose } = propsFromPickerValue;
-  const { views, openTo, onViewChange, disableOpenPicker, viewRenderers, timezone } = props;
+  const { views, openTo, onViewChange, viewRenderers, timezone } = props;
   const { className, sx, ...propsToForwardToView } = props;
 
   const { view, setView, defaultView, focusedView, setFocusedView, setValueAndGoToNextView } =
@@ -203,9 +201,7 @@ export const usePickerViews = <
       views.reduce(
         (acc, viewForReduce) => {
           let viewMode: 'field' | 'UI';
-          if (disableOpenPicker) {
-            viewMode = 'field';
-          } else if (viewRenderers[viewForReduce] != null) {
+          if (viewRenderers[viewForReduce] != null) {
             viewMode = 'UI';
           } else {
             viewMode = 'field';
@@ -220,7 +216,7 @@ export const usePickerViews = <
         },
         { hasUIView: false, viewModeLookup: {} as Record<TView, 'field' | 'UI'> },
       ),
-    [disableOpenPicker, viewRenderers, views],
+    [viewRenderers, views],
   );
 
   const timeViewsCount = React.useMemo(

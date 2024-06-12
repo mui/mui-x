@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { useRtl } from '@mui/system/RtlProvider';
 import Divider from '@mui/material/Divider';
 import {
   PickersLayoutContentWrapper,
@@ -20,14 +21,16 @@ function DesktopDateTimePickerLayout<
   TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
 >(props: PickersLayoutProps<TValue, TDate, TView>) {
+  const isRtl = useRtl();
   const { toolbar, tabs, content, actionBar, shortcuts } = usePickerLayout(props);
-  const { sx, className, isLandscape, ref } = props;
+  const { sx, className, isLandscape, ref, classes } = props;
   const isActionBarVisible = actionBar && (actionBar.props.actions?.length ?? 0) > 0;
+  const ownerState = { ...props, isRtl };
 
   return (
     <PickersLayoutRoot
       ref={ref}
-      className={clsx(className, pickersLayoutClasses.root)}
+      className={clsx(className, pickersLayoutClasses.root, classes?.root)}
       sx={[
         {
           [`& .${pickersLayoutClasses.tabs}`]: { gridRow: 4, gridColumn: '1 / 4' },
@@ -35,12 +38,12 @@ function DesktopDateTimePickerLayout<
         },
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
-      ownerState={props}
+      ownerState={ownerState}
     >
       {isLandscape ? shortcuts : toolbar}
       {isLandscape ? toolbar : shortcuts}
       <PickersLayoutContentWrapper
-        className={pickersLayoutClasses.contentWrapper}
+        className={clsx(pickersLayoutClasses.contentWrapper, classes?.contentWrapper)}
         sx={{ display: 'grid' }}
       >
         {content}
@@ -65,6 +68,10 @@ DesktopDateTimePickerLayout.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
   isLandscape: PropTypes.bool.isRequired,
+  /**
+   * `true` if the application is in right-to-left direction.
+   */
+  isRtl: PropTypes.bool.isRequired,
   isValid: PropTypes.func.isRequired,
   onAccept: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,

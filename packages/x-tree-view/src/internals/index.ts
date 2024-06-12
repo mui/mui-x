@@ -7,14 +7,15 @@ export type {
   TreeViewPlugin,
   TreeViewPluginSignature,
   ConvertPluginsIntoSignatures,
-  MergePluginsProperty,
+  MergeSignaturesProperty,
   TreeViewPublicAPI,
+  TreeViewExperimentalFeatures,
 } from './models';
 
 // Plugins
 export { DEFAULT_TREE_VIEW_PLUGINS } from './plugins/defaultPlugins';
 export type {
-  DefaultTreeViewPlugins,
+  DefaultTreeViewPluginSignatures,
   DefaultTreeViewPluginSlots,
   DefaultTreeViewPluginSlotProps,
 } from './plugins/defaultPlugins';

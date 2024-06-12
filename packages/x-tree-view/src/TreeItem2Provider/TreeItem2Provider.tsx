@@ -4,9 +4,9 @@ import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewCon
 
 function TreeItem2Provider(props: TreeItem2ProviderProps) {
   const { children, itemId } = props;
-  const { wrapItem } = useTreeViewContext<[]>();
+  const { wrapItem, instance } = useTreeViewContext<[]>();
 
-  return wrapItem({ children, itemId });
+  return wrapItem({ children, itemId, instance });
 }
 
 TreeItem2Provider.propTypes = {

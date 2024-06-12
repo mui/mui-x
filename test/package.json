@@ -6,18 +6,19 @@
     "typescript": "tsc -p tsconfig.json"
   },
   "devDependencies": {
-    "@babel/runtime": "^7.24.5",
+    "@babel/runtime": "^7.24.7",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
-    "@mui/material": "^5.15.14",
+    "@mui/material": "^5.15.19",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-data-grid-pro": "workspace:*",
     "@mui/x-date-pickers": "workspace:*",
     "@mui/x-date-pickers-pro": "workspace:*",
     "@mui/x-license": "workspace:*",
     "@react-spring/web": "^9.7.3",
-    "@playwright/test": "^1.43.1",
+    "@playwright/test": "^1.44.1",
     "@types/chai": "^4.3.16",
+    "@types/karma": "^6.3.8",
     "@types/moment-jalaali": "^0.7.9",
     "@types/prop-types": "^15.7.12",
     "@types/react": "^18.2.60",
@@ -28,8 +29,8 @@
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.3",
-    "stylis": "^4.3.1",
+    "react-router-dom": "^6.23.1",
+    "stylis": "^4.3.2",
     "stylis-plugin-rtl": "^2.1.1"
   }
 }

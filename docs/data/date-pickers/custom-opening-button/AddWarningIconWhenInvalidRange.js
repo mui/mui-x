@@ -22,7 +22,7 @@ export default function AddWarningIconWhenInvalidRange() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DatePicker']}>
+      <DemoContainer components={['DateRangePicker']}>
         <DateRangePicker
           label="Picker with error icon"
           maxDate={dayjs('2022-04-19')}

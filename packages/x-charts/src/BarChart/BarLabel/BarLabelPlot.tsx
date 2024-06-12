@@ -77,10 +77,6 @@ BarLabelPlot.propTypes = {
       color: PropTypes.string.isRequired,
       dataIndex: PropTypes.number.isRequired,
       height: PropTypes.number.isRequired,
-      highlightScope: PropTypes.shape({
-        faded: PropTypes.oneOf(['global', 'none', 'series']),
-        highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-      }),
       layout: PropTypes.oneOf(['horizontal', 'vertical']),
       maskId: PropTypes.string.isRequired,
       seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
