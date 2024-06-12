@@ -5,7 +5,7 @@ import traverse from '@babel/traverse';
 import * as prettier from 'prettier';
 import * as babel from '@babel/core';
 import * as babelTypes from '@babel/types';
-import yargs from 'yargs';
+import yargs, { ArgumentsCamelCase } from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { Octokit } from '@octokit/rest';
 import { retry } from '@octokit/plugin-retry';
@@ -15,6 +15,7 @@ import {
   SOURCE_GITHUB_BRANCH as DOCS_SOURCE_GITHUB_BRANCH,
 } from '../docs/constants';
 
+// @ts-ignore
 const MyOctokit = Octokit.plugin(retry);
 
 const GIT_ORGANIZATION = 'mui';
@@ -191,7 +192,7 @@ function findLocales(localesDirectory: string, constantsPath: string) {
 }
 
 function extractAndReplaceTranslations(localePath: string) {
-  const translations = {};
+  const translations: Translations = {};
   const file = fse.readFileSync(localePath, { encoding: 'utf-8' });
   const { code } = babel.transformSync(file, {
     plugins: [...BABEL_PLUGINS, plugin(translations)],
@@ -316,7 +317,7 @@ type DocumentationReportItem = {
 };
 const generateDocReport = async (
   missingTranslations: MissingTranslations,
-  baseTranslationsNumber,
+  baseTranslationsNumber: TranslationsNumber,
 ) => {
   const workspaceRoot = path.resolve(__dirname, '../');
 
@@ -332,7 +333,7 @@ const generateDocReport = async (
         importName.length > 2
           ? `${importName.slice(0, 2).toLowerCase()}-${importName.slice(2).toUpperCase()}`
           : importName;
-      const localeName = localeNames[languageTag];
+      const localeName = localeNames[languageTag as keyof typeof localeNames];
 
       if (localeName === undefined) {
         throw new Error(
@@ -363,7 +364,7 @@ const generateDocReport = async (
   });
 };
 
-async function updateIssue(githubToken, newMessage) {
+async function updateIssue(githubToken: string, newMessage: string) {
   // Initialize the API client
   const octokit = new MyOctokit({
     auth: githubToken,
@@ -395,12 +396,14 @@ interface HandlerArgv {
   githubToken?: string;
 }
 
-async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
+type TranslationsNumber = Record<string, number>;
+
+async function run(argv: ArgumentsCamelCase<HandlerArgv>) {
   const { report, githubToken } = argv;
   const workspaceRoot = path.resolve(__dirname, '../');
 
-  const missingTranslations: Record<string, any> = {};
-  const baseTranslationsNumber: Record<string, number> = {};
+  const missingTranslations: MissingTranslations = {};
+  const baseTranslationsNumber: TranslationsNumber = {};
 
   await Promise.all(
     packagesWithL10n.map(async (packageInfo) => {
