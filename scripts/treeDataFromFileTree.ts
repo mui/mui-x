@@ -1,6 +1,7 @@
 import { promises as fs, Stats } from 'fs';
 import path from 'path';
-import * as yargs from 'yargs';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
 interface Node {
   hierarchy: string[];
@@ -68,7 +69,7 @@ const run = async (argv: yargs.ArgumentsCamelCase<{ path: string }>) => {
   );
 };
 
-yargs
+yargs(hideBin(process.argv))
   .command({
     command: '$0',
     describe: 'Generate tree data rows from a folder.',

@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 import { Octokit } from '@octokit/rest';
 import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
 const GIT_ORGANIZATION = 'mui';
 const GIT_REPO = 'mui-x';
@@ -43,7 +44,7 @@ async function findLatestTaggedVersion(octokit) {
 }
 
 function resolvePackagesByLabels(labels) {
-  let resolvedPackages = [];
+  const resolvedPackages = [];
   labels.forEach((label) => {
     switch (label.name) {
       case 'component: data grid':
@@ -323,7 +324,7 @@ ${logChangelogSection(otherCommits, '')}
   console.log(changelog);
 }
 
-yargs(process.argv.slice(2))
+yargs(hideBin(process.argv))
   .command({
     command: '$0',
     description: 'Creates a changelog',

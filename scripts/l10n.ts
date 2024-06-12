@@ -5,7 +5,8 @@ import traverse from '@babel/traverse';
 import * as prettier from 'prettier';
 import * as babel from '@babel/core';
 import * as babelTypes from '@babel/types';
-import * as yargs from 'yargs';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import { Octokit } from '@octokit/rest';
 import { retry } from '@octokit/plugin-retry';
 import localeNames from './localeNames';
@@ -491,7 +492,7 @@ async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
   process.exit(0);
 }
 
-yargs
+yargs(hideBin(process.argv))
   .command({
     command: '$0',
     describe: 'Syncs translation files.',
