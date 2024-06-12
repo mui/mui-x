@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import { DataGridPro, GridColDef, GridRowParams } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import {
   randomEmail,
   randomInt,
@@ -12,6 +12,7 @@ import {
   randomTraderName,
   randomId,
 } from '@mui/x-data-grid-generator';
+import { DataGridProps } from '@mui/x-data-grid';
 
 async function getProducts(orderId: Customer['id']) {
   await new Promise((resolve) => {
@@ -110,14 +111,13 @@ for (let i = 0; i < 100; i += 1) {
 
 type Customer = (typeof rows)[number];
 
+const getDetailPanelContent: DataGridProps['getDetailPanelContent'] = (params) => (
+  <DetailPanelContent row={params.row} />
+);
+
+const getDetailPanelHeight = () => 240;
+
 export default function LazyLoadingDetailPanel() {
-  const getDetailPanelContent = React.useCallback(
-    ({ row }: GridRowParams) => <DetailPanelContent row={row} />,
-    [],
-  );
-
-  const getDetailPanelHeight = React.useCallback(() => 240, []);
-
   return (
     <Box sx={{ width: '100%', height: 400 }}>
       <DataGridPro

@@ -106,14 +106,11 @@ for (let i = 0; i < 100; i += 1) {
   rows.push(getRow());
 }
 
+const getDetailPanelContent = (params) => <DetailPanelContent row={params.row} />;
+
+const getDetailPanelHeight = () => 240;
+
 export default function LazyLoadingDetailPanel() {
-  const getDetailPanelContent = React.useCallback(
-    ({ row }) => <DetailPanelContent row={row} />,
-    [],
-  );
-
-  const getDetailPanelHeight = React.useCallback(() => 240, []);
-
   return (
     <Box sx={{ width: '100%', height: 400 }}>
       <DataGridPro
