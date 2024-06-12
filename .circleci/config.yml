@@ -66,7 +66,6 @@ commands:
                 name: Install pnpm package manager
                 command: |
                   corepack enable
-                  corepack prepare pnpm@latest-8 --activate
             - run:
                 name: Prepare playwright hash
                 command: pnpm list --json --filter playwright > /tmp/playwright_info.json
@@ -276,15 +275,9 @@ jobs:
           command: pnpm test:argos
   run_danger:
     <<: *default-job
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.44.1-focal
-        environment:
-          NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
       - checkout
-      - install_js:
-          # TODO remove, no needed
-          browsers: true
+      - install_js
       - run:
           name: Run danger on PRs
           command: pnpm danger ci --fail-on-errors
