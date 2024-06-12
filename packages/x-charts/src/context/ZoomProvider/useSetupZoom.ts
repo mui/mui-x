@@ -14,6 +14,15 @@ const zoomAtPoint = (point: number, scale: number, currentRange: [number, number
   return [newMinRange, newMaxRange];
 };
 
+const isPointOutside = (
+  point: { x: number; y: number },
+  area: { left: number; top: number; width: number; height: number },
+) => {
+  const outsideX = point.x < area.left || point.x > area.left + area.width;
+  const outsideY = point.y < area.top || point.y > area.top + area.height;
+  return outsideX || outsideY;
+};
+
 export const useSetupZoom = () => {
   const { zoomRange, setZoomRange } = useZoom();
   const area = useDrawingArea();
@@ -33,6 +42,11 @@ export const useSetupZoom = () => {
       }
 
       const point = getSVGPoint(element, event);
+
+      if (isPointOutside(point, area)) {
+        return;
+      }
+
       const { deltaY } = event;
       const { left, width } = area;
 
