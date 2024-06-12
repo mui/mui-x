@@ -1,18 +1,14 @@
 import * as React from 'react';
-import { useThemeProps } from '@mui/material/styles';
-import { useSlotProps } from '@mui/base/utils';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import { RichTreeViewRoot } from '@mui/x-tree-view/RichTreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import {
-  DEFAULT_TREE_VIEW_PLUGINS,
-  extractPluginParamsFromProps,
-  useTreeView,
-  TreeViewProvider,
-} from '@mui/x-tree-view/internals';
+  RichTreeViewRoot,
+  RICH_TREE_VIEW_PLUGINS,
+} from '@mui/x-tree-view/RichTreeView';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
+import { useTreeView, TreeViewProvider } from '@mui/x-tree-view/internals';
 
 const useTreeViewLogExpanded = ({ params, models }) => {
   const expandedStr = JSON.stringify(models.expandedItems.value);
@@ -37,25 +33,12 @@ useTreeViewLogExpanded.params = {
   logMessage: true,
 };
 
-const TREE_VIEW_PLUGINS = [...DEFAULT_TREE_VIEW_PLUGINS, useTreeViewLogExpanded];
+const TREE_VIEW_PLUGINS = [...RICH_TREE_VIEW_PLUGINS, useTreeViewLogExpanded];
 
-function TreeView(inProps) {
-  const themeProps = useThemeProps({ props: inProps, name: 'HeadlessTreeView' });
-  const ownerState = themeProps;
-
-  const { pluginParams, otherProps } = extractPluginParamsFromProps({
-    props: themeProps,
+function TreeView(props) {
+  const { getRootProps, contextValue, instance } = useTreeView({
     plugins: TREE_VIEW_PLUGINS,
-  });
-
-  const { getRootProps, contextValue, instance } = useTreeView(pluginParams);
-
-  const rootProps = useSlotProps({
-    elementType: RichTreeViewRoot,
-    externalSlotProps: {},
-    externalForwardedProps: otherProps,
-    getSlotProps: getRootProps,
-    ownerState,
+    props,
   });
 
   const itemsToRender = instance.getItemsToRender();
@@ -70,7 +53,7 @@ function TreeView(inProps) {
 
   return (
     <TreeViewProvider value={contextValue}>
-      <RichTreeViewRoot {...rootProps}>
+      <RichTreeViewRoot {...getRootProps()}>
         {itemsToRender.map(renderItem)}
       </RichTreeViewRoot>
     </TreeViewProvider>

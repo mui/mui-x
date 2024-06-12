@@ -16,7 +16,7 @@ import {
   MergeSignaturesProperty,
 } from '@mui/x-tree-view/internals';
 
-export const DEFAULT_TREE_VIEW_PRO_PLUGINS = [
+export const RICH_TREE_VIEW_PRO_PLUGINS = [
   useTreeViewId,
   useTreeViewItems,
   useTreeViewExpansion,
@@ -26,25 +26,23 @@ export const DEFAULT_TREE_VIEW_PRO_PLUGINS = [
   useTreeViewIcons,
 ] as const;
 
-export type DefaultTreeViewProPluginSignatures = ConvertPluginsIntoSignatures<
-  typeof DEFAULT_TREE_VIEW_PRO_PLUGINS
+export type RichTreeViewProPluginSignatures = ConvertPluginsIntoSignatures<
+  typeof RICH_TREE_VIEW_PRO_PLUGINS
 >;
 
-export type DefaultTreeViewProPluginSlots = MergeSignaturesProperty<
-  DefaultTreeViewProPluginSignatures,
+export type RichTreeViewProPluginSlots = MergeSignaturesProperty<
+  RichTreeViewProPluginSignatures,
   'slots'
 >;
 
-export type DefaultTreeViewProPluginSlotProps = MergeSignaturesProperty<
-  DefaultTreeViewProPluginSignatures,
+export type RichTreeViewProPluginSlotProps = MergeSignaturesProperty<
+  RichTreeViewProPluginSignatures,
   'slotProps'
 >;
 
 // We can't infer this type from the plugin, otherwise we would lose the generics.
-export interface DefaultTreeViewProPluginParameters<
-  R extends {},
-  Multiple extends boolean | undefined,
-> extends UseTreeViewIdParameters,
+export interface RichTreeViewProPluginParameters<R extends {}, Multiple extends boolean | undefined>
+  extends UseTreeViewIdParameters,
     UseTreeViewItemsParameters<R>,
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,
