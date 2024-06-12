@@ -347,7 +347,7 @@ const buildAggregatedQuickFilterApplier = (
   return function isRowMatchingQuickFilter(row, shouldApplyFilter) {
     const result = {} as GridQuickFilterValueResult;
 
-    /* eslint-disable no-restricted-syntax, no-labels */
+    /* eslint-disable no-labels */
     outer: for (let v = 0; v < quickFilterValues.length; v += 1) {
       const filterValue = quickFilterValues[v];
 
@@ -378,8 +378,6 @@ const buildAggregatedQuickFilterApplier = (
 
       result[filterValue] = false;
     }
-    /* eslint-enable no-restricted-syntax, no-labels */
-
     return result;
   };
 };

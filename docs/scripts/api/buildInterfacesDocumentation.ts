@@ -103,11 +103,9 @@ const parseInterfaceSymbol = async (
   };
 
   const properties: Record<string, ParsedProperty> = {};
-  // eslint-disable-next-line no-restricted-syntax
   for (const { type, project } of projectInterfaces) {
     const propertiesOnProject = type.getProperties();
 
-    // eslint-disable-next-line no-restricted-syntax
     for (const propertySymbol of propertiesOnProject) {
       if (properties[propertySymbol.name]) {
         properties[propertySymbol.name].projects.push(project.name);
@@ -281,7 +279,6 @@ export async function buildInterfacesDocumentationPage(
     documentedInterfaces.set(interfaceName, packagesWithThisInterface);
   });
 
-  // eslint-disable-next-line no-restricted-syntax
   for (const [interfaceName, packagesWithThisInterface] of Array.from(
     documentedInterfaces.entries(),
   )) {
