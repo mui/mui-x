@@ -1,32 +1,27 @@
 import * as React from 'react';
 import '@mui/x-charts-pro/typeOverloads';
-import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
-import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import {
-  UnstableHeatmapContainer,
-  UnstableHeatmapPlot,
-} from '@mui/x-charts-pro/Heatmap';
+import { UnstableHeatmap } from '@mui/x-charts-pro/Heatmap';
 
 export default function BasicHeatmap() {
   return (
-    <UnstableHeatmapContainer
+    <UnstableHeatmap
       height={400}
       width={600}
       xAxis={[{ scaleType: 'band', data: [1, 2, 3, 4, 5] }]}
       yAxis={[
         { scaleType: 'band', data: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'] },
       ]}
-      zAxis={[
-        {
-          id: 'color-map-id',
-          colorMap: {
-            type: 'continuous',
-            min: -2,
-            max: 4,
-            color: ['green', 'orange'],
-          },
-        },
-      ]}
+      // zAxis={[
+      //   {
+      //     id: 'color-map-id',
+      //     colorMap: {
+      //       type: 'continuous',
+      //       min: -2,
+      //       max: 4,
+      //       color: ['green', 'orange'],
+      //     },
+      //   },
+      // ]}
       series={[
         {
           type: 'heatmap',
@@ -69,13 +64,6 @@ export default function BasicHeatmap() {
           ],
         },
       ]}
-    >
-      <ChartsAxis />
-      <UnstableHeatmapPlot />
-      <ChartsTooltip
-      // trigger="item"
-      //   {...tooltip} slots={slots} slotProps={slotProps}
-      />
-    </UnstableHeatmapContainer>
+    />
   );
 }

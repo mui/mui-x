@@ -1,2 +1,2 @@
-export { HeatmapContainer as UnstableHeatmapContainer } from './HeatmapContainer';
+export { Heatmap as UnstableHeatmap } from './Heatmap';
 export { HeatmapPlot as UnstableHeatmapPlot } from './HeatmapPlot';

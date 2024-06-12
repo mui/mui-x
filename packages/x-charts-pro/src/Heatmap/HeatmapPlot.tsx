@@ -1,6 +1,5 @@
 import * as React from 'react';
-
-import { useXScale, useYScale, useZColorScale } from '@mui/x-charts';
+import { useXScale, useYScale, useZColorScale } from '@mui/x-charts/hooks';
 import { useHeatmapSeries } from '../hooks/useSeries';
 
 export function HeatmapPlot() {
