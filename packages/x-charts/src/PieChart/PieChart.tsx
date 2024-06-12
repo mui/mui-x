@@ -35,7 +35,7 @@ import {
   ChartsOverlayProps,
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
-} from '../ChartsOverlay/ChartsOverlay';
+} from '../ChartsOverlay';
 
 export interface PieChartSlots
   extends ChartsAxisSlots,
@@ -52,7 +52,10 @@ export interface PieChartSlotProps
     ChartsOverlaySlotProps {}
 
 export interface PieChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series' | 'leftAxis' | 'bottomAxis' | 'plugins'>,
+  extends Omit<
+      ResponsiveChartContainerProps,
+      'series' | 'leftAxis' | 'bottomAxis' | 'plugins' | 'zAxis'
+    >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Pick<PiePlotProps, 'skipAnimation'> {

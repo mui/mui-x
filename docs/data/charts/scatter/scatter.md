@@ -67,7 +67,7 @@ The scatter charts use by priority:
 
 :::info
 The z-axis is a third axis that allows to customize scatter points independently from their position.
-It can be provided with `zAxis` props, or with `ZAxisContextProvider` when using composition.
+It can be provided with `zAxis` props.
 
 The value to map can either come from the `z` property of series data, or from the zAxis data.
 Here are three ways to set z value to 5.
