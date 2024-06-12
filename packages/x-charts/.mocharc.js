@@ -30,5 +30,5 @@ module.exports = {
     '**/build/**',
     'docs/.next/**',
   ],
-  spec: ['packages/x-charts/**/*.test.{js,ts,tsx}'],
+  spec: ['packages/x-charts{,-pro,-premium}/**/*.test.{js,ts,tsx}'],
 };

@@ -7,7 +7,7 @@ import {
   DefaultTreeViewPluginParameters,
   DefaultTreeViewPluginSlotProps,
   DefaultTreeViewPluginSlots,
-  DefaultTreeViewPlugins,
+  DefaultTreeViewPluginSignatures,
 } from '../internals/plugins/defaultPlugins';
 import { TreeItemProps } from '../TreeItem';
 import { TreeItem2Props } from '../TreeItem2';
@@ -47,7 +47,7 @@ export interface RichTreeViewSlotProps<R extends {}, Multiple extends boolean | 
 }
 
 export type RichTreeViewApiRef = React.MutableRefObject<
-  TreeViewPublicAPI<DefaultTreeViewPlugins> | undefined
+  TreeViewPublicAPI<DefaultTreeViewPluginSignatures> | undefined
 >;
 
 export interface RichTreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement> {
@@ -84,5 +84,5 @@ export interface RichTreeViewProps<R extends {}, Multiple extends boolean | unde
    * For each feature, if the flag is not explicitly set to `true`,
    * the feature will be fully disabled and any property / method call will not have any effect.
    */
-  experimentalFeatures?: TreeViewExperimentalFeatures<DefaultTreeViewPlugins>;
+  experimentalFeatures?: TreeViewExperimentalFeatures<DefaultTreeViewPluginSignatures>;
 }

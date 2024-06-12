@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import { useSlotProps } from '@mui/base/utils';
@@ -10,14 +9,20 @@ import {
   buildWarning,
   extractPluginParamsFromProps,
 } from '@mui/x-tree-view/internals';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
 import {
   RichTreeViewProProps,
   RichTreeViewProSlotProps,
   RichTreeViewProSlots,
 } from './RichTreeViewPro.types';
-import { DEFAULT_TREE_VIEW_PRO_PLUGINS } from '../internals/plugins';
+import {
+  DEFAULT_TREE_VIEW_PRO_PLUGINS,
+  DefaultTreeViewProPluginSignatures,
+} from '../internals/plugins';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
+
+const useThemeProps = createUseThemeProps('MuiRichTreeViewPro');
 
 const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
   ownerState: RichTreeViewProProps<R, Multiple>,
@@ -100,7 +105,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   }
 
   const { pluginParams, slots, slotProps, otherProps } = extractPluginParamsFromProps<
-    typeof DEFAULT_TREE_VIEW_PRO_PLUGINS,
+    DefaultTreeViewProPluginSignatures,
     RichTreeViewProSlots,
     RichTreeViewProSlotProps<R, Multiple>,
     RichTreeViewProProps<R, Multiple>

@@ -33,6 +33,8 @@
         "boolean": "If <code>true</code>, the month will be disabled."
       }
     },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
@@ -42,5 +44,8 @@
     },
     "value": { "description": "The selected value. Used when the component is controlled." }
   },
-  "classDescriptions": { "root": { "description": "Styles applied to the root element." } }
+  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
+  "slotDescriptions": {
+    "monthButton": "Button displayed to render a single month in the &quot;month&quot; view."
+  }
 }

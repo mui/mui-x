@@ -5,7 +5,7 @@ import { ColorProcessorsConfig } from '../models/plugin';
 
 export function useColorProcessor<T extends ChartSeriesType>(
   seriesType: T,
-): ColorProcessorsConfig<ChartSeriesType>[T];
+): ColorProcessorsConfig<ChartSeriesType>;
 export function useColorProcessor(): ColorProcessorsConfig<ChartSeriesType>;
 export function useColorProcessor(seriesType?: ChartSeriesType) {
   const colorProcessors = React.useContext(ColorContext);

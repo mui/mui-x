@@ -29,6 +29,12 @@
         "returned": "boolean"
       }
     },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -52,6 +58,14 @@
     "import { MonthCalendar } from '@mui/x-date-pickers';",
     "import { MonthCalendar } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [
+    {
+      "name": "monthButton",
+      "description": "Button displayed to render a single month in the \"month\" view.",
+      "default": "MonthCalendarButton",
+      "class": null
+    }
+  ],
   "classes": [
     {
       "key": "root",
@@ -66,6 +80,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MonthCalendar/MonthCalendar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li>\n<li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
   "cssComponent": false
 }
