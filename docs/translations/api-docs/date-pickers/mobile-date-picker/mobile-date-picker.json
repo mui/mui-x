@@ -166,13 +166,15 @@
     "leftArrowIcon": "Icon displayed in the left view switch button.",
     "mobilePaper": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
     "mobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
+    "monthButton": "Button displayed to render a single month in the &quot;month&quot; view.",
     "nextIconButton": "Button allowing to switch to the right view.",
     "previousIconButton": "Button allowing to switch to the left view.",
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "shortcuts": "Custom component for the shortcuts.",
     "switchViewButton": "Button displayed to switch between different calendar views.",
-    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
+    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &quot;year&quot;.",
     "textField": "Form control with an input to render the value inside the default field.",
-    "toolbar": "Custom component for the toolbar rendered above the views."
+    "toolbar": "Custom component for the toolbar rendered above the views.",
+    "yearButton": "Button displayed to render a single year in the &quot;year&quot; view."
   }
 }

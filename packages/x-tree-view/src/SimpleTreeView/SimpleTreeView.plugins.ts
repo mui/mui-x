@@ -1,9 +1,3 @@
-import {
-  DefaultTreeViewPluginSlotProps,
-  DefaultTreeViewPluginSlots,
-} from '../internals/plugins/defaultPlugins';
-import { useTreeViewJSXItems } from '../internals/plugins/useTreeViewJSXItems';
-import { ConvertPluginsIntoSignatures } from '../internals/models';
 import { useTreeViewId, UseTreeViewIdParameters } from '../internals/plugins/useTreeViewId';
 import {
   useTreeViewItems,
@@ -26,6 +20,8 @@ import {
   useTreeViewIcons,
   UseTreeViewIconsParameters,
 } from '../internals/plugins/useTreeViewIcons';
+import { useTreeViewJSXItems } from '../internals/plugins/useTreeViewJSXItems';
+import { ConvertPluginsIntoSignatures, MergeSignaturesProperty } from '../internals/models';
 
 export const SIMPLE_TREE_VIEW_PLUGINS = [
   useTreeViewId,
@@ -42,9 +38,15 @@ export type SimpleTreeViewPluginSignatures = ConvertPluginsIntoSignatures<
   typeof SIMPLE_TREE_VIEW_PLUGINS
 >;
 
-export type SimpleTreeViewPluginSlots = DefaultTreeViewPluginSlots;
+export type SimpleTreeViewPluginSlots = MergeSignaturesProperty<
+  SimpleTreeViewPluginSignatures,
+  'slots'
+>;
 
-export type SimpleTreeViewPluginSlotProps = DefaultTreeViewPluginSlotProps;
+export type SimpleTreeViewPluginSlotProps = MergeSignaturesProperty<
+  SimpleTreeViewPluginSignatures,
+  'slotProps'
+>;
 
 // We can't infer this type from the plugin, otherwise we would lose the generics.
 export interface SimpleTreeViewPluginParameters<Multiple extends boolean | undefined>

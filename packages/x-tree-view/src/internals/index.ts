@@ -19,13 +19,6 @@ export type {
 } from './models';
 
 // Plugins
-export { DEFAULT_TREE_VIEW_PLUGINS } from './plugins/defaultPlugins';
-export type {
-  DefaultTreeViewPluginSignatures,
-  DefaultTreeViewPluginSlots,
-  DefaultTreeViewPluginSlotProps,
-} from './plugins/defaultPlugins';
-export type { DefaultTreeViewPluginParameters } from './plugins/defaultPlugins';
 export { useTreeViewExpansion } from './plugins/useTreeViewExpansion';
 export type {
   UseTreeViewExpansionSignature,
@@ -68,4 +61,3 @@ export type {
 
 export { isEventTargetInDescendants } from './utils/tree';
 export { buildWarning } from './utils/warning';
-export { extractPluginParamsFromProps } from './utils/extractPluginParamsFromProps';

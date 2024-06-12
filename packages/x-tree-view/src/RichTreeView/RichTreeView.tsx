@@ -3,14 +3,13 @@ import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { useSlotProps } from '@mui/base/utils';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
-import { RichTreeViewProps, RichTreeViewSlotProps, RichTreeViewSlots } from './RichTreeView.types';
+import { RichTreeViewProps } from './RichTreeView.types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
-import { DEFAULT_TREE_VIEW_PLUGINS, DefaultTreeViewPluginSignatures } from '../internals/plugins';
+import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { TreeItem, TreeItemProps } from '../TreeItem';
 import { buildWarning } from '../internals/utils/warning';
-import { extractPluginParamsFromProps } from '../internals/utils/extractPluginParamsFromProps';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -30,7 +29,7 @@ export const RichTreeViewRoot = styled('ul', {
   name: 'MuiRichTreeView',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: RichTreeViewProps<any, any> }>({
+})({
   padding: 0,
   margin: 0,
   listStyle: 'none',
@@ -90,26 +89,22 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     }
   }
 
-  const { pluginParams, slots, slotProps, otherProps } = extractPluginParamsFromProps<
-    DefaultTreeViewPluginSignatures,
-    RichTreeViewSlots,
-    RichTreeViewSlotProps<R, Multiple>,
-    RichTreeViewProps<R, Multiple>
+  const { getRootProps, contextValue, instance } = useTreeView<
+    RichTreeViewPluginSignatures,
+    typeof props
   >({
-    props,
-    plugins: DEFAULT_TREE_VIEW_PLUGINS,
+    plugins: RICH_TREE_VIEW_PLUGINS,
     rootRef: ref,
+    props,
   });
 
-  const { getRootProps, contextValue, instance } = useTreeView(pluginParams);
-
+  const { slots, slotProps } = props;
   const classes = useUtilityClasses(props);
 
   const Root = slots?.root ?? RichTreeViewRoot;
   const rootProps = useSlotProps({
     elementType: Root,
     externalSlotProps: slotProps?.root,
-    externalForwardedProps: otherProps,
     className: classes.root,
     getSlotProps: getRootProps,
     ownerState: props as RichTreeViewProps<any, any>,

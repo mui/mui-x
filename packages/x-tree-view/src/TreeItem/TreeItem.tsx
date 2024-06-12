@@ -13,9 +13,8 @@ import { unstable_composeClasses as composeClasses } from '@mui/base';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeItemContent } from './TreeItemContent';
 import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
-import { TreeItemOwnerState, TreeItemProps } from './TreeItem.types';
+import { TreeItemMinimalPlugins, TreeItemOwnerState, TreeItemProps } from './TreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
-import { DefaultTreeViewPluginSignatures } from '../internals/plugins';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 import { TreeItem2Provider } from '../TreeItem2Provider';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
@@ -187,7 +186,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     disabledItemsFocusable,
     indentationAtItemLevel,
     instance,
-  } = useTreeViewContext<DefaultTreeViewPluginSignatures>();
+  } = useTreeViewContext<TreeItemMinimalPlugins>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
   const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
@@ -465,6 +464,10 @@ TreeItem.propTypes = {
    * Use the `onItemFocus` callback on the tree if you need to monitor a item's focus.
    */
   onFocus: unsupportedProp,
+  /**
+   * Callback fired when a key of the keyboard is pressed on the item.
+   */
+  onKeyDown: PropTypes.func,
   /**
    * The props used for each component slot.
    * @default {}
