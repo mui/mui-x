@@ -1,6 +1,6 @@
 import { promises as fs, Stats } from 'fs';
 import path from 'path';
-import yargs from 'yargs';
+import yargs, { ArgumentsCamelCase } from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 interface Node {
@@ -50,7 +50,7 @@ const getSubTree = async (nodePath: string, parentHierarchy: string[] = []) => {
   return nodes;
 };
 
-const run = async (argv: yargs.ArgumentsCamelCase<{ path: string }>) => {
+const run = async (argv: ArgumentsCamelCase<{ path: string }>) => {
   const children = await fs.readdir(argv.path);
 
   const nodes: Node[] = [];
