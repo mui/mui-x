@@ -94,7 +94,6 @@ async function run() {
   // Create documentation folder if it does not exist
   const apiPagesFolder = path.resolve('./docs/pages/x/api');
 
-  // eslint-disable-next-line no-restricted-syntax
   for (const { folder, packages, documentedInterfaces } of interfacesToDocument) {
     const subProjects: XTypeScriptProjects = new Map();
 
