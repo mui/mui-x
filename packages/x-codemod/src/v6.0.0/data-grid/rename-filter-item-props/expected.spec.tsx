@@ -31,7 +31,7 @@ function App() {
     ],
   });
   return (
-    <React.Fragment>
+    (<React.Fragment>
       <DataGrid
         columns={columns}
         rows={rows}
@@ -72,6 +72,6 @@ function App() {
           premiumFilterModel.current = model;
         }}
       />
-    </React.Fragment>
+    </React.Fragment>)
   );
 }

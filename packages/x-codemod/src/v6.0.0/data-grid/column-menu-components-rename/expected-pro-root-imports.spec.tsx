@@ -10,12 +10,12 @@ import {
 
 function App({ column, hideMenu }: GridColumnMenuItemProps) {
   return (
-    <React.Fragment>
+    (<React.Fragment>
       <GridColumnMenuFilterItem colDef={column} onClick={hideMenu} />
       <GridColumnMenuHideItem colDef={column} onClick={hideMenu} />
       <GridColumnMenuColumnsItem colDef={column} onClick={hideMenu} />
       <GridColumnMenuSortItem colDef={column} onClick={hideMenu} />
       <GridColumnMenuPinningItem colDef={column} onClick={hideMenu} />
-    </React.Fragment>
+    </React.Fragment>)
   );
 }
