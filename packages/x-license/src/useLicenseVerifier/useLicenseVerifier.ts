@@ -56,6 +56,7 @@ export function useLicenseVerifier(
       releaseInfo,
       licenseKey,
       acceptedScopes,
+      packageName,
     });
 
     const fullPackageName = `@mui/${packageName}`;

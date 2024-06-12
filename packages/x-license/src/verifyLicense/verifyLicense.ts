@@ -1,7 +1,8 @@
+import { LICENSE_UPDATE_TIMESTAMPS } from '@mui/x-license/generateLicense/licenseUpdateTimestamps';
 import { base64Decode, base64Encode } from '../encoding/base64';
 import { md5 } from '../encoding/md5';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import { LicenseScope, LICENSE_SCOPES } from '../utils/licenseScope';
+import { LicenseScope, LICENSE_SCOPES, ProductScope } from '../utils/licenseScope';
 import { LicensingModel, LICENSING_MODELS } from '../utils/licensingModel';
 
 const getDefaultReleaseDate = () => {
@@ -21,6 +22,7 @@ interface MuiLicense {
   licensingModel: LicensingModel | null;
   scope: LicenseScope | null;
   expiryTimestamp: number | null;
+  purchaseTimestamp?: number | null;
 }
 
 /**
@@ -45,7 +47,8 @@ const decodeLicenseVersion1 = (license: string): MuiLicense => {
 };
 
 /**
- * Format: O=${orderNumber},E=${expiryTimestamp},S=${scope},LM=${licensingModel},KV=2`;
+ * Format: O=${orderNumber}[,P=${purchaseTimestamp}],E=${expiryTimestamp},S=${scope},LM=${licensingModel},KV=2`;
+ * purchaseTimestamp is optional.
  */
 const decodeLicenseVersion2 = (license: string): MuiLicense => {
   const licenseInfo: MuiLicense = {
@@ -73,6 +76,13 @@ const decodeLicenseVersion2 = (license: string): MuiLicense => {
           licenseInfo.expiryTimestamp = expiryTimestamp;
         }
       }
+
+      if (key === 'P') {
+        const purchaseTimestamp = parseInt(value, 10);
+        if (purchaseTimestamp && !Number.isNaN(purchaseTimestamp)) {
+          licenseInfo.purchaseTimestamp = purchaseTimestamp;
+        }
+      }
     });
 
   return licenseInfo;
@@ -95,14 +105,22 @@ const decodeLicense = (encodedLicense: string): MuiLicense | null => {
   return null;
 };
 
+const extractProductScope = (packageName: string): ProductScope | null => {
+  const regex = /x-(.*?)(-pro|-premium)?$/;
+  const match = packageName.match(regex);
+  return match ? (match[1] as ProductScope) : null;
+};
+
 export function verifyLicense({
   releaseInfo,
   licenseKey,
   acceptedScopes,
+  packageName,
 }: {
   releaseInfo: string;
   licenseKey: string | undefined;
   acceptedScopes: LicenseScope[];
+  packageName: string;
 }): { status: LicenseStatus; meta?: any } {
   if (!releaseInfo) {
     throw new Error('MUI X: The release information is missing. Not able to validate license.');
@@ -133,6 +151,11 @@ export function verifyLicense({
 
   if (license.expiryTimestamp == null) {
     console.error('MUI X: Error checking license. Expiry timestamp not found or invalid!');
+    return { status: LICENSE_STATUS.Invalid };
+  }
+
+  if (license.purchaseTimestamp && license.purchaseTimestamp > license.expiryTimestamp) {
+    console.error('MUI X: Error checking license. Purchase timestamp cannot be later than expiry!');
     return { status: LICENSE_STATUS.Invalid };
   }
 
@@ -171,6 +194,29 @@ export function verifyLicense({
 
   if (!acceptedScopes.includes(license.scope)) {
     return { status: LICENSE_STATUS.OutOfScope };
+  }
+
+  if (packageName) {
+    const productScope = extractProductScope(packageName);
+
+    switch (productScope) {
+      case 'charts':
+      case 'tree-view':
+        if (
+          license.purchaseTimestamp &&
+          license.purchaseTimestamp >= LICENSE_UPDATE_TIMESTAMPS['2024-06']
+        ) {
+          // NEW LICENSE
+          // therefore usage of charts-pro and tree-view-pro is allowed
+          break;
+        }
+
+        return { status: LICENSE_STATUS.ProductScope };
+      case 'data-grid':
+      case 'date-pickers':
+      default:
+        break;
+    }
   }
 
   return { status: LICENSE_STATUS.Valid };
