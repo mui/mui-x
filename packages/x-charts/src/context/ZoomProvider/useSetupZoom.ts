@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { useSvgRef } from '../../hooks';
+import { useDrawingArea, useSvgRef } from '../../hooks';
 import { useZoom } from './useZoom';
+import { getSVGPoint } from '../../internals/utils';
 
 const zoomAtPoint = (point: number, scale: number, currentRange: [number, number]) => {
   const [minRange, maxRange] = currentRange;
@@ -13,13 +14,9 @@ const zoomAtPoint = (point: number, scale: number, currentRange: [number, number
   return [newMinRange, newMaxRange];
 };
 
-const centerOfRange = (range: [number, number]) => {
-  const [min, max] = range;
-  return (max - min) / 2;
-};
-
 export const useSetupZoom = () => {
   const { zoomRange, setZoomRange } = useZoom();
+  const area = useDrawingArea();
 
   const svgRef = useSvgRef();
 
@@ -35,12 +32,17 @@ export const useSetupZoom = () => {
         return;
       }
 
+      const point = getSVGPoint(element, event);
       const { deltaY } = event;
+      const { left, width } = area;
 
       // TODO: make step a config option.
       const scale = deltaY < 0 ? 0.995 : 1.005;
 
-      const centerPoint = centerOfRange(zoomRange);
+      // Center point is a number from 0 to 200, where 100 is the center of the chart.
+      // This is because our calculations scale on center for 100 if there is no skew.
+      // We clamp the window value to 0-100 then double it.
+      const centerPoint = Math.min(100, Math.max(0, ((point.x - left) / width) * 100)) * 2;
 
       // TODO: zoom at cursor position.
       const [newMinRange, newMaxRange] = zoomAtPoint(centerPoint, scale, zoomRange);
@@ -48,7 +50,7 @@ export const useSetupZoom = () => {
       const newSpanPercent = newMaxRange - newMinRange;
 
       // TODO: make span a config option.
-      if (newSpanPercent < 10) {
+      if (newSpanPercent < 10 || newSpanPercent > 100) {
         return;
       }
 
@@ -60,5 +62,5 @@ export const useSetupZoom = () => {
     return () => {
       element.removeEventListener('wheel', handleZoom);
     };
-  }, [svgRef, setZoomRange, zoomRange]);
+  }, [svgRef, setZoomRange, zoomRange, area]);
 };
