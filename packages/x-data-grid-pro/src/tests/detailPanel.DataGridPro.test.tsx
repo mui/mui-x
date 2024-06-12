@@ -501,6 +501,29 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(screen.getByTestId(`detail-panel-content`).textContent).to.equal(`${counter}`);
   });
 
+  it("should not render detail panel for the focused row if it's outside of the viewport", function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+    render(
+      <TestCase
+        getDetailPanelHeight={() => 50}
+        getDetailPanelContent={() => <div />}
+        rowBufferPx={0}
+        nbRows={20}
+      />,
+    );
+
+    userEvent.mousePress(screen.getAllByRole('button', { name: 'Expand' })[0]);
+
+    const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+    virtualScroller.scrollTop = 500;
+    act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+
+    const detailPanels = document.querySelectorAll(`.${gridClasses.detailPanel}`);
+    expect(detailPanels.length).to.equal(0);
+  });
+
   describe('prop: onDetailPanelsExpandedRowIds', () => {
     it('should call when a row is expanded or closed', () => {
       const handleDetailPanelsExpandedRowIdsChange = spy();

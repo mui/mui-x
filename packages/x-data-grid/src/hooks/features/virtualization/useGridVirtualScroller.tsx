@@ -490,6 +490,10 @@ export const useGridVirtualScroller = () => {
         />,
       );
 
+      if (isNotVisible) {
+        return;
+      }
+
       const panel = panels.get(id);
       if (panel) {
         rows.push(panel);
