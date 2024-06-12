@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -9,6 +9,7 @@ import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import {
   unstable_useTreeItem2 as useTreeItem2,
   UseTreeItem2Parameters,
+  UseTreeItem2ContentSlotOwnProps,
 } from '@mui/x-tree-view/useTreeItem2';
 import {
   TreeItem2Content,
@@ -20,8 +21,7 @@ import {
 import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
 import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
 import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
-import { UseTreeItem2ContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem2';
-import { ThreeDItem, findItemById } from './SceneObjects'; //temporarily solution
+import { ThreeDItem } from './SceneObjects';
 import CustomTreeItemContextMenu from './ContextMenu';
 
 const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
@@ -35,17 +35,10 @@ interface CustomTreeItemProps extends Omit<UseTreeItem2Parameters, 'rootRef'> {
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   props: CustomTreeItemProps,
-  ref: React.Ref<HTMLLIElement>
+  ref: React.Ref<HTMLLIElement>,
 ) {
-  const {
-    id,
-    itemId,
-    label,
-    children,
-    sceneObjects,
-    toggleVisibility,
-    ...other
-  } = props;
+  const { id, itemId, label, children, sceneObjects, toggleVisibility, ...other } =
+    props;
 
   const {
     getRootProps,
@@ -54,10 +47,10 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     getLabelProps,
     getGroupTransitionProps,
     status,
+    publicAPI,
   } = useTreeItem2({ id, itemId, children, label, rootRef: ref });
 
-  const originalItem = findItemById(sceneObjects, itemId)!;
-  const { visibility, type } = originalItem;
+  const item = publicAPI.getItem(itemId);
 
   const [mousePosition, setMousePosition] = React.useState<{
     x: number;
@@ -90,9 +83,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     children: props.children,
   });
 
-  const handleContentClick: UseTreeItem2ContentSlotOwnProps['onClick'] = (
-    event
-  ) => {
+  const handleContentClick: UseTreeItem2ContentSlotOwnProps['onClick'] = (event) => {
     event.defaultMuiPrevented = true;
     interactions.handleSelection(event);
   };
@@ -101,18 +92,20 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     interactions.handleExpansion(event);
   };
 
-  const ItemIcon = () => {
-    switch (type) {
-      case 'mesh':
-        return <ViewInArOutlinedIcon style={{ color: 'darkolivegreen' }} />;
-      case 'light':
-        return <LightbulbOutlinedIcon style={{ color: 'yellow' }} />;
-      case 'collection':
-        return <FolderOutlinedIcon style={{ color: 'gray' }} />;
-      default:
-        return null;
-    }
-  };
+  let itemIcon: React.ReactNode;
+  switch (item.type) {
+    case 'mesh':
+      itemIcon = <ViewInArOutlinedIcon style={{ color: 'darkolivegreen' }} />;
+      break;
+    case 'light':
+      itemIcon = <LightbulbOutlinedIcon style={{ color: 'yellow' }} />;
+      break;
+    case 'collection':
+      itemIcon = <FolderOutlinedIcon style={{ color: 'gray' }} />;
+      break;
+    default:
+      itemIcon = null;
+  }
 
   return (
     <TreeItem2Provider itemId={itemId}>
@@ -131,7 +124,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
             sx={{ flexGrow: 1, display: 'flex', gap: 1 }}
             onClick={handleContentClick}
           >
-            {visibility ? (
+            {item.visibility ? (
               <VisibilityIcon
                 sx={(theme) => ({
                   color: theme.palette.primary.main,
@@ -146,18 +139,16 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
                 onClick={handleEyeClick}
               />
             )}
-            <ItemIcon />
+            {itemIcon}
             <TreeItem2Label
               {...getLabelProps()}
               sx={(theme) => ({
-                color: visibility ? theme.palette.text.primary : '#888',
+                color: item.visibility ? theme.palette.text.primary : '#888',
               })}
             />
           </Box>
         </CustomTreeItemContent>
-        {children && (
-          <TreeItem2GroupTransition {...getGroupTransitionProps()} />
-        )}
+        {children && <TreeItem2GroupTransition {...getGroupTransitionProps()} />}
       </TreeItem2Root>
       <CustomTreeItemContextMenu
         positionSeed={mousePosition}

@@ -1,24 +1,4 @@
-import { TextareaAutosize } from '@mui/material';
-
-export function findItemById(items, nodeId) {
-  let result = null;
-
-  items.some((item) => {
-    if (item.id === nodeId) {
-      result = item;
-      return true;
-    }
-    //search in children
-    if (item.children && item.children.length > 0) {
-      result = findItemById(item.children, nodeId);
-      return result !== null;
-    }
-    return false;
-  });
-  return result;
-}
-
-const sceneObjects = [
+export const ALL_SCENE_OBJECTS = [
   {
     id: 'lights',
     label: 'Scene Lights',
@@ -81,7 +61,7 @@ const sceneObjects = [
       {
         id: 'wheels',
         label: 'Wheels',
-        visibility: TextareaAutosize,
+        visibility: true,
         type: 'collection',
         children: [
           {
@@ -139,5 +119,3 @@ const sceneObjects = [
     color: 'darkgray',
   },
 ];
-
-export default sceneObjects;

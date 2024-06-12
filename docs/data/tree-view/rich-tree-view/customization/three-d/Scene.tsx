@@ -12,8 +12,7 @@ import { ThreeDItem } from './SceneObjects';
 const renderSceneObjects = (objects: ThreeDItem[]) => {
   return objects.map((item) => {
     if (
-      (item.type === 'collection' ||
-        (item.children && item.children.length > 0)) &&
+      (item.type === 'collection' || (item.children && item.children.length > 0)) &&
       item.visibility
     ) {
       return renderSceneObjects(item.children);

@@ -1,11 +1,9 @@
-import React from 'react';
+import * as React from 'react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import CustomTreeItem from './three-d/CustomTreeItem';
-import CustomTreeItemContextMenu from './three-d/ContextMenu';
 import Scene from './three-d/Scene';
-import sceneObjects from './three-d/SceneObjects';
-import ThemeProvider from '@mui/material/styles/ThemeProvider';
-import { createTheme } from '@mui/material/styles';
+import { ALL_SCENE_OBJECTS } from './three-d/SceneObjects';
 
 const darkTheme = createTheme({
   palette: {
@@ -19,33 +17,22 @@ const darkTheme = createTheme({
   },
 });
 
-export default function Demo() {
-  const [objectsToRender, setObjectsToRender] = React.useState(sceneObjects);
-  const [expandedNodes, setExpandedNodes] = React.useState<string[]>([
-    'lights',
-    'chassi',
-    'wheels',
-    'car',
-  ]);
+const DEFAULT_EXPANDED_ITEMS = ['lights', 'chassi', 'wheels', 'car'];
 
-  const handleExpandedNodesChange = (
-    event: React.SyntheticEvent,
-    nodeIds: string[]
-  ) => {
-    setExpandedNodes(nodeIds);
-  };
+export default function ThreeDCanvas() {
+  const [sceneObjects, setSceneObjects] = React.useState(ALL_SCENE_OBJECTS);
 
-  const toggleVisibility = (nodeId, items = objectsToRender) => {
+  const toggleVisibility = (itemId: string, items = sceneObjects) => {
     items.forEach((item) => {
-      if (item.id === nodeId) {
+      if (item.id === itemId) {
         item.visibility = !item.visibility;
       }
       if (item.children && item.children.length > 0) {
         // do it recursively
-        toggleVisibility(nodeId, item.children);
+        toggleVisibility(itemId, item.children);
       }
     });
-    setObjectsToRender([...items]);
+    setSceneObjects([...items]);
   };
   return (
     <ThemeProvider theme={darkTheme}>
@@ -65,18 +52,14 @@ export default function Demo() {
       >
         <RichTreeView
           items={sceneObjects}
-          expandedItems={expandedNodes}
-          onExpandedItemsChange={handleExpandedNodesChange}
+          defaultExpandedItems={DEFAULT_EXPANDED_ITEMS}
           sx={{ minWidth: '50%', paddingTop: '60px', paddingLeft: '20px' }}
-          slots={{ item: CustomTreeItem }}
+          slots={{ item: CustomTreeItem as any }}
           slotProps={{
-            item: {
-              toggleVisibility: toggleVisibility,
-              sceneObjects: objectsToRender, //temporarily solution
-            },
+            item: { toggleVisibility } as any,
           }}
         />
-        <Scene objects={objectsToRender} />
+        <Scene objects={sceneObjects} />
       </div>
     </ThemeProvider>
   );

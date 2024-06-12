@@ -83,7 +83,6 @@ The demo below shows many of the previous customization examples brought togethe
 
 {{"demo": "FileExplorer.js", "defaultCodeOpen": false}}
 
-
 ### 3D Canvas
 
 This example is built using the new `useTreeItem`.

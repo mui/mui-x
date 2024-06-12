@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -18,7 +18,6 @@ import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
 import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
 import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
 
-import { findItemById } from './SceneObjects'; //temporarily solution
 import CustomTreeItemContextMenu from './ContextMenu';
 
 const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
@@ -36,10 +35,10 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     getLabelProps,
     getGroupTransitionProps,
     status,
+    publicAPI,
   } = useTreeItem2({ id, itemId, children, label, rootRef: ref });
 
-  const originalItem = findItemById(sceneObjects, itemId);
-  const { visibility, type } = originalItem;
+  const item = publicAPI.getItem(itemId);
 
   const [mousePosition, setMousePosition] = React.useState(null);
 
@@ -78,18 +77,20 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     interactions.handleExpansion(event);
   };
 
-  const ItemIcon = () => {
-    switch (type) {
-      case 'mesh':
-        return <ViewInArOutlinedIcon style={{ color: 'darkolivegreen' }} />;
-      case 'light':
-        return <LightbulbOutlinedIcon style={{ color: 'yellow' }} />;
-      case 'collection':
-        return <FolderOutlinedIcon style={{ color: 'gray' }} />;
-      default:
-        return null;
-    }
-  };
+  let itemIcon;
+  switch (item.type) {
+    case 'mesh':
+      itemIcon = <ViewInArOutlinedIcon style={{ color: 'darkolivegreen' }} />;
+      break;
+    case 'light':
+      itemIcon = <LightbulbOutlinedIcon style={{ color: 'yellow' }} />;
+      break;
+    case 'collection':
+      itemIcon = <FolderOutlinedIcon style={{ color: 'gray' }} />;
+      break;
+    default:
+      itemIcon = null;
+  }
 
   return (
     <TreeItem2Provider itemId={itemId}>
@@ -108,7 +109,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
             sx={{ flexGrow: 1, display: 'flex', gap: 1 }}
             onClick={handleContentClick}
           >
-            {visibility ? (
+            {item.visibility ? (
               <VisibilityIcon
                 sx={(theme) => ({
                   color: theme.palette.primary.main,
@@ -124,11 +125,11 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
               />
             )}
 
-            <ItemIcon />
+            {itemIcon}
             <TreeItem2Label
               {...getLabelProps()}
               sx={(theme) => ({
-                color: visibility ? theme.palette.text.primary : '#888',
+                color: item.visibility ? theme.palette.text.primary : '#888',
               })}
             />
           </Box>

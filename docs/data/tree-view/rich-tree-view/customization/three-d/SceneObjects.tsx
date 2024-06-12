@@ -1,4 +1,3 @@
-import { TextareaAutosize } from '@mui/material';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
 export interface ThreeDItem extends TreeViewBaseItem {
@@ -8,28 +7,10 @@ export interface ThreeDItem extends TreeViewBaseItem {
   position?: number[];
   color?: string;
   intensity?: number;
-  children: ThreeDItem[];
+  children?: ThreeDItem[];
 }
 
-export function findItemById(items, nodeId) {
-  let result = null;
-
-  items.some((item) => {
-    if (item.id === nodeId) {
-      result = item;
-      return true;
-    }
-    //search in children
-    if (item.children && item.children.length > 0) {
-      result = findItemById(item.children, nodeId);
-      return result !== null;
-    }
-    return false;
-  });
-  return result;
-}
-
-const sceneObjects: ThreeDItem[] = [
+export const ALL_SCENE_OBJECTS: ThreeDItem[] = [
   {
     id: 'lights',
     label: 'Scene Lights',
@@ -92,7 +73,7 @@ const sceneObjects: ThreeDItem[] = [
       {
         id: 'wheels',
         label: 'Wheels',
-        visibility: TextareaAutosize,
+        visibility: true,
         type: 'collection',
         children: [
           {
@@ -150,5 +131,3 @@ const sceneObjects: ThreeDItem[] = [
     color: 'darkgray',
   },
 ];
-
-export default sceneObjects;
