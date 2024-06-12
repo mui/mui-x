@@ -1,5 +1,5 @@
-import React from 'react';
-import { Canvas, useThree } from '@react-three/fiber';
+import * as React from 'react';
+import { Canvas } from '@react-three/fiber';
 import {
   PerspectiveCamera,
   OrbitControls,
@@ -9,35 +9,38 @@ import {
 } from '@react-three/drei';
 import { ThreeDItem } from './SceneObjects';
 
-const renderSceneObjects = (objects: ThreeDItem[]) => {
-  return objects.map((item) => {
-    if (
-      (item.type === 'collection' || (item.children && item.children.length > 0)) &&
-      item.visibility
-    ) {
-      return renderSceneObjects(item.children);
+const renderThreeDItem = (item: ThreeDItem): React.ReactNode => {
+  switch (item.type) {
+    case 'collection': {
+      if (!item.visibility) {
+        return null;
+      }
+
+      return item.children.map(renderThreeDItem);
     }
 
-    switch (item.type) {
-      case 'light':
-        return item.id.toLowerCase().includes('spot') ? (
-          <spotLight
-            visible={item.visibility}
-            key={item.id}
-            position={item.position}
-            intensity={item.intensity}
-            color={item.color}
-          />
-        ) : (
-          <ambientLight
-            visible={item.visibility}
-            key={item.id}
-            color={item.color}
-            intensity={item.intensity}
-          />
-        );
-      case 'mesh':
-        return item.id.toLowerCase().includes('wheel') ? (
+    case 'light': {
+      return item.id.toLowerCase().includes('spot') ? (
+        <spotLight
+          visible={item.visibility}
+          key={item.id}
+          position={item.position}
+          intensity={item.intensity}
+          color={item.color}
+        />
+      ) : (
+        <ambientLight
+          visible={item.visibility}
+          key={item.id}
+          color={item.color}
+          intensity={item.intensity}
+        />
+      );
+    }
+
+    case 'mesh': {
+      if (item.id.toLowerCase().includes('wheel')) {
+        return (
           <Cylinder
             args={item.size}
             position={item.position}
@@ -47,26 +50,32 @@ const renderSceneObjects = (objects: ThreeDItem[]) => {
           >
             <meshStandardMaterial color={item.color} />
           </Cylinder>
-        ) : (
-          <Box
-            args={item.size}
-            position={item.position}
-            visible={item.visibility}
-            key={item.id}
-          >
-            <meshStandardMaterial color={item.color} />
-          </Box>
         );
+      }
+
+      return (
+        <Box
+          args={item.size}
+          position={item.position}
+          visible={item.visibility}
+          key={item.id}
+        >
+          <meshStandardMaterial color={item.color} />
+        </Box>
+      );
     }
-    return null;
-  });
+
+    default: {
+      return null;
+    }
+  }
 };
 
-export default function Scene(props: { objects: ThreeDItem[] }) {
-  const { objects } = props;
+export function Scene(props: { items: ThreeDItem[] }) {
+  const { items } = props;
 
   return (
-    <Canvas style={{ width: '50vw', height: '80vh', backgroundColor: 'gray' }}>
+    <Canvas style={{ height: '300px', backgroundColor: 'gray' }}>
       <PerspectiveCamera makeDefault position={[-3, 2, 3]} fov={60} />
       <Grid
         rotation={[0, 0, 0]}
@@ -77,7 +86,7 @@ export default function Scene(props: { objects: ThreeDItem[] }) {
         args={[100, 100]}
       />
       <OrbitControls />
-      {renderSceneObjects(objects)}
+      {items.map(renderThreeDItem)}
     </Canvas>
   );
 }

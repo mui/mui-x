@@ -33,7 +33,7 @@ interface CustomTreeItemProps extends Omit<UseTreeItem2Parameters, 'rootRef'> {
   sceneObjects: ThreeDItem[];
 }
 
-const CustomTreeItem = React.forwardRef(function CustomTreeItem(
+export const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   props: CustomTreeItemProps,
   ref: React.Ref<HTMLLIElement>,
 ) {
@@ -142,9 +142,9 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
             {itemIcon}
             <TreeItem2Label
               {...getLabelProps()}
-              sx={(theme) => ({
-                color: item.visibility ? theme.palette.text.primary : '#888',
-              })}
+              sx={{
+                opacity: item.visibility ? 1 : 0.5,
+              }}
             />
           </Box>
         </CustomTreeItemContent>
@@ -159,5 +159,3 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     </TreeItem2Provider>
   );
 });
-
-export default CustomTreeItem;

@@ -1,14 +1,30 @@
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import { Vector3 } from '@react-three/fiber';
 
-export interface ThreeDItem extends TreeViewBaseItem {
-  type: 'mesh' | 'light' | 'collection';
-  visibility?: boolean;
-  size?: number[];
-  position?: number[];
-  color?: string;
-  intensity?: number;
-  children?: ThreeDItem[];
+interface ThreeDBaseItem {
+  id: string;
+  label: string;
+  visibility: boolean;
+  position?: Vector3;
 }
+
+interface ThreeDCollectionItem extends ThreeDBaseItem {
+  type: 'collection';
+  children: ThreeDItem[];
+}
+
+interface ThreeDLightItem extends ThreeDBaseItem {
+  type: 'light';
+  color: string;
+  intensity: number;
+}
+
+interface ThreeDMeshItem extends ThreeDBaseItem {
+  type: 'mesh';
+  color: string;
+  size: number[];
+}
+
+export type ThreeDItem = ThreeDCollectionItem | ThreeDLightItem | ThreeDMeshItem;
 
 export const ALL_SCENE_OBJECTS: ThreeDItem[] = [
   {
@@ -51,7 +67,6 @@ export const ALL_SCENE_OBJECTS: ThreeDItem[] = [
           {
             id: 'chassis-bottom-box',
             label: 'Base Frame',
-            children: [],
             visibility: true,
             type: 'mesh',
             size: [2, 0.5, 1],
@@ -66,7 +81,6 @@ export const ALL_SCENE_OBJECTS: ThreeDItem[] = [
             size: [1, 0.5, 0.8],
             position: [0.25, 1, 0],
             color: 'blue',
-            children: [],
           },
         ],
       },
@@ -81,7 +95,6 @@ export const ALL_SCENE_OBJECTS: ThreeDItem[] = [
             label: 'Front Left Wheel',
             visibility: true,
             type: 'mesh',
-            children: [],
             size: [0.25, 0.25, 0.2, 32],
             position: [-0.5, 0.25, 0.5],
             color: 'purple',
@@ -91,7 +104,6 @@ export const ALL_SCENE_OBJECTS: ThreeDItem[] = [
             label: 'Front Right Wheel',
             visibility: true,
             type: 'mesh',
-            children: [],
             size: [0.25, 0.25, 0.2, 32],
             position: [-0.5, 0.25, -0.5],
             color: 'purple',
@@ -101,7 +113,6 @@ export const ALL_SCENE_OBJECTS: ThreeDItem[] = [
             label: 'Back Left Wheel',
             visibility: true,
             type: 'mesh',
-            children: [],
             size: [0.3, 0.3, 0.2, 32],
             position: [0.5, 0.3, 0.5],
             color: 'purple',
@@ -111,7 +122,6 @@ export const ALL_SCENE_OBJECTS: ThreeDItem[] = [
             label: 'Back Right Wheel',
             visibility: true,
             type: 'mesh',
-            children: [],
             size: [0.3, 0.3, 0.2, 32],
             position: [0.5, 0.3, -0.5],
             color: 'purple',
@@ -125,7 +135,6 @@ export const ALL_SCENE_OBJECTS: ThreeDItem[] = [
     label: 'Street',
     visibility: false,
     type: 'mesh',
-    children: [],
     size: [100, 0.01, 3],
     position: [0, 0, 0],
     color: 'darkgray',

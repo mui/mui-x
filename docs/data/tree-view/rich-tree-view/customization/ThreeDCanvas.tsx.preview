@@ -1,0 +1,9 @@
+<RichTreeView
+  items={sceneObjects}
+  defaultExpandedItems={DEFAULT_EXPANDED_ITEMS}
+  slots={{ item: CustomTreeItem as any }}
+  slotProps={{
+    item: { toggleVisibility } as any,
+  }}
+/>
+<Scene items={sceneObjects} />

@@ -24,7 +24,7 @@ const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
 }));
 
-const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
+export const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const { id, itemId, label, children, sceneObjects, toggleVisibility, ...other } =
     props;
 
@@ -128,9 +128,9 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
             {itemIcon}
             <TreeItem2Label
               {...getLabelProps()}
-              sx={(theme) => ({
-                color: item.visibility ? theme.palette.text.primary : '#888',
-              })}
+              sx={{
+                opacity: item.visibility ? 1 : 0.5,
+              }}
             />
           </Box>
         </CustomTreeItemContent>
@@ -145,5 +145,3 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     </TreeItem2Provider>
   );
 });
-
-export default CustomTreeItem;
