@@ -385,7 +385,7 @@ export class AdapterDateFnsJalali
     return getWeek(date, { locale: this.locale });
   };
 
-  public getYearRange = ([start, end]: [Date, Date]): Date => {
+  public getYearRange = ([start, end]: [Date, Date]): Date[] => {
     const startDate = this.startOfYear(start);
     const endDate = this.endOfYear(end);
     const years: Date[] = [];
