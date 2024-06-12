@@ -1,38 +1,35 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ChartContainer, ChartContainerProps } from '../ChartContainer';
-import { useChartContainerDimensions } from './useChartContainerDimensions';
-import { ResizableContainer } from './ResizableContainer';
+import { useLicenseVerifier, Watermark } from '@mui/x-license';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ResponsiveChartContainerProps } from '@mui/x-charts/ResponsiveChartContainer';
+import { ResizableContainer, useChartContainerDimensions } from '@mui/x-charts/internals';
+import { getReleaseInfo } from '../internals/utils/releaseInfo';
 
-export interface ResponsiveChartContainerProps
-  extends Omit<ChartContainerProps, 'width' | 'height'> {
-  /**
-   * The width of the chart in px. If not defined, it takes the width of the parent element.
-   */
-  width?: number;
-  /**
-   * The height of the chart in px. If not defined, it takes the height of the parent element.
-   */
-  height?: number;
-}
+export interface ResponsiveChartContainerProProps extends ResponsiveChartContainerProps {}
 
-const ResponsiveChartContainer = React.forwardRef(function ResponsiveChartContainer(
-  props: ResponsiveChartContainerProps,
+const releaseInfo = getReleaseInfo();
+
+const ResponsiveChartContainerPro = React.forwardRef(function ResponsiveChartContainerPro(
+  props: ResponsiveChartContainerProProps,
   ref,
 ) {
   const { width: inWidth, height: inHeight, ...other } = props;
   const [containerRef, width, height] = useChartContainerDimensions(inWidth, inHeight);
+
+  useLicenseVerifier('x-charts-pro', releaseInfo);
 
   return (
     <ResizableContainer ref={containerRef} ownerState={{ width: inWidth, height: inHeight }}>
       {width && height ? (
         <ChartContainer {...other} width={width} height={height} ref={ref} />
       ) : null}
+      <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
     </ResizableContainer>
   );
 });
 
-ResponsiveChartContainer.propTypes = {
+ResponsiveChartContainerPro.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -255,4 +252,4 @@ ResponsiveChartContainer.propTypes = {
   ),
 } as any;
 
-export { ResponsiveChartContainer };
+export { ResponsiveChartContainerPro };
