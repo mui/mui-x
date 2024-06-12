@@ -93,7 +93,10 @@
       "isGlobal": true
     }
   ],
+  "spread": true,
+  "themeDefaultProps": true,
   "muiName": "MuiTreeItem2",
+  "forwardsRefTo": "HTMLLIElement",
   "filename": "/packages/x-tree-view/src/TreeItem2/TreeItem2.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-tree-view/rich-tree-view/customization/\">Rich Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/customization/\">Simple Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/tree-item-customization/\">Tree Item Customization</a></li></ul>",
