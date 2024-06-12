@@ -8,9 +8,9 @@ import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/co
 import { AxisDefaultized } from '../models/axis';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsAxisTooltipContent } from './DefaultChartsAxisTooltipContent';
-import { isCartesianSeriesType } from '../internals/isCartesian';
-import { useColorProcessor } from '../hooks/useColor';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
+import { useColorProcessor } from '../hooks/useColor';
+import { isCartesianSeriesType } from '../internals/isCartesian';
 import { useSeries } from '../hooks/useSeries';
 
 type ChartSeriesDefaultizedWithColorGetter = ChartSeriesDefaultized<ChartSeriesType> & {
