@@ -132,10 +132,11 @@ export const CustomTreeItem = React.forwardRef(function CustomTreeItem(
           </TreeItem2IconContainer>
           {itemIcon}
           <TreeItem2Label
-            {...getLabelProps()}
-            sx={{
-              opacity: item.visibility ? 1 : 0.5,
-            }}
+            {...getLabelProps({
+              sx: {
+                opacity: item.visibility ? 1 : 0.5,
+              },
+            })}
           />
         </TreeItem2Content>
         {children && <TreeItem2GroupTransition {...getGroupTransitionProps()} />}
