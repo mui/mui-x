@@ -50,7 +50,7 @@ export interface GridRowApi {
   getAllRowIds: () => GridRowId[];
   /**
    * Sets the internal loading state.
-   * @param {boolean} loading The new rows.
+   * @param {boolean} loading If `true` the loading indicator will be shown over the Data Grid.
    */
   setLoading: (loading: boolean) => void;
   /**
