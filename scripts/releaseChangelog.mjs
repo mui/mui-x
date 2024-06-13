@@ -8,16 +8,16 @@ const GIT_REPO = 'mui-x';
 
 /**
  * @param {string} commitMessage
- * @returns {string} The tags in lowercases, ordered ascending and commaseparated
+ * @returns {string} The tags in lowercases, ordered ascending and comma-separated
  */
 function parseTags(commitMessage) {
-  const tagMatch = commitMessage.match(/^(\[[\w-]+\])+/);
+  const tagMatch = commitMessage.match(/^(\[[\w- ]+\])+/);
   if (tagMatch === null) {
     return '';
   }
   const [tagsWithBracketDelimiter] = tagMatch;
   return tagsWithBracketDelimiter
-    .match(/([\w-]+)/g)
+    .match(/([\w- ]+)/g)
     .map((tag) => {
       return tag;
     })
@@ -165,8 +165,11 @@ async function main(argv) {
 
   commitsItems.forEach((commitItem) => {
     const tag = parseTags(commitItem.commit.message);
-    switch (tag) {
+    // for now we use only one parsed tag
+    const firstTag = tag.split(',')[0];
+    switch (firstTag) {
       case 'DataGrid':
+      case 'data grid':
         dataGridCommits.push(commitItem);
         break;
       case 'DataGridPro':
@@ -190,6 +193,7 @@ async function main(argv) {
         chartsCommits.push(commitItem);
         break;
       case 'TreeView':
+      case 'tree view':
         treeViewCommits.push(commitItem);
         break;
       case 'docs':
