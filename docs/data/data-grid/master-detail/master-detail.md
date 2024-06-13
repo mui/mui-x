@@ -77,6 +77,16 @@ On the other hand, if you only want to initialize the data grid with some rows a
 
 {{"demo": "ControlMasterDetail.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Lazy loading detail panel content
+
+You don't need to provide the content for detail panels upfront.
+Instead, you can load it lazily when the row is expanded.
+
+In the following example, the `DetailPanelContent` component is fetching the data on mount.
+This component is used by the `getDetailPanelContent` prop to render the detail panel content.
+
+{{"demo": "LazyLoadingDetailPanel.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Using a detail panel as a form
 
 As an alternative to the built-in [row editing](/x/react-data-grid/editing/#row-editing), a form component can be rendered inside the detail panel, allowing the user to edit the current row values.
