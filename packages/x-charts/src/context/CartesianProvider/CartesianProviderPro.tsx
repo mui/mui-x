@@ -8,16 +8,6 @@ import { ExtremumGettersConfig } from '../../models';
 import { useZoom } from '../ZoomProvider/useZoom';
 import { CartesianContextProviderProps } from './CartesianProvider';
 
-function CartesianContextProviderPro(props: CartesianContextProviderProps) {
-  const prevContext = React.useContext(CartesianContext);
-
-  if (prevContext.isInitialized) {
-    return props.children;
-  }
-
-  return <CartesianContextProviderReal {...props} />;
-}
-
 const calculateZoom = (
   data: [number | null, number | null],
   zoom: [number, number],
@@ -49,7 +39,7 @@ const zoomExtremumGetter = (getters: ExtremumGettersConfig, zoom: [number, numbe
   );
 };
 
-function CartesianContextProviderReal(props: CartesianContextProviderProps) {
+function CartesianContextProviderPro(props: CartesianContextProviderProps) {
   const {
     xAxis: inXAxis,
     yAxis: inYAxis,
