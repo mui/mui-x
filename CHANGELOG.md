@@ -21,7 +21,6 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 #### `@mui/x-data-grid@7.6.3`
 
-- [data grid][docs] Add small edits to the overview page (#13060) @danilo-leal
 - [DataGrid] Add `getFilterState` method (#13418) @cherniavskii
 - [DataGrid] Do not show resize separators for column groups (#13455) @cherniavskii
 - [l10n] Improve Persian (fa-IR) locale (#13402) @fakhamatia
@@ -74,6 +73,7 @@ Same changes as in `@mui/x-date-pickers@7.6.3`.
 
 - [docs] Add `renderHeader` recipe to the Master Details docs (#13370) @michelengelen
 - [docs] Add lazy loading detail panel demo (#13453) @cherniavskii
+- [docs] Add small edits to the Data Grid overview page (#13060) @danilo-leal
 - [docs] Update a11y pages description (#13417) @danilo-leal
 - [docs] improve the writing on the "Quick filter outside of the grid" example (#13155) @michelengelen
 
