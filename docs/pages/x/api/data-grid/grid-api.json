@@ -116,6 +116,12 @@
       "required": true,
       "isProPlan": true
     },
+    "getFilterState": {
+      "type": {
+        "description": "(filterModel: GridFilterModel) =&gt; GridStateCommunity['filter']"
+      },
+      "required": true
+    },
     "getLocaleText": {
       "type": {
         "description": "&lt;T extends GridTranslationKeys&gt;(key: T) =&gt; GridLocaleText[T]"

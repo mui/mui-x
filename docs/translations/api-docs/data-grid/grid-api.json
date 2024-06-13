@@ -66,6 +66,9 @@
       "description": "Returns the grid data as an exceljs workbook.<br />This method is used internally by <code>exportDataAsExcel</code>."
     },
     "getExpandedDetailPanels": { "description": "Returns the rows whose detail panel is open." },
+    "getFilterState": {
+      "description": "Returns the filter state for the given filter model without applying it to the data grid."
+    },
     "getLocaleText": { "description": "Returns the translation for the <code>key</code>." },
     "getPinnedColumns": { "description": "Returns which columns are pinned." },
     "getRootDimensions": { "description": "Returns the dimensions of the grid" },

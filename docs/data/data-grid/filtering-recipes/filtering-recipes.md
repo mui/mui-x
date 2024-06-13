@@ -15,3 +15,9 @@ This requires certain considerations due to the Grid's context structure.
 The following example shows how to accomplish this:
 
 {{"demo": "QuickFilterOutsideOfGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Calculating filtered rows in advance
+
+The [Grid API](/x/react-data-grid/api-object/#how-to-use-the-api-object) provides the [`getFilterState`](/x/api/data-grid/grid-api/#grid-api-prop-getFilterState) method, which allows you to display the row count for predefined filters upfront without applying filters to the Data Grid:
+
+{{"demo": "FilteredRowCount.js", "bg": "inline", "defaultCodeOpen": false}}
