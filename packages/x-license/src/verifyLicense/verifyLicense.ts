@@ -1,7 +1,7 @@
 import { base64Decode, base64Encode } from '../encoding/base64';
 import { md5 } from '../encoding/md5';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import { LicenseScope, LICENSE_SCOPES } from '../utils/licenseScope';
+import { LicenseScope, LICENSE_SCOPES, ProductScope, PlanVersion } from '../utils/licenseScope';
 import { LicensingModel, LICENSING_MODELS } from '../utils/licensingModel';
 
 const getDefaultReleaseDate = () => {
@@ -21,6 +21,7 @@ interface MuiLicense {
   licensingModel: LicensingModel | null;
   scope: LicenseScope | null;
   expiryTimestamp: number | null;
+  planVersion?: PlanVersion | null;
 }
 
 /**
@@ -45,7 +46,7 @@ const decodeLicenseVersion1 = (license: string): MuiLicense => {
 };
 
 /**
- * Format: O=${orderNumber},E=${expiryTimestamp},S=${scope},LM=${licensingModel},KV=2`;
+ * Format: O=${orderNumber},E=${expiryTimestamp},S=${scope},LM=${licensingModel},PV=${planVersion},KV=2`;
  */
 const decodeLicenseVersion2 = (license: string): MuiLicense => {
   const licenseInfo: MuiLicense = {
@@ -73,6 +74,10 @@ const decodeLicenseVersion2 = (license: string): MuiLicense => {
           licenseInfo.expiryTimestamp = expiryTimestamp;
         }
       }
+
+      if (key === 'PV') {
+        licenseInfo.planVersion = value as PlanVersion;
+      }
     });
 
   return licenseInfo;
@@ -99,10 +104,12 @@ export function verifyLicense({
   releaseInfo,
   licenseKey,
   acceptedScopes,
+  productScope,
 }: {
   releaseInfo: string;
   licenseKey: string | undefined;
   acceptedScopes: readonly LicenseScope[];
+  productScope: ProductScope | null;
 }): { status: LicenseStatus; meta?: any } {
   if (!releaseInfo) {
     throw new Error('MUI X: The release information is missing. Not able to validate license.');
@@ -167,6 +174,16 @@ export function verifyLicense({
   if (license.scope == null || !LICENSE_SCOPES.includes(license.scope)) {
     console.error('Error checking license. scope not found or invalid!');
     return { status: LICENSE_STATUS.Invalid };
+  }
+
+  // no planVersion or planVersion is 'legacy'
+  // only available for old licenses ordered between 2024-06-20 and 2024-07-20
+  if (!license.planVersion || license.planVersion === 'legacy') {
+    // check if the productScope is 'charts' or 'tree-view'
+    if (productScope === 'charts' || productScope === 'tree-view') {
+      console.error('Error checking license. Plan version not found or invalid!');
+      return { status: LICENSE_STATUS.Invalid };
+    }
   }
 
   if (!acceptedScopes.includes(license.scope)) {

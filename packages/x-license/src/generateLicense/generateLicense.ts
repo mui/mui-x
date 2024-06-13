@@ -10,6 +10,7 @@ export interface LicenseDetails {
   expiryDate: Date;
   scope: LicenseScope;
   licensingModel: LicensingModel;
+  planVersion: string;
 }
 
 function getClearLicenseString(details: LicenseDetails) {
@@ -21,9 +22,16 @@ function getClearLicenseString(details: LicenseDetails) {
     throw new Error('MUI X: Invalid licensing model');
   }
 
-  return `O=${details.orderNumber},E=${details.expiryDate.getTime()},S=${details.scope},LM=${
-    details.licensingModel
-  },KV=${licenseVersion}`;
+  const keyParts = [
+    `O=${details.orderNumber}`,
+    `E=${details.expiryDate.getTime()}`,
+    `S=${details.scope}`,
+    `LM=${details.licensingModel}`,
+    `PV=${details.planVersion}`,
+    `KV=${licenseVersion}`,
+  ];
+
+  return keyParts.join(',');
 }
 
 export function generateLicense(details: LicenseDetails) {

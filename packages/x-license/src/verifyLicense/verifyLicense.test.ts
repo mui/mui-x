@@ -243,4 +243,24 @@ describe('License: verifyLicense', () => {
       ).to.equal(LICENSE_STATUS.Valid);
     });
   });
+
+  describe('key version: 2.2', () => {
+    const licenseKeyPro = generateLicense({
+      expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
+      orderNumber: 'MUI-123',
+      scope: 'pro2024',
+      licensingModel: 'annual',
+    });
+
+    it('should accept licensingModel="annual"', () => {
+      process.env.NODE_ENV = 'production';
+      expect(
+        verifyLicense({
+          releaseInfo: RELEASE_INFO,
+          licenseKey: licenseKeyPro,
+          acceptedScopes: ['pro2024', 'premium2024'],
+        }).status,
+      ).to.equal(LICENSE_STATUS.Valid);
+    });
+  });
 });
