@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ViewInArOutlinedIcon from '@mui/icons-material/ViewInArOutlined';
@@ -18,10 +18,6 @@ import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
 import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
 
 import CustomTreeItemContextMenu from './ContextMenu';
-
-const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
-  padding: theme.spacing(0.5, 1),
-}));
 
 export const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const { id, itemId, label, children, sceneObjects, toggleVisibility, ...other } =
@@ -98,14 +94,15 @@ export const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, re
   return (
     <TreeItem2Provider itemId={itemId}>
       <TreeItem2Root {...getRootProps(other)}>
-        <CustomTreeItemContent
-          {...getContentProps()}
-          onContextMenu={handleContextMenu}
-          onClick={handleContentClick}
+        <TreeItem2Content
+          {...getContentProps({
+            onContextMenu: handleContextMenu,
+            onClick: handleContentClick,
+            sx: { gap: '12px' },
+          })}
         >
           <TreeItem2IconContainer
-            {...getIconContainerProps()}
-            onClick={handleIconContainerClick}
+            {...getIconContainerProps({ onClick: handleIconContainerClick })}
           >
             <TreeItem2Icon status={status} />
           </TreeItem2IconContainer>
@@ -123,7 +120,7 @@ export const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, re
               opacity: item.visibility ? 1 : 0.5,
             }}
           />
-        </CustomTreeItemContent>
+        </TreeItem2Content>
         {children && <TreeItem2GroupTransition {...getGroupTransitionProps()} />}
       </TreeItem2Root>
       <CustomTreeItemContextMenu
