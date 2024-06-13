@@ -182,7 +182,7 @@ export function verifyLicense({
     // check if the productScope is 'charts' or 'tree-view'
     if (productScope === 'charts' || productScope === 'tree-view') {
       console.error('Error checking license. Plan version not found or invalid!');
-      return { status: LICENSE_STATUS.Invalid };
+      return { status: LICENSE_STATUS.OutOfScope };
     }
   }
 
