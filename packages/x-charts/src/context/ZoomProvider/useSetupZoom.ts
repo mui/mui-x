@@ -16,6 +16,12 @@ function throttle(fn: Function, wait: number) {
   };
 }
 
+const MAX_RANGE = 100;
+const MIN_RANGE = 0;
+
+const MIN_ALLOWED_SPAN = 10;
+const MAX_ALLOWED_SPAN = 100;
+
 const zoomAtPoint = (point: number, scale: number, currentRange: [number, number]) => {
   const [minRange, maxRange] = currentRange;
 
@@ -24,29 +30,29 @@ const zoomAtPoint = (point: number, scale: number, currentRange: [number, number
   let newMinRange = (minRange + (scale - 1) * (point - minRange)) / scale;
   let minSpillover = 0;
 
-  if (newMinRange < 0) {
+  if (newMinRange < MIN_RANGE) {
     minSpillover = Math.abs(newMinRange);
-    newMinRange = 0;
+    newMinRange = MIN_RANGE;
   }
 
   let newMaxRange = ((point - maxRange) * (scale - 1) + maxRange) / scale;
   let maxSpillover = 0;
 
-  if (newMaxRange > 100) {
-    newMaxRange = 100;
-    maxSpillover = Math.abs(newMaxRange - 100);
+  if (newMaxRange > MAX_RANGE) {
+    newMaxRange = MAX_RANGE;
+    maxSpillover = Math.abs(newMaxRange - MAX_RANGE);
   }
 
-  console.log('sp', minSpillover, maxSpillover);
+  if (minSpillover > 0 && maxSpillover > 0) {
+    // This shouldn't happen, but just in case.
+    throw Error('MUI X Charts: Both min and max zoom ranges spillover the [0-100] boundary.');
+  }
 
   newMaxRange += minSpillover;
   newMinRange -= maxSpillover;
 
-  console.log('1', newMinRange, newMaxRange);
-
-  newMinRange = Math.max(0, newMinRange);
-  newMaxRange = Math.min(100, newMaxRange);
-  console.log('2', newMinRange, newMaxRange);
+  newMinRange = Math.min(MAX_RANGE - MIN_ALLOWED_SPAN, Math.max(MIN_RANGE, newMinRange));
+  newMaxRange = Math.max(MIN_ALLOWED_SPAN, Math.min(MAX_RANGE, newMaxRange));
 
   return [newMinRange, newMaxRange];
 };
@@ -104,7 +110,10 @@ export const useSetupZoom = () => {
       console.log('newSpanPercent', newSpanPercent);
 
       // TODO: make span a config option.
-      if ((zoomIn && newSpanPercent < 10) || (!zoomIn && newSpanPercent > 100)) {
+      if (
+        (zoomIn && newSpanPercent < MIN_ALLOWED_SPAN) ||
+        (!zoomIn && newSpanPercent > MAX_ALLOWED_SPAN)
+      ) {
         return;
       }
 
