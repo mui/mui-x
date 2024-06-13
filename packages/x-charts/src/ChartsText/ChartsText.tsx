@@ -49,13 +49,11 @@ function ChartsText(props: ChartsTextProps) {
   if (angle) {
     transforms.push(`rotate(${angle}, ${x}, ${y})`);
   }
-  if (transforms.length) {
-    textProps.transform = transforms.join(' ');
-  }
 
   return (
     <text
       {...textProps}
+      transform={transforms.length > 0 ? transforms.join(' ') : undefined}
       x={x}
       y={y}
       textAnchor={textAnchor}
