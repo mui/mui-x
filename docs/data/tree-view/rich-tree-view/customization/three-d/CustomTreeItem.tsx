@@ -19,7 +19,6 @@ import {
 import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
 import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
 import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
-import { TreeItemContextMenu } from './ContextMenu';
 import { ThreeDItem } from './SceneObjects';
 
 interface CustomTreeItemProps extends Omit<UseTreeItem2Parameters, 'rootRef'> {
@@ -50,27 +49,6 @@ export const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   });
 
   const item = publicAPI.getItem(itemId);
-
-  const [mousePosition, setMousePosition] = React.useState<{
-    x: number;
-    y: number;
-  } | null>(null);
-
-  const handleContextMenu = (event: React.MouseEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    setMousePosition({
-      x: event.clientX - 2,
-      y: event.clientY - 4,
-    });
-  };
-
-  const handleContextMenuClose = () => {
-    setMousePosition(null); // Closes the context menu
-  };
-
-  const handleContextMenuItemClick = () => {
-    handleContextMenuClose();
-  };
 
   const handleVisibilityIconClick = (
     event: React.MouseEvent & { defaultMuiPrevented?: boolean },
@@ -112,7 +90,6 @@ export const CustomTreeItem = React.forwardRef(function CustomTreeItem(
       <TreeItem2Root {...getRootProps(other)}>
         <TreeItem2Content
           {...getContentProps({
-            onContextMenu: handleContextMenu,
             onClick: handleContentClick,
             sx: { gap: '12px' },
           })}
@@ -140,12 +117,6 @@ export const CustomTreeItem = React.forwardRef(function CustomTreeItem(
         </TreeItem2Content>
         {children && <TreeItem2GroupTransition {...getGroupTransitionProps()} />}
       </TreeItem2Root>
-      <TreeItemContextMenu
-        positionSeed={mousePosition}
-        onClose={handleContextMenuClose}
-        onClick={handleContextMenuItemClick}
-        menuItems={['Action 1', 'Action 2', 'Action 3']}
-      />
     </TreeItem2Provider>
   );
 });
