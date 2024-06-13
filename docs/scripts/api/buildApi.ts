@@ -1,5 +1,6 @@
 /* eslint-disable no-await-in-loop */
-import * as yargs from 'yargs';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import path from 'path';
 import fs from 'fs';
 import * as prettier from 'prettier';
@@ -143,7 +144,7 @@ async function run() {
   });
 }
 
-yargs
+yargs(hideBin(process.argv))
   .command({
     command: '$0',
     describe: 'generates API docs',

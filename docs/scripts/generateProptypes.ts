@@ -1,4 +1,5 @@
-import * as yargs from 'yargs';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import * as path from 'path';
 import * as fse from 'fs-extra';
 import * as prettier from 'prettier';
@@ -199,7 +200,7 @@ async function run() {
   }
 }
 
-yargs
+yargs(hideBin(process.argv))
   .command({
     command: '$0',
     describe: 'Generates Component.propTypes from TypeScript declarations',

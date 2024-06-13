@@ -2,7 +2,7 @@ import * as ts from 'typescript';
 import { EOL } from 'os';
 import kebabCase from 'lodash/kebabCase';
 import path from 'path';
-import { renderMarkdown } from '@mui/monorepo/packages/markdown';
+import { renderMarkdown } from '@mui/internal-markdown';
 import {
   getSymbolDescription,
   getSymbolJSDocTags,
