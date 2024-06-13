@@ -192,11 +192,20 @@ export const useGridDataSource = (
   const setChildrenLoading = React.useCallback<GridDataSourceApiBase['setChildrenLoading']>(
     (parentId, isLoading) => {
       apiRef.current.setState((state) => {
+        if (!state.dataSource.loading[parentId] && isLoading === false) {
+          return state;
+        }
+        const newLoadingState = { ...state.dataSource.loading };
+        if (isLoading === false) {
+          delete newLoadingState[parentId];
+        } else {
+          newLoadingState[parentId] = isLoading;
+        }
         return {
           ...state,
           dataSource: {
             ...state.dataSource,
-            loading: { ...state.dataSource.loading, [parentId]: isLoading },
+            loading: newLoadingState,
           },
         };
       });
