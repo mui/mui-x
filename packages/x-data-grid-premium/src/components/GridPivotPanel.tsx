@@ -16,6 +16,8 @@ const GridPivotPanelContainerStyled = styled('div')({
   width: 250,
   overflow: 'hidden',
   position: 'relative',
+  display: 'flex',
+  flexDirection: 'column',
 });
 
 const ResizeHandle = styled('div')(({ theme }) => ({
@@ -57,6 +59,7 @@ const PivotSectionContainer = styled('div')<{ 'data-section': FieldTransferObjec
   ({ theme }) => ({
     padding: '8px 0',
     minHeight: 50,
+    flexShrink: 0,
 
     '&[data-drag-over="true"]': {
       backgroundColor: theme.palette.action.selected,
@@ -520,7 +523,14 @@ function GridPivotPanelContent({
   }, []);
 
   return (
-    <div>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        flexShrink: 1,
+      }}
+    >
       <PivotSectionContainer
         onDrop={handleDrop}
         onDragEnter={handleDragEnter}
@@ -617,6 +627,7 @@ function GridPivotPanelContent({
         onDragLeave={handleDragLeave}
         data-section={null}
         ref={useAutoAnimate()[0]}
+        sx={{ flexShrink: 1, overflow: 'auto' }}
       >
         <PivotSectionTitle>Available fields</PivotSectionTitle>
         {availableFields.map((field) => {
@@ -650,17 +661,19 @@ export function GridPivotPanel({
 }) {
   return (
     <React.Fragment>
-      <FormControlLabel
-        control={
-          <Switch
-            checked={pivotMode}
-            onChange={(e) => onPivotModeChange(e.target.checked)}
-            size="small"
-          />
-        }
-        sx={{ marginLeft: 0, py: 1 }}
-        label="Pivot"
-      />
+      <div>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={pivotMode}
+              onChange={(e) => onPivotModeChange(e.target.checked)}
+              size="small"
+            />
+          }
+          sx={{ marginLeft: 0, py: 1 }}
+          label="Pivot"
+        />
+      </div>
       <Divider />
       {pivotMode && (
         <GridPivotPanelContent
