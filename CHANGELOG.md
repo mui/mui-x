@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 7.6.3
+## 7.7.0
 
 _Jun 13, 2024_
 
@@ -19,7 +19,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 ### Data Grid
 
-#### `@mui/x-data-grid@7.6.3`
+#### `@mui/x-data-grid@7.7.0`
 
 - [DataGrid] Add `getFilterState` method (#13418) @cherniavskii
 - [DataGrid] Do not show resize separators for column groups (#13455) @cherniavskii
@@ -27,31 +27,31 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [l10n] Improve Portuguese (pt-PT) locale (#13384) @olavocarvalho
 - [l10n] Improve Russian (ru-RU) locale (#11210) @dastan-akhmetov-scity
 
-#### `@mui/x-data-grid-pro@7.6.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@7.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@7.6.3`, plus:
+Same changes as in `@mui/x-data-grid@7.7.0`, plus:
 
 - [DataGridPro] Do not render detail panel if the focused cell is not visible (#13456) @cherniavskii
 
-#### `@mui/x-data-grid-premium@7.6.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@7.7.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@7.6.3`.
+Same changes as in `@mui/x-data-grid-pro@7.7.0`.
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@7.6.3`
+#### `@mui/x-date-pickers@7.7.0`
 
 - [l10n] Improve Korean (ko-KR) locale (#13452) @ryxxn
 - [l10n] Improve Persian (fa-IR) locale (#13402) @fakhamatia
 - [pickers] Allow to customize the month and the year buttons (#13321) @flaviendelangle
 
-#### `@mui/x-date-pickers-pro@7.6.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@7.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@7.6.3`.
+Same changes as in `@mui/x-date-pickers@7.7.0`.
 
 ### Charts
 
-#### `@mui/x-charts@7.6.3`
+#### `@mui/x-charts@7.7.0`
 
 - [charts] Add watermark on the pro `ResponsiveChartContainer` (#13398) @alexfauquette
 - [charts] Allow to specify y-axis configuration (#13438) @alexfauquette
@@ -62,7 +62,7 @@ Same changes as in `@mui/x-date-pickers@7.6.3`.
 
 ### Tree View
 
-#### `@mui/x-tree-view@7.6.3`
+#### `@mui/x-tree-view@7.7.0`
 
 - [TreeView] Improve TypeScript for plugins (#13380) @flaviendelangle
 - [TreeView] Improve the typing of the cancelable events (#13152) @flaviendelangle
