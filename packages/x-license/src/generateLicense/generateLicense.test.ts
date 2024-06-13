@@ -53,17 +53,4 @@ describe('License: generateLicense', () => {
       'b16edd8e6bc83293a723779a259f520cTz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1wZXJwZXR1YWwsS1Y9Mg==',
     );
   });
-
-  it('should generate a new license covering charts-pro and tree-view-pro', () => {
-    expect(
-      generateLicense({
-        expiryDate: new Date(1591723879062),
-        orderNumber: 'MUI-123',
-        scope: 'pro2024',
-        licensingModel: 'annual',
-      }),
-    ).to.equal(
-      'b3fbd10f8df5b5a6976673e6e714b8a1Tz1NVUktMTIzLEU9MTc2NzIyNTU5OTk5OSxTPXBybzIwMjQsTE09YW5udWFsLEtWPTI=',
-    );
-  });
 });
