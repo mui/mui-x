@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ViewInArOutlinedIcon from '@mui/icons-material/ViewInArOutlined';
@@ -38,6 +37,11 @@ export const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, re
     publicAPI,
   } = useTreeItem2({ id, itemId, children, label, rootRef: ref });
 
+  const { interactions } = useTreeItem2Utils({
+    itemId: props.itemId,
+    children: props.children,
+  });
+
   const item = publicAPI.getItem(itemId);
 
   const [mousePosition, setMousePosition] = React.useState(null);
@@ -58,16 +62,16 @@ export const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, re
     handleContextMenuClose();
   };
 
-  const handleEyeClick = () => {
+  const handleVisibilityIconClick = (event) => {
+    event.defaultMuiPrevented = true;
     toggleVisibility(itemId);
   };
 
-  const { interactions } = useTreeItem2Utils({
-    itemId: props.itemId,
-    children: props.children,
-  });
-
   const handleContentClick = (event) => {
+    if (event.defaultMuiPrevented) {
+      return;
+    }
+
     event.defaultMuiPrevented = true;
     interactions.handleSelection(event);
   };
@@ -97,6 +101,7 @@ export const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, re
         <CustomTreeItemContent
           {...getContentProps()}
           onContextMenu={handleContextMenu}
+          onClick={handleContentClick}
         >
           <TreeItem2IconContainer
             {...getIconContainerProps()}
@@ -104,34 +109,20 @@ export const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, re
           >
             <TreeItem2Icon status={status} />
           </TreeItem2IconContainer>
-          <Box
-            sx={{ flexGrow: 1, display: 'flex', gap: 1 }}
-            onClick={handleContentClick}
-          >
+          <TreeItem2IconContainer onClick={handleVisibilityIconClick}>
             {item.visibility ? (
-              <VisibilityIcon
-                sx={(theme) => ({
-                  color: theme.palette.primary.main,
-                  width: 24,
-                  height: 24,
-                })}
-                onClick={handleEyeClick}
-              />
+              <VisibilityIcon color="primary" />
             ) : (
-              <VisibilityOffIcon
-                sx={{ width: 24, height: 24, color: '#555' }}
-                onClick={handleEyeClick}
-              />
+              <VisibilityOffIcon sx={{ color: '#555' }} />
             )}
-
-            {itemIcon}
-            <TreeItem2Label
-              {...getLabelProps()}
-              sx={{
-                opacity: item.visibility ? 1 : 0.5,
-              }}
-            />
-          </Box>
+          </TreeItem2IconContainer>
+          {itemIcon}
+          <TreeItem2Label
+            {...getLabelProps()}
+            sx={{
+              opacity: item.visibility ? 1 : 0.5,
+            }}
+          />
         </CustomTreeItemContent>
         {children && <TreeItem2GroupTransition {...getGroupTransitionProps()} />}
       </TreeItem2Root>
