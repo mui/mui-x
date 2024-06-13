@@ -55,8 +55,6 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
   const isDataLoading = useGridSelector(apiRef, loadingSelector);
   const error = useGridSelector(apiRef, errorSelector);
 
-  const hasServerChildren = rowNode.hasServerChildren;
-
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!rowNode.childrenExpanded) {
       // always fetch/get from cache the children when the node is expanded
@@ -79,7 +77,7 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
       </div>
     );
   }
-  return descendantCount > 0 || hasServerChildren ? (
+  return descendantCount > 0 ? (
     <rootProps.slots.baseIconButton
       size="small"
       onClick={handleClick}
