@@ -217,10 +217,6 @@ export interface GridDataSourceCache {
 }
 ```
 
-The following demo uses cache used by a popular library [`swr`](https://github.com/vercel/swr) to cache the server-side data.
-
-{{"demo": "ServerSideDataGridWithSWR.js", "bg": "inline"}}
-
 ### Disable cache
 
 To disable the data source cache, pass `null` to the `unstable_dataSourceCache` prop.
