@@ -10,7 +10,7 @@ import {
   showExpiredPackageVersionError,
 } from '../utils/licenseErrorMessageUtils';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import { LicenseScope } from '../utils/licenseScope';
+import { extractAcceptedScopes, LicenseScope } from '../utils/licenseScope';
 import MuiLicenseInfoContext from '../Unstable_LicenseInfoProvider/MuiLicenseInfoContext';
 
 export type MuiCommercialPackageName =
@@ -47,9 +47,7 @@ export function useLicenseVerifier(
       return sharedLicenseStatuses[packageName]!.licenseVerifier;
     }
 
-    const acceptedScopes: LicenseScope[] = packageName.includes('premium')
-      ? ['premium']
-      : ['pro', 'premium'];
+    const acceptedScopes: readonly LicenseScope[] = extractAcceptedScopes(packageName);
 
     const plan = packageName.includes('premium') ? 'Premium' : 'Pro';
     const licenseStatus = verifyLicense({

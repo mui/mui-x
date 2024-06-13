@@ -102,7 +102,7 @@ export function verifyLicense({
 }: {
   releaseInfo: string;
   licenseKey: string | undefined;
-  acceptedScopes: LicenseScope[];
+  acceptedScopes: readonly LicenseScope[];
 }): { status: LicenseStatus; meta?: any } {
   if (!releaseInfo) {
     throw new Error('MUI X: The release information is missing. Not able to validate license.');
