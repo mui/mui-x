@@ -1,6 +1,6 @@
 import { md5 } from '../encoding/md5';
 import { base64Encode } from '../encoding/base64';
-import { LICENSE_SCOPES, LicenseScope } from '../utils/licenseScope';
+import { LICENSE_SCOPES, LicenseScope, PlanVersion } from '../utils/licenseScope';
 import { LICENSING_MODELS, LicensingModel } from '../utils/licensingModel';
 
 const licenseVersion = '2';
@@ -10,7 +10,7 @@ export interface LicenseDetails {
   expiryDate: Date;
   scope: LicenseScope;
   licensingModel: LicensingModel;
-  planVersion: string;
+  planVersion: PlanVersion;
 }
 
 function getClearLicenseString(details: LicenseDetails) {

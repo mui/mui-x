@@ -53,6 +53,7 @@ describe('License: verifyLicense', () => {
         scope: 'pro',
         licensingModel: 'perpetual',
         orderNumber: 'MUI-123',
+        planVersion: 'legacy',
       });
 
       expect(
@@ -83,6 +84,7 @@ describe('License: verifyLicense', () => {
       orderNumber: 'MUI-123',
       scope: 'pro',
       licensingModel: 'subscription',
+      planVersion: 'legacy',
     });
 
     const licenseKeyPremium = generateLicense({
@@ -90,6 +92,7 @@ describe('License: verifyLicense', () => {
       orderNumber: 'MUI-123',
       scope: 'premium',
       licensingModel: 'subscription',
+      planVersion: 'legacy',
     });
 
     it('should log an error when ReleaseInfo is not valid', () => {
@@ -147,6 +150,7 @@ describe('License: verifyLicense', () => {
           orderNumber: 'MUI-123',
           scope: 'pro',
           licensingModel: 'subscription',
+          planVersion: 'legacy',
         });
 
         expect(
@@ -164,6 +168,7 @@ describe('License: verifyLicense', () => {
           orderNumber: 'MUI-123',
           scope: 'pro',
           licensingModel: 'subscription',
+          planVersion: 'legacy',
         });
 
         expect(
@@ -182,6 +187,7 @@ describe('License: verifyLicense', () => {
           orderNumber: 'MUI-123',
           scope: 'pro',
           licensingModel: 'subscription',
+          planVersion: 'legacy',
         });
 
         expect(
@@ -199,6 +205,7 @@ describe('License: verifyLicense', () => {
           orderNumber: 'MUI-123',
           scope: 'pro',
           licensingModel: 'perpetual',
+          planVersion: 'legacy',
         });
 
         expect(
@@ -230,6 +237,7 @@ describe('License: verifyLicense', () => {
       orderNumber: 'MUI-123',
       scope: 'pro',
       licensingModel: 'annual',
+      planVersion: 'legacy',
     });
 
     it('should accept licensingModel="annual"', () => {

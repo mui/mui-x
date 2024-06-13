@@ -104,12 +104,12 @@ export function verifyLicense({
   releaseInfo,
   licenseKey,
   acceptedScopes,
-  productScope,
+  productScope = null,
 }: {
   releaseInfo: string;
   licenseKey: string | undefined;
   acceptedScopes: readonly LicenseScope[];
-  productScope: ProductScope | null;
+  productScope?: ProductScope;
 }): { status: LicenseStatus; meta?: any } {
   if (!releaseInfo) {
     throw new Error('MUI X: The release information is missing. Not able to validate license.');
@@ -176,8 +176,7 @@ export function verifyLicense({
     return { status: LICENSE_STATUS.Invalid };
   }
 
-  // no planVersion or planVersion is 'legacy'
-  // only available for old licenses ordered between 2024-06-20 and 2024-07-20
+  // 'legacy' is only available for licenses ordered between 2024-06-20 and 2024-07-20
   if (!license.planVersion || license.planVersion === 'legacy') {
     // check if the productScope is 'charts' or 'tree-view'
     if (productScope === 'charts' || productScope === 'tree-view') {

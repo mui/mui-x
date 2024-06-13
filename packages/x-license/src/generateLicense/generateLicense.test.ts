@@ -9,9 +9,10 @@ describe('License: generateLicense', () => {
         orderNumber: 'MUI-123',
         scope: 'pro',
         licensingModel: 'subscription',
+        planVersion: 'legacy',
       }),
     ).to.equal(
-      'b2b2ea9c6fd846e11770da3c795d6f63Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1zdWJzY3JpcHRpb24sS1Y9Mg==',
+      '076fc290e354b9a04720190023e1f868Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1zdWJzY3JpcHRpb24sUFY9bGVnYWN5LEtWPTI=',
     );
   });
 
@@ -22,9 +23,10 @@ describe('License: generateLicense', () => {
         orderNumber: 'MUI-123',
         scope: 'premium',
         licensingModel: 'subscription',
+        planVersion: 'legacy',
       }),
     ).to.equal(
-      'ac8d20b4ecd1f919157f3713f8ba1651Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLEtWPTI=',
+      'fafc52d1dbb97e825702a7ccf5986fbbTz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLFBWPWxlZ2FjeSxLVj0y',
     );
   });
 
@@ -35,9 +37,10 @@ describe('License: generateLicense', () => {
         orderNumber: 'MUI-123',
         scope: 'pro',
         licensingModel: 'subscription',
+        planVersion: 'legacy',
       }),
     ).to.equal(
-      'b2b2ea9c6fd846e11770da3c795d6f63Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1zdWJzY3JpcHRpb24sS1Y9Mg==',
+      '076fc290e354b9a04720190023e1f868Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1zdWJzY3JpcHRpb24sUFY9bGVnYWN5LEtWPTI=',
     );
   });
 
@@ -48,9 +51,10 @@ describe('License: generateLicense', () => {
         orderNumber: 'MUI-123',
         scope: 'pro',
         licensingModel: 'perpetual',
+        planVersion: 'legacy',
       }),
     ).to.equal(
-      'b16edd8e6bc83293a723779a259f520cTz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1wZXJwZXR1YWwsS1Y9Mg==',
+      'a32c4d6c8cce5d9ca0132527a252e999Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1wZXJwZXR1YWwsUFY9bGVnYWN5LEtWPTI=',
     );
   });
 });

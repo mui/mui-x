@@ -53,7 +53,7 @@ export function useLicenseVerifier(
     }
 
     const acceptedScopes: readonly LicenseScope[] = extractAcceptedScopes(packageName);
-    const productScope: ProductScope | null = extractProductScope(packageName);
+    const productScope: ProductScope = extractProductScope(packageName);
 
     const plan = packageName.includes('premium') ? 'Premium' : 'Pro';
     const licenseStatus = verifyLicense({
