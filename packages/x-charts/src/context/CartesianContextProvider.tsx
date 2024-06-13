@@ -227,8 +227,12 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
         if (axis.scaleType === 'ordinal-time') {
           const timeScale = scaleTime(axis.data!, range);
           completedXAxis[axis.id].valueFormatter =
-            axis.valueFormatter ?? timeScale.tickFormat(axis.tickNumber);
-          completedXAxis[axis.id].tickInterval = timeScale.ticks(axis.tickNumber);
+            axis.valueFormatter ??
+            ((v, { location }) =>
+              location === 'tick'
+                ? timeScale.tickFormat(axis.tickNumber)(v)
+                : `${v.toLocaleString()}`);
+          // completedXAxis[axis.id].tickInterval = timeScale.ticks(axis.tickNumber);
         }
       }
       if (isPointScaleConfig(axis)) {
