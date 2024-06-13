@@ -97,6 +97,7 @@
     "@octokit/rest": "^20.1.1",
     "@playwright/test": "^1.44.1",
     "@testing-library/react": "^15.0.7",
+    "@types/babel__traverse": "^7.20.6",
     "@types/babel__core": "^7.20.5",
     "@types/chai": "^4.3.16",
     "@types/chai-dom": "^1.11.3",
