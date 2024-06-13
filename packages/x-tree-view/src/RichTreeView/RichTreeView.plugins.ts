@@ -20,10 +20,9 @@ import {
   useTreeViewIcons,
   UseTreeViewIconsParameters,
 } from '../internals/plugins/useTreeViewIcons';
-import { useTreeViewJSXItems } from '../internals/plugins/useTreeViewJSXItems';
 import { ConvertPluginsIntoSignatures, MergeSignaturesProperty } from '../internals/models';
 
-export const SIMPLE_TREE_VIEW_PLUGINS = [
+export const RICH_TREE_VIEW_PLUGINS = [
   useTreeViewId,
   useTreeViewItems,
   useTreeViewExpansion,
@@ -31,30 +30,26 @@ export const SIMPLE_TREE_VIEW_PLUGINS = [
   useTreeViewFocus,
   useTreeViewKeyboardNavigation,
   useTreeViewIcons,
-  useTreeViewJSXItems,
 ] as const;
 
-export type SimpleTreeViewPluginSignatures = ConvertPluginsIntoSignatures<
-  typeof SIMPLE_TREE_VIEW_PLUGINS
+export type RichTreeViewPluginSignatures = ConvertPluginsIntoSignatures<
+  typeof RICH_TREE_VIEW_PLUGINS
 >;
 
-export type SimpleTreeViewPluginSlots = MergeSignaturesProperty<
-  SimpleTreeViewPluginSignatures,
+export type RichTreeViewPluginSlots = MergeSignaturesProperty<
+  RichTreeViewPluginSignatures,
   'slots'
 >;
 
-export type SimpleTreeViewPluginSlotProps = MergeSignaturesProperty<
-  SimpleTreeViewPluginSignatures,
+export type RichTreeViewPluginSlotProps = MergeSignaturesProperty<
+  RichTreeViewPluginSignatures,
   'slotProps'
 >;
 
 // We can't infer this type from the plugin, otherwise we would lose the generics.
-export interface SimpleTreeViewPluginParameters<Multiple extends boolean | undefined>
+export interface RichTreeViewPluginParameters<R extends {}, Multiple extends boolean | undefined>
   extends UseTreeViewIdParameters,
-    Omit<
-      UseTreeViewItemsParameters<any>,
-      'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
-    >,
+    UseTreeViewItemsParameters<R>,
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,
