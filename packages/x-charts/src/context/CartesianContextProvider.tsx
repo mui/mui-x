@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { scaleBand, scalePoint } from 'd3-scale';
+import { scaleBand, scalePoint, scaleTime } from 'd3-scale';
 import {
   AxisConfig,
   AxisDefaultized,
@@ -224,6 +224,12 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
               ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
               : getColorScale(axis.colorMap)),
         };
+        if (axis.scaleType === 'ordinal-time') {
+          const timeScale = scaleTime(axis.data!, range);
+          completedXAxis[axis.id].valueFormatter =
+            axis.valueFormatter ?? timeScale.tickFormat(axis.tickNumber);
+          completedXAxis[axis.id].tickInterval = timeScale.ticks(axis.tickNumber);
+        }
       }
       if (isPointScaleConfig(axis)) {
         completedXAxis[axis.id] = {
@@ -237,7 +243,11 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
               : getColorScale(axis.colorMap)),
         };
       }
-      if (axis.scaleType === 'band' || axis.scaleType === 'point') {
+      if (
+        axis.scaleType === 'band' ||
+        axis.scaleType === 'point' ||
+        axis.scaleType === 'ordinal-time'
+      ) {
         // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
         return;
       }
@@ -310,7 +320,11 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
               : getColorScale(axis.colorMap)),
         };
       }
-      if (axis.scaleType === 'band' || axis.scaleType === 'point') {
+      if (
+        axis.scaleType === 'band' ||
+        axis.scaleType === 'point' ||
+        axis.scaleType === 'ordinal-time'
+      ) {
         // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
         return;
       }
