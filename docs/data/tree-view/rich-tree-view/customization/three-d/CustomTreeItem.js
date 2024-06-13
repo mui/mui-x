@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ViewInArOutlinedIcon from '@mui/icons-material/ViewInArOutlined';
@@ -16,8 +15,7 @@ import {
 import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
 import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
 import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
-
-import CustomTreeItemContextMenu from './ContextMenu';
+import { TreeItemContextMenu } from './ContextMenu';
 
 export const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const { id, itemId, label, children, sceneObjects, toggleVisibility, ...other } =
@@ -124,7 +122,7 @@ export const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, re
         </TreeItem2Content>
         {children && <TreeItem2GroupTransition {...getGroupTransitionProps()} />}
       </TreeItem2Root>
-      <CustomTreeItemContextMenu
+      <TreeItemContextMenu
         positionSeed={mousePosition}
         onClose={handleContextMenuClose}
         onClick={handleContextMenuItemClick}

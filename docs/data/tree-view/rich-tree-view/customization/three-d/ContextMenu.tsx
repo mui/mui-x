@@ -6,21 +6,24 @@ interface ContextMenuProps {
   positionSeed: { x: number; y: number } | null;
   onClose: () => void;
   onClick: (menuItem: string) => void;
-  menuItems: string[]; //you may want to have another type for
+  menuItems: string[]; // you may want to have another type for
 }
 
-export default function CustomTreeItemContextMenu(props: ContextMenuProps) {
+export function TreeItemContextMenu(props: ContextMenuProps) {
   const { positionSeed, onClose, onClick, menuItems } = props;
 
   const open = Boolean(positionSeed);
 
-  const { x, y } = positionSeed ? positionSeed : { x: null, y: null };
   return (
     <Menu
       open={open}
       onClose={onClose}
       anchorReference="anchorPosition"
-      anchorPosition={positionSeed !== null ? { top: y, left: x } : undefined}
+      anchorPosition={
+        positionSeed == null
+          ? undefined
+          : { top: positionSeed.y, left: positionSeed.x }
+      }
     >
       {menuItems.map((item, index) => (
         <MenuItem
