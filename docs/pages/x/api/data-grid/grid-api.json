@@ -491,11 +491,6 @@
       "type": { "description": "(updates: GridRowModelUpdate[]) =&gt; void" },
       "required": true
     },
-    "updateServerRows": {
-      "type": { "description": "(updates: GridRowModelUpdate[], groupKeys?: string[]) =&gt; void" },
-      "required": true,
-      "isProPlan": true
-    },
     "upsertFilterItem": {
       "type": { "description": "(item: GridFilterItem) =&gt; void" },
       "required": true

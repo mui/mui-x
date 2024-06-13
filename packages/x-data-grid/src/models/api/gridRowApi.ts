@@ -116,6 +116,9 @@ export interface GridRowProApi {
    * @param {boolean} isExpanded A boolean indicating if the row must be expanded or collapsed.
    */
   setRowChildrenExpansion: (id: GridRowId, isExpanded: boolean) => void;
+}
+
+export interface GridRowProPrivateApi {
   /**
    * Allows to update, insert and delete rows at a specific nested level.
    * @param {GridRowModelUpdate[]} updates An array of rows with an `action` specifying what to do.
