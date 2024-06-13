@@ -7,6 +7,14 @@ import { TreeItemContentProps } from './TreeItemContent';
 import { TreeItemClasses } from './treeItemClasses';
 import { TreeViewItemId } from '../models';
 import { SlotComponentPropsFromProps } from '../internals/models';
+import { MuiCancellableEventHandler } from '../internals/models/MuiCancellableEvent';
+import { UseTreeViewIconsSignature } from '../internals/plugins/useTreeViewIcons';
+import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
+import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
+import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
+import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
+import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
+import { UseTreeViewIdSignature } from '../internals/plugins/useTreeViewId';
 
 export interface TreeItemSlots {
   /**
@@ -26,7 +34,7 @@ export interface TreeItemSlots {
    */
   icon?: React.ElementType;
   /**
-   * The component that animates to appearance / disappearance of the item's children.
+   * The component that animates the appearance / disappearance of the item's children.
    * @default TreeItem2Group
    */
   groupTransition?: React.ElementType;
@@ -91,6 +99,10 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
+  /**
+   * Callback fired when a key of the keyboard is pressed on the item.
+   */
+  onKeyDown?: MuiCancellableEventHandler<React.KeyboardEvent<HTMLLIElement>>;
 }
 
 export interface TreeItemOwnerState extends TreeItemProps {
@@ -100,3 +112,13 @@ export interface TreeItemOwnerState extends TreeItemProps {
   disabled: boolean;
   indentationAtItemLevel: boolean;
 }
+
+export type TreeItemMinimalPlugins = readonly [
+  UseTreeViewIconsSignature,
+  UseTreeViewSelectionSignature,
+  UseTreeViewItemsSignature,
+  UseTreeViewFocusSignature,
+  UseTreeViewExpansionSignature,
+  UseTreeViewKeyboardNavigationSignature,
+  UseTreeViewIdSignature,
+];
