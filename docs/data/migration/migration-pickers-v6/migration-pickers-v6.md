@@ -264,7 +264,7 @@ The deprecated `defaultCalendarMonth` prop has been removed in favor of the more
 The new `referenceDate` prop is not limited to the default month.
 It will also impact year, day, and time.
 
-Learn more on this prop on [the `DateCalendar` documentation](/x/react-date-pickers/date-calendar/#choose-the-initial-year-month) or [the `referenceDate` documentation](/x/react-date-pickers/base-concepts/#reference-date-when-no-value-is-defined) pages.
+You can learn more on this prop on [the `DateCalendar` documentation](/x/react-date-pickers/date-calendar/#choose-the-initial-year-month) or [the `referenceDate` documentation](/x/react-date-pickers/base-concepts/#reference-date-when-no-value-is-defined) pages.
 :::
 
 ```diff
@@ -295,16 +295,7 @@ The string argument of the `dayOfWeekFormatter` prop has been replaced in favor 
 All the date-related props are now strictly typed to only accept the date format supported by your adapter
 (`Date` object for `date-fns`, `daysjs.Dayjs` object for `days-js`, etc.).
 
-If you run into TypeScript errors such as `DesktopDatePickerProps<Date> error Type 'Date' does not satisfy the constraint 'never'`,
-it is probably because you are not importing the adapter in the same TypeScript project as the rest of your codebase.
-You can fix it by manually importing the adapter in some file of your project as follows:
-
-```ts
-// Replace `AdapterDayjs` with the adapter you are using.
-import type {} from '@mui/x-date-pickers/AdapterDayjs';
-```
-
-Learn more about this change on the [dedicated doc section](/x/react-date-pickers/base-concepts/#typing-of-the-date).
+You can learn more about this change in the [dedicated doc section](/x/react-date-pickers/base-concepts/#typing-of-the-date).
 
 ## Field components
 
@@ -444,7 +435,7 @@ then you can look at the page to see all the examples improved and updated to us
 
 The headless field hooks (e.g.: `useDateField`) now return a new prop called `enableAccessibleFieldDOMStructure`.
 This is used to know if the current UI expected is built using the accessible DOM structure or not.
-Learn more about this new [accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure).
+You can learn more about this new [accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure).
 
 When building a custom UI, you are most-likely only supporting one DOM structure, so you can remove `enableAccessibleFieldDOMStructure` before it is passed to the DOM:
 
@@ -533,7 +524,7 @@ The `dayPickerClasses` variable has been renamed `dayCalendarClasses` to be cons
 
 The `dateLibInstance` prop of `LocalizationProvider` does not work with `AdapterDayjs` anymore.
 This prop was used to set the pickers in UTC mode before the implementation of a proper timezone support in the components.
-Learn more about the new approach on the [dedicated doc page](https://mui.com/x/react-date-pickers/timezone/).
+You can learn more about the new approach on the [dedicated doc page](https://mui.com/x/react-date-pickers/timezone/).
 
 ```diff
  // When a `value` or a `defaultValue` is provided
