@@ -110,9 +110,9 @@ When your component first renders, `apiRef` will be `undefined`.
 After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
 :::
 
-### Select or unselect an item
+### Select or deselect an item
 
-Use the `selectItem` API method to select or unselect an item:
+Use the `selectItem` API method to select or deselect an item:
 
 ```ts
 apiRef.current.selectItem({
