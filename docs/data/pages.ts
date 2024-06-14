@@ -462,7 +462,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/radar', planned: true },
               { pathname: '/x/react-charts/tree-map', title: 'Treemap', planned: true },
               {
-                pathname: '/x/react-charts/heat-map',
+                pathname: '/x/react-charts/heatmap',
                 title: 'Heatmap',
                 plan: 'pro',
                 planned: true,

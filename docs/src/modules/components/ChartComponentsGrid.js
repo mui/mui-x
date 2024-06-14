@@ -64,7 +64,7 @@ function getComponents() {
       title: 'Heatmap',
       srcLight: '/static/x/component-illustrations/heatmap-light.png',
       srcDark: '/static/x/component-illustrations/heatmap-dark.png',
-      href: '/x/react-charts/heat-map/',
+      href: '/x/react-charts/heatmap/',
       planned: true,
       pro: true,
     },
