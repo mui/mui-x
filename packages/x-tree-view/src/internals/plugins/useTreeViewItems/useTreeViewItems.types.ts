@@ -6,7 +6,6 @@ interface TreeViewItemProps {
   label: string;
   itemId: string;
   id: string | undefined;
-  isBeingEdited: boolean;
   children?: TreeViewItemProps[];
 }
 

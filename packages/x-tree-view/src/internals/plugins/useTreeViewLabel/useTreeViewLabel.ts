@@ -1,6 +1,5 @@
 import { TreeViewPlugin } from '../../models';
 import { TreeViewItemId } from '../../../models';
-
 import { UseTreeViewLabelSignature } from './useTreeViewLabel.types';
 
 const getItemsLabels = (items: readonly any[], getItemLabel): {} => {

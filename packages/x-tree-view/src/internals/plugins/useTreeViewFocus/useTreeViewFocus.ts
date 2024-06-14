@@ -98,7 +98,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       );
 
       if (itemElement) {
-        if (itemMeta.isBeingEdited) {
+        if (instance.isItemBeingEdited(state.focusedItemId)) {
           instance.setEditedItemId(null);
         }
         itemElement.blur();

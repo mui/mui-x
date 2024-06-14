@@ -57,7 +57,7 @@ export const useTreeItem2 = <
   } = useTreeViewContext<TSignatures>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
-  const { id, itemId, label: inLabel, children, rootRef, isBeingEdited } = parameters;
+  const { id, itemId, label: inLabel, children, rootRef } = parameters;
   const { label, setLabel, resetLabel } = useTreeItemLabelInput(inLabel as string);
 
   const { rootRef: pluginRootRef, contentRef } = runItemPlugins(parameters);
@@ -66,6 +66,8 @@ export const useTreeItem2 = <
   const handleRootRef = useForkRef(rootRef, pluginRootRef)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
   const inputRef = React.useRef<HTMLButtonElement>(null);
+
+  const isBeingEdited = instance.isItemBeingEdited(itemId);
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>

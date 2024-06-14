@@ -14,16 +14,13 @@ interface UpdateNodesStateParameters
   extends Pick<
     UseTreeViewItemsDefaultizedParameters<TreeViewBaseItem>,
     'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId' | 'isItemEditable'
-  > {
-  isItemBeingEdited: (itemId: TreeViewItemId) => boolean;
-}
+  > {}
 
 type State = UseTreeViewItemsState<any>['items'];
 const updateItemsState = ({
   items,
   isItemDisabled,
   getItemId,
-  isItemBeingEdited,
   isItemEditable,
 }: UpdateNodesStateParameters): UseTreeViewItemsState<any>['items'] => {
   const itemMetaMap: State['itemMetaMap'] = {};
@@ -57,13 +54,11 @@ const updateItemsState = ({
     }
 
     const editable = isItemEditable ? isItemEditable(item) : false;
-    const isBeingEdited = isItemBeingEdited ? isItemBeingEdited(id) && editable : false;
     // console.log('change state', editable, isItemBeingEdited(id));
 
     itemMetaMap[id] = {
       id,
       parentId,
-      isBeingEdited,
       editable,
       idAttribute: undefined,
       expandable: !!item.children?.length,
@@ -144,7 +139,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   );
 
   const isItemEditable = React.useCallback(
-    (itemId: string | null): itemId is string => {
+    (itemId: string): itemId is string => {
       if (itemId == null) {
         return false;
       }
@@ -202,7 +197,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         items: params.items,
         isItemDisabled: params.isItemDisabled,
         getItemId: params.getItemId,
-        isItemBeingEdited: instance.isItemBeingEdited,
         isItemEditable: params.isItemEditable,
       });
 
@@ -233,7 +227,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         label: state.labels[item.id]!,
         itemId: item.id,
         id: item.idAttribute,
-        isBeingEdited: item.isBeingEdited,
         children: state.items.itemOrderedChildrenIds[id].map(getPropsFromItemId),
       };
     };
@@ -278,7 +271,6 @@ useTreeViewItems.getInitialState = (params) => ({
     isItemDisabled: params.isItemDisabled,
     getItemId: params.getItemId,
     getItemLabel: params.getItemLabel,
-    isItemBeingEdited: () => false,
     isItemEditable: params.isItemEditable,
   }),
 });

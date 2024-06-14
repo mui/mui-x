@@ -232,17 +232,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTreeItem2' });
 
-  const {
-    id,
-    itemId,
-    label,
-    disabled,
-    isBeingEdited,
-    children,
-    slots = {},
-    slotProps = {},
-    ...other
-  } = props;
+  const { id, itemId, label, disabled, children, slots = {}, slotProps = {}, ...other } = props;
 
   const {
     getRootProps,
@@ -259,7 +249,6 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
     children,
     label,
     disabled,
-    isBeingEdited,
   });
 
   const ownerState: TreeItem2OwnerState = {
@@ -380,7 +369,6 @@ TreeItem2.propTypes = {
    * The id attribute of the item. If not provided, it will be generated.
    */
   id: PropTypes.string,
-  isBeingEdited: PropTypes.bool.isRequired,
   /**
    * The id of the item.
    * Must be unique.
