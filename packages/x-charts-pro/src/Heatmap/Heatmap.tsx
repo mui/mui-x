@@ -41,7 +41,7 @@ export interface HeatmapSlots
     ChartsOverlaySlots {}
 export interface HeatmapSlotProps
   extends ChartsAxisSlotProps,
-    Omit<ChartsTooltipSlotProps, 'axisContent'>,
+    Omit<ChartsTooltipSlotProps<'heatmap'>, 'axisContent'>,
     ChartsOverlaySlotProps {}
 
 export interface HeatmapProps
@@ -175,6 +175,7 @@ export const Heatmap = React.forwardRef(function Heatmap(props: HeatmapProps, re
       {!loading && (
         <ChartsTooltip
           trigger="item"
+          {...tooltip}
           slots={{ itemContent: DefaultHeatmapTooltip, ...slots }}
           slotProps={slotProps}
         />

@@ -28,7 +28,7 @@ export type PopperProps = BasePopperProps & {
   sx?: SxProps<Theme>;
 };
 
-export interface ChartsTooltipSlots<T extends ChartSeriesType = ChartSeriesType> {
+export interface ChartsTooltipSlots<T extends ChartSeriesType> {
   /**
    * Custom component for the tooltip popper.
    * @default ChartsTooltipRoot
@@ -46,13 +46,13 @@ export interface ChartsTooltipSlots<T extends ChartSeriesType = ChartSeriesType>
   itemContent?: React.ElementType<ChartsItemContentProps<T>>;
 }
 
-export interface ChartsTooltipSlotProps<T extends ChartSeriesType = ChartSeriesType> {
+export interface ChartsTooltipSlotProps<T extends ChartSeriesType> {
   popper?: Partial<PopperProps>;
   axisContent?: Partial<ChartsAxisContentProps>;
   itemContent?: Partial<ChartsItemContentProps<T>>;
 }
 
-export type ChartsTooltipProps<T extends ChartSeriesType = ChartSeriesType> = {
+export interface ChartsTooltipProps<T extends ChartSeriesType> {
   /**
    * Select the kind of tooltip to display
    * - 'item': Shows data about the item below the mouse.
@@ -85,7 +85,7 @@ export type ChartsTooltipProps<T extends ChartSeriesType = ChartSeriesType> = {
    * @default {}
    */
   slotProps?: ChartsTooltipSlotProps<T>;
-};
+}
 
 const useUtilityClasses = <T extends ChartSeriesType>(ownerState: {
   classes: ChartsTooltipProps<T>['classes'];
@@ -124,7 +124,7 @@ const ChartsTooltipRoot = styled(Popper, {
  *
  * - [ChartsTooltip API](https://mui.com/x/api/charts/charts-tool-tip/)
  */
-function ChartsTooltip<T extends ChartSeriesType = ChartSeriesType>(props: ChartsTooltipProps<T>) {
+function ChartsTooltip<T extends ChartSeriesType>(props: ChartsTooltipProps<T>) {
   const themeProps = useThemeProps({
     props,
     name: 'MuiChartsTooltip',
@@ -165,7 +165,7 @@ function ChartsTooltip<T extends ChartSeriesType = ChartSeriesType>(props: Chart
           {trigger === 'item' ? (
             <ChartsItemTooltipContent
               itemData={displayedData as ItemInteractionData<T>}
-              content={slots?.itemContent ?? itemContent}
+              content={(slots?.itemContent ?? itemContent) as any}
               contentProps={slotProps?.itemContent as Partial<ChartsItemContentProps<T>>}
               sx={{ mx: 2 }}
               classes={classes}

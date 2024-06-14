@@ -11,7 +11,7 @@ import { ZAxisContext } from '../context/ZAxisContextProvider';
 import { useColorProcessor } from '../hooks/useColor';
 import { useSeries } from '../hooks/useSeries';
 
-export interface ChartsItemContentProps<T extends ChartSeriesType = ChartSeriesType> {
+export interface ChartsItemContentProps<T extends ChartSeriesType> {
   /**
    * The data used to identify the triggered item.
    */
@@ -33,12 +33,12 @@ export interface ChartsItemContentProps<T extends ChartSeriesType = ChartSeriesT
   sx?: SxProps<Theme>;
 }
 
-interface ChartsItemTooltipContentProps<T extends ChartSeriesType> {
+export interface ChartsItemTooltipContentProps<T extends ChartSeriesType> {
   itemData: ItemInteractionData<T>;
   content?: React.ElementType<ChartsItemContentProps<T>>;
   contentProps?: Partial<ChartsItemContentProps<T>>;
   sx?: SxProps<Theme>;
-  classes: ChartsItemContentProps['classes'];
+  classes: ChartsItemContentProps<T>['classes'];
 }
 
 function ChartsItemTooltipContent<T extends ChartSeriesType>(
