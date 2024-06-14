@@ -2,6 +2,11 @@ import * as React from 'react';
 import { TreeViewItemId } from '../models';
 import { MuiCancellableEventHandler } from '../internals/models/MuiCancellableEvent';
 import { TreeViewAnyPluginSignature, TreeViewPublicAPI } from '../internals/models';
+import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
+import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
+import { UseTreeViewIdSignature } from '../internals/plugins/useTreeViewId';
+import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
+import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
 
 export interface UseTreeItem2Parameters {
   /**
@@ -110,7 +115,9 @@ export interface UseTreeItem2Status {
   disabled: boolean;
 }
 
-export interface UseTreeItem2ReturnValue<TPlugins extends readonly TreeViewAnyPluginSignature[]> {
+export interface UseTreeItem2ReturnValue<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+> {
   /**
    * Resolver for the root slot's props.
    * @param {ExternalProps} externalProps Additional props for the root slot
@@ -170,5 +177,13 @@ export interface UseTreeItem2ReturnValue<TPlugins extends readonly TreeViewAnyPl
   /**
    * The object the allows Tree View manipulation.
    */
-  publicAPI: TreeViewPublicAPI<TPlugins>;
+  publicAPI: TreeViewPublicAPI<TSignatures>;
 }
+
+export type UseTreeItem2MinimalPlugins = readonly [
+  UseTreeViewSelectionSignature,
+  UseTreeViewItemsSignature,
+  UseTreeViewIdSignature,
+  UseTreeViewFocusSignature,
+  UseTreeViewKeyboardNavigationSignature,
+];
