@@ -30,7 +30,7 @@ export const useGridAggregationPreProcessors = (
     | 'getAggregationPosition'
     | 'slotProps'
     | 'slots'
-    | 'unstable_pivotMode'
+    | 'pivotParams'
   >,
 ) => {
   // apiRef.current.caches.aggregation.rulesOnLastColumnHydration is not used because by the time
@@ -64,7 +64,7 @@ export const useGridAggregationPreProcessors = (
             column,
             aggregationRule: aggregationRules[field],
             apiRef,
-            pivotMode: props.unstable_pivotMode,
+            pivotMode: props.pivotParams?.pivotMode ?? false,
           });
         }
 
@@ -75,7 +75,7 @@ export const useGridAggregationPreProcessors = (
 
       return columnsState;
     },
-    [apiRef, props.aggregationFunctions, props.disableAggregation, props.unstable_pivotMode],
+    [apiRef, props.aggregationFunctions, props.disableAggregation, props.pivotParams],
   );
 
   const addGroupFooterRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(

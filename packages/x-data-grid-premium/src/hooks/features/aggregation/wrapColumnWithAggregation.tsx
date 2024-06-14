@@ -40,7 +40,7 @@ type ColumnPropertyWrapper<P extends WrappableColumnProperty> = (params: {
     id: GridRowId,
     field: string,
   ) => GridAggregationLookup[GridRowId][string] | null;
-  pivotMode: DataGridPremiumProcessedProps['unstable_pivotMode'];
+  pivotMode: boolean;
 }) => GridBaseColDef[P];
 
 const getAggregationValueWrappedValueGetter: ColumnPropertyWrapper<'valueGetter'> = ({
@@ -206,7 +206,7 @@ export const wrapColumnWithAggregationValue = ({
   column: GridBaseColDef;
   apiRef: React.MutableRefObject<GridApiPremium>;
   aggregationRule: GridAggregationRule;
-  pivotMode: DataGridPremiumProcessedProps['unstable_pivotMode'];
+  pivotMode: boolean;
 }): GridBaseColDef => {
   const getCellAggregationResult = (
     id: GridRowId,

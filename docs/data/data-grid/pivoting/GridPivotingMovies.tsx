@@ -35,33 +35,26 @@ export default function GridPivotingMovies() {
     ],
   });
 
-  const { isPivot, setIsPivot, props } = unstable_useGridPivoting({
-    pivotModel,
+  const [isPivotMode, setIsPivotMode] = React.useState(false);
+
+  const pivotParams = unstable_useGridPivoting({
     apiRef,
-    // initialIsPivot: true,
+    pivotModel,
+    onPivotModelChange: setPivotModel,
+    pivotMode: isPivotMode,
+    onPivotModeChange: setIsPivotMode,
   });
 
   return (
     <div style={{ width: '100%' }}>
-      <div style={{ height: isPivot ? undefined : 400, width: '100%' }}>
+      <div style={{ height: isPivotMode ? undefined : 400, width: '100%' }}>
         <DataGridPremium
           rows={data.rows}
           columns={data.columns}
-          {...props}
+          pivotParams={pivotParams}
           apiRef={apiRef}
-          autoHeight={isPivot}
-          slots={{
-            toolbar: GridToolbar,
-          }}
-          slotProps={{
-            pivotPanel: {
-              pivotModel,
-              initialColumns: data.columns,
-              onPivotModelChange: setPivotModel,
-              pivotMode: isPivot,
-              onPivotModeChange: setIsPivot,
-            },
-          }}
+          autoHeight={isPivotMode}
+          slots={{ toolbar: GridToolbar }}
           sx={{
             '& .MuiDataGrid-columnHeader--filledGroup': {
               '& .MuiDataGrid-columnHeaderTitleContainer': {

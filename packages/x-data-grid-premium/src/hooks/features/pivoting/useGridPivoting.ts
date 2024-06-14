@@ -80,7 +80,6 @@ const getPivotedData = ({
   getAggregationPosition: NonNullable<DataGridPremiumProcessedProps['getAggregationPosition']>;
   columnVisibilityModel: NonNullable<DataGridPremiumProcessedProps['columnVisibilityModel']>;
   columnGroupingModel: NonNullable<DataGridPremiumProcessedProps['columnGroupingModel']>;
-  unstable_pivotMode: NonNullable<DataGridPremiumProcessedProps['unstable_pivotMode']>;
 } => {
   const pivotColumns: GridColDef[] = [];
   const columnVisibilityModel: DataGridPremiumProcessedProps['columnVisibilityModel'] = {};
@@ -243,24 +242,31 @@ const getPivotedData = ({
     getAggregationPosition: (groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline'),
     columnVisibilityModel,
     columnGroupingModel,
-    unstable_pivotMode: true,
   };
 };
 
 export const useGridPivoting = ({
-  initialIsPivot = false,
+  // initialIsPivot = false,
   pivotModel,
+  onPivotModelChange,
   apiRef,
+  pivotMode,
+  onPivotModeChange,
 }: {
-  initialIsPivot?: boolean;
+  // initialIsPivot?: boolean;
   pivotModel: PivotModel;
+  onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
   apiRef: React.MutableRefObject<GridApiPremium>;
+  pivotMode: boolean;
+  onPivotModeChange: (isPivot: boolean) => void;
 }) => {
-  const [isPivot, setIsPivot] = React.useState(initialIsPivot);
+  const isPivot = pivotMode;
+  const setIsPivot = onPivotModeChange;
+  // const [isPivot, setIsPivot] = React.useState(initialIsPivot);
   const exportedStateRef = React.useRef<GridInitialStatePremium | null>(null);
   const prevProps = usePreviousProps({ isPivot });
-  const nonPivotDataRef = React.useRef<{ rows: GridRowModel[]; columns: GridColDef[] } | null>(
-    null,
+  const nonPivotDataRef = React.useRef<{ rows: GridRowModel[]; columns: GridColDef[] } | undefined>(
+    undefined,
   );
 
   const props = React.useMemo(() => {
@@ -304,8 +310,12 @@ export const useGridPivoting = ({
   }, [isPivot, apiRef]);
 
   return {
-    isPivot,
+    pivotMode,
+    onPivotModeChange,
     setIsPivot,
     props,
+    pivotModel,
+    onPivotModelChange,
+    initialColumns: nonPivotDataRef.current?.columns,
   };
 };

@@ -4,6 +4,7 @@ import {
   GridValidRowModel,
   GridGroupNode,
   GridEventListener,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 import {
   GridExperimentalProFeatures,
@@ -23,6 +24,7 @@ import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
+import { PivotModel } from '../hooks/features/pivoting/useGridPivoting';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
@@ -115,7 +117,6 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @default (pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }
    */
   splitClipboardPastedText: (text: string) => string[][] | null;
-  unstable_pivotMode: boolean;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -189,4 +190,23 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures?: Partial<GridExperimentalPremiumFeatures>;
+
+  pivotParams?: {
+    pivotMode: boolean;
+    onPivotModeChange: (pivotMode: boolean) => void;
+    setIsPivot: (pivotMode: boolean) => void;
+    props?: Pick<
+      DataGridPremiumProps,
+      | 'rows'
+      | 'columns'
+      | 'rowGroupingModel'
+      | 'aggregationModel'
+      | 'getAggregationPosition'
+      | 'columnVisibilityModel'
+      | 'columnGroupingModel'
+    >;
+    pivotModel: PivotModel;
+    onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
+    initialColumns: GridColDef[] | undefined;
+  };
 }

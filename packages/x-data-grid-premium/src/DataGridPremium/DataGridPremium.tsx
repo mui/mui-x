@@ -46,7 +46,9 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
-  const hasPivotModel = props.slotProps?.pivotPanel?.pivotModel;
+  const { pivotParams } = props;
+
+  const hasPivotModel = pivotParams?.pivotModel != null;
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
@@ -54,10 +56,7 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot
-        className={clsx(
-          props.className,
-          props.slotProps?.pivotPanel?.pivotModel && gridClasses.sidePanel,
-        )}
+        className={clsx(props.className, hasPivotModel && gridClasses.sidePanel)}
         style={props.style}
         sx={props.sx}
         ref={ref}
@@ -75,7 +74,7 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
         </div>
         {hasPivotModel && (
           <GridPivotPanelContainer>
-            <GridPivotPanel {...props.slotProps?.pivotPanel} />
+            <GridPivotPanel pivotParams={pivotParams} />
           </GridPivotPanelContainer>
         )}
       </GridRoot>
@@ -1077,5 +1076,4 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
-  unstable_pivotMode: PropTypes.bool,
 } as any;

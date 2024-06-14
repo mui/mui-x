@@ -8,7 +8,10 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { PivotModel } from '../hooks/features/pivoting/useGridPivoting';
 import { useResize } from '../hooks/utils/useResize';
-import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
+import type {
+  DataGridPremiumProcessedProps,
+  DataGridPremiumProps,
+} from '../models/dataGridPremiumProps';
 import { useGridRootProps } from '../typeOverloads/reexports';
 import { getAvailableAggregationFunctions } from '../hooks/features/aggregation/gridAggregationUtils';
 
@@ -651,14 +654,12 @@ function GridPivotPanelContent({
 }
 
 export function GridPivotPanel({
-  pivotModel,
-  initialColumns,
-  onPivotModelChange,
-  pivotMode,
-  onPivotModeChange,
+  pivotParams,
 }: {
-  pivotModel: any;
+  pivotParams: NonNullable<DataGridPremiumProcessedProps['pivotParams']>;
 }) {
+  const { pivotMode, onPivotModeChange, pivotModel, onPivotModelChange } = pivotParams;
+
   return (
     <React.Fragment>
       <div>
@@ -678,7 +679,7 @@ export function GridPivotPanel({
       {pivotMode && (
         <GridPivotPanelContent
           pivotModel={pivotModel}
-          columns={initialColumns}
+          columns={pivotParams.initialColumns ?? []}
           onPivotModelChange={onPivotModelChange}
         />
       )}
