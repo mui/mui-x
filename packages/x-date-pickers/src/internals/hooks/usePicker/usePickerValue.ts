@@ -165,19 +165,31 @@ export const usePickerValue = <
   const {
     onAccept,
     onChange,
-    value: inValue,
+    value: inValueWithoutRenderTimezone,
     defaultValue: inDefaultValue,
     closeOnSelect = wrapperVariant === 'desktop',
     timezone: timezoneProp,
   } = props;
 
   const { current: defaultValue } = React.useRef(inDefaultValue);
-  const { current: isControlled } = React.useRef(inValue !== undefined);
+  const { current: isControlled } = React.useRef(inValueWithoutRenderTimezone !== undefined);
+
+  const {
+    timezone,
+    value: inValueWithTimezoneToRender,
+    handleValueChange,
+  } = useValueWithTimezone({
+    timezone: timezoneProp,
+    value: inValueWithoutRenderTimezone,
+    defaultValue,
+    onChange,
+    valueManager,
+  });
 
   /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
   if (process.env.NODE_ENV !== 'production') {
     React.useEffect(() => {
-      if (isControlled !== (inValue !== undefined)) {
+      if (isControlled !== (inValueWithTimezoneToRender !== undefined)) {
         console.error(
           [
             `MUI X: A component is changing the ${
@@ -191,7 +203,7 @@ export const usePickerValue = <
           ].join('\n'),
         );
       }
-    }, [inValue]);
+    }, [inValueWithTimezoneToRender]);
 
     React.useEffect(() => {
       if (!isControlled && defaultValue !== inDefaultValue) {
@@ -210,18 +222,6 @@ export const usePickerValue = <
   const adapter = useLocalizationContext<TDate>();
 
   const { isOpen, setIsOpen } = useOpenState(props);
-
-  const {
-    timezone,
-    value: inValueWithTimezoneToRender,
-    handleValueChange,
-  } = useValueWithTimezone({
-    timezone: timezoneProp,
-    value: inValue,
-    defaultValue,
-    onChange,
-    valueManager,
-  });
 
   const [dateState, setDateState] = React.useState<UsePickerValueState<TValue>>(() => {
     let initialValue: TValue;
