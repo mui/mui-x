@@ -42,7 +42,10 @@
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
     "xAxis": {
-      "description": "The xAxis configuration. Notice it is a single configuration object, not an array of configuration."
+      "description": "The xAxis configuration. Notice it is a single <a href='/x/api/charts/axis-config/'>AxisConfig</a> object, not an array of configuration."
+    },
+    "yAxis": {
+      "description": "The yAxis configuration. Notice it is a single <a href='/x/api/charts/axis-config/'>AxisConfig</a> object, not an array of configuration."
     }
   },
   "classDescriptions": {},

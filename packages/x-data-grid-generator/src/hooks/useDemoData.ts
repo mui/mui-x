@@ -79,7 +79,6 @@ export const deepFreeze = <T>(object: T): T => {
 
   // Freeze properties before freezing self
 
-  // eslint-disable-next-line no-restricted-syntax
   for (const name of propNames) {
     const value = object[name as keyof T];
 

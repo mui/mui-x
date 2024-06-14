@@ -1,9 +1,5 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import barSeriesFormatter from '../BarChart/formatter';
-import scatterSeriesFormatter from '../ScatterChart/formatter';
-import lineSeriesFormatter from '../LineChart/formatter';
-import pieSeriesFormatter from '../PieChart/formatter';
 import { AllSeriesType } from '../models/seriesType';
 import { defaultizeColor } from '../internals/defaultizeColor';
 import {
@@ -15,19 +11,29 @@ import {
 import { ChartsColorPalette, blueberryTwilightPalette } from '../colorPalettes';
 import { Initializable } from './context.types';
 
-export type SeriesContextProviderProps = {
+export type SeriesFormatterType<T extends ChartSeriesType> = (
+  series: AllSeriesType<T>[],
+  colors: string[],
+  dataset?: DatasetType,
+) => { [type in T]?: FormatterResult<type> };
+
+export type SeriesContextProviderProps<T extends ChartSeriesType = ChartSeriesType> = {
   dataset?: DatasetType;
   /**
    * The array of series to display.
    * Each type of series has its own specificity.
    * Please refer to the appropriate docs page to learn more about it.
    */
-  series: AllSeriesType[];
+  series: AllSeriesType<T>[];
   /**
    * Color palette used to colorize multiple series.
    * @default blueberryTwilightPalette
    */
   colors?: ChartsColorPalette;
+  /**
+   * Preprocessors for each series types.
+   */
+  seriesFormatters: SeriesFormatterConfig<T>;
   children: React.ReactNode;
 };
 
@@ -42,13 +48,9 @@ if (process.env.NODE_ENV !== 'production') {
   SeriesContext.displayName = 'SeriesContext';
 }
 
-const seriesTypeFormatter: {
-  [type in ChartSeriesType]?: (series: any, dataset?: DatasetType) => any;
-} = {
-  bar: barSeriesFormatter,
-  scatter: scatterSeriesFormatter,
-  line: lineSeriesFormatter,
-  pie: pieSeriesFormatter,
+export type SeriesFormatterConfig<T extends ChartSeriesType = ChartSeriesType> = {
+  // TODO replace the function type by Formatter<K>
+  [K in T]?: (series: FormatterParams<K>, dataset?: DatasetType) => any;
 };
 
 /**
@@ -59,7 +61,12 @@ const seriesTypeFormatter: {
  * @param colors The color palette used to defaultize series colors
  * @returns An object structuring all the series by type.
  */
-const formatSeries = (series: AllSeriesType[], colors: string[], dataset?: DatasetType) => {
+const preprocessSeries = <T extends ChartSeriesType>(
+  series: AllSeriesType<T>[],
+  colors: string[],
+  seriesFormatters: SeriesFormatterConfig<T>,
+  dataset?: DatasetType,
+) => {
   // Group series by type
   const seriesGroups: { [type in ChartSeriesType]?: FormatterParams<type> } = {};
   series.forEach((seriesData, seriesIndex: number) => {
@@ -81,31 +88,32 @@ const formatSeries = (series: AllSeriesType[], colors: string[], dataset?: Datas
 
   const formattedSeries: FormattedSeries = {};
   // Apply formatter on a type group
-  (Object.keys(seriesTypeFormatter) as ChartSeriesType[]).forEach((type) => {
-    if (seriesGroups[type] !== undefined) {
-      formattedSeries[type] =
-        seriesTypeFormatter[type]?.(seriesGroups[type], dataset) ?? seriesGroups[type];
+  (Object.keys(seriesFormatters) as T[]).forEach((type) => {
+    const group = seriesGroups[type];
+    if (group !== undefined) {
+      formattedSeries[type] = seriesFormatters[type]?.(group, dataset) ?? seriesGroups[type];
     }
   });
 
   return formattedSeries;
 };
 
-function SeriesContextProvider(props: SeriesContextProviderProps) {
-  const { series, dataset, colors = blueberryTwilightPalette, children } = props;
+function SeriesContextProvider<T extends ChartSeriesType>(props: SeriesContextProviderProps<T>) {
+  const { series, dataset, colors = blueberryTwilightPalette, seriesFormatters, children } = props;
 
   const theme = useTheme();
 
   const formattedSeries = React.useMemo(
     () => ({
       isInitialized: true,
-      data: formatSeries(
+      data: preprocessSeries(
         series,
         typeof colors === 'function' ? colors(theme.palette.mode) : colors,
+        seriesFormatters,
         dataset as DatasetType<number>,
       ),
     }),
-    [series, colors, theme.palette.mode, dataset],
+    [series, colors, theme.palette.mode, seriesFormatters, dataset],
   );
 
   return <SeriesContext.Provider value={formattedSeries}>{children}</SeriesContext.Provider>;
