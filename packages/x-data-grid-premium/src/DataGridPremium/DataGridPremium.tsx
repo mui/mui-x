@@ -917,6 +917,32 @@ DataGridPremiumRaw.propTypes = {
     bottom: PropTypes.arrayOf(PropTypes.object),
     top: PropTypes.arrayOf(PropTypes.object),
   }),
+  pivotParams: PropTypes /* @typescript-to-proptypes-ignore */.shape({
+    initialColumns: PropTypes.array,
+    onPivotModeChange: PropTypes.func.isRequired,
+    onPivotModelChange: PropTypes.func.isRequired,
+    pivotMode: PropTypes.bool.isRequired,
+    pivotModel: PropTypes.shape({
+      columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+      rows: PropTypes.arrayOf(PropTypes.string).isRequired,
+      values: PropTypes.arrayOf(
+        PropTypes.shape({
+          aggFunc: PropTypes.string.isRequired,
+          field: PropTypes.string.isRequired,
+        }),
+      ).isRequired,
+    }).isRequired,
+    props: PropTypes.shape({
+      aggregationModel: PropTypes.object,
+      columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
+      columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+      columnVisibilityModel: PropTypes.object,
+      getAggregationPosition: PropTypes.func,
+      rowGroupingModel: PropTypes.arrayOf(PropTypes.string),
+      rows: PropTypes.array,
+    }),
+    setIsPivot: PropTypes.func.isRequired,
+  }),
   /**
    * Callback called before updating a row with new values in the row and cell editing.
    * @template R
