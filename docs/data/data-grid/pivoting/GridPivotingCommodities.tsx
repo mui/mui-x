@@ -13,13 +13,13 @@ export default function GridPivotingMovies() {
 
   const { data } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: 100,
+    rowLength: 1_000,
     editable: true,
   });
 
   const [pivotModel, setPivotModel] = React.useState<PivotModel>({
-    rows: ['commodity'],
-    columns: [{ field: 'brokerName', sort: 'asc' }],
+    rows: ['brokerName'],
+    columns: [{ field: 'commodity', sort: 'asc' }],
     values: [{ field: 'quantity', aggFunc: 'sum' }],
   });
 
