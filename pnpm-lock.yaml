@@ -751,9 +751,6 @@ importers:
         specifier: ^17.0.0 || ^18.0.0
         version: 18.2.0(react@18.2.0)
     devDependencies:
-      '@mui/internal-test-utils':
-        specifier: ^1.0.1
-        version: 1.0.1(@babel/core@7.24.7)(@types/react@18.2.60)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@react-spring/core':
         specifier: ^9.7.3
         version: 9.7.3(react@18.2.0)
@@ -946,9 +943,6 @@ importers:
         specifier: ^4.1.8
         version: 4.1.8
     devDependencies:
-      '@mui/internal-test-utils':
-        specifier: ^1.0.1
-        version: 1.0.1(@babel/core@7.24.7)(@types/react@18.2.60)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@mui/joy':
         specifier: 5.0.0-beta.32
         version: 5.0.0-beta.32(@emotion/react@11.11.4(@types/react@18.2.60)(react@18.2.0))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.2.60)(react@18.2.0))(@types/react@18.2.60)(react@18.2.0))(@types/react@18.2.60)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1049,9 +1043,6 @@ importers:
         specifier: ^4.1.8
         version: 4.1.8
     devDependencies:
-      '@mui/internal-test-utils':
-        specifier: ^1.0.1
-        version: 1.0.1(@babel/core@7.24.7)(@types/react@18.2.60)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@types/prop-types':
         specifier: ^15.7.12
         version: 15.7.12
@@ -1102,9 +1093,6 @@ importers:
         specifier: ^4.1.8
         version: 4.1.8
     devDependencies:
-      '@mui/internal-test-utils':
-        specifier: ^1.0.1
-        version: 1.0.1(@babel/core@7.24.7)(@types/react@18.2.60)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@types/prop-types':
         specifier: ^15.7.12
         version: 15.7.12
@@ -1155,9 +1143,6 @@ importers:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
     devDependencies:
-      '@mui/internal-test-utils':
-        specifier: ^1.0.1
-        version: 1.0.1(@babel/core@7.24.7)(@types/react@18.2.60)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@types/luxon':
         specifier: ^3.4.2
         version: 3.4.2
@@ -1250,9 +1235,6 @@ importers:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
     devDependencies:
-      '@mui/internal-test-utils':
-        specifier: ^1.0.1
-        version: 1.0.1(@babel/core@7.24.7)(@types/react@18.2.60)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@types/luxon':
         specifier: ^3.4.2
         version: 3.4.2
@@ -1291,9 +1273,6 @@ importers:
         specifier: ^17.0.0 || ^18.0.0
         version: 18.2.0
     devDependencies:
-      '@mui/internal-test-utils':
-        specifier: ^1.0.1
-        version: 1.0.1(@babel/core@7.24.7)(@types/react@18.2.60)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       rimraf:
         specifier: ^5.0.7
         version: 5.0.7
@@ -1341,9 +1320,6 @@ importers:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
     devDependencies:
-      '@mui/internal-test-utils':
-        specifier: ^1.0.1
-        version: 1.0.1(@babel/core@7.24.7)(@types/react@18.2.60)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@types/prop-types':
         specifier: ^15.7.12
         version: 15.7.12
@@ -1400,9 +1376,6 @@ importers:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
     devDependencies:
-      '@mui/internal-test-utils':
-        specifier: ^1.0.1
-        version: 1.0.1(@babel/core@7.24.7)(@types/react@18.2.60)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       rimraf:
         specifier: ^5.0.7
         version: 5.0.7
