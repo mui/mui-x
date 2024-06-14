@@ -165,19 +165,19 @@ export const usePickerValue = <
   const {
     onAccept,
     onChange,
-    value: inValue,
+    value: inValueWithoutRenderTimezone,
     defaultValue: inDefaultValue,
     closeOnSelect = wrapperVariant === 'desktop',
     timezone: timezoneProp,
   } = props;
 
   const { current: defaultValue } = React.useRef(inDefaultValue);
-  const { current: isControlled } = React.useRef(inValue !== undefined);
+  const { current: isControlled } = React.useRef(inValueWithoutRenderTimezone !== undefined);
 
   /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
   if (process.env.NODE_ENV !== 'production') {
     React.useEffect(() => {
-      if (isControlled !== (inValue !== undefined)) {
+      if (isControlled !== (inValueWithoutRenderTimezone !== undefined)) {
         console.error(
           [
             `MUI X: A component is changing the ${
@@ -191,7 +191,7 @@ export const usePickerValue = <
           ].join('\n'),
         );
       }
-    }, [inValue]);
+    }, [inValueWithoutRenderTimezone]);
 
     React.useEffect(() => {
       if (!isControlled && defaultValue !== inDefaultValue) {
@@ -208,13 +208,24 @@ export const usePickerValue = <
 
   const utils = useUtils<TDate>();
   const adapter = useLocalizationContext<TDate>();
-
   const { isOpen, setIsOpen } = useOpenState(props);
+
+  const {
+    timezone,
+    value: inValueWithTimezoneToRender,
+    handleValueChange,
+  } = useValueWithTimezone({
+    timezone: timezoneProp,
+    value: inValueWithoutRenderTimezone,
+    defaultValue,
+    onChange,
+    valueManager,
+  });
 
   const [dateState, setDateState] = React.useState<UsePickerValueState<TValue>>(() => {
     let initialValue: TValue;
-    if (inValue !== undefined) {
-      initialValue = inValue;
+    if (inValueWithTimezoneToRender !== undefined) {
+      initialValue = inValueWithTimezoneToRender;
     } else if (defaultValue !== undefined) {
       initialValue = defaultValue;
     } else {
@@ -225,17 +236,9 @@ export const usePickerValue = <
       draft: initialValue,
       lastPublishedValue: initialValue,
       lastCommittedValue: initialValue,
-      lastControlledValue: inValue,
+      lastControlledValue: inValueWithTimezoneToRender,
       hasBeenModifiedSinceMount: false,
     };
-  });
-
-  const { timezone, handleValueChange } = useValueWithTimezone({
-    timezone: timezoneProp,
-    value: inValue,
-    defaultValue,
-    onChange,
-    valueManager,
   });
 
   useValidation(
@@ -297,21 +300,29 @@ export const usePickerValue = <
   });
 
   if (
-    inValue !== undefined &&
+    inValueWithTimezoneToRender !== undefined &&
     (dateState.lastControlledValue === undefined ||
-      !valueManager.areValuesEqual(utils, dateState.lastControlledValue, inValue))
+      !valueManager.areValuesEqual(
+        utils,
+        dateState.lastControlledValue,
+        inValueWithTimezoneToRender,
+      ))
   ) {
-    const isUpdateComingFromPicker = valueManager.areValuesEqual(utils, dateState.draft, inValue);
+    const isUpdateComingFromPicker = valueManager.areValuesEqual(
+      utils,
+      dateState.draft,
+      inValueWithTimezoneToRender,
+    );
 
     setDateState((prev) => ({
       ...prev,
-      lastControlledValue: inValue,
+      lastControlledValue: inValueWithTimezoneToRender,
       ...(isUpdateComingFromPicker
         ? {}
         : {
-            lastCommittedValue: inValue,
-            lastPublishedValue: inValue,
-            draft: inValue,
+            lastCommittedValue: inValueWithTimezoneToRender,
+            lastPublishedValue: inValueWithTimezoneToRender,
+            draft: inValueWithTimezoneToRender,
             hasBeenModifiedSinceMount: true,
           }),
     }));
