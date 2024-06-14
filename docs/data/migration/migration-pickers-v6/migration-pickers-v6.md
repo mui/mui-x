@@ -290,6 +290,22 @@ The string argument of the `dayOfWeekFormatter` prop has been replaced in favor 
  />
 ```
 
+### Strict typing of the date-related props
+
+All the date-related props are now strictly typed to only accept the date format supported by your adapter
+(`Date` object for `date-fns`, `daysjs.Dayjs` object for `days-js` etc...).
+
+If you run into TypeScript errors such as `DesktopDatePickerProps<Date> error Type 'Date' does not satisfy the constraint 'never'`,
+it is probably because you are not importing the adapter in the same TypeScript project as the rest of your codebase.
+You can fix it by manually importing the adapter in some file of your project as follows:
+
+```ts
+// Replace `AdapterDayjs` with the adapter you are using.
+import type {} from '@mui/x-date-pickers/AdapterDayjs';
+```
+
+Learn more about this change on the [dedicated doc section](/x/react-date-pickers/base-concepts/#typing-of-the-date).
+
 ## Field components
 
 ### Update the format of `selectedSections`
@@ -517,7 +533,7 @@ The `dayPickerClasses` variable has been renamed `dayCalendarClasses` to be cons
 
 The `dateLibInstance` prop of `LocalizationProvider` does not work with `AdapterDayjs` anymore.
 This prop was used to set the pickers in UTC mode before the implementation of a proper timezone support in the components.
-You can learn more about the new approach on the [dedicated doc page](https://mui.com/x/react-date-pickers/timezone/).
+Learn more about the new approach on the [dedicated doc page](https://mui.com/x/react-date-pickers/timezone/).
 
 ```diff
  // When a `value` or a `defaultValue` is provided
