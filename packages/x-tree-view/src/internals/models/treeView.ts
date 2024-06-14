@@ -16,7 +16,6 @@ export interface TreeViewItemMeta {
    * Only defined for `RichTreeView` and `RichTreeViewPro`.
    */
   label?: string;
-  editable: boolean;
 }
 
 export interface TreeViewModel<TValue> {

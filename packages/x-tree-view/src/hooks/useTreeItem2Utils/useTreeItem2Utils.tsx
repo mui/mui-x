@@ -4,6 +4,7 @@ import { UseTreeViewSelectionSignature } from '../../internals/plugins/useTreeVi
 import { UseTreeViewExpansionSignature } from '../../internals/plugins/useTreeViewExpansion';
 import { UseTreeViewItemsSignature } from '../../internals/plugins/useTreeViewItems';
 import { UseTreeViewFocusSignature } from '../../internals/plugins/useTreeViewFocus';
+import { UseTreeViewLabelSignature } from '../../internals/plugins/useTreeViewLabel';
 import type { UseTreeItem2Status } from '../../useTreeItem2';
 
 interface UseTreeItem2Interactions {
@@ -29,6 +30,7 @@ type UseTreeItem2UtilsMinimalPlugins = readonly [
   UseTreeViewExpansionSignature,
   UseTreeViewItemsSignature,
   UseTreeViewFocusSignature,
+  UseTreeViewLabelSignature,
 ];
 
 export const useTreeItem2Utils = ({

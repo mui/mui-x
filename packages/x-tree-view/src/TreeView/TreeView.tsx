@@ -140,6 +140,11 @@ TreeView.propTypes = {
    */
   expandedItems: PropTypes.arrayOf(PropTypes.string),
   /**
+   * The slot that triggers the item's expansion on click.
+   * @default 'content'
+   */
+  expansionTrigger: PropTypes.oneOf(['content', 'iconContainer']),
+  /**
    * Unstable features, breaking changes might be introduced.
    * For each feature, if the flag is not explicitly set to `true`,
    * the feature will be fully disabled and any property / method call will not have any effect.
@@ -152,13 +157,6 @@ TreeView.propTypes = {
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
-  /**
-   * Used to determine if a given item is editable.
-   * @template R
-   * @param {R} item The item to check.
-   * @returns {boolean} `true` if the item should be editable.
-   */
-  isItemEditable: PropTypes.func,
   /**
    * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".

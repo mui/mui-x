@@ -50,6 +50,7 @@ export const useTreeItem2 = <
   const {
     runItemPlugins,
     selection: { multiSelect, disableSelection, checkboxSelection },
+    expansion: { expansionTrigger },
     disabledItemsFocusable,
     indentationAtItemLevel,
     instance,
@@ -65,6 +66,7 @@ export const useTreeItem2 = <
   const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
   const handleRootRef = useForkRef(rootRef, pluginRootRef)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
+  const iconContainerRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLButtonElement>(null);
 
   const isBeingEdited = instance.isItemBeingEdited(itemId);
@@ -110,13 +112,12 @@ export const useTreeItem2 = <
   const createCotentHandleDoubleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
       otherHandlers.onDoubleClick?.(event);
-      if (event.defaultMuiPrevented) {
+      if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;
       }
-      if (!checkboxSelection) {
-        interactions.handleSelection(event);
+      if (instance.isItemEditable(itemId) && !instance.isItemBeingEdited(itemId)) {
+        instance.setEditedItemId(itemId);
       }
-      instance.setEditedItemId(itemId);
     };
 
   const createContentHandleClick =
@@ -125,8 +126,9 @@ export const useTreeItem2 = <
       if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;
       }
-
-      interactions.handleExpansion(event);
+      if (expansionTrigger === 'content') {
+        interactions.handleExpansion(event);
+      }
 
       if (!checkboxSelection) {
         interactions.handleSelection(event);
@@ -187,6 +189,18 @@ export const useTreeItem2 = <
     (event: React.ChangeEvent<HTMLInputElement> & MuiCancellableEvent) => {
       otherHandlers.onChange?.(event);
       setLabel(event.target.value);
+    };
+
+  const createIconContainerHandleClick =
+    (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
+      console.log('yay');
+      otherHandlers.onClick?.(event);
+      if (event.defaultMuiPrevented) {
+        return;
+      }
+      if (expansionTrigger === 'iconContainer') {
+        interactions.handleExpansion(event);
+      }
     };
 
   const getRootProps = <ExternalProps extends Record<string, any> = {}>(
@@ -314,6 +328,8 @@ export const useTreeItem2 = <
     return {
       ...externalEventHandlers,
       ...externalProps,
+      ref: iconContainerRef,
+      onClick: createIconContainerHandleClick(externalEventHandlers),
     };
   };
 

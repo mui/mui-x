@@ -83,6 +83,17 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     }
   };
 
+  const getExpansionTrigger = () => {
+    if (instance.isTreeViewEditable) {
+      return 'iconContainer';
+    }
+    if (params.expansionTrigger) {
+      return params.expansionTrigger;
+    }
+
+    return 'content';
+  };
+
   return {
     publicAPI: {
       setItemExpansion,
@@ -93,6 +104,11 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
       setItemExpansion,
       toggleItemExpansion,
       expandAllSiblings,
+    },
+    contextValue: {
+      expansion: {
+        expansionTrigger: getExpansionTrigger(),
+      },
     },
   };
 };
@@ -108,6 +124,7 @@ const DEFAULT_EXPANDED_ITEMS: string[] = [];
 useTreeViewExpansion.getDefaultizedParams = (params) => ({
   ...params,
   defaultExpandedItems: params.defaultExpandedItems ?? DEFAULT_EXPANDED_ITEMS,
+  expansionTrigger: params.expansionTrigger ?? 'content',
 });
 
 useTreeViewExpansion.params = {
@@ -115,4 +132,5 @@ useTreeViewExpansion.params = {
   defaultExpandedItems: true,
   onExpandedItemsChange: true,
   onItemExpansionToggle: true,
+  expansionTrigger: true,
 };

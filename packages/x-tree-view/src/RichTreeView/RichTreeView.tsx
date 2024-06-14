@@ -192,6 +192,11 @@ RichTreeView.propTypes = {
    */
   expandedItems: PropTypes.arrayOf(PropTypes.string),
   /**
+   * The slot that triggers the item's expansion on click.
+   * @default 'content'
+   */
+  expansionTrigger: PropTypes.oneOf(['content', 'iconContainer']),
+  /**
    * Unstable features, breaking changes might be introduced.
    * For each feature, if the flag is not explicitly set to `true`,
    * the feature will be fully disabled and any property / method call will not have any effect.
@@ -268,6 +273,12 @@ RichTreeView.propTypes = {
    * @param {string} value of the focused item.
    */
   onItemFocus: PropTypes.func,
+  /**
+   * Callback fired when the label of an item changes.
+   * @param {TreeViewItemId} itemId The id of the item that was edited.
+   * @param {string} newLabel The new label of the items.
+   */
+  onItemLabelChange: PropTypes.func,
   /**
    * Callback fired when a tree item is selected or deselected.
    * @param {React.SyntheticEvent} event The event source of the callback.

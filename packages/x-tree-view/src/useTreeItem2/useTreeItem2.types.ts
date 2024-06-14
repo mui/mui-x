@@ -8,6 +8,7 @@ import { UseTreeViewIdSignature } from '../internals/plugins/useTreeViewId';
 import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
 import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
 import { UseTreeViewLabelSignature } from '../internals/plugins/useTreeViewLabel';
+import { UseTreeViewExpansionSignature } from '../internals';
 
 export interface UseTreeItem2Parameters {
   /**
@@ -193,6 +194,7 @@ export interface UseTreeItem2ReturnValue<
 
 export type UseTreeItem2MinimalPlugins = readonly [
   UseTreeViewSelectionSignature,
+  UseTreeViewExpansionSignature,
   UseTreeViewItemsSignature,
   UseTreeViewIdSignature,
   UseTreeViewFocusSignature,
