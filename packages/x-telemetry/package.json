@@ -27,8 +27,7 @@
     "mui-x-telemetry": "scripts/cli.js"
   },
   "packageScripts": {
-    "postinstall": "node ./scripts/postinstall.js",
-    "prebuild": "node ./scripts/prebuild.js"
+    "postinstall": "node ./scripts/postinstall.js"
   },
   "repository": {
     "type": "git",

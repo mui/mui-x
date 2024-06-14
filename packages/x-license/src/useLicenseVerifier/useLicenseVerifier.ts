@@ -61,13 +61,12 @@ export function useLicenseVerifier(
     const fullPackageName = `@mui/${packageName}`;
 
     muiXTelemetry.send(
-        muiXTelemetry.events.licenseVerification({
-          packageName,
-          releaseInfo,
-          licenseStatus: licenseStatus.status,
-          licenseStatusExpiryDate: licenseStatus.meta?.expiryTimestamp,
-        })
-    )
+      muiXTelemetry.events.licenseVerification({
+        packageName,
+        releaseInfo,
+        licenseStatus: licenseStatus?.status ?? 'unknown',
+      }),
+    );
 
     if (licenseStatus.status === LICENSE_STATUS.Valid) {
       // Skip
