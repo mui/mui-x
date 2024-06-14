@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { DateTime, Info } from 'luxon';
+import { DateTime, Info, Settings } from 'luxon';
 import {
   AdapterFormats,
   AdapterOptions,
@@ -164,7 +164,8 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return <R>DateTime.fromISO(value, { locale: this.locale, zone: timezone });
   };
 
-  public getInvalidDate = () => DateTime.fromJSDate(new Date('Invalid Date'));
+  public getInvalidDate = () =>
+    Settings.throwOnInvalid ? null : DateTime.fromJSDate(new Date('Invalid Date'));
 
   public getTimezone = (value: DateTime): string => {
     // When using the system zone, we want to return "system", not something like "Europe/Paris"
@@ -192,7 +193,21 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
       return null;
     }
 
-    return DateTime.fromFormat(value, formatString, { locale: this.locale });
+    let dateTime: DateTime | null = null;
+    try {
+      dateTime = DateTime.fromFormat(value, formatString, { locale: this.locale });
+    } catch (error) {
+      // thrown an error due to Settings.throwOnInvalid = true
+      if (Settings.throwOnInvalid) {
+        // considering 'Invalid Date' as equal to null in such case
+        dateTime = null;
+      } else {
+        // rethrow the error otherwise
+        throw error;
+      }
+    }
+
+    return dateTime;
   };
 
   public getCurrentLocaleCode = () => {
