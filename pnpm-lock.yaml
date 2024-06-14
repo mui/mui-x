@@ -110,9 +110,6 @@ importers:
       '@playwright/test':
         specifier: ^1.44.1
         version: 1.44.1
-      '@testing-library/react':
-        specifier: ^15.0.7
-        version: 15.0.7(@types/react@18.2.60)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
