@@ -12,6 +12,7 @@ export { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 // utils
 export * from './defaultizeValueFormatter';
 export * from './configInit';
+export * from './getLabel';
 
 // contexts
 

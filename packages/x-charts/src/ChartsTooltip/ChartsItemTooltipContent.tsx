@@ -11,7 +11,7 @@ import { ZAxisContext } from '../context/ZAxisContextProvider';
 import { useColorProcessor } from '../hooks/useColor';
 import { useSeries } from '../hooks/useSeries';
 
-export type ChartsItemContentProps<T extends ChartSeriesType = ChartSeriesType> = {
+export interface ChartsItemContentProps<T extends ChartSeriesType = ChartSeriesType> {
   /**
    * The data used to identify the triggered item.
    */
@@ -31,15 +31,19 @@ export type ChartsItemContentProps<T extends ChartSeriesType = ChartSeriesType> 
    */
   getColor: (dataIndex: number) => string;
   sx?: SxProps<Theme>;
-};
+}
 
-function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
+interface ChartsItemTooltipContentProps<T extends ChartSeriesType> {
   itemData: ItemInteractionData<T>;
   content?: React.ElementType<ChartsItemContentProps<T>>;
   contentProps?: Partial<ChartsItemContentProps<T>>;
   sx?: SxProps<Theme>;
-  classes: ChartsItemContentProps<T>['classes'];
-}) {
+  classes: ChartsItemContentProps['classes'];
+}
+
+function ChartsItemTooltipContent<T extends ChartSeriesType>(
+  props: ChartsItemTooltipContentProps<T>,
+) {
   const { content, itemData, sx, classes, contentProps } = props;
 
   const series = useSeries()[itemData.type]!.series[itemData.seriesId] as ChartSeriesDefaultized<T>;

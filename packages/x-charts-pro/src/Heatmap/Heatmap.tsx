@@ -33,11 +33,15 @@ import {
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
 import { plugin as heatmapPlugin } from './plugin';
+import { DefaultHeatmapTooltip } from './DefaultHeatmapTooltip';
 
-export interface HeatmapSlots extends ChartsAxisSlots, ChartsTooltipSlots, ChartsOverlaySlots {}
+export interface HeatmapSlots
+  extends ChartsAxisSlots,
+    Omit<ChartsTooltipSlots<'heatmap'>, 'axisContent'>,
+    ChartsOverlaySlots {}
 export interface HeatmapSlotProps
   extends ChartsAxisSlotProps,
-    ChartsTooltipSlotProps,
+    Omit<ChartsTooltipSlotProps, 'axisContent'>,
     ChartsOverlaySlotProps {}
 
 export interface HeatmapProps
@@ -66,7 +70,7 @@ export interface HeatmapProps
    * The configuration of the tooltip.
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    */
-  tooltip?: ChartsTooltipProps;
+  tooltip?: ChartsTooltipProps<'heatmap'>;
   /**
    * Overridable component slots.
    * @default {}
@@ -150,12 +154,7 @@ export const Heatmap = React.forwardRef(function Heatmap(props: HeatmapProps, re
       colors={colors}
       dataset={dataset}
       sx={sx}
-      disableAxisListener={
-        // tooltip?.trigger !== 'axis' &&
-        // axisHighlight?.x === 'none' &&
-        // axisHighlight?.y === 'none' &&
-        !onAxisClick
-      }
+      disableAxisListener
       highlightedItem={highlightedItem}
       onHighlightChange={onHighlightChange}
     >
@@ -173,7 +172,13 @@ export const Heatmap = React.forwardRef(function Heatmap(props: HeatmapProps, re
         slotProps={slotProps}
       />
 
-      {!loading && <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />}
+      {!loading && (
+        <ChartsTooltip
+          trigger="item"
+          slots={{ itemContent: DefaultHeatmapTooltip, ...slots }}
+          slotProps={slotProps}
+        />
+      )}
       <ChartsClipPath id={clipPathId} />
       {children}
     </ResponsiveChartContainerPro>
