@@ -996,9 +996,6 @@ importers:
       '@types/chance':
         specifier: ^1.1.6
         version: 1.1.6
-      '@types/lru-cache':
-        specifier: ^7.10.10
-        version: 7.10.10
       rimraf:
         specifier: ^5.0.7
         version: 5.0.7
@@ -3673,10 +3670,6 @@ packages:
 
   '@types/lodash@4.17.5':
     resolution: {integrity: sha512-MBIOHVZqVqgfro1euRDWX7OO0fBVUUMrN6Pwm8LQsz8cWhEpihlvR70ENj3f40j58TNxZaWv2ndSkInykNBBJw==}
-
-  '@types/lru-cache@7.10.10':
-    resolution: {integrity: sha512-nEpVRPWW9EBmx2SCfNn3ClYxPL7IktPX12HhIoSc/H5mMjdeW3+YsXIpseLQ2xF35+OcpwKQbEUw5VtqE4PDNA==}
-    deprecated: This is a stub types definition. lru-cache provides its own type definitions, so you do not need this installed.
 
   '@types/luxon@3.4.2':
     resolution: {integrity: sha512-TifLZlFudklWlMBfhubvgqTXRzLDI5pCbGa4P8a3wPyUQSW+1xQ5eDsreP9DWHX3tjq1ke96uYG/nwundroWcA==}
@@ -12566,10 +12559,6 @@ snapshots:
       - supports-color
 
   '@types/lodash@4.17.5': {}
-
-  '@types/lru-cache@7.10.10':
-    dependencies:
-      lru-cache: 10.2.2
 
   '@types/luxon@3.4.2': {}
 
