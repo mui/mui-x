@@ -1718,6 +1718,12 @@
       "isGlobal": false
     },
     {
+      "key": "sidePanel",
+      "className": "MuiDataGridPro-sidePanel",
+      "description": "",
+      "isGlobal": false
+    },
+    {
       "key": "sortIcon",
       "className": "MuiDataGridPro-sortIcon",
       "description": "Styles applied to the sort icon element.",

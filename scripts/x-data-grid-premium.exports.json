@@ -636,7 +636,6 @@
   { "name": "SkeletonCellPropsOverrides", "kind": "Interface" },
   { "name": "ToolbarPropsOverrides", "kind": "Interface" },
   { "name": "Unstable_GridPivotModel", "kind": "Interface" },
-  { "name": "Unstable_GridPivotModelEditor", "kind": "Function" },
   { "name": "unstable_resetCleanupTracking", "kind": "Variable" },
   { "name": "unstable_useGridPivoting", "kind": "Variable" },
   { "name": "useFirstRender", "kind": "Variable" },
