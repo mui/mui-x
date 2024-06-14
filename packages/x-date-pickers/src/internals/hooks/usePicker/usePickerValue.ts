@@ -211,10 +211,22 @@ export const usePickerValue = <
 
   const { isOpen, setIsOpen } = useOpenState(props);
 
+  const {
+    timezone,
+    value: inValueWithTimezoneToRender,
+    handleValueChange,
+  } = useValueWithTimezone({
+    timezone: timezoneProp,
+    value: inValue,
+    defaultValue,
+    onChange,
+    valueManager,
+  });
+
   const [dateState, setDateState] = React.useState<UsePickerValueState<TValue>>(() => {
     let initialValue: TValue;
-    if (inValue !== undefined) {
-      initialValue = inValue;
+    if (inValueWithTimezoneToRender !== undefined) {
+      initialValue = inValueWithTimezoneToRender;
     } else if (defaultValue !== undefined) {
       initialValue = defaultValue;
     } else {
@@ -225,17 +237,9 @@ export const usePickerValue = <
       draft: initialValue,
       lastPublishedValue: initialValue,
       lastCommittedValue: initialValue,
-      lastControlledValue: inValue,
+      lastControlledValue: inValueWithTimezoneToRender,
       hasBeenModifiedSinceMount: false,
     };
-  });
-
-  const { timezone, handleValueChange } = useValueWithTimezone({
-    timezone: timezoneProp,
-    value: inValue,
-    defaultValue,
-    onChange,
-    valueManager,
   });
 
   useValidation(
@@ -297,21 +301,29 @@ export const usePickerValue = <
   });
 
   if (
-    inValue !== undefined &&
+    inValueWithTimezoneToRender !== undefined &&
     (dateState.lastControlledValue === undefined ||
-      !valueManager.areValuesEqual(utils, dateState.lastControlledValue, inValue))
+      !valueManager.areValuesEqual(
+        utils,
+        dateState.lastControlledValue,
+        inValueWithTimezoneToRender,
+      ))
   ) {
-    const isUpdateComingFromPicker = valueManager.areValuesEqual(utils, dateState.draft, inValue);
+    const isUpdateComingFromPicker = valueManager.areValuesEqual(
+      utils,
+      dateState.draft,
+      inValueWithTimezoneToRender,
+    );
 
     setDateState((prev) => ({
       ...prev,
-      lastControlledValue: inValue,
+      lastControlledValue: inValueWithTimezoneToRender,
       ...(isUpdateComingFromPicker
         ? {}
         : {
-            lastCommittedValue: inValue,
-            lastPublishedValue: inValue,
-            draft: inValue,
+            lastCommittedValue: inValueWithTimezoneToRender,
+            lastPublishedValue: inValueWithTimezoneToRender,
+            draft: inValueWithTimezoneToRender,
             hasBeenModifiedSinceMount: true,
           }),
     }));
