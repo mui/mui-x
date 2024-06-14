@@ -115,7 +115,7 @@ After this initial render, `apiRef` holds methods to interact imperatively with 
 Use the `selectItem` API method to select or unselect an item:
 
 ```ts
-apiRef.current.selectItem(
+apiRef.current.selectItem({
   // The DOM event that triggered the change
   event,
   // The id of the item to select or deselect
@@ -128,7 +128,7 @@ apiRef.current.selectItem(
   // If `false` the item will be deselected
   // If not defined, the item's new selection status will be the opposite of its current one
   isSelected,
-);
+});
 ```
 
 {{"demo": "ApiMethodSelectItem.js", "defaultCodeOpen": false}}
