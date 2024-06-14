@@ -3,10 +3,7 @@ import {
   DataGridPremium,
   useGridApiRef,
   unstable_useGridPivoting,
-  Unstable_GridPivotModelEditor as GridPivotModelEditor,
 } from '@mui/x-data-grid-premium';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 
 const initialRows = [
   { id: 1, product: 'Product 1', type: 'Type A', price: 10, quantity: 2 },
@@ -27,7 +24,7 @@ const initialColumns = [
   { field: 'type' },
   {
     field: 'price',
-    valueFormatter: ({ value }) => {
+    valueFormatter: (value) => {
       if (!value) {
         return '';
       }
@@ -46,32 +43,24 @@ export default function GridPivotingBasic() {
     values: [{ field: 'price', aggFunc: 'sum' }],
   });
 
-  const { isPivot, setIsPivot, props } = unstable_useGridPivoting({
-    rows: initialRows,
-    columns: initialColumns,
-    pivotModel,
+  const [isPivotMode, setIsPivotMode] = React.useState(false);
+
+  const pivotParams = unstable_useGridPivoting({
     apiRef,
+    pivotModel,
+    onPivotModelChange: setPivotModel,
+    pivotMode: isPivotMode,
+    onPivotModeChange: setIsPivotMode,
   });
 
   return (
-    <div style={{ width: '100%' }}>
-      <FormControlLabel
-        control={
-          <Switch checked={isPivot} onChange={(e) => setIsPivot(e.target.checked)} />
-        }
-        label="Pivot"
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGridPremium
+        rows={initialRows}
+        columns={initialColumns}
+        pivotParams={pivotParams}
+        apiRef={apiRef}
       />
-      {isPivot && (
-        <GridPivotModelEditor
-          columns={initialColumns}
-          pivotModel={pivotModel}
-          onPivotModelChange={setPivotModel}
-        />
-      )}
-
-      <div style={{ height: 400, width: '100%' }}>
-        <DataGridPremium key={isPivot.toString()} {...props} apiRef={apiRef} />
-      </div>
     </div>
   );
 }

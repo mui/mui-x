@@ -182,7 +182,7 @@ function SortSelect({
         <rootProps.slots.baseSelectOption
           key={sortDirection || ''}
           value={sortDirection || ''}
-          // FIXME
+          // @ts-ignore FIXME
           style={{ fontSize: '12px' }}
         >
           {sortDirection === 'asc' && 'A — Z'}
@@ -223,7 +223,7 @@ function AggregationSelect({
       sx={{ marginLeft: 'auto', fontSize: '12px' }}
       value={aggFunc}
       onChange={(event) => {
-        const newValue = event.target.value;
+        const newValue = event.target.value as string;
         onPivotModelChange((prev) => {
           return {
             ...prev,
@@ -231,7 +231,7 @@ function AggregationSelect({
               if (col.field === field) {
                 return {
                   ...col,
-                  aggFunc: newValue!,
+                  aggFunc: newValue,
                 };
               }
               return col;
@@ -244,7 +244,7 @@ function AggregationSelect({
         <rootProps.slots.baseSelectOption
           key={func}
           value={func}
-          // FIXME
+          // @ts-ignore FIXME
           style={{ fontSize: '12px' }}
         >
           {func}
@@ -435,17 +435,6 @@ function GridPivotPanelContent({
       onPivotModelChange((prev) => {
         const newModel = { ...prev };
         if (targetSection) {
-          const newItem = targetSection === 'rows' ? field : { field };
-          if (targetSection === 'values') {
-            const availableAggregationFunctions = getAvailableAggregationFunctions({
-              aggregationFunctions: rootProps.aggregationFunctions,
-              colDef: initialColumnsLookup[field],
-            });
-            newItem.aggFunc = availableAggregationFunctions[0];
-          }
-          if (targetSection === 'columns') {
-            newItem.sort = 'asc';
-          }
           const newSectionArray = [...prev[targetSection]];
           let toIndex = newSectionArray.length;
           if (targetField) {
@@ -469,10 +458,30 @@ function GridPivotPanelContent({
             }
           }
 
-          newSectionArray.splice(toIndex, 0, newItem);
-          newModel[targetSection] = newSectionArray;
+          let newItem:
+            | PivotModel['columns'][number]
+            | PivotModel['values'][number]
+            | PivotModel['rows'][number];
+          if (targetSection === 'values') {
+            const availableAggregationFunctions = getAvailableAggregationFunctions({
+              aggregationFunctions: rootProps.aggregationFunctions,
+              colDef: initialColumnsLookup[field],
+            });
+            newSectionArray.splice(toIndex, 0, {
+              field,
+              aggFunc: availableAggregationFunctions[0],
+            });
+            newModel['values'] = newSectionArray as PivotModel['values'];
+          } else if (targetSection === 'columns') {
+            newSectionArray.splice(toIndex, 0, { field, sort: 'asc' });
+            newModel['columns'] = newSectionArray as PivotModel['columns'];
+          } else if (targetSection === 'rows') {
+            newSectionArray.splice(toIndex, 0, field);
+            newModel['rows'] = newSectionArray as PivotModel['rows'];
+          }
         }
         if (targetSection !== originSection && originSection) {
+          // @ts-ignore FIXME
           newModel[originSection] = prev[originSection].filter((f) => {
             if (typeof f === 'string') {
               return f !== field;

@@ -22,10 +22,14 @@ export default function GridPivotingMovies() {
     values: [{ field: 'quantity', aggFunc: 'sum' }],
   });
 
-  const { isPivot, setIsPivot, props } = unstable_useGridPivoting({
-    pivotModel,
+  const [isPivotMode, setIsPivotMode] = React.useState(false);
+
+  const pivotParams = unstable_useGridPivoting({
     apiRef,
-    // initialIsPivot: true,
+    pivotModel,
+    onPivotModelChange: setPivotModel,
+    pivotMode: isPivotMode,
+    onPivotModeChange: setIsPivotMode,
   });
 
   return (
@@ -34,20 +38,9 @@ export default function GridPivotingMovies() {
         <DataGridPremium
           rows={data.rows}
           columns={data.columns}
-          {...props}
           apiRef={apiRef}
-          slots={{
-            toolbar: GridToolbar,
-          }}
-          slotProps={{
-            pivotPanel: {
-              pivotModel,
-              initialColumns: data.columns,
-              onPivotModelChange: setPivotModel,
-              pivotMode: isPivot,
-              onPivotModeChange: setIsPivot,
-            },
-          }}
+          slots={{ toolbar: GridToolbar }}
+          pivotParams={pivotParams}
         />
       </div>
     </div>

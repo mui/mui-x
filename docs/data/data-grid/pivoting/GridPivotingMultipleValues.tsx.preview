@@ -1,16 +1,6 @@
-<FormControlLabel
-  control={
-    <Switch checked={isPivot} onChange={(e) => setIsPivot(e.target.checked)} />
-  }
-  label="Pivot"
+<DataGridPremium
+  rows={initialRows}
+  columns={initialColumns}
+  pivotParams={pivotParams}
+  apiRef={apiRef}
 />
-{isPivot && (
-  <GridPivotModelEditor
-    columns={initialColumns}
-    pivotModel={pivotModel}
-    onPivotModelChange={setPivotModel}
-  />
-)}
-<div style={{ height: 400, width: '100%' }}>
-  <DataGridPremium key={isPivot.toString()} {...props} apiRef={apiRef} />
-</div>
