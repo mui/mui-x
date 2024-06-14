@@ -2,6 +2,12 @@ import * as React from 'react';
 import { TreeViewItemId } from '../models';
 import { MuiCancellableEventHandler } from '../internals/models/MuiCancellableEvent';
 import { TreeViewAnyPluginSignature, TreeViewPublicAPI } from '../internals/models';
+import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
+import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
+import { UseTreeViewIdSignature } from '../internals/plugins/useTreeViewId';
+import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
+import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
+import { UseTreeViewLabelSignature } from '../internals/plugins/useTreeViewLabel';
 
 export interface UseTreeItem2Parameters {
   /**
@@ -184,3 +190,12 @@ export interface UseTreeItem2ReturnValue<
    */
   publicAPI: TreeViewPublicAPI<TSignatures>;
 }
+
+export type UseTreeItem2MinimalPlugins = readonly [
+  UseTreeViewSelectionSignature,
+  UseTreeViewItemsSignature,
+  UseTreeViewIdSignature,
+  UseTreeViewFocusSignature,
+  UseTreeViewKeyboardNavigationSignature,
+  UseTreeViewLabelSignature,
+];

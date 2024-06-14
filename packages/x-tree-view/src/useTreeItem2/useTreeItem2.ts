@@ -11,9 +11,9 @@ import {
   UseTreeItemIconContainerSlotProps,
   UseTreeItem2CheckboxSlotProps,
   UseTreeItem2LabelInputSlotProps,
+  UseTreeItem2MinimalPlugins,
 } from './useTreeItem2.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
-import { DefaultTreeViewPluginSignatures } from '../internals/plugins/defaultPlugins';
 import { MuiCancellableEvent } from '../internals/models/MuiCancellableEvent';
 import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
@@ -43,7 +43,7 @@ const useTreeItemLabelInput = (inLabel: string) => {
 };
 
 export const useTreeItem2 = <
-  TSignatures extends DefaultTreeViewPluginSignatures = DefaultTreeViewPluginSignatures,
+  TSignatures extends UseTreeItem2MinimalPlugins = UseTreeItem2MinimalPlugins,
 >(
   parameters: UseTreeItem2Parameters,
 ): UseTreeItem2ReturnValue<TSignatures> => {

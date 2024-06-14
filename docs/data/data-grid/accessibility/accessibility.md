@@ -1,6 +1,6 @@
 # Data Grid - Accessibility
 
-<p class="description">The Data Grid has complete accessibility support, including built-in keyboard navigation that follows international standards.</p>
+<p class="description">Learn how the Data Grid implements accessibility features and guidelines, including keyboard navigation that follows international standards.</p>
 
 ## Guidelines
 
