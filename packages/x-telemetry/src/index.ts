@@ -49,17 +49,17 @@ const muiXTelemetry = {
 
     if (getMuiXTelemetryEnv('DEBUG')) {
       // eslint-disable-next-line no-console
-      console.log('[mui-x-telemetry]', JSON.stringify(eventPayload, null, 2));
+      console.log('[mui-x-telemetry]', JSON.stringify({ event: eventPayload }, null, 2));
+      return;
     }
 
-    // Ignore if fetch is not available (e.g. Node.js before v18)
+    // Ignore if fetch is not available (e.g. Node.js < v18, IE, etc.)
     if (typeof fetch !== 'function') {
       return;
     }
 
     // TODO: batch events and send them in a single request when there will be more
     fetch('https://x-telemetry.up.railway.app/api/v1/telemetry/record', {
-      // fetch('http://localhost:8000/api/v1/telemetry/record', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify([eventPayload]),

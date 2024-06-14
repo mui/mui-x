@@ -74,8 +74,8 @@ export class TelemetryStorage {
     return generated;
   }
 
-  public setEnabled = (_enabled: boolean) => {
-    this.conf?.set(TELEMETRY_KEY_IS_COLLECTING, !!_enabled);
+  public setEnabled = (isCollecting: boolean) => {
+    this.conf?.set(TELEMETRY_KEY_IS_COLLECTING, !!isCollecting);
 
     // Rerun the postinstall script to update the context file
     // eslint-disable-next-line global-require
