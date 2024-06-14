@@ -293,7 +293,7 @@ The string argument of the `dayOfWeekFormatter` prop has been replaced in favor 
 ### Strict typing of the date-related props
 
 All the date-related props are now strictly typed to only accept the date format supported by your adapter
-(`Date` object for `date-fns`, `daysjs.Dayjs` object for `days-js` etc...).
+(`Date` object for `date-fns`, `daysjs.Dayjs` object for `days-js`, etc.).
 
 If you run into TypeScript errors such as `DesktopDatePickerProps<Date> error Type 'Date' does not satisfy the constraint 'never'`,
 it is probably because you are not importing the adapter in the same TypeScript project as the rest of your codebase.
