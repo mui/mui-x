@@ -1,19 +1,21 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { useSlotProps } from '@mui/base/utils';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getSimpleTreeViewUtilityClass } from './simpleTreeViewClasses';
 import {
   SimpleTreeViewProps,
-  SimpleTreeViewSlotProps,
   SimpleTreeViewSlots,
+  SimpleTreeViewSlotProps,
 } from './SimpleTreeView.types';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
-import { SIMPLE_TREE_VIEW_PLUGINS } from './SimpleTreeView.plugins';
+import { SIMPLE_TREE_VIEW_PLUGINS, SimpleTreeViewPluginSignatures } from './SimpleTreeView.plugins';
 import { buildWarning } from '../internals/utils/warning';
 import { extractPluginParamsFromProps } from '../internals/utils/extractPluginParamsFromProps';
+
+const useThemeProps = createUseThemeProps('MuiSimpleTreeView');
 
 const useUtilityClasses = <Multiple extends boolean | undefined>(
   ownerState: SimpleTreeViewProps<Multiple>,
@@ -74,7 +76,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   }
 
   const { pluginParams, slots, slotProps, otherProps } = extractPluginParamsFromProps<
-    typeof SIMPLE_TREE_VIEW_PLUGINS,
+    SimpleTreeViewPluginSignatures,
     SimpleTreeViewSlots,
     SimpleTreeViewSlotProps,
     SimpleTreeViewProps<Multiple> & { items: any }

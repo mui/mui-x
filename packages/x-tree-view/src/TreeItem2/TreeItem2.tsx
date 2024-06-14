@@ -2,12 +2,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import unsupportedProp from '@mui/utils/unsupportedProp';
-import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import MuiCheckbox, { CheckboxProps } from '@mui/material/Checkbox';
 import { useSlotProps } from '@mui/base/utils';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeItem2Props, TreeItem2OwnerState } from './TreeItem2.types';
 import {
   unstable_useTreeItem2 as useTreeItem2,
@@ -17,6 +18,8 @@ import {
 import { getTreeItemUtilityClass } from '../TreeItem';
 import { TreeItem2Icon } from '../TreeItem2Icon';
 import { TreeItem2Provider } from '../TreeItem2Provider';
+
+const useThemeProps = createUseThemeProps('MuiTreeItem2');
 
 export const TreeItem2Root = styled('li', {
   name: 'MuiTreeItem2',
@@ -388,10 +391,18 @@ TreeItem2.propTypes = {
    */
   label: PropTypes.node,
   /**
+   * Callback fired when the item root is blurred.
+   */
+  onBlur: PropTypes.func,
+  /**
    * This prop isn't supported.
-   * Use the `onItemFocus` callback on the tree if you need to monitor a item's focus.
+   * Use the `onItemFocus` callback on the tree if you need to monitor an item's focus.
    */
   onFocus: unsupportedProp,
+  /**
+   * Callback fired when a key is pressed on the keyboard and the tree is in focus.
+   */
+  onKeyDown: PropTypes.func,
   /**
    * The props used for each component slot.
    * @default {}

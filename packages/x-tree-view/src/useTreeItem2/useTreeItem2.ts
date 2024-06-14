@@ -13,7 +13,7 @@ import {
   UseTreeItem2LabelInputSlotProps,
 } from './useTreeItem2.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
-import { DefaultTreeViewPlugins } from '../internals/plugins/defaultPlugins';
+import { DefaultTreeViewPluginSignatures } from '../internals/plugins/defaultPlugins';
 import { MuiCancellableEvent } from '../internals/models/MuiCancellableEvent';
 import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
@@ -42,9 +42,11 @@ const useTreeItemLabelInput = (inLabel: string) => {
   };
 };
 
-export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTreeViewPlugins>(
+export const useTreeItem2 = <
+  TSignatures extends DefaultTreeViewPluginSignatures = DefaultTreeViewPluginSignatures,
+>(
   parameters: UseTreeItem2Parameters,
-): UseTreeItem2ReturnValue<TPlugins> => {
+): UseTreeItem2ReturnValue<TSignatures> => {
   const {
     runItemPlugins,
     selection: { multiSelect, disableSelection, checkboxSelection },
@@ -52,7 +54,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
     indentationAtItemLevel,
     instance,
     publicAPI,
-  } = useTreeViewContext<TPlugins>();
+  } = useTreeViewContext<TSignatures>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
   const { id, itemId, label: inLabel, children, rootRef, isBeingEdited } = parameters;
