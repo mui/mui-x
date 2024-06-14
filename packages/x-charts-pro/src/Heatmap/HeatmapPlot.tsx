@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useXScale, useYScale, useZColorScale } from '@mui/x-charts/hooks';
 import { useHeatmapSeries } from '../hooks/useSeries';
+import { HeatmapItem } from './HeatmapItem';
 
 export function HeatmapPlot() {
   const xScale = useXScale<'band'>();
@@ -18,15 +19,23 @@ export function HeatmapPlot() {
 
   return (
     <g>
-      {seriesToDisplay.data.map(([xIndex, yIndex, value]) => {
+      {seriesToDisplay.data.map(([xIndex, yIndex, value], dataIndex) => {
+        const x = xScale(xDomain[xIndex]);
+        const y = yScale(yDomain[yIndex]);
+        const color = colorScale?.(value);
+        if (x === undefined || y === undefined || !color) {
+          return null;
+        }
         return (
-          <rect
+          <HeatmapItem
             key={`${xIndex}_${yIndex}`}
             width={xScale.bandwidth()}
             height={yScale.bandwidth()}
-            x={xScale(xDomain[xIndex])}
-            y={yScale(yDomain[yIndex])}
-            fill={colorScale?.(value) ?? undefined}
+            x={x}
+            y={y}
+            color={color}
+            dataIndex={dataIndex}
+            seriesId={series.seriesOrder[0]}
           />
         );
       })}

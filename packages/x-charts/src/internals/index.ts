@@ -7,6 +7,7 @@ export * from '../ResponsiveChartContainer/ResizableContainer';
 // hooks
 export { useReducedMotion } from '../hooks/useReducedMotion';
 export { useSeries } from '../hooks/useSeries';
+export { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 
 // utils
 export * from './defaultizeValueFormatter';

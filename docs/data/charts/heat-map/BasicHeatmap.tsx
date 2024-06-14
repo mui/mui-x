@@ -25,6 +25,10 @@ export default function BasicHeatmap() {
       series={[
         {
           type: 'heatmap',
+          highlightScope: {
+            highlight: 'item',
+            fade: 'global',
+          },
           data: [
             [0, 0, 1],
             [0, 1, 2],

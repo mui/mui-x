@@ -109,12 +109,12 @@ export const Heatmap = React.forwardRef(function Heatmap(props: HeatmapProps, re
   const clipPathId = `${id}-clip-path`;
 
   const defaultizedXAxis = React.useMemo(
-    () => xAxis.map((axis) => ({ scaleType: 'band' as const, ...axis })),
+    () => xAxis.map((axis) => ({ scaleType: 'band' as const, categoryGapRatio: 0, ...axis })),
     [xAxis],
   );
 
   const defaultizedYAxis = React.useMemo(
-    () => yAxis.map((axis) => ({ scaleType: 'band' as const, ...axis })),
+    () => yAxis.map((axis) => ({ scaleType: 'band' as const, categoryGapRatio: 0, ...axis })),
     [yAxis],
   );
 

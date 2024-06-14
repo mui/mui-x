@@ -1,4 +1,5 @@
 import * as React from 'react';
+import '@mui/x-charts-pro/typeOverloads';
 import { UnstableHeatmap } from '@mui/x-charts-pro/Heatmap';
 
 export default function BasicHeatmap() {
@@ -10,20 +11,24 @@ export default function BasicHeatmap() {
       yAxis={[
         { scaleType: 'band', data: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'] },
       ]}
-      zAxis={[
-        {
-          id: 'color-map-id',
-          colorMap: {
-            type: 'continuous',
-            min: -2,
-            max: 4,
-            color: ['green', 'orange'],
-          },
-        },
-      ]}
+      // zAxis={[
+      //   {
+      //     id: 'color-map-id',
+      //     colorMap: {
+      //       type: 'continuous',
+      //       min: -2,
+      //       max: 4,
+      //       color: ['green', 'orange'],
+      //     },
+      //   },
+      // ]}
       series={[
         {
           type: 'heatmap',
+          highlightScope: {
+            highlight: 'item',
+            fade: 'global',
+          },
           data: [
             [0, 0, 1],
             [0, 1, 2],
