@@ -53,7 +53,7 @@ describe('License: verifyLicense', () => {
         scope: 'pro',
         licensingModel: 'perpetual',
         orderNumber: 'MUI-123',
-        planVersion: 'legacy',
+        planVersion: 'initial',
       });
 
       expect(
@@ -84,7 +84,7 @@ describe('License: verifyLicense', () => {
       orderNumber: 'MUI-123',
       scope: 'pro',
       licensingModel: 'subscription',
-      planVersion: 'legacy',
+      planVersion: 'initial',
     });
 
     const licenseKeyPremium = generateLicense({
@@ -92,7 +92,7 @@ describe('License: verifyLicense', () => {
       orderNumber: 'MUI-123',
       scope: 'premium',
       licensingModel: 'subscription',
-      planVersion: 'legacy',
+      planVersion: 'initial',
     });
 
     it('should log an error when ReleaseInfo is not valid', () => {
@@ -150,7 +150,7 @@ describe('License: verifyLicense', () => {
           orderNumber: 'MUI-123',
           scope: 'pro',
           licensingModel: 'subscription',
-          planVersion: 'legacy',
+          planVersion: 'initial',
         });
 
         expect(
@@ -168,7 +168,7 @@ describe('License: verifyLicense', () => {
           orderNumber: 'MUI-123',
           scope: 'pro',
           licensingModel: 'subscription',
-          planVersion: 'legacy',
+          planVersion: 'initial',
         });
 
         expect(
@@ -187,7 +187,7 @@ describe('License: verifyLicense', () => {
           orderNumber: 'MUI-123',
           scope: 'pro',
           licensingModel: 'subscription',
-          planVersion: 'legacy',
+          planVersion: 'initial',
         });
 
         expect(
@@ -205,7 +205,7 @@ describe('License: verifyLicense', () => {
           orderNumber: 'MUI-123',
           scope: 'pro',
           licensingModel: 'perpetual',
-          planVersion: 'legacy',
+          planVersion: 'initial',
         });
 
         expect(
@@ -237,7 +237,7 @@ describe('License: verifyLicense', () => {
       orderNumber: 'MUI-123',
       scope: 'pro',
       licensingModel: 'annual',
-      planVersion: 'legacy',
+      planVersion: 'initial',
     });
 
     it('should accept licensingModel="annual"', () => {

@@ -63,6 +63,7 @@ describe('useLicenseVerifier', function test() {
         licensingModel: 'perpetual',
         orderNumber: '12345',
         scope: 'pro',
+        planVersion: 'initial',
       });
 
       LicenseInfo.setLicenseKey('');
@@ -88,6 +89,7 @@ describe('useLicenseVerifier', function test() {
         orderNumber: 'MUI-123',
         scope: 'pro',
         licensingModel: 'subscription',
+        planVersion: 'initial',
       });
       LicenseInfo.setLicenseKey(expiredLicenseKey);
 

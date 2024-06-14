@@ -21,7 +21,7 @@ interface MuiLicense {
   licensingModel: LicensingModel | null;
   scope: LicenseScope | null;
   expiryTimestamp: number | null;
-  planVersion?: PlanVersion | null;
+  planVersion: PlanVersion;
 }
 
 /**
@@ -42,6 +42,7 @@ const decodeLicenseVersion1 = (license: string): MuiLicense => {
     scope: 'pro',
     licensingModel: 'perpetual',
     expiryTimestamp,
+    planVersion: 'initial',
   };
 };
 
@@ -53,6 +54,7 @@ const decodeLicenseVersion2 = (license: string): MuiLicense => {
     scope: null,
     licensingModel: null,
     expiryTimestamp: null,
+    planVersion: 'initial',
   };
 
   license
@@ -176,11 +178,10 @@ export function verifyLicense({
     return { status: LICENSE_STATUS.Invalid };
   }
 
-  // 'legacy' is only available for licenses ordered between 2024-06-20 and 2024-07-20
-  if (!license.planVersion || license.planVersion === 'legacy') {
-    // check if the productScope is 'charts' or 'tree-view'
+  if (license.planVersion === 'initial') {
+    // 'charts-pro' or 'tree-view-pro' can only be used with a newer license
     if (productScope === 'charts' || productScope === 'tree-view') {
-      console.error('Error checking license. Plan version not found or invalid!');
+      console.error('Error checking license. Plan version invalid!');
       return { status: LICENSE_STATUS.OutOfScope };
     }
   }

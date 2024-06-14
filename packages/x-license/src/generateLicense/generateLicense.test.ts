@@ -9,7 +9,7 @@ describe('License: generateLicense', () => {
         orderNumber: 'MUI-123',
         scope: 'pro',
         licensingModel: 'subscription',
-        planVersion: 'legacy',
+        planVersion: 'initial',
       }),
     ).to.equal(
       '076fc290e354b9a04720190023e1f868Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1zdWJzY3JpcHRpb24sUFY9bGVnYWN5LEtWPTI=',
@@ -23,7 +23,7 @@ describe('License: generateLicense', () => {
         orderNumber: 'MUI-123',
         scope: 'premium',
         licensingModel: 'subscription',
-        planVersion: 'legacy',
+        planVersion: 'initial',
       }),
     ).to.equal(
       'fafc52d1dbb97e825702a7ccf5986fbbTz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLFBWPWxlZ2FjeSxLVj0y',
@@ -37,7 +37,7 @@ describe('License: generateLicense', () => {
         orderNumber: 'MUI-123',
         scope: 'pro',
         licensingModel: 'subscription',
-        planVersion: 'legacy',
+        planVersion: 'initial',
       }),
     ).to.equal(
       '076fc290e354b9a04720190023e1f868Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1zdWJzY3JpcHRpb24sUFY9bGVnYWN5LEtWPTI=',
@@ -51,7 +51,7 @@ describe('License: generateLicense', () => {
         orderNumber: 'MUI-123',
         scope: 'pro',
         licensingModel: 'perpetual',
-        planVersion: 'legacy',
+        planVersion: 'initial',
       }),
     ).to.equal(
       'a32c4d6c8cce5d9ca0132527a252e999Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1wZXJwZXR1YWwsUFY9bGVnYWN5LEtWPTI=',
