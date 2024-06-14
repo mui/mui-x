@@ -62,6 +62,15 @@ export default function GridPivotingMovies() {
               onPivotModeChange: setIsPivot,
             },
           }}
+          sx={{
+            '& .MuiDataGrid-columnHeaderTitleContainer': {
+              overflow: 'visible',
+            },
+            '& .MuiDataGrid-columnHeaderTitleContainerContent': {
+              position: 'sticky',
+              left: 8,
+            },
+          }}
         />
       </div>
     </div>
