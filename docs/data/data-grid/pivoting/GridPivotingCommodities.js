@@ -7,7 +7,7 @@ import {
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-export default function GridPivotingMovies() {
+export default function GridPivotingCommodities() {
   const apiRef = useGridApiRef();
 
   const { data } = useDemoData({

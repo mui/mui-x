@@ -8,10 +8,7 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { PivotModel } from '../hooks/features/pivoting/useGridPivoting';
 import { useResize } from '../hooks/utils/useResize';
-import type {
-  DataGridPremiumProcessedProps,
-  DataGridPremiumProps,
-} from '../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 import { useGridRootProps } from '../typeOverloads/reexports';
 import { getAvailableAggregationFunctions } from '../hooks/features/aggregation/gridAggregationUtils';
 
@@ -458,10 +455,6 @@ function GridPivotPanelContent({
             }
           }
 
-          let newItem:
-            | PivotModel['columns'][number]
-            | PivotModel['values'][number]
-            | PivotModel['rows'][number];
           if (targetSection === 'values') {
             const availableAggregationFunctions = getAvailableAggregationFunctions({
               aggregationFunctions: rootProps.aggregationFunctions,
@@ -471,13 +464,13 @@ function GridPivotPanelContent({
               field,
               aggFunc: availableAggregationFunctions[0],
             });
-            newModel['values'] = newSectionArray as PivotModel['values'];
+            newModel.values = newSectionArray as PivotModel['values'];
           } else if (targetSection === 'columns') {
             newSectionArray.splice(toIndex, 0, { field, sort: 'asc' });
-            newModel['columns'] = newSectionArray as PivotModel['columns'];
+            newModel.columns = newSectionArray as PivotModel['columns'];
           } else if (targetSection === 'rows') {
             newSectionArray.splice(toIndex, 0, field);
-            newModel['rows'] = newSectionArray as PivotModel['rows'];
+            newModel.rows = newSectionArray as PivotModel['rows'];
           }
         }
         if (targetSection !== originSection && originSection) {
@@ -492,7 +485,7 @@ function GridPivotPanelContent({
         return newModel;
       });
     },
-    [onPivotModelChange],
+    [initialColumnsLookup, onPivotModelChange, rootProps.aggregationFunctions],
   );
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {

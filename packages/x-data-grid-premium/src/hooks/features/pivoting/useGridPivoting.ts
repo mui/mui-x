@@ -15,7 +15,7 @@ import {
 import { usePreviousProps } from '@mui/utils';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridAggregationModel } from '../aggregation';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 
