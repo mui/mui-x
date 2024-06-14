@@ -63,12 +63,14 @@ export default function GridPivotingMovies() {
             },
           }}
           sx={{
-            '& .MuiDataGrid-columnHeaderTitleContainer': {
-              overflow: 'visible',
-            },
-            '& .MuiDataGrid-columnHeaderTitleContainerContent': {
-              position: 'sticky',
-              left: 8,
+            '& .MuiDataGrid-columnHeader--filledGroup': {
+              '& .MuiDataGrid-columnHeaderTitleContainer': {
+                overflow: 'visible',
+              },
+              '& .MuiDataGrid-columnHeaderTitleContainerContent': {
+                position: 'sticky',
+                left: 8,
+              },
             },
           }}
         />
