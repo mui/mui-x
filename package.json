@@ -171,7 +171,7 @@
     "mocha": "^10.4.0",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
-    "nyc": "^15.1.0",
+    "nyc": "^17.0.0",
     "prettier": "^3.3.2",
     "pretty-quick": "^4.0.0",
     "process": "^0.11.10",
