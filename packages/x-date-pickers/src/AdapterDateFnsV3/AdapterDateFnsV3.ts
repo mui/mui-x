@@ -102,7 +102,7 @@ export class AdapterDateFns
     }
     super({ locale: locale ?? enUS, formats, longFormatters });
   }
-  
+
   // TODO: explicit return types can be removed once there is only one date-fns version supported
   public parse = (value: string, format: string): Date | null => {
     if (value === '') {
