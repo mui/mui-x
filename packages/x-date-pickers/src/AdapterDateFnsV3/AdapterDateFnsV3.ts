@@ -102,8 +102,8 @@ export class AdapterDateFns
     }
     super({ locale: locale ?? enUS, formats, longFormatters });
   }
-
-  // TODO: remove explicit returns in all methods when date-fns-v3 becomes default
+  
+  // TODO: explicit return types can be removed once there is only one date-fns version supported
   public parse = (value: string, format: string): Date | null => {
     if (value === '') {
       return null;
