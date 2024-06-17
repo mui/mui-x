@@ -117,6 +117,63 @@ export const cleanLeadingZeros = <TDate>(
   valueStr: string,
   size: number,
 ) => {
+  const today = utils.date(undefined);
+  const formattedZero = utils.formatByString(
+    utils.setSeconds(today, 0),
+    FORMAT_SECONDS_NO_LEADING_ZEROS,
+  );
+
+  if (formattedZero === '0') {
+    return NON_LOCALIZED_DIGITS;
+  }
+
+  return Array.from({ length: 10 }).map((_, index) =>
+    utils.formatByString(utils.setSeconds(today, index), FORMAT_SECONDS_NO_LEADING_ZEROS),
+  );
+};
+
+export const removeLocalizedDigits = (valueStr: string, localizedDigits: string[]) => {
+  if (localizedDigits[0] === '0') {
+    return valueStr;
+  }
+
+  const digits: string[] = [];
+  let currentFormattedDigit = '';
+  for (let i = 0; i < valueStr.length; i += 1) {
+    currentFormattedDigit += valueStr[i];
+    const matchingDigitIndex = localizedDigits.indexOf(currentFormattedDigit);
+    if (matchingDigitIndex > -1) {
+      digits.push(matchingDigitIndex.toString());
+      currentFormattedDigit = '';
+    }
+  }
+
+  return digits.join('');
+};
+
+export const applyLocalizedDigits = (valueStr: string, localizedDigits: string[]) => {
+  if (localizedDigits[0] === '0') {
+    return valueStr;
+  }
+
+  return valueStr
+    .split('')
+    .map((char) => localizedDigits[Number(char)])
+    .join('');
+};
+
+export const isStringNumber = (valueStr: string, localizedDigits: string[]) => {
+  const nonLocalizedValueStr = removeLocalizedDigits(valueStr, localizedDigits);
+  // `Number(' ')` returns `0` even if ' ' is not a valid number.
+  return nonLocalizedValueStr !== ' ' && !Number.isNaN(Number(nonLocalizedValueStr));
+};
+
+/**
+ * Remove the leading zeroes to a digit section value.
+ * E.g.: `03` => `3`
+ * Warning: Should only be called with non-localized digits. Call `removeLocalizedDigits` with your value if needed.
+ */
+export const cleanLeadingZeros = (valueStr: string, size: number) => {
   let cleanValueStr = valueStr;
 
   // Remove the leading zeros
