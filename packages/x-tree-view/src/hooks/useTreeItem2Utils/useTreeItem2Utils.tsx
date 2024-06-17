@@ -11,12 +11,36 @@ interface UseTreeItem2Interactions {
   handleExpansion: (event: React.MouseEvent) => void;
   handleSelection: (event: React.MouseEvent) => void;
   handleCheckboxSelection: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  toggleItemEditing: () => void;
+  setLabelInputValue: (label: string) => void;
+  resetLabelInputValue: () => void;
 }
 
 interface UseTreeItem2UtilsReturnValue {
   interactions: UseTreeItem2Interactions;
   status: UseTreeItem2Status;
+  label: string;
 }
+
+const useTreeItemLabelInput = (inLabel: string) => {
+  const initialLabelValue = React.useRef(inLabel);
+  const [labelInputValue, setLabelInputValue] = React.useState(inLabel);
+
+  const resetLabelInputValue = () => {
+    setLabelInputValue(initialLabelValue.current);
+  };
+
+  React.useEffect(() => {
+    initialLabelValue.current = inLabel;
+    setLabelInputValue(inLabel);
+  }, [inLabel]);
+
+  return {
+    labelInputValue,
+    setLabelInputValue,
+    resetLabelInputValue,
+  };
+};
 
 const isItemExpandable = (reactChildren: React.ReactNode) => {
   if (Array.isArray(reactChildren)) {
@@ -36,14 +60,20 @@ type UseTreeItem2UtilsMinimalPlugins = readonly [
 export const useTreeItem2Utils = ({
   itemId,
   children,
+  label,
 }: {
   itemId: string;
   children: React.ReactNode;
+  label: string;
 }): UseTreeItem2UtilsReturnValue => {
   const {
     instance,
     selection: { multiSelect },
   } = useTreeViewContext<UseTreeItem2UtilsMinimalPlugins>();
+
+  const { labelInputValue, setLabelInputValue, resetLabelInputValue } = useTreeItemLabelInput(
+    label as string,
+  );
 
   const status: UseTreeItem2Status = {
     expandable: isItemExpandable(children),
@@ -107,11 +137,24 @@ export const useTreeItem2Utils = ({
     }
   };
 
+  const toggleItemEditing = () => {
+    if (instance.isItemEditable(itemId)) {
+      if (instance.isItemBeingEdited(itemId)) {
+        instance.setEditedItemId(null);
+      } else {
+        instance.setEditedItemId(itemId);
+      }
+    }
+  };
+
   const interactions: UseTreeItem2Interactions = {
     handleExpansion,
     handleSelection,
     handleCheckboxSelection,
+    toggleItemEditing,
+    setLabelInputValue,
+    resetLabelInputValue,
   };
 
-  return { interactions, status };
+  return { interactions, status, label: labelInputValue };
 };

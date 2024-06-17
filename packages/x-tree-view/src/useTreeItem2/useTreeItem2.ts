@@ -18,30 +18,6 @@ import { MuiCancellableEvent } from '../internals/models/MuiCancellableEvent';
 import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 
-const useTreeItemLabelInput = (inLabel: string) => {
-  const [label, setLabel] = React.useState(inLabel);
-  const [initialLabel, setInitialLabel] = React.useState(inLabel);
-
-  const resetInitialLabel = (newLabel: string) => {
-    setInitialLabel(newLabel);
-    setLabel(newLabel);
-  };
-
-  const resetLabel = () => {
-    setLabel(initialLabel);
-  };
-
-  React.useEffect(() => {
-    resetInitialLabel(inLabel);
-  }, [inLabel]);
-
-  return {
-    label,
-    setLabel,
-    resetLabel,
-  };
-};
-
 export const useTreeItem2 = <
   TSignatures extends UseTreeItem2MinimalPlugins = UseTreeItem2MinimalPlugins,
 >(
@@ -59,10 +35,13 @@ export const useTreeItem2 = <
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
   const { id, itemId, label: inLabel, children, rootRef } = parameters;
-  const { label, setLabel, resetLabel } = useTreeItemLabelInput(inLabel as string);
 
   const { rootRef: pluginRootRef, contentRef } = runItemPlugins(parameters);
-  const { interactions, status } = useTreeItem2Utils({ itemId, children });
+  const { interactions, status, label } = useTreeItem2Utils({
+    itemId,
+    children,
+    label: inLabel as string,
+  });
   const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
   const handleRootRef = useForkRef(rootRef, pluginRootRef)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
@@ -109,15 +88,14 @@ export const useTreeItem2 = <
 
       instance.handleItemKeyDown(event, itemId);
     };
+
   const createCotentHandleDoubleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
       otherHandlers.onDoubleClick?.(event);
       if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;
       }
-      if (instance.isItemEditable(itemId) && !instance.isItemBeingEdited(itemId)) {
-        instance.setEditedItemId(itemId);
-      }
+      interactions.toggleItemEditing();
     };
 
   const createContentHandleClick =
@@ -167,14 +145,16 @@ export const useTreeItem2 = <
     otherHandlers.onKeyDown?.(event);
     event.stopPropagation();
     if (event.key === 'Enter') {
-      if (event.target?.value) {
+      if (event.target?.value && event.target?.value !== label) {
         instance.updateItemLabel(itemId, event.target.value);
       } else {
-        resetLabel();
+        interactions.resetLabelInputValue();
+        interactions.toggleItemEditing();
       }
       instance.focusItem(event, itemId);
     } else if (event.key === 'Escape') {
-      resetLabel();
+      interactions.resetLabelInputValue();
+      interactions.toggleItemEditing();
       instance.focusItem(event, itemId);
     }
   };
@@ -182,13 +162,13 @@ export const useTreeItem2 = <
     (otherHandlers: EventHandlers) =>
     (event: React.FocusEvent<HTMLInputElement> & MuiCancellableEvent) => {
       otherHandlers.onBlur?.(event);
-      resetLabel();
+      interactions.resetLabelInputValue();
     };
   const createInputHandleChange =
     (otherHandlers: EventHandlers) =>
     (event: React.ChangeEvent<HTMLInputElement> & MuiCancellableEvent) => {
       otherHandlers.onChange?.(event);
-      setLabel(event.target.value);
+      interactions.setLabelInputValue(event.target.value);
     };
 
   const createIconContainerHandleClick =
