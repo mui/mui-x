@@ -21,6 +21,9 @@
     "expandedItems": {
       "description": "Expanded item ids. Used when the item&#39;s expansion is controlled."
     },
+    "expansionTrigger": {
+      "description": "The slot that triggers the item&#39;s expansion on click."
+    },
     "experimentalFeatures": {
       "description": "Unstable features, breaking changes might be introduced. For each feature, if the flag is not explicitly set to <code>true</code>, the feature will be fully disabled and any property / method call will not have any effect."
     },
@@ -76,6 +79,13 @@
         "event": "The event source of the callback <strong>Warning</strong>: This is a generic event not a focus event.",
         "itemId": "The id of the focused item.",
         "value": "of the focused item."
+      }
+    },
+    "onItemLabelChange": {
+      "description": "Callback fired when the label of an item changes.",
+      "typeDescriptions": {
+        "itemId": "The id of the item that was edited.",
+        "newLabel": "The new label of the items."
       }
     },
     "onItemSelectionToggle": {

@@ -51,6 +51,8 @@ export const useTreeItem2Utils = ({
     focused: instance.isItemFocused(itemId),
     selected: instance.isItemSelected(itemId),
     disabled: instance.isItemDisabled(itemId),
+    editing: instance.isItemBeingEdited(itemId),
+    editable: instance.isItemEditable(itemId),
   };
 
   const handleExpansion = (event: React.MouseEvent) => {

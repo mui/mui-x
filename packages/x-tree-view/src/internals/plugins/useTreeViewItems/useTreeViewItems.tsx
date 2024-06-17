@@ -161,6 +161,20 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 
   const areItemUpdatesPrevented = React.useCallback(() => areItemUpdatesPreventedRef.current, []);
 
+  const isItemEditable = (itemId: string): boolean => {
+    if (itemId == null) {
+      return false;
+    }
+    const item = instance.getItem(itemId);
+
+    if (!item) {
+      return false;
+    }
+    return params.isItemEditable ? params.isItemEditable(item) : false;
+  };
+
+  const isTreeViewEditable = Boolean(params.isItemEditable);
+
   React.useEffect(() => {
     if (instance.areItemUpdatesPrevented()) {
       return;
@@ -228,6 +242,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       isItemNavigable,
       preventItemUpdates,
       areItemUpdatesPrevented,
+      isItemEditable,
+      isTreeViewEditable,
     },
     contextValue: {
       disabledItemsFocusable: params.disabledItemsFocusable,
@@ -266,4 +282,5 @@ useTreeViewItems.params = {
   getItemLabel: true,
   getItemId: true,
   itemChildrenIndentation: true,
+  isItemEditable: true,
 };

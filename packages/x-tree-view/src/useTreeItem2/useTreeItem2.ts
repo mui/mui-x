@@ -193,7 +193,6 @@ export const useTreeItem2 = <
 
   const createIconContainerHandleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
-      console.log('yay');
       otherHandlers.onClick?.(event);
       if (event.defaultMuiPrevented) {
         return;

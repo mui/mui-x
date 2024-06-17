@@ -16,6 +16,10 @@
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
     "expandedItems": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "expansionTrigger": {
+      "type": { "name": "enum", "description": "'content'<br>&#124;&nbsp;'iconContainer'" },
+      "default": "'content'"
+    },
     "experimentalFeatures": {
       "type": { "name": "shape", "description": "{ indentationAtItemLevel?: bool }" }
     },
@@ -78,6 +82,13 @@
       "signature": {
         "type": "function(event: React.SyntheticEvent, itemId: string, value: string) => void",
         "describedArgs": ["event", "itemId", "value"]
+      }
+    },
+    "onItemLabelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(itemId: TreeViewItemId, newLabel: string) => void",
+        "describedArgs": ["itemId", "newLabel"]
       }
     },
     "onItemSelectionToggle": {

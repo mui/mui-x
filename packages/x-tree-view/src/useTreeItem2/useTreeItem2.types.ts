@@ -117,6 +117,8 @@ export interface UseTreeItem2Status {
   focused: boolean;
   selected: boolean;
   disabled: boolean;
+  editing: boolean;
+  editable: boolean;
 }
 
 export interface UseTreeItem2ReturnValue<

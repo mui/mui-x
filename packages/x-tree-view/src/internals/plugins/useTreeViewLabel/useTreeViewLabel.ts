@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { TreeViewPlugin } from '../../models';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewLabelSignature } from './useTreeViewLabel.types';
@@ -31,7 +30,6 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
   state,
   setState,
   params,
-  instance,
 }) => {
   const setEditedItemId = (editedItemId: TreeViewItemId | null) => {
     setState((prevState) => ({ ...prevState, editedItemId }));
@@ -58,27 +56,11 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
     }
   };
 
-  const isItemEditable = (itemId: string): itemId is string => {
-    if (itemId == null) {
-      return false;
-    }
-    const item = instance.getItem(itemId);
-
-    if (!item) {
-      return false;
-    }
-    return params.isItemEditable ? params.isItemEditable(item) : false;
-  };
-
-  const isTreeViewEditable = Boolean(params.isItemEditable);
-
   return {
     instance: {
       setEditedItemId,
       isItemBeingEdited,
       updateItemLabel,
-      isItemEditable,
-      isTreeViewEditable,
     },
   };
 };
@@ -92,5 +74,4 @@ useTreeViewLabel.params = {
   items: true,
   getItemLabel: true,
   onItemLabelChange: true,
-  isItemEditable: true,
 };
