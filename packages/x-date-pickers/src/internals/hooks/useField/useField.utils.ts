@@ -169,7 +169,8 @@ export const applyLocalizedDigits = (valueStr: string, localizedDigits: string[]
 
 export const isStringNumber = (valueStr: string, localizedDigits: string[]) => {
   const nonLocalizedValueStr = removeLocalizedDigits(valueStr, localizedDigits);
-  return !Number.isNaN(Number(nonLocalizedValueStr));
+  // `Number(' ')` returns `0` even if ' ' is not a valid number.
+  return nonLocalizedValueStr !== ' ' && !Number.isNaN(Number(nonLocalizedValueStr));
 };
 
 /**
