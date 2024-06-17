@@ -13,7 +13,6 @@ import { IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import EditOffIcon from '@mui/icons-material/EditOff';
 import { TreeItem2LabelInput } from '@mui/x-tree-view/TreeItem2/TreeItem2';
-import { update } from 'lodash';
 
 const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   {
