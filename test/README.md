@@ -18,9 +18,17 @@ You can check integration of different versions of React (for example different 
 
 #### `next` version
 
-For `react@next` specifically, there's a `react-next` workflow in our CircleCI pipeline that is always on hold and needs a manual approval to run:
+For `react@next` specifically, there's a `react-next` workflow in our CircleCI pipeline that you can trigger in CircleCI on the PR you want to test:
 
-![react-next workflow](./circleci-react-next.png)
+1. Go to https://app.circleci.com/pipelines/github/mui/mui-x?branch=pull/PR_NUMBER and replace `PR_NUMBER` with the PR number you want to test.
+2. Click `Trigger Pipeline` button.
+3. Expand `Add parameters (optional)` and add the following parameter:
+
+   | Parameter type | Name       | Value        |
+   | :------------- | :--------- | :----------- |
+   | `string`       | `workflow` | `react-next` |
+
+4. Click `Trigger Pipeline` button.
 
 #### Other versions
 
@@ -31,7 +39,7 @@ PR #24289 for `react@next`
 
 ```bash
 curl --request POST \
-  --url https://circleci.com/api/v2/project/gh/mui/mui-x/pipeline \
+  --url https://circleci.com/api/v2/project/gh/mui/material-ui/pipeline \
   --header 'content-type: application/json' \
   --header 'Circle-Token: $CIRCLE_TOKEN' \
   --data-raw '{"branch":"pull/24289/head","parameters":{"react-version":"next"}}'
