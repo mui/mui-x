@@ -3,18 +3,13 @@ import { useDrawingArea, useSvgRef } from '../../hooks';
 import { useZoom } from './useZoom';
 import { getSVGPoint } from '../../internals/utils';
 
-function throttle(fn: Function, wait: number) {
-  let time = Date.now();
-
-  return function inThrottle(event: WheelEvent) {
-    event.preventDefault();
-
-    if (time + wait - Date.now() < 0) {
-      fn(event);
-      time = Date.now();
-    }
-  };
-}
+const isTrackPad = (e: WheelEvent): boolean => {
+  const { deltaY } = e;
+  if (deltaY && !Number.isInteger(deltaY)) {
+    return false;
+  }
+  return true;
+};
 
 const MAX_RANGE = 100;
 const MIN_RANGE = 0;
@@ -94,7 +89,10 @@ export const useSetupZoom = () => {
       const { left, width } = area;
 
       // TODO: make step a config option.
-      const scale = deltaY < 0 ? 0.995 : 1.005;
+      const step = 5;
+      const multiplier = isTrackPad(event) ? 1 : 3;
+      const scaledStep = (step * multiplier) / 1000;
+      const scale = deltaY < 0 ? 1 - scaledStep : 1 + scaledStep;
       const zoomIn = deltaY > 0;
 
       // Center point is a number from 0 to 200, where 100 is the center of the chart.
@@ -120,12 +118,10 @@ export const useSetupZoom = () => {
       setZoomRange([newMinRange, newMaxRange]);
     };
 
-    const handler = throttle(handleZoom, 25);
-
-    element.addEventListener('wheel', handler);
+    element.addEventListener('wheel', handleZoom);
 
     return () => {
-      element.removeEventListener('wheel', handler);
+      element.removeEventListener('wheel', handleZoom);
     };
   }, [svgRef, setZoomRange, zoomRange, area]);
 };
