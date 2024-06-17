@@ -39,7 +39,7 @@ PR #24289 for `react@next`
 
 ```bash
 curl --request POST \
-  --url https://circleci.com/api/v2/project/gh/mui/material-ui/pipeline \
+  --url https://circleci.com/api/v2/project/gh/mui/mui-x/pipeline \
   --header 'content-type: application/json' \
   --header 'Circle-Token: $CIRCLE_TOKEN' \
   --data-raw '{"branch":"pull/24289/head","parameters":{"react-version":"next"}}'
