@@ -339,6 +339,8 @@ workflows:
             - checkout
 
   react-next:
+    when:
+      equal: [react-next, << pipeline.parameters.workflow >>]
     # triggers:
     #   - schedule:
     #       cron: '0 0 * * *'
@@ -347,29 +349,19 @@ workflows:
     #           only:
     #             - master
     jobs:
-      - hold:
-          type: approval
       - test_unit:
           <<: *default-context
           react-version: next
           name: test_unit-react@next
-          requires:
-            - hold
       - test_browser:
           <<: *default-context
           react-version: next
           name: test_browser-react@next
-          requires:
-            - hold
       - test_regressions:
           <<: *default-context
           react-version: next
           name: test_regressions-react@next
-          requires:
-            - hold
       - test_e2e:
           <<: *default-context
           react-version: next
           name: test_e2e-react@next
-          requires:
-            - hold
