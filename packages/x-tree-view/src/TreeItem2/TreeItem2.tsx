@@ -153,7 +153,7 @@ export const TreeItem2GroupTransition = styled(Collapse, {
   ],
 });
 
-const TreeItem2LabelInput = React.forwardRef(function TreeItem2LabelInput(
+export const TreeItem2LabelInput = React.forwardRef(function TreeItem2LabelInput(
   {
     visible = false,
     ownerState,

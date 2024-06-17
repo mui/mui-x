@@ -62,6 +62,9 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
       isItemBeingEdited,
       updateItemLabel,
     },
+    publicAPI: {
+      updateItemLabel,
+    },
   };
 };
 

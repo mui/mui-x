@@ -27,3 +27,9 @@ Enter again after editing will save the new label. Bluring or pressing escape wi
 You can limit the editing to just th eleaves of the tree.
 
 {{"demo": "EditLeaves.js"}}
+
+## Enable editing using only icons
+
+I wouldn't spend too much time reviewing this demo, it's still WIP.
+
+{{"demo": "EditWithIcons.js"}}

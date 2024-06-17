@@ -1,7 +1,11 @@
 import { TreeViewPluginSignature } from '../../models';
 import { TreeViewItemId } from '../../../models';
 
-export interface UseTreeViewLabelInstance {
+export interface UseTreeViewLabelPublicAPI {
+  updateItemLabel: (itemId: TreeViewItemId, newLabel: string) => void;
+}
+
+export interface UseTreeViewLabelInstance extends UseTreeViewLabelPublicAPI {
   /**
    * Used to set the state.
    * @param {TreeViewItemId} itemId The item that is being currently edited.
@@ -14,7 +18,6 @@ export interface UseTreeViewLabelInstance {
    * @returns {void}.
    */
   isItemBeingEdited: (itemId: TreeViewItemId) => boolean;
-  updateItemLabel: (itemId: TreeViewItemId, newLabel: string) => void;
 }
 
 export interface UseTreeViewLabelParameters<R extends {}> {
@@ -36,6 +39,7 @@ export interface UseTreeViewLabelState {
 export type UseTreeViewLabelSignature = TreeViewPluginSignature<{
   params: UseTreeViewLabelParameters<any>;
   defaultizedParams: UseTreeViewLabelParameters<any>;
+  publicAPI: UseTreeViewLabelPublicAPI;
   instance: UseTreeViewLabelInstance;
   state: UseTreeViewLabelState;
 }>;
