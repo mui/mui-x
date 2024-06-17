@@ -44,8 +44,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.24.7",
-    "@mui/system": "^5.15.15",
-    "@mui/utils": "^5.15.14",
+    "@mui/system": "^5.15.20",
+    "@mui/utils": "^5.15.20",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-data-grid-pro": "workspace:*",
     "@mui/x-license": "workspace:*",
