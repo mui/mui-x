@@ -1,9 +1,12 @@
 import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
-import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import { useSlotProps } from '@mui/base/utils';
-import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import { useTreeView, TreeViewProvider, buildWarning } from '@mui/x-tree-view/internals';
+import {
+  useTreeView,
+  TreeViewProvider,
+  buildWarning,
+  RichTreeViewItems,
+} from '@mui/x-tree-view/internals';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
 import { RichTreeViewProProps } from './RichTreeViewPro.types';
@@ -12,6 +15,9 @@ import {
   RichTreeViewProPluginSignatures,
 } from './RichTreeViewPro.plugins';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
+import { Watermark } from '@mui/x-license';
+import { TreeViewVirtualScrollbar } from '@mui/x-tree-view-pro/TreeViewVirtualScroller/TreeViewVirtualScrollbar';
+import { TreeViewVirtualScroller } from '@mui/x-tree-view-pro/TreeViewVirtualScroller';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeViewPro');
 
@@ -43,26 +49,6 @@ type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undef
   props: RichTreeViewProProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-function WrappedTreeItem<R extends {}>({
-  slots,
-  slotProps,
-  label,
-  id,
-  itemId,
-  children,
-}: Pick<RichTreeViewProProps<R, any>, 'slots' | 'slotProps'> &
-  Pick<TreeItemProps, 'id' | 'itemId' | 'children'> & { label: string }) {
-  const Item = slots?.item ?? TreeItem;
-  const itemProps = useSlotProps({
-    elementType: Item,
-    externalSlotProps: slotProps?.item,
-    additionalProps: { itemId, id, label },
-    ownerState: { itemId, label },
-  });
-
-  return <Item {...itemProps}>{children}</Item>;
-}
-
 const releaseInfo = getReleaseInfo();
 
 const childrenWarning = buildWarning([
@@ -87,8 +73,6 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
 >(inProps: RichTreeViewProProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeViewPro' });
 
-  useLicenseVerifier('x-tree-view-pro', releaseInfo);
-
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
       childrenWarning();
@@ -108,7 +92,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   const classes = useUtilityClasses(props);
 
   const Root = slots?.root ?? RichTreeViewProRoot;
-  const rootProps = useSlotProps({
+  const { enableVirtualization, ...rootProps } = useSlotProps({
     elementType: Root,
     externalSlotProps: slotProps?.root,
     className: classes.root,
@@ -116,34 +100,24 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     ownerState: props as RichTreeViewProProps<any, any>,
   });
 
-  const itemsToRender = instance.getItemsToRender();
-
-  const renderItem = ({
-    label,
-    itemId,
-    id,
-    children,
-  }: ReturnType<typeof instance.getItemsToRender>[number]) => {
-    return (
-      <WrappedTreeItem
-        slots={slots}
-        slotProps={slotProps}
-        key={itemId}
-        label={label}
-        id={id}
-        itemId={itemId}
-      >
-        {children?.map(renderItem)}
-      </WrappedTreeItem>
-    );
-  };
-
   return (
     <TreeViewProvider value={contextValue}>
-      <Root {...rootProps}>
-        {itemsToRender.map(renderItem)}
-        <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
-      </Root>
+      {enableVirtualization ? (
+        <TreeViewVirtualScroller
+          {...rootProps}
+          slots={{ ...slots, root: Root }}
+          slotProps={slotProps}
+        />
+      ) : (
+        <Root {...rootProps} ref={ref}>
+          <RichTreeViewItems
+            slots={slots}
+            slotProps={slotProps}
+            itemsToRender={instance.getItemsToRender()}
+          />
+          <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
+        </Root>
+      )}
     </TreeViewProvider>
   );
 }) as RichTreeViewProComponent;

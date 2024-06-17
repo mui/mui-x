@@ -1,11 +1,11 @@
 import { TreeViewItemMeta, DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { TreeViewItemId } from '../../../models';
 
-interface TreeViewItemProps {
+export interface TreeViewItemToRenderProps {
   label: string;
   itemId: string;
   id: string | undefined;
-  children?: TreeViewItemProps[];
+  children?: TreeViewItemToRenderProps[];
 }
 
 export interface UseTreeViewItemsPublicAPI<R extends {}> {
@@ -29,10 +29,10 @@ export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItems
   /**
    * Get the item that should be rendered.
    * This method is only used on Rich Tree View components.
-   * Check the `TreeViewItemProps` type for more information.
-   * @returns {TreeViewItemProps[]} The items to render.
+   * Check the `TreeViewItemToRenderProps` type for more information.
+   * @returns {TreeViewItemToRenderProps[]} The items to render.
    */
-  getItemsToRender: () => TreeViewItemProps[];
+  getItemsToRender: () => TreeViewItemToRenderProps[];
   /**
    * Get the ids of a given item's children.
    * Those ids are returned in the order they should be rendered.

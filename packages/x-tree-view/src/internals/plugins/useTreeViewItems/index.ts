@@ -3,4 +3,5 @@ export type {
   UseTreeViewItemsSignature,
   UseTreeViewItemsParameters,
   UseTreeViewItemsDefaultizedParameters,
+  TreeViewItemToRenderProps,
 } from './useTreeViewItems.types';

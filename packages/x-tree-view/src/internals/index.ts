@@ -1,5 +1,13 @@
 export { useTreeView } from './useTreeView';
 export { TreeViewProvider } from './TreeViewProvider';
+export { useTreeViewContext } from './TreeViewProvider/useTreeViewContext';
+
+export { RichTreeViewItems } from './components/RichTreeViewItems';
+export type {
+  RichTreeViewItemsProps,
+  RichTreeViewItemsSlots,
+  RichTreeViewItemsSlotProps,
+} from './components/RichTreeViewItems';
 
 export { unstable_resetCleanupTracking } from './hooks/useInstanceEventHandler';
 
@@ -10,6 +18,7 @@ export type {
   MergeSignaturesProperty,
   TreeViewPublicAPI,
   TreeViewExperimentalFeatures,
+  MakeOptional,
 } from './models';
 
 // Plugins

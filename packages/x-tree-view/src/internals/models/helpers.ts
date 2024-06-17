@@ -1,5 +1,7 @@
 import type { TreeViewAnyPluginSignature, TreeViewPlugin } from './plugin';
 
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+
 export type DefaultizedProps<
   P extends {},
   RequiredProps extends keyof P,
