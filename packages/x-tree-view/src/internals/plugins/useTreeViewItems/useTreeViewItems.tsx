@@ -231,6 +231,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     }),
     publicAPI: {
       getItem,
+      getItemOrderedChildrenIds,
     },
     instance: {
       getItemMeta,

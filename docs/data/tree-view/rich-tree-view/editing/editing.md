@@ -15,8 +15,15 @@ packageName: '@mui/x-tree-view'
 this doc page is stip WIP
 :::
 
-To edit a label double click the item or press Enter on the keyboard
+## Enable editing on certain items
 
+To edit a label double click the item or press Enter on the keyboard
 Enter again after editing will save the new label. Bluring or pressing escape will cancel the editing
 
 {{"demo": "LabelEditing.js"}}
+
+## Limit editing to leaves
+
+You can limit the editing to just th eleaves of the tree.
+
+{{"demo": "EditLeaves.js"}}
