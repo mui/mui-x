@@ -174,7 +174,7 @@ export function verifyLicense({
   }
 
   if (license.scope == null || !LICENSE_SCOPES.includes(license.scope)) {
-    console.error('Error checking license. scope not found or invalid!');
+    console.error('MUI X: Error checking license. scope not found or invalid!');
     return { status: LICENSE_STATUS.Invalid };
   }
 
