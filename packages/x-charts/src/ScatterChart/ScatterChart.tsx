@@ -30,7 +30,7 @@ import {
   ChartsOverlayProps,
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
-} from '../ChartsOverlay/ChartsOverlay';
+} from '../ChartsOverlay';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
 import {
@@ -54,7 +54,7 @@ export interface ScatterChartSlotProps
     ChartsOverlaySlotProps {}
 
 export interface ScatterChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series'>,
+  extends Omit<ResponsiveChartContainerProps, 'series' | 'plugins'>,
     Omit<ZAxisContextProviderProps, 'children' | 'dataset'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,

@@ -7,6 +7,11 @@
       "description": "Deletes a <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>.",
       "type": "(item: GridFilterItem) => void"
     },
+    {
+      "name": "getFilterState",
+      "description": "Returns the filter state for the given filter model without applying it to the data grid.",
+      "type": "(filterModel: GridFilterModel) => GridStateCommunity['filter']"
+    },
     { "name": "hideFilterPanel", "description": "Hides the filter panel.", "type": "() => void" },
     {
       "name": "ignoreDiacritics",
