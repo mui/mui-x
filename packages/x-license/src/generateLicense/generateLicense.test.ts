@@ -12,7 +12,7 @@ describe('License: generateLicense', () => {
         planVersion: 'initial',
       }),
     ).to.equal(
-      '076fc290e354b9a04720190023e1f868Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1zdWJzY3JpcHRpb24sUFY9bGVnYWN5LEtWPTI=',
+      'e8fad422a82720084ec67dd693f08056Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1zdWJzY3JpcHRpb24sUFY9aW5pdGlhbCxLVj0y',
     );
   });
 
@@ -26,7 +26,7 @@ describe('License: generateLicense', () => {
         planVersion: 'initial',
       }),
     ).to.equal(
-      'fafc52d1dbb97e825702a7ccf5986fbbTz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLFBWPWxlZ2FjeSxLVj0y',
+      '8ca0384bfb92ec214d4cd72483f5110bTz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLFBWPWluaXRpYWwsS1Y9Mg==',
     );
   });
 
@@ -40,7 +40,7 @@ describe('License: generateLicense', () => {
         planVersion: 'initial',
       }),
     ).to.equal(
-      '076fc290e354b9a04720190023e1f868Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1zdWJzY3JpcHRpb24sUFY9bGVnYWN5LEtWPTI=',
+      'e8fad422a82720084ec67dd693f08056Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1zdWJzY3JpcHRpb24sUFY9aW5pdGlhbCxLVj0y',
     );
   });
 
@@ -54,7 +54,35 @@ describe('License: generateLicense', () => {
         planVersion: 'initial',
       }),
     ).to.equal(
-      'a32c4d6c8cce5d9ca0132527a252e999Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1wZXJwZXR1YWwsUFY9bGVnYWN5LEtWPTI=',
+      'aaf2e3c60b06199962fbbab985843d97Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1wZXJwZXR1YWwsUFY9aW5pdGlhbCxLVj0y',
+    );
+  });
+
+  it('should generate perpetual pro-license when `planVersion: "Q3-2024"`', () => {
+    expect(
+      generateLicense({
+        expiryDate: new Date(1591723879062),
+        orderNumber: 'MUI-123',
+        scope: 'pro',
+        licensingModel: 'subscription',
+        planVersion: 'Q3-2024',
+      }),
+    ).to.equal(
+      '4adf08e54d606215809064d1d31b6b39Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1zdWJzY3JpcHRpb24sUFY9UTMtMjAyNCxLVj0y',
+    );
+  });
+
+  it('should generate perpetual premium-license when `planVersion: "Q3-2024"`', () => {
+    expect(
+      generateLicense({
+        expiryDate: new Date(1591723879062),
+        orderNumber: 'MUI-123',
+        scope: 'pro',
+        licensingModel: 'subscription',
+        planVersion: 'Q3-2024',
+      }),
+    ).to.equal(
+      '4adf08e54d606215809064d1d31b6b39Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1zdWJzY3JpcHRpb24sUFY9UTMtMjAyNCxLVj0y',
     );
   });
 });
