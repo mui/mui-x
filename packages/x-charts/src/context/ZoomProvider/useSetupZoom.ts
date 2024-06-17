@@ -17,22 +17,31 @@ const MIN_RANGE = 0;
 const MIN_ALLOWED_SPAN = 10;
 const MAX_ALLOWED_SPAN = 100;
 
-const zoomAtPoint = (point: number, scale: number, currentRange: [number, number]) => {
+/**
+ * Helper to get the range (in percents of a reference range) corresponding to a given scale
+ * @param centerRatio {number} The ratio of the point that should not move between the previous and next range.
+ * @param scale {number} The target scale
+ * @returns The range to display
+ */
+const zoomAtPoint = (
+  centerRatio: number,
+  scale: number,
+  currentRange: readonly [number, number],
+) => {
   const [minRange, maxRange] = currentRange;
+  const scaleRatio = scale;
 
-  // m = minRange, M = maxRange, z = scale, P = point
-  // [(m+(z−1)P)/z,((z−1)P+M)/z]
-  let newMinRange = (minRange + (scale - 1) * (point - minRange)) / scale;
+  const point = minRange + centerRatio * (maxRange - minRange);
+
+  let newMinRange = (minRange + point * (scaleRatio - 1)) / scaleRatio;
+  let newMaxRange = (maxRange + point * (scaleRatio - 1)) / scaleRatio;
+
   let minSpillover = 0;
-
+  let maxSpillover = 0;
   if (newMinRange < MIN_RANGE) {
     minSpillover = Math.abs(newMinRange);
     newMinRange = MIN_RANGE;
   }
-
-  let newMaxRange = ((point - maxRange) * (scale - 1) + maxRange) / scale;
-  let maxSpillover = 0;
-
   if (newMaxRange > MAX_RANGE) {
     newMaxRange = MAX_RANGE;
     maxSpillover = Math.abs(newMaxRange - MAX_RANGE);
@@ -92,16 +101,13 @@ export const useSetupZoom = () => {
       const step = 5;
       const multiplier = isTrackPad(event) ? 1 : 3;
       const scaledStep = (step * multiplier) / 1000;
-      const scale = deltaY < 0 ? 1 - scaledStep : 1 + scaledStep;
+      // The ratio between the new scale and the last scale
+      const scaleRatio = deltaY < 0 ? 1 - scaledStep : 1 + scaledStep;
       const zoomIn = deltaY > 0;
 
-      // Center point is a number from 0 to 200, where 100 is the center of the chart.
-      // This is because our calculations scale on center for 100 if there is no skew.
-      // We clamp the window value to 0-100 then double it.
-      const centerPoint = Math.min(100, Math.max(0, ((point.x - left) / width) * 100)) * 2;
+      const centerRatio = (point.x - left) / width;
 
-      // TODO: zoom at cursor position.
-      const [newMinRange, newMaxRange] = zoomAtPoint(centerPoint, scale, zoomRange);
+      const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoomRange, {});
 
       const newSpanPercent = newMaxRange - newMinRange;
 
