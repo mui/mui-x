@@ -61,7 +61,7 @@
     "react-dom": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "1.0.0",
+    "@mui/internal-test-utils": "^1.0.1",
     "@types/prop-types": "^15.7.12",
     "date-fns": "^2.30.0",
     "rimraf": "^5.0.7"
