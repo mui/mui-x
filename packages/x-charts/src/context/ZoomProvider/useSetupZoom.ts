@@ -29,27 +29,26 @@ const zoomAtPoint = (
   currentRange: readonly [number, number],
 ) => {
   const [minRange, maxRange] = currentRange;
-  const scaleRatio = scale;
 
   const point = minRange + centerRatio * (maxRange - minRange);
 
-  let newMinRange = (minRange + point * (scaleRatio - 1)) / scaleRatio;
-  let newMaxRange = (maxRange + point * (scaleRatio - 1)) / scaleRatio;
+  let newMinRange = (minRange + point * (scale - 1)) / scale;
+  let newMaxRange = (maxRange + point * (scale - 1)) / scale;
 
   let minSpillover = 0;
   let maxSpillover = 0;
+
   if (newMinRange < MIN_RANGE) {
     minSpillover = Math.abs(newMinRange);
     newMinRange = MIN_RANGE;
   }
   if (newMaxRange > MAX_RANGE) {
-    newMaxRange = MAX_RANGE;
     maxSpillover = Math.abs(newMaxRange - MAX_RANGE);
+    newMaxRange = MAX_RANGE;
   }
 
   if (minSpillover > 0 && maxSpillover > 0) {
-    // This shouldn't happen, but just in case.
-    throw Error('MUI X Charts: Both min and max zoom ranges spillover the [0-100] boundary.');
+    return [MIN_RANGE, MAX_RANGE];
   }
 
   newMaxRange += minSpillover;
@@ -99,19 +98,16 @@ export const useSetupZoom = () => {
 
       // TODO: make step a config option.
       const step = 5;
-      const multiplier = isTrackPad(event) ? 1 : 3;
+      const multiplier = isTrackPad(event) ? 1 : 5;
       const scaledStep = (step * multiplier) / 1000;
-      // The ratio between the new scale and the last scale
-      const scaleRatio = deltaY < 0 ? 1 - scaledStep : 1 + scaledStep;
+      const scale = deltaY < 0 ? 1 - scaledStep : 1 + scaledStep;
       const zoomIn = deltaY > 0;
 
       const centerRatio = (point.x - left) / width;
 
-      const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoomRange, {});
+      const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scale, zoomRange);
 
       const newSpanPercent = newMaxRange - newMinRange;
-
-      console.log('newSpanPercent', newSpanPercent);
 
       // TODO: make span a config option.
       if (
