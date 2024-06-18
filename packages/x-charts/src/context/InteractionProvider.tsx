@@ -98,6 +98,10 @@ const dataReducer: React.Reducer<Omit<InteractionState, 'dispatch'>, Interaction
 
     case 'updateAxis':
       if (action.data.x === prevState.axis.x && action.data.y === prevState.axis.y) {
+        // if (
+        //   action.data.x?.value === prevState.axis.x?.value &&
+        //   action.data.y?.value === prevState.axis.y?.value
+        // ) {
         return prevState;
       }
       return { ...prevState, axis: action.data };
@@ -115,13 +119,12 @@ function InteractionProvider(props: InteractionProviderProps) {
     useVoronoiInteraction: false,
   });
 
-  const value = React.useMemo(
-    () => ({
+  const value = React.useMemo(() => {
+    return {
       ...data,
       dispatch,
-    }),
-    [data],
-  );
+    };
+  }, [data]);
 
   return <InteractionContext.Provider value={value}>{children}</InteractionContext.Provider>;
 }

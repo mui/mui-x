@@ -36,6 +36,44 @@ export function generateVirtualElement(mousePosition: { x: number; y: number } |
   };
 }
 
+export function useMouseTrackerRef() {
+  const svgRef = useSvgRef();
+
+  const mousePosition = React.useRef<null | { x: number; y: number }>(null);
+
+  React.useEffect(() => {
+    const element = svgRef.current;
+    if (element === null) {
+      return () => {};
+    }
+
+    const handleOut = () => {
+      mousePosition.current = null;
+    };
+
+    const handleMove = (event: MouseEvent | TouchEvent) => {
+      const target = 'targetTouches' in event ? event.targetTouches[0] : event;
+      mousePosition.current = {
+        x: target.clientX,
+        y: target.clientY,
+      };
+    };
+
+    element.addEventListener('mouseout', handleOut);
+    element.addEventListener('mousemove', handleMove);
+    element.addEventListener('touchend', handleOut);
+    element.addEventListener('touchmove', handleMove);
+    return () => {
+      element.removeEventListener('mouseout', handleOut);
+      element.removeEventListener('mousemove', handleMove);
+      element.addEventListener('touchend', handleOut);
+      element.addEventListener('touchmove', handleMove);
+    };
+  }, [svgRef]);
+
+  return mousePosition.current;
+}
+
 export function useMouseTracker() {
   const svgRef = useSvgRef();
 
