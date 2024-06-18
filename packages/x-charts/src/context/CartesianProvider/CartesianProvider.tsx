@@ -54,10 +54,27 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
 
   const yAxis = React.useMemo(() => normalizeAxis(inYAxis, dataset, 'y'), [inYAxis, dataset]);
 
+  const xValues = React.useMemo(
+    () => computeValue(drawingArea, formattedSeries, xAxis, xExtremumGetters, 'x'),
+    [drawingArea, formattedSeries, xAxis, xExtremumGetters],
+  );
+
+  const yValues = React.useMemo(
+    () => computeValue(drawingArea, formattedSeries, yAxis, yExtremumGetters, 'y'),
+    [drawingArea, formattedSeries, yAxis, yExtremumGetters],
+  );
+
   const value = React.useMemo(
-    () =>
-      computeValue(drawingArea, formattedSeries, xAxis, yAxis, xExtremumGetters, yExtremumGetters),
-    [drawingArea, formattedSeries, xAxis, xExtremumGetters, yAxis, yExtremumGetters],
+    () => ({
+      isInitialized: true,
+      data: {
+        xAxis: xValues.axis,
+        yAxis: yValues.axis,
+        xAxisIds: xValues.axisIds,
+        yAxisIds: yValues.axisIds,
+      },
+    }),
+    [xValues, yValues],
   );
 
   return <CartesianContext.Provider value={value}>{children}</CartesianContext.Provider>;
