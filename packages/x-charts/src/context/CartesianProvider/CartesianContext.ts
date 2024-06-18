@@ -10,7 +10,7 @@ import {
 } from '../../models/axis';
 
 export type DefaultizedAxisConfig<AxisProps> = {
-  [axisKey: string]: AxisDefaultized<ScaleName, any, AxisProps>;
+  [axisKey: AxisId]: AxisDefaultized<ScaleName, any, AxisProps>;
 };
 
 export type CartesianContextState = {
