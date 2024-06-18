@@ -177,23 +177,6 @@ export interface AxisScaleConfig {
     barGapRatio: number;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
   } & Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
-  'ordinal-time': {
-    scaleType: 'ordinal-time';
-    scale: ScaleBand<number | Date | string>;
-    /**
-     * The ratio between the space allocated for padding between two categories and the category width.
-     * 0 means no gap, and 1 no data.
-     * @default 0.2
-     */
-    categoryGapRatio: number;
-    /**
-     * The ratio between the width of a bar, and the gap between two bars.
-     * 0 means no gap, and 1 no bar.
-     * @default 0.1
-     */
-    barGapRatio: number;
-    colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
-  } & Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
   point: {
     scaleType: 'point';
     scale: ScalePoint<number | Date | string>;
@@ -233,13 +216,6 @@ export interface AxisScaleConfig {
 
 export interface AxisScaleComputedConfig {
   band: {
-    colorScale?:
-      | ScaleOrdinal<string | number | Date, string, string | null>
-      | ScaleOrdinal<number, string, string | null>
-      | ScaleSequential<string, string | null>
-      | ScaleThreshold<number | Date, string | null>;
-  };
-  'ordinal-time': {
     colorScale?:
       | ScaleOrdinal<string | number | Date, string, string | null>
       | ScaleOrdinal<number, string, string | null>
@@ -346,10 +322,8 @@ export type AxisDefaultized<
 
 export function isBandScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
-): scaleConfig is
-  | (AxisConfig<'band'> & { scaleType: 'band' })
-  | (AxisConfig<'ordinal-time'> & { scaleType: 'ordinal-time' }) {
-  return scaleConfig.scaleType === 'band' || scaleConfig.scaleType === 'ordinal-time';
+): scaleConfig is AxisConfig<'band'> & { scaleType: 'band' } {
+  return scaleConfig.scaleType === 'band';
 }
 
 export function isPointScaleConfig(

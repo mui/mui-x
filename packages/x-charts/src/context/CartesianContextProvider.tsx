@@ -224,7 +224,7 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
               ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
               : getColorScale(axis.colorMap)),
         };
-        if (axis.scaleType === 'ordinal-time') {
+        if (axis.data?.[0] instanceof Date) {
           const timeScale = scaleTime(axis.data!, range);
           completedXAxis[axis.id].valueFormatter =
             axis.valueFormatter ??
@@ -232,7 +232,6 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
               location === 'tick'
                 ? timeScale.tickFormat(axis.tickNumber)(v)
                 : `${v.toLocaleString()}`);
-          // completedXAxis[axis.id].tickInterval = timeScale.ticks(axis.tickNumber);
         }
       }
       if (isPointScaleConfig(axis)) {
@@ -246,12 +245,17 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
               ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
               : getColorScale(axis.colorMap)),
         };
+        if (axis.data?.[0] instanceof Date) {
+          const timeScale = scaleTime(axis.data!, range);
+          completedXAxis[axis.id].valueFormatter =
+            axis.valueFormatter ??
+            ((v, { location }) =>
+              location === 'tick'
+                ? timeScale.tickFormat(axis.tickNumber)(v)
+                : `${v.toLocaleString()}`);
+        }
       }
-      if (
-        axis.scaleType === 'band' ||
-        axis.scaleType === 'point' ||
-        axis.scaleType === 'ordinal-time'
-      ) {
+      if (axis.scaleType === 'band' || axis.scaleType === 'point') {
         // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
         return;
       }
@@ -311,6 +315,15 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
               ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
               : getColorScale(axis.colorMap)),
         };
+        if (axis.data?.[0] instanceof Date) {
+          const timeScale = scaleTime(axis.data!, range);
+          completedXAxis[axis.id].valueFormatter =
+            axis.valueFormatter ??
+            ((v, { location }) =>
+              location === 'tick'
+                ? timeScale.tickFormat(axis.tickNumber)(v)
+                : `${v.toLocaleString()}`);
+        }
       }
       if (isPointScaleConfig(axis)) {
         completedYAxis[axis.id] = {
@@ -323,12 +336,18 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
               ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
               : getColorScale(axis.colorMap)),
         };
+        if (axis.data?.[0] instanceof Date) {
+          const timeScale = scaleTime(axis.data!, range);
+          completedXAxis[axis.id].valueFormatter =
+            axis.valueFormatter ??
+            ((v, { location }) =>
+              location === 'tick'
+                ? timeScale.tickFormat(axis.tickNumber)(v)
+                : `${v.toLocaleString()}`);
+        }
       }
-      if (
-        axis.scaleType === 'band' ||
-        axis.scaleType === 'point' ||
-        axis.scaleType === 'ordinal-time'
-      ) {
+
+      if (axis.scaleType === 'band' || axis.scaleType === 'point') {
         // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
         return;
       }
