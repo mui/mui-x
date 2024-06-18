@@ -36,21 +36,23 @@ export const TreeViewVirtualScroller = React.forwardRef(function TreeViewVirtual
   props: TreeViewVirtualScrollerProps,
   ref: React.Ref<HTMLUListElement>,
 ) {
-  const { enableVirtualization, slots, slotProps, ...other } = props;
+  const { slots, slotProps, ...other } = props;
 
   useLicenseVerifier('x-tree-view-pro', releaseInfo);
 
   const { instance } = useTreeViewContext<[UseTreeViewItemsSignature]>();
-  const { getRootProps } = useTreeViewVirtualScroller({ enableVirtualization });
+  const { getRootProps } = useTreeViewVirtualScroller();
 
   const Root = slots.root;
   const rootProps = useSlotProps({
+    elementType: Root,
     getSlotProps: getRootProps,
     externalForwardedProps: other,
     externalSlotProps: slotProps?.root,
     additionalProps: {
       ref,
     },
+    ownerState: {},
   });
 
   return (
