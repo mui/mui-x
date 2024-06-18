@@ -85,9 +85,8 @@ export const computeValue = (
     const extremums = [axis.min ?? minData, axis.max ?? maxData];
     const tickNumber = getTickNumber({ ...axis, range, domain: extremums });
 
-    // Gotta remove ".nice" here to avoid jittering in zoom
     const scale = getScale(scaleType, extremums, range);
-    const [minDomain, maxDomain] = scale.domain();
+    const [minDomain, maxDomain] = scale.nice().domain();
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 
     completedXAxis[axis.id] = {
@@ -158,9 +157,8 @@ export const computeValue = (
     const extremums = [axis.min ?? minData, axis.max ?? maxData];
     const tickNumber = getTickNumber({ ...axis, range, domain: extremums });
 
-    // Gotta remove ".nice" here to avoid jittering in zoom
     const scale = getScale(scaleType, extremums, range);
-    const [minDomain, maxDomain] = scale.domain();
+    const [minDomain, maxDomain] = scale.nice().domain();
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 
     completedYAxis[axis.id] = {
