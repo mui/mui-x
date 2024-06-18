@@ -8,6 +8,7 @@ export * from '../ResponsiveChartContainer/ResizableContainer';
 export { useReducedMotion } from '../hooks/useReducedMotion';
 export { useSeries } from '../hooks/useSeries';
 export { useDrawingArea } from '../hooks/useDrawingArea';
+export { useChartContainerHooks } from '../ChartContainer/useChartContainerHooks';
 
 // utils
 export * from './defaultizeValueFormatter';
@@ -18,6 +19,7 @@ export * from './getSVGPoint';
 
 export * from '../context/CartesianProvider';
 export * from '../context/DrawingProvider';
+export * from '../context/ColorProvider';
 export * from '../context/InteractionProvider';
 export * from '../context/SeriesContextProvider';
 export * from '../context/ZAxisContextProvider';

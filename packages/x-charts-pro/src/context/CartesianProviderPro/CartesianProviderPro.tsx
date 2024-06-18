@@ -44,7 +44,7 @@ const zoomExtremumGetter = (getters: ExtremumGettersConfig, zoom: [number, numbe
 
 export type CartesianContextProviderProProps = CartesianContextProviderProps;
 
-function CartesianContextProviderPro(props: CartesianContextProviderProps) {
+function CartesianContextProviderPro(props: CartesianContextProviderProProps) {
   const {
     xAxis: inXAxis,
     yAxis: inYAxis,
