@@ -94,6 +94,6 @@ export type UseTreeViewExpansionSignature = TreeViewPluginSignature<{
   instance: UseTreeViewExpansionInstance;
   publicAPI: UseTreeViewExpansionPublicAPI;
   modelNames: 'expandedItems';
-  dependantPlugins: [UseTreeViewItemsSignature];
   contextValue: UseTreeViewExpansionContextValue;
+  dependantPlugins: [UseTreeViewItemsSignature];
 }>;
