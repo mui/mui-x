@@ -330,6 +330,13 @@ describe('<TimeField /> - Editing', () => {
         keyStrokes: [{ value: '02:12 p', expected: '02:12 PM' }],
       });
     });
+
+    it('should not edit when pressing the Space key', () => {
+      testFieldChange({
+        format: adapter.formats.hours24h,
+        keyStrokes: [{ value: ' ', expected: 'hh' }],
+      });
+    });
   });
 
   describeAdapters(

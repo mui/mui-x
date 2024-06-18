@@ -384,7 +384,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
 
   const applyCharacterEditing = useEventCallback((params: ApplyCharacterEditingParams) => {
     const activeSection = sections[params.sectionIndex];
-    const isNumericEditing = !Number.isNaN(Number(params.keyPressed));
+    const isNumericEditing = params.keyPressed !== ' ' && !Number.isNaN(Number(params.keyPressed));
     const response = isNumericEditing ? applyNumericEditing(params) : applyLetterEditing(params);
     if (response == null) {
       setTempAndroidValueStr(null);
