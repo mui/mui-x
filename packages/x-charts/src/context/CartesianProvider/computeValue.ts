@@ -18,6 +18,15 @@ import { FormattedSeries } from '../SeriesContextProvider';
 import { MakeOptional } from '../../models/helpers';
 import { getAxisExtremum } from './getAxisExtremum';
 
+const getRange = (drawingArea: DrawingArea, axisName: 'x' | 'y', isReverse?: boolean) => {
+  const range =
+    axisName === 'x'
+      ? [drawingArea.left, drawingArea.left + drawingArea.width]
+      : [drawingArea.top + drawingArea.height, drawingArea.top];
+
+  return isReverse ? range.reverse() : range;
+};
+
 export function computeValue(
   drawingArea: DrawingArea,
   formattedSeries: FormattedSeries,
@@ -48,7 +57,8 @@ export function computeValue(
   const DEFAULT_AXIS_KEY = axisName === 'x' ? DEFAULT_X_AXIS_KEY : DEFAULT_Y_AXIS_KEY;
 
   const allAxis: AxisConfig<ScaleName, any, ChartsAxisProps>[] = [
-    ...(inAxis?.map((a, index) => ({ id: `defaultized-x-axis-${index}`, ...a })) ?? []),
+    ...(inAxis?.map((axis, index) => ({ id: `defaultized-${axisName}-axis-${index}`, ...axis })) ??
+      []),
     ...(inAxis === undefined || inAxis.findIndex(({ id }) => id === DEFAULT_AXIS_KEY) === -1
       ? [{ id: DEFAULT_AXIS_KEY, scaleType: 'linear' as const }]
       : []),
@@ -64,21 +74,21 @@ export function computeValue(
       formattedSeries,
     );
 
-    const range = axis.reverse
-      ? [drawingArea.left + drawingArea.width, drawingArea.left]
-      : [drawingArea.left, drawingArea.left + drawingArea.width];
+    const range = getRange(drawingArea, axisName, axis.reverse);
 
     if (isBandScaleConfig(axis)) {
       const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
       const DEFAULT_BAR_GAP_RATIO = 0.1;
 
       const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
-      const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
+      const barGapRatio = axisName === 'x' ? axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO : 0;
+      const scaleRange = axisName === 'x' ? range : [...range].reverse();
+
       completeAxis[axis.id] = {
         categoryGapRatio,
         barGapRatio,
         ...axis,
-        scale: scaleBand(axis.data!, range)
+        scale: scaleBand(axis.data!, scaleRange)
           .paddingInner(categoryGapRatio)
           .paddingOuter(categoryGapRatio / 2),
         tickNumber: axis.data!.length,
@@ -90,9 +100,11 @@ export function computeValue(
       };
     }
     if (isPointScaleConfig(axis)) {
+      const scaleRange = axisName === 'x' ? range : [...range].reverse();
+
       completeAxis[axis.id] = {
         ...axis,
-        scale: scalePoint(axis.data!, range),
+        scale: scalePoint(axis.data!, scaleRange),
         tickNumber: axis.data!.length,
         colorScale:
           axis.colorMap &&
