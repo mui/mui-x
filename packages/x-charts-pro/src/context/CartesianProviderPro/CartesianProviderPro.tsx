@@ -1,12 +1,15 @@
 import * as React from 'react';
-import { useDrawingArea } from '../../hooks/useDrawingArea';
-import { useSeries } from '../../hooks/useSeries';
-import { CartesianContext } from './CartesianContext';
-import { normalizeAxis } from './normalizeAxis';
-import { computeValue } from './computeValue';
-import { ExtremumGettersConfig } from '../../models';
+import {
+  useDrawingArea,
+  useSeries,
+  CartesianContext,
+  CartesianContextProviderProps,
+  cartesianProviderUtils,
+} from '@mui/x-charts/internals';
+import { ExtremumGettersConfig } from '@mui/x-charts/models';
 import { useZoom } from '../ZoomProvider/useZoom';
-import { CartesianContextProviderProps } from './CartesianProvider';
+
+const { normalizeAxis, computeValue } = cartesianProviderUtils;
 
 const calculateZoom = (
   data: [number | null, number | null],
@@ -38,6 +41,8 @@ const zoomExtremumGetter = (getters: ExtremumGettersConfig, zoom: [number, numbe
     ]),
   );
 };
+
+export type CartesianContextProviderProProps = CartesianContextProviderProps;
 
 function CartesianContextProviderPro(props: CartesianContextProviderProps) {
   const {

@@ -7,10 +7,12 @@ export * from '../ResponsiveChartContainer/ResizableContainer';
 // hooks
 export { useReducedMotion } from '../hooks/useReducedMotion';
 export { useSeries } from '../hooks/useSeries';
+export { useDrawingArea } from '../hooks/useDrawingArea';
 
 // utils
 export * from './defaultizeValueFormatter';
 export * from './configInit';
+export * from './getSVGPoint';
 
 // contexts
 
@@ -19,6 +21,7 @@ export * from '../context/DrawingProvider';
 export * from '../context/InteractionProvider';
 export * from '../context/SeriesContextProvider';
 export * from '../context/ZAxisContextProvider';
+export type * from '../context/context.types';
 
 // series configuration
 export * from '../models/seriesType/config';

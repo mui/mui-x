@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Initializable } from '../context.types';
+import { Initializable } from '@mui/x-charts/internals';
 
 export type ZoomState = {
   zoomRange: [number, number];
