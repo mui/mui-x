@@ -265,4 +265,70 @@ describe('License: verifyLicense', () => {
       ).to.equal(LICENSE_STATUS.Valid);
     });
   });
+
+  describe('key version: 2.2', () => {
+    const licenseKeyInitial = generateLicense({
+      expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
+      orderNumber: 'MUI-123',
+      scope: 'pro',
+      licensingModel: 'annual',
+      planVersion: 'initial',
+    });
+
+    const licenseKey2 = generateLicense({
+      expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
+      orderNumber: 'MUI-123',
+      scope: 'pro',
+      licensingModel: 'annual',
+      planVersion: 'Q3-2024',
+    });
+
+    it('PlanVersion "initial" should not accept charts', () => {
+      process.env.NODE_ENV = 'production';
+      expect(
+        verifyLicense({
+          releaseInfo: RELEASE_INFO,
+          licenseKey: licenseKeyInitial,
+          acceptedScopes: ['pro', 'premium'],
+          productScope: 'charts',
+        }).status,
+      ).to.equal(LICENSE_STATUS.OutOfScope);
+    });
+
+    it('PlanVersion "initial" should not accept tree-view', () => {
+      process.env.NODE_ENV = 'production';
+      expect(
+        verifyLicense({
+          releaseInfo: RELEASE_INFO,
+          licenseKey: licenseKeyInitial,
+          acceptedScopes: ['pro', 'premium'],
+          productScope: 'tree-view',
+        }).status,
+      ).to.equal(LICENSE_STATUS.OutOfScope);
+    });
+
+    it('PlanVersion "Q3-2024" should accept charts', () => {
+      process.env.NODE_ENV = 'production';
+      expect(
+        verifyLicense({
+          releaseInfo: RELEASE_INFO,
+          licenseKey: licenseKey2,
+          acceptedScopes: ['pro', 'premium'],
+          productScope: 'charts',
+        }).status,
+      ).to.equal(LICENSE_STATUS.Valid);
+    });
+
+    it('PlanVersion "Q3-2024" should accept tree-view', () => {
+      process.env.NODE_ENV = 'production';
+      expect(
+        verifyLicense({
+          releaseInfo: RELEASE_INFO,
+          licenseKey: licenseKey2,
+          acceptedScopes: ['pro', 'premium'],
+          productScope: 'tree-view',
+        }).status,
+      ).to.equal(LICENSE_STATUS.Valid);
+    });
+  });
 });
