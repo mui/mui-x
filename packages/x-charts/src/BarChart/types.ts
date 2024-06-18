@@ -6,8 +6,8 @@ export type AnimationData = {
   y: number;
   width: number;
   height: number;
-  yOrigin: number;
-  xOrigin: number;
+  yOrigin?: number;
+  xOrigin?: number;
   layout: BarSeriesType['layout'];
 };
 
