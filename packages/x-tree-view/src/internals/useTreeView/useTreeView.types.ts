@@ -9,27 +9,22 @@ import {
   TreeViewPublicAPI,
   TreeViewExperimentalFeatures,
 } from '../models';
-import { TreeViewCorePluginSignatures } from '../corePlugins';
 
-export type UseTreeViewParameters<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
-  UseTreeViewBaseParameters<TSignatures> &
-    Omit<MergeSignaturesProperty<TSignatures, 'params'>, keyof UseTreeViewBaseParameters<any>>;
-
-export interface UseTreeViewBaseParameters<
+export interface UseTreeViewParameters<
   TSignatures extends readonly TreeViewAnyPluginSignature[],
+  TProps extends Partial<UseTreeViewBaseProps<TSignatures>>,
 > {
-  apiRef: React.MutableRefObject<TreeViewPublicAPI<TSignatures>> | undefined;
-  rootRef?: React.Ref<HTMLUListElement> | undefined;
   plugins: ConvertSignaturesIntoPlugins<TSignatures>;
+  rootRef?: React.Ref<HTMLUListElement> | undefined;
+  props: TProps; // Omit<MergeSignaturesProperty<TSignatures, 'params'>, keyof UseTreeViewBaseParameters<any>>
+}
+
+export interface UseTreeViewBaseProps<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
+  apiRef: React.MutableRefObject<TreeViewPublicAPI<TSignatures> | undefined> | undefined;
   slots: MergeSignaturesProperty<TSignatures, 'slots'>;
   slotProps: MergeSignaturesProperty<TSignatures, 'slotProps'>;
   experimentalFeatures: TreeViewExperimentalFeatures<TSignatures>;
 }
-
-export type UseTreeViewDefaultizedParameters<
-  TSignatures extends readonly TreeViewAnyPluginSignature[],
-> = UseTreeViewBaseParameters<TSignatures> &
-  MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'defaultizedParams'>;
 
 export interface UseTreeViewRootSlotProps
   extends Pick<

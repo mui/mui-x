@@ -8,18 +8,18 @@ import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { TreeViewPublicAPI, TreeViewExperimentalFeatures } from '@mui/x-tree-view/internals';
 import { RichTreeViewProClasses } from './richTreeViewProClasses';
 import {
-  DefaultTreeViewProPluginParameters,
-  DefaultTreeViewProPluginSlotProps,
-  DefaultTreeViewProPluginSlots,
-  DefaultTreeViewProPluginSignatures,
-} from '../internals/plugins/defaultPlugins';
+  RichTreeViewProPluginParameters,
+  RichTreeViewProPluginSlotProps,
+  RichTreeViewProPluginSlots,
+  RichTreeViewProPluginSignatures,
+} from './RichTreeViewPro.plugins';
 
 interface RichTreeViewItemProSlotOwnerState {
   itemId: TreeViewItemId;
   label: string;
 }
 
-export interface RichTreeViewProSlots extends DefaultTreeViewProPluginSlots {
+export interface RichTreeViewProSlots extends RichTreeViewProPluginSlots {
   /**
    * Element rendered at the root.
    * @default RichTreeViewProRoot
@@ -33,13 +33,13 @@ export interface RichTreeViewProSlots extends DefaultTreeViewProPluginSlots {
 }
 
 export interface RichTreeViewProSlotProps<R extends {}, Multiple extends boolean | undefined>
-  extends DefaultTreeViewProPluginSlotProps {
+  extends RichTreeViewProPluginSlotProps {
   root?: SlotComponentProps<'ul', {}, RichTreeViewProProps<R, Multiple>>;
   item?: SlotComponentProps<typeof TreeItem, {}, RichTreeViewItemProSlotOwnerState>;
 }
 
 export type RichTreeViewProApiRef = React.MutableRefObject<
-  TreeViewPublicAPI<DefaultTreeViewProPluginSignatures> | undefined
+  TreeViewPublicAPI<RichTreeViewProPluginSignatures> | undefined
 >;
 
 export interface RichTreeViewProPropsBase extends React.HTMLAttributes<HTMLUListElement> {
@@ -55,7 +55,7 @@ export interface RichTreeViewProPropsBase extends React.HTMLAttributes<HTMLUList
 }
 
 export interface RichTreeViewProProps<R extends {}, Multiple extends boolean | undefined>
-  extends DefaultTreeViewProPluginParameters<R, Multiple>,
+  extends RichTreeViewProPluginParameters<R, Multiple>,
     RichTreeViewProPropsBase {
   /**
    * Overridable component slots.
@@ -76,5 +76,5 @@ export interface RichTreeViewProProps<R extends {}, Multiple extends boolean | u
    * For each feature, if the flag is not explicitly set to `true`,
    * the feature will be fully disabled and any property / method call will not have any effect.
    */
-  experimentalFeatures?: TreeViewExperimentalFeatures<DefaultTreeViewProPluginSignatures>;
+  experimentalFeatures?: TreeViewExperimentalFeatures<RichTreeViewProPluginSignatures>;
 }

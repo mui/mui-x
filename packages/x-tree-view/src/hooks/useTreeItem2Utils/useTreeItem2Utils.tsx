@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { useTreeViewContext } from '../../internals/TreeViewProvider/useTreeViewContext';
-import { DefaultTreeViewPluginSignatures } from '../../internals/plugins';
+import { UseTreeViewSelectionSignature } from '../../internals/plugins/useTreeViewSelection';
+import { UseTreeViewExpansionSignature } from '../../internals/plugins/useTreeViewExpansion';
+import { UseTreeViewItemsSignature } from '../../internals/plugins/useTreeViewItems';
+import { UseTreeViewFocusSignature } from '../../internals/plugins/useTreeViewFocus';
 import type { UseTreeItem2Status } from '../../useTreeItem2';
 
 interface UseTreeItem2Interactions {
@@ -21,6 +24,13 @@ const isItemExpandable = (reactChildren: React.ReactNode) => {
   return Boolean(reactChildren);
 };
 
+type UseTreeItem2UtilsMinimalPlugins = readonly [
+  UseTreeViewSelectionSignature,
+  UseTreeViewExpansionSignature,
+  UseTreeViewItemsSignature,
+  UseTreeViewFocusSignature,
+];
+
 export const useTreeItem2Utils = ({
   itemId,
   children,
@@ -31,7 +41,7 @@ export const useTreeItem2Utils = ({
   const {
     instance,
     selection: { multiSelect },
-  } = useTreeViewContext<DefaultTreeViewPluginSignatures>();
+  } = useTreeViewContext<UseTreeItem2UtilsMinimalPlugins>();
 
   const status: UseTreeItem2Status = {
     expandable: isItemExpandable(children),

@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { useThemeProps } from '@mui/material/styles';
-import { useSlotProps } from '@mui/base/utils';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -8,17 +6,16 @@ import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import {
   RichTreeViewPropsBase,
   RichTreeViewRoot,
+  RICH_TREE_VIEW_PLUGINS,
+  RichTreeViewPluginParameters,
+  RichTreeViewPluginSlots,
+  RichTreeViewPluginSlotProps,
 } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import {
   UseTreeViewExpansionSignature,
   TreeViewPlugin,
   TreeViewPluginSignature,
-  DefaultTreeViewPluginParameters,
-  DefaultTreeViewPluginSlotProps,
-  DefaultTreeViewPluginSlots,
-  DEFAULT_TREE_VIEW_PLUGINS,
-  extractPluginParamsFromProps,
   useTreeView,
   TreeViewProvider,
   ConvertPluginsIntoSignatures,
@@ -70,42 +67,31 @@ useTreeViewLogExpanded.params = {
 };
 
 export interface TreeViewProps<R extends {}, Multiple extends boolean | undefined>
-  extends DefaultTreeViewPluginParameters<R, Multiple>,
+  extends RichTreeViewPluginParameters<R, Multiple>,
     TreeViewLogExpandedParameters,
     RichTreeViewPropsBase {
-  slots?: DefaultTreeViewPluginSlots;
-  slotProps?: DefaultTreeViewPluginSlotProps;
+  slots?: RichTreeViewPluginSlots;
+  slotProps?: RichTreeViewPluginSlotProps;
 }
 
 const TREE_VIEW_PLUGINS = [
-  ...DEFAULT_TREE_VIEW_PLUGINS,
+  ...RICH_TREE_VIEW_PLUGINS,
   useTreeViewLogExpanded,
 ] as const;
 
+type TreeViewPluginSignatures = ConvertPluginsIntoSignatures<
+  typeof TREE_VIEW_PLUGINS
+>;
+
 function TreeView<R extends {}, Multiple extends boolean | undefined>(
-  inProps: TreeViewProps<R, Multiple>,
+  props: TreeViewProps<R, Multiple>,
 ) {
-  const themeProps = useThemeProps({ props: inProps, name: 'HeadlessTreeView' });
-  const ownerState = themeProps as TreeViewProps<any, any>;
-
-  const { pluginParams, otherProps } = extractPluginParamsFromProps<
-    ConvertPluginsIntoSignatures<typeof TREE_VIEW_PLUGINS>,
-    DefaultTreeViewPluginSlots,
-    DefaultTreeViewPluginSlotProps,
-    TreeViewProps<R, Multiple>
+  const { getRootProps, contextValue, instance } = useTreeView<
+    TreeViewPluginSignatures,
+    typeof props
   >({
-    props: themeProps,
     plugins: TREE_VIEW_PLUGINS,
-  });
-
-  const { getRootProps, contextValue, instance } = useTreeView(pluginParams);
-
-  const rootProps = useSlotProps({
-    elementType: RichTreeViewRoot,
-    externalSlotProps: {},
-    externalForwardedProps: otherProps,
-    getSlotProps: getRootProps,
-    ownerState,
+    props,
   });
 
   const itemsToRender = instance.getItemsToRender();
@@ -123,7 +109,7 @@ function TreeView<R extends {}, Multiple extends boolean | undefined>(
 
   return (
     <TreeViewProvider value={contextValue}>
-      <RichTreeViewRoot {...rootProps}>
+      <RichTreeViewRoot {...getRootProps()}>
         {itemsToRender.map(renderItem)}
       </RichTreeViewRoot>
     </TreeViewProvider>

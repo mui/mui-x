@@ -40,7 +40,10 @@ export interface SparkLineChartSlotProps
     ChartsTooltipSlotProps {}
 
 export interface SparkLineChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series' | 'xAxis' | 'yAxis' | 'margin' | 'plugins'> {
+  extends Omit<
+    ResponsiveChartContainerProps,
+    'series' | 'xAxis' | 'yAxis' | 'zAxis' | 'margin' | 'plugins'
+  > {
   /**
    * The xAxis configuration.
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.

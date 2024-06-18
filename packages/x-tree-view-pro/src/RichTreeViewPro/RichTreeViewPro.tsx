@@ -3,23 +3,14 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import { useSlotProps } from '@mui/base/utils';
 import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import {
-  useTreeView,
-  TreeViewProvider,
-  buildWarning,
-  extractPluginParamsFromProps,
-} from '@mui/x-tree-view/internals';
+import { useTreeView, TreeViewProvider, buildWarning } from '@mui/x-tree-view/internals';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
+import { RichTreeViewProProps } from './RichTreeViewPro.types';
 import {
-  RichTreeViewProProps,
-  RichTreeViewProSlotProps,
-  RichTreeViewProSlots,
-} from './RichTreeViewPro.types';
-import {
-  DEFAULT_TREE_VIEW_PRO_PLUGINS,
-  DefaultTreeViewProPluginSignatures,
-} from '../internals/plugins';
+  RICH_TREE_VIEW_PRO_PLUGINS,
+  RichTreeViewProPluginSignatures,
+} from './RichTreeViewPro.plugins';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeViewPro');
@@ -104,26 +95,22 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     }
   }
 
-  const { pluginParams, slots, slotProps, otherProps } = extractPluginParamsFromProps<
-    DefaultTreeViewProPluginSignatures,
-    RichTreeViewProSlots,
-    RichTreeViewProSlotProps<R, Multiple>,
-    RichTreeViewProProps<R, Multiple>
+  const { getRootProps, contextValue, instance } = useTreeView<
+    RichTreeViewProPluginSignatures,
+    typeof props
   >({
-    props,
-    plugins: DEFAULT_TREE_VIEW_PRO_PLUGINS,
+    plugins: RICH_TREE_VIEW_PRO_PLUGINS,
     rootRef: ref,
+    props,
   });
 
-  const { getRootProps, contextValue, instance } = useTreeView(pluginParams);
-
+  const { slots, slotProps } = props;
   const classes = useUtilityClasses(props);
 
   const Root = slots?.root ?? RichTreeViewProRoot;
   const rootProps = useSlotProps({
     elementType: Root,
     externalSlotProps: slotProps?.root,
-    externalForwardedProps: otherProps,
     className: classes.root,
     getSlotProps: getRootProps,
     ownerState: props as RichTreeViewProProps<any, any>,
