@@ -18,7 +18,7 @@ export const normalizeAxis = <
     }
     if (dataset === undefined) {
       throw Error(
-        `MUI ${axisName.toUpperCase()} Charts: ${axisName}-axis uses \`dataKey\` but no \`dataset\` is provided.`,
+        `MUI X Charts: ${axisName}-axis uses \`dataKey\` but no \`dataset\` is provided.`,
       );
     }
     return {
