@@ -15,7 +15,6 @@ import { ScatterChartProps } from '../ScatterChart/ScatterChart';
 import { ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
 import { ChartSeriesType } from '../models/seriesType/config';
 
-
 export interface ChartsComponentsPropsList {
   MuiChartsAxis: ChartsAxisProps;
   MuiChartsXAxis: ChartsXAxisProps;

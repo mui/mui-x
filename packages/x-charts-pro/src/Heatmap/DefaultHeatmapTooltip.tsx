@@ -45,7 +45,8 @@ export function DefaultHeatmapTooltip(props: ChartsItemContentProps<'heatmap'>) 
         <thead>
           <ChartsTooltipRow>
             <ChartsTooltipCell>{formattedX}</ChartsTooltipCell>
-            <ChartsTooltipCell colSpan={2}>{formattedY}</ChartsTooltipCell>
+            {formattedX && formattedY && <ChartsTooltipCell />}
+            <ChartsTooltipCell>{formattedY}</ChartsTooltipCell>
           </ChartsTooltipRow>
         </thead>
         <tbody>

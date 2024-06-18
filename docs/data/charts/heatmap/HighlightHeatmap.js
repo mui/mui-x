@@ -26,13 +26,13 @@ const data = [
   [3, 4, 5],
 ];
 
-export default function BasicHeatmap() {
+export default function HighlightHeatmap() {
   return (
     <Box sx={{ width: '100%', maxWidth: 400 }}>
       <UnstableHeatmap
         xAxis={[{ data: [1, 2, 3, 4] }]}
         yAxis={[{ data: ['A', 'B', 'C', 'D', 'E'] }]}
-        series={[{ data }]}
+        series={[{ data, highlightScope: { highlight: 'item', fade: 'global' } }]}
         margin={{ top: 5, right: 5, left: 20 }}
         height={300}
       />

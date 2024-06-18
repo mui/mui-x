@@ -69,7 +69,11 @@ function ZAxisContextProvider(props: ZAxisContextProviderProps) {
           axis.colorMap &&
           (axis.colorMap.type === 'ordinal' && axis.data
             ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
-            : getColorScale(axis.colorMap)),
+            : getColorScale(
+                axis.colorMap.type === 'continuous'
+                  ? { min: axis.min, max: axis.max, ...axis.colorMap }
+                  : axis.colorMap,
+              )),
       };
     });
 

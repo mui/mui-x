@@ -5,7 +5,6 @@ import {
   CartesianSeriesType,
 } from '@mui/x-charts/internals';
 
-// TODO: discuss if it's the best data format.
 export type HeatmapValueType = [number, number, number];
 
 export interface HeatmapSeriesType

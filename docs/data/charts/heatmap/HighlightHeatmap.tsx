@@ -2,8 +2,9 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import '@mui/x-charts-pro/typeOverloads';
 import { UnstableHeatmap } from '@mui/x-charts-pro/Heatmap';
+import { HeatmapValueType } from '@mui/x-charts-pro/models';
 
-const data = [
+const data: HeatmapValueType[] = [
   [0, 0, 1],
   [0, 1, 2],
   [0, 2, 4],
@@ -26,13 +27,13 @@ const data = [
   [3, 4, 5],
 ];
 
-export default function BasicHeatmap() {
+export default function HighlightHeatmap() {
   return (
     <Box sx={{ width: '100%', maxWidth: 400 }}>
       <UnstableHeatmap
         xAxis={[{ data: [1, 2, 3, 4] }]}
         yAxis={[{ data: ['A', 'B', 'C', 'D', 'E'] }]}
-        series={[{ data }]}
+        series={[{ data, highlightScope: { highlight: 'item', fade: 'global' } }]}
         margin={{ top: 5, right: 5, left: 20 }}
         height={300}
       />

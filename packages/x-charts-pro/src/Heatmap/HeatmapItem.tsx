@@ -31,6 +31,7 @@ export function HeatmapItem(props: HeatmapItemProps) {
       {...getInteractionItemProps({ type: 'heatmap', seriesId, dataIndex })}
       style={{
         filter: (isHighlighted && 'saturate(120%)') || (isFaded && 'saturate(80%)') || undefined,
+        shapeRendering: 'crispEdges',
       }}
     />
   );
