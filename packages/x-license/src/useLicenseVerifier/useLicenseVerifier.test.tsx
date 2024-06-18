@@ -6,6 +6,7 @@ import {
   LicenseInfo,
   generateLicense,
   Unstable_LicenseInfoProvider as LicenseInfoProvider,
+  MuiCommercialPackageName,
 } from '@mui/x-license';
 import { sharedLicenseStatuses } from './useLicenseVerifier';
 import { generateReleaseInfo } from '../verifyLicense';
@@ -14,8 +15,8 @@ const oneDayInMS = 1000 * 60 * 60 * 24;
 const releaseDate = new Date(3000, 0, 0, 0, 0, 0, 0);
 const RELEASE_INFO = generateReleaseInfo(releaseDate);
 
-function TestComponent() {
-  const licenseStatus = useLicenseVerifier('x-date-pickers-pro', RELEASE_INFO);
+function TestComponent(props: { packageName?: MuiCommercialPackageName }) {
+  const licenseStatus = useLicenseVerifier(props.packageName || 'x-date-pickers-pro', RELEASE_INFO);
   return <div data-testid="status">Status: {licenseStatus.status}</div>;
 }
 
@@ -63,7 +64,7 @@ describe('useLicenseVerifier', function test() {
         licensingModel: 'perpetual',
         orderNumber: '12345',
         scope: 'pro',
-        planVersion: 'initial',
+        planVersion: 'Q3-2024',
       });
 
       LicenseInfo.setLicenseKey('');
@@ -89,7 +90,7 @@ describe('useLicenseVerifier', function test() {
         orderNumber: 'MUI-123',
         scope: 'pro',
         licensingModel: 'subscription',
-        planVersion: 'initial',
+        planVersion: 'Q3-2024',
       });
       LicenseInfo.setLicenseKey(expiredLicenseKey);
 
@@ -106,6 +107,26 @@ describe('useLicenseVerifier', function test() {
         'The above error occurred in the <TestComponent> component',
       ]);
       expect(actualErrorMsg).to.match(/MUI X: Expired license key/);
+    });
+
+    it('should throw if the license is not covering charts and tree-view', () => {
+      // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
+      // eslint-disable-next-line no-useless-concat
+      process.env['NODE_' + 'ENV'] = 'development';
+
+      const initialLicenseKey = generateLicense({
+        expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
+        orderNumber: 'MUI-123',
+        scope: 'pro',
+        licensingModel: 'subscription',
+        planVersion: 'initial',
+      });
+
+      LicenseInfo.setLicenseKey(initialLicenseKey);
+
+      expect(() => {
+        render(<TestComponent packageName={'x-charts-pro'} />);
+      }).to.toErrorDev(['MUI X: Invalid Product coverage']);
     });
   });
 });

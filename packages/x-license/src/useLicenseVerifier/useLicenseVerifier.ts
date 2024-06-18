@@ -8,6 +8,7 @@ import {
   showMissingLicenseKeyError,
   showLicenseKeyPlanMismatchError,
   showExpiredPackageVersionError,
+  showProductScopeMismatchError,
 } from '../utils/licenseErrorMessageUtils';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
 import { extractAcceptedScopes, extractProductScope } from '../utils/licenseScope';
@@ -64,6 +65,8 @@ export function useLicenseVerifier(
       // Skip
     } else if (licenseStatus.status === LICENSE_STATUS.Invalid) {
       showInvalidLicenseKeyError();
+    } else if (licenseStatus.status === LICENSE_STATUS.OutOfProductScope) {
+      showProductScopeMismatchError();
     } else if (licenseStatus.status === LICENSE_STATUS.OutOfScope) {
       showLicenseKeyPlanMismatchError();
     } else if (licenseStatus.status === LICENSE_STATUS.NotFound) {

@@ -292,7 +292,7 @@ describe('License: verifyLicense', () => {
           acceptedScopes: ['pro', 'premium'],
           productScope: 'charts',
         }).status,
-      ).to.equal(LICENSE_STATUS.OutOfScope);
+      ).to.equal(LICENSE_STATUS.OutOfProductScope);
     });
 
     it('PlanVersion "initial" should not accept tree-view', () => {
@@ -304,7 +304,7 @@ describe('License: verifyLicense', () => {
           acceptedScopes: ['pro', 'premium'],
           productScope: 'tree-view',
         }).status,
-      ).to.equal(LICENSE_STATUS.OutOfScope);
+      ).to.equal(LICENSE_STATUS.OutOfProductScope);
     });
 
     it('PlanVersion "Q3-2024" should accept charts', () => {

@@ -32,6 +32,16 @@ export function showLicenseKeyPlanMismatchError() {
   ]);
 }
 
+export function showProductScopeMismatchError() {
+  showError([
+    'MUI X: Invalid Product coverage.',
+    '',
+    'Your use of MUI X is not compatible with the plan of your license key. The product you are trying to use is not included in the version of your license plan. This happens if you try to use `ChartsPro` or TreeViewPro` with a license plan where these products are not included.',
+    '',
+    'To solve the issue, you can upgrade your plan version at https://mui.com/r/x-get-license.',
+  ]);
+}
+
 export function showMissingLicenseKeyError({
   plan,
   packageName,
