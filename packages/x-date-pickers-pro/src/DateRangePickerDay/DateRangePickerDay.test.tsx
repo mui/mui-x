@@ -3,7 +3,7 @@ import {
   DateRangePickerDay,
   dateRangePickerDayClasses as classes,
 } from '@mui/x-date-pickers-pro/DateRangePickerDay';
-import { wrapPickerMount, createPickerRenderer, adapterToUse } from 'test/utils/pickers';
+import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DateRangePickerDay />', () => {
@@ -29,7 +29,6 @@ describe('<DateRangePickerDay />', () => {
       inheritComponent: 'button',
       muiName: 'MuiDateRangePickerDay',
       render,
-      wrapMount: wrapPickerMount,
       refInstanceof: window.HTMLButtonElement,
       // cannot test reactTestRenderer because of required context
       skip: [
