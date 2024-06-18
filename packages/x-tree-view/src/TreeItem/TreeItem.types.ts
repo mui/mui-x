@@ -113,6 +113,9 @@ export interface TreeItemOwnerState extends TreeItemProps {
   indentationAtItemLevel: boolean;
 }
 
+/**
+ * Plugins that need to be present in the Tree View in order for `TreeItem` to work correctly.
+ */
 export type TreeItemMinimalPlugins = readonly [
   UseTreeViewIconsSignature,
   UseTreeViewSelectionSignature,
@@ -122,3 +125,8 @@ export type TreeItemMinimalPlugins = readonly [
   UseTreeViewKeyboardNavigationSignature,
   UseTreeViewIdSignature,
 ];
+
+/**
+ * Plugins that `TreeItem` can use if they are present, but are not required.
+ */
+export type TreeItemOptionalPlugins = readonly [];
