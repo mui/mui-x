@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { InteractionContext } from '../context/InteractionProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { isBandScale } from '../internals/isBandScale';
 import { AxisDefaultized } from '../models/axis';
-import { getSVGPoint } from '../internals/utils';
+import { getSVGPoint } from '../internals/getSVGPoint';
 import { useSvgRef } from './useSvgRef';
 import { useDrawingArea } from './useDrawingArea';
 
@@ -13,7 +13,7 @@ function getAsANumber(value: number | Date) {
 export const useAxisEvents = (disableAxisListener: boolean) => {
   const svgRef = useSvgRef();
   const { left, top, width, height } = useDrawingArea();
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = React.useContext(CartesianContext);
+  const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
   const { dispatch } = React.useContext(InteractionContext);
 
   const usedXAxis = xAxisIds[0];
