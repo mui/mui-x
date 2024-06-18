@@ -30,7 +30,7 @@ const zoomExtremumGetter = (getters: ExtremumGettersConfig, zoom: [number, numbe
     Object.entries(getters).map(([key, value]) => [
       key,
       (...getterProp: any[]) => {
-        // @ts-ignore
+        // @ts-expect-error, params are correct.
         const data = value(...getterProp);
         const result = calculateZoom(data, zoom);
         return result;
