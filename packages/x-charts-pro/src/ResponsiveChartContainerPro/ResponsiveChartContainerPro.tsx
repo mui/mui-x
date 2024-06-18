@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { Watermark } from '@mui/x-license';
 import { ResponsiveChartContainerProps } from '@mui/x-charts/ResponsiveChartContainer';
 import { ResizableContainer, useChartContainerDimensions } from '@mui/x-charts/internals';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
+import { ChartContainerPro } from '../ChartContainerPro';
 
 export interface ResponsiveChartContainerProProps extends ResponsiveChartContainerProps {}
 
@@ -17,12 +17,10 @@ const ResponsiveChartContainerPro = React.forwardRef(function ResponsiveChartCon
   const { width: inWidth, height: inHeight, ...other } = props;
   const [containerRef, width, height] = useChartContainerDimensions(inWidth, inHeight);
 
-  useLicenseVerifier('x-charts-pro', releaseInfo);
-
   return (
     <ResizableContainer ref={containerRef} ownerState={{ width: inWidth, height: inHeight }}>
       {width && height ? (
-        <ChartContainer {...other} width={width} height={height} ref={ref} />
+        <ChartContainerPro {...other} width={width} height={height} ref={ref} />
       ) : null}
       <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
     </ResizableContainer>
