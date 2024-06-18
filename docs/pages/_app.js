@@ -64,6 +64,7 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-charts-pro': getMuiPackageVersion('x-charts-pro', muiCommitRef),
       '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
       '@mui/x-tree-view-pro': getMuiPackageVersion('x-tree-view-pro', muiCommitRef),
+      '@mui/x-utils': getMuiPackageVersion('x-utils', muiCommitRef),
       exceljs: 'latest',
     };
     return output;

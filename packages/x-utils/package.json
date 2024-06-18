@@ -1,15 +1,19 @@
 {
-  "name": "@mui/x-data-grid-pro",
+  "name": "@mui/x-utils",
   "version": "7.7.0",
-  "description": "The Pro plan edition of the Data Grid components (MUI X).",
+  "description": "Utility functions for the MUI X packages (internal use only).",
   "author": "MUI Team",
   "main": "src/index.ts",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
   },
-  "homepage": "https://mui.com/x/react-data-grid/",
+  "homepage": "https://mui.com/x/",
   "sideEffects": false,
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/mui-org"
+  },
   "publishConfig": {
     "access": "public",
     "directory": "build"
@@ -20,12 +24,7 @@
     "material-ui",
     "mui",
     "mui-x",
-    "react-table",
-    "table",
-    "datatable",
-    "data-table",
-    "datagrid",
-    "data-grid"
+    "utils"
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
@@ -40,28 +39,18 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/mui/mui-x.git",
-    "directory": "packages/x-data-grid-pro"
+    "directory": "packages/x-utils"
   },
   "dependencies": {
     "@babel/runtime": "^7.24.7",
-    "@mui/system": "^5.15.20",
-    "@mui/utils": "^5.15.20",
-    "@mui/x-data-grid": "workspace:*",
-    "@mui/x-license": "workspace:*",
-    "@mui/x-utils": "workspace:*",
-    "@types/format-util": "^1.0.4",
-    "clsx": "^2.1.1",
-    "prop-types": "^15.8.1",
-    "reselect": "^4.1.8"
+    "@mui/utils": "^5.15.20"
   },
   "peerDependencies": {
     "@mui/material": "^5.15.14",
-    "react": "^17.0.0 || ^18.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0"
+    "react": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^1.0.1",
-    "@types/prop-types": "^15.7.12",
     "rimraf": "^5.0.7"
   },
   "engines": {
