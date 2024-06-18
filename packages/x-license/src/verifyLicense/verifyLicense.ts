@@ -109,7 +109,7 @@ export function verifyLicense({
   productScope,
 }: {
   releaseInfo: string;
-  licenseKey: string | undefined;
+  licenseKey?: string;
   acceptedScopes: readonly LicenseScope[];
   productScope: ProductScope;
 }): { status: LicenseStatus; meta?: any } {
@@ -181,7 +181,6 @@ export function verifyLicense({
   if (license.planVersion === 'initial') {
     // 'charts-pro' or 'tree-view-pro' can only be used with a newer license
     if (productScope === 'charts' || productScope === 'tree-view') {
-      console.error('MUI X: Error checking license. Plan version invalid!');
       return { status: LICENSE_STATUS.OutOfScope };
     }
   }
