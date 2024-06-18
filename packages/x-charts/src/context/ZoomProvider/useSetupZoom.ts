@@ -18,22 +18,22 @@ const MIN_ALLOWED_SPAN = 10;
 const MAX_ALLOWED_SPAN = 100;
 
 /**
- * Helper to get the range (in percents of a reference range) corresponding to a given scale
+ * Helper to get the range (in percents of a reference range) corresponding to a given scale.
  * @param centerRatio {number} The ratio of the point that should not move between the previous and next range.
- * @param scale {number} The target scale
- * @returns The range to display
+ * @param scaleRatio {number} The target scale ratio.
+ * @returns The range to display.
  */
 const zoomAtPoint = (
   centerRatio: number,
-  scale: number,
+  scaleRatio: number,
   currentRange: readonly [number, number],
 ) => {
   const [minRange, maxRange] = currentRange;
 
   const point = minRange + centerRatio * (maxRange - minRange);
 
-  let newMinRange = (minRange + point * (scale - 1)) / scale;
-  let newMaxRange = (maxRange + point * (scale - 1)) / scale;
+  let newMinRange = (minRange + point * (scaleRatio - 1)) / scaleRatio;
+  let newMaxRange = (maxRange + point * (scaleRatio - 1)) / scaleRatio;
 
   let minSpillover = 0;
   let maxSpillover = 0;
@@ -100,12 +100,12 @@ export const useSetupZoom = () => {
       const step = 5;
       const multiplier = isTrackPad(event) ? 1 : 5;
       const scaledStep = (step * multiplier) / 1000;
-      const scale = deltaY < 0 ? 1 - scaledStep : 1 + scaledStep;
+      const scaleRatio = deltaY < 0 ? 1 - scaledStep : 1 + scaledStep;
       const zoomIn = deltaY > 0;
 
       const centerRatio = (point.x - left) / width;
 
-      const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scale, zoomRange);
+      const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoomRange);
 
       const newSpanPercent = newMaxRange - newMinRange;
 
