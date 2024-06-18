@@ -18,6 +18,7 @@ import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewCon
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 import { TreeItem2Provider } from '../TreeItem2Provider';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
+import { useTreeItemState } from './useTreeItemState';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem');
 
@@ -182,6 +183,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     icons: contextIcons,
     runItemPlugins,
     selection: { multiSelect },
+    expansion: { expansionTrigger },
     disabledItemsFocusable,
     indentationAtItemLevel,
     instance,
@@ -207,6 +209,8 @@ export const TreeItem = React.forwardRef(function TreeItem(
     onKeyDown,
     ...other
   } = props;
+
+  const { handleExpansion } = useTreeItemState(itemId);
 
   const { contentRef, rootRef } = runItemPlugins<TreeItemProps>(props);
   const handleRootRef = useForkRef(inRef, rootRef);
@@ -258,6 +262,11 @@ export const TreeItem = React.forwardRef(function TreeItem(
     className: classes.groupTransition,
   });
 
+  const handleIconContainerClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (expansionTrigger === 'iconContainer') {
+      handleExpansion(event);
+    }
+  };
   const ExpansionIcon = expanded ? slots.collapseIcon : slots.expandIcon;
   const { ownerState: expansionIconOwnerState, ...expansionIconProps } = useSlotProps({
     elementType: ExpansionIcon,
@@ -274,6 +283,9 @@ export const TreeItem = React.forwardRef(function TreeItem(
         ...resolveComponentProps(contextIcons.slotProps.expandIcon, tempOwnerState),
         ...resolveComponentProps(inSlotProps?.expandIcon, tempOwnerState),
       };
+    },
+    additionalProps: {
+      onClick: handleIconContainerClick,
     },
   });
   const expansionIcon =
