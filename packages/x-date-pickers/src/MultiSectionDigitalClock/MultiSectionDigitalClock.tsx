@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
@@ -62,6 +63,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
   TDate extends PickerValidDate,
 >(inProps: MultiSectionDigitalClockProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const utils = useUtils<TDate>();
+  const isRtl = useRtl();
 
   const props = useThemeProps({
     props: inProps,
@@ -390,13 +392,24 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
   );
 
   const viewTimeOptions = React.useMemo(() => {
-    return views.reduce(
-      (result, currentView) => {
-        return { ...result, [currentView]: buildViewProps(currentView) };
+    // Filter out the 'meridiem' view and orders the other views
+    const otherViews = views.filter((v) => v !== 'meridiem');
+    const orderedOtherViews = isRtl ? otherViews.toReversed() : otherViews;
+
+    // Build other views to be rendered
+    const result = orderedOtherViews.reduce(
+      (res, currentView) => {
+        return { ...res, [currentView]: buildViewProps(currentView) };
       },
       {} as Record<TimeViewWithMeridiem, MultiSectionDigitalClockViewProps<number>>,
     );
-  }, [views, buildViewProps]);
+    // Add built 'meridiem' view at the end, if it was in the original views
+    if (views.includes('meridiem')) {
+      result.meridiem = buildViewProps('meridiem');
+    }
+
+    return result;
+  }, [views, isRtl, buildViewProps]);
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
