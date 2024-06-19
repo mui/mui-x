@@ -1,8 +1,24 @@
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import { useSlotProps } from '@mui/base/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { useItemHighlighted } from '@mui/x-charts/context';
 import { useInteractionItemProps, SeriesId } from '@mui/x-charts/internals';
+import { HeatmapClasses, getHeatmapUtilityClass, heatmapClasses } from './heatmapClasses';
 
-interface HeatmapItemProps {
+export interface HeatmapItemSlots {
+  /**
+   * The component that renders the heatmap cell.
+   * @default HeatmapCell
+   */
+  cell?: React.ElementType;
+}
+
+export interface HeatmapItemSlotProps {
+  cell?: Partial<React.ComponentPropsWithRef<'rect'>>;
+}
+
+export interface HeatmapItemProps {
   dataIndex: number;
   seriesId: SeriesId;
   width: number;
@@ -10,10 +26,56 @@ interface HeatmapItemProps {
   x: number;
   y: number;
   color: string;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: HeatmapItemSlotProps;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: HeatmapItemSlots;
 }
 
+export interface HeatmapItemOwnerState {
+  seriesId: SeriesId;
+  dataIndex: number;
+  color: string;
+  isFaded: boolean;
+  isHighlighted: boolean;
+  classes?: Partial<HeatmapClasses>;
+}
+
+const HeatmapCell = styled('rect', {
+  name: 'MuiHeatmap',
+  slot: 'Cell',
+  overridesResolver: (_, styles) => styles.arc,
+})<{ ownerState: HeatmapItemOwnerState }>(({ ownerState }) => ({
+  filter:
+    (ownerState.isHighlighted && 'saturate(120%)') ||
+    (ownerState.isFaded && 'saturate(80%)') ||
+    undefined,
+  fill: ownerState.color,
+  shapeRendering: 'crispEdges',
+}));
+
+const useUtilityClasses = (ownerState: HeatmapItemOwnerState) => {
+  const { classes, seriesId, isFaded, isHighlighted } = ownerState;
+  const slots = {
+    cell: [
+      'root',
+      `series-${seriesId}`,
+      isFaded && heatmapClasses.faded,
+      isHighlighted && heatmapClasses.highlighted,
+    ],
+  };
+
+  return composeClasses(slots, getHeatmapUtilityClass, classes);
+};
+
 export function HeatmapItem(props: HeatmapItemProps) {
-  const { dataIndex, seriesId, width, height, x, y, color } = props;
+  const { seriesId, dataIndex, color, slotProps = {}, slots = {}, ...other } = props;
 
   const getInteractionItemProps = useInteractionItemProps();
   const { isFaded, isHighlighted } = useItemHighlighted({
@@ -21,18 +83,24 @@ export function HeatmapItem(props: HeatmapItemProps) {
     dataIndex,
   });
 
-  return (
-    <rect
-      width={width}
-      height={height}
-      x={x}
-      y={y}
-      fill={color}
-      {...getInteractionItemProps({ type: 'heatmap', seriesId, dataIndex })}
-      style={{
-        filter: (isHighlighted && 'saturate(120%)') || (isFaded && 'saturate(80%)') || undefined,
-        shapeRendering: 'crispEdges',
-      }}
-    />
-  );
+  const ownerState = {
+    seriesId,
+    dataIndex,
+    color,
+    isFaded,
+    isHighlighted,
+  };
+  const classes = useUtilityClasses(ownerState);
+
+  const Cell = slots?.cell ?? HeatmapCell;
+  const cellProps = useSlotProps({
+    elementType: Cell,
+    additionalProps: getInteractionItemProps({ type: 'heatmap', seriesId, dataIndex }),
+    externalForwardedProps: { ...other },
+    externalSlotProps: slotProps.cell,
+    ownerState,
+    className: classes.cell,
+  });
+
+  return <Cell {...cellProps} />;
 }

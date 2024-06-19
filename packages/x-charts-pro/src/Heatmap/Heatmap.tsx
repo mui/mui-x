@@ -34,15 +34,18 @@ import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
 import { plugin as heatmapPlugin } from './plugin';
 import { DefaultHeatmapTooltip } from './DefaultHeatmapTooltip';
+import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
 
 export interface HeatmapSlots
   extends ChartsAxisSlots,
     Omit<ChartsTooltipSlots<'heatmap'>, 'axisContent'>,
-    ChartsOverlaySlots {}
+    ChartsOverlaySlots,
+    HeatmapItemSlots {}
 export interface HeatmapSlotProps
   extends ChartsAxisSlotProps,
     Omit<ChartsTooltipSlotProps<'heatmap'>, 'axisContent'>,
-    ChartsOverlaySlotProps {}
+    ChartsOverlaySlotProps,
+    HeatmapItemSlotProps {}
 
 export interface HeatmapProps
   extends Omit<ResponsiveChartContainerProProps, 'series' | 'plugins' | 'xAxis' | 'yAxis'>,
@@ -160,7 +163,7 @@ export const Heatmap = React.forwardRef(function Heatmap(props: HeatmapProps, re
     >
       {onAxisClick && <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />}
       <g clipPath={`url(#${clipPathId})`}>
-        <HeatmapPlot />
+        <HeatmapPlot slots={slots} slotProps={slotProps} />
         <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
       </g>
       <ChartsAxis
