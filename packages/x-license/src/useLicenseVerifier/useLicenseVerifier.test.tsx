@@ -64,7 +64,7 @@ describe('useLicenseVerifier', function test() {
         licensingModel: 'perpetual',
         orderNumber: '12345',
         scope: 'pro',
-        planVersion: 'Q3-2024',
+        planVersion: 'initial',
       });
 
       LicenseInfo.setLicenseKey('');
@@ -90,7 +90,7 @@ describe('useLicenseVerifier', function test() {
         orderNumber: 'MUI-123',
         scope: 'pro',
         licensingModel: 'subscription',
-        planVersion: 'Q3-2024',
+        planVersion: 'initial',
       });
       LicenseInfo.setLicenseKey(expiredLicenseKey);
 
@@ -114,7 +114,7 @@ describe('useLicenseVerifier', function test() {
       // eslint-disable-next-line no-useless-concat
       process.env['NODE_' + 'ENV'] = 'development';
 
-      const initialLicenseKey = generateLicense({
+      const licenseKey = generateLicense({
         expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
         orderNumber: 'MUI-123',
         scope: 'pro',
@@ -122,11 +122,67 @@ describe('useLicenseVerifier', function test() {
         planVersion: 'initial',
       });
 
-      LicenseInfo.setLicenseKey(initialLicenseKey);
+      LicenseInfo.setLicenseKey(licenseKey);
 
       expect(() => {
         render(<TestComponent packageName={'x-charts-pro'} />);
       }).to.toErrorDev(['MUI X: Invalid Product coverage']);
+
+      expect(() => {
+        render(<TestComponent packageName={'x-tree-view-pro'} />);
+      }).to.toErrorDev(['MUI X: Invalid Product coverage']);
+    });
+
+    it('should not throw if the license is covering charts and tree-view', () => {
+      // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
+      // eslint-disable-next-line no-useless-concat
+      process.env['NODE_' + 'ENV'] = 'development';
+
+      const licenseKey = generateLicense({
+        expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
+        orderNumber: 'MUI-123',
+        scope: 'pro',
+        licensingModel: 'subscription',
+        planVersion: 'Q3-2024',
+      });
+
+      LicenseInfo.setLicenseKey(licenseKey);
+
+      expect(() => {
+        render(<TestComponent packageName={'x-charts-pro'} />);
+      }).not.toErrorDev();
+
+      expect(() => {
+        render(<TestComponent packageName={'x-tree-view-pro'} />);
+      }).not.toErrorDev();
+    });
+
+    it('should not throw for existing pro and premium packages', () => {
+      // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
+      // eslint-disable-next-line no-useless-concat
+      process.env['NODE_' + 'ENV'] = 'development';
+
+      const licenseKey = generateLicense({
+        expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
+        orderNumber: 'MUI-123',
+        scope: 'premium',
+        licensingModel: 'subscription',
+        planVersion: 'Q3-2024',
+      });
+
+      LicenseInfo.setLicenseKey(licenseKey);
+
+      expect(() => {
+        render(<TestComponent packageName={'x-data-grid-pro'} />);
+      }).not.toErrorDev();
+
+      expect(() => {
+        render(<TestComponent packageName={'x-data-grid-premium'} />);
+      }).not.toErrorDev();
+
+      expect(() => {
+        render(<TestComponent packageName={'x-date-pickers-pro'} />);
+      }).not.toErrorDev();
     });
   });
 });
