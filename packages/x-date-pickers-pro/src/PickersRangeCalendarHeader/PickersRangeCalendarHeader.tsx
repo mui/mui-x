@@ -56,9 +56,7 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
   });
 
   if (calendars === 1) {
-    return (
-      <PickersCalendarHeader {...other} labelId={`${labelId}-${monthIndex}-label`} ref={ref} />
-    );
+    return <PickersCalendarHeader {...other} labelId={labelId} ref={ref} />;
   }
 
   const selectNextMonth = () => onMonthChange(utils.addMonths(currentMonth, 1), 'left');
@@ -78,7 +76,7 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
       nextLabel={localeText.nextMonth}
       slots={slots}
       slotProps={slotProps}
-      labelId={`${labelId}-${monthIndex}-label`}
+      labelId={labelId}
     >
       {utils.formatByString(month, format ?? `${utils.formats.month} ${utils.formats.year}`)}
     </PickersRangeCalendarHeaderContentMultipleCalendars>
