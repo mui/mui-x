@@ -129,7 +129,7 @@ export type UseTreeViewItemsReorderingSignature = TreeViewPluginSignature<{
   instance: UseTreeViewItemsReorderingInstance;
   state: UseTreeViewItemsReorderingState;
   contextValue: UseTreeViewItemsReorderingContextValue;
-  dependantPlugins: [UseTreeViewItemsSignature, UseTreeViewIdSignature];
+  dependencies: [UseTreeViewItemsSignature, UseTreeViewIdSignature];
 }>;
 
 export interface UseTreeItem2RootSlotPropsFromItemsReordering {
