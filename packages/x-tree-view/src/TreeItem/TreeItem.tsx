@@ -13,7 +13,12 @@ import { unstable_composeClasses as composeClasses } from '@mui/base';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeItemContent } from './TreeItemContent';
 import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
-import { TreeItemMinimalPlugins, TreeItemOwnerState, TreeItemProps } from './TreeItem.types';
+import {
+  TreeItemMinimalPlugins,
+  TreeItemOptionalPlugins,
+  TreeItemOwnerState,
+  TreeItemProps,
+} from './TreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 import { TreeItem2Provider } from '../TreeItem2Provider';
@@ -185,7 +190,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     disabledItemsFocusable,
     indentationAtItemLevel,
     instance,
-  } = useTreeViewContext<TreeItemMinimalPlugins>();
+  } = useTreeViewContext<TreeItemMinimalPlugins, TreeItemOptionalPlugins>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
   const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });

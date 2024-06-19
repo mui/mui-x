@@ -38,5 +38,5 @@ export type UseTreeViewJSXItemsSignature = TreeViewPluginSignature<{
   params: UseTreeViewJSXItemsParameters;
   defaultizedParams: UseTreeViewItemsDefaultizedParameters;
   instance: UseTreeViewItemsInstance;
-  dependantPlugins: [UseTreeViewItemsSignature, UseTreeViewKeyboardNavigationSignature];
+  dependencies: [UseTreeViewItemsSignature, UseTreeViewKeyboardNavigationSignature];
 }>;

@@ -11,6 +11,7 @@ import {
   UseTreeItemIconContainerSlotProps,
   UseTreeItem2CheckboxSlotProps,
   UseTreeItem2MinimalPlugins,
+  UseTreeItem2OptionalPlugins,
 } from './useTreeItem2.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
 import { MuiCancellableEvent } from '../internals/models/MuiCancellableEvent';
@@ -19,9 +20,10 @@ import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext'
 
 export const useTreeItem2 = <
   TSignatures extends UseTreeItem2MinimalPlugins = UseTreeItem2MinimalPlugins,
+  TOptionalSignatures extends UseTreeItem2OptionalPlugins = UseTreeItem2OptionalPlugins,
 >(
   parameters: UseTreeItem2Parameters,
-): UseTreeItem2ReturnValue<TSignatures> => {
+): UseTreeItem2ReturnValue<TSignatures, TOptionalSignatures> => {
   const {
     runItemPlugins,
     selection: { multiSelect, disableSelection, checkboxSelection },
@@ -29,7 +31,7 @@ export const useTreeItem2 = <
     indentationAtItemLevel,
     instance,
     publicAPI,
-  } = useTreeViewContext<TSignatures>();
+  } = useTreeViewContext<TSignatures, TOptionalSignatures>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
   const { id, itemId, label, children, rootRef } = parameters;

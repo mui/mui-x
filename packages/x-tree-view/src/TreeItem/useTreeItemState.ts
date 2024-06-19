@@ -12,11 +12,13 @@ type UseTreeItemStateMinimalPlugins = readonly [
   UseTreeViewItemsSignature,
 ];
 
+type UseTreeItemStateOptionalPlugins = readonly [];
+
 export function useTreeItemState(itemId: string) {
   const {
     instance,
     selection: { multiSelect, checkboxSelection, disableSelection },
-  } = useTreeViewContext<UseTreeItemStateMinimalPlugins>();
+  } = useTreeViewContext<UseTreeItemStateMinimalPlugins, UseTreeItemStateOptionalPlugins>();
 
   const expandable = instance.isItemExpandable(itemId);
   const expanded = instance.isItemExpanded(itemId);

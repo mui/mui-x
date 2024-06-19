@@ -61,7 +61,7 @@ export type UseTreeViewFocusSignature = TreeViewPluginSignature<{
   instance: UseTreeViewFocusInstance;
   publicAPI: UseTreeViewFocusPublicAPI;
   state: UseTreeViewFocusState;
-  dependantPlugins: [
+  dependencies: [
     UseTreeViewIdSignature,
     UseTreeViewItemsSignature,
     UseTreeViewSelectionSignature,
