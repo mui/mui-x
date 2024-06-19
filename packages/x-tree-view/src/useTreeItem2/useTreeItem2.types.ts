@@ -7,7 +7,7 @@ import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems
 import { UseTreeViewIdSignature } from '../internals/plugins/useTreeViewId';
 import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
 import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
-import { UseTreeViewExpansionSignature } from '../internals';
+import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
 
 export interface UseTreeItem2Parameters {
   /**
