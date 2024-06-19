@@ -153,7 +153,7 @@ const buildQuickFilterApplier = (filterModel: GridFilterModel, columns: GridColD
     shouldApplyFilter?: (field: string) => boolean,
   ) {
     const result = {} as Record<string, boolean>;
-    /* eslint-disable no-restricted-syntax, no-labels */
+
     outer: for (let v = 0; v < quickFilterValues.length; v += 1) {
       const filterValue = quickFilterValues[v];
 

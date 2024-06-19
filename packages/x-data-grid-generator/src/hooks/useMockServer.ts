@@ -47,7 +47,7 @@ function decodeParams(url: string): GridGetRowsParams {
   const params = new URL(url).searchParams;
   const decodedParams = {} as any;
   const array = Array.from(params.entries());
-  // eslint-disable-next-line no-restricted-syntax
+
   for (const [key, value] of array) {
     try {
       decodedParams[key] = JSON.parse(decodeURIComponent(value));
