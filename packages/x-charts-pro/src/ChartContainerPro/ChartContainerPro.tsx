@@ -1,11 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  ChartContainerProps,
-  ChartsSurface,
-  HighlightedProvider,
-  ZAxisContextProvider,
-} from '@mui/x-charts';
+import { ChartContainerProps } from '@mui/x-charts/ChartContainer';
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { HighlightedProvider, ZAxisContextProvider } from '@mui/x-charts/context';
 import {
   ChartsAxesGradients,
   ColorProvider,
@@ -16,7 +13,7 @@ import {
 } from '@mui/x-charts/internals';
 import { CartesianContextProviderPro } from '../context/CartesianProviderPro';
 
-export type ChartContainerProProps = ChartContainerProps;
+export interface ChartContainerProProps extends ChartContainerProps {}
 
 const ChartContainerPro = React.forwardRef(function ChartContainer(
   props: ChartContainerProProps,
