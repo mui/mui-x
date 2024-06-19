@@ -38,6 +38,7 @@ export function HeatmapPlot(props: HeatmapPlotProps) {
             color={color}
             dataIndex={dataIndex}
             seriesId={series.seriesOrder[0]}
+            value={value}
             slots={props.slots}
             slotProps={props.slotProps}
           />

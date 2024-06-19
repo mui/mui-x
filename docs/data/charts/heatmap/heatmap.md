@@ -52,3 +52,7 @@ The available options are available in the [dedicated page](/x/react-charts/axis
 ## Legend 🚧
 
 ## Labels 🚧
+
+## Custom item
+
+{{"demo": "CustomItem.js"}}

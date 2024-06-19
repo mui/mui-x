@@ -21,6 +21,7 @@ export interface HeatmapItemSlotProps {
 export interface HeatmapItemProps {
   dataIndex: number;
   seriesId: SeriesId;
+  value: number;
   width: number;
   height: number;
   x: number;
@@ -75,7 +76,7 @@ const useUtilityClasses = (ownerState: HeatmapItemOwnerState) => {
 };
 
 export function HeatmapItem(props: HeatmapItemProps) {
-  const { seriesId, dataIndex, color, slotProps = {}, slots = {}, ...other } = props;
+  const { seriesId, dataIndex, color, value, slotProps = {}, slots = {}, ...other } = props;
 
   const getInteractionItemProps = useInteractionItemProps();
   const { isFaded, isHighlighted } = useItemHighlighted({
@@ -87,6 +88,7 @@ export function HeatmapItem(props: HeatmapItemProps) {
     seriesId,
     dataIndex,
     color,
+    value,
     isFaded,
     isHighlighted,
   };
@@ -95,7 +97,7 @@ export function HeatmapItem(props: HeatmapItemProps) {
   const Cell = slots?.cell ?? HeatmapCell;
   const cellProps = useSlotProps({
     elementType: Cell,
-    additionalProps: getInteractionItemProps({ type: 'heatmap', seriesId, dataIndex }),
+    additionalProps: { ...getInteractionItemProps({ type: 'heatmap', seriesId, dataIndex }) },
     externalForwardedProps: { ...other },
     externalSlotProps: slotProps.cell,
     ownerState,
