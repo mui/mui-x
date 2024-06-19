@@ -24,3 +24,4 @@ export * from '@mui/x-charts/Gauge';
 export * from '@mui/x-charts/ChartsSurface';
 
 export * from './ResponsiveChartContainerPro';
+export * from './ChartContainerPro';
