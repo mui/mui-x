@@ -11,6 +11,7 @@
       "type": { "name": "string" },
       "default": "`${adapter.formats.month} ${adapter.formats.year}`"
     },
+    "labelId": { "type": { "name": "string" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
