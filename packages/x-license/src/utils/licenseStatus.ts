@@ -7,7 +7,7 @@ export enum LICENSE_STATUS {
   ExpiredVersion = 'ExpiredVersion',
   Valid = 'Valid',
   OutOfScope = 'OutOfScope',
-  OutOfProductScope = 'OutOfProductScope',
+  ProductNotCovered = 'ProductNotCovered',
 }
 
 export type LicenseStatus = keyof typeof LICENSE_STATUS;

@@ -126,11 +126,11 @@ describe('useLicenseVerifier', function test() {
 
       expect(() => {
         render(<TestComponent packageName={'x-charts-pro'} />);
-      }).to.toErrorDev(['MUI X: Invalid Product coverage']);
+      }).to.toErrorDev(['MUI X: Product not not covered by plan.']);
 
       expect(() => {
         render(<TestComponent packageName={'x-tree-view-pro'} />);
-      }).to.toErrorDev(['MUI X: Invalid Product coverage']);
+      }).to.toErrorDev(['MUI X: Product not not covered by plan.']);
     });
 
     it('should not throw if the license is covering charts and tree-view', () => {
