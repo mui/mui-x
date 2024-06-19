@@ -35,7 +35,7 @@ import {
 import { updateRowTree } from '../../../utils/tree/updateRowTree';
 import { getVisibleRowsLookup } from '../../../utils/tree/utils';
 
-const SERVER_SIDE_TREE_DATA_STRATEGY = 'serverSideTreeData';
+const DATA_SOURCE_TREE_DATA_STRATEGY = 'dataSourceTreeData';
 
 export const useGridDataSourceTreeDataPreProcessors = (
   privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
@@ -53,7 +53,7 @@ export const useGridDataSourceTreeDataPreProcessors = (
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
       'rowTree',
-      SERVER_SIDE_TREE_DATA_STRATEGY,
+      DATA_SOURCE_TREE_DATA_STRATEGY,
       props.treeData && props.unstable_dataSource ? () => true : () => false,
     );
   }, [privateApiRef, props.treeData, props.unstable_dataSource]);
@@ -64,7 +64,7 @@ export const useGridDataSourceTreeDataPreProcessors = (
     let colDefOverride: GridGroupingColDefOverride | null | undefined;
     if (typeof groupingColDefProp === 'function') {
       const params: GridGroupingColDefOverrideParams = {
-        groupingName: SERVER_SIDE_TREE_DATA_STRATEGY,
+        groupingName: DATA_SOURCE_TREE_DATA_STRATEGY,
         fields: [],
       };
 
@@ -171,7 +171,7 @@ export const useGridDataSourceTreeDataPreProcessors = (
           nodes: params.updates.rows.map(getRowTreeBuilderNode),
           defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
           isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-          groupingName: SERVER_SIDE_TREE_DATA_STRATEGY,
+          groupingName: DATA_SOURCE_TREE_DATA_STRATEGY,
           onDuplicatePath,
         });
       }
@@ -187,7 +187,7 @@ export const useGridDataSourceTreeDataPreProcessors = (
         previousTreeDepth: params.previousTreeDepths!,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-        groupingName: SERVER_SIDE_TREE_DATA_STRATEGY,
+        groupingName: DATA_SOURCE_TREE_DATA_STRATEGY,
       });
     },
     [
@@ -212,25 +212,25 @@ export const useGridDataSourceTreeDataPreProcessors = (
   useGridRegisterPipeProcessor(privateApiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterStrategyProcessor(
     privateApiRef,
-    SERVER_SIDE_TREE_DATA_STRATEGY,
+    DATA_SOURCE_TREE_DATA_STRATEGY,
     'rowTreeCreation',
     createRowTreeForTreeData,
   );
   useGridRegisterStrategyProcessor(
     privateApiRef,
-    SERVER_SIDE_TREE_DATA_STRATEGY,
+    DATA_SOURCE_TREE_DATA_STRATEGY,
     'filtering',
     filterRows,
   );
   useGridRegisterStrategyProcessor(
     privateApiRef,
-    SERVER_SIDE_TREE_DATA_STRATEGY,
+    DATA_SOURCE_TREE_DATA_STRATEGY,
     'sorting',
     sortRows,
   );
   useGridRegisterStrategyProcessor(
     privateApiRef,
-    SERVER_SIDE_TREE_DATA_STRATEGY,
+    DATA_SOURCE_TREE_DATA_STRATEGY,
     'visibleRowsLookupCreation',
     getVisibleRowsLookup,
   );
