@@ -82,7 +82,8 @@ export function computeValue(
 
       const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
       const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
-      const scaleRange = axisName === 'x' ? range : [...range].reverse();
+      // Reverse range because ordinal scales are presented from top to bottom on y-axis
+      const scaleRange = axisName === 'x' ? range : [range[1], range[0]];
 
       completeAxis[axis.id] = {
         categoryGapRatio,
