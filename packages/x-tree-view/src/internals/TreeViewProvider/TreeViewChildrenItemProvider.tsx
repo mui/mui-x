@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTreeViewContext } from './useTreeViewContext';
-import { escapeOperandAttributeSelector } from '../../../../x-data-grid/src/utils/domUtils';
+import { escapeOperandAttributeSelector } from '../utils/utils';
 import type { UseTreeViewJSXItemsSignature } from '../plugins/useTreeViewJSXItems';
 import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
 import type { UseTreeViewIdSignature } from '../plugins/useTreeViewId';
