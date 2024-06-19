@@ -27,6 +27,9 @@ const getRange = (drawingArea: DrawingArea, axisName: 'x' | 'y', isReverse?: boo
   return isReverse ? range.reverse() : range;
 };
 
+const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
+const DEFAULT_BAR_GAP_RATIO = 0.1;
+
 export function computeValue(
   drawingArea: DrawingArea,
   formattedSeries: FormattedSeries,
@@ -77,9 +80,6 @@ export function computeValue(
     const range = getRange(drawingArea, axisName, axis.reverse);
 
     if (isBandScaleConfig(axis)) {
-      const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
-      const DEFAULT_BAR_GAP_RATIO = 0.1;
-
       const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
       const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
       // Reverse range because ordinal scales are presented from top to bottom on y-axis
