@@ -5,7 +5,8 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import useId from '@mui/utils/useId';
 import { Watermark } from '@mui/x-license';
 import {
   applyDefaultDate,
@@ -231,6 +232,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
 
   const utils = useUtils<TDate>();
   const now = useNow<TDate>(timezone);
+  const id = useId();
 
   const { rangePosition, onRangePositionChange } = useRangePosition({
     rangePosition: rangePositionProp,
@@ -548,10 +550,16 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
       <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
       {calendarMonths.map((monthIndex) => {
         const month = visibleMonths[monthIndex];
+        const labelId = `${id}-grid-${monthIndex}-label`;
 
         return (
           <DateRangeCalendarMonthContainer key={monthIndex} className={classes.monthContainer}>
-            <CalendarHeader<TDate> {...calendarHeaderProps} month={month} monthIndex={monthIndex} />
+            <CalendarHeader<TDate>
+              {...calendarHeaderProps}
+              month={month}
+              monthIndex={monthIndex}
+              labelId={labelId}
+            />
             <DayCalendarForRange<TDate>
               className={classes.dayCalendar}
               {...calendarState}
@@ -575,6 +583,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
               fixedWeekNumber={fixedWeekNumber}
               displayWeekNumber={displayWeekNumber}
               timezone={timezone}
+              gridLabelId={labelId}
             />
           </DateRangeCalendarMonthContainer>
         );

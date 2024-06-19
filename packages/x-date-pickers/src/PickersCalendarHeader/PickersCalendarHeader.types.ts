@@ -67,6 +67,10 @@ export interface PickersCalendarHeaderProps<TDate extends PickerValidDate>
   view: DateView;
   reduceAnimations: boolean;
   onViewChange?: (view: DateView) => void;
+  /**
+   * Id of the calendar text element.
+   * It is used to establish an `aria-labelledby` relationship with the calendar `grid` element.
+   */
   labelId?: string;
   /**
    * Override or extend the styles applied to the component.
