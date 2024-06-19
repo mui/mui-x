@@ -25,6 +25,7 @@ import {
   useViews,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
+import useId from '@mui/utils/useId';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import {
   dateRangeCalendarClasses,
@@ -231,6 +232,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
 
   const utils = useUtils<TDate>();
   const now = useNow<TDate>(timezone);
+  const id = useId();
 
   const { rangePosition, onRangePositionChange } = useRangePosition({
     rangePosition: rangePositionProp,
@@ -368,6 +370,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
       timezone,
       slots,
       slotProps,
+      labelId: `${id}-grid`,
     },
     ownerState: props,
   });
@@ -575,6 +578,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
               fixedWeekNumber={fixedWeekNumber}
               displayWeekNumber={displayWeekNumber}
               timezone={timezone}
+              gridLabelId={`${id}-grid-${monthIndex}-label`}
             />
           </DateRangeCalendarMonthContainer>
         );

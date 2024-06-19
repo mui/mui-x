@@ -29,7 +29,7 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
   const utils = useUtils<TDate>();
   const localeText = useLocaleText<TDate>();
 
-  const { calendars, month, monthIndex, ...other } = props;
+  const { calendars, month, monthIndex, labelId, ...other } = props;
   const {
     format,
     slots,
@@ -56,7 +56,9 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
   });
 
   if (calendars === 1) {
-    return <PickersCalendarHeader {...other} ref={ref} />;
+    return (
+      <PickersCalendarHeader {...other} labelId={`${labelId}-${monthIndex}-label`} ref={ref} />
+    );
   }
 
   const selectNextMonth = () => onMonthChange(utils.addMonths(currentMonth, 1), 'left');
@@ -76,6 +78,7 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
       nextLabel={localeText.nextMonth}
       slots={slots}
       slotProps={slotProps}
+      labelId={`${labelId}-${monthIndex}-label`}
     >
       {utils.formatByString(month, format ?? `${utils.formats.month} ${utils.formats.year}`)}
     </PickersRangeCalendarHeaderContentMultipleCalendars>
