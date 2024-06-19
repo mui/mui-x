@@ -38,7 +38,7 @@ function CustomCell(props) {
         width={width - 2 * 4}
         height={height - 2 * 4}
         fill={ownerState.color}
-        clipPath="inset(0px round 4px)"
+        clipPath={ownerState.isHighlighted ? undefined : 'inset(0px round 10px)'}
       />
       <text
         x={x + width / 2}
@@ -59,7 +59,7 @@ export default function CustomItem() {
         slots={{ cell: CustomCell }}
         xAxis={[{ data: [1, 2, 3, 4] }]}
         yAxis={[{ data: ['A', 'B', 'C', 'D', 'E'] }]}
-        series={[{ data }]}
+        series={[{ data, highlightScope: { highlight: 'item' } }]}
         margin={{ top: 5, right: 5, left: 20 }}
         height={300}
       />

@@ -42,6 +42,10 @@ Planned work:
 
 {{"demo": "HighlightHeatmap.js"}}
 
+You can modify the styling with CSS selectors.
+
+{{"demo": "HighlightClasses.js"}}
+
 ### Axes
 
 The Heatmap axes can be customized like any other chart axis.

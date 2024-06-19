@@ -4,7 +4,7 @@ import { useSlotProps } from '@mui/base/utils';
 import composeClasses from '@mui/utils/composeClasses';
 import { useItemHighlighted } from '@mui/x-charts/context';
 import { useInteractionItemProps, SeriesId } from '@mui/x-charts/internals';
-import { HeatmapClasses, getHeatmapUtilityClass, heatmapClasses } from './heatmapClasses';
+import { HeatmapClasses, getHeatmapUtilityClass } from './heatmapClasses';
 
 export interface HeatmapItemSlots {
   /**
@@ -64,14 +64,8 @@ const HeatmapCell = styled('rect', {
 const useUtilityClasses = (ownerState: HeatmapItemOwnerState) => {
   const { classes, seriesId, isFaded, isHighlighted } = ownerState;
   const slots = {
-    cell: [
-      'root',
-      `series-${seriesId}`,
-      isFaded && heatmapClasses.faded,
-      isHighlighted && heatmapClasses.highlighted,
-    ],
+    cell: ['cell', `series-${seriesId}`, isFaded && 'faded', isHighlighted && 'highlighted'],
   };
-
   return composeClasses(slots, getHeatmapUtilityClass, classes);
 };
 
