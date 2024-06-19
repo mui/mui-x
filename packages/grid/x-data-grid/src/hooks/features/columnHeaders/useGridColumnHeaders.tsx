@@ -129,7 +129,9 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   );
 
   React.useEffect(() => {
-    apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
+    if (apiRef.current.columnHeadersContainerElementRef?.current) {
+      apiRef.current.columnHeadersContainerElementRef.current.scrollLeft = 0;
+    }
   }, [apiRef]);
 
   // memoize `getFirstColumnIndexToRender`, since it's called on scroll

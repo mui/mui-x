@@ -586,6 +586,17 @@ async function initializeEnvironment(
           await input.press('2');
           expect(await input.inputValue()).to.equal('02/11/2022');
         });
+
+        it('should correctly select a day in a calendar with "AdapterMomentJalaali"', async () => {
+          await renderFixture('DatePicker/MomentJalaliDateCalendar');
+
+          await page.getByRole('gridcell', { name: '11' }).click();
+
+          const day11 = page.getByRole('gridcell', { name: '11' });
+          expect(await day11.getAttribute('aria-selected')).to.equal('true');
+          // check that selecting a day doesn't change the day text
+          expect(await day11.textContent()).to.equal('11');
+        });
       });
 
       describe('<MobileDatePicker />', () => {
@@ -762,6 +773,28 @@ async function initializeEnvironment(
         await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
 
         expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022 – 04/13/2022');
+      });
+
+      it('should not change timezone when changing the start date from non DST to DST', async () => {
+        // firefox in CI is not happy with this test
+        if (browserType.name() === 'firefox') {
+          return;
+        }
+        const thrownErrors: string[] = [];
+        context.on('weberror', (webError) => {
+          thrownErrors.push(webError.error().message);
+        });
+
+        await renderFixture('DatePicker/SingleDesktopDateRangePickerWithTZ');
+
+        // open the picker
+        await page.getByRole('textbox').click();
+
+        await page.getByRole('textbox').press('ArrowDown');
+
+        expect(thrownErrors).not.to.contain(
+          'MUI X: The timezone of the start and the end date should be the same.',
+        );
       });
     });
   });

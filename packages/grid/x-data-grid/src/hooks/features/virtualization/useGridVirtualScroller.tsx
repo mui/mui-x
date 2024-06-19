@@ -17,6 +17,7 @@ import {
 } from '../columns/gridColumnsSelector';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridEventListener } from '../../../models/events';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { clamp } from '../../../utils/utils';
@@ -211,35 +212,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     }
     return -1;
   }, [cellFocus, visibleColumns]);
-  const getNearestIndexToRender = React.useCallback(
-    (offset: number) => {
-      const lastMeasuredIndexRelativeToAllRows = apiRef.current.getLastMeasuredRowIndex();
-      let allRowsMeasured = lastMeasuredIndexRelativeToAllRows === Infinity;
-      if (currentPage.range?.lastRowIndex && !allRowsMeasured) {
-        // Check if all rows in this page are already measured
-        allRowsMeasured = lastMeasuredIndexRelativeToAllRows >= currentPage.range.lastRowIndex;
-      }
-
-      const lastMeasuredIndexRelativeToCurrentPage = clamp(
-        lastMeasuredIndexRelativeToAllRows - (currentPage.range?.firstRowIndex || 0),
-        0,
-        rowsMeta.positions.length,
-      );
-
-      if (allRowsMeasured || rowsMeta.positions[lastMeasuredIndexRelativeToCurrentPage] >= offset) {
-        // If all rows were measured (when no row has "auto" as height) or all rows before the offset
-        // were measured, then use a binary search because it's faster.
-        return binarySearch(offset, rowsMeta.positions);
-      }
-
-      // Otherwise, use an exponential search.
-      // If rows have "auto" as height, their positions will be based on estimated heights.
-      // In this case, we can skip several steps until we find a position higher than the offset.
-      // Inspired by https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/utils/CellSizeAndPositionManager.js
-      return exponentialSearch(offset, rowsMeta.positions, lastMeasuredIndexRelativeToCurrentPage);
-    },
-    [apiRef, currentPage.range?.firstRowIndex, currentPage.range?.lastRowIndex, rowsMeta.positions],
-  );
 
   const computeRenderContext = React.useCallback(() => {
     if (!enabled) {
@@ -255,11 +227,14 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     // Clamp the value because the search may return an index out of bounds.
     // In the last index, this is not needed because Array.slice doesn't include it.
-    const firstRowIndex = Math.min(getNearestIndexToRender(top), rowsMeta.positions.length - 1);
+    const firstRowIndex = Math.min(
+      getNearestIndexToRender(apiRef, currentPage, rowsMeta, top),
+      rowsMeta.positions.length - 1,
+    );
 
     const lastRowIndex = rootProps.autoHeight
       ? firstRowIndex + currentPage.rows.length
-      : getNearestIndexToRender(top + containerDimensions.height!);
+      : getNearestIndexToRender(apiRef, currentPage, rowsMeta, top + containerDimensions.height!);
 
     let firstColumnIndex = 0;
     let lastColumnIndex = columnPositions.length;
@@ -298,11 +273,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   }, [
     enabled,
     enabledForColumns,
-    getNearestIndexToRender,
-    rowsMeta.positions.length,
+    rowsMeta,
     rootProps.autoHeight,
     rootProps.rowBuffer,
-    currentPage.rows,
+    currentPage,
     columnPositions,
     visibleColumns.length,
     apiRef,
@@ -833,3 +807,35 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     getRenderZoneProps: () => ({ ref: renderZoneRef, role: 'rowgroup' }),
   };
 };
+
+function getNearestIndexToRender(
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  currentPage: ReturnType<typeof useGridVisibleRows>,
+  rowsMeta: ReturnType<typeof gridRowsMetaSelector>,
+  offset: number,
+) {
+  const lastMeasuredIndexRelativeToAllRows = apiRef.current.getLastMeasuredRowIndex();
+  let allRowsMeasured = lastMeasuredIndexRelativeToAllRows === Infinity;
+  if (currentPage.range?.lastRowIndex && !allRowsMeasured) {
+    // Check if all rows in this page are already measured
+    allRowsMeasured = lastMeasuredIndexRelativeToAllRows >= currentPage.range.lastRowIndex;
+  }
+
+  const lastMeasuredIndexRelativeToCurrentPage = clamp(
+    lastMeasuredIndexRelativeToAllRows - (currentPage.range?.firstRowIndex || 0),
+    0,
+    rowsMeta.positions.length,
+  );
+
+  if (allRowsMeasured || rowsMeta.positions[lastMeasuredIndexRelativeToCurrentPage] >= offset) {
+    // If all rows were measured (when no row has "auto" as height) or all rows before the offset
+    // were measured, then use a binary search because it's faster.
+    return binarySearch(offset, rowsMeta.positions);
+  }
+
+  // Otherwise, use an exponential search.
+  // If rows have "auto" as height, their positions will be based on estimated heights.
+  // In this case, we can skip several steps until we find a position higher than the offset.
+  // Inspired by https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/utils/CellSizeAndPositionManager.js
+  return exponentialSearch(offset, rowsMeta.positions, lastMeasuredIndexRelativeToCurrentPage);
+}

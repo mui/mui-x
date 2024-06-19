@@ -152,13 +152,15 @@ export const useDesktopPicker = <
     fieldProps.InputProps = {
       ...fieldProps.InputProps,
       ref: containerRef,
-      [`${inputAdornmentProps.position}Adornment`]: (
-        <InputAdornment {...inputAdornmentProps}>
-          <OpenPickerButton {...openPickerButtonProps}>
-            <OpenPickerIcon {...innerSlotProps?.openPickerIcon} />
-          </OpenPickerButton>
-        </InputAdornment>
-      ),
+      ...(!props.disableOpenPicker && {
+        [`${inputAdornmentProps.position}Adornment`]: (
+          <InputAdornment {...inputAdornmentProps}>
+            <OpenPickerButton {...openPickerButtonProps}>
+              <OpenPickerIcon {...innerSlotProps?.openPickerIcon} />
+            </OpenPickerButton>
+          </InputAdornment>
+        ),
+      }),
     };
   }
 

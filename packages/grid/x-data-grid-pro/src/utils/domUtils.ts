@@ -58,7 +58,10 @@ export function findGridCellElementsFromCol(col: HTMLElement, api: GridPrivateAp
 }
 
 export function findGridHeader(api: GridPrivateApiPro, field: string) {
-  const headers = api.columnHeadersContainerElementRef!.current!;
+  const headers = api.columnHeadersContainerElementRef?.current;
+  if (!headers) {
+    return null;
+  }
   return headers.querySelector(`:scope > div > div > [data-field="${field}"][role="columnheader"]`);
 }
 

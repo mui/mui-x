@@ -3,6 +3,184 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.20.1
+
+_Jun 6, 2024_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid-premium@6.20.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+- [DataGridPremium] Fix clipboard paste not working when cell loses focus (#12737) @cherniavskii
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.20.1`
+
+- [pickers] Fix `AdapterDayjs` timezone behavior (#13373) @LukasTy
+
+#### `@mui/x-data-grid-pro@6.20.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers-pro@7.20.1`.
+
+### Docs
+
+- [docs] Fix Pickers FAQ callout (#13243) @LukasTy
+
+### Core
+
+- [core] Stop publishing v6 under latest tag (#13269) @cherniavskii
+
+## 6.20.0
+
+_May 24, 2024_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.20.0`
+
+- [DataGrid] Escape formulas in CSV and Excel export (#13190) @cherniavskii
+
+#### `@mui/x-data-grid-pro@6.20.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.20.0`.
+
+#### `@mui/x-data-grid-premium@6.20.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.20.0`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.20.0`
+
+- [pickers] Fix `disableOpenPicker` prop behavior (#13221) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.20.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.20.0`.
+
+## 6.19.12
+
+_May 17, 2024_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.19.12`
+
+- [pickers] Fix `AdapterMomentJalaali` regression (#13150) @LukasTy
+
+#### `@mui/x-date-pickers-pro@6.19.12` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@6.19.12`.
+
+### Docs
+
+- [docs] Use MUI X v6 in Codesandbox and Stackblitz demos (#12838) @cherniavskii
+
+## 6.19.11
+
+_Apr 18, 2024_
+
+We'd like to offer a big thanks to the 1 contributor who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.19.11`
+
+- [DataGrid] Fix virtualization memory leak (#12812) @romgrk
+
+#### `@mui/x-data-grid-pro@6.19.11` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.19.11`.
+
+#### `@mui/x-data-grid-premium@6.19.11` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.19.11`.
+
+## 6.19.10
+
+_Apr 12, 2024_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.19.10`
+
+- [DataGrid] Do not escape double quotes when copying to clipboard (#12734) @cherniavskii
+- [DataGrid] Fix bug in suspense (#12754) @cherniavskii
+
+#### `@mui/x-data-grid-pro@6.19.10` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.19.10`.
+
+#### `@mui/x-data-grid-premium@6.19.10` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.19.10`.
+
+### Core
+
+- [core] Update the docs release source branch (#12685) @LukasTy
+
+## 6.19.9
+
+_Apr 5, 2024_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.19.9`
+
+- [DataGrid] Remove legacy editing API event: `rowEditCommit` (#12087) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@6.19.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.19.9`.
+
+#### `@mui/x-data-grid-premium@6.19.9` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.19.9`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.19.9`
+
+No changes.
+
+#### `@mui/x-date-pickers-pro@6.19.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+- [DateRangePicker] Fix selection behavior with single input field when `readOnly` (#12605) @LukasTy
+
+### Docs
+
+- [docs] Adds a recipe for the `checkboxSelectionVisibleOnly` prop (#12667) @michelengelen
+- [docs] Explain the use of `_action: 'delete'` in `processRowUpdate` (#12673) @michelengelen
+
+### Core
+
+- [core] Use Circle CI context (#12607) @cherniavskii
+
 ## 6.19.8
 
 _Mar 20, 2024_
