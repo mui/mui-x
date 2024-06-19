@@ -405,8 +405,8 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
 
   const viewTimeOptions = React.useMemo(() => {
     return views.reduce(
-      (res, currentView) => {
-        return { ...res, [currentView]: buildViewProps(currentView) };
+      (result, currentView) => {
+        return { ...result, [currentView]: buildViewProps(currentView) };
       },
       {} as Record<TimeViewWithMeridiem, MultiSectionDigitalClockViewProps<number>>,
     );
