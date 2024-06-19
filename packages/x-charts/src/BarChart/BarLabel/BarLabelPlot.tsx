@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
 import type { AnimationData, CompletedBarData } from '../types';
 import { BarLabelItem, BarLabelItemProps } from './BarLabelItem';
@@ -65,30 +64,5 @@ function BarLabelPlot(props: BarLabelPlotProps) {
     </React.Fragment>
   );
 }
-
-BarLabelPlot.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
-  bars: PropTypes.arrayOf(
-    PropTypes.shape({
-      color: PropTypes.string.isRequired,
-      dataIndex: PropTypes.number.isRequired,
-      height: PropTypes.number.isRequired,
-      layout: PropTypes.oneOf(['horizontal', 'vertical']),
-      maskId: PropTypes.string.isRequired,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      value: PropTypes.number,
-      width: PropTypes.number.isRequired,
-      x: PropTypes.number.isRequired,
-      xOrigin: PropTypes.number.isRequired,
-      y: PropTypes.number.isRequired,
-      yOrigin: PropTypes.number.isRequired,
-    }),
-  ).isRequired,
-  skipAnimation: PropTypes.bool,
-} as any;
 
 export { BarLabelPlot };
