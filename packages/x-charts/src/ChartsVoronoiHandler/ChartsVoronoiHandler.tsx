@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import { Delaunay } from 'd3-delaunay';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { InteractionContext } from '../context/InteractionProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
-import { SeriesContext } from '../context/SeriesContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { getSVGPoint } from '../internals/utils';
 import { ScatterItemIdentifier } from '../models';
 import { SeriesId } from '../models/seriesType/common';
 import { useDrawingArea, useSvgRef } from '../hooks';
 import { useHighlighted } from '../context';
+import { useScatterSeries } from '../hooks/useSeries';
 
 export type ChartsVoronoiHandlerProps = {
   /**
@@ -32,10 +32,10 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const { voronoiMaxRadius, onItemClick } = props;
   const svgRef = useSvgRef();
   const { left, top, width, height } = useDrawingArea();
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = React.useContext(CartesianContext);
+  const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
   const { dispatch } = React.useContext(InteractionContext);
 
-  const { series, seriesOrder } = React.useContext(SeriesContext).scatter ?? {};
+  const { series, seriesOrder } = useScatterSeries() ?? {};
   const voronoiRef = React.useRef<Record<string, VoronoiSeries>>({});
   const delauneyRef = React.useRef<Delaunay<any> | undefined>(undefined);
 

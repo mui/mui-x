@@ -29,7 +29,7 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
   const utils = useUtils<TDate>();
   const localeText = useLocaleText<TDate>();
 
-  const { calendars, month, monthIndex, ...other } = props;
+  const { calendars, month, monthIndex, labelId, ...other } = props;
   const {
     format,
     slots,
@@ -56,7 +56,7 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
   });
 
   if (calendars === 1) {
-    return <PickersCalendarHeader {...other} ref={ref} />;
+    return <PickersCalendarHeader {...other} labelId={labelId} ref={ref} />;
   }
 
   const selectNextMonth = () => onMonthChange(utils.addMonths(currentMonth, 1), 'left');
@@ -76,6 +76,7 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
       nextLabel={localeText.nextMonth}
       slots={slots}
       slotProps={slotProps}
+      labelId={labelId}
     >
       {utils.formatByString(month, format ?? `${utils.formats.month} ${utils.formats.year}`)}
     </PickersRangeCalendarHeaderContentMultipleCalendars>
@@ -105,6 +106,10 @@ PickersRangeCalendarHeader.propTypes = {
    * @default `${adapter.formats.month} ${adapter.formats.year}`
    */
   format: PropTypes.string,
+  /**
+   * Id of the calendar text element.
+   * It is used to establish an `aria-labelledby` relationship with the calendar `grid` element.
+   */
   labelId: PropTypes.string,
   maxDate: PropTypes.object.isRequired,
   minDate: PropTypes.object.isRequired,

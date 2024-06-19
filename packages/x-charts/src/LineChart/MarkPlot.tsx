@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SeriesContext } from '../context/SeriesContextProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { useChartId } from '../hooks/useChartId';
@@ -9,6 +8,7 @@ import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
 import { cleanId } from '../internals/utils';
 import getColor from './getColor';
+import { useLineSeries } from '../hooks/useSeries';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -55,8 +55,8 @@ export interface MarkPlotProps
 function MarkPlot(props: MarkPlotProps) {
   const { slots, slotProps, skipAnimation, onItemClick, ...other } = props;
 
-  const seriesData = React.useContext(SeriesContext).line;
-  const axisData = React.useContext(CartesianContext);
+  const seriesData = useLineSeries();
+  const axisData = useCartesianContext();
   const chartId = useChartId();
 
   const Mark = slots?.mark ?? MarkElement;

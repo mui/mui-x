@@ -1,5 +1,6 @@
 import type { TreeViewAnyPluginSignature } from './plugin';
-import type { MergePluginsProperty } from './helpers';
+import type { MergeSignaturesProperty } from './helpers';
+import type { TreeViewCorePluginSignatures } from '../corePlugins';
 
 export interface TreeViewItemMeta {
   id: string;
@@ -23,12 +24,18 @@ export interface TreeViewModel<TValue> {
   setControlledValue: (value: TValue | ((prevValue: TValue) => TValue)) => void;
 }
 
-export type TreeViewInstance<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
-  MergePluginsProperty<TSignatures, 'instance'>;
+export type TreeViewInstance<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
+> = MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'instance'> &
+  Partial<MergeSignaturesProperty<TOptionalSignatures, 'instance'>>;
 
-export type TreeViewPublicAPI<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
-  MergePluginsProperty<TSignatures, 'publicAPI'>;
+export type TreeViewPublicAPI<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
+> = MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'publicAPI'> &
+  Partial<MergeSignaturesProperty<TOptionalSignatures, 'instance'>>;
 
 export type TreeViewExperimentalFeatures<
   TSignatures extends readonly TreeViewAnyPluginSignature[],
-> = { [key in MergePluginsProperty<TSignatures, 'experimentalFeatures'>]?: boolean };
+> = { [key in MergeSignaturesProperty<TSignatures, 'experimentalFeatures'>]?: boolean };
