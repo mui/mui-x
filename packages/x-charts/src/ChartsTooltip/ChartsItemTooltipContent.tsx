@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { SxProps, Theme } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { ItemInteractionData } from '../context/InteractionProvider';
@@ -41,6 +40,9 @@ export interface ChartsItemTooltipContentProps<T extends ChartSeriesType> {
   classes: ChartsItemContentProps<T>['classes'];
 }
 
+/**
+ * @ignore - internal component.
+ */
 function ChartsItemTooltipContent<T extends ChartSeriesType>(
   props: ChartsItemTooltipContentProps<T>,
 ) {
@@ -79,39 +81,5 @@ function ChartsItemTooltipContent<T extends ChartSeriesType>(
   });
   return <Content {...chartTooltipContentProps} />;
 }
-
-ChartsItemTooltipContent.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  classes: PropTypes.object.isRequired,
-  content: PropTypes.elementType,
-  contentProps: PropTypes.shape({
-    classes: PropTypes.object,
-    getColor: PropTypes.func,
-    itemData: PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
-    }),
-    series: PropTypes.object,
-    sx: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-      PropTypes.func,
-      PropTypes.object,
-    ]),
-  }),
-  itemData: PropTypes.shape({
-    dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
-  }).isRequired,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-} as any;
 
 export { ChartsItemTooltipContent };
