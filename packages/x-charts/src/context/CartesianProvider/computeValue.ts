@@ -1,7 +1,13 @@
 import { scaleBand, scalePoint } from 'd3-scale';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../../constants';
-import { AxisConfig, ChartsXAxisProps, ScaleName } from '../../models';
-import { ChartsYAxisProps, isBandScaleConfig, isPointScaleConfig } from '../../models/axis';
+import { AxisConfig, ScaleName } from '../../models';
+import {
+  ChartsXAxisProps,
+  ChartsAxisProps,
+  ChartsYAxisProps,
+  isBandScaleConfig,
+  isPointScaleConfig,
+} from '../../models/axis';
 import { CartesianChartSeriesType, ExtremumGetter } from '../../models/seriesType/config';
 import { DefaultizedAxisConfig } from './CartesianContext';
 import { getColorScale, getOrdinalColorScale } from '../../internals/colorScale';
@@ -12,47 +18,78 @@ import { FormattedSeries } from '../SeriesContextProvider';
 import { MakeOptional } from '../../models/helpers';
 import { getAxisExtremum } from './getAxisExtremum';
 
+const getRange = (drawingArea: DrawingArea, axisName: 'x' | 'y', isReverse?: boolean) => {
+  const range =
+    axisName === 'x'
+      ? [drawingArea.left, drawingArea.left + drawingArea.width]
+      : [drawingArea.top + drawingArea.height, drawingArea.top];
+
+  return isReverse ? range.reverse() : range;
+};
+
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 const DEFAULT_BAR_GAP_RATIO = 0.1;
 
-export const computeValue = (
+export function computeValue(
   drawingArea: DrawingArea,
   formattedSeries: FormattedSeries,
-  xAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[] | undefined,
-  yAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[] | undefined,
-  xExtremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
-  yExtremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
-) => {
-  const allXAxis: AxisConfig<ScaleName, any, ChartsXAxisProps>[] = [
-    ...(xAxis?.map((axis, index) => ({ id: `defaultized-x-axis-${index}`, ...axis })) ?? []),
-    // Allows to specify an axis with id=DEFAULT_X_AXIS_KEY
-    ...(xAxis === undefined || xAxis.findIndex(({ id }) => id === DEFAULT_X_AXIS_KEY) === -1
-      ? [{ id: DEFAULT_X_AXIS_KEY, scaleType: 'linear' as const }]
+  axis: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[] | undefined,
+  extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
+  axisName: 'y',
+): {
+  axis: DefaultizedAxisConfig<ChartsYAxisProps>;
+  axisIds: string[];
+};
+export function computeValue(
+  drawingArea: DrawingArea,
+  formattedSeries: FormattedSeries,
+  inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[] | undefined,
+  extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
+  axisName: 'x',
+): {
+  axis: DefaultizedAxisConfig<ChartsAxisProps>;
+  axisIds: string[];
+};
+export function computeValue(
+  drawingArea: DrawingArea,
+  formattedSeries: FormattedSeries,
+  inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsAxisProps>, 'id'>[] | undefined,
+  extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
+  axisName: 'x' | 'y',
+) {
+  const DEFAULT_AXIS_KEY = axisName === 'x' ? DEFAULT_X_AXIS_KEY : DEFAULT_Y_AXIS_KEY;
+
+  const allAxis: AxisConfig<ScaleName, any, ChartsAxisProps>[] = [
+    ...(inAxis?.map((axis, index) => ({ id: `defaultized-${axisName}-axis-${index}`, ...axis })) ??
+      []),
+    ...(inAxis === undefined || inAxis.findIndex(({ id }) => id === DEFAULT_AXIS_KEY) === -1
+      ? [{ id: DEFAULT_AXIS_KEY, scaleType: 'linear' as const }]
       : []),
   ];
 
-  const completedXAxis: DefaultizedAxisConfig<ChartsXAxisProps> = {};
-  allXAxis.forEach((axis, axisIndex) => {
+  const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
+  allAxis.forEach((axis, axisIndex) => {
     const isDefaultAxis = axisIndex === 0;
     const [minData, maxData] = getAxisExtremum(
       axis,
-      xExtremumGetters,
+      extremumGetters,
       isDefaultAxis,
       formattedSeries,
     );
 
-    const range = axis.reverse
-      ? [drawingArea.left + drawingArea.width, drawingArea.left]
-      : [drawingArea.left, drawingArea.left + drawingArea.width];
+    const range = getRange(drawingArea, axisName, axis.reverse);
 
     if (isBandScaleConfig(axis)) {
       const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
       const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
-      completedXAxis[axis.id] = {
+      // Reverse range because ordinal scales are presented from top to bottom on y-axis
+      const scaleRange = axisName === 'x' ? range : [range[1], range[0]];
+
+      completeAxis[axis.id] = {
         categoryGapRatio,
         barGapRatio,
         ...axis,
-        scale: scaleBand(axis.data!, range)
+        scale: scaleBand(axis.data!, scaleRange)
           .paddingInner(categoryGapRatio)
           .paddingOuter(categoryGapRatio / 2),
         tickNumber: axis.data!.length,
@@ -64,9 +101,11 @@ export const computeValue = (
       };
     }
     if (isPointScaleConfig(axis)) {
-      completedXAxis[axis.id] = {
+      const scaleRange = axisName === 'x' ? range : [...range].reverse();
+
+      completeAxis[axis.id] = {
         ...axis,
-        scale: scalePoint(axis.data!, range),
+        scale: scalePoint(axis.data!, scaleRange),
         tickNumber: axis.data!.length,
         colorScale:
           axis.colorMap &&
@@ -85,85 +124,11 @@ export const computeValue = (
     const extremums = [axis.min ?? minData, axis.max ?? maxData];
     const tickNumber = getTickNumber({ ...axis, range, domain: extremums });
 
-    // Gotta remove ".nice" here to avoid jittering in zoom
-    const scale = getScale(scaleType, extremums, range);
+    const scale = getScale(scaleType, extremums, range).nice(tickNumber);
     const [minDomain, maxDomain] = scale.domain();
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 
-    completedXAxis[axis.id] = {
-      ...axis,
-      scaleType: scaleType as any,
-      scale: scale.domain(domain) as any,
-      tickNumber,
-      colorScale: axis.colorMap && getColorScale(axis.colorMap),
-    };
-  });
-
-  const allYAxis: AxisConfig<ScaleName, any, ChartsYAxisProps>[] = [
-    ...(yAxis?.map((axis, index) => ({ id: `defaultized-y-axis-${index}`, ...axis })) ?? []),
-    ...(yAxis === undefined || yAxis.findIndex(({ id }) => id === DEFAULT_Y_AXIS_KEY) === -1
-      ? [{ id: DEFAULT_Y_AXIS_KEY, scaleType: 'linear' as const }]
-      : []),
-  ];
-
-  const completedYAxis: DefaultizedAxisConfig<ChartsYAxisProps> = {};
-  allYAxis.forEach((axis, axisIndex) => {
-    const isDefaultAxis = axisIndex === 0;
-    const [minData, maxData] = getAxisExtremum(
-      axis,
-      yExtremumGetters,
-      isDefaultAxis,
-      formattedSeries,
-    );
-    const range = axis.reverse
-      ? [drawingArea.top, drawingArea.top + drawingArea.height]
-      : [drawingArea.top + drawingArea.height, drawingArea.top];
-
-    if (isBandScaleConfig(axis)) {
-      const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
-      completedYAxis[axis.id] = {
-        categoryGapRatio,
-        barGapRatio: 0,
-        ...axis,
-        scale: scaleBand(axis.data!, [range[1], range[0]])
-          .paddingInner(categoryGapRatio)
-          .paddingOuter(categoryGapRatio / 2),
-        tickNumber: axis.data!.length,
-        colorScale:
-          axis.colorMap &&
-          (axis.colorMap.type === 'ordinal'
-            ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
-            : getColorScale(axis.colorMap)),
-      };
-    }
-    if (isPointScaleConfig(axis)) {
-      completedYAxis[axis.id] = {
-        ...axis,
-        scale: scalePoint(axis.data!, [range[1], range[0]]),
-        tickNumber: axis.data!.length,
-        colorScale:
-          axis.colorMap &&
-          (axis.colorMap.type === 'ordinal'
-            ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
-            : getColorScale(axis.colorMap)),
-      };
-    }
-    if (axis.scaleType === 'band' || axis.scaleType === 'point') {
-      // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
-      return;
-    }
-
-    const scaleType = axis.scaleType ?? ('linear' as const);
-
-    const extremums = [axis.min ?? minData, axis.max ?? maxData];
-    const tickNumber = getTickNumber({ ...axis, range, domain: extremums });
-
-    // Gotta remove ".nice" here to avoid jittering in zoom
-    const scale = getScale(scaleType, extremums, range);
-    const [minDomain, maxDomain] = scale.domain();
-    const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
-
-    completedYAxis[axis.id] = {
+    completeAxis[axis.id] = {
       ...axis,
       scaleType: scaleType as any,
       scale: scale.domain(domain) as any,
@@ -173,12 +138,7 @@ export const computeValue = (
   });
 
   return {
-    isInitialized: true,
-    data: {
-      xAxis: completedXAxis,
-      yAxis: completedYAxis,
-      xAxisIds: allXAxis.map(({ id }) => id),
-      yAxisIds: allYAxis.map(({ id }) => id),
-    },
+    axis: completeAxis,
+    axisIds: allAxis.map(({ id }) => id),
   };
-};
+}
