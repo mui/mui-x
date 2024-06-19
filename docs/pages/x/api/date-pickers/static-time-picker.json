@@ -18,7 +18,10 @@
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "onAccept": {
       "type": { "name": "func" },
-      "signature": { "type": "function(value: TValue) => void", "describedArgs": ["value"] }
+      "signature": {
+        "type": "function(value: TValue, context: FieldChangeHandlerContext<TError>) => void",
+        "describedArgs": ["value", "context"]
+      }
     },
     "onChange": {
       "type": { "name": "func" },
