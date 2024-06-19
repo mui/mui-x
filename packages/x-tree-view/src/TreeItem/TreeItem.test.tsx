@@ -47,6 +47,18 @@ describeTreeView<[]>('TreeItem component', ({ render, treeItemComponentName }) =
 
       expect(response.getItemContent('1').textContent).to.equal('ABCDEF');
     });
+
+    it('should render TreeItem when itemId prop is escaping characters without throwing an error', function test() {
+      if (treeItemComponentName === 'TreeItem2') {
+        this.skip();
+      }
+
+      const response = render({
+        items: [{ id: 'C:\\\\', label: 'ABCDEF' }],
+      });
+
+      expect(response.getItemContent('C:\\\\').textContent).to.equal('ABCDEF');
+    });
   });
 });
 
