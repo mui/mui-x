@@ -12,6 +12,10 @@ import {
   SeriesContextProvider,
   useChartContainerHooks,
 } from '@mui/x-charts/internals';
+import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
+import { getReleaseInfo } from '../internals/utils/releaseInfo';
+
+const releaseInfo = getReleaseInfo();
 
 export interface ChartContainerProProps extends ChartContainerProps {}
 
@@ -38,6 +42,8 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
     plugins,
     children,
   } = props;
+
+  useLicenseVerifier('x-charts-pro', releaseInfo);
 
   const {
     svgRef,
