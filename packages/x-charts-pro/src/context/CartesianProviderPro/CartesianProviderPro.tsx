@@ -42,7 +42,7 @@ const zoomExtremumGetter = (getters: ExtremumGettersConfig, zoom: [number, numbe
   );
 };
 
-export type CartesianContextProviderProProps = CartesianContextProviderProps;
+export interface CartesianContextProviderProProps extends CartesianContextProviderProps {}
 
 function CartesianContextProviderPro(props: CartesianContextProviderProProps) {
   const {
@@ -62,17 +62,34 @@ function CartesianContextProviderPro(props: CartesianContextProviderProProps) {
 
   const yAxis = React.useMemo(() => normalizeAxis(inYAxis, dataset, 'y'), [inYAxis, dataset]);
 
-  const value = React.useMemo(
+  const xValues = React.useMemo(
     () =>
       computeValue(
         drawingArea,
         formattedSeries,
         xAxis,
-        yAxis,
         zoomExtremumGetter(xExtremumGetters, zoomRange),
-        yExtremumGetters,
+        'x',
       ),
-    [drawingArea, formattedSeries, xAxis, xExtremumGetters, yAxis, yExtremumGetters, zoomRange],
+    [drawingArea, formattedSeries, xAxis, xExtremumGetters, zoomRange],
+  );
+
+  const yValues = React.useMemo(
+    () => computeValue(drawingArea, formattedSeries, yAxis, yExtremumGetters, 'y'),
+    [drawingArea, formattedSeries, yAxis, yExtremumGetters],
+  );
+
+  const value = React.useMemo(
+    () => ({
+      isInitialized: true,
+      data: {
+        xAxis: xValues.axis,
+        yAxis: yValues.axis,
+        xAxisIds: xValues.axisIds,
+        yAxisIds: yValues.axisIds,
+      },
+    }),
+    [xValues, yValues],
   );
 
   return <CartesianContext.Provider value={value}>{children}</CartesianContext.Provider>;
