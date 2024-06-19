@@ -210,7 +210,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     ...other
   } = props;
 
-  const { handleExpansion } = useTreeItemState(itemId);
+  const { expanded, focused, selected, disabled, handleExpansion } = useTreeItemState(itemId);
 
   const { contentRef, rootRef } = runItemPlugins<TreeItemProps>(props);
   const handleRootRef = useForkRef(inRef, rootRef);
@@ -231,10 +231,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
     return Boolean(reactChildren);
   };
   const expandable = isExpandable(children);
-  const expanded = instance.isItemExpanded(itemId);
-  const focused = instance.isItemFocused(itemId);
-  const selected = instance.isItemSelected(itemId);
-  const disabled = instance.isItemDisabled(itemId);
 
   const ownerState: TreeItemOwnerState = {
     ...props,

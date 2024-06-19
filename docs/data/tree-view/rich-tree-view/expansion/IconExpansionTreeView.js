@@ -1,10 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
-const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
+const MUI_X_PRODUCTS = [
   {
     id: 'grid',
     label: 'Data Grid',
@@ -37,11 +35,7 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
 export default function IconExpansionTreeView() {
   return (
     <Box sx={{ minHeight: 352, minWidth: 250 }}>
-      <RichTreeView
-        items={MUI_X_PRODUCTS}
-        slots={{ item: TreeItem2 }}
-        expansionTrigger="iconContainer"
-      />
+      <RichTreeView items={MUI_X_PRODUCTS} expansionTrigger="iconContainer" />
     </Box>
   );
 }

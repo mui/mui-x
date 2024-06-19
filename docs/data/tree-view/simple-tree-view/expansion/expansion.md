@@ -32,6 +32,12 @@ Use the `onItemExpansionToggle` prop to trigger an action upon an item being exp
 
 {{"demo": "TrackItemExpansionToggle.js"}}
 
+## Limit expansion to icon container
+
+The demo below shows how to trigger the expansion interaction just by clicking on the icon container instead of the whole Tree Item content.
+
+{{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
+
 ## Imperative API
 
 :::success
