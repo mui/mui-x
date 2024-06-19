@@ -16,7 +16,7 @@ import {
   useChartContainerHooks,
 } from '@mui/x-charts/internals';
 
-export type ChartContainerProProps = ChartContainerProps;
+export interface ChartContainerProProps extends ChartContainerProps {}
 
 const ChartContainerPro = React.forwardRef(function ChartContainer(
   props: ChartContainerProProps,
