@@ -13,7 +13,7 @@ import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import {
   CartesianContextProvider,
   CartesianContextProviderProps,
-} from '../context/CartesianContextProvider';
+} from '../context/CartesianProvider';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import {
   HighlightedProvider,

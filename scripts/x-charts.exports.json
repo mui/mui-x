@@ -135,6 +135,7 @@
   { "name": "DefaultizedScatterSeriesType", "kind": "Interface" },
   { "name": "DefaultizedSeriesType", "kind": "TypeAlias" },
   { "name": "Direction", "kind": "TypeAlias" },
+  { "name": "ExtremumGettersConfig", "kind": "TypeAlias" },
   { "name": "FadeOptions", "kind": "TypeAlias" },
   { "name": "Gauge", "kind": "Function" },
   { "name": "gaugeClasses", "kind": "Variable" },

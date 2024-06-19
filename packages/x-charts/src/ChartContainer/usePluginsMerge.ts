@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { ChartsPluginType, ColorProcessorsConfig } from '../models';
+import { ChartsPluginType, ColorProcessorsConfig, ExtremumGettersConfig } from '../models';
 import { ChartSeriesType } from '../models/seriesType/config';
-import { ExtremumGettersConfig } from '../context/CartesianContextProvider';
 import { SeriesFormatterConfig } from '../context/SeriesContextProvider';
 import { defaultPlugins } from './defaultPlugins';
 

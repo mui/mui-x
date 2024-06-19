@@ -1,4 +1,9 @@
-import { ChartSeriesType, ExtremumGetter, Formatter } from './seriesType/config';
+import {
+  CartesianChartSeriesType,
+  ChartSeriesType,
+  ExtremumGetter,
+  Formatter,
+} from './seriesType/config';
 import { AxisDefaultized } from './axis';
 import { DefaultizedSeriesType } from './seriesType';
 import { ZAxisDefaultized } from './z-axis';
@@ -23,3 +28,7 @@ export type ChartsPluginType<T> = T extends ChartSeriesType
       yExtremumGetter?: ExtremumGetter<T>;
     }
   : never;
+
+export type ExtremumGettersConfig<T extends ChartSeriesType = CartesianChartSeriesType> = {
+  [K in T]?: ExtremumGetter<K>;
+};

@@ -1,8 +1,8 @@
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { AxisDefaultized, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
+import { AxisDefaultized, AxisId, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
 import { SeriesId } from '../models/seriesType/common';
 
-const getAxisMessage = (axisDirection: 'x' | 'y', axisKey: string) => {
+const getAxisMessage = (axisDirection: 'x' | 'y', axisKey: AxisId) => {
   const axisName = `${axisDirection}-axis`;
   const axisKeyName = `${axisDirection}Axis`;
   const axisDefaultKey = axisDirection === 'x' ? DEFAULT_X_AXIS_KEY : DEFAULT_Y_AXIS_KEY;
@@ -14,10 +14,10 @@ const getAxisMessage = (axisDirection: 'x' | 'y', axisKey: string) => {
 export function checkScaleErrors(
   verticalLayout: boolean,
   seriesId: SeriesId,
-  xAxisKey: string,
-  xAxis: { DEFAULT_X_AXIS_KEY: AxisDefaultized } & { [axisKey: string]: AxisDefaultized },
-  yAxisKey: string,
-  yAxis: { DEFAULT_X_AXIS_KEY: AxisDefaultized } & { [axisKey: string]: AxisDefaultized },
+  xAxisKey: AxisId,
+  xAxis: { [axisKey: AxisId]: AxisDefaultized },
+  yAxisKey: AxisId,
+  yAxis: { [axisKey: AxisId]: AxisDefaultized },
 ): void {
   const xAxisConfig = xAxis[xAxisKey];
   const yAxisConfig = yAxis[yAxisKey];

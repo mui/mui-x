@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { LineHighlightElement, LineHighlightElementProps } from './LineHighlightElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { InteractionContext } from '../context/InteractionProvider';
@@ -43,7 +43,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
   const { slots, slotProps, ...other } = props;
 
   const seriesData = useLineSeries();
-  const axisData = React.useContext(CartesianContext);
+  const axisData = useCartesianContext();
   const { axis } = React.useContext(InteractionContext);
 
   const highlightedIndex = axis.x?.index;

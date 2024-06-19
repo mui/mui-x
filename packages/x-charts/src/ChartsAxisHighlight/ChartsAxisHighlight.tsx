@@ -5,7 +5,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { styled } from '@mui/material/styles';
 import { InteractionContext } from '../context/InteractionProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { isBandScale } from '../internals/isBandScale';
 
@@ -67,7 +67,7 @@ export type ChartsAxisHighlightProps = {
  */
 function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
   const { x: xAxisHighlight, y: yAxisHighlight } = props;
-  const { xAxisIds, xAxis, yAxisIds, yAxis } = React.useContext(CartesianContext);
+  const { xAxisIds, xAxis, yAxisIds, yAxis } = useCartesianContext();
   const classes = useUtilityClasses();
 
   const USED_X_AXIS_ID = xAxisIds[0];

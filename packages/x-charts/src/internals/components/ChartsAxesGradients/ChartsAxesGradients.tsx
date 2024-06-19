@@ -1,14 +1,15 @@
 import * as React from 'react';
-import { CartesianContext } from '../../../context/CartesianContextProvider';
+import { useCartesianContext } from '../../../context/CartesianProvider';
 import { DrawingContext } from '../../../context/DrawingProvider';
 import { useDrawingArea } from '../../../hooks';
 import ChartsPiecewiseGradient from './ChartsPiecewiseGradient';
 import ChartsContinuousGradient from './ChartsContinuousGradient';
+import { AxisId } from '../../../models/axis';
 
 export function useChartGradient() {
   const { chartId } = React.useContext(DrawingContext);
   return React.useCallback(
-    (axisId: string, direction: 'x' | 'y') => `${chartId}-gradient-${direction}-${axisId}`,
+    (axisId: AxisId, direction: 'x' | 'y') => `${chartId}-gradient-${direction}-${axisId}`,
     [chartId],
   );
 }
@@ -19,7 +20,7 @@ export function ChartsAxesGradients() {
   const svgHeight = top + height + bottom;
   const svgWidth = left + width + right;
   const getGradientId = useChartGradient();
-  const { xAxisIds, xAxis, yAxisIds, yAxis } = React.useContext(CartesianContext);
+  const { xAxisIds, xAxis, yAxisIds, yAxis } = useCartesianContext();
 
   return (
     <defs>

@@ -14,7 +14,7 @@ export * from './configInit';
 
 // contexts
 
-export * from '../context/CartesianContextProvider';
+export * from '../context/CartesianProvider';
 export * from '../context/DrawingProvider';
 export * from '../context/InteractionProvider';
 export * from '../context/SeriesContextProvider';
