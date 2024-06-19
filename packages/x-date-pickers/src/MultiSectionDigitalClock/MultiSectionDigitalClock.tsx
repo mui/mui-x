@@ -391,25 +391,26 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     ],
   );
 
-  const viewTimeOptions = React.useMemo(() => {
-    // Filter out the 'meridiem' view and orders the other views
-    const otherViews = views.filter((v) => v !== 'meridiem');
-    const orderedOtherViews = isRtl ? otherViews.toReversed() : otherViews;
+  const viewsToRender = React.useMemo(() => {
+    if (!isRtl) {
+      return views;
+    }
+    const digitViews = views.filter((v) => v !== 'meridiem');
+    const result = digitViews.toReversed();
+    if (views.includes('meridiem')) {
+      result.push('meridiem');
+    }
+    return result;
+  }, [isRtl, views]);
 
-    // Build other views to be rendered
-    const result = orderedOtherViews.reduce(
+  const viewTimeOptions = React.useMemo(() => {
+    return views.reduce(
       (res, currentView) => {
         return { ...res, [currentView]: buildViewProps(currentView) };
       },
       {} as Record<TimeViewWithMeridiem, MultiSectionDigitalClockViewProps<number>>,
     );
-    // Add built 'meridiem' view at the end, if it was in the original views
-    if (views.includes('meridiem')) {
-      result.meridiem = buildViewProps('meridiem');
-    }
-
-    return result;
-  }, [views, isRtl, buildViewProps]);
+  }, [views, buildViewProps]);
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
@@ -422,11 +423,11 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
       role="group"
       {...other}
     >
-      {Object.entries(viewTimeOptions).map(([timeView, viewOptions]) => (
+      {viewsToRender.map((timeView) => (
         <MultiSectionDigitalClockSection
           key={timeView}
-          items={viewOptions.items}
-          onChange={viewOptions.onChange}
+          items={viewTimeOptions[timeView].items}
+          onChange={viewTimeOptions[timeView].onChange}
           active={view === timeView}
           autoFocus={autoFocus ?? focusedView === timeView}
           disabled={disabled}
@@ -434,7 +435,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           slots={slots}
           slotProps={slotProps}
           skipDisabled={skipDisabled}
-          aria-label={localeText.selectViewText(timeView as TimeViewWithMeridiem)}
+          aria-label={localeText.selectViewText(timeView)}
         />
       ))}
     </MultiSectionDigitalClockRoot>
