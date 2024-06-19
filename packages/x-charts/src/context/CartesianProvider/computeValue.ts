@@ -124,7 +124,8 @@ export function computeValue(
     const extremums = [axis.min ?? minData, axis.max ?? maxData];
     const tickNumber = getTickNumber({ ...axis, range, domain: extremums });
 
-    const scale = getScale(scaleType, extremums, range).nice(tickNumber);
+    const scale = getScale(scaleType, extremums, range);
+    // TODO: move nice to prop? Disable when there is zoom? .nice(tickNumber);
     const [minDomain, maxDomain] = scale.domain();
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 
