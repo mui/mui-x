@@ -44,13 +44,15 @@ Note how changing the value of the start date section will call `onChange` even 
 
 ## Pickers lifecycle
 
-### When is `onClose` called?
+### `onClose`
+
+#### When is `onClose` called?
 
 :::info
 In all the below scenarios, the picker closes when `onClose` is called, except if you are controlling the `open` prop.
 :::
 
-#### When the last view is completed
+##### When the last view is completed
 
 When a selection in the last view is made, `onClose` will be called only if the `closeOnSelect` prop is equal to `true`.
 By default, it is set to `true` on desktop and `false` on mobile.
@@ -124,27 +126,55 @@ For example, on the `DatePicker`, the `year` and `month` views are not in the de
 so the picker will close even if you never went to those views.
 :::
 
-#### When the picker is manually closed
+##### When the picker is manually closed
 
 Pressing <kbd class="key">Escape</kbd> or clicking outside the picker will close the picker.
 
-#### When a value is selected using the action bar
+##### When a value is selected using the action bar
 
 Clicking on any built-in button of the action bar will close the picker.
 
-#### When a shortcut is picked
+##### When a shortcut is picked
 
 Clicking on a shortcut will close the picker, except if the `changeImportance` property has been set to `"set"` instead of the default value `"accept"`.
 You can find more information [in the dedicated doc section](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut).
 
-### When is `onChange` called?
+### `onChange`
 
-#### When the field calls `onChange`
+#### Usage
+
+The `onChange` callback is called whenever the current value changes.
+
+If you don't want to listen to the intermediary steps, consider using the [`onAccept` prop](/x/react-date-pickers/lifecycle/#onaccept) instead.
+
+```tsx
+<DatePicker onChange={(value) => setValue(value)} />
+```
+
+:::success
+You can use the second argument passed to the `onChange` callback to get the validation error associated with the current value:
+
+```tsx
+<DatePicker
+  onChange={(newValue, context) => {
+    setValue(value);
+    if (context.validationError == null) {
+      runSomeLogic();
+    }
+  }}
+/>
+```
+
+:::
+
+#### When is `onChange` called?
+
+##### When the field calls `onChange`
 
 When editing your value through the input(s) of your field, the picker will just re-publish the `onChange` callback.
 Take a look at the [dedicated section](/x/react-date-pickers/lifecycle/#fields-lifecycle) for more information.
 
-#### When the user interacts with the view
+##### When the user interacts with the view
 
 If the component is controlled (i.e: if it has a `value` prop),
 clicking on a value will call `onChange` if the value to publish is different from the current value
@@ -157,21 +187,46 @@ Some views can decide not to call `onChange` for some value modifications.
 The most common example is the mobile time views (using the [`TimeClock`](/x/react-date-pickers/time-clock/) component).
 The `onChange` is only fired once when the dragging (touching) of the clock hand ends even though the UI updates on each position change.
 
-#### When a value is selected using the action bar
+##### When a value is selected using the action bar
 
 If the component is controlled (i.e: if it has a `value` prop),
 clicking on any built-in actions will call `onChange` if the value to publish is different from the current value.
 
 If the component is not controlled, the behavior is the same, except for the _Clear_, _Today_, and _OK_ actions that will call `onChange` if no value has ever been published, even if the current value equals the value to publish.
 
-#### When a shortcut is picked
+##### When a shortcut is picked
 
 Clicking on a shortcut will call `onChange`.
 You can find more information [in the dedicated doc section](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut).
 
-### When is `onAccept` called?
+### `onAccept`
 
-#### When the last view is completed
+#### Usage
+
+The `onAccept` callback allows you to get the final value selected by the user without caring about the intermediary steps.
+
+```tsx
+<DatePicker onAccept={(value) => sendValueToServer(value)} />
+```
+
+:::success
+You can use the second argument passed to the `onAccept` callback to get the validation error associated with the current value:
+
+```tsx
+<DatePicker
+  onAccept={(newValue, context) => {
+    if (context.validationError == null) {
+      runSomeLogic();
+    }
+  }}
+/>
+```
+
+:::
+
+#### When is `onAccept` called?
+
+##### When the last view is completed
 
 When a selection in the last view is made, `onAccept` will be called only if the `closeOnSelect` prop is equal to `true` and the value has been modified since the last time `onAccept` was called.
 By default, `closeOnSelect`, is set to `true` on desktop and `false` on mobile.
@@ -230,21 +285,21 @@ The examples below are using the desktop and mobile variants of the pickers, but
 
   **Behavior:** The picker will call `onAccept` when selecting the minutes or meridiem (if a 12-hour clock is used).
 
-#### When the picker is manually closed
+##### When the picker is manually closed
 
 When the user presses <kbd class="key">Escape</kbd> or clicks outside the picker, `onAccept` is called with:
 
 - the current value, if the last view has been completed
 - the last accepted value, if the last view has not been completed
 
-#### When a value is selected using the action bar
+##### When a value is selected using the action bar
 
 If the component is controlled (i.e: if it has a `value` prop),
 clicking on any built-in actions will call `onAccept` if the value to publish is different from the current value.
 
 If the component is not controlled, the behavior is the same, except for the _Clear_, _Today_, and _OK_ actions that will call `onAccept` if no value has ever been published, even if the current value equals the value to publish.
 
-#### When a shortcut is picked
+##### When a shortcut is picked
 
 Clicking on a shortcut will call `onAccept`, except if the `changeImportance` property has been set to `"set"` instead of `"accept"`.
 You can find more information [in the dedicated doc section](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut).
@@ -341,6 +396,6 @@ In such a case, the recommended UI is to add a button for validating the form.
 If for some reason, you need to send the data to the server without having the user pressing a validation button, you can debounce the `onChange` as follows.
 
 The following demo shows how to extend the Date Field component by adding an `onAccept` prop, which is a debounced version of `onChange`.
-You can find more information about the `onAccept` prop [in the dedicated doc section](/x/react-date-pickers/lifecycle/#when-is-onaccept-called).
+You can find more information about the `onAccept` prop [in the dedicated doc section](/x/react-date-pickers/lifecycle/#onaccept).
 
 {{"demo": "ServerInteraction.js"}}
