@@ -58,7 +58,7 @@ describe('License: generateLicense', () => {
     );
   });
 
-  it('should generate perpetual pro-license when `planVersion: "Q3-2024"`', () => {
+  it('should generate subscription Pro license when `planVersion: "Q3-2024"`', () => {
     expect(
       generateLicense({
         expiryDate: new Date(1591723879062),
@@ -72,12 +72,12 @@ describe('License: generateLicense', () => {
     );
   });
 
-  it('should generate perpetual premium-license when `planVersion: "Q3-2024"`', () => {
+  it('should generate subscription Premium license when `planVersion: "Q3-2024"`', () => {
     expect(
       generateLicense({
         expiryDate: new Date(1591723879062),
         orderNumber: 'MUI-123',
-        scope: 'pro',
+        scope: 'premium',
         licensingModel: 'subscription',
         planVersion: 'Q3-2024',
       }),
