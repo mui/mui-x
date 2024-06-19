@@ -81,11 +81,11 @@ export interface UseTreeViewExpansionParameters {
 
 export type UseTreeViewExpansionDefaultizedParameters = DefaultizedProps<
   UseTreeViewExpansionParameters,
-  'defaultExpandedItems' | 'expansionTrigger'
+  'defaultExpandedItems'
 >;
 
 interface UseTreeViewExpansionContextValue {
-  expansion: Pick<UseTreeViewExpansionDefaultizedParameters, 'expansionTrigger'>;
+  expansion: Pick<UseTreeViewExpansionParameters, 'expansionTrigger'>;
 }
 
 export type UseTreeViewExpansionSignature = TreeViewPluginSignature<{

@@ -121,7 +121,6 @@ const DEFAULT_EXPANDED_ITEMS: string[] = [];
 useTreeViewExpansion.getDefaultizedParams = (params) => ({
   ...params,
   defaultExpandedItems: params.defaultExpandedItems ?? DEFAULT_EXPANDED_ITEMS,
-  expansionTrigger: params.expansionTrigger ?? 'content',
 });
 
 useTreeViewExpansion.params = {
