@@ -81,7 +81,7 @@ export function computeValue(
       const DEFAULT_BAR_GAP_RATIO = 0.1;
 
       const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
-      const barGapRatio = axisName === 'x' ? axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO : 0;
+      const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
       const scaleRange = axisName === 'x' ? range : [...range].reverse();
 
       completeAxis[axis.id] = {
