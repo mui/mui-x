@@ -4,7 +4,7 @@ import {
   useGridApiEventHandler,
   gridRowsLoadingSelector,
   useGridApiMethod,
-  GridServerSideGroupNode,
+  GridDataSourceGroupNode,
   useGridSelector,
   GridRowId,
 } from '@mui/x-data-grid';
@@ -132,7 +132,7 @@ export const useGridDataSource = (
         return;
       }
 
-      const rowNode = apiRef.current.getRowNode<GridServerSideGroupNode>(id);
+      const rowNode = apiRef.current.getRowNode<GridDataSourceGroupNode>(id);
       if (!rowNode) {
         nestedDataManager.clearPendingRequest(id);
         return;

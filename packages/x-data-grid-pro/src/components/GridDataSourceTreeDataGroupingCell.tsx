@@ -5,7 +5,7 @@ import Badge from '@mui/material/Badge';
 import {
   getDataGridUtilityClass,
   GridRenderCellParams,
-  GridServerSideGroupNode,
+  GridDataSourceGroupNode,
   useGridSelector,
 } from '@mui/x-data-grid';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -30,7 +30,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 interface GridTreeDataGroupingCellProps
-  extends GridRenderCellParams<any, any, any, GridServerSideGroupNode> {
+  extends GridRenderCellParams<any, any, any, GridDataSourceGroupNode> {
   hideDescendantCount?: boolean;
   /**
    * The cell offset multiplier used for calculating cell offset (`rowNode.depth * offsetMultiplier` px).
@@ -98,7 +98,7 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
   ) : null;
 }
 
-export function GridServerSideTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
+export function GridDataSourceTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
   const { id, field, formattedValue, rowNode, hideDescendantCount, offsetMultiplier = 2 } = props;
 
   const rootProps = useGridRootProps();

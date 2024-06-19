@@ -4,7 +4,7 @@ import {
   useFirstRender,
   GridColDef,
   GridRenderCellParams,
-  GridServerSideGroupNode,
+  GridDataSourceGroupNode,
   GridRowId,
   GRID_CHECKBOX_SELECTION_FIELD,
 } from '@mui/x-data-grid';
@@ -26,7 +26,7 @@ import {
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
 } from '../../../models/gridGroupingColDefOverride';
-import { GridServerSideTreeDataGroupingCell } from '../../../components/GridServerSideTreeDataGroupingCell';
+import { GridDataSourceTreeDataGroupingCell } from '../../../components/GridDataSourceTreeDataGroupingCell';
 import { createRowTree } from '../../../utils/tree/createRowTree';
 import {
   GridTreePathDuplicateHandler,
@@ -37,7 +37,7 @@ import { getVisibleRowsLookup } from '../../../utils/tree/utils';
 
 const SERVER_SIDE_TREE_DATA_STRATEGY = 'serverSideTreeData';
 
-export const useGridServerSideTreeDataPreProcessors = (
+export const useGridDataSourceTreeDataPreProcessors = (
   privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
@@ -78,8 +78,8 @@ export const useGridServerSideTreeDataPreProcessors = (
     const commonProperties: Omit<GridColDef, 'field' | 'editable'> = {
       ...GRID_TREE_DATA_GROUPING_COL_DEF,
       renderCell: (params) => (
-        <GridServerSideTreeDataGroupingCell
-          {...(params as GridRenderCellParams<any, any, any, GridServerSideGroupNode>)}
+        <GridDataSourceTreeDataGroupingCell
+          {...(params as GridRenderCellParams<any, any, any, GridDataSourceGroupNode>)}
           hideDescendantCount={hideDescendantCount}
         />
       ),

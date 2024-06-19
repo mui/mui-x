@@ -4,7 +4,7 @@ import {
   GridLeafNode,
   GridRowId,
   GridRowTreeConfig,
-  GridServerSideGroupNode,
+  GridDataSourceGroupNode,
 } from '@mui/x-data-grid';
 import { GridTreeDepths, GridRowTreeUpdatedGroupsManager } from '@mui/x-data-grid/internals';
 import {
@@ -98,7 +98,7 @@ export const insertDataRowInTree = ({
       // If no node matches the full path,
       // We create a leaf node for the data row.
       if (existingNodeIdWithPartialPath == null) {
-        let node: GridLeafNode | GridServerSideGroupNode;
+        let node: GridLeafNode | GridDataSourceGroupNode;
         if (hasServerChildren) {
           node = {
             type: 'group',

@@ -65,7 +65,7 @@ import {
   useGridHeaderFiltering,
   virtualizationStateInitializer,
   useGridVirtualization,
-  useGridServerSideTreeDataPreProcessors,
+  useGridDataSourceTreeDataPreProcessors,
   useGridDataSource,
   dataSourceStateInitializer,
 } from '@mui/x-data-grid-pro/internals';
@@ -102,7 +102,7 @@ export const useDataGridPremiumComponent = (
   useGridRowReorderPreProcessors(apiRef, props);
   useGridRowGroupingPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
-  useGridServerSideTreeDataPreProcessors(apiRef, props);
+  useGridDataSourceTreeDataPreProcessors(apiRef, props);
   useGridLazyLoaderPreProcessors(apiRef, props);
   useGridRowPinningPreProcessors(apiRef);
   useGridAggregationPreProcessors(apiRef, props);
