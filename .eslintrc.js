@@ -173,11 +173,31 @@ module.exports = {
     // TODO move to @mui/monorepo/.eslintrc
     // TODO Fix <Input> props names to not conflict
     'react/jsx-no-duplicate-props': [1, { ignoreCase: false }],
-    // TOOD move to @mui/monorepo/.eslintrc, these are false positive
+    // TODO move to @mui/monorepo/.eslintrc, these are false positive
     'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
   },
   overrides: [
     ...baseline.overrides,
+    {
+      files: [
+        'docs/**',
+        'test/**',
+        'scripts/**',
+        'packages/x-codemod/**',
+        'packages/x-data-grid-generator/**',
+        'packages/x-license/**',
+        'packages/x-data-grid/**',
+        'packages/x-data-grid-pro/**',
+        'packages/x-data-grid-premium/**',
+        'packages/x-date-pickers/**',
+        'packages/x-date-pickers-pro/**',
+        'packages/x-tree-view/**',
+        'packages/x-tree-view-pro/**',
+      ],
+      rules: {
+        '@typescript-eslint/consistent-type-imports': 'off',
+      },
+    },
     {
       files: [
         // matching the pattern of the test runner
