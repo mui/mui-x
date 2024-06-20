@@ -1,8 +1,6 @@
 import * as React from 'react';
-import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
 import { BarChartProps, BarPlot } from '@mui/x-charts/BarChart';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
 import { ChartsOnAxisClickHandler } from '@mui/x-charts/ChartsOnAxisClickHandler';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
@@ -11,6 +9,7 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
+import { useBarChartProps } from '@mui/x-charts/internals';
 import { ResponsiveChartContainerPro } from '../ResponsiveChartContainerPro';
 
 export interface BarChartProProps extends BarChartProps {
@@ -30,112 +29,34 @@ export interface BarChartProProps extends BarChartProps {
  */
 const BarChartPro = React.forwardRef(function BarChartPro(props: BarChartProProps, ref) {
   const {
-    xAxis,
-    yAxis,
-    series,
-    width,
-    height,
-    margin,
-    colors,
-    dataset,
-    sx,
-    layout,
-    tooltip,
-    axisHighlight,
-    legend,
-    grid,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
-    skipAnimation,
-    borderRadius,
-    onItemClick,
-    onAxisClick,
+    chartContainerProps,
+    barPlotProps,
+    axisClickHandlerProps,
+    gridProps,
+    clipPathProps,
+    clipPathGroupProps,
+    overlayProps,
+    chartsAxisProps,
+    axisHighlightProps,
+    legendProps,
+    tooltipProps,
+
     children,
-    slots,
-    slotProps,
-    loading,
-    barLabel,
-    highlightedItem,
-    onHighlightChange,
-  } = props;
+  } = useBarChartProps(props);
 
-  const id = useId();
-  const clipPathId = `${id}-clip-path`;
-
-  const hasHorizontalSeries =
-    layout === 'horizontal' ||
-    (layout === undefined && series.some((item) => item.layout === 'horizontal'));
-
-  const defaultAxisConfig = {
-    scaleType: 'band',
-    data: Array.from(
-      { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
-      (_, index) => index,
-    ),
-  } as const;
-
-  const defaultizedAxisHighlight = {
-    ...(hasHorizontalSeries ? ({ y: 'band' } as const) : ({ x: 'band' } as const)),
-    ...axisHighlight,
-  };
   return (
-    <ResponsiveChartContainerPro
-      ref={ref}
-      series={series.map((s) => ({
-        type: 'bar',
-        ...s,
-        layout: hasHorizontalSeries ? 'horizontal' : 'vertical',
-      }))}
-      width={width}
-      height={height}
-      margin={margin}
-      xAxis={
-        xAxis ??
-        (hasHorizontalSeries ? undefined : [{ id: DEFAULT_X_AXIS_KEY, ...defaultAxisConfig }])
-      }
-      yAxis={
-        yAxis ??
-        (hasHorizontalSeries ? [{ id: DEFAULT_Y_AXIS_KEY, ...defaultAxisConfig }] : undefined)
-      }
-      colors={colors}
-      dataset={dataset}
-      sx={sx}
-      disableAxisListener={
-        tooltip?.trigger !== 'axis' &&
-        axisHighlight?.x === 'none' &&
-        axisHighlight?.y === 'none' &&
-        !onAxisClick
-      }
-      highlightedItem={highlightedItem}
-      onHighlightChange={onHighlightChange}
-    >
-      {onAxisClick && <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />}
-      {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}
-      <g clipPath={`url(#${clipPathId})`}>
-        <BarPlot
-          slots={slots}
-          slotProps={slotProps}
-          skipAnimation={skipAnimation}
-          onItemClick={onItemClick}
-          borderRadius={borderRadius}
-          barLabel={barLabel}
-        />
-        <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
+    <ResponsiveChartContainerPro ref={ref} {...chartContainerProps}>
+      {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
+      {props.grid && <ChartsGrid {...gridProps} />}
+      <g {...clipPathGroupProps}>
+        <BarPlot {...barPlotProps} />
+        <ChartsOverlay {...overlayProps} />
       </g>
-      <ChartsAxis
-        topAxis={topAxis}
-        leftAxis={leftAxis}
-        rightAxis={rightAxis}
-        bottomAxis={bottomAxis}
-        slots={slots}
-        slotProps={slotProps}
-      />
-      <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
-      <ChartsAxisHighlight {...defaultizedAxisHighlight} />
-      {!loading && <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />}
-      <ChartsClipPath id={clipPathId} />
+      <ChartsAxis {...chartsAxisProps} />
+      <ChartsLegend {...legendProps} />
+      <ChartsAxisHighlight {...axisHighlightProps} />
+      {!props.loading && <ChartsTooltip {...tooltipProps} />}
+      <ChartsClipPath {...clipPathProps} />
       {children}
     </ResponsiveChartContainerPro>
   );

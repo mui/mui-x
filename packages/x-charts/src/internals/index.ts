@@ -10,6 +10,7 @@ export { useSeries } from '../hooks/useSeries';
 export { useChartContainerHooks } from '../ChartContainer/useChartContainerHooks';
 export { useScatterChartProps } from '../ScatterChart/useScatterChartProps';
 export { useLineChartProps } from '../LineChart/useLineChartProps';
+export { useBarChartProps } from '../BarChart/useBarChartProps';
 
 // utils
 export * from './defaultizeValueFormatter';
