@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { interpolateRgbBasis } from 'd3-interpolate';
 import useId from '@mui/utils/useId';
 import { ChartsAxis, ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import {
@@ -86,6 +87,19 @@ export interface HeatmapProps
   slotProps?: HeatmapSlotProps;
 }
 
+// The GnBu: https://github.com/d3/d3-scale-chromatic/blob/main/src/sequential-multi/GnBu.js
+const defaultColorMap = interpolateRgbBasis([
+  '#f7fcf0',
+  '#e0f3db',
+  '#ccebc5',
+  '#a8ddb5',
+  '#7bccc4',
+  '#4eb3d3',
+  '#2b8cbe',
+  '#0868ac',
+  '#084081',
+]);
+
 export const Heatmap = React.forwardRef(function Heatmap(props: HeatmapProps, ref) {
   const {
     xAxis,
@@ -132,8 +146,8 @@ export const Heatmap = React.forwardRef(function Heatmap(props: HeatmapProps, re
           colorMap: {
             type: 'continuous',
             min: 0,
-            max: 10,
-            color: ['blue', 'red'],
+            max: 100,
+            color: defaultColorMap,
           },
         } as const,
       ],
