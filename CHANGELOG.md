@@ -9,8 +9,8 @@ _Jun 20, 2024_
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-- 🌍 Improve Portuguese (pt-PT) locales on the Data Grid
-- 🌍 Improve Danish (da-DK) locales on the Date and Time Pickers
+- 🌍 Improve Portuguese (pt-PT) locale on the Data Grid
+- 🌍 Improve Danish (da-DK) locale on the Date and Time Pickers
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -20,13 +20,14 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 #### `@mui/x-data-grid@7.7.1`
 
-- [DataGrid] Warn about `getTreeDataPath` reference (#13519) @cherniavskii
 - [DataGrid] Fix CSV export escaping for non-string values (#13560) @joeycumines-scw
 - [l10n] Improve Portuguese (pt-PT) locale (#13348) @joaosreis
 
 #### `@mui/x-data-grid-pro@7.7.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@7.7.1`.
+Same changes as in `@mui/x-data-grid@7.7.1`, plus:
+
+- [DataGrid] Warn about `getTreeDataPath` reference (#13519) @cherniavskii
 
 #### `@mui/x-data-grid-premium@7.7.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -36,13 +37,13 @@ Same changes as in `@mui/x-data-grid-pro@7.7.1`.
 
 #### `@mui/x-date-pickers@7.7.1`
 
-- [fields] Prevents digit editing on `Space` key down (#13510) @flaviendelangle
+- [fields] Prevent digit editing on the `Space` key down (#13510) @flaviendelangle
 - [l10n] Improve Danish (da-DK) locale (#13375) @jacrowland1
 - [pickers] Add context to `onAccept` callback (#13511) @flaviendelangle
-- [pickers] Improves RTL verification for the time pickers default views  (#13447) @arthurbalduini
 - [pickers] Always use the same timezone in the field, the view and the layout components (#13481) @flaviendelangle
 - [pickers] Fix `AdapterDateFnsV3` generated method types (#13464) @alexey-kozlenkov
 - [pickers] Fix controlled `view` behavior (#13552) @LukasTy
+- [TimePicker] Improves RTL verification for the time pickers default views  (#13447) @arthurbalduini
 
 #### `@mui/x-date-pickers-pro@7.7.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -71,6 +72,10 @@ Same changes as in `@mui/x-date-pickers@7.7.1`, plus:
 - [docs] Document the `PickerValidDate` type override (#13476) @flaviendelangle
 - [docs] Fix typo (#13507) @anshtiwatne
 - [docs] Use dedicated tab for weather dataset (#13513) @alexfauquette
+- [x-license] license update proposal (#13459) @michelengelen
+
+### Core
+
 - [infra] Remove explicit `@testing-library/react` dependency (#13478) @LukasTy
 
 ## 7.7.0
