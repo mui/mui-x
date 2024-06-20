@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Watermark } from '@mui/x-license/Watermark';
-import { ResponsiveChartContainerProps } from '@mui/x-charts/ResponsiveChartContainer';
+import type { ResponsiveChartContainerProps } from '@mui/x-charts/ResponsiveChartContainer';
 import { ResizableContainer, useChartContainerDimensions } from '@mui/x-charts/internals';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import { ChartContainerPro } from '../ChartContainerPro';
