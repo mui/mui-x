@@ -11,6 +11,7 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridIconButtonContainer } from './GridIconButtonContainer';
 
 export interface GridColumnHeaderSortIconProps {
+  field: string;
   direction: GridSortDirection;
   index: number | undefined;
   sortingOrder: readonly GridSortDirection[];
