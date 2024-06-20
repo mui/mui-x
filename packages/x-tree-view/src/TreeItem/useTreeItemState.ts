@@ -48,7 +48,6 @@ export function useTreeItemState(itemId: string) {
       }
 
       const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
-
       if (multiple) {
         if (event.shiftKey) {
           instance.expandSelectionRange(event, itemId);
@@ -56,7 +55,7 @@ export function useTreeItemState(itemId: string) {
           instance.selectItem({ event, itemId, keepExistingSelection: true });
         }
       } else {
-        instance.selectItem({ event, itemId });
+        instance.selectItem({ event, itemId, isSelected: true });
       }
     }
   };
