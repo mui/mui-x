@@ -14,7 +14,6 @@ import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems
 import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
 import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
 import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
-import { UseTreeViewIdSignature } from '../internals/plugins/useTreeViewId';
 
 export interface TreeItemSlots {
   /**
@@ -123,7 +122,6 @@ export type TreeItemMinimalPlugins = readonly [
   UseTreeViewFocusSignature,
   UseTreeViewExpansionSignature,
   UseTreeViewKeyboardNavigationSignature,
-  UseTreeViewIdSignature,
 ];
 
 /**
