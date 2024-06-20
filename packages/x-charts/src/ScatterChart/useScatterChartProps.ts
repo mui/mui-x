@@ -100,6 +100,8 @@ export const useScatterChartProps = <T extends ScatterChartProps>(props: T) => {
   const tooltipProps = {
     trigger: 'item' as const,
     ...tooltip,
+    slots,
+    slotProps,
   };
 
   return {
@@ -113,6 +115,7 @@ export const useScatterChartProps = <T extends ScatterChartProps>(props: T) => {
     legendProps,
     axisHighlightProps,
     tooltipProps,
+
     children,
     ...rest,
   };
