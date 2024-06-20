@@ -1,7 +1,7 @@
 import { base64Decode, base64Encode } from '../encoding/base64';
 import { md5 } from '../encoding/md5';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import { LicenseScope, LICENSE_SCOPES } from '../utils/licenseScope';
+import { LicenseScope, LICENSE_SCOPES, ProductScope, PlanVersion } from '../utils/licenseScope';
 import { LicensingModel, LICENSING_MODELS } from '../utils/licensingModel';
 
 const getDefaultReleaseDate = () => {
@@ -21,6 +21,7 @@ interface MuiLicense {
   licensingModel: LicensingModel | null;
   scope: LicenseScope | null;
   expiryTimestamp: number | null;
+  planVersion: PlanVersion;
 }
 
 /**
@@ -41,17 +42,19 @@ const decodeLicenseVersion1 = (license: string): MuiLicense => {
     scope: 'pro',
     licensingModel: 'perpetual',
     expiryTimestamp,
+    planVersion: 'initial',
   };
 };
 
 /**
- * Format: O=${orderNumber},E=${expiryTimestamp},S=${scope},LM=${licensingModel},KV=2`;
+ * Format: O=${orderNumber},E=${expiryTimestamp},S=${scope},LM=${licensingModel},PV=${planVersion},KV=2`;
  */
 const decodeLicenseVersion2 = (license: string): MuiLicense => {
   const licenseInfo: MuiLicense = {
     scope: null,
     licensingModel: null,
     expiryTimestamp: null,
+    planVersion: 'initial',
   };
 
   license
@@ -72,6 +75,10 @@ const decodeLicenseVersion2 = (license: string): MuiLicense => {
         if (expiryTimestamp && !Number.isNaN(expiryTimestamp)) {
           licenseInfo.expiryTimestamp = expiryTimestamp;
         }
+      }
+
+      if (key === 'PV') {
+        licenseInfo.planVersion = value as PlanVersion;
       }
     });
 
@@ -99,10 +106,12 @@ export function verifyLicense({
   releaseInfo,
   licenseKey,
   acceptedScopes,
+  productScope,
 }: {
   releaseInfo: string;
-  licenseKey: string | undefined;
-  acceptedScopes: LicenseScope[];
+  licenseKey?: string;
+  acceptedScopes: readonly LicenseScope[];
+  productScope: ProductScope;
 }): { status: LicenseStatus; meta?: any } {
   if (!releaseInfo) {
     throw new Error('MUI X: The release information is missing. Not able to validate license.');
@@ -165,8 +174,15 @@ export function verifyLicense({
   }
 
   if (license.scope == null || !LICENSE_SCOPES.includes(license.scope)) {
-    console.error('Error checking license. scope not found or invalid!');
+    console.error('MUI X: Error checking license. scope not found or invalid!');
     return { status: LICENSE_STATUS.Invalid };
+  }
+
+  if (license.planVersion === 'initial') {
+    // 'charts-pro' or 'tree-view-pro' can only be used with a newer license
+    if (productScope === 'charts' || productScope === 'tree-view') {
+      return { status: LICENSE_STATUS.ProductNotCovered };
+    }
   }
 
   if (!acceptedScopes.includes(license.scope)) {

@@ -4,6 +4,7 @@ import { ChartContainerProps } from '@mui/x-charts/ChartContainer';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { HighlightedProvider, ZAxisContextProvider } from '@mui/x-charts/context';
 import {
+  CartesianContextProvider,
   ChartsAxesGradients,
   ColorProvider,
   DrawingProvider,
@@ -11,7 +12,10 @@ import {
   SeriesContextProvider,
   useChartContainerHooks,
 } from '@mui/x-charts/internals';
-import { CartesianContextProviderPro } from '../context/CartesianProviderPro';
+import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
+import { getReleaseInfo } from '../internals/utils/releaseInfo';
+
+const releaseInfo = getReleaseInfo();
 
 export interface ChartContainerProProps extends ChartContainerProps {}
 
@@ -39,6 +43,8 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
     children,
   } = props;
 
+  useLicenseVerifier('x-charts-pro', releaseInfo);
+
   const {
     svgRef,
     handleRef,
@@ -57,7 +63,7 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
           dataset={dataset}
           seriesFormatters={seriesFormatters}
         >
-          <CartesianContextProviderPro
+          <CartesianContextProvider
             xAxis={xAxis}
             yAxis={yAxis}
             dataset={dataset}
@@ -85,7 +91,7 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
                 </HighlightedProvider>
               </InteractionProvider>
             </ZAxisContextProvider>
-          </CartesianContextProviderPro>
+          </CartesianContextProvider>
         </SeriesContextProvider>
       </ColorProvider>
     </DrawingProvider>
@@ -182,15 +188,6 @@ ChartContainerPro.propTypes = {
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
-        }),
-        PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
             PropTypes.func,
@@ -205,6 +202,15 @@ ChartContainerPro.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
         }),
       ]),
       data: PropTypes.array,
@@ -253,15 +259,6 @@ ChartContainerPro.propTypes = {
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
-        }),
-        PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
             PropTypes.func,
@@ -276,6 +273,15 @@ ChartContainerPro.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
         }),
       ]),
       data: PropTypes.array,
@@ -320,15 +326,6 @@ ChartContainerPro.propTypes = {
     PropTypes.shape({
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
-        }),
-        PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
             PropTypes.func,
@@ -343,6 +340,15 @@ ChartContainerPro.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
         }),
       ]),
       data: PropTypes.array,
