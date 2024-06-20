@@ -1,5 +1,5 @@
 import * as React from 'react';
-import muiXTelemetry from '@mui/x-telemetry';
+import { sendMuiXTelemetryEvent, muiXTelemetryEvents } from '@mui/x-telemetry';
 import { verifyLicense } from '../verifyLicense/verifyLicense';
 import { LicenseInfo } from '../utils/licenseInfo';
 import {
@@ -60,12 +60,16 @@ export function useLicenseVerifier(
     });
     const fullPackageName = `@mui/${packageName}`;
 
-    muiXTelemetry.send(
-      muiXTelemetry.events.licenseVerification({
-        packageName,
-        releaseInfo,
-        licenseStatus: licenseStatus?.status ?? 'unknown',
-      }),
+    sendMuiXTelemetryEvent(
+      muiXTelemetryEvents.licenseVerification(
+        {
+          packageName,
+          packageReleaseInfo: releaseInfo,
+        },
+        {
+          licenseStatus: licenseStatus?.status,
+        },
+      ),
     );
 
     if (licenseStatus.status === LICENSE_STATUS.Valid) {
