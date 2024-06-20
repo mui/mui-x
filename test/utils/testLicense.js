@@ -10,7 +10,7 @@ export function generateTestLicenseKey() {
     scope: 'premium',
     orderNumber: 'MUI X tests',
     expiryDate,
-    planVersion: 'initial',
+    planVersion: 'Q3-2024',
   });
 }
 

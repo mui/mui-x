@@ -34,7 +34,7 @@ export function showLicenseKeyPlanMismatchError() {
 
 export function showProductNotCoveredError() {
   showError([
-    'MUI X: Product not not covered by plan.',
+    'MUI X: Product not covered by plan.',
     '',
     'The component you are trying to use is not included in the Pro Plan your purchased. You are using a license that is only compatible with the `@mui/x-data-grid-pro` and `@mui/x-date-pickers-pro` commercial packages.',
     '',
