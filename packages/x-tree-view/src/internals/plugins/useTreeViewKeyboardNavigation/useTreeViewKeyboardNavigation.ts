@@ -108,7 +108,12 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         if (params.multiSelect && event.shiftKey) {
           instance.expandSelectionRange(event, itemId);
         } else {
-          instance.selectItem({ event, itemId, keepExistingSelection: params.multiSelect });
+          instance.selectItem({
+            event,
+            itemId,
+            keepExistingSelection: params.multiSelect,
+            isSelected: true,
+          });
         }
         break;
       }
