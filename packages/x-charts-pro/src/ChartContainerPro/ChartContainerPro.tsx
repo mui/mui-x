@@ -1,33 +1,104 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Watermark } from '@mui/x-license/Watermark';
-import { ResponsiveChartContainerProps } from '@mui/x-charts/ResponsiveChartContainer';
-import { ResizableContainer, useChartContainerDimensions } from '@mui/x-charts/internals';
+import { ChartContainerProps } from '@mui/x-charts/ChartContainer';
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { HighlightedProvider, ZAxisContextProvider } from '@mui/x-charts/context';
+import {
+  CartesianContextProvider,
+  ChartsAxesGradients,
+  ColorProvider,
+  DrawingProvider,
+  InteractionProvider,
+  SeriesContextProvider,
+  useChartContainerHooks,
+} from '@mui/x-charts/internals';
+import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
-import { ChartContainerPro } from '../ChartContainerPro';
-
-export interface ResponsiveChartContainerProProps extends ResponsiveChartContainerProps {}
 
 const releaseInfo = getReleaseInfo();
 
-const ResponsiveChartContainerPro = React.forwardRef(function ResponsiveChartContainerPro(
-  props: ResponsiveChartContainerProProps,
+export interface ChartContainerProProps extends ChartContainerProps {}
+
+const ChartContainerPro = React.forwardRef(function ChartContainer(
+  props: ChartContainerProProps,
   ref,
 ) {
-  const { width: inWidth, height: inHeight, ...other } = props;
-  const [containerRef, width, height] = useChartContainerDimensions(inWidth, inHeight);
+  const {
+    width,
+    height,
+    series,
+    margin,
+    xAxis,
+    yAxis,
+    zAxis,
+    colors,
+    dataset,
+    sx,
+    title,
+    desc,
+    disableAxisListener,
+    highlightedItem,
+    onHighlightChange,
+    plugins,
+    children,
+  } = props;
+
+  useLicenseVerifier('x-charts-pro', releaseInfo);
+
+  const {
+    svgRef,
+    handleRef,
+    xExtremumGetters,
+    yExtremumGetters,
+    seriesFormatters,
+    colorProcessors,
+  } = useChartContainerHooks(ref, plugins);
 
   return (
-    <ResizableContainer ref={containerRef} ownerState={{ width: inWidth, height: inHeight }}>
-      {width && height ? (
-        <ChartContainerPro {...other} width={width} height={height} ref={ref} />
-      ) : null}
-      <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
-    </ResizableContainer>
+    <DrawingProvider width={width} height={height} margin={margin} svgRef={svgRef}>
+      <ColorProvider colorProcessors={colorProcessors}>
+        <SeriesContextProvider
+          series={series}
+          colors={colors}
+          dataset={dataset}
+          seriesFormatters={seriesFormatters}
+        >
+          <CartesianContextProvider
+            xAxis={xAxis}
+            yAxis={yAxis}
+            dataset={dataset}
+            xExtremumGetters={xExtremumGetters}
+            yExtremumGetters={yExtremumGetters}
+          >
+            <ZAxisContextProvider zAxis={zAxis} dataset={dataset}>
+              <InteractionProvider>
+                <HighlightedProvider
+                  highlightedItem={highlightedItem}
+                  onHighlightChange={onHighlightChange}
+                >
+                  <ChartsSurface
+                    width={width}
+                    height={height}
+                    ref={handleRef}
+                    sx={sx}
+                    title={title}
+                    desc={desc}
+                    disableAxisListener={disableAxisListener}
+                  >
+                    <ChartsAxesGradients />
+                    {children}
+                  </ChartsSurface>
+                </HighlightedProvider>
+              </InteractionProvider>
+            </ZAxisContextProvider>
+          </CartesianContextProvider>
+        </SeriesContextProvider>
+      </ColorProvider>
+    </DrawingProvider>
   );
 });
 
-ResponsiveChartContainerPro.propTypes = {
+ChartContainerPro.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -51,9 +122,9 @@ ResponsiveChartContainerPro.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
-   * The height of the chart in px. If not defined, it takes the height of the parent element.
+   * The height of the chart in px.
    */
-  height: PropTypes.number,
+  height: PropTypes.number.isRequired,
   /**
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */
@@ -103,9 +174,9 @@ ResponsiveChartContainerPro.propTypes = {
     y: PropTypes.number,
   }),
   /**
-   * The width of the chart in px. If not defined, it takes the width of the parent element.
+   * The width of the chart in px.
    */
-  width: PropTypes.number,
+  width: PropTypes.number.isRequired,
   /**
    * The configuration of the x-axes.
    * If not provided, a default axis config is used.
@@ -287,4 +358,4 @@ ResponsiveChartContainerPro.propTypes = {
   ),
 } as any;
 
-export { ResponsiveChartContainerPro };
+export { ChartContainerPro };
