@@ -110,6 +110,30 @@ describe('<DesktopDatePicker />', () => {
       fireEvent.click(screen.getByText('2020'));
       expect(document.activeElement).to.have.text('5');
     });
+
+    it('should go to the relevant `view` when `view` prop changes', () => {
+      const { setProps } = render(
+        <DesktopDatePicker
+          defaultValue={adapterToUse.date('2018-01-01')}
+          views={['year', 'month', 'day']}
+          view="month"
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      expect(screen.getByRole('radio', { checked: true, name: 'January' })).to.not.equal(null);
+
+      // Dismiss the picker
+      userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+      setProps({ view: 'year' });
+      openPicker({ type: 'date', variant: 'desktop' });
+      // wait for all pending changes to be flushed
+      clock.runToLast();
+
+      // should have changed the open view
+      expect(screen.getByRole('radio', { checked: true, name: '2018' })).to.not.equal(null);
+    });
   });
 
   describe('scroll', () => {
