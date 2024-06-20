@@ -69,7 +69,10 @@
     },
     "onAccept": {
       "description": "Callback fired when the value is accepted.",
-      "typeDescriptions": { "value": "The value that was just accepted." }
+      "typeDescriptions": {
+        "value": "The value that was just accepted.",
+        "context": "The context containing the validation result of the current value."
+      }
     },
     "onChange": {
       "description": "Callback fired when the value changes.",
