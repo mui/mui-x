@@ -1,8 +1,7 @@
-import * as React from 'react';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 
 export function useXAxis(identifier?: number | string) {
-  const { xAxis, xAxisIds } = React.useContext(CartesianContext);
+  const { xAxis, xAxisIds } = useCartesianContext();
 
   const id = typeof identifier === 'string' ? identifier : xAxisIds[identifier ?? 0];
 
@@ -10,7 +9,7 @@ export function useXAxis(identifier?: number | string) {
 }
 
 export function useYAxis(identifier?: number | string) {
-  const { yAxis, yAxisIds } = React.useContext(CartesianContext);
+  const { yAxis, yAxisIds } = useCartesianContext();
 
   const id = typeof identifier === 'string' ? identifier : yAxisIds[identifier ?? 0];
 
