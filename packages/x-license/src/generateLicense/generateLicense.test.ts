@@ -82,7 +82,7 @@ describe('License: generateLicense', () => {
         planVersion: 'Q3-2024',
       }),
     ).to.equal(
-      '4adf08e54d606215809064d1d31b6b39Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1zdWJzY3JpcHRpb24sUFY9UTMtMjAyNCxLVj0y',
+      'b76c2067275b3b566fcae1d28ad23c91Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLFBWPVEzLTIwMjQsS1Y9Mg==',
     );
   });
 });
