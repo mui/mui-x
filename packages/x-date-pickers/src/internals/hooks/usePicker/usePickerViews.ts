@@ -163,13 +163,13 @@ export const usePickerViews = <
   TExternalProps,
   TAdditionalProps
 >): UsePickerViewsResponse<TView> => {
-  const { onChange, open, onSelectedSectionsChange, onClose } = propsFromPickerValue;
-  const { views, openTo, onViewChange, viewRenderers, timezone } = props;
+  const { onChange, open, onClose } = propsFromPickerValue;
+  const { view: inView, views, openTo, onViewChange, viewRenderers, timezone } = props;
   const { className, sx, ...propsToForwardToView } = props;
 
   const { view, setView, defaultView, focusedView, setFocusedView, setValueAndGoToNextView } =
     useViews({
-      view: undefined,
+      view: inView,
       views,
       openTo,
       onChange,
