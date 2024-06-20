@@ -6,7 +6,7 @@ import type { GridApiCommunity } from '../../../../models/api/gridApiCommunity';
 import { buildWarning } from '../../../../utils/warning';
 
 function sanitizeCellValue(value: unknown, csvOptions: CSVOptions): string {
-  const valueStr = typeof value === 'string' ? value : '' + value;
+  const valueStr = typeof value === 'string' ? value : `${value}`;
 
   if (csvOptions.shouldAppendQuotes || csvOptions.escapeFormulas) {
     const escapedValue = valueStr.replace(/"/g, '""');
