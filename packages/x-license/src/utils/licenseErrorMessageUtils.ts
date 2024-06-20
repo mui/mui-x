@@ -38,7 +38,7 @@ export function showProductNotCoveredError() {
     '',
     'The component you are trying to use is not included in the Pro Plan your purchased. You are using a license that is only compatible with the `@mui/x-data-grid-pro` and `@mui/x-date-pickers-pro` commercial packages.',
     '',
-    'To start using another Pro package, please consider reaching to our sales team to upgrade your license.',
+    'To start using another Pro package, please consider reaching to our sales team to upgrade your license or visit https://mui.com/r/x-get-license to get a new license key.',
   ]);
 }
 
