@@ -52,7 +52,7 @@ function getIcon(
 }
 
 function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
-  const { direction, index, sortingOrder, disabled } = props;
+  const { direction, index, sortingOrder, disabled, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
@@ -71,6 +71,7 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
       size="small"
       disabled={disabled}
       {...rootProps.slotProps?.baseIconButton}
+      {...other}
     >
       {iconElement}
     </rootProps.slots.baseIconButton>
