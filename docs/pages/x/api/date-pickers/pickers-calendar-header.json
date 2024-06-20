@@ -5,6 +5,7 @@
       "type": { "name": "string" },
       "default": "`${adapter.formats.month} ${adapter.formats.year}`"
     },
+    "labelId": { "type": { "name": "string" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -34,7 +35,7 @@
     },
     {
       "name": "switchViewIcon",
-      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.",
+      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is \"year\".",
       "default": "ArrowDropDown",
       "class": "MuiPickersCalendarHeader-switchViewIcon"
     },

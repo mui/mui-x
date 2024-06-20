@@ -35,8 +35,8 @@
     "directory": "packages/x-telemetry"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.6",
-    "@mui/utils": "^5.15.14",
+    "@babel/runtime": "^7.24.7",
+    "@mui/utils": "^5.15.20",
     "yargs": "^17.7.2"
   },
   "peerDependencies": {
