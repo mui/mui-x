@@ -8,6 +8,7 @@ export * from '../ResponsiveChartContainer/ResizableContainer';
 export { useReducedMotion } from '../hooks/useReducedMotion';
 export { useSeries } from '../hooks/useSeries';
 export { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+export { useChartContainerHooks } from '../ChartContainer/useChartContainerHooks';
 
 // utils
 export * from './defaultizeValueFormatter';
@@ -16,11 +17,13 @@ export * from './getLabel';
 
 // contexts
 
-export * from '../context/CartesianContextProvider';
+export * from '../context/CartesianProvider';
 export * from '../context/DrawingProvider';
+export * from '../context/ColorProvider';
 export * from '../context/InteractionProvider';
 export * from '../context/SeriesContextProvider';
 export * from '../context/ZAxisContextProvider';
+export type * from '../context/context.types';
 
 // series configuration
 export * from '../models/seriesType/config';

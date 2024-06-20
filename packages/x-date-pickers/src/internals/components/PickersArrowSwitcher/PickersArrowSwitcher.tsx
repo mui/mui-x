@@ -79,6 +79,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     isPreviousHidden,
     onGoToPrevious,
     previousLabel,
+    labelId,
     ...other
   } = props;
 
@@ -169,7 +170,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
         )}
       </PreviousIconButton>
       {children ? (
-        <Typography variant="subtitle1" component="span">
+        <Typography variant="subtitle1" component="span" id={labelId}>
           {children}
         </Typography>
       ) : (

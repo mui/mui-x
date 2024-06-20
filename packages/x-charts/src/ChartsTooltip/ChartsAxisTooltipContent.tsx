@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { AxisInteractionData } from '../context/InteractionProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 import { AxisDefaultized } from '../models/axis';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
@@ -61,7 +61,7 @@ function ChartsAxisTooltipContent(props: {
   const dataIndex = isXaxis ? axisData.x && axisData.x.index : axisData.y && axisData.y.index;
   const axisValue = isXaxis ? axisData.x && axisData.x.value : axisData.y && axisData.y.value;
 
-  const { xAxisIds, xAxis, yAxisIds, yAxis } = React.useContext(CartesianContext);
+  const { xAxisIds, xAxis, yAxisIds, yAxis } = useCartesianContext();
   const { zAxisIds, zAxis } = React.useContext(ZAxisContext);
   const series = useSeries();
 
