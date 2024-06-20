@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v6.20.2
+
+_Jun 20, 2024_
+
+We'd like to offer a big thanks to the 1 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@v6.20.2`
+
+- [fields] Do not apply digit editing when pressing `Space` (@flaviendelangle) (#13516) @github-actions[bot]
+- [pickers] Fix controlled `view` behavior (@LukasTy) (#13559) @github-actions[bot]
+
 ## 6.20.1
 
 _Jun 6, 2024_
