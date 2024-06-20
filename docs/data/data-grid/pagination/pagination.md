@@ -6,9 +6,6 @@
 
 The default pagination behavior depends on your plan:
 
-- For the Community Data Grid, pagination is enabled by default and cannot be disabled.
-- For the Pro and Premium Data Grid, pagination is disabled by default; use the `pagination` prop to enable it.
-
 :::info
 Exported CSV and Excel files include all data and disregard pagination by default.
 To apply pagination to exported files, review the available [row selectors](/x/react-data-grid/export/#exported-rows).
@@ -16,11 +13,13 @@ To apply pagination to exported files, review the available [row selectors](/x/r
 
 ### Community plan
 
+For the Community Data Grid, pagination is enabled by default and cannot be disabled.
+
 {{"demo": "PaginationCommunityNoSnap.js", "bg": "inline"}}
 
 ### Pro [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') and Premium [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-The following example shows how to activate pagination on a Premium Data Grid component:
+For the Pro and Premium Data Grid, pagination is disabled by default; use the `pagination` prop to enable it.
 
 {{"demo": "PageSizeAutoPremium.js", "bg": "inline"}}
 
