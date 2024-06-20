@@ -151,7 +151,6 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     lineHighlightPlotProps,
     legendProps,
     tooltipProps,
-
     children,
   } = useLineChartProps(props);
 
