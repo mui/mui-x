@@ -5,27 +5,25 @@ import type { GridStateColDef } from '../../../../models/colDef/gridColDef';
 import type { GridApiCommunity } from '../../../../models/api/gridApiCommunity';
 import { buildWarning } from '../../../../utils/warning';
 
-function sanitizeCellValue(value: any, csvOptions: CSVOptions) {
-  if (typeof value === 'string') {
-    if (csvOptions.shouldAppendQuotes || csvOptions.escapeFormulas) {
-      const escapedValue = value.replace(/"/g, '""');
-      // Make sure value containing delimiter or line break won't be split into multiple cells
-      if ([csvOptions.delimiter, '\n', '\r', '"'].some((delimiter) => value.includes(delimiter))) {
-        return `"${escapedValue}"`;
-      }
-      if (csvOptions.escapeFormulas) {
-        // See https://owasp.org/www-community/attacks/CSV_Injection
-        if (['=', '+', '-', '@', '\t', '\r'].includes(escapedValue[0])) {
-          return `'${escapedValue}`;
-        }
-      }
-      return escapedValue;
-    }
+function sanitizeCellValue(value: unknown, csvOptions: CSVOptions): string {
+  const valueStr = typeof value === 'string' ? value : `${value}`;
 
-    return value;
+  if (csvOptions.shouldAppendQuotes || csvOptions.escapeFormulas) {
+    const escapedValue = valueStr.replace(/"/g, '""');
+    // Make sure value containing delimiter or line break won't be split into multiple cells
+    if ([csvOptions.delimiter, '\n', '\r', '"'].some((delimiter) => valueStr.includes(delimiter))) {
+      return `"${escapedValue}"`;
+    }
+    if (csvOptions.escapeFormulas) {
+      // See https://owasp.org/www-community/attacks/CSV_Injection
+      if (['=', '+', '-', '@', '\t', '\r'].includes(escapedValue[0])) {
+        return `'${escapedValue}`;
+      }
+    }
+    return escapedValue;
   }
 
-  return value;
+  return valueStr;
 }
 
 export const serializeCellValue = (
