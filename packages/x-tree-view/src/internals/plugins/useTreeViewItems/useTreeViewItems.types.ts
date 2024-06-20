@@ -154,7 +154,7 @@ export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   state: UseTreeViewItemsState<any>;
   contextValue: UseTreeViewItemsContextValue;
   experimentalFeatures: 'indentationAtItemLevel';
-  dependantPlugins: [UseTreeViewIdSignature];
+  dependencies: [UseTreeViewIdSignature];
 }>;
 
 export type TreeViewItemMetaMap = { [itemId: string]: TreeViewItemMeta };
