@@ -59,5 +59,7 @@
 /x/react-date-pickers/calendar/ /x/react-date-pickers/date-calendar/ 301
 /x/react-date-pickers/legacy-date-time-picker/ /x/react-date-pickers/date-time-picker/ 301
 # 2024
+/x/react-charts/heat-map/ /x/react-charts/heatmap/ 301
+/x/react-charts/tree-map/ /x/react-charts/treemap/ 301
 
 # Proxies
