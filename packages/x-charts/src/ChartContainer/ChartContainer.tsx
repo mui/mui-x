@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useForkRef from '@mui/utils/useForkRef';
 import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
 import {
   SeriesContextProvider,
@@ -8,23 +7,28 @@ import {
 } from '../context/SeriesContextProvider';
 import { InteractionProvider } from '../context/InteractionProvider';
 import { ColorProvider } from '../context/ColorProvider';
-import { useReducedMotion } from '../hooks/useReducedMotion';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import {
   CartesianContextProvider,
   CartesianContextProviderProps,
-} from '../context/CartesianContextProvider';
+} from '../context/CartesianProvider';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
-import { HighlightedProvider, HighlightedProviderProps } from '../context';
+import {
+  HighlightedProvider,
+  HighlightedProviderProps,
+  ZAxisContextProvider,
+  ZAxisContextProviderProps,
+} from '../context';
 import { ChartsPluginType } from '../models/plugin';
 import { ChartSeriesType } from '../models/seriesType/config';
-import { usePluginsMerge } from './usePluginsMerge';
+import { useChartContainerHooks } from './useChartContainerHooks';
 
 export type ChartContainerProps = Omit<
   ChartsSurfaceProps &
     Omit<SeriesContextProviderProps, 'seriesFormatters'> &
     Omit<DrawingProviderProps, 'svgRef'> &
     Omit<CartesianContextProviderProps, 'xExtremumGetters' | 'yExtremumGetters'> &
+    ZAxisContextProviderProps &
     HighlightedProviderProps,
   'children'
 > & {
@@ -44,6 +48,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
     margin,
     xAxis,
     yAxis,
+    zAxis,
     colors,
     dataset,
     sx,
@@ -55,12 +60,14 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
     plugins,
     children,
   } = props;
-  const svgRef = React.useRef<SVGSVGElement>(null);
-  const handleRef = useForkRef(ref, svgRef);
-
-  const { xExtremumGetters, yExtremumGetters, seriesFormatters, colorProcessors } =
-    usePluginsMerge(plugins);
-  useReducedMotion(); // a11y reduce motion (see: https://react-spring.dev/docs/utilities/use-reduced-motion)
+  const {
+    svgRef,
+    handleRef,
+    xExtremumGetters,
+    yExtremumGetters,
+    seriesFormatters,
+    colorProcessors,
+  } = useChartContainerHooks(ref, plugins);
 
   return (
     <DrawingProvider width={width} height={height} margin={margin} svgRef={svgRef}>
@@ -78,25 +85,27 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
             xExtremumGetters={xExtremumGetters}
             yExtremumGetters={yExtremumGetters}
           >
-            <InteractionProvider>
-              <HighlightedProvider
-                highlightedItem={highlightedItem}
-                onHighlightChange={onHighlightChange}
-              >
-                <ChartsSurface
-                  width={width}
-                  height={height}
-                  ref={handleRef}
-                  sx={sx}
-                  title={title}
-                  desc={desc}
-                  disableAxisListener={disableAxisListener}
+            <ZAxisContextProvider zAxis={zAxis} dataset={dataset}>
+              <InteractionProvider>
+                <HighlightedProvider
+                  highlightedItem={highlightedItem}
+                  onHighlightChange={onHighlightChange}
                 >
-                  <ChartsAxesGradients />
-                  {children}
-                </ChartsSurface>
-              </HighlightedProvider>
-            </InteractionProvider>
+                  <ChartsSurface
+                    width={width}
+                    height={height}
+                    ref={handleRef}
+                    sx={sx}
+                    title={title}
+                    desc={desc}
+                    disableAxisListener={disableAxisListener}
+                  >
+                    <ChartsAxesGradients />
+                    {children}
+                  </ChartsSurface>
+                </HighlightedProvider>
+              </InteractionProvider>
+            </ZAxisContextProvider>
           </CartesianContextProvider>
         </SeriesContextProvider>
       </ColorProvider>
@@ -323,6 +332,43 @@ ChartContainer.propTypes = {
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
+    }),
+  ),
+  /**
+   * The configuration of the z-axes.
+   */
+  zAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+        PropTypes.shape({
+          color: PropTypes.oneOfType([
+            PropTypes.arrayOf(PropTypes.string.isRequired),
+            PropTypes.func,
+          ]).isRequired,
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          thresholds: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+          ).isRequired,
+          type: PropTypes.oneOf(['piecewise']).isRequired,
+        }),
+      ]),
+      data: PropTypes.array,
+      dataKey: PropTypes.string,
+      id: PropTypes.string,
     }),
   ),
 } as any;

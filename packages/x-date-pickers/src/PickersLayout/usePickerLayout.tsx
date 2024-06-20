@@ -74,7 +74,6 @@ const usePickerLayout = <
   const classes = useUtilityClasses(props);
 
   // Action bar
-
   const ActionBar = slots?.actionBar ?? PickersActionBar;
   const actionBarProps = useSlotProps({
     elementType: ActionBar,
@@ -93,7 +92,6 @@ const usePickerLayout = <
   const actionBar = <ActionBar {...actionBarProps} />;
 
   // Toolbar
-
   const Toolbar = slots?.toolbar;
   const toolbarProps = useSlotProps({
     elementType: Toolbar!,
@@ -114,11 +112,9 @@ const usePickerLayout = <
   const toolbar = toolbarHasView(toolbarProps) && !!Toolbar ? <Toolbar {...toolbarProps} /> : null;
 
   // Content
-
   const content = children;
 
   // Tabs
-
   const Tabs = slots?.tabs;
   const tabs =
     view && Tabs ? (
@@ -126,7 +122,6 @@ const usePickerLayout = <
     ) : null;
 
   // Shortcuts
-
   const Shortcuts = slots?.shortcuts ?? PickersShortcuts;
   const shortcutsProps = useSlotProps({
     elementType: Shortcuts!,
@@ -144,7 +139,6 @@ const usePickerLayout = <
       wrapperVariant,
     },
   });
-
   const shortcuts = view && !!Shortcuts ? <Shortcuts {...shortcutsProps} /> : null;
 
   return {

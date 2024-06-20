@@ -3,6 +3,87 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.7.0
+
+_Jun 13, 2024_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Allow customization of the Pickers month and the year buttons
+- 🌍 Improve Persian (fa-IR), Portuguese (pt-PT), and Russian (ru-RU) locales on the Data Grid
+- 🌍 Improve Korean (ko-KR) and Persian (fa-IR) locales on the Date and Time Pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.7.0`
+
+- [DataGrid] Add `getFilterState` method (#13418) @cherniavskii
+- [DataGrid] Do not show resize separators for column groups (#13455) @cherniavskii
+- [l10n] Improve Persian (fa-IR) locale (#13402) @fakhamatia
+- [l10n] Improve Portuguese (pt-PT) locale (#13384) @olavocarvalho
+- [l10n] Improve Russian (ru-RU) locale (#11210) @dastan-akhmetov-scity
+
+#### `@mui/x-data-grid-pro@7.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.7.0`, plus:
+
+- [DataGridPro] Do not render detail panel if the focused cell is not visible (#13456) @cherniavskii
+
+#### `@mui/x-data-grid-premium@7.7.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.7.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.7.0`
+
+- [l10n] Improve Korean (ko-KR) locale (#13452) @ryxxn
+- [l10n] Improve Persian (fa-IR) locale (#13402) @fakhamatia
+- [pickers] Allow to customize the month and the year buttons (#13321) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.7.0`.
+
+### Charts
+
+#### `@mui/x-charts@7.7.0`
+
+- [charts] Add watermark on the pro `ResponsiveChartContainer` (#13398) @alexfauquette
+- [charts] Allow to specify y-axis configuration (#13438) @alexfauquette
+- [charts] Fix eslint for react compiler (#13444) @alexfauquette
+- [charts] Improve themeAugmentation typing (#13433) @noraleonte
+- [charts] Move the `ZAxisContextProvider` by default in the `ChartContainer` (#13465) @alexfauquette
+- [charts] Use plugins to define series extremum and colors (#13397) @alexfauquette
+
+### Tree View
+
+#### `@mui/x-tree-view@7.7.0`
+
+- [TreeView] Improve TypeScript for plugins (#13380) @flaviendelangle
+- [TreeView] Improve the typing of the cancelable events (#13152) @flaviendelangle
+- [TreeView] Prepare support for PigmentCSS (#13412) @flaviendelangle
+- [TreeView] Refactor the tree view internals to prepare for headless API (#13311) @flaviendelangle
+
+### Docs
+
+- [docs] Add `renderHeader` recipe to the Master Details docs (#13370) @michelengelen
+- [docs] Add lazy loading detail panel demo (#13453) @cherniavskii
+- [docs] Add small edits to the Data Grid overview page (#13060) @danilo-leal
+- [docs] Update a11y pages description (#13417) @danilo-leal
+- [docs] improve the writing on the "Quick filter outside of the grid" example (#13155) @michelengelen
+
+### Core
+
+- [core] Add `eslint-plugin-react-compiler` experimental version and rules (#13415) @JCQuintas
+- [core] Minor setup cleanup (#13467) @LukasTy
+- [infra] Adjust CI setup (#13448) @LukasTy
+- [test] Add tests for the custom slots of `TreeItem2` (#13314) @flaviendelangle
+
 ## 7.6.2
 
 _Jun 6, 2024_

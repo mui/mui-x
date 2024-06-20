@@ -8,6 +8,13 @@ import { TreeItemClasses } from './treeItemClasses';
 import { TreeViewItemId } from '../models';
 import { SlotComponentPropsFromProps } from '../internals/models';
 import { MuiCancellableEventHandler } from '../internals/models/MuiCancellableEvent';
+import { UseTreeViewIconsSignature } from '../internals/plugins/useTreeViewIcons';
+import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
+import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
+import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
+import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
+import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
+import { UseTreeViewIdSignature } from '../internals/plugins/useTreeViewId';
 
 export interface TreeItemSlots {
   /**
@@ -105,3 +112,21 @@ export interface TreeItemOwnerState extends TreeItemProps {
   disabled: boolean;
   indentationAtItemLevel: boolean;
 }
+
+/**
+ * Plugins that need to be present in the Tree View in order for `TreeItem` to work correctly.
+ */
+export type TreeItemMinimalPlugins = readonly [
+  UseTreeViewIconsSignature,
+  UseTreeViewSelectionSignature,
+  UseTreeViewItemsSignature,
+  UseTreeViewFocusSignature,
+  UseTreeViewExpansionSignature,
+  UseTreeViewKeyboardNavigationSignature,
+  UseTreeViewIdSignature,
+];
+
+/**
+ * Plugins that `TreeItem` can use if they are present, but are not required.
+ */
+export type TreeItemOptionalPlugins = readonly [];

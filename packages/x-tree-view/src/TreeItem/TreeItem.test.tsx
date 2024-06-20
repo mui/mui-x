@@ -2,47 +2,11 @@ import * as React from 'react';
 import { expect } from 'chai';
 import PropTypes from 'prop-types';
 import { createRenderer } from '@mui/internal-test-utils';
-import { SimpleTreeViewPluginSignatures } from '@mui/x-tree-view/SimpleTreeView/SimpleTreeView.plugins';
 import { TreeItem, treeItemClasses as classes } from '@mui/x-tree-view/TreeItem';
-import { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvider';
 import { TreeViewContext } from '@mui/x-tree-view/internals/TreeViewProvider/TreeViewContext';
 import { describeConformance } from 'test/utils/describeConformance';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-
-const TEST_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue<SimpleTreeViewPluginSignatures> = {
-  instance: {
-    isItemExpandable: () => false,
-    isItemExpanded: () => false,
-    isItemFocused: () => false,
-    isItemSelected: () => false,
-    isItemDisabled: (itemId: string | null): itemId is string => !!itemId,
-    getTreeItemIdAttribute: () => '',
-    mapFirstCharFromJSX: () => () => {},
-    canItemBeTabbed: () => false,
-  } as any,
-  publicAPI: {
-    focusItem: () => {},
-    getItem: () => ({}),
-    setItemExpansion: () => {},
-  },
-  runItemPlugins: () => ({ rootRef: null, contentRef: null }),
-  wrapItem: ({ children }) => children,
-  wrapRoot: ({ children }) => children,
-  disabledItemsFocusable: false,
-  indentationAtItemLevel: false,
-  icons: {
-    slots: {},
-    slotProps: {},
-  },
-  selection: {
-    multiSelect: false,
-    checkboxSelection: false,
-    disableSelection: false,
-  },
-  rootRef: {
-    current: null,
-  },
-};
+import { getFakeContextValue } from 'test/utils/tree-view/fakeContextValue';
 
 describeTreeView<[]>('TreeItem component', ({ render, treeItemComponentName }) => {
   describe('ContentComponent / ContentProps props (TreeItem only)', () => {
@@ -83,6 +47,18 @@ describeTreeView<[]>('TreeItem component', ({ render, treeItemComponentName }) =
 
       expect(response.getItemContent('1').textContent).to.equal('ABCDEF');
     });
+
+    it('should render TreeItem when itemId prop is escaping characters without throwing an error', function test() {
+      if (treeItemComponentName === 'TreeItem2') {
+        this.skip();
+      }
+
+      const response = render({
+        items: [{ id: 'C:\\\\', label: 'ABCDEF' }],
+      });
+
+      expect(response.getItemContent('C:\\\\').textContent).to.equal('ABCDEF');
+    });
   });
 });
 
@@ -94,17 +70,13 @@ describe('<TreeItem />', () => {
     inheritComponent: 'li',
     wrapMount: (mount) => (item: React.ReactNode) => {
       const wrapper = mount(
-        <TreeViewContext.Provider value={TEST_TREE_VIEW_CONTEXT_VALUE}>
-          {item}
-        </TreeViewContext.Provider>,
+        <TreeViewContext.Provider value={getFakeContextValue()}>{item}</TreeViewContext.Provider>,
       );
       return wrapper.childAt(0);
     },
     render: (item) => {
       return render(
-        <TreeViewContext.Provider value={TEST_TREE_VIEW_CONTEXT_VALUE}>
-          {item}
-        </TreeViewContext.Provider>,
+        <TreeViewContext.Provider value={getFakeContextValue()}>{item}</TreeViewContext.Provider>,
       );
     },
     muiName: 'MuiTreeItem',

@@ -7,6 +7,7 @@ import {
   ChartsReferenceLineClasses,
   getReferenceLineUtilityClass,
 } from './chartsReferenceLineClasses';
+import { buildWarning } from '../internals/warning';
 
 export type ChartsXReferenceLineProps<
   TValue extends string | number | Date = string | number | Date,
@@ -72,7 +73,11 @@ export function getXReferenceLineClasses(classes?: Partial<ChartsReferenceLineCl
   );
 }
 
-let warnedOnce = false;
+const valueError = buildWarning(
+  (value, id) =>
+    `MUI X Charts: the value ${value} does not exist in the data of x axis with id ${id}.`,
+  'error',
+);
 
 function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
   const {
@@ -93,12 +98,7 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
 
   if (xPosition === undefined) {
     if (process.env.NODE_ENV !== 'production') {
-      if (!warnedOnce) {
-        warnedOnce = true;
-        console.error(
-          `MUI X Charts: the value ${x} does not exist in the data of x axis with id ${axisId}.`,
-        );
-      }
+      valueError(x, axisId);
     }
     return null;
   }
