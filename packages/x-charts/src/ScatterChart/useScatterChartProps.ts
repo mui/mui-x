@@ -9,7 +9,7 @@ import type { ScatterPlotProps } from './ScatterPlot';
  * @param props The input props for ScatterChart
  * @returns An object with props for the children components of ScatterChart
  */
-export const useScatterChartProps = <T extends ScatterChartProps>(props: T) => {
+export const useScatterChartProps = (props: ScatterChartProps) => {
   const {
     xAxis,
     yAxis,
@@ -37,7 +37,6 @@ export const useScatterChartProps = <T extends ScatterChartProps>(props: T) => {
     loading,
     highlightedItem,
     onHighlightChange,
-    ...rest
   } = props;
 
   const chartContainerProps = {
@@ -115,8 +114,6 @@ export const useScatterChartProps = <T extends ScatterChartProps>(props: T) => {
     legendProps,
     axisHighlightProps,
     tooltipProps,
-
     children,
-    ...rest,
   };
 };

@@ -9,7 +9,7 @@ import type { LineChartProps } from './LineChart';
  * @param props The input props for LineChart
  * @returns An object with props for the children components of LineChart
  */
-export const useLineChartProps = <T extends LineChartProps>(props: T) => {
+export const useLineChartProps = (props: LineChartProps) => {
   const {
     xAxis,
     yAxis,
@@ -40,7 +40,6 @@ export const useLineChartProps = <T extends LineChartProps>(props: T) => {
     loading,
     highlightedItem,
     onHighlightChange,
-    ...rest
   } = props;
 
   const id = useId();
@@ -168,8 +167,6 @@ export const useLineChartProps = <T extends LineChartProps>(props: T) => {
     lineHighlightPlotProps,
     legendProps,
     tooltipProps,
-
     children,
-    ...rest,
   };
 };

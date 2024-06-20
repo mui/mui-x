@@ -9,7 +9,7 @@ import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
  * @param props The input props for BarChart
  * @returns An object with props for the children components of BarChart
  */
-export const useBarChartProps = <T extends BarChartProps>(props: T) => {
+export const useBarChartProps = (props: BarChartProps) => {
   const {
     xAxis,
     yAxis,
@@ -40,7 +40,6 @@ export const useBarChartProps = <T extends BarChartProps>(props: T) => {
     onHighlightChange,
     borderRadius,
     barLabel,
-    ...rest
   } = props;
 
   const id = useId();
@@ -155,8 +154,6 @@ export const useBarChartProps = <T extends BarChartProps>(props: T) => {
     axisHighlightProps,
     legendProps,
     tooltipProps,
-
     children,
-    ...rest,
   };
 };
