@@ -8,6 +8,7 @@ export * from '../ResponsiveChartContainer/ResizableContainer';
 export { useReducedMotion } from '../hooks/useReducedMotion';
 export { useSeries } from '../hooks/useSeries';
 export { useChartContainerHooks } from '../ChartContainer/useChartContainerHooks';
+export { useScatterChartProps } from '../ScatterChart/useScatterChartProps';
 
 // utils
 export * from './defaultizeValueFormatter';
