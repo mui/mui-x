@@ -1,8 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ChartsXReferenceLine, ChartsXReferenceLineProps } from './ChartsXReferenceLine';
-import { ChartsYReferenceLine, ChartsYReferenceLineProps } from './ChartsYReferenceLine';
-import { XOR } from '../internals/utils';
+import type { ChartsXReferenceLineProps } from './ChartsXReferenceLine';
+import { ChartsXReferenceLine } from './ChartsXReferenceLine';
+import type { ChartsYReferenceLineProps } from './ChartsYReferenceLine';
+import { ChartsYReferenceLine } from './ChartsYReferenceLine';
+import type { XOR } from '../internals/utils';
 
 type ChartsReferenceLineProps<TValue extends string | number | Date = string | number | Date> = XOR<
   ChartsXReferenceLineProps<TValue>,

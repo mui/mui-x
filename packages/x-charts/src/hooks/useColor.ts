@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { ChartSeriesType } from '../internals';
+import type { ChartSeriesType } from '../internals';
 import { ColorContext } from '../context/ColorProvider';
-import { ColorProcessorsConfig } from '../models/plugin';
+import type { ColorProcessorsConfig } from '../models/plugin';
 
 export function useColorProcessor<T extends ChartSeriesType>(
   seriesType: T,

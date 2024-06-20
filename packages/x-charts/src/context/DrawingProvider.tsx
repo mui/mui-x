@@ -1,8 +1,8 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import useChartDimensions from '../hooks/useChartDimensions';
-import { LayoutConfig } from '../models/layout';
-import { Initializable } from './context.types';
+import type { LayoutConfig } from '../models/layout';
+import type { Initializable } from './context.types';
 
 export interface DrawingProviderProps extends LayoutConfig {
   children: React.ReactNode;

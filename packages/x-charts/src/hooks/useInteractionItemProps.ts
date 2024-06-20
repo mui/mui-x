@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { InteractionContext } from '../context/InteractionProvider';
-import { SeriesItemIdentifier } from '../models';
+import type { SeriesItemIdentifier } from '../models';
 import { useHighlighted } from '../context';
 
 export const useInteractionItemProps = (skip?: boolean) => {

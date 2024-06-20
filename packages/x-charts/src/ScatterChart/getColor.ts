@@ -1,6 +1,6 @@
-import { AxisDefaultized } from '../models/axis';
-import { ZAxisDefaultized } from '../models/z-axis';
-import { DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
+import type { AxisDefaultized } from '../models/axis';
+import type { ZAxisDefaultized } from '../models/z-axis';
+import type { DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
 
 export default function getColor(
   series: DefaultizedScatterSeriesType,

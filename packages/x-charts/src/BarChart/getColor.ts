@@ -1,5 +1,5 @@
-import { AxisDefaultized } from '../models/axis';
-import { DefaultizedBarSeriesType } from '../models/seriesType/bar';
+import type { AxisDefaultized } from '../models/axis';
+import type { DefaultizedBarSeriesType } from '../models/seriesType/bar';
 
 export default function getColor(
   series: DefaultizedBarSeriesType,

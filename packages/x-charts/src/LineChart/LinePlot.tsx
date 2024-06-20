@@ -2,19 +2,15 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { line as d3Line } from 'd3-shape';
 import { useCartesianContext } from '../context/CartesianProvider';
-import {
-  LineElement,
-  LineElementProps,
-  LineElementSlotProps,
-  LineElementSlots,
-} from './LineElement';
+import type { LineElementProps, LineElementSlotProps, LineElementSlots } from './LineElement';
+import { LineElement } from './LineElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { LineItemIdentifier } from '../models/seriesType/line';
+import type { LineItemIdentifier } from '../models/seriesType/line';
 import { useChartGradient } from '../internals/components/ChartsAxesGradients';
 import { useLineSeries } from '../hooks/useSeries';
-import { AxisId } from '../models/axis';
+import type { AxisId } from '../models/axis';
 
 export interface LinePlotSlots extends LineElementSlots {}
 

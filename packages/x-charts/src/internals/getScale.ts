@@ -1,5 +1,5 @@
 import { scaleLog, scalePow, scaleSqrt, scaleTime, scaleUtc, scaleLinear } from 'd3-scale';
-import { ContinuousScaleName, D3ContinuousScale } from '../models/axis';
+import type { ContinuousScaleName, D3ContinuousScale } from '../models/axis';
 
 export function getScale(
   scaleType: ContinuousScaleName,

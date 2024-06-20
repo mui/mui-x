@@ -1,18 +1,18 @@
-import { BarLabelProps } from '../BarChart/BarLabel';
-import { BarChartProps } from '../BarChart/BarChart';
-import { BarElementProps } from '../BarChart/BarElement';
-import { ChartsAxisProps } from '../ChartsAxis';
-import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { ChartsClipPathProps } from '../ChartsClipPath';
-import { ChartsGridProps } from '../ChartsGrid';
-import { ChartsLegendProps } from '../ChartsLegend';
-import { ChartsSurfaceProps } from '../ChartsSurface';
-import { ChartsTooltipProps } from '../ChartsTooltip';
-import { AreaElementProps, LineElementProps, MarkElementProps } from '../LineChart';
-import { LineChartProps } from '../LineChart/LineChart';
-import { ScatterProps } from '../ScatterChart/Scatter';
-import { ScatterChartProps } from '../ScatterChart/ScatterChart';
-import { ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
+import type { BarLabelProps } from '../BarChart/BarLabel';
+import type { BarChartProps } from '../BarChart/BarChart';
+import type { BarElementProps } from '../BarChart/BarElement';
+import type { ChartsAxisProps } from '../ChartsAxis';
+import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import type { ChartsClipPathProps } from '../ChartsClipPath';
+import type { ChartsGridProps } from '../ChartsGrid';
+import type { ChartsLegendProps } from '../ChartsLegend';
+import type { ChartsSurfaceProps } from '../ChartsSurface';
+import type { ChartsTooltipProps } from '../ChartsTooltip';
+import type { AreaElementProps, LineElementProps, MarkElementProps } from '../LineChart';
+import type { LineChartProps } from '../LineChart/LineChart';
+import type { ScatterProps } from '../ScatterChart/Scatter';
+import type { ScatterChartProps } from '../ScatterChart/ScatterChart';
+import type { ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
 
 export interface ChartsComponentsPropsList {
   MuiChartsAxis: ChartsAxisProps;

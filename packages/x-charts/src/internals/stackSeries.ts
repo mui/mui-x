@@ -1,3 +1,4 @@
+import type { Series } from 'd3-shape';
 import {
   stackOrderAppearance as d3StackOrderAppearance,
   stackOrderAscending as d3StackOrderAscending,
@@ -10,11 +11,10 @@ import {
   stackOffsetNone as d3StackOffsetNone,
   stackOffsetSilhouette as d3StackOffsetSilhouette,
   stackOffsetWiggle as d3StackOffsetWiggle,
-  Series,
 } from 'd3-shape';
 import type { BarSeriesType, LineSeriesType } from '../models/seriesType';
 import type { StackOffsetType, StackOrderType } from '../models/stacking';
-import { SeriesId } from '../models/seriesType/common';
+import type { SeriesId } from '../models/seriesType/common';
 
 type StackableSeries = Record<SeriesId, BarSeriesType> | Record<SeriesId, LineSeriesType>;
 

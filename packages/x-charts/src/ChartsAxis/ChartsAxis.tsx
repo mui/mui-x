@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { ChartsXAxis } from '../ChartsXAxis';
 import { ChartsYAxis } from '../ChartsYAxis';
-import {
+import type {
   AxisId,
   ChartsAxisSlotProps,
   ChartsAxisSlots,

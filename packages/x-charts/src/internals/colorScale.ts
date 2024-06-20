@@ -1,5 +1,6 @@
-import { scaleOrdinal, scaleThreshold, scaleSequential, ScaleOrdinal } from 'd3-scale';
-import {
+import type { ScaleOrdinal } from 'd3-scale';
+import { scaleOrdinal, scaleThreshold, scaleSequential } from 'd3-scale';
+import type {
   ContinuousColorConfig,
   PiecewiseColorConfig,
   OrdinalColorConfig,

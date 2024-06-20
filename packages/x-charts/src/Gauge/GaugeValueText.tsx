@@ -1,7 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useGaugeState } from './GaugeProvider';
-import { ChartsText, ChartsTextProps } from '../ChartsText';
+import type { ChartsTextProps } from '../ChartsText';
+import { ChartsText } from '../ChartsText';
 
 export interface GaugeFormatterParams {
   value: number | null;

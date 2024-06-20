@@ -1,6 +1,6 @@
-import { PieArcDatum as D3PieArcDatum } from 'd3-shape';
-import { DefaultizedProps } from '../helpers';
-import { CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
+import type { PieArcDatum as D3PieArcDatum } from 'd3-shape';
+import type { DefaultizedProps } from '../helpers';
+import type { CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
 
 export type PieItemId = string | number;
 

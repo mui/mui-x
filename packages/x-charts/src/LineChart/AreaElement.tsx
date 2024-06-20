@@ -5,8 +5,9 @@ import { useSlotProps } from '@mui/base/utils';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { AnimatedArea, AnimatedAreaProps } from './AnimatedArea';
-import { SeriesId } from '../models/seriesType/common';
+import type { AnimatedAreaProps } from './AnimatedArea';
+import { AnimatedArea } from './AnimatedArea';
+import type { SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../context';
 
 export interface AreaElementClasses {

@@ -1,8 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { DrawingContext } from '../context/DrawingProvider';
-import { PieArcPlot, PieArcPlotProps, PieArcPlotSlotProps, PieArcPlotSlots } from './PieArcPlot';
-import { PieArcLabelPlotSlots, PieArcLabelPlotSlotProps, PieArcLabelPlot } from './PieArcLabelPlot';
+import type { PieArcPlotProps, PieArcPlotSlotProps, PieArcPlotSlots } from './PieArcPlot';
+import { PieArcPlot } from './PieArcPlot';
+import type { PieArcLabelPlotSlots, PieArcLabelPlotSlotProps } from './PieArcLabelPlot';
+import { PieArcLabelPlot } from './PieArcLabelPlot';
 import { getPercentageValue } from '../internals/utils';
 import { getPieCoordinates } from './getPieCoordinates';
 import { usePieSeries } from '../hooks/useSeries';

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ChartContainer, ChartContainerProps } from '../ChartContainer';
+import type { ChartContainerProps } from '../ChartContainer';
+import { ChartContainer } from '../ChartContainer';
 import { useChartContainerDimensions } from './useChartContainerDimensions';
 import { ResizableContainer } from './ResizableContainer';
 

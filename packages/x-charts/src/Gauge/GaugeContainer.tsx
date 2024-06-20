@@ -3,9 +3,12 @@ import PropTypes from 'prop-types';
 import useForkRef from '@mui/utils/useForkRef';
 import { styled } from '@mui/material/styles';
 import { useChartContainerDimensions } from '../ResponsiveChartContainer/useChartContainerDimensions';
-import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
-import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';
+import type { ChartsSurfaceProps } from '../ChartsSurface';
+import { ChartsSurface } from '../ChartsSurface';
+import type { DrawingProviderProps } from '../context/DrawingProvider';
+import { DrawingProvider } from '../context/DrawingProvider';
+import type { GaugeProviderProps } from './GaugeProvider';
+import { GaugeProvider } from './GaugeProvider';
 
 export interface GaugeContainerProps
   extends Omit<ChartsSurfaceProps, 'width' | 'height' | 'children'>,

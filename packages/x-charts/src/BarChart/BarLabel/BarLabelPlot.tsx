@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useTransition } from '@react-spring/web';
 import type { AnimationData, CompletedBarData } from '../types';
-import { BarLabelItem, BarLabelItemProps } from './BarLabelItem';
+import type { BarLabelItemProps } from './BarLabelItem';
+import { BarLabelItem } from './BarLabelItem';
 
 const leaveStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: AnimationData) => ({
   ...(layout === 'vertical'

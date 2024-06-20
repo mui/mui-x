@@ -1,41 +1,37 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
-import { BarPlot, BarPlotProps, BarPlotSlotProps, BarPlotSlots } from './BarPlot';
-import {
-  ResponsiveChartContainer,
-  ResponsiveChartContainerProps,
-} from '../ResponsiveChartContainer';
-import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
-import { BarSeriesType } from '../models/seriesType/bar';
-import { MakeOptional } from '../models/helpers';
+import type { BarPlotProps, BarPlotSlotProps, BarPlotSlots } from './BarPlot';
+import { BarPlot } from './BarPlot';
+import type { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
+import { ResponsiveChartContainer } from '../ResponsiveChartContainer';
+import type { ChartsAxisProps } from '../ChartsAxis';
+import { ChartsAxis } from '../ChartsAxis';
+import type { BarSeriesType } from '../models/seriesType/bar';
+import type { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import {
-  ChartsTooltip,
+import type {
   ChartsTooltipProps,
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
-import {
-  ChartsLegend,
-  ChartsLegendProps,
-  ChartsLegendSlots,
-  ChartsLegendSlotProps,
-} from '../ChartsLegend';
-import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsTooltip } from '../ChartsTooltip';
+import type { ChartsLegendProps, ChartsLegendSlots, ChartsLegendSlotProps } from '../ChartsLegend';
+import { ChartsLegend } from '../ChartsLegend';
+import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsAxisHighlight } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
-import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
-import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
-import {
-  ChartsOnAxisClickHandler,
-  ChartsOnAxisClickHandlerProps,
-} from '../ChartsOnAxisClickHandler';
-import {
-  ChartsOverlay,
+import type { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
+import type { ChartsGridProps } from '../ChartsGrid';
+import { ChartsGrid } from '../ChartsGrid';
+import type { ChartsOnAxisClickHandlerProps } from '../ChartsOnAxisClickHandler';
+import { ChartsOnAxisClickHandler } from '../ChartsOnAxisClickHandler';
+import type {
   ChartsOverlayProps,
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
 } from '../ChartsOverlay/ChartsOverlay';
+import { ChartsOverlay } from '../ChartsOverlay/ChartsOverlay';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,

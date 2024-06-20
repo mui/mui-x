@@ -1,18 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useControlled from '@mui/utils/useControlled';
-import {
-  HighlightItemData,
-  HighlightedContext,
-  HighlightScope,
-  HighlightedState,
-} from './HighlightedContext';
+import type { HighlightItemData, HighlightScope, HighlightedState } from './HighlightedContext';
+import { HighlightedContext } from './HighlightedContext';
 import { createIsFaded } from './createIsFaded';
 import { createIsHighlighted } from './createIsHighlighted';
 import { useSeries } from '../../hooks/useSeries';
-import { ChartSeriesType } from '../../models/seriesType/config';
-import { SeriesId } from '../../models/seriesType/common';
-import { Initializable } from '../context.types';
+import type { ChartSeriesType } from '../../models/seriesType/config';
+import type { SeriesId } from '../../models/seriesType/common';
+import type { Initializable } from '../context.types';
 
 export type HighlightedProviderProps = {
   children: React.ReactNode;

@@ -2,27 +2,29 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
-import {
-  ResponsiveChartContainer,
-  ResponsiveChartContainerProps,
-} from '../ResponsiveChartContainer';
+import type { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
+import { ResponsiveChartContainer } from '../ResponsiveChartContainer';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import {
-  ChartsTooltip,
+import type {
   ChartsTooltipProps,
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
-import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
-import { MakeOptional } from '../models/helpers';
-import { LineSeriesType } from '../models/seriesType/line';
-import { CardinalDirections } from '../models/layout';
-import { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';
-import { LinePlotSlots, LinePlotSlotProps } from '../LineChart/LinePlot';
-import { MarkPlotSlots, MarkPlotSlotProps } from '../LineChart/MarkPlot';
-import { LineHighlightPlotSlots, LineHighlightPlotSlotProps } from '../LineChart/LineHighlightPlot';
-import { BarPlotSlots, BarPlotSlotProps } from '../BarChart/BarPlot';
+import { ChartsTooltip } from '../ChartsTooltip';
+import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsAxisHighlight } from '../ChartsAxisHighlight';
+import type { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
+import type { MakeOptional } from '../models/helpers';
+import type { LineSeriesType } from '../models/seriesType/line';
+import type { CardinalDirections } from '../models/layout';
+import type { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';
+import type { LinePlotSlots, LinePlotSlotProps } from '../LineChart/LinePlot';
+import type { MarkPlotSlots, MarkPlotSlotProps } from '../LineChart/MarkPlot';
+import type {
+  LineHighlightPlotSlots,
+  LineHighlightPlotSlotProps,
+} from '../LineChart/LineHighlightPlot';
+import type { BarPlotSlots, BarPlotSlotProps } from '../BarChart/BarPlot';
 
 export interface SparkLineChartSlots
   extends AreaPlotSlots,

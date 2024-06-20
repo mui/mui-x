@@ -9,10 +9,14 @@ import type {
   ScaleSequential,
   ScaleThreshold,
 } from 'd3-scale';
-import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
+import type { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
-import { ChartsTextProps } from '../ChartsText';
-import { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from './colorMapping';
+import type { ChartsTextProps } from '../ChartsText';
+import type {
+  ContinuousColorConfig,
+  OrdinalColorConfig,
+  PiecewiseColorConfig,
+} from './colorMapping';
 
 export type AxisId = string | number;
 

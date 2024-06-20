@@ -1,7 +1,7 @@
 import { pie as d3Pie } from 'd3-shape';
-import { ChartSeriesDefaultized, Formatter } from '../models/seriesType/config';
-import { ChartsPieSorting, PieValueType } from '../models/seriesType/pie';
-import { SeriesId } from '../models/seriesType/common';
+import type { ChartSeriesDefaultized, Formatter } from '../models/seriesType/config';
+import type { ChartsPieSorting, PieValueType } from '../models/seriesType/pie';
+import type { SeriesId } from '../models/seriesType/common';
 import { getLabel } from '../internals/getLabel';
 
 const getSortingComparator = (comparator: ChartsPieSorting = 'none') => {

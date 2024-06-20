@@ -1,11 +1,20 @@
-import { ScatterSeriesType, DefaultizedScatterSeriesType, ScatterItemIdentifier } from './scatter';
-import { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from './line';
-import { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
-import { PieSeriesType, DefaultizedPieSeriesType, PieItemIdentifier, PieValueType } from './pie';
-import { AxisConfig } from '../axis';
-import { DefaultizedProps, MakeOptional } from '../helpers';
-import { StackingGroupsType } from '../../internals/stackSeries';
-import { SeriesId } from './common';
+import type {
+  ScatterSeriesType,
+  DefaultizedScatterSeriesType,
+  ScatterItemIdentifier,
+} from './scatter';
+import type { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from './line';
+import type { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
+import type {
+  PieSeriesType,
+  DefaultizedPieSeriesType,
+  PieItemIdentifier,
+  PieValueType,
+} from './pie';
+import type { AxisConfig } from '../axis';
+import type { DefaultizedProps, MakeOptional } from '../helpers';
+import type { StackingGroupsType } from '../../internals/stackSeries';
+import type { SeriesId } from './common';
 
 export interface ChartsSeriesConfig {
   bar: {

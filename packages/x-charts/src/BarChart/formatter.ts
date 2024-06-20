@@ -1,14 +1,14 @@
 import { stack as d3Stack } from 'd3-shape';
 import { getStackingGroups } from '../internals/stackSeries';
-import {
+import type {
   ChartSeries,
   DatasetElementType,
   DatasetType,
   Formatter,
 } from '../models/seriesType/config';
 import { defaultizeValueFormatter } from '../internals/defaultizeValueFormatter';
-import { DefaultizedProps } from '../models/helpers';
-import { SeriesId } from '../models/seriesType/common';
+import type { DefaultizedProps } from '../models/helpers';
+import type { SeriesId } from '../models/seriesType/common';
 
 let warnOnce = false;
 

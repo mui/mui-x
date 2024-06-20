@@ -1,5 +1,9 @@
 import type { ScaleOrdinal, ScaleSequential, ScaleThreshold } from 'd3-scale';
-import { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from './colorMapping';
+import type {
+  ContinuousColorConfig,
+  OrdinalColorConfig,
+  PiecewiseColorConfig,
+} from './colorMapping';
 
 export interface ZAxisConfig<V = any> {
   id: string;

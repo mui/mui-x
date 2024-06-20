@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../../models/axis';
-import { DatasetType } from '../../models/seriesType/config';
-import { MakeOptional } from '../../models/helpers';
+import type { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../../models/axis';
+import type { DatasetType } from '../../models/seriesType/config';
+import type { MakeOptional } from '../../models/helpers';
 import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useSeries } from '../../hooks/useSeries';
 import { CartesianContext } from './CartesianContext';
 import { normalizeAxis } from './normalizeAxis';
 import { computeValue } from './computeValue';
-import { ExtremumGettersConfig } from '../../models';
+import type { ExtremumGettersConfig } from '../../models';
 
 export type CartesianContextProviderProps = {
   /**

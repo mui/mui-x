@@ -1,9 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DatasetType } from '../models/seriesType/config';
-import { MakeOptional } from '../models/helpers';
+import type { DatasetType } from '../models/seriesType/config';
+import type { MakeOptional } from '../models/helpers';
 import { getColorScale, getOrdinalColorScale } from '../internals/colorScale';
-import { ZAxisConfig, ZAxisDefaultized } from '../models/z-axis';
+import type { ZAxisConfig, ZAxisDefaultized } from '../models/z-axis';
 
 export type ZAxisContextProviderProps = {
   /**

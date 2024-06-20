@@ -1,4 +1,5 @@
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { useAxisEvents } from './hooks/useAxisEvents';

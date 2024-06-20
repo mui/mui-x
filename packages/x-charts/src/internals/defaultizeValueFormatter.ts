@@ -1,4 +1,4 @@
-import { SeriesId, SeriesValueFormatter } from '../models/seriesType/common';
+import type { SeriesId, SeriesValueFormatter } from '../models/seriesType/common';
 
 export function defaultizeValueFormatter<
   TValue,

@@ -1,4 +1,4 @@
-import { HighlightItemData, HighlightScope } from './HighlightedContext';
+import type { HighlightItemData, HighlightScope } from './HighlightedContext';
 
 export const createIsFaded =
   (highlightScope: HighlightScope | null | undefined, highlightedItem: HighlightItemData | null) =>

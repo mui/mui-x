@@ -1,26 +1,20 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
-import {
-  SeriesContextProvider,
-  SeriesContextProviderProps,
-} from '../context/SeriesContextProvider';
+import type { DrawingProviderProps } from '../context/DrawingProvider';
+import { DrawingProvider } from '../context/DrawingProvider';
+import type { SeriesContextProviderProps } from '../context/SeriesContextProvider';
+import { SeriesContextProvider } from '../context/SeriesContextProvider';
 import { InteractionProvider } from '../context/InteractionProvider';
 import { ColorProvider } from '../context/ColorProvider';
-import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import {
-  CartesianContextProvider,
-  CartesianContextProviderProps,
-} from '../context/CartesianProvider';
+import type { ChartsSurfaceProps } from '../ChartsSurface';
+import { ChartsSurface } from '../ChartsSurface';
+import type { CartesianContextProviderProps } from '../context/CartesianProvider';
+import { CartesianContextProvider } from '../context/CartesianProvider';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
-import {
-  HighlightedProvider,
-  HighlightedProviderProps,
-  ZAxisContextProvider,
-  ZAxisContextProviderProps,
-} from '../context';
-import { ChartsPluginType } from '../models/plugin';
-import { ChartSeriesType } from '../models/seriesType/config';
+import type { HighlightedProviderProps, ZAxisContextProviderProps } from '../context';
+import { HighlightedProvider, ZAxisContextProvider } from '../context';
+import type { ChartsPluginType } from '../models/plugin';
+import type { ChartSeriesType } from '../models/seriesType/config';
 import { useChartContainerHooks } from './useChartContainerHooks';
 
 export type ChartContainerProps = Omit<

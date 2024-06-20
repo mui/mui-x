@@ -1,12 +1,12 @@
-import {
+import type {
   CartesianChartSeriesType,
   ChartSeriesType,
   ExtremumGetter,
   Formatter,
 } from './seriesType/config';
-import { AxisDefaultized } from './axis';
-import { DefaultizedSeriesType } from './seriesType';
-import { ZAxisDefaultized } from './z-axis';
+import type { AxisDefaultized } from './axis';
+import type { DefaultizedSeriesType } from './seriesType';
+import type { ZAxisDefaultized } from './z-axis';
 
 type ColorProcessor<T extends ChartSeriesType> = (
   series: DefaultizedSeriesType<T>,

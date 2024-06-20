@@ -5,11 +5,8 @@ import { styled, useThemeProps } from '@mui/material/styles';
 
 import { useCartesianContext } from '../context/CartesianProvider';
 import { useTicks } from '../hooks/useTicks';
-import {
-  ChartsGridClasses,
-  getChartsGridUtilityClass,
-  chartsGridClasses,
-} from './chartsGridClasses';
+import type { ChartsGridClasses } from './chartsGridClasses';
+import { getChartsGridUtilityClass, chartsGridClasses } from './chartsGridClasses';
 
 const GridRoot = styled('g', {
   name: 'MuiChartsGrid',

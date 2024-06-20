@@ -1,4 +1,4 @@
-import { SeriesId } from '../../models/seriesType/common';
+import type { SeriesId } from '../../models/seriesType/common';
 import type { BarLabelClasses } from './barLabelClasses';
 
 export interface BarLabelOwnerState {

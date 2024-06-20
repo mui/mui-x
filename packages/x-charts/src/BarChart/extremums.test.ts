@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { getExtremumX } from './extremums';
-import { ExtremumGetter } from '../models/seriesType/config';
+import type { ExtremumGetter } from '../models/seriesType/config';
 
 const buildData = (
   data: number[],

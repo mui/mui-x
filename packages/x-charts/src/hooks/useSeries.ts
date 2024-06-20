@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider';
+import type { FormattedSeries } from '../context/SeriesContextProvider';
+import { SeriesContext } from '../context/SeriesContextProvider';
 
 /**
  * Get access to the internal state of series.

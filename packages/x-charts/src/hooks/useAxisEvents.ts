@@ -2,7 +2,7 @@ import * as React from 'react';
 import { InteractionContext } from '../context/InteractionProvider';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { isBandScale } from '../internals/isBandScale';
-import { AxisDefaultized } from '../models/axis';
+import type { AxisDefaultized } from '../models/axis';
 import { getSVGPoint } from '../internals/utils';
 import { useSvgRef } from './useSvgRef';
 import { useDrawingArea } from './useDrawingArea';

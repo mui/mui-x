@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { HighlightedContext, HighlightedState } from './HighlightedContext';
+import type { HighlightedState } from './HighlightedContext';
+import { HighlightedContext } from './HighlightedContext';
 
 /**
  * A hook to get the highlighted state of the chart.

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { SpringValue, animated } from '@react-spring/web';
+import type { SpringValue } from '@react-spring/web';
+import { animated } from '@react-spring/web';
 import { getRadius } from './getRadius';
 
 const buildInset = (corners: {

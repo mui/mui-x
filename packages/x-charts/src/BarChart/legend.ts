@@ -1,5 +1,5 @@
 import { getLabel } from '../internals/getLabel';
-import { LegendGetter, LegendParams } from '../models/seriesType/config';
+import type { LegendGetter, LegendParams } from '../models/seriesType/config';
 
 const legendGetter: LegendGetter<'bar'> = (params) => {
   const { seriesOrder, series } = params;

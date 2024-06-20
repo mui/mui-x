@@ -1,11 +1,11 @@
-import { BarLabelClassKey } from '../BarChart';
-import { BarElementClassKey } from '../BarChart/BarElement';
-import { ChartsAxisClassKey } from '../ChartsAxis';
-import { ChartsAxisHighlightClassKey } from '../ChartsAxisHighlight';
-import { ChartsGridClassKey } from '../ChartsGrid';
-import { ChartsLegendClassKey } from '../ChartsLegend';
-import { ChartsTooltipClassKey } from '../ChartsTooltip';
-import { AreaElementClassKey, LineElementClassKey, MarkElementClassKey } from '../LineChart';
+import type { BarLabelClassKey } from '../BarChart';
+import type { BarElementClassKey } from '../BarChart/BarElement';
+import type { ChartsAxisClassKey } from '../ChartsAxis';
+import type { ChartsAxisHighlightClassKey } from '../ChartsAxisHighlight';
+import type { ChartsGridClassKey } from '../ChartsGrid';
+import type { ChartsLegendClassKey } from '../ChartsLegend';
+import type { ChartsTooltipClassKey } from '../ChartsTooltip';
+import type { AreaElementClassKey, LineElementClassKey, MarkElementClassKey } from '../LineChart';
 
 // prettier-ignore
 export interface PickersComponentNameToClassKey {

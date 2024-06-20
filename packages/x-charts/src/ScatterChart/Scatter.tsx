@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
+import type {
   DefaultizedScatterSeriesType,
   ScatterItemIdentifier,
   ScatterValueType,
@@ -8,7 +8,7 @@ import {
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { InteractionContext } from '../context/InteractionProvider';
-import { D3Scale } from '../models/axis';
+import type { D3Scale } from '../models/axis';
 import { useHighlighted } from '../context';
 
 export interface ScatterProps {

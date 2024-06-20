@@ -2,8 +2,8 @@ import useForkRef from '@mui/utils/useForkRef';
 import * as React from 'react';
 import { usePluginsMerge } from './usePluginsMerge';
 import { useReducedMotion } from '../hooks/useReducedMotion';
-import { ChartsPluginType } from '../models';
-import { ChartSeriesType } from '../models/seriesType/config';
+import type { ChartsPluginType } from '../models';
+import type { ChartSeriesType } from '../models/seriesType/config';
 
 export const useChartContainerHooks = (
   ref: React.ForwardedRef<unknown> | null,

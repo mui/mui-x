@@ -3,7 +3,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import { animated } from '@react-spring/web';
 import PropTypes from 'prop-types';
 import { barLabelClasses } from './barLabelClasses';
-import { BarLabelOwnerState } from './BarLabel.types';
+import type { BarLabelOwnerState } from './BarLabel.types';
 
 export const BarLabelComponent = styled(animated.text, {
   name: 'MuiBarLabel',

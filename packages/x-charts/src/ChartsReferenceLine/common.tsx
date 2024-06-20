@@ -1,7 +1,8 @@
 import { styled } from '@mui/material/styles';
-import { referenceLineClasses, ChartsReferenceLineClasses } from './chartsReferenceLineClasses';
-import { ChartsTextStyle } from '../ChartsText';
-import { AxisId } from '../models/axis';
+import type { ChartsReferenceLineClasses } from './chartsReferenceLineClasses';
+import { referenceLineClasses } from './chartsReferenceLineClasses';
+import type { ChartsTextStyle } from '../ChartsText';
+import type { AxisId } from '../models/axis';
 
 export type CommonChartsReferenceLineProps = {
   /**

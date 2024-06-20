@@ -8,7 +8,7 @@ import {
   curveStepAfter,
   curveStepBefore,
 } from 'd3-shape';
-import { CurveType } from '../models/seriesType/line';
+import type { CurveType } from '../models/seriesType/line';
 
 export default function getCurveFactory(curveType?: CurveType) {
   switch (curveType) {

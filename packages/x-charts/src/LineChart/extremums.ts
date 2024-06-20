@@ -1,4 +1,4 @@
-import { ExtremumGetter, ExtremumGetterResult } from '../models/seriesType/config';
+import type { ExtremumGetter, ExtremumGetterResult } from '../models/seriesType/config';
 
 export const getExtremumX: ExtremumGetter<'line'> = (params) => {
   const { axis } = params;

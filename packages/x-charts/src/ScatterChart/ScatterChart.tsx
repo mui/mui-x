@@ -1,44 +1,36 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  ScatterPlot,
-  ScatterPlotProps,
-  ScatterPlotSlotProps,
-  ScatterPlotSlots,
-} from './ScatterPlot';
-import {
-  ResponsiveChartContainer,
-  ResponsiveChartContainerProps,
-} from '../ResponsiveChartContainer';
-import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
-import { ScatterSeriesType } from '../models/seriesType/scatter';
-import { MakeOptional } from '../models/helpers';
-import {
-  ChartsTooltip,
+import type { ScatterPlotProps, ScatterPlotSlotProps, ScatterPlotSlots } from './ScatterPlot';
+import { ScatterPlot } from './ScatterPlot';
+import type { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
+import { ResponsiveChartContainer } from '../ResponsiveChartContainer';
+import type { ChartsAxisProps } from '../ChartsAxis';
+import { ChartsAxis } from '../ChartsAxis';
+import type { ScatterSeriesType } from '../models/seriesType/scatter';
+import type { MakeOptional } from '../models/helpers';
+import type {
   ChartsTooltipProps,
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
-import {
-  ChartsLegend,
-  ChartsLegendProps,
-  ChartsLegendSlotProps,
-  ChartsLegendSlots,
-} from '../ChartsLegend';
-import {
-  ChartsOverlay,
+import { ChartsTooltip } from '../ChartsTooltip';
+import type { ChartsLegendProps, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import { ChartsLegend } from '../ChartsLegend';
+import type {
   ChartsOverlayProps,
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
 } from '../ChartsOverlay';
-import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
-import {
-  ChartsVoronoiHandler,
-  ChartsVoronoiHandlerProps,
-} from '../ChartsVoronoiHandler/ChartsVoronoiHandler';
-import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
-import { ZAxisContextProvider, ZAxisContextProviderProps } from '../context/ZAxisContextProvider';
+import { ChartsOverlay } from '../ChartsOverlay';
+import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsAxisHighlight } from '../ChartsAxisHighlight';
+import type { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
+import type { ChartsVoronoiHandlerProps } from '../ChartsVoronoiHandler/ChartsVoronoiHandler';
+import { ChartsVoronoiHandler } from '../ChartsVoronoiHandler/ChartsVoronoiHandler';
+import type { ChartsGridProps } from '../ChartsGrid';
+import { ChartsGrid } from '../ChartsGrid';
+import type { ZAxisContextProviderProps } from '../context/ZAxisContextProvider';
+import { ZAxisContextProvider } from '../context/ZAxisContextProvider';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,

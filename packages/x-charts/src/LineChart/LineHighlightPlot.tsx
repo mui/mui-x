@@ -1,7 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useCartesianContext } from '../context/CartesianProvider';
-import { LineHighlightElement, LineHighlightElementProps } from './LineHighlightElement';
+import type { LineHighlightElementProps } from './LineHighlightElement';
+import { LineHighlightElement } from './LineHighlightElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { InteractionContext } from '../context/InteractionProvider';
 import { DEFAULT_X_AXIS_KEY } from '../constants';

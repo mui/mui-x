@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useCartesianContext } from '../context/CartesianProvider';
-import { AxisScaleComputedConfig, ScaleName } from '../models/axis';
+import type { AxisScaleComputedConfig, ScaleName } from '../models/axis';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
 
 export function useXColorScale<S extends ScaleName>(

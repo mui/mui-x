@@ -4,7 +4,7 @@ import { DrawingContext } from '../../../context/DrawingProvider';
 import { useDrawingArea } from '../../../hooks';
 import ChartsPiecewiseGradient from './ChartsPiecewiseGradient';
 import ChartsContinuousGradient from './ChartsContinuousGradient';
-import { AxisId } from '../../../models/axis';
+import type { AxisId } from '../../../models/axis';
 
 export function useChartGradient() {
   const { chartId } = React.useContext(DrawingContext);

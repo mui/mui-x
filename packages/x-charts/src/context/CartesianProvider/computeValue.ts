@@ -1,21 +1,16 @@
 import { scaleBand, scalePoint } from 'd3-scale';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../../constants';
-import { AxisConfig, ScaleName } from '../../models';
-import {
-  ChartsXAxisProps,
-  ChartsAxisProps,
-  ChartsYAxisProps,
-  isBandScaleConfig,
-  isPointScaleConfig,
-} from '../../models/axis';
-import { CartesianChartSeriesType, ExtremumGetter } from '../../models/seriesType/config';
-import { DefaultizedAxisConfig } from './CartesianContext';
+import type { AxisConfig, ScaleName } from '../../models';
+import type { ChartsXAxisProps, ChartsAxisProps, ChartsYAxisProps } from '../../models/axis';
+import { isBandScaleConfig, isPointScaleConfig } from '../../models/axis';
+import type { CartesianChartSeriesType, ExtremumGetter } from '../../models/seriesType/config';
+import type { DefaultizedAxisConfig } from './CartesianContext';
 import { getColorScale, getOrdinalColorScale } from '../../internals/colorScale';
 import { getTickNumber } from '../../hooks/useTicks';
 import { getScale } from '../../internals/getScale';
-import { DrawingArea } from '../DrawingProvider';
-import { FormattedSeries } from '../SeriesContextProvider';
-import { MakeOptional } from '../../models/helpers';
+import type { DrawingArea } from '../DrawingProvider';
+import type { FormattedSeries } from '../SeriesContextProvider';
+import type { MakeOptional } from '../../models/helpers';
 import { getAxisExtremum } from './getAxisExtremum';
 
 const getRange = (drawingArea: DrawingArea, axisName: 'x' | 'y', isReverse?: boolean) => {

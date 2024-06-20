@@ -1,6 +1,6 @@
 import { useCartesianContext } from '../context/CartesianProvider';
 import { isBandScale } from '../internals/isBandScale';
-import { AxisScaleConfig, D3Scale, ScaleName } from '../models/axis';
+import type { AxisScaleConfig, D3Scale, ScaleName } from '../models/axis';
 
 /**
  * For a given scale return a function that map value to their position.

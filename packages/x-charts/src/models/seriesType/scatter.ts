@@ -1,5 +1,10 @@
-import { DefaultizedProps } from '../helpers';
-import { CartesianSeriesType, CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
+import type { DefaultizedProps } from '../helpers';
+import type {
+  CartesianSeriesType,
+  CommonDefaultizedProps,
+  CommonSeriesType,
+  SeriesId,
+} from './common';
 
 export type ScatterValueType = {
   x: number;

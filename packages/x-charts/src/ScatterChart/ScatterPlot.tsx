@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Scatter, ScatterProps } from './Scatter';
+import type { ScatterProps } from './Scatter';
+import { Scatter } from './Scatter';
 import { useCartesianContext } from '../context/CartesianProvider';
 import getColor from './getColor';
 import { ZAxisContext } from '../context/ZAxisContextProvider';

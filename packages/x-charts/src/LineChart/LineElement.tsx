@@ -5,8 +5,9 @@ import { useSlotProps } from '@mui/base/utils';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { AnimatedLine, AnimatedLineProps } from './AnimatedLine';
-import { SeriesId } from '../models/seriesType/common';
+import type { AnimatedLineProps } from './AnimatedLine';
+import { AnimatedLine } from './AnimatedLine';
+import type { SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../context';
 
 export interface LineElementClasses {

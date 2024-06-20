@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { SeriesId } from '../../models/seriesType/common';
-import { Initializable } from '../context.types';
+import type { SeriesId } from '../../models/seriesType/common';
+import type { Initializable } from '../context.types';
 
 /**
  * The data of the highlighted item.

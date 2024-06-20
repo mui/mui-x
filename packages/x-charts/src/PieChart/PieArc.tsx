@@ -1,14 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { arc as d3Arc } from 'd3-shape';
-import { animated, SpringValue, to } from '@react-spring/web';
+import type { SpringValue } from '@react-spring/web';
+import { animated, to } from '@react-spring/web';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { PieItemId } from '../models';
-import { HighlightScope } from '../context';
+import type { PieItemId } from '../models';
+import type { HighlightScope } from '../context';
 
 export interface PieArcClasses {
   /** Styles applied to the root element. */

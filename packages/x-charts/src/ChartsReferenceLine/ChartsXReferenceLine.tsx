@@ -1,12 +1,11 @@
 import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
 import { useDrawingArea, useXScale } from '../hooks';
-import { CommonChartsReferenceLineProps, ReferenceLineRoot } from './common';
+import type { CommonChartsReferenceLineProps } from './common';
+import { ReferenceLineRoot } from './common';
 import { ChartsText } from '../ChartsText';
-import {
-  ChartsReferenceLineClasses,
-  getReferenceLineUtilityClass,
-} from './chartsReferenceLineClasses';
+import type { ChartsReferenceLineClasses } from './chartsReferenceLineClasses';
+import { getReferenceLineUtilityClass } from './chartsReferenceLineClasses';
 import { buildWarning } from '../internals/warning';
 
 export type ChartsXReferenceLineProps<

@@ -1,25 +1,23 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled, useThemeProps, SxProps, Theme } from '@mui/material/styles';
-import { Popper, PopperProps as BasePopperProps } from '@mui/base/Popper';
+import type { SxProps, Theme } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
+import type { PopperProps as BasePopperProps } from '@mui/base/Popper';
+import { Popper } from '@mui/base/Popper';
 import { NoSsr } from '@mui/base/NoSsr';
 import { useSlotProps } from '@mui/base/utils';
-import {
-  AxisInteractionData,
-  InteractionContext,
-  ItemInteractionData,
-} from '../context/InteractionProvider';
-import {
-  generateVirtualElement,
-  useMouseTracker,
-  getTooltipHasData,
-  TriggerOptions,
-} from './utils';
-import { ChartSeriesType } from '../models/seriesType/config';
-import { ChartsItemContentProps, ChartsItemTooltipContent } from './ChartsItemTooltipContent';
-import { ChartsAxisContentProps, ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
-import { ChartsTooltipClasses, getChartsTooltipUtilityClass } from './chartsTooltipClasses';
+import type { AxisInteractionData, ItemInteractionData } from '../context/InteractionProvider';
+import { InteractionContext } from '../context/InteractionProvider';
+import type { TriggerOptions } from './utils';
+import { generateVirtualElement, useMouseTracker, getTooltipHasData } from './utils';
+import type { ChartSeriesType } from '../models/seriesType/config';
+import type { ChartsItemContentProps } from './ChartsItemTooltipContent';
+import { ChartsItemTooltipContent } from './ChartsItemTooltipContent';
+import type { ChartsAxisContentProps } from './ChartsAxisTooltipContent';
+import { ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
+import type { ChartsTooltipClasses } from './chartsTooltipClasses';
+import { getChartsTooltipUtilityClass } from './chartsTooltipClasses';
 
 export type PopperProps = BasePopperProps & {
   /**

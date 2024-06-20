@@ -1,4 +1,4 @@
-import { AllSeriesType } from '../models/seriesType';
+import type { AllSeriesType } from '../models/seriesType';
 
 const DEFAULT_COLORS = [
   '#1f77b4',

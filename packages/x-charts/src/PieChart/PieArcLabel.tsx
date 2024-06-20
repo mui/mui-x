@@ -1,12 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { animated, SpringValue, to } from '@react-spring/web';
+import type { SpringValue } from '@react-spring/web';
+import { animated, to } from '@react-spring/web';
 import { arc as d3Arc } from 'd3-shape';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { PieItemId } from '../models/seriesType/pie';
+import type { PieItemId } from '../models/seriesType/pie';
 
 export interface PieArcLabelClasses {
   /** Styles applied to the root element. */

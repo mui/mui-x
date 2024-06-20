@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { AllSeriesType } from '../models/seriesType';
+import type { AllSeriesType } from '../models/seriesType';
 import { defaultizeColor } from '../internals/defaultizeColor';
-import {
+import type {
   ChartSeriesType,
   DatasetType,
   FormatterParams,
   FormatterResult,
 } from '../models/seriesType/config';
-import { ChartsColorPalette, blueberryTwilightPalette } from '../colorPalettes';
-import { Initializable } from './context.types';
+import type { ChartsColorPalette } from '../colorPalettes';
+import { blueberryTwilightPalette } from '../colorPalettes';
+import type { Initializable } from './context.types';
 
 export type SeriesFormatterType<T extends ChartSeriesType> = (
   series: AllSeriesType<T>[],

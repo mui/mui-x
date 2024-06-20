@@ -1,5 +1,5 @@
-import { BarSeriesType, DefaultizedBarSeriesType } from './bar';
-import {
+import type { BarSeriesType, DefaultizedBarSeriesType } from './bar';
+import type {
   CartesianChartSeriesType,
   ChartSeriesType,
   ChartsSeriesConfig,

@@ -1,6 +1,6 @@
-import { DefaultizedProps } from '../helpers';
+import type { DefaultizedProps } from '../helpers';
 import type { StackOffsetType } from '../stacking';
-import {
+import type {
   CartesianSeriesType,
   CommonSeriesType,
   CommonDefaultizedProps,

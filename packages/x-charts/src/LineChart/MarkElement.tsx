@@ -9,7 +9,7 @@ import { animated, to, useSpring } from '@react-spring/web';
 import { getSymbol } from '../internals/utils';
 import { InteractionContext } from '../context/InteractionProvider';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { SeriesId } from '../models/seriesType/common';
+import type { SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../context';
 
 export interface MarkElementClasses {

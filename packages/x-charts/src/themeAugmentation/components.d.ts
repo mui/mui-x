@@ -1,4 +1,4 @@
-import { ComponentsProps, ComponentsOverrides } from '@mui/material/styles';
+import type { ComponentsProps, ComponentsOverrides } from '@mui/material/styles';
 
 export interface ChartsComponents<Theme = unknown> {
   MuiChartsAxis?: {

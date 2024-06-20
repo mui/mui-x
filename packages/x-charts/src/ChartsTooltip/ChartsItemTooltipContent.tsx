@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SxProps, Theme } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import { ItemInteractionData } from '../context/InteractionProvider';
-import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
-import { ChartsTooltipClasses } from './chartsTooltipClasses';
+import type { ItemInteractionData } from '../context/InteractionProvider';
+import type { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
+import type { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsItemTooltipContent } from './DefaultChartsItemTooltipContent';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { ZAxisContext } from '../context/ZAxisContextProvider';

@@ -1,4 +1,4 @@
-import { DefaultizedPieSeriesType } from '../models/seriesType/pie';
+import type { DefaultizedPieSeriesType } from '../models/seriesType/pie';
 
 export default function getColor(series: DefaultizedPieSeriesType) {
   return (dataIndex: number) => {

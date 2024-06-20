@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { ChartsPluginType, ColorProcessorsConfig, ExtremumGettersConfig } from '../models';
-import { ChartSeriesType } from '../models/seriesType/config';
-import { SeriesFormatterConfig } from '../context/SeriesContextProvider';
+import type { ChartsPluginType, ColorProcessorsConfig, ExtremumGettersConfig } from '../models';
+import type { ChartSeriesType } from '../models/seriesType/config';
+import type { SeriesFormatterConfig } from '../context/SeriesContextProvider';
 import { defaultPlugins } from './defaultPlugins';
 
 export function usePluginsMerge<T extends ChartSeriesType>(plugins?: ChartsPluginType<T>[]) {

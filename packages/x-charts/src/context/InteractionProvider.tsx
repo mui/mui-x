@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChartItemIdentifier, ChartSeriesType } from '../models/seriesType/config';
+import type { ChartItemIdentifier, ChartSeriesType } from '../models/seriesType/config';
 
 export interface InteractionProviderProps {
   children: React.ReactNode;

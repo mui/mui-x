@@ -1,19 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
-import {
+import type {
   ComputedPieRadius,
   DefaultizedPieSeriesType,
   DefaultizedPieValueType,
   PieSeriesType,
 } from '../models/seriesType/pie';
 import { defaultLabelTransitionConfig } from './dataTransform/transition';
-import {
-  AnimatedObject,
-  ValueWithHighlight,
-  useTransformData,
-} from './dataTransform/useTransformData';
-import { PieArcLabel, PieArcLabelProps } from './PieArcLabel';
+import type { AnimatedObject, ValueWithHighlight } from './dataTransform/useTransformData';
+import { useTransformData } from './dataTransform/useTransformData';
+import type { PieArcLabelProps } from './PieArcLabel';
+import { PieArcLabel } from './PieArcLabel';
 import { getLabel } from '../internals/getLabel';
 
 const RATIO = 180 / Math.PI;

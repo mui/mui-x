@@ -1,11 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useCartesianContext } from '../context/CartesianProvider';
-import { MarkElement, MarkElementProps } from './MarkElement';
+import type { MarkElementProps } from './MarkElement';
+import { MarkElement } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { useChartId } from '../hooks/useChartId';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { LineItemIdentifier } from '../models/seriesType/line';
+import type { LineItemIdentifier } from '../models/seriesType/line';
 import { cleanId } from '../internals/utils';
 import getColor from './getColor';
 import { useLineSeries } from '../hooks/useSeries';

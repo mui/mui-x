@@ -1,4 +1,4 @@
-import { ChartSeriesType } from '../models/seriesType/config';
+import type { ChartSeriesType } from '../models/seriesType/config';
 
 let instance: undefined | Set<ChartSeriesType>;
 

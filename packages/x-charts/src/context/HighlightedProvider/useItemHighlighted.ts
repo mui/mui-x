@@ -1,4 +1,4 @@
-import { HighlightItemData } from './HighlightedContext';
+import type { HighlightItemData } from './HighlightedContext';
 import { useHighlighted } from './useHighlighted';
 
 export type ItemHighlightedState = {

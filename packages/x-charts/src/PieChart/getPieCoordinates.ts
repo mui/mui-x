@@ -1,6 +1,6 @@
-import { DrawingArea } from '../context/DrawingProvider';
+import type { DrawingArea } from '../context/DrawingProvider';
 import { getPercentageValue } from '../internals/utils';
-import { DefaultizedPieSeriesType } from '../models/seriesType/pie';
+import type { DefaultizedPieSeriesType } from '../models/seriesType/pie';
 
 export function getPieCoordinates(
   series: Pick<DefaultizedPieSeriesType, 'cx' | 'cy'>,

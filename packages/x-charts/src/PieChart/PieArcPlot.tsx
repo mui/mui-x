@@ -1,19 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
-import { PieArc, PieArcProps } from './PieArc';
-import {
+import type { PieArcProps } from './PieArc';
+import { PieArc } from './PieArc';
+import type {
   ComputedPieRadius,
   DefaultizedPieSeriesType,
   DefaultizedPieValueType,
   PieItemIdentifier,
 } from '../models/seriesType/pie';
 import { defaultTransitionConfig } from './dataTransform/transition';
-import {
-  AnimatedObject,
-  ValueWithHighlight,
-  useTransformData,
-} from './dataTransform/useTransformData';
+import type { AnimatedObject, ValueWithHighlight } from './dataTransform/useTransformData';
+import { useTransformData } from './dataTransform/useTransformData';
 import { useHighlighted } from '../context';
 
 export interface PieArcPlotSlots {

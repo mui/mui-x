@@ -1,6 +1,7 @@
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { AxisDefaultized, AxisId, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
-import { SeriesId } from '../models/seriesType/common';
+import type { AxisDefaultized, AxisId } from '../models/axis';
+import { isBandScaleConfig, isPointScaleConfig } from '../models/axis';
+import type { SeriesId } from '../models/seriesType/common';
 
 const getAxisMessage = (axisDirection: 'x' | 'y', axisKey: AxisId) => {
   const axisName = `${axisDirection}-axis`;

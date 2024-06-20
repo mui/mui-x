@@ -1,41 +1,38 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  ResponsiveChartContainer,
-  ResponsiveChartContainerProps,
-} from '../ResponsiveChartContainer';
-import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
-import { PieSeriesType } from '../models/seriesType';
-import { MakeOptional } from '../models/helpers';
+import type { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
+import { ResponsiveChartContainer } from '../ResponsiveChartContainer';
+import type { ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
+import { ChartsAxis } from '../ChartsAxis/ChartsAxis';
+import type { PieSeriesType } from '../models/seriesType';
+import type { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import {
-  ChartsTooltip,
+import type {
   ChartsTooltipProps,
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
-import {
-  ChartsLegend,
-  ChartsLegendProps,
-  ChartsLegendSlotProps,
-  ChartsLegendSlots,
-} from '../ChartsLegend';
-import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { PiePlot, PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
-import { PieValueType } from '../models/seriesType/pie';
-import {
+import { ChartsTooltip } from '../ChartsTooltip';
+import type { ChartsLegendProps, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import { ChartsLegend } from '../ChartsLegend';
+import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsAxisHighlight } from '../ChartsAxisHighlight';
+import type { PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
+import { PiePlot } from './PiePlot';
+import type { PieValueType } from '../models/seriesType/pie';
+import type {
   ChartsAxisSlots,
   ChartsAxisSlotProps,
   ChartsXAxisProps,
   ChartsYAxisProps,
 } from '../models/axis';
 import { useIsRTL } from '../internals/useIsRTL';
-import {
-  ChartsOverlay,
+import type {
   ChartsOverlayProps,
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
 } from '../ChartsOverlay';
+import { ChartsOverlay } from '../ChartsOverlay';
 
 export interface PieChartSlots
   extends ChartsAxisSlots,

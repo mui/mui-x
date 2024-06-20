@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ColorProcessorsConfig } from '../models';
-import { ChartSeriesType } from '../models/seriesType/config';
+import type { ColorProcessorsConfig } from '../models';
+import type { ChartSeriesType } from '../models/seriesType/config';
 
 export interface ColorProviderProps {
   children: React.ReactNode;

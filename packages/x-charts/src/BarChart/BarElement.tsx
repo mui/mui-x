@@ -6,9 +6,10 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import { color as d3Color } from 'd3-color';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { AnimatedProps, animated } from '@react-spring/web';
+import type { AnimatedProps } from '@react-spring/web';
+import { animated } from '@react-spring/web';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { SeriesId } from '../models/seriesType/common';
+import type { SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../context';
 
 export interface BarElementClasses {

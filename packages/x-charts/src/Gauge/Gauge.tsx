@@ -1,11 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { GaugeContainer, GaugeContainerProps } from './GaugeContainer';
+import type { GaugeContainerProps } from './GaugeContainer';
+import { GaugeContainer } from './GaugeContainer';
 import { GaugeValueArc } from './GaugeValueArc';
 import { GaugeReferenceArc } from './GaugeReferenceArc';
-import { GaugeClasses, getGaugeUtilityClass } from './gaugeClasses';
-import { GaugeValueText, GaugeValueTextProps } from './GaugeValueText';
+import type { GaugeClasses } from './gaugeClasses';
+import { getGaugeUtilityClass } from './gaugeClasses';
+import type { GaugeValueTextProps } from './GaugeValueText';
+import { GaugeValueText } from './GaugeValueText';
 
 export interface GaugeProps extends GaugeContainerProps, Pick<GaugeValueTextProps, 'text'> {
   classes?: Partial<GaugeClasses>;

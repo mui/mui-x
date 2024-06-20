@@ -1,5 +1,5 @@
-import { UseTransitionProps } from '@react-spring/web';
-import { ValueWithHighlight } from './useTransformData';
+import type { UseTransitionProps } from '@react-spring/web';
+import type { ValueWithHighlight } from './useTransformData';
 
 export const defaultTransitionConfig: UseTransitionProps<ValueWithHighlight> = {
   keys: (item) => item.id,

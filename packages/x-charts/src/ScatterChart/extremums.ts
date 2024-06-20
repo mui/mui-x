@@ -1,4 +1,4 @@
-import { ExtremumGetter, ExtremumGetterResult } from '../models/seriesType/config';
+import type { ExtremumGetter, ExtremumGetterResult } from '../models/seriesType/config';
 
 const mergeMinMax = (
   acc: ExtremumGetterResult,

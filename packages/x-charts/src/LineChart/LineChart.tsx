@@ -1,48 +1,43 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
-import { AreaPlot, AreaPlotProps, AreaPlotSlotProps, AreaPlotSlots } from './AreaPlot';
-import { LinePlot, LinePlotProps, LinePlotSlotProps, LinePlotSlots } from './LinePlot';
-import {
-  ResponsiveChartContainer,
-  ResponsiveChartContainerProps,
-} from '../ResponsiveChartContainer';
-import { MarkPlot, MarkPlotProps, MarkPlotSlotProps, MarkPlotSlots } from './MarkPlot';
-import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
-import { LineSeriesType } from '../models/seriesType/line';
-import { MakeOptional } from '../models/helpers';
+import type { AreaPlotProps, AreaPlotSlotProps, AreaPlotSlots } from './AreaPlot';
+import { AreaPlot } from './AreaPlot';
+import type { LinePlotProps, LinePlotSlotProps, LinePlotSlots } from './LinePlot';
+import { LinePlot } from './LinePlot';
+import type { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
+import { ResponsiveChartContainer } from '../ResponsiveChartContainer';
+import type { MarkPlotProps, MarkPlotSlotProps, MarkPlotSlots } from './MarkPlot';
+import { MarkPlot } from './MarkPlot';
+import type { ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
+import { ChartsAxis } from '../ChartsAxis/ChartsAxis';
+import type { LineSeriesType } from '../models/seriesType/line';
+import type { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import {
-  ChartsTooltip,
+import type {
   ChartsTooltipProps,
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
-import {
-  ChartsLegend,
-  ChartsLegendProps,
-  ChartsLegendSlotProps,
-  ChartsLegendSlots,
-} from '../ChartsLegend';
-import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsTooltip } from '../ChartsTooltip';
+import type { ChartsLegendProps, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import { ChartsLegend } from '../ChartsLegend';
+import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsAxisHighlight } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
-import { ChartsAxisSlotProps, ChartsAxisSlots } from '../models/axis';
-import {
-  LineHighlightPlot,
-  LineHighlightPlotSlots,
-  LineHighlightPlotSlotProps,
-} from './LineHighlightPlot';
-import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
-import {
-  ChartsOnAxisClickHandler,
-  ChartsOnAxisClickHandlerProps,
-} from '../ChartsOnAxisClickHandler';
-import {
-  ChartsOverlay,
+import type { ChartsAxisSlotProps, ChartsAxisSlots } from '../models/axis';
+import type { LineHighlightPlotSlots, LineHighlightPlotSlotProps } from './LineHighlightPlot';
+import { LineHighlightPlot } from './LineHighlightPlot';
+import type { ChartsGridProps } from '../ChartsGrid';
+import { ChartsGrid } from '../ChartsGrid';
+import type { ChartsOnAxisClickHandlerProps } from '../ChartsOnAxisClickHandler';
+import { ChartsOnAxisClickHandler } from '../ChartsOnAxisClickHandler';
+import type {
   ChartsOverlayProps,
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
 } from '../ChartsOverlay';
+import { ChartsOverlay } from '../ChartsOverlay';
 
 export interface LineChartSlots
   extends ChartsAxisSlots,

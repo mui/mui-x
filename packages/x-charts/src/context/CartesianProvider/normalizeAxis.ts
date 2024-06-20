@@ -1,7 +1,7 @@
 import type { AxisConfig, ScaleName } from '../../models';
-import { ChartsAxisProps } from '../../models/axis';
-import { MakeOptional } from '../../models/helpers';
-import { DatasetType } from '../../models/seriesType/config';
+import type { ChartsAxisProps } from '../../models/axis';
+import type { MakeOptional } from '../../models/helpers';
+import type { DatasetType } from '../../models/seriesType/config';
 
 export const normalizeAxis = <
   T extends ChartsAxisProps,

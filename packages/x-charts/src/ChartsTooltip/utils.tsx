@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { AxisInteractionData, ItemInteractionData } from '../context/InteractionProvider';
-import { ChartSeriesType } from '../models/seriesType/config';
+import type { AxisInteractionData, ItemInteractionData } from '../context/InteractionProvider';
+import type { ChartSeriesType } from '../models/seriesType/config';
 import { useSvgRef } from '../hooks';
 
 export function generateVirtualElement(mousePosition: { x: number; y: number } | null) {
