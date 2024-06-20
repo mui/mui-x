@@ -99,6 +99,7 @@ GridColumnHeaderSortIconRaw.propTypes = {
   // ----------------------------------------------------------------------
   direction: PropTypes.oneOf(['asc', 'desc']),
   disabled: PropTypes.bool,
+  field: PropTypes.string.isRequired,
   index: PropTypes.number,
   sortingOrder: PropTypes.arrayOf(PropTypes.oneOf(['asc', 'desc'])).isRequired,
 } as any;
