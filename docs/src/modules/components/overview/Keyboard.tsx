@@ -246,7 +246,11 @@ const arrowKeys: KeyType[] = [
 
 const RootRectangle = styled('rect')(({ theme }) => ({
   fill: 'white',
-  stroke: theme.palette.grey[50],
+  stroke: theme.palette.grey[500],
+  ...(theme.palette.mode === 'dark' && {
+    stroke: theme.palette.grey[600],
+    fill: theme.palette.background.paper,
+  }),
 }));
 const KeyRoot = styled('g')(({ theme }) => ({
   cursor: 'pointer',
@@ -256,11 +260,16 @@ const KeyRoot = styled('g')(({ theme }) => ({
 const KeyRectangle = styled('rect')(({ theme }) => ({
   fill: 'white',
   stroke: theme.palette.grey[500],
+  ...(theme.palette.mode === 'dark' && {
+    stroke: theme.palette.grey[600],
+    fill: theme.palette.background.paper,
+  }),
 }));
 const KeyText = styled('text')(({ theme }) => ({
   fill: theme.palette.grey[800],
   fontSize: 9,
   fontFamily: 'IBM Plex Sans',
+  ...(theme.palette.mode === 'dark' && { fill: theme.palette.text.primary }),
 }));
 
 type KeyboardSvgProps = {
