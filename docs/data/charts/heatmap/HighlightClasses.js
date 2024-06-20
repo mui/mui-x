@@ -27,7 +27,6 @@ const data = [
 ];
 
 export default function HighlightClasses() {
-  console.log([`& .${heatmapClasses.cell}.${heatmapClasses.highlighted}`]);
   return (
     <Box sx={{ width: '100%', maxWidth: 400 }}>
       <UnstableHeatmap

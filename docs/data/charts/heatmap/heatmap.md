@@ -5,7 +5,7 @@ productId: x-charts
 
 # Charts - Heatmap [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
 
-<p class="description">Heatmap charts allow to highlight correlation between categories.</p>
+<p class="description">Heatmap charts visually represents data with color variations to highlight patterns and trends across two dimensions.</p>
 
 :::warning
 The Heatmap Chart component isn't stable. Don't hesitate to open issues to give feedback.
@@ -38,7 +38,7 @@ To fade the other item, set `highlightScope.fade` to `'global'`.
 
 {{"demo": "HighlightHeatmap.js"}}
 
-By default highlighted/faded effect is obtained by applying the CSS property `fliter: saturate(...)` to cells.
+By default highlighted/faded effect is obtained by applying the CSS property `filter: saturate(...)` to cells.
 To modify this styling, use the `heatmapClasses.highlighted` and `heatmapClasses.faded` CSS classes to override the applied style.
 
 In the following demo, we replace the highlight saturation by a border radius and reduce the saturation of the faded cells.
