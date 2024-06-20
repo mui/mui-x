@@ -15,8 +15,8 @@ We'd like to offer a big thanks to the 2 contributors who made this release poss
 
 #### `@mui/x-date-pickers@6.20.2`
 
-- [fields] Do not apply digit editing when pressing `Space` (@flaviendelangle) (#13516)
-- [pickers] Fix controlled `view` behavior (@LukasTy) (#13559)
+- [fields] Do not apply digit editing when pressing `Space` (#13516) @flaviendelangle
+- [pickers] Fix controlled `view` behavior (#13559) @LukasTy
 
 ## 6.20.1
 
