@@ -13,6 +13,8 @@ function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
       return 'MUI X Invalid license key';
     case LICENSE_STATUS.OutOfScope:
       return 'MUI X License key plan mismatch';
+    case LICENSE_STATUS.ProductNotCovered:
+      return 'MUI X Product not covered by plan';
     case LICENSE_STATUS.NotFound:
       return 'MUI X Missing license key';
     default:
