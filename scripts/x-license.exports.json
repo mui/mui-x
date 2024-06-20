@@ -15,6 +15,7 @@
   { "name": "showInvalidLicenseKeyError", "kind": "Function" },
   { "name": "showLicenseKeyPlanMismatchError", "kind": "Function" },
   { "name": "showMissingLicenseKeyError", "kind": "Function" },
+  { "name": "showProductNotCoveredError", "kind": "Function" },
   { "name": "Unstable_LicenseInfoProvider", "kind": "Function" },
   { "name": "Unstable_LicenseInfoProviderProps", "kind": "Interface" },
   { "name": "useLicenseVerifier", "kind": "Function" },
