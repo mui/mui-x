@@ -163,7 +163,7 @@ export const usePickerViews = <
   TExternalProps,
   TAdditionalProps
 >): UsePickerViewsResponse<TView> => {
-  const { onChange, open, onClose } = propsFromPickerValue;
+  const { onChange, open, onSelectedSectionsChange, onClose } = propsFromPickerValue;
   const { view: inView, views, openTo, onViewChange, viewRenderers, timezone } = props;
   const { className, sx, ...propsToForwardToView } = props;
 
