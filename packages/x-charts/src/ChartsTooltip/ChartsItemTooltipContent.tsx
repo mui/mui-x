@@ -6,7 +6,7 @@ import { ItemInteractionData } from '../context/InteractionProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsItemTooltipContent } from './DefaultChartsItemTooltipContent';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
 import { useColorProcessor } from '../hooks/useColor';
 import { useSeries } from '../hooks/useSeries';
@@ -44,7 +44,7 @@ function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
 
   const series = useSeries()[itemData.type]!.series[itemData.seriesId] as ChartSeriesDefaultized<T>;
 
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = React.useContext(CartesianContext);
+  const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
   const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
   const colorProcessors = useColorProcessor();
 

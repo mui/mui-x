@@ -136,7 +136,7 @@ export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{
   publicAPI: UseTreeViewSelectionPublicAPI;
   contextValue: UseTreeViewSelectionContextValue;
   modelNames: 'selectedItems';
-  dependantPlugins: [
+  dependencies: [
     UseTreeViewItemsSignature,
     UseTreeViewExpansionSignature,
     UseTreeViewItemsSignature,
