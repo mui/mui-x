@@ -52,6 +52,7 @@ export default function DigitalClock() {
           slots={{ layout: CustomLayout }}
           viewRenderers={{
             hours: renderMultiSectionDigitalClockTimeView,
+            minutes: renderMultiSectionDigitalClockTimeView,
             meridiem: renderMultiSectionDigitalClockTimeView,
           }}
         />

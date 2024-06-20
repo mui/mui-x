@@ -9,7 +9,7 @@ import { DateField } from '@mui/x-date-pickers/DateField';
 
 export default function Birthday() {
   return (
-    <Card variant="outlined" sx={{ padding: 1 }}>
+    <Card variant="outlined" sx={{ padding: 1, maxWidth: '265px' }}>
       <Stack sx={{ height: 'fit-content' }} spacing={1} alignItems="center">
         <DateField
           label="Enter your birthday"

@@ -1,7 +1,16 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Card from '@mui/material/Card';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
+
+import {
+  usePickerLayout,
+  pickersLayoutClasses,
+  PickersLayoutRoot,
+  PickersLayoutContentWrapper,
+} from '@mui/x-date-pickers/PickersLayout';
 
 const shortcutsItems = [
   {
@@ -44,17 +53,55 @@ const shortcutsItems = [
   { label: 'Reset', getValue: () => [null, null] },
 ];
 
+function CustomLayout(props) {
+  const { isHorizontal, ...other } = props;
+  const { tabs, content, shortcuts } = usePickerLayout(other);
+
+  return (
+    <PickersLayoutRoot
+      ownerState={props}
+      sx={{
+        overflow: 'auto',
+        [`.${pickersLayoutClasses.shortcuts}`]: isHorizontal
+          ? {
+              gridColumn: 2,
+              gridRow: 1,
+              display: 'flex',
+              flexGrow: 1,
+              maxWidth: '100%',
+            }
+          : {},
+        [`.${pickersLayoutClasses.contentWrapper}`]: {
+          flexGrow: 1,
+          alignItems: 'center',
+        },
+      }}
+    >
+      {shortcuts}
+      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+        {tabs}
+        {content}
+      </PickersLayoutContentWrapper>
+    </PickersLayoutRoot>
+  );
+}
+
 export default function DateRangeWithShortcuts() {
+  const theme = useTheme();
+  const showTwoCalendars = useMediaQuery('(min-width:700px)');
+  const lgDown = useMediaQuery(theme.breakpoints.down('lg'));
+  const smUp = useMediaQuery(theme.breakpoints.up('sm'));
+  const xlDown = useMediaQuery(theme.breakpoints.down('xl'));
   return (
     <Card variant="outlined" sx={{ flexGrow: 1 }}>
       <StaticDateRangePicker
-        calendars={1}
+        calendars={lgDown && showTwoCalendars ? 2 : 1}
+        slots={{ layout: CustomLayout }}
         slotProps={{
           shortcuts: {
-            items: shortcutsItems,
+            items: smUp ? shortcutsItems : [],
           },
-          actionBar: { actions: [] },
-          toolbar: { sx: { display: 'none' } },
+          layout: { isHorizontal: xlDown && smUp },
         }}
       />
     </Card>

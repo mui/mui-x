@@ -1,12 +1,12 @@
 <Card variant="outlined" sx={{ flexGrow: 1 }}>
   <StaticDateRangePicker
-    calendars={1}
+    calendars={lgDown && showTwoCalendars ? 2 : 1}
+    slots={{ layout: CustomLayout }}
     slotProps={{
       shortcuts: {
-        items: shortcutsItems,
+        items: smUp ? shortcutsItems : [],
       },
-      actionBar: { actions: [] },
-      toolbar: { sx: { display: 'none' } },
+      layout: { isHorizontal: xlDown && smUp } as CustomLayoutProps,
     }}
   />
 </Card>
