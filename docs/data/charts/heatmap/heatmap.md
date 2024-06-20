@@ -31,18 +31,17 @@ You can either use the piecewise or continuous [color mapping](https://mui.com/x
 
 {{"demo": "ColorConfig.js"}}
 
-### Highlight 🚧
+### Highlight
 
-Is this a disco dancefloor? 🕺🪩
-
-Planned work:
-
-- Add a way to override the styling. I woudl be in favor of adding a CSS classes instead of using styled component with ownerState, to let user apply filters on top of the current color, but they could not do crazy thing like complete color modification. They would need to use slots for that
-- Adding an other highlight scopes: `x-axis`, `y-axis`, and `xy-axis`
+You can chose to highlight the hovered element by setting `highlightScope.highlight` to `'item'`.
+To fade the other item, set `highlightScope.fade` to `'global'`.
 
 {{"demo": "HighlightHeatmap.js"}}
 
-You can modify the styling with CSS selectors.
+By default highlighted/faded effect is obtained by applying the CSS property `fliter: saturate(...)` to cells.
+To modify this styling, use the `heatmapClasses.highlighted` and `heatmapClasses.faded` CSS classes to override the applied style.
+
+In the following demo, we replace the highlight saturation by a border radius and reduce the saturation of the faded cells.
 
 {{"demo": "HighlightClasses.js"}}
 
