@@ -163,6 +163,10 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 
   const getItemDOMElement = (itemId: string) => {
     const itemMeta = instance.getItemMeta(itemId);
+    if (itemMeta == null) {
+      return null;
+    }
+
     return document.getElementById(instance.getTreeItemIdAttribute(itemId, itemMeta.idAttribute));
   };
 

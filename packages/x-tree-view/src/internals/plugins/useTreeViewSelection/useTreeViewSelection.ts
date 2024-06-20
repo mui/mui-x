@@ -97,7 +97,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       }
     } else {
       // eslint-disable-next-line no-lonely-if
-      if (isSelected === false) {
+      if (isSelected === false || (isSelected == null && instance.isItemSelected(itemId))) {
         newSelected = params.multiSelect ? [] : null;
       } else {
         newSelected = params.multiSelect ? [itemId] : itemId;
