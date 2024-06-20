@@ -141,6 +141,12 @@ module.exports = {
     'import/prefer-default-export': 'off',
     // TODO move rule into the main repo once it has upgraded
     '@typescript-eslint/return-await': 'off',
+    '@typescript-eslint/consistent-type-imports': [
+      'error',
+      {
+        disallowTypeAnnotations: false,
+      },
+    ],
     'no-restricted-imports': 'off',
     // TODO move to @mui/monorepo/.eslintrc
     'jsdoc/require-param': ['error', { contexts: ['TSFunctionType'] }],
