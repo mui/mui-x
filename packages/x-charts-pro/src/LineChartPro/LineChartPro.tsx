@@ -1,5 +1,4 @@
 import * as React from 'react';
-import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
 import {
   AreaPlot,
@@ -8,7 +7,6 @@ import {
   LinePlot,
   MarkPlot,
 } from '@mui/x-charts/LineChart';
-import { DEFAULT_X_AXIS_KEY } from '@mui/x-charts/constants';
 import { ChartsOnAxisClickHandler } from '@mui/x-charts/ChartsOnAxisClickHandler';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
@@ -17,6 +15,7 @@ import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
+import { useLineChartProps } from '@mui/x-charts/internals';
 import { ResponsiveChartContainerPro } from '../ResponsiveChartContainerPro';
 
 export interface LineChartProProps extends LineChartProps {
@@ -35,112 +34,40 @@ export interface LineChartProProps extends LineChartProps {
  */
 const LineChartPro = React.forwardRef(function LineChartPro(props: LineChartProProps, ref) {
   const {
-    xAxis,
-    yAxis,
-    series,
-    width,
-    height,
-    margin,
-    colors,
-    dataset,
-    sx,
-    tooltip,
-    onAxisClick,
-    onAreaClick,
-    onLineClick,
-    onMarkClick,
-    axisHighlight = { x: 'line' },
-    disableLineItemHighlight,
-    legend,
-    grid,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
-    children,
-    slots,
-    slotProps,
-    skipAnimation,
-    loading,
-    highlightedItem,
-    onHighlightChange,
-  } = props;
+    chartContainerProps,
+    axisClickHandlerProps,
+    gridProps,
+    clipPathProps,
+    clipPathGroupProps,
+    areaPlotProps,
+    linePlotProps,
+    markPlotProps,
+    overlayProps,
+    chartsAxisProps,
+    axisHighlightProps,
+    lineHighlightPlotProps,
+    legendProps,
+    tooltipProps,
 
-  const id = useId();
-  const clipPathId = `${id}-clip-path`;
+    children,
+  } = useLineChartProps(props);
 
   return (
-    <ResponsiveChartContainerPro
-      ref={ref}
-      series={series.map((s) => ({
-        disableHighlight: !!disableLineItemHighlight,
-        type: 'line',
-        ...s,
-      }))}
-      width={width}
-      height={height}
-      margin={margin}
-      xAxis={
-        xAxis ?? [
-          {
-            id: DEFAULT_X_AXIS_KEY,
-            scaleType: 'point',
-            data: Array.from(
-              { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
-              (_, index) => index,
-            ),
-          },
-        ]
-      }
-      yAxis={yAxis}
-      colors={colors}
-      dataset={dataset}
-      sx={sx}
-      disableAxisListener={
-        tooltip?.trigger !== 'axis' &&
-        axisHighlight?.x === 'none' &&
-        axisHighlight?.y === 'none' &&
-        !onAxisClick
-      }
-      highlightedItem={highlightedItem}
-      onHighlightChange={onHighlightChange}
-    >
-      {onAxisClick && <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />}
-      {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}
-      <g clipPath={`url(#${clipPathId})`}>
-        <AreaPlot
-          slots={slots}
-          slotProps={slotProps}
-          onItemClick={onAreaClick}
-          skipAnimation={skipAnimation}
-        />
-        <LinePlot
-          slots={slots}
-          slotProps={slotProps}
-          onItemClick={onLineClick}
-          skipAnimation={skipAnimation}
-        />
-        <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
+    <ResponsiveChartContainerPro ref={ref} {...chartContainerProps}>
+      {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
+      {props.grid && <ChartsGrid {...gridProps} />}
+      <g {...clipPathGroupProps}>
+        <AreaPlot {...areaPlotProps} />
+        <LinePlot {...linePlotProps} />
+        <ChartsOverlay {...overlayProps} />
       </g>
-      <ChartsAxis
-        topAxis={topAxis}
-        leftAxis={leftAxis}
-        rightAxis={rightAxis}
-        bottomAxis={bottomAxis}
-        slots={slots}
-        slotProps={slotProps}
-      />
-      <ChartsAxisHighlight {...axisHighlight} />
-      <MarkPlot
-        slots={slots}
-        slotProps={slotProps}
-        onItemClick={onMarkClick}
-        skipAnimation={skipAnimation}
-      />
-      <LineHighlightPlot slots={slots} slotProps={slotProps} />
-      <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
-      {!loading && <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />}
-      <ChartsClipPath id={clipPathId} />
+      <ChartsAxis {...chartsAxisProps} />
+      <ChartsAxisHighlight {...axisHighlightProps} />
+      <MarkPlot {...markPlotProps} />
+      <LineHighlightPlot {...lineHighlightPlotProps} />
+      <ChartsLegend {...legendProps} />
+      {!props.loading && <ChartsTooltip {...tooltipProps} />}
+      <ChartsClipPath {...clipPathProps} />
       {children}
     </ResponsiveChartContainerPro>
   );

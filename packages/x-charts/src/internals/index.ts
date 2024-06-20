@@ -9,6 +9,7 @@ export { useReducedMotion } from '../hooks/useReducedMotion';
 export { useSeries } from '../hooks/useSeries';
 export { useChartContainerHooks } from '../ChartContainer/useChartContainerHooks';
 export { useScatterChartProps } from '../ScatterChart/useScatterChartProps';
+export { useLineChartProps } from '../LineChart/useLineChartProps';
 
 // utils
 export * from './defaultizeValueFormatter';
