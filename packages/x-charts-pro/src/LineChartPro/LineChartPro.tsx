@@ -1,7 +1,8 @@
 import * as React from 'react';
+import type {
+  LineChartProps} from '@mui/x-charts/LineChart';
 import {
   AreaPlot,
-  LineChartProps,
   LineHighlightPlot,
   LinePlot,
   MarkPlot,

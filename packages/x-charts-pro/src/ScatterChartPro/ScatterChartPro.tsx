@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
-import { ScatterChartProps, ScatterPlot } from '@mui/x-charts/ScatterChart';
+import type { ScatterChartProps} from '@mui/x-charts/ScatterChart';
+import { ScatterPlot } from '@mui/x-charts/ScatterChart';
 import { ZAxisContextProvider } from '@mui/x-charts/context';
 import { ChartsVoronoiHandler } from '@mui/x-charts/ChartsVoronoiHandler';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';

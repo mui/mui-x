@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { BarChartProps, BarPlot } from '@mui/x-charts/BarChart';
+import type { BarChartProps} from '@mui/x-charts/BarChart';
+import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsOnAxisClickHandler } from '@mui/x-charts/ChartsOnAxisClickHandler';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
