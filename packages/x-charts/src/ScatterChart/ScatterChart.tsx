@@ -39,6 +39,7 @@ import {
 } from '../ChartsVoronoiHandler/ChartsVoronoiHandler';
 import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
 import { ZAxisContextProvider, ZAxisContextProviderProps } from '../context/ZAxisContextProvider';
+import { useScatterChartProps } from './useScatterChartProps';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,
@@ -119,75 +120,29 @@ export interface ScatterChartProps
  */
 const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartProps, ref) {
   const {
-    xAxis,
-    yAxis,
-    zAxis,
-    series,
-    tooltip,
-    axisHighlight,
-    voronoiMaxRadius,
-    disableVoronoi,
-    legend,
-    width,
-    height,
-    margin,
-    colors,
-    sx,
-    grid,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
-    onItemClick,
+    chartContainerProps,
+    zAxisProps,
+    voronoiHandlerProps,
+    chartsAxisProps,
+    gridProps,
+    scatterPlotProps,
+    overlayProps,
+    legendProps,
+    axisHighlightProps,
+    tooltipProps,
     children,
-    slots,
-    slotProps,
-    loading,
-    highlightedItem,
-    onHighlightChange,
-  } = props;
+  } = useScatterChartProps(props);
   return (
-    <ResponsiveChartContainer
-      ref={ref}
-      series={series.map((s) => ({ type: 'scatter', ...s }))}
-      width={width}
-      height={height}
-      margin={margin}
-      colors={colors}
-      xAxis={xAxis}
-      yAxis={yAxis}
-      sx={sx}
-      highlightedItem={highlightedItem}
-      onHighlightChange={onHighlightChange}
-    >
-      <ZAxisContextProvider zAxis={zAxis}>
-        {!disableVoronoi && (
-          <ChartsVoronoiHandler
-            voronoiMaxRadius={voronoiMaxRadius}
-            onItemClick={onItemClick as ChartsVoronoiHandlerProps['onItemClick']}
-          />
-        )}
-
-        <ChartsAxis
-          topAxis={topAxis}
-          leftAxis={leftAxis}
-          rightAxis={rightAxis}
-          bottomAxis={bottomAxis}
-          slots={slots}
-          slotProps={slotProps}
-        />
-        {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}
-        <ScatterPlot
-          slots={slots}
-          slotProps={slotProps}
-          onItemClick={
-            disableVoronoi ? (onItemClick as ScatterPlotProps['onItemClick']) : undefined
-          }
-        />
-        <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
-        <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
-        <ChartsAxisHighlight x="none" y="none" {...axisHighlight} />
-        {!loading && <ChartsTooltip trigger="item" {...tooltip} />}
+    <ResponsiveChartContainer ref={ref} {...chartContainerProps}>
+      <ZAxisContextProvider {...zAxisProps}>
+        {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
+        <ChartsAxis {...chartsAxisProps} />
+        {props.grid && <ChartsGrid {...gridProps} />}
+        <ScatterPlot {...scatterPlotProps} />
+        <ChartsOverlay {...overlayProps} />
+        <ChartsLegend {...legendProps} />
+        <ChartsAxisHighlight {...axisHighlightProps} />
+        {!props.loading && <ChartsTooltip {...tooltipProps} />}
         {children}
       </ZAxisContextProvider>
     </ResponsiveChartContainer>

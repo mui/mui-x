@@ -24,4 +24,7 @@ export * from '@mui/x-charts/Gauge';
 export * from '@mui/x-charts/ChartsSurface';
 
 export * from './ResponsiveChartContainerPro';
+export * from './ScatterChartPro';
+export * from './BarChartPro';
+export * from './LineChartPro';
 export * from './ChartContainerPro';
