@@ -299,6 +299,7 @@ To solve the issue, please consider an earlier [renewal](https://mui.com/r/x-get
 
 You might be eligible for a discount if you have an active Pro license.
 Contact [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%20discount) for additional information.
+
 Or if you didn't intend to use the Pro features, you can replace the import of `@mui/x-charts-pro` or `@mui/x-tree-view-pro` with `@mui/x-charts` or `@mui/x-tree-view` respectively.
 
 ### 6. Invalid license key
