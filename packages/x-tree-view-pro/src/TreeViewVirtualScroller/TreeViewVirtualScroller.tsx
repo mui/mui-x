@@ -1,14 +1,8 @@
 import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
-import useForkRef from '@mui/utils/useForkRef';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import {
-  RichTreeViewItems,
-  useTreeViewContext,
-  UseTreeViewItemsSignature,
-} from '@mui/x-tree-view/internals';
+import { RichTreeViewItems } from '@mui/x-tree-view/internals';
 import { styled } from '../internals/zero-styled';
-import { UseTreeViewVirtualizationSignature } from '../internals/plugins/useTreeViewVirtualization';
 import { useTreeViewVirtualScroller } from './useTreeViewVirtualScroller';
 import { TreeViewVirtualScrollerProps } from './TreeViewVirtualScroller.types';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
@@ -24,6 +18,27 @@ const TreeViewVirtualScrollerRoot = styled('div', {
   overflow: 'hidden',
 });
 
+const TreeViewVirtualScrollerContent = styled('div', {
+  name: 'MuiTreeViewVirtualScroller',
+  slot: 'Content',
+  overridesResolver: (props, styles) => styles.content,
+})({
+  position: 'relative',
+  height: '100%',
+  overflow: 'scroll',
+  scrollbarWidth: 'none' /* Firefox */,
+  '&::-webkit-scrollbar': {
+    display: 'none' /* Safari and Chrome */,
+  },
+
+  '@media print': {
+    overflow: 'hidden',
+  },
+
+  // See https://github.com/mui/mui-x/issues/10547
+  zIndex: 0,
+});
+
 const releaseInfo = getReleaseInfo();
 
 export const TreeViewVirtualScroller = React.forwardRef(function TreeViewVirtualScroller(
@@ -33,11 +48,8 @@ export const TreeViewVirtualScroller = React.forwardRef(function TreeViewVirtual
   const { slots, slotProps, ...other } = props;
 
   useLicenseVerifier('x-tree-view-pro', releaseInfo);
-
-  const { instance } =
-    useTreeViewContext<[UseTreeViewVirtualizationSignature, UseTreeViewItemsSignature]>();
-  const { getRootProps, getScrollbarProps } = useTreeViewVirtualScroller();
-  const handleRef = useForkRef(ref, instance.virtualScrollerRef);
+  const { getRootProps, getContentProps, getScrollbarProps, getItemsToRender } =
+    useTreeViewVirtualScroller();
 
   const Root = slots.root;
   const rootProps = useSlotProps({
@@ -46,18 +58,16 @@ export const TreeViewVirtualScroller = React.forwardRef(function TreeViewVirtual
     externalForwardedProps: other,
     externalSlotProps: slotProps?.root,
     additionalProps: {
-      ref: handleRef,
+      ref,
     },
     ownerState: props,
   });
 
   return (
     <TreeViewVirtualScrollerRoot as={Root} {...rootProps}>
-      <RichTreeViewItems
-        slots={slots}
-        slotProps={slotProps}
-        itemsToRender={instance.getItemsToRender()}
-      />
+      <TreeViewVirtualScrollerContent {...getContentProps()}>
+        <RichTreeViewItems slots={slots} slotProps={slotProps} itemsToRender={getItemsToRender()} />
+      </TreeViewVirtualScrollerContent>
       <TreeViewVirtualScrollbar {...getScrollbarProps()} />
       <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
     </TreeViewVirtualScrollerRoot>
