@@ -8,7 +8,7 @@ import {
   showMissingLicenseKeyError,
   showLicenseKeyPlanMismatchError,
   showExpiredPackageVersionError,
-  showComponentNotIncludedError,
+  showNotAvailableInInitialProPlanError,
 } from '../utils/licenseErrorMessageUtils';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
 import { extractAcceptedScopes, extractProductScope } from '../utils/licenseScope';
@@ -65,8 +65,8 @@ export function useLicenseVerifier(
       // Skip
     } else if (licenseStatus.status === LICENSE_STATUS.Invalid) {
       showInvalidLicenseKeyError();
-    } else if (licenseStatus.status === LICENSE_STATUS.ComponentNotIncluded) {
-      showComponentNotIncludedError();
+    } else if (licenseStatus.status === LICENSE_STATUS.NotAvailableInInitialProPlan) {
+      showNotAvailableInInitialProPlanError();
     } else if (licenseStatus.status === LICENSE_STATUS.OutOfScope) {
       showLicenseKeyPlanMismatchError();
     } else if (licenseStatus.status === LICENSE_STATUS.NotFound) {
