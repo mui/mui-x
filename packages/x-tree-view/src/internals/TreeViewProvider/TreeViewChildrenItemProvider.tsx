@@ -4,7 +4,6 @@ import { useTreeViewContext } from './useTreeViewContext';
 import { escapeOperandAttributeSelector } from '../utils/utils';
 import type { UseTreeViewJSXItemsSignature } from '../plugins/useTreeViewJSXItems';
 import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
-import type { UseTreeViewIdSignature } from '../plugins/useTreeViewId';
 
 export const TreeViewChildrenItemContext =
   React.createContext<TreeViewChildrenItemContextValue | null>(null);
@@ -22,9 +21,7 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
   const { children, itemId = null } = props;
 
   const { instance, rootRef } =
-    useTreeViewContext<
-      [UseTreeViewJSXItemsSignature, UseTreeViewItemsSignature, UseTreeViewIdSignature]
-    >();
+    useTreeViewContext<[UseTreeViewJSXItemsSignature, UseTreeViewItemsSignature]>();
   const childrenIdAttrToIdRef = React.useRef<Map<string, string>>(new Map());
 
   React.useEffect(() => {
