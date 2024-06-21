@@ -21,6 +21,9 @@ export type {
   MakeOptional,
 } from './models';
 
+// Core plugins
+export type { TreeViewCorePluginParameters } from './corePlugins';
+
 // Plugins
 export { useTreeViewExpansion } from './plugins/useTreeViewExpansion';
 export type {
@@ -39,8 +42,6 @@ export type {
 } from './plugins/useTreeViewFocus';
 export { useTreeViewKeyboardNavigation } from './plugins/useTreeViewKeyboardNavigation';
 export type { UseTreeViewKeyboardNavigationSignature } from './plugins/useTreeViewKeyboardNavigation';
-export { useTreeViewId } from './plugins/useTreeViewId';
-export type { UseTreeViewIdSignature, UseTreeViewIdParameters } from './plugins/useTreeViewId';
 export { useTreeViewIcons } from './plugins/useTreeViewIcons';
 export type {
   UseTreeViewIconsSignature,

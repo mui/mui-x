@@ -8,9 +8,10 @@ import {
   showMissingLicenseKeyError,
   showLicenseKeyPlanMismatchError,
   showExpiredPackageVersionError,
+  showProductNotCoveredError,
 } from '../utils/licenseErrorMessageUtils';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import { LicenseScope } from '../utils/licenseScope';
+import { extractAcceptedScopes, extractProductScope } from '../utils/licenseScope';
 import MuiLicenseInfoContext from '../Unstable_LicenseInfoProvider/MuiLicenseInfoContext';
 
 export type MuiCommercialPackageName =
@@ -47,15 +48,15 @@ export function useLicenseVerifier(
       return sharedLicenseStatuses[packageName]!.licenseVerifier;
     }
 
-    const acceptedScopes: LicenseScope[] = packageName.includes('premium')
-      ? ['premium']
-      : ['pro', 'premium'];
+    const acceptedScopes = extractAcceptedScopes(packageName);
+    const productScope = extractProductScope(packageName);
 
     const plan = packageName.includes('premium') ? 'Premium' : 'Pro';
     const licenseStatus = verifyLicense({
       releaseInfo,
       licenseKey,
       acceptedScopes,
+      productScope,
     });
 
     const fullPackageName = `@mui/${packageName}`;
@@ -64,6 +65,8 @@ export function useLicenseVerifier(
       // Skip
     } else if (licenseStatus.status === LICENSE_STATUS.Invalid) {
       showInvalidLicenseKeyError();
+    } else if (licenseStatus.status === LICENSE_STATUS.ProductNotCovered) {
+      showProductNotCoveredError();
     } else if (licenseStatus.status === LICENSE_STATUS.OutOfScope) {
       showLicenseKeyPlanMismatchError();
     } else if (licenseStatus.status === LICENSE_STATUS.NotFound) {
