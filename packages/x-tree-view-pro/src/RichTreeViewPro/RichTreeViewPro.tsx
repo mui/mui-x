@@ -7,6 +7,7 @@ import {
   buildWarning,
   RichTreeViewItems,
 } from '@mui/x-tree-view/internals';
+import { Watermark } from '@mui/x-license';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
 import { RichTreeViewProProps } from './RichTreeViewPro.types';
@@ -15,9 +16,7 @@ import {
   RichTreeViewProPluginSignatures,
 } from './RichTreeViewPro.plugins';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
-import { Watermark } from '@mui/x-license';
-import { TreeViewVirtualScrollbar } from '@mui/x-tree-view-pro/TreeViewVirtualScroller/TreeViewVirtualScrollbar';
-import { TreeViewVirtualScroller } from '@mui/x-tree-view-pro/TreeViewVirtualScroller';
+import { TreeViewVirtualScroller } from '../TreeViewVirtualScroller';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeViewPro');
 
@@ -88,11 +87,11 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     props,
   });
 
-  const { slots, slotProps } = props;
+  const { slots, slotProps, enableVirtualization } = props;
   const classes = useUtilityClasses(props);
 
   const Root = slots?.root ?? RichTreeViewProRoot;
-  const { enableVirtualization, ...rootProps } = useSlotProps({
+  const rootProps = useSlotProps({
     elementType: Root,
     externalSlotProps: slotProps?.root,
     className: classes.root,

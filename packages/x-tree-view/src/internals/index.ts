@@ -19,6 +19,7 @@ export type {
   TreeViewPublicAPI,
   TreeViewExperimentalFeatures,
   MakeOptional,
+  DefaultizedProps,
 } from './models';
 
 // Core plugins

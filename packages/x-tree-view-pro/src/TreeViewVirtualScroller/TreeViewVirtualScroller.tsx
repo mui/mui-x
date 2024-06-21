@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
 import { shouldForwardProp } from '@mui/system/createStyled';
+import useForkRef from '@mui/utils/useForkRef';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import {
   RichTreeViewItems,
@@ -8,6 +9,7 @@ import {
   UseTreeViewItemsSignature,
 } from '@mui/x-tree-view/internals';
 import { styled } from '../internals/zero-styled';
+import { UseTreeViewVirtualizationSignature } from '../internals/plugins/useTreeViewVirtualization';
 import { useTreeViewVirtualScroller } from './useTreeViewVirtualScroller';
 import { TreeViewVirtualScrollerProps } from './TreeViewVirtualScroller.types';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
@@ -40,8 +42,10 @@ export const TreeViewVirtualScroller = React.forwardRef(function TreeViewVirtual
 
   useLicenseVerifier('x-tree-view-pro', releaseInfo);
 
-  const { instance } = useTreeViewContext<[UseTreeViewItemsSignature]>();
+  const { instance } =
+    useTreeViewContext<[UseTreeViewVirtualizationSignature, UseTreeViewItemsSignature]>();
   const { getRootProps } = useTreeViewVirtualScroller();
+  const handleRef = useForkRef(ref, instance.virtualScrollerRef);
 
   const Root = slots.root;
   const rootProps = useSlotProps({
@@ -50,9 +54,9 @@ export const TreeViewVirtualScroller = React.forwardRef(function TreeViewVirtual
     externalForwardedProps: other,
     externalSlotProps: slotProps?.root,
     additionalProps: {
-      ref,
+      ref: handleRef,
     },
-    ownerState: {},
+    ownerState: props,
   });
 
   return (

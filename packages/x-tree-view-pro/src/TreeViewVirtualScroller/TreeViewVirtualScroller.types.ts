@@ -16,5 +16,5 @@ export interface TreeViewVirtualScrollerSlotProps extends RichTreeViewItemsSlotP
 
 export interface TreeViewVirtualScrollerProps extends React.HTMLAttributes<HTMLUListElement> {
   slots: TreeViewVirtualScrollerSlots;
-  slotProps?: TreeViewVirtualScrollerSlotProps<OwnerState>;
+  slotProps?: TreeViewVirtualScrollerSlotProps;
 }

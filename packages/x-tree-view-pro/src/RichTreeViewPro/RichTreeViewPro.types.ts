@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
+import { SlotComponentProps } from '@mui/base/utils';
 import { SxProps } from '@mui/system';
 import {
   TreeViewPublicAPI,
@@ -16,6 +17,7 @@ import {
 import {
   TreeViewVirtualScrollerSlots,
   TreeViewVirtualScrollerSlotProps,
+  TreeViewVirtualScrollerProps,
 } from '../TreeViewVirtualScroller';
 
 export interface RichTreeViewProSlots
@@ -24,7 +26,13 @@ export interface RichTreeViewProSlots
 
 export interface RichTreeViewProSlotProps
   extends RichTreeViewProPluginSlotProps,
-    TreeViewVirtualScrollerSlotProps {}
+    Omit<TreeViewVirtualScrollerSlotProps, 'root'> {
+  root?: SlotComponentProps<
+    'ul',
+    {},
+    TreeViewVirtualScrollerProps | RichTreeViewProProps<any, any>
+  >;
+}
 
 export type RichTreeViewProApiRef = React.MutableRefObject<
   TreeViewPublicAPI<RichTreeViewProPluginSignatures> | undefined
@@ -65,5 +73,4 @@ export interface RichTreeViewProProps<R extends {}, Multiple extends boolean | u
    * the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures?: TreeViewExperimentalFeatures<RichTreeViewProPluginSignatures>;
-  enableVirtualization?: boolean;
 }
