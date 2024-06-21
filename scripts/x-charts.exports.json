@@ -93,7 +93,6 @@
   { "name": "ChartsOnAxisClickHandlerProps", "kind": "Interface" },
   { "name": "ChartsPieSorting", "kind": "TypeAlias" },
   { "name": "ChartsPluginType", "kind": "TypeAlias" },
-  { "name": "ChartsPluginTypes", "kind": "TypeAlias" },
   { "name": "ChartsReferenceLine", "kind": "Function" },
   { "name": "ChartsReferenceLineClasses", "kind": "Interface" },
   { "name": "ChartsReferenceLineClassKey", "kind": "TypeAlias" },
@@ -136,6 +135,7 @@
   { "name": "DefaultizedScatterSeriesType", "kind": "Interface" },
   { "name": "DefaultizedSeriesType", "kind": "TypeAlias" },
   { "name": "Direction", "kind": "TypeAlias" },
+  { "name": "ExtremumGettersConfig", "kind": "TypeAlias" },
   { "name": "FadeOptions", "kind": "TypeAlias" },
   { "name": "Gauge", "kind": "Function" },
   { "name": "gaugeClasses", "kind": "Variable" },
@@ -288,8 +288,11 @@
   { "name": "useHighlighted", "kind": "Function" },
   { "name": "useItemHighlighted", "kind": "Function" },
   { "name": "useSvgRef", "kind": "Function" },
+  { "name": "useXColorScale", "kind": "Function" },
   { "name": "useXScale", "kind": "Function" },
+  { "name": "useYColorScale", "kind": "Function" },
   { "name": "useYScale", "kind": "Function" },
+  { "name": "useZColorScale", "kind": "Function" },
   { "name": "ZAxisContextProvider", "kind": "Function" },
   { "name": "ZAxisContextProviderProps", "kind": "TypeAlias" }
 ]

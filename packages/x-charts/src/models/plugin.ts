@@ -1,4 +1,9 @@
-import { ChartSeriesType, ExtremumGetter, Formatter } from './seriesType/config';
+import {
+  CartesianChartSeriesType,
+  ChartSeriesType,
+  ExtremumGetter,
+  Formatter,
+} from './seriesType/config';
 import { AxisDefaultized } from './axis';
 import { DefaultizedSeriesType } from './seriesType';
 import { ZAxisDefaultized } from './z-axis';
@@ -14,14 +19,16 @@ export type ColorProcessorsConfig<T extends ChartSeriesType> = {
   [Key in T]?: ColorProcessor<Key>;
 };
 
-export type ChartsPluginType<T extends ChartSeriesType> = {
-  seriesType: T;
-  seriesFormatter: Formatter<T>;
-  colorProcessor: ColorProcessor<T>;
-  xExtremumGetter?: ExtremumGetter<T>;
-  yExtremumGetter?: ExtremumGetter<T>;
-};
+export type ChartsPluginType<T> = T extends ChartSeriesType
+  ? {
+      seriesType: T;
+      seriesFormatter: Formatter<T>;
+      colorProcessor: ColorProcessor<T>;
+      xExtremumGetter?: ExtremumGetter<T>;
+      yExtremumGetter?: ExtremumGetter<T>;
+    }
+  : never;
 
-export type ChartsPluginTypes<T extends ChartSeriesType> = {
-  [Key in T]: ChartsPluginType<Key>;
-}[T];
+export type ExtremumGettersConfig<T extends ChartSeriesType = CartesianChartSeriesType> = {
+  [K in T]?: ExtremumGetter<K>;
+};

@@ -103,7 +103,8 @@ export class AdapterDateFns
     super({ locale: locale ?? enUS, formats, longFormatters });
   }
 
-  public parse = (value: string, format: string) => {
+  // TODO: explicit return types can be removed once there is only one date-fns version supported
+  public parse = (value: string, format: string): Date | null => {
     if (value === '') {
       return null;
     }
@@ -111,7 +112,7 @@ export class AdapterDateFns
     return dateFnsParse(value, format, new Date(), { locale: this.locale });
   };
 
-  public isValid = (value: Date | null) => {
+  public isValid = (value: Date | null): boolean => {
     if (value == null) {
       return false;
     }
@@ -119,15 +120,15 @@ export class AdapterDateFns
     return isValid(value);
   };
 
-  public format = (value: Date, formatKey: keyof AdapterFormats) => {
+  public format = (value: Date, formatKey: keyof AdapterFormats): string => {
     return this.formatByString(value, this.formats[formatKey]);
   };
 
-  public formatByString = (value: Date, formatString: string) => {
+  public formatByString = (value: Date, formatString: string): string => {
     return dateFnsFormat(value, formatString, { locale: this.locale });
   };
 
-  public isEqual = (value: Date | null, comparing: Date | null) => {
+  public isEqual = (value: Date | null, comparing: Date | null): boolean => {
     if (value === null && comparing === null) {
       return true;
     }
@@ -139,171 +140,171 @@ export class AdapterDateFns
     return isEqual(value, comparing);
   };
 
-  public isSameYear = (value: Date, comparing: Date) => {
+  public isSameYear = (value: Date, comparing: Date): boolean => {
     return isSameYear(value, comparing);
   };
 
-  public isSameMonth = (value: Date, comparing: Date) => {
+  public isSameMonth = (value: Date, comparing: Date): boolean => {
     return isSameMonth(value, comparing);
   };
 
-  public isSameDay = (value: Date, comparing: Date) => {
+  public isSameDay = (value: Date, comparing: Date): boolean => {
     return isSameDay(value, comparing);
   };
 
-  public isSameHour = (value: Date, comparing: Date) => {
+  public isSameHour = (value: Date, comparing: Date): boolean => {
     return isSameHour(value, comparing);
   };
 
-  public isAfter = (value: Date, comparing: Date) => {
+  public isAfter = (value: Date, comparing: Date): boolean => {
     return isAfter(value, comparing);
   };
 
-  public isAfterYear = (value: Date, comparing: Date) => {
+  public isAfterYear = (value: Date, comparing: Date): boolean => {
     return isAfter(value, endOfYear(comparing));
   };
 
-  public isAfterDay = (value: Date, comparing: Date) => {
+  public isAfterDay = (value: Date, comparing: Date): boolean => {
     return isAfter(value, endOfDay(comparing));
   };
 
-  public isBefore = (value: Date, comparing: Date) => {
+  public isBefore = (value: Date, comparing: Date): boolean => {
     return isBefore(value, comparing);
   };
 
-  public isBeforeYear = (value: Date, comparing: Date) => {
+  public isBeforeYear = (value: Date, comparing: Date): boolean => {
     return isBefore(value, this.startOfYear(comparing));
   };
 
-  public isBeforeDay = (value: Date, comparing: Date) => {
+  public isBeforeDay = (value: Date, comparing: Date): boolean => {
     return isBefore(value, this.startOfDay(comparing));
   };
 
-  public isWithinRange = (value: Date, [start, end]: [Date, Date]) => {
+  public isWithinRange = (value: Date, [start, end]: [Date, Date]): boolean => {
     return isWithinInterval(value, { start, end });
   };
 
-  public startOfYear = (value: Date) => {
+  public startOfYear = (value: Date): Date => {
     return startOfYear(value);
   };
 
-  public startOfMonth = (value: Date) => {
+  public startOfMonth = (value: Date): Date => {
     return startOfMonth(value);
   };
 
-  public startOfWeek = (value: Date) => {
+  public startOfWeek = (value: Date): Date => {
     return startOfWeek(value, { locale: this.locale });
   };
 
-  public startOfDay = (value: Date) => {
+  public startOfDay = (value: Date): Date => {
     return startOfDay(value);
   };
 
-  public endOfYear = (value: Date) => {
+  public endOfYear = (value: Date): Date => {
     return endOfYear(value);
   };
 
-  public endOfMonth = (value: Date) => {
+  public endOfMonth = (value: Date): Date => {
     return endOfMonth(value);
   };
 
-  public endOfWeek = (value: Date) => {
+  public endOfWeek = (value: Date): Date => {
     return endOfWeek(value, { locale: this.locale });
   };
 
-  public endOfDay = (value: Date) => {
+  public endOfDay = (value: Date): Date => {
     return endOfDay(value);
   };
 
-  public addYears = (value: Date, amount: number) => {
+  public addYears = (value: Date, amount: number): Date => {
     return addYears(value, amount);
   };
 
-  public addMonths = (value: Date, amount: number) => {
+  public addMonths = (value: Date, amount: number): Date => {
     return addMonths(value, amount);
   };
 
-  public addWeeks = (value: Date, amount: number) => {
+  public addWeeks = (value: Date, amount: number): Date => {
     return addWeeks(value, amount);
   };
 
-  public addDays = (value: Date, amount: number) => {
+  public addDays = (value: Date, amount: number): Date => {
     return addDays(value, amount);
   };
 
-  public addHours = (value: Date, amount: number) => {
+  public addHours = (value: Date, amount: number): Date => {
     return addHours(value, amount);
   };
 
-  public addMinutes = (value: Date, amount: number) => {
+  public addMinutes = (value: Date, amount: number): Date => {
     return addMinutes(value, amount);
   };
 
-  public addSeconds = (value: Date, amount: number) => {
+  public addSeconds = (value: Date, amount: number): Date => {
     return addSeconds(value, amount);
   };
 
-  public getYear = (value: Date) => {
+  public getYear = (value: Date): number => {
     return getYear(value);
   };
 
-  public getMonth = (value: Date) => {
+  public getMonth = (value: Date): number => {
     return getMonth(value);
   };
 
-  public getDate = (value: Date) => {
+  public getDate = (value: Date): number => {
     return getDate(value);
   };
 
-  public getHours = (value: Date) => {
+  public getHours = (value: Date): number => {
     return getHours(value);
   };
 
-  public getMinutes = (value: Date) => {
+  public getMinutes = (value: Date): number => {
     return getMinutes(value);
   };
 
-  public getSeconds = (value: Date) => {
+  public getSeconds = (value: Date): number => {
     return getSeconds(value);
   };
 
-  public getMilliseconds = (value: Date) => {
+  public getMilliseconds = (value: Date): number => {
     return getMilliseconds(value);
   };
 
-  public setYear = (value: Date, year: number) => {
+  public setYear = (value: Date, year: number): Date => {
     return setYear(value, year);
   };
 
-  public setMonth = (value: Date, month: number) => {
+  public setMonth = (value: Date, month: number): Date => {
     return setMonth(value, month);
   };
 
-  public setDate = (value: Date, date: number) => {
+  public setDate = (value: Date, date: number): Date => {
     return setDate(value, date);
   };
 
-  public setHours = (value: Date, hours: number) => {
+  public setHours = (value: Date, hours: number): Date => {
     return setHours(value, hours);
   };
 
-  public setMinutes = (value: Date, minutes: number) => {
+  public setMinutes = (value: Date, minutes: number): Date => {
     return setMinutes(value, minutes);
   };
 
-  public setSeconds = (value: Date, seconds: number) => {
+  public setSeconds = (value: Date, seconds: number): Date => {
     return setSeconds(value, seconds);
   };
 
-  public setMilliseconds = (value: Date, milliseconds: number) => {
+  public setMilliseconds = (value: Date, milliseconds: number): Date => {
     return setMilliseconds(value, milliseconds);
   };
 
-  public getDaysInMonth = (value: Date) => {
+  public getDaysInMonth = (value: Date): number => {
     return getDaysInMonth(value);
   };
 
-  public getWeekArray = (value: Date) => {
+  public getWeekArray = (value: Date): Date[][] => {
     const start = this.startOfWeek(this.startOfMonth(value));
     const end = this.endOfWeek(this.endOfMonth(value));
 
@@ -323,11 +324,11 @@ export class AdapterDateFns
     return nestedWeeks;
   };
 
-  public getWeekNumber = (value: Date) => {
+  public getWeekNumber = (value: Date): number => {
     return getWeek(value, { locale: this.locale });
   };
 
-  public getYearRange = ([start, end]: [Date, Date]) => {
+  public getYearRange = ([start, end]: [Date, Date]): Date[] => {
     const startDate = this.startOfYear(start);
     const endDate = this.endOfYear(end);
     const years: Date[] = [];

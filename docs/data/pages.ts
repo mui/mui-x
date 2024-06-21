@@ -230,6 +230,7 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-date-pickers', title: 'Overview' },
       { pathname: '/x/react-date-pickers/getting-started' },
       { pathname: '/x/react-date-pickers/base-concepts' },
+      { pathname: '/x/react-date-pickers/accessibility' },
       { pathname: '/x/react-date-pickers/faq', title: 'FAQ' },
       {
         pathname: '/x/react-date-pickers-components',
@@ -460,9 +461,9 @@ const pages: MuiPage[] = [
             subheader: 'Future components',
             children: [
               { pathname: '/x/react-charts/radar', planned: true },
-              { pathname: '/x/react-charts/tree-map', title: 'Treemap', planned: true },
+              { pathname: '/x/react-charts/treemap', title: 'Treemap', planned: true },
               {
-                pathname: '/x/react-charts/heat-map',
+                pathname: '/x/react-charts/heatmap',
                 title: 'Heatmap',
                 plan: 'pro',
                 planned: true,

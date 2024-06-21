@@ -169,7 +169,8 @@ export const applyLocalizedDigits = (valueStr: string, localizedDigits: string[]
 
 export const isStringNumber = (valueStr: string, localizedDigits: string[]) => {
   const nonLocalizedValueStr = removeLocalizedDigits(valueStr, localizedDigits);
-  return !Number.isNaN(Number(nonLocalizedValueStr));
+  // `Number(' ')` returns `0` even if ' ' is not a valid number.
+  return nonLocalizedValueStr !== ' ' && !Number.isNaN(Number(nonLocalizedValueStr));
 };
 
 /**
@@ -495,12 +496,12 @@ export const createDateStrForV7HiddenInputFromSections = (sections: FieldSection
 export const createDateStrForV6InputFromSections = (
   sections: FieldSection[],
   localizedDigits: string[],
-  isRTL: boolean,
+  isRtl: boolean,
 ) => {
   const formattedSections = sections.map((section) => {
     const dateValue = getSectionVisibleValue(
       section,
-      isRTL ? 'input-rtl' : 'input-ltr',
+      isRtl ? 'input-rtl' : 'input-ltr',
       localizedDigits,
     );
 
@@ -509,7 +510,7 @@ export const createDateStrForV6InputFromSections = (
 
   const dateStr = formattedSections.join('');
 
-  if (!isRTL) {
+  if (!isRtl) {
     return dateStr;
   }
 

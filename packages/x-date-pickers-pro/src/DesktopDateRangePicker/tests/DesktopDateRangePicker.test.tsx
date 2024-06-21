@@ -18,8 +18,8 @@ import {
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-const getPickerDay = (name: string, picker = 'January 2018'): HTMLButtonElement =>
-  getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
+const getPickerDay = (name: string, picker = 'January 2018') =>
+  getByRole(screen.getByRole('grid', { name: picker }), 'gridcell', { name });
 
 describe('<DesktopDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({
