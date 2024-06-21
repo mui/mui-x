@@ -29,8 +29,8 @@ function getLicenseKey(): string | undefined {
   return ponyfillGlobal.__MUI_LICENSE_INFO__?.key || undefined;
 }
 
-function sendMuiXTelemetryEvent(event: TelemetryEvent) {
-  if (!shouldSendTelemetry()) {
+function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
+  if (!event || !shouldSendTelemetry()) {
     return;
   }
 

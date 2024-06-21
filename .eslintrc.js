@@ -256,6 +256,7 @@ module.exports = {
     ...buildPackageRestrictedImports('@mui/x-tree-view', 'x-tree-view', false),
     ...buildPackageRestrictedImports('@mui/x-tree-view-pro', 'x-tree-view-pro', false),
     ...buildPackageRestrictedImports('@mui/x-license', 'x-license'),
+    ...buildPackageRestrictedImports('@mui/x-telemetry', 'x-telemetry'),
 
     ...addReactCompilerRule(['x-charts', 'x-charts-pro'], ENABLE_REACT_COMPILER_PLUGIN_CHARTS),
     ...addReactCompilerRule(

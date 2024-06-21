@@ -74,12 +74,12 @@ export class TelemetryStorage {
     return generated;
   }
 
-  public setEnabled = (isCollecting: boolean) => {
+  public setEnabled = async (isCollecting: boolean) => {
     this.conf?.set(TELEMETRY_KEY_IS_COLLECTING, !!isCollecting);
 
     // Rerun the postinstall script to update the context file
-    // eslint-disable-next-line global-require
-    require('../scripts/postinstall');
+    // eslint-disable-next-line global-require,import/no-cycle
+    await import('../scripts/postinstall');
   };
 
   /**
