@@ -292,7 +292,7 @@ Or if you didn\'t intend to use Premium features, you can replace the import of 
 
 ### 5. Product not covered by the license key
 
-This error indicates that the product you are trying to use is not covered by the license key.
+This error indicates that the component you are trying to use is not covered by your current license.
 This happens if you try to use `ChartsPro` or `TreeViewPro` with a license that does not cover these products.
 
 To solve the issue, you can [purchase a license](https://mui.com/r/x-get-license/) that covers the product you are trying to use.
