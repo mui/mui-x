@@ -16,10 +16,6 @@ const isPointOutside = (
   return outsideX || outsideY;
 };
 
-const isTouchEvent = (event: MouseEvent | TouchEvent): event is TouchEvent => {
-  return 'targetTouches' in event;
-};
-
 export const useSetupPan = () => {
   const { zoomRange, setZoomRange } = useZoom();
   const area = useDrawingArea();
@@ -28,6 +24,7 @@ export const useSetupPan = () => {
 
   const isTrackingRef = React.useRef(false);
   const touchStartRef = React.useRef<number | null>(null);
+  const eventCacheRef = React.useRef<PointerEvent[]>([]);
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -35,24 +32,15 @@ export const useSetupPan = () => {
       return () => {};
     }
 
-    const handlePan = (event: MouseEvent | TouchEvent) => {
-      if (element === null || !isTrackingRef.current) {
+    const handlePan = (event: PointerEvent) => {
+      if (element === null || !isTrackingRef.current || eventCacheRef.current.length > 1) {
         return;
       }
 
-      let target: Touch | MouseEvent;
-      let movementX: number;
+      const movementX = event.clientX - (touchStartRef.current ?? 0);
+      touchStartRef.current = event.clientX;
 
-      if (isTouchEvent(event)) {
-        target = event.targetTouches[0];
-        movementX = target.clientX - (touchStartRef.current ?? 0);
-        touchStartRef.current = target.clientX;
-      } else {
-        target = event;
-        movementX = event.movementX;
-      }
-
-      const point = getSVGPoint(element, target);
+      const point = getSVGPoint(element, event);
 
       if (isPointOutside(point, area)) {
         isTrackingRef.current = false;
@@ -79,32 +67,34 @@ export const useSetupPan = () => {
       setZoomRange([newMinRange, newMaxRange]);
     };
 
-    const handleDown = (event: MouseEvent | TouchEvent) => {
-      // Prevent text selection
-      event.preventDefault();
+    const handleDown = (event: PointerEvent) => {
+      eventCacheRef.current.push(event);
+      // Prevent default if there is only one pointer
+      // otherwise it prevents the pinch movement.
+      if (eventCacheRef.current.length === 1) {
+        event.preventDefault();
+      }
       isTrackingRef.current = true;
-      touchStartRef.current = isTouchEvent(event) ? event.targetTouches[0].clientX : null;
+      touchStartRef.current = event.clientX;
     };
 
-    const handleUp = () => {
+    const handleUp = (event: PointerEvent) => {
+      eventCacheRef.current.splice(
+        eventCacheRef.current.findIndex((e) => e.pointerId === event.pointerId),
+        1,
+      );
       isTrackingRef.current = false;
       touchStartRef.current = null;
     };
 
-    element.addEventListener('mousedown', handleDown);
-    element.addEventListener('mousemove', handlePan);
-    element.addEventListener('mouseup', handleUp);
-    element.addEventListener('touchstart', handleDown);
-    element.addEventListener('touchmove', handlePan);
-    element.addEventListener('touchend', handleUp);
+    element.addEventListener('pointerdown', handleDown);
+    element.addEventListener('pointermove', handlePan);
+    element.addEventListener('pointerup', handleUp);
 
     return () => {
-      element.removeEventListener('mousedown', handleDown);
-      element.removeEventListener('mousemove', handlePan);
-      element.removeEventListener('mouseup', handleUp);
-      element.removeEventListener('touchstart', handleDown);
-      element.removeEventListener('touchmove', handlePan);
-      element.removeEventListener('touchend', handleUp);
+      element.removeEventListener('pointerdown', handleDown);
+      element.removeEventListener('pointermove', handlePan);
+      element.removeEventListener('pointerup', handleUp);
     };
   }, [area, svgRef, isTrackingRef, zoomRange, setZoomRange]);
 };

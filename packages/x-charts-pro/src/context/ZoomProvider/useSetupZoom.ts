@@ -74,6 +74,8 @@ export const useSetupZoom = () => {
   const area = useDrawingArea();
 
   const svgRef = useSvgRef();
+  const eventCacheRef = React.useRef<PointerEvent[]>([]);
+  const eventPrevDiff = React.useRef<number>(0);
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -98,7 +100,7 @@ export const useSetupZoom = () => {
 
       // TODO: make step a config option.
       const step = 5;
-      const multiplier = isTrackPad(event) ? 1 : 5;
+      const multiplier = isTrackPad(event) ? 1 : 10;
       const scaledStep = (step * multiplier) / 1000;
       const scaleRatio = deltaY < 0 ? 1 - scaledStep : 1 + scaledStep;
       const zoomIn = deltaY > 0;
@@ -120,10 +122,108 @@ export const useSetupZoom = () => {
       setZoomRange([newMinRange, newMaxRange]);
     };
 
+    function pointerDownHandler(event: PointerEvent) {
+      eventCacheRef.current.push(event);
+    }
+
+    function pointerMoveHandler(event: PointerEvent) {
+      if (element === null) {
+        return;
+      }
+
+      const step = 5;
+      const scaledStep = step / 1000;
+      let scaleRatio: number = 0;
+      let zoomIn: boolean = false;
+
+      const index = eventCacheRef.current.findIndex(
+        (cachedEv) => cachedEv.pointerId === event.pointerId,
+      );
+      eventCacheRef.current[index] = event;
+
+      const prevDiff = eventPrevDiff.current;
+      const [firstEvent, secondEvent] = eventCacheRef.current;
+
+      // If two pointers are down, check for pinch gestures
+      if (eventCacheRef.current.length === 2) {
+        // Calculate the distance between the two pointers
+        const curDiff = Math.hypot(
+          firstEvent.pageX - secondEvent.pageX,
+          firstEvent.pageY - secondEvent.pageY,
+        );
+
+        const hasMoved = prevDiff > 0;
+
+        if (hasMoved && curDiff > prevDiff) {
+          // The distance between the two pointers has increased
+          scaleRatio = 1 + scaledStep;
+          zoomIn = true;
+        }
+        if (hasMoved && curDiff < prevDiff) {
+          // The distance between the two pointers has decreased
+          scaleRatio = 1 - scaledStep;
+          zoomIn = false;
+        }
+
+        if (scaleRatio === 0) {
+          eventPrevDiff.current = curDiff;
+          return;
+        }
+
+        const point = getSVGPoint(element, firstEvent);
+        const { left, width } = area;
+
+        const centerRatio = (point.x - left) / width;
+
+        const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoomRange);
+
+        const newSpanPercent = newMaxRange - newMinRange;
+
+        // TODO: make span a config option.
+        if (
+          (zoomIn && newSpanPercent < MIN_ALLOWED_SPAN) ||
+          (!zoomIn && newSpanPercent > MAX_ALLOWED_SPAN)
+        ) {
+          eventPrevDiff.current = curDiff;
+          return;
+        }
+
+        eventPrevDiff.current = curDiff;
+        setZoomRange([newMinRange, newMaxRange]);
+      }
+    }
+
+    function pointerUpHandler(event: PointerEvent) {
+      eventCacheRef.current.splice(
+        eventCacheRef.current.findIndex((e) => e.pointerId === event.pointerId),
+        1,
+      );
+
+      if (eventCacheRef.current.length < 2) {
+        eventPrevDiff.current = 0;
+      }
+    }
+
     element.addEventListener('wheel', handleZoom);
+    element.addEventListener('pointerdown', pointerDownHandler);
+    element.addEventListener('pointermove', pointerMoveHandler);
+    element.addEventListener('pointerup', pointerUpHandler);
+    element.addEventListener('pointercancel', pointerUpHandler);
+    element.addEventListener('pointerout', pointerUpHandler);
+    element.addEventListener('pointerleave', pointerUpHandler);
+
+    // Prevent zooming the page on touch devices
+    element.addEventListener('touchstart', (e) => e.preventDefault());
+    element.addEventListener('touchmove', (e) => e.preventDefault());
 
     return () => {
       element.removeEventListener('wheel', handleZoom);
+      element.removeEventListener('pointerdown', pointerDownHandler);
+      element.removeEventListener('pointermove', pointerMoveHandler);
+      element.removeEventListener('pointerup', pointerUpHandler);
+      element.removeEventListener('pointercancel', pointerUpHandler);
+      element.removeEventListener('pointerout', pointerUpHandler);
+      element.removeEventListener('pointerleave', pointerUpHandler);
     };
   }, [svgRef, setZoomRange, zoomRange, area]);
 };
