@@ -3,6 +3,7 @@ import { DefaultizedProps, TreeViewPluginSignature } from '@mui/x-tree-view/inte
 
 export interface UseTreeViewVirtualizationInstance {
   virtualScrollerRef: React.RefObject<HTMLUListElement>;
+  getDimensions: () => UseTreeViewVirtualizationState['virtualization'];
 }
 
 export interface UseTreeViewVirtualizationParameters {
@@ -14,9 +15,23 @@ export type UseTreeViewVirtualizationDefaultizedParameters = DefaultizedProps<
   'enableVirtualization'
 >;
 
+interface UseTreeViewVirtualizationState {
+  virtualization: {
+    /**
+     * The viewport height.
+     */
+    viewportHeight: number;
+    /**
+     * The minimum size to display all the items.
+     */
+    contentSize: number;
+  };
+}
+
 export type UseTreeViewVirtualizationSignature = TreeViewPluginSignature<{
   params: UseTreeViewVirtualizationParameters;
   defaultizedParams: UseTreeViewVirtualizationDefaultizedParameters;
   instance: UseTreeViewVirtualizationInstance;
+  state: UseTreeViewVirtualizationState;
   dependencies: [];
 }>;

@@ -8,6 +8,7 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
   return {
     instance: {
       virtualScrollerRef,
+      getDimensions: () => ({}) as any,
     },
   };
 };
@@ -15,6 +16,10 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
 useTreeViewVirtualization.getDefaultizedParams = (params) => ({
   ...params,
   enableVirtualization: params.enableVirtualization ?? false,
+});
+
+useTreeViewVirtualization.getInitialState = () => ({
+  virtualization: { contentSize: 0, viewportHeight: 0 },
 });
 
 useTreeViewVirtualization.params = { enableVirtualization: true };

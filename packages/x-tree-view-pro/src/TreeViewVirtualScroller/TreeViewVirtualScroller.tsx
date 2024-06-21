@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
-import { shouldForwardProp } from '@mui/system/createStyled';
 import useForkRef from '@mui/utils/useForkRef';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import {
@@ -13,23 +12,16 @@ import { UseTreeViewVirtualizationSignature } from '../internals/plugins/useTree
 import { useTreeViewVirtualScroller } from './useTreeViewVirtualScroller';
 import { TreeViewVirtualScrollerProps } from './TreeViewVirtualScroller.types';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
+import { TreeViewVirtualScrollbar } from './TreeViewVirtualScrollbar';
 
 const TreeViewVirtualScrollerRoot = styled('div', {
   name: 'MuiTreeViewVirtualScroller',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'enableVirtualization',
 })({
-  variants: [
-    {
-      props: { enableVirtualization: true },
-      style: {
-        flexGrow: 1,
-        position: 'relative',
-        overflow: 'hidden',
-      },
-    },
-  ],
+  flexGrow: 1,
+  position: 'relative',
+  overflow: 'hidden',
 });
 
 const releaseInfo = getReleaseInfo();
@@ -44,7 +36,7 @@ export const TreeViewVirtualScroller = React.forwardRef(function TreeViewVirtual
 
   const { instance } =
     useTreeViewContext<[UseTreeViewVirtualizationSignature, UseTreeViewItemsSignature]>();
-  const { getRootProps } = useTreeViewVirtualScroller();
+  const { getRootProps, getScrollbarProps } = useTreeViewVirtualScroller();
   const handleRef = useForkRef(ref, instance.virtualScrollerRef);
 
   const Root = slots.root;
@@ -66,6 +58,7 @@ export const TreeViewVirtualScroller = React.forwardRef(function TreeViewVirtual
         slotProps={slotProps}
         itemsToRender={instance.getItemsToRender()}
       />
+      <TreeViewVirtualScrollbar {...getScrollbarProps()} />
       <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
     </TreeViewVirtualScrollerRoot>
   );

@@ -42,15 +42,10 @@ export const TreeViewVirtualScrollbar = React.forwardRef<HTMLDivElement, {}>(
     const scrollbarRef = React.useRef<HTMLDivElement>(null);
     const contentRef = React.useRef<HTMLDivElement>(null);
 
-    // TODO: Make dynamic
-    const dimensions = {};
-
-    const contentSize =
-      dimensions.minimumSize.height + (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
-
-    const scrollbarSize = dimensions.viewportInnerSize.height;
-
-    const scrollbarInnerSize = scrollbarSize * (contentSize / dimensions.viewportOuterSize.height);
+    const dimensions = instance.getDimensions();
+    const scrollbarHeight = dimensions.viewportHeight;
+    const scrollbarInnerSize =
+      scrollbarHeight * (dimensions.contentSize / dimensions.viewportHeight);
 
     const onScrollerScroll = useEventCallback(() => {
       const scroller = instance.virtualScrollerRef.current!;
@@ -66,7 +61,7 @@ export const TreeViewVirtualScrollbar = React.forwardRef<HTMLDivElement, {}>(
       }
       isLocked.current = true;
 
-      const value = scroller.scrollTop / contentSize;
+      const value = scroller.scrollTop / dimensions.contentSize;
       scrollbar.scrollTop = value * scrollbarInnerSize;
 
       lastPosition.current = scroller.scrollTop;
@@ -83,7 +78,7 @@ export const TreeViewVirtualScrollbar = React.forwardRef<HTMLDivElement, {}>(
       isLocked.current = true;
 
       const value = scrollbar.scrollTop / scrollbarInnerSize;
-      scroller.scrollTop = value * contentSize;
+      scroller.scrollTop = value * dimensions.contentSize;
     });
 
     useOnMount(() => {
