@@ -23,7 +23,7 @@ export const paginationStateInitializer: GridStateInitializer<
 
   throwIfPageSizeExceedsTheLimit(paginationModel.pageSize, props.signature);
 
-  const rowCount = props.rowCount ?? props.initialState?.pagination?.rowCount;
+  const rowCount = props.rowCount ?? props.initialState?.pagination?.rowCount ?? 0;
   return {
     ...state,
     pagination: {
