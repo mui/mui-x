@@ -8,9 +8,10 @@ import { styled } from '@mui/material/styles';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { gridFilteredTopLevelRowCountSelector } from '../hooks/features/filter';
-
-import { gridPaginationModelSelector } from '../hooks/features/pagination/gridPaginationSelector';
+import {
+  gridPaginationModelSelector,
+  gridPaginationRowCountSelector,
+} from '../hooks/features/pagination/gridPaginationSelector';
 
 const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
   [`& .${tablePaginationClasses.selectLabel}`]: {
@@ -46,12 +47,7 @@ const GridPagination = React.forwardRef<
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
-  const visibleTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
-
-  const rowCount = React.useMemo(
-    () => rootProps.rowCount ?? visibleTopLevelRowCount ?? 0,
-    [rootProps.rowCount, visibleTopLevelRowCount],
-  );
+  const rowCount = useGridSelector(apiRef, gridPaginationRowCountSelector);
 
   const lastPage = React.useMemo(
     () => Math.floor(rowCount / (paginationModel.pageSize || 1)),
