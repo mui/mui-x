@@ -58,7 +58,6 @@ export const ChartsTooltipCell = styled('td', {
   },
 }));
 
-// eslint-disable-next-line material-ui/no-styled-box
 export const ChartsTooltipMark = styled(Box, {
   name: 'MuiChartsTooltip',
   slot: 'Mark',
