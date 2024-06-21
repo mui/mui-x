@@ -10,6 +10,7 @@ import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useScatterChartProps } from '@mui/x-charts/internals';
 import { ResponsiveChartContainerPro } from '../ResponsiveChartContainerPro';
+import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
 
 export interface ScatterChartProProps extends ScatterChartProps {
   // TODO: Add zoom props
@@ -53,6 +54,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
         <ChartsLegend {...legendProps} />
         <ChartsAxisHighlight {...axisHighlightProps} />
         {!props.loading && <ChartsTooltip {...tooltipProps} />}
+        <ZoomSetup />
         {children}
       </ZAxisContextProvider>
     </ResponsiveChartContainerPro>
