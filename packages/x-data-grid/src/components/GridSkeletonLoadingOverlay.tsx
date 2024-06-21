@@ -45,6 +45,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+const getColIndex = (el: HTMLElement) => parseInt(el.getAttribute('data-colindex')!, 10);
+
 const GridSkeletonLoadingOverlay = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -143,6 +145,7 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
             align={column.align}
             width="var(--width)"
             height={dimensions.rowHeight}
+            data-colindex={colIndex}
             className={clsx(
               isPinnedLeft && gridClasses['cell--pinnedLeft'],
               isPinnedRight && gridClasses['cell--pinnedRight'],
@@ -190,15 +193,52 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
   // Sync the column resize of the overlay columns with the grid
   const handleColumnResize: GridEventListener<'columnResize'> = (params) => {
     const { colDef, width } = params;
-    const cells = ref.current?.querySelectorAll(
+    const cells = ref.current?.querySelectorAll<HTMLElement>(
       `[data-field="${escapeOperandAttributeSelector(colDef.field)}"]`,
     );
+
+    if (!cells) {
+      throw new Error('MUI X: Expected skeleton cells to be defined with `data-field` attribute.');
+    }
+
+    const resizedColIndex = columns.findIndex((col) => col.field === colDef.field);
+    const pinnedPosition = getPinnedPosition(colDef.field);
+    const isPinnedLeft = pinnedPosition === GridPinnedColumnPosition.LEFT;
+    const isPinnedRight = pinnedPosition === GridPinnedColumnPosition.RIGHT;
+    const currentWidth = getComputedStyle(cells[0]).getPropertyValue('--width');
+    const delta = parseInt(currentWidth, 10) - width;
+
     if (cells) {
       cells.forEach((element) => {
-        (element as HTMLElement).style.setProperty('--width', `${width}px`);
+        element.style.setProperty('--width', `${width}px`);
+      });
+    }
+
+    if (isPinnedLeft) {
+      const pinnedCells = ref.current?.querySelectorAll<HTMLElement>(
+        `.${gridClasses['cell--pinnedLeft']}`,
+      );
+      pinnedCells?.forEach((element) => {
+        const colIndex = getColIndex(element);
+        if (colIndex > resizedColIndex) {
+          element.style.left = `${parseInt(getComputedStyle(element).left, 10) - delta}px`;
+        }
+      });
+    }
+
+    if (isPinnedRight) {
+      const pinnedCells = ref.current?.querySelectorAll<HTMLElement>(
+        `.${gridClasses['cell--pinnedRight']}`,
+      );
+      pinnedCells?.forEach((element) => {
+        const colIndex = getColIndex(element);
+        if (colIndex < resizedColIndex) {
+          element.style.right = `${parseInt(getComputedStyle(element).right, 10) + delta}px`;
+        }
       });
     }
   };
+
   useGridApiEventHandler(apiRef, 'columnResize', handleColumnResize);
 
   return (
