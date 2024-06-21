@@ -2,8 +2,8 @@
 import { randomBytes } from 'crypto';
 import path from 'path';
 
-import Conf from '../compiled/conf';
-import isDockerFunction from '../compiled/is-docker';
+import Conf from 'conf';
+import isDockerFunction from 'is-docker';
 import notifyAboutMuiXTelemetry from './notify';
 
 import * as ciEnvironment from './ci-info';

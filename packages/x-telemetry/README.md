@@ -40,12 +40,12 @@ This util is purpose to give ability to enable / disable telemetry for the curre
 ### Possible commands
 
 ```
-mui-x-telemetry <command>
+npx mui-x-telemetry <command>
 
 Commands:
-  mui-x-telemetry enable   Enable MUI X telemetry
-  mui-x-telemetry disable  Disable MUI X telemetry
-  mui-x-telemetry status   Check the status of MUI X telemetry
+  npx mui-x-telemetry enable   Enable MUI X telemetry
+  npx mui-x-telemetry disable  Disable MUI X telemetry
+  npx mui-x-telemetry status   Check the status of MUI X telemetry
 
 Options:
   --help  Show help                                                    [boolean]
@@ -53,18 +53,18 @@ Options:
 
 ### How to enable
 ```shell
-$ mui-x-telemetry enable
+$ npx mui-x-telemetry enable
 [telemetry] MUI X telemetry enabled
 ```
 
 ### How to disable
 ```shell
-$ mui-x-telemetry disable
+$ npx mui-x-telemetry disable
 [telemetry] MUI X telemetry disabled
 ```
 
 ### How to current status 
 ```shell
-$ mui-x-telemetry status
+$ npx mui-x-telemetry status
 [telemetry] MUI X telemetry is enabled
 ```

@@ -13,5 +13,7 @@ if (packageJson.packageScripts) {
     const buildPackageJson = JSON.parse(buildPackageJsonFileContent)
 
     buildPackageJson.scripts = packageJson.packageScripts;
+    delete buildPackageJson.packageScripts;
+
     fs.writeFileSync(buildPackageJsonPath, JSON.stringify(buildPackageJson, null, 2))
 }

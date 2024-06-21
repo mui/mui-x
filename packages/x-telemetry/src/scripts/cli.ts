@@ -6,7 +6,7 @@ import { hideBin } from 'yargs/helpers';
 import { TelemetryStorage } from '../internal/storage';
 
 yargs(hideBin(process.argv))
-  .scriptName('mui-x-telemetry')
+  .scriptName('npx mui-x-telemetry')
   .command({
     command: 'enable',
     describe: 'Enable MUI X telemetry',

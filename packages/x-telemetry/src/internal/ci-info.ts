@@ -1,4 +1,4 @@
-import ciEnvironment from '../compiled/ci-info'
+import ciEnvironment from 'ci-info'
 
 const isZeitNow = !!process.env.NOW_BUILDER
 

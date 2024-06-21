@@ -1,4 +1,4 @@
-import { machineId } from '../compiled/node-machine-id';
+import { machineId } from 'node-machine-id';
 
 async function getMachineId(): Promise<string | null> {
   try {

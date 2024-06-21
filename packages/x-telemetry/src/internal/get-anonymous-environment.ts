@@ -1,4 +1,4 @@
-import isDockerFunction from '../compiled/is-docker';
+import isDockerFunction from 'is-docker';
 import * as ciEnvironment from './ci-info';
 
 type AnonymousMeta = {
