@@ -295,7 +295,10 @@ Or if you didn\'t intend to use Premium features, you can replace the import of 
 This error indicates that the component you are trying to use is not covered by your current license.
 This happens if you try to use `ChartsPro` or `TreeViewPro` with a license that does not cover these products.
 
-To solve the issue, you can [purchase a license](https://mui.com/r/x-get-license/) that covers the product you are trying to use.
+To solve the issue, please consider an earlier [renewal](https://mui.com/r/x-get-license/).
+
+You might be eligible for a discount if you have an active Pro license.
+Contact [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%20discount) for additional information.
 Or if you didn't intend to use the Pro features, you can replace the import of `@mui/x-charts-pro` or `@mui/x-tree-view-pro` with `@mui/x-charts` or `@mui/x-tree-view` respectively.
 
 You might be eligible for a discount if you already have a license for another product and want to upgrade to a plan that covers the product you are trying to use.
