@@ -3,6 +3,9 @@ import { useDrawingArea, useSvgRef } from '@mui/x-charts/hooks';
 import { getSVGPoint } from '@mui/x-charts/internals';
 import { useZoom } from './useZoom';
 
+const MAX_RANGE = 100;
+const MIN_RANGE = 0;
+
 // TODO: move to helper
 const isPointOutside = (
   point: { x: number; y: number },
@@ -45,8 +48,18 @@ export const useSetupPan = () => {
       const [min, max] = range;
       const span = max - min;
 
-      const newMinRange = min - (movementX / area.width) * span;
-      const newMaxRange = max - (movementX / area.width) * span;
+      let newMinRange = min - (movementX / area.width) * span;
+      let newMaxRange = max - (movementX / area.width) * span;
+
+      if (newMinRange < MIN_RANGE) {
+        newMinRange = MIN_RANGE;
+        newMaxRange = span;
+      }
+
+      if (newMaxRange > MAX_RANGE) {
+        newMaxRange = MAX_RANGE;
+        newMinRange = MAX_RANGE - span;
+      }
 
       setZoomRange([newMinRange, newMaxRange]);
     };
