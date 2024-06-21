@@ -64,7 +64,9 @@ export const useSetupPan = () => {
       setZoomRange([newMinRange, newMaxRange]);
     };
 
-    const handleDown = () => {
+    const handleDown = (event: MouseEvent) => {
+      // Prevent text selection
+      event.preventDefault();
       isTrackingRef.current = true;
     };
 
