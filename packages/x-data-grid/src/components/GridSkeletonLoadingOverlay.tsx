@@ -20,8 +20,7 @@ import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../utils/cellBorderUtils';
-
-const colWidthVar = (index: number) => `--colWidth-${index}`;
+import { escapeOperandAttributeSelector } from '../utils/domUtils';
 
 const SkeletonOverlay = styled('div', {
   name: 'MuiDataGrid',
@@ -111,7 +110,7 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
         const sectionIndex = pinnedPosition
           ? pinnedColumns[pinnedPosition].findIndex((col) => col.field === column.field)
           : -1;
-        const style =
+        const pinnedStyle =
           pinnedPosition && getPinnedStyle(column.computedWidth, colIndex, pinnedPosition);
         const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
         const showRightBorder = shouldCellShowRightBorder(
@@ -139,9 +138,10 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
         rowCells.push(
           <slots.skeletonCell
             key={`skeleton-column-${i}-${column.field}`}
+            field={column.field}
             type={column.type}
             align={column.align}
-            width={`var(${colWidthVar(colIndex)})`}
+            width="var(--width)"
             height={dimensions.rowHeight}
             className={clsx(
               isPinnedLeft && gridClasses['cell--pinnedLeft'],
@@ -149,7 +149,9 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
               showRightBorder && gridClasses['cell--withRightBorder'],
               showLeftBorder && gridClasses['cell--withLeftBorder'],
             )}
-            style={style}
+            style={
+              { '--width': `${column.computedWidth}px`, ...pinnedStyle } as React.CSSProperties
+            }
           />,
         );
 
@@ -185,32 +187,22 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
     getPinnedStyle,
   ]);
 
-  const initialColWidthVariables = columns.reduce<Record<string, string>>(
-    (initialSize, column, i) => {
-      const varName = colWidthVar(i);
-      initialSize[varName] = `${column.computedWidth}px`;
-      return initialSize;
-    },
-    {},
-  );
-
   // Sync the column resize of the overlay columns with the grid
   const handleColumnResize: GridEventListener<'columnResize'> = (params) => {
-    const columnIndex = columns.findIndex((column) => column.field === params.colDef.field);
-    ref.current?.style.setProperty(colWidthVar(columnIndex), `${params.width}px`);
+    const { colDef, width } = params;
+    const cells = ref.current?.querySelectorAll(
+      `[data-field="${escapeOperandAttributeSelector(colDef.field)}"]`,
+    );
+    if (cells) {
+      cells.forEach((element) => {
+        (element as HTMLElement).style.setProperty('--width', `${width}px`);
+      });
+    }
   };
   useGridApiEventHandler(apiRef, 'columnResize', handleColumnResize);
 
   return (
-    <SkeletonOverlay
-      className={classes.root}
-      ref={handleRef}
-      {...props}
-      style={{
-        ...initialColWidthVariables,
-        ...props.style,
-      }}
-    >
+    <SkeletonOverlay className={classes.root} ref={handleRef} {...props}>
       {children}
     </SkeletonOverlay>
   );

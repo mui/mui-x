@@ -87,6 +87,7 @@ function GridSkeletonCell(props: GridSkeletonCellProps) {
 
   return (
     <div
+      data-field={field}
       className={clsx(classes.root, className)}
       style={{ height, maxWidth: width, minWidth: width, ...style }}
       {...other}
