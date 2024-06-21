@@ -5,9 +5,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 7.7.1
 
-_Jun 20, 2024_
+_Jun 21, 2024_
 
-We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌍 Improve Portuguese (pt-PT) locale on the Data Grid
 - 🌍 Improve Danish (da-DK) locale on the Date and Time Pickers
@@ -20,6 +20,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 #### `@mui/x-data-grid@7.7.1`
 
+- [DataGrid][docs] Clarify enabling pagination (#13350) @oliviertassinari
 - [DataGrid] Fix CSV export escaping for non-string values (#13560) @joeycumines-scw
 - [l10n] Improve Portuguese (pt-PT) locale (#13348) @joaosreis
 
@@ -57,6 +58,7 @@ Same changes as in `@mui/x-date-pickers@7.7.1`, plus:
 
 - [charts] Divide `CartesianProvider` to use logic in Pro package (#13531) @JCQuintas
 - [charts] Do not publish the pro package (#13539) @alexfauquette
+- [charts] Export `Pro` versions of regular charts (#13547) @JCQuintas
 - [charts] Prepare `ChartContainerPro` for future Zoom changes (#13532) @JCQuintas
 - [charts] Remove unnecessary proptypes from internal component (#13518) @JCQuintas
 
@@ -65,17 +67,22 @@ Same changes as in `@mui/x-date-pickers@7.7.1`, plus:
 #### `@mui/x-tree-view@7.7.1`
 
 - [TreeView] Improve typing to support optional dependencies in plugins and in the item (#13523) @flaviendelangle
+- [TreeView] Move `useTreeViewId` to the core plugins (#13566) @flaviendelangle
+- [TreeView] Remove unused state from `useTreeViewId` (#13579) @flaviendelangle
 - [TreeView] Support `itemId` with escaping characters when using `SimpleTreeView` (#13487) @oukunan
 
 ### Docs
 
+- [docs] Add section about the new uncovered product watermark (#13568) @michelengelen
 - [docs] Document the `PickerValidDate` type override (#13476) @flaviendelangle
 - [docs] Fix typo (#13507) @anshtiwatne
+- [docs] Remove "-" in heat-map and tree-map urls (#13569) @alexfauquette
 - [docs] Use dedicated tab for weather dataset (#13513) @alexfauquette
 - [x-license] license update proposal (#13459) @michelengelen
 
 ### Core
 
+- [core] Fix failing CI test (#13574) @alexfauquette
 - [infra] Remove explicit `@testing-library/react` dependency (#13478) @LukasTy
 
 ## 7.7.0
