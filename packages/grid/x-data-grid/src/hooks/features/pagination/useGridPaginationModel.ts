@@ -5,6 +5,7 @@ import { GridPaginationModelApi, GridPaginationState } from './gridPaginationInt
 import { GridEventListener } from '../../../models/events';
 import { GridPaginationModel } from '../../../models/gridPaginationProps';
 import { gridDensityFactorSelector } from '../density';
+import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
 import {
   useGridLogger,
   useGridSelector,
@@ -220,9 +221,11 @@ export const useGridPaginationModel = (
     }
 
     const dimensions = apiRef.current.getRootDimensions() || { viewportInnerSize: { height: 0 } };
+    const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
 
     const maximumPageSizeWithoutScrollBar = Math.floor(
-      dimensions.viewportInnerSize.height / rowHeight,
+      (dimensions.viewportInnerSize.height - pinnedRowsHeight.top - pinnedRowsHeight.bottom) /
+        rowHeight,
     );
 
     apiRef.current.setPageSize(maximumPageSizeWithoutScrollBar);
