@@ -290,7 +290,7 @@ This happens if you try to use `DataGridPremium` with a license key for the Pro 
 To solve the issue, you can [upgrade your plan](https://mui.com/r/x-get-license/?scope=premium) from Pro to Premium.
 Or if you didn\'t intend to use Premium features, you can replace the import of `@mui/x-data-grid-premium` with `@mui/x-data-grid-pro`.
 
-### 5. Product not covered by the license key
+### 5. Component not included in your license
 
 This error indicates that the component you are trying to use is not covered by your current license.
 This happens if you try to use `ChartsPro` or `TreeViewPro` with a license that does not cover these products.
