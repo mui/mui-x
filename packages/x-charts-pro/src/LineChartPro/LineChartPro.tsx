@@ -1,12 +1,6 @@
 import * as React from 'react';
-import type {
-  LineChartProps} from '@mui/x-charts/LineChart';
-import {
-  AreaPlot,
-  LineHighlightPlot,
-  LinePlot,
-  MarkPlot,
-} from '@mui/x-charts/LineChart';
+import type { LineChartProps } from '@mui/x-charts/LineChart';
+import { AreaPlot, LineHighlightPlot, LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { ChartsOnAxisClickHandler } from '@mui/x-charts/ChartsOnAxisClickHandler';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
