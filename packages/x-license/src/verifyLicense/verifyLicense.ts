@@ -181,7 +181,7 @@ export function verifyLicense({
   if (license.planVersion === 'initial') {
     // 'charts-pro' or 'tree-view-pro' can only be used with a newer license
     if (productScope === 'charts' || productScope === 'tree-view') {
-      return { status: LICENSE_STATUS.ProductNotCovered };
+      return { status: LICENSE_STATUS.NotAvailableInInitialProPlan };
     }
   }
 

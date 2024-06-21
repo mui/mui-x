@@ -290,7 +290,19 @@ This happens if you try to use `DataGridPremium` with a license key for the Pro 
 To solve the issue, you can [upgrade your plan](https://mui.com/r/x-get-license/?scope=premium) from Pro to Premium.
 Or if you didn\'t intend to use Premium features, you can replace the import of `@mui/x-data-grid-premium` with `@mui/x-data-grid-pro`.
 
-### 5. Invalid license key
+### 5. Component not included in your license
+
+This error indicates that the component you are trying to use is not covered by your current license.
+This happens if you try to use `ChartsPro` or `TreeViewPro` with a license that does not cover these products.
+
+To solve the issue, please consider an earlier [renewal](https://mui.com/r/x-get-license/).
+
+You might be eligible for a discount if you have an active Pro license.
+Contact [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%20discount) for additional information.
+
+Or if you didn't intend to use the Pro features, you can replace the import of `@mui/x-charts-pro` or `@mui/x-tree-view-pro` with `@mui/x-charts` or `@mui/x-tree-view` respectively.
+
+### 6. Invalid license key
 
 This error indicates that your MUI X license key format isn't valid.
 It could be because the license key is missing a character or has a typo.
@@ -298,7 +310,7 @@ It could be because the license key is missing a character or has a typo.
 To solve the issue, you need to double-check that `setLicenseKey()` is called with the right argument.
 Please check the [license key installation](/x/introduction/licensing/#license-key).
 
-### 6. Invalid license key (TypeError: extracting license expiry timestamp)
+### 7. Invalid license key (TypeError: extracting license expiry timestamp)
 
 The following JavaScript exception indicates that you may be trying to validate the new license's key format on an older version of the npm package.
 
