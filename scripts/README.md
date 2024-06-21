@@ -7,6 +7,9 @@
 
 > Tip: You can copy raw markdown checklist below to the release Pull Request and follow it step by step marking completed items.
 
+> Tip: Ensure you have `pnpm` installed as `release:build` uses it.
+> If you are not using `corepack`, run `npm install -g pnpm` to install it globally.
+
 A typical release goes like this:
 
 ### Prepare the release of the packages
