@@ -32,9 +32,9 @@ export function showLicenseKeyPlanMismatchError() {
   ]);
 }
 
-export function showProductNotCoveredError() {
+export function showComponentNotIncludedError() {
   showError([
-    'MUI X: Product not covered by plan.',
+    'MUI X: Component not included in your license.',
     '',
     'The component you are trying to use is not included in the Pro Plan your purchased.',
     '',
