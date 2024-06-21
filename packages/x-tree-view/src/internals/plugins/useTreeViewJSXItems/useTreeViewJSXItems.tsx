@@ -16,7 +16,6 @@ import {
 } from '../useTreeViewItems/useTreeViewItems.utils';
 import type { TreeItemProps } from '../../../TreeItem';
 import type { TreeItem2Props } from '../../../TreeItem2';
-import { UseTreeViewIdSignature } from '../useTreeViewId';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 
 export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> = ({
@@ -122,7 +121,7 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
   rootRef,
   contentRef,
 }) => {
-  const { instance } = useTreeViewContext<[UseTreeViewIdSignature, UseTreeViewJSXItemsSignature]>();
+  const { instance } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
   const { children, disabled = false, label, itemId, id } = props;
 
   const parentContext = React.useContext(TreeViewChildrenItemContext);

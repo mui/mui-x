@@ -31,6 +31,7 @@ describe('License: verifyLicense', () => {
             releaseInfo: '__RELEASE_INFO__',
             licenseKey,
             acceptedScopes: ['pro', 'premium'],
+            productScope: 'data-grid',
           }).status,
       ).to.throw('MUI X: The release information is invalid. Not able to validate license.');
     });
@@ -42,6 +43,7 @@ describe('License: verifyLicense', () => {
           releaseInfo: RELEASE_INFO,
           licenseKey,
           acceptedScopes: ['pro', 'premium'],
+          productScope: 'data-grid',
         }).status,
       ).to.equal(LICENSE_STATUS.Valid);
     });
@@ -53,6 +55,7 @@ describe('License: verifyLicense', () => {
         scope: 'pro',
         licensingModel: 'perpetual',
         orderNumber: 'MUI-123',
+        planVersion: 'initial',
       });
 
       expect(
@@ -60,6 +63,7 @@ describe('License: verifyLicense', () => {
           releaseInfo: RELEASE_INFO,
           licenseKey: expiredLicenseKey,
           acceptedScopes: ['pro', 'premium'],
+          productScope: 'data-grid',
         }).status,
       ).to.equal(LICENSE_STATUS.ExpiredVersion);
     });
@@ -72,6 +76,7 @@ describe('License: verifyLicense', () => {
           licenseKey:
             'b43ff5f9ac93f021855ff59ff0ba5220TkFNRTpNYC1VSSBTQVMsREVWRUxPUEVSX0NPVU5UPTEwLEVYUElSWT0xNTkxNzIzMDY3MDQyLFZFUlNJT049MS4yLjM',
           acceptedScopes: ['pro', 'premium'],
+          productScope: 'data-grid',
         }).status,
       ).to.equal(LICENSE_STATUS.Invalid);
     });
@@ -83,6 +88,7 @@ describe('License: verifyLicense', () => {
       orderNumber: 'MUI-123',
       scope: 'pro',
       licensingModel: 'subscription',
+      planVersion: 'initial',
     });
 
     const licenseKeyPremium = generateLicense({
@@ -90,6 +96,7 @@ describe('License: verifyLicense', () => {
       orderNumber: 'MUI-123',
       scope: 'premium',
       licensingModel: 'subscription',
+      planVersion: 'initial',
     });
 
     it('should log an error when ReleaseInfo is not valid', () => {
@@ -100,6 +107,7 @@ describe('License: verifyLicense', () => {
             releaseInfo: '__RELEASE_INFO__',
             licenseKey: licenseKeyPro,
             acceptedScopes: ['pro', 'premium'],
+            productScope: 'data-grid',
           }).status,
       ).to.throw('MUI X: The release information is invalid. Not able to validate license.');
     });
@@ -112,6 +120,7 @@ describe('License: verifyLicense', () => {
             releaseInfo: RELEASE_INFO,
             licenseKey: licenseKeyPro,
             acceptedScopes: ['pro', 'premium'],
+            productScope: 'data-grid',
           }).status,
         ).to.equal(LICENSE_STATUS.Valid);
       });
@@ -123,6 +132,7 @@ describe('License: verifyLicense', () => {
             releaseInfo: RELEASE_INFO,
             licenseKey: licenseKeyPremium,
             acceptedScopes: ['premium'],
+            productScope: 'data-grid',
           }).status,
         ).to.equal(LICENSE_STATUS.Valid);
       });
@@ -134,6 +144,7 @@ describe('License: verifyLicense', () => {
             releaseInfo: RELEASE_INFO,
             licenseKey: licenseKeyPro,
             acceptedScopes: ['premium'],
+            productScope: 'data-grid',
           }).status,
         ).to.equal(LICENSE_STATUS.OutOfScope);
       });
@@ -147,6 +158,7 @@ describe('License: verifyLicense', () => {
           orderNumber: 'MUI-123',
           scope: 'pro',
           licensingModel: 'subscription',
+          planVersion: 'initial',
         });
 
         expect(
@@ -154,6 +166,7 @@ describe('License: verifyLicense', () => {
             releaseInfo: RELEASE_INFO,
             licenseKey: expiredLicenseKey,
             acceptedScopes: ['pro', 'premium'],
+            productScope: 'data-grid',
           }).status,
         ).to.equal(LICENSE_STATUS.Valid);
       });
@@ -164,6 +177,7 @@ describe('License: verifyLicense', () => {
           orderNumber: 'MUI-123',
           scope: 'pro',
           licensingModel: 'subscription',
+          planVersion: 'initial',
         });
 
         expect(
@@ -171,6 +185,7 @@ describe('License: verifyLicense', () => {
             releaseInfo: RELEASE_INFO,
             licenseKey: expiredLicenseKey,
             acceptedScopes: ['pro', 'premium'],
+            productScope: 'data-grid',
           }).status,
         ).to.equal(LICENSE_STATUS.ExpiredAnnualGrace);
       });
@@ -182,6 +197,7 @@ describe('License: verifyLicense', () => {
           orderNumber: 'MUI-123',
           scope: 'pro',
           licensingModel: 'subscription',
+          planVersion: 'initial',
         });
 
         expect(
@@ -189,6 +205,7 @@ describe('License: verifyLicense', () => {
             releaseInfo: RELEASE_INFO,
             licenseKey: expiredLicenseKey,
             acceptedScopes: ['pro', 'premium'],
+            productScope: 'data-grid',
           }).status,
         ).to.equal(LICENSE_STATUS.ExpiredAnnual);
       });
@@ -199,6 +216,7 @@ describe('License: verifyLicense', () => {
           orderNumber: 'MUI-123',
           scope: 'pro',
           licensingModel: 'perpetual',
+          planVersion: 'initial',
         });
 
         expect(
@@ -206,6 +224,7 @@ describe('License: verifyLicense', () => {
             releaseInfo: RELEASE_INFO,
             licenseKey: expiredLicenseKey,
             acceptedScopes: ['pro', 'premium'],
+            productScope: 'data-grid',
           }).status,
         ).to.equal(LICENSE_STATUS.Valid);
       });
@@ -219,6 +238,7 @@ describe('License: verifyLicense', () => {
           licenseKey:
             'b43ff5f9ac93f021855ff59ff0ba5220TkFNRTpNYC1VSSBTQVMsREVWRUxPUEVSX0NPVU5UPTEwLEVYUElSWT0xNTkxNzIzMDY3MDQyLFZFUlNJT049MS4yLjM',
           acceptedScopes: ['pro', 'premium'],
+          productScope: 'data-grid',
         }).status,
       ).to.equal(LICENSE_STATUS.Invalid);
     });
@@ -230,6 +250,7 @@ describe('License: verifyLicense', () => {
       orderNumber: 'MUI-123',
       scope: 'pro',
       licensingModel: 'annual',
+      planVersion: 'initial',
     });
 
     it('should accept licensingModel="annual"', () => {
@@ -239,6 +260,73 @@ describe('License: verifyLicense', () => {
           releaseInfo: RELEASE_INFO,
           licenseKey: licenseKeyPro,
           acceptedScopes: ['pro', 'premium'],
+          productScope: 'data-grid',
+        }).status,
+      ).to.equal(LICENSE_STATUS.Valid);
+    });
+  });
+
+  describe('key version: 2.2', () => {
+    const licenseKeyInitial = generateLicense({
+      expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
+      orderNumber: 'MUI-123',
+      scope: 'pro',
+      licensingModel: 'annual',
+      planVersion: 'initial',
+    });
+
+    const licenseKey2 = generateLicense({
+      expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
+      orderNumber: 'MUI-123',
+      scope: 'pro',
+      licensingModel: 'annual',
+      planVersion: 'Q3-2024',
+    });
+
+    it('PlanVersion "initial" should not accept charts', () => {
+      process.env.NODE_ENV = 'production';
+      expect(
+        verifyLicense({
+          releaseInfo: RELEASE_INFO,
+          licenseKey: licenseKeyInitial,
+          acceptedScopes: ['pro', 'premium'],
+          productScope: 'charts',
+        }).status,
+      ).to.equal(LICENSE_STATUS.ProductNotCovered);
+    });
+
+    it('PlanVersion "initial" should not accept tree-view', () => {
+      process.env.NODE_ENV = 'production';
+      expect(
+        verifyLicense({
+          releaseInfo: RELEASE_INFO,
+          licenseKey: licenseKeyInitial,
+          acceptedScopes: ['pro', 'premium'],
+          productScope: 'tree-view',
+        }).status,
+      ).to.equal(LICENSE_STATUS.ProductNotCovered);
+    });
+
+    it('PlanVersion "Q3-2024" should accept charts', () => {
+      process.env.NODE_ENV = 'production';
+      expect(
+        verifyLicense({
+          releaseInfo: RELEASE_INFO,
+          licenseKey: licenseKey2,
+          acceptedScopes: ['pro', 'premium'],
+          productScope: 'charts',
+        }).status,
+      ).to.equal(LICENSE_STATUS.Valid);
+    });
+
+    it('PlanVersion "Q3-2024" should accept tree-view', () => {
+      process.env.NODE_ENV = 'production';
+      expect(
+        verifyLicense({
+          releaseInfo: RELEASE_INFO,
+          licenseKey: licenseKey2,
+          acceptedScopes: ['pro', 'premium'],
+          productScope: 'tree-view',
         }).status,
       ).to.equal(LICENSE_STATUS.Valid);
     });

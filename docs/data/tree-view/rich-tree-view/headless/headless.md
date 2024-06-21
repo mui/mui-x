@@ -283,7 +283,7 @@ type UseCustomPluginSignature = TreeViewPluginSignature<{
   // The name of the models defined by your plugin
   modelNames: UseCustomPluginModelNames;
   // The plugins this plugin needs to work correctly
-  dependantPlugins: UseCustomPluginDependantPlugins;
+  dependencies: UseCustomPluginDependantPlugins;
 }>;
 ```
 
@@ -317,7 +317,7 @@ type UseCustomPluginSignature = TreeViewPluginSignature<{
   contextValue: { customPlugin: { enabled: boolean } };
   modelNames: 'customModel';
   // We want to have access to the expansion models and methods of the expansion plugin.
-  dependantPlugins: [UseTreeViewExpansionSignature];
+  dependencies: [UseTreeViewExpansionSignature];
 }>;
 ```
 

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { TreeViewPluginSignature } from '../../models';
-import { UseTreeViewIdSignature } from '../useTreeViewId/useTreeViewId.types';
 import type { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import type { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
@@ -61,8 +60,7 @@ export type UseTreeViewFocusSignature = TreeViewPluginSignature<{
   instance: UseTreeViewFocusInstance;
   publicAPI: UseTreeViewFocusPublicAPI;
   state: UseTreeViewFocusState;
-  dependantPlugins: [
-    UseTreeViewIdSignature,
+  dependencies: [
     UseTreeViewItemsSignature,
     UseTreeViewSelectionSignature,
     UseTreeViewExpansionSignature,
