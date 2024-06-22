@@ -302,7 +302,7 @@ export function useGridDimensions(
   }, [apiRef, savedSize, updateDimensions]);
 
   const root = apiRef.current.rootElementRef.current;
-  const dimensions = apiRef.current.state.dimensions;
+  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   useEnhancedEffect(() => {
     if (!root) {
       return;
