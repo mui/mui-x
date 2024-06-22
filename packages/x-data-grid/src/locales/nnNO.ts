@@ -158,7 +158,7 @@ const nnNOGrid: Partial<GridLocaleText> = {
   groupingColumnHeaderName: 'Grupper',
   groupColumn: (name) => `Grupper på ${name}`,
   unGroupColumn: (name) => `Slutt å grupper på ${name}`,
-  
+
   // Master/detail
   detailPanelToggle: 'Utvid/kollaps detalj panel',
   expandDetailPanel: 'Utvid',
