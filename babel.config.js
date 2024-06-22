@@ -22,9 +22,6 @@ const defaultAlias = {
   '@mui-internal/api-docs-builder': resolveAliasPath(
     './node_modules/@mui/monorepo/packages/api-docs-builder',
   ),
-  '@mui-internal/test-utils': resolveAliasPath(
-    './node_modules/@mui/monorepo/packages/test-utils/src',
-  ),
   docs: resolveAliasPath('./node_modules/@mui/monorepo/docs'),
   test: resolveAliasPath('./test'),
   packages: resolveAliasPath('./packages'),

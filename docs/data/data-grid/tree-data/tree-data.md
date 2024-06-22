@@ -26,9 +26,11 @@ const rows: GridRowsProp = [
   { path: ['Sarah', 'Thomas', 'Karen'], jobTitle: 'Sales Person', id: 3 },
 ];
 
+const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.path;
+
 <DataGridPro
   treeData
-  getTreeDataPath={(row) => row.path}
+  getTreeDataPath={getTreeDataPath}
   rows={rows}
   columns={columns}
 />;
@@ -41,13 +43,21 @@ const rows: GridRowsProp = [
   { path: 'Sarah/Thomas/Karen', jobTitle: 'Sales Person', id: 3 },
 ];
 
+const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) =>
+  row.path.split('/');
+
 <DataGridPro
   treeData
-  getTreeDataPath={(row) => row.path.split('/')}
+  getTreeDataPath={getTreeDataPath}
   rows={rows}
   columns={columns}
 />;
 ```
+
+:::warning
+The `getTreeDataPath` prop should keep the same reference between two renders.
+If it changes, the data grid will consider that the data has changed and will recompute the tree resulting in collapsing all the rows.
+:::
 
 {{"demo": "TreeDataSimple.js", "bg": "inline", "defaultCodeOpen": false}}
 

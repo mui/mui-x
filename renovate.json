@@ -6,7 +6,7 @@
   "commitMessageTopic": "{{depName}}",
   "dependencyDashboard": true,
   "rebaseWhen": "conflicted",
-  "ignoreDeps": ["jsdom"],
+  "ignoreDeps": ["@mui/joy"],
   "labels": ["dependencies"],
   "stopUpdatingLabel": "on hold",
   "packageRules": [
@@ -84,7 +84,6 @@
       "matchPackageNames": [
         "@mui/base",
         "@mui/icons-material",
-        "@mui/joy",
         "@mui/lab",
         "@mui/material",
         "@mui/styles",

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import moment from 'moment/moment';
 import jMoment from 'moment-jalaali';
-import { fireEvent } from '@mui-internal/test-utils';
+import { fireEvent } from '@mui/internal-test-utils';
 import {
   buildFieldInteractions,
   getCleanedSelectedContent,
