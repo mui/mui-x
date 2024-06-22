@@ -176,4 +176,4 @@ const nnNOGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'størrelse',
 };
 
-export const nbNO: Localization = getGridLocalization(nnNOGrid, nnNOCore);
+export const nnNO: Localization = getGridLocalization(nnNOGrid, nnNOCore);
