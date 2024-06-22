@@ -177,14 +177,14 @@ export const useGridPrintExport = (
       // The height above does not include grid border width, so we need to exclude it
       gridClone.style.boxSizing = 'content-box';
 
-      // the footer is always being placed at the bottom of the page as if all rows are exported
-      // so if getRowsToExport is being used to only export a subset of rows then we need to
-      // adjust the footer position to be correctly placed at the bottom of the grid
-      const gridFooterElement: HTMLElement | null = gridClone.querySelector(
-        `.${gridClasses.footerContainer}`,
-      );
+      if (!normalizeOptions.hideFooter) {
+        // the footer is always being placed at the bottom of the page as if all rows are exported
+        // so if getRowsToExport is being used to only export a subset of rows then we need to
+        // adjust the footer position to be correctly placed at the bottom of the grid
+        const gridFooterElement: HTMLElement | null = gridClone.querySelector(
+          `.${gridClasses.footerContainer}`,
+        )!;
 
-      if (gridFooterElement) {
         gridFooterElement.style.position = 'absolute';
         gridFooterElement.style.width = '100%';
         gridFooterElement.style.top = `${computedTotalHeight - gridFooterElementHeight}px`;
