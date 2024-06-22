@@ -121,17 +121,17 @@ const nnNOGrid: Partial<GridLocaleText> = {
 
   // Rows selected footer text
   footerRowSelected: (count) =>
-    count !== 1 ? `${count.toLocaleString()} rader valgt` : `${count.toLocaleString()} rad valgt`,
+    count !== 1 ? `${count.toLocaleString()} rader valt` : `${count.toLocaleString()} rad valt`,
 
   // Total row amount footer text
-  footerTotalRows: 'Totalt antall rader:',
+  footerTotalRows: 'Totalt tal rader:',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} av ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
-  checkboxSelectionHeaderName: 'Avmerkingsboks valgt',
+  checkboxSelectionHeaderName: 'Avmerkingsboks',
   checkboxSelectionSelectAllRows: 'Vel alle rader',
   checkboxSelectionUnselectAllRows: 'Vel vekk alle rader',
   checkboxSelectionSelectRow: 'Vel rad',

@@ -131,7 +131,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
     `${visibleCount.toLocaleString()} av ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
-  checkboxSelectionHeaderName: 'Avmerkingsboks valgt',
+  checkboxSelectionHeaderName: 'Avmerkingsboks',
   checkboxSelectionSelectAllRows: 'Velg alle rader',
   checkboxSelectionUnselectAllRows: 'Velg bort alle rader',
   checkboxSelectionSelectRow: 'Velg rad',
