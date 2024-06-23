@@ -736,6 +736,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   getRowId?: GridRowIdGetter<R>;
   /**
    * If `true`, a loading overlay is displayed.
+   * @default false
    */
   loading?: boolean;
   /**
