@@ -22,7 +22,7 @@ export const useSetupPan = () => {
 
   const svgRef = useSvgRef();
 
-  const isTrackingRef = React.useRef(false);
+  const isPanningRef = React.useRef(false);
   const touchStartRef = React.useRef<number | null>(null);
   const eventCacheRef = React.useRef<PointerEvent[]>([]);
 
@@ -33,7 +33,7 @@ export const useSetupPan = () => {
     }
 
     const handlePan = (event: PointerEvent) => {
-      if (element === null || !isTrackingRef.current || eventCacheRef.current.length > 1) {
+      if (element === null || !isPanningRef.current || eventCacheRef.current.length > 1) {
         return;
       }
 
@@ -43,7 +43,7 @@ export const useSetupPan = () => {
       const point = getSVGPoint(element, event);
 
       if (isPointOutside(point, area)) {
-        isTrackingRef.current = false;
+        isPanningRef.current = false;
         return;
       }
 
@@ -74,7 +74,7 @@ export const useSetupPan = () => {
       if (eventCacheRef.current.length === 1) {
         event.preventDefault();
       }
-      isTrackingRef.current = true;
+      isPanningRef.current = true;
       touchStartRef.current = event.clientX;
     };
 
@@ -83,7 +83,7 @@ export const useSetupPan = () => {
         eventCacheRef.current.findIndex((e) => e.pointerId === event.pointerId),
         1,
       );
-      isTrackingRef.current = false;
+      isPanningRef.current = false;
       touchStartRef.current = null;
     };
 
@@ -96,5 +96,5 @@ export const useSetupPan = () => {
       element.removeEventListener('pointermove', handlePan);
       element.removeEventListener('pointerup', handleUp);
     };
-  }, [area, svgRef, isTrackingRef, zoomRange, setZoomRange]);
+  }, [area, svgRef, isPanningRef, zoomRange, setZoomRange]);
 };
