@@ -1,3 +1,5 @@
+import { UseTreeViewVirtualizationRenderContext } from '../internals/plugins/useTreeViewVirtualization';
+
 export enum ScrollDirection {
   NONE,
   UP,
@@ -67,4 +69,17 @@ export function directionForDelta(dx: number, dy: number) {
     }
   }
   /* eslint-enable */
+}
+
+export function areRenderContextsEqual(
+  context1: UseTreeViewVirtualizationRenderContext,
+  context2: UseTreeViewVirtualizationRenderContext,
+) {
+  if (context1 === context2) {
+    return true;
+  }
+  return (
+    context1.firstItemIndex === context2.firstItemIndex &&
+    context1.lastItemIndex === context2.lastItemIndex
+  );
 }

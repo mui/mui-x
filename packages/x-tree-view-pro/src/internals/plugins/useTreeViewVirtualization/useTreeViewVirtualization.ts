@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TreeViewPlugin } from '@mui/x-tree-view/internals';
+import { clamp, TreeViewPlugin } from '@mui/x-tree-view/internals';
 import { UseTreeViewVirtualizationSignature } from './useTreeViewVirtualization.types';
 
 export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualizationSignature> = ({
@@ -8,9 +8,28 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
 }) => {
   const virtualScrollerRef = React.useRef<HTMLDivElement>(null);
 
+  const itemCount = Object.keys(state.items.itemMap).length;
+  const computeRenderContext = React.useCallback(
+    (scrollPositionPx: number) => {
+      const clampItemIndex = (itemIndex: number) => clamp(itemIndex, 0, itemCount - 1);
+
+      return {
+        firstItemIndex: clampItemIndex(
+          (scrollPositionPx - params.scrollBufferPx) / params.itemsHeight,
+        ),
+        lastItemIndex: clampItemIndex(
+          (scrollPositionPx + state.virtualization.viewportHeight + params.scrollBufferPx) /
+            params.itemsHeight,
+        ),
+      };
+    },
+    [itemCount, params.itemsHeight, params.scrollBufferPx, state.virtualization.viewportHeight],
+  );
+
   return {
     instance: {
       getDimensions: () => state.virtualization,
+      computeRenderContext,
     },
     contextValue: {
       virtualization: {

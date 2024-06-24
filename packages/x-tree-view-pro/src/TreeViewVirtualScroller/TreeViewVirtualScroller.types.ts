@@ -18,3 +18,5 @@ export interface TreeViewVirtualScrollerProps extends React.HTMLAttributes<HTMLU
   slots: TreeViewVirtualScrollerSlots;
   slotProps?: TreeViewVirtualScrollerSlotProps;
 }
+
+export type TreeViewVirtualizationScrollPosition = { top: number; left: number };

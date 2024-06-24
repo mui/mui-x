@@ -14,6 +14,7 @@ export { unstable_resetCleanupTracking } from './hooks/useInstanceEventHandler';
 export type {
   TreeViewPlugin,
   TreeViewPluginSignature,
+  TreeViewInstance,
   ConvertPluginsIntoSignatures,
   MergeSignaturesProperty,
   TreeViewPublicAPI,
@@ -59,4 +60,5 @@ export type {
   UseTreeViewJSXItemsParameters,
 } from './plugins/useTreeViewJSXItems';
 
+export { clamp } from './utils/utils';
 export { buildWarning } from './utils/warning';

@@ -4,13 +4,25 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
 import { useTreeViewContext, UseTreeViewItemsSignature } from '@mui/x-tree-view/internals';
-import { UseTreeViewVirtualizationSignature } from '../internals/plugins/useTreeViewVirtualization';
+import {
+  UseTreeViewVirtualizationSignature,
+  UseTreeViewVirtualizationRenderContext,
+} from '../internals/plugins/useTreeViewVirtualization';
 import {
   createScrollCache,
   bufferForDirection,
   directionForDelta,
   ScrollDirection,
+  areRenderContextsEqual,
 } from './TreeViewVirtualScroller.utils';
+import { TreeViewVirtualizationScrollPosition } from './TreeViewVirtualScroller.types';
+
+const EMPTY_RENDER_CONTEXT: UseTreeViewVirtualizationRenderContext = {
+  firstItemIndex: 0,
+  lastItemIndex: 0,
+};
+
+const EMPTY_SCROLL_POSITION: TreeViewVirtualizationScrollPosition = { top: 0, left: 0 };
 
 export const useTreeViewVirtualScroller = () => {
   const {
@@ -21,6 +33,9 @@ export const useTreeViewVirtualScroller = () => {
   const rootRef = React.useRef<HTMLUListElement>(null);
   const scrollbarRef = React.useRef<HTMLDivElement>(null);
   const scrollCache = useLazyRef(() => createScrollCache(scrollBufferPx, itemsHeight * 15)).current;
+  const [renderContext, setRenderContext] =
+    React.useState<UseTreeViewVirtualizationRenderContext>(EMPTY_RENDER_CONTEXT);
+  const frozenContext = React.useRef<UseTreeViewVirtualizationRenderContext | undefined>(undefined);
 
   /*
    * Scroll context logic
@@ -37,8 +52,18 @@ export const useTreeViewVirtualScroller = () => {
    * work that's not necessary. Thus we store the context at the start of the scroll in `frozenContext`, and the rows
    * that are part of this old context will keep their same render context as to avoid re-rendering.
    */
-  const scrollPosition = React.useRef(EMPTY_SCROLL_POSITION);
-  const previousContextScrollPosition = React.useRef(EMPTY_SCROLL_POSITION);
+  const scrollPosition = React.useRef<TreeViewVirtualizationScrollPosition>(EMPTY_SCROLL_POSITION);
+  const previousContextScrollPosition =
+    React.useRef<TreeViewVirtualizationScrollPosition>(EMPTY_SCROLL_POSITION);
+
+  const updateRenderContext = (nextRenderContext: UseTreeViewVirtualizationRenderContext) => {
+    if (areRenderContextsEqual(nextRenderContext, renderContext)) {
+      return;
+    }
+
+    setRenderContext(nextRenderContext);
+    previousContextScrollPosition.current = scrollPosition.current;
+  };
 
   const triggerUpdateRenderContext = () => {
     const newScroll = {
@@ -56,20 +81,17 @@ export const useTreeViewVirtualScroller = () => {
     const direction = isScrolling ? directionForDelta(dx, dy) : ScrollDirection.NONE;
 
     // Since previous render, we have scrolled...
-    const rowScroll = Math.abs(
+    const verticalScroll = Math.abs(
       scrollPosition.current.top - previousContextScrollPosition.current.top,
-    );
-    const columnScroll = Math.abs(
-      scrollPosition.current.left - previousContextScrollPosition.current.left,
     );
 
     // PERF: use the computed minimum column width instead of a static one
-    const didCrossThreshold = rowScroll >= itemsHeight || columnScroll >= MINIMUM_COLUMN_WIDTH;
+    const didCrossThreshold = verticalScroll >= itemsHeight;
     const didChangeDirection = scrollCache.direction !== direction;
     const shouldUpdate = didCrossThreshold || didChangeDirection;
 
     if (!shouldUpdate) {
-      return renderContext;
+      return;
     }
 
     // Render a new context
@@ -90,8 +112,7 @@ export const useTreeViewVirtualScroller = () => {
     scrollCache.direction = direction;
     scrollCache.buffer = bufferForDirection(direction, scrollBufferPx, itemsHeight * 15);
 
-    const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
-    const nextRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
+    const nextRenderContext = instance.computeRenderContext(scrollPosition.current.top);
 
     // Prevents batching render context changes
     ReactDOM.flushSync(() => {
@@ -99,25 +120,17 @@ export const useTreeViewVirtualScroller = () => {
     });
 
     scrollTimeout.start(1000, triggerUpdateRenderContext);
-
-    return nextRenderContext;
   };
 
   const handleScroll = useEventCallback((event: React.UIEvent) => {
-    const { scrollTop, scrollLeft } = event.currentTarget;
+    const { scrollTop } = event.currentTarget;
 
     // On iOS and macOS, negative offsets are possible when swiping past the start
     if (scrollTop < 0) {
       return;
     }
 
-    // const nextRenderContext = triggerUpdateRenderContext();
-
-    apiRef.current.publishEvent('scrollPositionChange', {
-      top: scrollTop,
-      left: scrollLeft,
-      renderContext: nextRenderContext,
-    });
+    triggerUpdateRenderContext();
   });
 
   const getRootProps = () => ({ ref: rootRef });

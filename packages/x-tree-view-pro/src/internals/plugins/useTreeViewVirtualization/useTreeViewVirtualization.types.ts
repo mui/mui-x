@@ -1,8 +1,13 @@
 import * as React from 'react';
-import { DefaultizedProps, TreeViewPluginSignature } from '@mui/x-tree-view/internals';
+import {
+  DefaultizedProps,
+  TreeViewPluginSignature,
+  UseTreeViewItemsSignature,
+} from '@mui/x-tree-view/internals';
 
 export interface UseTreeViewVirtualizationInstance {
   getDimensions: () => UseTreeViewVirtualizationState['virtualization'];
+  computeRenderContext: (scrollPositionPx: number) => UseTreeViewVirtualizationRenderContext;
 }
 
 export interface UseTreeViewVirtualizationParameters {
@@ -46,11 +51,16 @@ export interface UseTreeViewVirtualizationContextValue {
   };
 }
 
+export interface UseTreeViewVirtualizationRenderContext {
+  firstItemIndex: number;
+  lastItemIndex: number;
+}
+
 export type UseTreeViewVirtualizationSignature = TreeViewPluginSignature<{
   params: UseTreeViewVirtualizationParameters;
   defaultizedParams: UseTreeViewVirtualizationDefaultizedParameters;
   instance: UseTreeViewVirtualizationInstance;
   state: UseTreeViewVirtualizationState;
   contextValue: UseTreeViewVirtualizationContextValue;
-  dependencies: [];
+  dependencies: [UseTreeViewItemsSignature];
 }>;
