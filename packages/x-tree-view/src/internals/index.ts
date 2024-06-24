@@ -49,7 +49,7 @@ export type {
   UseTreeViewIconsSignature,
   UseTreeViewIconsParameters,
 } from './plugins/useTreeViewIcons';
-export { useTreeViewItems } from './plugins/useTreeViewItems';
+export { useTreeViewItems, TREE_VIEW_ROOT_PARENT_ID } from './plugins/useTreeViewItems';
 export type {
   UseTreeViewItemsSignature,
   UseTreeViewItemsParameters,

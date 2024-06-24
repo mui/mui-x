@@ -5,3 +5,4 @@ export type {
   UseTreeViewItemsDefaultizedParameters,
   TreeViewItemToRenderProps,
 } from './useTreeViewItems.types';
+export { TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';

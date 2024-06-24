@@ -40,6 +40,16 @@ const TreeViewVirtualScrollerContent = styled('div', {
   zIndex: 0,
 });
 
+const TreeViewVirtualScrollerRenderZone = styled('div', {
+  name: 'MuiTreeViewVirtualScroller',
+  slot: 'RenderZone',
+  overridesResolver: (props, styles) => styles.renderZone,
+})({
+  position: 'absolute',
+  display: 'flex', // Prevents margin collapsing when using `getRowSpacing`
+  flexDirection: 'column',
+});
+
 const releaseInfo = getReleaseInfo();
 
 export const TreeViewVirtualScroller = React.forwardRef(function TreeViewVirtualScroller(
@@ -49,7 +59,7 @@ export const TreeViewVirtualScroller = React.forwardRef(function TreeViewVirtual
   const { slots, slotProps, ...other } = props;
 
   useLicenseVerifier('x-tree-view-pro', releaseInfo);
-  const { getRootProps, getContentProps, getScrollbarProps, getItemsToRender } =
+  const { getRootProps, getContentProps, getRenderZoneProps, getScrollbarProps, getItemsToRender } =
     useTreeViewVirtualScroller();
 
   const Root = slots.root;
@@ -67,7 +77,13 @@ export const TreeViewVirtualScroller = React.forwardRef(function TreeViewVirtual
   return (
     <TreeViewVirtualScrollerRoot as={Root} {...rootProps}>
       <TreeViewVirtualScrollerContent {...getContentProps()}>
-        <RichTreeViewItems slots={slots} slotProps={slotProps} itemsToRender={getItemsToRender()} />
+        <TreeViewVirtualScrollerRenderZone {...getRenderZoneProps()}>
+          <RichTreeViewItems
+            slots={slots}
+            slotProps={slotProps}
+            itemsToRender={getItemsToRender()}
+          />
+        </TreeViewVirtualScrollerRenderZone>
       </TreeViewVirtualScrollerContent>
       <TreeViewVirtualScrollbar {...getScrollbarProps()} />
       <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />

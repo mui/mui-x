@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useEventCallback from '@mui/utils/useEventCallback';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useTimeout from '@mui/utils/useTimeout';
 import { useTreeViewContext, UseTreeViewItemsSignature } from '@mui/x-tree-view/internals';
 import {
@@ -18,7 +19,6 @@ import {
 import { TreeViewVirtualizationScrollPosition } from './TreeViewVirtualScroller.types';
 import { useResizeObserver } from './useResizeObserver';
 import { useRunOnce } from './useRunOnce';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 
 const EMPTY_RENDER_CONTEXT: UseTreeViewVirtualizationRenderContext = {
   firstItemIndex: 0,
@@ -151,9 +151,25 @@ export const useTreeViewVirtualScroller = () => {
 
   const getContentProps = () => ({ ref: virtualScrollerRef, onScroll: handleScroll });
 
+  const getRenderZoneProps = () => ({
+    style: {
+      transform: `translate3d(0, ${renderContext.firstItemIndex * itemsHeight}px, 0)`,
+    },
+  });
+
   const getScrollbarProps = () => ({ ref: scrollbarRef });
 
   const getItemsToRender = () => {
+    const flatItemIds = instance.getFlatItemIds();
+
+    const itemIdsToRender = flatItemIds.slice(renderContext.firstItemIndex, renderContext.lastItemIndex + 1);
+    let currentItemMeta = instance.getItemMeta(itemIdsToRender[0]);
+
+    for(let itemId of itemIdsToRender){
+      const itemMeta = instance.getItemMeta(itemId);
+    }
+
+
     // TODO: Add actual virtualization
     return instance.getItemsToRender();
   };
@@ -161,6 +177,7 @@ export const useTreeViewVirtualScroller = () => {
   return {
     getRootProps,
     getContentProps,
+    getRenderZoneProps,
     getScrollbarProps,
     getItemsToRender,
   };

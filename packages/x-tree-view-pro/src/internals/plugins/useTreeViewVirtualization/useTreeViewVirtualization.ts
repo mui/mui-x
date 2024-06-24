@@ -1,7 +1,13 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerWindow from '@mui/utils/ownerWindow';
-import { buildWarning, clamp, TreeViewPlugin } from '@mui/x-tree-view/internals';
+import {
+  buildWarning,
+  clamp,
+  TreeViewPlugin,
+  TREE_VIEW_ROOT_PARENT_ID,
+} from '@mui/x-tree-view/internals';
+import { TreeViewItemId } from '@mui/x-tree-view/models';
 import {
   UseTreeViewVirtualizationElementSize,
   UseTreeViewVirtualizationSignature,
@@ -104,11 +110,24 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
     [itemCount, params.itemsHeight, params.scrollBufferPx, state.virtualization.viewportHeight],
   );
 
+  const flatItemIds = React.useMemo(() => {
+    const itemOrderedChildrenIds = state.items.itemOrderedChildrenIds;
+
+    const addChildrenToItem = (itemId: TreeViewItemId) => {
+      return [itemId, ...(itemOrderedChildrenIds[itemId] ?? []).flatMap(addChildrenToItem)];
+    };
+
+    return (itemOrderedChildrenIds[TREE_VIEW_ROOT_PARENT_ID] ?? []).flatMap(addChildrenToItem);
+  }, [state.items.itemOrderedChildrenIds]);
+
+  const getFlatItemIds = () => flatItemIds
+
   return {
     instance: {
       getDimensions,
       handleResizeRoot,
       computeRenderContext,
+      getFlatItemIds,
     },
     contextValue: {
       virtualization: {
