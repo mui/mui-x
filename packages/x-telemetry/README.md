@@ -5,14 +5,17 @@ Package used by some of MUI X to collects **completely anonymous** temetry data
 ## How to opt-in
 
 Currently, **it's disabled by default,** and you could opt-in to it in 3 ways:
+
 1. By using CLI util to enable/disable it for the current machine.
+
 ```shell
 npx mui-x-telemetry enable
 ```
 
 2. By setting it directly to package settings on the application start (e.g. in main file).
+
 ```js
-import { muiXTelemetrySettings } from "@mui/x-telemetry";
+import { muiXTelemetrySettings } from '@mui/x-telemetry';
 
 muiXTelemetrySettings.enableTelemetry();
 // or
@@ -20,28 +23,34 @@ muiXTelemetrySettings.disableTelemetry();
 ```
 
 3. By setting the environment variable.
+
 ```dotenv
 MUI_X_TELEMETRY_ENABLED=true
 # or
 MUI_X_TELEMETRY_DISABLED=true
 ```
+
 > ⚠️ Note that some frameworks requires to prefix the variable with `REACT_APP_` or `NEXT_PUBLIC_` or other.
 >
 > Supported prefixes are:
-> - REACT_APP_
-> - NEXT_PUBLIC_
-> - GATSBY_
-> - PUBLIC_
+>
+> - REACT*APP*
+> - NEXT*PUBLIC*
+> - GATSBY\_
+> - PUBLIC\_
 
 4. By setting the flag to global object on the application start (e.g. in main file).
+
 ```js
-import { ponyfillGlobal } from "@mui/utils";
+import { ponyfillGlobal } from '@mui/utils';
 
 ponyfillGlobal.__MUI_X_TELEMETRY_ENABLED__ = true;
 // or
 ponyfillGlobal.__MUI_X_TELEMETRY_DISABLED__ = true;
 ```
+
 OR
+
 ```js
 if (typeof window !== 'undefined') {
   window.__MUI_X_TELEMETRY_ENABLED__ = true;
@@ -72,18 +81,21 @@ Options:
 ```
 
 ### How to enable
+
 ```shell
 $ npx mui-x-telemetry enable
 [telemetry] MUI X telemetry enabled
 ```
 
 ### How to disable
+
 ```shell
 $ npx mui-x-telemetry disable
 [telemetry] MUI X telemetry disabled
 ```
 
-### How to current status 
+### How to current status
+
 ```shell
 $ npx mui-x-telemetry status
 [telemetry] MUI X telemetry is enabled

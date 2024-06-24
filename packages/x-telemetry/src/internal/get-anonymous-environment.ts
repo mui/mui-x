@@ -1,5 +1,5 @@
 import isDockerFunction from 'is-docker';
-import ciEnvironment from 'ci-info'
+import ciEnvironment from 'ci-info';
 
 type AnonymousMeta = {
   isDocker: boolean;
@@ -18,7 +18,7 @@ function getAnonymousEnvironment(): AnonymousMeta {
   traits = {
     isDocker: isDockerFunction(),
     isCI: ciEnvironment.isCI,
-    ...ciName && { ciName },
+    ...(ciName && { ciName }),
   };
 
   return traits;

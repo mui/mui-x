@@ -7,8 +7,13 @@ import {
 } from './window-storage';
 
 function oncePerSession<T extends TelemetryEvent>(payload: T): T | null {
-  const { traits: { sessionId } } = getTelemetryContext();
-  const { eventName, context: { packageName, packageReleaseInfo } } = payload
+  const {
+    traits: { sessionId },
+  } = getTelemetryContext();
+  const {
+    eventName,
+    context: { packageName, packageReleaseInfo },
+  } = payload;
 
   if (isWindowStorageAvailable('sessionStorage')) {
     const sessionKey = eventName + packageName + packageReleaseInfo;

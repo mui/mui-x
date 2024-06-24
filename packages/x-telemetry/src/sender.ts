@@ -54,7 +54,6 @@ function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
   };
 
   if (getMuiXTelemetryEnv('DEBUG')) {
-    // eslint-disable-next-line no-console
     console.log('[mui-x-telemetry] event', JSON.stringify(eventPayload, null, 2));
     return;
   }

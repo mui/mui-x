@@ -10,13 +10,9 @@ async function getRawMachineId(): Promise<string | null> {
 }
 
 async function getAnonymousMachineId(): Promise<string | null> {
-  const rawMachineId = await getRawMachineId()
+  const rawMachineId = await getRawMachineId();
 
-  return rawMachineId
-    ? createHash('sha256')
-      .update(rawMachineId)
-      .digest('hex')
-    : rawMachineId;
+  return rawMachineId ? createHash('sha256').update(rawMachineId).digest('hex') : rawMachineId;
 }
 
 export default getAnonymousMachineId;

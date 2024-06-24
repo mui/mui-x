@@ -20,8 +20,8 @@ function generateId(length: number): string {
 
 function getAnonymousId(): string {
   if (isWindowStorageAvailable('localStorage')) {
-    const localStorageKey = 'anonymous_id'
-    const existingAnonymousId = getWindowStorageItem('localStorage', localStorageKey)
+    const localStorageKey = 'anonymous_id';
+    const existingAnonymousId = getWindowStorageItem('localStorage', localStorageKey);
     if (existingAnonymousId) {
       return existingAnonymousId;
     }
@@ -37,8 +37,8 @@ function getAnonymousId(): string {
 
 function getSessionId(): string {
   if (isWindowStorageAvailable('sessionStorage')) {
-    const localStorageKey = 'session_id'
-    const existingSessionId = getWindowStorageItem('sessionStorage', localStorageKey)
+    const localStorageKey = 'session_id';
+    const existingSessionId = getWindowStorageItem('sessionStorage', localStorageKey);
     if (existingSessionId) {
       return existingSessionId;
     }
@@ -64,5 +64,5 @@ function getTelemetryContext(): TelemetryContextType {
   return telemetryContext;
 }
 
-export { TelemetryContextType }
+export { TelemetryContextType };
 export default getTelemetryContext;
