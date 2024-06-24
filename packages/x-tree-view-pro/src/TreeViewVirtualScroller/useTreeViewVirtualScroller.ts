@@ -16,6 +16,9 @@ import {
   areRenderContextsEqual,
 } from './TreeViewVirtualScroller.utils';
 import { TreeViewVirtualizationScrollPosition } from './TreeViewVirtualScroller.types';
+import { useResizeObserver } from './useResizeObserver';
+import { useRunOnce } from './useRunOnce';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 
 const EMPTY_RENDER_CONTEXT: UseTreeViewVirtualizationRenderContext = {
   firstItemIndex: 0,
@@ -27,15 +30,17 @@ const EMPTY_SCROLL_POSITION: TreeViewVirtualizationScrollPosition = { top: 0, le
 export const useTreeViewVirtualScroller = () => {
   const {
     instance,
+    rootRef,
     virtualization: { virtualScrollerRef, scrollBufferPx, itemsHeight },
   } = useTreeViewContext<[UseTreeViewVirtualizationSignature, UseTreeViewItemsSignature]>();
   const scrollTimeout = useTimeout();
-  const rootRef = React.useRef<HTMLUListElement>(null);
   const scrollbarRef = React.useRef<HTMLDivElement>(null);
   const scrollCache = useLazyRef(() => createScrollCache(scrollBufferPx, itemsHeight * 15)).current;
   const [renderContext, setRenderContext] =
     React.useState<UseTreeViewVirtualizationRenderContext>(EMPTY_RENDER_CONTEXT);
   const frozenContext = React.useRef<UseTreeViewVirtualizationRenderContext | undefined>(undefined);
+
+  useResizeObserver(rootRef, () => instance.handleResizeRoot());
 
   /*
    * Scroll context logic
@@ -133,7 +138,16 @@ export const useTreeViewVirtualScroller = () => {
     triggerUpdateRenderContext();
   });
 
-  const getRootProps = () => ({ ref: rootRef });
+  useEnhancedEffect(() => {
+    instance.handleResizeRoot();
+  }, [instance]);
+
+  useRunOnce(instance.getDimensions().viewportHeight !== 0, () => {
+    const initialRenderContext = instance.computeRenderContext(scrollPosition.current.top);
+    updateRenderContext(initialRenderContext);
+  });
+
+  const getRootProps = () => ({});
 
   const getContentProps = () => ({ ref: virtualScrollerRef, onScroll: handleScroll });
 

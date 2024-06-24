@@ -7,6 +7,7 @@ import {
 
 export interface UseTreeViewVirtualizationInstance {
   getDimensions: () => UseTreeViewVirtualizationState['virtualization'];
+  handleResizeRoot: () => void;
   computeRenderContext: (scrollPositionPx: number) => UseTreeViewVirtualizationRenderContext;
 }
 
@@ -22,11 +23,16 @@ export interface UseTreeViewVirtualizationParameters {
    * @default 32
    */
   itemsHeight?: number;
+  /**
+   * The millisecond throttle delay for resizing the Tree View when virtualization is enabled.
+   * @default 60
+   */
+  resizeThrottleMs: number;
 }
 
 export type UseTreeViewVirtualizationDefaultizedParameters = DefaultizedProps<
   UseTreeViewVirtualizationParameters,
-  'enableVirtualization' | 'scrollBufferPx' | 'itemsHeight'
+  'enableVirtualization' | 'scrollBufferPx' | 'itemsHeight' | 'resizeThrottleMs'
 >;
 
 interface UseTreeViewVirtualizationState {
@@ -54,6 +60,20 @@ export interface UseTreeViewVirtualizationContextValue {
 export interface UseTreeViewVirtualizationRenderContext {
   firstItemIndex: number;
   lastItemIndex: number;
+}
+
+/**
+ * The size of a container.
+ */
+export interface UseTreeViewVirtualizationElementSize {
+  /**
+   * The height of a container or HTMLElement.
+   */
+  height: number;
+  /**
+   * The width of a container or HTMLElement.
+   */
+  width: number;
 }
 
 export type UseTreeViewVirtualizationSignature = TreeViewPluginSignature<{

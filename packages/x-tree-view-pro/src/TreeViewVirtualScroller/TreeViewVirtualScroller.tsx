@@ -16,6 +16,7 @@ const TreeViewVirtualScrollerRoot = styled('div', {
   flexGrow: 1,
   position: 'relative',
   overflow: 'hidden',
+  height: '100%',
 });
 
 const TreeViewVirtualScrollerContent = styled('div', {

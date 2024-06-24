@@ -36,7 +36,10 @@ const TreeViewVirtualScrollbarContent = styled('div')({
 
 export const TreeViewVirtualScrollbar = React.forwardRef<HTMLDivElement, {}>(
   function GridVirtualScrollbar(props, ref) {
-    const { instance } = useTreeViewContext<[UseTreeViewVirtualizationSignature]>();
+    const {
+      instance,
+      virtualization: { virtualScrollerRef },
+    } = useTreeViewContext<[UseTreeViewVirtualizationSignature]>();
     const isLocked = React.useRef(false);
     const lastPosition = React.useRef(0);
     const scrollbarRef = React.useRef<HTMLDivElement>(null);
@@ -48,7 +51,7 @@ export const TreeViewVirtualScrollbar = React.forwardRef<HTMLDivElement, {}>(
       scrollbarHeight * (dimensions.contentSize / dimensions.viewportHeight);
 
     const onScrollerScroll = useEventCallback(() => {
-      const scroller = instance.virtualScrollerRef.current!;
+      const scroller = virtualScrollerRef.current!;
       const scrollbar = scrollbarRef.current!;
 
       if (scroller.scrollTop === lastPosition.current) {
@@ -68,7 +71,7 @@ export const TreeViewVirtualScrollbar = React.forwardRef<HTMLDivElement, {}>(
     });
 
     const onScrollbarScroll = useEventCallback(() => {
-      const scroller = instance.virtualScrollerRef.current!;
+      const scroller = virtualScrollerRef.current!;
       const scrollbar = scrollbarRef.current!;
 
       if (isLocked.current) {
@@ -82,7 +85,7 @@ export const TreeViewVirtualScrollbar = React.forwardRef<HTMLDivElement, {}>(
     });
 
     useOnMount(() => {
-      const scroller = instance.virtualScrollerRef.current!;
+      const scroller = virtualScrollerRef.current!;
       const scrollbar = scrollbarRef.current!;
       scroller.addEventListener('scroll', onScrollerScroll, { capture: true });
       scrollbar.addEventListener('scroll', onScrollbarScroll, { capture: true });

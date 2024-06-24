@@ -1,25 +1,103 @@
 import * as React from 'react';
-import { clamp, TreeViewPlugin } from '@mui/x-tree-view/internals';
-import { UseTreeViewVirtualizationSignature } from './useTreeViewVirtualization.types';
+import useEventCallback from '@mui/utils/useEventCallback';
+import ownerWindow from '@mui/utils/ownerWindow';
+import { buildWarning, clamp, TreeViewPlugin } from '@mui/x-tree-view/internals';
+import {
+  UseTreeViewVirtualizationElementSize,
+  UseTreeViewVirtualizationSignature,
+} from './useTreeViewVirtualization.types';
+import { areElementSizesEqual } from './useTreeViewVirtualization.utils';
+import { throttle } from './throttle';
+
+const emptyParentHeightWarning = buildWarning([
+  'The parent DOM element of the data grid has an empty height.',
+  'Please make sure that this element has an intrinsic height.',
+  'The grid displays with a height of 0px.',
+  '',
+  'More details: https://mui.com/r/x-data-grid-no-dimensions.',
+]);
 
 export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualizationSignature> = ({
   params,
   state,
+  rootRef,
+  setState,
 }) => {
   const virtualScrollerRef = React.useRef<HTMLDivElement>(null);
-
+  const rootDimensionsRef = React.useRef<UseTreeViewVirtualizationElementSize | undefined>(
+    undefined,
+  );
   const itemCount = Object.keys(state.items.itemMap).length;
+
+  const getDimensions = () => state.virtualization;
+
+  const updateDimensions = useEventCallback(() => {
+    if (!rootRef.current || !rootDimensionsRef.current) {
+      return;
+    }
+
+    const viewportHeight = rootDimensionsRef.current.height;
+
+    setState((prevState) => ({
+      ...prevState,
+      virtualization: {
+        viewportHeight,
+        contentSize: itemCount * params.itemsHeight,
+      },
+    }));
+  });
+
+  const throttledUpdateDimensions = React.useMemo(
+    () => throttle(updateDimensions, params.resizeThrottleMs),
+    [params.resizeThrottleMs, updateDimensions],
+  );
+
+  const handleResizeRoot = () => {
+    const element = rootRef.current;
+    if (!element) {
+      return;
+    }
+
+    const computedStyle = ownerWindow(element).getComputedStyle(element);
+
+    const newSize = {
+      width: parseFloat(computedStyle.width) || 0,
+      height: parseFloat(computedStyle.height) || 0,
+    };
+
+    const prevDimensions = rootDimensionsRef.current;
+    rootDimensionsRef.current = newSize;
+
+    if (!prevDimensions || !areElementSizesEqual(prevDimensions, newSize)) {
+      // jsdom has no layout capabilities
+      const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
+      if (newSize.height === 0 && !isJSDOM) {
+        emptyParentHeightWarning();
+      }
+
+      if (prevDimensions == null) {
+        // We want to initialize the Tree View dimensions as soon as possible to avoid flickering
+        updateDimensions();
+      } else {
+        throttledUpdateDimensions();
+      }
+    }
+  };
+
   const computeRenderContext = React.useCallback(
     (scrollPositionPx: number) => {
       const clampItemIndex = (itemIndex: number) => clamp(itemIndex, 0, itemCount - 1);
 
       return {
         firstItemIndex: clampItemIndex(
-          (scrollPositionPx - params.scrollBufferPx) / params.itemsHeight,
+          Math.floor((scrollPositionPx - params.scrollBufferPx) / params.itemsHeight),
         ),
         lastItemIndex: clampItemIndex(
-          (scrollPositionPx + state.virtualization.viewportHeight + params.scrollBufferPx) /
-            params.itemsHeight,
+          Math.ceil(
+            (scrollPositionPx + state.virtualization.viewportHeight + params.scrollBufferPx) /
+              params.itemsHeight,
+          ),
         ),
       };
     },
@@ -28,7 +106,8 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
 
   return {
     instance: {
-      getDimensions: () => state.virtualization,
+      getDimensions,
+      handleResizeRoot,
       computeRenderContext,
     },
     contextValue: {
@@ -46,6 +125,7 @@ useTreeViewVirtualization.getDefaultizedParams = (params) => ({
   enableVirtualization: params.enableVirtualization ?? false,
   scrollBufferPx: params.scrollBufferPx ?? 150,
   itemsHeight: params.itemsHeight ?? 32,
+  resizeThrottleMs: params.resizeThrottleMs ?? 60,
 });
 
 useTreeViewVirtualization.getInitialState = () => ({
@@ -56,4 +136,5 @@ useTreeViewVirtualization.params = {
   enableVirtualization: true,
   scrollBufferPx: true,
   itemsHeight: true,
+  resizeThrottleMs: true,
 };
