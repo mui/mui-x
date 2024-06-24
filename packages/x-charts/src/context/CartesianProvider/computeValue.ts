@@ -1,4 +1,4 @@
-import { scaleBand, scalePoint } from 'victory-vendor/d3-scale';
+import { scaleBand, scalePoint } from '@mui/x-charts-vendor/d3-scale';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../../constants';
 import { AxisConfig, ScaleName } from '../../models';
 import {

@@ -46,11 +46,11 @@
     "@mui/utils": "^5.15.20",
     "@mui/x-charts": "workspace:*",
     "@mui/x-license": "workspace:*",
+    "@mui/x-charts-vendor": "workspace:*",
     "@react-spring/rafz": "^9.7.3",
     "@react-spring/web": "^9.7.3",
     "clsx": "^2.1.1",
-    "d3-delaunay": "^6.0.4",
-    "victory-vendor": "^37.0.2",
+    
     "prop-types": "^15.8.1"
   },
   "peerDependencies": {
