@@ -83,7 +83,7 @@ export const useSetupZoom = () => {
       return () => {};
     }
 
-    const handleZoom = (event: WheelEvent) => {
+    const wheelHandler = (event: WheelEvent) => {
       event.preventDefault();
       if (element === null) {
         return;
@@ -95,27 +95,16 @@ export const useSetupZoom = () => {
         return;
       }
 
-      const { deltaY } = event;
-      const { left, width } = area;
+      const centerRatio = getHorizontalCenterRatio(point, area);
 
       // TODO: make step a config option.
       const step = 5;
-      const multiplier = isTrackPad(event) ? 1 : 10;
-      const scaledStep = (step * multiplier) / 1000;
-      const scaleRatio = deltaY < 0 ? 1 - scaledStep : 1 + scaledStep;
-      const zoomIn = deltaY > 0;
-
-      const centerRatio = (point.x - left) / width;
+      const { scaleRatio, isZoomIn } = getWheelScaleRatio(event, step);
 
       const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoomRange);
 
-      const newSpanPercent = newMaxRange - newMinRange;
-
       // TODO: make span a config option.
-      if (
-        (zoomIn && newSpanPercent < MIN_ALLOWED_SPAN) ||
-        (!zoomIn && newSpanPercent > MAX_ALLOWED_SPAN)
-      ) {
+      if (!isSpanValid(newMinRange, newMaxRange, isZoomIn)) {
         return;
       }
 
@@ -131,59 +120,35 @@ export const useSetupZoom = () => {
         return;
       }
 
-      const step = 5;
-      const scaledStep = step / 1000;
-      let scaleRatio: number = 0;
-      let zoomIn: boolean = false;
-
       const index = eventCacheRef.current.findIndex(
         (cachedEv) => cachedEv.pointerId === event.pointerId,
       );
       eventCacheRef.current[index] = event;
 
-      const prevDiff = eventPrevDiff.current;
-      const [firstEvent, secondEvent] = eventCacheRef.current;
-
       // If two pointers are down, check for pinch gestures
       if (eventCacheRef.current.length === 2) {
-        // Calculate the distance between the two pointers
-        const curDiff = Math.hypot(
-          firstEvent.pageX - secondEvent.pageX,
-          firstEvent.pageY - secondEvent.pageY,
+        // TODO: make step configurable
+        const step = 5;
+        const { scaleRatio, isZoomIn, curDiff, firstEvent } = getPinchScaleRatio(
+          eventCacheRef.current,
+          eventPrevDiff.current,
+          step,
         );
 
-        const hasMoved = prevDiff > 0;
-
-        if (hasMoved && curDiff > prevDiff) {
-          // The distance between the two pointers has increased
-          scaleRatio = 1 + scaledStep;
-          zoomIn = true;
-        }
-        if (hasMoved && curDiff < prevDiff) {
-          // The distance between the two pointers has decreased
-          scaleRatio = 1 - scaledStep;
-          zoomIn = false;
-        }
-
+        // If the scale ratio is 0, it means the pinch gesture is not valid.
         if (scaleRatio === 0) {
           eventPrevDiff.current = curDiff;
           return;
         }
 
         const point = getSVGPoint(element, firstEvent);
-        const { left, width } = area;
 
-        const centerRatio = (point.x - left) / width;
+        const centerRatio = getHorizontalCenterRatio(point, area);
 
         const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoomRange);
 
-        const newSpanPercent = newMaxRange - newMinRange;
-
         // TODO: make span a config option.
-        if (
-          (zoomIn && newSpanPercent < MIN_ALLOWED_SPAN) ||
-          (!zoomIn && newSpanPercent > MAX_ALLOWED_SPAN)
-        ) {
+        if (!isSpanValid(newMinRange, newMaxRange, isZoomIn)) {
           eventPrevDiff.current = curDiff;
           return;
         }
@@ -204,7 +169,7 @@ export const useSetupZoom = () => {
       }
     }
 
-    element.addEventListener('wheel', handleZoom);
+    element.addEventListener('wheel', wheelHandler);
     element.addEventListener('pointerdown', pointerDownHandler);
     element.addEventListener('pointermove', pointerMoveHandler);
     element.addEventListener('pointerup', pointerUpHandler);
@@ -212,18 +177,96 @@ export const useSetupZoom = () => {
     element.addEventListener('pointerout', pointerUpHandler);
     element.addEventListener('pointerleave', pointerUpHandler);
 
-    // Prevent zooming the page on touch devices
-    element.addEventListener('touchstart', (e) => e.preventDefault());
-    element.addEventListener('touchmove', (e) => e.preventDefault());
+    // Prevent zooming the entire page on touch devices
+    element.addEventListener('touchstart', preventDefault);
+    element.addEventListener('touchmove', preventDefault);
 
     return () => {
-      element.removeEventListener('wheel', handleZoom);
+      element.removeEventListener('wheel', wheelHandler);
       element.removeEventListener('pointerdown', pointerDownHandler);
       element.removeEventListener('pointermove', pointerMoveHandler);
       element.removeEventListener('pointerup', pointerUpHandler);
       element.removeEventListener('pointercancel', pointerUpHandler);
       element.removeEventListener('pointerout', pointerUpHandler);
       element.removeEventListener('pointerleave', pointerUpHandler);
+      element.removeEventListener('touchstart', preventDefault);
+      element.removeEventListener('touchmove', preventDefault);
     };
   }, [svgRef, setZoomRange, zoomRange, area]);
 };
+
+/**
+ * Checks if the new span is valid.
+ */
+function isSpanValid(minRange: number, maxRange: number, isZoomIn: boolean) {
+  const newSpanPercent = maxRange - minRange;
+
+  // TODO: make span a config option.
+  if (
+    (isZoomIn && newSpanPercent < MIN_ALLOWED_SPAN) ||
+    (!isZoomIn && newSpanPercent > MAX_ALLOWED_SPAN)
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Get the scale ratio and if it's a zoom in or out from a wheel event.
+ */
+function getWheelScaleRatio(event: WheelEvent, step: number) {
+  const deltaY = event.deltaY;
+  const multiplier = isTrackPad(event) ? 1 : 10;
+  const scaledStep = (step * multiplier) / 1000;
+  const scaleRatio = deltaY < 0 ? 1 - scaledStep : 1 + scaledStep;
+  const isZoomIn = deltaY > 0;
+  return { scaleRatio, isZoomIn };
+}
+
+/**
+ * Get the scale ratio and if it's a zoom in or out from a pinch gesture.
+ */
+function getPinchScaleRatio(eventCache: PointerEvent[], prevDiff: number, step: number) {
+  const scaledStep = step / 1000;
+  let scaleRatio: number = 0;
+  let isZoomIn: boolean = false;
+
+  const [firstEvent, secondEvent] = eventCache;
+
+  // Calculate the distance between the two pointers
+  const curDiff = Math.hypot(
+    firstEvent.pageX - secondEvent.pageX,
+    firstEvent.pageY - secondEvent.pageY,
+  );
+
+  const hasMoved = prevDiff > 0;
+
+  if (hasMoved && curDiff > prevDiff) {
+    // The distance between the two pointers has increased
+    scaleRatio = 1 + scaledStep;
+    isZoomIn = true;
+  }
+  if (hasMoved && curDiff < prevDiff) {
+    // The distance between the two pointers has decreased
+    scaleRatio = 1 - scaledStep;
+    isZoomIn = false;
+  }
+
+  return { scaleRatio, isZoomIn, curDiff, firstEvent };
+}
+
+/**
+ * Get the ratio of the point in the horizontal center of the area.
+ */
+function getHorizontalCenterRatio(
+  point: { x: number; y: number },
+  area: { left: number; width: number },
+) {
+  const { left, width } = area;
+  return (point.x - left) / width;
+}
+
+function preventDefault(event: Event) {
+  event.preventDefault();
+}
