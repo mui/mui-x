@@ -90,11 +90,17 @@ export const useSetupPan = () => {
     element.addEventListener('pointerdown', handleDown);
     element.addEventListener('pointermove', handlePan);
     element.addEventListener('pointerup', handleUp);
+    element.addEventListener('pointercancel', handleUp);
+    element.addEventListener('pointerout', handleUp);
+    element.addEventListener('pointerleave', handleUp);
 
     return () => {
       element.removeEventListener('pointerdown', handleDown);
       element.removeEventListener('pointermove', handlePan);
       element.removeEventListener('pointerup', handleUp);
+      element.removeEventListener('pointercancel', handleUp);
+      element.removeEventListener('pointerout', handleUp);
+      element.removeEventListener('pointerleave', handleUp);
     };
   }, [area, svgRef, isPanningRef, zoomRange, setZoomRange]);
 };
