@@ -7,7 +7,7 @@ import getAnonymousEnvironment from '../internal/get-anonymous-environment';
 import getAnonymousProjectId from '../internal/get-project-id';
 // eslint-disable-next-line import/no-cycle
 import { TelemetryStorage } from '../internal/storage';
-import getMachineId from '../internal/get-machine-id';
+import getAnonymousMachineId from '../internal/get-machine-id';
 
 (async () => {
   const storage = new TelemetryStorage({
@@ -17,7 +17,7 @@ import getMachineId from '../internal/get-machine-id';
   const [anonymousEnvironment, projectId, machineId] = await Promise.all([
     getAnonymousEnvironment(),
     getAnonymousProjectId(),
-    getMachineId(),
+    getAnonymousMachineId(),
   ]);
 
   const contextData: TelemetryContextType = {
