@@ -927,7 +927,7 @@ importers:
       '@mui/utils':
         specifier: ^5.15.20
         version: 5.15.20(@types/react@18.2.60)(react@18.2.0)
-      '@mui/x-utils':
+      '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-utils/build
       clsx:
@@ -1024,12 +1024,12 @@ importers:
       '@mui/x-data-grid-pro':
         specifier: workspace:*
         version: link:../x-data-grid-pro/build
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-utils/build
       '@mui/x-license':
         specifier: workspace:*
         version: link:../x-license/build
-      '@mui/x-utils':
-        specifier: workspace:*
-        version: link:../x-utils/build
       '@types/format-util':
         specifier: ^1.0.4
         version: 1.0.4
@@ -1083,12 +1083,12 @@ importers:
       '@mui/x-data-grid':
         specifier: workspace:*
         version: link:../x-data-grid/build
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-utils/build
       '@mui/x-license':
         specifier: workspace:*
         version: link:../x-license/build
-      '@mui/x-utils':
-        specifier: workspace:*
-        version: link:../x-utils/build
       '@types/format-util':
         specifier: ^1.0.4
         version: 1.0.4

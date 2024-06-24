@@ -6,7 +6,7 @@ import {
 } from '@mui/utils';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useTimeout from '@mui/utils/useTimeout';
-import { useResizeObserver } from '@mui/x-utils/useResizeObserver';
+import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useTheme, Theme } from '@mui/material/styles';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';

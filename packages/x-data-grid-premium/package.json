@@ -48,7 +48,7 @@
     "@mui/utils": "^5.15.20",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-data-grid-pro": "workspace:*",
-    "@mui/x-utils": "workspace:*",
+    "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
     "@types/format-util": "^1.0.4",
     "clsx": "^2.1.1",
