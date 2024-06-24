@@ -665,6 +665,12 @@
       "class": null
     },
     {
+      "name": "columnHeaderSortIcon",
+      "description": "Sort icon component rendered in each column header.",
+      "default": "GridColumnHeaderSortIcon",
+      "class": null
+    },
+    {
       "name": "columnMenu",
       "description": "Column menu component rendered by clicking on the 3 dots \"kebab\" icon in column headers.",
       "default": "GridColumnMenu",

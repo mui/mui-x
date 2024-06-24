@@ -1045,6 +1045,7 @@
     "columnFilteredIcon": "Icon displayed on the column header menu to show that a filter has been applied to the column.",
     "columnHeaderFilterIconButton": "Filter icon component rendered in each column header.",
     "columnHeaders": "Component responsible for rendering the column headers.",
+    "columnHeaderSortIcon": "Sort icon component rendered in each column header.",
     "columnMenu": "Column menu component rendered by clicking on the 3 dots &quot;kebab&quot; icon in column headers.",
     "columnMenuClearIcon": "Icon displayed in column menu for clearing values",
     "columnMenuFilterIcon": "Icon displayed in column menu for filter",

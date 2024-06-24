@@ -6,7 +6,6 @@ import { fastMemo } from '../../utils/fastMemo';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
-import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderSeparatorProps } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
@@ -248,11 +247,13 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       )}
 
       {showSortIcon && (
-        <GridColumnHeaderSortIcon
+        <rootProps.slots.columnHeaderSortIcon
+          field={colDef.field}
           direction={sortDirection}
           index={sortIndex}
           sortingOrder={sortingOrder}
           disabled={!colDef.sortable}
+          {...rootProps.slotProps?.columnHeaderSortIcon}
         />
       )}
     </React.Fragment>
