@@ -25,6 +25,7 @@
     "@mui/x-charts": "packages/x-charts/build",
     "@mui/x-charts-pro": "packages/x-charts-pro/build",
     "@mui/x-tree-view": "packages/x-tree-view/build",
+    "@mui/x-tree-view-pro": "packages/x-tree-view-pro/build",
     "@mui/x-internals": "packages/x-internals/build"
   },
   "sandboxes": ["/bug-reproductions/x-data-grid"],
