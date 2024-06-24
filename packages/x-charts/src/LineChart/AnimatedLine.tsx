@@ -1,9 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { animated, useSpring } from '@react-spring/web';
-import { color as d3Color } from 'd3-color';
 import { styled } from '@mui/material/styles';
 import { useAnimatedPath } from '../internals/useAnimatedPath';
+import d3Color from '../internals/d3-color/color';
 import { cleanId } from '../internals/utils';
 import type { LineElementOwnerState } from './LineElement';
 import { useChartId } from '../hooks/useChartId';

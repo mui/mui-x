@@ -1,4 +1,4 @@
-import { PieArcDatum as D3PieArcDatum } from 'd3-shape';
+import { PieArcDatum as D3PieArcDatum } from 'victory-vendor/d3-shape';
 import { DefaultizedProps } from '../helpers';
 import { CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
 

@@ -1,4 +1,4 @@
-import { scaleOrdinal, scaleThreshold, scaleSequential, ScaleOrdinal } from 'd3-scale';
+import { scaleOrdinal, scaleThreshold, scaleSequential, ScaleOrdinal } from 'victory-vendor/d3-scale';
 import {
   ContinuousColorConfig,
   PiecewiseColorConfig,

@@ -4,11 +4,11 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useSlotProps } from '@mui/base/utils';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
-import { color as d3Color } from 'd3-color';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { AnimatedProps, animated } from '@react-spring/web';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { SeriesId } from '../models/seriesType/common';
+import d3Color from '../internals/d3-color/color';
 import { useItemHighlighted } from '../context';
 
 export interface BarElementClasses {
