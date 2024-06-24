@@ -97,21 +97,21 @@ export const useLineChartProps = (props: LineChartProps) => {
   const areaPlotProps = {
     slots,
     slotProps,
-    onAreaClick,
+    onItemClick: onAreaClick,
     skipAnimation,
   };
 
   const linePlotProps = {
     slots,
     slotProps,
-    onLineClick,
+    onItemClick: onLineClick,
     skipAnimation,
   };
 
   const markPlotProps = {
     slots,
     slotProps,
-    onMarkClick,
+    onItemClick: onMarkClick,
     skipAnimation,
   };
 
