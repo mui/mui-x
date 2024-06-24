@@ -929,7 +929,7 @@ importers:
         version: 5.15.20(@types/react@18.2.60)(react@18.2.0)
       '@mui/x-internals':
         specifier: workspace:*
-        version: link:../x-utils/build
+        version: link:../x-internals/build
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1026,7 +1026,7 @@ importers:
         version: link:../x-data-grid-pro/build
       '@mui/x-internals':
         specifier: workspace:*
-        version: link:../x-utils/build
+        version: link:../x-internals/build
       '@mui/x-license':
         specifier: workspace:*
         version: link:../x-license/build
@@ -1085,7 +1085,7 @@ importers:
         version: link:../x-data-grid/build
       '@mui/x-internals':
         specifier: workspace:*
-        version: link:../x-utils/build
+        version: link:../x-internals/build
       '@mui/x-license':
         specifier: workspace:*
         version: link:../x-license/build
@@ -1285,6 +1285,29 @@ importers:
         version: 5.0.7
     publishDirectory: build
 
+  packages/x-internals:
+    dependencies:
+      '@babel/runtime':
+        specifier: ^7.24.7
+        version: 7.24.7
+      '@mui/material':
+        specifier: ^5.15.14
+        version: 5.15.20(@emotion/react@11.11.4(@types/react@18.2.60)(react@18.2.0))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.2.60)(react@18.2.0))(@types/react@18.2.60)(react@18.2.0))(@types/react@18.2.60)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@mui/utils':
+        specifier: ^5.15.20
+        version: 5.15.20(@types/react@18.2.60)(react@18.2.0)
+      react:
+        specifier: ^17.0.0 || ^18.0.0
+        version: 18.2.0
+    devDependencies:
+      '@mui/internal-test-utils':
+        specifier: ^1.0.1
+        version: 1.0.1(@babel/core@7.24.7)(@types/react@18.2.60)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      rimraf:
+        specifier: ^5.0.7
+        version: 5.0.7
+    publishDirectory: build
+
   packages/x-license:
     dependencies:
       '@babel/runtime':
@@ -1412,29 +1435,6 @@ importers:
       rimraf:
         specifier: ^5.0.7
         version: 5.0.7
-
-  packages/x-utils:
-    dependencies:
-      '@babel/runtime':
-        specifier: ^7.24.7
-        version: 7.24.7
-      '@mui/material':
-        specifier: ^5.15.14
-        version: 5.15.20(@emotion/react@11.11.4(@types/react@18.2.60)(react@18.2.0))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.2.60)(react@18.2.0))(@types/react@18.2.60)(react@18.2.0))(@types/react@18.2.60)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@mui/utils':
-        specifier: ^5.15.20
-        version: 5.15.20(@types/react@18.2.60)(react@18.2.0)
-      react:
-        specifier: ^17.0.0 || ^18.0.0
-        version: 18.2.0
-    devDependencies:
-      '@mui/internal-test-utils':
-        specifier: ^1.0.1
-        version: 1.0.1(@babel/core@7.24.7)(@types/react@18.2.60)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      rimraf:
-        specifier: ^5.0.7
-        version: 5.0.7
-    publishDirectory: build
 
   test:
     devDependencies:
