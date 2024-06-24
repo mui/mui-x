@@ -1,4 +1,12 @@
+import { ChartsAxisProps } from '../ChartsAxis';
+import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsGridProps } from '../ChartsGrid';
+import { ChartsLegendProps } from '../ChartsLegend';
+import { ChartsOverlayProps } from '../ChartsOverlay';
+import { ChartsTooltipProps } from '../ChartsTooltip';
 import type { ChartsVoronoiHandlerProps } from '../ChartsVoronoiHandler';
+import { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
+import { ZAxisContextProviderProps } from '../context';
 import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
 
@@ -39,7 +47,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     onHighlightChange,
   } = props;
 
-  const chartContainerProps = {
+  const chartContainerProps: ResponsiveChartContainerProps = {
     series: series.map((s) => ({ type: 'scatter' as const, ...s })),
     width,
     height,
@@ -51,14 +59,14 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     highlightedItem,
     onHighlightChange,
   };
-  const zAxisProps = {
+  const zAxisProps: Omit<ZAxisContextProviderProps, 'children'> = {
     zAxis,
   };
-  const voronoiHandlerProps = {
+  const voronoiHandlerProps: ChartsVoronoiHandlerProps = {
     voronoiMaxRadius,
     onItemClick: onItemClick as ChartsVoronoiHandlerProps['onItemClick'],
   };
-  const chartsAxisProps = {
+  const chartsAxisProps: ChartsAxisProps = {
     topAxis,
     leftAxis,
     rightAxis,
@@ -67,36 +75,36 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     slotProps,
   };
 
-  const gridProps = {
+  const gridProps: ChartsGridProps = {
     vertical: grid?.vertical,
     horizontal: grid?.horizontal,
   };
 
-  const scatterPlotProps = {
+  const scatterPlotProps: ScatterPlotProps = {
     onItemClick: disableVoronoi ? (onItemClick as ScatterPlotProps['onItemClick']) : undefined,
     slots,
     slotProps,
   };
 
-  const overlayProps = {
+  const overlayProps: ChartsOverlayProps = {
     loading,
     slots,
     slotProps,
   };
 
-  const legendProps = {
+  const legendProps: ChartsLegendProps = {
     ...legend,
     slots,
     slotProps,
   };
 
-  const axisHighlightProps = {
+  const axisHighlightProps: ChartsAxisHighlightProps = {
     y: 'none' as const,
     x: 'none' as const,
     ...axisHighlight,
   };
 
-  const tooltipProps = {
+  const tooltipProps: ChartsTooltipProps = {
     trigger: 'item' as const,
     ...tooltip,
     slots,

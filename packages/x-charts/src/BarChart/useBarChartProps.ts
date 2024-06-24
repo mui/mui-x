@@ -1,6 +1,16 @@
 import useId from '@mui/utils/useId';
 import type { BarChartProps } from './BarChart';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
+import { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
+import { BarPlotProps } from './BarPlot';
+import { ChartsOnAxisClickHandlerProps } from '../ChartsOnAxisClickHandler';
+import { ChartsGridProps } from '../ChartsGrid';
+import { ChartsClipPathProps } from '../ChartsClipPath';
+import { ChartsOverlayProps } from '../ChartsOverlay';
+import { ChartsAxisProps } from '../ChartsAxis';
+import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsLegendProps } from '../ChartsLegend';
+import { ChartsTooltipProps } from '../ChartsTooltip';
 
 /**
  * A helper function that extracts BarChartProps from the input props
@@ -57,7 +67,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     ),
   } as const;
 
-  const chartContainerProps = {
+  const chartContainerProps: ResponsiveChartContainerProps = {
     series: series.map((s) => ({
       type: 'bar' as const,
       ...s,
@@ -84,7 +94,7 @@ export const useBarChartProps = (props: BarChartProps) => {
       !onAxisClick,
   };
 
-  const barPlotProps = {
+  const barPlotProps: BarPlotProps = {
     onItemClick,
     slots,
     slotProps,
@@ -93,11 +103,11 @@ export const useBarChartProps = (props: BarChartProps) => {
     barLabel,
   };
 
-  const axisClickHandlerProps = {
+  const axisClickHandlerProps: ChartsOnAxisClickHandlerProps = {
     onAxisClick,
   };
 
-  const gridProps = {
+  const gridProps: ChartsGridProps = {
     vertical: grid?.vertical,
     horizontal: grid?.horizontal,
   };
@@ -106,17 +116,17 @@ export const useBarChartProps = (props: BarChartProps) => {
     clipPath: `url(#${clipPathId})`,
   };
 
-  const clipPathProps = {
+  const clipPathProps: ChartsClipPathProps = {
     id: clipPathId,
   };
 
-  const overlayProps = {
+  const overlayProps: ChartsOverlayProps = {
     slots,
     slotProps,
     loading,
   };
 
-  const chartsAxisProps = {
+  const chartsAxisProps: ChartsAxisProps = {
     topAxis,
     leftAxis,
     rightAxis,
@@ -125,18 +135,18 @@ export const useBarChartProps = (props: BarChartProps) => {
     slotProps,
   };
 
-  const axisHighlightProps = {
+  const axisHighlightProps: ChartsAxisHighlightProps = {
     ...(hasHorizontalSeries ? ({ y: 'band' } as const) : ({ x: 'band' } as const)),
     ...axisHighlight,
   };
 
-  const legendProps = {
+  const legendProps: ChartsLegendProps = {
     ...legend,
     slots,
     slotProps,
   };
 
-  const tooltipProps = {
+  const tooltipProps: ChartsTooltipProps = {
     ...tooltip,
     slots,
     slotProps,
