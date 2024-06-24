@@ -28,7 +28,8 @@ import type { GridDetailPanelsProps } from '../components/GridDetailPanels';
 import type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 import type { GridColumnsManagementProps } from '../components/columnsManagement/GridColumnsManagement';
 import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
-import type { GridRowCountProps } from '../components';
+import type { GridRowCountProps } from '../components/GridRowCount';
+import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
 
 // Overrides for module augmentation
 export interface BaseCheckboxPropsOverrides {}
@@ -47,6 +48,7 @@ export interface BaseChipPropsOverrides {}
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
 export interface ColumnHeaderFilterIconButtonPropsOverrides {}
+export interface ColumnHeaderSortIconPropsOverrides {}
 export interface ColumnMenuPropsOverrides {}
 export interface ColumnsPanelPropsOverrides {}
 export interface DetailPanelsPropsOverrides {}
@@ -85,6 +87,7 @@ export interface GridSlotProps {
   columnHeaders: GridColumnHeadersProps;
   columnHeaderFilterIconButton: ColumnHeaderFilterIconButtonProps &
     ColumnHeaderFilterIconButtonPropsOverrides;
+  columnHeaderSortIcon: GridColumnHeaderSortIconProps & ColumnHeaderSortIconPropsOverrides;
   columnMenu: GridColumnMenuProps & ColumnMenuPropsOverrides;
   columnsPanel: GridColumnsPanelProps & ColumnsPanelPropsOverrides;
   columnsManagement: GridColumnsManagementProps & ColumnsManagementPropsOverrides;
