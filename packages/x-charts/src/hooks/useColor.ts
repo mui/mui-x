@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChartSeriesType } from '../internals';
+import { ChartSeriesType } from '../models/seriesType/config';
 import { ColorContext } from '../context/ColorProvider';
 import { ColorProcessorsConfig } from '../models/plugin';
 
