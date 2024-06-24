@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { useChartId } from '../hooks/useChartId';
@@ -56,7 +56,7 @@ function MarkPlot(props: MarkPlotProps) {
   const { slots, slotProps, skipAnimation, onItemClick, ...other } = props;
 
   const seriesData = useLineSeries();
-  const axisData = React.useContext(CartesianContext);
+  const axisData = useCartesianContext();
   const chartId = useChartId();
 
   const Mark = slots?.mark ?? MarkElement;

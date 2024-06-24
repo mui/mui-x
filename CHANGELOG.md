@@ -3,6 +3,88 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.7.1
+
+_Jun 21, 2024_
+
+We'd like to offer a big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Portuguese (pt-PT) locale on the Data Grid
+- 🌍 Improve Danish (da-DK) locale on the Date and Time Pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.7.1`
+
+- [DataGrid][docs] Clarify enabling pagination (#13350) @oliviertassinari
+- [DataGrid] Fix CSV export escaping for non-string values (#13560) @joeycumines-scw
+- [l10n] Improve Portuguese (pt-PT) locale (#13348) @joaosreis
+
+#### `@mui/x-data-grid-pro@7.7.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.7.1`, plus:
+
+- [DataGrid] Warn about `getTreeDataPath` reference (#13519) @cherniavskii
+
+#### `@mui/x-data-grid-premium@7.7.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.7.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.7.1`
+
+- [fields] Prevent digit editing on the `Space` key down (#13510) @flaviendelangle
+- [l10n] Improve Danish (da-DK) locale (#13375) @jacrowland1
+- [pickers] Add context to `onAccept` callback (#13511) @flaviendelangle
+- [pickers] Always use the same timezone in the field, the view and the layout components (#13481) @flaviendelangle
+- [pickers] Fix `AdapterDateFnsV3` generated method types (#13464) @alexey-kozlenkov
+- [pickers] Fix controlled `view` behavior (#13552) @LukasTy
+- [TimePicker] Improves RTL verification for the time pickers default views  (#13447) @arthurbalduini
+
+#### `@mui/x-date-pickers-pro@7.7.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.7.1`, plus:
+
+- [DateRangePicker] Add accessible name to calendar grid (#13538) @LukasTy
+
+### Charts
+
+#### `@mui/x-charts@7.7.1`
+
+- [charts] Divide `CartesianProvider` to use logic in Pro package (#13531) @JCQuintas
+- [charts] Do not publish the pro package (#13539) @alexfauquette
+- [charts] Export `Pro` versions of regular charts (#13547) @JCQuintas
+- [charts] Prepare `ChartContainerPro` for future Zoom changes (#13532) @JCQuintas
+- [charts] Remove unnecessary proptypes from internal component (#13518) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@7.7.1`
+
+- [TreeView] Improve typing to support optional dependencies in plugins and in the item (#13523) @flaviendelangle
+- [TreeView] Move `useTreeViewId` to the core plugins (#13566) @flaviendelangle
+- [TreeView] Remove unused state from `useTreeViewId` (#13579) @flaviendelangle
+- [TreeView] Support `itemId` with escaping characters when using `SimpleTreeView` (#13487) @oukunan
+
+### Docs
+
+- [docs] Add section about the new uncovered product watermark (#13568) @michelengelen
+- [docs] Document the `PickerValidDate` type override (#13476) @flaviendelangle
+- [docs] Fix typo (#13507) @anshtiwatne
+- [docs] Remove "-" in heat-map and tree-map urls (#13569) @alexfauquette
+- [docs] Use dedicated tab for weather dataset (#13513) @alexfauquette
+- [x-license] license update proposal (#13459) @michelengelen
+
+### Core
+
+- [core] Fix failing CI test (#13574) @alexfauquette
+- [infra] Remove explicit `@testing-library/react` dependency (#13478) @LukasTy
+
 ## 7.7.0
 
 _Jun 13, 2024_

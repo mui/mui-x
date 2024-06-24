@@ -3,7 +3,6 @@ import { TreeViewItemId } from '../models';
 import { TreeViewPublicAPI, MuiCancellableEventHandler } from '../internals/models';
 import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
 import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
-import { UseTreeViewIdSignature } from '../internals/plugins/useTreeViewId';
 import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
 import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
 
@@ -205,7 +204,6 @@ export interface UseTreeItem2ReturnValue<
 export type UseTreeItem2MinimalPlugins = readonly [
   UseTreeViewSelectionSignature,
   UseTreeViewItemsSignature,
-  UseTreeViewIdSignature,
   UseTreeViewFocusSignature,
   UseTreeViewKeyboardNavigationSignature,
 ];

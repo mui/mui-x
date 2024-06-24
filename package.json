@@ -1,5 +1,5 @@
 {
-  "version": "7.7.0",
+  "version": "7.7.1",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -92,7 +92,7 @@
     "@mui/material": "^5.15.20",
     "@mui/monorepo": "github:mui/material-ui#22c5206a9e8191b2f81131d6978a0958e55b7032",
     "@mui/utils": "^5.15.20",
-    "@next/eslint-plugin-next": "14.2.3",
+    "@next/eslint-plugin-next": "14.2.4",
     "@octokit/plugin-retry": "^6.0.1",
     "@octokit/rest": "^20.1.1",
     "@playwright/test": "^1.44.1",
@@ -112,8 +112,8 @@
     "@types/requestidlecallback": "^0.3.7",
     "@types/sinon": "^17.0.3",
     "@types/yargs": "^17.0.32",
-    "@typescript-eslint/eslint-plugin": "^7.12.0",
-    "@typescript-eslint/parser": "^7.12.0",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.13.1",
     "autoprefixer": "^10.4.19",
     "axe-core": "4.9.1",
     "babel-loader": "^9.1.3",
@@ -141,7 +141,7 @@
     "eslint-import-resolver-webpack": "^0.13.8",
     "eslint-plugin-filenames": "^1.3.2",
     "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-jsdoc": "^48.2.9",
+    "eslint-plugin-jsdoc": "^48.2.12",
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-material-ui": "workspace:^",
     "eslint-plugin-mocha": "^10.4.3",
@@ -171,7 +171,7 @@
     "mocha": "^10.4.0",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
-    "nyc": "^15.1.0",
+    "nyc": "^17.0.0",
     "prettier": "^3.3.2",
     "pretty-quick": "^4.0.0",
     "process": "^0.11.10",
@@ -188,7 +188,7 @@
     "typescript": "^5.4.5",
     "unist-util-visit": "^2.0.3",
     "util": "^0.12.5",
-    "webpack": "^5.91.0",
+    "webpack": "^5.92.1",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^5.1.4",
     "yargs": "^17.7.2"
@@ -197,9 +197,9 @@
     "react-is": "^18.2.0",
     "@types/node": "^18.19.34"
   },
-  "packageManager": "pnpm@9.2.0",
+  "packageManager": "pnpm@9.4.0",
   "engines": {
-    "pnpm": "9.2.0"
+    "pnpm": "9.4.0"
   },
   "pnpm": {
     "patchedDependencies": {
