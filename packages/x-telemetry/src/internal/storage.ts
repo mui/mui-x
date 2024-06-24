@@ -1,12 +1,10 @@
 /* eslint-disable no-console */
 import { randomBytes } from 'crypto';
 import path from 'path';
-
 import Conf from 'conf';
 import isDockerFunction from 'is-docker';
+import ciEnvironment from 'ci-info';
 import notifyAboutMuiXTelemetry from './notify';
-
-import * as ciEnvironment from './ci-info';
 
 // This is the key that stores whether or not telemetry is enabled or disabled.
 const TELEMETRY_KEY_IS_COLLECTING = 'telemetry.isCollecting';
@@ -62,6 +60,10 @@ export class TelemetryStorage {
 
     notifyAboutMuiXTelemetry();
   };
+
+  get configPath(): string | undefined {
+    return this.conf?.path;
+  }
 
   get anonymousId(): string {
     const val = this.conf && this.conf.get(TELEMETRY_KEY_ID);

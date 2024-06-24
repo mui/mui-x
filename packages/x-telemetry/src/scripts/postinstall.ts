@@ -5,6 +5,7 @@ import { randomBytes } from 'crypto';
 import type { TelemetryContextType } from '../context';
 import getAnonymousEnvironment from '../internal/get-anonymous-environment';
 import getAnonymousProjectId from '../internal/get-project-id';
+// eslint-disable-next-line import/no-cycle
 import { TelemetryStorage } from '../internal/storage';
 import getMachineId from '../internal/get-machine-id';
 
@@ -22,6 +23,7 @@ import getMachineId from '../internal/get-machine-id';
   const contextData: TelemetryContextType = {
     config: {
       isCollecting: storage.isCollecting,
+      isInitialized: true,
     },
     traits: {
       ...anonymousEnvironment,

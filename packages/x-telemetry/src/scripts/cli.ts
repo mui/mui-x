@@ -37,6 +37,14 @@ yargs(hideBin(process.argv))
       console.log(`[telemetry] MUI X telemetry is ${config.isCollecting ? 'enabled' : 'disabled'}`);
     },
   })
+  .command({
+    command: 'config',
+    describe: 'Get path where the global config is stored',
+    handler: async () => {
+      const config = new TelemetryStorage({ distDir: process.cwd() });
+      console.log(`[telemetry] The config is at '${config.configPath}'`);
+    },
+  })
   .help()
   .strict(true)
   .version(false)

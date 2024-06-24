@@ -10,13 +10,13 @@ Currently, **it's disabled by default,** and you could opt-in to it in 3 ways:
 npx mui-x-telemetry enable
 ```
 
-2. By setting the flag to global object on the application start (e.g. in main file).
+2. By setting it directly to package settings on the application start (e.g. in main file).
 ```js
-import { ponyfillGlobal } from "@mui/utils";
+import { muiXTelemetrySettings } from "@mui/x-telemetry";
 
-ponyfillGlobal.__MUI_X_TELEMETRY_ENABLED__ = true;
+muiXTelemetrySettings.enableTelemetry();
 // or
-ponyfillGlobal.__MUI_X_TELEMETRY_DISABLED__ = true;
+muiXTelemetrySettings.disableTelemetry();
 ```
 
 3. By setting the environment variable.
@@ -33,9 +33,28 @@ MUI_X_TELEMETRY_DISABLED=true
 > - GATSBY_
 > - PUBLIC_
 
+4. By setting the flag to global object on the application start (e.g. in main file).
+```js
+import { ponyfillGlobal } from "@mui/utils";
+
+ponyfillGlobal.__MUI_X_TELEMETRY_ENABLED__ = true;
+// or
+ponyfillGlobal.__MUI_X_TELEMETRY_DISABLED__ = true;
+```
+OR
+```js
+if (typeof window !== 'undefined') {
+  window.__MUI_X_TELEMETRY_ENABLED__ = true;
+}
+// or
+if (typeof window !== 'undefined') {
+  window.__MUI_X_TELEMETRY_DISABLED__ = true;
+}
+```
+
 ## CLI util
 
-This util is purpose to give ability to enable / disable telemetry for the current machine.
+The purpose of this utility is to enable/disable telemetry for the current machine.
 
 ### Possible commands
 
@@ -46,6 +65,7 @@ Commands:
   npx mui-x-telemetry enable   Enable MUI X telemetry
   npx mui-x-telemetry disable  Disable MUI X telemetry
   npx mui-x-telemetry status   Check the status of MUI X telemetry
+  npx mui-x-telemetry config   Get path where the global config is stored
 
 Options:
   --help  Show help                                                    [boolean]

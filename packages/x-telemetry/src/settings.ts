@@ -1,13 +1,13 @@
 import { setMuiXTelemetryEnv } from './config';
 
 const muiXTelemetrySettings = {
-  debug: () => {
+  setDebugging: () => {
     setMuiXTelemetryEnv('DEBUG', true);
   },
-  enable: () => {
+  enableTelemetry: () => {
     setMuiXTelemetryEnv('IS_COLLECTING', true);
   },
-  disable: () => {
+  disableTelemetry: () => {
     setMuiXTelemetryEnv('IS_COLLECTING', false);
   },
 };

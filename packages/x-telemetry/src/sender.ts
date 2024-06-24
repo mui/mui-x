@@ -1,11 +1,13 @@
+/* eslint-disable no-console */
 import { ponyfillGlobal } from '@mui/utils';
+import getTelemetryContext, { TelemetryContextType } from './get-context';
 import { getMuiXTelemetryEnv } from './config';
-import telemetryContext from './context';
 import { TelemetryEvent } from './types';
+import { md5 } from './encoding/md5';
 
-function shouldSendTelemetry(): boolean {
+function shouldSendTelemetry(telemetryContext: TelemetryContextType): boolean {
   // Disable collection of the telemetry
-  // in non-production environment
+  // in production environment
   if (process.env.NODE_ENV === 'production') {
     return false;
   }
@@ -16,6 +18,12 @@ function shouldSendTelemetry(): boolean {
     return envIsCollecting;
   }
 
+  // Disable collection of the telemetry in CI builds,
+  // as it not related to development process
+  if (telemetryContext.traits.isCI) {
+    return false;
+  }
+
   if (typeof telemetryContext.config.isCollecting === 'boolean') {
     return telemetryContext.config.isCollecting;
   }
@@ -24,13 +32,15 @@ function shouldSendTelemetry(): boolean {
   return false;
 }
 
-function getLicenseKey(): string | undefined {
+function getLicenseKeyHash(): string | undefined {
   // eslint-disable-next-line no-underscore-dangle
-  return ponyfillGlobal.__MUI_LICENSE_INFO__?.key || undefined;
+  const licenseKey = ponyfillGlobal.__MUI_LICENSE_INFO__?.key || undefined;
+  return licenseKey ? md5(licenseKey) : undefined;
 }
 
 function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
-  if (!event || !shouldSendTelemetry()) {
+  const telemetryContext = getTelemetryContext();
+  if (!event || !shouldSendTelemetry(telemetryContext)) {
     return;
   }
 
@@ -38,14 +48,14 @@ function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
     ...event,
     context: {
       ...telemetryContext.traits,
-      licenseKey: getLicenseKey(),
+      licenseKeyHash: getLicenseKeyHash(),
       ...event.context,
     },
   };
 
   if (getMuiXTelemetryEnv('DEBUG')) {
     // eslint-disable-next-line no-console
-    console.log('[mui-x-telemetry]', JSON.stringify(eventPayload, null, 2));
+    console.log('[mui-x-telemetry] event', JSON.stringify(eventPayload, null, 2));
     return;
   }
 

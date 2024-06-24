@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-telemetry",
-  "version": "7.6.1",
+  "version": "7.7.0",
   "description": "MUI X Telemetry",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -27,7 +27,7 @@
     "mui-x-telemetry": "scripts/cli.js"
   },
   "packageScripts": {
-    "install": "node ./scripts/postinstall.js"
+    "postinstall": "node ./scripts/postinstall.js"
   },
   "repository": {
     "type": "git",

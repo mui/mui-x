@@ -1,11 +1,10 @@
 import isDockerFunction from 'is-docker';
-import * as ciEnvironment from './ci-info';
+import ciEnvironment from 'ci-info'
 
 type AnonymousMeta = {
   isDocker: boolean;
   isCI: boolean;
-  ciName: string | undefined;
-  nodeVersion: string;
+  ciName?: string;
 };
 
 let traits: AnonymousMeta | undefined;
@@ -15,11 +14,11 @@ function getAnonymousEnvironment(): AnonymousMeta {
     return traits;
   }
 
+  const ciName = ciEnvironment.isCI && ciEnvironment.name;
   traits = {
     isDocker: isDockerFunction(),
     isCI: ciEnvironment.isCI,
-    ciName: (ciEnvironment.isCI && ciEnvironment.name) || undefined,
-    nodeVersion: process.version,
+    ...ciName && { ciName },
   };
 
   return traits;
