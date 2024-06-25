@@ -53,7 +53,7 @@ function WrappedTreeItem({
   const itemProps = useSlotProps({
     elementType: Item,
     externalSlotProps: slotProps?.item,
-    additionalProps: { itemId, id, label, isContentHidden },
+    additionalProps: { itemId, id, label, ...(isContentHidden ? { isContentHidden: true } : {}) },
     ownerState: { itemId, label },
   });
 
