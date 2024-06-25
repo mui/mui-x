@@ -1,6 +1,7 @@
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridRowId } from '../../../models/gridRows';
 import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
@@ -94,6 +95,30 @@ export const gridFilteredSortedRowEntriesSelector = createSelectorMemoized(
 export const gridFilteredSortedRowIdsSelector = createSelectorMemoized(
   gridFilteredSortedRowEntriesSelector,
   (filteredSortedRowEntries) => filteredSortedRowEntries.map((row) => row.id),
+);
+
+/**
+ * Get the row ids accessible after the filtering process to parent lookup.
+ * Does not contain the collapsed children.
+ * @category Filtering
+ */
+export const gridExpandedSortedRowIdsLookupSelector = createSelectorMemoized(
+  gridExpandedSortedRowIdsSelector,
+  gridRowTreeSelector,
+  (visibleSortedRowIds, rowTree) =>
+    Object.values(rowTree).reduce((acc: Record<GridRowId, GridRowId[]>, rowNode) => {
+      const parentRowId = rowNode.parent;
+      if (!visibleSortedRowIds.includes(rowNode.id) || parentRowId === null) {
+        return acc;
+      }
+
+      if (!acc[parentRowId]) {
+        acc[parentRowId] = [];
+      }
+
+      acc[parentRowId].push(rowNode.id);
+      return acc;
+    }, {}),
 );
 
 /**
