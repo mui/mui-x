@@ -42,14 +42,18 @@ function WrappedTreeItem({
   label,
   id,
   itemId,
+  isContentHidden,
   children,
 }: Pick<RichTreeViewItemsProps, 'slots' | 'slotProps'> &
-  Pick<TreeItemProps, 'id' | 'itemId' | 'children'> & { label: string }) {
+  Pick<TreeItemProps, 'id' | 'itemId' | 'children'> & {
+    label: string;
+    isContentHidden?: boolean;
+  }) {
   const Item = slots?.item ?? TreeItem;
   const itemProps = useSlotProps({
     elementType: Item,
     externalSlotProps: slotProps?.item,
-    additionalProps: { itemId, id, label },
+    additionalProps: { itemId, id, label, isContentHidden },
     ownerState: { itemId, label },
   });
 
@@ -59,9 +63,23 @@ function WrappedTreeItem({
 export function RichTreeViewItems(props: RichTreeViewItemsProps) {
   const { itemsToRender, slots, slotProps } = props;
 
-  const renderItem = ({ children, ...other }: TreeViewItemToRenderProps) => {
+  const renderItem = ({
+    label,
+    itemId,
+    id,
+    isContentHidden,
+    children,
+  }: TreeViewItemToRenderProps) => {
     return (
-      <WrappedTreeItem slots={slots} slotProps={slotProps} key={other.itemId} {...other}>
+      <WrappedTreeItem
+        slots={slots}
+        slotProps={slotProps}
+        key={itemId}
+        label={label}
+        id={id}
+        itemId={itemId}
+        isContentHidden={isContentHidden}
+      >
         {children?.map(renderItem)}
       </WrappedTreeItem>
     );

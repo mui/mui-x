@@ -37,7 +37,10 @@ export const TreeItem2Content = styled('div', {
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
   shouldForwardProp: (prop) =>
-    shouldForwardProp(prop) && prop !== 'status' && prop !== 'indentationAtItemLevel',
+    shouldForwardProp(prop) &&
+    prop !== 'status' &&
+    prop !== 'indentationAtItemLevel' &&
+    prop !== 'hidden',
 })<{ status: UseTreeItem2Status; indentationAtItemLevel?: true }>(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
   borderRadius: theme.shape.borderRadius,
@@ -56,6 +59,12 @@ export const TreeItem2Content = styled('div', {
     },
   },
   variants: [
+    {
+      props: { hidden: true },
+      style: {
+        display: 'none',
+      },
+    },
     {
       props: { indentationAtItemLevel: true },
       style: {
@@ -212,7 +221,17 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTreeItem2' });
 
-  const { id, itemId, label, disabled, children, slots = {}, slotProps = {}, ...other } = props;
+  const {
+    id,
+    itemId,
+    label,
+    disabled,
+    isContentHidden,
+    children,
+    slots = {},
+    slotProps = {},
+    ...other
+  } = props;
 
   const {
     getRootProps,
@@ -228,6 +247,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
     children,
     label,
     disabled,
+    isContentHidden,
   });
 
   const ownerState: TreeItem2OwnerState = {

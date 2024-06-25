@@ -34,7 +34,7 @@ export const useTreeItem2 = <
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
-  const { id, itemId, label, children, rootRef } = parameters;
+  const { id, itemId, label, isContentHidden, children, rootRef } = parameters;
 
   const { rootRef: pluginRootRef, contentRef } = runItemPlugins(parameters);
   const { interactions, status } = useTreeItem2Utils({ itemId, children });
@@ -178,6 +178,7 @@ export const useTreeItem2 = <
       onClick: createContentHandleClick(externalEventHandlers),
       onMouseDown: createContentHandleMouseDown(externalEventHandlers),
       status,
+      hidden: isContentHidden,
     };
 
     if (indentationAtItemLevel) {

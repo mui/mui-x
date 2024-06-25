@@ -150,9 +150,7 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
         itemId: item.id,
         id: item.idAttribute,
         children: [],
-        ...(itemsToRenderSet.has(item.id)
-          ? {}
-          : { slotProps: { content: { sx: { display: 'none' } } } }),
+        isContentHidden: !itemsToRenderSet.has(id),
       };
     };
 
@@ -163,7 +161,7 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
     const tree: TreeViewItemToRenderProps[] = [];
     for (const itemId of itemsToRender) {
       const ancestors: TreeViewItemId[] = [];
-      let currentItemId: TreeViewItemId | null = itemId;
+      let currentItemId: TreeViewItemId | null = state.items.itemMetaMap[itemId].parentId;
       while (currentItemId != null) {
         ancestors.push(currentItemId);
         currentItemId = state.items.itemMetaMap[currentItemId]?.parentId ?? null;

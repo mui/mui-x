@@ -6,6 +6,7 @@ export interface TreeViewItemToRenderProps {
   itemId: string;
   id: string | undefined;
   children: TreeViewItemToRenderProps[];
+  isContentHidden?: boolean;
 }
 
 export interface UseTreeViewItemsPublicAPI<R extends {}> {
