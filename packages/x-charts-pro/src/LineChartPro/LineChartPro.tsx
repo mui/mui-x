@@ -16,6 +16,7 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useLineChartProps } from '@mui/x-charts/internals';
 import { ResponsiveChartContainerPro } from '../ResponsiveChartContainerPro';
+import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
 
 export interface LineChartProProps extends LineChartProps {
   // TODO: Add zoom props
@@ -67,6 +68,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(props: LineChartProP
       <ChartsLegend {...legendProps} />
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       <ChartsClipPath {...clipPathProps} />
+      <ZoomSetup />
       {children}
     </ResponsiveChartContainerPro>
   );

@@ -10,6 +10,7 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useBarChartProps } from '@mui/x-charts/internals';
 import { ResponsiveChartContainerPro } from '../ResponsiveChartContainerPro';
+import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
 
 export interface BarChartProProps extends BarChartProps {
   // TODO: Add zoom props
@@ -56,6 +57,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(props: BarChartProProp
       <ChartsAxisHighlight {...axisHighlightProps} />
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       <ChartsClipPath {...clipPathProps} />
+      <ZoomSetup />
       {children}
     </ResponsiveChartContainerPro>
   );

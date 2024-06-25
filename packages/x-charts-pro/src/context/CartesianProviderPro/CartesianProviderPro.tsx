@@ -70,6 +70,7 @@ function CartesianContextProviderPro(props: CartesianContextProviderProProps) {
         xAxis,
         zoomExtremumGetter(xExtremumGetters, zoomRange),
         'x',
+        zoomRange,
       ),
     [drawingArea, formattedSeries, xAxis, xExtremumGetters, zoomRange],
   );
