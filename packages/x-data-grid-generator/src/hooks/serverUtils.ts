@@ -154,6 +154,7 @@ const buildQuickFilterApplier = (filterModel: GridFilterModel, columns: GridColD
   ) {
     const result = {} as Record<string, boolean>;
 
+    /* eslint-disable no-labels */
     outer: for (let v = 0; v < quickFilterValues.length; v += 1) {
       const filterValue = quickFilterValues[v];
 
@@ -181,7 +182,7 @@ const buildQuickFilterApplier = (filterModel: GridFilterModel, columns: GridColD
 
       result[filterValue] = false;
     }
-    /* eslint-enable no-restricted-syntax, no-labels */
+    /* eslint-enable no-labels */
 
     return result;
   };
