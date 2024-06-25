@@ -17,9 +17,7 @@
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
     "expandedItems": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
-    "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ indentationAtItemLevel?: bool }" }
-    },
+    "experimentalFeatures": { "type": { "name": "object" } },
     "id": { "type": { "name": "string" } },
     "itemChildrenIndentation": {
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
