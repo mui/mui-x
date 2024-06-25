@@ -2,18 +2,16 @@ import { gridVisibleColumnDefinitionsSelector } from '../features/columns/gridCo
 import { useGridSelector } from './useGridSelector';
 import { useGridRootProps } from './useGridRootProps';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../features/columnGrouping/gridColumnGroupsSelector';
-import {
-  gridPinnedRowsCountSelector,
-  gridRowCountSelector,
-} from '../features/rows/gridRowsSelector';
+import { gridPinnedRowsCountSelector } from '../features/rows/gridRowsSelector';
 import { useGridPrivateApiContext } from './useGridPrivateApiContext';
 import { isMultipleRowSelectionEnabled } from '../features/rowSelection/utils';
+import { gridExpandedRowCountSelector } from '../features/filter/gridFilterSelector';
 
 export const useGridAriaAttributes = () => {
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
-  const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
+  const accessibleRowCount = useGridSelector(apiRef, gridExpandedRowCountSelector);
   const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
   const pinnedRowsCount = useGridSelector(apiRef, gridPinnedRowsCountSelector);
 
@@ -25,7 +23,7 @@ export const useGridAriaAttributes = () => {
   return {
     role,
     'aria-colcount': visibleColumns.length,
-    'aria-rowcount': headerGroupingMaxDepth + 1 + pinnedRowsCount + totalRowCount,
+    'aria-rowcount': headerGroupingMaxDepth + 1 + pinnedRowsCount + accessibleRowCount,
     'aria-multiselectable': isMultipleRowSelectionEnabled(rootProps),
   };
 };
