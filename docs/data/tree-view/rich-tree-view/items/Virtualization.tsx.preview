@@ -1,5 +1,6 @@
 <RichTreeViewPro
   items={ITEMS}
   experimentalFeatures={{ virtualization: true }}
-  defaultExpandedItems={ITEMS.map((el) => el.id)}
+  defaultExpandedItems={flatItemIds}
+  slots={{ item: TreeItem2 }}
 />

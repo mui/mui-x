@@ -358,6 +358,7 @@ TreeItem2.propTypes = {
    * The id attribute of the item. If not provided, it will be generated.
    */
   id: PropTypes.string,
+  isContentHidden: PropTypes.bool,
   /**
    * The id of the item.
    * Must be unique.
