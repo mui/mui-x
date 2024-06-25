@@ -34,7 +34,6 @@ export const useTreeViewVirtualScroller = () => {
     virtualization: { virtualScrollerRef, scrollBufferPx, itemsHeight },
   } = useTreeViewContext<[UseTreeViewVirtualizationSignature, UseTreeViewItemsSignature]>();
   const scrollTimeout = useTimeout();
-  const scrollbarRef = React.useRef<HTMLDivElement>(null);
   const scrollCache = useLazyRef(() => createScrollCache(scrollBufferPx, itemsHeight * 15)).current;
   const [renderContext, setRenderContext] =
     React.useState<UseTreeViewVirtualizationRenderContext>(EMPTY_RENDER_CONTEXT);

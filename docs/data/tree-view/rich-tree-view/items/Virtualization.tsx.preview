@@ -1,0 +1,5 @@
+<RichTreeViewPro
+  items={ITEMS}
+  enableVirtualization
+  defaultExpandedItems={ITEMS.map((el) => el.id)}
+/>

@@ -16,7 +16,6 @@ export interface UseTreeViewVirtualizationInstance {
 }
 
 export interface UseTreeViewVirtualizationParameters {
-  enableVirtualization?: boolean;
   /**
    * Region in pixels to render before/after the viewport
    * @default 150
@@ -36,7 +35,7 @@ export interface UseTreeViewVirtualizationParameters {
 
 export type UseTreeViewVirtualizationDefaultizedParameters = DefaultizedProps<
   UseTreeViewVirtualizationParameters,
-  'enableVirtualization' | 'scrollBufferPx' | 'itemsHeight' | 'resizeThrottleMs'
+  'scrollBufferPx' | 'itemsHeight' | 'resizeThrottleMs'
 >;
 
 interface UseTreeViewVirtualizationState {
@@ -86,5 +85,6 @@ export type UseTreeViewVirtualizationSignature = TreeViewPluginSignature<{
   instance: UseTreeViewVirtualizationInstance;
   state: UseTreeViewVirtualizationState;
   contextValue: UseTreeViewVirtualizationContextValue;
+  experimentalFeatures: 'virtualization';
   dependencies: [UseTreeViewItemsSignature];
 }>;

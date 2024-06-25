@@ -1,5 +1,5 @@
 import type { TreeViewAnyPluginSignature } from './plugin';
-import type { MergeSignaturesProperty } from './helpers';
+import { MergeSignaturesProperty, MergeSignaturesPropertyUnion } from './helpers';
 import type { TreeViewCorePluginSignatures } from '../corePlugins';
 
 export interface TreeViewItemMeta {
@@ -38,4 +38,4 @@ export type TreeViewPublicAPI<
 
 export type TreeViewExperimentalFeatures<
   TSignatures extends readonly TreeViewAnyPluginSignature[],
-> = { [key in MergeSignaturesProperty<TSignatures, 'experimentalFeatures'>]?: boolean };
+> = { [key in MergeSignaturesPropertyUnion<TSignatures, 'experimentalFeatures'>]?: boolean };

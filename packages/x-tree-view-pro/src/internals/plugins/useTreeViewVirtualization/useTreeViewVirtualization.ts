@@ -30,6 +30,7 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
   state,
   rootRef,
   setState,
+  experimentalFeatures,
 }) => {
   const virtualScrollerRef = React.useRef<HTMLDivElement>(null);
   const rootDimensionsRef = React.useRef<UseTreeViewVirtualizationElementSize | undefined>(
@@ -94,6 +95,10 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
   };
 
   const flatItemIds = React.useMemo(() => {
+    if (!experimentalFeatures.virtualization) {
+      return [];
+    }
+
     const itemOrderedChildrenIds = state.items.itemOrderedChildrenIds;
 
     const addChildrenToItem = (itemId: TreeViewItemId): TreeViewItemId[] => {
@@ -101,7 +106,7 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
     };
 
     return (itemOrderedChildrenIds[TREE_VIEW_ROOT_PARENT_ID] ?? []).flatMap(addChildrenToItem);
-  }, [state.items.itemOrderedChildrenIds]);
+  }, [state.items.itemOrderedChildrenIds, experimentalFeatures.virtualization]);
 
   const computeRenderContext = React.useCallback(
     (scrollPositionPx: number): UseTreeViewVirtualizationRenderContext => {
@@ -166,7 +171,6 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
 
 useTreeViewVirtualization.getDefaultizedParams = (params) => ({
   ...params,
-  enableVirtualization: params.enableVirtualization ?? false,
   scrollBufferPx: params.scrollBufferPx ?? 150,
   itemsHeight: params.itemsHeight ?? 32,
   resizeThrottleMs: params.resizeThrottleMs ?? 60,
@@ -177,7 +181,6 @@ useTreeViewVirtualization.getInitialState = () => ({
 });
 
 useTreeViewVirtualization.params = {
-  enableVirtualization: true,
   scrollBufferPx: true,
   itemsHeight: true,
   resizeThrottleMs: true,

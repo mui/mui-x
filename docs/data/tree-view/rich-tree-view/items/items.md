@@ -119,6 +119,14 @@ Otherwise, the Tree View will re-generate its entire structure.
 This can be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
 :::
 
+## Virtualization [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+:::warning
+This is only a POC
+:::
+
+{{"demo": "Virtualization.js"}}
+
 ### Focus disabled items
 
 Use the `disabledItemsFocusable` prop to control if disabled Tree Items can be focused.
