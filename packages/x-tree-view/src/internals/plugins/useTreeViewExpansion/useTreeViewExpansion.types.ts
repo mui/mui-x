@@ -72,6 +72,11 @@ export interface UseTreeViewExpansionParameters {
     itemId: string,
     isExpanded: boolean,
   ) => void;
+  /**
+   * The slot that triggers the item's expansion when clicked.
+   * @default 'content'
+   */
+  expansionTrigger?: 'content' | 'iconContainer';
 }
 
 export type UseTreeViewExpansionDefaultizedParameters = DefaultizedProps<
@@ -79,11 +84,16 @@ export type UseTreeViewExpansionDefaultizedParameters = DefaultizedProps<
   'defaultExpandedItems'
 >;
 
+interface UseTreeViewExpansionContextValue {
+  expansion: Pick<UseTreeViewExpansionParameters, 'expansionTrigger'>;
+}
+
 export type UseTreeViewExpansionSignature = TreeViewPluginSignature<{
   params: UseTreeViewExpansionParameters;
   defaultizedParams: UseTreeViewExpansionDefaultizedParameters;
   instance: UseTreeViewExpansionInstance;
   publicAPI: UseTreeViewExpansionPublicAPI;
   modelNames: 'expandedItems';
+  contextValue: UseTreeViewExpansionContextValue;
   dependencies: [UseTreeViewItemsSignature];
 }>;

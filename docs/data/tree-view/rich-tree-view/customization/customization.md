@@ -64,12 +64,6 @@ The demo below shows how to add an avatar and custom typography elements.
 
 ## Common examples
 
-### Limit expansion to icon container
-
-The demo below shows how to trigger the expansion interaction just by clicking on the icon container instead of the whole Tree Item surface.
-
-{{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
-
 ### File explorer
 
 :::warning

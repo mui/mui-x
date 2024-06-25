@@ -27,6 +27,7 @@ export const useTreeItem2 = <
   const {
     runItemPlugins,
     selection: { multiSelect, disableSelection, checkboxSelection },
+    expansion: { expansionTrigger },
     disabledItemsFocusable,
     indentationAtItemLevel,
     instance,
@@ -85,7 +86,9 @@ export const useTreeItem2 = <
         return;
       }
 
-      interactions.handleExpansion(event);
+      if (expansionTrigger === 'content') {
+        interactions.handleExpansion(event);
+      }
 
       if (!checkboxSelection) {
         interactions.handleSelection(event);
@@ -118,6 +121,17 @@ export const useTreeItem2 = <
       }
 
       interactions.handleCheckboxSelection(event);
+    };
+
+  const createIconContainerHandleClick =
+    (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
+      otherHandlers.onClick?.(event);
+      if (event.defaultMuiPrevented) {
+        return;
+      }
+      if (expansionTrigger === 'iconContainer') {
+        interactions.handleExpansion(event);
+      }
     };
 
   const getRootProps = <ExternalProps extends Record<string, any> = {}>(
@@ -227,6 +241,7 @@ export const useTreeItem2 = <
     return {
       ...externalEventHandlers,
       ...externalProps,
+      onClick: createIconContainerHandleClick(externalEventHandlers),
     };
   };
 

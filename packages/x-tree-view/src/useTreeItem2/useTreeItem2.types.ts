@@ -6,6 +6,7 @@ import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewS
 import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
 import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
 import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
+import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
 
 export interface UseTreeItem2Parameters {
   /**
@@ -67,7 +68,9 @@ export interface UseTreeItem2ContentSlotOwnProps {
 export type UseTreeItem2ContentSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItem2ContentSlotOwnProps;
 
-export interface UseTreeItem2IconContainerSlotOwnProps {}
+export interface UseTreeItem2IconContainerSlotOwnProps {
+  onClick: MuiCancellableEventHandler<React.MouseEvent>;
+}
 
 export type UseTreeItemIconContainerSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItem2IconContainerSlotOwnProps;
@@ -185,6 +188,7 @@ export interface UseTreeItem2ReturnValue<
  */
 export type UseTreeItem2MinimalPlugins = readonly [
   UseTreeViewSelectionSignature,
+  UseTreeViewExpansionSignature,
   UseTreeViewItemsSignature,
   UseTreeViewFocusSignature,
   UseTreeViewKeyboardNavigationSignature,

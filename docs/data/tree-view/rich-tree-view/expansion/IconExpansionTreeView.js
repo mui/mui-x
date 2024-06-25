@@ -1,9 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
-
-import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
 
 const MUI_X_PRODUCTS = [
   {
@@ -35,37 +32,10 @@ const MUI_X_PRODUCTS = [
   },
 ];
 
-const CustomTreeItem = React.forwardRef(function MyTreeItem(props, ref) {
-  const { interactions } = useTreeItem2Utils({
-    itemId: props.itemId,
-    children: props.children,
-  });
-
-  const handleContentClick = (event) => {
-    event.defaultMuiPrevented = true;
-    interactions.handleSelection(event);
-  };
-
-  const handleIconContainerClick = (event) => {
-    interactions.handleExpansion(event);
-  };
-
-  return (
-    <TreeItem2
-      {...props}
-      ref={ref}
-      slotProps={{
-        content: { onClick: handleContentClick },
-        iconContainer: { onClick: handleIconContainerClick },
-      }}
-    />
-  );
-});
-
 export default function IconExpansionTreeView() {
   return (
     <Box sx={{ minHeight: 352, minWidth: 250 }}>
-      <RichTreeView items={MUI_X_PRODUCTS} slots={{ item: CustomTreeItem }} />
+      <RichTreeView items={MUI_X_PRODUCTS} expansionTrigger="iconContainer" />
     </Box>
   );
 }

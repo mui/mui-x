@@ -22,6 +22,9 @@
     "expandedItems": {
       "description": "Expanded item ids. Used when the item&#39;s expansion is controlled."
     },
+    "expansionTrigger": {
+      "description": "The slot that triggers the item&#39;s expansion when clicked."
+    },
     "experimentalFeatures": {
       "description": "Unstable features, breaking changes might be introduced. For each feature, if the flag is not explicitly set to <code>true</code>, the feature will be fully disabled and any property / method call will not have any effect."
     },
