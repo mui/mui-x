@@ -6,6 +6,7 @@ import { GridHeaderFilterMenu } from '../components/headerFiltering/GridHeaderFi
 import { GridHeaderFilterCell } from '../components/headerFiltering/GridHeaderFilterCell';
 import { GridDetailPanels } from '../components/GridDetailPanels';
 import { GridPinnedRows } from '../components/GridPinnedRows';
+import { GridRow } from '../components/GridRow';
 import materialSlots from '../material';
 
 export const DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS: GridProSlotsComponent = {
@@ -17,4 +18,5 @@ export const DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS: GridProSlotsComponent = {
   headerFilterCell: GridHeaderFilterCell,
   headerFilterMenu: GridHeaderFilterMenu,
   pinnedRows: GridPinnedRows,
+  row: GridRow,
 };
