@@ -80,7 +80,7 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 {{"demo": "LocalizationLuxon.js"}}
 
 :::warning
-Luxon adapter does not support `Settings.throwOnInvalid = true` [setting](https://moment.github.io/luxon/api-docs/index.html#settingsthrowoninvalid).
+`AdapterLuxon` does not support `Settings.throwOnInvalid = true` [setting](https://moment.github.io/luxon/api-docs/index.html#settingsthrowoninvalid).
 
 👍 Upvote [issue #11853](https://github.com/mui/mui-x/issues/11853) if you need support for it.
 
