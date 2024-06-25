@@ -23,6 +23,7 @@ import { useTreeViewContext } from '../internals/TreeViewProvider';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 import { TreeItem2Provider } from '../TreeItem2Provider';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
+import { useTreeItemState } from './useTreeItemState';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem');
 
@@ -188,6 +189,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     icons: contextIcons,
     runItemPlugins,
     selection: { multiSelect },
+    expansion: { expansionTrigger },
     disabledItemsFocusable,
     indentationAtItemLevel,
     instance,
@@ -214,6 +216,8 @@ export const TreeItem = React.forwardRef(function TreeItem(
     ...other
   } = props;
 
+  const { expanded, focused, selected, disabled, handleExpansion } = useTreeItemState(itemId);
+
   const { contentRef, rootRef, propsEnhancers } = runItemPlugins<TreeItemProps>(props);
   const rootRefObject = React.useRef<HTMLLIElement>(null);
   const contentRefObject = React.useRef<HTMLDivElement>(null);
@@ -235,10 +239,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
     return Boolean(reactChildren);
   };
   const expandable = isExpandable(children);
-  const expanded = instance.isItemExpanded(itemId);
-  const focused = instance.isItemFocused(itemId);
-  const selected = instance.isItemSelected(itemId);
-  const disabled = instance.isItemDisabled(itemId);
 
   const ownerState: TreeItemOwnerState = {
     ...props,
@@ -266,6 +266,11 @@ export const TreeItem = React.forwardRef(function TreeItem(
     className: classes.groupTransition,
   });
 
+  const handleIconContainerClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (expansionTrigger === 'iconContainer') {
+      handleExpansion(event);
+    }
+  };
   const ExpansionIcon = expanded ? slots.collapseIcon : slots.expandIcon;
   const { ownerState: expansionIconOwnerState, ...expansionIconProps } = useSlotProps({
     elementType: ExpansionIcon,
@@ -282,6 +287,9 @@ export const TreeItem = React.forwardRef(function TreeItem(
         ...resolveComponentProps(contextIcons.slotProps.expandIcon, tempOwnerState),
         ...resolveComponentProps(inSlotProps?.expandIcon, tempOwnerState),
       };
+    },
+    additionalProps: {
+      onClick: handleIconContainerClick,
     },
   });
   const expansionIcon =

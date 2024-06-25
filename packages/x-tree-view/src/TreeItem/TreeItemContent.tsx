@@ -88,6 +88,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     handleSelection,
     handleCheckboxSelection,
     preventSelection,
+    expansionTrigger,
   } = useTreeItemState(itemId);
 
   const icon = iconProp || expansionIcon || displayIcon;
@@ -106,7 +107,9 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
       return;
     }
 
-    handleExpansion(event);
+    if (expansionTrigger === 'content') {
+      handleExpansion(event);
+    }
 
     if (!checkboxSelection) {
       handleSelection(event);
