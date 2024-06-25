@@ -149,29 +149,23 @@ export const useTreeViewVirtualScroller = () => {
 
   const getRootProps = () => ({});
 
-  const getContentProps = () => ({ ref: virtualScrollerRef, onScroll: handleScroll });
+  const getContentProps = () => ({
+    ref: virtualScrollerRef,
+    onScroll: handleScroll,
+    role: 'presentation',
+  });
 
   const getRenderZoneProps = () => ({
     style: {
       transform: `translate3d(0, ${renderContext.firstItemIndex * itemsHeight}px, 0)`,
+      role: 'presentation',
     },
   });
 
-  const getScrollbarProps = () => ({ ref: scrollbarRef });
+  const getScrollbarProps = () => ({ role: 'presentation' });
 
   const getItemsToRender = () => {
-    const flatItemIds = instance.getFlatItemIds();
-
-    const itemIdsToRender = flatItemIds.slice(renderContext.firstItemIndex, renderContext.lastItemIndex + 1);
-    let currentItemMeta = instance.getItemMeta(itemIdsToRender[0]);
-
-    for(let itemId of itemIdsToRender){
-      const itemMeta = instance.getItemMeta(itemId);
-    }
-
-
-    // TODO: Add actual virtualization
-    return instance.getItemsToRender();
+    return instance.getItemsToRenderWithVirtualization(renderContext);
   };
 
   return {

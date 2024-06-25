@@ -1,16 +1,18 @@
 import * as React from 'react';
-import {TreeViewItemId} from "@mui/x-tree-view/models";
 import {
   DefaultizedProps,
   TreeViewPluginSignature,
   UseTreeViewItemsSignature,
+  TreeViewItemToRenderProps,
 } from '@mui/x-tree-view/internals';
 
 export interface UseTreeViewVirtualizationInstance {
   getDimensions: () => UseTreeViewVirtualizationState['virtualization'];
-  getFlatItemIds: () => TreeViewItemId[];
   handleResizeRoot: () => void;
   computeRenderContext: (scrollPositionPx: number) => UseTreeViewVirtualizationRenderContext;
+  getItemsToRenderWithVirtualization: (
+    renderContext: UseTreeViewVirtualizationRenderContext,
+  ) => TreeViewItemToRenderProps[];
 }
 
 export interface UseTreeViewVirtualizationParameters {

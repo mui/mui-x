@@ -6,10 +6,12 @@ import {
   clamp,
   TreeViewPlugin,
   TREE_VIEW_ROOT_PARENT_ID,
+  TreeViewItemToRenderProps,
 } from '@mui/x-tree-view/internals';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
 import {
   UseTreeViewVirtualizationElementSize,
+  UseTreeViewVirtualizationRenderContext,
   UseTreeViewVirtualizationSignature,
 } from './useTreeViewVirtualization.types';
 import { areElementSizesEqual } from './useTreeViewVirtualization.utils';
@@ -91,43 +93,66 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
     }
   };
 
-  const computeRenderContext = React.useCallback(
-    (scrollPositionPx: number) => {
-      const clampItemIndex = (itemIndex: number) => clamp(itemIndex, 0, itemCount - 1);
-
-      return {
-        firstItemIndex: clampItemIndex(
-          Math.floor((scrollPositionPx - params.scrollBufferPx) / params.itemsHeight),
-        ),
-        lastItemIndex: clampItemIndex(
-          Math.ceil(
-            (scrollPositionPx + state.virtualization.viewportHeight + params.scrollBufferPx) /
-              params.itemsHeight,
-          ),
-        ),
-      };
-    },
-    [itemCount, params.itemsHeight, params.scrollBufferPx, state.virtualization.viewportHeight],
-  );
-
   const flatItemIds = React.useMemo(() => {
     const itemOrderedChildrenIds = state.items.itemOrderedChildrenIds;
 
-    const addChildrenToItem = (itemId: TreeViewItemId) => {
+    const addChildrenToItem = (itemId: TreeViewItemId): TreeViewItemId[] => {
       return [itemId, ...(itemOrderedChildrenIds[itemId] ?? []).flatMap(addChildrenToItem)];
     };
 
     return (itemOrderedChildrenIds[TREE_VIEW_ROOT_PARENT_ID] ?? []).flatMap(addChildrenToItem);
   }, [state.items.itemOrderedChildrenIds]);
 
-  const getFlatItemIds = () => flatItemIds
+  const computeRenderContext = React.useCallback(
+    (scrollPositionPx: number): UseTreeViewVirtualizationRenderContext => {
+      const clampItemIndex = (itemIndex: number) => clamp(itemIndex, 0, itemCount - 1);
+
+      const firstItemIndex = clampItemIndex(
+        Math.floor((scrollPositionPx - params.scrollBufferPx) / params.itemsHeight),
+      );
+
+      const lastItemIndex = clampItemIndex(
+        Math.ceil(
+          (scrollPositionPx + state.virtualization.viewportHeight + params.scrollBufferPx) /
+            params.itemsHeight,
+        ),
+      );
+
+      return {
+        firstItemIndex,
+        lastItemIndex,
+      };
+    },
+    [itemCount, params.itemsHeight, params.scrollBufferPx, state.virtualization.viewportHeight],
+  );
+
+  const getItemsToRenderWithVirtualization = (
+    renderContext: UseTreeViewVirtualizationRenderContext,
+  ) => {
+    const itemsToRender = flatItemIds.slice(
+      renderContext.firstItemIndex,
+      renderContext.lastItemIndex + 1,
+    );
+
+    const getPropsFromItemId = (id: TreeViewItemId): TreeViewItemToRenderProps => {
+      const item = state.items.itemMetaMap[id];
+      return {
+        label: item.label!,
+        itemId: item.id,
+        id: item.idAttribute,
+        children: [],
+      };
+    };
+
+    return itemsToRender.map(getPropsFromItemId);
+  };
 
   return {
     instance: {
       getDimensions,
       handleResizeRoot,
       computeRenderContext,
-      getFlatItemIds,
+      getItemsToRenderWithVirtualization,
     },
     contextValue: {
       virtualization: {

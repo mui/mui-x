@@ -53,6 +53,7 @@ export { useTreeViewItems, TREE_VIEW_ROOT_PARENT_ID } from './plugins/useTreeVie
 export type {
   UseTreeViewItemsSignature,
   UseTreeViewItemsParameters,
+  TreeViewItemToRenderProps,
 } from './plugins/useTreeViewItems';
 export { useTreeViewJSXItems } from './plugins/useTreeViewJSXItems';
 export type {
