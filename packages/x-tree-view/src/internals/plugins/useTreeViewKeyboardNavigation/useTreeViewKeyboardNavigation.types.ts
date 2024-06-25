@@ -29,7 +29,7 @@ export interface UseTreeViewKeyboardNavigationInstance {
 
 export type UseTreeViewKeyboardNavigationSignature = TreeViewPluginSignature<{
   instance: UseTreeViewKeyboardNavigationInstance;
-  dependantPlugins: [
+  dependencies: [
     UseTreeViewItemsSignature,
     UseTreeViewSelectionSignature,
     UseTreeViewFocusSignature,
