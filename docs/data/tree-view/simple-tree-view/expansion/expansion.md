@@ -36,7 +36,7 @@ Use the `onItemExpansionToggle` prop to trigger an action upon an item being exp
 
 You can use the `expansionTrigger` prop to decide if the expansion interaction should be triggered by clicking on the icon container instead of the whole Tree Item content.
 
-{{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
+{{"demo": "IconExpansionTreeView.js"}}
 
 ## Imperative API
 
