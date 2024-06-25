@@ -7,7 +7,6 @@ import {
   timeClockClasses as classes,
 } from '@mui/x-date-pickers/TimeClock';
 import {
-  wrapPickerMount,
   createPickerRenderer,
   adapterToUse,
   timeClockHandler,
@@ -21,7 +20,6 @@ describe('<TimeClock /> - Describes', () => {
   describeConformance(<TimeClock />, () => ({
     classes,
     inheritComponent: 'div',
-    wrapMount: wrapPickerMount,
     render,
     refInstanceof: window.HTMLDivElement,
     muiName: 'MuiTimeClock',

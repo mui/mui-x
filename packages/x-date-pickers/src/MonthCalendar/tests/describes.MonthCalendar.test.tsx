@@ -2,7 +2,6 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { userEvent, screen } from '@mui/internal-test-utils';
 import {
-  wrapPickerMount,
   createPickerRenderer,
   adapterToUse,
   describeValidation,
@@ -25,7 +24,6 @@ describe('<MonthCalendar /> - Describes', () => {
     classes,
     inheritComponent: 'div',
     render,
-    wrapMount: wrapPickerMount,
     muiName: 'MuiMonthCalendar',
     refInstanceof: window.HTMLDivElement,
     // cannot test reactTestRenderer because of required context

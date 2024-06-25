@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
-  wrapPickerMount,
   adapterToUse,
   digitalClockHandler,
   describeValidation,
@@ -28,7 +27,6 @@ describe('<DigitalClock /> - Describes', () => {
     classes: {} as any,
     render,
     muiName: 'MuiDigitalClock',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',

@@ -3,7 +3,6 @@ import { screen, userEvent } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   createPickerRenderer,
-  wrapPickerMount,
   expectFieldValueV7,
   describePicker,
   describeValue,
@@ -34,7 +33,6 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
     classes: {} as any,
     render,
     muiName: 'MuiDesktopDateRangePicker',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',

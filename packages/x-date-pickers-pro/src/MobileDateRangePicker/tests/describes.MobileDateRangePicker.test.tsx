@@ -4,7 +4,6 @@ import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePi
 import {
   adapterToUse,
   createPickerRenderer,
-  wrapPickerMount,
   openPicker,
   expectFieldValueV7,
   describeRangeValidation,
@@ -34,7 +33,6 @@ describe('<MobileDateRangePicker /> - Describes', () => {
     classes: {} as any,
     render,
     muiName: 'MuiMobileDateRangePicker',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',

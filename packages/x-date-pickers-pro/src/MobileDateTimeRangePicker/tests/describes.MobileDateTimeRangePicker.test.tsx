@@ -7,7 +7,6 @@ import {
   describeValue,
   describePicker,
   describeRangeValidation,
-  wrapPickerMount,
   getFieldSectionsContainer,
   openPicker,
 } from 'test/utils/pickers';
@@ -36,7 +35,6 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
     classes: {} as any,
     render,
     muiName: 'MuiMobileDateTimeRangePicker',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',

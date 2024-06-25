@@ -5,7 +5,6 @@ import { DateCalendar, dateCalendarClasses as classes } from '@mui/x-date-picker
 import { pickersDayClasses } from '@mui/x-date-pickers/PickersDay';
 import {
   adapterToUse,
-  wrapPickerMount,
   createPickerRenderer,
   describeValidation,
   describeValue,
@@ -27,7 +26,6 @@ describe('<DateCalendar /> - Describes', () => {
     inheritComponent: 'div',
     render,
     muiName: 'MuiDateCalendar',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     // cannot test reactTestRenderer because of required context
     skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
