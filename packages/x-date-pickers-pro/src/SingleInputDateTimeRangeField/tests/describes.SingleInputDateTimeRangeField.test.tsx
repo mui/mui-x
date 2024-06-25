@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SingleInputDateTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputDateTimeRangeField';
-import { createPickerRenderer, wrapPickerMount, describeRangeValidation } from 'test/utils/pickers';
+import { createPickerRenderer, describeRangeValidation } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<SingleInputDateTimeRangeField /> - Describes', () => {
@@ -11,7 +11,6 @@ describe('<SingleInputDateTimeRangeField /> - Describes', () => {
     inheritComponent: 'div',
     render,
     muiName: 'MuiSingleInputDateTimeRangeField',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     // cannot test reactTestRenderer because of required context
     skip: [
