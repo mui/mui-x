@@ -38,7 +38,7 @@ export const useTreeViewVirtualScroller = () => {
   const [renderContext, setRenderContext] =
     React.useState<UseTreeViewVirtualizationRenderContext>(EMPTY_RENDER_CONTEXT);
   const frozenContext = React.useRef<UseTreeViewVirtualizationRenderContext | undefined>(undefined);
-
+  const dimensions = instance.getDimensions();
   useResizeObserver(rootRef, () => instance.handleResizeRoot());
 
   /*
@@ -141,16 +141,23 @@ export const useTreeViewVirtualScroller = () => {
     instance.handleResizeRoot();
   }, [instance]);
 
-  useRunOnce(instance.getDimensions().viewportHeight !== 0, () => {
+  useRunOnce(dimensions.viewportHeight !== 0, () => {
     const initialRenderContext = instance.computeRenderContext(scrollPosition.current.top);
     updateRenderContext(initialRenderContext);
   });
 
   const getRootProps = () => ({});
 
-  const getContentProps = () => ({
+  const getScrollerProps = () => ({
     ref: virtualScrollerRef,
+    tabIndex: -1,
     onScroll: handleScroll,
+    style: { overflowX: 'hidden' } as React.CSSProperties,
+    role: 'presentation',
+  });
+
+  const getContentProps = () => ({
+    style: { height: dimensions.contentSize } as React.CSSProperties,
     role: 'presentation',
   });
 
@@ -169,6 +176,7 @@ export const useTreeViewVirtualScroller = () => {
 
   return {
     getRootProps,
+    getScrollerProps,
     getContentProps,
     getRenderZoneProps,
     getScrollbarProps,

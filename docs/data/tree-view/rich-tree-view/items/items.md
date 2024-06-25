@@ -147,9 +147,9 @@ When it's set to true:
 
 :::warning
 This is only a POC:
-- Dragging the scrollbar does not scroll to the scroll to the right element
+
 - The DOM structure is flat and not nested
-:::
+  :::
 
 {{"demo": "Virtualization.js"}}
 

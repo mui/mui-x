@@ -27,6 +27,12 @@ const TreeViewVirtualScrollerContent = styled('div', {
   name: 'MuiTreeViewVirtualScroller',
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
+})({});
+
+const TreeViewVirtualScrollerScroller = styled('div', {
+  name: 'MuiTreeViewVirtualScroller',
+  slot: 'Scroller',
+  overridesResolver: (props, styles) => styles.scroller,
 })({
   position: 'relative',
   height: '100%',
@@ -63,8 +69,14 @@ export const TreeViewVirtualScroller = React.forwardRef(function TreeViewVirtual
   const { slots, slotProps, ...other } = props;
 
   useLicenseVerifier('x-tree-view-pro', releaseInfo);
-  const { getRootProps, getContentProps, getRenderZoneProps, getScrollbarProps, getItemsToRender } =
-    useTreeViewVirtualScroller();
+  const {
+    getRootProps,
+    getScrollerProps,
+    getContentProps,
+    getRenderZoneProps,
+    getScrollbarProps,
+    getItemsToRender,
+  } = useTreeViewVirtualScroller();
 
   const Root = slots.root;
   const rootProps = useSlotProps({
@@ -80,15 +92,17 @@ export const TreeViewVirtualScroller = React.forwardRef(function TreeViewVirtual
 
   return (
     <TreeViewVirtualScrollerRoot as={Root} {...rootProps}>
-      <TreeViewVirtualScrollerContent {...getContentProps()}>
-        <TreeViewVirtualScrollerRenderZone {...getRenderZoneProps()}>
-          <RichTreeViewItems
-            slots={slots}
-            slotProps={slotProps}
-            itemsToRender={getItemsToRender()}
-          />
-        </TreeViewVirtualScrollerRenderZone>
-      </TreeViewVirtualScrollerContent>
+      <TreeViewVirtualScrollerScroller {...getScrollerProps()}>
+        <TreeViewVirtualScrollerContent {...getContentProps()}>
+          <TreeViewVirtualScrollerRenderZone {...getRenderZoneProps()}>
+            <RichTreeViewItems
+              slots={slots}
+              slotProps={slotProps}
+              itemsToRender={getItemsToRender()}
+            />
+          </TreeViewVirtualScrollerRenderZone>
+        </TreeViewVirtualScrollerContent>
+      </TreeViewVirtualScrollerScroller>
       <TreeViewVirtualScrollbar {...getScrollbarProps()} />
       <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
     </TreeViewVirtualScrollerRoot>
