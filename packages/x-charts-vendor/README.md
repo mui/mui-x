@@ -11,6 +11,7 @@ To help provide an easy path to folks still using CommonJS in their Node.js appl
 ## Packages
 
 We presently provide the following top-level libraries:
+
 <!-- cat packages/victory-vendor/package.json | egrep '"d3-' | egrep -o 'd3-[^"]*'| sor t-->
 
 - d3-ease
@@ -20,6 +21,7 @@ We presently provide the following top-level libraries:
 - d3-timer
 
 This is the total list of top and transitive libraries we vendor:
+
 <!-- ls packages/victory-vendor/lib-vendor | sort -->
 
 - d3-array
@@ -48,7 +50,7 @@ We provide two alternate paths and behaviors -- for ESM and CommonJS
 If you do a Node.js import like:
 
 ```js
-import { interpolate } from "@mui/x-charts-vendor/d3-interpolate";
+import { interpolate } from '@mui/x-charts-vendor/d3-interpolate';
 ```
 
 under the hood it's going to just re-export and pass you through to `node_modules/d3-interpolate`, the **real** ESM library from D3.
@@ -58,7 +60,7 @@ under the hood it's going to just re-export and pass you through to `node_module
 If you do a Node.js import like:
 
 ```js
-const { interpolate } = require("@mui/x-charts-vendor/d3-interpolate");
+const { interpolate } = require('@mui/x-charts-vendor/d3-interpolate');
 ```
 
 under the hood it's going to will go to an alternate path that contains the transpiled version of the underlying d3 library to be found at `victory-vendor/lib-vendor/d3-interpolate/**/*.js`. This futher has internally consistent import references to other `victory-vendor/lib-vendor/<pkg-name>` paths.

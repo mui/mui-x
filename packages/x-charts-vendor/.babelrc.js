@@ -5,20 +5,20 @@
  * internally consistent references to other d3 packages. It is only meant
  * to be used for the CommonJS import path.
  */
-const path = require("path");
+const path = require('path');
 
 module.exports = {
-  only: ["node_modules/*/src/**/*.js"],
+  only: ['node_modules/*/src/**/*.js'],
   plugins: [
     [
-      "@babel/transform-modules-commonjs",
+      '@babel/transform-modules-commonjs',
       {
         strict: false,
         allowTopLevelThis: true,
       },
     ],
     [
-      "module-resolver",
+      'module-resolver',
       {
         // Convert all imports for _other_ d3 dependencies to the relative
         // path in our vendor package.
@@ -30,9 +30,7 @@ module.exports = {
             // - Only top level imports "d3-<whatever>"
             // - With no path components (like "d3-<whatever>/path/to.js")
             if (match.groups.path) {
-              throw new Error(
-                `Unable to process ${sourcePath} import in ${currentFile}`,
-              );
+              throw new Error(`Unable to process ${sourcePath} import in ${currentFile}`);
             }
 
             // Get Vendor package path.
@@ -44,13 +42,10 @@ module.exports = {
             // and have an import transform like:
             // - `d3-color`
             // - `../../d3-color`
-            const currentFileVendor = currentFile.replace(
-              /^node_modules/,
-              "lib-vendor",
-            );
+            const currentFileVendor = currentFile.replace(/^node_modules/, 'lib-vendor');
             const relPathToPkg = path
               .relative(path.dirname(currentFileVendor), vendorPkg)
-              .replace(/\\/g, "/");
+              .replace(/\\/g, '/');
 
             return relPathToPkg;
           }
