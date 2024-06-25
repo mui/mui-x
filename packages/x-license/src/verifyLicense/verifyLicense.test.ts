@@ -31,7 +31,7 @@ describe('License: verifyLicense', () => {
             releaseInfo: '__RELEASE_INFO__',
             licenseKey,
             acceptedScopes: ['pro', 'premium'],
-            productScope: 'data-grid',
+            productLine: 'data-grid',
           }).status,
       ).to.throw('MUI X: The release information is invalid. Not able to validate license.');
     });
@@ -43,7 +43,7 @@ describe('License: verifyLicense', () => {
           releaseInfo: RELEASE_INFO,
           licenseKey,
           acceptedScopes: ['pro', 'premium'],
-          productScope: 'data-grid',
+          productLine: 'data-grid',
         }).status,
       ).to.equal(LICENSE_STATUS.Valid);
     });
@@ -63,7 +63,7 @@ describe('License: verifyLicense', () => {
           releaseInfo: RELEASE_INFO,
           licenseKey: expiredLicenseKey,
           acceptedScopes: ['pro', 'premium'],
-          productScope: 'data-grid',
+          productLine: 'data-grid',
         }).status,
       ).to.equal(LICENSE_STATUS.ExpiredVersion);
     });
@@ -76,7 +76,7 @@ describe('License: verifyLicense', () => {
           licenseKey:
             'b43ff5f9ac93f021855ff59ff0ba5220TkFNRTpNYC1VSSBTQVMsREVWRUxPUEVSX0NPVU5UPTEwLEVYUElSWT0xNTkxNzIzMDY3MDQyLFZFUlNJT049MS4yLjM',
           acceptedScopes: ['pro', 'premium'],
-          productScope: 'data-grid',
+          productLine: 'data-grid',
         }).status,
       ).to.equal(LICENSE_STATUS.Invalid);
     });
@@ -107,7 +107,7 @@ describe('License: verifyLicense', () => {
             releaseInfo: '__RELEASE_INFO__',
             licenseKey: licenseKeyPro,
             acceptedScopes: ['pro', 'premium'],
-            productScope: 'data-grid',
+            productLine: 'data-grid',
           }).status,
       ).to.throw('MUI X: The release information is invalid. Not able to validate license.');
     });
@@ -120,7 +120,7 @@ describe('License: verifyLicense', () => {
             releaseInfo: RELEASE_INFO,
             licenseKey: licenseKeyPro,
             acceptedScopes: ['pro', 'premium'],
-            productScope: 'data-grid',
+            productLine: 'data-grid',
           }).status,
         ).to.equal(LICENSE_STATUS.Valid);
       });
@@ -132,7 +132,7 @@ describe('License: verifyLicense', () => {
             releaseInfo: RELEASE_INFO,
             licenseKey: licenseKeyPremium,
             acceptedScopes: ['premium'],
-            productScope: 'data-grid',
+            productLine: 'data-grid',
           }).status,
         ).to.equal(LICENSE_STATUS.Valid);
       });
@@ -144,7 +144,7 @@ describe('License: verifyLicense', () => {
             releaseInfo: RELEASE_INFO,
             licenseKey: licenseKeyPro,
             acceptedScopes: ['premium'],
-            productScope: 'data-grid',
+            productLine: 'data-grid',
           }).status,
         ).to.equal(LICENSE_STATUS.OutOfScope);
       });
@@ -166,7 +166,7 @@ describe('License: verifyLicense', () => {
             releaseInfo: RELEASE_INFO,
             licenseKey: expiredLicenseKey,
             acceptedScopes: ['pro', 'premium'],
-            productScope: 'data-grid',
+            productLine: 'data-grid',
           }).status,
         ).to.equal(LICENSE_STATUS.Valid);
       });
@@ -185,7 +185,7 @@ describe('License: verifyLicense', () => {
             releaseInfo: RELEASE_INFO,
             licenseKey: expiredLicenseKey,
             acceptedScopes: ['pro', 'premium'],
-            productScope: 'data-grid',
+            productLine: 'data-grid',
           }).status,
         ).to.equal(LICENSE_STATUS.ExpiredAnnualGrace);
       });
@@ -205,7 +205,7 @@ describe('License: verifyLicense', () => {
             releaseInfo: RELEASE_INFO,
             licenseKey: expiredLicenseKey,
             acceptedScopes: ['pro', 'premium'],
-            productScope: 'data-grid',
+            productLine: 'data-grid',
           }).status,
         ).to.equal(LICENSE_STATUS.ExpiredAnnual);
       });
@@ -224,7 +224,7 @@ describe('License: verifyLicense', () => {
             releaseInfo: RELEASE_INFO,
             licenseKey: expiredLicenseKey,
             acceptedScopes: ['pro', 'premium'],
-            productScope: 'data-grid',
+            productLine: 'data-grid',
           }).status,
         ).to.equal(LICENSE_STATUS.Valid);
       });
@@ -238,7 +238,7 @@ describe('License: verifyLicense', () => {
           licenseKey:
             'b43ff5f9ac93f021855ff59ff0ba5220TkFNRTpNYC1VSSBTQVMsREVWRUxPUEVSX0NPVU5UPTEwLEVYUElSWT0xNTkxNzIzMDY3MDQyLFZFUlNJT049MS4yLjM',
           acceptedScopes: ['pro', 'premium'],
-          productScope: 'data-grid',
+          productLine: 'data-grid',
         }).status,
       ).to.equal(LICENSE_STATUS.Invalid);
     });
@@ -260,7 +260,7 @@ describe('License: verifyLicense', () => {
           releaseInfo: RELEASE_INFO,
           licenseKey: licenseKeyPro,
           acceptedScopes: ['pro', 'premium'],
-          productScope: 'data-grid',
+          productLine: 'data-grid',
         }).status,
       ).to.equal(LICENSE_STATUS.Valid);
     });
@@ -290,7 +290,7 @@ describe('License: verifyLicense', () => {
           releaseInfo: RELEASE_INFO,
           licenseKey: licenseKeyInitial,
           acceptedScopes: ['pro', 'premium'],
-          productScope: 'charts',
+          productLine: 'charts',
         }).status,
       ).to.equal(LICENSE_STATUS.NotAvailableInInitialProPlan);
     });
@@ -302,7 +302,7 @@ describe('License: verifyLicense', () => {
           releaseInfo: RELEASE_INFO,
           licenseKey: licenseKeyInitial,
           acceptedScopes: ['pro', 'premium'],
-          productScope: 'tree-view',
+          productLine: 'tree-view',
         }).status,
       ).to.equal(LICENSE_STATUS.NotAvailableInInitialProPlan);
     });
@@ -314,7 +314,7 @@ describe('License: verifyLicense', () => {
           releaseInfo: RELEASE_INFO,
           licenseKey: licenseKey2,
           acceptedScopes: ['pro', 'premium'],
-          productScope: 'charts',
+          productLine: 'charts',
         }).status,
       ).to.equal(LICENSE_STATUS.Valid);
     });
@@ -326,7 +326,7 @@ describe('License: verifyLicense', () => {
           releaseInfo: RELEASE_INFO,
           licenseKey: licenseKey2,
           acceptedScopes: ['pro', 'premium'],
-          productScope: 'tree-view',
+          productLine: 'tree-view',
         }).status,
       ).to.equal(LICENSE_STATUS.Valid);
     });

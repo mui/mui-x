@@ -1,7 +1,7 @@
 import { base64Decode, base64Encode } from '../encoding/base64';
 import { md5 } from '../encoding/md5';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import { LicenseScope, LICENSE_SCOPES, ProductScope, PlanVersion } from '../utils/licenseScope';
+import { LicenseScope, LICENSE_SCOPES, ProductLine, PlanVersion } from '../utils/licenseScope';
 import { LicensingModel, LICENSING_MODELS } from '../utils/licensingModel';
 
 const getDefaultReleaseDate = () => {
@@ -23,6 +23,8 @@ interface MuiLicense {
   expiryTimestamp: number | null;
   planVersion: PlanVersion;
 }
+
+const PRODUCT_LINES_AVAILABLE_IN_INITIAL_PRO_PLAN: ProductLine[] = ['data-grid', 'date-pickers']
 
 /**
  * Format: ORDER:${orderNumber},EXPIRY=${expiryTimestamp},KEYVERSION=1
@@ -106,12 +108,12 @@ export function verifyLicense({
   releaseInfo,
   licenseKey,
   acceptedScopes,
-  productScope,
+  productLine,
 }: {
   releaseInfo: string;
   licenseKey?: string;
   acceptedScopes: readonly LicenseScope[];
-  productScope: ProductScope;
+  productLine: ProductLine;
 }): { status: LicenseStatus; meta?: any } {
   if (!releaseInfo) {
     throw new Error('MUI X: The release information is missing. Not able to validate license.');
@@ -178,11 +180,9 @@ export function verifyLicense({
     return { status: LICENSE_STATUS.Invalid };
   }
 
-  if (license.planVersion === 'initial' && license.scope === 'pro') {
-    // 'charts-pro' or 'tree-view-pro' can only be used with a newer license
-    if (productScope === 'charts' || productScope === 'tree-view') {
-      return { status: LICENSE_STATUS.NotAvailableInInitialProPlan };
-    }
+  // 'charts-pro' or 'tree-view-pro' can only be used with a newer Pro license
+  if (license.planVersion === 'initial' && license.scope === 'pro' && !PRODUCT_LINES_AVAILABLE_IN_INITIAL_PRO_PLAN.includes(productLine)) {
+    return { status: LICENSE_STATUS.NotAvailableInInitialProPlan };
   }
 
   if (!acceptedScopes.includes(license.scope)) {

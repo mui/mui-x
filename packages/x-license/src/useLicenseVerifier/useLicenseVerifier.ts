@@ -11,7 +11,7 @@ import {
   showNotAvailableInInitialProPlanError,
 } from '../utils/licenseErrorMessageUtils';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import { extractAcceptedScopes, extractProductScope } from '../utils/licenseScope';
+import { extractAcceptedScopes, extractProductLine } from '../utils/licenseScope';
 import MuiLicenseInfoContext from '../Unstable_LicenseInfoProvider/MuiLicenseInfoContext';
 
 export type MuiCommercialPackageName =
@@ -49,14 +49,14 @@ export function useLicenseVerifier(
     }
 
     const acceptedScopes = extractAcceptedScopes(packageName);
-    const productScope = extractProductScope(packageName);
+    const productLine = extractProductLine(packageName);
 
     const plan = packageName.includes('premium') ? 'Premium' : 'Pro';
     const licenseStatus = verifyLicense({
       releaseInfo,
       licenseKey,
       acceptedScopes,
-      productScope,
+      productLine,
     });
 
     const fullPackageName = `@mui/${packageName}`;
