@@ -70,7 +70,7 @@ export function GridPrintExportMenuItem(props: GridPrintExportMenuItemProps) {
 
 const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
   function GridToolbarExport(props, ref) {
-    const { csvOptions = {}, printOptions = {}, excelOptions, ...other } = props;
+    const { csvOptions = {}, printOptions = {}, excelOptions, ...other } = props as GridToolbarExportProps & { excelOptions?: any };
 
     const apiRef = useGridApiContext();
 
