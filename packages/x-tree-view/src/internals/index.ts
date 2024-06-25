@@ -54,6 +54,7 @@ export type {
   UseTreeViewItemsSignature,
   UseTreeViewItemsParameters,
   TreeViewItemToRenderProps,
+  TreeViewItemMetaMap,
 } from './plugins/useTreeViewItems';
 export { useTreeViewJSXItems } from './plugins/useTreeViewJSXItems';
 export type {

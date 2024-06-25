@@ -25,6 +25,8 @@ const emptyParentHeightWarning = buildWarning([
   'More details: https://mui.com/r/x-data-grid-no-dimensions.',
 ]);
 
+const SHOULD_USE_FLAT_DOM_STRUCTURE = false;
+
 export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualizationSignature> = ({
   params,
   state,
@@ -139,6 +141,8 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
       renderContext.lastItemIndex + 1,
     );
 
+    const itemsToRenderSet = new Set(itemsToRender);
+
     const getPropsFromItemId = (id: TreeViewItemId): TreeViewItemToRenderProps => {
       const item = state.items.itemMetaMap[id];
       return {
@@ -146,10 +150,42 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
         itemId: item.id,
         id: item.idAttribute,
         children: [],
+        ...(itemsToRenderSet.has(item.id)
+          ? {}
+          : { slotProps: { content: { sx: { display: 'none' } } } }),
       };
     };
 
-    return itemsToRender.map(getPropsFromItemId);
+    if (SHOULD_USE_FLAT_DOM_STRUCTURE) {
+      return itemsToRender.map(getPropsFromItemId);
+    }
+
+    const tree: TreeViewItemToRenderProps[] = [];
+    for (const itemId of itemsToRender) {
+      const ancestors: TreeViewItemId[] = [];
+      let currentItemId: TreeViewItemId | null = itemId;
+      while (currentItemId != null) {
+        ancestors.push(currentItemId);
+        currentItemId = state.items.itemMetaMap[currentItemId]?.parentId ?? null;
+      }
+
+      let subTree = tree;
+      while (ancestors.length > 0) {
+        const parentId = ancestors.pop()!;
+        const parentInTree = subTree.find((props) => props.itemId === parentId);
+        if (parentInTree == null) {
+          const newParentIdTree = getPropsFromItemId(parentId);
+          subTree.push(newParentIdTree);
+          subTree = newParentIdTree.children;
+        } else {
+          subTree = parentInTree.children;
+        }
+      }
+
+      subTree.push(getPropsFromItemId(itemId));
+    }
+
+    return tree;
   };
 
   return {
