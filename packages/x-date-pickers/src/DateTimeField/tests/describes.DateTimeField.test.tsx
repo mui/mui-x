@@ -4,7 +4,6 @@ import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import {
   adapterToUse,
   createPickerRenderer,
-  wrapPickerMount,
   expectFieldValueV7,
   describeValidation,
   describeValue,
@@ -27,7 +26,6 @@ describe('<DateTimeField /> - Describes', () => {
     inheritComponent: PickersTextField,
     render,
     muiName: 'MuiDateTimeField',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     // cannot test reactTestRenderer because of required context
     skip: [
