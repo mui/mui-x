@@ -32,7 +32,6 @@ export interface GridToolbarExportProps {
    * @default {}
    */
   slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
-  [key: string]: any;
 }
 
 export function GridCsvExportMenuItem(props: GridCsvExportMenuItemProps) {
