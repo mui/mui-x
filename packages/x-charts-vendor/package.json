@@ -35,11 +35,14 @@
     "@types/d3-shape": "^3.1.6"
   },
   "devDependencies": {
-    "d3-color": "^3.1.0",
     "d3-format": "^3.1.0",
-    "d3-path": "^3.0.1",
     "d3-time-format": "^4.1.0",
-    "d3-voronoi": "^1.1.4",
+    "d3-path": "^3.0.1",
+    "d3-array": "^3.1.6",
+    "@types/d3-format": "^3.0.4",
+    "@types/d3-time-format": "^4.0.3",
+    "@types/d3-path": "^3.0.1",
+    "@types/d3-array": "^3.0.3",
     "internmap": "^2.0.3",
     "execa": "^6.1.0",
     "rimraf": "^3.0.2"
