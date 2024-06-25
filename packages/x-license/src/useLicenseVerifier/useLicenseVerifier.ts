@@ -11,15 +11,8 @@ import {
   showNotAvailableInInitialProPlanError,
 } from '../utils/licenseErrorMessageUtils';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import { extractAcceptedScopes, extractProductLine } from '../utils/licenseScope';
 import MuiLicenseInfoContext from '../Unstable_LicenseInfoProvider/MuiLicenseInfoContext';
-
-export type MuiCommercialPackageName =
-  | 'x-data-grid-pro'
-  | 'x-data-grid-premium'
-  | 'x-date-pickers-pro'
-  | 'x-tree-view-pro'
-  | 'x-charts-pro';
+import { MuiCommercialPackageName } from '../utils/commercialPackages';
 
 export const sharedLicenseStatuses: {
   [packageName in MuiCommercialPackageName]?: {
@@ -48,15 +41,11 @@ export function useLicenseVerifier(
       return sharedLicenseStatuses[packageName]!.licenseVerifier;
     }
 
-    const acceptedScopes = extractAcceptedScopes(packageName);
-    const productLine = extractProductLine(packageName);
-
     const plan = packageName.includes('premium') ? 'Premium' : 'Pro';
     const licenseStatus = verifyLicense({
       releaseInfo,
       licenseKey,
-      acceptedScopes,
-      productLine,
+      packageName,
     });
 
     const fullPackageName = `@mui/${packageName}`;
