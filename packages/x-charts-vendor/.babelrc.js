@@ -8,7 +8,7 @@
 const path = require('path');
 
 module.exports = {
-  only: ['node_modules/*/src/**/*.js'],
+  only: ['node_modules/*/src/**/*.js', 'node_modules/*/**/*.js'],
   plugins: [
     [
       '@babel/transform-modules-commonjs',
@@ -23,7 +23,8 @@ module.exports = {
         // Convert all imports for _other_ d3 dependencies to the relative
         // path in our vendor package.
         resolvePath(sourcePath, currentFile) {
-          const d3pattern = /^(?<pkg>(d3-[^\/]+|internmap))(?<path>.*)/;
+          const d3pattern =
+            /^(?<pkg>(d3-[^\/]+|internmap|delaunator|robust-predicates))(?<path>.*)/;
           const match = d3pattern.exec(sourcePath);
           if (match) {
             // We're assuming a common shape of d3 packages:
@@ -34,8 +35,11 @@ module.exports = {
             }
 
             // Get Vendor package path.
-            const vendorPkg = `lib-vendor/${match.groups.pkg}/src/index.js`;
+            const vendorPkg = ['delaunator', 'robust-predicates'].includes(match.groups.pkg)
+              ? `lib-vendor/${match.groups.pkg}/index.js`
+              : `lib-vendor/${match.groups.pkg}/src/index.js`;
 
+            console.log({ vendorPkg });
             // Derive relative path to vendor lib to have a file like move from:
             // - 'node_modules/d3-interpolate/src/rgb.js'
             // - 'lib-vendor/d3-interpolate/src/rgb.js'

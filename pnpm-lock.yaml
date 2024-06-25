@@ -844,6 +844,9 @@ importers:
       '@types/d3-shape':
         specifier: ^3.1.6
         version: 3.1.6
+      '@types/d3-time':
+        specifier: ^3.0.3
+        version: 3.0.3
       d3-color:
         specifier: ^3.1.0
         version: 3.1.0
@@ -859,6 +862,15 @@ importers:
       d3-shape:
         specifier: ^3.2.0
         version: 3.2.0
+      d3-time:
+        specifier: ^3.1.0
+        version: 3.1.0
+      delaunator:
+        specifier: ^5.0.1
+        version: 5.0.1
+      robust-predicates:
+        specifier: ^3.0.2
+        version: 3.0.2
     devDependencies:
       '@types/d3-array':
         specifier: ^3.0.3

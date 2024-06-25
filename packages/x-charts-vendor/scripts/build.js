@@ -60,7 +60,7 @@ const main = async () => {
 
   // Get d3-related packages we want to vendor.
   const pkgs = (await fs.readdir(path.resolve(__dirname, '../node_modules/'))).filter((name) =>
-    /^(d3-|internmap)/.test(name),
+    /^(d3-|internmap|delaunator|robust-predicates)/.test(name),
   );
 
   // Safety check: we assume that **all** are flattened to root level of this
@@ -116,7 +116,11 @@ const main = async () => {
     await Promise.all([
       fs.writeFile(path.join(EsmBasePath, `${pkgName}.js`), getEsmIndex(pkg)),
       fs.writeFile(path.join(CjsBasePath, `${pkgName}.js`), getCjsIndex(pkg)),
-      fs.copyFile(path.join(pkgBase, 'LICENSE'), path.join(libVendorPath, 'LICENSE')),
+      fs
+        .copyFile(path.join(pkgBase, 'LICENSE'), path.join(libVendorPath, 'LICENSE'))
+        .catch((error) => {
+          // The package has no license file
+        }),
       // Root hack file for non package.json:exports systems
       VENDOR_PKGS.has(pkgName) &&
         fs.writeFile(path.resolve(__dirname, `../${pkgName}.js`), getCjsRootIndex(pkg)),

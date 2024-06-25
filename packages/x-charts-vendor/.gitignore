@@ -1,5 +1,7 @@
 /lib-vendor
 /d3-*
+/delaunator.*
+/robust-predicates.*
 /internmap.js
 /es
 /lib
