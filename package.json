@@ -105,7 +105,7 @@
     "@types/karma": "^6.3.8",
     "@types/lodash": "^4.17.5",
     "@types/mocha": "^10.0.6",
-    "@types/node": "^18.19.34",
+    "@types/node": "^18.19.39",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/react-test-renderer": "^18.3.0",
@@ -141,12 +141,12 @@
     "eslint-import-resolver-webpack": "^0.13.8",
     "eslint-plugin-filenames": "^1.3.2",
     "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-jsdoc": "^48.2.12",
+    "eslint-plugin-jsdoc": "^48.4.0",
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-material-ui": "workspace:^",
     "eslint-plugin-mocha": "^10.4.3",
     "eslint-plugin-prettier": "^5.1.3",
-    "eslint-plugin-react": "^7.34.2",
+    "eslint-plugin-react": "^7.34.3",
     "eslint-plugin-react-compiler": "0.0.0-experimental-51a85ea-20240601",
     "eslint-plugin-react-hooks": "^4.6.2",
     "fast-glob": "^3.3.2",
@@ -184,7 +184,7 @@
     "stream-browserify": "^3.0.0",
     "string-replace-loader": "^3.1.0",
     "terser-webpack-plugin": "^5.3.10",
-    "tsx": "^4.15.5",
+    "tsx": "^4.15.7",
     "typescript": "^5.4.5",
     "unist-util-visit": "^2.0.3",
     "util": "^0.12.5",
@@ -195,7 +195,7 @@
   },
   "resolutions": {
     "react-is": "^18.3.1",
-    "@types/node": "^18.19.34"
+    "@types/node": "^18.19.39"
   },
   "packageManager": "pnpm@9.4.0",
   "engines": {
