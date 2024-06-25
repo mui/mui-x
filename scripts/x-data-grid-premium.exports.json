@@ -16,6 +16,7 @@
   { "name": "checkGridRowIdIsValid", "kind": "Function" },
   { "name": "ColumnHeaderFilterIconButtonProps", "kind": "Interface" },
   { "name": "ColumnHeaderFilterIconButtonPropsOverrides", "kind": "Interface" },
+  { "name": "ColumnHeaderSortIconPropsOverrides", "kind": "Interface" },
   { "name": "ColumnMenuPropsOverrides", "kind": "Interface" },
   { "name": "ColumnsManagementPropsOverrides", "kind": "Interface" },
   { "name": "ColumnsPanelPropsOverrides", "kind": "Interface" },

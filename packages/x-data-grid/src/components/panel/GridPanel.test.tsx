@@ -40,17 +40,6 @@ describe('<GridPanel />', () => {
           {node}
         </Wrapper>,
       ),
-    wrapMount:
-      (baseMount: (node: React.ReactElement) => import('enzyme').ReactWrapper) =>
-      (node: React.ReactNode) => {
-        const wrapper = baseMount(
-          <Wrapper>
-            <div data-id="gridPanelAnchor" />
-            <span>{node}</span>
-          </Wrapper>,
-        );
-        return wrapper.find('span').childAt(0);
-      },
     refInstanceof: window.HTMLDivElement,
     only: ['mergeClassName', 'propsSpread', 'refForwarding', 'rootClass'],
   }));
