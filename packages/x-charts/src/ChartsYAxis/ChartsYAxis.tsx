@@ -74,6 +74,8 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   } = defaultizedProps;
 
   const theme = useTheme();
+  const isRTL = theme.direction === 'rtl';
+
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
 
   const { left, top, width, height } = useDrawingArea();
@@ -101,13 +103,14 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   const TickLabel = slots?.axisTickLabel ?? ChartsText;
   const Label = slots?.axisLabel ?? ChartsText;
 
+  const revertAnchor = (!isRTL && position === 'right') || (isRTL && position !== 'right');
   const axisTickLabelProps = useSlotProps({
     elementType: TickLabel,
     externalSlotProps: slotProps?.axisTickLabel,
     additionalProps: {
       style: {
         fontSize: tickFontSize,
-        textAnchor: position === 'right' ? 'start' : 'end',
+        textAnchor: revertAnchor ? 'start' : 'end',
         dominantBaseline: 'central',
         ...tickLabelStyle,
       },
