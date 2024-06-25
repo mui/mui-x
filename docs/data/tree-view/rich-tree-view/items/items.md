@@ -119,14 +119,6 @@ Otherwise, the Tree View will re-generate its entire structure.
 This can be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
 :::
 
-## Virtualization [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
-
-:::warning
-This is only a POC
-:::
-
-{{"demo": "Virtualization.js"}}
-
 ### Focus disabled items
 
 Use the `disabledItemsFocusable` prop to control if disabled Tree Items can be focused.
@@ -150,6 +142,16 @@ When it's set to true:
 - Programmatic focus will focus disabled items.
 
 {{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}
+
+## Virtualization [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+:::warning
+This is only a POC:
+- Dragging the scrollbar does not scroll to the scroll to the right element
+- The DOM structure is flat and not nested
+:::
+
+{{"demo": "Virtualization.js"}}
 
 ## Imperative API
 
