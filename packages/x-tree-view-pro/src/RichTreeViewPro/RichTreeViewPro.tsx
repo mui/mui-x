@@ -87,7 +87,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     props,
   });
 
-  const { slots, slotProps, enableVirtualization } = props;
+  const { slots, slotProps } = props;
   const classes = useUtilityClasses(props);
 
   const Root = slots?.root ?? RichTreeViewProRoot;
@@ -101,7 +101,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
 
   return (
     <TreeViewProvider value={contextValue}>
-      {enableVirtualization ? (
+      {contextValue.virtualization.enabled ? (
         <TreeViewVirtualScroller
           {...rootProps}
           slots={{ ...slots, root: Root }}

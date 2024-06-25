@@ -56,6 +56,7 @@ export interface UseTreeViewVirtualizationContextValue {
     UseTreeViewVirtualizationDefaultizedParameters,
     'scrollBufferPx' | 'itemsHeight'
   > & {
+    enabled: boolean;
     virtualScrollerRef: React.RefObject<HTMLDivElement>;
   };
 }

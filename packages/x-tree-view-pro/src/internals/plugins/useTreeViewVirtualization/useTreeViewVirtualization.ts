@@ -161,6 +161,7 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
     },
     contextValue: {
       virtualization: {
+        enabled: experimentalFeatures.virtualization,
         virtualScrollerRef,
         scrollBufferPx: params.scrollBufferPx,
         itemsHeight: params.itemsHeight,
