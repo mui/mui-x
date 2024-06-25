@@ -4,6 +4,7 @@ import {
   getColumnHeaderCell,
   getColumnHeadersTextContent,
   getColumnValues,
+  getRow,
 } from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';
@@ -722,6 +723,40 @@ describe('<DataGridPro /> - Tree data', () => {
         'A.B',
         'A.A',
       ]);
+    });
+  });
+
+  describe('accessibility', () => {
+    it('should add necessary treegrid aria attributes to the rows', () => {
+      render(<Test defaultGroupingExpansionDepth={2} />);
+
+      expect(getRow(0).getAttribute('aria-level')).to.equal('1'); // A
+      expect(getRow(1).getAttribute('aria-level')).to.equal('2'); // A.A
+      expect(getRow(1).getAttribute('aria-posinset')).to.equal('1');
+      expect(getRow(1).getAttribute('aria-setsize')).to.equal('2');
+      expect(getRow(2).getAttribute('aria-level')).to.equal('2'); // A.B
+    });
+
+    it('should adjust treegrid aria attributes after filtering', () => {
+      render(
+        <Test
+          defaultGroupingExpansionDepth={2}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [],
+                quickFilterValues: ['B'],
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(getRow(0).getAttribute('aria-level')).to.equal('1'); // A
+      expect(getRow(1).getAttribute('aria-level')).to.equal('2'); // A.B
+      expect(getRow(1).getAttribute('aria-posinset')).to.equal('1');
+      expect(getRow(1).getAttribute('aria-setsize')).to.equal('1'); // A.A is filtered out, set size is now 1
+      expect(getRow(2).getAttribute('aria-level')).to.equal('1'); // B
     });
   });
 
