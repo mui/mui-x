@@ -3,14 +3,6 @@ import { useDrawingArea, useSvgRef } from '@mui/x-charts/hooks';
 import { getSVGPoint } from '@mui/x-charts/internals';
 import { useZoom } from './useZoom';
 
-const isTrackPad = (e: WheelEvent): boolean => {
-  const { deltaY } = e;
-  if (deltaY && !Number.isInteger(deltaY)) {
-    return false;
-  }
-  return true;
-};
-
 const MAX_RANGE = 100;
 const MIN_RANGE = 0;
 
@@ -212,14 +204,29 @@ function isSpanValid(minRange: number, maxRange: number, isZoomIn: boolean) {
   return true;
 }
 
+function getMultiplier(event: WheelEvent) {
+  const ctrlMultiplier = event.ctrlKey ? 3 : 1;
+
+  // DeltaMode: 0 is pixel, 1 is line, 2 is page
+  // This is defined by the browser.
+  if (event.deltaMode === 1) {
+    return 1 * ctrlMultiplier;
+  }
+  if (event.deltaMode) {
+    return 10 * ctrlMultiplier;
+  }
+  return 0.2 * ctrlMultiplier;
+}
+
 /**
  * Get the scale ratio and if it's a zoom in or out from a wheel event.
  */
 function getWheelScaleRatio(event: WheelEvent, step: number) {
   const deltaY = event.deltaY;
-  const multiplier = isTrackPad(event) ? 1 : 10;
-  const scaledStep = (step * multiplier) / 1000;
-  const scaleRatio = deltaY < 0 ? 1 - scaledStep : 1 + scaledStep;
+  const multiplier = getMultiplier(event);
+  const scaledStep = (step * multiplier * deltaY) / 1000;
+  // Clamp the scale ratio between 0.1 and 1.9 so that the zoom is not too big or too small.
+  const scaleRatio = Math.min(Math.max(1 + scaledStep, 0.1), 1.9);
   const isZoomIn = deltaY > 0;
   return { scaleRatio, isZoomIn };
 }
