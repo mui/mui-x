@@ -178,7 +178,7 @@ export function verifyLicense({
     return { status: LICENSE_STATUS.Invalid };
   }
 
-  if (license.planVersion === 'initial') {
+  if (license.planVersion === 'initial' && license.scope === 'pro') {
     // 'charts-pro' or 'tree-view-pro' can only be used with a newer license
     if (productScope === 'charts' || productScope === 'tree-view') {
       return { status: LICENSE_STATUS.NotAvailableInInitialProPlan };
