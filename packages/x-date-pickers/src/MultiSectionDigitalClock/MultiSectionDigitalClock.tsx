@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
@@ -62,6 +63,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
   TDate extends PickerValidDate,
 >(inProps: MultiSectionDigitalClockProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const utils = useUtils<TDate>();
+  const isRtl = useRtl();
 
   const props = useThemeProps({
     props: inProps,
@@ -389,6 +391,18 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     ],
   );
 
+  const viewsToRender = React.useMemo(() => {
+    if (!isRtl) {
+      return views;
+    }
+    const digitViews = views.filter((v) => v !== 'meridiem');
+    const result = digitViews.toReversed();
+    if (views.includes('meridiem')) {
+      result.push('meridiem');
+    }
+    return result;
+  }, [isRtl, views]);
+
   const viewTimeOptions = React.useMemo(() => {
     return views.reduce(
       (result, currentView) => {
@@ -409,11 +423,11 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
       role="group"
       {...other}
     >
-      {Object.entries(viewTimeOptions).map(([timeView, viewOptions]) => (
+      {viewsToRender.map((timeView) => (
         <MultiSectionDigitalClockSection
           key={timeView}
-          items={viewOptions.items}
-          onChange={viewOptions.onChange}
+          items={viewTimeOptions[timeView].items}
+          onChange={viewTimeOptions[timeView].onChange}
           active={view === timeView}
           autoFocus={autoFocus ?? focusedView === timeView}
           disabled={disabled}
@@ -421,7 +435,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           slots={slots}
           slotProps={slotProps}
           skipDisabled={skipDisabled}
-          aria-label={localeText.selectViewText(timeView as TimeViewWithMeridiem)}
+          aria-label={localeText.selectViewText(timeView)}
         />
       ))}
     </MultiSectionDigitalClockRoot>

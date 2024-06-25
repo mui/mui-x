@@ -13,12 +13,6 @@ describe('<TreeItem2 />', () => {
   describeConformance(<TreeItem2 itemId="one" label="one" />, () => ({
     classes,
     inheritComponent: 'li',
-    wrapMount: (mount) => (item: React.ReactNode) => {
-      const wrapper = mount(
-        <TreeViewContext.Provider value={getFakeContextValue()}>{item}</TreeViewContext.Provider>,
-      );
-      return wrapper.childAt(0);
-    },
     render: (item) => {
       return render(
         <TreeViewContext.Provider value={getFakeContextValue()}>{item}</TreeViewContext.Provider>,
