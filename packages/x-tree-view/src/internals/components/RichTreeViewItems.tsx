@@ -59,8 +59,6 @@ function WrappedTreeItem({
 export function RichTreeViewItems(props: RichTreeViewItemsProps) {
   const { itemsToRender, slots, slotProps } = props;
 
-  console.log(itemsToRender);
-
   const renderItem = ({ label, itemId, id, children }: TreeViewItemToRenderProps) => {
     return (
       <WrappedTreeItem
