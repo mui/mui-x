@@ -3,12 +3,7 @@ import { expect } from 'chai';
 import { isWeekend } from 'date-fns';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { screen } from '@mui/internal-test-utils';
-import {
-  wrapPickerMount,
-  createPickerRenderer,
-  adapterToUse,
-  describeRangeValidation,
-} from 'test/utils/pickers';
+import { createPickerRenderer, adapterToUse, describeRangeValidation } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<StaticDateRangePicker />', () => {
@@ -21,7 +16,6 @@ describe('<StaticDateRangePicker />', () => {
     classes: {} as any,
     render,
     muiName: 'MuiStaticDateRangePicker',
-    wrapMount: wrapPickerMount,
     refInstanceof: undefined,
     skip: [
       'componentProp',
