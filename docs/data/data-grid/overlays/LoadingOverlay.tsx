@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-export default function NoRowsOverlay() {
+export default function LoadingOverlay() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 6,
