@@ -146,7 +146,7 @@ When it's set to true:
 ## Virtualization [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 :::warning
-This is only a POC, for now the DOM structure is flat and not nested
+This is only a POC, a lot of the behaviors are potentially broken.
 :::
 
 {{"demo": "Virtualization.js"}}
