@@ -66,7 +66,7 @@
     "clean:node_modules": "rimraf --glob \"**/node_modules\""
   },
   "devDependencies": {
-    "@argos-ci/core": "^2.2.0",
+    "@argos-ci/core": "^2.3.0",
     "@babel/cli": "^7.24.7",
     "@babel/core": "^7.24.7",
     "@babel/node": "^7.24.7",
