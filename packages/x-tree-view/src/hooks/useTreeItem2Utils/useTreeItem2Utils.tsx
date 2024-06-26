@@ -49,6 +49,9 @@ const isItemExpandable = (reactChildren: React.ReactNode) => {
   return Boolean(reactChildren);
 };
 
+/**
+ * Plugins that need to be present in the Tree View in order for `useTreeItem2Utils` to work correctly.
+ */
 type UseTreeItem2UtilsMinimalPlugins = readonly [
   UseTreeViewSelectionSignature,
   UseTreeViewExpansionSignature,
@@ -56,6 +59,11 @@ type UseTreeItem2UtilsMinimalPlugins = readonly [
   UseTreeViewFocusSignature,
   UseTreeViewLabelSignature,
 ];
+
+/**
+ * Plugins that `useTreeItem2Utils` can use if they are present, but are not required.
+ */
+export type UseTreeItem2UtilsOptionalPlugins = readonly [];
 
 export const useTreeItem2Utils = ({
   itemId,
@@ -69,7 +77,7 @@ export const useTreeItem2Utils = ({
   const {
     instance,
     selection: { multiSelect },
-  } = useTreeViewContext<UseTreeItem2UtilsMinimalPlugins>();
+  } = useTreeViewContext<UseTreeItem2UtilsMinimalPlugins, UseTreeItem2UtilsOptionalPlugins>();
 
   const { labelInputValue, setLabelInputValue, resetLabelInputValue } = useTreeItemLabelInput(
     label as string,

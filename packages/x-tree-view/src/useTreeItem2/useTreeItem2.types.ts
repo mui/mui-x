@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { TreeViewItemId } from '../models';
 import { MuiCancellableEventHandler } from '../internals/models/MuiCancellableEvent';
-import { TreeViewAnyPluginSignature, TreeViewPublicAPI } from '../internals/models';
+import { TreeViewPublicAPI } from '../internals/models';
 import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
 import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
-import { UseTreeViewIdSignature } from '../internals/plugins/useTreeViewId';
 import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
 import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
 import { UseTreeViewLabelSignature } from '../internals/plugins/useTreeViewLabel';
-import { UseTreeViewExpansionSignature } from '../internals';
+import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
 
 export interface UseTreeItem2Parameters {
   /**
@@ -71,7 +70,9 @@ export interface UseTreeItem2ContentSlotOwnProps {
 export type UseTreeItem2ContentSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItem2ContentSlotOwnProps;
 
-export interface UseTreeItem2IconContainerSlotOwnProps {}
+export interface UseTreeItem2IconContainerSlotOwnProps {
+  onClick: MuiCancellableEventHandler<React.MouseEvent>;
+}
 
 export type UseTreeItemIconContainerSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItem2IconContainerSlotOwnProps;
@@ -123,7 +124,8 @@ export interface UseTreeItem2Status {
 }
 
 export interface UseTreeItem2ReturnValue<
-  TSignatures extends readonly TreeViewAnyPluginSignature[],
+  TSignatures extends UseTreeItem2MinimalPlugins,
+  TOptionalSignatures extends UseTreeItem2OptionalPlugins,
 > {
   /**
    * Resolver for the root slot's props.
@@ -192,15 +194,22 @@ export interface UseTreeItem2ReturnValue<
   /**
    * The object the allows Tree View manipulation.
    */
-  publicAPI: TreeViewPublicAPI<TSignatures>;
+  publicAPI: TreeViewPublicAPI<TSignatures, TOptionalSignatures>;
 }
 
+/**
+ * Plugins that need to be present in the Tree View in order for `useTreeItem2` to work correctly.
+ */
 export type UseTreeItem2MinimalPlugins = readonly [
   UseTreeViewSelectionSignature,
   UseTreeViewExpansionSignature,
   UseTreeViewItemsSignature,
-  UseTreeViewIdSignature,
   UseTreeViewFocusSignature,
   UseTreeViewKeyboardNavigationSignature,
   UseTreeViewLabelSignature,
 ];
+
+/**
+ * Plugins that `useTreeItem2` can use if they are present, but are not required.
+ */
+export type UseTreeItem2OptionalPlugins = readonly [];

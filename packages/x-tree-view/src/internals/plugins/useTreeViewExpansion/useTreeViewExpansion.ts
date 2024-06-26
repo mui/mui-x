@@ -83,16 +83,16 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     }
   };
 
-  const getExpansionTrigger = () => {
-    if (instance.isTreeViewEditable) {
-      return 'iconContainer';
-    }
+  const expansionTrigger = React.useMemo(() => {
     if (params.expansionTrigger) {
       return params.expansionTrigger;
     }
+    if (instance.isTreeViewEditable) {
+      return 'iconContainer';
+    }
 
     return 'content';
-  };
+  }, [params.expansionTrigger]);
 
   return {
     publicAPI: {
@@ -107,7 +107,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     },
     contextValue: {
       expansion: {
-        expansionTrigger: getExpansionTrigger(),
+        expansionTrigger,
       },
     },
   };

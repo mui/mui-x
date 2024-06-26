@@ -140,7 +140,7 @@ TreeView.propTypes = {
    */
   expandedItems: PropTypes.arrayOf(PropTypes.string),
   /**
-   * The slot that triggers the item's expansion on click.
+   * The slot that triggers the item's expansion when clicked.
    * @default 'content'
    */
   expansionTrigger: PropTypes.oneOf(['content', 'iconContainer']),

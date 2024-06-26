@@ -1,4 +1,4 @@
-import { useTreeViewId, UseTreeViewIdParameters } from '../internals/plugins/useTreeViewId';
+import { TreeViewCorePluginParameters } from '../internals/corePlugins';
 import {
   useTreeViewItems,
   UseTreeViewItemsParameters,
@@ -27,7 +27,6 @@ import {
 } from '../internals/plugins/useTreeViewLabel';
 
 export const RICH_TREE_VIEW_PLUGINS = [
-  useTreeViewId,
   useTreeViewItems,
   useTreeViewExpansion,
   useTreeViewSelection,
@@ -53,7 +52,7 @@ export type RichTreeViewPluginSlotProps = MergeSignaturesProperty<
 
 // We can't infer this type from the plugin, otherwise we would lose the generics.
 export interface RichTreeViewPluginParameters<R extends {}, Multiple extends boolean | undefined>
-  extends UseTreeViewIdParameters,
+  extends TreeViewCorePluginParameters,
     UseTreeViewItemsParameters<R>,
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,

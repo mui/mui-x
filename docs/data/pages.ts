@@ -87,6 +87,7 @@ const pages: MuiPage[] = [
       },
       { pathname: '/x/react-data-grid/export' },
       { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste', newFeature: true },
+      { pathname: '/x/react-data-grid/overlays', title: 'Overlays' },
       { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
       {
         pathname: '/x/react-data-grid/style-group',
@@ -460,9 +461,9 @@ const pages: MuiPage[] = [
             subheader: 'Future components',
             children: [
               { pathname: '/x/react-charts/radar', planned: true },
-              { pathname: '/x/react-charts/tree-map', title: 'Treemap', planned: true },
+              { pathname: '/x/react-charts/treemap', title: 'Treemap', planned: true },
               {
-                pathname: '/x/react-charts/heat-map',
+                pathname: '/x/react-charts/heatmap',
                 title: 'Heatmap',
                 plan: 'pro',
                 planned: true,

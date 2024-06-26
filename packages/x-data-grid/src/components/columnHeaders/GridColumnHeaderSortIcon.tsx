@@ -11,6 +11,7 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridIconButtonContainer } from './GridIconButtonContainer';
 
 export interface GridColumnHeaderSortIconProps {
+  field: string;
   direction: GridSortDirection;
   index: number | undefined;
   sortingOrder: readonly GridSortDirection[];
@@ -51,7 +52,7 @@ function getIcon(
 }
 
 function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
-  const { direction, index, sortingOrder, disabled } = props;
+  const { direction, index, sortingOrder, disabled, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
@@ -70,6 +71,7 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
       size="small"
       disabled={disabled}
       {...rootProps.slotProps?.baseIconButton}
+      {...other}
     >
       {iconElement}
     </rootProps.slots.baseIconButton>
@@ -78,7 +80,7 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
   return (
     <GridIconButtonContainer>
       {index != null && (
-        <Badge badgeContent={index} color="default">
+        <Badge badgeContent={index} color="default" overlap="circular">
           {iconButton}
         </Badge>
       )}
@@ -97,6 +99,7 @@ GridColumnHeaderSortIconRaw.propTypes = {
   // ----------------------------------------------------------------------
   direction: PropTypes.oneOf(['asc', 'desc']),
   disabled: PropTypes.bool,
+  field: PropTypes.string.isRequired,
   index: PropTypes.number,
   sortingOrder: PropTypes.arrayOf(PropTypes.oneOf(['asc', 'desc'])).isRequired,
 } as any;
