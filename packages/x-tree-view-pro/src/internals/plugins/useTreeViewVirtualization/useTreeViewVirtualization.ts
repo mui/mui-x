@@ -30,6 +30,7 @@ const SHOULD_USE_FLAT_DOM_STRUCTURE = false;
 export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualizationSignature> = ({
   params,
   state,
+  instance,
   rootRef,
   setState,
   experimentalFeatures,
@@ -96,6 +97,7 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
     }
   };
 
+  const isItemExpanded = instance.isItemExpanded;
   const flatItemIds = React.useMemo(() => {
     if (!experimentalFeatures.virtualization) {
       return [];
@@ -104,11 +106,15 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
     const itemOrderedChildrenIds = state.items.itemOrderedChildrenIds;
 
     const addChildrenToItem = (itemId: TreeViewItemId): TreeViewItemId[] => {
-      return [itemId, ...(itemOrderedChildrenIds[itemId] ?? []).flatMap(addChildrenToItem)];
+      if (isItemExpanded(itemId)) {
+        return [itemId, ...(itemOrderedChildrenIds[itemId] ?? []).flatMap(addChildrenToItem)];
+      }
+
+      return [itemId];
     };
 
     return (itemOrderedChildrenIds[TREE_VIEW_ROOT_PARENT_ID] ?? []).flatMap(addChildrenToItem);
-  }, [state.items.itemOrderedChildrenIds, experimentalFeatures.virtualization]);
+  }, [state.items.itemOrderedChildrenIds, experimentalFeatures.virtualization, isItemExpanded]);
 
   const computeRenderContext = React.useCallback(
     (scrollPositionPx: number): UseTreeViewVirtualizationRenderContext => {
