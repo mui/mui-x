@@ -27,6 +27,31 @@ const getRange = (drawingArea: DrawingArea, axisName: 'x' | 'y', isReverse?: boo
   return isReverse ? range.reverse() : range;
 };
 
+const zoomedScaleRange = (scaleRange: [number, number] | number[], zoomRange: [number, number]) => {
+  const rangeGap = scaleRange[1] - scaleRange[0];
+  const rangeMinMultiplier = zoomRange[0] / 100;
+  const rangeMaxMultiplier = (zoomRange[1] - zoomRange[0]) / 100 - rangeMinMultiplier;
+  const min = (scaleRange[0] - rangeGap * rangeMinMultiplier) / (1 - rangeMinMultiplier);
+  const max = (scaleRange[1] + rangeGap * (1 - rangeMaxMultiplier)) / rangeMaxMultiplier;
+  console.table([
+    {
+      mul: rangeMinMultiplier,
+      gap: rangeGap * rangeMinMultiplier,
+      pct: (rangeGap * rangeMinMultiplier) / rangeGap,
+    },
+    {
+      mul: rangeMaxMultiplier,
+      gap: rangeGap * rangeMaxMultiplier,
+      pct: (rangeGap * rangeMaxMultiplier) / rangeGap,
+    },
+  ]);
+  console.table({
+    vals: zoomRange,
+    pct: rangeMaxMultiplier + rangeMinMultiplier,
+  });
+  return [min, max];
+};
+
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 const DEFAULT_BAR_GAP_RATIO = 0.1;
 
@@ -87,19 +112,14 @@ export function computeValue(
       const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
       // Reverse range because ordinal scales are presented from top to bottom on y-axis
       const scaleRange = axisName === 'x' ? range : [range[1], range[0]];
-
-      const rangeGap = scaleRange[1] - scaleRange[0];
-      const rangeMinMultiplier = zoomRange[0] / 100;
-      const rangeMaxMultiplier = zoomRange[1] / 100;
-      const min = (scaleRange[0] - rangeGap * rangeMinMultiplier) / (1 - rangeMinMultiplier);
-      const max = (scaleRange[1] + rangeGap * (1 - rangeMaxMultiplier)) / rangeMaxMultiplier;
+      const zoomedRange = zoomedScaleRange(scaleRange, zoomRange);
 
       // This is a band scale
       completeAxis[axis.id] = {
         categoryGapRatio,
         barGapRatio,
         ...axis,
-        scale: scaleBand(axis.data!, [min, max])
+        scale: scaleBand(axis.data!, zoomedRange)
           .paddingInner(categoryGapRatio)
           .paddingOuter(categoryGapRatio / 2),
         tickNumber: axis.data!.length,
@@ -112,16 +132,11 @@ export function computeValue(
     }
     if (isPointScaleConfig(axis)) {
       const scaleRange = axisName === 'x' ? range : [...range].reverse();
-
-      const rangeGap = scaleRange[1] - scaleRange[0];
-      const rangeMinMultiplier = zoomRange[0] / 100;
-      const rangeMaxMultiplier = zoomRange[1] / 100;
-      const min = (scaleRange[0] - rangeGap * rangeMinMultiplier) / (1 - rangeMinMultiplier);
-      const max = (scaleRange[1] + rangeGap * (1 - rangeMaxMultiplier)) / rangeMaxMultiplier;
+      const zoomedRange = zoomedScaleRange(scaleRange, zoomRange);
 
       completeAxis[axis.id] = {
         ...axis,
-        scale: scalePoint(axis.data!, [min, max]),
+        scale: scalePoint(axis.data!, zoomedRange),
         tickNumber: axis.data!.length,
         colorScale:
           axis.colorMap &&
