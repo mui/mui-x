@@ -30,7 +30,7 @@ const getRange = (drawingArea: DrawingArea, axisName: 'x' | 'y', isReverse?: boo
 const zoomedScaleRange = (scaleRange: [number, number] | number[], zoomRange: [number, number]) => {
   const rangeGap = scaleRange[1] - scaleRange[0];
   const rangeMinMultiplier = zoomRange[0] / 100;
-  const rangeMaxMultiplier = (zoomRange[1] - zoomRange[0]) / 100 - rangeMinMultiplier;
+  const rangeMaxMultiplier = zoomRange[1] / 100;
   const min = (scaleRange[0] - rangeGap * rangeMinMultiplier) / (1 - rangeMinMultiplier);
   const max = (scaleRange[1] + rangeGap * (1 - rangeMaxMultiplier)) / rangeMaxMultiplier;
   console.table([
@@ -114,7 +114,6 @@ export function computeValue(
       const scaleRange = axisName === 'x' ? range : [range[1], range[0]];
       const zoomedRange = zoomedScaleRange(scaleRange, zoomRange);
 
-      // This is a band scale
       completeAxis[axis.id] = {
         categoryGapRatio,
         barGapRatio,
