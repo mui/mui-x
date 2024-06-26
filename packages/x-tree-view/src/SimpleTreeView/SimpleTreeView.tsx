@@ -155,6 +155,11 @@ SimpleTreeView.propTypes = {
    */
   expandedItems: PropTypes.arrayOf(PropTypes.string),
   /**
+   * The slot that triggers the item's expansion when clicked.
+   * @default 'content'
+   */
+  expansionTrigger: PropTypes.oneOf(['content', 'iconContainer']),
+  /**
    * Unstable features, breaking changes might be introduced.
    * For each feature, if the flag is not explicitly set to `true`,
    * the feature will be fully disabled and any property / method call will not have any effect.
