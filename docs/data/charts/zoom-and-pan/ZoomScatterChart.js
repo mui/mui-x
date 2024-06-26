@@ -1,6 +1,26 @@
 import * as React from 'react';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 
+export default function ZoomScatterChart() {
+  return (
+    <ScatterChartPro
+      width={600}
+      height={300}
+      zoom
+      series={[
+        {
+          label: 'Series A',
+          data: data.map((v) => ({ x: v.x1, y: v.y1, id: v.id })),
+        },
+        {
+          label: 'Series B',
+          data: data.map((v) => ({ x: v.x1, y: v.y2, id: v.id })),
+        },
+      ]}
+    />
+  );
+}
+
 const data = [
   {
     id: 'data-0',
@@ -164,23 +184,3 @@ const data = [
     y2: 488.06,
   },
 ];
-
-export default function ZoomScatterChart() {
-  return (
-    <ScatterChartPro
-      width={600}
-      height={300}
-      zoom
-      series={[
-        {
-          label: 'Series A',
-          data: data.map((v) => ({ x: v.x1, y: v.y1, id: v.id })),
-        },
-        {
-          label: 'Series B',
-          data: data.map((v) => ({ x: v.x1, y: v.y2, id: v.id })),
-        },
-      ]}
-    />
-  );
-}
