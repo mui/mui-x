@@ -21,9 +21,9 @@ function isLicenseScopeSufficient(
   licenseScope: LicenseScope,
 ) {
   let acceptedScopes: LicenseScope[];
-  if (packageName.includes('pro')) {
+  if (packageName.includes('-pro')) {
     acceptedScopes = ['pro', 'premium'];
-  } else if (packageName.includes('premium')) {
+  } else if (packageName.includes(-'premium')) {
     acceptedScopes = ['premium'];
   } else {
     acceptedScopes = [];
