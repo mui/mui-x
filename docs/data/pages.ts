@@ -87,8 +87,8 @@ const pages: MuiPage[] = [
       },
       { pathname: '/x/react-data-grid/export' },
       { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste', newFeature: true },
-      { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
       { pathname: '/x/react-data-grid/overlays', title: 'Overlays' },
+      { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
       {
         pathname: '/x/react-data-grid/style-group',
         title: 'Style',

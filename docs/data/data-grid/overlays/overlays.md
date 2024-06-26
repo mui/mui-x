@@ -21,9 +21,28 @@ The type of loading overlay to display can be set via `slotProps.loadingOverlay`
 - `variant`: when `loading` and there are rows in the table.
 - `noRowsVariant`: when `loading` and there are not any rows in the table.
 
-In the following demo, we are showing a skeleton overlay when there are no rows, and a linear progress bar when more are loading:
+```tsx
+<DataGrid
+  {...data}
+  loading
+  slotProps={{
+    loadingOverlay: {
+      variant: 'linear-progress',
+      noRowsVariant: 'skeleton',
+    },
+  }}
+/>
+```
+
+Use the demo below to try out the different variants. You can toggle whether there are rows in the table or not with the _Rows_ switch; unchecking it will let you preview the selected `noRowsVariant`.
 
 {{"demo": "LoadingOverlayVariants.js", "bg": "inline"}}
+
+### Custom component
+
+If you want to customize the no rows overlay, a component can be passed to the `loadingOverlay` slot. In the following demo, a [LinearProgress](/material-ui/react-progress/#linear) component is rendered in place of the default circular loading spinner.
+
+{{"demo": "LoadingOverlayCustom.js", "bg": "inline"}}
 
 ## No rows overlay
 
@@ -31,15 +50,23 @@ The no rows overlay is displayed when the data grid has no rows.
 
 {{"demo": "NoRowsOverlay.js", "bg": "inline"}}
 
+### Custom component
+
+If you want to customize the no rows overlay, a component can be passed to the `noRowsOverlay` slot and rendered in place. In the following demo, an illustration is added on top of the default "No rows" message.
+
+{{"demo": "NoRowsOverlayCustom.js", "bg": "inline"}}
+
 ## No results overlay
 
 The no results overlay is displayed when the data grid has no results after filtering.
 
 {{"demo": "NoResultsOverlay.js", "bg": "inline"}}
 
-## Custom overlays
+### Custom component
 
-You can customize the rendering of the overlays as shown in [the component section](/x/react-data-grid/components/#component-slots) of the documentation.
+If you want to customize the no results overlay, a component can be passed to the `noResults` slot and rendered in place. In the following demo, an illustration is added on top of the default "No results found" message.
+
+{{"demo": "NoResultsOverlayCustom.js", "bg": "inline"}}
 
 ## API
 

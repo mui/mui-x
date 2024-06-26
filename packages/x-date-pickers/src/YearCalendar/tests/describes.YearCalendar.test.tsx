@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import { userEvent, screen } from '@mui/internal-test-utils';
 import { YearCalendar, yearCalendarClasses as classes } from '@mui/x-date-pickers/YearCalendar';
 import {
-  wrapPickerMount,
   createPickerRenderer,
   adapterToUse,
   describeValidation,
@@ -26,7 +25,6 @@ describe('<YearCalendar /> - Describes', () => {
   describeConformance(<YearCalendar defaultValue={adapterToUse.date()} />, () => ({
     classes,
     inheritComponent: 'div',
-    wrapMount: wrapPickerMount,
     render,
     muiName: 'MuiYearCalendar',
     refInstanceof: window.HTMLDivElement,
