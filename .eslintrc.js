@@ -139,6 +139,17 @@ module.exports = {
     ...(ENABLE_REACT_COMPILER_PLUGIN ? { 'react-compiler/react-compiler': 'error' } : {}),
     // TODO move to @mui/monorepo/.eslintrc, codebase is moving away from default exports
     'import/prefer-default-export': 'off',
+    'import/no-restricted-paths': [
+      'error',
+      {
+        zones: [
+          {
+            target: './packages/x-charts/src/**',
+            from: './packages/x-charts/src/internals/index.ts',
+          },
+        ],
+      },
+    ],
     // TODO move rule into the main repo once it has upgraded
     '@typescript-eslint/return-await': 'off',
     'no-restricted-imports': 'off',
@@ -167,7 +178,7 @@ module.exports = {
     // TODO move to @mui/monorepo/.eslintrc
     // TODO Fix <Input> props names to not conflict
     'react/jsx-no-duplicate-props': [1, { ignoreCase: false }],
-    // TOOD move to @mui/monorepo/.eslintrc, these are false positive
+    // TODO move to @mui/monorepo/.eslintrc, these are false positive
     'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
   },
   overrides: [
