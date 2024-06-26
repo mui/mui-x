@@ -305,7 +305,6 @@
   { "name": "GridExceljsProcessInput", "kind": "Interface" },
   { "name": "gridExpandedRowCountSelector", "kind": "Variable" },
   { "name": "gridExpandedSortedRowEntriesSelector", "kind": "Variable" },
-  { "name": "gridExpandedSortedRowIdsLookupSelector", "kind": "Variable" },
   { "name": "gridExpandedSortedRowIdsSelector", "kind": "Variable" },
   { "name": "GridExpandMoreIcon", "kind": "Variable" },
   { "name": "GridExperimentalPremiumFeatures", "kind": "Interface" },
