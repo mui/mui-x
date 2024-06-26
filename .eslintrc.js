@@ -1,6 +1,19 @@
 const baseline = require('@mui/monorepo/.eslintrc');
 const path = require('path');
 
+const chartsPackages = ['x-charts', 'x-charts-pro'];
+
+const dataGridPackages = [
+  'x-data-grid',
+  'x-data-grid-pro',
+  'x-data-grid-premium',
+  'x-data-grid-generator',
+];
+
+const datePickersPackages = ['x-date-pickers', 'x-date-pickers-pro'];
+
+const treeViewPackages = ['x-tree-view', 'x-tree-view-pro'];
+
 // Enable React Compiler Plugin rules globally
 const ENABLE_REACT_COMPILER_PLUGIN = process.env.ENABLE_REACT_COMPILER_PLUGIN ?? false;
 
@@ -142,12 +155,13 @@ module.exports = {
     'import/no-restricted-paths': [
       'error',
       {
-        zones: [
-          {
-            target: './packages/x-charts/src/**',
-            from: './packages/x-charts/src/internals/index.ts',
-          },
-        ],
+        zones: [...chartsPackages, ...datePickersPackages, ...treeViewPackages].map(
+          (packageName) => ({
+            target: `./packages/${packageName}/src/**/!(*.test.*|*.spec.*)`,
+            from: `./packages/${packageName}/src/internals/index.ts`,
+            message: `Use a more specific import instead. E.g. import { MyInternal } from '../internals/MyInternal';`,
+          }),
+        ),
       },
     ],
     // TODO move rule into the main repo once it has upgraded
@@ -268,18 +282,9 @@ module.exports = {
     ...buildPackageRestrictedImports('@mui/x-tree-view-pro', 'x-tree-view-pro', false),
     ...buildPackageRestrictedImports('@mui/x-license', 'x-license'),
 
-    ...addReactCompilerRule(['x-charts', 'x-charts-pro'], ENABLE_REACT_COMPILER_PLUGIN_CHARTS),
-    ...addReactCompilerRule(
-      ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium', 'x-data-grid-generator'],
-      ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID,
-    ),
-    ...addReactCompilerRule(
-      ['x-date-pickers', 'x-date-pickers-pro'],
-      ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS,
-    ),
-    ...addReactCompilerRule(
-      ['x-tree-view', 'x-tree-view-pro'],
-      ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW,
-    ),
+    ...addReactCompilerRule(chartsPackages, ENABLE_REACT_COMPILER_PLUGIN_CHARTS),
+    ...addReactCompilerRule(dataGridPackages, ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID),
+    ...addReactCompilerRule(datePickersPackages, ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS),
+    ...addReactCompilerRule(treeViewPackages, ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW),
   ],
 };
