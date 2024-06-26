@@ -6,16 +6,6 @@ type ZoomProviderProps = {
 };
 
 export function ZoomProvider({ children }: ZoomProviderProps) {
-  const prevContext = React.useContext(ZoomContext);
-
-  if (prevContext.isInitialized) {
-    return children;
-  }
-
-  return <ZoomProviderReal>{children}</ZoomProviderReal>;
-}
-
-function ZoomProviderReal({ children }: ZoomProviderProps) {
   const [zoomRange, setZoomRange] = React.useState<[number, number]>([0, 100]);
   const [isInteracting, setIsInteracting] = React.useState<boolean>(false);
 

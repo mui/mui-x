@@ -15,7 +15,10 @@ import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
 import { useZoom } from '../context/ZoomProvider/useZoom';
 
 export interface BarChartProProps extends BarChartProps {
-  // TODO: Add zoom props
+  /**
+   * If `true`, the chart will be zoomable.
+   */
+  zoom?: boolean;
 }
 
 /**
@@ -59,7 +62,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(props: BarChartProProp
       <ChartsAxisHighlight {...axisHighlightProps} />
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       <ChartsClipPath {...clipPathProps} />
-      <ZoomSetup />
+      {props.zoom && <ZoomSetup />}
       {children}
     </ResponsiveChartContainerPro>
   );

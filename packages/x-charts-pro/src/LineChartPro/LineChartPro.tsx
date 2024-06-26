@@ -21,7 +21,10 @@ import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
 import { useZoom } from '../context/ZoomProvider/useZoom';
 
 export interface LineChartProProps extends LineChartProps {
-  // TODO: Add zoom props
+  /**
+   * If `true`, the chart will be zoomable.
+   */
+  zoom?: boolean;
 }
 
 /**
@@ -70,7 +73,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(props: LineChartProP
       <ChartsLegend {...legendProps} />
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       <ChartsClipPath {...clipPathProps} />
-      <ZoomSetup />
+      {props.zoom && <ZoomSetup />}
       {children}
     </ResponsiveChartContainerPro>
   );
