@@ -1,22 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridRow as DataGridRow, GridRowProps } from '@mui/x-data-grid';
-import { useGridPrivateApiContext } from '@mui/x-data-grid/internals';
-import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { GridRowPro, GridTreeNodeWithParent } from './GridProRow';
+import { useGridRowAriaAttributes } from '../hooks/utils/useGridRowAriaAttributes';
 
 function GridRow(props: GridRowProps) {
   const { rowId } = props;
 
-  const apiRef = useGridPrivateApiContext();
-  const rootProps = useGridRootProps();
-  const rowNode = apiRef.current.getRowNode(rowId);
+  const { getGridRowAriaAttributes } = useGridRowAriaAttributes();
+  const ariaAttributes = getGridRowAriaAttributes(rowId);
 
-  return rootProps.treeData !== true || rowNode === null || rowNode.parent === null ? (
-    <DataGridRow {...props} />
-  ) : (
-    <GridRowPro {...props} rowNode={rowNode as GridTreeNodeWithParent} />
-  );
+  return <DataGridRow {...ariaAttributes} {...props} />;
 }
 
 GridRow.propTypes = {
