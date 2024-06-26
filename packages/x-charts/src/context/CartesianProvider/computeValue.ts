@@ -29,26 +29,13 @@ const getRange = (drawingArea: DrawingArea, axisName: 'x' | 'y', isReverse?: boo
 
 const zoomedScaleRange = (scaleRange: [number, number] | number[], zoomRange: [number, number]) => {
   const rangeGap = scaleRange[1] - scaleRange[0];
-  const rangeMinMultiplier = zoomRange[0] / 100;
-  const rangeMaxMultiplier = zoomRange[1] / 100;
-  const min = (scaleRange[0] - rangeGap * rangeMinMultiplier) / (1 - rangeMinMultiplier);
-  const max = (scaleRange[1] + rangeGap * (1 - rangeMaxMultiplier)) / rangeMaxMultiplier;
-  console.table([
-    {
-      mul: rangeMinMultiplier,
-      gap: rangeGap * rangeMinMultiplier,
-      pct: (rangeGap * rangeMinMultiplier) / rangeGap,
-    },
-    {
-      mul: rangeMaxMultiplier,
-      gap: rangeGap * rangeMaxMultiplier,
-      pct: (rangeGap * rangeMaxMultiplier) / rangeGap,
-    },
-  ]);
-  console.table({
-    vals: zoomRange,
-    pct: rangeMaxMultiplier + rangeMinMultiplier,
-  });
+  const zoomGap = zoomRange[1] - zoomRange[0];
+
+  // If current zoom show the scale between p1 and p2 percents
+  // The range should be extended by adding [0, p1] and [p2, 100] segments
+  const min = scaleRange[0] - (zoomRange[0] * rangeGap) / zoomGap;
+  const max = scaleRange[1] + ((100 - zoomRange[1]) * rangeGap) / zoomGap;
+
   return [min, max];
 };
 

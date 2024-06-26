@@ -23,7 +23,7 @@ export const useSetupPan = () => {
   const svgRef = useSvgRef();
 
   const isDraggingRef = React.useRef(false);
-  const touchStartRef = React.useRef<number | null>(null);
+  const touchStartRef = React.useRef<{ x: number; minX: number; maxX: number } | null>(null);
   const eventCacheRef = React.useRef<PointerEvent[]>([]);
 
   React.useEffect(() => {
@@ -37,10 +37,12 @@ export const useSetupPan = () => {
         return;
       }
 
-      const movementX = event.clientX - (touchStartRef.current ?? 0);
-      touchStartRef.current = event.clientX;
+      if (touchStartRef.current == null) {
+        return;
+      }
 
       const point = getSVGPoint(element, event);
+      const movementX = point.x - touchStartRef.current.x;
 
       if (isPointOutside(point, area)) {
         isDraggingRef.current = false;
@@ -48,8 +50,8 @@ export const useSetupPan = () => {
         return;
       }
 
-      const range = zoomRange;
-      const [min, max] = range;
+      const max = touchStartRef.current.maxX;
+      const min = touchStartRef.current.minX;
       const span = max - min;
 
       let newMinRange = min - (movementX / area.width) * span;
@@ -77,7 +79,13 @@ export const useSetupPan = () => {
       }
       isDraggingRef.current = true;
       setIsInteracting(true);
-      touchStartRef.current = event.clientX;
+
+      const point = getSVGPoint(element, event);
+      touchStartRef.current = {
+        x: point.x,
+        minX: zoomRange[0],
+        maxX: zoomRange[1],
+      };
     };
 
     const handleUp = (event: PointerEvent) => {
