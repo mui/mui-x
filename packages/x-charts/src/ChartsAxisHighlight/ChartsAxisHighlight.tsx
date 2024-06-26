@@ -80,11 +80,12 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
 
   const getXPosition = getValueToPositionMapper(xScale);
   const getYPosition = getValueToPositionMapper(yScale);
+
   return (
     <React.Fragment>
       {xAxisHighlight === 'band' && axis.x !== null && isBandScale(xScale) && (
         <ChartsAxisHighlightPath
-          d={`M ${xScale(axis.x.value)! - (xScale.step() - xScale.bandwidth()) / 2} ${
+          d={`M ${(xScale(axis.x.value) ?? 0) - (xScale.step() - xScale.bandwidth()) / 2} ${
             yScale.range()[0]
           } l ${xScale.step()} 0 l 0 ${
             yScale.range()[1] - yScale.range()[0]
@@ -97,7 +98,7 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
       {yAxisHighlight === 'band' && axis.y !== null && isBandScale(yScale) && (
         <ChartsAxisHighlightPath
           d={`M ${xScale.range()[0]} ${
-            yScale(axis.y.value)! - (yScale.step() - yScale.bandwidth()) / 2
+            (yScale(axis.y.value) ?? 0) - (yScale.step() - yScale.bandwidth()) / 2
           } l 0 ${yScale.step()} l ${
             xScale.range()[1] - xScale.range()[0]
           } 0 l 0 ${-yScale.step()} Z`}
