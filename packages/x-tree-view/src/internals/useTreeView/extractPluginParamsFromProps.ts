@@ -71,6 +71,6 @@ export const extractPluginParamsFromProps = <
     pluginParams: defaultizedPluginParams,
     slots: slots ?? ({} as any),
     slotProps: slotProps ?? ({} as any),
-    experimentalFeatures: experimentalFeatures ?? {},
+    experimentalFeatures: experimentalFeatures ?? ({} as any),
   };
 };
