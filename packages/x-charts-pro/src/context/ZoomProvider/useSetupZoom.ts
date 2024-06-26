@@ -222,7 +222,7 @@ function getMultiplier(event: WheelEvent) {
  * Get the scale ratio and if it's a zoom in or out from a wheel event.
  */
 function getWheelScaleRatio(event: WheelEvent, step: number) {
-  const deltaY = event.deltaY;
+  const deltaY = -event.deltaY;
   const multiplier = getMultiplier(event);
   const scaledStep = (step * multiplier * deltaY) / 1000;
   // Clamp the scale ratio between 0.1 and 1.9 so that the zoom is not too big or too small.
