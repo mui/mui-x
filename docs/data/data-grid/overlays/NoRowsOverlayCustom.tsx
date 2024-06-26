@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
 import { styled } from '@mui/material/styles';
 
 const StyledGridOverlay = styled('div')(({ theme }) => ({
@@ -50,16 +51,22 @@ function CustomNoRowsOverlay() {
   );
 }
 
-export default function AutoHeightOverlayNoSnap() {
+export default function NoRowsOverlayCustom() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+    maxColumns: 6,
+  });
+
   return (
-    <Box sx={{ width: '100%' }}>
+    <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        autoHeight
-        columns={[{ field: 'ID' }, { field: 'First name' }, { field: 'Last name' }]}
+        slots={{
+          noRowsOverlay: CustomNoRowsOverlay,
+        }}
+        {...data}
         rows={[]}
-        slots={{ noRowsOverlay: CustomNoRowsOverlay }}
-        sx={{ '--DataGrid-overlayHeight': '300px' }}
       />
-    </Box>
+    </div>
   );
 }

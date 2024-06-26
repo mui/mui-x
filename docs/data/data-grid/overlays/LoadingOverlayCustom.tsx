@@ -3,7 +3,7 @@ import { DataGrid, GridSlots } from '@mui/x-data-grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-export default function CustomLoadingOverlayGrid() {
+export default function LoadingOverlayCustom() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
