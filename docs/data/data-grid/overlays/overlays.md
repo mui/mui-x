@@ -6,10 +6,6 @@
 
 To display a loading overlay and signify that the data grid is in a loading state, set the `loading` prop to `true`.
 
-{{"demo": "LoadingOverlay.js", "bg": "inline"}}
-
-### Variants
-
 The data grid supports 3 loading overlay variants out of the box:
 
 - `circular-progress` (default): a circular loading spinner.
@@ -34,9 +30,23 @@ The type of loading overlay to display can be set via `slotProps.loadingOverlay`
 />
 ```
 
-Use the demo below to try out the different variants. You can toggle whether there are rows in the table or not with the _Rows_ switch; unchecking it will let you preview the selected `noRowsVariant`.
+### Circular progress
 
-{{"demo": "LoadingOverlayVariants.js", "bg": "inline"}}
+A circular loading spinner, the default loading overlay.
+
+{{"demo": "LoadingOverlay.js", "bg": "inline"}}
+
+### Linear progress
+
+An indeterminate linear progress bar.
+
+{{"demo": "LoadingOverlayLinearProgress.js", "bg": "inline"}}
+
+### Skeleton
+
+An animated placeholder of the data grid.
+
+{{"demo": "LoadingOverlaySkeleton.js", "bg": "inline"}}
 
 ### Custom component
 
