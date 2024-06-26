@@ -21,6 +21,7 @@ import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../utils/cellBorderUtils';
 import { escapeOperandAttributeSelector } from '../utils/domUtils';
+import { GridScrollbarFillerCell } from './GridScrollbarFillerCell';
 
 const SkeletonOverlay = styled('div', {
   name: 'MuiDataGrid',
@@ -132,6 +133,8 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
         const emptyCell = (
           <slots.skeletonCell key={`skeleton-filler-column-${i}`} width={emptyCellWidth} empty />
         );
+        const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
+        const hasScrollbarFiller = isLastColumn && scrollbarWidth !== 0;
 
         if (hasFillerBefore) {
           rowCells.push(emptyCell);
@@ -161,6 +164,10 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
         if (hasFillerAfter) {
           rowCells.push(emptyCell);
         }
+
+        if (hasScrollbarFiller) {
+          rowCells.push(<GridScrollbarFillerCell pinnedRight={pinnedColumns.right.length > 0} />);
+        }
       }
 
       array.push(
@@ -186,6 +193,8 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
     dimensions.columnsTotalWidth,
     dimensions.viewportOuterSize.width,
     dimensions.rowHeight,
+    dimensions.hasScrollY,
+    dimensions.scrollbarSize,
     getPinnedPosition,
     getPinnedStyle,
   ]);
