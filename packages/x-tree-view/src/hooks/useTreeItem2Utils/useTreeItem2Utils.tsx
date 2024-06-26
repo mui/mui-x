@@ -51,7 +51,7 @@ export const useTreeItem2Utils = ({
     selection: { multiSelect },
   } = useTreeViewContext<UseTreeItem2UtilsMinimalPlugins, UseTreeItem2UtilsOptionalPlugins>();
 
-  const itemMeta = instance.getItemMeta(itemId);
+  const itemMeta = instance.getItemMeta?.(itemId);
   const status: UseTreeItem2Status = {
     expandable: itemMeta ? itemMeta.expandable : isItemExpandable(children),
     expanded: instance.isItemExpanded(itemId),

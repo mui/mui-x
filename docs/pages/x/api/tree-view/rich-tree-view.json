@@ -20,7 +20,9 @@
       "type": { "name": "enum", "description": "'content'<br>&#124;&nbsp;'iconContainer'" },
       "default": "'content'"
     },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ indentationAtItemLevel?: bool }" }
+    },
     "getItemId": {
       "type": { "name": "func" },
       "default": "(item) => item.id",

@@ -33,15 +33,6 @@ export type MergeSignaturesProperty<
     : {}
   : {};
 
-export type MergeSignaturesPropertyUnion<
-  TSignatures extends readonly any[],
-  TProperty extends keyof TreeViewAnyPluginSignature,
-> = TSignatures extends readonly [plugin: infer P, ...otherPlugin: infer R]
-  ? P extends TreeViewAnyPluginSignature
-    ? P[TProperty] | MergeSignaturesPropertyUnion<R, TProperty>
-    : never
-  : never;
-
 export type ConvertPluginsIntoSignatures<
   TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
 > = TPlugins extends readonly [plugin: infer TPlugin, ...otherPlugin: infer R]

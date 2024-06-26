@@ -67,9 +67,9 @@ export type TreeViewPluginSignature<
         >;
       }
     : {};
-  experimentalFeatures: T['experimentalFeatures'] extends string
-    ? T['experimentalFeatures']
-    : never;
+  experimentalFeatures: T extends { experimentalFeatures: string }
+    ? { [key in T['experimentalFeatures']]?: boolean }
+    : {};
   dependencies: T extends { dependencies: Array<any> } ? T['dependencies'] : [];
   optionalDependencies: T extends { optionalDependencies: Array<any> }
     ? T['optionalDependencies']

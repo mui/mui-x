@@ -164,7 +164,9 @@ SimpleTreeView.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`,
    * the feature will be fully disabled and any property / method call will not have any effect.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    indentationAtItemLevel: PropTypes.bool,
+  }),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
