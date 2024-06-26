@@ -160,7 +160,8 @@ export function computeValue(
     const scaleType = axis.scaleType ?? ('linear' as const);
 
     const extremums = [axis.min ?? minData, axis.max ?? maxData];
-    const tickNumber = getTickNumber({ ...axis, range, domain: extremums });
+    const tickNumber =
+      getTickNumber({ ...axis, range, domain: extremums }) / ((zoomRange[1] - zoomRange[0]) / 100);
 
     const zoomedRange = zoomedScaleRange(range, zoomRange);
 
