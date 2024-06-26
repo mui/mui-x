@@ -135,8 +135,8 @@ importers:
         specifier: ^4.17.5
         version: 4.17.5
       '@types/mocha':
-        specifier: ^10.0.6
-        version: 10.0.6
+        specifier: ^10.0.7
+        version: 10.0.7
       '@types/node':
         specifier: ^18.19.39
         version: 18.19.39
@@ -327,8 +327,8 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0
       mocha:
-        specifier: ^10.4.0
-        version: 10.4.0
+        specifier: ^10.5.1
+        version: 10.5.1
       moment:
         specifier: ^2.30.1
         version: 2.30.1
@@ -3676,8 +3676,8 @@ packages:
   '@types/minimist@1.2.5':
     resolution: {integrity: sha512-hov8bUuiLiyFPGyFPE1lwWhmzYbirOXQNNo40+y3zow8aFVTeyn3VWL0VFFfdNddA8S4Vf0Tc062rzyNr7Paag==}
 
-  '@types/mocha@10.0.6':
-    resolution: {integrity: sha512-dJvrYWxP/UcXm36Qn36fxhUKu8A/xMRXVT2cliFF1Z7UA9liG5Psj3ezNSZw+5puH2czDXRLcXQxf8JbJt0ejg==}
+  '@types/mocha@10.0.7':
+    resolution: {integrity: sha512-GN8yJ1mNTcFcah/wKEFIJckJx9iJLoMSzWcfRRuxz/Jk+U6KQNnml+etbtxFK8lPjzOw3zp4Ha/kjSst9fsHYw==}
 
   '@types/moment-hijri@2.1.4':
     resolution: {integrity: sha512-pGX1DaSducJDkJAC3q8fCuemow0pzI4oa0iKcspwQNPXuwlI55WRgBVrA6NVi+rf8bZN1qjWVsGdUatrLhZk6Q==}
@@ -7289,8 +7289,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  mocha@10.4.0:
-    resolution: {integrity: sha512-eqhGB8JKapEYcC4ytX/xrzKforgEc3j1pGlAXVy3eRwrtAy5/nIfT1SvgGzfN0XZZxeLq0aQWkOUAmqIJiv+bA==}
+  mocha@10.5.1:
+    resolution: {integrity: sha512-eq5tEnaz2kM9ade8cuGJBMh5fBb9Ih/TB+ddlmPR+wLQmwLhUwa0ovqDlg7OTfKquW0BI7NUcNWX7DH8sC+3gw==}
     engines: {node: '>= 14.0.0'}
     hasBin: true
 
@@ -11217,7 +11217,7 @@ snapshots:
       fs-extra: 11.2.0
       jsdom: 24.1.0
       lodash: 4.17.21
-      mocha: 10.4.0
+      mocha: 10.5.1
       playwright: 1.44.1
       prop-types: 15.8.1
       react: 18.3.1
@@ -12305,7 +12305,7 @@ snapshots:
 
   '@types/minimist@1.2.5': {}
 
-  '@types/mocha@10.0.6': {}
+  '@types/mocha@10.0.7': {}
 
   '@types/moment-hijri@2.1.4':
     dependencies:
@@ -16733,7 +16733,7 @@ snapshots:
 
   mkdirp@1.0.4: {}
 
-  mocha@10.4.0:
+  mocha@10.5.1:
     dependencies:
       ansi-colors: 4.1.1
       browser-stdout: 1.3.1
