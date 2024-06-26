@@ -4,6 +4,8 @@ import { Initializable } from '@mui/x-charts/internals';
 export type ZoomState = {
   zoomRange: [number, number];
   setZoomRange: (range: [number, number]) => void;
+  isInteracting: boolean;
+  setIsInteracting: (isInteracting: boolean) => void;
 };
 
 export const ZoomContext = React.createContext<Initializable<ZoomState>>({
@@ -11,6 +13,8 @@ export const ZoomContext = React.createContext<Initializable<ZoomState>>({
   data: {
     zoomRange: [0, 100],
     setZoomRange: () => {},
+    isInteracting: false,
+    setIsInteracting: () => {},
   },
 });
 

@@ -15,8 +15,10 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useLineChartProps } from '@mui/x-charts/internals';
+import { MarkPlotProps } from '@mui/x-charts';
 import { ResponsiveChartContainerPro } from '../ResponsiveChartContainerPro';
 import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
+import { useZoom } from '../context/ZoomProvider/useZoom';
 
 export interface LineChartProProps extends LineChartProps {
   // TODO: Add zoom props
@@ -63,7 +65,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(props: LineChartProP
       </g>
       <ChartsAxis {...chartsAxisProps} />
       <ChartsAxisHighlight {...axisHighlightProps} />
-      <MarkPlot {...markPlotProps} />
+      <MarkPlotZoom {...markPlotProps} />
       <LineHighlightPlot {...lineHighlightPlotProps} />
       <ChartsLegend {...legendProps} />
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
@@ -73,5 +75,10 @@ const LineChartPro = React.forwardRef(function LineChartPro(props: LineChartProP
     </ResponsiveChartContainerPro>
   );
 });
+
+function MarkPlotZoom(props: MarkPlotProps) {
+  const { isInteracting } = useZoom();
+  return <MarkPlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
+}
 
 export { LineChartPro };

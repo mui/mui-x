@@ -9,8 +9,10 @@ import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useBarChartProps } from '@mui/x-charts/internals';
+import { BarPlotProps } from '@mui/x-charts';
 import { ResponsiveChartContainerPro } from '../ResponsiveChartContainerPro';
 import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
+import { useZoom } from '../context/ZoomProvider/useZoom';
 
 export interface BarChartProProps extends BarChartProps {
   // TODO: Add zoom props
@@ -49,7 +51,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(props: BarChartProProp
       {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
       {props.grid && <ChartsGrid {...gridProps} />}
       <g {...clipPathGroupProps}>
-        <BarPlot {...barPlotProps} />
+        <BarChartPlotZoom {...barPlotProps} />
         <ChartsOverlay {...overlayProps} />
       </g>
       <ChartsAxis {...chartsAxisProps} />
@@ -62,5 +64,11 @@ const BarChartPro = React.forwardRef(function BarChartPro(props: BarChartProProp
     </ResponsiveChartContainerPro>
   );
 });
+
+function BarChartPlotZoom(props: BarPlotProps) {
+  const { isInteracting } = useZoom();
+
+  return <BarPlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
+}
 
 export { BarChartPro };

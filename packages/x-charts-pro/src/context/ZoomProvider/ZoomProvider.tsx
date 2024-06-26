@@ -17,6 +17,7 @@ export function ZoomProvider({ children }: ZoomProviderProps) {
 
 function ZoomProviderReal({ children }: ZoomProviderProps) {
   const [zoomRange, setZoomRange] = React.useState<[number, number]>([0, 100]);
+  const [isInteracting, setIsInteracting] = React.useState<boolean>(false);
 
   const value = React.useMemo(
     () => ({
@@ -24,9 +25,11 @@ function ZoomProviderReal({ children }: ZoomProviderProps) {
       data: {
         zoomRange,
         setZoomRange,
+        isInteracting,
+        setIsInteracting,
       },
     }),
-    [zoomRange, setZoomRange],
+    [zoomRange, setZoomRange, isInteracting, setIsInteracting],
   );
 
   return <ZoomContext.Provider value={value}>{children}</ZoomContext.Provider>;

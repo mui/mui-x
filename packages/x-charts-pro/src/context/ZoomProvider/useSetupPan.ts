@@ -17,12 +17,12 @@ const isPointOutside = (
 };
 
 export const useSetupPan = () => {
-  const { zoomRange, setZoomRange } = useZoom();
+  const { zoomRange, setZoomRange, setIsInteracting } = useZoom();
   const area = useDrawingArea();
 
   const svgRef = useSvgRef();
 
-  const isPanningRef = React.useRef(false);
+  const isDraggingRef = React.useRef(false);
   const touchStartRef = React.useRef<number | null>(null);
   const eventCacheRef = React.useRef<PointerEvent[]>([]);
 
@@ -33,7 +33,7 @@ export const useSetupPan = () => {
     }
 
     const handlePan = (event: PointerEvent) => {
-      if (element === null || !isPanningRef.current || eventCacheRef.current.length > 1) {
+      if (element === null || !isDraggingRef.current || eventCacheRef.current.length > 1) {
         return;
       }
 
@@ -43,7 +43,8 @@ export const useSetupPan = () => {
       const point = getSVGPoint(element, event);
 
       if (isPointOutside(point, area)) {
-        isPanningRef.current = false;
+        isDraggingRef.current = false;
+        setIsInteracting(false);
         return;
       }
 
@@ -74,7 +75,8 @@ export const useSetupPan = () => {
       if (eventCacheRef.current.length === 1) {
         event.preventDefault();
       }
-      isPanningRef.current = true;
+      isDraggingRef.current = true;
+      setIsInteracting(true);
       touchStartRef.current = event.clientX;
     };
 
@@ -83,7 +85,8 @@ export const useSetupPan = () => {
         eventCacheRef.current.findIndex((e) => e.pointerId === event.pointerId),
         1,
       );
-      isPanningRef.current = false;
+      setIsInteracting(false);
+      isDraggingRef.current = false;
       touchStartRef.current = null;
     };
 
@@ -100,5 +103,5 @@ export const useSetupPan = () => {
       element.removeEventListener('pointercancel', handleUp);
       element.removeEventListener('pointerleave', handleUp);
     };
-  }, [area, svgRef, isPanningRef, zoomRange, setZoomRange]);
+  }, [area, svgRef, isDraggingRef, zoomRange, setZoomRange, setIsInteracting]);
 };
