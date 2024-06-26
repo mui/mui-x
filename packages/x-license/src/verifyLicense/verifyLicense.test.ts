@@ -253,7 +253,7 @@ describe('License: verifyLicense', () => {
   });
 
   describe('key version: 2.2', () => {
-    const licenseKeyInitial = generateLicense({
+    const proLicenseKeyInitial = generateLicense({
       expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
       orderNumber: 'MUI-123',
       scope: 'pro',
@@ -261,7 +261,15 @@ describe('License: verifyLicense', () => {
       planVersion: 'initial',
     });
 
-    const licenseKey2 = generateLicense({
+    const premiumLicenseKeyInitial = generateLicense({
+      expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
+      orderNumber: 'MUI-123',
+      scope: 'premium',
+      licensingModel: 'annual',
+      planVersion: 'initial',
+    });
+
+    const proLicenseKeyQ32024 = generateLicense({
       expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
       orderNumber: 'MUI-123',
       scope: 'pro',
@@ -269,46 +277,68 @@ describe('License: verifyLicense', () => {
       planVersion: 'Q3-2024',
     });
 
-    it('PlanVersion "initial" should not accept charts', () => {
+    it('PlanVersion "initial" should not accept x-charts-pro', () => {
       process.env.NODE_ENV = 'production';
       expect(
         verifyLicense({
           releaseInfo: RELEASE_INFO,
-          licenseKey: licenseKeyInitial,
+          licenseKey: proLicenseKeyInitial,
           packageName: 'x-charts-pro',
         }).status,
       ).to.equal(LICENSE_STATUS.NotAvailableInInitialProPlan);
     });
 
-    it('PlanVersion "initial" should not accept tree-view', () => {
+    it('PlanVersion "initial" should not accept x-tree-view-pro', () => {
       process.env.NODE_ENV = 'production';
       expect(
         verifyLicense({
           releaseInfo: RELEASE_INFO,
-          licenseKey: licenseKeyInitial,
+          licenseKey: proLicenseKeyInitial,
           packageName: 'x-tree-view-pro',
         }).status,
       ).to.equal(LICENSE_STATUS.NotAvailableInInitialProPlan);
     });
 
-    it('PlanVersion "Q3-2024" should accept charts', () => {
+    it('PlanVersion "Q3-2024" should accept x-charts-pro', () => {
       process.env.NODE_ENV = 'production';
       expect(
         verifyLicense({
           releaseInfo: RELEASE_INFO,
-          licenseKey: licenseKey2,
+          licenseKey: proLicenseKeyQ32024,
           packageName: 'x-charts-pro',
         }).status,
       ).to.equal(LICENSE_STATUS.Valid);
     });
 
-    it('PlanVersion "Q3-2024" should accept tree-view', () => {
+    it('PlanVersion "Q3-2024" should accept x-tree-view-pro', () => {
       process.env.NODE_ENV = 'production';
       expect(
         verifyLicense({
           releaseInfo: RELEASE_INFO,
-          licenseKey: licenseKey2,
+          licenseKey: proLicenseKeyQ32024,
           packageName: 'x-tree-view-pro',
+        }).status,
+      ).to.equal(LICENSE_STATUS.Valid);
+    });
+
+    it('Premium with planVersion "initial" should accept x-tree-view-pro', () => {
+      process.env.NODE_ENV = 'production';
+      expect(
+        verifyLicense({
+          releaseInfo: RELEASE_INFO,
+          licenseKey: premiumLicenseKeyInitial,
+          packageName: 'x-tree-view-pro',
+        }).status,
+      ).to.equal(LICENSE_STATUS.Valid);
+    });
+
+    it('Premium with planVersion "initial" should accept x-charts-pro', () => {
+      process.env.NODE_ENV = 'production';
+      expect(
+        verifyLicense({
+          releaseInfo: RELEASE_INFO,
+          licenseKey: premiumLicenseKeyInitial,
+          packageName: 'x-charts-pro',
         }).status,
       ).to.equal(LICENSE_STATUS.Valid);
     });
