@@ -35,12 +35,12 @@
     "@babel/core": "^7.24.7",
     "@babel/runtime": "^7.24.7",
     "@babel/traverse": "^7.24.7",
-    "jscodeshift": "0.13.1",
+    "jscodeshift": "0.15.2",
     "jscodeshift-add-imports": "^1.0.10",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/jscodeshift": "^0.11.5",
+    "@types/jscodeshift": "^0.11.11",
     "dayjs": "^1.11.11",
     "moment-timezone": "^0.5.45",
     "rimraf": "^5.0.7"
