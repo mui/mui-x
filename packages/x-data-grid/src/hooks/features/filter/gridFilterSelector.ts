@@ -98,30 +98,6 @@ export const gridFilteredSortedRowIdsSelector = createSelectorMemoized(
 );
 
 /**
- * Get the row ids accessible after the filtering process to parent lookup.
- * Does not contain the collapsed children.
- * @category Filtering
- */
-export const gridExpandedSortedRowIdsLookupSelector = createSelectorMemoized(
-  gridExpandedSortedRowIdsSelector,
-  gridRowTreeSelector,
-  (visibleSortedRowIds, rowTree) =>
-    Object.values(rowTree).reduce((acc: Record<GridRowId, GridRowId[]>, rowNode) => {
-      const parentRowId = rowNode.parent;
-      if (!visibleSortedRowIds.includes(rowNode.id) || parentRowId === null) {
-        return acc;
-      }
-
-      if (!acc[parentRowId]) {
-        acc[parentRowId] = [];
-      }
-
-      acc[parentRowId].push(rowNode.id);
-      return acc;
-    }, {}),
-);
-
-/**
  * Get the id and the model of the top level rows accessible after the filtering process.
  * @category Filtering
  */
