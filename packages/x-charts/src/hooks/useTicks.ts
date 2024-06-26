@@ -101,8 +101,12 @@ export function useTicks(
 
       if (scale.bandwidth() > 0) {
         // scale type = 'band'
+        const filteredDomain =
+          (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
+          (typeof tickInterval === 'object' && tickInterval) ||
+          domain;
         return [
-          ...domain.map((value) => ({
+          ...filteredDomain.map((value) => ({
             value,
             formattedValue: valueFormatter?.(value, { location: 'tick' }) ?? `${value}`,
             offset:

@@ -156,7 +156,7 @@ export interface ChartsXAxisProps extends ChartsAxisProps {
   position?: 'top' | 'bottom';
 }
 
-export type ScaleName = 'linear' | 'band' | 'point' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
+export type ScaleName = keyof AxisScaleConfig;
 export type ContinuousScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
 
 export interface AxisScaleConfig {
