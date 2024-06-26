@@ -1,8 +1,9 @@
 import { base64Decode, base64Encode } from '../encoding/base64';
 import { md5 } from '../encoding/md5';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import { LicenseScope, LICENSE_SCOPES, ProductScope, PlanVersion } from '../utils/licenseScope';
+import { LicenseScope, LICENSE_SCOPES, PlanVersion } from '../utils/licenseScope';
 import { LicensingModel, LICENSING_MODELS } from '../utils/licensingModel';
+import { MuiCommercialPackageName } from '../utils/commercialPackages';
 
 const getDefaultReleaseDate = () => {
   const today = new Date();
@@ -15,6 +16,22 @@ export function generateReleaseInfo(releaseDate = getDefaultReleaseDate()) {
   return base64Encode(releaseDate.getTime().toString());
 }
 
+function isLicenseScopeSufficient(
+  packageName: MuiCommercialPackageName,
+  licenseScope: LicenseScope,
+) {
+  let acceptedScopes: LicenseScope[];
+  if (packageName.includes('-pro')) {
+    acceptedScopes = ['pro', 'premium'];
+  } else if (packageName.includes('-premium')) {
+    acceptedScopes = ['premium'];
+  } else {
+    acceptedScopes = [];
+  }
+
+  return acceptedScopes.includes(licenseScope);
+}
+
 const expiryReg = /^.*EXPIRY=([0-9]+),.*$/;
 
 interface MuiLicense {
@@ -23,6 +40,11 @@ interface MuiLicense {
   expiryTimestamp: number | null;
   planVersion: PlanVersion;
 }
+
+const PRO_PACKAGES_AVAILABLE_IN_INITIAL_PRO_PLAN: MuiCommercialPackageName[] = [
+  'x-data-grid-pro',
+  'x-date-pickers-pro',
+];
 
 /**
  * Format: ORDER:${orderNumber},EXPIRY=${expiryTimestamp},KEYVERSION=1
@@ -105,13 +127,11 @@ const decodeLicense = (encodedLicense: string): MuiLicense | null => {
 export function verifyLicense({
   releaseInfo,
   licenseKey,
-  acceptedScopes,
-  productScope,
+  packageName,
 }: {
   releaseInfo: string;
   licenseKey?: string;
-  acceptedScopes: readonly LicenseScope[];
-  productScope: ProductScope;
+  packageName: MuiCommercialPackageName;
 }): { status: LicenseStatus; meta?: any } {
   if (!releaseInfo) {
     throw new Error('MUI X: The release information is missing. Not able to validate license.');
@@ -178,15 +198,17 @@ export function verifyLicense({
     return { status: LICENSE_STATUS.Invalid };
   }
 
-  if (license.planVersion === 'initial') {
-    // 'charts-pro' or 'tree-view-pro' can only be used with a newer license
-    if (productScope === 'charts' || productScope === 'tree-view') {
-      return { status: LICENSE_STATUS.NotAvailableInInitialProPlan };
-    }
+  if (!isLicenseScopeSufficient(packageName, license.scope)) {
+    return { status: LICENSE_STATUS.OutOfScope };
   }
 
-  if (!acceptedScopes.includes(license.scope)) {
-    return { status: LICENSE_STATUS.OutOfScope };
+  // 'charts-pro' or 'tree-view-pro' can only be used with a newer Pro license
+  if (
+    license.planVersion === 'initial' &&
+    license.scope === 'pro' &&
+    !PRO_PACKAGES_AVAILABLE_IN_INITIAL_PRO_PLAN.includes(packageName)
+  ) {
+    return { status: LICENSE_STATUS.NotAvailableInInitialProPlan };
   }
 
   return { status: LICENSE_STATUS.Valid };

@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { MuiCommercialPackageName, useLicenseVerifier } from '../useLicenseVerifier';
+import { useLicenseVerifier } from '../useLicenseVerifier';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
+import { MuiCommercialPackageName } from '../utils/commercialPackages';
 
 function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
   switch (licenseStatus) {
