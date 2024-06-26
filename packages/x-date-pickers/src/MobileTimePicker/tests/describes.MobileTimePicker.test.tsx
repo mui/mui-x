@@ -2,7 +2,6 @@ import * as React from 'react';
 import { screen, fireEvent, userEvent, fireTouchChangedEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
-  wrapPickerMount,
   adapterToUse,
   expectFieldValueV7,
   openPicker,
@@ -36,7 +35,6 @@ describe('<MobileTimePicker /> - Describes', () => {
     classes: {} as any,
     render,
     muiName: 'MuiMobileTimePicker',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',

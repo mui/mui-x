@@ -9,7 +9,7 @@ function App({ column, hideMenu, apiRef, handleEvent }) {
     event.defaultMuiPrevented = true;
   };
   return (
-    <React.Fragment>
+    (<React.Fragment>
       <DataGrid
         disableMultipleRowSelection
         showCellVerticalBorder
@@ -29,7 +29,7 @@ function App({ column, hideMenu, apiRef, handleEvent }) {
           },
         }} />
       <GridColumnMenuSortItem colDef={column} onClick={hideMenu} />
-    </React.Fragment>
+    </React.Fragment>)
   );
 }
 
