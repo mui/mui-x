@@ -9,6 +9,8 @@ import {
   GRID_CHECKBOX_SELECTION_FIELD,
   gridFilteredDescendantCountLookupSelector,
   gridExpandedSortedRowIdsLookupSelector,
+  GRID_ROOT_GROUP_ID,
+  gridFilteredTopLevelRowCountSelector,
 } from '@mui/x-data-grid';
 import {
   GridPipeProcessor,
@@ -219,6 +221,7 @@ export const useGridTreeDataPreProcessors = (
         return ariaAttributes;
       }
 
+      const filteredTopLevelRowCount = gridFilteredTopLevelRowCountSelector(privateApiRef);
       const filteredDescendantCountLookup =
         gridFilteredDescendantCountLookupSelector(privateApiRef);
       const sortedVisibleRowPositionsLookup = gridExpandedSortedRowIdsLookupSelector(privateApiRef);
@@ -233,7 +236,10 @@ export const useGridTreeDataPreProcessors = (
 
       // if the parent is null, set size and position cannot be determined
       if (rowNode.parent !== null) {
-        ariaAttributes['aria-setsize'] = filteredDescendantCountLookup[rowNode.parent] ?? 0;
+        ariaAttributes['aria-setsize'] =
+          rowNode.parent === GRID_ROOT_GROUP_ID
+            ? filteredTopLevelRowCount
+            : filteredDescendantCountLookup[rowNode.parent];
         ariaAttributes['aria-posinset'] = sortedVisibleRowPositionsLookup[rowNode.id];
       }
 
