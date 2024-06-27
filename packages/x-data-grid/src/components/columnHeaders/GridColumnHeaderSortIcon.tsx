@@ -80,7 +80,7 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
   return (
     <GridIconButtonContainer>
       {index != null && (
-        <Badge badgeContent={index} color="default">
+        <Badge badgeContent={index} color="default" overlap="circular">
           {iconButton}
         </Badge>
       )}

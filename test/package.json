@@ -25,7 +25,7 @@
     "chai": "^4.4.1",
     "dayjs": "^1.11.11",
     "moment": "^2.30.1",
-    "moment-jalaali": "^0.10.0",
+    "moment-jalaali": "^0.10.1",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

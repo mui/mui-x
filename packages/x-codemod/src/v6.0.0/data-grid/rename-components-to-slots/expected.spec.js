@@ -5,7 +5,7 @@ import { Button, Checkbox, TextField } from '@mui/material';
 
 export default function App() {
   return (
-    <div>
+    (<div>
       <DataGrid
         slots={{
           toolbar: CustomToolbar,
@@ -39,6 +39,6 @@ export default function App() {
           },
         }}
       />
-    </div>
+    </div>)
   );
 };
