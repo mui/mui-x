@@ -2,15 +2,26 @@ import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { test } from 'mocha';
-import { ResponsiveChartContainer } from './ResponsiveChartContainer';
+import { ScatterChart } from './ScatterChart';
 
-describe('<ResponsiveChartContainer />', () => {
+describe('<ScatterChart />', () => {
   const { render } = createRenderer();
-  const testClass = 'test-class-responsive-container';
+  const testClass = 'test-class';
 
   test('should pass className prop to root component', () => {
     const { container } = render(
-      <ResponsiveChartContainer height={100} series={[]} className={testClass} />,
+      <ScatterChart
+        height={100}
+        series={[
+          {
+            data: [
+              { id: 'A', x: 100, y: 10 },
+              { id: 'B', x: 200, y: 20 },
+            ],
+          },
+        ]}
+        className={testClass}
+      />,
     );
     expect(container.firstElementChild?.classList.contains(testClass)).to.equal(true);
   });
