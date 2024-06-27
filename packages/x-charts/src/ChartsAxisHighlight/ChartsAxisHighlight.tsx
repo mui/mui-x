@@ -88,8 +88,9 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
   const isBandScaleY = yAxisHighlight === 'band' && axisY !== null && isBandScale(yScale);
 
   if (process.env.NODE_ENV !== 'production') {
-    const isXError = isBandScaleX && (xScale(axisX.value) ?? true);
-    const isYError = isBandScaleY && (yScale(axisY.value) ?? true);
+    const isXError = isBandScaleX && xScale(axisX.value) === undefined;
+    const isYError = isBandScaleY && yScale(axisY.value) === undefined;
+
     if (isXError || isYError) {
       console.error(
         [
