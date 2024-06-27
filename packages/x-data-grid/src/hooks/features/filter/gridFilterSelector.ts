@@ -125,7 +125,7 @@ export const gridExpandedSortedRowIdsLookupSelector = createSelectorMemoized(
       }
 
       lastDepth = rowNode.depth;
-      depthPositionCounter[rowNode.depth]++;
+      depthPositionCounter[rowNode.depth] += 1;
       acc[rowId] = depthPositionCounter[rowNode.depth];
       return acc;
     }, {});
