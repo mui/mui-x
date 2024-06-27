@@ -104,9 +104,9 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
 
   return (
     <React.Fragment>
-      {isBandScaleX && (
+      {isBandScaleX && xScale(axisX.value) !== undefined && (
         <ChartsAxisHighlightPath
-          // @ts-expect-error, xScale value is checked in the if statement above
+          // @ts-expect-error, xScale value is checked in the statement above
           d={`M ${xScale(axisX.value) - (xScale.step() - xScale.bandwidth()) / 2} ${
             yScale.range()[0]
           } l ${xScale.step()} 0 l 0 ${
@@ -117,10 +117,10 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
         />
       )}
 
-      {isBandScaleY && (
+      {isBandScaleY && yScale(axisY.value) === undefined && (
         <ChartsAxisHighlightPath
           d={`M ${xScale.range()[0]} ${
-            // @ts-expect-error, yScale value is checked in the if statement above
+            // @ts-expect-error, yScale value is checked in the statement above
             yScale(axisY.value) - (yScale.step() - yScale.bandwidth()) / 2
           } l 0 ${yScale.step()} l ${
             xScale.range()[1] - xScale.range()[0]
