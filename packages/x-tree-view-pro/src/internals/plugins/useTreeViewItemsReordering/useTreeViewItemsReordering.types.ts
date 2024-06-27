@@ -4,7 +4,6 @@ import {
   TreeViewPluginSignature,
   UseTreeViewItemsSignature,
   MuiCancellableEventHandler,
-  UseTreeViewIdSignature,
 } from '@mui/x-tree-view/internals';
 import { TreeViewItemId, TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
 import { TreeItem2DragAndDropOverlayProps } from '@mui/x-tree-view/TreeItem2DragAndDropOverlay';
@@ -129,7 +128,7 @@ export type UseTreeViewItemsReorderingSignature = TreeViewPluginSignature<{
   instance: UseTreeViewItemsReorderingInstance;
   state: UseTreeViewItemsReorderingState;
   contextValue: UseTreeViewItemsReorderingContextValue;
-  dependencies: [UseTreeViewItemsSignature, UseTreeViewIdSignature];
+  dependencies: [UseTreeViewItemsSignature];
 }>;
 
 export interface UseTreeItem2RootSlotPropsFromItemsReordering {
