@@ -20,7 +20,7 @@ import { MULTI_SECTION_CLOCK_SECTION_WIDTH } from '../internals/constants/dimens
 import { formatMeridiem } from '../internals/utils/date-utils';
 import { MakeOptional } from '../internals/models/helpers';
 import { pickersToolbarTextClasses } from '../internals/components/pickersToolbarTextClasses';
-import { pickersToolbarClasses } from '../internals';
+import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { PickerValidDate } from '../models';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {

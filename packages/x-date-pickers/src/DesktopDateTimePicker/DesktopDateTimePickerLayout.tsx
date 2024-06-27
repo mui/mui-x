@@ -11,7 +11,7 @@ import {
   usePickerLayout,
 } from '../PickersLayout';
 import { PickerValidDate } from '../models';
-import { DateOrTimeViewWithMeridiem } from '../internals';
+import { DateOrTimeViewWithMeridiem } from '../internals/models/common';
 
 /**
  * @ignore - internal component.
