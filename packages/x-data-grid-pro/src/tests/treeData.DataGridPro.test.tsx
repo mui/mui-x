@@ -726,7 +726,7 @@ describe('<DataGridPro /> - Tree data', () => {
     });
   });
 
-  describe.only('accessibility', () => {
+  describe('accessibility', () => {
     it('should add necessary treegrid aria attributes to the rows', () => {
       render(<Test defaultGroupingExpansionDepth={2} />);
 
