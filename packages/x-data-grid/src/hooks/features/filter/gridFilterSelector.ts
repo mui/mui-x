@@ -116,12 +116,11 @@ export const gridExpandedSortedRowIdsLookupSelector = createSelectorMemoized(
         depthPositionCounter[rowNode.depth] = 0;
       }
 
-      // going deeper in the tree should keep the counters intact, because once we go back up
-      // position on that level continues from where it left off
-      // going back up in the tree should reset the counter for the levels below
-      // because the next item on that level is part of a different branch
-      if (rowNode.depth < lastDepth) {
-        depthPositionCounter[lastDepth] = 0;
+      // going deeper in the tree should reset the counter
+      // since it might have been used in some other branch at the same level, up in the tree
+      // going back up should keep the counter and continue where it left off
+      if (rowNode.depth > lastDepth) {
+        depthPositionCounter[rowNode.depth] = 0;
       }
 
       lastDepth = rowNode.depth;
