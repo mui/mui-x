@@ -29,8 +29,6 @@ const emptyParentHeightWarning = buildWarning([
   'More details: https://mui.com/r/x-data-grid-no-dimensions.',
 ]);
 
-const SHOULD_USE_FLAT_DOM_STRUCTURE = false;
-
 export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualizationSignature> = ({
   params,
   state,
@@ -173,10 +171,6 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
         isContentHidden: !itemsToRenderSet.has(id),
       };
     };
-
-    if (SHOULD_USE_FLAT_DOM_STRUCTURE) {
-      return itemsToRender.map(getPropsFromItemId);
-    }
 
     const tree: TreeViewItemToRenderProps[] = [];
     for (const itemId of itemsToRender) {
