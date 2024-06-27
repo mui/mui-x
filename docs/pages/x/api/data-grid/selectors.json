@@ -173,6 +173,13 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridExpandedSortedRowIdsLookupSelector",
+    "returnType": "Record<GridRowId, number>",
+    "category": "Filtering",
+    "description": "Get the row ids accessible after the filtering process to position in the current tree level lookup.\nDoes not contain the collapsed children.",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridExpandedSortedRowIdsSelector",
     "returnType": "GridRowId[]",
     "category": "Filtering",
