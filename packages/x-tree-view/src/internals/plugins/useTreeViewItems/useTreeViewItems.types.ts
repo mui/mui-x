@@ -5,7 +5,7 @@ export interface TreeViewItemToRenderProps {
   label: string;
   itemId: string;
   id: string | undefined;
-  children: TreeViewItemToRenderProps[];
+  children?: TreeViewItemToRenderProps[];
   isContentHidden?: boolean;
 }
 

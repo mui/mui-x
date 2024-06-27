@@ -4,4 +4,5 @@ export type {
   UseTreeViewVirtualizationParameters,
   UseTreeViewVirtualizationDefaultizedParameters,
   UseTreeViewVirtualizationRenderContext,
+  UseTreeViewVirtualizationScrollDirection,
 } from './useTreeViewVirtualization.types';

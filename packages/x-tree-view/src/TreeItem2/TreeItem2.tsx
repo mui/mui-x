@@ -18,6 +18,7 @@ import {
 import { getTreeItemUtilityClass } from '../TreeItem';
 import { TreeItem2Icon } from '../TreeItem2Icon';
 import { TreeItem2Provider } from '../TreeItem2Provider';
+import { fastMemo } from '../internals/utils/fastMemo';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem2');
 
@@ -215,7 +216,7 @@ type TreeItem2Component = ((
  *
  * - [TreeItem2 API](https://mui.com/x/api/tree-view/tree-item-2/)
  */
-export const TreeItem2 = React.forwardRef(function TreeItem2(
+const TreeItem2 = React.forwardRef(function TreeItem2(
   inProps: TreeItem2Props,
   forwardedRef: React.Ref<HTMLLIElement>,
 ) {
@@ -392,3 +393,7 @@ TreeItem2.propTypes = {
    */
   slots: PropTypes.object,
 } as any;
+
+const MemoizedTreeItem2 = fastMemo(TreeItem2);
+
+export { MemoizedTreeItem2 as TreeItem2 };

@@ -11,10 +11,14 @@ import {
 import { TreeViewItemId } from '@mui/x-tree-view/models';
 import {
   UseTreeViewVirtualizationElementSize,
+  UseTreeViewVirtualizationInstance,
   UseTreeViewVirtualizationRenderContext,
   UseTreeViewVirtualizationSignature,
 } from './useTreeViewVirtualization.types';
-import { areElementSizesEqual } from './useTreeViewVirtualization.utils';
+import {
+  areElementSizesEqual,
+  getBufferFromScrollDirection,
+} from './useTreeViewVirtualization.utils';
 import { throttle } from './throttle';
 
 const emptyParentHeightWarning = buildWarning([
@@ -116,28 +120,35 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
     return (itemOrderedChildrenIds[TREE_VIEW_ROOT_PARENT_ID] ?? []).flatMap(addChildrenToItem);
   }, [state.items.itemOrderedChildrenIds, experimentalFeatures.virtualization, isItemExpanded]);
 
-  const computeRenderContext = React.useCallback(
-    (scrollPositionPx: number): UseTreeViewVirtualizationRenderContext => {
-      const clampItemIndex = (itemIndex: number) => clamp(itemIndex, 0, itemCount - 1);
+  const computeRenderContext: UseTreeViewVirtualizationInstance['computeRenderContext'] = ({
+    scrollPositionPx,
+    scrollDirection,
+  }) => {
+    const clampItemIndex = (itemIndex: number) => clamp(itemIndex, 0, itemCount - 1);
 
-      const firstItemIndex = clampItemIndex(
-        Math.floor((scrollPositionPx - params.scrollBufferPx) / params.itemsHeight),
-      );
+    const scrollBuffer = getBufferFromScrollDirection({
+      scrollBufferPx: params.scrollBufferPx,
+      verticalBuffer: params.itemsHeight * 15,
+      scrollDirection,
+    });
 
-      const lastItemIndex = clampItemIndex(
-        Math.ceil(
-          (scrollPositionPx + state.virtualization.viewportHeight + params.scrollBufferPx) /
-            params.itemsHeight,
-        ),
-      );
+    const firstItemIndex = clampItemIndex(
+      Math.floor((scrollPositionPx - params.scrollBufferPx) / params.itemsHeight) -
+        scrollBuffer.itemsBefore,
+    );
 
-      return {
-        firstItemIndex,
-        lastItemIndex,
-      };
-    },
-    [itemCount, params.itemsHeight, params.scrollBufferPx, state.virtualization.viewportHeight],
-  );
+    const lastItemIndex = clampItemIndex(
+      Math.ceil(
+        (scrollPositionPx + state.virtualization.viewportHeight + params.scrollBufferPx) /
+          params.itemsHeight,
+      ) + scrollBuffer.itemsAfter,
+    );
+
+    return {
+      firstItemIndex,
+      lastItemIndex,
+    };
+  };
 
   const getItemsToRenderWithVirtualization = (
     renderContext: UseTreeViewVirtualizationRenderContext,
@@ -149,13 +160,16 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
 
     const itemsToRenderSet = new Set(itemsToRender);
 
-    const getPropsFromItemId = (id: TreeViewItemId): TreeViewItemToRenderProps => {
+    const getPropsFromItemId = (
+      id: TreeViewItemId,
+      isAncestor: boolean,
+    ): TreeViewItemToRenderProps => {
       const item = state.items.itemMetaMap[id];
       return {
         label: item.label!,
         itemId: item.id,
         id: item.idAttribute,
-        children: [],
+        children: isAncestor ? [] : undefined,
         isContentHidden: !itemsToRenderSet.has(id),
       };
     };
@@ -178,15 +192,18 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
         const parentId = ancestors.pop()!;
         const parentInTree = subTree.find((props) => props.itemId === parentId);
         if (parentInTree == null) {
-          const newParentIdTree = getPropsFromItemId(parentId);
+          const newParentIdTree = getPropsFromItemId(parentId, true);
           subTree.push(newParentIdTree);
-          subTree = newParentIdTree.children;
+          subTree = newParentIdTree.children!;
         } else {
+          if (!parentInTree.children) {
+            parentInTree.children = [];
+          }
           subTree = parentInTree.children;
         }
       }
 
-      subTree.push(getPropsFromItemId(itemId));
+      subTree.push(getPropsFromItemId(itemId, false));
     }
 
     return tree;
@@ -203,7 +220,6 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
       virtualization: {
         enabled: experimentalFeatures.virtualization ?? false,
         virtualScrollerRef,
-        scrollBufferPx: params.scrollBufferPx,
         itemsHeight: params.itemsHeight,
       },
     },

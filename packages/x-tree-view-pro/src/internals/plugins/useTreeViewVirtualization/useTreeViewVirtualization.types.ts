@@ -10,7 +10,10 @@ import {
 export interface UseTreeViewVirtualizationInstance {
   getDimensions: () => UseTreeViewVirtualizationState['virtualization'];
   handleResizeRoot: () => void;
-  computeRenderContext: (scrollPositionPx: number) => UseTreeViewVirtualizationRenderContext;
+  computeRenderContext: (params: {
+    scrollPositionPx: number;
+    scrollDirection: UseTreeViewVirtualizationScrollDirection;
+  }) => UseTreeViewVirtualizationRenderContext;
   getItemsToRenderWithVirtualization: (
     renderContext: UseTreeViewVirtualizationRenderContext,
   ) => TreeViewItemToRenderProps[];
@@ -53,10 +56,7 @@ interface UseTreeViewVirtualizationState {
 }
 
 export interface UseTreeViewVirtualizationContextValue {
-  virtualization: Pick<
-    UseTreeViewVirtualizationDefaultizedParameters,
-    'scrollBufferPx' | 'itemsHeight'
-  > & {
+  virtualization: Pick<UseTreeViewVirtualizationDefaultizedParameters, 'itemsHeight'> & {
     enabled: boolean;
     virtualScrollerRef: React.RefObject<HTMLDivElement>;
   };
@@ -80,6 +80,8 @@ export interface UseTreeViewVirtualizationElementSize {
    */
   width: number;
 }
+
+export type UseTreeViewVirtualizationScrollDirection = 'none' | 'up' | 'down' | 'left' | 'right';
 
 export type UseTreeViewVirtualizationSignature = TreeViewPluginSignature<{
   params: UseTreeViewVirtualizationParameters;

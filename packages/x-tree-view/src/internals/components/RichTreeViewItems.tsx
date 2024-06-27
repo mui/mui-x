@@ -43,19 +43,28 @@ function WrappedTreeItem({
   id,
   itemId,
   isContentHidden,
-  children,
+  itemsToRender,
 }: Pick<RichTreeViewItemsProps, 'slots' | 'slotProps'> &
   Pick<TreeItemProps, 'id' | 'itemId' | 'children'> & {
     label: string;
     isContentHidden?: boolean;
+    itemsToRender: TreeViewItemToRenderProps[] | undefined;
   }) {
   const Item = slots?.item ?? TreeItem;
-  const itemProps = useSlotProps({
+  const { ownerState, ...itemProps } = useSlotProps({
     elementType: Item,
     externalSlotProps: slotProps?.item,
     additionalProps: { itemId, id, label, ...(isContentHidden ? { isContentHidden: true } : {}) },
     ownerState: { itemId, label },
   });
+
+  const children = React.useMemo(
+    () =>
+      itemsToRender ? (
+        <RichTreeViewItems itemsToRender={itemsToRender} slots={slots} slotProps={slotProps} />
+      ) : null,
+    [itemsToRender, slots, slotProps],
+  );
 
   return <Item {...itemProps}>{children}</Item>;
 }
@@ -63,27 +72,20 @@ function WrappedTreeItem({
 export function RichTreeViewItems(props: RichTreeViewItemsProps) {
   const { itemsToRender, slots, slotProps } = props;
 
-  const renderItem = ({
-    label,
-    itemId,
-    id,
-    isContentHidden,
-    children,
-  }: TreeViewItemToRenderProps) => {
-    return (
-      <WrappedTreeItem
-        slots={slots}
-        slotProps={slotProps}
-        key={itemId}
-        label={label}
-        id={id}
-        itemId={itemId}
-        isContentHidden={isContentHidden}
-      >
-        {children?.map(renderItem)}
-      </WrappedTreeItem>
-    );
-  };
-
-  return <React.Fragment>{itemsToRender.map(renderItem)}</React.Fragment>;
+  return (
+    <React.Fragment>
+      {itemsToRender.map((item) => (
+        <WrappedTreeItem
+          slots={slots}
+          slotProps={slotProps}
+          key={item.itemId}
+          label={item.label}
+          id={item.id}
+          itemId={item.itemId}
+          isContentHidden={item.isContentHidden}
+          itemsToRender={item.children}
+        />
+      ))}
+    </React.Fragment>
+  );
 }

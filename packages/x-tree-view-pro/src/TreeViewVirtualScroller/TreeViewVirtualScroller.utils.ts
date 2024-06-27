@@ -1,71 +1,27 @@
-import { UseTreeViewVirtualizationRenderContext } from '../internals/plugins/useTreeViewVirtualization';
+import {
+  UseTreeViewVirtualizationRenderContext,
+  UseTreeViewVirtualizationScrollDirection,
+} from '../internals/plugins/useTreeViewVirtualization';
 
-export enum ScrollDirection {
-  NONE,
-  UP,
-  DOWN,
-  LEFT,
-  RIGHT,
-}
-
-export const createScrollCache = (scrollBufferPx: number, verticalBuffer: number) => ({
-  direction: ScrollDirection.NONE,
-  buffer: bufferForDirection(ScrollDirection.NONE, scrollBufferPx, verticalBuffer),
-});
-
-export function bufferForDirection(
-  direction: ScrollDirection,
-  scrollBufferPx: number,
-  verticalBuffer: number,
-) {
-  switch (direction) {
-    case ScrollDirection.NONE:
-      return {
-        rowAfter: scrollBufferPx,
-        rowBefore: scrollBufferPx,
-      };
-    case ScrollDirection.LEFT:
-      return {
-        rowAfter: 0,
-        rowBefore: 0,
-      };
-    case ScrollDirection.RIGHT:
-      return {
-        rowAfter: 0,
-        rowBefore: 0,
-      };
-    case ScrollDirection.UP:
-      return {
-        rowAfter: 0,
-        rowBefore: verticalBuffer,
-      };
-    case ScrollDirection.DOWN:
-      return {
-        rowAfter: verticalBuffer,
-        rowBefore: 0,
-      };
-    default:
-      // eslint unable to figure out enum exhaustiveness
-      throw new Error('unreachable');
-  }
-}
-
-export function directionForDelta(dx: number, dy: number) {
+export function getDirectionFromDelta(
+  dx: number,
+  dy: number,
+): UseTreeViewVirtualizationScrollDirection {
   if (dx === 0 && dy === 0) {
-    return ScrollDirection.NONE;
+    return 'none';
   }
   /* eslint-disable */
   if (Math.abs(dy) >= Math.abs(dx)) {
     if (dy > 0) {
-      return ScrollDirection.DOWN;
+      return 'down';
     } else {
-      return ScrollDirection.UP;
+      return 'up';
     }
   } else {
     if (dx > 0) {
-      return ScrollDirection.RIGHT;
+      return 'right';
     } else {
-      return ScrollDirection.LEFT;
+      return 'left';
     }
   }
   /* eslint-enable */

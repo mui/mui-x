@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import useLazyRef from '@mui/utils/useLazyRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useTimeout from '@mui/utils/useTimeout';
@@ -8,14 +7,9 @@ import { useTreeViewContext, UseTreeViewItemsSignature } from '@mui/x-tree-view/
 import {
   UseTreeViewVirtualizationSignature,
   UseTreeViewVirtualizationRenderContext,
+  UseTreeViewVirtualizationScrollDirection,
 } from '../internals/plugins/useTreeViewVirtualization';
-import {
-  createScrollCache,
-  bufferForDirection,
-  directionForDelta,
-  ScrollDirection,
-  areRenderContextsEqual,
-} from './TreeViewVirtualScroller.utils';
+import { getDirectionFromDelta, areRenderContextsEqual } from './TreeViewVirtualScroller.utils';
 import { TreeViewVirtualizationScrollPosition } from './TreeViewVirtualScroller.types';
 import { useResizeObserver } from './useResizeObserver';
 import { useRunOnce } from './useRunOnce';
@@ -31,13 +25,12 @@ export const useTreeViewVirtualScroller = () => {
   const {
     instance,
     rootRef,
-    virtualization: { virtualScrollerRef, scrollBufferPx, itemsHeight },
+    virtualization: { virtualScrollerRef, itemsHeight },
   } = useTreeViewContext<[UseTreeViewVirtualizationSignature, UseTreeViewItemsSignature]>();
   const scrollTimeout = useTimeout();
-  const scrollCache = useLazyRef(() => createScrollCache(scrollBufferPx, itemsHeight * 15)).current;
+  const scrollDirectionRef = React.useRef<UseTreeViewVirtualizationScrollDirection>('none');
   const [renderContext, setRenderContext] =
     React.useState<UseTreeViewVirtualizationRenderContext>(EMPTY_RENDER_CONTEXT);
-  const frozenContext = React.useRef<UseTreeViewVirtualizationRenderContext | undefined>(undefined);
   const dimensions = instance.getDimensions();
   useResizeObserver(rootRef, () => instance.handleResizeRoot());
 
@@ -82,41 +75,27 @@ export const useTreeViewVirtualScroller = () => {
 
     scrollPosition.current = newScroll;
 
-    const direction = isScrolling ? directionForDelta(dx, dy) : ScrollDirection.NONE;
+    const direction = isScrolling ? getDirectionFromDelta(dx, dy) : 'none';
 
-    // Since previous render, we have scrolled...
+    // Since the previous render, we have scrolled...
     const verticalScroll = Math.abs(
       scrollPosition.current.top - previousContextScrollPosition.current.top,
     );
 
-    // PERF: use the computed minimum column width instead of a static one
     const didCrossThreshold = verticalScroll >= itemsHeight;
-    const didChangeDirection = scrollCache.direction !== direction;
+    const didChangeDirection = scrollDirectionRef.current !== direction;
     const shouldUpdate = didCrossThreshold || didChangeDirection;
 
     if (!shouldUpdate) {
       return;
     }
 
-    // Render a new context
+    scrollDirectionRef.current = direction;
 
-    if (didChangeDirection) {
-      switch (direction) {
-        case ScrollDirection.NONE:
-        case ScrollDirection.LEFT:
-        case ScrollDirection.RIGHT:
-          frozenContext.current = undefined;
-          break;
-        default:
-          frozenContext.current = renderContext;
-          break;
-      }
-    }
-
-    scrollCache.direction = direction;
-    scrollCache.buffer = bufferForDirection(direction, scrollBufferPx, itemsHeight * 15);
-
-    const nextRenderContext = instance.computeRenderContext(scrollPosition.current.top);
+    const nextRenderContext = instance.computeRenderContext({
+      scrollPositionPx: scrollPosition.current.top,
+      scrollDirection: scrollDirectionRef.current,
+    });
 
     // Prevents batching render context changes
     ReactDOM.flushSync(() => {
@@ -142,7 +121,10 @@ export const useTreeViewVirtualScroller = () => {
   }, [instance]);
 
   useRunOnce(dimensions.viewportHeight !== 0, () => {
-    const initialRenderContext = instance.computeRenderContext(scrollPosition.current.top);
+    const initialRenderContext = instance.computeRenderContext({
+      scrollPositionPx: scrollPosition.current.top,
+      scrollDirection: 'none',
+    });
     updateRenderContext(initialRenderContext);
   });
 
