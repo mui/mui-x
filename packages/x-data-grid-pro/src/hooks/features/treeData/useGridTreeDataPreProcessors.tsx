@@ -7,6 +7,8 @@ import {
   GridGroupNode,
   GridRowId,
   GRID_CHECKBOX_SELECTION_FIELD,
+  gridFilteredDescendantCountLookupSelector,
+  gridExpandedSortedRowIdsLookupSelector,
 } from '@mui/x-data-grid';
 import {
   GridPipeProcessor,
@@ -208,6 +210,38 @@ export const useGridTreeDataPreProcessors = (
     [privateApiRef, props.disableChildrenSorting],
   );
 
+  const updateGridRowAriaAttributes = React.useCallback<GridPipeProcessor<'ariaAttributes'>>(
+    (attributes, rowId) => {
+      const rowNode = privateApiRef.current.getRowNode(rowId);
+      const ariaAttributes = attributes as Record<string, string | number | boolean>;
+
+      if (props.treeData !== true || rowNode === null) {
+        return ariaAttributes;
+      }
+
+      const filteredDescendantCountLookup =
+        gridFilteredDescendantCountLookupSelector(privateApiRef);
+      const sortedVisibleRowPositionsLookup = gridExpandedSortedRowIdsLookupSelector(privateApiRef);
+
+      ariaAttributes['aria-level'] = rowNode.depth + 1;
+
+      const filteredDescendantCount = filteredDescendantCountLookup[rowNode.id] ?? 0;
+      // aria-expanded should only be added to the rows that contain children
+      if (rowNode.type === 'group' && filteredDescendantCount > 0) {
+        ariaAttributes['aria-expanded'] = Boolean(rowNode.childrenExpanded);
+      }
+
+      // if the parent is null, set size and position cannot be determined
+      if (rowNode.parent !== null) {
+        ariaAttributes['aria-setsize'] = filteredDescendantCountLookup[rowNode.parent] ?? 0;
+        ariaAttributes['aria-posinset'] = sortedVisibleRowPositionsLookup[rowNode.id];
+      }
+
+      return ariaAttributes;
+    },
+    [privateApiRef, props.treeData],
+  );
+
   useGridRegisterPipeProcessor(privateApiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterStrategyProcessor(
     privateApiRef,
@@ -223,6 +257,7 @@ export const useGridTreeDataPreProcessors = (
     'visibleRowsLookupCreation',
     getVisibleRowsLookup,
   );
+  useGridRegisterPipeProcessor(privateApiRef, 'ariaAttributes', updateGridRowAriaAttributes);
 
   /**
    * 1ST RENDER
