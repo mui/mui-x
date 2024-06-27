@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
-import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import {
   PickersToolbar,
@@ -13,12 +12,15 @@ import {
   ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { DateRange } from '../models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateRangePickerToolbarClasses,
   getDateRangePickerToolbarUtilityClass,
 } from './dateRangePickerToolbarClasses';
+
+const useThemeProps = createUseThemeProps('MuiDateRangePickerToolbar');
 
 const useUtilityClasses = (ownerState: DateRangePickerToolbarProps<any>) => {
   const { classes } = ownerState;

@@ -2,8 +2,8 @@ import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
-import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
@@ -13,6 +13,8 @@ import {
   getDatePickerToolbarUtilityClass,
 } from './datePickerToolbarClasses';
 import { resolveDateFormat } from '../internals/utils/date-utils';
+
+const useThemeProps = createUseThemeProps('MuiDatePickerToolbar');
 
 export interface DatePickerToolbarProps<TDate extends PickerValidDate>
   extends BaseToolbarProps<TDate | null, DateView>,

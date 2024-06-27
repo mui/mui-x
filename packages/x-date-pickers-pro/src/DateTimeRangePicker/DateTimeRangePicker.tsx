@@ -2,11 +2,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { refType } from '@mui/utils';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useThemeProps } from '@mui/material/styles';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { createUseThemeProps } from '../internals/zero-styled';
 import { DateTimeRangePickerProps } from './DateTimeRangePicker.types';
 import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
 import { MobileDateTimeRangePicker } from '../MobileDateTimeRangePicker';
+
+const useThemeProps = createUseThemeProps('MuiDateTimeRangePicker');
 
 type DateTimeRangePickerComponent = (<
   TDate extends PickerValidDate,

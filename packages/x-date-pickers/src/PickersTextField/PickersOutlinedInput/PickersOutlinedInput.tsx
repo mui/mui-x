@@ -1,9 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { FormControlState, useFormControl } from '@mui/material/FormControl';
-import { styled, useThemeProps } from '@mui/material/styles';
 import { refType } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
+import { styled, createUseThemeProps } from '../../internals/zero-styled';
 import {
   pickersOutlinedInputClasses,
   getPickersOutlinedInputUtilityClass,
@@ -14,6 +14,8 @@ import {
   PickersInputBaseRoot,
   PickersInputBaseSectionsContainer,
 } from '../PickersInputBase/PickersInputBase';
+
+const useThemeProps = createUseThemeProps('MuiPickersOutlinedInput');
 
 export interface PickersOutlinedInputProps extends PickersInputBaseProps {
   notched?: boolean;

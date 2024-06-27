@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { createUseThemeProps } from '../internals/zero-styled';
 import { useStaticRangePicker } from '../internals/hooks/useStaticRangePicker';
 import { StaticDateRangePickerProps } from './StaticDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
@@ -9,6 +10,8 @@ import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { validateDateRange } from '../internals/utils/validation/validateDateRange';
 import { DateRange } from '../models';
+
+const useThemeProps = createUseThemeProps('MuiStaticDateRangePicker');
 
 type StaticDateRangePickerComponent = (<TDate extends PickerValidDate>(
   props: StaticDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -27,10 +30,12 @@ type StaticDateRangePickerComponent = (<TDate extends PickerValidDate>(
 const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<
   TDate extends PickerValidDate,
 >(inProps: StaticDateRangePickerProps<TDate>, ref: React.Ref<HTMLDivElement>) {
+  const themeProps = useThemeProps({ props: inProps, name: 'MuiStaticDateRangePicker' });
+
   const defaultizedProps = useDateRangePickerDefaultizedProps<
     TDate,
     StaticDateRangePickerProps<TDate>
-  >(inProps, 'MuiStaticDateRangePicker');
+  >(themeProps);
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
 

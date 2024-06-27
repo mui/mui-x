@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useThemeProps } from '@mui/material/styles';
 import { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
   DefaultizedProps,
@@ -73,35 +72,31 @@ type UseDateRangePickerDefaultizedProps<
 export function useDateRangePickerDefaultizedProps<
   TDate extends PickerValidDate,
   Props extends BaseDateRangePickerProps<TDate>,
->(props: Props, name: string): UseDateRangePickerDefaultizedProps<TDate, Props> {
+>(props: Props): UseDateRangePickerDefaultizedProps<TDate, Props> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
-  const themeProps = useThemeProps({
-    props,
-    name,
-  });
 
   const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
-    if (themeProps.localeText?.toolbarTitle == null) {
-      return themeProps.localeText;
+    if (props.localeText?.toolbarTitle == null) {
+      return props.localeText;
     }
 
     return {
-      ...themeProps.localeText,
-      dateRangePickerToolbarTitle: themeProps.localeText.toolbarTitle,
+      ...props.localeText,
+      dateRangePickerToolbarTitle: props.localeText.toolbarTitle,
     };
-  }, [themeProps.localeText]);
+  }, [props.localeText]);
 
   return {
-    ...themeProps,
+    ...props,
     localeText,
-    disableFuture: themeProps.disableFuture ?? false,
-    disablePast: themeProps.disablePast ?? false,
-    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    disableFuture: props.disableFuture ?? false,
+    disablePast: props.disablePast ?? false,
+    minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
     slots: {
       toolbar: DateRangePickerToolbar,
-      ...themeProps.slots,
+      ...props.slots,
     },
   };
 }

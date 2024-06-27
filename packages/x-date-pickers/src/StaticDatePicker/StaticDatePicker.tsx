@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { createUseThemeProps } from '../internals/zero-styled';
 import { StaticDatePickerProps } from './StaticDatePicker.types';
 import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers';
@@ -7,6 +8,8 @@ import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { validateDate } from '../internals/utils/validation/validateDate';
 import { DateView, PickerValidDate } from '../models';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
+
+const useThemeProps = createUseThemeProps('MuiStaticDatePicker');
 
 type StaticDatePickerComponent = (<TDate extends PickerValidDate>(
   props: StaticDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -26,9 +29,13 @@ const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate extend
   inProps: StaticDatePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const themeProps = useThemeProps({
+    props: inProps,
+    name: 'MuiStaticDatePicker',
+  });
+
   const defaultizedProps = useDatePickerDefaultizedProps<TDate, StaticDatePickerProps<TDate>>(
-    inProps,
-    'MuiStaticDatePicker',
+    themeProps,
   );
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';

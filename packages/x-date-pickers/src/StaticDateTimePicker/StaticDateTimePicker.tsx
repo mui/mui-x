@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { createUseThemeProps } from '../internals/zero-styled';
 import { StaticDateTimePickerProps } from './StaticDateTimePicker.types';
 import {
   DateTimePickerViewRenderers,
@@ -11,6 +12,8 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { DateOrTimeView, PickerValidDate } from '../models';
 import { validateDateTime } from '../internals/utils/validation/validateDateTime';
+
+const useThemeProps = createUseThemeProps('MuiStaticDateTimePicker');
 
 type StaticDateTimePickerComponent = (<TDate extends PickerValidDate>(
   props: StaticDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -29,11 +32,13 @@ type StaticDateTimePickerComponent = (<TDate extends PickerValidDate>(
 const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<
   TDate extends PickerValidDate,
 >(inProps: StaticDateTimePickerProps<TDate>, ref: React.Ref<HTMLDivElement>) {
+  const themeProps = useThemeProps({ props: inProps, name: 'MuiStaticDateTimePicker' });
+
   const defaultizedProps = useDateTimePickerDefaultizedProps<
     TDate,
     DateOrTimeView,
     StaticDateTimePickerProps<TDate>
-  >(inProps, 'MuiStaticDateTimePicker');
+  >(themeProps);
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
   const ampmInClock = defaultizedProps.ampmInClock ?? displayStaticWrapperAs === 'desktop';

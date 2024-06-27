@@ -1,10 +1,12 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH } from './shared';
 import { TimeView } from '../models';
 import { ClockPointerClasses, getClockPointerUtilityClass } from './clockPointerClasses';
+
+const useThemeProps = createUseThemeProps('MuiClockPointer');
 
 export interface ClockPointerProps extends React.HTMLAttributes<HTMLDivElement> {
   hasSelected: boolean;

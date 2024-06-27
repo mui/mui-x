@@ -1,13 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { PickersLayoutProps } from './PickersLayout.types';
 import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { PickerValidDate } from '../models';
+
+const useThemeProps = createUseThemeProps('MuiPickersLayout');
 
 const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
   const { isLandscape, classes } = ownerState;

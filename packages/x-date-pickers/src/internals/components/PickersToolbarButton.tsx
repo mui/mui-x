@@ -1,13 +1,15 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import Button, { ButtonProps } from '@mui/material/Button';
-import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { TypographyProps } from '@mui/material/Typography';
+import { styled, createUseThemeProps } from '../zero-styled';
 import { PickersToolbarText } from './PickersToolbarText';
 import { ExtendMui } from '../models/helpers';
 import { getPickersToolbarUtilityClass } from './pickersToolbarClasses';
 import { PickersToolbarButtonClasses } from './pickersToolbarButtonClasses';
+
+const useThemeProps = createUseThemeProps('MuiPickersToolbarButton');
 
 export interface PickersToolbarButtonProps extends ExtendMui<ButtonProps, 'value' | 'variant'> {
   align?: TypographyProps['align'];

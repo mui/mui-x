@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { FormControlState, useFormControl } from '@mui/material/FormControl';
-import { styled, useThemeProps } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import { refType } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
@@ -9,6 +8,7 @@ import capitalize from '@mui/utils/capitalize';
 import { useSlotProps } from '@mui/base/utils';
 import visuallyHidden from '@mui/utils/visuallyHidden';
 import { useRtl } from '@mui/system/RtlProvider';
+import { styled, createUseThemeProps } from '../../internals/zero-styled';
 import {
   pickersInputBaseClasses,
   getPickersInputBaseUtilityClass,
@@ -21,6 +21,8 @@ import {
   Unstable_PickersSectionListSectionSeparator as PickersSectionListSectionSeparator,
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
 } from '../../PickersSectionList';
+
+const useThemeProps = createUseThemeProps('MuiPickersInputBase');
 
 const round = (value: number) => Math.round(value * 1e5) / 1e5;
 

@@ -3,13 +3,15 @@ import PropTypes from 'prop-types';
 import { useSlotProps } from '@mui/base/utils';
 import composeClasses from '@mui/utils/composeClasses';
 import useForkRef from '@mui/utils/useForkRef';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   getPickersSectionListUtilityClass,
   pickersSectionListClasses,
   PickersSectionListClasses,
 } from './pickersSectionListClasses';
 import { PickersSectionListProps, PickersSectionElement } from './PickersSectionList.types';
+
+const useThemeProps = createUseThemeProps('MuiPickersSectionList');
 
 export const PickersSectionListRoot = styled('div', {
   name: 'MuiPickersSectionList',

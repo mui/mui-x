@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled } from '@mui/material/styles';
+import { styled } from '../../zero-styled';
 import { UseStaticPickerParams, UseStaticPickerProps } from './useStaticPicker.types';
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';

@@ -1,15 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
-import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
+import { createUseThemeProps } from '../internals/zero-styled';
 import { DateTimeFieldProps } from './DateTimeField.types';
 import { useDateTimeField } from './useDateTimeField';
 import { useClearableField } from '../hooks';
 import { PickersTextField } from '../PickersTextField';
 import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
 import { PickerValidDate } from '../models';
+
+const useThemeProps = createUseThemeProps('MuiDateTimeField');
 
 type DateTimeFieldComponent = (<
   TDate extends PickerValidDate,

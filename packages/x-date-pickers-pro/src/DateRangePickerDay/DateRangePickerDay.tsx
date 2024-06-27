@@ -2,17 +2,20 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license';
-import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useUtils } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   DateRangePickerDayClasses,
   getDateRangePickerDayUtilityClass,
   dateRangePickerDayClasses,
 } from './dateRangePickerDayClasses';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
+
+const useThemeProps = createUseThemeProps('MuiDateRangePickerDay');
 
 const releaseInfo = getReleaseInfo();
 

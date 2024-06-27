@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled } from '../../internals/zero-styled';
 
 interface OutlineProps extends React.HTMLAttributes<HTMLFieldSetElement> {
   notched: boolean;

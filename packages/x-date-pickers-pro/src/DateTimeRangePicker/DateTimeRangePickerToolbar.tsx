@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import {
   BaseToolbarProps,
@@ -16,6 +15,7 @@ import {
   DateTimePickerToolbarProps,
   DateTimePickerToolbar,
 } from '@mui/x-date-pickers/DateTimePicker';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { DateRange } from '../models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
@@ -23,6 +23,8 @@ import {
   getDateTimeRangePickerToolbarUtilityClass,
 } from './dateTimeRangePickerToolbarClasses';
 import { calculateRangeChange } from '../internals/utils/date-range-manager';
+
+const useThemeProps = createUseThemeProps('MuiDateTimeRangePickerToolbar');
 
 const useUtilityClasses = (ownerState: DateTimeRangePickerToolbarProps<any>) => {
   const { classes } = ownerState;

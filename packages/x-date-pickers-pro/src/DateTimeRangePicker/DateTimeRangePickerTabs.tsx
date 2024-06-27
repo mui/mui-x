@@ -1,7 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TimeIcon, DateRangeIcon, ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers/icons';
@@ -14,12 +13,15 @@ import {
 } from '@mui/x-date-pickers/internals';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   DateTimeRangePickerTabsClasses,
   getDateTimeRangePickerTabsUtilityClass,
 } from './dateTimeRangePickerTabsClasses';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import { RangePosition } from '../models';
+
+const useThemeProps = createUseThemeProps('MuiDateTimeRangePickerTabs');
 
 type TabValue = 'start-date' | 'start-time' | 'end-date' | 'end-time';
 

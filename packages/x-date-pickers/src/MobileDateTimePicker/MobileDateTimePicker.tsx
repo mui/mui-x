@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
+import { createUseThemeProps } from '../internals/zero-styled';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
 import { MobileDateTimePickerProps } from './MobileDateTimePicker.types';
@@ -17,6 +18,8 @@ import { extractValidationProps } from '../internals/utils/validation/extractVal
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
+
+const useThemeProps = createUseThemeProps('MuiMobileDateTimePicker');
 
 type MobileDateTimePickerComponent = (<
   TDate extends PickerValidDate,
@@ -46,12 +49,14 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 
+  const themeProps = useThemeProps({ props: inProps, name: 'MuiMobileDateTimePicker' });
+
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateTimePickerDefaultizedProps<
     TDate,
     DateOrTimeView,
     MobileDateTimePickerProps<TDate, DateOrTimeView, TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiMobileDateTimePicker');
+  >(themeProps);
 
   const viewRenderers: DateTimePickerViewRenderers<TDate, DateOrTimeView, any> = {
     day: renderDateViewCalendar,

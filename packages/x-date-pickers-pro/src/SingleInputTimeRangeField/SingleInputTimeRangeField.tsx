@@ -5,12 +5,14 @@ import { useClearableField } from '@mui/x-date-pickers/hooks';
 import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
-import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
+import { createUseThemeProps } from '../internals/zero-styled';
 import { SingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
 import { useSingleInputTimeRangeField } from './useSingleInputTimeRangeField';
 import { FieldType } from '../models';
+
+const useThemeProps = createUseThemeProps('MuiSingleInputTimeRangeField');
 
 type DateRangeFieldComponent = (<
   TDate extends PickerValidDate,

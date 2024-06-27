@@ -1,8 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useThemeProps } from '@mui/material/styles';
+import { createUseThemeProps } from '../internals/zero-styled';
 import { AdapterFormats, MuiPickersAdapter, PickerValidDate } from '../models';
 import { PickersInputLocaleText } from '../locales';
+
+const useThemeProps = createUseThemeProps('MuiLocalizationProvider');
 
 export interface MuiPickersAdapterContextValue<TDate extends PickerValidDate> {
   defaultDates: {

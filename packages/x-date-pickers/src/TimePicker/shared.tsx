@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { useUtils } from '../internals/hooks/useUtils';
 import { TimeClockSlots, TimeClockSlotProps } from '../TimeClock/TimeClock.types';
@@ -82,48 +81,44 @@ export function useTimePickerDefaultizedProps<
   TDate extends PickerValidDate,
   TView extends TimeViewWithMeridiem,
   Props extends BaseTimePickerProps<TDate, TView>,
->(props: Props, name: string): UseTimePickerDefaultizedProps<TDate, TView, Props> {
+>(props: Props): UseTimePickerDefaultizedProps<TDate, TView, Props> {
   const utils = useUtils<TDate>();
-  const themeProps = useThemeProps({
-    props,
-    name,
-  });
 
-  const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
+  const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
 
   const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
-    if (themeProps.localeText?.toolbarTitle == null) {
-      return themeProps.localeText;
+    if (props.localeText?.toolbarTitle == null) {
+      return props.localeText;
     }
 
     return {
-      ...themeProps.localeText,
-      timePickerToolbarTitle: themeProps.localeText.toolbarTitle,
+      ...props.localeText,
+      timePickerToolbarTitle: props.localeText.toolbarTitle,
     };
-  }, [themeProps.localeText]);
+  }, [props.localeText]);
 
   return {
-    ...themeProps,
+    ...props,
     ampm,
     localeText,
     ...applyDefaultViewProps({
-      views: themeProps.views,
-      openTo: themeProps.openTo,
+      views: props.views,
+      openTo: props.openTo,
       defaultViews: ['hours', 'minutes'] as TView[],
       defaultOpenTo: 'hours' as TView,
     }),
-    disableFuture: themeProps.disableFuture ?? false,
-    disablePast: themeProps.disablePast ?? false,
+    disableFuture: props.disableFuture ?? false,
+    disablePast: props.disablePast ?? false,
     slots: {
       toolbar: TimePickerToolbar,
-      ...themeProps.slots,
+      ...props.slots,
     },
     slotProps: {
-      ...themeProps.slotProps,
+      ...props.slotProps,
       toolbar: {
         ampm,
-        ampmInClock: themeProps.ampmInClock,
-        ...themeProps.slotProps?.toolbar,
+        ampmInClock: props.ampmInClock,
+        ...props.slotProps?.toolbar,
       },
     },
   };

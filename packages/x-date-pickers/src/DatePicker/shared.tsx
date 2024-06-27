@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '../internals/models/helpers';
 import {
   DateCalendarSlots,
@@ -78,38 +77,34 @@ type UseDatePickerDefaultizedProps<
 export function useDatePickerDefaultizedProps<
   TDate extends PickerValidDate,
   Props extends BaseDatePickerProps<TDate>,
->(props: Props, name: string): UseDatePickerDefaultizedProps<TDate, Props> {
+>(props: Props): UseDatePickerDefaultizedProps<TDate, Props> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
-  const themeProps = useThemeProps({
-    props,
-    name,
-  });
 
   const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
-    if (themeProps.localeText?.toolbarTitle == null) {
-      return themeProps.localeText;
+    if (props.localeText?.toolbarTitle == null) {
+      return props.localeText;
     }
 
     return {
-      ...themeProps.localeText,
-      datePickerToolbarTitle: themeProps.localeText.toolbarTitle,
+      ...props.localeText,
+      datePickerToolbarTitle: props.localeText.toolbarTitle,
     };
-  }, [themeProps.localeText]);
+  }, [props.localeText]);
 
   return {
-    ...themeProps,
+    ...props,
     localeText,
     ...applyDefaultViewProps({
-      views: themeProps.views,
-      openTo: themeProps.openTo,
+      views: props.views,
+      openTo: props.openTo,
       defaultViews: ['year', 'day'],
       defaultOpenTo: 'day',
     }),
-    disableFuture: themeProps.disableFuture ?? false,
-    disablePast: themeProps.disablePast ?? false,
-    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
-    slots: { toolbar: DatePickerToolbar, ...themeProps.slots },
+    disableFuture: props.disableFuture ?? false,
+    disablePast: props.disablePast ?? false,
+    minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
+    slots: { toolbar: DatePickerToolbar, ...props.slots },
   };
 }

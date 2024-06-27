@@ -250,23 +250,7 @@ module.exports = {
       files: ['packages/*/src/**/*{.ts,.tsx,.js}'],
       excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx'],
       rules: {
-        'material-ui/mui-name-matches-component-name': [
-          'error',
-          {
-            customHooks: [
-              'useDatePickerProcessedProps',
-              'useDatePickerDefaultizedProps',
-              'useTimePickerDefaultizedProps',
-              'useDateTimePickerDefaultizedProps',
-              'useDateRangePickerDefaultizedProps',
-              'useDateTimeRangePickerDefaultizedProps',
-              'useDateCalendarDefaultizedProps',
-              'useMonthCalendarDefaultizedProps',
-              'useYearCalendarDefaultizedProps',
-              'useDateRangeCalendarDefaultizedProps',
-            ],
-          },
-        ],
+        'material-ui/mui-name-matches-component-name': ['error', { customHooks: [] }],
       },
     },
     ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts', false),
