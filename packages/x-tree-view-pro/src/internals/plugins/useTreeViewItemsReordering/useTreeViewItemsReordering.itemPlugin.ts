@@ -60,6 +60,9 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
             event.dataTransfer.setData('text/plain', 'android-fallback');
           }
 
+          // iOS requires a media type to be defined
+          event.dataTransfer.setData('application/mui-x', '');
+
           instance.startDraggingItem(itemId);
         };
 
