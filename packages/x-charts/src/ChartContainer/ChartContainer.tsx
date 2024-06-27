@@ -59,6 +59,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
     onHighlightChange,
     plugins,
     children,
+    className,
   } = props;
   const {
     svgRef,
@@ -99,6 +100,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
                     title={title}
                     desc={desc}
                     disableAxisListener={disableAxisListener}
+                    className={className}
                   >
                     <ChartsAxesGradients />
                     {children}

@@ -53,6 +53,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     loading,
     highlightedItem,
     onHighlightChange,
+    className,
   } = props;
 
   const id = useId();
@@ -88,6 +89,7 @@ export const useLineChartProps = (props: LineChartProps) => {
       axisHighlight?.x === 'none' &&
       axisHighlight?.y === 'none' &&
       !onAxisClick,
+    className,
   };
 
   const axisClickHandlerProps: ChartsOnAxisClickHandlerProps = {

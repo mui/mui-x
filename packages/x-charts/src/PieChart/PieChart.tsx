@@ -148,6 +148,7 @@ function PieChart(props: PieChartProps) {
     loading,
     highlightedItem,
     onHighlightChange,
+    className,
   } = props;
   const isRTL = useIsRTL();
 
@@ -183,6 +184,7 @@ function PieChart(props: PieChartProps) {
       }
       highlightedItem={highlightedItem}
       onHighlightChange={onHighlightChange}
+      className={className}
     >
       <ChartsAxis
         topAxis={topAxis}
