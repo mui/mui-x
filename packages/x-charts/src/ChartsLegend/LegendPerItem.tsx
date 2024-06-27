@@ -91,6 +91,11 @@ const getStandardizedPadding = (padding: LegendPerItemProps['padding']) => {
   };
 };
 
+/**
+ * Internal component to display an array of items as a legend.
+ * Used for series legend, and threshold color legend.
+ * @ignore - Do not document
+ */
 export function LegendPerItem(props: LegendPerItemProps) {
   const {
     hidden,

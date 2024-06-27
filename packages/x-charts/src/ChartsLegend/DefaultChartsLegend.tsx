@@ -33,6 +33,9 @@ DefaultChartsLegend.propTypes = {
    * The default depends on the chart.
    */
   direction: PropTypes.oneOf(['column', 'row']).isRequired,
+  /**
+   * @deprecated Use the `useDrawingArea` hook instead.
+   */
   drawingArea: PropTypes.shape({
     bottom: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
