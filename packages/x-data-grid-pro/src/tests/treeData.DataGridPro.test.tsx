@@ -726,7 +726,7 @@ describe('<DataGridPro /> - Tree data', () => {
     });
   });
 
-  describe('accessibility', () => {
+  describe.only('accessibility', () => {
     it('should add necessary treegrid aria attributes to the rows', () => {
       render(<Test defaultGroupingExpansionDepth={2} />);
 
@@ -735,6 +735,7 @@ describe('<DataGridPro /> - Tree data', () => {
       expect(getRow(1).getAttribute('aria-posinset')).to.equal('1');
       expect(getRow(1).getAttribute('aria-setsize')).to.equal('2');
       expect(getRow(2).getAttribute('aria-level')).to.equal('2'); // A.B
+      expect(getRow(4).getAttribute('aria-posinset')).to.equal('1'); // B.A
     });
 
     it('should adjust treegrid aria attributes after filtering', () => {
