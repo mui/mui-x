@@ -80,11 +80,34 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
 
   const getXPosition = getValueToPositionMapper(xScale);
   const getYPosition = getValueToPositionMapper(yScale);
+
+  const axisX = axis.x;
+  const axisY = axis.y;
+
+  const isBandScaleX = xAxisHighlight === 'band' && axisX !== null && isBandScale(xScale);
+  const isBandScaleY = yAxisHighlight === 'band' && axisY !== null && isBandScale(yScale);
+
+  if (process.env.NODE_ENV !== 'production') {
+    const isXError = isBandScaleX && xScale(axisX.value) === undefined;
+    const isYError = isBandScaleY && yScale(axisY.value) === undefined;
+
+    if (isXError || isYError) {
+      console.error(
+        [
+          `MUI X Charts: The position value provided for the axis is not valid for the current scale.`,
+          `This probably means something is wrong with the data passed to the chart.`,
+          `The ChartsAxisHighlight component will not be displayed.`,
+        ].join('\n'),
+      );
+    }
+  }
+
   return (
     <React.Fragment>
-      {xAxisHighlight === 'band' && axis.x !== null && isBandScale(xScale) && (
+      {isBandScaleX && xScale(axisX.value) !== undefined && (
         <ChartsAxisHighlightPath
-          d={`M ${xScale(axis.x.value)! - (xScale.step() - xScale.bandwidth()) / 2} ${
+          // @ts-expect-error, xScale value is checked in the statement above
+          d={`M ${xScale(axisX.value) - (xScale.step() - xScale.bandwidth()) / 2} ${
             yScale.range()[0]
           } l ${xScale.step()} 0 l 0 ${
             yScale.range()[1] - yScale.range()[0]
@@ -94,10 +117,11 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
         />
       )}
 
-      {yAxisHighlight === 'band' && axis.y !== null && isBandScale(yScale) && (
+      {isBandScaleY && yScale(axisY.value) === undefined && (
         <ChartsAxisHighlightPath
           d={`M ${xScale.range()[0]} ${
-            yScale(axis.y.value)! - (yScale.step() - yScale.bandwidth()) / 2
+            // @ts-expect-error, yScale value is checked in the statement above
+            yScale(axisY.value) - (yScale.step() - yScale.bandwidth()) / 2
           } l 0 ${yScale.step()} l ${
             xScale.range()[1] - xScale.range()[0]
           } 0 l 0 ${-yScale.step()} Z`}

@@ -10,7 +10,7 @@ import { AxisScaleConfig, D3Scale, ScaleName } from '../models/axis';
  */
 export function getValueToPositionMapper(scale: D3Scale) {
   if (isBandScale(scale)) {
-    return (value: any) => scale(value)! + scale.bandwidth() / 2;
+    return (value: any) => (scale(value) ?? 0) + scale.bandwidth() / 2;
   }
   return (value: any) => scale(value) as number;
 }
