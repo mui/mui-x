@@ -9,7 +9,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
-import { useLocaleText } from '@mui/x-date-pickers/internals';
+import { useLocaleText } from '@mui/x-date-pickers/hooks';
 
 function CustomActionBar(props: PickersActionBarProps) {
   const { onAccept, onClear, onCancel, onSetToday, actions, className } = props;

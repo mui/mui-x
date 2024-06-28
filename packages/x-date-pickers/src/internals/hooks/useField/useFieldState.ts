@@ -1,7 +1,8 @@
 import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
 import { useRtl } from '@mui/system/RtlProvider';
-import { useUtils, useLocaleText, useLocalizationContext } from '../useUtils';
+import { useLocaleText } from '../../../hooks/useLocaleText';
+import { useUtils, useLocalizationContext } from '../useUtils';
 import {
   UseFieldInternalProps,
   UseFieldParams,

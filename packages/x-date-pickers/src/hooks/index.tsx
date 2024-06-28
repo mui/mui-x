@@ -5,3 +5,5 @@ export type {
   UseClearableFieldSlotProps,
   UseClearableFieldResponse,
 } from './useClearableField';
+
+export { useLocaleText } from './useLocaleText';

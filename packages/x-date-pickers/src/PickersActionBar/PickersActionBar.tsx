@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import DialogActions, { DialogActionsProps } from '@mui/material/DialogActions';
-import { useLocaleText } from '../internals/hooks/useUtils';
+import { useLocaleText } from '../hooks/useLocaleText';
 
 export type PickersActionBarAction = 'clear' | 'cancel' | 'accept' | 'today';
 

@@ -4,7 +4,7 @@ import MuiIconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { SxProps } from '@mui/system';
 import { ClearIcon } from '../icons';
-import { useLocaleText } from '../internals/hooks/useUtils';
+import { useLocaleText } from './useLocaleText';
 
 export interface ExportedUseClearableFieldProps {
   /**

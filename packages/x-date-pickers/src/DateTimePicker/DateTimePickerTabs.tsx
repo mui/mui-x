@@ -7,7 +7,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { TimeIcon, DateRangeIcon } from '../icons';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
-import { useLocaleText } from '../internals/hooks/useUtils';
+import { useLocaleText } from '../hooks/useLocaleText';
 import {
   DateTimePickerTabsClasses,
   getDateTimePickerTabsUtilityClass,

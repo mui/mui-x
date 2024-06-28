@@ -11,7 +11,8 @@ import {
   DateTimePickerViewRenderers,
 } from '../DateTimePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { useLocaleText } from '../hooks/useLocaleText';
+import { useUtils } from '../internals/hooks/useUtils';
 import { validateDateTime } from '../internals/utils/validation/validateDateTime';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { CalendarIcon } from '../icons';

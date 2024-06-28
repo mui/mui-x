@@ -9,7 +9,8 @@ import {
   DateTimePickerViewRenderers,
   useDateTimePickerDefaultizedProps,
 } from '../DateTimePicker/shared';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { useLocaleText } from '../hooks/useLocaleText';
+import { useUtils } from '../internals/hooks/useUtils';
 import { validateDateTime } from '../internals/utils/validation/validateDateTime';
 import { DateOrTimeView, PickerValidDate } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';

@@ -7,11 +7,11 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { TimeIcon, DateRangeIcon, ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers/icons';
 import {
   DateOrTimeViewWithMeridiem,
-  useLocaleText,
   BaseTabsProps,
   ExportedBaseTabsProps,
   isDatePickerView,
 } from '@mui/x-date-pickers/internals';
+import { useLocaleText } from '@mui/x-date-pickers/hooks';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import {

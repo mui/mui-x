@@ -7,7 +7,8 @@ import clsx from 'clsx';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { useLocaleText } from '../hooks/useLocaleText';
+import { useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import {
   dateTimePickerToolbarClasses,

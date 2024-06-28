@@ -11,7 +11,8 @@ import {
 } from './useField.types';
 import { getActiveElement } from '../../utils/utils';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
-import { useLocaleText, useUtils } from '../useUtils';
+import { useLocaleText } from '../../../hooks/useLocaleText';
+import { useUtils } from '../useUtils';
 
 export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
   const {

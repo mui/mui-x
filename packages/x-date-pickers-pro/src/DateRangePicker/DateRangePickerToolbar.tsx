@@ -9,9 +9,9 @@ import {
   PickersToolbarButton,
   useUtils,
   BaseToolbarProps,
-  useLocaleText,
   ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
+import { useLocaleText } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateRange } from '../models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';

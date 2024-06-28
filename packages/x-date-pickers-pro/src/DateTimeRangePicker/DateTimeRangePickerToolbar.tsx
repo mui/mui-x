@@ -5,12 +5,12 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import {
   BaseToolbarProps,
-  useLocaleText,
   ExportedBaseToolbarProps,
   useUtils,
   DateOrTimeViewWithMeridiem,
   WrapperVariant,
 } from '@mui/x-date-pickers/internals';
+import { useLocaleText } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DateTimePickerToolbarProps,

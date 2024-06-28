@@ -5,11 +5,11 @@ import { PickersCalendarHeader } from '@mui/x-date-pickers/PickersCalendarHeader
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   PickersArrowSwitcher,
-  useLocaleText,
   useNextMonthDisabled,
   usePreviousMonthDisabled,
   useUtils,
 } from '@mui/x-date-pickers/internals';
+import { useLocaleText } from '@mui/x-date-pickers/hooks';
 import { PickersRangeCalendarHeaderProps } from './PickersRangeCalendarHeader.types';
 
 type PickersRangeCalendarHeaderComponent = (<TDate extends PickerValidDate>(

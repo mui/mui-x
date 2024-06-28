@@ -10,7 +10,8 @@ import {
 } from '@mui/utils';
 import clsx from 'clsx';
 import { PickersDay, PickersDayProps, ExportedPickersDayProps } from '../PickersDay/PickersDay';
-import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
+import { useLocaleText } from '../hooks/useLocaleText';
+import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 import {

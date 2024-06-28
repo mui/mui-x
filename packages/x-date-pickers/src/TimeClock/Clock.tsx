@@ -8,7 +8,8 @@ import {
   unstable_composeClasses as composeClasses,
 } from '@mui/utils';
 import { ClockPointer } from './ClockPointer';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { useLocaleText } from '../hooks/useLocaleText';
+import { useUtils } from '../internals/hooks/useUtils';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { CLOCK_HOUR_WIDTH, getHours, getMinutes } from './shared';

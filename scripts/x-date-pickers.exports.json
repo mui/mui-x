@@ -297,6 +297,7 @@
   { "name": "UseDateFieldProps", "kind": "Interface" },
   { "name": "UseDateTimeFieldComponentProps", "kind": "TypeAlias" },
   { "name": "UseDateTimeFieldProps", "kind": "Interface" },
+  { "name": "useLocaleText", "kind": "Variable" },
   { "name": "usePickerLayout", "kind": "ExportAssignment" },
   { "name": "UseTimeFieldComponentProps", "kind": "TypeAlias" },
   { "name": "UseTimeFieldProps", "kind": "Interface" },

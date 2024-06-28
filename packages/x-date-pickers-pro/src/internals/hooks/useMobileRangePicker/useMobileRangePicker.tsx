@@ -8,10 +8,10 @@ import {
   PickersModalDialog,
   InferError,
   ExportedBaseToolbarProps,
-  useLocaleText,
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
 } from '@mui/x-date-pickers/internals';
+import { useLocaleText } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate, FieldRef, BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
 import useId from '@mui/utils/useId';
 import {

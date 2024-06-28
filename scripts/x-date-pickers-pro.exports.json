@@ -406,6 +406,7 @@
   { "name": "UseDateRangeFieldProps", "kind": "Interface" },
   { "name": "UseDateTimeFieldComponentProps", "kind": "TypeAlias" },
   { "name": "UseDateTimeFieldProps", "kind": "Interface" },
+  { "name": "useLocaleText", "kind": "Variable" },
   { "name": "UseMultiInputDateRangeFieldComponentProps", "kind": "TypeAlias" },
   { "name": "UseMultiInputDateRangeFieldProps", "kind": "Interface" },
   { "name": "UseMultiInputDateTimeRangeFieldComponentProps", "kind": "TypeAlias" },
