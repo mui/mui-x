@@ -6,16 +6,6 @@ import { useZoom } from './useZoom';
 const MAX_RANGE = 100;
 const MIN_RANGE = 0;
 
-// TODO: move to helper
-const isPointOutside = (
-  point: { x: number; y: number },
-  area: { left: number; top: number; width: number; height: number },
-) => {
-  const outsideX = point.x < area.left || point.x > area.left + area.width;
-  const outsideY = point.y < area.top || point.y > area.top + area.height;
-  return outsideX || outsideY;
-};
-
 export const useSetupPan = () => {
   const { zoomRange, setZoomRange, setIsInteracting } = useZoom();
   const area = useDrawingArea();
@@ -43,12 +33,6 @@ export const useSetupPan = () => {
 
       const point = getSVGPoint(element, event);
       const movementX = point.x - touchStartRef.current.x;
-
-      if (isPointOutside(point, area)) {
-        isDraggingRef.current = false;
-        setIsInteracting(false);
-        return;
-      }
 
       const max = touchStartRef.current.maxX;
       const min = touchStartRef.current.minX;
@@ -99,17 +83,17 @@ export const useSetupPan = () => {
     };
 
     element.addEventListener('pointerdown', handleDown);
-    element.addEventListener('pointermove', handlePan);
-    element.addEventListener('pointerup', handleUp);
-    element.addEventListener('pointercancel', handleUp);
-    element.addEventListener('pointerleave', handleUp);
+    document.addEventListener('pointermove', handlePan);
+    document.addEventListener('pointerup', handleUp);
+    document.addEventListener('pointercancel', handleUp);
+    document.addEventListener('pointerleave', handleUp);
 
     return () => {
       element.removeEventListener('pointerdown', handleDown);
-      element.removeEventListener('pointermove', handlePan);
-      element.removeEventListener('pointerup', handleUp);
-      element.removeEventListener('pointercancel', handleUp);
-      element.removeEventListener('pointerleave', handleUp);
+      document.removeEventListener('pointermove', handlePan);
+      document.removeEventListener('pointerup', handleUp);
+      document.removeEventListener('pointercancel', handleUp);
+      document.removeEventListener('pointerleave', handleUp);
     };
   }, [area, svgRef, isDraggingRef, zoomRange, setZoomRange, setIsInteracting]);
 };
