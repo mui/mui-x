@@ -11,9 +11,8 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 - 🛰 Introduce server-side data source for improved server integration in the Data Grid. See [documentation](https://mui.com/x/react-data-grid/server-side-data/) for more details.
 - 📈 Support Date data on the BarChart component
-- 🖱️ Support modifying the expansion trigger on the Tree View components
 - ↕️ Support custom column sort icons on the Data Grid
-- 📝 Add "Overlays" section to the Data Grid documentation
+- 🖱️ Support modifying the expansion trigger on the Tree View components
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
