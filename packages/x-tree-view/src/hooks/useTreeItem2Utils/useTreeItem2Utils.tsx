@@ -12,35 +12,14 @@ interface UseTreeItem2Interactions {
   handleSelection: (event: React.MouseEvent) => void;
   handleCheckboxSelection: (event: React.ChangeEvent<HTMLInputElement>) => void;
   toggleItemEditing: () => void;
-  setLabelInputValue: (label: string) => void;
-  resetLabelInputValue: () => void;
+  handleSaveItemLabel: (event: React.SyntheticEvent, label: string) => void;
+  handleCancelItemLabelEditing: (event: React.SyntheticEvent) => void;
 }
 
 interface UseTreeItem2UtilsReturnValue {
   interactions: UseTreeItem2Interactions;
   status: UseTreeItem2Status;
-  label: string;
 }
-
-const useTreeItemLabelInput = (inLabel: string) => {
-  const initialLabelValue = React.useRef(inLabel);
-  const [labelInputValue, setLabelInputValue] = React.useState(inLabel);
-
-  const resetLabelInputValue = () => {
-    setLabelInputValue(initialLabelValue.current);
-  };
-
-  React.useEffect(() => {
-    initialLabelValue.current = inLabel;
-    setLabelInputValue(inLabel);
-  }, [inLabel]);
-
-  return {
-    labelInputValue,
-    setLabelInputValue,
-    resetLabelInputValue,
-  };
-};
 
 const isItemExpandable = (reactChildren: React.ReactNode) => {
   if (Array.isArray(reactChildren)) {
@@ -68,20 +47,14 @@ export type UseTreeItem2UtilsOptionalPlugins = readonly [];
 export const useTreeItem2Utils = ({
   itemId,
   children,
-  label,
 }: {
   itemId: string;
   children: React.ReactNode;
-  label: string;
 }): UseTreeItem2UtilsReturnValue => {
   const {
     instance,
     selection: { multiSelect },
   } = useTreeViewContext<UseTreeItem2UtilsMinimalPlugins, UseTreeItem2UtilsOptionalPlugins>();
-
-  const { labelInputValue, setLabelInputValue, resetLabelInputValue } = useTreeItemLabelInput(
-    label as string,
-  );
 
   const status: UseTreeItem2Status = {
     expandable: isItemExpandable(children),
@@ -155,14 +128,25 @@ export const useTreeItem2Utils = ({
     }
   };
 
+  const handleSaveItemLabel = (event: React.SyntheticEvent, label: string) => {
+    instance.updateItemLabel(itemId, label);
+    toggleItemEditing();
+    instance.focusItem(event, itemId);
+  };
+
+  const handleCancelItemLabelEditing = (event: React.SyntheticEvent) => {
+    toggleItemEditing();
+    instance.focusItem(event, itemId);
+  };
+
   const interactions: UseTreeItem2Interactions = {
     handleExpansion,
     handleSelection,
     handleCheckboxSelection,
     toggleItemEditing,
-    setLabelInputValue,
-    resetLabelInputValue,
+    handleSaveItemLabel,
+    handleCancelItemLabelEditing,
   };
 
-  return { interactions, status, label: labelInputValue };
+  return { interactions, status };
 };

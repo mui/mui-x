@@ -1,16 +1,14 @@
 import * as React from 'react';
-
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
+import { useTreeItem2Utils, useTreeViewApiRef } from '@mui/x-tree-view/hooks';
 
 import { TreeItem2, TreeItem2Label } from '@mui/x-tree-view/TreeItem2';
-
 import { IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import EditOffIcon from '@mui/icons-material/EditOff';
+import CheckIcon from '@mui/icons-material/Check';
 import { TreeItem2LabelInput } from '@mui/x-tree-view/TreeItem2/TreeItem2';
-import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
 
 const MUI_X_PRODUCTS = [
   {
@@ -55,39 +53,68 @@ function CustomLabel({ editing, editable, children, toggleItemEditing, ...other 
   );
 }
 
-function CustomLabelInput({
+const CustomLabelInput = React.forwardRef(function CustomLabelInput({
   editing,
-  resetLabelInputValue,
-  setLabelInputValue,
+  handleCancelItemLabelEditing,
+  handleSaveItemLabel,
+  label,
   ...other
 }) {
+  const [labelInputValue, setLabelInputValue] = React.useState(label);
+
   if (!editing) {
     return null;
   }
 
   return (
     <React.Fragment>
-      <TreeItem2LabelInput {...other} />
-      <IconButton onClick={resetLabelInputValue}>
+      <TreeItem2LabelInput
+        {...other}
+        label={label}
+        onChange={(event) => {
+          setLabelInputValue(event.target.value);
+        }}
+      />
+      <IconButton tabIndex={-1} onClick={handleCancelItemLabelEditing}>
         <EditOffIcon />
       </IconButton>
-      <IconButton onClick={setLabelInputValue}>
-        <EditOffIcon />
+      <IconButton
+        onClick={(event) => {
+          handleSaveItemLabel(event, labelInputValue);
+        }}
+      >
+        <CheckIcon />
       </IconButton>
     </React.Fragment>
   );
-}
+});
 
-const CustomTreeItem2 = React.forwardRef(function MyTreeItem(props, ref) {
+const CustomTreeItem2 = React.forwardRef(function MyTreeItem(
+  { focusItem, updateItemLabel, ...props },
+  ref,
+) {
   const {
-    interactions: { resetLabelInputValue, setLabelInputValue, toggleItemEditing },
+    interactions: {
+      toggleItemEditing,
+      handleCancelItemLabelEditing,
+      handleSaveItemLabel,
+    },
     status,
   } = useTreeItem2Utils({
     itemId: props.itemId,
     children: props.children,
-    label: props.label,
   });
+
   const handleContentDoubleClick = (event) => {
+    event.defaultMuiPrevented = true;
+  };
+
+  const handleInputBlur = (event) => {
+    event.defaultMuiPrevented = true;
+    event.stopPropagation();
+  };
+
+  const handleInputKeyDown = (event) => {
     event.defaultMuiPrevented = true;
   };
 
@@ -106,9 +133,11 @@ const CustomTreeItem2 = React.forwardRef(function MyTreeItem(props, ref) {
           toggleItemEditing,
         },
         labelInput: {
+          onBlur: handleInputBlur,
+          onKeyDown: handleInputKeyDown,
           editing: status.editing,
-          resetLabelInputValue,
-          setLabelInputValue,
+          handleCancelItemLabelEditing,
+          handleSaveItemLabel,
         },
       }}
     />

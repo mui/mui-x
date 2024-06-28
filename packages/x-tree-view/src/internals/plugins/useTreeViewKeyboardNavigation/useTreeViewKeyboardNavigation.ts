@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { TreeViewPlugin } from '../../models';
-import { TreeViewItemId } from '../../../models';
+import { TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import {
   getFirstNavigableItem,
   getLastNavigableItem,
@@ -36,15 +35,15 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       return;
     }
 
-    const newFirstCharMap: { [itemId: TreeViewItemId]: string } = {};
+    const newFirstCharMap: { [itemId: string]: string } = {};
 
-    const processItem = (itemId: TreeViewItemId) => {
-      newFirstCharMap[itemId] = state.labels[itemId]!.substring(0, 1).toLowerCase();
+    const processItem = (item: TreeViewItemMeta) => {
+      newFirstCharMap[item.id] = item.label!.substring(0, 1).toLowerCase();
     };
 
-    Object.keys(state.labels).forEach(processItem);
+    Object.values(state.items.itemMetaMap).forEach(processItem);
     firstCharMap.current = newFirstCharMap;
-  }, [state.labels, params.getItemId, instance]);
+  }, [state.items.itemMetaMap, params.getItemId, instance]);
 
   const getFirstMatchingItem = (itemId: string, query: string) => {
     const cleanQuery = query.toLowerCase();

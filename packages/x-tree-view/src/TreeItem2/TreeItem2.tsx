@@ -156,20 +156,41 @@ export const TreeItem2GroupTransition = styled(Collapse, {
 export const TreeItem2LabelInput = React.forwardRef(function TreeItem2LabelInput(
   {
     visible = false,
-    ownerState,
+    onChange,
+    label,
     ...props
   }: React.InputHTMLAttributes<any> & {
     visible: boolean;
-    value: string;
-    ownerState: TreeItem2OwnerState;
+    label: string;
   },
   ref: React.Ref<HTMLInputElement>,
 ) {
+  const [labelInputValue, setLabelInputValue] = React.useState(label);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onChange?.(event);
+    setLabelInputValue(event.target.value);
+  };
+
+  React.useEffect(() => {
+    return () => setLabelInputValue(label);
+  }, [label, visible]);
+
   if (!visible) {
     return null;
   }
 
-  return <input {...props} tabIndex={0} autoFocus type="text" ref={ref} />;
+  return (
+    <input
+      {...props}
+      onChange={handleInputChange}
+      value={labelInputValue}
+      tabIndex={0}
+      autoFocus
+      type="text"
+      ref={ref}
+    />
+  );
 });
 
 export const TreeItem2Checkbox = styled(

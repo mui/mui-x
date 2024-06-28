@@ -1,5 +1,6 @@
 import { TreeViewPluginSignature } from '../../models';
 import { TreeViewItemId } from '../../../models';
+import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 
 export interface UseTreeViewLabelPublicAPI {
   updateItemLabel: (itemId: TreeViewItemId, newLabel: string) => void;
@@ -18,11 +19,21 @@ export interface UseTreeViewLabelInstance extends UseTreeViewLabelPublicAPI {
    * @returns {void}.
    */
   isItemBeingEdited: (itemId: TreeViewItemId) => boolean;
+  /**
+   * Used to determine if a given item is editable.
+   * @param {TreeViewItemId} itemId The item to check.
+   * @returns {boolean} `true` if the item should be editable.
+   */
+  isItemEditable: (itemId: TreeViewItemId) => boolean;
+  /**
+   * Used to determine if the tree view is editable.
+   * @returns {boolean} `true` if the tree view is editable.
+   */
+  isTreeViewEditable: boolean;
 }
 
 export interface UseTreeViewLabelParameters<R extends {}> {
   items: readonly R[];
-  getItemLabel?: (item: R) => string;
   /**
    * Callback fired when the label of an item changes.
    * @param {TreeViewItemId} itemId The id of the item that was edited.
@@ -33,7 +44,6 @@ export interface UseTreeViewLabelParameters<R extends {}> {
 
 export interface UseTreeViewLabelState {
   editedItemId: string | null;
-  labels: { [key: TreeViewItemId]: string };
 }
 
 export type UseTreeViewLabelSignature = TreeViewPluginSignature<{
@@ -42,4 +52,5 @@ export type UseTreeViewLabelSignature = TreeViewPluginSignature<{
   publicAPI: UseTreeViewLabelPublicAPI;
   instance: UseTreeViewLabelInstance;
   state: UseTreeViewLabelState;
+  dependencies: [UseTreeViewItemsSignature];
 }>;

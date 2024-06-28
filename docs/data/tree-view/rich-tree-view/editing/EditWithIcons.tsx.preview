@@ -1,6 +1,6 @@
 <RichTreeView
   items={MUI_X_PRODUCTS}
-  slots={{ item: CustomTreeItem2 }}
+  slots={{ item: CustomTreeItem2 as any }}
   apiRef={apiRef}
   isItemEditable={(item) =>
     apiRef.current!.getItemOrderedChildrenIds(item.id).length === 0

@@ -44,6 +44,7 @@ export default function LabelEditing() {
         isItemEditable={(item) => Boolean(item?.editable)}
         defaultExpandedItems={['grid', 'pickers']}
         checkboxSelection
+        expansionTrigger="iconContainer"
       />
     </Box>
   );

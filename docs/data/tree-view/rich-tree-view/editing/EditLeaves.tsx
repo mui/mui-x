@@ -48,6 +48,7 @@ export default function EditLeaves() {
           apiRef.current!.getItemOrderedChildrenIds(item.id).length === 0
         }
         defaultExpandedItems={['grid', 'pickers']}
+        expansionTrigger="iconContainer"
       />
     </Box>
   );
