@@ -56,11 +56,11 @@ export const useSetupPan = () => {
 
     const handleDown = (event: PointerEvent) => {
       eventCacheRef.current.push(event);
-      // Prevent default if there is only one pointer
-      // otherwise it prevents the pinch movement.
+      // If there is only one pointer, prevent selecting text
       if (eventCacheRef.current.length === 1) {
         event.preventDefault();
       }
+
       isDraggingRef.current = true;
       setIsInteracting(true);
 

@@ -76,7 +76,6 @@ export const useSetupZoom = () => {
     }
 
     const wheelHandler = (event: WheelEvent) => {
-      event.preventDefault();
       if (element === null) {
         return;
       }
@@ -86,6 +85,8 @@ export const useSetupZoom = () => {
       if (isPointOutside(point, area)) {
         return;
       }
+
+      event.preventDefault();
 
       const centerRatio = getHorizontalCenterRatio(point, area);
 
@@ -274,6 +275,6 @@ function getHorizontalCenterRatio(
   return (point.x - left) / width;
 }
 
-function preventDefault(event: Event) {
+function preventDefault(event: TouchEvent) {
   event.preventDefault();
 }
