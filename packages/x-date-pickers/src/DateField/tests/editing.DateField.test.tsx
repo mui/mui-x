@@ -2030,13 +2030,13 @@ describe('<DateField /> - Editing', () => {
           fireEvent.change(input, { target: { value: initialValueStr.replace('23', '1') } });
         });
 
-        expectFieldValueV6(input, '11/21/2022');
+        expectFieldValueV6(input, '11/01/2022');
       });
 
       it('should support letter editing', () => {
         // Test with v6 input
         const v6Response = renderWithProps({
-          defaultValue: adapter.date('2022-05-16'),
+          defaultValue: adapter.date('2022-01-16'),
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           enableAccessibleFieldDOMStructure: false,
         });
@@ -2057,10 +2057,10 @@ describe('<DateField /> - Editing', () => {
           fireEvent.change(input, { target: { value: ' 2022' } });
 
           // Set the key pressed in the selected section
-          fireEvent.change(input, { target: { value: 'u 2022' } });
+          fireEvent.change(input, { target: { value: 'a 2022' } });
         });
 
-        expectFieldValueV6(input, 'June 2022');
+        expectFieldValueV6(input, 'April 2022');
       });
     },
   );

@@ -162,6 +162,18 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
               inputRef.current.setSelectionRange(selectionStart, selectionEnd);
             }
           }
+          setTimeout(() => {
+            // handle case when the selection is not updated correctly
+            // could happen on Android
+            if (
+              inputRef.current &&
+              inputRef.current === getActiveElement(document) &&
+              (inputRef.current.selectionStart !== selectionStart ||
+                inputRef.current.selectionEnd !== selectionEnd)
+            ) {
+              interactions.syncSelectionToDOM();
+            }
+          });
         }
 
         // Even reading this variable seems to do the trick, but also setting it just to make use of it
@@ -377,10 +389,9 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
     if (keyPressed.length === 0) {
       if (isAndroid()) {
         setTempAndroidValueStr(valueStr);
-      } else {
-        resetCharacterQuery();
-        clearActiveSection();
       }
+      resetCharacterQuery();
+      clearActiveSection();
 
       return;
     }
