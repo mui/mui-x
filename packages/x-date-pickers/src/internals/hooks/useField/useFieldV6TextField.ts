@@ -377,10 +377,9 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
     if (keyPressed.length === 0) {
       if (isAndroid()) {
         setTempAndroidValueStr(valueStr);
-      } else {
-        resetCharacterQuery();
-        clearActiveSection();
       }
+      resetCharacterQuery();
+      clearActiveSection();
 
       return;
     }
