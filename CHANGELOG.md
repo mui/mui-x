@@ -65,6 +65,16 @@ Same changes as in `@mui/x-data-grid@7.8.0`, plus:
 
 Same changes as in `@mui/x-data-grid-pro@7.8.0`.
 
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.8.0`
+
+- [fields] Fix section clearing behavior on Android (#13652) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.8.0`.
+
 ### Charts
 
 #### `@mui/x-charts@7.8.0`
