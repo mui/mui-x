@@ -74,13 +74,15 @@ Think of it like a middleman handling the communication between the Data Grid (c
 
 :::warning
 
-This feature is under development and is marked as **unstable**. The information shared on this page could change in future. Feel free to subscribe or comment on the official GitHub [umbrella issue](https://github.com/mui/mui-x/issues/8179).
+This feature is under development and is marked as **unstable**.
+The information shared on this page could change in future.
+Feel free to subscribe or comment on the official GitHub [umbrella issue](https://github.com/mui/mui-x/issues/8179).
 
 :::
 
 It has an initial set of required methods that you need to implement. The data grid will use these methods internally to fetch a sub-set of data when needed.
 
-Let's take a look at the `GridDataSource` interface.
+Let's take a look at the minimal `GridDataSource` interface configuration.
 
 ```tsx
 interface GridDataSource {
@@ -90,14 +92,15 @@ interface GridDataSource {
    * @returns {Promise<GridGetRowsResponse>} A promise that resolves to the data of type [GridGetRowsResponse]
    */
   getRows(params: GridGetRowsParams): Promise<GridGetRowsResponse>;
-  /**
-   * This method will be called when the user updates a row [Not yet implemented]
-   * @param {GridRowModel} updatedRow The updated row
-   * @returns {Promise<any>} If resolved (synced on the backend), the grid will update the row and mutate the cache
-   */
-  updateRow?(updatedRow: GridRowModel): Promise<any>;
 }
 ```
+
+:::info
+
+The above interface is a minimal configuration required for a data source to work.
+More specific properties like `getChildrenCount` and `getGroupKey` will be discussed in the corresponding sections.
+
+:::
 
 Here's how the above mentioned example would look like when implemented with the data source:
 
@@ -164,7 +167,7 @@ When the corresponding models update, the data grid calls the `getRows` method w
 ```tsx
 <DataGridPro
   columns={columns}
-  unstable_dataSource={customDataSource} // this automatically means `sortingMode="server"`, `filterMode="server"`, `paginationMode="server"`
+  unstable_dataSource={customDataSource} // automatically sets `sortingMode="server"`, `filterMode="server"`, `paginationMode="server"`
 />
 ```
 
@@ -173,14 +176,16 @@ The following demo showcases this behavior.
 {{"demo": "ServerSideDataGrid.js", "bg": "inline"}}
 
 :::info
-The data source demos use a utility function `useMockServer` to simulate the server-side data fetching. In a real-world scenario, you should replace this with your own server-side data fetching logic.
+The data source demos use a utility function `useMockServer` to simulate the server-side data fetching.
+In a real-world scenario, you should replace this with your own server-side data fetching logic.
 
 Open info section of the browser console to see the requests being made and the data being fetched in response.
 :::
 
 ## Data caching
 
-The data source caches fetched data by default. This means that if the user navigates to a page or expands a node that has already been fetched, the grid will not call the `getRows` function again to avoid unnecessary calls to the server.
+The data source caches fetched data by default.
+This means that if the user navigates to a page or expands a node that has already been fetched, the grid will not call the `getRows` function again to avoid unnecessary calls to the server.
 
 The `GridDataSourceCacheDefault` is used by default which is a simple in-memory cache that stores the data in a plain object. It could be seen in action in the demo below.
 
