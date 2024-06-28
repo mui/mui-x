@@ -160,14 +160,14 @@ export function computeValue(
     const scaleType = axis.scaleType ?? ('linear' as const);
 
     const extremums = [axis.min ?? minData, axis.max ?? maxData];
-    const tickNumber =
-      getTickNumber({ ...axis, range, domain: extremums }) / ((zoomRange[1] - zoomRange[0]) / 100);
+    const rawTickNumber = getTickNumber({ ...axis, range, domain: extremums });
+    const tickNumber = rawTickNumber / ((zoomRange[1] - zoomRange[0]) / 100);
 
     const zoomedRange = zoomedScaleRange(range, zoomRange);
 
-    const scale = getScale(scaleType, extremums, zoomedRange);
     // TODO: move nice to prop? Disable when there is zoom?
-    const [minDomain, maxDomain] = scale.nice(tickNumber).domain();
+    const scale = getScale(scaleType, extremums, zoomedRange).nice(rawTickNumber);
+    const [minDomain, maxDomain] = scale.domain();
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 
     completeAxis[axis.id] = {
