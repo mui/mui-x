@@ -2,6 +2,8 @@ import * as React from 'react';
 import { LegendPerItem, LegendPerItemProps } from './LegendPerItem';
 import { AxisDefaultized } from '../models/axis';
 import { ZAxisDefaultized } from '../models/z-axis';
+import { LegendGradient } from './LegendGradient';
+import { ScaleSequential } from 'd3-scale';
 
 export interface ChartsColorScaleLegendRenderProps
   extends Omit<LegendPerItemProps, 'itemsToDisplay'> {
@@ -38,6 +40,22 @@ function DefaultChartsColorScaleLegend(props: ChartsColorScaleLegendRenderProps)
       return { id: label, color, label };
     });
     return <LegendPerItem {...other} itemsToDisplay={itemsToDisplay} />;
+  }
+  if (colorMap.type === 'continuous') {
+    const colorScale = axisItem.colorScale;
+
+    if (!colorScale) {
+      return null;
+    }
+    return (
+      <LegendGradient
+        colorMap={colorMap}
+        colorScale={colorScale as ScaleSequential<string, string | null>}
+        id={`legend-gradient-${axisItem.id}`}
+        direction={other.direction}
+        position={other.position}
+      />
+    );
   }
   return null;
 }
