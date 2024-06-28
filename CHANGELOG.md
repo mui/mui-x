@@ -3,6 +3,74 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.8.0
+
+_Jun 28, 2024_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 📈 Support Date data on the BarChart component
+- 🖱️ Support modifying the expansion trigger on the Tree View component
+- ↕️ Support custom column sort icons on the Data Grid
+- 📝 Add Overlays documentation for the Data Grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.8.0`
+
+- [DataGrid] Add `columnHeaderSortIcon` slot (#13563) @arminmeh
+- [DataGrid] Fix dimensions lag issue after autosize (#13587) @MBilalShafi
+- [DataGrid] Fix print export failure when `hideFooter` option is set (#13034) @tarunrajput
+- [DataGrid][docs] Add overlay documentation (#13624) @KenanYusuf
+
+#### `@mui/x-data-grid-pro@7.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.8.0`, plus:
+
+- [DataGridPro] Fix multi-sorting indicator being cut off (#13625) @KenanYusuf
+
+#### `@mui/x-data-grid-premium@7.8.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.8.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.8.0`
+
+#### `@mui/x-date-pickers-pro@7.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.8.0`.
+
+### Charts
+
+#### `@mui/x-charts@7.8.0`
+
+- [charts] Fix line chart props not passing correct event handlers (#13609) @JCQuintas
+- [charts] Support BarChart with `Date` data (#13471) @alexfauquette
+- [charts] Support RTL for y-axis (#13614) @alexfauquette
+
+### Tree View
+
+#### `@mui/x-tree-view@7.8.0`
+
+- [TreeView] Add `expansionTrigger` prop (#13533) @noraleonte
+- [TreeView] Support experimental features from plugin's dependencies (#13632) @flaviendelangle
+
+### Docs
+
+- [docs] Add callout for `Luxon` `throwOnInvalid` support (#13621) @LukasTy
+
+### Core
+
+- [core] Add eslint rule to restrict import from `../internals` root (#13633) @JCQuintas
+- [chart] Use default values instead of non-null assertion to prevent error being thrown (#13637) @JCQuintas
+- [docs-infra] Sync \_app file with monorepo (#13582) @Janpot
+- [license] Allow usage of charts an tree view pro package for old premium licenses (#13619) @flaviendelangle
+
 ## 7.7.1
 
 _Jun 21, 2024_
@@ -44,7 +112,7 @@ Same changes as in `@mui/x-data-grid-pro@7.7.1`.
 - [pickers] Always use the same timezone in the field, the view and the layout components (#13481) @flaviendelangle
 - [pickers] Fix `AdapterDateFnsV3` generated method types (#13464) @alexey-kozlenkov
 - [pickers] Fix controlled `view` behavior (#13552) @LukasTy
-- [TimePicker] Improves RTL verification for the time pickers default views  (#13447) @arthurbalduini
+- [TimePicker] Improves RTL verification for the time pickers default views (#13447) @arthurbalduini
 
 #### `@mui/x-date-pickers-pro@7.7.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
