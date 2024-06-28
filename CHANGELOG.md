@@ -89,8 +89,8 @@ Same changes as in `@mui/x-data-grid-pro@7.8.0`.
 ### Core
 
 - [core] Add eslint rule to restrict import from `../internals` root (#13633) @JCQuintas
-- [docs-infra] Sync \_app file with monorepo (#13582) @Janpot
-- [license] Allow usage of charts an tree view pro package for old premium licenses (#13619) @flaviendelangle
+- [docs-infra] Sync `\_app` folder with monorepo (#13582) @Janpot
+- [license] Allow usage of charts and tree view pro package for old premium licenses (#13619) @flaviendelangle
 
 ## 7.7.1
 
@@ -785,7 +785,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - 📄 Support [unknown and estimated row count in server-side pagination](https://mui.com/x/react-data-grid/pagination/#index-based-pagination) (#12490) @MBilalShafi
 - 🎨 Support color scales in Charts (#12490) @alexfauquette
   Add a [`colorMap` configuration](https://mui.com/x/react-charts/styling/#values-color) to an axis, and the chart will use it to select colors.
-  Each impacted chart ([bar charts](https://mui.com/x/react-charts/bars/#color-scale), [line charts](https://mui.com/x/react-charts/lines/#color-scale), [scatter chasrts](https://mui.com/x/react-charts/scatter/#color-scale)) has a dedicated section explaining how this color map is impacting it.
+  Each impacted chart ([bar charts](https://mui.com/x/react-charts/bars/#color-scale), [line charts](https://mui.com/x/react-charts/lines/#color-scale), [scatter charts](https://mui.com/x/react-charts/scatter/#color-scale)) has a dedicated section explaining how this color map is impacting it.
 
   <img src="https://github.com/mui/mui-x/assets/45398769/f0066606-3486-4c4e-b3be-7fdd56d763c3" alt="scatter chart with gradient along y-axis" />
 
