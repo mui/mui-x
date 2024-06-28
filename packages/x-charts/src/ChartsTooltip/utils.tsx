@@ -52,23 +52,19 @@ export function useMouseTracker() {
       setMousePosition(null);
     };
 
-    const handleMove = (event: MouseEvent | TouchEvent) => {
-      const target = 'targetTouches' in event ? event.targetTouches[0] : event;
+    const handleMove = (event: PointerEvent) => {
       setMousePosition({
-        x: target.clientX,
-        y: target.clientY,
+        x: event.clientX,
+        y: event.clientY,
       });
     };
 
-    element.addEventListener('mouseout', handleOut);
-    element.addEventListener('mousemove', handleMove);
-    element.addEventListener('touchend', handleOut);
-    element.addEventListener('touchmove', handleMove);
+    element.addEventListener('pointermove', handleMove);
+    element.addEventListener('pointerup', handleOut);
+
     return () => {
-      element.removeEventListener('mouseout', handleOut);
-      element.removeEventListener('mousemove', handleMove);
-      element.addEventListener('touchend', handleOut);
-      element.addEventListener('touchmove', handleMove);
+      element.removeEventListener('pointermove', handleMove);
+      element.removeEventListener('pointerup', handleOut);
     };
   }, [svgRef]);
 
