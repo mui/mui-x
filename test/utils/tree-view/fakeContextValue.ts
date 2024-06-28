@@ -39,4 +39,5 @@ export const getFakeContextValue = (
   rootRef: {
     current: null,
   },
+  expansion: { expansionTrigger: 'content' },
 });
