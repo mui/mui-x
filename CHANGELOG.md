@@ -13,8 +13,6 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - 📈 Support Date data on the BarChart component
 - ↕️ Support custom column sort icons on the Data Grid
 - 🖱️ Support modifying the expansion trigger on the Tree View components
-- 🐞 Bugfixes
-- 📚 Documentation improvements
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
