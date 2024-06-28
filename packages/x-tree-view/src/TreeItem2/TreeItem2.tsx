@@ -159,10 +159,7 @@ export const TreeItem2LabelInput = React.forwardRef(function TreeItem2LabelInput
     onChange,
     label,
     ...props
-  }: React.InputHTMLAttributes<any> & {
-    visible: boolean;
-    label: string;
-  },
+  }: React.InputHTMLAttributes<any> & { visible: boolean; label: string },
   ref: React.Ref<HTMLInputElement>,
 ) {
   const [labelInputValue, setLabelInputValue] = React.useState(label);
