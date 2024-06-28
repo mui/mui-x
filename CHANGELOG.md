@@ -9,7 +9,37 @@ _Jun 28, 2024_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
-- 🛰 Introduce server-side data source for improved server integration in the Data Grid. See [documentation](https://mui.com/x/react-data-grid/server-side-data/) for more details.
+- 🛰 Introduce server-side data source for improved server integration in the Data Grid.
+
+  Supports server-side pagination, sorting and filtering on plain and tree data, and automatic caching.
+
+  To enable, provide a `getRows` function to the `unstable_dataSource` prop on the Data Grid component.
+
+  ```tsx
+  const dataSource = {
+    getRows: async (params: GridServerGetRowsParams) => {
+      const data = await fetch(
+        `https://api.example.com/data?${new URLSearchParams({
+          page: params.page,
+          pageSize: params.pageSize,
+          sortModel: JSON.stringify(params.sortModel),
+          filterModel: JSON.stringify(params.filterModel),
+        }).toString()}`,
+      );
+      return {
+        rows: data.rows,
+        totalRows: data.totalRows,
+      };
+    },
+  }
+  <DataGridPro
+    unstable_dataSource={dataSource}
+    {...otherProps}
+  />
+  ```
+
+  See [server-side data documentation](https://mui.com/x/react-data-grid/server-side-data/) for more details.
+
 - 📈 Support Date data on the BarChart component
 - ↕️ Support custom column sort icons on the Data Grid
 - 🖱️ Support modifying the expansion trigger on the Tree View components
@@ -755,7 +785,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - 📄 Support [unknown and estimated row count in server-side pagination](https://mui.com/x/react-data-grid/pagination/#index-based-pagination) (#12490) @MBilalShafi
 - 🎨 Support color scales in Charts (#12490) @alexfauquette
   Add a [`colorMap` configuration](https://mui.com/x/react-charts/styling/#values-color) to an axis, and the chart will use it to select colors.
-  Each impacted chart ([bar charts](https://mui.com/x/react-charts/bars/#color-scale), [line charts](https://mui.com/x/react-charts/lines/#color-scale), [scatter charts](https://mui.com/x/react-charts/scatter/#color-scale)) has a dedicated section explaining how this color map is impacting it.
+  Each impacted chart ([bar charts](https://mui.com/x/react-charts/bars/#color-scale), [line charts](https://mui.com/x/react-charts/lines/#color-scale), [scatter chasrts](https://mui.com/x/react-charts/scatter/#color-scale)) has a dedicated section explaining how this color map is impacting it.
 
   <img src="https://github.com/mui/mui-x/assets/45398769/f0066606-3486-4c4e-b3be-7fdd56d763c3" alt="scatter chart with gradient along y-axis" />
 
