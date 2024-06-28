@@ -36,13 +36,13 @@ type UseTreeItem2UtilsMinimalPlugins = readonly [
   UseTreeViewExpansionSignature,
   UseTreeViewItemsSignature,
   UseTreeViewFocusSignature,
-  UseTreeViewLabelSignature,
 ];
 
 /**
  * Plugins that `useTreeItem2Utils` can use if they are present, but are not required.
  */
-export type UseTreeItem2UtilsOptionalPlugins = readonly [];
+
+export type UseTreeItem2UtilsOptionalPlugins = readonly [UseTreeViewLabelSignature];
 
 export const useTreeItem2Utils = ({
   itemId,
@@ -62,8 +62,8 @@ export const useTreeItem2Utils = ({
     focused: instance.isItemFocused(itemId),
     selected: instance.isItemSelected(itemId),
     disabled: instance.isItemDisabled(itemId),
-    editing: instance.isItemBeingEdited(itemId),
-    editable: instance.isItemEditable(itemId),
+    editing: instance?.isItemBeingEdited ? instance?.isItemBeingEdited(itemId) : false,
+    editable: instance.isItemEditable ? instance.isItemEditable(itemId) : false,
   };
 
   const handleExpansion = (event: React.MouseEvent) => {
@@ -81,6 +81,7 @@ export const useTreeItem2Utils = ({
     if (
       status.expandable &&
       !(multiple && instance.isItemExpanded(itemId)) &&
+      instance.isItemBeingEdited &&
       !instance.isItemBeingEdited(itemId)
     ) {
       instance.toggleItemExpansion(event, itemId);
@@ -119,6 +120,9 @@ export const useTreeItem2Utils = ({
   };
 
   const toggleItemEditing = () => {
+    if (!instance.isItemEditable || !instance.isItemBeingEdited || !instance.setEditedItemId) {
+      return;
+    }
     if (instance.isItemEditable(itemId)) {
       if (instance.isItemBeingEdited(itemId)) {
         instance.setEditedItemId(null);
@@ -129,9 +133,11 @@ export const useTreeItem2Utils = ({
   };
 
   const handleSaveItemLabel = (event: React.SyntheticEvent, label: string) => {
-    instance.updateItemLabel(itemId, label);
-    toggleItemEditing();
-    instance.focusItem(event, itemId);
+    if (instance.updateItemLabel) {
+      instance.updateItemLabel(itemId, label);
+      toggleItemEditing();
+      instance.focusItem(event, itemId);
+    }
   };
 
   const handleCancelItemLabelEditing = (event: React.SyntheticEvent) => {

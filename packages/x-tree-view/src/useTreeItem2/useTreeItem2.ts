@@ -49,7 +49,7 @@ export const useTreeItem2 = <
   const iconContainerRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const isBeingEdited = instance.isItemBeingEdited(itemId);
+  const isBeingEdited = status.editing;
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>
@@ -206,7 +206,7 @@ export const useTreeItem2 = <
       ...externalEventHandlers,
       ref: handleRootRef,
       role: 'treeitem',
-      tabIndex: instance.canItemBeTabbed(itemId) && !instance.isItemBeingEdited(itemId) ? 0 : -1,
+      tabIndex: instance.canItemBeTabbed(itemId) && !isBeingEdited ? 0 : -1,
       id: idAttribute,
       'aria-expanded': status.expandable ? status.expanded : undefined,
       'aria-selected': ariaSelected,
