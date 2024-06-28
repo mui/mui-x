@@ -18,6 +18,7 @@ export const getFakeContextValue = (
     focusItem: () => {},
     getItem: () => ({}),
     setItemExpansion: () => {},
+    getItemOrderedChildrenIds: () => [],
   },
   runItemPlugins: () => ({
     rootRef: null,
