@@ -26,7 +26,6 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGrid] Add `columnHeaderSortIcon` slot (#13563) @arminmeh
 - [DataGrid] Fix dimensions lag issue after autosize (#13587) @MBilalShafi
 - [DataGrid] Fix print export failure when `hideFooter` option is set (#13034) @tarunrajput
-- [DataGrid][docs] Add overlay documentation (#13624) @KenanYusuf
 
 #### `@mui/x-data-grid-pro@7.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -38,14 +37,6 @@ Same changes as in `@mui/x-data-grid@7.8.0`, plus:
 #### `@mui/x-data-grid-premium@7.8.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-data-grid-pro@7.8.0`.
-
-### Date and Time Pickers
-
-#### `@mui/x-date-pickers@7.8.0`
-
-#### `@mui/x-date-pickers-pro@7.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-date-pickers@7.8.0`.
 
 ### Charts
 
@@ -66,6 +57,7 @@ Same changes as in `@mui/x-date-pickers@7.8.0`.
 ### Docs
 
 - [docs] Add callout for `Luxon` `throwOnInvalid` support (#13621) @LukasTy
+- [docs] Add "Overlays" section to the Data Grid documentation (#13624) @KenanYusuf
 
 ### Core
 
