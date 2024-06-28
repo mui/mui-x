@@ -1,9 +1,12 @@
 [
+  { "name": "BASE_URL", "kind": "Variable" },
   { "name": "ColumnsOptions", "kind": "Interface" },
   { "name": "createFakeServer", "kind": "Variable" },
   { "name": "currencyPairs", "kind": "Variable" },
+  { "name": "deepFreeze", "kind": "Variable" },
   { "name": "DemoDataReturnType", "kind": "TypeAlias" },
   { "name": "DemoLink", "kind": "Variable" },
+  { "name": "extrapolateSeed", "kind": "Function" },
   { "name": "generateFilledQuantity", "kind": "Variable" },
   { "name": "generateIsFilled", "kind": "Variable" },
   { "name": "getBasicGridData", "kind": "Variable" },
@@ -77,5 +80,6 @@
   { "name": "useBasicDemoData", "kind": "Variable" },
   { "name": "useDemoData", "kind": "Variable" },
   { "name": "UseDemoDataOptions", "kind": "Interface" },
+  { "name": "useMockServer", "kind": "Variable" },
   { "name": "useMovieData", "kind": "Variable" }
 ]

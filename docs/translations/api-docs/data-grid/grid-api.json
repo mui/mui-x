@@ -181,6 +181,7 @@
     "setFilterModel": {
       "description": "Sets the filter model to the one given by <code>model</code>."
     },
+    "setLoading": { "description": "Sets the internal loading state." },
     "setPage": {
       "description": "Sets the displayed page to the value given by <code>page</code>."
     },
@@ -243,6 +244,7 @@
     },
     "toggleDetailPanel": { "description": "Expands or collapses the detail panel of a row." },
     "unpinColumn": { "description": "Unpins a column." },
+    "unstable_dataSource": { "description": "The data source API." },
     "unstable_replaceRows": { "description": "Replace a set of rows with new rows." },
     "unstable_setColumnVirtualization": { "description": "Enable/disable column virtualization." },
     "unstable_setPinnedRows": { "description": "Changes the pinned rows." },

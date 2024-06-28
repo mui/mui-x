@@ -15,6 +15,7 @@ export {
   useGridColumnReorder,
   columnReorderStateInitializer,
 } from '../hooks/features/columnReorder/useGridColumnReorder';
+export { useGridDataSourceTreeDataPreProcessors } from '../hooks/features/serverSideTreeData/useGridDataSourceTreeDataPreProcessors';
 export {
   useGridDetailPanel,
   detailPanelStateInitializer,
@@ -36,6 +37,10 @@ export {
 } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
 export { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
 export { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
+export {
+  useGridDataSource,
+  dataSourceStateInitializer,
+} from '../hooks/features/dataSource/useGridDataSource';
 
 export type {
   GridExperimentalProFeatures,

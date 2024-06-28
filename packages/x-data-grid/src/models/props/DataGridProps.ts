@@ -32,6 +32,7 @@ import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
 import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
 import type { GridAutosizeOptions } from '../../hooks/features/columnResize';
+import type { GridDataSource } from '../gridDataSource';
 
 export interface GridExperimentalFeatures {
   /**
@@ -813,6 +814,7 @@ export interface DataGridProSharedPropsWithoutDefaultValue {
    * Override the height of the header filters.
    */
   headerFilterHeight?: number;
+  unstable_dataSource?: GridDataSource;
 }
 
 export interface DataGridPremiumSharedPropsWithDefaultValue {

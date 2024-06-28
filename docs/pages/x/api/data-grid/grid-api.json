@@ -350,6 +350,7 @@
       },
       "required": true
     },
+    "setLoading": { "type": { "description": "(loading: boolean) =&gt; void" }, "required": true },
     "setPage": { "type": { "description": "(page: number) =&gt; void" }, "required": true },
     "setPageSize": { "type": { "description": "(pageSize: number) =&gt; void" }, "required": true },
     "setPaginationMeta": {
@@ -463,6 +464,11 @@
     },
     "unpinColumn": {
       "type": { "description": "(field: string) =&gt; void" },
+      "required": true,
+      "isProPlan": true
+    },
+    "unstable_dataSource": {
+      "type": { "description": "GridDataSourceApiBase" },
       "required": true,
       "isProPlan": true
     },
