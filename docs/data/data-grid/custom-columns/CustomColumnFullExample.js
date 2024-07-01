@@ -27,7 +27,7 @@ import {
   INCOTERM_OPTIONS,
   STATUS_OPTIONS,
 } from '@mui/x-data-grid-generator/services/static-data';
-import { SparkLineChart } from '@mui/x-charts';
+import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 import { DataGrid, gridStringOrNumberComparator } from '@mui/x-data-grid';
 
 function GridSparklineCell(params) {
@@ -165,7 +165,7 @@ const rows = Array.from({ length: 10 }, (_, index) => ({
   incoTerm: randomIncoterm(),
 }));
 
-export default function CustomColumnsFullExample() {
+export default function CustomColumnFullExample() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid rows={rows} columns={columns} />
