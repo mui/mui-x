@@ -25,3 +25,8 @@ performance-snapshot.json
 .github/styles/Google
 .github/styles/MUI
 .github/styles/.vale-config
+**/test-results/
+**/playwright-report/
+**/blob-report/
+**/playwright/.cache/
+
