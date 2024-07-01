@@ -81,8 +81,8 @@ importers:
         specifier: ^5.15.21
         version: 5.15.21(@mui/material@5.15.21(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/internal-markdown':
-        specifier: ^1.0.5
-        version: 1.0.5
+        specifier: ^1.0.6
+        version: 1.0.6
       '@mui/internal-test-utils':
         specifier: ^1.0.3
         version: 1.0.3(@babel/core@7.24.7)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2777,8 +2777,8 @@ packages:
   '@mui/internal-docs-utils@1.0.7':
     resolution: {integrity: sha512-vHplixLKu17U7Wa3RDbGv9C3FmXniJKywyZEIeJaTG4ikvl+iWI+BuZPCNniJwj0HSxu3thbyPIrBXijh7j+Xg==}
 
-  '@mui/internal-markdown@1.0.5':
-    resolution: {integrity: sha512-5Hv6XypPsVW8PHZiJvGl/KT+BdyyR9o7YGBQCM5KYitHtNSHHpTkfsjimhyKbZHI4jPNzWFzTjibYJRPpW8Jdw==}
+  '@mui/internal-markdown@1.0.6':
+    resolution: {integrity: sha512-JuCRVTa77yG0+Jx6Myt5Esji8r+iv8ymlfMHVKMw+Z+Np/8/DZXRoJs5UGXbWBK2hFvVA02pbjExqmGNNdfC7A==}
 
   '@mui/internal-scripts@1.0.11':
     resolution: {integrity: sha512-lvdnCVG57QjggVpcDc9lZ+JbIIV+zB7crUoJ43ahpFVKtos9yzZPLuk/8rLV0I/B3erVztGeUPocp4p19Mph0w==}
@@ -7059,9 +7059,9 @@ packages:
     resolution: {integrity: sha512-qwGyuyKwjkEMOJ10XN6OTKNOVYvOIi35RNvDLNxTof5s8UmyGHlCdpngRHoRGNvQVGuxO3BJ7uNSgdeX166WXw==}
     engines: {node: '>=18'}
 
-  marked@5.1.2:
-    resolution: {integrity: sha512-ahRPGXJpjMjwSOlBoTMZAK7ATXkli5qCPxZ21TG44rx1KEo44bii4ekgTDQPNRQ4Kh7JMb9Ub1PVk1NxRSsorg==}
-    engines: {node: '>= 16'}
+  marked@13.0.1:
+    resolution: {integrity: sha512-7kBohS6GrZKvCsNXZyVVXSW7/hGBHe49ng99YPkDCckSUrrG7MSFLCexsRxptzOmyW2eT5dySh4Md1V6my52fA==}
+    engines: {node: '>= 18'}
     hasBin: true
 
   mdast-util-from-markdown@0.8.5:
@@ -11073,11 +11073,11 @@ snapshots:
       rimraf: 5.0.7
       typescript: 5.5.2
 
-  '@mui/internal-markdown@1.0.5':
+  '@mui/internal-markdown@1.0.6':
     dependencies:
       '@babel/runtime': 7.24.7
       lodash: 4.17.21
-      marked: 5.1.2
+      marked: 13.0.1
       prismjs: 1.29.0
 
   '@mui/internal-scripts@1.0.11':
@@ -16315,7 +16315,7 @@ snapshots:
       markdown-it: 14.1.0
       markdownlint-micromark: 0.1.9
 
-  marked@5.1.2: {}
+  marked@13.0.1: {}
 
   mdast-util-from-markdown@0.8.5:
     dependencies:
