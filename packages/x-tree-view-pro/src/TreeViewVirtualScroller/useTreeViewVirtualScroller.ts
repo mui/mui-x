@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useTimeout from '@mui/utils/useTimeout';
+import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useTreeViewContext, UseTreeViewItemsSignature } from '@mui/x-tree-view/internals';
 import {
   UseTreeViewVirtualizationSignature,
@@ -11,7 +12,6 @@ import {
 } from '../internals/plugins/useTreeViewVirtualization';
 import { getDirectionFromDelta, areRenderContextsEqual } from './TreeViewVirtualScroller.utils';
 import { TreeViewVirtualizationScrollPosition } from './TreeViewVirtualScroller.types';
-import { useResizeObserver } from './useResizeObserver';
 import { useRunOnce } from './useRunOnce';
 
 const EMPTY_RENDER_CONTEXT: UseTreeViewVirtualizationRenderContext = {
