@@ -216,8 +216,8 @@ importers:
         specifier: ^12.3.3
         version: 12.3.3(encoding@0.1.13)
       date-fns-jalali-v3:
-        specifier: npm:date-fns-jalali@3.6.0-0
-        version: date-fns-jalali@3.6.0-0
+        specifier: npm:date-fns-jalali@3.6.0-1
+        version: date-fns-jalali@3.6.0-1
       date-fns-v3:
         specifier: npm:date-fns@3.6.0
         version: date-fns@3.6.0
@@ -4966,8 +4966,8 @@ packages:
     resolution: {integrity: sha512-2wz5AOzd3oQ+PnL3E/iKvJZ14i6oTp15sW047ZFCOgM9OSP8ggbb9jm/4SKI8ejdUGH96Krb5dfEQe8zbkVyZw==}
     engines: {node: '>=0.11'}
 
-  date-fns-jalali@3.6.0-0:
-    resolution: {integrity: sha512-rcOocwhBFgEN4i+vXPoEp/irCxAmX8yloK/l/oeMOVCLpaFQfkq7jVn0vCWK91P2H9I/doSAPEN4WSWQeqwsug==}
+  date-fns-jalali@3.6.0-1:
+    resolution: {integrity: sha512-f4FlXArA3kE0uW27y/2AJjRevb6x7DaLMjJfxw7CEXC+XK/JXbZ/WVHND5l1zq2VZsssRrXRWWS0u9NGwawVsQ==}
 
   date-fns@2.30.0:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
@@ -13873,7 +13873,7 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.24.7
 
-  date-fns-jalali@3.6.0-0: {}
+  date-fns-jalali@3.6.0-1: {}
 
   date-fns@2.30.0:
     dependencies:
