@@ -23,7 +23,7 @@ export function generateVirtualElement(
   }
   const { x, y, isMouse } = mousePosition;
   const xPosition = x;
-  const yPosition = y + (isMouse ? 0 : -30);
+  const yPosition = y + (isMouse ? 0 : -40);
   const boundingBox = {
     width: 0,
     height: 0,
