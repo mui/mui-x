@@ -87,6 +87,7 @@ const pages: MuiPage[] = [
       },
       { pathname: '/x/react-data-grid/export' },
       { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste', newFeature: true },
+      { pathname: '/x/react-data-grid/overlays', title: 'Overlays' },
       { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
       {
         pathname: '/x/react-data-grid/style-group',
@@ -115,9 +116,10 @@ const pages: MuiPage[] = [
       {
         pathname: '/x/react-data-grid/server-side-data-group',
         title: 'Server-side data',
-        planned: true,
+        plan: 'pro',
         children: [
-          { pathname: '/x/react-data-grid/server-side-data', title: 'Overview', planned: true },
+          { pathname: '/x/react-data-grid/server-side-data', title: 'Overview' },
+          { pathname: '/x/react-data-grid/server-side-data/tree-data', plan: 'pro' },
           {
             pathname: '/x/react-data-grid/server-side-data/lazy-loading',
             plan: 'pro',
@@ -128,7 +130,6 @@ const pages: MuiPage[] = [
             plan: 'pro',
             planned: true,
           },
-          { pathname: '/x/react-data-grid/server-side-data/tree-data', plan: 'pro', planned: true },
           {
             pathname: '/x/react-data-grid/server-side-data/row-grouping',
             plan: 'pro',

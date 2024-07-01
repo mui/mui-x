@@ -10,18 +10,6 @@ type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 export type XOR<T, U> = T | U extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U;
 
 /**
- * Transform mouse event position to coordinates inside the SVG.
- * @param svg The SVG element
- * @param event The mouseEvent to transform
- */
-export function getSVGPoint(svg: SVGSVGElement, event: Pick<MouseEvent, 'clientX' | 'clientY'>) {
-  const pt = svg.createSVGPoint();
-  pt.x = event.clientX;
-  pt.y = event.clientY;
-  return pt.matrixTransform(svg.getScreenCTM()!.inverse());
-}
-
-/**
  * Helper that converts values and percentages into values.
  * @param value The value provided by the developer. Can either be a number or a string with '%' or 'px'.
  * @param refValue The numerical value associated to 100%.

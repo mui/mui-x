@@ -28,19 +28,18 @@ import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
 } from '../timeViewRenderers';
-import {
-  DefaultizedProps,
-  UsePickerViewsProps,
-  VIEW_HEIGHT,
-  isDatePickerView,
-  isInternalTimeView,
-} from '../internals';
+
 import {
   multiSectionDigitalClockClasses,
   multiSectionDigitalClockSectionClasses,
 } from '../MultiSectionDigitalClock';
 import { digitalClockClasses } from '../DigitalClock';
 import { DesktopDateTimePickerLayout } from './DesktopDateTimePickerLayout';
+import { VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { DefaultizedProps } from '../internals/models/helpers';
+import { UsePickerViewsProps } from '../internals/hooks/usePicker/usePickerViews';
+import { isInternalTimeView } from '../internals/utils/time-utils';
+import { isDatePickerView } from '../internals/utils/date-utils';
 
 const rendererInterceptor = function rendererInterceptor<
   TDate extends PickerValidDate,
