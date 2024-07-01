@@ -943,4 +943,16 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
+  unstable_dataSource: PropTypes.shape({
+    getChildrenCount: PropTypes.func,
+    getGroupKey: PropTypes.func,
+    getRows: PropTypes.func.isRequired,
+    updateRow: PropTypes.func,
+  }),
+  unstable_dataSourceCache: PropTypes.shape({
+    clear: PropTypes.func.isRequired,
+    get: PropTypes.func.isRequired,
+    set: PropTypes.func.isRequired,
+  }),
+  unstable_onDataSourceError: PropTypes.func,
 } as any;

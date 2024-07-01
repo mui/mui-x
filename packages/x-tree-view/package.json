@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view",
-  "version": "7.7.1",
+  "version": "7.8.0",
   "description": "The community edition of the Tree View components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -60,7 +60,7 @@
     "react-dom": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.2",
+    "@mui/internal-test-utils": "^1.0.3",
     "@types/prop-types": "^15.7.12",
     "rimraf": "^5.0.7"
   },
