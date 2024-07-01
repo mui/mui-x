@@ -3,9 +3,14 @@ import { AxisInteractionData, ItemInteractionData } from '../context/Interaction
 import { ChartSeriesType } from '../models/seriesType/config';
 import { useSvgRef } from '../hooks';
 
-export function generateVirtualElement(
-  mousePosition: { x: number; y: number; isMouse: boolean } | null,
-) {
+type MousePosition = {
+  x: number;
+  y: number;
+  pointerType: 'mouse' | 'touch' | 'pen';
+  height: number;
+};
+
+export function generateVirtualElement(mousePosition: MousePosition | null) {
   if (mousePosition === null) {
     return {
       getBoundingClientRect: () => ({
@@ -21,9 +26,9 @@ export function generateVirtualElement(
       }),
     };
   }
-  const { x, y, isMouse } = mousePosition;
+  const { x, y, pointerType, height } = mousePosition;
   const xPosition = x;
-  const yPosition = y + (isMouse ? 0 : -40);
+  const yPosition = y - (pointerType === 'touch' ? 40 - height : 0);
   const boundingBox = {
     width: 0,
     height: 0,
@@ -46,11 +51,7 @@ export function useMouseTracker() {
   const svgRef = useSvgRef();
 
   // Use a ref to avoid rerendering on every mousemove event.
-  const [mousePosition, setMousePosition] = React.useState<null | {
-    x: number;
-    y: number;
-    isMouse: boolean;
-  }>(null);
+  const [mousePosition, setMousePosition] = React.useState<MousePosition | null>(null);
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -63,10 +64,13 @@ export function useMouseTracker() {
     };
 
     const handleMove = (event: PointerEvent) => {
+      document.getElementById('console')!.innerText =
+        `${event.height} ${event.width} ${event.pointerType}`;
       setMousePosition({
         x: event.clientX,
         y: event.clientY,
-        isMouse: event.pointerType === 'mouse',
+        height: event.height,
+        pointerType: event.pointerType as MousePosition['pointerType'],
       });
     };
 
