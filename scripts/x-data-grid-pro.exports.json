@@ -613,7 +613,6 @@
   { "name": "useGridSelector", "kind": "Variable" },
   { "name": "useGridVirtualization", "kind": "Function" },
   { "name": "useOnMount", "kind": "Function" },
-  { "name": "useResizeObserver", "kind": "Function" },
   { "name": "useRunOnce", "kind": "Variable" },
   { "name": "ValueOptions", "kind": "TypeAlias" },
   { "name": "virtualizationStateInitializer", "kind": "Variable" }
