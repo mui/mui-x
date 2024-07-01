@@ -83,9 +83,6 @@ function GridToolbarRemoteControl() {
           logicOperator: (result.filterOperator as GridLogicOperator) ?? GridLogicOperator.And,
           quickFilterValues: [],
         });
-        apiRef.current.setSortModel(
-          result.sorting.map((s) => ({ field: s.column, sort: s.direction })),
-        );
 
         // XXX: This requires premium.
         if ((apiRef.current as any).setRowGroupingModel) {
@@ -96,6 +93,10 @@ function GridToolbarRemoteControl() {
           // XXX: Custom aggregation functions not supported here.
           (apiRef.current as any).setAggregationModel(result.aggregation);
         }
+
+        apiRef.current.setSortModel(
+          result.sorting.map((s) => ({ field: s.column, sort: s.direction })),
+        );
 
         const rows = getVisibleRows(apiRef, rootProps);
         const selectedRowIds =
