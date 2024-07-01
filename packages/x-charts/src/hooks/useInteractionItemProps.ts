@@ -16,7 +16,7 @@ export const useInteractionItemProps = (skip?: boolean) => {
         event.currentTarget.releasePointerCapture(event.pointerId);
       }
     };
-    const onPointerEnter = (event: React.PointerEvent) => {
+    const onPointerEnter = () => {
       dispatchInteraction({
         type: 'enterItem',
         data,

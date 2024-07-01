@@ -123,7 +123,9 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
 
     const handleDown = (event: PointerEvent) => {
       const target = event.currentTarget;
-      if (!target) return;
+      if (!target) {
+        return;
+      }
 
       if ((target as HTMLElement).hasPointerCapture(event.pointerId)) {
         (target as HTMLElement).releasePointerCapture(event.pointerId);
