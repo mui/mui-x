@@ -43,6 +43,8 @@ module.exports = {
     fallback: {
       // Exclude polyfill and treat 'fs' as an empty module since it is not required. next -> gzip-size relies on it.
       fs: false,
+      // Exclude polyfill and treat 'stream' as an empty module since it is not required. next -> gzip-size relies on it.
+      stream: false,
       // Exclude polyfill and treat 'zlib' as an empty module since it is not required. next -> gzip-size relies on it.
       zlib: false,
     },
