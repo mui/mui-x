@@ -146,7 +146,7 @@ function ChartsTooltip(props: ChartsTooltipProps) {
     externalSlotProps: slotProps?.popper,
     additionalProps: {
       open: popperOpen,
-      placement: 'right-start' as const,
+      placement: mousePosition?.isMouse ? ('right-start' as const) : ('top' as const),
       anchorEl: generateVirtualElement(mousePosition),
     },
     ownerState: {},

@@ -3,7 +3,9 @@ import { AxisInteractionData, ItemInteractionData } from '../context/Interaction
 import { ChartSeriesType } from '../models/seriesType/config';
 import { useSvgRef } from '../hooks';
 
-export function generateVirtualElement(mousePosition: { x: number; y: number } | null) {
+export function generateVirtualElement(
+  mousePosition: { x: number; y: number; isMouse: boolean } | null,
+) {
   if (mousePosition === null) {
     return {
       getBoundingClientRect: () => ({
@@ -19,19 +21,23 @@ export function generateVirtualElement(mousePosition: { x: number; y: number } |
       }),
     };
   }
-  const { x, y } = mousePosition;
+  const { x, y, isMouse } = mousePosition;
+  const xPosition = x;
+  const yPosition = y + (isMouse ? 0 : -30);
+  const boundingBox = {
+    width: 0,
+    height: 0,
+    x: xPosition,
+    y: yPosition,
+    top: yPosition,
+    right: xPosition,
+    bottom: yPosition,
+    left: xPosition,
+  };
   return {
     getBoundingClientRect: () => ({
-      width: 0,
-      height: 0,
-      x,
-      y,
-      top: y,
-      right: x,
-      bottom: y,
-      left: x,
-      toJSON: () =>
-        JSON.stringify({ width: 0, height: 0, x, y, top: y, right: x, bottom: y, left: x }),
+      ...boundingBox,
+      toJSON: () => JSON.stringify(boundingBox),
     }),
   };
 }
@@ -40,7 +46,11 @@ export function useMouseTracker() {
   const svgRef = useSvgRef();
 
   // Use a ref to avoid rerendering on every mousemove event.
-  const [mousePosition, setMousePosition] = React.useState<null | { x: number; y: number }>(null);
+  const [mousePosition, setMousePosition] = React.useState<null | {
+    x: number;
+    y: number;
+    isMouse: boolean;
+  }>(null);
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -56,13 +66,16 @@ export function useMouseTracker() {
       setMousePosition({
         x: event.clientX,
         y: event.clientY,
+        isMouse: event.pointerType === 'mouse',
       });
     };
 
+    element.addEventListener('pointerdown', handleMove);
     element.addEventListener('pointermove', handleMove);
     element.addEventListener('pointerup', handleOut);
 
     return () => {
+      element.removeEventListener('pointerdown', handleMove);
       element.removeEventListener('pointermove', handleMove);
       element.removeEventListener('pointerup', handleOut);
     };
