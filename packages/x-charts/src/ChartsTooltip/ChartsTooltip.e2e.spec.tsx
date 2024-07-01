@@ -1,27 +1,11 @@
 import { test, expect } from '@playwright/experimental-ct-react';
-import { BarChart } from '@mui/x-charts';
+import { BarChartTest } from './ChartsTooltip.e2e.stories';
 
 test.use({ viewport: { width: 500, height: 500 } });
 
 test.describe('<ChartsTooltip/>', () => {
   test('should display tooltip on item hover', async ({ mount, page }) => {
-    const component = await mount(
-      <BarChart
-        height={500}
-        width={500}
-        skipAnimation
-        series={[
-          {
-            data: [100, 200, 300],
-          },
-        ]}
-        leftAxis={null}
-        barLabel="value"
-        tooltip={{
-          trigger: 'item',
-        }}
-      />,
-    );
+    const component = await mount(<BarChartTest />);
 
     await component.getByText('100').hover({ force: true });
 
@@ -36,23 +20,7 @@ test.describe('<ChartsTooltip/>', () => {
   }) => {
     test.skip(!hasTouch, 'Test touch only on touch devices');
 
-    const component = await mount(
-      <BarChart
-        height={500}
-        width={500}
-        skipAnimation
-        series={[
-          {
-            data: [100, 200, 300],
-          },
-        ]}
-        leftAxis={null}
-        barLabel="value"
-        tooltip={{
-          trigger: 'item',
-        }}
-      />,
-    );
+    const component = await mount(<BarChartTest />);
 
     const first = (await component.getByText('100').boundingBox())!;
     const second = (await component.getByText('200').boundingBox())!;
