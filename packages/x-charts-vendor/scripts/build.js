@@ -74,11 +74,11 @@ const main = async () => {
   }
 
   // Clean out and ensure base library paths exist
-  const EsmBasePath = path.resolve(__dirname, `../es`);
-  const CjsBasePath = path.resolve(__dirname, `../lib`);
-  const VendorBasePath = path.resolve(__dirname, `../lib-vendor`);
+  const EsmBasePath = path.resolve(__dirname, `../build/es`);
+  const CjsBasePath = path.resolve(__dirname, `../build/lib`);
+  const VendorBasePath = path.resolve(__dirname, `../build/lib-vendor`);
   const baseDirs = [EsmBasePath, CjsBasePath, VendorBasePath];
-  const cleanGlobs = [].concat(baseDirs, path.resolve(__dirname, '../d3-*'));
+  const cleanGlobs = [].concat(baseDirs, path.resolve(__dirname, '../build/d3-*'));
 
   log('Cleaning old vendor directories.');
   await Promise.all(cleanGlobs.map((glob) => rimrafP(glob)));
@@ -94,7 +94,7 @@ const main = async () => {
       '--config-file',
       path.resolve(__dirname, '../.babelrc.js'),
       '-d',
-      path.resolve(__dirname, '../lib-vendor'),
+      path.resolve(__dirname, '../build/lib-vendor'),
       path.resolve(__dirname, '../node_modules'),
     ],
     {
@@ -110,10 +110,14 @@ const main = async () => {
     const pkgBase = path.resolve(__dirname, `../node_modules/${pkgName}`);
     const pkgPath = path.join(pkgBase, `package.json`);
     const pkg = await fs.readFile(pkgPath).then((buf) => JSON.parse(buf.toString()));
-    const libVendorPath = path.resolve(__dirname, `../lib-vendor/${pkgName}`);
+    const libVendorPath = path.resolve(__dirname, `../build/lib-vendor/${pkgName}`);
 
     // Create library indexes and copy licenses to `lib-vendor.
     await Promise.all([
+      fs.writeFile(
+        path.join(path.resolve(__dirname, `../build/`), `package.json`),
+        JSON.stringify(pkg, null, 2),
+      ),
       fs.writeFile(path.join(EsmBasePath, `${pkgName}.js`), getEsmIndex(pkg)),
       fs.writeFile(path.join(CjsBasePath, `${pkgName}.js`), getCjsIndex(pkg)),
       fs
@@ -123,10 +127,13 @@ const main = async () => {
         }),
       // Root hack file for non package.json:exports systems
       VENDOR_PKGS.has(pkgName) &&
-        fs.writeFile(path.resolve(__dirname, `../${pkgName}.js`), getCjsRootIndex(pkg)),
+        fs.writeFile(path.resolve(__dirname, `../build/${pkgName}.js`), getCjsRootIndex(pkg)),
       // Generate TypeScript definitions
       VENDOR_PKGS.has(pkgName) &&
-        fs.writeFile(path.resolve(__dirname, `../${pkgName}.d.ts`), getTypeDefinitionFile(pkg)),
+        fs.writeFile(
+          path.resolve(__dirname, `../build/${pkgName}.d.ts`),
+          getTypeDefinitionFile(pkg),
+        ),
     ]);
   }
 };
