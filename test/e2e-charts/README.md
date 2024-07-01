@@ -24,6 +24,10 @@ The tests are written in TypeScript and can be written in any of the x-charts(-\
 
 We use playwright in [component testing mode](https://playwright.dev/docs/test-components), which is **experimental**. But allows us to test the components in isolation. It has some caveats, so be sure to read the documentation.
 
+Mainly, you can't pass a synchronous function as a prop to a component, because it will be executed in the test environment, not in the browser. You can define your component's "story" in a different file and import it in the test file.
+
+For that we use a `*.e2e.stories.tsx` file, where we define the stories for the components we want to test.
+
 ## Reasoning vs RTL
 
 Some of our features use SVG apis that are not available in the JSDOM environment. This is why we use playwright to run the tests in a real browser.
