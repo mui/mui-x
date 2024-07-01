@@ -663,7 +663,6 @@
   { "name": "useGridVirtualization", "kind": "Function" },
   { "name": "useKeepGroupedColumnsHidden", "kind": "Variable" },
   { "name": "useOnMount", "kind": "Function" },
-  { "name": "useResizeObserver", "kind": "Function" },
   { "name": "useRunOnce", "kind": "Variable" },
   { "name": "ValueOptions", "kind": "TypeAlias" },
   { "name": "virtualizationStateInitializer", "kind": "Variable" }
