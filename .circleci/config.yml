@@ -93,7 +93,7 @@ commands:
           command: pnpm install
       - run:
           name: Build charts vendor
-          command: node ./packages/x-charts-vendor/scripts/build.js"
+          command: node ./packages/x-charts-vendor/scripts/build.js
       - when:
           condition: << parameters.browsers >>
           steps:
