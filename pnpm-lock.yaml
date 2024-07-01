@@ -640,8 +640,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7
       '@mui/internal-scripts':
-        specifier: ^1.0.10
-        version: 1.0.10
+        specifier: ^1.0.11
+        version: 1.0.11
       '@types/chance':
         specifier: ^1.1.6
         version: 1.1.6
@@ -2761,8 +2761,8 @@ packages:
   '@mui/internal-markdown@1.0.5':
     resolution: {integrity: sha512-5Hv6XypPsVW8PHZiJvGl/KT+BdyyR9o7YGBQCM5KYitHtNSHHpTkfsjimhyKbZHI4jPNzWFzTjibYJRPpW8Jdw==}
 
-  '@mui/internal-scripts@1.0.10':
-    resolution: {integrity: sha512-Cj07lzcM2ozjTF7BYIhSaCwy6MYzAUB7HxC3d7lex46dE9N6zsG/48S0Hs5qSMrWOyUnNXI/5Y/SypgL/Ss8ng==}
+  '@mui/internal-scripts@1.0.11':
+    resolution: {integrity: sha512-lvdnCVG57QjggVpcDc9lZ+JbIIV+zB7crUoJ43ahpFVKtos9yzZPLuk/8rLV0I/B3erVztGeUPocp4p19Mph0w==}
 
   '@mui/internal-test-utils@1.0.2':
     resolution: {integrity: sha512-E6M2pqAk6GO6KLofuXzDmlLSpiwaNheQ/8tgqiqO+ZYAxhFA7JthVzlhK1wyQnt7RvEiTSH6/xEwAI/qD9K0sw==}
@@ -11179,7 +11179,7 @@ snapshots:
       marked: 5.1.2
       prismjs: 1.29.0
 
-  '@mui/internal-scripts@1.0.10':
+  '@mui/internal-scripts@1.0.11':
     dependencies:
       '@babel/core': 7.24.7
       '@babel/plugin-syntax-class-properties': 7.12.13(@babel/core@7.24.7)
