@@ -2,12 +2,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useSlotProps } from '@mui/base/utils';
-import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useId as useId,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { DateCalendarProps, DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
@@ -31,6 +31,8 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { PickerValidDate } from '../models';
 
+const useThemeProps = createUseThemeProps('MuiDateCalendar');
+
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   const { classes } = ownerState;
   const slots = {
@@ -43,14 +45,14 @@ const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
 
 function useDateCalendarDefaultizedProps<TDate extends PickerValidDate>(
   props: DateCalendarProps<TDate>,
-  name: string,
 ): DateCalendarDefaultizedProps<TDate> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const defaultReduceAnimations = useDefaultReduceAnimations();
   const themeProps = useThemeProps({
     props,
-    name,
+    // eslint-disable-next-line material-ui/mui-name-matches-component-name
+    name: 'MuiDateCalendar',
   });
 
   return {
@@ -105,7 +107,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
 ) {
   const utils = useUtils<TDate>();
   const id = useId();
-  const props = useDateCalendarDefaultizedProps(inProps, 'MuiDateCalendar');
+  const props = useDateCalendarDefaultizedProps(inProps);
 
   const {
     autoFocus,

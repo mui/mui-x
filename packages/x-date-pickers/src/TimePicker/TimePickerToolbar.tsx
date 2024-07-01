@@ -2,8 +2,8 @@ import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { useRtl } from '@mui/system/RtlProvider';
-import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
@@ -19,6 +19,8 @@ import {
 import { TimeViewWithMeridiem } from '../internals/models';
 import { formatMeridiem } from '../internals/utils/date-utils';
 import { PickerValidDate } from '../models';
+
+const useThemeProps = createUseThemeProps('MuiTimePickerToolbar');
 
 export interface TimePickerToolbarProps<TDate extends PickerValidDate>
   extends BaseToolbarProps<TDate | null, TimeViewWithMeridiem>,

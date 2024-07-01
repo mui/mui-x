@@ -1,13 +1,15 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH } from './shared';
 import {
   ClockNumberClasses,
   getClockNumberUtilityClass,
   clockNumberClasses,
 } from './clockNumberClasses';
+
+const useThemeProps = createUseThemeProps('MuiClockNumber');
 
 export interface ClockNumberProps extends React.HTMLAttributes<HTMLSpanElement> {
   'aria-label': string;

@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
+import { createUseThemeProps } from '../internals/zero-styled';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { MobileTimePickerProps } from './MobileTimePicker.types';
@@ -13,6 +14,8 @@ import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
+
+const useThemeProps = createUseThemeProps('MuiMobileTimePicker');
 
 type MobileTimePickerComponent = (<
   TDate extends PickerValidDate,
@@ -42,12 +45,17 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 
+  const themeProps = useThemeProps({
+    props: inProps,
+    name: 'MuiMobileTimePicker',
+  });
+
   // Props with the default values common to all time pickers
   const defaultizedProps = useTimePickerDefaultizedProps<
     TDate,
     TimeView,
     MobileTimePickerProps<TDate, TimeView, TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiMobileTimePicker');
+  >(themeProps);
 
   const viewRenderers: TimePickerViewRenderers<TDate, TimeView, any> = {
     hours: renderTimeViewClock,

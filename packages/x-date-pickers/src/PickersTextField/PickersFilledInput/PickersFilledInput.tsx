@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { FormControlState, useFormControl } from '@mui/material/FormControl';
-import { styled, useThemeProps } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system';
 import { refType } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
+import { styled, createUseThemeProps } from '../../internals/zero-styled';
 import {
   pickersFilledInputClasses,
   getPickersFilledInputUtilityClass,
@@ -14,6 +14,8 @@ import {
   PickersInputBaseRoot,
   PickersInputBaseSectionsContainer,
 } from '../PickersInputBase/PickersInputBase';
+
+const useThemeProps = createUseThemeProps('MuiPickersFilledInput');
 
 export interface PickersFilledInputProps extends PickersInputBaseProps {
   disableUnderline?: boolean;

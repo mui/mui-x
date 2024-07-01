@@ -1,15 +1,18 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled, alpha, useThemeProps } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   getPickersMonthUtilityClass,
   pickersMonthClasses,
   PickersMonthClasses,
 } from './pickersMonthClasses';
 import { MonthCalendarSlotProps, MonthCalendarSlots } from './MonthCalendar.types';
+
+const useThemeProps = createUseThemeProps('MuiPickersMonth');
 
 export interface ExportedPickersMonthProps {
   classes?: Partial<PickersMonthClasses>;

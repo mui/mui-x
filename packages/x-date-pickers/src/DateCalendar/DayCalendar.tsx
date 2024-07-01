@@ -1,14 +1,14 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import useEventCallback from '@mui/utils/useEventCallback';
 import Typography from '@mui/material/Typography';
 import { useSlotProps } from '@mui/base/utils';
 import { useRtl } from '@mui/system/RtlProvider';
-import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useControlled as useControlled,
 } from '@mui/utils';
-import clsx from 'clsx';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { PickersDay, PickersDayProps, ExportedPickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
@@ -29,6 +29,8 @@ import { findClosestEnabledDate, getWeekdays } from '../internals/utils/date-uti
 import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
 import { PickerValidDate, TimezoneProps } from '../models';
 import { DefaultizedProps, SlotComponentPropsFromProps } from '../internals/models/helpers';
+
+const useThemeProps = createUseThemeProps('MuiDayCalendar');
 
 export interface DayCalendarSlots<TDate extends PickerValidDate> {
   /**

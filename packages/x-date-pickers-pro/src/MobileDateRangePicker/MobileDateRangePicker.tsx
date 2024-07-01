@@ -4,6 +4,7 @@ import { extractValidationProps, PickerViewRendererLookup } from '@mui/x-date-pi
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { resolveComponentProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
+import { createUseThemeProps } from '../internals/zero-styled';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileDateRangePickerProps } from './MobileDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
@@ -12,6 +13,8 @@ import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateDateRange } from '../internals/utils/validation/validateDateRange';
 import { DateRange } from '../models';
+
+const useThemeProps = createUseThemeProps('MuiMobileDateRangePicker');
 
 type MobileDateRangePickerComponent = (<
   TDate extends PickerValidDate,
@@ -38,11 +41,13 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
   inProps: MobileDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const themeProps = useThemeProps({ props: inProps, name: 'MuiMobileDateRangePicker' });
+
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateRangePickerDefaultizedProps<
     TDate,
     MobileDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiMobileDateRangePicker');
+  >(themeProps);
 
   const viewRenderers: PickerViewRendererLookup<DateRange<TDate>, 'day', any, {}> = {
     day: renderDateRangeViewCalendar,

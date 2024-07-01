@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useThemeProps } from '@mui/material/styles';
 import { LocalizedComponent } from '@mui/x-date-pickers/locales';
 import {
   DefaultizedProps,
@@ -138,18 +137,14 @@ type UseDateTimeRangePickerDefaultizedProps<
 export function useDateTimeRangePickerDefaultizedProps<
   TDate extends PickerValidDate,
   Props extends BaseDateTimeRangePickerProps<TDate>,
->(props: Props, name: string): UseDateTimeRangePickerDefaultizedProps<TDate, Props> {
+>(props: Props): UseDateTimeRangePickerDefaultizedProps<TDate, Props> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
-  const themeProps = useThemeProps({
-    props,
-    name,
-  });
 
-  const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
+  const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
   const { openTo, views: defaultViews } = applyDefaultViewProps<DateTimeRangePickerViewExternal>({
-    views: themeProps.views,
-    openTo: themeProps.openTo,
+    views: props.views,
+    openTo: props.openTo,
     defaultViews: ['day', 'hours', 'minutes'],
     defaultOpenTo: 'day',
   });
@@ -159,52 +154,44 @@ export function useDateTimeRangePickerDefaultizedProps<
     views,
     timeSteps,
   } = resolveTimeViewsResponse<TDate, DateTimeRangePickerViewExternal, DateTimeRangePickerView>({
-    thresholdToRenderTimeInASingleColumn: themeProps.thresholdToRenderTimeInASingleColumn,
+    thresholdToRenderTimeInASingleColumn: props.thresholdToRenderTimeInASingleColumn,
     ampm,
-    timeSteps: themeProps.timeSteps,
+    timeSteps: props.timeSteps,
     views: defaultViews,
   });
 
   return {
-    ...themeProps,
+    ...props,
     timeSteps,
     openTo,
     shouldRenderTimeInASingleColumn,
     thresholdToRenderTimeInASingleColumn,
     views,
     ampm,
-    disableFuture: themeProps.disableFuture ?? false,
-    disablePast: themeProps.disablePast ?? false,
-    minDate: applyDefaultDate(
-      utils,
-      themeProps.minDateTime ?? themeProps.minDate,
-      defaultDates.minDate,
-    ),
-    maxDate: applyDefaultDate(
-      utils,
-      themeProps.maxDateTime ?? themeProps.maxDate,
-      defaultDates.maxDate,
-    ),
-    minTime: themeProps.minDateTime ?? themeProps.minTime,
-    maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
+    disableFuture: props.disableFuture ?? false,
+    disablePast: props.disablePast ?? false,
+    minDate: applyDefaultDate(utils, props.minDateTime ?? props.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, props.maxDateTime ?? props.maxDate, defaultDates.maxDate),
+    minTime: props.minDateTime ?? props.minTime,
+    maxTime: props.maxDateTime ?? props.maxTime,
     disableIgnoringDatePartForTimeValidation:
-      themeProps.disableIgnoringDatePartForTimeValidation ??
+      props.disableIgnoringDatePartForTimeValidation ??
       Boolean(
-        themeProps.minDateTime ||
-          themeProps.maxDateTime ||
+        props.minDateTime ||
+          props.maxDateTime ||
           // allow digital clocks to correctly check time validity: https://github.com/mui/mui-x/issues/12048
-          themeProps.disablePast ||
-          themeProps.disableFuture,
+          props.disablePast ||
+          props.disableFuture,
       ),
     slots: {
       tabs: DateTimeRangePickerTabs,
       toolbar: DateTimeRangePickerToolbar,
-      ...themeProps.slots,
+      ...props.slots,
     },
     slotProps: {
-      ...themeProps.slotProps,
+      ...props.slotProps,
       toolbar: {
-        ...themeProps.slotProps?.toolbar,
+        ...props.slotProps?.toolbar,
         ampm,
       },
     },

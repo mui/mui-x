@@ -2,11 +2,11 @@ import * as React from 'react';
 import clsx from 'clsx';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_composeClasses as composeClasses,
 } from '@mui/utils';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { ClockPointer } from './ClockPointer';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
@@ -15,6 +15,8 @@ import { CLOCK_HOUR_WIDTH, getHours, getMinutes } from './shared';
 import { PickerValidDate, TimeView } from '../models';
 import { ClockClasses, getClockUtilityClass } from './clockClasses';
 import { formatMeridiem } from '../internals/utils/date-utils';
+
+const useThemeProps = createUseThemeProps('MuiClock');
 
 export interface ClockProps<TDate extends PickerValidDate>
   extends ReturnType<typeof useMeridiemMode> {

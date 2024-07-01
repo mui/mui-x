@@ -4,7 +4,6 @@ import { clsx } from 'clsx';
 import Stack, { StackProps } from '@mui/material/Stack';
 import MuiTextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import {
   unstable_composeClasses as composeClasses,
@@ -17,6 +16,7 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   MultiInputTimeRangeFieldProps,
   MultiInputTimeRangeFieldSlotProps,
@@ -24,6 +24,8 @@ import {
 import { useMultiInputTimeRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputTimeRangeField';
 import { UseTimeRangeFieldProps } from '../internals/models/timeRange';
 import { MultiInputRangeFieldClasses, RangePosition } from '../models';
+
+const useThemeProps = createUseThemeProps('MuiMultiInputTimeRangeField');
 
 export const multiInputTimeRangeFieldClasses: MultiInputRangeFieldClasses = generateUtilityClasses(
   'MuiMultiInputTimeRangeField',

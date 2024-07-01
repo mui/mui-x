@@ -23,6 +23,7 @@ import Divider from '@mui/material/Divider';
 import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
 import type { PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
 import { DesktopDateTimePickerLayout } from '@mui/x-date-pickers/DesktopDateTimePicker';
+import { createUseThemeProps } from '../internals/zero-styled';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
@@ -40,6 +41,8 @@ import {
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
+
+const useThemeProps = createUseThemeProps('MuiDesktopDateTimeRangePicker');
 
 const rendererInterceptor = function rendererInterceptor<
   TDate extends PickerValidDate,
@@ -138,11 +141,13 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
   inProps: DesktopDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const themeProps = useThemeProps({ props: inProps, name: 'MuiDesktopDateTimeRangePicker' });
+
   // Props with the default values common to all date time range pickers
   const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
     TDate,
     DesktopDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiDesktopDateTimeRangePicker');
+  >(themeProps);
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView

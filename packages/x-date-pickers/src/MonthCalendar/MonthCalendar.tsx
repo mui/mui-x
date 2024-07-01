@@ -2,12 +2,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useRtl } from '@mui/system/RtlProvider';
-import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_useControlled as useControlled,
   unstable_composeClasses as composeClasses,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { PickersMonth } from './PickersMonth';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
 import { getMonthCalendarUtilityClass } from './monthCalendarClasses';
@@ -19,6 +19,8 @@ import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReference
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { DIALOG_WIDTH } from '../internals/constants/dimensions';
 import { PickerValidDate } from '../models';
+
+const useThemeProps = createUseThemeProps('MuiMonthCalendar');
 
 const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -32,7 +34,6 @@ const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
 
 export function useMonthCalendarDefaultizedProps<TDate extends PickerValidDate>(
   props: MonthCalendarProps<TDate>,
-  name: string,
 ): DefaultizedProps<
   MonthCalendarProps<TDate>,
   'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
@@ -41,7 +42,8 @@ export function useMonthCalendarDefaultizedProps<TDate extends PickerValidDate>(
   const defaultDates = useDefaultDates<TDate>();
   const themeProps = useThemeProps({
     props,
-    name,
+    // eslint-disable-next-line material-ui/mui-name-matches-component-name
+    name: 'MuiMonthCalendar',
   });
 
   return {
@@ -84,7 +86,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
   inProps: MonthCalendarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const props = useMonthCalendarDefaultizedProps(inProps, 'MuiMonthCalendar');
+  const props = useMonthCalendarDefaultizedProps(inProps);
   const {
     className,
     value: valueProp,

@@ -2,12 +2,15 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { TransitionGroup } from 'react-transition-group';
 import Fade from '@mui/material/Fade';
-import { styled, useTheme, useThemeProps } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   getPickersFadeTransitionGroupUtilityClass,
   PickersFadeTransitionGroupClasses,
 } from './pickersFadeTransitionGroupClasses';
+
+const useThemeProps = createUseThemeProps('MuiPickersFadeTransitionGroup');
 
 export interface PickersFadeTransitionGroupProps {
   children: React.ReactElement;

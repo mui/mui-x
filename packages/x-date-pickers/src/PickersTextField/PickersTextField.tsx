@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
 import { refType } from '@mui/utils';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
@@ -9,11 +8,14 @@ import useId from '@mui/utils/useId';
 import InputLabel from '@mui/material/InputLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getPickersTextFieldUtilityClass } from './pickersTextFieldClasses';
 import { PickersTextFieldProps } from './PickersTextField.types';
 import { PickersOutlinedInput } from './PickersOutlinedInput';
 import { PickersFilledInput } from './PickersFilledInput';
 import { PickersInput } from './PickersInput';
+
+const useThemeProps = createUseThemeProps('MuiPickersTextField');
 
 const VARIANT_COMPONENT = {
   standard: PickersInput,

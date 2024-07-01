@@ -3,14 +3,16 @@ import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
-import { useThemeProps } from '@mui/material/styles';
 import { refType } from '@mui/utils';
 import { useSlotProps } from '@mui/base/utils';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { createUseThemeProps } from '../internals/zero-styled';
 import { SingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
 import { useSingleInputDateTimeRangeField } from './useSingleInputDateTimeRangeField';
 import { FieldType } from '../models';
+
+const useThemeProps = createUseThemeProps('MuiSingleInputDateTimeRangeField');
 
 type DateRangeFieldComponent = (<
   TDate extends PickerValidDate,

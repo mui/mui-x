@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
 import { PickersCalendarHeader } from '@mui/x-date-pickers/PickersCalendarHeader';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
@@ -10,6 +9,7 @@ import {
   usePreviousMonthDisabled,
   useUtils,
 } from '@mui/x-date-pickers/internals';
+import { styled } from '../internals/zero-styled';
 import { PickersRangeCalendarHeaderProps } from './PickersRangeCalendarHeader.types';
 
 type PickersRangeCalendarHeaderComponent = (<TDate extends PickerValidDate>(

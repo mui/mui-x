@@ -1,6 +1,5 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
 import {
@@ -10,6 +9,7 @@ import {
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { styled } from '../../zero-styled';
 import {
   UseStaticRangePickerParams,
   UseStaticRangePickerProps,
