@@ -579,6 +579,11 @@ export interface GridClasses {
    */
   treeDataGroupingCellToggle: string;
   /**
+   * Styles applied to the loading container of the grouping cell of the tree data.
+   * @ignore - do not document.
+   */
+  treeDataGroupingCellLoadingContainer: string;
+  /**
    * Styles applied to the root element of the grouping criteria cell
    */
   groupingCriteriaCell: string;
@@ -754,6 +759,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--withLeftBorder',
   'treeDataGroupingCell',
   'treeDataGroupingCellToggle',
+  'treeDataGroupingCellLoadingContainer',
   'groupingCriteriaCell',
   'groupingCriteriaCellToggle',
   'pinnedRows',
