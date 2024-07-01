@@ -92,7 +92,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     }
 
     return 'content';
-  }, [params.expansionTrigger]);
+  }, [params.expansionTrigger, instance.isTreeViewEditable]);
 
   return {
     publicAPI: {
