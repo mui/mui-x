@@ -91,6 +91,9 @@ commands:
       - run:
           name: Install js dependencies
           command: pnpm install
+      - run:
+          name: Build charts vendor
+          command: node ./packages/x-charts-vendor/scripts/build.js"
       - when:
           condition: << parameters.browsers >>
           steps:
