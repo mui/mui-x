@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { interpolateRgbBasis } from 'd3-interpolate';
+import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
 import useId from '@mui/utils/useId';
 import { ChartsAxis, ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import {

@@ -114,10 +114,6 @@ const main = async () => {
 
     // Create library indexes and copy licenses to `lib-vendor.
     await Promise.all([
-      fs.writeFile(
-        path.join(path.resolve(__dirname, `../build/`), `package.json`),
-        JSON.stringify(pkg, null, 2),
-      ),
       fs.writeFile(path.join(EsmBasePath, `${pkgName}.js`), getEsmIndex(pkg)),
       fs.writeFile(path.join(CjsBasePath, `${pkgName}.js`), getCjsIndex(pkg)),
       fs
@@ -136,6 +132,14 @@ const main = async () => {
         ),
     ]);
   }
+
+  const pkg = await fs
+    .readFile(path.resolve(__dirname, `../package.json`))
+    .then((buf) => JSON.parse(buf.toString()));
+  await fs.writeFile(
+    path.join(path.resolve(__dirname, `../build/`), `package.json`),
+    JSON.stringify(pkg, null, 2),
+  );
 };
 
 if (require.main === module) {
