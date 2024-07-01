@@ -13,6 +13,7 @@ import { LineChartProps } from '../LineChart/LineChart';
 import { ScatterProps } from '../ScatterChart/Scatter';
 import { ScatterChartProps } from '../ScatterChart/ScatterChart';
 import { ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
+import { ChartSeriesType } from '../models/seriesType/config';
 
 export interface ChartsComponentsPropsList {
   MuiChartsAxis: ChartsAxisProps;
@@ -22,7 +23,7 @@ export interface ChartsComponentsPropsList {
   MuiChartsClipPath: ChartsClipPathProps;
   MuiChartsGrid: ChartsGridProps;
   MuiChartsLegend: ChartsLegendProps;
-  MuiChartsTooltip: ChartsTooltipProps;
+  MuiChartsTooltip: ChartsTooltipProps<ChartSeriesType>;
   MuiChartsSurface: ChartsSurfaceProps;
 
   // BarChart components

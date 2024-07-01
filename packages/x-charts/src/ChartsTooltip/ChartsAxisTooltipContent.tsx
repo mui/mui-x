@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { SxProps, Theme } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { AxisInteractionData } from '../context/InteractionProvider';
@@ -45,6 +44,9 @@ export type ChartsAxisContentProps = {
   sx?: SxProps<Theme>;
 };
 
+/**
+ * @ignore - internal component.
+ */
 function ChartsAxisTooltipContent(props: {
   axisData: AxisInteractionData;
   content?: React.ElementType<ChartsAxisContentProps>;
@@ -127,59 +129,5 @@ function ChartsAxisTooltipContent(props: {
   });
   return <Content {...chartTooltipContentProps} />;
 }
-
-ChartsAxisTooltipContent.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  axisData: PropTypes.shape({
-    x: PropTypes.shape({
-      index: PropTypes.number,
-      value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-        .isRequired,
-    }),
-    y: PropTypes.shape({
-      index: PropTypes.number,
-      value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-        .isRequired,
-    }),
-  }).isRequired,
-  classes: PropTypes.object.isRequired,
-  content: PropTypes.elementType,
-  contentProps: PropTypes.shape({
-    axis: PropTypes.object,
-    axisData: PropTypes.shape({
-      x: PropTypes.shape({
-        index: PropTypes.number,
-        value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-          .isRequired,
-      }),
-      y: PropTypes.shape({
-        index: PropTypes.number,
-        value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-          .isRequired,
-      }),
-    }),
-    axisValue: PropTypes.oneOfType([
-      PropTypes.instanceOf(Date),
-      PropTypes.number,
-      PropTypes.string,
-    ]),
-    classes: PropTypes.object,
-    dataIndex: PropTypes.number,
-    series: PropTypes.arrayOf(PropTypes.object),
-    sx: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-      PropTypes.func,
-      PropTypes.object,
-    ]),
-  }),
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-} as any;
 
 export { ChartsAxisTooltipContent };

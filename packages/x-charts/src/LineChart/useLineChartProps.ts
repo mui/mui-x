@@ -159,7 +159,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     slotProps,
   };
 
-  const tooltipProps: ChartsTooltipProps = {
+  const tooltipProps: ChartsTooltipProps<'line'> = {
     ...tooltip,
     slots,
     slotProps,
