@@ -97,7 +97,14 @@ commands:
             pnpm --version
       - run:
           name: Install js dependencies
-          command: pnpm install --no-frozen-lockfile
+          command: |
+            if [ $REACT_VERSION == "stable" ];
+            then
+              pnpm install
+            else
+              pnpm install --no-frozen-lockfile
+            fi
+
       - when:
           condition: << parameters.browsers >>
           steps:
