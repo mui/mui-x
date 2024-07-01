@@ -110,8 +110,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   experimentalFeatures,
 }) => {
   const getItemMeta = React.useCallback(
-    (itemId: string) => state.items.itemMap[itemId],
-    [state.items.itemMap],
+    (itemId: string) => state.items.itemMetaMap[itemId],
+    [state.items.itemMetaMap],
   );
 
   const getItem = React.useCallback(
