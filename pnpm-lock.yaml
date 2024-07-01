@@ -930,6 +930,9 @@ importers:
       '@mui/utils':
         specifier: ^5.15.20
         version: 5.15.20(@types/react@18.3.3)(react@18.3.1)
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1024,6 +1027,9 @@ importers:
       '@mui/x-data-grid-pro':
         specifier: workspace:*
         version: link:../x-data-grid-pro/build
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
       '@mui/x-license':
         specifier: workspace:*
         version: link:../x-license/build
@@ -1080,6 +1086,9 @@ importers:
       '@mui/x-data-grid':
         specifier: workspace:*
         version: link:../x-data-grid/build
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
       '@mui/x-license':
         specifier: workspace:*
         version: link:../x-license/build
@@ -1274,6 +1283,26 @@ importers:
       moment:
         specifier: ^2.30.1
         version: 2.30.1
+      rimraf:
+        specifier: ^5.0.7
+        version: 5.0.7
+    publishDirectory: build
+
+  packages/x-internals:
+    dependencies:
+      '@babel/runtime':
+        specifier: ^7.24.7
+        version: 7.24.7
+      '@mui/utils':
+        specifier: ^5.15.20
+        version: 5.15.20(@types/react@18.3.3)(react@18.3.1)
+      react:
+        specifier: ^17.0.0 || ^18.0.0
+        version: 18.3.1
+    devDependencies:
+      '@mui/internal-test-utils':
+        specifier: ^1.0.2
+        version: 1.0.2(@babel/core@7.24.7)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       rimraf:
         specifier: ^5.0.7
         version: 5.0.7
