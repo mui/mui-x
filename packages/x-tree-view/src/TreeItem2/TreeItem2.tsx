@@ -153,7 +153,7 @@ export const TreeItem2GroupTransition = styled(Collapse, {
   ],
 });
 
-export const TreeItem2LabelInput = React.forwardRef(function TreeItem2LabelInput(
+export const UnstyledLabelInput = React.forwardRef(function LabelInput(
   {
     visible = false,
     onChange,
@@ -188,6 +188,14 @@ export const TreeItem2LabelInput = React.forwardRef(function TreeItem2LabelInput
       ref={ref}
     />
   );
+});
+
+export const TreeItem2LabelInput = styled(UnstyledLabelInput, {
+  name: 'MuiTreeItem2',
+  slot: 'LabelInput',
+  overridesResolver: (props, styles) => styles.labelInput,
+})({
+  width: '100%',
 });
 
 export const TreeItem2Checkbox = styled(

@@ -5,8 +5,8 @@ import { useTreeItem2Utils, useTreeViewApiRef } from '@mui/x-tree-view/hooks';
 
 import { TreeItem2, TreeItem2Label } from '@mui/x-tree-view/TreeItem2';
 import { IconButton } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import EditOffIcon from '@mui/icons-material/EditOff';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import CheckIcon from '@mui/icons-material/Check';
 import { TreeItem2LabelInput } from '@mui/x-tree-view/TreeItem2/TreeItem2';
 
@@ -42,11 +42,23 @@ const MUI_X_PRODUCTS = [
 
 function CustomLabel({ editing, editable, children, toggleItemEditing, ...other }) {
   return (
-    <TreeItem2Label {...other}>
+    <TreeItem2Label
+      {...other}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 2,
+        justifyContent: 'space-between',
+      }}
+    >
       {children}
       {editable && (
-        <IconButton onClick={toggleItemEditing}>
-          <EditIcon />
+        <IconButton
+          size="small"
+          onClick={toggleItemEditing}
+          sx={{ color: 'text.secondary' }}
+        >
+          <EditOutlinedIcon fontSize="small" />
         </IconButton>
       )}
     </TreeItem2Label>
@@ -75,15 +87,21 @@ const CustomLabelInput = React.forwardRef(function CustomLabelInput({
           setLabelInputValue(event.target.value);
         }}
       />
-      <IconButton tabIndex={-1} onClick={handleCancelItemLabelEditing}>
-        <EditOffIcon />
-      </IconButton>
       <IconButton
+        color="error"
+        size="small"
         onClick={(event) => {
           handleSaveItemLabel(event, labelInputValue);
         }}
       >
-        <CheckIcon />
+        <CheckIcon fontSize="small" />
+      </IconButton>
+      <IconButton
+        color="success"
+        size="small"
+        onClick={handleCancelItemLabelEditing}
+      >
+        <CloseRoundedIcon fontSize="small" />
       </IconButton>
     </React.Fragment>
   );
