@@ -540,8 +540,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       jscodeshift:
-        specifier: 0.15.2
-        version: 0.15.2(@babel/preset-env@7.24.7(@babel/core@7.24.7))
+        specifier: 0.16.1
+        version: 0.16.1(@babel/preset-env@7.24.7(@babel/core@7.24.7))
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -893,11 +893,11 @@ importers:
         specifier: ^7.24.7
         version: 7.24.7
       jscodeshift:
-        specifier: 0.15.2
-        version: 0.15.2(@babel/preset-env@7.24.7(@babel/core@7.24.7))
+        specifier: 0.16.1
+        version: 0.16.1(@babel/preset-env@7.24.7(@babel/core@7.24.7))
       jscodeshift-add-imports:
         specifier: ^1.0.10
-        version: 1.0.10(jscodeshift@0.15.2(@babel/preset-env@7.24.7(@babel/core@7.24.7)))
+        version: 1.0.10(jscodeshift@0.16.1(@babel/preset-env@7.24.7(@babel/core@7.24.7)))
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
@@ -1777,8 +1777,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/plugin-syntax-flow@7.23.3':
-    resolution: {integrity: sha512-YZiAIpkJAwQXBJLIQbRFayR5c+gJ35Vcz3bg954k7cd73zqjvhacJuL9RbrzPz8qPmZdgqP6EUKwy0PCNhaaPA==}
+  '@babel/plugin-syntax-flow@7.24.7':
+    resolution: {integrity: sha512-9G8GYT/dxn/D1IIKOUBmGX0mnmj46mGH9NnZyJLwtCpgh5f7D2VbuKodb+2s9m1Yavh1s7ASQN8lf0eqrb1LTw==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
@@ -1955,8 +1955,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/plugin-transform-flow-strip-types@7.23.3':
-    resolution: {integrity: sha512-26/pQTf9nQSNVJCrLB1IkHUKyPxR+lMrH2QDPG89+Znu9rAMbtrybdbWeE9bb7gzjmE5iXHEY+e0HUwM6Co93Q==}
+  '@babel/plugin-transform-flow-strip-types@7.24.7':
+    resolution: {integrity: sha512-cjRKJ7FobOH2eakx7Ja+KpJRj8+y+/SiB3ooYm/n2UJfxu0oEaOoxOinitkJcPqv9KxS0kxTGPUaR7L2XcXDXA==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
@@ -2207,8 +2207,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/preset-flow@7.23.3':
-    resolution: {integrity: sha512-7yn6hl8RIv+KNk6iIrGZ+D06VhVY35wLVf23Cz/mMu1zOr7u4MMP4j0nZ9tLf8+4ZFpnib8cFYgB/oYg9hfswA==}
+  '@babel/preset-flow@7.24.7':
+    resolution: {integrity: sha512-NL3Lo0NorCU607zU3NwRyJbpaB6E3t0xtd3LfAQKDfkeX4/ggcDXvkmkW42QWT5owUeW/jAe4hn+2qvkV1IbfQ==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
@@ -4241,11 +4241,6 @@ packages:
   axobject-query@3.1.1:
     resolution: {integrity: sha512-goKlv8DZrK9hUh975fnHzhNIO4jUnFCfv/dszV5VwUGDFjI6vQ2VwoyjYjYNEbBE8AH87TduWP5uyDR1D+Iteg==}
 
-  babel-core@7.0.0-bridge.0:
-    resolution: {integrity: sha512-poPX9mZH/5CSanm50Q+1toVci6pv5KSRv/5TWCwtzQS5XEwn40BcCrgIeMFWP9CKKIniKXNxoIOnOq4VVlGXhg==}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-
   babel-loader@9.1.3:
     resolution: {integrity: sha512-xG3ST4DglodGf8qSwv0MdeWLhrDsw/32QMdTO5T1ZIp9gQur0HkCyFs7Awskr10JKXFXwpAhiCuYX5oGXnRGbw==}
     engines: {node: '>= 14.15.0'}
@@ -4364,8 +4359,8 @@ packages:
   brace-expansion@2.0.1:
     resolution: {integrity: sha512-XnAIvQ8eM+kC6aULx6wuQiwVsnzsi9d3WxzV3FpWTGA19F621kwdbsAcFKXgKUHZWsy+mY6iL1sHTxWEFCytDA==}
 
-  braces@3.0.2:
-    resolution: {integrity: sha512-b8um+L1RzM3WDSzvhm6gIz1yfTbBt6YTlcEKAvsmqCZZFw46z626lVj9j1yEPW33H5H+lBQpZMP1k8l+78Ha0A==}
+  braces@3.0.3:
+    resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
 
   browser-stdout@1.3.1:
@@ -5657,8 +5652,8 @@ packages:
   filelist@1.0.4:
     resolution: {integrity: sha512-w1cEuf3S+DrLCQL7ET6kz+gmlJdbq9J7yXCSjK/OZCPA+qEN1WyF4ZAf0YYJa4/shHJra2t/d/r8SV4Ji+x+8Q==}
 
-  fill-range@7.0.1:
-    resolution: {integrity: sha512-qOo9F+dMUmC2Lcb4BbVvnKJxTPjCm+RRpe4gDuGrzkL7mEVl/djYSu2OdQ2Pa302N4oqkSg9ir6jaLWJ2USVpQ==}
+  fill-range@7.1.1:
+    resolution: {integrity: sha512-YsGpe3WHLK8ZYi4tWDg2Jy3ebRz2rXowDxnld4bkQB00cc/1Zw9AWnC0i9ztDJitivtQvaI9KaLyKrc+hBW0yg==}
     engines: {node: '>=8'}
 
   finalhandler@1.1.2:
@@ -6619,8 +6614,8 @@ packages:
     peerDependencies:
       jscodeshift: ^0.7.0 || ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0
 
-  jscodeshift@0.15.2:
-    resolution: {integrity: sha512-FquR7Okgmc4Sd0aEDwqho3rEiKR3BdvuG9jfdHjLJ6JQoWSMpavug3AoIfnfWhxFlf+5pzQh8qjqz0DWFrNQzA==}
+  jscodeshift@0.16.1:
+    resolution: {integrity: sha512-oMQXySazy63awNBzMpXbbVv73u3irdxTeX2L5ueRyFRxi32qb9uzdZdOY5fTBYADBG19l5M/wnGknZSV1dzCdA==}
     hasBin: true
     peerDependencies:
       '@babel/preset-env': ^7.1.6
@@ -7158,6 +7153,10 @@ packages:
 
   micromatch@4.0.5:
     resolution: {integrity: sha512-DMy+ERcEW2q8Z2Po+WNXuw3c5YaUSFjAO5GsJqfEl7UjvtIuFKO6ZrKvcItdy98dwFI2N1tg3zNIdKaQT+aNdA==}
+    engines: {node: '>=8.6'}
+
+  micromatch@4.0.7:
+    resolution: {integrity: sha512-LPP/3KorzCwBxfeUuZmaR6bG2kdeHSbe0P2tY3FLRU4vYrjYz5hI4QZwV0njUx3jeuKe67YukQ1LSPZBKDqO/Q==}
     engines: {node: '>=8.6'}
 
   mime-db@1.33.0:
@@ -8932,8 +8931,8 @@ packages:
     resolution: {integrity: sha512-xZFXEGbG7SNC3itwBzI3RYjq/cEhBkx2hJuKGIUOcEULmkQExXiHat2z/qkISYsuR+IKumhEfKKbV5qXmhICFQ==}
     engines: {node: '>=4'}
 
-  temp@0.8.4:
-    resolution: {integrity: sha512-s0ZZzd0BzYv5tLSptZooSjK8oj6C+c19p7Vqta9+6NPOf7r+fxq0cJe6/oN4LTC79sy5NY8ucOJNgwsKCSbfqg==}
+  temp@0.9.4:
+    resolution: {integrity: sha512-yYrrsWnrXMcdsnu/7YMYAofM1ktpL5By7vZhf15CrXijWWrEYZks5AXBudalfSWJLlnen/QUJUB5aoB0kqZUGA==}
     engines: {node: '>=6.0.0'}
 
   terser-webpack-plugin@5.3.10:
@@ -10004,7 +10003,7 @@ snapshots:
       '@babel/core': 7.24.7
       '@babel/helper-plugin-utils': 7.24.7
 
-  '@babel/plugin-syntax-flow@7.23.3(@babel/core@7.24.7)':
+  '@babel/plugin-syntax-flow@7.24.7(@babel/core@7.24.7)':
     dependencies:
       '@babel/core': 7.24.7
       '@babel/helper-plugin-utils': 7.24.7
@@ -10192,11 +10191,11 @@ snapshots:
       '@babel/helper-plugin-utils': 7.24.7
       '@babel/plugin-syntax-export-namespace-from': 7.8.3(@babel/core@7.24.7)
 
-  '@babel/plugin-transform-flow-strip-types@7.23.3(@babel/core@7.24.7)':
+  '@babel/plugin-transform-flow-strip-types@7.24.7(@babel/core@7.24.7)':
     dependencies:
       '@babel/core': 7.24.7
       '@babel/helper-plugin-utils': 7.24.7
-      '@babel/plugin-syntax-flow': 7.23.3(@babel/core@7.24.7)
+      '@babel/plugin-syntax-flow': 7.24.7(@babel/core@7.24.7)
 
   '@babel/plugin-transform-for-of@7.24.7(@babel/core@7.24.7)':
     dependencies:
@@ -10557,12 +10556,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/preset-flow@7.23.3(@babel/core@7.24.7)':
+  '@babel/preset-flow@7.24.7(@babel/core@7.24.7)':
     dependencies:
       '@babel/core': 7.24.7
       '@babel/helper-plugin-utils': 7.24.7
       '@babel/helper-validator-option': 7.24.7
-      '@babel/plugin-transform-flow-strip-types': 7.23.3(@babel/core@7.24.7)
+      '@babel/plugin-transform-flow-strip-types': 7.24.7(@babel/core@7.24.7)
 
   '@babel/preset-modules@0.1.6-no-external-plugins(@babel/core@7.24.7)':
     dependencies:
@@ -12982,10 +12981,6 @@ snapshots:
     dependencies:
       deep-equal: 2.2.3
 
-  babel-core@7.0.0-bridge.0(@babel/core@7.24.7):
-    dependencies:
-      '@babel/core': 7.24.7
-
   babel-loader@9.1.3(@babel/core@7.24.7)(webpack@5.92.1(webpack-cli@5.1.4)):
     dependencies:
       '@babel/core': 7.24.7
@@ -13162,9 +13157,9 @@ snapshots:
     dependencies:
       balanced-match: 1.0.2
 
-  braces@3.0.2:
+  braces@3.0.3:
     dependencies:
-      fill-range: 7.0.1
+      fill-range: 7.1.1
 
   browser-stdout@1.3.1: {}
 
@@ -13369,7 +13364,7 @@ snapshots:
   chokidar@3.5.3:
     dependencies:
       anymatch: 3.1.3
-      braces: 3.0.2
+      braces: 3.0.3
       glob-parent: 5.1.2
       is-binary-path: 2.1.0
       is-glob: 4.0.3
@@ -13693,7 +13688,7 @@ snapshots:
       cp-file: 10.0.0
       globby: 13.2.2
       junk: 4.0.1
-      micromatch: 4.0.5
+      micromatch: 4.0.7
       nested-error-stacks: 2.1.1
       p-filter: 3.0.0
       p-map: 6.0.0
@@ -13825,7 +13820,7 @@ snapshots:
       lodash.mapvalues: 4.6.0
       lodash.memoize: 4.1.2
       memfs-or-file-map-to-github-branch: 1.2.1(encoding@0.1.13)
-      micromatch: 4.0.5
+      micromatch: 4.0.7
       node-cleanup: 2.1.2
       node-fetch: 2.7.0(encoding@0.1.13)
       override-require: 1.1.1
@@ -14781,7 +14776,7 @@ snapshots:
       '@nodelib/fs.walk': 1.2.8
       glob-parent: 5.1.2
       merge2: 1.4.1
-      micromatch: 4.0.5
+      micromatch: 4.0.7
 
   fast-json-patch@3.1.1: {}
 
@@ -14817,7 +14812,7 @@ snapshots:
     dependencies:
       minimatch: 5.1.6
 
-  fill-range@7.0.1:
+  fill-range@7.1.1:
     dependencies:
       to-regex-range: 5.0.1
 
@@ -15864,19 +15859,19 @@ snapshots:
     dependencies:
       argparse: 2.0.1
 
-  jscodeshift-add-imports@1.0.10(jscodeshift@0.15.2(@babel/preset-env@7.24.7(@babel/core@7.24.7))):
+  jscodeshift-add-imports@1.0.10(jscodeshift@0.16.1(@babel/preset-env@7.24.7(@babel/core@7.24.7))):
     dependencies:
       '@babel/traverse': 7.24.7
-      jscodeshift: 0.15.2(@babel/preset-env@7.24.7(@babel/core@7.24.7))
-      jscodeshift-find-imports: 2.0.4(jscodeshift@0.15.2(@babel/preset-env@7.24.7(@babel/core@7.24.7)))
+      jscodeshift: 0.16.1(@babel/preset-env@7.24.7(@babel/core@7.24.7))
+      jscodeshift-find-imports: 2.0.4(jscodeshift@0.16.1(@babel/preset-env@7.24.7(@babel/core@7.24.7)))
     transitivePeerDependencies:
       - supports-color
 
-  jscodeshift-find-imports@2.0.4(jscodeshift@0.15.2(@babel/preset-env@7.24.7(@babel/core@7.24.7))):
+  jscodeshift-find-imports@2.0.4(jscodeshift@0.16.1(@babel/preset-env@7.24.7(@babel/core@7.24.7))):
     dependencies:
-      jscodeshift: 0.15.2(@babel/preset-env@7.24.7(@babel/core@7.24.7))
+      jscodeshift: 0.16.1(@babel/preset-env@7.24.7(@babel/core@7.24.7))
 
-  jscodeshift@0.15.2(@babel/preset-env@7.24.7(@babel/core@7.24.7)):
+  jscodeshift@0.16.1(@babel/preset-env@7.24.7(@babel/core@7.24.7)):
     dependencies:
       '@babel/core': 7.24.7
       '@babel/parser': 7.24.7
@@ -15885,19 +15880,18 @@ snapshots:
       '@babel/plugin-transform-nullish-coalescing-operator': 7.24.7(@babel/core@7.24.7)
       '@babel/plugin-transform-optional-chaining': 7.24.7(@babel/core@7.24.7)
       '@babel/plugin-transform-private-methods': 7.24.7(@babel/core@7.24.7)
-      '@babel/preset-flow': 7.23.3(@babel/core@7.24.7)
+      '@babel/preset-flow': 7.24.7(@babel/core@7.24.7)
       '@babel/preset-typescript': 7.24.7(@babel/core@7.24.7)
       '@babel/register': 7.24.6(@babel/core@7.24.7)
-      babel-core: 7.0.0-bridge.0(@babel/core@7.24.7)
       chalk: 4.1.2
       flow-parser: 0.227.0
       graceful-fs: 4.2.11
-      micromatch: 4.0.5
+      micromatch: 4.0.7
       neo-async: 2.6.2
       node-dir: 0.1.17
       recast: 0.23.9
-      temp: 0.8.4
-      write-file-atomic: 2.4.3
+      temp: 0.9.4
+      write-file-atomic: 5.0.1
     optionalDependencies:
       '@babel/preset-env': 7.24.7(@babel/core@7.24.7)
     transitivePeerDependencies:
@@ -16120,7 +16114,7 @@ snapshots:
     dependencies:
       '@colors/colors': 1.5.0
       body-parser: 1.20.2
-      braces: 3.0.2
+      braces: 3.0.3
       chokidar: 3.5.3
       connect: 3.7.0
       di: 0.0.1
@@ -16616,7 +16610,12 @@ snapshots:
 
   micromatch@4.0.5:
     dependencies:
-      braces: 3.0.2
+      braces: 3.0.3
+      picomatch: 2.3.1
+
+  micromatch@4.0.7:
+    dependencies:
+      braces: 3.0.3
       picomatch: 2.3.1
 
   mime-db@1.33.0: {}
@@ -18688,8 +18687,9 @@ snapshots:
 
   temp-dir@1.0.0: {}
 
-  temp@0.8.4:
+  temp@0.9.4:
     dependencies:
+      mkdirp: 0.5.6
       rimraf: 2.6.3
 
   terser-webpack-plugin@5.3.10(webpack@5.92.1(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.92.1))):
