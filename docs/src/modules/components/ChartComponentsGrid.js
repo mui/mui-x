@@ -57,7 +57,7 @@ function getComponents() {
       title: 'Treemap',
       srcLight: '/static/x/component-illustrations/treemap-light.png',
       srcDark: '/static/x/component-illustrations/treemap-dark.png',
-      href: '/x/react-charts/tree-map/',
+      href: '/x/react-charts/treemap/',
       planned: true,
     },
     {
