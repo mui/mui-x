@@ -64,8 +64,6 @@ export function useMouseTracker() {
     };
 
     const handleMove = (event: PointerEvent) => {
-      document.getElementById('console')!.innerText =
-        `${event.height} ${event.width} ${event.pointerType}`;
       setMousePosition({
         x: event.clientX,
         y: event.clientY,
