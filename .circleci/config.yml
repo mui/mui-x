@@ -98,10 +98,13 @@ commands:
       - run:
           name: Install js dependencies
           command: |
+            echo "React version $REACT_VERSION"
             if [ $REACT_VERSION == "stable" ];
             then
+              echo "pnpm install"
               pnpm install
             else
+              echo "pnpm install --no-frozen-lockfile"
               pnpm install --no-frozen-lockfile
             fi
 
