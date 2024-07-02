@@ -119,12 +119,14 @@ describe('<DataGridPremium /> - Clipboard', () => {
         { id: 2, brand: 'Puma' },
       ];
       render(
-        <DataGridPremium
-          columns={columns}
-          rows={rows}
-          cellSelection
-          sortModel={[{ field: 'brand', sort: 'asc' }]}
-        />,
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPremium
+            columns={columns}
+            rows={rows}
+            cellSelection
+            sortModel={[{ field: 'brand', sort: 'asc' }]}
+          />
+        </div>,
       );
 
       const cell = getCell(0, 0);
@@ -143,15 +145,17 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
     it('should not escape double quotes when copying multiple cells to clipboard', () => {
       render(
-        <DataGridPremium
-          columns={[{ field: 'value' }]}
-          rows={[
-            { id: 0, value: '1 " 1' },
-            { id: 1, value: '2' },
-          ]}
-          cellSelection
-          disableRowSelectionOnClick
-        />,
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPremium
+            columns={[{ field: 'value' }]}
+            rows={[
+              { id: 0, value: '1 " 1' },
+              { id: 1, value: '2' },
+            ]}
+            cellSelection
+            disableRowSelectionOnClick
+          />
+        </div>,
       );
 
       const cell = getCell(0, 0);
