@@ -35,7 +35,11 @@ export interface ChartsSurfaceProps {
 const ChartChartsSurfaceStyles = styled('svg', {
   name: 'MuiChartsSurface',
   slot: 'Root',
-})(() => ({}));
+})(() => ({
+  // This prevents default touch actions when using the svg on mobile devices.
+  // For example, prevent page scroll & zoom.
+  touchAction: 'none',
+}));
 
 const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(function ChartsSurface(
   props: ChartsSurfaceProps,
