@@ -36,8 +36,8 @@ module.exports = {
 
             // Get Vendor package path.
             const vendorPkg = ['delaunator', 'robust-predicates'].includes(match.groups.pkg)
-              ? `lib-vendor/${match.groups.pkg}/index.js`
-              : `lib-vendor/${match.groups.pkg}/src/index.js`;
+              ? path.resolve(__dirname, `./lib-vendor/${match.groups.pkg}/index.js`)
+              : path.resolve(__dirname, `./lib-vendor/${match.groups.pkg}/src/index.js`);
 
             console.log({ vendorPkg });
             // Derive relative path to vendor lib to have a file like move from:
