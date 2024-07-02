@@ -1,4 +1,5 @@
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
+import { GridRowId } from '../../../models/gridRows';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
@@ -94,6 +95,40 @@ export const gridFilteredSortedRowEntriesSelector = createSelectorMemoized(
 export const gridFilteredSortedRowIdsSelector = createSelectorMemoized(
   gridFilteredSortedRowEntriesSelector,
   (filteredSortedRowEntries) => filteredSortedRowEntries.map((row) => row.id),
+);
+
+/**
+ * Get the row ids accessible after the filtering process to position in the current tree level lookup.
+ * Does not contain the collapsed children.
+ * @category Filtering
+ */
+export const gridExpandedSortedRowIdsLookupSelector = createSelectorMemoized(
+  gridExpandedSortedRowIdsSelector,
+  gridRowTreeSelector,
+  (visibleSortedRowIds, rowTree) => {
+    const depthPositionCounter: Record<number, number> = {};
+    let lastDepth = 0;
+
+    return visibleSortedRowIds.reduce((acc: Record<GridRowId, number>, rowId) => {
+      const rowNode = rowTree[rowId];
+
+      if (!depthPositionCounter[rowNode.depth]) {
+        depthPositionCounter[rowNode.depth] = 0;
+      }
+
+      // going deeper in the tree should reset the counter
+      // since it might have been used in some other branch at the same level, up in the tree
+      // going back up should keep the counter and continue where it left off
+      if (rowNode.depth > lastDepth) {
+        depthPositionCounter[rowNode.depth] = 0;
+      }
+
+      lastDepth = rowNode.depth;
+      depthPositionCounter[rowNode.depth] += 1;
+      acc[rowId] = depthPositionCounter[rowNode.depth];
+      return acc;
+    }, {});
+  },
 );
 
 /**

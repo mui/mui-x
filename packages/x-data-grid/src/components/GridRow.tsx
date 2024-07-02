@@ -332,6 +332,14 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   }, [isNotVisible, rowHeight, styleProp, minHeight, sizes, rootProps.rowSpacingType]);
 
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
+  const ariaAttributes = apiRef.current.unstable_applyPipeProcessors(
+    'ariaAttributes',
+    {
+      'aria-rowindex': ariaRowIndex,
+      'aria-selected': selected,
+    },
+    rowId,
+  );
 
   if (typeof rootProps.getRowClassName === 'function') {
     const indexRelativeToCurrentPage = index - (currentPage.range?.firstRowIndex || 0);
@@ -503,9 +511,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       data-rowindex={index}
       role="row"
       className={clsx(...rowClassNames, classes.root, className)}
-      aria-rowindex={ariaRowIndex}
-      aria-selected={selected}
       style={style}
+      {...ariaAttributes}
       {...eventHandlers}
       {...other}
     >
