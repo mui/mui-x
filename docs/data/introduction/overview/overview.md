@@ -32,6 +32,11 @@ Throughout the documentation, Pro- and Premium-only features are denoted with th
 - **Grow with us:** You can start for free with the MIT-licensed packages, and upgrade to Pro or Premium when you need more advanced features or technical support.
 - **Dedicated maintenance:** MUI X is maintained by a full-time staff of engineers, so you can rest assured that any issues will be addressed in a timely manner.
 - **Technical support:** Pro and Premium users get access to technical support from our team as well as priority for bug fixes and feature requests.
+- **Customizable for any design system:** Easily adapt the look and feel of MUI X components to match any design system, whether it's a corporate branding or a fresh startup style.
+- **Rich data grid capabilities:** With features like filtering, sorting, and pagination built-in, the MUI X Data Grid simplifies complex data operations, making it easier to manage large sets of information.
+- **Accessibility built-in:** MUI X components are designed with accessibility in mind, ensuring that your applications are usable by as many people as possible right out of the box.
+- **Internationalization support:** MUI X supports multiple languages and cultures, allowing you to create global applications that cater to users around the world.
+- **Performance optimized:** Components are optimized for performance, ensuring your applications run smoothly even under heavy load.
 
 ## MUI X vs. MUI Core
 
