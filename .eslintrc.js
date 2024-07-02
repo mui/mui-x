@@ -269,6 +269,12 @@ module.exports = {
         ],
       },
     },
+    {
+      files: ['packages/*/src/**/*.e2e.spec{.ts,.tsx,.js}'],
+      rules: {
+        'react/react-in-jsx-scope': 'off',
+      },
+    },
     ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts', false),
     ...buildPackageRestrictedImports('@mui/x-charts-pro', 'x-charts-pro', false),
     ...buildPackageRestrictedImports('@mui/x-codemod', 'x-codemod', false),
