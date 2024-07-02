@@ -289,7 +289,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     (sectionIndex: number) => (event: React.MouseEvent<HTMLDivElement>) => {
       // The click event on the clear button would propagate to the input, trigger this handler and result in a wrong section selection.
       // We avoid this by checking if the call to this function is actually intended, or a side effect.
-      if (event.isDefaultPrevented() || readOnly) {
+      if (event.isDefaultPrevented()) {
         return;
       }
 
@@ -303,10 +303,6 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
   });
 
   const getInputContentFocusHandler = useEventCallback((sectionIndex: number) => () => {
-    if (readOnly) {
-      return;
-    }
-
     setSelectedSections(sectionIndex);
   });
 
