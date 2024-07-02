@@ -5,8 +5,8 @@ parameters:
     description: Whether to force browserstack usage. We have limited resources on browserstack so the pipeline might decide to skip browserstack if this parameter isn't set to true.
     type: boolean
     default: false
-  react-dist-tag:
-    description: The dist-tag of react to be used
+  react-version:
+    description: The version of react to be used
     type: string
     default: stable
   workflow:
@@ -20,10 +20,10 @@ parameters:
 
 default-job: &default-job
   parameters:
-    react-dist-tag:
-      description: The dist-tag of react to be used
+    react-version:
+      description: The version of react to be used
       type: string
-      default: << pipeline.parameters.react-dist-tag >>
+      default: << pipeline.parameters.react-version >>
     e2e-base-url:
       description: The base url for running end-to-end test
       type: string
@@ -33,7 +33,7 @@ default-job: &default-job
     PLAYWRIGHT_BROWSERS_PATH: /tmp/pw-browsers
     # expose it globally otherwise we have to thread it from each job to the install command
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
-    REACT_DIST_TAG: << parameters.react-dist-tag >>
+    REACT_VERSION: << parameters.react-version >>
   working_directory: /tmp/mui
   docker:
     - image: cimg/node:18.20
@@ -59,6 +59,13 @@ commands:
         description: 'Set to true if you intend to any browser (for example with playwright).'
 
     steps:
+      - run:
+          name: Resolve React version
+          command: |
+            node scripts/useReactVersion.mjs
+            # log a patch for maintainers who want to check out this change
+            git --no-pager diff HEAD
+
       - when:
           condition: << parameters.browsers >>
           steps:
@@ -90,7 +97,17 @@ commands:
             pnpm --version
       - run:
           name: Install js dependencies
-          command: pnpm install
+          command: |
+            echo "React version $REACT_VERSION"
+            if [ $REACT_VERSION == "stable" ];
+            then
+              echo "pnpm install"
+              pnpm install
+            else
+              echo "pnpm install --no-frozen-lockfile"
+              pnpm install --no-frozen-lockfile
+            fi
+
       - when:
           condition: << parameters.browsers >>
           steps:
@@ -146,7 +163,7 @@ jobs:
           command: |
             curl -Os https://uploader.codecov.io/latest/linux/codecov
             chmod +x codecov
-            ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_DIST_TAG-jsdom"
+            ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-jsdom"
   test_lint:
     <<: *default-job
     steps:
@@ -330,3 +347,31 @@ workflows:
       - test_e2e_website:
           requires:
             - checkout
+
+  react-next:
+    when:
+      equal: [react-next, << pipeline.parameters.workflow >>]
+    # triggers:
+    #   - schedule:
+    #       cron: '0 0 * * *'
+    #       filters:
+    #         branches:
+    #           only:
+    #             - master
+    jobs:
+      - test_unit:
+          <<: *default-context
+          react-version: next
+          name: test_unit-react@next
+      - test_browser:
+          <<: *default-context
+          react-version: next
+          name: test_browser-react@next
+      - test_regressions:
+          <<: *default-context
+          react-version: next
+          name: test_regressions-react@next
+      - test_e2e:
+          <<: *default-context
+          react-version: next
+          name: test_e2e-react@next
