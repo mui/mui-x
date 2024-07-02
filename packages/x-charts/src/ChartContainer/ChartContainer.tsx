@@ -93,6 +93,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
                   onHighlightChange={onHighlightChange}
                 >
                   <ChartsSurface
+                    {...rest}
                     width={width}
                     height={height}
                     ref={handleRef}
@@ -100,7 +101,6 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
                     title={title}
                     desc={desc}
                     disableAxisListener={disableAxisListener}
-                    {...rest}
                   >
                     <ChartsAxesGradients />
                     {children}
