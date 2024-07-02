@@ -64,21 +64,6 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
     </GridContextProvider>
   );
 });
-interface DataGridPremiumComponent {
-  <R extends GridValidRowModel = any>(
-    props: DataGridPremiumProps<R> & React.RefAttributes<HTMLDivElement>,
-  ): React.JSX.Element;
-  propTypes?: any;
-}
-
-/**
- * Demos:
- * - [DataGridPremium](https://mui.com/x/react-data-grid/demo/)
- *
- * API:
- * - [DataGridPremium API](https://mui.com/x/api/data-grid/data-grid-premium/)
- */
-export const DataGridPremium = React.memo(DataGridPremiumRaw) as DataGridPremiumComponent;
 
 DataGridPremiumRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -1059,4 +1044,32 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
+  unstable_dataSource: PropTypes.shape({
+    getChildrenCount: PropTypes.func,
+    getGroupKey: PropTypes.func,
+    getRows: PropTypes.func.isRequired,
+    updateRow: PropTypes.func,
+  }),
+  unstable_dataSourceCache: PropTypes.shape({
+    clear: PropTypes.func.isRequired,
+    get: PropTypes.func.isRequired,
+    set: PropTypes.func.isRequired,
+  }),
+  unstable_onDataSourceError: PropTypes.func,
 } as any;
+
+interface DataGridPremiumComponent {
+  <R extends GridValidRowModel = any>(
+    props: DataGridPremiumProps<R> & React.RefAttributes<HTMLDivElement>,
+  ): React.JSX.Element;
+  propTypes?: any;
+}
+
+/**
+ * Demos:
+ * - [DataGridPremium](https://mui.com/x/react-data-grid/demo/)
+ *
+ * API:
+ * - [DataGridPremium API](https://mui.com/x/api/data-grid/data-grid-premium/)
+ */
+export const DataGridPremium = React.memo(DataGridPremiumRaw) as DataGridPremiumComponent;

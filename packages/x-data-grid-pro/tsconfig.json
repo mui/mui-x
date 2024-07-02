@@ -5,7 +5,8 @@
       "@mui/internal-test-utils/initMatchers",
       "@mui/material/themeCssVarsAugmentation",
       "chai-dom",
-      "mocha"
+      "mocha",
+      "node"
     ]
   },
   "include": ["src/**/*"]

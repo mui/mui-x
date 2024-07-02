@@ -1,4 +1,4 @@
-import { scaleBand, scalePoint } from 'd3-scale';
+import { scaleBand, scalePoint, scaleTime } from 'd3-scale';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../../constants';
 import { AxisConfig, ScaleName } from '../../models';
 import {
@@ -26,6 +26,18 @@ const getRange = (drawingArea: DrawingArea, axisName: 'x' | 'y', isReverse?: boo
 
   return isReverse ? range.reverse() : range;
 };
+
+const isDateData = (data?: any[]): data is Date[] => data?.[0] instanceof Date;
+
+function createDateFormatter(
+  axis: AxisConfig<'band' | 'point', any, ChartsAxisProps>,
+  range: number[],
+): AxisConfig<'band' | 'point', any, ChartsAxisProps>['valueFormatter'] {
+  const timeScale = scaleTime(axis.data!, range);
+
+  return (v, { location }) =>
+    location === 'tick' ? timeScale.tickFormat(axis.tickNumber)(v) : `${v.toLocaleString()}`;
+}
 
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 const DEFAULT_BAR_GAP_RATIO = 0.1;
@@ -99,6 +111,11 @@ export function computeValue(
             ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
             : getColorScale(axis.colorMap)),
       };
+
+      if (isDateData(axis.data)) {
+        const dateFormatter = createDateFormatter(axis, scaleRange);
+        completeAxis[axis.id].valueFormatter = axis.valueFormatter ?? dateFormatter;
+      }
     }
     if (isPointScaleConfig(axis)) {
       const scaleRange = axisName === 'x' ? range : [...range].reverse();
@@ -113,6 +130,11 @@ export function computeValue(
             ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
             : getColorScale(axis.colorMap)),
       };
+
+      if (isDateData(axis.data)) {
+        const dateFormatter = createDateFormatter(axis, scaleRange);
+        completeAxis[axis.id].valueFormatter = axis.valueFormatter ?? dateFormatter;
+      }
     }
     if (axis.scaleType === 'band' || axis.scaleType === 'point') {
       // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.

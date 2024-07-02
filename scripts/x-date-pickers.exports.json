@@ -298,6 +298,7 @@
   { "name": "UseDateTimeFieldComponentProps", "kind": "TypeAlias" },
   { "name": "UseDateTimeFieldProps", "kind": "Interface" },
   { "name": "usePickerLayout", "kind": "ExportAssignment" },
+  { "name": "usePickersTranslations", "kind": "Variable" },
   { "name": "UseTimeFieldComponentProps", "kind": "TypeAlias" },
   { "name": "UseTimeFieldProps", "kind": "Interface" },
   { "name": "YearCalendar", "kind": "Variable" },

@@ -14,6 +14,24 @@ import {
 import { GridProSlotsComponent } from '../models';
 import { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridProDefaultSlotsComponents';
 
+interface GetDataGridProPropsDefaultValues extends DataGridProProps {}
+
+type DataGridProForcedProps = { [key in keyof DataGridProProps]?: DataGridProProcessedProps[key] };
+type GetDataGridProForcedProps = (
+  themedProps: GetDataGridProPropsDefaultValues,
+) => DataGridProForcedProps;
+
+const getDataGridProForcedProps: GetDataGridProForcedProps = (themedProps) => ({
+  signature: 'DataGridPro',
+  ...(themedProps.unstable_dataSource
+    ? {
+        filterMode: 'server',
+        sortingMode: 'server',
+        paginationMode: 'server',
+      }
+    : {}),
+});
+
 /**
  * The default values of `DataGridProPropsWithDefaultValue` to inject in the props of DataGridPro.
  */
@@ -65,7 +83,7 @@ export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGr
       ...themedProps,
       localeText,
       slots,
-      signature: 'DataGridPro',
+      ...getDataGridProForcedProps(themedProps),
     }),
     [themedProps, localeText, slots],
   );
