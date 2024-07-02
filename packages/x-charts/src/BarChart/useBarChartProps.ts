@@ -51,6 +51,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     borderRadius,
     barLabel,
     className,
+    ...rest
   } = props;
 
   const id = useId();
@@ -167,5 +168,6 @@ export const useBarChartProps = (props: BarChartProps) => {
     legendProps,
     tooltipProps,
     children,
+    rest,
   };
 };
