@@ -127,7 +127,7 @@ apiRef.current.selectItem({
   // If `true` the item will be selected
   // If `false` the item will be deselected
   // If not defined, the item's new selection status will be the opposite of its current one
-  isSelected,
+  shouldBeSelected,
 });
 ```
 

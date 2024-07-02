@@ -10,13 +10,13 @@ export interface UseTreeViewSelectionPublicAPI {
    * @param {React.SyntheticEvent} params.event The DOM event that triggered the change.
    * @param {string} params.itemId The id of the item to select or deselect.
    * @param {boolean} params.keepExistingSelection If `true`, the other already selected items will remain selected, otherwise, they will be deselected. This parameter is only relevant when `multiSelect` is `true`
-   * @param {boolean | undefined} params.isSelected If `true` the item will be selected. If `false` the item will be deselected. If not defined, the item's new selection status will be the opposite of its current one.
+   * @param {boolean | undefined} params.shouldBeSelected If `true` the item will be selected. If `false` the item will be deselected. If not defined, the item's new selection status will be the opposite of its current one.
    */
   selectItem: (params: {
     event: React.SyntheticEvent;
     itemId: string;
     keepExistingSelection?: boolean;
-    isSelected?: boolean;
+    shouldBeSelected?: boolean;
   }) => void;
 }
 
