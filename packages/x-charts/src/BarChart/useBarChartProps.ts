@@ -50,6 +50,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     onHighlightChange,
     borderRadius,
     barLabel,
+    className,
   } = props;
 
   const id = useId();
@@ -92,6 +93,7 @@ export const useBarChartProps = (props: BarChartProps) => {
       axisHighlight?.x === 'none' &&
       axisHighlight?.y === 'none' &&
       !onAxisClick,
+    className,
   };
 
   const barPlotProps: BarPlotProps = {
