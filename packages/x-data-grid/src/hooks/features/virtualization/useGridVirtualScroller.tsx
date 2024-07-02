@@ -107,6 +107,7 @@ export const useGridVirtualScroller = () => {
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
+  const [lock, setLock] = React.useState(false);
 
   const theme = useTheme();
   const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
@@ -281,6 +282,10 @@ export const useGridVirtualScroller = () => {
   };
 
   const handleScroll = useEventCallback((event: React.UIEvent) => {
+    if (lock) {
+      return;
+    }
+
     const { scrollTop, scrollLeft } = event.currentTarget;
 
     // On iOS and macOS, negative offsets are possible when swiping past the start
@@ -308,10 +313,16 @@ export const useGridVirtualScroller = () => {
   });
 
   const handleWheel = useEventCallback((event: React.WheelEvent) => {
+    if (lock) {
+      return;
+    }
     apiRef.current.publishEvent('virtualScrollerWheel', {}, event);
   });
 
   const handleTouchMove = useEventCallback((event: React.TouchEvent) => {
+    if (lock) {
+      return;
+    }
     apiRef.current.publishEvent('virtualScrollerTouchMove', {}, event);
   });
 
@@ -577,6 +588,7 @@ export const useGridVirtualScroller = () => {
 
   apiRef.current.register('private', {
     updateRenderContext: forceUpdateRenderContext,
+    setVirtualScrollerLock: setLock,
   });
 
   useGridApiEventHandler(apiRef, 'columnsChange', forceUpdateRenderContext);
