@@ -21,8 +21,10 @@ export default function LoadingOverlaySkeleton() {
             noRowsVariant: 'skeleton',
           },
         }}
-        pinnedColumns={{
-          left: ['desk'],
+        initialState={{
+          pinnedColumns: {
+            left: ['desk'],
+          },
         }}
       />
     </Box>
