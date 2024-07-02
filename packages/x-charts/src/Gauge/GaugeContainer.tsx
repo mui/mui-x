@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useForkRef from '@mui/utils/useForkRef';
 import { styled } from '@mui/material/styles';
 import { useChartContainerDimensions } from '../ResponsiveChartContainer/useChartContainerDimensions';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
@@ -64,10 +63,9 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(props: GaugeCont
     children,
     ...other
   } = props;
-  const [containerRef, width, height] = useChartContainerDimensions(inWidth, inHeight);
+  const { containerRef, width, height } = useChartContainerDimensions(ref, inWidth, inHeight);
 
   const svgRef = React.useRef<SVGSVGElement>(null);
-  const handleRef = useForkRef(ref, svgRef);
 
   return (
     <ResizableContainer
@@ -101,7 +99,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(props: GaugeCont
             <ChartsSurface
               width={width}
               height={height}
-              ref={handleRef}
+              ref={svgRef}
               title={title}
               desc={desc}
               disableAxisListener

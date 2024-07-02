@@ -2,7 +2,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Watermark } from '@mui/x-license/Watermark';
 import { ResponsiveChartContainerProps } from '@mui/x-charts/ResponsiveChartContainer';
-import { ResizableContainer, useChartContainerDimensions } from '@mui/x-charts/internals';
+import {
+  ResizableContainer,
+  useChartContainerDimensions,
+  useResponsiveChartContainerProps,
+} from '@mui/x-charts/internals';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import { ChartContainerPro } from '../ChartContainerPro';
 
@@ -14,13 +18,18 @@ const ResponsiveChartContainerPro = React.forwardRef(function ResponsiveChartCon
   props: ResponsiveChartContainerProProps,
   ref,
 ) {
-  const { width: inWidth, height: inHeight, ...other } = props;
-  const [containerRef, width, height] = useChartContainerDimensions(inWidth, inHeight);
+  const { inHeight, inWidth, chartContainerProps, resizableChartContainerProps } =
+    useResponsiveChartContainerProps(props);
+  const { containerRef, width, height } = useChartContainerDimensions(ref, inWidth, inHeight);
 
   return (
-    <ResizableContainer ref={containerRef} ownerState={{ width: inWidth, height: inHeight }}>
+    <ResizableContainer
+      ref={containerRef}
+      ownerState={{ width: inWidth, height: inHeight }}
+      {...resizableChartContainerProps}
+    >
       {width && height ? (
-        <ChartContainerPro {...other} width={width} height={height} ref={ref} />
+        <ChartContainerPro {...chartContainerProps} width={width} height={height} />
       ) : null}
       <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
     </ResizableContainer>
