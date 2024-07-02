@@ -38,4 +38,5 @@ export type TreeViewPublicAPI<
 
 export type TreeViewExperimentalFeatures<
   TSignatures extends readonly TreeViewAnyPluginSignature[],
-> = { [key in MergeSignaturesProperty<TSignatures, 'experimentalFeatures'>]?: boolean };
+  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
+> = MergeSignaturesProperty<[...TSignatures, ...TOptionalSignatures], 'experimentalFeatures'>;

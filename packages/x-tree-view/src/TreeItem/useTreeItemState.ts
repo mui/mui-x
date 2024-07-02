@@ -18,6 +18,7 @@ export function useTreeItemState(itemId: string) {
   const {
     instance,
     selection: { multiSelect, checkboxSelection, disableSelection },
+    expansion: { expansionTrigger },
   } = useTreeViewContext<UseTreeItemStateMinimalPlugins, UseTreeItemStateOptionalPlugins>();
 
   const expandable = instance.isItemExpandable(itemId);
@@ -96,5 +97,6 @@ export function useTreeItemState(itemId: string) {
     handleSelection,
     handleCheckboxSelection,
     preventSelection,
+    expansionTrigger,
   };
 }
