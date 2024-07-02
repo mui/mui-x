@@ -84,7 +84,7 @@ export interface UseTreeItem2LabelSlotOwnProps {
 export type UseTreeItem2LabelSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItem2LabelSlotOwnProps;
 
-export type UseTreeItem2LabelInputSlotProps<ExternalProps = {}> = ExternalProps & {
+export type UseTreeItem2LabelInputSlotOwnProps = {
   onBlur: MuiCancellableEventHandler<React.FocusEvent<HTMLInputElement>>;
   label: React.ReactNode;
   visible: boolean;
@@ -92,6 +92,9 @@ export type UseTreeItem2LabelInputSlotProps<ExternalProps = {}> = ExternalProps 
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   ref: React.RefObject<HTMLInputElement>;
 };
+
+export type UseTreeItem2LabelInputSlotProps<ExternalProps = {}> = ExternalProps &
+  UseTreeItem2LabelInputSlotOwnProps;
 
 export interface UseTreeItem2CheckboxSlotOwnProps {
   visible: boolean;

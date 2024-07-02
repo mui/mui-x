@@ -18,6 +18,7 @@ import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewCon
 import { MuiCancellableEvent } from '../internals/models/MuiCancellableEvent';
 import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
+import { treeItemClasses } from '../TreeItem';
 
 export const useTreeItem2 = <
   TSignatures extends UseTreeItem2MinimalPlugins = UseTreeItem2MinimalPlugins,
@@ -50,6 +51,7 @@ export const useTreeItem2 = <
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const isBeingEdited = status.editing;
+  const rootTabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>
@@ -73,9 +75,10 @@ export const useTreeItem2 = <
         return;
       }
 
-      if (event.relatedTarget?.className === 'MuiTreeItem-labelInput') {
+      if (event.relatedTarget?.classList.contains(treeItemClasses.labelInput)) {
         return;
       }
+
       instance.removeFocusedItem();
     };
 
@@ -158,9 +161,14 @@ export const useTreeItem2 = <
     (otherHandlers: EventHandlers) =>
     (event: React.FocusEvent<HTMLInputElement> & MuiCancellableEvent) => {
       otherHandlers.onBlur?.(event);
-      if (event.defaultMuiPrevented) {
+      event.stopPropagation();
+      if (
+        event.defaultMuiPrevented ||
+        event.relatedTarget?.classList.contains(treeItemClasses.root)
+      ) {
         return;
       }
+
       interactions.handleSaveItemLabel(event, event.target.value);
     };
   const createInputHandleChange =
@@ -205,7 +213,7 @@ export const useTreeItem2 = <
       ...externalEventHandlers,
       ref: handleRootRef,
       role: 'treeitem',
-      tabIndex: instance.canItemBeTabbed(itemId) && !isBeingEdited ? 0 : -1,
+      tabIndex: rootTabIndex,
       id: idAttribute,
       'aria-expanded': status.expandable ? status.expanded : undefined,
       'aria-selected': ariaSelected,

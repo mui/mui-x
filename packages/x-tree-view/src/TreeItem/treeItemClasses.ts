@@ -22,6 +22,12 @@ export interface TreeItemClasses {
   label: string;
   /** Styles applied to the checkbox element. */
   checkbox: string;
+  /** Styles applied to the input element that is visible when editing is enabled. */
+  labelInput: string;
+  /** Styles applied to the content element when editing is enabled. */
+  editing: string;
+  /** Styles applied to the content of the items that are editable. */
+  editable: string;
 }
 
 export type TreeItemClassKey = keyof TreeItemClasses;
@@ -41,4 +47,7 @@ export const treeItemClasses: TreeItemClasses = generateUtilityClasses('MuiTreeI
   'iconContainer',
   'label',
   'checkbox',
+  'labelInput',
+  'editable',
+  'editing',
 ]);

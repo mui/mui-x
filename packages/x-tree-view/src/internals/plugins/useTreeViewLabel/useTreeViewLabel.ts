@@ -28,6 +28,16 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
   const isTreeViewEditable = Boolean(params.isItemEditable);
 
   const updateItemLabel = (itemId: TreeViewItemId, label: string) => {
+    if (!label) {
+      throw new Error(
+        [
+          'MUI X: The Tree View component requires all items to have a `label` property.',
+          'Alternatively, you can use the `getItemLabel` prop to specify a custom label for each item.',
+          'An item was provided without label in the `items` prop:',
+          JSON.stringify(itemId),
+        ].join('\n'),
+      );
+    }
     setState((prevState) => {
       const item = prevState.items.itemMetaMap[itemId];
       if (item.label !== label) {

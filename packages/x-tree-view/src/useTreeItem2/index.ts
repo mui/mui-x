@@ -4,4 +4,5 @@ export type {
   UseTreeItem2ReturnValue,
   UseTreeItem2Status,
   UseTreeItem2ContentSlotOwnProps,
+  UseTreeItem2LabelInputSlotOwnProps,
 } from './useTreeItem2.types';

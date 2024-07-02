@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { MuiCancellableEvent } from '../../internals/models/MuiCancellableEvent';
 import { useTreeViewContext } from '../../internals/TreeViewProvider/useTreeViewContext';
 import { UseTreeViewSelectionSignature } from '../../internals/plugins/useTreeViewSelection';
 import { UseTreeViewExpansionSignature } from '../../internals/plugins/useTreeViewExpansion';
@@ -132,8 +133,11 @@ export const useTreeItem2Utils = ({
     }
   };
 
-  const handleSaveItemLabel = (event: React.SyntheticEvent, label: string) => {
-    if (instance.updateItemLabel) {
+  const handleSaveItemLabel = (
+    event: React.SyntheticEvent & MuiCancellableEvent,
+    label: string,
+  ) => {
+    if (instance.updateItemLabel && label) {
       instance.updateItemLabel(itemId, label);
       toggleItemEditing();
       instance.focusItem(event, itemId);

@@ -71,6 +71,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     }
 
     setFocusedItemId(itemId);
+
     if (params.onItemFocus) {
       params.onItemFocus(event, itemId);
     }

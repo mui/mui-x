@@ -13,6 +13,7 @@ import { TreeItem2Props, TreeItem2OwnerState } from './TreeItem2.types';
 import {
   unstable_useTreeItem2 as useTreeItem2,
   UseTreeItem2ContentSlotOwnProps,
+  UseTreeItem2LabelInputSlotOwnProps,
   UseTreeItem2Status,
 } from '../useTreeItem2';
 import { getTreeItemUtilityClass } from '../TreeItem';
@@ -153,13 +154,8 @@ export const TreeItem2GroupTransition = styled(Collapse, {
   ],
 });
 
-export const TreeItem2LabelInput = React.forwardRef(function TreeItem2LabelInput(
-  {
-    visible = false,
-    onChange,
-    label,
-    ...props
-  }: React.InputHTMLAttributes<any> & { visible: boolean; label: string },
+export const UnstyledLabelInput = React.forwardRef(function UnstyledLabelInput(
+  { visible = false, onChange, label, ...props }: UseTreeItem2LabelInputSlotOwnProps,
   ref: React.Ref<HTMLInputElement>,
 ) {
   const [labelInputValue, setLabelInputValue] = React.useState(label);
@@ -181,14 +177,21 @@ export const TreeItem2LabelInput = React.forwardRef(function TreeItem2LabelInput
     <input
       {...props}
       onChange={handleInputChange}
-      value={labelInputValue}
-      tabIndex={0}
+      value={labelInputValue as string}
       autoFocus
       type="text"
       ref={ref}
-      style={{ width: '100%' }}
+      style={{}}
     />
   );
+});
+
+export const TreeItem2LabelInput = styled(UnstyledLabelInput, {
+  name: 'MuiTreeItem2',
+  slot: 'LabelInput',
+  overridesResolver: (props, styles) => styles.labelInput,
+})({
+  width: '100%',
 });
 
 export const TreeItem2Checkbox = styled(
@@ -218,6 +221,8 @@ const useUtilityClasses = (ownerState: TreeItem2OwnerState) => {
     root: ['root'],
     content: ['content'],
     expanded: ['expanded'],
+    editing: ['editing'],
+    editable: ['editable'],
     selected: ['selected'],
     focused: ['focused'],
     disabled: ['disabled'],
@@ -301,8 +306,11 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
       [classes.selected]: status.selected,
       [classes.focused]: status.focused,
       [classes.disabled]: status.disabled,
+      [classes.editing]: status.editing,
+      [classes.editable]: status.editable,
     }),
   });
+
   const IconContainer: React.ElementType = slots.iconContainer ?? TreeItem2IconContainer;
   const iconContainerProps = useSlotProps({
     elementType: IconContainer,
