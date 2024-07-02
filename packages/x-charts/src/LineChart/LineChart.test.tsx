@@ -4,13 +4,16 @@ import { LineChart } from './LineChart';
 
 describe('<LineChart />', () => {
   const { render } = createRenderer();
-  describeConformance(<LineChart height={100} series={[{ data: [100, 200] }]} />, () => ({
-    classes: {} as any,
-    inheritComponent: 'svg',
-    render,
-    muiName: 'MuiBarChart',
-    testComponentPropWith: 'div',
-    refInstanceof: window.HTMLDivElement,
-    only: ['mergeClassName', 'propsSpread', 'refForwarding', 'reactTestRenderer', 'rootClass'],
-  }));
+  describeConformance(
+    <LineChart height={100} width={100} series={[{ data: [100, 200] }]} />,
+    () => ({
+      classes: {} as any,
+      inheritComponent: 'svg',
+      render,
+      muiName: 'MuiLineChart',
+      testComponentPropWith: 'div',
+      refInstanceof: window.HTMLDivElement,
+      only: ['mergeClassName', 'propsSpread', 'refForwarding', 'reactTestRenderer', 'rootClass'],
+    }),
+  );
 });

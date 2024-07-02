@@ -5,11 +5,11 @@ import { Gauge } from './Gauge';
 describe('<Gauge />', () => {
   const { render } = createRenderer();
 
-  describeConformance(<Gauge height={100} value={60} />, () => ({
+  describeConformance(<Gauge height={100} width={100} value={60} />, () => ({
     classes: {} as any,
     inheritComponent: 'svg',
     render,
-    muiName: 'MuiBarChart',
+    muiName: 'MuiGauge',
     testComponentPropWith: 'div',
     refInstanceof: window.HTMLDivElement,
     only: ['mergeClassName', 'propsSpread', 'refForwarding', 'reactTestRenderer', 'rootClass'],

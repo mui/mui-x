@@ -5,11 +5,11 @@ import { SparkLineChart } from './SparkLineChart';
 describe('<SparkLineChart />', () => {
   const { render } = createRenderer();
 
-  describeConformance(<SparkLineChart height={100} data={[100, 200]} />, () => ({
+  describeConformance(<SparkLineChart height={100} width={100} data={[100, 200]} />, () => ({
     classes: {} as any,
     inheritComponent: 'svg',
     render,
-    muiName: 'MuiBarChart',
+    muiName: 'MuiSparkLineChart',
     testComponentPropWith: 'div',
     refInstanceof: window.HTMLDivElement,
     only: ['mergeClassName', 'propsSpread', 'refForwarding', 'reactTestRenderer', 'rootClass'],

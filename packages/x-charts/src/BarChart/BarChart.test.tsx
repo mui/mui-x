@@ -5,13 +5,16 @@ import { BarChart } from './BarChart';
 describe('<BarChart />', () => {
   const { render } = createRenderer();
 
-  describeConformance(<BarChart height={100} series={[{ data: [100, 200] }]} />, () => ({
-    classes: {} as any,
-    inheritComponent: 'svg',
-    render,
-    muiName: 'MuiBarChart',
-    testComponentPropWith: 'div',
-    refInstanceof: window.HTMLDivElement,
-    only: ['mergeClassName', 'propsSpread', 'refForwarding', 'reactTestRenderer', 'rootClass'],
-  }));
+  describeConformance(
+    <BarChart height={100} width={100} series={[{ data: [100, 200] }]} />,
+    () => ({
+      classes: {} as any,
+      inheritComponent: 'svg',
+      render,
+      muiName: 'MuiBarChart',
+      testComponentPropWith: 'div',
+      refInstanceof: window.HTMLDivElement,
+      only: ['mergeClassName', 'propsSpread', 'refForwarding', 'reactTestRenderer', 'rootClass'],
+    }),
+  );
 });

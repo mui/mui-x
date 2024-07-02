@@ -7,6 +7,7 @@ describe('<PieChart />', () => {
   describeConformance(
     <PieChart
       height={100}
+      width={100}
       series={[
         {
           data: [
@@ -20,7 +21,7 @@ describe('<PieChart />', () => {
       classes: {} as any,
       inheritComponent: 'svg',
       render,
-      muiName: 'MuiBarChart',
+      muiName: 'MuiPieChart',
       testComponentPropWith: 'div',
       refInstanceof: window.HTMLDivElement,
       only: ['mergeClassName', 'propsSpread', 'refForwarding', 'reactTestRenderer', 'rootClass'],

@@ -8,6 +8,7 @@ describe('<ScatterChart />', () => {
   describeConformance(
     <ScatterChart
       height={100}
+      width={100}
       series={[
         {
           data: [
@@ -21,7 +22,7 @@ describe('<ScatterChart />', () => {
       classes: {} as any,
       inheritComponent: 'svg',
       render,
-      muiName: 'MuiBarChart',
+      muiName: 'MuiScatterChart',
       testComponentPropWith: 'div',
       refInstanceof: window.HTMLDivElement,
       only: ['mergeClassName', 'propsSpread', 'refForwarding', 'reactTestRenderer', 'rootClass'],
