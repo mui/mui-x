@@ -38,6 +38,7 @@ export interface LineChartProProps extends LineChartProps {
  * - [LineChart API](https://mui.com/x/api/charts/line-chart/)
  */
 const LineChartPro = React.forwardRef(function LineChartPro(props: LineChartProProps, ref) {
+  const { zoom, ...restProps } = props;
   const {
     chartContainerProps,
     axisClickHandlerProps,
@@ -53,9 +54,8 @@ const LineChartPro = React.forwardRef(function LineChartPro(props: LineChartProP
     lineHighlightPlotProps,
     legendProps,
     tooltipProps,
-
     children,
-  } = useLineChartProps(props);
+  } = useLineChartProps(restProps);
 
   return (
     <ResponsiveChartContainerPro ref={ref} {...chartContainerProps}>
@@ -73,7 +73,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(props: LineChartProP
       <ChartsLegend {...legendProps} />
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       <ChartsClipPath {...clipPathProps} />
-      {props.zoom && <ZoomSetup />}
+      {zoom && <ZoomSetup />}
       {children}
     </ResponsiveChartContainerPro>
   );
