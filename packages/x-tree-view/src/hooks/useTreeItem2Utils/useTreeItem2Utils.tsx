@@ -94,7 +94,7 @@ export const useTreeItem2Utils = ({
         instance.selectItem({ event, itemId, keepExistingSelection: true });
       }
     } else {
-      instance.selectItem({ event, itemId, isSelected: true });
+      instance.selectItem({ event, itemId, shouldBeSelected: true });
     }
   };
 
@@ -107,7 +107,7 @@ export const useTreeItem2Utils = ({
         event,
         itemId,
         keepExistingSelection: multiSelect,
-        isSelected: event.target.checked,
+        shouldBeSelected: event.target.checked,
       });
     }
   };

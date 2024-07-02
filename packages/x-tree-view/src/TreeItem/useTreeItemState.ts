@@ -56,7 +56,7 @@ export function useTreeItemState(itemId: string) {
           instance.selectItem({ event, itemId, keepExistingSelection: true });
         }
       } else {
-        instance.selectItem({ event, itemId, isSelected: true });
+        instance.selectItem({ event, itemId, shouldBeSelected: true });
       }
     }
   };
@@ -74,7 +74,7 @@ export function useTreeItemState(itemId: string) {
         event,
         itemId,
         keepExistingSelection: multiSelect,
-        isSelected: event.target.checked,
+        shouldBeSelected: event.target.checked,
       });
     }
   };

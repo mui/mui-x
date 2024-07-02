@@ -797,7 +797,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
 
     describe('selectItem api method', () => {
       describe('single selection', () => {
-        it('should select un-selected item when isSelected is not defined', () => {
+        it('should select un-selected item when shouldBeSelected is not defined', () => {
           const response = render({
             items: [{ id: '1' }, { id: '2' }],
           });
@@ -809,7 +809,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           expect(response.isItemSelected('1')).to.equal(true);
         });
 
-        it('should un-select selected item when isSelected is not defined', () => {
+        it('should un-select selected item when shouldBeSelected is not defined', () => {
           const response = render({
             items: [{ id: '1' }, { id: '2' }],
             defaultSelectedItems: ['1'],
@@ -851,7 +851,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
       });
 
       describe('multi selection', () => {
-        it('should select un-selected item and remove other selected items when isSelected is not defined', () => {
+        it('should select un-selected item and remove other selected items when shouldBeSelected is not defined', () => {
           const response = render({
             items: [{ id: '1' }, { id: '2' }],
             defaultSelectedItems: ['2'],
@@ -865,7 +865,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           expect(response.getSelectedTreeItems()).to.deep.equal(['1']);
         });
 
-        it('should select un-selected item and keep other selected items when isSelected is not defined and keepExistingSelection is true', () => {
+        it('should select un-selected item and keep other selected items when shouldBeSelected is not defined and keepExistingSelection is true', () => {
           const response = render({
             items: [{ id: '1' }, { id: '2' }],
             defaultSelectedItems: ['2'],
