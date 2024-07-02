@@ -1,28 +1,17 @@
 import * as React from 'react';
-import { createRenderer } from '@mui/internal-test-utils';
-import { expect } from 'chai';
-import { test } from 'mocha';
+import { createRenderer, describeConformance } from '@mui/internal-test-utils';
 import { Gauge } from './Gauge';
 
 describe('<Gauge />', () => {
   const { render } = createRenderer();
-  const testClass = 'test-class';
 
-  test('should pass className prop to root component', () => {
-    const { container } = render(
-      <Gauge
-        height={100}
-        series={[
-          {
-            data: [
-              { id: 'A', value: 100 },
-              { id: 'B', value: 200 },
-            ],
-          },
-        ]}
-        className={testClass}
-      />,
-    );
-    expect(container.firstElementChild?.classList.contains(testClass)).to.equal(true);
-  });
+  describeConformance(<Gauge height={100} value={60} />, () => ({
+    classes: {} as any,
+    inheritComponent: 'svg',
+    render,
+    muiName: 'MuiBarChart',
+    testComponentPropWith: 'div',
+    refInstanceof: window.HTMLDivElement,
+    only: ['mergeClassName', 'propsSpread', 'refForwarding', 'reactTestRenderer', 'rootClass'],
+  }));
 });

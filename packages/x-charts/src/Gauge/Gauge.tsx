@@ -26,18 +26,18 @@ const useUtilityClasses = (props: GaugeProps) => {
   return composeClasses(slots, getGaugeUtilityClass, classes);
 };
 
-function Gauge(props: GaugeProps) {
+const Gauge = React.forwardRef(function Gauge(props: GaugeProps, ref) {
   const { text, children, classes: propsClasses, className, ...other } = props;
   const classes = useUtilityClasses(props);
   return (
-    <GaugeContainer {...other} className={clsx(classes.root, className)}>
+    <GaugeContainer {...other} className={clsx(classes.root, className)} ref={ref}>
       <GaugeReferenceArc className={classes.referenceArc} />
       <GaugeValueArc className={classes.valueArc} />
       <GaugeValueText className={classes.valueText} text={text} />
       {children}
     </GaugeContainer>
   );
-}
+});
 
 Gauge.propTypes = {
   // ----------------------------- Warning --------------------------------
