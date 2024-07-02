@@ -413,6 +413,7 @@
   { "name": "UseMultiInputTimeRangeFieldComponentProps", "kind": "TypeAlias" },
   { "name": "UseMultiInputTimeRangeFieldProps", "kind": "Interface" },
   { "name": "usePickerLayout", "kind": "ExportAssignment" },
+  { "name": "usePickersTranslations", "kind": "Variable" },
   { "name": "UseSingleInputDateRangeFieldProps", "kind": "Interface" },
   { "name": "UseSingleInputDateTimeRangeFieldProps", "kind": "Interface" },
   { "name": "UseSingleInputTimeRangeFieldProps", "kind": "Interface" },

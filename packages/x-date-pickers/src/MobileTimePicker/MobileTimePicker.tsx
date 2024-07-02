@@ -6,7 +6,8 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { MobileTimePickerProps } from './MobileTimePicker.types';
 import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils } from '../internals/hooks/useUtils';
 import { validateTime } from '../internals/utils/validation/validateTime';
 import { PickerValidDate, TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
@@ -39,7 +40,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
   inProps: MobileTimePickerProps<TDate, TimeView, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const utils = useUtils<TDate>();
 
   // Props with the default values common to all time pickers
@@ -92,7 +93,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     valueManager: singleItemValueManager,
     valueType: 'time',
     getOpenDialogAriaText:
-      props.localeText?.openTimePickerDialogue ?? localeText.openTimePickerDialogue,
+      props.localeText?.openTimePickerDialogue ?? translations.openTimePickerDialogue,
     validator: validateTime,
   });
 

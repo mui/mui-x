@@ -9,9 +9,9 @@ import {
   PickersToolbarButton,
   useUtils,
   BaseToolbarProps,
-  useLocaleText,
   ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
+import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateRange } from '../models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
@@ -86,15 +86,15 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
     ...other
   } = props;
 
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
 
   const startDateValue = start
     ? utils.formatByString(start, toolbarFormat || utils.formats.shortDate)
-    : localeText.start;
+    : translations.start;
 
   const endDateValue = end
     ? utils.formatByString(end, toolbarFormat || utils.formats.shortDate)
-    : localeText.end;
+    : translations.end;
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
@@ -102,7 +102,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
   return (
     <DateRangePickerToolbarRoot
       {...other}
-      toolbarTitle={localeText.dateRangePickerToolbarTitle}
+      toolbarTitle={translations.dateRangePickerToolbarTitle}
       isLandscape={false}
       className={clsx(className, classes.root)}
       ownerState={ownerState}

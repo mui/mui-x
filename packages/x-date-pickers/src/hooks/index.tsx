@@ -5,3 +5,5 @@ export type {
   UseClearableFieldSlotProps,
   UseClearableFieldResponse,
 } from './useClearableField';
+
+export { usePickersTranslations } from './usePickersTranslations';

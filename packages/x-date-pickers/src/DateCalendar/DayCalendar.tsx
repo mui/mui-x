@@ -10,7 +10,8 @@ import {
 } from '@mui/utils';
 import clsx from 'clsx';
 import { PickersDay, PickersDayProps, ExportedPickersDayProps } from '../PickersDay/PickersDay';
-import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 import {
@@ -385,7 +386,7 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
     timezone,
   });
 
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
 
   const [internalHasFocus, setInternalHasFocus] = useControlled({
     name: 'DayCalendar',
@@ -562,10 +563,10 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
           <PickersCalendarWeekNumberLabel
             variant="caption"
             role="columnheader"
-            aria-label={localeText.calendarWeekNumberHeaderLabel}
+            aria-label={translations.calendarWeekNumberHeaderLabel}
             className={classes.weekNumberLabel}
           >
-            {localeText.calendarWeekNumberHeaderText}
+            {translations.calendarWeekNumberHeaderText}
           </PickersCalendarWeekNumberLabel>
         )}
         {getWeekdays(utils, now).map((weekday, i) => (
@@ -614,11 +615,11 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
                   <PickersCalendarWeekNumber
                     className={classes.weekNumber}
                     role="rowheader"
-                    aria-label={localeText.calendarWeekNumberAriaLabelText(
+                    aria-label={translations.calendarWeekNumberAriaLabelText(
                       utils.getWeekNumber(week[0]),
                     )}
                   >
-                    {localeText.calendarWeekNumberText(utils.getWeekNumber(week[0]))}
+                    {translations.calendarWeekNumberText(utils.getWeekNumber(week[0]))}
                   </PickersCalendarWeekNumber>
                 )}
                 {week.map((day, dayIndex) => (

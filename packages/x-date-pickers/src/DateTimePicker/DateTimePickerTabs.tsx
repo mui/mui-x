@@ -7,13 +7,14 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { TimeIcon, DateRangeIcon } from '../icons';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
-import { useLocaleText } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import {
   DateTimePickerTabsClasses,
   getDateTimePickerTabsUtilityClass,
 } from './dateTimePickerTabsClasses';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
 import { isDatePickerView } from '../internals/utils/date-utils';
+import { PickerValidDate } from '../models';
 
 type TabValue = 'date' | 'time';
 
@@ -93,7 +94,9 @@ const DateTimePickerTabsRoot = styled(Tabs, {
  *
  * - [DateTimePickerTabs API](https://mui.com/x/api/date-pickers/date-time-picker-tabs/)
  */
-const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTabsProps) {
+const DateTimePickerTabs = function DateTimePickerTabs<TDate extends PickerValidDate>(
+  inProps: DateTimePickerTabsProps,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerTabs' });
   const {
     dateIcon = <DateRangeIcon />,
@@ -105,7 +108,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
     sx,
   } = props;
 
-  const localeText = useLocaleText();
+  const translations = usePickersTranslations<TDate>();
   const classes = useUtilityClasses(props);
 
   const handleChange = (event: React.SyntheticEvent, value: TabValue) => {
@@ -127,12 +130,12 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
     >
       <Tab
         value="date"
-        aria-label={localeText.dateTableLabel}
+        aria-label={translations.dateTableLabel}
         icon={<React.Fragment>{dateIcon}</React.Fragment>}
       />
       <Tab
         value="time"
-        aria-label={localeText.timeTableLabel}
+        aria-label={translations.timeTableLabel}
         icon={<React.Fragment>{timeIcon}</React.Fragment>}
       />
     </DateTimePickerTabsRoot>
