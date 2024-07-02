@@ -156,6 +156,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
     area,
     curve = 'linear',
     className,
+    ...rest
   } = props;
 
   const defaultXHighlight: { x: 'band' | 'none' } =
@@ -167,6 +168,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
 
   return (
     <ResponsiveChartContainer
+      {...rest}
       ref={ref}
       series={[
         {
