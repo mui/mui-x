@@ -62,7 +62,7 @@ commands:
       - run:
           name: Resolve React version
           command: |
-            node scripts/useReactVersion.mjs
+            node scripts/useReactVersionCLI.mjs
             # log a patch for maintainers who want to check out this change
             git --no-pager diff HEAD
 
