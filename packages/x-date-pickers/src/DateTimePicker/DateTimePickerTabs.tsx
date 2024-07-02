@@ -108,7 +108,7 @@ const DateTimePickerTabs = function DateTimePickerTabs<TDate extends PickerValid
     sx,
   } = props;
 
-  const translations = usePickersTranslations();
+  const translations = usePickersTranslations<TDate>();
   const classes = useUtilityClasses(props);
 
   const handleChange = (event: React.SyntheticEvent, value: TabValue) => {
