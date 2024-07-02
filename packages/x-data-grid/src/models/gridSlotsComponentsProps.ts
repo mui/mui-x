@@ -27,6 +27,7 @@ import type { GridColumnHeadersProps } from '../components/GridColumnHeaders';
 import type { GridDetailPanelsProps } from '../components/GridDetailPanels';
 import type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 import type { GridColumnsManagementProps } from '../components/columnsManagement/GridColumnsManagement';
+import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
 import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
 
@@ -94,7 +95,7 @@ export interface GridSlotProps {
   filterPanel: GridFilterPanelProps & FilterPanelPropsOverrides;
   footer: GridFooterContainerProps & FooterPropsOverrides;
   footerRowCount: GridRowCountProps & FooterRowCountOverrides;
-  loadingOverlay: GridOverlayProps & LoadingOverlayPropsOverrides;
+  loadingOverlay: GridLoadingOverlayProps & LoadingOverlayPropsOverrides;
   noResultsOverlay: GridOverlayProps & NoResultsOverlayPropsOverrides;
   noRowsOverlay: GridOverlayProps & NoRowsOverlayPropsOverrides;
   pagination: Partial<TablePaginationProps> & PaginationPropsOverrides;

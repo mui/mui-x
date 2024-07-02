@@ -9,7 +9,8 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridDimensions, gridDimensionsSelector } from '../../hooks/features/dimensions';
 import { useGridVirtualScroller } from '../../hooks/features/virtualization/useGridVirtualScroller';
-import { GridOverlays } from '../base/GridOverlays';
+import { useGridOverlays } from '../../hooks/features/overlays/useGridOverlays';
+import { GridOverlays as Overlays } from '../base/GridOverlays';
 import { GridHeaders } from '../GridHeaders';
 import { GridMainContainer as Container } from './GridMainContainer';
 import { GridTopContainer as TopContainer } from './GridTopContainer';
@@ -18,14 +19,23 @@ import { GridVirtualScrollerContent as Content } from './GridVirtualScrollerCont
 import { GridVirtualScrollerFiller as SpaceFiller } from './GridVirtualScrollerFiller';
 import { GridVirtualScrollerRenderZone as RenderZone } from './GridVirtualScrollerRenderZone';
 import { GridVirtualScrollbar as Scrollbar } from './GridVirtualScrollbar';
+import { GridLoadingOverlayVariant } from '../GridLoadingOverlay';
 
 type OwnerState = DataGridProcessedProps;
 
-const useUtilityClasses = (ownerState: OwnerState, dimensions: GridDimensions) => {
+const useUtilityClasses = (
+  ownerState: OwnerState,
+  dimensions: GridDimensions,
+  loadingOverlayVariant: GridLoadingOverlayVariant | null,
+) => {
   const { classes } = ownerState;
 
   const slots = {
-    root: ['main', dimensions.rightPinnedWidth > 0 && 'main--hasPinnedRight'],
+    root: [
+      'main',
+      dimensions.rightPinnedWidth > 0 && 'main--hasPinnedRight',
+      loadingOverlayVariant === 'skeleton' && 'main--hasSkeletonLoadingOverlay',
+    ],
     scroller: ['virtualScroller'],
   };
 
@@ -61,7 +71,8 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-  const classes = useUtilityClasses(rootProps, dimensions);
+  const overlaysProps = useGridOverlays();
+  const classes = useUtilityClasses(rootProps, dimensions, overlaysProps.loadingOverlayVariant);
 
   const virtualScroller = useGridVirtualScroller();
   const {
@@ -86,7 +97,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
           <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
         </TopContainer>
 
-        <GridOverlays />
+        <Overlays {...overlaysProps} />
 
         <Content {...getContentProps()}>
           <RenderZone {...getRenderZoneProps()}>

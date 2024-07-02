@@ -11,7 +11,7 @@ export default function LoadingOverlay() {
   });
 
   return (
-    <Box sx={{ width: '100%', height: 340 }}>
+    <Box sx={{ width: '100%', height: 400 }}>
       <DataGrid {...data} loading />
     </Box>
   );

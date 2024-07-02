@@ -1682,6 +1682,12 @@
       "isGlobal": false
     },
     {
+      "key": "rowSkeleton",
+      "className": "MuiDataGridPro-rowSkeleton",
+      "description": "Styles applied to the skeleton row element.",
+      "isGlobal": false
+    },
+    {
       "key": "scrollArea",
       "className": "MuiDataGridPro-scrollArea",
       "description": "Styles applied to both scroll area elements.",

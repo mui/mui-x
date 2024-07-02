@@ -1128,6 +1128,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the row&#39;s draggable placeholder element inside the special row reorder cell"
     },
+    "rowSkeleton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the skeleton row element"
+    },
     "scrollArea": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "both scroll area elements"

@@ -1,0 +1,15 @@
+<DataGridPro
+  {...data}
+  loading
+  slotProps={{
+    loadingOverlay: {
+      variant: 'skeleton',
+      noRowsVariant: 'skeleton',
+    },
+  }}
+  initialState={{
+    pinnedColumns: {
+      left: ['desk'],
+    },
+  }}
+/>
