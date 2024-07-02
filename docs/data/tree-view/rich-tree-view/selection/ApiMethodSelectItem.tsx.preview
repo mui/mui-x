@@ -1,0 +1,10 @@
+<div>
+  <Button onClick={handleSelectGridPro}>Select grid pro item</Button>
+</div>
+<Box sx={{ minHeight: 352, minWidth: 250 }}>
+  <RichTreeView
+    items={MUI_X_PRODUCTS}
+    apiRef={apiRef}
+    defaultExpandedItems={['grid']}
+  />
+</Box>
