@@ -1,3 +1,5 @@
+import { expect } from 'chai';
+
 /*
  * This test verifies that these modules and types are exported correctly
  */
@@ -8,10 +10,10 @@ import {
   INVALID_TYPE,
   interpolate,
   NumberArray,
-} from '@mui/x-charts/d3-interpolate';
+} from '@mui/x-charts-vendor/d3-interpolate';
 
 describe('d3-interpolate', () => {
   it('exports valid functions', () => {
-    expect(interpolate).toBeInstanceOf(Function);
+    expect(interpolate).instanceOf(Function);
   });
 });

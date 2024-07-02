@@ -1,3 +1,5 @@
+import { expect } from 'chai';
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   // @ts-expect-error Make sure invalid imports fail:
@@ -51,13 +53,13 @@ import {
   scaleTime,
   scaleUtc,
   tickFormat,
-} from '@mui/x-charts/d3-scale';
+} from '@mui/x-charts-vendor/d3-scale';
 
 describe('d3-scale', () => {
   it('exports valid functions', () => {
-    expect(scaleLinear).toBeInstanceOf(Function);
-    expect(scaleLog).toBeInstanceOf(Function);
-    expect(scalePow).toBeInstanceOf(Function);
-    expect(scaleSqrt).toBeInstanceOf(Function);
+    expect(scaleLinear).instanceOf(Function);
+    expect(scaleLog).instanceOf(Function);
+    expect(scalePow).instanceOf(Function);
+    expect(scaleSqrt).instanceOf(Function);
   });
 });
