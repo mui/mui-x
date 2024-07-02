@@ -133,6 +133,6 @@ apiRef.current.selectItem({
 
 {{"demo": "ApiMethodSelectItem.js", "defaultCodeOpen": false}}
 
-You can use the `keepExistingSelection` to avoid losing the already selected items when using `multiSelect`:
+You can use the `keepExistingSelection` property to avoid losing the already selected items when using `multiSelect`:
 
 {{"demo": "ApiMethodSelectItemKeepExistingSelection.js", "defaultCodeOpen": false}}
