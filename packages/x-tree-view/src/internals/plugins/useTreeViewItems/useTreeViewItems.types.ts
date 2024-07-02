@@ -12,10 +12,16 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
   /**
    * Get the item with the given id.
    * When used in the `SimpleTreeView`, it returns an object with the `id` and `label` properties.
-   * @param {string} itemId The id of the item to return.
+   * @param {string} itemId The id of the item to retrieve.
    * @returns {R} The item with the given id.
    */
   getItem: (itemId: TreeViewItemId) => R;
+  /**
+   * Get the DOM element of the item with the given id.
+   * @param {TreeViewItemId} itemId The id of the item to get the DOM element of.
+   * @returns {HTMLElement | null} The DOM element of the item with the given id.
+   */
+  getItemDOMElement: (itemId: TreeViewItemId) => HTMLElement | null;
 }
 
 export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItemsPublicAPI<R> {

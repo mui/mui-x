@@ -182,5 +182,23 @@ describeTreeView<
         expect(response.getItemRoot('1.1.1')).to.have.attribute('aria-disabled', 'true');
       });
     });
+
+    describe('getItemDOMElement api method', () => {
+      it('should return the DOM element of the item', () => {
+        const response = render({
+          items: [{ id: '1' }],
+        });
+
+        expect(response.apiRef.current.getItemDOMElement('1')).to.equal(response.getItemRoot('1'));
+      });
+
+      it("should return the null when the item doesn't exist", () => {
+        const response = render({
+          items: [{ id: '1' }],
+        });
+
+        expect(response.apiRef.current.getItemDOMElement('2')).to.equal(null);
+      });
+    });
   },
 );

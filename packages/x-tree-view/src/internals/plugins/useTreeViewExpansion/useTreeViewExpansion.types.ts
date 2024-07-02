@@ -6,9 +6,9 @@ import { TreeViewItemId } from '../../../models';
 export interface UseTreeViewExpansionPublicAPI {
   /**
    * Change the expansion status of a given item.
-   * @param {React.SyntheticEvent} event The UI event that triggered the change.
-   * @param {string} itemId The id of the item to modify.
-   * @param {boolean} isExpanded The new expansion status of the given item.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {string} itemId The id of the item to expand of collapse.
+   * @param {boolean} isExpanded If `true` the item will be expanded. If `false` the item will be collapsed.
    */
   setItemExpansion: (event: React.SyntheticEvent, itemId: string, isExpanded: boolean) => void;
 }
@@ -31,13 +31,13 @@ export interface UseTreeViewExpansionInstance extends UseTreeViewExpansionPublic
   /**
    * Toggle the current expansion of an item.
    * If it is expanded, it will be collapsed, and vice versa.
-   * @param {React.SyntheticEvent} event The UI event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {TreeViewItemId} itemId The id of the item to toggle.
    */
   toggleItemExpansion: (event: React.SyntheticEvent, itemId: TreeViewItemId) => void;
   /**
    * Expand all the siblings (i.e.: the items that have the same parent) of a given item.
-   * @param {React.SyntheticEvent} event The UI event that triggered the change.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {TreeViewItemId} itemId The id of the item whose siblings will be expanded.
    */
   expandAllSiblings: (event: React.KeyboardEvent, itemId: TreeViewItemId) => void;
@@ -57,13 +57,13 @@ export interface UseTreeViewExpansionParameters {
   defaultExpandedItems?: string[];
   /**
    * Callback fired when tree items are expanded/collapsed.
-   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {array} itemIds The ids of the expanded items.
    */
   onExpandedItemsChange?: (event: React.SyntheticEvent, itemIds: string[]) => void;
   /**
    * Callback fired when a tree item is expanded or collapsed.
-   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */

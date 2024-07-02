@@ -65,10 +65,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   };
 
   const innerFocusItem = (event: React.SyntheticEvent | null, itemId: string) => {
-    const itemMeta = instance.getItemMeta(itemId);
-    const itemElement = document.getElementById(
-      instance.getTreeItemIdAttribute(itemId, itemMeta.idAttribute),
-    );
+    const itemElement = instance.getItemDOMElement(itemId);
     if (itemElement) {
       itemElement.focus();
     }

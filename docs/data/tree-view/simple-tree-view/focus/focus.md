@@ -34,7 +34,7 @@ Use the `focusItem` API method to focus a specific item.
 apiRef.current.focusItem(
   // The DOM event that triggered the change
   event,
-  // The ID of the item to focus
+  // The id of the item to focus
   itemId,
 );
 ```

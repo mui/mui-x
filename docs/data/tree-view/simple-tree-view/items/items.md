@@ -73,3 +73,18 @@ When it's set to true:
 - Programmatic focus will focus disabled items.
 
 {{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}
+
+## Imperative API
+
+### Get an item's DOM element by ID
+
+Use the `getItemDOMElement` API method to get an item's DOM element by its ID.
+
+```ts
+const itemElement = apiRef.current.getItemDOMElement(
+  // The id of the item to get the DOM element of
+  itemId,
+);
+```
+
+{{"demo": "ApiMethodGetItemDOMElement.js", "defaultCodeOpen": false}}
