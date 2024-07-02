@@ -24,11 +24,18 @@ import { gridHeaderFilteringEnabledSelector } from '../headerFiltering/gridHeade
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import type { GridDimensions } from '../dimensions/gridDimensionsApi';
 
+type ArrayElement<ArrayType extends readonly unknown[]> =
+  ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
+
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
 export type GridColumnDimensionProperties = (typeof COLUMNS_DIMENSION_PROPERTIES)[number];
 
 const COLUMN_TYPES = getGridDefaultColumnTypes();
+
+const columnDimensionProperties = (column: GridColDef): Partial<Pick<GridColDef, ArrayElement<typeof COLUMNS_DIMENSION_PROPERTIES>>> => COLUMNS_DIMENSION_PROPERTIES.reduce((columnDimensionPros, dimensionKey) => dimensionKey in column ?
+  Object.assign(columnDimensionPros, { [dimensionKey]: column[dimensionKey] })
+  : columnDimensionPros, {})
 
 /**
  * Computes width for flex columns.
@@ -264,9 +271,9 @@ export const applyInitialState = (
     cleanOrderedFields.length === 0
       ? columnsState.orderedFields
       : [
-          ...cleanOrderedFields,
-          ...columnsState.orderedFields.filter((field) => !orderedFieldsLookup[field]),
-        ];
+        ...cleanOrderedFields,
+        ...columnsState.orderedFields.filter((field) => !orderedFieldsLookup[field]),
+      ];
 
   const newColumnLookup: GridColumnRawLookup = { ...columnsState.lookup };
   for (let i = 0; i < columnsWithUpdatedDimensions.length; i += 1) {
@@ -316,9 +323,12 @@ export const createColumnsState = ({
 }) => {
   const isInsideStateInitializer = !apiRef.current.state.columns;
 
+
   let columnsState: Omit<GridColumnsRawState, 'lookup'> & {
     lookup: { [field: string]: Omit<GridStateColDef, 'computedWidth'> };
+    desiredOrderedFields?: string[];
   };
+
   if (isInsideStateInitializer) {
     columnsState = {
       orderedFields: [],
@@ -327,10 +337,18 @@ export const createColumnsState = ({
     };
   } else {
     const currentState = gridColumnsStateSelector(apiRef.current.state);
+
+    const pinnedColumns = apiRef.current.state.pinnedColumns;
+    // Remove pinned columns
+    const desiredOrderedFields = currentState.orderedFields.filter(field => {
+      return !(pinnedColumns.left?.includes(field) || pinnedColumns.right?.includes(field))
+    });
+
     columnsState = {
       orderedFields: keepOnlyColumnsToUpsert ? [] : [...currentState.orderedFields],
       lookup: { ...currentState.lookup }, // Will be cleaned later if keepOnlyColumnsToUpsert=true
       columnVisibilityModel,
+      desiredOrderedFields, // Will be cleaned later
     };
   }
 
@@ -379,12 +397,42 @@ export const createColumnsState = ({
       }
     });
 
+    // Do not override column dimension properties on re-render if not desired
+    const previousDimensions = columnsState.lookup[field]
+      ? columnDimensionProperties(columnsState.lookup[field])
+      : {};
+
+    // check if new dimensions are specified
+    const newDimensions = {
+      ...previousDimensions,
+      ...columnDimensionProperties(newColumn),
+    }
+
+
     columnsState.lookup[field] = {
       ...existingState,
       ...newColumn,
+      ...newDimensions,
       hasBeenResized,
     };
   });
+
+  if (columnsState.desiredOrderedFields) {
+    columnsState.orderedFields.sort((fieldA, fieldB) => {
+      const indexA = columnsState.desiredOrderedFields!.indexOf(fieldA);
+      const indexB = columnsState.desiredOrderedFields!.indexOf(fieldB);
+      if (indexA === -1 && indexB !== -1) {
+        return 1;
+      }
+      if (indexB === -1 && indexA !== -1) {
+        return -1;
+      }
+
+      return indexA - indexB
+    });
+
+    delete columnsState.desiredOrderedFields;
+  }
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
     Object.keys(columnsState.lookup).forEach((field) => {
