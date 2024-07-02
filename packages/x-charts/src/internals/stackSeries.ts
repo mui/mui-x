@@ -11,7 +11,7 @@ import {
   stackOffsetSilhouette as d3StackOffsetSilhouette,
   stackOffsetWiggle as d3StackOffsetWiggle,
   Series,
-} from 'd3-shape';
+} from '@mui/x-charts-vendor/d3-shape';
 import type { BarSeriesType, LineSeriesType } from '../models/seriesType';
 import type { StackOffsetType, StackOrderType } from '../models/stacking';
 import { SeriesId } from '../models/seriesType/common';

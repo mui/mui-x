@@ -1,4 +1,4 @@
-import type { ScaleOrdinal, ScaleSequential, ScaleThreshold } from 'd3-scale';
+import type { ScaleOrdinal, ScaleSequential, ScaleThreshold } from '@mui/x-charts-vendor/d3-scale';
 import { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from './colorMapping';
 
 export interface ZAxisConfig<V = any> {

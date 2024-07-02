@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { area as d3Area } from 'd3-shape';
+import { area as d3Area } from '@mui/x-charts-vendor/d3-shape';
 import { useCartesianContext } from '../context/CartesianProvider';
 import {
   AreaElement,

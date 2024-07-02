@@ -8,7 +8,7 @@ import type {
   ScaleOrdinal,
   ScaleSequential,
   ScaleThreshold,
-} from 'd3-scale';
+} from '@mui/x-charts-vendor/d3-scale';
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';

@@ -91,6 +91,9 @@ commands:
       - run:
           name: Install js dependencies
           command: pnpm install
+      - run:
+          name: Build charts vendor
+          command: node ./packages/x-charts-vendor/scripts/build.js
       - when:
           condition: << parameters.browsers >>
           steps:
@@ -128,9 +131,6 @@ jobs:
     steps:
       - checkout
       - install_js
-      - run:
-          name: Tests charts
-          command: pnpm test:charts:unit # Run special test for charts due to ESM compatibility issue
       - run:
           name: Tests fake browser
           command: pnpm test:coverage
