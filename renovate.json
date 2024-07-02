@@ -31,6 +31,10 @@
       "matchPackagePatterns": "@emotion/*"
     },
     {
+      "groupName": "Playwright",
+      "matchPackagePatterns": "@playwright/*"
+    },
+    {
       "groupName": "core-js",
       "matchPackageNames": ["core-js"],
       "allowedVersions": "< 2.0.0"

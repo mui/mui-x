@@ -15,7 +15,6 @@
     "@mui/x-date-pickers": "workspace:*",
     "@mui/x-date-pickers-pro": "workspace:*",
     "@mui/x-license": "workspace:*",
-    "@playwright/test": "^1.44.1",
     "@react-spring/web": "^9.7.3",
     "@types/chai": "^4.3.16",
     "@types/karma": "^6.3.8",
