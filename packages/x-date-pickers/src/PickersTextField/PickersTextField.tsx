@@ -139,6 +139,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
         areAllSectionsEmpty={areAllSectionsEmpty}
         onClick={onClick}
         onKeyDown={onKeyDown}
+        onKeyUp={onKeyUp}
         onInput={onInput}
         onPaste={onPaste}
         endAdornment={endAdornment}
