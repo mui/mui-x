@@ -155,9 +155,17 @@
     "languageTag": "nb-NO",
     "importName": "nbNO",
     "localeName": "Norwegian (Bokmål)",
-    "missingKeysCount": 25,
+    "missingKeysCount": 0,
     "totalKeysCount": 118,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/nbNO.ts"
+  },
+  {
+    "languageTag": "nn-NO",
+    "importName": "nnNO",
+    "localeName": "Norwegian (Nynorsk)",
+    "missingKeysCount": 0,
+    "totalKeysCount": 118,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/nnNO.ts"
   },
   {
     "languageTag": "fa-IR",

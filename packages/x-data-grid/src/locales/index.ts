@@ -18,6 +18,7 @@ export * from './jaJP';
 export * from './koKR';
 export * from './nbNO';
 export * from './nlNL';
+export * from './nnNO';
 export * from './plPL';
 export * from './ptBR';
 export * from './roRO';
