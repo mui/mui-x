@@ -37,6 +37,7 @@ const ChartChartsSurfaceStyles = styled('svg', {
   slot: 'Root',
 })(() => ({
   // This prevents default touch actions when using the svg on mobile devices.
+  // For example, prevent page scroll & zoom.
   touchAction: 'none',
 }));
 
