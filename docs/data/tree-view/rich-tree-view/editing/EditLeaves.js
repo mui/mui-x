@@ -17,13 +17,11 @@ const MUI_X_PRODUCTS = [
   },
   {
     id: 'pickers',
-    label: 'I am editable',
-    editable: true,
+    label: 'Date and time pickers',
     children: [
       {
         id: 'pickers-community',
-        label: 'also editable',
-        editable: true,
+        label: '@mui/x-date-pickers',
       },
       { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
     ],
