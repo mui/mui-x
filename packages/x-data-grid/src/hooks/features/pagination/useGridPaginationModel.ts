@@ -115,17 +115,20 @@ export const useGridPaginationModel = (
       }
       logger.debug("Setting 'paginationModel' to", paginationModel);
 
-      apiRef.current.setState((state) => ({
-        ...state,
-        pagination: {
-          ...state.pagination,
-          paginationModel: getDerivedPaginationModel(
-            state.pagination,
-            props.signature,
-            paginationModel,
-          ),
-        },
-      }));
+      apiRef.current.setState(
+        (state) => ({
+          ...state,
+          pagination: {
+            ...state.pagination,
+            paginationModel: getDerivedPaginationModel(
+              state.pagination,
+              props.signature,
+              paginationModel,
+            ),
+          },
+        }),
+        'setPaginationModel',
+      );
     },
     [apiRef, logger, props.signature],
   );
