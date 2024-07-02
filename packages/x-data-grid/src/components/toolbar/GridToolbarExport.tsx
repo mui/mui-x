@@ -32,7 +32,6 @@ export interface GridToolbarExportProps {
    * @default {}
    */
   slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
-  [key: string]: any;
 }
 
 export function GridCsvExportMenuItem(props: GridCsvExportMenuItemProps) {
@@ -71,7 +70,7 @@ export function GridPrintExportMenuItem(props: GridPrintExportMenuItemProps) {
 
 const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
   function GridToolbarExport(props, ref) {
-    const { csvOptions = {}, printOptions = {}, excelOptions, ...other } = props;
+    const { csvOptions = {}, printOptions = {}, excelOptions, ...other } = props as GridToolbarExportProps & { excelOptions?: any };
 
     const apiRef = useGridApiContext();
 
