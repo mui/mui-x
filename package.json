@@ -86,7 +86,7 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.21",
-    "@mui/internal-markdown": "^1.0.5",
+    "@mui/internal-markdown": "^1.0.6",
     "@mui/internal-test-utils": "^1.0.3",
     "@mui/material": "^5.15.21",
     "@mui/monorepo": "github:mui/material-ui#22c5206a9e8191b2f81131d6978a0958e55b7032",

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
 import { useRtl } from '@mui/system/RtlProvider';
-import { useUtils, useLocaleText, useLocalizationContext } from '../useUtils';
+import { usePickersTranslations } from '../../../hooks/usePickersTranslations';
+import { useUtils, useLocalizationContext } from '../useUtils';
 import {
   UseFieldInternalProps,
   UseFieldParams,
@@ -86,7 +87,7 @@ export const useFieldState = <
   >,
 ): UseFieldStateResponse<TValue, TDate, TSection> => {
   const utils = useUtils<TDate>();
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const adapter = useLocalizationContext<TDate>();
   const isRtl = useRtl();
 
@@ -136,7 +137,7 @@ export const useFieldState = <
         buildSectionsFromFormat({
           utils,
           timezone,
-          localeText,
+          localeText: translations,
           localizedDigits,
           format,
           date,
@@ -149,7 +150,7 @@ export const useFieldState = <
     [
       fieldValueManager,
       format,
-      localeText,
+      translations,
       localizedDigits,
       isRtl,
       shouldRespectLeadingZeros,
@@ -285,7 +286,7 @@ export const useFieldState = <
       const sections = buildSectionsFromFormat({
         utils,
         timezone,
-        localeText,
+        localeText: translations,
         localizedDigits,
         format,
         date,
