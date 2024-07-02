@@ -3,7 +3,14 @@ import { AxisInteractionData, ItemInteractionData } from '../context/Interaction
 import { ChartSeriesType } from '../models/seriesType/config';
 import { useSvgRef } from '../hooks';
 
-export function generateVirtualElement(mousePosition: { x: number; y: number } | null) {
+type MousePosition = {
+  x: number;
+  y: number;
+  pointerType: 'mouse' | 'touch' | 'pen';
+  height: number;
+};
+
+export function generateVirtualElement(mousePosition: MousePosition | null) {
   if (mousePosition === null) {
     return {
       getBoundingClientRect: () => ({
@@ -20,18 +27,20 @@ export function generateVirtualElement(mousePosition: { x: number; y: number } |
     };
   }
   const { x, y } = mousePosition;
+  const boundingBox = {
+    width: 0,
+    height: 0,
+    x,
+    y,
+    top: y,
+    right: x,
+    bottom: y,
+    left: x,
+  };
   return {
     getBoundingClientRect: () => ({
-      width: 0,
-      height: 0,
-      x,
-      y,
-      top: y,
-      right: x,
-      bottom: y,
-      left: x,
-      toJSON: () =>
-        JSON.stringify({ width: 0, height: 0, x, y, top: y, right: x, bottom: y, left: x }),
+      ...boundingBox,
+      toJSON: () => JSON.stringify(boundingBox),
     }),
   };
 }
@@ -40,7 +49,7 @@ export function useMouseTracker() {
   const svgRef = useSvgRef();
 
   // Use a ref to avoid rerendering on every mousemove event.
-  const [mousePosition, setMousePosition] = React.useState<null | { x: number; y: number }>(null);
+  const [mousePosition, setMousePosition] = React.useState<MousePosition | null>(null);
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -52,23 +61,23 @@ export function useMouseTracker() {
       setMousePosition(null);
     };
 
-    const handleMove = (event: MouseEvent | TouchEvent) => {
-      const target = 'targetTouches' in event ? event.targetTouches[0] : event;
+    const handleMove = (event: PointerEvent) => {
       setMousePosition({
-        x: target.clientX,
-        y: target.clientY,
+        x: event.clientX,
+        y: event.clientY,
+        height: event.height,
+        pointerType: event.pointerType as MousePosition['pointerType'],
       });
     };
 
-    element.addEventListener('mouseout', handleOut);
-    element.addEventListener('mousemove', handleMove);
-    element.addEventListener('touchend', handleOut);
-    element.addEventListener('touchmove', handleMove);
+    element.addEventListener('pointerdown', handleMove);
+    element.addEventListener('pointermove', handleMove);
+    element.addEventListener('pointerup', handleOut);
+
     return () => {
-      element.removeEventListener('mouseout', handleOut);
-      element.removeEventListener('mousemove', handleMove);
-      element.addEventListener('touchend', handleOut);
-      element.addEventListener('touchmove', handleMove);
+      element.removeEventListener('pointerdown', handleMove);
+      element.removeEventListener('pointermove', handleMove);
+      element.removeEventListener('pointerup', handleOut);
     };
   }, [svgRef]);
 
