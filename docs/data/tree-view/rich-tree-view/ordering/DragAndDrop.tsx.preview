@@ -1,0 +1,6 @@
+<RichTreeViewPro
+  items={ITEMS}
+  itemsReordering
+  defaultExpandedItems={['grid', 'pickers']}
+  experimentalFeatures={{ indentationAtItemLevel: true }}
+/>

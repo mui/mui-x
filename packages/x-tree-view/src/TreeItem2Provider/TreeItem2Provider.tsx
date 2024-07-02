@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { TreeItem2ProviderProps } from './TreeItem2Provider.types';
-import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
+import { useTreeViewContext } from '../internals/TreeViewProvider';
 
 function TreeItem2Provider(props: TreeItem2ProviderProps) {
   const { children, itemId } = props;

@@ -58,6 +58,12 @@
       "default": "TreeItem2Label",
       "class": "MuiTreeItem2-label"
     },
+    {
+      "name": "dragAndDropOverlay",
+      "description": "The component that renders the overlay when an item reordering is ongoing.\nWarning: This slot is only useful when using the `RichTreeViewPro` component.",
+      "default": "TreeItem2DragAndDropOverlay",
+      "class": "MuiTreeItem2-dragAndDropOverlay"
+    },
     { "name": "collapseIcon", "description": "The icon used to collapse the item.", "class": null },
     { "name": "expandIcon", "description": "The icon used to expand the item.", "class": null },
     { "name": "endIcon", "description": "The icon displayed next to an end item.", "class": null },
@@ -99,6 +105,6 @@
   "forwardsRefTo": "HTMLLIElement",
   "filename": "/packages/x-tree-view/src/TreeItem2/TreeItem2.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/rich-tree-view/customization/\">Rich Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/customization/\">Simple Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/tree-item-customization/\">Tree Item Customization</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-tree-view/rich-tree-view/customization/\">Rich Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/ordering/\">Rich Tree View - Ordering <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/customization/\">Simple Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/tree-item-customization/\">Tree Item Customization</a></li></ul>",
   "cssComponent": false
 }
