@@ -399,16 +399,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     );
 
     const handleDeleteFilter = () => {
-      if (rootProps.disableMultipleColumnsFiltering) {
-        if (item.value === undefined) {
-          deleteFilter(item);
-        } else {
-          // TODO v6: simplify the behavior by always remove the filter form
-          applyFilterChanges({ ...item, value: undefined });
-        }
-      } else {
-        deleteFilter(item);
-      }
+      deleteFilter(item);
     };
 
     React.useImperativeHandle(
