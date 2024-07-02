@@ -21,6 +21,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
 
   // Use a ref to avoid rerendering on every mousemove event.
   const mousePosition = React.useRef({
+    isInChart: false,
     x: -1,
     y: -1,
   });
@@ -94,6 +95,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
 
     const handleOut = () => {
       mousePosition.current = {
+        isInChart: false,
         x: -1,
         y: -1,
       };
@@ -104,17 +106,19 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       const target = 'targetTouches' in event ? event.targetTouches[0] : event;
       const svgPoint = getSVGPoint(svgRef.current!, target);
 
-      mousePosition.current = {
-        x: svgPoint.x,
-        y: svgPoint.y,
-      };
+      mousePosition.current.x = svgPoint.x;
+      mousePosition.current.y = svgPoint.y;
 
       const outsideX = svgPoint.x < left || svgPoint.x > left + width;
       const outsideY = svgPoint.y < top || svgPoint.y > top + height;
       if (outsideX || outsideY) {
-        dispatch({ type: 'exitChart' });
+        if (mousePosition.current.isInChart) {
+          dispatch({ type: 'exitChart' });
+          mousePosition.current.isInChart = false;
+        }
         return;
       }
+      mousePosition.current.isInChart = true;
       const newStateX = getNewAxisState(xAxis[usedXAxis], svgPoint.x);
       const newStateY = getNewAxisState(yAxis[usedYAxis], svgPoint.y);
 
