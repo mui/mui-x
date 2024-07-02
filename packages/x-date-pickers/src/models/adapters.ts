@@ -196,7 +196,7 @@ export interface MuiPickersAdapter<TDate extends PickerValidDate, TLocale = any>
    * Creates an invalid date in the date library format.
    * @returns {TDate} The invalid date.
    */
-  getInvalidDate(): TDate;
+  getInvalidDate(): TDate | null;
   /**
    * Extracts the timezone from a date.
    * @template TDate
