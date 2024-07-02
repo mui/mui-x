@@ -1,5 +1,5 @@
 import * as React from 'react';
-import LRUCache from 'lru-cache';
+import { LRUCache } from 'lru-cache';
 import { GridColumnVisibilityModel } from '@mui/x-data-grid-premium';
 import { GridDemoData, getRealGridData } from '../services/real-data-service';
 import { getCommodityColumns } from '../columns/commodities.columns';
