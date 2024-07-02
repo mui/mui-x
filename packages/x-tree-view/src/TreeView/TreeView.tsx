@@ -95,6 +95,7 @@ TreeView.propTypes = {
     current: PropTypes.shape({
       focusItem: PropTypes.func.isRequired,
       getItem: PropTypes.func.isRequired,
+      getItemOrderedChildrenIds: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
     }),
   }),
@@ -157,6 +158,13 @@ TreeView.propTypes = {
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * Used to determine if a given item is editable.
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {boolean} `true` if the item should be editable.
+   */
+  isItemEditable: PropTypes.func,
   /**
    * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".

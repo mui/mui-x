@@ -151,7 +151,9 @@ RichTreeView.propTypes = {
     current: PropTypes.shape({
       focusItem: PropTypes.func.isRequired,
       getItem: PropTypes.func.isRequired,
+      getItemOrderedChildrenIds: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
+      updateItemLabel: PropTypes.func.isRequired,
     }),
   }),
   /**
@@ -235,6 +237,13 @@ RichTreeView.propTypes = {
    */
   isItemDisabled: PropTypes.func,
   /**
+   * Used to determine if a given item is editable.
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {boolean} `true` if the item should be editable.
+   */
+  isItemEditable: PropTypes.func,
+  /**
    * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".
    * @default 12px
@@ -266,6 +275,12 @@ RichTreeView.propTypes = {
    * @param {string} value of the focused item.
    */
   onItemFocus: PropTypes.func,
+  /**
+   * Callback fired when the label of an item changes.
+   * @param {TreeViewItemId} itemId The id of the item that was edited.
+   * @param {string} newLabel The new label of the items.
+   */
+  onItemLabelChange: PropTypes.func,
   /**
    * Callback fired when a tree item is selected or deselected.
    * @param {React.SyntheticEvent} event The event source of the callback.

@@ -16,6 +16,13 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
    * @returns {R} The item with the given id.
    */
   getItem: (itemId: TreeViewItemId) => R;
+  /**
+   * Get the ids of a given item's children.
+   * Those ids are returned in the order they should be rendered.
+   * @param {TreeViewItemId | null} itemId The id of the item to get the children of.
+   * @returns {TreeViewItemId[]} The ids of the item's children.
+   */
+  getItemOrderedChildrenIds: (itemId: TreeViewItemId | null) => TreeViewItemId[];
 }
 
 export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItemsPublicAPI<R> {
@@ -111,6 +118,13 @@ export interface UseTreeViewItemsParameters<R extends {}> {
    * @default 12px
    */
   itemChildrenIndentation?: string | number;
+  /**
+   * Used to determine if a given item is editable.
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {boolean} `true` if the item should be editable.
+   */
+  isItemEditable?: (item: R) => boolean;
 }
 
 export type UseTreeViewItemsDefaultizedParameters<R extends {}> = DefaultizedProps<

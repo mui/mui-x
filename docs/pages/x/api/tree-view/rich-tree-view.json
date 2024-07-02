@@ -50,6 +50,14 @@
         "returned": "boolean"
       }
     },
+    "isItemEditable": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(item: R) => boolean",
+        "describedArgs": ["item"],
+        "returned": "boolean"
+      }
+    },
     "itemChildrenIndentation": {
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "12px"
@@ -74,6 +82,13 @@
       "signature": {
         "type": "function(event: React.SyntheticEvent, itemId: string, value: string) => void",
         "describedArgs": ["event", "itemId", "value"]
+      }
+    },
+    "onItemLabelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(itemId: TreeViewItemId, newLabel: string) => void",
+        "describedArgs": ["itemId", "newLabel"]
       }
     },
     "onItemSelectionToggle": {

@@ -4,12 +4,16 @@ import { UseTreeViewSelectionSignature } from '../../internals/plugins/useTreeVi
 import { UseTreeViewExpansionSignature } from '../../internals/plugins/useTreeViewExpansion';
 import { UseTreeViewItemsSignature } from '../../internals/plugins/useTreeViewItems';
 import { UseTreeViewFocusSignature } from '../../internals/plugins/useTreeViewFocus';
+import { UseTreeViewLabelSignature } from '../../internals/plugins/useTreeViewLabel';
 import type { UseTreeItem2Status } from '../../useTreeItem2';
 
 interface UseTreeItem2Interactions {
   handleExpansion: (event: React.MouseEvent) => void;
   handleSelection: (event: React.MouseEvent) => void;
   handleCheckboxSelection: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  toggleItemEditing: () => void;
+  handleSaveItemLabel: (event: React.SyntheticEvent, label: string) => void;
+  handleCancelItemLabelEditing: (event: React.SyntheticEvent) => void;
 }
 
 interface UseTreeItem2UtilsReturnValue {
@@ -37,7 +41,8 @@ type UseTreeItem2UtilsMinimalPlugins = readonly [
 /**
  * Plugins that `useTreeItem2Utils` can use if they are present, but are not required.
  */
-export type UseTreeItem2UtilsOptionalPlugins = readonly [];
+
+export type UseTreeItem2UtilsOptionalPlugins = readonly [UseTreeViewLabelSignature];
 
 export const useTreeItem2Utils = ({
   itemId,
@@ -57,6 +62,8 @@ export const useTreeItem2Utils = ({
     focused: instance.isItemFocused(itemId),
     selected: instance.isItemSelected(itemId),
     disabled: instance.isItemDisabled(itemId),
+    editing: instance?.isItemBeingEdited ? instance?.isItemBeingEdited(itemId) : false,
+    editable: instance.isItemEditable ? instance.isItemEditable(itemId) : false,
   };
 
   const handleExpansion = (event: React.MouseEvent) => {
@@ -71,7 +78,12 @@ export const useTreeItem2Utils = ({
     const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
 
     // If already expanded and trying to toggle selection don't close
-    if (status.expandable && !(multiple && instance.isItemExpanded(itemId))) {
+    if (
+      status.expandable &&
+      !(multiple && instance.isItemExpanded(itemId)) &&
+      instance.isItemBeingEdited &&
+      !instance.isItemBeingEdited(itemId)
+    ) {
       instance.toggleItemExpansion(event, itemId);
     }
   };
@@ -107,10 +119,39 @@ export const useTreeItem2Utils = ({
     }
   };
 
+  const toggleItemEditing = () => {
+    if (!instance.isItemEditable || !instance.isItemBeingEdited || !instance.setEditedItemId) {
+      return;
+    }
+    if (instance.isItemEditable(itemId)) {
+      if (instance.isItemBeingEdited(itemId)) {
+        instance.setEditedItemId(null);
+      } else {
+        instance.setEditedItemId(itemId);
+      }
+    }
+  };
+
+  const handleSaveItemLabel = (event: React.SyntheticEvent, label: string) => {
+    if (instance.updateItemLabel) {
+      instance.updateItemLabel(itemId, label);
+      toggleItemEditing();
+      instance.focusItem(event, itemId);
+    }
+  };
+
+  const handleCancelItemLabelEditing = (event: React.SyntheticEvent) => {
+    toggleItemEditing();
+    instance.focusItem(event, itemId);
+  };
+
   const interactions: UseTreeItem2Interactions = {
     handleExpansion,
     handleSelection,
     handleCheckboxSelection,
+    toggleItemEditing,
+    handleSaveItemLabel,
+    handleCancelItemLabelEditing,
   };
 
   return { interactions, status };

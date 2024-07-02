@@ -10,6 +10,7 @@ import {
   UseTreeItem2LabelSlotProps,
   UseTreeItemIconContainerSlotProps,
   UseTreeItem2CheckboxSlotProps,
+  UseTreeItem2LabelInputSlotProps,
   UseTreeItem2MinimalPlugins,
   UseTreeItem2OptionalPlugins,
 } from './useTreeItem2.types';
@@ -38,10 +39,17 @@ export const useTreeItem2 = <
   const { id, itemId, label, children, rootRef } = parameters;
 
   const { rootRef: pluginRootRef, contentRef } = runItemPlugins(parameters);
-  const { interactions, status } = useTreeItem2Utils({ itemId, children });
+  const { interactions, status } = useTreeItem2Utils({
+    itemId,
+    children,
+  });
   const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
   const handleRootRef = useForkRef(rootRef, pluginRootRef)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
+  const iconContainerRef = React.useRef<HTMLDivElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  const isBeingEdited = status.editing;
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>
@@ -65,6 +73,9 @@ export const useTreeItem2 = <
         return;
       }
 
+      if (event.relatedTarget?.className === 'MuiTreeItem-labelInput') {
+        return;
+      }
       instance.removeFocusedItem();
     };
 
@@ -79,13 +90,21 @@ export const useTreeItem2 = <
       instance.handleItemKeyDown(event, itemId);
     };
 
+  const createCotentHandleDoubleClick =
+    (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
+      otherHandlers.onDoubleClick?.(event);
+      if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
+        return;
+      }
+      interactions.toggleItemEditing();
+    };
+
   const createContentHandleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
       otherHandlers.onClick?.(event);
       if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;
       }
-
       if (expansionTrigger === 'content') {
         interactions.handleExpansion(event);
       }
@@ -121,6 +140,34 @@ export const useTreeItem2 = <
       }
 
       interactions.handleCheckboxSelection(event);
+    };
+
+  const createInputHandleKeydown = (otherHandlers: EventHandlers) => (event: any) => {
+    otherHandlers.onKeyDown?.(event);
+    event.stopPropagation();
+    if (event.defaultMuiPrevented) {
+      return;
+    }
+    if (event.key === 'Enter') {
+      interactions.handleSaveItemLabel(event, event.target.value);
+    } else if (event.key === 'Escape') {
+      interactions.handleCancelItemLabelEditing(event);
+      interactions.handleCancelItemLabelEditing(event);
+    }
+  };
+  const createInputHandleBlur =
+    (otherHandlers: EventHandlers) =>
+    (event: React.FocusEvent<HTMLInputElement> & MuiCancellableEvent) => {
+      otherHandlers.onBlur?.(event);
+      if (event.defaultMuiPrevented) {
+        return;
+      }
+      interactions.toggleItemEditing();
+    };
+  const createInputHandleChange =
+    (otherHandlers: EventHandlers) =>
+    (event: React.ChangeEvent<HTMLInputElement> & MuiCancellableEvent) => {
+      otherHandlers.onChange?.(event);
     };
 
   const createIconContainerHandleClick =
@@ -159,7 +206,7 @@ export const useTreeItem2 = <
       ...externalEventHandlers,
       ref: handleRootRef,
       role: 'treeitem',
-      tabIndex: instance.canItemBeTabbed(itemId) ? 0 : -1,
+      tabIndex: instance.canItemBeTabbed(itemId) && !isBeingEdited ? 0 : -1,
       id: idAttribute,
       'aria-expanded': status.expandable ? status.expanded : undefined,
       'aria-selected': ariaSelected,
@@ -190,6 +237,7 @@ export const useTreeItem2 = <
       ...externalProps,
       ref: contentRef,
       onClick: createContentHandleClick(externalEventHandlers),
+      onDoubleClick: createCotentHandleDoubleClick(externalEventHandlers),
       onMouseDown: createContentHandleMouseDown(externalEventHandlers),
       status,
     };
@@ -233,6 +281,23 @@ export const useTreeItem2 = <
     };
   };
 
+  const getLabelInputProps = <ExternalProps extends Record<string, any> = {}>(
+    externalProps: ExternalProps = {} as ExternalProps,
+  ): UseTreeItem2LabelInputSlotProps<ExternalProps> => {
+    const externalEventHandlers = extractEventHandlers(externalProps);
+
+    return {
+      ...externalEventHandlers,
+      label,
+      ref: inputRef,
+      visible: isBeingEdited,
+      ...externalProps,
+      onKeyDown: createInputHandleKeydown(externalEventHandlers),
+      onChange: createInputHandleChange(externalEventHandlers),
+      onBlur: createInputHandleBlur(externalEventHandlers),
+    };
+  };
+
   const getIconContainerProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
   ): UseTreeItemIconContainerSlotProps<ExternalProps> => {
@@ -241,6 +306,7 @@ export const useTreeItem2 = <
     return {
       ...externalEventHandlers,
       ...externalProps,
+      ref: iconContainerRef,
       onClick: createIconContainerHandleClick(externalEventHandlers),
     };
   };
@@ -274,6 +340,7 @@ export const useTreeItem2 = <
     getIconContainerProps,
     getCheckboxProps,
     getLabelProps,
+    getLabelInputProps,
     rootRef: handleRootRef,
     status,
     publicAPI,

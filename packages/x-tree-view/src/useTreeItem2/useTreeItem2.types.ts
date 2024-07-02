@@ -6,6 +6,7 @@ import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewS
 import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
 import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
 import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
+import { UseTreeViewLabelSignature } from '../internals/plugins/useTreeViewLabel';
 import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
 
 export interface UseTreeItem2Parameters {
@@ -56,6 +57,7 @@ export type UseTreeItem2RootSlotProps<ExternalProps = {}> = ExternalProps &
 
 export interface UseTreeItem2ContentSlotOwnProps {
   onClick: MuiCancellableEventHandler<React.MouseEvent>;
+  onDoubleClick: MuiCancellableEventHandler<React.MouseEvent>;
   onMouseDown: MuiCancellableEventHandler<React.MouseEvent>;
   ref: React.RefCallback<HTMLDivElement> | null;
   status: UseTreeItem2Status;
@@ -81,6 +83,15 @@ export interface UseTreeItem2LabelSlotOwnProps {
 
 export type UseTreeItem2LabelSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItem2LabelSlotOwnProps;
+
+export type UseTreeItem2LabelInputSlotProps<ExternalProps = {}> = ExternalProps & {
+  onBlur: MuiCancellableEventHandler<React.FocusEvent<HTMLInputElement>>;
+  label: React.ReactNode;
+  visible: boolean;
+  onKeyDown: MuiCancellableEventHandler<React.KeyboardEvent<HTMLInputElement>>;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  ref: React.RefObject<HTMLInputElement>;
+};
 
 export interface UseTreeItem2CheckboxSlotOwnProps {
   visible: boolean;
@@ -115,6 +126,8 @@ export interface UseTreeItem2Status {
   focused: boolean;
   selected: boolean;
   disabled: boolean;
+  editing: boolean;
+  editable: boolean;
 }
 
 export interface UseTreeItem2ReturnValue<
@@ -145,6 +158,14 @@ export interface UseTreeItem2ReturnValue<
   getLabelProps: <ExternalProps extends Record<string, any> = {}>(
     externalProps?: ExternalProps,
   ) => UseTreeItem2LabelSlotProps<ExternalProps>;
+  /**
+   * Resolver for the labelInput slot's props.
+   * @param {ExternalProps} externalProps Additional props for the label slot
+   * @returns {UseTreeItem2LabelInputSlotProps<ExternalProps>} Props that should be spread on the label slot
+   */
+  getLabelInputProps: <ExternalProps extends Record<string, any> = {}>(
+    externalProps?: ExternalProps,
+  ) => UseTreeItem2LabelInputSlotProps<ExternalProps>;
   /**
    * Resolver for the checkbox slot's props.
    * @param {ExternalProps} externalProps Additional props for the checkbox slot
@@ -192,6 +213,7 @@ export type UseTreeItem2MinimalPlugins = readonly [
   UseTreeViewItemsSignature,
   UseTreeViewFocusSignature,
   UseTreeViewKeyboardNavigationSignature,
+  UseTreeViewLabelSignature,
 ];
 
 /**

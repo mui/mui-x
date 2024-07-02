@@ -45,6 +45,13 @@
         "boolean": "<code>true</code> if the item should be disabled."
       }
     },
+    "isItemEditable": {
+      "description": "Used to determine if a given item is editable.",
+      "typeDescriptions": {
+        "item": "The item to check.",
+        "boolean": "<code>true</code> if the item should be editable."
+      }
+    },
     "itemChildrenIndentation": {
       "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
     },
@@ -72,6 +79,13 @@
         "event": "The event source of the callback <strong>Warning</strong>: This is a generic event not a focus event.",
         "itemId": "The id of the focused item.",
         "value": "of the focused item."
+      }
+    },
+    "onItemLabelChange": {
+      "description": "Callback fired when the label of an item changes.",
+      "typeDescriptions": {
+        "itemId": "The id of the item that was edited.",
+        "newLabel": "The new label of the items."
       }
     },
     "onItemSelectionToggle": {

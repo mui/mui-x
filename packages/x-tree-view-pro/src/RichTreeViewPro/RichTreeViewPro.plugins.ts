@@ -13,6 +13,8 @@ import {
   ConvertPluginsIntoSignatures,
   MergeSignaturesProperty,
   TreeViewCorePluginParameters,
+  useTreeViewLabel,
+  UseTreeViewLabelParameters,
 } from '@mui/x-tree-view/internals';
 
 export const RICH_TREE_VIEW_PRO_PLUGINS = [
@@ -22,6 +24,7 @@ export const RICH_TREE_VIEW_PRO_PLUGINS = [
   useTreeViewFocus,
   useTreeViewKeyboardNavigation,
   useTreeViewIcons,
+  useTreeViewLabel,
 ] as const;
 
 export type RichTreeViewProPluginSignatures = ConvertPluginsIntoSignatures<
@@ -45,4 +48,5 @@ export interface RichTreeViewProPluginParameters<R extends {}, Multiple extends 
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,
-    UseTreeViewIconsParameters {}
+    UseTreeViewIconsParameters,
+    UseTreeViewLabelParameters<R> {}
