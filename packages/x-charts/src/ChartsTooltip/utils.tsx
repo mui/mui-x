@@ -26,18 +26,16 @@ export function generateVirtualElement(mousePosition: MousePosition | null) {
       }),
     };
   }
-  const { x, y, pointerType, height } = mousePosition;
-  const xPosition = x;
-  const yPosition = y - (pointerType === 'touch' ? 40 - height : 0);
+  const { x, y } = mousePosition;
   const boundingBox = {
     width: 0,
     height: 0,
-    x: xPosition,
-    y: yPosition,
-    top: yPosition,
-    right: xPosition,
-    bottom: yPosition,
-    left: xPosition,
+    x: x,
+    y: y,
+    top: y,
+    right: x,
+    bottom: y,
+    left: x,
   };
   return {
     getBoundingClientRect: () => ({

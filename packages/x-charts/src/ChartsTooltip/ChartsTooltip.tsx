@@ -149,6 +149,14 @@ function ChartsTooltip(props: ChartsTooltipProps) {
       placement:
         mousePosition?.pointerType === 'mouse' ? ('right-start' as const) : ('top' as const),
       anchorEl: generateVirtualElement(mousePosition),
+      modifiers: [
+        {
+          name: 'offset',
+          options: {
+            offset: [0, mousePosition?.pointerType === 'touch' ? 40 - mousePosition.height : 0],
+          },
+        },
+      ],
     },
     ownerState: {},
   });
