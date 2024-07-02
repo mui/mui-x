@@ -318,8 +318,8 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0
       mocha:
-        specifier: ^10.5.1
-        version: 10.5.1
+        specifier: ^10.5.2
+        version: 10.5.2
       moment:
         specifier: ^2.30.1
         version: 2.30.1
@@ -7242,8 +7242,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  mocha@10.5.1:
-    resolution: {integrity: sha512-eq5tEnaz2kM9ade8cuGJBMh5fBb9Ih/TB+ddlmPR+wLQmwLhUwa0ovqDlg7OTfKquW0BI7NUcNWX7DH8sC+3gw==}
+  mocha@10.5.2:
+    resolution: {integrity: sha512-9btlN3JKCefPf+vKd/kcKz2SXxi12z6JswkGfaAF0saQvnsqLJk504ZmbxhSoENge08E9dsymozKgFMTl5PQsA==}
     engines: {node: '>= 14.0.0'}
     hasBin: true
 
@@ -11112,7 +11112,7 @@ snapshots:
       fs-extra: 11.2.0
       jsdom: 24.1.0
       lodash: 4.17.21
-      mocha: 10.5.1
+      mocha: 10.5.2
       playwright: 1.44.1
       prop-types: 15.8.1
       react: 18.3.1
@@ -16501,7 +16501,7 @@ snapshots:
 
   mkdirp@1.0.4: {}
 
-  mocha@10.5.1:
+  mocha@10.5.2:
     dependencies:
       ansi-colors: 4.1.1
       browser-stdout: 1.3.1
