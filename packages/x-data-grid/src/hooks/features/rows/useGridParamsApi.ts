@@ -48,7 +48,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
     [apiRef],
   );
 
-  const getCellParams = React.useCallback<GridParamsApi['getCellParams']>(
+  const getCellParamsRaw = React.useCallback<GridParamsApi['getCellParams']>(
     (id, field) => {
       const colDef = apiRef.current.getColumn(field);
       const row = apiRef.current.getRow(id);
@@ -58,10 +58,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
         throw new MissingRowIdError(`No row with id #${id} found`);
       }
 
-      const rawValue = row[field];
-      const value = colDef?.valueGetter
-        ? colDef.valueGetter(rawValue as never, row, colDef, apiRef)
-        : rawValue;
+      const value = row[field];
       const cellFocus = gridFocusCellSelector(apiRef);
       const cellTabIndex = gridTabIndexCellSelector(apiRef);
 
@@ -78,14 +75,35 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
         formattedValue: value,
         isEditable: false,
       };
-      if (colDef && colDef.valueFormatter) {
-        params.formattedValue = colDef.valueFormatter(value as never, row, colDef, apiRef);
-      }
-      params.isEditable = colDef && apiRef.current.isCellEditable(params);
 
       return params;
     },
     [apiRef],
+  );
+
+  const getCellParams = React.useCallback<GridParamsApi['getCellParams']>(
+    (id, field) => {
+      const params = getCellParamsRaw(id, field);
+      const { colDef, row } = params;
+      if (colDef) {
+        let { value, formattedValue } = params;
+
+        if (colDef.valueGetter) {
+          value = colDef.valueGetter(value as never, row, colDef, apiRef);
+          formattedValue = value;
+        }
+        if (colDef.valueFormatter) {
+          formattedValue = colDef.valueFormatter(value as never, row, colDef, apiRef);
+        }
+
+        params.value = value;
+        params.formattedValue = formattedValue;
+        params.isEditable = apiRef.current.isCellEditable(params);
+      }
+
+      return params as GridCellParams<any, any, any, any>;
+    },
+    [apiRef, getCellParamsRaw],
   );
 
   const getCellValue = React.useCallback<GridParamsApi['getCellValue']>(
@@ -164,6 +182,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
 
   const paramsApi: GridParamsApi = {
     getCellValue,
+    getCellParamsRaw,
     getCellParams,
     getCellElement,
     getRowValue,

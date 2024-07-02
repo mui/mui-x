@@ -32,6 +32,9 @@
     "getCellParams": {
       "description": "Gets the <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a> object that is passed as argument in events."
     },
+    "getCellParamsRaw": {
+      "description": "Gets the <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a> object, without invoking <code>valueGetter</code> and <code>valueFormatter</code>, nor asserting<br />if cell is editable.<br />Here, the <code>value</code> and <code>formattedValue</code> properties are always the raw value."
+    },
     "getCellSelectionModel": {
       "description": "Returns an object containing the selection state of the cells.<br />The keys of the object correpond to the row IDs.<br />The value of each key is another object whose keys are the fields and values are the selection state."
     },

@@ -61,6 +61,12 @@
       },
       "required": true
     },
+    "getCellParamsRaw": {
+      "type": {
+        "description": "&lt;R extends GridValidRowModel = any, V = unknown, F = V, N extends GridTreeNode = GridTreeNode&gt;(id: GridRowId, field: string) =&gt; GridCellParams&lt;R, V, F, N&gt;"
+      },
+      "required": true
+    },
     "getCellSelectionModel": {
       "type": { "description": "() =&gt; GridCellSelectionModel" },
       "required": true,
