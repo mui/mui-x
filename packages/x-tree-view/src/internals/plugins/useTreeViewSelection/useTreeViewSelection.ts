@@ -78,7 +78,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     event,
     itemId,
     keepExistingSelection = false,
-    isSelected,
+    shouldBeSelected,
   }) => {
     if (params.disableSelection) {
       return;
@@ -88,16 +88,19 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     if (keepExistingSelection) {
       const cleanSelectedItems = convertSelectedItemsToArray(models.selectedItems.value);
       const isSelectedBefore = instance.isItemSelected(itemId);
-      if (isSelectedBefore && (isSelected === false || isSelected == null)) {
+      if (isSelectedBefore && (shouldBeSelected === false || shouldBeSelected == null)) {
         newSelected = cleanSelectedItems.filter((id) => id !== itemId);
-      } else if (!isSelectedBefore && (isSelected === true || isSelected == null)) {
+      } else if (!isSelectedBefore && (shouldBeSelected === true || shouldBeSelected == null)) {
         newSelected = [itemId].concat(cleanSelectedItems);
       } else {
         newSelected = cleanSelectedItems;
       }
     } else {
       // eslint-disable-next-line no-lonely-if
-      if (isSelected === false || (isSelected == null && instance.isItemSelected(itemId))) {
+      if (
+        shouldBeSelected === false ||
+        (shouldBeSelected == null && instance.isItemSelected(itemId))
+      ) {
         newSelected = params.multiSelect ? [] : null;
       } else {
         newSelected = params.multiSelect ? [itemId] : itemId;
