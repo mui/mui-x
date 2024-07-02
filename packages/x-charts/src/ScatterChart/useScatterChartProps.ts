@@ -46,9 +46,11 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     highlightedItem,
     onHighlightChange,
     className,
+    ...rest
   } = props;
 
   const chartContainerProps: ResponsiveChartContainerProps = {
+    ...rest,
     series: series.map((s) => ({ type: 'scatter' as const, ...s })),
     width,
     height,
