@@ -4,6 +4,12 @@ import { styled } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { gridClasses, getDataGridUtilityClass } from '../../constants/gridClasses';
 
+const GridPanelAnchor = styled('div')({
+  position: 'absolute',
+  top: `var(--DataGrid-headersTotalHeight)`,
+  left: 0,
+});
+
 const useUtilityClasses = () => {
   const slots = {
     root: ['topContainer'],
@@ -29,13 +35,17 @@ const Element = styled('div')({
 });
 
 export function GridTopContainer(props: React.HTMLAttributes<HTMLDivElement>) {
+  const { children, ...otherProps } = props;
   const classes = useUtilityClasses();
 
   return (
     <Element
-      {...props}
-      className={clsx(classes.root, props.className, gridClasses['container--top'])}
+      {...otherProps}
+      className={clsx(classes.root, otherProps.className, gridClasses['container--top'])}
       role="presentation"
-    />
+    >
+      <GridPanelAnchor role="presentation" data-id="gridPanelAnchor" />
+      {children} 
+    </Element>
   );
 }

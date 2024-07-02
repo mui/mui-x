@@ -7,7 +7,7 @@ import {
   unstable_capitalize as capitalize,
   unstable_composeClasses as composeClasses,
 } from '@mui/utils';
-import { SxProps, styled } from '@mui/system';
+import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { GridRootStyles } from './GridRootStyles';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
@@ -45,15 +45,9 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridPanelAnchor = styled('div')({
-  position: 'absolute',
-  top: `var(--DataGrid-headersTotalHeight)`,
-  left: 0,
-});
-
 const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(props, ref) {
   const rootProps = useGridRootProps();
-  const { children, className, ...other } = props;
+  const { className, ...other } = props;
   const apiRef = useGridPrivateApiContext();
   const density = useGridSelector(apiRef, gridDensitySelector);
   const rootElementRef = apiRef.current.rootElementRef;
@@ -82,10 +76,7 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
       className={clsx(className, classes.root)}
       ownerState={ownerState}
       {...other}
-    >
-      <GridPanelAnchor role="presentation" data-id="gridPanelAnchor" />
-      {children}
-    </GridRootStyles>
+    />
   );
 });
 
