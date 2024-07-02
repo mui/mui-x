@@ -70,6 +70,7 @@ export const useBarChartProps = (props: BarChartProps) => {
   } as const;
 
   const chartContainerProps: ResponsiveChartContainerProps = {
+    ...rest,
     series: series.map((s) => ({
       type: 'bar' as const,
       ...s,
@@ -168,6 +169,5 @@ export const useBarChartProps = (props: BarChartProps) => {
     legendProps,
     tooltipProps,
     children,
-    rest,
   };
 };

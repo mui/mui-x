@@ -123,11 +123,10 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     legendProps,
     tooltipProps,
     children,
-    rest,
   } = useBarChartProps(props);
 
   return (
-    <ResponsiveChartContainer ref={ref} {...chartContainerProps} {...rest}>
+    <ResponsiveChartContainer ref={ref} {...chartContainerProps}>
       {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
       {props.grid && <ChartsGrid {...gridProps} />}
       <g {...clipPathGroupProps}>

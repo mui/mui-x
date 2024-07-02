@@ -39,7 +39,6 @@ const BarChartPro = React.forwardRef(function BarChartPro(props: BarChartProProp
     axisHighlightProps,
     legendProps,
     tooltipProps,
-
     children,
   } = useBarChartProps(props);
 
