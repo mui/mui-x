@@ -257,8 +257,9 @@ export type AxisValueFormatterContext = {
    * Location indicates where the value will be displayed.
    * - `'tick'` The value is displayed on the axis ticks.
    * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
+   * - `'legend'` The value is displayed in the legend when using color legend.
    */
-  location: 'tick' | 'tooltip';
+  location: 'tick' | 'tooltip' | 'legend';
 };
 
 export type AxisConfig<
