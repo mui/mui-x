@@ -198,7 +198,6 @@ const useMultiInputFieldSlotProps = <
   }, [rangePosition, open, currentView, startFieldRef, endFieldRef]);
 
   const openRangeStartSelection: React.UIEventHandler = (event) => {
-    event.stopPropagation();
     onRangePositionChange('start');
     if (!readOnly && !disableOpenPicker) {
       actions.onOpen(event);
@@ -206,7 +205,6 @@ const useMultiInputFieldSlotProps = <
   };
 
   const openRangeEndSelection: React.UIEventHandler = (event) => {
-    event.stopPropagation();
     onRangePositionChange('end');
     if (!readOnly && !disableOpenPicker) {
       actions.onOpen(event);
@@ -400,7 +398,7 @@ const useSingleInputFieldSlotProps = <
   );
 
   const openPicker = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
-    event.stopPropagation();
+    event.preventDefault();
 
     if (!readOnly && !disableOpenPicker) {
       actions.onOpen(event);

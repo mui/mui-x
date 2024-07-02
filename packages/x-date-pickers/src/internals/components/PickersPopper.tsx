@@ -360,6 +360,16 @@ export function PickersPopper(inProps: PickerPopperProps) {
   }, [onDismiss, open]);
 
   const lastFocusedElementRef = React.useRef<Element | null>(null);
+
+  const handleClickAway: OnClickAway = useEventCallback(() => {
+    lastFocusedElementRef.current = null;
+    if (onBlur) {
+      onBlur();
+      return;
+    }
+    onDismiss();
+  });
+
   React.useEffect(() => {
     if (role === 'tooltip' || (shouldRestoreFocus && !shouldRestoreFocus())) {
       return;
@@ -383,7 +393,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
 
   const [clickAwayRef, onPaperClick, onPaperTouchStart] = useClickAwayListener(
     open,
-    onBlur ?? onDismiss,
+    handleClickAway,
   );
   const paperRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(paperRef, containerRef);
