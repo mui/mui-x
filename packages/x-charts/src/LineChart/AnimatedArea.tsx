@@ -2,9 +2,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { animated, useSpring } from '@react-spring/web';
+import { color as d3Color } from '@mui/x-charts-vendor/d3-color';
 import { useAnimatedPath } from '../internals/useAnimatedPath';
 import { cleanId } from '../internals/utils';
-import d3Color from '../internals/d3-color/color';
 import type { AreaElementOwnerState } from './AreaElement';
 import { useChartId, useDrawingArea } from '../hooks';
 
