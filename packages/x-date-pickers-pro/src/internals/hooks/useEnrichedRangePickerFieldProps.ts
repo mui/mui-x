@@ -14,7 +14,7 @@ import {
 import {
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
-  useLocaleText,
+  usePickersTranslations,
 } from '@mui/x-date-pickers/hooks';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
@@ -170,7 +170,7 @@ const useMultiInputFieldSlotProps = <
     TError
   >;
 
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const handleStartFieldRef = useForkRef(fieldProps.unstableStartFieldRef, startFieldRef);
   const handleEndFieldRef = useForkRef(fieldProps.unstableEndFieldRef, endFieldRef);
 
@@ -248,7 +248,7 @@ const useMultiInputFieldSlotProps = <
       let InputProps: MultiInputFieldSlotTextFieldProps['InputProps'];
       if (ownerState.position === 'start') {
         textFieldProps = {
-          label: inLocaleText?.start ?? localeText.start,
+          label: inLocaleText?.start ?? translations.start,
           onKeyDown: onSpaceOrEnter(openRangeStartSelection),
           onFocus: handleFocusStart,
           focused: open ? rangePosition === 'start' : undefined,
@@ -265,7 +265,7 @@ const useMultiInputFieldSlotProps = <
         }
       } else {
         textFieldProps = {
-          label: inLocaleText?.end ?? localeText.end,
+          label: inLocaleText?.end ?? translations.end,
           onKeyDown: onSpaceOrEnter(openRangeEndSelection),
           onFocus: handleFocusEnd,
           focused: open ? rangePosition === 'end' : undefined,

@@ -10,7 +10,7 @@ import {
   DateOrTimeViewWithMeridiem,
   WrapperVariant,
 } from '@mui/x-date-pickers/internals';
-import { useLocaleText } from '@mui/x-date-pickers/hooks';
+import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DateTimePickerToolbarProps,
@@ -151,7 +151,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     toolbarPlaceholder,
   };
 
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
@@ -212,7 +212,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
       <DateTimeRangePickerToolbarStart<TDate>
         value={start}
         onViewChange={handleStartRangeViewChange}
-        toolbarTitle={localeText.start}
+        toolbarTitle={translations.start}
         ownerState={ownerState}
         toolbarVariant="desktop"
         view={rangePosition === 'start' ? view : undefined}
@@ -224,7 +224,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
       <DateTimeRangePickerToolbarEnd<TDate>
         value={end}
         onViewChange={handleEndRangeViewChange}
-        toolbarTitle={localeText.end}
+        toolbarTitle={translations.end}
         ownerState={ownerState}
         toolbarVariant="desktop"
         view={rangePosition === 'end' ? view : undefined}

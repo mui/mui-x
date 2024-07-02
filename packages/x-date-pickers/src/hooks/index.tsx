@@ -6,4 +6,4 @@ export type {
   UseClearableFieldResponse,
 } from './useClearableField';
 
-export { useLocaleText } from './useLocaleText';
+export { usePickersTranslations } from './usePickersTranslations';

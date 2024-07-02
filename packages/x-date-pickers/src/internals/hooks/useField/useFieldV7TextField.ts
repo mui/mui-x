@@ -11,7 +11,7 @@ import {
 } from './useField.types';
 import { getActiveElement } from '../../utils/utils';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
-import { useLocaleText } from '../../../hooks/useLocaleText';
+import { usePickersTranslations } from '../../../hooks/usePickersTranslations';
 import { useUtils } from '../useUtils';
 
 export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
@@ -44,7 +44,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
 
   const sectionListRef = React.useRef<PickersSectionListRef>(null);
   const handleSectionListRef = useForkRef(inSectionListRef, sectionListRef);
-  const localeText = useLocaleText();
+  const translations = usePickersTranslations();
   const utils = useUtils();
   const id = useId();
 
@@ -436,8 +436,10 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
           'aria-valuenow': getSectionValueNow(section, utils),
           'aria-valuemin': sectionBoundaries[section.type].minimum,
           'aria-valuemax': sectionBoundaries[section.type].maximum,
-          'aria-valuetext': section.value ? getSectionValueText(section, utils) : localeText.empty,
-          'aria-label': localeText[section.type],
+          'aria-valuetext': section.value
+            ? getSectionValueText(section, utils)
+            : translations.empty,
+          'aria-label': translations[section.type],
           'aria-disabled': disabled,
           spellCheck: isEditable ? false : undefined,
           autoCapitalize: isEditable ? 'off' : undefined,
@@ -472,7 +474,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     disabled,
     readOnly,
     isContainerEditable,
-    localeText,
+    translations,
     utils,
     sectionBoundaries,
     id,

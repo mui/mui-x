@@ -134,7 +134,14 @@ Note that these translations of the date and time picker components depend on th
 
 ## Access the translations in slots and subcomponents
 
-You can use the `useLocaleText` hook to access the translations in your custom components.
-The demo below shows how to use the `localeText.okButtonLabel` translation key in a custom Action Bar:
+You can use the `usePickersTranslations` hook to access the translations in your custom components.
 
-{{"demo": "UseLocaleText.js", "defaultCodeOpen": false}}
+```tsx
+import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+
+const translations = usePickersTranslations();
+```
+
+:::info
+See [Custom slots and subcomponents—Action bar](/x/react-date-pickers/custom-components/#component) for more details.
+:::

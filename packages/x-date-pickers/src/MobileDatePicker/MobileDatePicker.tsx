@@ -5,7 +5,7 @@ import { refType } from '@mui/utils';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { MobileDatePickerProps } from './MobileDatePicker.types';
 import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
-import { useLocaleText } from '../hooks/useLocaleText';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { validateDate } from '../internals/utils/validation/validateDate';
 import { DateView, PickerValidDate } from '../models';
@@ -40,7 +40,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
   inProps: MobileDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const utils = useUtils<TDate>();
 
   // Props with the default values common to all date pickers
@@ -89,7 +89,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
     valueManager: singleItemValueManager,
     valueType: 'date',
     getOpenDialogAriaText:
-      props.localeText?.openDatePickerDialogue ?? localeText.openDatePickerDialogue,
+      props.localeText?.openDatePickerDialogue ?? translations.openDatePickerDialogue,
     validator: validateDate,
   });
 

@@ -11,7 +11,7 @@ import {
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
 } from '@mui/x-date-pickers/internals';
-import { useLocaleText } from '@mui/x-date-pickers/hooks';
+import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate, FieldRef, BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
 import useId from '@mui/utils/useId';
 import {
@@ -78,7 +78,7 @@ export const useMobileRangePicker = <
     fieldType === 'single-input' ? startFieldRef : undefined,
   );
   const labelId = useId();
-  const contextLocaleText = useLocaleText();
+  const contextTranslations = usePickersTranslations();
 
   const {
     open,
@@ -193,7 +193,7 @@ export const useMobileRangePicker = <
   const Layout = slots?.layout ?? PickersLayout;
 
   const finalLocaleText = {
-    ...contextLocaleText,
+    ...contextTranslations,
     ...localeText,
   };
   let labelledById =

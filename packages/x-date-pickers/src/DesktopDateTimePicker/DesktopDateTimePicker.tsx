@@ -11,7 +11,7 @@ import {
   DateTimePickerViewRenderers,
 } from '../DateTimePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
-import { useLocaleText } from '../hooks/useLocaleText';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { validateDateTime } from '../internals/utils/validation/validateDateTime';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
@@ -134,7 +134,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   inProps: DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const utils = useUtils<TDate>();
 
   // Props with the default values common to all date time pickers
@@ -227,7 +227,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
     valueManager: singleItemValueManager,
     valueType: 'date-time',
     getOpenDialogAriaText:
-      props.localeText?.openDatePickerDialogue ?? localeText.openDatePickerDialogue,
+      props.localeText?.openDatePickerDialogue ?? translations.openDatePickerDialogue,
     validator: validateDateTime,
     rendererInterceptor,
   });
