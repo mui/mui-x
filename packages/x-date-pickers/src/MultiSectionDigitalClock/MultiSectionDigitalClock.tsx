@@ -5,7 +5,8 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
-import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { useViews } from '../internals/hooks/useViews';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
@@ -114,7 +115,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     valueManager: singleItemValueManager,
   });
 
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const now = useNow<TDate>(timezone);
 
   const timeSteps = React.useMemo<Required<TimeStepOptions>>(
@@ -296,7 +297,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
               utils,
               isDisabled: (hours) => isTimeDisabled(hours, 'hours'),
               timeStep: timeSteps.hours,
-              resolveAriaLabel: localeText.hoursClockNumberText,
+              resolveAriaLabel: translations.hoursClockNumberText,
               valueOrReferenceDate,
             }),
           };
@@ -318,7 +319,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
               resolveLabel: (minutes) => utils.format(utils.setMinutes(now, minutes), 'minutes'),
               timeStep: timeSteps.minutes,
               hasValue: !!value,
-              resolveAriaLabel: localeText.minutesClockNumberText,
+              resolveAriaLabel: translations.minutesClockNumberText,
             }),
           };
         }
@@ -339,7 +340,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
               resolveLabel: (seconds) => utils.format(utils.setSeconds(now, seconds), 'seconds'),
               timeStep: timeSteps.seconds,
               hasValue: !!value,
-              resolveAriaLabel: localeText.secondsClockNumberText,
+              resolveAriaLabel: translations.secondsClockNumberText,
             }),
           };
         }
@@ -380,9 +381,9 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
       timeSteps.hours,
       timeSteps.minutes,
       timeSteps.seconds,
-      localeText.hoursClockNumberText,
-      localeText.minutesClockNumberText,
-      localeText.secondsClockNumberText,
+      translations.hoursClockNumberText,
+      translations.minutesClockNumberText,
+      translations.secondsClockNumberText,
       meridiemMode,
       setValueAndGoToNextView,
       valueOrReferenceDate,
@@ -435,7 +436,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           slots={slots}
           slotProps={slotProps}
           skipDisabled={skipDisabled}
-          aria-label={localeText.selectViewText(timeView)}
+          aria-label={translations.selectViewText(timeView)}
         />
       ))}
     </MultiSectionDigitalClockRoot>

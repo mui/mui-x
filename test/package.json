@@ -1,6 +1,6 @@
 {
   "name": "@mui-x-internal/test",
-  "version": "7.7.1",
+  "version": "7.8.0",
   "private": true,
   "scripts": {
     "typescript": "tsc -p tsconfig.json"
