@@ -4,6 +4,7 @@ import {
   UseTreeViewItemsSignature,
   UseTreeViewItemsDefaultizedParameters,
   UseTreeViewItemsState,
+  TreeViewItemToRenderProps,
 } from './useTreeViewItems.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
@@ -215,9 +216,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   ]);
 
   const getItemsToRender = () => {
-    const getPropsFromItemId = (
-      id: TreeViewItemId,
-    ): ReturnType<typeof instance.getItemsToRender>[number] => {
+    const getPropsFromItemId = (id: TreeViewItemId): TreeViewItemToRenderProps => {
       const item = state.items.itemMetaMap[id];
       return {
         label: item.label!,

@@ -1,5 +1,5 @@
 import type { TreeViewAnyPluginSignature } from './plugin';
-import type { MergeSignaturesProperty } from './helpers';
+import { MergeSignaturesProperty } from './helpers';
 import type { TreeViewCorePluginSignatures } from '../corePlugins';
 
 export interface TreeViewItemMeta {

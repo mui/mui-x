@@ -18,6 +18,7 @@ import {
 import { getTreeItemUtilityClass } from '../TreeItem';
 import { TreeItem2Icon } from '../TreeItem2Icon';
 import { TreeItem2Provider } from '../TreeItem2Provider';
+import { fastMemo } from '../internals/utils/fastMemo';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem2');
 
@@ -37,7 +38,10 @@ export const TreeItem2Content = styled('div', {
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
   shouldForwardProp: (prop) =>
-    shouldForwardProp(prop) && prop !== 'status' && prop !== 'indentationAtItemLevel',
+    shouldForwardProp(prop) &&
+    prop !== 'status' &&
+    prop !== 'indentationAtItemLevel' &&
+    prop !== 'hidden',
 })<{ status: UseTreeItem2Status; indentationAtItemLevel?: true }>(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
   borderRadius: theme.shape.borderRadius,
@@ -56,6 +60,12 @@ export const TreeItem2Content = styled('div', {
     },
   },
   variants: [
+    {
+      props: { hidden: true },
+      style: {
+        display: 'none',
+      },
+    },
     {
       props: { indentationAtItemLevel: true },
       style: {
@@ -206,13 +216,23 @@ type TreeItem2Component = ((
  *
  * - [TreeItem2 API](https://mui.com/x/api/tree-view/tree-item-2/)
  */
-export const TreeItem2 = React.forwardRef(function TreeItem2(
+const TreeItem2 = React.forwardRef(function TreeItem2(
   inProps: TreeItem2Props,
   forwardedRef: React.Ref<HTMLLIElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTreeItem2' });
 
-  const { id, itemId, label, disabled, children, slots = {}, slotProps = {}, ...other } = props;
+  const {
+    id,
+    itemId,
+    label,
+    disabled,
+    isContentHidden,
+    children,
+    slots = {},
+    slotProps = {},
+    ...other
+  } = props;
 
   const {
     getRootProps,
@@ -228,6 +248,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
     children,
     label,
     disabled,
+    isContentHidden,
   });
 
   const ownerState: TreeItem2OwnerState = {
@@ -338,6 +359,7 @@ TreeItem2.propTypes = {
    * The id attribute of the item. If not provided, it will be generated.
    */
   id: PropTypes.string,
+  isContentHidden: PropTypes.bool,
   /**
    * The id of the item.
    * Must be unique.
@@ -371,3 +393,7 @@ TreeItem2.propTypes = {
    */
   slots: PropTypes.object,
 } as any;
+
+const MemoizedTreeItem2 = fastMemo(TreeItem2);
+
+export { MemoizedTreeItem2 as TreeItem2 };

@@ -32,6 +32,7 @@ export interface UseTreeItem2Parameters {
    * The content of the component.
    */
   children?: React.ReactNode;
+  isContentHidden?: boolean;
 }
 
 export interface UseTreeItem2RootSlotOwnProps {

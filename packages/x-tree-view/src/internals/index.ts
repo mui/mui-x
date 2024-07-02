@@ -1,15 +1,26 @@
 export { useTreeView } from './useTreeView';
 export { TreeViewProvider } from './TreeViewProvider';
+export { useTreeViewContext } from './TreeViewProvider/useTreeViewContext';
+
+export { RichTreeViewItems } from './components/RichTreeViewItems';
+export type {
+  RichTreeViewItemsProps,
+  RichTreeViewItemsSlots,
+  RichTreeViewItemsSlotProps,
+} from './components/RichTreeViewItems';
 
 export { unstable_resetCleanupTracking } from './hooks/useInstanceEventHandler';
 
 export type {
   TreeViewPlugin,
   TreeViewPluginSignature,
+  TreeViewInstance,
   ConvertPluginsIntoSignatures,
   MergeSignaturesProperty,
   TreeViewPublicAPI,
   TreeViewExperimentalFeatures,
+  MakeOptional,
+  DefaultizedProps,
 } from './models';
 
 // Core plugins
@@ -38,10 +49,12 @@ export type {
   UseTreeViewIconsSignature,
   UseTreeViewIconsParameters,
 } from './plugins/useTreeViewIcons';
-export { useTreeViewItems } from './plugins/useTreeViewItems';
+export { useTreeViewItems, TREE_VIEW_ROOT_PARENT_ID } from './plugins/useTreeViewItems';
 export type {
   UseTreeViewItemsSignature,
   UseTreeViewItemsParameters,
+  TreeViewItemToRenderProps,
+  TreeViewItemMetaMap,
 } from './plugins/useTreeViewItems';
 export { useTreeViewJSXItems } from './plugins/useTreeViewJSXItems';
 export type {
@@ -49,4 +62,5 @@ export type {
   UseTreeViewJSXItemsParameters,
 } from './plugins/useTreeViewJSXItems';
 
+export { clamp } from './utils/utils';
 export { buildWarning } from './utils/warning';

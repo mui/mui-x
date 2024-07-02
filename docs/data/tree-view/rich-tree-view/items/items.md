@@ -143,6 +143,14 @@ When it's set to true:
 
 {{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}
 
+## Virtualization [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+:::warning
+This is only a POC, a lot of the behaviors are potentially broken.
+:::
+
+{{"demo": "Virtualization.js"}}
+
 ## Imperative API
 
 ### Get an item by ID
