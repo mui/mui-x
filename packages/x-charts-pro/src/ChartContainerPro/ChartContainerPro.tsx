@@ -4,7 +4,6 @@ import { ChartContainerProps } from '@mui/x-charts/ChartContainer';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { HighlightedProvider, ZAxisContextProvider } from '@mui/x-charts/context';
 import {
-  CartesianContextProvider,
   ChartsAxesGradients,
   ColorProvider,
   DrawingProvider,
@@ -14,6 +13,8 @@ import {
 } from '@mui/x-charts/internals';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
+import { CartesianContextProviderPro } from '../context/CartesianProviderPro';
+import { ZoomProvider } from '../context/ZoomProvider';
 
 const releaseInfo = getReleaseInfo();
 
@@ -63,35 +64,37 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
           dataset={dataset}
           seriesFormatters={seriesFormatters}
         >
-          <CartesianContextProvider
-            xAxis={xAxis}
-            yAxis={yAxis}
-            dataset={dataset}
-            xExtremumGetters={xExtremumGetters}
-            yExtremumGetters={yExtremumGetters}
-          >
-            <ZAxisContextProvider zAxis={zAxis} dataset={dataset}>
-              <InteractionProvider>
-                <HighlightedProvider
-                  highlightedItem={highlightedItem}
-                  onHighlightChange={onHighlightChange}
-                >
-                  <ChartsSurface
-                    width={width}
-                    height={height}
-                    ref={handleRef}
-                    sx={sx}
-                    title={title}
-                    desc={desc}
-                    disableAxisListener={disableAxisListener}
+          <ZoomProvider>
+            <CartesianContextProviderPro
+              xAxis={xAxis}
+              yAxis={yAxis}
+              dataset={dataset}
+              xExtremumGetters={xExtremumGetters}
+              yExtremumGetters={yExtremumGetters}
+            >
+              <ZAxisContextProvider zAxis={zAxis} dataset={dataset}>
+                <InteractionProvider>
+                  <HighlightedProvider
+                    highlightedItem={highlightedItem}
+                    onHighlightChange={onHighlightChange}
                   >
-                    <ChartsAxesGradients />
-                    {children}
-                  </ChartsSurface>
-                </HighlightedProvider>
-              </InteractionProvider>
-            </ZAxisContextProvider>
-          </CartesianContextProvider>
+                    <ChartsSurface
+                      width={width}
+                      height={height}
+                      ref={handleRef}
+                      sx={sx}
+                      title={title}
+                      desc={desc}
+                      disableAxisListener={disableAxisListener}
+                    >
+                      <ChartsAxesGradients />
+                      {children}
+                    </ChartsSurface>
+                  </HighlightedProvider>
+                </InteractionProvider>
+              </ZAxisContextProvider>
+            </CartesianContextProviderPro>
+          </ZoomProvider>
         </SeriesContextProvider>
       </ColorProvider>
     </DrawingProvider>

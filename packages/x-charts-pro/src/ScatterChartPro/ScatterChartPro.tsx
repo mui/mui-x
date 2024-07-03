@@ -10,9 +10,13 @@ import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useScatterChartProps } from '@mui/x-charts/internals';
 import { ResponsiveChartContainerPro } from '../ResponsiveChartContainerPro';
+import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
 
 export interface ScatterChartProProps extends ScatterChartProps {
-  // TODO: Add zoom props
+  /**
+   * If `true`, the chart will be zoomable.
+   */
+  zoom?: boolean;
 }
 
 /**
@@ -29,6 +33,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   props: ScatterChartProProps,
   ref,
 ) {
+  const { zoom, ...restProps } = props;
   const {
     chartContainerProps,
     zAxisProps,
@@ -41,7 +46,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
     axisHighlightProps,
     tooltipProps,
     children,
-  } = useScatterChartProps(props);
+  } = useScatterChartProps(restProps);
   return (
     <ResponsiveChartContainerPro ref={ref} {...chartContainerProps}>
       <ZAxisContextProvider {...zAxisProps}>
@@ -53,6 +58,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
         <ChartsLegend {...legendProps} />
         <ChartsAxisHighlight {...axisHighlightProps} />
         {!props.loading && <ChartsTooltip {...tooltipProps} />}
+        {zoom && <ZoomSetup />}
         {children}
       </ZAxisContextProvider>
     </ResponsiveChartContainerPro>
