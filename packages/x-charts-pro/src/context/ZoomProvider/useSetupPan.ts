@@ -6,6 +6,15 @@ import { useZoom } from './useZoom';
 const MAX_RANGE = 100;
 const MIN_RANGE = 0;
 
+const isPointOutside = (
+  point: { x: number; y: number },
+  area: { left: number; top: number; width: number; height: number },
+) => {
+  const outsideX = point.x < area.left || point.x > area.left + area.width;
+  const outsideY = point.y < area.top || point.y > area.top + area.height;
+  return outsideX || outsideY;
+};
+
 export const useSetupPan = () => {
   const { zoomRange, setZoomRange, setIsInteracting } = useZoom();
   const area = useDrawingArea();
@@ -56,6 +65,12 @@ export const useSetupPan = () => {
 
     const handleDown = (event: PointerEvent) => {
       eventCacheRef.current.push(event);
+      const point = getSVGPoint(element, event);
+
+      if (isPointOutside(point, area)) {
+        return;
+      }
+
       // If there is only one pointer, prevent selecting text
       if (eventCacheRef.current.length === 1) {
         event.preventDefault();
@@ -64,7 +79,6 @@ export const useSetupPan = () => {
       isDraggingRef.current = true;
       setIsInteracting(true);
 
-      const point = getSVGPoint(element, event);
       touchStartRef.current = {
         x: point.x,
         minX: zoomRange[0],
