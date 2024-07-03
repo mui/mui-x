@@ -78,7 +78,13 @@ const main = async () => {
   const CjsBasePath = path.resolve(__dirname, `../lib`);
   const VendorBasePath = path.resolve(__dirname, `../lib-vendor`);
   const baseDirs = [EsmBasePath, CjsBasePath, VendorBasePath];
-  const cleanGlobs = [].concat(baseDirs, path.resolve(__dirname, '../d3-*'));
+  const cleanGlobs = [].concat(
+    baseDirs,
+    path.resolve(__dirname, '../d3-*'),
+    path.resolve(__dirname, '../internmap'),
+    path.resolve(__dirname, '../delaunator'),
+    path.resolve(__dirname, '../robust-predicates'),
+  );
 
   log('Cleaning old vendor directories.');
   await Promise.all(cleanGlobs.map((glob) => rimrafP(glob)));

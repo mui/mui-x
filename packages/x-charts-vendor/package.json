@@ -17,10 +17,10 @@
   "license": "MIT AND ISC",
   "exports": {
     "./package.json": "./package.json",
-    "./d3-*": {
-      "types": "./d3-*.d.ts",
-      "import": "./es/d3-*.js",
-      "default": "./lib/d3-*.js"
+    "./*": {
+      "types": "./*.d.ts",
+      "import": "./es/*.js",
+      "default": "./lib/*.js"
     }
   },
   "dependencies": {
