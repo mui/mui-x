@@ -12,6 +12,16 @@ describe('<SparkLineChart />', () => {
     muiName: 'MuiSparkLineChart',
     testComponentPropWith: 'div',
     refInstanceof: window.HTMLDivElement,
-    only: ['mergeClassName', 'propsSpread', 'refForwarding', 'reactTestRenderer', 'rootClass'],
+    skip: [
+      'componentProp',
+      'componentsProp',
+      'slotPropsProp',
+      'slotPropsCallback',
+      'slotsProp',
+      'themeDefaultProps',
+      'themeStyleOverrides',
+      'themeVariants',
+      'themeCustomPalette',
+    ],
   }));
 });

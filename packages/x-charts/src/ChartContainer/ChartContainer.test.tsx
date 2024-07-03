@@ -12,6 +12,16 @@ describe('<ResponsiveChartContainer />', () => {
     muiName: 'MuiChartContainer',
     testComponentPropWith: 'div',
     refInstanceof: window.SVGSVGElement,
-    only: ['mergeClassName', 'propsSpread', 'refForwarding', 'reactTestRenderer', 'rootClass'],
+    skip: [
+      'componentProp',
+      'componentsProp',
+      'slotPropsProp',
+      'slotPropsCallback',
+      'slotsProp',
+      'themeDefaultProps',
+      'themeStyleOverrides',
+      'themeVariants',
+      'themeCustomPalette',
+    ],
   }));
 });
