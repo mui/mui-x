@@ -294,6 +294,7 @@
   { "name": "gridFilterActiveItemsSelector", "kind": "Variable" },
   { "name": "GridFilterAltIcon", "kind": "Variable" },
   { "name": "GridFilterApi", "kind": "Interface" },
+  { "name": "gridFilteredChildrenCountLookupSelector", "kind": "Variable" },
   { "name": "gridFilteredDescendantCountLookupSelector", "kind": "Variable" },
   { "name": "gridFilteredDescendantRowCountSelector", "kind": "Variable" },
   { "name": "gridFilteredRowCountSelector", "kind": "Variable" },
