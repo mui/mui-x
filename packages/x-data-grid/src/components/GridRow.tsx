@@ -112,7 +112,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     ...other
   } = props;
   const apiRef = useGridApiContext();
-  const gridConfiguration = useGridConfiguration();
+  const configuration = useGridConfiguration();
   const ref = React.useRef<HTMLDivElement>(null);
   const rootProps = useGridRootProps();
   const currentPage = useGridVisibleRows(apiRef, rootProps);
@@ -149,7 +149,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       rowHeight === 'auto' && 'row--dynamicHeight',
     ],
   });
-  const { getRowAriaAttributes } = gridConfiguration.hooks.useGridRowAriaAttributes();
+  const { getRowAriaAttributes } = configuration.hooks.useGridRowAriaAttributes();
 
   React.useLayoutEffect(() => {
     if (currentPage.range) {
