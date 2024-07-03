@@ -1,3 +1,6 @@
+import {} from './typeOverloads/modules';
+
+// exports from MIT package
 export * from '@mui/x-charts/constants';
 export * from '@mui/x-charts/context';
 export * from '@mui/x-charts/hooks';
@@ -23,6 +26,8 @@ export * from '@mui/x-charts/SparkLineChart';
 export * from '@mui/x-charts/Gauge';
 export * from '@mui/x-charts/ChartsSurface';
 
+// Pro components
+export * from './Heatmap';
 export * from './ResponsiveChartContainerPro';
 export * from './ScatterChartPro';
 export * from './BarChartPro';

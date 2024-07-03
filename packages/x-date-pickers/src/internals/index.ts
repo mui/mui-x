@@ -89,13 +89,7 @@ export type {
   UseStaticPickerSlots,
   UseStaticPickerSlotProps,
 } from './hooks/useStaticPicker';
-export {
-  useLocalizationContext,
-  useDefaultDates,
-  useUtils,
-  useLocaleText,
-  useNow,
-} from './hooks/useUtils';
+export { useLocalizationContext, useDefaultDates, useUtils, useNow } from './hooks/useUtils';
 export type { ExportedUseViewsOptions, UseViewsOptions } from './hooks/useViews';
 export { useViews } from './hooks/useViews';
 export { useValidation } from './hooks/useValidation';
