@@ -21,9 +21,6 @@ const require = createRequire(import.meta.url);
 
 const WORKSPACE_ROOT = path.resolve(currentDirectory, '../');
 const MONOREPO_PATH = path.resolve(WORKSPACE_ROOT, './node_modules/@mui/monorepo');
-const MONOREPO_ALIASES = {
-  '@mui/docs': path.resolve(MONOREPO_PATH, './packages/mui-docs/src'),
-};
 
 const WORKSPACE_ALIASES = {
   '@mui/x-data-grid': path.resolve(WORKSPACE_ROOT, './packages/x-data-grid/src'),
@@ -108,7 +105,6 @@ export default withDocsInfra({
         ...config.resolve,
         alias: {
           ...config.resolve.alias,
-          ...MONOREPO_ALIASES,
           ...WORKSPACE_ALIASES,
           // TODO: get rid of this, replace with @mui/docs
           docs: path.resolve(MONOREPO_PATH, './docs'),

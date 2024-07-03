@@ -33,8 +33,6 @@
       "@mui/x-license/*": ["./packages/x-license/src/*"],
       "@mui/x-internals": ["./packages/x-internals/src"],
       "@mui/x-internals/*": ["./packages/x-internals/src/*"],
-      "@mui/docs": ["./node_modules/@mui/monorepo/packages/mui-docs/src"],
-      "@mui/docs/*": ["./node_modules/@mui/monorepo/packages/mui-docs/src/*"],
       "@mui-internal/api-docs-builder": ["./node_modules/@mui/monorepo/packages/api-docs-builder"],
       "@mui-internal/api-docs-builder/*": [
         "./node_modules/@mui/monorepo/packages/api-docs-builder/*"
