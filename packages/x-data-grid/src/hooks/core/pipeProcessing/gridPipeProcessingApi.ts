@@ -50,10 +50,6 @@ export interface GridPipeProcessingLookup {
     value: string[];
     context: GridRowId;
   };
-  ariaAttributes: {
-    value: Record<string, string | number | boolean>;
-    context: GridRowId;
-  };
   cellClassName: { value: string[]; context: GridCellCoordinates };
   isCellSelected: { value: boolean; context: GridCellCoordinates };
   canUpdateFocus: {
