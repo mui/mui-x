@@ -592,6 +592,40 @@ describe('<DataGridPro /> - Tree data', () => {
 
       expect(getColumnValues(0)).to.deep.equal(['B (1)', 'D', 'D (1)', 'A']);
     });
+
+    it('should keep the correct count of the children and descendants in the filter state', () => {
+      render(
+        <Test
+          rows={[
+            { name: 'A' },
+            { name: 'A.A' },
+            { name: 'A.B' },
+            { name: 'A.B.A' },
+            { name: 'A.B.B' },
+            { name: 'A.C' },
+            { name: 'B' },
+            { name: 'B.A' },
+            { name: 'B.B' },
+            { name: 'B.C' },
+            { name: 'C' },
+          ]}
+          filterModel={{ items: [], quickFilterValues: ['A'] }}
+          defaultGroupingExpansionDepth={3}
+        />,
+      );
+
+      const { filteredChildrenCountLookup, filteredDescendantCountLookup } =
+        apiRef.current.state.filter;
+
+      expect(filteredChildrenCountLookup['A']).to.equal(3);
+      expect(filteredDescendantCountLookup['A']).to.equal(5);
+
+      expect(filteredChildrenCountLookup['B']).to.equal(1);
+      expect(filteredDescendantCountLookup['B']).to.equal(1);
+
+      expect(filteredChildrenCountLookup['C']).to.be.undefined;
+      expect(filteredDescendantCountLookup['C']).to.be.undefined;
+    });
   });
 
   describe('sorting', () => {
