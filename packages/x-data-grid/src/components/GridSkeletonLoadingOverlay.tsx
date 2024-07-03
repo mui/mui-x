@@ -112,10 +112,12 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
         const pinnedPosition = getPinnedPosition(column.field);
         const isPinnedLeft = pinnedPosition === GridPinnedColumnPosition.LEFT;
         const isPinnedRight = pinnedPosition === GridPinnedColumnPosition.RIGHT;
-        const sectionLength = pinnedPosition ? pinnedColumns[pinnedPosition].length : 0;
+        const sectionLength = pinnedPosition
+          ? pinnedColumns[pinnedPosition].length // pinned section
+          : columns.length - pinnedColumns.left.length - pinnedColumns.right.length; // middle section
         const sectionIndex = pinnedPosition
-          ? pinnedColumns[pinnedPosition].findIndex((col) => col.field === column.field)
-          : -1;
+          ? pinnedColumns[pinnedPosition].findIndex((col) => col.field === column.field) // pinned section
+          : colIndex - pinnedColumns.left.length; // middle section
         const pinnedStyle =
           pinnedPosition && getPinnedStyle(column.computedWidth, colIndex, pinnedPosition);
         const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
