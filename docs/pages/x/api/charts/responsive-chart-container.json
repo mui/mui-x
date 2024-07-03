@@ -59,7 +59,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": true,
+  "themeDefaultProps": false,
   "muiName": "MuiResponsiveChartContainer",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/ResponsiveChartContainer/ResponsiveChartContainer.tsx",

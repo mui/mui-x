@@ -169,7 +169,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": true,
+  "themeDefaultProps": false,
   "muiName": "MuiPieChart",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/PieChart/PieChart.tsx",

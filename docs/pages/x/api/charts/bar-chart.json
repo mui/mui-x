@@ -190,7 +190,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": true,
+  "themeDefaultProps": false,
   "muiName": "MuiBarChart",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/BarChart/BarChart.tsx",

@@ -59,7 +59,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": true,
+  "themeDefaultProps": false,
   "muiName": "MuiChartContainer",
   "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/ChartContainer/ChartContainer.tsx",
