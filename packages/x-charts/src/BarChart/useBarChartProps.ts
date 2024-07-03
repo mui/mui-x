@@ -150,7 +150,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     slotProps,
   };
 
-  const tooltipProps: ChartsTooltipProps = {
+  const tooltipProps: ChartsTooltipProps<'bar'> = {
     ...tooltip,
     slots,
     slotProps,

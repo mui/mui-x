@@ -41,14 +41,14 @@ export interface PieChartSlots
   extends ChartsAxisSlots,
     PiePlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots,
+    ChartsTooltipSlots<'pie'>,
     ChartsOverlaySlots {}
 
 export interface PieChartSlotProps
   extends ChartsAxisSlotProps,
     PiePlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps,
+    ChartsTooltipSlotProps<'pie'>,
     ChartsOverlaySlotProps {}
 
 export interface PieChartProps
@@ -81,7 +81,7 @@ export interface PieChartProps
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    * @default { trigger: 'item' }
    */
-  tooltip?: ChartsTooltipProps;
+  tooltip?: ChartsTooltipProps<'pie'>;
   /**
    * The configuration of axes highlight.
    * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.

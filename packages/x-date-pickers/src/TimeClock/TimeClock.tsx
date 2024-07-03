@@ -3,7 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
-import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { useViews } from '../internals/hooks/useViews';
@@ -124,7 +125,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
     timezone,
   });
 
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const now = useNow<TDate>(timezone);
 
   const { view, setView, previousView, nextView, setValueAndGoToNextView } = useViews({
@@ -269,7 +270,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
             utils,
             ampm,
             onChange: handleHoursChange,
-            getClockNumberText: localeText.hoursClockNumberText,
+            getClockNumberText: translations.hoursClockNumberText,
             isDisabled: (hourValue) => disabled || isTimeDisabled(hourValue, 'hours'),
             selectedId,
           }),
@@ -293,7 +294,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
             utils,
             value: minutesValue,
             onChange: handleMinutesChange,
-            getClockNumberText: localeText.minutesClockNumberText,
+            getClockNumberText: translations.minutesClockNumberText,
             isDisabled: (minuteValue) => disabled || isTimeDisabled(minuteValue, 'minutes'),
             selectedId,
           }),
@@ -317,7 +318,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
             utils,
             value: secondsValue,
             onChange: handleSecondsChange,
-            getClockNumberText: localeText.secondsClockNumberText,
+            getClockNumberText: translations.secondsClockNumberText,
             isDisabled: (secondValue) => disabled || isTimeDisabled(secondValue, 'seconds'),
             selectedId,
           }),
@@ -332,9 +333,9 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
     utils,
     value,
     ampm,
-    localeText.hoursClockNumberText,
-    localeText.minutesClockNumberText,
-    localeText.secondsClockNumberText,
+    translations.hoursClockNumberText,
+    translations.minutesClockNumberText,
+    translations.secondsClockNumberText,
     meridiemMode,
     setValueAndGoToNextView,
     valueOrReferenceDate,
@@ -375,10 +376,10 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
           slotProps={slotProps}
           onGoToPrevious={() => setView(previousView!)}
           isPreviousDisabled={!previousView}
-          previousLabel={localeText.openPreviousView}
+          previousLabel={translations.openPreviousView}
           onGoToNext={() => setView(nextView!)}
           isNextDisabled={!nextView}
-          nextLabel={localeText.openNextView}
+          nextLabel={translations.openNextView}
           ownerState={ownerState}
         />
       )}

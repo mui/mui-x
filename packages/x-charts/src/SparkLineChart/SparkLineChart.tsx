@@ -30,14 +30,14 @@ export interface SparkLineChartSlots
     MarkPlotSlots,
     LineHighlightPlotSlots,
     Omit<BarPlotSlots, 'barLabel'>,
-    ChartsTooltipSlots {}
+    ChartsTooltipSlots<'line' | 'bar'> {}
 export interface SparkLineChartSlotProps
   extends AreaPlotSlotProps,
     LinePlotSlotProps,
     MarkPlotSlotProps,
     LineHighlightPlotSlotProps,
     BarPlotSlotProps,
-    ChartsTooltipSlotProps {}
+    ChartsTooltipSlotProps<'line' | 'bar'> {}
 
 export interface SparkLineChartProps
   extends Omit<
@@ -54,7 +54,7 @@ export interface SparkLineChartProps
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>;
-  tooltip?: ChartsTooltipProps;
+  tooltip?: ChartsTooltipProps<'line' | 'bar'>;
   axisHighlight?: ChartsAxisHighlightProps;
   /**
    * Type of plot used.

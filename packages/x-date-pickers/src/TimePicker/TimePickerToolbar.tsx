@@ -8,7 +8,8 @@ import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { arrayIncludes } from '../internals/utils/utils';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils } from '../internals/hooks/useUtils';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import {
@@ -165,7 +166,7 @@ function TimePickerToolbar<TDate extends PickerValidDate>(inProps: TimePickerToo
     ...other
   } = props;
   const utils = useUtils<TDate>();
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const isRtl = useRtl();
 
   const showAmPmControl = Boolean(ampm && !ampmInClock && views.includes('hours'));
@@ -190,7 +191,7 @@ function TimePickerToolbar<TDate extends PickerValidDate>(inProps: TimePickerToo
   return (
     <TimePickerToolbarRoot
       landscapeDirection="row"
-      toolbarTitle={localeText.timePickerToolbarTitle}
+      toolbarTitle={translations.timePickerToolbarTitle}
       isLandscape={isLandscape}
       ownerState={ownerState}
       className={clsx(classes.root, className)}
