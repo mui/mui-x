@@ -62,7 +62,7 @@
       "name": "labelInput",
       "description": "The component that renders the input to edit the label when the item is editable and is currently being edited.",
       "default": "TreeItem2LabelInput",
-      "class": null
+      "class": "MuiTreeItem2-labelInput"
     },
     { "name": "collapseIcon", "description": "The icon used to collapse the item.", "class": null },
     { "name": "expandIcon", "description": "The icon used to expand the item.", "class": null },
@@ -79,6 +79,18 @@
       "className": "Mui-disabled",
       "description": "State class applied to the element when disabled.",
       "isGlobal": true
+    },
+    {
+      "key": "editable",
+      "className": "MuiTreeItem2-editable",
+      "description": "Styles applied to the content of the items that are editable.",
+      "isGlobal": false
+    },
+    {
+      "key": "editing",
+      "className": "MuiTreeItem2-editing",
+      "description": "Styles applied to the content element when editing is enabled.",
+      "isGlobal": false
     },
     {
       "key": "expanded",

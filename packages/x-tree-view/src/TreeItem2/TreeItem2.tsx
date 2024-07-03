@@ -154,7 +154,7 @@ export const TreeItem2GroupTransition = styled(Collapse, {
   ],
 });
 
-export const UnstyledLabelInput = React.forwardRef(function UnstyledLabelInput(
+const UnstyledLabelInput = React.forwardRef(function UnstyledLabelInput(
   { visible = false, onChange, label, ...props }: UseTreeItem2LabelInputSlotOwnProps,
   ref: React.Ref<HTMLInputElement>,
 ) {

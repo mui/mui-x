@@ -23,6 +23,15 @@
       "nodeName": "the element",
       "conditions": "disabled"
     },
+    "editable": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the content of the items that are editable"
+    },
+    "editing": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the content element",
+      "conditions": "editing is enabled"
+    },
     "expanded": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the content element",
