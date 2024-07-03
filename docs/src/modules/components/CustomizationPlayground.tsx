@@ -1,8 +1,6 @@
 import * as React from 'react';
-// @ts-ignore
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
-// @ts-ignore
-import BrandingProvider from 'docs/src/BrandingProvider';
+import { BrandingProvider } from '@mui/docs/branding';
 import { styled, Theme, alpha, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Tabs from '@mui/material/Tabs';
@@ -353,6 +351,7 @@ const CustomizationPlayground = function CustomizationPlayground({
           {moreInformation}
         </PlaygroundDemoArea>
         {shouldBeInteractive && (
+          // @ts-ignore - `undefined` `mode` is handled
           <BrandingProvider>
             <PlaygroundConfigArea>
               <ConfigSectionWrapper>
@@ -406,6 +405,7 @@ const CustomizationPlayground = function CustomizationPlayground({
         )}
       </PlaygroundWrapper>
       {selectedDemo && customizationOptions && selectedCustomizationOption && (
+        // @ts-ignore - `undefined` `mode` is handled
         <BrandingProvider>
           <TabsWrapper>
             <StylingApproachTabs
