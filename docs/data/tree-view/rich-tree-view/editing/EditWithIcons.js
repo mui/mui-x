@@ -139,6 +139,7 @@ export default function EditWithIcons() {
         slots={{ item: CustomTreeItem2 }}
         isItemEditable={(item) => Boolean(item?.editable)}
         defaultExpandedItems={['grid', 'pickers']}
+        expansionTrigger="iconContainer"
       />
     </Box>
   );
