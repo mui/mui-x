@@ -68,7 +68,10 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
     [totalWidth, positions],
   );
   const allVisibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
-  const columns = allVisibleColumns.slice(0, inViewportCount);
+  const columns = React.useMemo(
+    () => allVisibleColumns.slice(0, inViewportCount),
+    [allVisibleColumns, inViewportCount],
+  );
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
 
   const getPinnedStyle = React.useCallback(

@@ -5,6 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { GridOverlay, GridOverlayProps } from './containers/GridOverlay';
 import { GridSkeletonLoadingOverlay } from './GridSkeletonLoadingOverlay';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import { gridRowCountSelector, useGridSelector } from '../hooks';
 
 export type GridLoadingOverlayVariant = 'circular-progress' | 'linear-progress' | 'skeleton';
 
@@ -51,7 +52,7 @@ const GridLoadingOverlay = React.forwardRef<HTMLDivElement, GridLoadingOverlayPr
       ...other
     } = props;
     const apiRef = useGridApiContext();
-    const rowsCount = apiRef.current.getRowsCount();
+    const rowsCount = useGridSelector(apiRef, gridRowCountSelector);
     const activeVariant = LOADING_VARIANTS[rowsCount === 0 ? noRowsVariant : variant];
 
     return (

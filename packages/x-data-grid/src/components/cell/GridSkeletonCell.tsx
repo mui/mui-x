@@ -13,6 +13,10 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridColType } from '../../models';
 
+const CIRCULAR_CONTENT_SIZE = '1.3em';
+
+const CONTENT_HEIGHT = '1.2em';
+
 const DEFAULT_CONTENT_WIDTH_RANGE = [40, 80] as const;
 
 const CONTENT_WIDTH_RANGE_BY_TYPE: Partial<Record<GridColType, [number, number]>> = {
@@ -63,27 +67,30 @@ function GridSkeletonCell(props: GridSkeletonCellProps) {
   const ownerState = { classes: rootProps.classes, align, empty };
   const classes = useUtilityClasses(ownerState);
 
-  // The width of the skeleton is a random number between the min and max values
-  // The min and max values are determined by the type of the column
-  const [min, max] = type
-    ? CONTENT_WIDTH_RANGE_BY_TYPE[type] ?? DEFAULT_CONTENT_WIDTH_RANGE
-    : DEFAULT_CONTENT_WIDTH_RANGE;
+  // Memo prevents the non-circular skeleton widths changing to random widths on every render
+  const skeletonProps = React.useMemo(() => {
+    const isCircularContent = type === 'boolean' || type === 'actions';
 
-  // Memo prevents the skeleton width changing to a random width on every render
-  const contentWidth = React.useMemo(() => Math.round(randomNumberGenerator(min, max)), [min, max]);
-
-  const isCircularContent = type === 'boolean' || type === 'actions';
-  const skeletonProps = isCircularContent
-    ? ({
+    if (isCircularContent) {
+      return {
         variant: 'circular',
-        width: '1.3em',
-        height: '1.3em',
-      } as const)
-    : ({
-        variant: 'text',
-        width: `${contentWidth}%`,
-        height: '1.2em',
-      } as const);
+        width: CIRCULAR_CONTENT_SIZE,
+        height: CIRCULAR_CONTENT_SIZE,
+      } as const;
+    }
+
+    // The width of the skeleton is a random number between the min and max values
+    // The min and max values are determined by the type of the column
+    const [min, max] = type
+      ? CONTENT_WIDTH_RANGE_BY_TYPE[type] ?? DEFAULT_CONTENT_WIDTH_RANGE
+      : DEFAULT_CONTENT_WIDTH_RANGE;
+
+    return {
+      variant: 'text',
+      width: `${Math.round(randomNumberGenerator(min, max))}%`,
+      height: CONTENT_HEIGHT,
+    } as const;
+  }, [type]);
 
   return (
     <div
