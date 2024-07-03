@@ -24,7 +24,11 @@ export const useResponsiveChartContainerProps = (props: ResponsiveChartContainer
     ...rest
   } = props;
 
-  const resizableChartContainerProps = rest;
+  const resizableChartContainerProps = {
+    ...rest,
+    ownerState: { width, height },
+  };
+
   const chartContainerProps: Omit<ChartContainerProps, 'height' | 'width'> = {
     margin,
     children,

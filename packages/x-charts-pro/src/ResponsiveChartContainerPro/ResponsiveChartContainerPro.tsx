@@ -23,11 +23,7 @@ const ResponsiveChartContainerPro = React.forwardRef(function ResponsiveChartCon
   const { containerRef, width, height } = useChartContainerDimensions(ref, inWidth, inHeight);
 
   return (
-    <ResizableContainer
-      ref={containerRef}
-      ownerState={{ width: inWidth, height: inHeight }}
-      {...resizableChartContainerProps}
-    >
+    <ResizableContainer ref={containerRef} {...resizableChartContainerProps}>
       {width && height ? (
         <ChartContainerPro {...chartContainerProps} width={width} height={height} />
       ) : null}
