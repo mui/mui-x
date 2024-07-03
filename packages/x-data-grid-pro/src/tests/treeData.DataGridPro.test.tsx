@@ -758,6 +758,8 @@ describe('<DataGridPro /> - Tree data', () => {
       expect(getRow(1).getAttribute('aria-posinset')).to.equal('1');
       expect(getRow(1).getAttribute('aria-setsize')).to.equal('1'); // A.A is filtered out, set size is now 1
       expect(getRow(2).getAttribute('aria-level')).to.equal('1'); // B
+      expect(getRow(3).getAttribute('aria-posinset')).to.equal('1'); // B.A
+      expect(getRow(3).getAttribute('aria-setsize')).to.equal('2'); // B.A & B.B
     });
   });
 
