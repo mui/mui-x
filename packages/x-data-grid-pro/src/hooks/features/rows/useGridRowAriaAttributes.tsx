@@ -3,7 +3,7 @@ import {
   GridRowId,
   useGridSelector,
   gridFilteredTopLevelRowCountSelector,
-  gridFilteredDescendantCountLookupSelector,
+  gridFilteredChildrenCountLookupSelector,
   gridExpandedSortedRowIdsLookupSelector,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid';
@@ -18,9 +18,9 @@ export const useGridRowAriaAttributes = () => {
     useGridRowAriaAttributesCommunity();
 
   const filteredTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
-  const filteredDescendantCountLookup = useGridSelector(
+  const filteredChildrenCountLookup = useGridSelector(
     apiRef,
-    gridFilteredDescendantCountLookupSelector,
+    gridFilteredChildrenCountLookupSelector,
   );
   const sortedVisibleRowPositionsLookup = useGridSelector(
     apiRef,
@@ -38,9 +38,9 @@ export const useGridRowAriaAttributes = () => {
 
       ariaAttributes['aria-level'] = rowNode.depth + 1;
 
-      const filteredDescendantCount = filteredDescendantCountLookup[rowNode.id] ?? 0;
+      const filteredChildrenCount = filteredChildrenCountLookup[rowNode.id] ?? 0;
       // aria-expanded should only be added to the rows that contain children
-      if (rowNode.type === 'group' && filteredDescendantCount > 0) {
+      if (rowNode.type === 'group' && filteredChildrenCount > 0) {
         ariaAttributes['aria-expanded'] = Boolean(rowNode.childrenExpanded);
       }
 
@@ -49,7 +49,7 @@ export const useGridRowAriaAttributes = () => {
         ariaAttributes['aria-setsize'] =
           rowNode.parent === GRID_ROOT_GROUP_ID
             ? filteredTopLevelRowCount
-            : filteredDescendantCountLookup[rowNode.parent];
+            : filteredChildrenCountLookup[rowNode.parent];
         ariaAttributes['aria-posinset'] = sortedVisibleRowPositionsLookup[rowNode.id];
       }
 
@@ -59,7 +59,7 @@ export const useGridRowAriaAttributes = () => {
       apiRef,
       props.treeData,
       filteredTopLevelRowCount,
-      filteredDescendantCountLookup,
+      filteredChildrenCountLookup,
       sortedVisibleRowPositionsLookup,
       getRowAriaAttributesCommunity,
     ],
