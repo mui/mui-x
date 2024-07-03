@@ -27,6 +27,7 @@ import { getReleaseInfo } from '../utils/releaseInfo';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
+const configuration = { hooks: { useGridRowAriaAttributes } };
 const releaseInfo = getReleaseInfo();
 
 let dataGridPremiumPropValidators: PropValidator<DataGridPremiumProcessedProps>[];
@@ -41,8 +42,6 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 ) {
   const props = useDataGridPremiumProps(inProps);
   const privateApiRef = useDataGridPremiumComponent(props.apiRef, props);
-  const hooks = { useGridRowAriaAttributes };
-  const configuration = { hooks };
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {

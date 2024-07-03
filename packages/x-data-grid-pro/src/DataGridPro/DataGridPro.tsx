@@ -20,6 +20,7 @@ import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaA
 
 export type { GridProSlotsComponent as GridSlots } from '../models';
 
+const configuration = { hooks: { useGridRowAriaAttributes } };
 const releaseInfo = getReleaseInfo();
 
 const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValidRowModel>(
@@ -28,8 +29,6 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
 ) {
   const props = useDataGridProProps(inProps);
   const privateApiRef = useDataGridProComponent(props.apiRef, props);
-  const hooks = { useGridRowAriaAttributes };
-  const configuration = { hooks };
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {

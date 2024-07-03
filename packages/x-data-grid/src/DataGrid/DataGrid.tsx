@@ -16,6 +16,7 @@ import {
 
 export type { GridSlotsComponent as GridSlots } from '../models';
 
+const configuration = { hooks: { useGridRowAriaAttributes } };
 let propValidators: PropValidator<DataGridProcessedProps>[];
 
 if (process.env.NODE_ENV !== 'production') {
@@ -41,9 +42,6 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
 ) {
   const props = useDataGridProps(inProps);
   const privateApiRef = useDataGridComponent(props.apiRef, props);
-
-  const hooks = { useGridRowAriaAttributes };
-  const configuration = { hooks };
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, propValidators);
