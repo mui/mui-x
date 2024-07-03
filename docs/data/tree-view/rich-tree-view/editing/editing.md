@@ -42,7 +42,3 @@ You can limit the editing to just the leaves of the tree.
 The demo below shows how to entirely override the editing behavior, and implementit using icons.
 
 {{"demo": "EditWithIcons.js"}}
-
-## Custom `labelInput`
-
-{{"demo": "CustomLabelInput.js"}}
