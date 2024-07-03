@@ -48,6 +48,15 @@ export const gridFilteredRowsLookupSelector = createSelector(
  * @category Filtering
  * @ignore - do not document.
  */
+export const gridFilteredChildrenCountLookupSelector = createSelector(
+  gridFilterStateSelector,
+  (filterState) => filterState.filteredChildrenCountLookup,
+);
+
+/**
+ * @category Filtering
+ * @ignore - do not document.
+ */
 export const gridFilteredDescendantCountLookupSelector = createSelector(
   gridFilterStateSelector,
   (filterState) => filterState.filteredDescendantCountLookup,
