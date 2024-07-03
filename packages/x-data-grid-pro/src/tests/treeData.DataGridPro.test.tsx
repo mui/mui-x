@@ -617,14 +617,14 @@ describe('<DataGridPro /> - Tree data', () => {
       const { filteredChildrenCountLookup, filteredDescendantCountLookup } =
         apiRef.current.state.filter;
 
-      expect(filteredChildrenCountLookup['A']).to.equal(3);
-      expect(filteredDescendantCountLookup['A']).to.equal(5);
+      expect(filteredChildrenCountLookup.A).to.equal(3);
+      expect(filteredDescendantCountLookup.A).to.equal(5);
 
-      expect(filteredChildrenCountLookup['B']).to.equal(1);
-      expect(filteredDescendantCountLookup['B']).to.equal(1);
+      expect(filteredChildrenCountLookup.B).to.equal(1);
+      expect(filteredDescendantCountLookup.B).to.equal(1);
 
-      expect(filteredChildrenCountLookup['C']).to.be.undefined;
-      expect(filteredDescendantCountLookup['C']).to.be.undefined;
+      expect(filteredChildrenCountLookup.C).to.equal(undefined);
+      expect(filteredDescendantCountLookup.C).to.equal(undefined);
     });
   });
 
