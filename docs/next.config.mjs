@@ -65,7 +65,6 @@ export default withDocsInfra({
   transpilePackages: [
     // TODO, those shouldn't be needed in the first place
     '@mui/monorepo', // Migrate everything to @mui/docs until the @mui/monorepo dependency becomes obsolete
-    '@mui/docs',
   ],
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
