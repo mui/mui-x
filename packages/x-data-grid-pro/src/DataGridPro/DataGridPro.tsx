@@ -16,6 +16,7 @@ import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
 import { propValidatorsDataGridPro } from '../internals/propValidation';
+import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 
 export type { GridProSlotsComponent as GridSlots } from '../models';
 
@@ -27,13 +28,15 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
 ) {
   const props = useDataGridProProps(inProps);
   const privateApiRef = useDataGridProComponent(props.apiRef, props);
+  const hooks = { useGridRowAriaAttributes };
+  const configuration = { hooks };
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, propValidatorsDataGridPro);
   }
   return (
-    <GridContextProvider privateApiRef={privateApiRef} props={props}>
+    <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
       <GridRoot
         className={props.className}
         style={props.style}

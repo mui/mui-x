@@ -15,6 +15,7 @@ import {
   propValidatorsDataGridPro,
   PropValidator,
   validateProps,
+  useGridRowAriaAttributes,
 } from '@mui/x-data-grid-pro/internals';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
 import {
@@ -40,14 +41,15 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 ) {
   const props = useDataGridPremiumProps(inProps);
   const privateApiRef = useDataGridPremiumComponent(props.apiRef, props);
-
+  const hooks = { useGridRowAriaAttributes };
+  const configuration = { hooks };
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
   }
   return (
-    <GridContextProvider privateApiRef={privateApiRef} props={props}>
+    <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
       <GridRoot
         className={props.className}
         style={props.style}

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridBody, GridFooterPlaceholder, GridHeader, GridRoot } from '../components';
+import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 import { DataGridProcessedProps, DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
@@ -41,11 +42,14 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
   const props = useDataGridProps(inProps);
   const privateApiRef = useDataGridComponent(props.apiRef, props);
 
+  const hooks = { useGridRowAriaAttributes };
+  const configuration = { hooks };
+
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, propValidators);
   }
   return (
-    <GridContextProvider privateApiRef={privateApiRef} props={props}>
+    <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
       <GridRoot
         className={props.className}
         style={props.style}
