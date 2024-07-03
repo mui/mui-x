@@ -22,6 +22,7 @@ export {
 } from '../hooks/features/detailPanel/useGridDetailPanel';
 export { useGridDetailPanelPreProcessors } from '../hooks/features/detailPanel/useGridDetailPanelPreProcessors';
 export { useGridInfiniteLoader } from '../hooks/features/infiniteLoader/useGridInfiniteLoader';
+export { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 export { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorder';
 export { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
 export { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
