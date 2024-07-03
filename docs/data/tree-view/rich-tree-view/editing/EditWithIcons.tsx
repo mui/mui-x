@@ -1,9 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { useTreeItem2Utils, useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
 import { UseTreeItem2ContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem2';
-import { TreeViewBaseItem, TreeViewItemId } from '@mui/x-tree-view/models';
 import {
   TreeItem2,
   TreeItem2Label,
@@ -18,36 +17,8 @@ import {
   UseTreeItem2LabelInputSlotProps,
   UseTreeItem2LabelSlotProps,
 } from '@mui/x-tree-view/useTreeItem2/useTreeItem2.types';
+import { MUI_X_PRODUCTS } from './products';
 
-const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
-  {
-    id: 'grid',
-    label: 'Data Grid',
-    children: [
-      { id: 'grid-community', label: '@mui/x-data-grid' },
-      { id: 'grid-pro', label: '@mui/x-data-grid-pro' },
-      { id: 'grid-premium', label: '@mui/x-data-grid-premium' },
-    ],
-  },
-  {
-    id: 'pickers',
-    label: 'Date and Time Pickers',
-    children: [
-      { id: 'pickers-community', label: '@mui/x-date-pickers' },
-      { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
-    ],
-  },
-  {
-    id: 'charts',
-    label: 'Charts',
-    children: [{ id: 'charts-community', label: '@mui/x-charts' }],
-  },
-  {
-    id: 'tree-view',
-    label: 'Tree View',
-    children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }],
-  },
-];
 type CustomLabelProps = UseTreeItem2LabelSlotProps<{
   editable: boolean;
   editing: boolean;
@@ -134,13 +105,8 @@ const CustomLabelInput = React.forwardRef(function CustomLabelInput({
   );
 });
 
-interface ExtendedTreeItemProps extends TreeItem2Props {
-  focusItem: (event: React.SyntheticEvent, itemId: TreeViewItemId) => void;
-  updateItemLabel: (itemId: TreeViewItemId, label: string) => void;
-}
-
 const CustomTreeItem2 = React.forwardRef(function MyTreeItem(
-  { focusItem, updateItemLabel, ...props }: ExtendedTreeItemProps,
+  props: TreeItem2Props,
   ref: React.Ref<HTMLLIElement>,
 ) {
   const {
@@ -198,17 +164,12 @@ const CustomTreeItem2 = React.forwardRef(function MyTreeItem(
 });
 
 export default function EditWithIcons() {
-  const apiRef = useTreeViewApiRef();
-
   return (
     <Box sx={{ minHeight: 200, flexGrow: 1, maxWidth: 400 }}>
       <RichTreeView
         items={MUI_X_PRODUCTS}
-        slots={{ item: CustomTreeItem2 as any }}
-        apiRef={apiRef}
-        isItemEditable={(item) =>
-          apiRef.current!.getItemOrderedChildrenIds(item.id).length === 0
-        }
+        slots={{ item: CustomTreeItem2 }}
+        isItemEditable={(item) => Boolean(item?.editable)}
         defaultExpandedItems={['grid', 'pickers']}
       />
     </Box>

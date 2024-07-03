@@ -25,14 +25,24 @@ Once an item is in editing state, the value of the label can be edited. Pressing
 
 {{"demo": "LabelEditing.js"}}
 
+## Change the default behavior
+
+The default behavior on bluring the tree item that is being edited is to save the new value if there is one. This can be customized using the `slotProps` of the `TreeItem2`
+
+{{"demo": "CustomBehavior.js"}}
+
 ## Limit editing to leaves
 
-You can limit the editing to just th eleaves of the tree.
+You can limit the editing to just the leaves of the tree.
 
 {{"demo": "EditLeaves.js"}}
 
 ## Enable editing using only icons
 
-I wouldn't spend too much time reviewing this demo, it's still WIP.
+The demo below shows how to entirely override the editing behavior, and implementit using icons.
 
 {{"demo": "EditWithIcons.js"}}
+
+## Custom `labelInput`
+
+{{"demo": "CustomLabelInput.js"}}

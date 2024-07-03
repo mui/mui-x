@@ -162,10 +162,7 @@ export const useTreeItem2 = <
     (event: React.FocusEvent<HTMLInputElement> & MuiCancellableEvent) => {
       otherHandlers.onBlur?.(event);
       event.stopPropagation();
-      if (
-        event.defaultMuiPrevented ||
-        event.relatedTarget?.classList.contains(treeItemClasses.root)
-      ) {
+      if (event.defaultMuiPrevented || event.relatedTarget?.id === idAttribute) {
         return;
       }
 

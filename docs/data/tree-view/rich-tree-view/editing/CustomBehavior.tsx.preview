@@ -1,6 +1,8 @@
 <RichTreeView
   items={MUI_X_PRODUCTS}
   slots={{ item: CustomTreeItem2 }}
+  apiRef={apiRef}
   isItemEditable={(item) => Boolean(item?.editable)}
   defaultExpandedItems={['grid', 'pickers']}
+  expansionTrigger="iconContainer"
 />
