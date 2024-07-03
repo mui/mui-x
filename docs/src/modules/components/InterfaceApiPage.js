@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
 import { alpha } from '@mui/material/styles';
-import { useTranslate, useUserLanguage } from 'docs/src/modules/utils/i18n';
+import { useTranslate, useUserLanguage } from '@mui/docs/i18n';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { MarkdownElement } from '@mui/docs/MarkdownElement';
 import { SectionTitle } from '@mui/docs/SectionTitle';

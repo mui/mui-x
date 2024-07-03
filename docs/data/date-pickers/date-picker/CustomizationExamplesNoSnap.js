@@ -4,7 +4,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import BrandingProvider from 'docs/src/BrandingProvider';
+import { BrandingProvider } from '@mui/docs/branding';
 import CustomizationPlayground from 'docsx/src/modules/components/CustomizationPlayground';
 import CircularProgress from '@mui/material/CircularProgress';
 import { pickerExamples } from './examplesConfig.styling';

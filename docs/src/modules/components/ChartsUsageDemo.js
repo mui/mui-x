@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/joy/Box';
-import BrandingProvider from 'docs/src/BrandingProvider';
+import { BrandingProvider } from '@mui/docs/branding';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import DemoPropsForm from './DemoPropsForm';
 

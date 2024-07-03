@@ -12,7 +12,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 The Data Grid component is built with React and TypeScript to provide a smooth UX for manipulating an unlimited set of data.
 It features an intuitive API for real-time updates as well as theming and custom templates—all with blazing-fast performance.
 
-{{"component": "modules/components/ComponentLinkHeader.js"}}
+{{"component": "@mui/docs/ComponentLinkHeader"}}
 
 ## Overview
 

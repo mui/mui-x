@@ -9,7 +9,7 @@ packageName: '@mui/x-charts'
 
 <p class="description">A fast and extendable library of react chart components for data visualization.</p>
 
-{{"component": "modules/components/ComponentLinkHeader.js", "design": false}}
+{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
 ## Overview
 
