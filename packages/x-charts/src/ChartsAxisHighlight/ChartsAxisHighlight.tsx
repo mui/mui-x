@@ -117,7 +117,7 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
         />
       )}
 
-      {isBandScaleY && yScale(axisY.value) === undefined && (
+      {isBandScaleY && yScale(axisY.value) !== undefined && (
         <ChartsAxisHighlightPath
           d={`M ${xScale.range()[0]} ${
             // @ts-expect-error, yScale value is checked in the statement above
