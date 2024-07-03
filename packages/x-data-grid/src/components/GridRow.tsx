@@ -28,7 +28,7 @@ import { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditing
 import { PinnedPosition, gridPinnedColumnPositionLookup } from './cell/GridCell';
 import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
-import { useGridConfigurationContext } from '../hooks/utils/useGridConfigurationContext';
+import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
 
 export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   row: GridRowModel;
@@ -112,7 +112,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     ...other
   } = props;
   const apiRef = useGridApiContext();
-  const gridConfiguration = useGridConfigurationContext();
+  const gridConfiguration = useGridConfiguration();
   const ref = React.useRef<HTMLDivElement>(null);
   const rootProps = useGridRootProps();
   const currentPage = useGridVisibleRows(apiRef, rootProps);

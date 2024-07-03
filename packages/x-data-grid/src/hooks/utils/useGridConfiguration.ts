@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridConfigurationContext } from '../../components/GridConfigurationContext';
 import { GridConfiguration } from '../../models/configuration/gridConfiguration';
 
-export const useGridConfigurationContext = () => {
+export const useGridConfiguration = () => {
   const configuration = React.useContext(GridConfigurationContext);
 
   if (configuration === undefined) {
