@@ -88,7 +88,7 @@
     "@mui/icons-material": "^5.15.21",
     "@mui/internal-markdown": "^1.0.6",
     "@mui/internal-test-utils": "^1.0.3",
-    "@mui/material": "^5.15.21",
+    "@mui/material": "https://pkg.csb.dev/mui/material-ui/commit/92d16003/@mui/material",
     "@mui/monorepo": "github:mui/material-ui#48cac390050585326d9259fc902fc7bc419da419",
     "@mui/utils": "^5.15.20",
     "@next/eslint-plugin-next": "14.2.4",
