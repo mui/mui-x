@@ -12,10 +12,12 @@ type ChartsContinuousGradientProps = {
   scale: (value: any) => number | undefined;
   colorMap: ContinuousColorConfig;
   colorScale: (value: any) => string | null;
+  gradientUnits?: 'objectBoundingBox' | 'userSpaceOnUse';
 };
 
 export default function ChartsContinuousGradient(props: ChartsContinuousGradientProps) {
-  const { isReversed, gradientId, size, direction, scale, colorScale, colorMap } = props;
+  const { gradientUnits, isReversed, gradientId, size, direction, scale, colorScale, colorMap } =
+    props;
 
   const extremValues = [colorMap.min ?? 0, colorMap.max ?? 100] as [number, number] | [Date, Date];
   const extremPositions = extremValues.map(scale).filter((p): p is number => p !== undefined);
@@ -40,8 +42,11 @@ export default function ChartsContinuousGradient(props: ChartsContinuousGradient
       x2="0"
       y1="0"
       y2="0"
-      {...{ [`${direction}${isReversed ? 1 : 2}`]: `${size}px` }}
-      gradientUnits="userSpaceOnUse" // Use the SVG coordinate instead of the component ones.
+      {...{
+        [`${direction}${isReversed ? 1 : 2}`]:
+          gradientUnits === 'objectBoundingBox' ? 1 : `${size}px`,
+      }}
+      gradientUnits={gradientUnits ?? 'userSpaceOnUse'} // Use the SVG coordinate instead of the component ones.
     >
       {Array.from({ length: numberOfPoints + 1 }, (_, index) => {
         const value = interpolator(index / numberOfPoints);
