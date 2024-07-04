@@ -17,6 +17,7 @@ The tooltip can be triggered by two kinds of events:
 
 - `'item'`—when the user's mouse hovers over an item on the chart, the tooltip will display data about this specific item.
 - `'axis'`—the user's mouse position is associated with a value of the x-axis. The tooltip will display data about all series at this specific x value.
+- `'none'`—disable the tooltip.
 
 {{"demo": "Interaction.js"}}
 
