@@ -198,7 +198,7 @@ export function buildCSV(options: BuildCSVOptions): string {
         const columnGroupId = (columnGroupPathsLookup[column.field] || [])[i];
         const columnGroup = columnGroupLookup[columnGroupId];
         const headerName = valueHelper(columnGroup?.headerName);
-        const headerNameOrGroupId = isString(headerName) ? headerName : columnGroup.groupId;
+        const headerNameOrGroupId = isString(headerName) ? headerName : columnGroup?.groupId;
         headerGroupRow.addValue(columnGroup ? headerNameOrGroupId : '');
       });
     }
