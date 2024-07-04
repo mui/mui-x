@@ -130,7 +130,7 @@ export const useGridPrintExport = (
     }
 
     Array.from(node.attributes).forEach((attribute) => {
-      newNode.attributes.setNamedItem(attribute.cloneNode());
+      newNode.attributes.setNamedItem(attribute.cloneNode() as Attr);
     });
 
     node.parentNode?.replaceChild(newNode, node);
