@@ -14,6 +14,7 @@ import { GridColumnGroupHeaderParams } from '../../models/params';
 import { isEventTargetInPortal } from '../../utils/domUtils';
 import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
+import { value } from '../../utils/value';
 
 interface GridColumnGroupHeaderProps {
   groupId: string | null;
@@ -144,7 +145,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     isDragging: false,
   };
 
-  const label = headerName ?? groupId;
+  const label = value(headerName) ?? groupId;
 
   const id = useId();
   const elementId = groupId === null ? `empty-group-cell-${id}` : groupId;
