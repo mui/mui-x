@@ -107,10 +107,13 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         event.preventDefault();
         if (params.multiSelect && event.shiftKey) {
           instance.expandSelectionRange(event, itemId);
-        } else if (params.multiSelect) {
-          instance.selectItem(event, itemId, true);
         } else {
-          instance.selectItem(event, itemId, false);
+          instance.selectItem({
+            event,
+            itemId,
+            keepExistingSelection: params.multiSelect,
+            shouldBeSelected: params.multiSelect ? undefined : true,
+          });
         }
         break;
       }
@@ -124,9 +127,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         } else if (canToggleItemSelection(itemId)) {
           if (params.multiSelect) {
             event.preventDefault();
-            instance.selectItem(event, itemId, true);
+            instance.selectItem({ event, itemId, keepExistingSelection: true });
           } else if (!instance.isItemSelected(itemId)) {
-            instance.selectItem(event, itemId, false);
+            instance.selectItem({ event, itemId });
             event.preventDefault();
           }
         }

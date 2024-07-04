@@ -7,7 +7,8 @@
       "chai-dom",
       "dayjs/plugin/timezone.d.ts",
       "dayjs/plugin/utc.d.ts",
-      "mocha"
+      "mocha",
+      "node"
     ],
     "noImplicitAny": false
   },
