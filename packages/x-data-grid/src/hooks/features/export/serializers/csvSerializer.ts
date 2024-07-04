@@ -197,7 +197,7 @@ export function buildCSV(options: BuildCSVOptions): string {
       filteredColumns.forEach((column) => {
         const columnGroupId = (columnGroupPathsLookup[column.field] || [])[i];
         const columnGroup = columnGroupLookup[columnGroupId];
-        const headerName = valueHelper(columnGroup.headerName);
+        const headerName = valueHelper(columnGroup?.headerName);
         const headerNameOrGroupId = isString(headerName) ? headerName : columnGroup.groupId;
         headerGroupRow.addValue(columnGroup ? headerNameOrGroupId : '');
       });
