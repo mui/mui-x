@@ -52,7 +52,7 @@
     },
     "headerAlign": { "type": { "description": "GridAlignment" } },
     "headerClassName": { "type": { "description": "GridColumnHeaderClassNamePropType" } },
-    "headerName": { "type": { "description": "string" } },
+    "headerName": { "type": { "description": "string | { (): React.ReactNode }" } },
     "hideable": { "type": { "description": "boolean" }, "default": "true" },
     "hideSortIcons": { "type": { "description": "boolean" }, "default": "false" },
     "maxWidth": { "type": { "description": "number" }, "default": "Infinity" },
