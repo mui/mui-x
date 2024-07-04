@@ -8,6 +8,7 @@ import {
   useGridApiContext,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import { isString, value } from '@mui/x-data-grid/internals';
 
 function CustomHeaderFilter(props) {
   const { colDef, width, height, hasFocus, colIndex, tabIndex } = props;
@@ -60,6 +61,8 @@ function CustomHeaderFilter(props) {
   const activeFiltersCount =
     filterModel.items?.filter(({ field }) => field === colDef.field).length ?? 0;
 
+  const headerName = value(colDef.headerName);
+
   return (
     <Stack
       sx={{
@@ -76,7 +79,7 @@ function CustomHeaderFilter(props) {
       alignItems="center"
       role="columnheader"
       aria-colindex={colIndex + 1}
-      aria-label={colDef.headerName ?? colDef.field}
+      aria-label={isString(headerName) ? headerName : colDef.field}
       {...mouseEventsHandlers}
     >
       <Button
