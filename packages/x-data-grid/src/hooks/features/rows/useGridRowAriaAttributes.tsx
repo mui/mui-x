@@ -11,7 +11,7 @@ export const useGridRowAriaAttributes: GridRowInternalHook = () => {
   const selectedIdsLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
   const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
 
-  const getRowAriaAttributes = React.useCallback(
+  return React.useCallback(
     (rowId: GridRowId, index: number) => {
       const rowNode = apiRef.current.getRowNode(rowId);
       const ariaAttributes = {} as Record<string, string | number | boolean>;
@@ -31,6 +31,4 @@ export const useGridRowAriaAttributes: GridRowInternalHook = () => {
     },
     [apiRef, selectedIdsLookup, headerGroupingMaxDepth],
   );
-
-  return { getRowAriaAttributes };
 };

@@ -14,8 +14,7 @@ import { useGridRootProps } from '../../utils/useGridRootProps';
 export const useGridRowAriaAttributes = () => {
   const apiRef = useGridPrivateApiContext();
   const props = useGridRootProps();
-  const { getRowAriaAttributes: getRowAriaAttributesCommunity } =
-    useGridRowAriaAttributesCommunity();
+  const getRowAriaAttributesCommunity = useGridRowAriaAttributesCommunity();
 
   const filteredTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
   const filteredChildrenCountLookup = useGridSelector(
@@ -27,7 +26,7 @@ export const useGridRowAriaAttributes = () => {
     gridExpandedSortedRowIdsLookupSelector,
   );
 
-  const getRowAriaAttributes = React.useCallback(
+  return React.useCallback(
     (rowId: GridRowId, index: number) => {
       const rowNode = apiRef.current.getRowNode(rowId);
       const ariaAttributes = getRowAriaAttributesCommunity(rowId, index);
@@ -64,6 +63,4 @@ export const useGridRowAriaAttributes = () => {
       getRowAriaAttributesCommunity,
     ],
   );
-
-  return { getRowAriaAttributes };
 };

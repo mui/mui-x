@@ -149,7 +149,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       rowHeight === 'auto' && 'row--dynamicHeight',
     ],
   });
-  const { getRowAriaAttributes } = configuration.hooks.useGridRowAriaAttributes();
+  const getRowAriaAttributes = configuration.hooks.useGridRowAriaAttributes();
 
   React.useLayoutEffect(() => {
     if (currentPage.range) {
