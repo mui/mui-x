@@ -97,7 +97,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
   /**
    * The title of the column rendered in the column header cell.
    */
-  headerName?: string;
+  headerName?: string | { (): React.ReactNode };
   /**
    * The description of the column rendered as tooltip if the column header name is not fully displayed.
    */

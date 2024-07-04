@@ -17,6 +17,7 @@ import { GridColumnHeaderEventLookup } from '../../models/events';
 import { isEventTargetInPortal } from '../../utils/domUtils';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
 import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
+import { value } from '../../utils/value';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -276,7 +277,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       ? colDef.headerClassName({ field: colDef.field, colDef })
       : colDef.headerClassName;
 
-  const label = colDef.headerName ?? colDef.field;
+  const label = value(colDef.headerName) ?? colDef.field;
 
   return (
     <GridGenericColumnHeaderItem

@@ -27,6 +27,8 @@ import {
   isNavigationKey,
   shouldCellShowLeftBorder,
   shouldCellShowRightBorder,
+  isString,
+  value,
 } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
@@ -305,6 +307,8 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       );
 
     const isFilterActive = isApplied || hasFocus;
+    const headerName = value(colDef.headerName);
+    const ariaLabel = isString(headerName) ? headerName : colDef.field;
 
     return (
       <div
@@ -319,7 +323,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
         }}
         role="columnheader"
         aria-colindex={colIndex + 1}
-        aria-label={headerFilterComponent == null ? colDef.headerName ?? colDef.field : undefined}
+        aria-label={headerFilterComponent == null ? ariaLabel : undefined}
         {...other}
         {...mouseEventsHandlers}
       >

@@ -9,6 +9,7 @@ import {
 } from '@mui/x-data-grid';
 import BuildIcon from '@mui/icons-material/Build';
 import PersonIcon from '@mui/icons-material/Person';
+import { value } from '@mui/x-data-grid/internals';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 150 },
@@ -62,7 +63,7 @@ function HeaderWithIcon(props: HeaderWithIconProps) {
 
   return (
     <HeaderWithIconRoot>
-      <span>{params.headerName ?? params.groupId}</span> {icon}
+      <span>{value(params.headerName) ?? params.groupId}</span> {icon}
     </HeaderWithIconRoot>
   );
 }

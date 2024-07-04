@@ -25,6 +25,8 @@ import {
   GridStateColDef,
 } from '../../../models/colDef/gridColDef';
 import { getValueFromValueOptions, getValueOptions } from './filterPanelUtils';
+import { value } from '../../../utils/value';
+import { isString } from '../../../utils/isString';
 
 export interface FilterColumnsArgs {
   field: GridColDef['field'];
@@ -199,7 +201,10 @@ const getLogicOperatorLocaleKey = (logicOperator: GridLogicOperator) => {
   }
 };
 
-const getColumnLabel = (col: GridColDef) => col.headerName || col.field;
+const getColumnLabel = (col: GridColDef) => {
+  const headerName = value(col.headerName);
+  return isString(headerName) ? headerName : col.field;
+};
 
 const collator = new Intl.Collator();
 
@@ -532,7 +537,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
                 key={col.field}
                 value={col.field}
               >
-                {getColumnLabel(col)}
+                {value(col.headerName) || col.field}
               </rootProps.slots.baseSelectOption>
             ))}
           </rootProps.slots.baseSelect>

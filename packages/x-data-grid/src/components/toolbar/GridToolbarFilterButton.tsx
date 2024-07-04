@@ -20,6 +20,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { value } from '../../utils/value';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -94,7 +95,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
             {activeFilters.map((item, index) => ({
               ...(lookup[item.field!] && (
                 <li key={index}>
-                  {`${lookup[item.field!].headerName || item.field}
+                  {`${value(lookup[item.field!].headerName) || item.field}
                   ${getOperatorLabel(item)}
                   ${
                     // implicit check for null and undefined

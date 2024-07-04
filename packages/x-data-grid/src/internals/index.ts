@@ -145,6 +145,8 @@ export * from '../utils/utils';
 export * from '../utils/fastMemo';
 export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
+export { value } from '../utils/value';
+export { isString } from '../utils/isString';
 export * from '../utils/getPublicApiRef';
 export * from '../utils/cellBorderUtils';
 export type { GridPrivateOnlyApiCommon } from '../models/api/gridApiCommon';

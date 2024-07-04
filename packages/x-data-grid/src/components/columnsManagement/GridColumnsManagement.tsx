@@ -16,6 +16,8 @@ import type { GridColDef } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useLazyRef } from '../../hooks/utils/useLazyRef';
 import { checkColumnVisibilityModelsSame, defaultSearchPredicate } from './utils';
+import { value } from '../../utils/value';
+import { isString } from '../../utils/isString';
 
 export interface GridColumnsManagementProps {
   /*
@@ -105,14 +107,24 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
   const sortedColumns = React.useMemo(() => {
     switch (sort) {
       case 'asc':
-        return [...columns].sort((a, b) =>
-          collator.compare(a.headerName || a.field, b.headerName || b.field),
-        );
+        return [...columns].sort((a, b) => {
+          const aHeaderName = value(a.headerName);
+          const bHeaderName = value(b.headerName);
+          return collator.compare(
+            isString(aHeaderName) ? aHeaderName : a.field,
+            isString(bHeaderName) ? bHeaderName : b.field,
+          );
+        });
 
       case 'desc':
-        return [...columns].sort(
-          (a, b) => -collator.compare(a.headerName || a.field, b.headerName || b.field),
-        );
+        return [...columns].sort((a, b) => {
+          const aHeaderName = value(a.headerName);
+          const bHeaderName = value(b.headerName);
+          return -collator.compare(
+            isString(aHeaderName) ? aHeaderName : a.field,
+            isString(bHeaderName) ? bHeaderName : b.field,
+          );
+        });
 
       default:
         return columns;
@@ -246,7 +258,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
                 {...rootProps.slotProps?.baseCheckbox}
               />
             }
-            label={column.headerName || column.field}
+            label={value(column.headerName) || column.field}
           />
         ))}
         {currentColumns.length === 0 && (

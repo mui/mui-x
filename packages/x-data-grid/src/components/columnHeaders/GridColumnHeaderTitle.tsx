@@ -50,7 +50,7 @@ const ColumnHeaderInnerTitle = React.forwardRef<
 });
 
 export interface GridColumnHeaderTitleProps {
-  label: string;
+  label: React.ReactNode;
   columnWidth: number;
   description?: React.ReactNode;
 }
@@ -60,7 +60,7 @@ function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
   const { label, description } = props;
   const rootProps = useGridRootProps();
   const titleRef = React.useRef<HTMLDivElement>(null);
-  const [tooltip, setTooltip] = React.useState('');
+  const [tooltip, setTooltip] = React.useState<React.ReactNode>('');
 
   const handleMouseOver = React.useCallback<React.MouseEventHandler<HTMLDivElement>>(() => {
     if (!description && titleRef?.current) {
