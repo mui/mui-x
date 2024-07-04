@@ -89,15 +89,13 @@ function GridAggregationHeader(
     aggregationRule: aggregation.aggregationRule,
   });
 
-  const headerName = value(colDef.headerName);
-
   return (
     <GridAggregationHeaderRoot ownerState={ownerState} className={classes.root}>
       {renderHeader ? (
         renderHeader(params)
       ) : (
         <GridColumnHeaderTitle
-          label={headerName ?? colDef.field}
+          label={value(colDef.headerName) ?? colDef.field}
           description={colDef.description}
           columnWidth={colDef.computedWidth}
         />
