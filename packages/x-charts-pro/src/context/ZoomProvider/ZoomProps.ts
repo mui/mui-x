@@ -6,6 +6,7 @@ export type ZoomOptions = {
   step?: number;
   minSpan?: number;
   maxSpan?: number;
+  panning?: boolean;
 };
 
 export type ZoomData = {
