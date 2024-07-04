@@ -92,7 +92,7 @@ GridColumnHeaderTitle.propTypes = {
   // ----------------------------------------------------------------------
   columnWidth: PropTypes.number.isRequired,
   description: PropTypes.node,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.node,
 } as any;
 
 export { GridColumnHeaderTitle };
