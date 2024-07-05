@@ -38,6 +38,7 @@ import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRange
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { isDatePickerView, isTimeView } from '@mui/x-date-pickers/internals';
+import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
 
 const ComponentSection = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -392,6 +393,7 @@ export default function PickersPlayground() {
       ampm: ampm !== undefined ? ampm : undefined,
       ampmInClock: ampmInClock !== undefined ? ampmInClock : undefined,
       displayStaticWrapperAs: isStaticDesktopMode ? 'desktop' : 'mobile',
+      sx: { [`&.${pickersLayoutClasses.root}`]: { overflowX: 'auto' } },
     }),
     [
       ampm,
