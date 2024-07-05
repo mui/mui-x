@@ -121,7 +121,7 @@ const RatingValue = React.memo(function RatingValue(props: RatingValueProps) {
   );
 });
 
-const EditRating = (props: GridRenderEditCellParams<any, number>) => {
+function EditRating(props: GridRenderEditCellParams<any, number>) {
   const { id, value, field } = props;
 
   const apiRef = useGridApiContext();
@@ -179,7 +179,7 @@ const EditRating = (props: GridRenderEditCellParams<any, number>) => {
       {Number(value)}
     </Box>
   );
-};
+}
 
 const Country = React.memo(function Country(props: CountryProps) {
   const { value } = props;
@@ -224,7 +224,7 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   },
 })) as typeof Autocomplete;
 
-const EditCountry = (props: GridRenderEditCellParams<CountryIsoOption>) => {
+function EditCountry(props: GridRenderEditCellParams<CountryIsoOption>) {
   const { id, value, field } = props;
 
   const apiRef = useGridApiContext();
@@ -284,7 +284,7 @@ const EditCountry = (props: GridRenderEditCellParams<CountryIsoOption>) => {
       )}
     />
   );
-};
+}
 
 const Center = styled('div')({
   height: '100%',
@@ -377,7 +377,7 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
   },
 }));
 
-const ValueLabelComponent = (props: any) => {
+const ValueLabelComponent = React.memo(function ValueLabelComponent(props: any) {
   const { children, open, value } = props;
 
   return (
@@ -385,9 +385,9 @@ const ValueLabelComponent = (props: any) => {
       {children}
     </Tooltip>
   );
-};
+});
 
-const EditProgress = (props: GridRenderEditCellParams<any, number>) => {
+function EditProgress(props: GridRenderEditCellParams<any, number>) {
   const { id, value, field } = props;
   const [valueState, setValueState] = React.useState(Number(value));
 
@@ -439,7 +439,7 @@ const EditProgress = (props: GridRenderEditCellParams<any, number>) => {
       valueLabelFormat={(newValue) => `${(newValue * 100).toLocaleString()} %`}
     />
   );
-};
+}
 
 const StyledChip = styled(Chip)(({ theme }) => ({
   justifyContent: 'left',
@@ -494,7 +494,7 @@ const Status = React.memo((props: StatusProps) => {
   );
 });
 
-const EditStatus = (props: GridRenderEditCellParams<any, string>) => {
+function EditStatus(props: GridRenderEditCellParams<any, string>) {
   const { id, value, field } = props;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -564,7 +564,7 @@ const EditStatus = (props: GridRenderEditCellParams<any, string>) => {
       })}
     </Select>
   );
-};
+}
 
 const Incoterm = React.memo(function Incoterm(props: IncotermProps) {
   const { value } = props;
@@ -589,7 +589,7 @@ const Incoterm = React.memo(function Incoterm(props: IncotermProps) {
   );
 });
 
-const EditIncoterm = (props: GridRenderEditCellParams<any, string | null>) => {
+function EditIncoterm(props: GridRenderEditCellParams<any, string | null>) {
   const { id, value, field } = props;
 
   const apiRef = useGridApiContext();
@@ -640,7 +640,7 @@ const EditIncoterm = (props: GridRenderEditCellParams<any, string | null>) => {
       })}
     </Select>
   );
-};
+}
 
 /** Custom cell renderers */
 // Avatar

@@ -87,7 +87,7 @@ const RatingValue = React.memo(function RatingValue(props) {
   );
 });
 
-const EditRating = (props) => {
+function EditRating(props) {
   const { id, value, field } = props;
 
   const apiRef = useGridApiContext();
@@ -145,7 +145,7 @@ const EditRating = (props) => {
       {Number(value)}
     </Box>
   );
-};
+}
 
 const Country = React.memo(function Country(props) {
   const { value } = props;
@@ -190,7 +190,7 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   },
 }));
 
-const EditCountry = (props) => {
+function EditCountry(props) {
   const { id, value, field } = props;
 
   const apiRef = useGridApiContext();
@@ -248,7 +248,7 @@ const EditCountry = (props) => {
       )}
     />
   );
-};
+}
 
 const Center = styled('div')({
   height: '100%',
@@ -341,7 +341,7 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
   },
 }));
 
-const ValueLabelComponent = (props) => {
+const ValueLabelComponent = React.memo(function ValueLabelComponent(props) {
   const { children, open, value } = props;
 
   return (
@@ -349,9 +349,9 @@ const ValueLabelComponent = (props) => {
       {children}
     </Tooltip>
   );
-};
+});
 
-const EditProgress = (props) => {
+function EditProgress(props) {
   const { id, value, field } = props;
   const [valueState, setValueState] = React.useState(Number(value));
 
@@ -403,7 +403,7 @@ const EditProgress = (props) => {
       valueLabelFormat={(newValue) => `${(newValue * 100).toLocaleString()} %`}
     />
   );
-};
+}
 
 const StyledChip = styled(Chip)(({ theme }) => ({
   justifyContent: 'left',
@@ -458,7 +458,7 @@ const Status = React.memo((props) => {
   );
 });
 
-const EditStatus = (props) => {
+function EditStatus(props) {
   const { id, value, field } = props;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -528,7 +528,7 @@ const EditStatus = (props) => {
       })}
     </Select>
   );
-};
+}
 
 const Incoterm = React.memo(function Incoterm(props) {
   const { value } = props;
@@ -553,7 +553,7 @@ const Incoterm = React.memo(function Incoterm(props) {
   );
 });
 
-const EditIncoterm = (props) => {
+function EditIncoterm(props) {
   const { id, value, field } = props;
 
   const apiRef = useGridApiContext();
@@ -604,7 +604,7 @@ const EditIncoterm = (props) => {
       })}
     </Select>
   );
-};
+}
 
 /** Custom cell renderers */
 // Avatar
