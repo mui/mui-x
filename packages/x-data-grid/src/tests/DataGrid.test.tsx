@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { expect } from 'chai';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, DATA_GRID_PROPS_DEFAULT_VALUES } from '@mui/x-data-grid';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -61,5 +61,35 @@ describe('<DataGrid />', () => {
         <DataGrid rows={rows} columns={columns} />
       </div>,
     );
+  });
+
+  it('should not cause unexpected behavior when props are explictly set to undefined', () => {
+    const rows = [
+      { id: 'a', col1: 'Hello', col2: 'World' },
+      { id: 'constructor', col1: 'DataGridPro', col2: 'is Awesome' },
+      { id: 'hasOwnProperty', col1: 'MUI', col2: 'is Amazing' },
+    ];
+
+    const columns = [
+      { field: 'col1', headerName: 'Column 1', width: 150 },
+      { field: 'col2', headerName: 'Column 2', width: 150 },
+    ];
+    expect(() => {
+      render(
+        <DataGrid
+          {...(
+            Object.keys(DATA_GRID_PROPS_DEFAULT_VALUES) as Array<
+              keyof typeof DATA_GRID_PROPS_DEFAULT_VALUES
+            >
+          ).reduce((acc, key) => {
+            // @ts-ignore
+            acc[key] = undefined;
+            return acc;
+          }, {})}
+          rows={rows}
+          columns={columns}
+        />,
+      );
+    }).not.toErrorDev();
   });
 });

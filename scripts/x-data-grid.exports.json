@@ -325,6 +325,8 @@
   { "name": "GridLeafNode", "kind": "Interface" },
   { "name": "GridLoadIcon", "kind": "Variable" },
   { "name": "GridLoadingOverlay", "kind": "Variable" },
+  { "name": "GridLoadingOverlayProps", "kind": "Interface" },
+  { "name": "GridLoadingOverlayVariant", "kind": "TypeAlias" },
   { "name": "GridLocaleText", "kind": "Interface" },
   { "name": "GridLocaleTextApi", "kind": "Interface" },
   { "name": "GridLogicOperator", "kind": "Enum" },
