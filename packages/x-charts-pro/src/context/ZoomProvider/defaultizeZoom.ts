@@ -6,11 +6,16 @@ const defaultZoomOptions = {
   step: 5,
   minSpan: 10,
   maxSpan: 100,
+  panning: true,
 };
+
+export type DefaultizedZoomOptions = Required<Omit<ZoomOptions, 'axisId'>> &
+  Pick<ZoomOptions, 'axisId'> & { axis: 'x' | 'y' };
 
 export const defaultizeZoomOptions = (
   zoom: ZoomProps['zoom'],
-): (Required<Omit<ZoomOptions, 'axisId'>> & Pick<ZoomOptions, 'axisId'>)[] | undefined => {
+  axis: 'x' | 'y',
+): DefaultizedZoomOptions[] | undefined => {
   if (zoom === 'x') {
     return [{ axis: 'x', ...defaultZoomOptions }];
   }
@@ -23,5 +28,5 @@ export const defaultizeZoomOptions = (
       { axis: 'y', ...defaultZoomOptions },
     ];
   }
-  return zoom?.map((v) => ({ ...defaultZoomOptions, ...v }));
+  return zoom?.map((v) => ({ ...defaultZoomOptions, ...v, axis }));
 };

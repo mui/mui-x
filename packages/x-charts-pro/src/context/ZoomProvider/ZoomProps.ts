@@ -1,6 +1,5 @@
 export type ZoomOptions = {
   axisId?: string;
-  axis: 'x' | 'y';
   min?: number;
   max?: number;
   step?: number;
@@ -10,13 +9,14 @@ export type ZoomOptions = {
 };
 
 export type ZoomData = {
-  range: [number, number];
-  axisId: string;
+  min: number;
+  max: number;
+  axisId?: string;
 };
 
 export type ZoomState = {
   zoomState: ZoomData[];
-  onZoomChange: (params: ZoomData) => void;
+  onZoomChange: (params: ZoomData[]) => void;
 };
 
 export type ZoomProps = {
