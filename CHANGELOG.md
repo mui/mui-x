@@ -9,8 +9,8 @@ _Jul 5, 2024_
 
 We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
-- 📊 Add Heatmap charts
-- ⛏️ Make the `usePickersTranslations` hook public
+- 🌳 Add `selectItem` and `getItemDOMElement` methods to the TreeView component public API
+- ⛏️ Make the `usePickersTranslations` hook public in the pickers component
 - 🐞 Bugfixes
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
