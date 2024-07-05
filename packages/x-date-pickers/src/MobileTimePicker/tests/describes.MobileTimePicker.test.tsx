@@ -45,7 +45,6 @@ describe('<MobileTimePicker /> - Describes', () => {
       'mergeClassName',
       'propsSpread',
       'rootClass',
-      'reactTestRenderer',
     ],
   }));
 

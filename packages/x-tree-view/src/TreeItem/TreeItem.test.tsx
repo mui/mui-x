@@ -75,7 +75,7 @@ describe('<TreeItem />', () => {
     },
     muiName: 'MuiTreeItem',
     refInstanceof: window.HTMLLIElement,
-    skip: ['reactTestRenderer', 'componentProp', 'componentsProp', 'themeVariants'],
+    skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
   describe('PropTypes warnings', () => {

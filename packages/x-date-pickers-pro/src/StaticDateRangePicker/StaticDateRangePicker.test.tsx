@@ -27,7 +27,6 @@ describe('<StaticDateRangePicker />', () => {
       'propsSpread',
       'refForwarding',
       'rootClass',
-      'reactTestRenderer',
     ],
   }));
 

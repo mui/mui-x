@@ -12,7 +12,6 @@ describe('<MultiInputTimeRangeField />', () => {
     render,
     muiName: 'MuiMultiInputTimeRangeField',
     refInstanceof: window.HTMLDivElement,
-    // cannot test reactTestRenderer because of required context
-    skip: ['reactTestRenderer', 'themeVariants', 'componentProp', 'componentsProp'],
+    skip: ['themeVariants', 'componentProp', 'componentsProp'],
   }));
 });

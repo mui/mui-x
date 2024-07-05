@@ -44,8 +44,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.24.7",
-    "@mui/system": "^5.15.20",
-    "@mui/utils": "^5.15.20",
+    "@mui/system": "^5.16.0",
+    "@mui/utils": "^5.16.0",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-data-grid-pro": "workspace:*",
     "@mui/x-internals": "workspace:*",
@@ -62,7 +62,7 @@
     "react-dom": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.3",
+    "@mui/internal-test-utils": "^1.0.4",
     "@types/prop-types": "^15.7.12",
     "date-fns": "^2.30.0",
     "rimraf": "^5.0.7"

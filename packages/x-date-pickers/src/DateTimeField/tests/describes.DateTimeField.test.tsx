@@ -27,9 +27,7 @@ describe('<DateTimeField /> - Describes', () => {
     render,
     muiName: 'MuiDateTimeField',
     refInstanceof: window.HTMLDivElement,
-    // cannot test reactTestRenderer because of required context
     skip: [
-      'reactTestRenderer',
       'componentProp',
       'componentsProp',
       'themeDefaultProps',

@@ -20,7 +20,7 @@ describe('<TreeItem2 />', () => {
     },
     muiName: 'MuiTreeItem2',
     refInstanceof: window.HTMLLIElement,
-    skip: ['reactTestRenderer', 'componentProp', 'componentsProp', 'themeVariants'],
+    skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
   describeSlotsConformance({
