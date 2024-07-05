@@ -47,7 +47,7 @@ You must pass a `label` prop to each Tree Item component, as shown below:
 
 Use the `disabled` prop on the Tree Item component to disable interaction and focus:
 
-{{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}
+{{"demo": "DisabledJSXItem.js", "defaultCodeOpen": false}}
 
 #### The disabledItemsFocusable prop
 
@@ -71,3 +71,20 @@ When it's set to true:
 - Mouse or keyboard interaction will not select disabled items.
 - <kbd class="key">Shift</kbd> + arrow keys will not skip disabled items, but the disabled item will not be selected.
 - Programmatic focus will focus disabled items.
+
+{{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}
+
+## Imperative API
+
+### Get an item's DOM element by ID
+
+Use the `getItemDOMElement` API method to get an item's DOM element by its ID.
+
+```ts
+const itemElement = apiRef.current.getItemDOMElement(
+  // The id of the item to get the DOM element of
+  itemId,
+);
+```
+
+{{"demo": "ApiMethodGetItemDOMElement.js", "defaultCodeOpen": false}}

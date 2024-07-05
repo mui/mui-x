@@ -11,6 +11,13 @@ export const useReducedMotion = () => {
   // Taken from: https://github.com/pmndrs/react-spring/blob/02ec877bbfab0df46da0e4a47d5f68d3e731206a/packages/shared/src/hooks/useReducedMotion.ts#L13
 
   useIsomorphicLayoutEffect(() => {
+    if (!window.matchMedia) {
+      // skip animation in environments where `window.matchMedia` would not be available (i.e. test/jsdom)
+      Globals.assign({
+        skipAnimation: true,
+      });
+      return () => {};
+    }
     const mql = window.matchMedia('(prefers-reduced-motion)');
 
     const handleMediaChange = (e: MediaQueryListEvent | MediaQueryList) => {

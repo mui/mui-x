@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { TreeViewItemId } from '../models';
 import { MuiCancellableEventHandler } from '../internals/models/MuiCancellableEvent';
-import { TreeViewAnyPluginSignature, TreeViewPublicAPI } from '../internals/models';
+import { TreeViewPublicAPI } from '../internals/models';
+import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
+import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
+import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
+import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
+import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
 
 export interface UseTreeItem2Parameters {
   /**
@@ -63,7 +68,9 @@ export interface UseTreeItem2ContentSlotOwnProps {
 export type UseTreeItem2ContentSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItem2ContentSlotOwnProps;
 
-export interface UseTreeItem2IconContainerSlotOwnProps {}
+export interface UseTreeItem2IconContainerSlotOwnProps {
+  onClick: MuiCancellableEventHandler<React.MouseEvent>;
+}
 
 export type UseTreeItemIconContainerSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItem2IconContainerSlotOwnProps;
@@ -110,7 +117,10 @@ export interface UseTreeItem2Status {
   disabled: boolean;
 }
 
-export interface UseTreeItem2ReturnValue<TPlugins extends readonly TreeViewAnyPluginSignature[]> {
+export interface UseTreeItem2ReturnValue<
+  TSignatures extends UseTreeItem2MinimalPlugins,
+  TOptionalSignatures extends UseTreeItem2OptionalPlugins,
+> {
   /**
    * Resolver for the root slot's props.
    * @param {ExternalProps} externalProps Additional props for the root slot
@@ -170,5 +180,21 @@ export interface UseTreeItem2ReturnValue<TPlugins extends readonly TreeViewAnyPl
   /**
    * The object the allows Tree View manipulation.
    */
-  publicAPI: TreeViewPublicAPI<TPlugins>;
+  publicAPI: TreeViewPublicAPI<TSignatures, TOptionalSignatures>;
 }
+
+/**
+ * Plugins that need to be present in the Tree View in order for `useTreeItem2` to work correctly.
+ */
+export type UseTreeItem2MinimalPlugins = readonly [
+  UseTreeViewSelectionSignature,
+  UseTreeViewExpansionSignature,
+  UseTreeViewItemsSignature,
+  UseTreeViewFocusSignature,
+  UseTreeViewKeyboardNavigationSignature,
+];
+
+/**
+ * Plugins that `useTreeItem2` can use if they are present, but are not required.
+ */
+export type UseTreeItem2OptionalPlugins = readonly [];

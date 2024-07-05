@@ -1,6 +1,48 @@
 const baseline = require('@mui/monorepo/.eslintrc');
 const path = require('path');
 
+const chartsPackages = ['x-charts', 'x-charts-pro'];
+
+const dataGridPackages = [
+  'x-data-grid',
+  'x-data-grid-pro',
+  'x-data-grid-premium',
+  'x-data-grid-generator',
+];
+
+const datePickersPackages = ['x-date-pickers', 'x-date-pickers-pro'];
+
+const treeViewPackages = ['x-tree-view', 'x-tree-view-pro'];
+
+// Enable React Compiler Plugin rules globally
+const ENABLE_REACT_COMPILER_PLUGIN = process.env.ENABLE_REACT_COMPILER_PLUGIN ?? false;
+
+// Enable React Compiler Plugin rules per package
+const ENABLE_REACT_COMPILER_PLUGIN_CHARTS = process.env.ENABLE_REACT_COMPILER_PLUGIN_CHARTS ?? true;
+const ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID =
+  process.env.ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID ?? false;
+const ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS =
+  process.env.ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS ?? false;
+const ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW =
+  process.env.ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW ?? false;
+
+const isAnyReactCompilerPluginEnabled =
+  ENABLE_REACT_COMPILER_PLUGIN ||
+  ENABLE_REACT_COMPILER_PLUGIN_CHARTS ||
+  ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID ||
+  ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS ||
+  ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW;
+
+const addReactCompilerRule = (packagesNames, isEnabled) =>
+  !isEnabled
+    ? []
+    : packagesNames.map((packageName) => ({
+        files: [`packages/${packageName}/src/**/*{.ts,.tsx,.js}`],
+        rules: {
+          'react-compiler/react-compiler': 'error',
+        },
+      }));
+
 // TODO move this helper to @mui/monorepo/.eslintrc
 // It needs to know about the parent "no-restricted-imports" to not override them.
 const buildPackageRestrictedImports = (packageName, root, allowRootImports = true) => [
@@ -89,7 +131,11 @@ const buildPackageRestrictedImports = (packageName, root, allowRootImports = tru
 
 module.exports = {
   ...baseline,
-  plugins: [...baseline.plugins, 'eslint-plugin-jsdoc'],
+  plugins: [
+    ...baseline.plugins,
+    'eslint-plugin-jsdoc',
+    ...(isAnyReactCompilerPluginEnabled ? ['eslint-plugin-react-compiler'] : []),
+  ],
   settings: {
     'import/resolver': {
       webpack: {
@@ -103,8 +149,21 @@ module.exports = {
    */
   rules: {
     ...baseline.rules,
+    ...(ENABLE_REACT_COMPILER_PLUGIN ? { 'react-compiler/react-compiler': 'error' } : {}),
     // TODO move to @mui/monorepo/.eslintrc, codebase is moving away from default exports
     'import/prefer-default-export': 'off',
+    'import/no-restricted-paths': [
+      'error',
+      {
+        zones: [...chartsPackages, ...datePickersPackages, ...treeViewPackages].map(
+          (packageName) => ({
+            target: `./packages/${packageName}/src/**/!(*.test.*|*.spec.*)`,
+            from: `./packages/${packageName}/src/internals/index.ts`,
+            message: `Use a more specific import instead. E.g. import { MyInternal } from '../internals/MyInternal';`,
+          }),
+        ),
+      },
+    ],
     // TODO move rule into the main repo once it has upgraded
     '@typescript-eslint/return-await': 'off',
     'no-restricted-imports': 'off',
@@ -133,7 +192,7 @@ module.exports = {
     // TODO move to @mui/monorepo/.eslintrc
     // TODO Fix <Input> props names to not conflict
     'react/jsx-no-duplicate-props': [1, { ignoreCase: false }],
-    // TOOD move to @mui/monorepo/.eslintrc, these are false positive
+    // TODO move to @mui/monorepo/.eslintrc, these are false positive
     'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
   },
   overrides: [
@@ -222,5 +281,10 @@ module.exports = {
     ...buildPackageRestrictedImports('@mui/x-tree-view', 'x-tree-view', false),
     ...buildPackageRestrictedImports('@mui/x-tree-view-pro', 'x-tree-view-pro', false),
     ...buildPackageRestrictedImports('@mui/x-license', 'x-license'),
+
+    ...addReactCompilerRule(chartsPackages, ENABLE_REACT_COMPILER_PLUGIN_CHARTS),
+    ...addReactCompilerRule(dataGridPackages, ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID),
+    ...addReactCompilerRule(datePickersPackages, ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS),
+    ...addReactCompilerRule(treeViewPackages, ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW),
   ],
 };

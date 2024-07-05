@@ -1,11 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SeriesContext } from '../context/SeriesContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
 import { PieArcPlot, PieArcPlotProps, PieArcPlotSlotProps, PieArcPlotSlots } from './PieArcPlot';
 import { PieArcLabelPlotSlots, PieArcLabelPlotSlotProps, PieArcLabelPlot } from './PieArcLabelPlot';
 import { getPercentageValue } from '../internals/utils';
 import { getPieCoordinates } from './getPieCoordinates';
+import { usePieSeries } from '../hooks/useSeries';
 
 export interface PiePlotSlots extends PieArcPlotSlots, PieArcLabelPlotSlots {}
 
@@ -36,7 +36,7 @@ export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'o
  */
 function PiePlot(props: PiePlotProps) {
   const { skipAnimation, slots, slotProps, onItemClick } = props;
-  const seriesData = React.useContext(SeriesContext).pie;
+  const seriesData = usePieSeries();
   const { left, top, width, height } = React.useContext(DrawingContext);
 
   if (seriesData === undefined) {

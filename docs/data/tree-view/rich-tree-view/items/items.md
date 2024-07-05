@@ -141,6 +141,8 @@ When it's set to true:
 - <kbd class="key">Shift</kbd> + arrow keys will not skip disabled items, but the disabled item will not be selected.
 - Programmatic focus will focus disabled items.
 
+{{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}
+
 ## Imperative API
 
 ### Get an item by ID
@@ -149,9 +151,22 @@ Use the `getItem` API method to get an item by its ID.
 
 ```ts
 const item = apiRef.current.getItem(
-  // The ID of the item to retrieve
+  // The id of the item to retrieve
   itemId,
 );
 ```
 
 {{"demo": "ApiMethodGetItem.js", "defaultCodeOpen": false}}
+
+### Get an item's DOM element by ID
+
+Use the `getItemDOMElement` API method to get an item's DOM element by its ID.
+
+```ts
+const itemElement = apiRef.current.getItemDOMElement(
+  // The id of the item to get the DOM element of
+  itemId,
+);
+```
+
+{{"demo": "ApiMethodGetItemDOMElement.js", "defaultCodeOpen": false}}

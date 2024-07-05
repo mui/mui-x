@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
@@ -98,17 +98,18 @@ const defaultProps = {
  * - [ChartsXAxis API](https://mui.com/x/api/charts/charts-x-axis/)
  */
 function ChartsXAxis(inProps: ChartsXAxisProps) {
-  const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiChartsXAxis' });
-  const { xAxisIds } = React.useContext(CartesianContext);
-  const {
-    xAxis: {
-      [props.axisId ?? xAxisIds[0]]: { scale: xScale, tickNumber, reverse, ...settings },
-    },
-  } = React.useContext(CartesianContext);
+  const { xAxisIds, xAxis } = useCartesianContext();
+  const { scale: xScale, tickNumber, reverse, ...settings } = xAxis[inProps.axisId ?? xAxisIds[0]];
 
   const isMounted = useMounted();
 
-  const defaultizedProps = { ...defaultProps, ...settings, ...props };
+  const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
+
+  const defaultizedProps = {
+    ...defaultProps,
+    ...themedProps,
+  };
+
   const {
     position,
     disableLine,
@@ -204,38 +205,39 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       className={classes.root}
     >
       {!disableLine && (
-        <Line
-          x1={xScale.range()[0]}
-          x2={xScale.range()[1]}
-          className={classes.line}
-          {...slotProps?.axisLine}
-        />
+        <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
       )}
 
-      {xTicksWithDimension.map(({ formattedValue, offset, labelOffset, skipLabel }, index) => {
-        const xTickLabel = labelOffset ?? 0;
-        const yTickLabel = positionSign * (tickSize + 3);
-        return (
-          <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
-            {!disableTicks && (
-              <Tick
-                y2={positionSign * tickSize}
-                className={classes.tick}
-                {...slotProps?.axisTick}
-              />
-            )}
+      {xTicksWithDimension
+        .filter((tick) => tick.offset >= left - 1 && tick.offset <= left + width + 1)
+        .map(({ formattedValue, offset, labelOffset, skipLabel }, index) => {
+          const xTickLabel = labelOffset ?? 0;
+          const yTickLabel = positionSign * (tickSize + 3);
 
-            {formattedValue !== undefined && !skipLabel && (
-              <TickLabel
-                x={xTickLabel}
-                y={yTickLabel}
-                {...axisTickLabelProps}
-                text={formattedValue.toString()}
-              />
-            )}
-          </g>
-        );
-      })}
+          const showTick = offset >= left - 1 && offset <= left + width + 1;
+          const showTickLabel =
+            offset + xTickLabel >= left - 1 && offset + xTickLabel <= left + width + 1;
+          return (
+            <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
+              {!disableTicks && showTick && (
+                <Tick
+                  y2={positionSign * tickSize}
+                  className={classes.tick}
+                  {...slotProps?.axisTick}
+                />
+              )}
+
+              {formattedValue !== undefined && !skipLabel && showTickLabel && (
+                <TickLabel
+                  x={xTickLabel}
+                  y={yTickLabel}
+                  {...axisTickLabelProps}
+                  text={formattedValue.toString()}
+                />
+              )}
+            </g>
+          );
+        })}
 
       {label && (
         <g className={classes.label}>
@@ -315,10 +317,12 @@ ChartsXAxis.propTypes = {
    */
   tickFontSize: PropTypes.number,
   /**
-   * Defines which ticks are displayed. Its value can be:
+   * Defines which ticks are displayed.
+   * Its value can be:
    * - 'auto' In such case the ticks are computed based on axis scale and other parameters.
-   * - a filtering function of the form `(value, index) => boolean` which is available only if the axis has a data property.
+   * - a filtering function of the form `(value, index) => boolean` which is available only if the axis has "point" scale.
    * - an array containing the values where ticks should be displayed.
+   * @see See {@link https://mui.com/x/react-charts/axis/#fixed-tick-positions}
    * @default 'auto'
    */
   tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),

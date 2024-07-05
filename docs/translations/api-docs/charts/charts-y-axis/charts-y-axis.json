@@ -17,7 +17,7 @@
     "stroke": { "description": "The stroke color of the axis line." },
     "tickFontSize": { "description": "The font size of the axis ticks text." },
     "tickInterval": {
-      "description": "Defines which ticks are displayed. Its value can be: - &#39;auto&#39; In such case the ticks are computed based on axis scale and other parameters. - a filtering function of the form <code>(value, index) =&gt; boolean</code> which is available only if the axis has a data property. - an array containing the values where ticks should be displayed."
+      "description": "Defines which ticks are displayed. Its value can be: - &#39;auto&#39; In such case the ticks are computed based on axis scale and other parameters. - a filtering function of the form <code>(value, index) =&gt; boolean</code> which is available only if the axis has &quot;point&quot; scale. - an array containing the values where ticks should be displayed."
     },
     "tickLabelInterval": {
       "description": "Defines which ticks get its label displayed. Its value can be: - &#39;auto&#39; In such case, labels are displayed if they do not overlap with the previous one. - a filtering function of the form (value, index) =&gt; boolean. Warning: the index is tick index, not data ones."
