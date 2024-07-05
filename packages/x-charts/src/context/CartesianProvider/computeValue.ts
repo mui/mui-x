@@ -1,5 +1,4 @@
 import { scaleBand, scalePoint, scaleTime } from 'd3-scale';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../../constants';
 import { AxisConfig, ScaleName } from '../../models';
 import {
   ChartsXAxisProps,
@@ -17,6 +16,7 @@ import { DrawingArea } from '../DrawingProvider';
 import { FormattedSeries } from '../SeriesContextProvider';
 import { MakeOptional } from '../../models/helpers';
 import { getAxisExtremum } from './getAxisExtremum';
+import { defaultizeAxis } from './defaultizeAxis';
 
 const getRange = (drawingArea: DrawingArea, axisName: 'x' | 'y', isReverse?: boolean) => {
   const range =
@@ -83,15 +83,7 @@ export function computeValue(
   axisName: 'x' | 'y',
   zoomRange: [number, number] = [0, 100],
 ) {
-  const DEFAULT_AXIS_KEY = axisName === 'x' ? DEFAULT_X_AXIS_KEY : DEFAULT_Y_AXIS_KEY;
-
-  const allAxis: AxisConfig<ScaleName, any, ChartsAxisProps>[] = [
-    ...(inAxis?.map((axis, index) => ({ id: `defaultized-${axisName}-axis-${index}`, ...axis })) ??
-      []),
-    ...(inAxis === undefined || inAxis.findIndex(({ id }) => id === DEFAULT_AXIS_KEY) === -1
-      ? [{ id: DEFAULT_AXIS_KEY, scaleType: 'linear' as const }]
-      : []),
-  ];
+  const allAxis = defaultizeAxis(inAxis, axisName);
 
   const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((axis, axisIndex) => {
