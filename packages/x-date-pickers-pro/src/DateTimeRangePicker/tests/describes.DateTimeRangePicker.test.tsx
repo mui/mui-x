@@ -20,7 +20,6 @@ describe('<DateTimeRangePicker /> - Describes', () => {
       'mergeClassName',
       'propsSpread',
       'rootClass',
-      'reactTestRenderer',
     ],
   }));
 });
