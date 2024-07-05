@@ -41,8 +41,8 @@
   "dependencies": {
     "@babel/runtime": "^7.24.7",
     "@mui/base": "^5.0.0-beta.40",
-    "@mui/system": "^5.15.20",
-    "@mui/utils": "^5.15.20",
+    "@mui/system": "^5.16.0",
+    "@mui/utils": "^5.16.0",
     "@react-spring/rafz": "^9.7.3",
     "@react-spring/web": "^9.7.3",
     "clsx": "^2.1.1",
@@ -69,7 +69,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.3",
+    "@mui/internal-test-utils": "^1.0.4",
     "@react-spring/core": "^9.7.3",
     "@react-spring/shared": "^9.7.3",
     "@types/d3-color": "^3.1.3",
