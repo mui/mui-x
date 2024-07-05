@@ -43,8 +43,8 @@ Same changes as in `@mui/x-date-pickers@7.9.0`.
 
 #### `@mui/x-charts@7.9.0`
 
-- [charts] Add Heatmap (#13209) @alexfauquette
-- [charts] Add initial `Zoom&Pan` to the Pro charts (#13405) @JCQuintas
+- [charts] Add Heatmap (unreleased) (#13209) @alexfauquette
+- [charts] Add initial `Zoom&Pan` to the Pro charts (unreleased) (#13405) @JCQuintas
 - [charts] Fix Axis Highlight on horizontal bar charts regression (#13717) @JCQuintas
 - [charts] Improve charts interaction for mobile users (#13692) @JCQuintas
 - [charts] Add documentation on how to disable the tooltip on charts (#13724) @JCQuintas
