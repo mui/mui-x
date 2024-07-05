@@ -1,6 +1,5 @@
 import * as React from 'react';
-// @ts-expect-error
-import HighlightedCodeWithTabs from 'docs/src/modules/components/HighlightedCodeWithTabs';
+import HighlightedCodeWithTabs from '@mui/docs/HighlightedCodeWithTabs';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import ToggleOptions from './ToggleOptions';
