@@ -259,6 +259,7 @@ function EditCountry(props: GridRenderEditCellParams<CountryIsoOption>) {
             },
           }}
           {...optionProps}
+          key={option.code}
         >
           <img
             loading="lazy"

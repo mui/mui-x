@@ -223,6 +223,7 @@ function EditCountry(props) {
             },
           }}
           {...optionProps}
+          key={option.code}
         >
           <img
             loading="lazy"
