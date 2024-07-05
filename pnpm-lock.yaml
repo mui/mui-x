@@ -420,8 +420,8 @@ importers:
         specifier: ^5.0.0-beta.40
         version: 5.0.0-beta.40(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/docs':
-        specifier: ^6.0.0-alpha.13
-        version: 6.0.0-alpha.13(7g77v67zn53nen4txxrs63agbq)
+        specifier: ^6.0.0-alpha.14
+        version: 6.0.0-dev.240424162023-9968b4889d(7g77v67zn53nen4txxrs63agbq)
       '@mui/icons-material':
         specifier: ^5.16.0
         version: 5.16.0(@mui/material@5.16.0(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
@@ -2766,8 +2766,8 @@ packages:
   '@mui/core-downloads-tracker@5.16.0':
     resolution: {integrity: sha512-8SLffXYPRVpcZx5QzxNE8fytTqzp+IuU3deZbQWg/vSaTlDpR5YVrQ4qQtXTi5cRdhOufV5INylmwlKK+//nPw==}
 
-  '@mui/docs@6.0.0-alpha.13':
-    resolution: {integrity: sha512-ijFZ2O65jGateb1/BK+1+Eir/jZ7hT1ZRgH7s3KJ5YEIcGN+PnAHOYBHEr3oOPqStaGJsZpXp887BYS0ztAGGQ==}
+  '@mui/docs@6.0.0-dev.240424162023-9968b4889d':
+    resolution: {integrity: sha512-F1K/DUvuJ5R18eG9K7m9zVfyC4qgujz7FjGyKdo/XGOfFUsKiKcEDg18DUN174mNqwc5MHCzo/sb9reP9V1K7w==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@mui/base': '*'
@@ -10942,7 +10942,7 @@ snapshots:
 
   '@mui/core-downloads-tracker@5.16.0': {}
 
-  '@mui/docs@6.0.0-alpha.13(7g77v67zn53nen4txxrs63agbq)':
+  '@mui/docs@6.0.0-dev.240424162023-9968b4889d(7g77v67zn53nen4txxrs63agbq)':
     dependencies:
       '@babel/runtime': 7.24.7
       '@mui/base': 5.0.0-beta.40(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
