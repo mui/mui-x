@@ -3,6 +3,72 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.9.0
+
+_Jul 5, 2024_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🔄 Add loading overlay variants, including a skeleton loader option to the Data Grid component. See [Loading overlay docs](https://mui.com/x/react-data-grid/overlays/#loading-overlay) for more details.
+- 🌳 Add `selectItem` and `getItemDOMElement` methods to the TreeView component public API
+- ⛏️ Make the `usePickersTranslations` hook public in the pickers component
+- 🐞 Bugfixes
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.9.0`
+
+- [DataGrid] Add skeleton loading overlay support (#13293) @KenanYusuf
+- [DataGrid] Fix pagination when `pagination={undefined}` (#13349) @sai6855
+
+#### `@mui/x-data-grid-pro@7.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.9.0`.
+
+#### `@mui/x-data-grid-premium@7.9.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.9.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.9.0`
+
+- [pickers] Make the `usePickersTranslations` hook public (#13657) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.9.0`.
+
+### Charts
+
+#### `@mui/x-charts@7.9.0`
+
+- [charts] Add Heatmap (unreleased) (#13209) @alexfauquette
+- [charts] Add initial `Zoom&Pan` to the Pro charts (unreleased) (#13405) @JCQuintas
+- [charts] Fix Axis Highlight on horizontal bar charts regression (#13717) @JCQuintas
+- [charts] Improve charts interaction for mobile users (#13692) @JCQuintas
+- [charts] Add documentation on how to disable the tooltip on charts (#13724) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@7.9.0`
+
+- [TreeView] Add `selectItem` and `getItemDOMElement` methods to the public API (#13485) @flaviendelangle
+
+### Docs
+
+- [docs] Fix custom "no results overlay" demo in dark mode (#13715) @KenanYusuf
+
+### Core
+
+- [core] Add `react_next` workflow in CircleCI (#13360) @cherniavskii
+- [core] Create a new package to share utils across X packages (#13528) @flaviendelangle
+- [core] Fix dependency setup (#13684) @LukasTy
+- [core] Remove `jscodeshift-add-imports` package (#13720) @LukasTy
+- [code-infra] Cleanup monorepo and `@mui/docs` usage (#13713) @LukasTy
+
 ## 7.8.0
 
 _Jun 28, 2024_
