@@ -64,7 +64,7 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
           dataset={dataset}
           seriesFormatters={seriesFormatters}
         >
-          <ZoomProvider>
+          <ZoomProvider xAxis={xAxis} yAxis={yAxis}>
             <CartesianContextProviderPro
               xAxis={xAxis}
               yAxis={yAxis}

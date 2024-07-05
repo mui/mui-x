@@ -1,5 +1,4 @@
 export type ZoomOptions = {
-  axisId?: string;
   min?: number;
   max?: number;
   step?: number;

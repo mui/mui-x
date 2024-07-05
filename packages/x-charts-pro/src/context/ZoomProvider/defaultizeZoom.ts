@@ -1,4 +1,6 @@
-import { ZoomOptions, ZoomProps } from './ZoomProps';
+import { AxisConfig, ScaleName, ChartsXAxisProps } from '@mui/x-charts';
+import { AxisId, isDefined } from '@mui/x-charts/internals';
+import { ZoomOptions } from './ZoomProps';
 
 const defaultZoomOptions = {
   min: 0,
@@ -9,24 +11,35 @@ const defaultZoomOptions = {
   panning: true,
 };
 
-export type DefaultizedZoomOptions = Required<Omit<ZoomOptions, 'axisId'>> &
-  Pick<ZoomOptions, 'axisId'> & { axis: 'x' | 'y' };
+export type DefaultizedZoomOptions = Required<ZoomOptions> & { id: AxisId };
 
-export const defaultizeZoomOptions = (
-  zoom: ZoomProps['zoom'],
-  axis: 'x' | 'y',
+export const defaultizeZoom = (
+  axis: Pick<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id' | 'zoom'>[] | undefined,
 ): DefaultizedZoomOptions[] | undefined => {
-  if (zoom === 'x') {
-    return [{ axis: 'x', ...defaultZoomOptions }];
+  if (!axis) {
+    return undefined;
   }
-  if (zoom === 'y') {
-    return [{ axis: 'y', ...defaultZoomOptions }];
-  }
-  if (zoom === 'xy') {
-    return [
-      { axis: 'x', ...defaultZoomOptions },
-      { axis: 'y', ...defaultZoomOptions },
-    ];
-  }
-  return zoom?.map((v) => ({ ...defaultZoomOptions, ...v, axis }));
+
+  const defaultized = axis
+    .map((v) => {
+      if (!v.zoom) {
+        return undefined;
+      }
+
+      if (v.zoom === true) {
+        return {
+          id: v.id,
+          ...defaultZoomOptions,
+        };
+      }
+
+      return {
+        id: v.id,
+        ...defaultZoomOptions,
+        ...v.zoom,
+      };
+    })
+    .filter(isDefined);
+
+  return defaultized.length > 0 ? defaultized : undefined;
 };
