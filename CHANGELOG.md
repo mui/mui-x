@@ -59,7 +59,7 @@ Same changes as in `@mui/x-date-pickers@7.9.0`.
 
 ### Docs
 
-- [docs] fix custom "no results overlay" demo in dark mode (#13715) @KenanYusuf
+- [docs] Fix custom "no results overlay" demo in dark mode (#13715) @KenanYusuf
 
 ### Core
 
