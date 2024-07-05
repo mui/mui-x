@@ -9,6 +9,7 @@ _Jul 5, 2024_
 
 We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
+- 🔄 Add loading overlay variants, including a skeleton loader option to the Data Grid component. See [Loading overlay docs](https://mui.com/x/react-data-grid/overlays/#loading-overlay) for more details.
 - 🌳 Add `selectItem` and `getItemDOMElement` methods to the TreeView component public API
 - ⛏️ Make the `usePickersTranslations` hook public in the pickers component
 - 🐞 Bugfixes
