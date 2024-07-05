@@ -28,8 +28,7 @@ describe('<YearCalendar /> - Describes', () => {
     render,
     muiName: 'MuiYearCalendar',
     refInstanceof: window.HTMLDivElement,
-    // cannot test reactTestRenderer because of required context
-    skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
+    skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
   describeValue(YearCalendar, () => ({

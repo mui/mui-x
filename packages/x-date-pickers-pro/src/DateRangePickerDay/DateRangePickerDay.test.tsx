@@ -36,7 +36,6 @@ describe('<DateRangePickerDay />', () => {
         'rootClass', // forwards classes to DateRangePickerDayDay, but applies root class on DateRangePickerDayRoot
         'mergeClassName', // forwards other props (i.e. data-test-id) to the DateRangePickerDayDay, but `className` is applied on the root
         'componentsProp',
-        'reactTestRenderer',
         'propsSpread',
         'refForwarding',
         // TODO: Fix DateRangePickerDays is not spreading props on root

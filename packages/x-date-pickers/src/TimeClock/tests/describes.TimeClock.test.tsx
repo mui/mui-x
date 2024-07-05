@@ -23,7 +23,7 @@ describe('<TimeClock /> - Describes', () => {
     render,
     refInstanceof: window.HTMLDivElement,
     muiName: 'MuiTimeClock',
-    skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
+    skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
   describeValue(TimeClock, () => ({
