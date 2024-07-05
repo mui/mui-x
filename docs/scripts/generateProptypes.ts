@@ -1,4 +1,5 @@
-import * as yargs from 'yargs';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import * as path from 'path';
 import * as fse from 'fs-extra';
 import * as prettier from 'prettier';
@@ -8,6 +9,8 @@ import {
 } from '@mui/internal-scripts/typescript-to-proptypes';
 import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/internal-docs-utils';
 import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
+
+const COMPONENTS_WITHOUT_PROPTYPES = ['ChartsAxisTooltipContent', 'ChartsItemTooltipContent'];
 
 async function generateProptypes(project: XTypeScriptProject, sourceFile: string) {
   const isTDate = (name: string) => {
@@ -71,6 +74,7 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         'topAxis',
         'leftAxis',
         'rightAxis',
+        'plugins',
       ];
       if (propsToNotResolve.includes(name)) {
         return false;
@@ -174,14 +178,20 @@ async function run() {
     }
 
     const componentsWithPropTypes = project.getComponentsWithPropTypes(project);
-    return componentsWithPropTypes.map<Promise<void>>(async (filename) => {
-      try {
-        await generateProptypes(project, filename);
-      } catch (error: any) {
-        error.message = `${filename}: ${error.message}`;
-        throw error;
-      }
-    });
+    return componentsWithPropTypes
+      .filter((filename) =>
+        COMPONENTS_WITHOUT_PROPTYPES.every(
+          (ignoredComponent) => !filename.includes(ignoredComponent),
+        ),
+      )
+      .map<Promise<void>>(async (filename) => {
+        try {
+          await generateProptypes(project, filename);
+        } catch (error: any) {
+          error.message = `${filename}: ${error.message}`;
+          throw error;
+        }
+      });
   });
 
   const results = await Promise.allSettled(promises);
@@ -198,7 +208,7 @@ async function run() {
   }
 }
 
-yargs
+yargs(hideBin(process.argv))
   .command({
     command: '$0',
     describe: 'Generates Component.propTypes from TypeScript declarations',

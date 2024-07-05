@@ -3,8 +3,14 @@ import { TreeViewAnyPluginSignature } from '../models';
 import { TreeViewContext } from './TreeViewContext';
 import { TreeViewContextValue } from './TreeViewProvider.types';
 
-export const useTreeViewContext = <TPlugins extends readonly TreeViewAnyPluginSignature[]>() => {
-  const context = React.useContext(TreeViewContext) as TreeViewContextValue<TPlugins>;
+export const useTreeViewContext = <
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
+>() => {
+  const context = React.useContext(TreeViewContext) as TreeViewContextValue<
+    TSignatures,
+    TOptionalSignatures
+  >;
   if (context == null) {
     throw new Error(
       [

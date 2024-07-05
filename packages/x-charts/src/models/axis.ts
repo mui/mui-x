@@ -156,7 +156,7 @@ export interface ChartsXAxisProps extends ChartsAxisProps {
   position?: 'top' | 'bottom';
 }
 
-export type ScaleName = 'linear' | 'band' | 'point' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
+export type ScaleName = keyof AxisScaleConfig;
 export type ContinuousScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
 
 export interface AxisScaleConfig {
@@ -214,7 +214,7 @@ export interface AxisScaleConfig {
   };
 }
 
-interface AxisScaleComputedConfig {
+export interface AxisScaleComputedConfig {
   band: {
     colorScale?:
       | ScaleOrdinal<string | number | Date, string, string | null>
@@ -261,7 +261,11 @@ export type AxisValueFormatterContext = {
   location: 'tick' | 'tooltip';
 };
 
-export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
+export type AxisConfig<
+  S extends ScaleName = ScaleName,
+  V = any,
+  AxisProps = ChartsXAxisProps | ChartsYAxisProps,
+> = {
   /**
    * Id used to identify the axis.
    */
@@ -299,14 +303,15 @@ export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * If `true`, Reverse the axis scaleBand.
    */
   reverse?: boolean;
-} & Partial<ChartsXAxisProps | ChartsYAxisProps> &
+} & Partial<AxisProps> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
   TickParams;
 
-export type AxisDefaultized<S extends ScaleName = ScaleName, V = any> = Omit<
-  AxisConfig<S, V>,
-  'scaleType'
-> &
+export type AxisDefaultized<
+  S extends ScaleName = ScaleName,
+  V = any,
+  AxisProps = ChartsXAxisProps | ChartsYAxisProps,
+> = Omit<AxisConfig<S, V, AxisProps>, 'scaleType'> &
   AxisScaleConfig[S] &
   AxisScaleComputedConfig[S] & {
     /**

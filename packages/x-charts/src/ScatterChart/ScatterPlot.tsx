@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Scatter, ScatterProps } from './Scatter';
-import { SeriesContext } from '../context/SeriesContextProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import getColor from './getColor';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
+import { useScatterSeries } from '../hooks/useSeries';
 
 export interface ScatterPlotSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
@@ -39,8 +39,8 @@ export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick'> {
  */
 function ScatterPlot(props: ScatterPlotProps) {
   const { slots, slotProps, onItemClick } = props;
-  const seriesData = React.useContext(SeriesContext).scatter;
-  const axisData = React.useContext(CartesianContext);
+  const seriesData = useScatterSeries();
+  const axisData = useCartesianContext();
   const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
 
   if (seriesData === undefined) {

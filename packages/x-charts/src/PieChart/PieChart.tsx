@@ -35,24 +35,27 @@ import {
   ChartsOverlayProps,
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
-} from '../ChartsOverlay/ChartsOverlay';
+} from '../ChartsOverlay';
 
 export interface PieChartSlots
   extends ChartsAxisSlots,
     PiePlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots,
+    ChartsTooltipSlots<'pie'>,
     ChartsOverlaySlots {}
 
 export interface PieChartSlotProps
   extends ChartsAxisSlotProps,
     PiePlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps,
+    ChartsTooltipSlotProps<'pie'>,
     ChartsOverlaySlotProps {}
 
 export interface PieChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series' | 'leftAxis' | 'bottomAxis'>,
+  extends Omit<
+      ResponsiveChartContainerProps,
+      'series' | 'leftAxis' | 'bottomAxis' | 'plugins' | 'zAxis'
+    >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Pick<PiePlotProps, 'skipAnimation'> {
@@ -78,7 +81,7 @@ export interface PieChartProps
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    * @default { trigger: 'item' }
    */
-  tooltip?: ChartsTooltipProps;
+  tooltip?: ChartsTooltipProps<'pie'>;
   /**
    * The configuration of axes highlight.
    * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
@@ -411,7 +414,7 @@ PieChart.propTypes = {
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      position: PropTypes.oneOf(['bottom', 'top']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
@@ -482,7 +485,7 @@ PieChart.propTypes = {
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      position: PropTypes.oneOf(['left', 'right']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,

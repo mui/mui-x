@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent } from '@mui/internal-test-utils';
+import { fireEvent, act } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import {
   UseTreeViewExpansionSignature,
@@ -792,6 +792,137 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
         expect(onItemSelectionToggle.callCount).to.equal(1);
         expect(onItemSelectionToggle.lastCall.args[1]).to.equal('1');
         expect(onItemSelectionToggle.lastCall.args[2]).to.equal(false);
+      });
+    });
+
+    describe('selectItem api method', () => {
+      describe('single selection', () => {
+        it('should select un-selected item when shouldBeSelected is not defined', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+          });
+
+          act(() => {
+            response.apiRef.current.selectItem({ itemId: '1', event: {} as any });
+          });
+
+          expect(response.isItemSelected('1')).to.equal(true);
+        });
+
+        it('should un-select selected item when shouldBeSelected is not defined', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+            defaultSelectedItems: ['1'],
+          });
+
+          act(() => {
+            response.apiRef.current.selectItem({ itemId: '1', event: {} as any });
+          });
+
+          expect(response.isItemSelected('1')).to.equal(false);
+        });
+
+        it('should not select an item when disableSelection is true', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+            disableSelection: true,
+          });
+
+          act(() => {
+            response.apiRef.current.selectItem({ itemId: '1', event: {} as any });
+          });
+
+          expect(response.isItemSelected('1')).to.equal(false);
+        });
+
+        it('should not un-select an item when disableSelection is true', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+            defaultSelectedItems: ['1'],
+            disableSelection: true,
+          });
+
+          act(() => {
+            response.apiRef.current.selectItem({ itemId: '1', event: {} as any });
+          });
+
+          expect(response.isItemSelected('1')).to.equal(true);
+        });
+      });
+
+      describe('multi selection', () => {
+        it('should select un-selected item and remove other selected items when shouldBeSelected is not defined', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+            defaultSelectedItems: ['2'],
+            multiSelect: true,
+          });
+
+          act(() => {
+            response.apiRef.current.selectItem({ itemId: '1', event: {} as any });
+          });
+
+          expect(response.getSelectedTreeItems()).to.deep.equal(['1']);
+        });
+
+        it('should select un-selected item and keep other selected items when shouldBeSelected is not defined and keepExistingSelection is true', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+            defaultSelectedItems: ['2'],
+            multiSelect: true,
+          });
+
+          act(() => {
+            response.apiRef.current.selectItem({
+              itemId: '1',
+              event: {} as any,
+              keepExistingSelection: true,
+            });
+          });
+
+          expect(response.getSelectedTreeItems()).to.deep.equal(['1', '2']);
+        });
+      });
+
+      describe('onItemSelectionToggle prop', () => {
+        it('should call call onItemSelectionToggle callback when selecting an item', () => {
+          const event = {} as any;
+          const onItemSelectionToggle = spy();
+
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+            onItemSelectionToggle,
+          });
+
+          act(() => {
+            response.apiRef.current.selectItem({ itemId: '1', event });
+          });
+
+          expect(onItemSelectionToggle.callCount).to.equal(1);
+          expect(onItemSelectionToggle.lastCall.args[0]).to.equal(event);
+          expect(onItemSelectionToggle.lastCall.args[1]).to.equal('1');
+          expect(onItemSelectionToggle.lastCall.args[2]).to.equal(true);
+        });
+
+        it('should call call onItemSelectionToggle callback when un-selecting an item', () => {
+          const event = {} as any;
+          const onItemSelectionToggle = spy();
+
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+            onItemSelectionToggle,
+            defaultSelectedItems: '1',
+          });
+
+          act(() => {
+            response.apiRef.current.selectItem({ itemId: '1', event });
+          });
+
+          expect(onItemSelectionToggle.callCount).to.equal(1);
+          expect(onItemSelectionToggle.lastCall.args[0]).to.equal(event);
+          expect(onItemSelectionToggle.lastCall.args[1]).to.equal('1');
+          expect(onItemSelectionToggle.lastCall.args[2]).to.equal(false);
+        });
       });
     });
   },

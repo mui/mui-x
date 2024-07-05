@@ -10,24 +10,29 @@ import {
   UseTreeItem2LabelSlotProps,
   UseTreeItemIconContainerSlotProps,
   UseTreeItem2CheckboxSlotProps,
+  UseTreeItem2MinimalPlugins,
+  UseTreeItem2OptionalPlugins,
 } from './useTreeItem2.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
-import { DefaultTreeViewPlugins } from '../internals/plugins/defaultPlugins';
 import { MuiCancellableEvent } from '../internals/models/MuiCancellableEvent';
 import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 
-export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTreeViewPlugins>(
+export const useTreeItem2 = <
+  TSignatures extends UseTreeItem2MinimalPlugins = UseTreeItem2MinimalPlugins,
+  TOptionalSignatures extends UseTreeItem2OptionalPlugins = UseTreeItem2OptionalPlugins,
+>(
   parameters: UseTreeItem2Parameters,
-): UseTreeItem2ReturnValue<TPlugins> => {
+): UseTreeItem2ReturnValue<TSignatures, TOptionalSignatures> => {
   const {
     runItemPlugins,
     selection: { multiSelect, disableSelection, checkboxSelection },
+    expansion: { expansionTrigger },
     disabledItemsFocusable,
     indentationAtItemLevel,
     instance,
     publicAPI,
-  } = useTreeViewContext<TPlugins>();
+  } = useTreeViewContext<TSignatures, TOptionalSignatures>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
   const { id, itemId, label, children, rootRef } = parameters;
@@ -81,7 +86,9 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
         return;
       }
 
-      interactions.handleExpansion(event);
+      if (expansionTrigger === 'content') {
+        interactions.handleExpansion(event);
+      }
 
       if (!checkboxSelection) {
         interactions.handleSelection(event);
@@ -114,6 +121,17 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
       }
 
       interactions.handleCheckboxSelection(event);
+    };
+
+  const createIconContainerHandleClick =
+    (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
+      otherHandlers.onClick?.(event);
+      if (event.defaultMuiPrevented) {
+        return;
+      }
+      if (expansionTrigger === 'iconContainer') {
+        interactions.handleExpansion(event);
+      }
     };
 
   const getRootProps = <ExternalProps extends Record<string, any> = {}>(
@@ -223,6 +241,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
     return {
       ...externalEventHandlers,
       ...externalProps,
+      onClick: createIconContainerHandleClick(externalEventHandlers),
     };
   };
 

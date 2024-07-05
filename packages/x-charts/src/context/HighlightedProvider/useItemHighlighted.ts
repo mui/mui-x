@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { HighlightedContext, HighlightItemData } from './HighlightedContext';
+import { HighlightItemData } from './HighlightedContext';
+import { useHighlighted } from './useHighlighted';
 
 export type ItemHighlightedState = {
   /**
@@ -22,16 +22,7 @@ export type ItemHighlightedState = {
  * @returns {ItemHighlightedState} the state of the item
  */
 export function useItemHighlighted(item: HighlightItemData | null): ItemHighlightedState {
-  const highlighted = React.useContext(HighlightedContext);
-
-  if (highlighted === undefined) {
-    throw new Error(
-      [
-        'MUI X: Could not find the highlighted ref context.',
-        'It looks like you rendered your component outside of a ChartsContainer parent component.',
-      ].join('\n'),
-    );
-  }
+  const highlighted = useHighlighted();
 
   if (!item) {
     return {

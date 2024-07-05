@@ -1,12 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SeriesContext } from '../context/SeriesContextProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { LineHighlightElement, LineHighlightElementProps } from './LineHighlightElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { InteractionContext } from '../context/InteractionProvider';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import getColor from './getColor';
+import { useLineSeries } from '../hooks/useSeries';
 
 export interface LineHighlightPlotSlots {
   lineHighlight?: React.JSXElementConstructor<LineHighlightElementProps>;
@@ -42,8 +42,8 @@ export interface LineHighlightPlotProps extends React.SVGAttributes<SVGSVGElemen
 function LineHighlightPlot(props: LineHighlightPlotProps) {
   const { slots, slotProps, ...other } = props;
 
-  const seriesData = React.useContext(SeriesContext).line;
-  const axisData = React.useContext(CartesianContext);
+  const seriesData = useLineSeries();
+  const axisData = useCartesianContext();
   const { axis } = React.useContext(InteractionContext);
 
   const highlightedIndex = axis.x?.index;
