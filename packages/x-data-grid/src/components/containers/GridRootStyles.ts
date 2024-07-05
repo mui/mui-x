@@ -255,6 +255,9 @@ export const GridRootStyles = styled('div', {
         width: 'unset',
       },
     },
+    [`&.${c.sidePanel}`]: {
+      flexDirection: 'row',
+    },
     [`& .${c.columnHeader}, & .${c.cell}`]: {
       WebkitTapHighlightColor: 'transparent',
       lineHeight: null,

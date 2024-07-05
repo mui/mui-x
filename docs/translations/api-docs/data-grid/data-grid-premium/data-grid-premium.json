@@ -1157,6 +1157,7 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the footer selected row count element"
     },
+    "sidePanel": { "description": "" },
     "sortIcon": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the sort icon element"
