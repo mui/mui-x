@@ -19,6 +19,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 #### `@mui/x-data-grid@7.9.0`
 
+- [DataGrid] Add skeleton loading overlay support (#13293) @KenanYusuf 
 - [DataGrid] Fix pagination when `pagination={undefined}` (#13349) @sai6855
 
 #### `@mui/x-data-grid-pro@7.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
