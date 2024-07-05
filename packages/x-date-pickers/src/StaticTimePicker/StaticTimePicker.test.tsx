@@ -35,7 +35,6 @@ describe('<StaticTimePicker />', () => {
       // TODO: `ref` is typed but has no effect
       'refForwarding',
       'rootClass',
-      'reactTestRenderer',
     ],
   }));
 

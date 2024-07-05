@@ -47,8 +47,8 @@
   "dependencies": {
     "@babel/runtime": "^7.24.7",
     "@mui/base": "^5.0.0-beta.40",
-    "@mui/system": "^5.15.20",
-    "@mui/utils": "^5.15.20",
+    "@mui/system": "^5.16.0",
+    "@mui/utils": "^5.16.0",
     "@types/react-transition-group": "^4.4.10",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
@@ -98,7 +98,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.3",
+    "@mui/internal-test-utils": "^1.0.4",
     "@types/luxon": "^3.4.2",
     "@types/moment-hijri": "^2.1.4",
     "@types/moment-jalaali": "^0.7.9",
