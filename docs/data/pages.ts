@@ -442,6 +442,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/stacking' },
               { pathname: '/x/react-charts/styling' },
               { pathname: '/x/react-charts/tooltip', title: 'Tooltip & Highlights' },
+              { pathname: '/x/react-charts/zoom-and-pan', title: 'Zoom & Pan', plan: 'pro' },
             ],
           },
           {

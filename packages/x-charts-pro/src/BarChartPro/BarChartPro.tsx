@@ -9,10 +9,16 @@ import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useBarChartProps } from '@mui/x-charts/internals';
+import { BarPlotProps } from '@mui/x-charts';
 import { ResponsiveChartContainerPro } from '../ResponsiveChartContainerPro';
+import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
+import { useZoom } from '../context/ZoomProvider/useZoom';
 
 export interface BarChartProProps extends BarChartProps {
-  // TODO: Add zoom props
+  /**
+   * If `true`, the chart will be zoomable.
+   */
+  zoom?: boolean;
 }
 
 /**
@@ -27,6 +33,7 @@ export interface BarChartProProps extends BarChartProps {
  * - [BarChart API](https://mui.com/x/api/charts/bar-chart/)
  */
 const BarChartPro = React.forwardRef(function BarChartPro(props: BarChartProProps, ref) {
+  const { zoom, ...restProps } = props;
   const {
     chartContainerProps,
     barPlotProps,
@@ -39,16 +46,15 @@ const BarChartPro = React.forwardRef(function BarChartPro(props: BarChartProProp
     axisHighlightProps,
     legendProps,
     tooltipProps,
-
     children,
-  } = useBarChartProps(props);
+  } = useBarChartProps(restProps);
 
   return (
     <ResponsiveChartContainerPro ref={ref} {...chartContainerProps}>
       {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
       {props.grid && <ChartsGrid {...gridProps} />}
       <g {...clipPathGroupProps}>
-        <BarPlot {...barPlotProps} />
+        <BarChartPlotZoom {...barPlotProps} />
         <ChartsOverlay {...overlayProps} />
       </g>
       <ChartsAxis {...chartsAxisProps} />
@@ -56,9 +62,16 @@ const BarChartPro = React.forwardRef(function BarChartPro(props: BarChartProProp
       <ChartsAxisHighlight {...axisHighlightProps} />
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       <ChartsClipPath {...clipPathProps} />
+      {zoom && <ZoomSetup />}
       {children}
     </ResponsiveChartContainerPro>
   );
 });
+
+function BarChartPlotZoom(props: BarPlotProps) {
+  const { isInteracting } = useZoom();
+
+  return <BarPlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
+}
 
 export { BarChartPro };
