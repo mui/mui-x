@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { HighlightedCodeWithTabs } from '@mui/docs/HighlightedCodeWithTabs';
+import HighlightedCodeWithTabs from '@mui/docs/HighlightedCodeWithTabs';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import ToggleOptions from './ToggleOptions';

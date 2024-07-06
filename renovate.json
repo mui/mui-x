@@ -6,7 +6,6 @@
   "commitMessageTopic": "{{depName}}",
   "dependencyDashboard": true,
   "rebaseWhen": "conflicted",
-  "ignoreDeps": ["@mui/joy"],
   "labels": ["dependencies"],
   "stopUpdatingLabel": "on hold",
   "packageRules": [
