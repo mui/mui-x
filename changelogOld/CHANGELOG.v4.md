@@ -89,7 +89,7 @@ A big thanks to the 6 contributors who made this release possible. Here are some
 - [core] Simplify `useGridColumns` hook (#2343) @oliviertassinari
 - [core] Update `doesSupportTouchActionNone` implementation (#2378) @DanailH
 - [core] Upgrade dependency with the monorepo (#2377) @oliviertassinari
-- [test] Use `.not.to.equal` in favour of `not.to.equal` (#2340) @oliviertassinari
+- [test] Use `.not.to.equal` in favor of `.to.not.equal` (#2340) @oliviertassinari
 
 ## 4.0.0-alpha.37
 
