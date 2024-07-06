@@ -166,8 +166,8 @@ describe('<DataGridPro /> - Lazy loader', () => {
     const updatedAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
     expect(updatedAllRows.slice(4, 6)).to.deep.equal([4, 5]);
 
-    expect(apiRef.current.getRowNode(4)).to.not.equal(null);
-    expect(apiRef.current.getRowNode(5)).to.not.equal(null);
+    expect(apiRef.current.getRowNode(4)).not.to.equal(null);
+    expect(apiRef.current.getRowNode(5)).not.to.equal(null);
   });
 
   it('should update rows when `apiRef.current.updateRows` with data reversed', () => {

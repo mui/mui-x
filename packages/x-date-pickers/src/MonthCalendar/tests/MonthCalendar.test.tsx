@@ -165,7 +165,7 @@ describe('<MonthCalendar />', () => {
     it('should not mark the `referenceDate` month as selected', () => {
       render(<MonthCalendar referenceDate={adapterToUse.date('2018-02-02')} />);
 
-      expect(screen.getByRole('radio', { name: 'February', checked: false })).to.not.equal(null);
+      expect(screen.getByRole('radio', { name: 'February', checked: false })).not.to.equal(null);
     });
   });
 });

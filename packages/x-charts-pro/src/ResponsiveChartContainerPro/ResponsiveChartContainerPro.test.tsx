@@ -22,7 +22,7 @@ describe('<ResponsiveChartContainerPro /> - License', () => {
     ).toErrorDev(['MUI X: Missing license key.']);
 
     await waitFor(() => {
-      expect(screen.findAllByText('MUI X Missing license key')).to.not.equal(null);
+      expect(screen.findAllByText('MUI X Missing license key')).not.to.equal(null);
     });
   });
 });
