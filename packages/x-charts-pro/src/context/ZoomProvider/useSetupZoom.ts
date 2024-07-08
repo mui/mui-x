@@ -211,15 +211,18 @@ function isSpanValid(
   minRange: number,
   maxRange: number,
   isZoomIn: boolean,
-  options: DefaultizedZoomOptions,
+  option: DefaultizedZoomOptions,
 ) {
   const newSpanPercent = maxRange - minRange;
 
-  // TODO: make span a config option.
   if (
-    (isZoomIn && newSpanPercent < options.minSpan) ||
-    (!isZoomIn && newSpanPercent > options.maxSpan)
+    (isZoomIn && newSpanPercent < option.minSpan) ||
+    (!isZoomIn && newSpanPercent > option.maxSpan)
   ) {
+    return false;
+  }
+
+  if (minRange < option.min || maxRange > option.max) {
     return false;
   }
 
