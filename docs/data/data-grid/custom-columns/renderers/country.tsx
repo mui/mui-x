@@ -1,0 +1,144 @@
+import * as React from 'react';
+import {
+  GridRenderCellParams,
+  GridRenderEditCellParams,
+  useGridApiContext,
+} from '@mui/x-data-grid';
+import {
+  COUNTRY_ISO_OPTIONS,
+  CountryIsoOption,
+} from '@mui/x-data-grid-generator/services/static-data';
+import {
+  Autocomplete,
+  autocompleteClasses,
+  AutocompleteProps,
+  Box,
+  InputBase,
+  styled,
+} from '@mui/material';
+
+interface CountryProps {
+  value: CountryIsoOption;
+}
+
+const Country = React.memo(function Country(props: CountryProps) {
+  const { value } = props;
+
+  return (
+    <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        '&  > img': {
+          mr: 0.5,
+          flexShrink: 0,
+          width: '20px',
+        },
+      }}
+    >
+      <img
+        loading="lazy"
+        width="20"
+        src={`https://flagcdn.com/w20/${value.code.toLowerCase()}.png`}
+        srcSet={`https://flagcdn.com/w40/${value.code.toLowerCase()}.png 2x`}
+        alt=""
+      />
+      <Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        {value.label}
+      </Box>
+    </Box>
+  );
+});
+
+const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
+  height: '100%',
+  [`& .${autocompleteClasses.inputRoot}`]: {
+    ...theme.typography.body2,
+    padding: '1px 0',
+    height: '100%',
+    '& input': {
+      padding: '0 16px',
+      height: '100%',
+    },
+  },
+})) as typeof Autocomplete;
+
+function EditCountry(props: GridRenderEditCellParams<CountryIsoOption>) {
+  const { id, value, field } = props;
+
+  const apiRef = useGridApiContext();
+
+  const handleChange = React.useCallback<
+    NonNullable<AutocompleteProps<CountryIsoOption, false, true, false>['onChange']>
+  >(
+    async (event, newValue) => {
+      await apiRef.current.setEditCellValue({ id, field, value: newValue }, event);
+      apiRef.current.stopCellEditMode({ id, field });
+    },
+    [apiRef, field, id],
+  );
+
+  return (
+    <StyledAutocomplete<CountryIsoOption, false, true, false>
+      value={value}
+      onChange={handleChange}
+      options={COUNTRY_ISO_OPTIONS}
+      getOptionLabel={(option: any) => option.label}
+      autoHighlight
+      fullWidth
+      open
+      disableClearable
+      renderOption={(optionProps, option: any) => (
+        <Box
+          component="li"
+          sx={{
+            '& > img': {
+              mr: 1.5,
+              flexShrink: 0,
+            },
+          }}
+          {...optionProps}
+          key={option.code}
+        >
+          <img
+            loading="lazy"
+            width="20"
+            src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+            srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+            alt=""
+          />
+          {option.label}
+        </Box>
+      )}
+      renderInput={(params) => (
+        <InputBase
+          autoFocus
+          fullWidth
+          id={params.id}
+          inputProps={{
+            ...params.inputProps,
+            autoComplete: 'new-password', // disable autocomplete and autofill
+          }}
+          {...params.InputProps}
+        />
+      )}
+    />
+  );
+}
+
+export function renderCountry(
+  params: GridRenderCellParams<CountryIsoOption, any, any>,
+) {
+  if (params.value == null) {
+    return '';
+  }
+
+  return <Country value={params.value} />;
+}
+
+export function renderEditCountry(
+  params: GridRenderEditCellParams<CountryIsoOption>,
+) {
+  return <EditCountry {...params} />;
+}
