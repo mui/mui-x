@@ -36,8 +36,8 @@ function CartesianContextProviderPro(props: CartesianContextProviderProProps) {
   );
 
   const yValues = React.useMemo(
-    () => computeValue(drawingArea, formattedSeries, yAxis, yExtremumGetters, 'y'),
-    [drawingArea, formattedSeries, yAxis, yExtremumGetters],
+    () => computeValue(drawingArea, formattedSeries, yAxis, yExtremumGetters, 'y', zoomData),
+    [drawingArea, formattedSeries, yAxis, yExtremumGetters, zoomData],
   );
 
   const value = React.useMemo(
