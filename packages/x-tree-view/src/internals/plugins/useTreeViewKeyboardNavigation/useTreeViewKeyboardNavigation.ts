@@ -121,7 +121,13 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // If the focused item has children, we expand it.
       // If the focused item has no children, we select it.
       case key === 'Enter': {
-        if (instance.isItemEditable(itemId) && !instance.isItemBeingEdited(itemId)) {
+        if (
+          instance.isItemBeingEdited &&
+          instance.isItemEditable &&
+          instance.setEditedItemId &&
+          instance.isItemEditable(itemId) &&
+          !instance.isItemBeingEdited(itemId)
+        ) {
           instance.setEditedItemId(itemId);
         } else if (canToggleItemExpansion(itemId)) {
           instance.toggleItemExpansion(event, itemId);
