@@ -62,7 +62,7 @@
   "devDependencies": {
     "@mui/internal-test-utils": "^1.0.4",
     "@types/prop-types": "^15.7.12",
-    "rimraf": "^5.0.7"
+    "rimraf": "^5.0.8"
   },
   "engines": {
     "node": ">=14.0.0"

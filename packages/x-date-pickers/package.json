@@ -111,7 +111,7 @@
     "moment-hijri": "^2.1.2",
     "moment-jalaali": "^0.10.1",
     "moment-timezone": "^0.5.45",
-    "rimraf": "^5.0.7"
+    "rimraf": "^5.0.8"
   },
   "engines": {
     "node": ">=14.0.0"
