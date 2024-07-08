@@ -1,9 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { InteractionContext } from '../context/InteractionProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
 import { useSeries } from '../hooks/useSeries';
 import { useSvgRef } from '../hooks';
+import { useCartesianContext } from '../context/CartesianProvider';
 
 type AxisData = {
   dataIndex: number;
@@ -27,7 +27,7 @@ function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
   const svgRef = useSvgRef();
   const series = useSeries();
   const { axis } = React.useContext(InteractionContext);
-  const { xAxisIds, xAxis, yAxisIds, yAxis } = React.useContext(CartesianContext);
+  const { xAxisIds, xAxis, yAxisIds, yAxis } = useCartesianContext();
 
   React.useEffect(() => {
     const element = svgRef.current;

@@ -14,7 +14,6 @@ import {
   MockedDataTransfer,
   rangeCalendarDayTouches,
   createPickerRenderer,
-  wrapPickerMount,
 } from 'test/utils/pickers';
 import {
   DateRangeCalendar,
@@ -25,7 +24,7 @@ import { describeConformance } from 'test/utils/describeConformance';
 import { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
-  getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
+  getByRole(screen.getByRole('grid', { name: picker }), 'gridcell', { name });
 
 const dynamicShouldDisableDate = (date, position: RangePosition) => {
   if (position === 'end') {
@@ -45,9 +44,8 @@ describe('<DateRangeCalendar />', () => {
     inheritComponent: 'div',
     render,
     muiName: 'MuiDateRangeCalendar',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
+    skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
   describe('Selection', () => {
