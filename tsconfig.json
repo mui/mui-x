@@ -1,8 +1,6 @@
 {
   "extends": "@mui/monorepo/tsconfig.json",
   "compilerOptions": {
-    // aligning with Node18 recommendation: https://www.npmjs.com/package/@tsconfig/node18
-    "target": "ES2022",
     "lib": ["dom", "dom.iterable", "esnext"],
     "moduleResolution": "bundler",
     // Already tested with eslint
