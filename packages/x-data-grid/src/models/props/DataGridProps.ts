@@ -807,6 +807,16 @@ export interface DataGridProSharedPropsWithDefaultValue {
    * @default false
    */
   headerFilters: boolean;
+  /**
+   * If `true`, following behavior happens with nested data:
+   * 1. Selecting/Deselecting a parent row selects/deselects all the nested rows.
+   * 2. When all nested rows are selected, the parent row is also selected.
+   * 3. When a nested row is deselected, the parent row is also deselected, if already selected.
+   * 4. Select All checkbox selects/deselects all the rows including nested rows.
+   * Works with tree data and row grouping on the client-side only.
+   * @default false
+   */
+  propagateRowSelection: boolean;
 }
 
 export interface DataGridProSharedPropsWithoutDefaultValue {

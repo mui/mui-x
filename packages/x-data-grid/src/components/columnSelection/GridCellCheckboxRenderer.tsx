@@ -10,6 +10,9 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
+import { selectedIdsLookupSelector } from '../../hooks/features/rowSelection/gridRowSelectionSelector';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { GridRowId } from '../../models';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -49,6 +52,23 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     const ownerState = { classes: rootProps.classes };
     const classes = useUtilityClasses(ownerState);
     const checkboxElement = React.useRef<HTMLElement>(null);
+
+    const rowSelectionLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
+    const children: GridRowId[] = React.useMemo(() => {
+      if (rowNode.type === 'group') {
+        // TODO check if a selector could be used here
+        // @ts-expect-error Access `GridProApi` method
+        return apiRef.current.getRowGroupChildren({ groupId: id });
+      }
+      return [];
+    }, [id, rowNode.type, apiRef]);
+
+    const someChildrenSelected = React.useMemo(() => {
+      if (rowNode.type === 'group') {
+        return children.some((child) => rowSelectionLookup[child]);
+      }
+      return false;
+    }, [children, rowNode.type, rowSelectionLookup]);
 
     const rippleRef = React.useRef<TouchRippleActions>(null);
     const handleRef = useForkRef(checkboxElement, ref);
@@ -104,6 +124,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
         className={classes.root}
         inputProps={{ 'aria-label': label }}
         onKeyDown={handleKeyDown}
+        indeterminate={!isChecked && someChildrenSelected}
         disabled={!isSelectable}
         touchRippleRef={rippleRef as any /* FIXME: typing error */}
         {...rootProps.slotProps?.baseCheckbox}

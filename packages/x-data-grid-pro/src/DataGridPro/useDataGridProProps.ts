@@ -50,6 +50,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   rowsLoadingMode: 'client',
   getDetailPanelHeight: () => 500,
   headerFilters: false,
+  propagateRowSelection: false,
 };
 
 const defaultSlots = DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS;
