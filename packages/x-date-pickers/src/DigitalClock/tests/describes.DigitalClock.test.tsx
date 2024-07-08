@@ -37,7 +37,6 @@ describe('<DigitalClock /> - Describes', () => {
       'mergeClassName',
       'propsSpread',
       'rootClass',
-      'reactTestRenderer',
     ],
   }));
 
