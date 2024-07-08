@@ -141,18 +141,14 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     // - No data is associated to the axis (other scale types)
     return null;
   }
+
   return (
     <AxisRoot
       transform={`translate(${position === 'right' ? left + width : left}, 0)`}
       className={classes.root}
     >
       {!disableLine && (
-        <Line
-          y1={yScale.range()[0]}
-          y2={yScale.range()[1]}
-          className={classes.line}
-          {...slotProps?.axisLine}
-        />
+        <Line y1={top - 1} y2={top + height} className={classes.line} {...slotProps?.axisLine} />
       )}
 
       {yTicks.map(({ formattedValue, offset, labelOffset, value }, index) => {
@@ -160,6 +156,13 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         const yTickLabel = labelOffset;
         const skipLabel =
           typeof tickLabelInterval === 'function' && !tickLabelInterval?.(value, index);
+
+        const showLabel = offset >= top && offset <= height + top;
+
+        if (!showLabel) {
+          return null;
+        }
+
         return (
           <g key={index} transform={`translate(0, ${offset})`} className={classes.tickContainer}>
             {!disableTicks && (
