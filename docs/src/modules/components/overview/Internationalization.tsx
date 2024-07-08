@@ -16,11 +16,16 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Typography from '@mui/material/Typography';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
-import { StaticDatePicker } from '@mui/x-date-pickers';
-import { roRO, enUS, zhCN } from '@mui/x-date-pickers/locales';
+import {
+  DateTimeRangePicker,
+  DateTimeField,
+  DatePicker,
+  StaticDatePicker,
+  DateTimeValidationError,
+} from '@mui/x-date-pickers-pro';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvider';
+import { roRO, enUS, zhCN } from '@mui/x-date-pickers-pro/locales';
 import InfoCard from './InfoCard';
 import WorldMapSvg, { ContinentClickHandler } from './WorldMapSvg';
 
@@ -28,7 +33,6 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const StyledDemoContainer = styled(Paper)({
-  flexGrow: 1,
   height: '100%',
 });
 
@@ -171,13 +175,91 @@ function LanguagesDemo() {
   );
 }
 
+const startOfQ12022 = dayjs('2024-01-01T00:00:00.000');
+const endOfQ12022 = dayjs('2024-03-31T23:59:59.999');
+const fiveAM = dayjs().set('hour', 5).startOf('hour');
+const nineAM = dayjs().set('hour', 9).startOf('hour');
+
+const getError = (error: DateTimeValidationError | null) => {
+  switch (error) {
+    case 'maxDate':
+    case 'minDate': {
+      return 'Please select a date in the first quarter of 2024';
+    }
+
+    case 'invalidDate': {
+      return 'Your date is not valid';
+    }
+
+    default: {
+      return '';
+    }
+  }
+};
+
+function ValidationDemo() {
+  const brandingTheme = useTheme();
+  const [fieldError, setFieldError] = React.useState<DateTimeValidationError | null>(null);
+  const [pickerError, setPickerError] = React.useState<DateTimeValidationError | null>(null);
+
+  const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
+
+  return (
+    <Paper
+      component="div"
+      variant="outlined"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: brandingTheme.spacing(3),
+        width: '100%',
+        background: `${(brandingTheme.vars || brandingTheme).palette.gradients.linearSubtle}`,
+      }}
+    >
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <ThemeProvider theme={theme}>
+          <Stack spacing={2} sx={{ width: '100%', maxWidth: '400px', height: 'fit-content' }}>
+            <DateTimeField
+              defaultValue={dayjs('')}
+              onError={(newError) => setFieldError(newError)}
+              slotProps={{
+                textField: {
+                  helperText: getError(fieldError),
+                  fullWidth: true,
+                },
+              }}
+              minDate={startOfQ12022}
+              maxDate={endOfQ12022}
+            />
+            <DatePicker
+              defaultValue={dayjs('2024-07-17')}
+              views={['month', 'day']}
+              onError={(newError) => setPickerError(newError)}
+              slotProps={{
+                textField: {
+                  helperText: getError(pickerError),
+                  fullWidth: true,
+                },
+              }}
+              minDate={startOfQ12022}
+              maxDate={endOfQ12022}
+            />
+            <DateTimeRangePicker defaultValue={[fiveAM, nineAM]} maxTime={fiveAM} />
+          </Stack>
+        </ThemeProvider>
+      </LocalizationProvider>
+    </Paper>
+  );
+}
+
 export default function Internationalization() {
   const [activeItem, setActiveItem] = React.useState(0);
 
   return (
     <React.Fragment>
       <Divider />
-      <Stack direction="row" spacing={6} py={4} alignItems="center">
+      <Stack direction={{ xs: 'column', md: 'row' }} spacing={6} py={4} alignItems="center">
         <Stack spacing={2} sx={{ maxWidth: '450px' }}>
           <SectionHeadline
             overline="Internationalization"
@@ -197,14 +279,19 @@ export default function Internationalization() {
             />
           ))}
         </Stack>
-        <Box sx={{ minWidth: '560px' }}>
+        <Stack
+          justifyContent="center"
+          alignItems="center"
+          sx={{ minWidth: '560px', minHeight: { xs: 0, md: '600px' } }}
+        >
           {activeItem === 0 && (
             <StyledDemoContainer variant="outlined">
               <TimezonesDemo />
             </StyledDemoContainer>
           )}
           {activeItem === 1 && <LanguagesDemo />}
-        </Box>
+          {activeItem === 2 && <ValidationDemo />}
+        </Stack>
       </Stack>
     </React.Fragment>
   );
