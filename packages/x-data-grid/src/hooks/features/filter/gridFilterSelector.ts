@@ -132,6 +132,26 @@ export const gridFilteredTopLevelRowCountSelector = createSelector(
 );
 
 /**
+ * Get the amount of rows accessible after the filtering process.
+ * Includes top level and descendant rows.
+ * @category Filtering
+ */
+export const gridFilteredRowCountSelector = createSelector(
+  gridFilteredSortedRowEntriesSelector,
+  (filteredSortedRowEntries) => filteredSortedRowEntries.length,
+);
+
+/**
+ * Get the amount of descendant rows accessible after the filtering process.
+ * @category Filtering
+ */
+export const gridFilteredDescendantRowCountSelector = createSelector(
+  gridFilteredRowCountSelector,
+  gridFilteredTopLevelRowCountSelector,
+  (totalRowCount, topLevelRowCount) => totalRowCount - topLevelRowCount,
+);
+
+/**
  * @category Filtering
  * @ignore - do not document.
  */
