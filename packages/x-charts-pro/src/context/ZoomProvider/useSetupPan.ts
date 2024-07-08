@@ -2,9 +2,7 @@ import * as React from 'react';
 import { useDrawingArea, useSvgRef } from '@mui/x-charts/hooks';
 import { getSVGPoint } from '@mui/x-charts/internals';
 import { useZoom } from './useZoom';
-
-const MAX_RANGE = 100;
-const MIN_RANGE = 0;
+import { ZoomData } from './Zoom.types';
 
 const isPointOutside = (
   point: { x: number; y: number },
@@ -16,13 +14,13 @@ const isPointOutside = (
 };
 
 export const useSetupPan = () => {
-  const { zoomData, setZoomData, setIsInteracting, isPanEnabled } = useZoom();
+  const { zoomData, setZoomData, setIsInteracting, isPanEnabled, options } = useZoom();
   const area = useDrawingArea();
 
   const svgRef = useSvgRef();
 
   const isDraggingRef = React.useRef(false);
-  const touchStartRef = React.useRef<{ x: number; minX: number; maxX: number } | null>(null);
+  const touchStartRef = React.useRef<{ x: number; y: number; zoomData: ZoomData[] } | null>(null);
   const eventCacheRef = React.useRef<PointerEvent[]>([]);
 
   React.useEffect(() => {
@@ -42,25 +40,44 @@ export const useSetupPan = () => {
 
       const point = getSVGPoint(element, event);
       const movementX = point.x - touchStartRef.current.x;
+      const movementY = (point.y - touchStartRef.current.y) * -1;
 
-      const max = touchStartRef.current.maxX;
-      const min = touchStartRef.current.minX;
-      const span = max - min;
+      const newZoomData = touchStartRef.current.zoomData.map((zoom) => {
+        const option = options[zoom.axisId];
+        if (!option || !option.panning) {
+          return zoom;
+        }
 
-      let newMinRange = min - (movementX / area.width) * span;
-      let newMaxRange = max - (movementX / area.width) * span;
+        const min = zoom.min;
+        const max = zoom.max;
+        const span = max - min;
+        const MIN_RANGE = option.min;
+        const MAX_RANGE = option.max;
 
-      if (newMinRange < MIN_RANGE) {
-        newMinRange = MIN_RANGE;
-        newMaxRange = span;
-      }
+        const movement = option.axis === 'x' ? movementX : movementY;
+        const dimension = option.axis === 'x' ? area.width : area.height;
 
-      if (newMaxRange > MAX_RANGE) {
-        newMaxRange = MAX_RANGE;
-        newMinRange = MAX_RANGE - span;
-      }
+        let newMinRange = min - (movement / dimension) * span;
+        let newMaxRange = max - (movement / dimension) * span;
 
-      setZoomData([{ axisId: zoomData[0].axisId, min: newMinRange, max: newMaxRange }]);
+        if (newMinRange < MIN_RANGE) {
+          newMinRange = MIN_RANGE;
+          newMaxRange = span;
+        }
+
+        if (newMaxRange > MAX_RANGE) {
+          newMaxRange = MAX_RANGE;
+          newMinRange = MAX_RANGE - span;
+        }
+
+        return {
+          ...zoom,
+          min: newMinRange,
+          max: newMaxRange,
+        };
+      });
+
+      setZoomData(newZoomData);
     };
 
     const handleDown = (event: PointerEvent) => {
@@ -81,8 +98,8 @@ export const useSetupPan = () => {
 
       touchStartRef.current = {
         x: point.x,
-        minX: zoomData[0].min,
-        maxX: zoomData[0].max,
+        y: point.y,
+        zoomData,
       };
     };
 
@@ -109,5 +126,5 @@ export const useSetupPan = () => {
       document.removeEventListener('pointercancel', handleUp);
       document.removeEventListener('pointerleave', handleUp);
     };
-  }, [area, svgRef, isDraggingRef, setIsInteracting, zoomData, setZoomData, isPanEnabled]);
+  }, [area, svgRef, isDraggingRef, setIsInteracting, zoomData, setZoomData, isPanEnabled, options]);
 };
