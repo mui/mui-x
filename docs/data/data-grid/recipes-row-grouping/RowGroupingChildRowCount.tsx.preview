@@ -1,0 +1,8 @@
+<DataGridPremium
+  {...data}
+  apiRef={apiRef}
+  initialState={initialState}
+  slots={{
+    footerRowCount: CustomFooterRowCount,
+  }}
+/>

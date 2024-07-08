@@ -18,6 +18,8 @@ export const getFakeContextValue = (
     focusItem: () => {},
     getItem: () => ({}),
     setItemExpansion: () => {},
+    getItemDOMElement: () => null,
+    selectItem: () => {},
   },
   runItemPlugins: () => ({
     rootRef: null,
@@ -39,4 +41,5 @@ export const getFakeContextValue = (
   rootRef: {
     current: null,
   },
+  expansion: { expansionTrigger: 'content' },
 });

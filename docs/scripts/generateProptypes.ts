@@ -10,6 +10,8 @@ import {
 import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/internal-docs-utils';
 import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
 
+const COMPONENTS_WITHOUT_PROPTYPES = ['ChartsAxisTooltipContent', 'ChartsItemTooltipContent'];
+
 async function generateProptypes(project: XTypeScriptProject, sourceFile: string) {
   const isTDate = (name: string) => {
     if (['x-date-pickers', 'x-date-pickers-pro'].includes(project.name)) {
@@ -176,14 +178,20 @@ async function run() {
     }
 
     const componentsWithPropTypes = project.getComponentsWithPropTypes(project);
-    return componentsWithPropTypes.map<Promise<void>>(async (filename) => {
-      try {
-        await generateProptypes(project, filename);
-      } catch (error: any) {
-        error.message = `${filename}: ${error.message}`;
-        throw error;
-      }
-    });
+    return componentsWithPropTypes
+      .filter((filename) =>
+        COMPONENTS_WITHOUT_PROPTYPES.every(
+          (ignoredComponent) => !filename.includes(ignoredComponent),
+        ),
+      )
+      .map<Promise<void>>(async (filename) => {
+        try {
+          await generateProptypes(project, filename);
+        } catch (error: any) {
+          error.message = `${filename}: ${error.message}`;
+          throw error;
+        }
+      });
   });
 
   const results = await Promise.allSettled(promises);

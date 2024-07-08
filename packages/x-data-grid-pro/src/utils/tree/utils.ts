@@ -49,7 +49,7 @@ export const getNodePathInTree = ({
   return path;
 };
 
-export const updateGroupDefaultExpansion = (
+export const checkGroupChildrenExpansion = (
   node: GridGroupNode,
   defaultGroupingExpansionDepth: number,
   isGroupExpandedByDefault?: DataGridProProps['isGroupExpandedByDefault'],
@@ -64,8 +64,20 @@ export const updateGroupDefaultExpansion = (
       defaultGroupingExpansionDepth === -1 || defaultGroupingExpansionDepth > node.depth;
   }
 
-  node.childrenExpanded = childrenExpanded;
+  return childrenExpanded;
+};
 
+export const updateGroupDefaultExpansion = (
+  node: GridGroupNode,
+  defaultGroupingExpansionDepth: number,
+  isGroupExpandedByDefault?: DataGridProProps['isGroupExpandedByDefault'],
+) => {
+  const childrenExpanded = checkGroupChildrenExpansion(
+    node,
+    defaultGroupingExpansionDepth,
+    isGroupExpandedByDefault,
+  );
+  node.childrenExpanded = childrenExpanded;
   return node;
 };
 

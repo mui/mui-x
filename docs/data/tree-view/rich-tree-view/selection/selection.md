@@ -94,3 +94,45 @@ you can create your own custom solution using the `selectedItems`,
 `onSelectedItemsChange` and `onItemSelectionToggle` props:
 
 {{"demo": "ParentChildrenSelectionRelationship.js"}}
+
+## Imperative API
+
+:::success
+To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+
+```tsx
+const apiRef = useTreeViewApiRef();
+
+return <SimpleTreeView apiRef={apiRef}>{children}</SimpleTreeView>;
+```
+
+When your component first renders, `apiRef` will be `undefined`.
+After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
+:::
+
+### Select or deselect an item
+
+Use the `selectItem` API method to select or deselect an item:
+
+```ts
+apiRef.current.selectItem({
+  // The DOM event that triggered the change
+  event,
+  // The id of the item to select or deselect
+  itemId,
+  // If `true`, the other already selected items will remain selected
+  // Otherwise, they will be deselected
+  // This parameter is only relevant when `multiSelect` is `true`
+  keepExistingSelection,
+  // If `true` the item will be selected
+  // If `false` the item will be deselected
+  // If not defined, the item's new selection status will be the opposite of its current one
+  shouldBeSelected,
+});
+```
+
+{{"demo": "ApiMethodSelectItem.js", "defaultCodeOpen": false}}
+
+You can use the `keepExistingSelection` property to avoid losing the already selected items when using `multiSelect`:
+
+{{"demo": "ApiMethodSelectItemKeepExistingSelection.js", "defaultCodeOpen": false}}
