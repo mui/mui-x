@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useDrawingArea, useSvgRef } from '@mui/x-charts/hooks';
 import { getSVGPoint } from '@mui/x-charts/internals';
 import { useZoom } from './useZoom';
+import { ZoomData } from './Zoom.types';
 
 const MAX_RANGE = 100;
 const MIN_RANGE = 0;
@@ -15,12 +16,9 @@ const MAX_ALLOWED_SPAN = 100;
  * @param scaleRatio {number} The target scale ratio.
  * @returns The range to display.
  */
-const zoomAtPoint = (
-  centerRatio: number,
-  scaleRatio: number,
-  currentRange: readonly [number, number],
-) => {
-  const [minRange, maxRange] = currentRange;
+const zoomAtPoint = (centerRatio: number, scaleRatio: number, currentZoomData: ZoomData) => {
+  const minRange = currentZoomData.min;
+  const maxRange = currentZoomData.max;
 
   const point = minRange + centerRatio * (maxRange - minRange);
 
@@ -62,7 +60,7 @@ const isPointOutside = (
 };
 
 export const useSetupZoom = () => {
-  const { zoomRange, setZoomRange } = useZoom();
+  const { zoomData, setZoomData, isZoomEnabled } = useZoom();
   const area = useDrawingArea();
 
   const svgRef = useSvgRef();
@@ -71,7 +69,7 @@ export const useSetupZoom = () => {
 
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null) {
+    if (element === null || !isZoomEnabled) {
       return () => {};
     }
 
@@ -94,14 +92,14 @@ export const useSetupZoom = () => {
       const step = 5;
       const { scaleRatio, isZoomIn } = getWheelScaleRatio(event, step);
 
-      const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoomRange);
+      const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoomData[0]);
 
       // TODO: make span a config option.
       if (!isSpanValid(newMinRange, newMaxRange, isZoomIn)) {
         return;
       }
 
-      setZoomRange([newMinRange, newMaxRange]);
+      setZoomData([{ axisId: zoomData[0].axisId, min: newMinRange, max: newMaxRange }]);
     };
 
     function pointerDownHandler(event: PointerEvent) {
@@ -138,7 +136,7 @@ export const useSetupZoom = () => {
 
         const centerRatio = getHorizontalCenterRatio(point, area);
 
-        const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoomRange);
+        const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoomData[0]);
 
         // TODO: make span a config option.
         if (!isSpanValid(newMinRange, newMaxRange, isZoomIn)) {
@@ -147,7 +145,7 @@ export const useSetupZoom = () => {
         }
 
         eventPrevDiff.current = curDiff;
-        setZoomRange([newMinRange, newMaxRange]);
+        setZoomData([{ axisId: zoomData[0].axisId, min: newMinRange, max: newMaxRange }]);
       }
     }
 
@@ -185,7 +183,7 @@ export const useSetupZoom = () => {
       element.removeEventListener('touchstart', preventDefault);
       element.removeEventListener('touchmove', preventDefault);
     };
-  }, [svgRef, setZoomRange, zoomRange, area]);
+  }, [svgRef, setZoomData, zoomData, area, isZoomEnabled]);
 };
 
 /**

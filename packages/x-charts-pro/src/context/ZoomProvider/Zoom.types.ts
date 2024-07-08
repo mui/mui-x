@@ -1,3 +1,5 @@
+import { AxisId } from '@mui/x-charts/internals';
+
 export type ZoomOptions = {
   min?: number;
   max?: number;
@@ -10,14 +12,12 @@ export type ZoomOptions = {
 export type ZoomData = {
   min: number;
   max: number;
-  axisId?: string;
-};
-
-export type ZoomState = {
-  zoomState: ZoomData[];
-  onZoomChange: (params: ZoomData[]) => void;
+  axisId: AxisId;
 };
 
 export type ZoomProps = {
-  zoom?: ZoomOptions[] | 'x' | 'y' | 'xy';
+  zoom: ZoomData[];
+  onZoomChange: (zoom: ZoomData[]) => void;
 };
+
+export type DefaultizedZoomOptions = Required<ZoomOptions> & { axisId: AxisId };

@@ -3,6 +3,7 @@ import { AxisConfig, ScaleName, ChartsXAxisProps, ChartsYAxisProps } from '@mui/
 import { cartesianProviderUtils } from '@mui/x-charts/internals';
 import { ZoomContext } from './ZoomContext';
 import { defaultizeZoom } from './defaultizeZoom';
+import { ZoomData } from './Zoom.types';
 
 const { defaultizeAxis } = cartesianProviderUtils;
 
@@ -23,11 +24,15 @@ type ZoomProviderProps = {
 };
 
 export function ZoomProvider({ children, xAxis: inXAxis, yAxis: inYAxis }: ZoomProviderProps) {
-  const [zoomRange, setZoomRange] = React.useState<[number, number]>([0, 100]);
   const [isInteracting, setIsInteracting] = React.useState<boolean>(false);
 
   const xZoomOptions = React.useMemo(() => defaultizeZoom(defaultizeAxis(inXAxis, 'x')), [inXAxis]);
   const yZoomOptions = React.useMemo(() => defaultizeZoom(defaultizeAxis(inYAxis, 'y')), [inYAxis]);
+
+  const [zoomData, setZoomData] = React.useState<ZoomData[]>([
+    ...(xZoomOptions?.map((v) => ({ axisId: v.axisId, min: v.min, max: v.max })) ?? []),
+    ...(yZoomOptions?.map((v) => ({ axisId: v.axisId, min: v.min, max: v.max })) ?? []),
+  ]);
 
   const value = React.useMemo(
     () => ({
@@ -35,13 +40,15 @@ export function ZoomProvider({ children, xAxis: inXAxis, yAxis: inYAxis }: ZoomP
       data: {
         isZoomEnabled: Boolean(xZoomOptions || yZoomOptions),
         isPanEnabled: isPanEnabled(xZoomOptions, yZoomOptions),
-        zoomRange,
-        setZoomRange,
+        xOptions: xZoomOptions || [],
+        yOptions: yZoomOptions || [],
+        zoomData,
+        setZoomData,
         isInteracting,
         setIsInteracting,
       },
     }),
-    [zoomRange, setZoomRange, isInteracting, setIsInteracting, xZoomOptions, yZoomOptions],
+    [zoomData, setZoomData, isInteracting, setIsInteracting, xZoomOptions, yZoomOptions],
   );
 
   return <ZoomContext.Provider value={value}>{children}</ZoomContext.Provider>;

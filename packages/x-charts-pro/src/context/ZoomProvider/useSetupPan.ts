@@ -16,7 +16,7 @@ const isPointOutside = (
 };
 
 export const useSetupPan = () => {
-  const { zoomRange, setZoomRange, setIsInteracting } = useZoom();
+  const { zoomData, setZoomData, setIsInteracting, isPanEnabled } = useZoom();
   const area = useDrawingArea();
 
   const svgRef = useSvgRef();
@@ -27,7 +27,7 @@ export const useSetupPan = () => {
 
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null) {
+    if (element === null || !isPanEnabled) {
       return () => {};
     }
 
@@ -60,7 +60,7 @@ export const useSetupPan = () => {
         newMinRange = MAX_RANGE - span;
       }
 
-      setZoomRange([newMinRange, newMaxRange]);
+      setZoomData([{ axisId: zoomData[0].axisId, min: newMinRange, max: newMaxRange }]);
     };
 
     const handleDown = (event: PointerEvent) => {
@@ -81,8 +81,8 @@ export const useSetupPan = () => {
 
       touchStartRef.current = {
         x: point.x,
-        minX: zoomRange[0],
-        maxX: zoomRange[1],
+        minX: zoomData[0].min,
+        maxX: zoomData[0].max,
       };
     };
 
@@ -109,5 +109,5 @@ export const useSetupPan = () => {
       document.removeEventListener('pointercancel', handleUp);
       document.removeEventListener('pointerleave', handleUp);
     };
-  }, [area, svgRef, isDraggingRef, zoomRange, setZoomRange, setIsInteracting]);
+  }, [area, svgRef, isDraggingRef, setIsInteracting, zoomData, setZoomData, isPanEnabled]);
 };

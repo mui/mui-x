@@ -6,6 +6,7 @@ import {
   ChartsYAxisProps,
   isBandScaleConfig,
   isPointScaleConfig,
+  AxisId,
 } from '../../models/axis';
 import { CartesianChartSeriesType, ExtremumGetter } from '../../models/seriesType/config';
 import { DefaultizedAxisConfig } from './CartesianContext';
@@ -59,7 +60,7 @@ export function computeValue(
   axis: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[] | undefined,
   extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
   axisName: 'y',
-  zoomRange?: [number, number],
+  zoomData?: { axisId: AxisId; min: number; max: number }[],
 ): {
   axis: DefaultizedAxisConfig<ChartsYAxisProps>;
   axisIds: string[];
@@ -70,7 +71,7 @@ export function computeValue(
   inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[] | undefined,
   extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
   axisName: 'x',
-  zoomRange?: [number, number],
+  zoomData?: { axisId: AxisId; min: number; max: number }[],
 ): {
   axis: DefaultizedAxisConfig<ChartsAxisProps>;
   axisIds: string[];
@@ -81,7 +82,7 @@ export function computeValue(
   inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsAxisProps>, 'id'>[] | undefined,
   extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
   axisName: 'x' | 'y',
-  zoomRange: [number, number] = [0, 100],
+  zoomData?: { axisId: AxisId; min: number; max: number }[],
 ) {
   const allAxis = defaultizeAxis(inAxis, axisName);
 
@@ -95,6 +96,8 @@ export function computeValue(
       formattedSeries,
     );
 
+    const zoom = zoomData?.find(({ axisId }) => axisId === axis.id);
+    const zoomRange: [number, number] = zoom ? [zoom.min, zoom.max] : [0, 100];
     const range = getRange(drawingArea, axisName, axis.reverse);
 
     if (isBandScaleConfig(axis)) {

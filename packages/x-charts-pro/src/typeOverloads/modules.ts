@@ -4,7 +4,7 @@ import {
   HeatmapSeriesType,
   DefaultizedHeatmapSeriesType,
 } from '../models/seriesType/heatmap';
-import { ZoomOptions } from '../context/ZoomProvider/ZoomProps';
+import { ZoomOptions } from '../context/ZoomProvider/Zoom.types';
 
 declare module '@mui/x-charts/internals' {
   interface ChartsSeriesConfig {
@@ -17,11 +17,7 @@ declare module '@mui/x-charts/internals' {
     };
   }
 
-  interface ChartsXAxisProps {
-    zoom?: boolean | ZoomOptions;
-  }
-
-  interface ChartsYAxisProps {
+  interface ChartsAxisProps {
     zoom?: boolean | ZoomOptions;
   }
 }
