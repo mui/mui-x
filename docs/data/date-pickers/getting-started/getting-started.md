@@ -24,7 +24,7 @@ Using your favorite package manager, install:
 
 :::info
 If you need more information about the date library supported by the Date and Time Pickers,
-take a look at the [dedicated section](/x/react-date-pickers/#date-library)
+take a look at the [dedicated section](/x/react-date-pickers/base-concepts/#date-library)
 :::
 
 The Date and Time Pickers package has a peer dependency on `@mui/material`.
