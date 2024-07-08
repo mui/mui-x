@@ -54,7 +54,7 @@ ${formatObject(identifier)}`}
             data: items,
           },
         ]}
-        onClick={handleClick}
+        onItemClick={handleClick}
         width={400}
         height={200}
         margin={{ right: 200 }}
