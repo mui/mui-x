@@ -38,11 +38,10 @@
     "@mui/x-data-grid-premium": "workspace:*",
     "chance": "^1.1.11",
     "clsx": "^2.1.1",
-    "lru-cache": "^7.18.3"
+    "lru-cache": "^10.3.0"
   },
   "devDependencies": {
     "@types/chance": "^1.1.6",
-    "@types/lru-cache": "^7.10.10",
     "rimraf": "^5.0.7"
   },
   "peerDependencies": {
