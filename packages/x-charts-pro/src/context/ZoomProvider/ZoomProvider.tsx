@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { AxisConfig, ScaleName, ChartsXAxisProps, ChartsYAxisProps } from '@mui/x-charts';
 import { cartesianProviderUtils } from '@mui/x-charts/internals';
-import { ZoomContext } from './ZoomContext';
+import { ZoomContext, ZoomState } from './ZoomContext';
 import { defaultizeZoom } from './defaultizeZoom';
 import { ZoomData } from './Zoom.types';
 
@@ -26,34 +26,44 @@ type ZoomProviderProps = {
 export function ZoomProvider({ children, xAxis: inXAxis, yAxis: inYAxis }: ZoomProviderProps) {
   const [isInteracting, setIsInteracting] = React.useState<boolean>(false);
 
-  const xZoomOptions = React.useMemo(() => defaultizeZoom(defaultizeAxis(inXAxis, 'x')), [inXAxis]);
-  const yZoomOptions = React.useMemo(() => defaultizeZoom(defaultizeAxis(inYAxis, 'y')), [inYAxis]);
+  const options = React.useMemo(
+    () =>
+      [
+        ...(defaultizeZoom(defaultizeAxis(inXAxis, 'x'), 'x') ?? []),
+        ...(defaultizeZoom(defaultizeAxis(inYAxis, 'y'), 'y') ?? []),
+      ].reduce(
+        (acc, v) => {
+          acc[v.axisId] = v;
+          return acc;
+        },
+        {} as ZoomState['options'],
+      ),
+    [inXAxis, inYAxis],
+  );
 
-  const [zoomData, setZoomData] = React.useState<ZoomData[]>([
-    ...(xZoomOptions?.map((v) => ({ axisId: v.axisId, min: v.min, max: v.max })) ?? []),
-    ...(yZoomOptions?.map((v) => ({ axisId: v.axisId, min: v.min, max: v.max })) ?? []),
-  ]);
+  const [zoomData, setZoomData] = React.useState<ZoomData[]>(
+    Object.values(options).map((v) => ({ axisId: v.axisId, min: v.min, max: v.max })),
+  );
 
   const value = React.useMemo(
     () => ({
       isInitialized: true,
       data: {
-        isZoomEnabled: Boolean(xZoomOptions || yZoomOptions),
-        isPanEnabled: isPanEnabled(xZoomOptions, yZoomOptions),
-        xOptions: xZoomOptions || [],
-        yOptions: yZoomOptions || [],
+        isZoomEnabled: zoomData.length > 0,
+        isPanEnabled: isPanEnabled(options),
+        options,
         zoomData,
         setZoomData,
         isInteracting,
         setIsInteracting,
       },
     }),
-    [zoomData, setZoomData, isInteracting, setIsInteracting, xZoomOptions, yZoomOptions],
+    [zoomData, setZoomData, isInteracting, setIsInteracting, options],
   );
 
   return <ZoomContext.Provider value={value}>{children}</ZoomContext.Provider>;
 }
 
-function isPanEnabled(x?: { panning?: boolean }[], y?: { panning?: boolean }[]): boolean {
-  return x?.some((v) => v.panning) || y?.some((v) => v.panning) || false;
+function isPanEnabled(options: Record<any, { panning?: boolean }>): boolean {
+  return Object.values(options).some((v) => v.panning) || false;
 }

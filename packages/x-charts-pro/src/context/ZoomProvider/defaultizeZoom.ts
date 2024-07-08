@@ -13,6 +13,7 @@ const defaultZoomOptions = {
 
 export const defaultizeZoom = (
   axis: Pick<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id' | 'zoom'>[] | undefined,
+  axisName: 'x' | 'y',
 ): DefaultizedZoomOptions[] | undefined => {
   if (!axis) {
     return undefined;
@@ -27,12 +28,14 @@ export const defaultizeZoom = (
       if (v.zoom === true) {
         return {
           axisId: v.id,
+          axis: axisName,
           ...defaultZoomOptions,
         };
       }
 
       return {
         axisId: v.id,
+        axis: axisName,
         ...defaultZoomOptions,
         ...v.zoom,
       };
