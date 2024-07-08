@@ -65,6 +65,6 @@ export type UseTreeViewFocusSignature = TreeViewPluginSignature<{
     UseTreeViewItemsSignature,
     UseTreeViewSelectionSignature,
     UseTreeViewExpansionSignature,
-    UseTreeViewLabelSignature,
   ];
+  optionalDependencies: [UseTreeViewLabelSignature];
 }>;
