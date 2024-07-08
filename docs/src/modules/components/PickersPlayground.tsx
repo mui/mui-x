@@ -38,6 +38,9 @@ import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRange
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { isDatePickerView, isTimeView } from '@mui/x-date-pickers/internals';
+import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
+import { DesktopDateTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopDateTimeRangePicker';
+import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
 
 const ComponentSection = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -154,13 +157,14 @@ const DEFAULT_VIEWS_MAP: ViewsMap = {
   seconds: false,
 };
 
-type ComponentFamily = 'date' | 'time' | 'date-time' | 'date-range';
+type ComponentFamily = 'date' | 'time' | 'date-time' | 'date-range' | 'date-time-range';
 
 const componentFamilies: { family: ComponentFamily; label: string }[] = [
   { family: 'date', label: 'Date' },
   { family: 'time', label: 'Time' },
   { family: 'date-time', label: 'Date Time' },
   { family: 'date-range', label: 'Date Range' },
+  { family: 'date-time-range', label: 'Date Time Range' },
 ];
 
 interface ComponentFamilySet {
@@ -392,6 +396,7 @@ export default function PickersPlayground() {
       ampm: ampm !== undefined ? ampm : undefined,
       ampmInClock: ampmInClock !== undefined ? ampmInClock : undefined,
       displayStaticWrapperAs: isStaticDesktopMode ? 'desktop' : 'mobile',
+      sx: { [`&.${pickersLayoutClasses.root}`]: { overflowX: 'auto' } },
     }),
     [
       ampm,
@@ -508,6 +513,22 @@ export default function PickersPlayground() {
     [commonProps],
   );
 
+  const DATE_TIME_RANGE_PICKERS: ComponentFamilySet[] = React.useMemo(
+    () => [
+      {
+        name: 'DesktopDateTimeRangePicker',
+        component: DesktopDateTimeRangePicker,
+        props: commonProps,
+      },
+      {
+        name: 'MobileDateTimeRangePicker',
+        component: MobileDateTimeRangePicker,
+        props: commonProps,
+      },
+    ],
+    [commonProps],
+  );
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box
@@ -592,6 +613,30 @@ export default function PickersPlayground() {
               ))}
             </DemoContainer>
           )}
+          {selectedPickers === 'date-time-range' && (
+            <DemoContainer
+              components={['DesktopDateTimeRangePicker', 'MobileDateTimeRangePicker']}
+              sx={{ flexGrow: 1 }}
+            >
+              {DATE_TIME_RANGE_PICKERS.map(({ name, component: Component, props }) => (
+                <Component
+                  key={name}
+                  label={name}
+                  calendars={singleCalendar ? 1 : undefined}
+                  views={['day', ...timeViews]}
+                  {...props}
+                  slotProps={{
+                    ...props.slotProps,
+                    ...(displayShortcuts && {
+                      shortcuts: {
+                        items: shortcutsItems,
+                      },
+                    }),
+                  }}
+                />
+              ))}
+            </DemoContainer>
+          )}
         </ComponentSection>
         <Divider orientation="vertical" light sx={{ display: { xs: 'none', md: 'flex' } }} />
         <Divider light sx={{ display: { xs: 'auto', md: 'none' } }} />
@@ -622,23 +667,31 @@ export default function PickersPlayground() {
             {selectedPickers !== 'date-range' && (
               <ViewSwitcher
                 showDateViews={selectedPickers === 'date' || selectedPickers === 'date-time'}
-                showTimeViews={selectedPickers === 'time' || selectedPickers === 'date-time'}
+                showTimeViews={
+                  selectedPickers === 'time' ||
+                  selectedPickers === 'date-time' ||
+                  selectedPickers === 'date-time-range'
+                }
                 views={views}
                 handleViewsChange={handleViewsChange}
               />
             )}
-            <BooleanGroupControl
-              label="Static desktop mode"
-              value={isStaticDesktopMode}
-              onChange={setIsStaticDesktopMode}
-            />
-            {selectedPickers === 'date-time' && (
-              <TriBooleanGroupControl
-                label="Tabs hidden"
-                value={isTabsHidden}
-                onChange={setIsTabsHidden}
+            {selectedPickers !== 'date-time-range' && (
+              <BooleanGroupControl
+                label="Static desktop mode"
+                value={isStaticDesktopMode}
+                onChange={setIsStaticDesktopMode}
               />
             )}
+
+            {selectedPickers === 'date-time' ||
+              (selectedPickers === 'date-time-range' && (
+                <TriBooleanGroupControl
+                  label="Tabs hidden"
+                  value={isTabsHidden}
+                  onChange={setIsTabsHidden}
+                />
+              ))}
             <BooleanGroupControl
               label="Show days outside current month"
               value={showDaysOutsideCurrentMonth}
@@ -654,7 +707,7 @@ export default function PickersPlayground() {
               value={displayWeekNumber}
               onChange={setDisplayWeekNumber}
             />
-            {selectedPickers !== 'date-range' && (
+            {selectedPickers !== 'date-range' && selectedPickers !== 'date-time-range' && (
               <BooleanGroupControl
                 label="Disable day margin"
                 value={disableDayMargin}
