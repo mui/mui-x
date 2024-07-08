@@ -131,7 +131,7 @@ export {
   mergeDateAndTime,
   formatMeridiem,
 } from './utils/date-utils';
-export { resolveTimeViewsResponse } from './utils/date-time-utils';
+export { resolveTimeViewsResponse, resolveDateTimeFormat } from './utils/date-time-utils';
 export { splitFieldInternalAndForwardedProps } from './utils/fields';
 export { getDefaultReferenceDate } from './utils/getDefaultReferenceDate';
 export {
