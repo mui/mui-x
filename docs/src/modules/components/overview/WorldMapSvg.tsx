@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, alpha, useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import clsx from 'clsx';
 
 const Continent = styled('g')(({ theme }) => ({
