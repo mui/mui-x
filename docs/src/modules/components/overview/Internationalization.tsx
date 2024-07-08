@@ -205,19 +205,20 @@ function ValidationDemo() {
   const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
 
   return (
-    <Paper
-      component="div"
-      variant="outlined"
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: brandingTheme.spacing(3),
-        width: '100%',
-        background: `${(brandingTheme.vars || brandingTheme).palette.gradients.linearSubtle}`,
-      }}
-    >
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      {' '}
+      <Paper
+        component="div"
+        variant="outlined"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          padding: brandingTheme.spacing(3),
+          width: '100%',
+          background: `${(brandingTheme.vars || brandingTheme).palette.gradients.linearSubtle}`,
+        }}
+      >
         <ThemeProvider theme={theme}>
           <Stack spacing={2} sx={{ width: '100%', maxWidth: '400px', height: 'fit-content' }}>
             <DateTimeField
@@ -248,8 +249,8 @@ function ValidationDemo() {
             <DateTimeRangePicker defaultValue={[fiveAM, nineAM]} maxTime={fiveAM} />
           </Stack>
         </ThemeProvider>
-      </LocalizationProvider>
-    </Paper>
+      </Paper>
+    </LocalizationProvider>
   );
 }
 
