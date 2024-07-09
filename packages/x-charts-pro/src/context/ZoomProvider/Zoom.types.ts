@@ -13,15 +13,53 @@ export type ZoomOptions = {
    * @default 100
    */
   end?: number;
+  /**
+   * The step size of the zoom range. Defines the granularity of the zoom.
+   *
+   * @default 5
+   */
   step?: number;
+  /**
+   * Restricts the minimal window size in a percentage. In the range of 0 to 100.
+   *
+   * If the window size is smaller than the minSpan, the window will be resized to the minSpan.
+   *
+   * @default 10
+   */
   minSpan?: number;
+  /**
+   * Restricts the maximal window size in a percentage. In the range of 0 to 100.
+   *
+   * If the window size is larger than the maxSpan, the window will be resized to the maxSpan.
+   *
+   * @default 100
+   */
   maxSpan?: number;
+  /**
+   * Set to `false` to disable panning. Useful when you want to pan programmatically,
+   * or to show only a specific section of the chart.
+   *
+   * @default true
+   */
   panning?: boolean;
 };
 
 export type ZoomData = {
+  /**
+   * The starting percentage of the zoom range. In the range of 0 to 100.
+   *
+   * @default 0
+   */
   start: number;
+  /**
+   * The ending percentage of the zoom range. In the range of 0 to 100.
+   *
+   * @default 100
+   */
   end: number;
+  /**
+   * The axis id that the zoom data belongs to.
+   */
   axisId: AxisId;
 };
 
