@@ -25,7 +25,7 @@
     {
       "name": "setRowSelectionModel",
       "description": "Updates the selected rows to be those passed to the <code>rowIds</code> argument. Any row already selected will be unselected.",
-      "type": "(rowIds: GridRowId[]) => void"
+      "type": "(rowIds: readonly GridRowId[]) => void"
     }
   ]
 }
