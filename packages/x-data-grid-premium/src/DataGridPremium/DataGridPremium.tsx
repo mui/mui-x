@@ -504,6 +504,7 @@ DataGridPremiumRaw.propTypes = {
   keepNonExistentRowsSelected: PropTypes.bool,
   /**
    * If `true`, a loading overlay is displayed.
+   * @default false
    */
   loading: PropTypes.bool,
   /**
