@@ -346,7 +346,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   }
 
   const getCell = (
-    column: GridStateColDef,
+    column: GridStateColDef | undefined,
     indexInSection: number,
     indexRelativeToAllColumns: number,
     sectionLength: number,
@@ -356,6 +356,11 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       rowId,
       indexRelativeToAllColumns,
     );
+
+    if (!column) {
+      // See https://github.com/mui/mui-x/issues/13719
+      return null;
+    }
 
     if (cellColSpanInfo?.spannedByColSpan) {
       return null;
