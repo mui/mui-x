@@ -88,7 +88,7 @@ function checkZoomOptionsErrors(options: ZoomOptions) {
 }
 
 function isBetween(value: number, min: number, max: number, name: string) {
-  if (value < 0 || value > 100) {
+  if (value < min || value > max) {
     throw new Error(`MUI X Charts: The ${name} value must be between ${min} and ${max}.`);
   }
 }

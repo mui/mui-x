@@ -28,25 +28,25 @@ describe('defaultizeZoom errors', () => {
 
   it('should throw an error when zoom.minSpan is below 1', async function test() {
     expect(() => defaultizeZoom([{ id: '1', zoom: { minSpan: 0 } }], 'x')).throws(
-      'MUI X Charts: The minSpan value must be between 0 and 100.',
+      'MUI X Charts: The minSpan value must be between 1 and 100.',
     );
   });
 
   it('should throw an error when zoom.minSpan is above 100', async function test() {
     expect(() => defaultizeZoom([{ id: '1', zoom: { minSpan: 101 } }], 'x')).throws(
-      'MUI X Charts: The minSpan value must be between 0 and 100.',
+      'MUI X Charts: The minSpan value must be between 1 and 100.',
     );
   });
 
   it('should throw an error when zoom.maxSpan is below 1', async function test() {
     expect(() => defaultizeZoom([{ id: '1', zoom: { maxSpan: 0 } }], 'x')).throws(
-      'MUI X Charts: The maxSpan value must be between 0 and 100.',
+      'MUI X Charts: The maxSpan value must be between 1 and 100.',
     );
   });
 
   it('should throw an error when zoom.maxSpan is above 100', async function test() {
     expect(() => defaultizeZoom([{ id: '1', zoom: { maxSpan: 101 } }], 'x')).throws(
-      'MUI X Charts: The maxSpan value must be between 0 and 100.',
+      'MUI X Charts: The maxSpan value must be between 1 and 100.',
     );
   });
 
@@ -86,7 +86,15 @@ describe('defaultizeZoom errors', () => {
 
   it('should not throw an error when zoom is valid', async function test() {
     expect(() =>
-      defaultizeZoom([{ id: '1', zoom: { start: 0, end: 100, minSpan: 0, maxSpan: 100 } }], 'x'),
+      defaultizeZoom(
+        [
+          {
+            id: '1',
+            zoom: { start: 1, end: 99, minSpan: 1, maxSpan: 99, step: 10, panning: false },
+          },
+        ],
+        'x',
+      ),
     ).not.to.throw();
   });
 });
