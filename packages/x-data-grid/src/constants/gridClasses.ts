@@ -368,6 +368,11 @@ export interface GridClasses {
    */
   'main--hasPinnedRight': string;
   /**
+   * Styles applied to the main container element when it has an active skeleton loading overlay.
+   * @ignore - do not document.
+   */
+  'main--hasSkeletonLoadingOverlay': string;
+  /**
    * Styles applied to the menu element.
    */
   menu: string;
@@ -488,6 +493,10 @@ export interface GridClasses {
    * Styles applied to the root element of the row reorder cell when dragging is allowed
    */
   'rowReorderCell--draggable': string;
+  /**
+   * Styles applied to the skeleton row element.
+   */
+  rowSkeleton: string;
   /**
    * Styles applied to both scroll area elements.
    */
@@ -706,6 +715,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'iconSeparator',
   'main',
   'main--hasPinnedRight',
+  'main--hasSkeletonLoadingOverlay',
   'menu',
   'menuIcon',
   'menuIconButton',
@@ -732,6 +742,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'rowReorderCellContainer',
   'rowReorderCell',
   'rowReorderCell--draggable',
+  'rowSkeleton',
   'scrollArea--left',
   'scrollArea--right',
   'scrollArea',
