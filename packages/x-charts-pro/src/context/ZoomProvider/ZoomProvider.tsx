@@ -42,7 +42,7 @@ export function ZoomProvider({ children, xAxis: inXAxis, yAxis: inYAxis }: ZoomP
   );
 
   const [zoomData, setZoomData] = React.useState<ZoomData[]>(() =>
-    Object.values(options).map((v) => ({ axisId: v.axisId, min: v.min, max: v.max })),
+    Object.values(options).map((v) => ({ axisId: v.axisId, start: v.start, end: v.end })),
   );
 
   const value = React.useMemo(

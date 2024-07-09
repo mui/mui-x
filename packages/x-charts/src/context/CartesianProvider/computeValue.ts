@@ -60,7 +60,7 @@ export function computeValue(
   axis: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[] | undefined,
   extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
   axisName: 'y',
-  zoomData?: { axisId: AxisId; min: number; max: number }[],
+  zoomData?: { axisId: AxisId; start: number; end: number }[],
 ): {
   axis: DefaultizedAxisConfig<ChartsYAxisProps>;
   axisIds: string[];
@@ -71,7 +71,7 @@ export function computeValue(
   inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[] | undefined,
   extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
   axisName: 'x',
-  zoomData?: { axisId: AxisId; min: number; max: number }[],
+  zoomData?: { axisId: AxisId; start: number; end: number }[],
 ): {
   axis: DefaultizedAxisConfig<ChartsAxisProps>;
   axisIds: string[];
@@ -82,7 +82,7 @@ export function computeValue(
   inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsAxisProps>, 'id'>[] | undefined,
   extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
   axisName: 'x' | 'y',
-  zoomData?: { axisId: AxisId; min: number; max: number }[],
+  zoomData?: { axisId: AxisId; start: number; end: number }[],
 ) {
   const allAxis = defaultizeAxis(inAxis, axisName);
 
@@ -97,7 +97,7 @@ export function computeValue(
     );
 
     const zoom = zoomData?.find(({ axisId }) => axisId === axis.id);
-    const zoomRange: [number, number] = zoom ? [zoom.min, zoom.max] : [0, 100];
+    const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
     const range = getRange(drawingArea, axisName, axis.reverse);
 
     if (isBandScaleConfig(axis)) {

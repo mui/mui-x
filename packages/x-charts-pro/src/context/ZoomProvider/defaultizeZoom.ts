@@ -3,8 +3,8 @@ import { isDefined } from '@mui/x-charts/internals';
 import { DefaultizedZoomOptions } from './Zoom.types';
 
 const defaultZoomOptions = {
-  min: 0,
-  max: 100,
+  start: 0,
+  end: 100,
   step: 5,
   minSpan: 10,
   maxSpan: 100,

@@ -16,13 +16,13 @@ const zoomAtPoint = (
   currentZoomData: ZoomData,
   options: DefaultizedZoomOptions,
 ) => {
-  const MAX_RANGE = options.max;
-  const MIN_RANGE = options.min;
+  const MIN_RANGE = options.start;
+  const MAX_RANGE = options.end;
 
   const MIN_ALLOWED_SPAN = options.minSpan;
 
-  const minRange = currentZoomData.min;
-  const maxRange = currentZoomData.max;
+  const minRange = currentZoomData.start;
+  const maxRange = currentZoomData.end;
 
   const point = minRange + centerRatio * (maxRange - minRange);
 
@@ -104,7 +104,7 @@ export const useSetupZoom = () => {
           return zoom;
         }
 
-        return { axisId: zoom.axisId, min: newMinRange, max: newMaxRange };
+        return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
       });
 
       setZoomData(newZoomData);
@@ -160,7 +160,7 @@ export const useSetupZoom = () => {
           return zoom;
         }
 
-        return { axisId: zoom.axisId, min: newMinRange, max: newMaxRange };
+        return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
       });
 
       eventPrevDiff.current = curDiff;
@@ -222,7 +222,7 @@ function isSpanValid(
     return false;
   }
 
-  if (minRange < option.min || maxRange > option.max) {
+  if (minRange < option.start || maxRange > option.end) {
     return false;
   }
 

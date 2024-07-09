@@ -48,11 +48,11 @@ export const useSetupPan = () => {
           return zoom;
         }
 
-        const min = zoom.min;
-        const max = zoom.max;
+        const min = zoom.start;
+        const max = zoom.end;
         const span = max - min;
-        const MIN_PERCENT = option.min;
-        const MAX_PERCENT = option.max;
+        const MIN_PERCENT = option.start;
+        const MAX_PERCENT = option.end;
 
         const movement = option.axis === 'x' ? movementX : movementY;
         const dimension = option.axis === 'x' ? area.width : area.height;
@@ -81,8 +81,8 @@ export const useSetupPan = () => {
 
         return {
           ...zoom,
-          min: newMinPercent,
-          max: newMaxPercent,
+          start: newMinPercent,
+          end: newMaxPercent,
         };
       });
 

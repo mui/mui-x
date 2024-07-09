@@ -1,8 +1,18 @@
 import { AxisId } from '@mui/x-charts/internals';
 
 export type ZoomOptions = {
-  min?: number;
-  max?: number;
+  /**
+   * The starting percentage of the zoom range. In the range of 0 to 100.
+   *
+   * @default 0
+   */
+  start?: number;
+  /**
+   * The ending percentage of the zoom range. In the range of 0 to 100.
+   *
+   * @default 100
+   */
+  end?: number;
   step?: number;
   minSpan?: number;
   maxSpan?: number;
@@ -10,8 +20,8 @@ export type ZoomOptions = {
 };
 
 export type ZoomData = {
-  min: number;
-  max: number;
+  start: number;
+  end: number;
   axisId: AxisId;
 };
 
