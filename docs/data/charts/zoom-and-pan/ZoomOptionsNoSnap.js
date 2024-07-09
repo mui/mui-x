@@ -53,7 +53,7 @@ const knobs = [
 export default function ZoomOptionsNoSnap() {
   return (
     <ChartsUsageDemo
-      componentName="Margin demos"
+      componentName="Zoom Options demo"
       data={knobs}
       renderDemo={(props) => (
         <div style={{ width: '100%', margin: 4 }}>
