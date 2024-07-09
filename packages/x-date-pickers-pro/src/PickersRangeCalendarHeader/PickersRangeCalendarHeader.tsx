@@ -41,6 +41,7 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
     minDate,
     maxDate,
     timezone,
+    // omit props that are not used in the PickersArrowSwitcher
     reduceAnimations,
     views,
     view,
