@@ -33,7 +33,7 @@ export const defaultizeZoom = (
         };
       }
 
-      checkErrors(v.zoom);
+      checkZoomOptionsErrors(v.zoom);
 
       return {
         axisId: v.id,
@@ -47,7 +47,7 @@ export const defaultizeZoom = (
   return defaultized.length > 0 ? defaultized : undefined;
 };
 
-function checkErrors(options: ZoomOptions) {
+function checkZoomOptionsErrors(options: ZoomOptions) {
   const start = options.start ?? defaultZoomOptions.start;
   const end = options.end ?? defaultZoomOptions.end;
   const step = options.step ?? defaultZoomOptions.step;
@@ -55,18 +55,18 @@ function checkErrors(options: ZoomOptions) {
   const maxSpan = options.maxSpan ?? defaultZoomOptions.maxSpan;
   const span = end - start;
 
-  if (end <= start) {
-    throw new Error('MUI X Charts: The end value must be greater than the start value.');
-  }
-
-  if (step <= 0) {
-    throw new Error('MUI X Charts: The step value must be greater than 0.');
-  }
-
   isBetweenZeroAndHundred(start, 'start');
   isBetweenZeroAndHundred(end, 'end');
   isBetweenZeroAndHundred(minSpan, 'minSpan');
   isBetweenZeroAndHundred(maxSpan, 'maxSpan');
+
+  if (end <= start) {
+    throw new Error('MUI X Charts: The end value must be greater than the start value.');
+  }
+
+  if (step <= 1) {
+    throw new Error('MUI X Charts: The step value must be greater than 1.');
+  }
 
   if (minSpan > maxSpan) {
     throw new Error(
