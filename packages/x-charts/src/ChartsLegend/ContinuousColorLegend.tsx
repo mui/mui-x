@@ -2,29 +2,20 @@ import * as React from 'react';
 import { ScaleSequential } from 'd3-scale';
 import ChartsContinuousGradient from '../internals/components/ChartsAxesGradients/ChartsContinuousGradient';
 import { ContinuousScaleName } from '../models/axis';
-import { ChartsLegendProps } from './ChartsLegend';
 import { useDrawingArea } from '../hooks';
 import { getScale } from '../internals/getScale';
-import { ContinuousColorConfig } from '../models/colorMapping';
 import { getPercentageValue } from '../internals/utils';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
-import { ChartsTextBaseline, ChartsTextStyle } from '../internals/getWordsByLines';
 import { getStringSize } from '../internals/domUtils';
-import { AnchorPosition } from './utils';
-
-type BoundingBox = {
-  width: number;
-  height: number;
-};
-
-interface Position {
-  x: number;
-  y: number;
-}
-interface TextPosition extends Position {
-  dominantBaseline: ChartsTextBaseline;
-  textAnchor: ChartsTextStyle['textAnchor'];
-}
+import { useAxis } from './useAxis';
+import {
+  AnchorPosition,
+  BoundingBox,
+  ColorLegendSelector,
+  LegendPlacement,
+  Position,
+  TextPosition,
+} from './legend.types';
 
 function getPositionOffset(position: AnchorPosition, legendBox: BoundingBox, svgBox: BoundingBox) {
   let offsetX = 0;
@@ -64,8 +55,8 @@ function getElementPositions(
   text2Box: BoundingBox,
   params: {
     spacing: number;
-    alignment: LegendGradientProps['alignment'];
-    direction: LegendGradientProps['direction'];
+    alignment: ContinuousColorLegendProps['alignment'];
+    direction: ContinuousColorLegendProps['direction'];
   },
 ): {
   text1: TextPosition;
@@ -148,9 +139,8 @@ function getElementPositions(
     }
   }
 }
-interface LegendGradientProps extends Pick<ChartsLegendProps, 'position' | 'direction'> {
-  colorScale: ScaleSequential<string, string | null>;
-  colorMap: ContinuousColorConfig<number | Date>;
+
+export interface ContinuousColorLegendProps extends LegendPlacement, ColorLegendSelector {
   /**
    * A unique identifier for the gradient.
    */
@@ -188,10 +178,8 @@ interface LegendGradientProps extends Pick<ChartsLegendProps, 'position' | 'dire
   labelStyle?: ChartsTextProps['style'];
 }
 
-export function LegendGradient(props: LegendGradientProps) {
+export function ContinuousColorLegend(props: ContinuousColorLegendProps) {
   const {
-    colorScale,
-    colorMap,
     id,
     scaleType = 'linear',
     direction,
@@ -207,7 +195,11 @@ export function LegendGradient(props: LegendGradientProps) {
       letterSpacing: '0.00938em',
     },
     position,
+    axisDirection,
+    axisId,
   } = props;
+
+  const axisItem = useAxis({ axisDirection, axisId });
   const { width, height, left, right, top, bottom } = useDrawingArea();
 
   const refLength = direction === 'column' ? height + top + bottom : width + left + right;
@@ -220,9 +212,12 @@ export function LegendGradient(props: LegendGradientProps) {
 
   const isReversed = direction === 'column';
 
-  if (!colorScale || !colorMap) {
+  const colorMap = axisItem?.colorMap;
+  if (!colorMap || !colorMap.type || colorMap.type !== 'continuous') {
     return null;
   }
+  const colorScale = axisItem.colorScale as ScaleSequential<string, string | null>;
+
   const scale = getScale(
     scaleType,
     [colorMap.min, colorMap.max],

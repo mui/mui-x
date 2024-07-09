@@ -59,3 +59,27 @@ The `labelStyle` property is needed to measure text size, and then place legend 
 Style applied by other means will not be taken into account.
 Which can lead to label overflow.
 :::
+
+## Color legend
+
+To display legend associated to a [colorMap](https://mui.com/x/react-charts/styling/#values-color), use the `<ChartsColorScaleLegend />`.
+This component support both `'piecewise'` and `'continuous'` type of color mapping.
+
+### Select data
+
+To select the color mapping to represent, use the following props:
+
+- `axisDirection` can be `'x'`, `'y'`, or `'z'`. It indicates which axis contain the `colorMap` definition.
+- `axisId` The id of the axis to use in case the selected direction contains multiple ones.
+
+{{"demo": "BasicColorLegend.js"}}
+
+### Position
+
+This component position is done exactly the same way as the [legend for series](#position).
+
+{{"demo": "ColorLegendPositionNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+
+### Continuous color mapping
+
+### Piecewise color mapping

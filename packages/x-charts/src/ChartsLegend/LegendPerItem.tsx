@@ -2,7 +2,6 @@ import * as React from 'react';
 import { NoSsr } from '@mui/base/NoSsr';
 import { useTheme, styled } from '@mui/material/styles';
 import { DrawingArea } from '../context/DrawingProvider';
-import { AnchorPosition, Direction } from './utils';
 import { DefaultizedProps } from '../models/helpers';
 import { ChartsText, ChartsTextStyle } from '../ChartsText';
 import { CardinalDirections } from '../models/layout';
@@ -11,6 +10,7 @@ import type { ChartsLegendProps } from './ChartsLegend';
 import { GetItemSpaceType, LegendItemParams } from './chartsLegend.types';
 import { legendItemPlacements } from './legendItemsPlacement';
 import { useDrawingArea } from '../hooks/useDrawingArea';
+import { AnchorPosition, Direction } from './legend.types';
 
 export type ChartsLegendRootOwnerState = {
   position: AnchorPosition;
