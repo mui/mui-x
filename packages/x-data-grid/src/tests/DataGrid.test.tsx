@@ -76,19 +76,21 @@ describe('<DataGrid />', () => {
     ];
     expect(() => {
       render(
-        <DataGrid
-          {...(
-            Object.keys(DATA_GRID_PROPS_DEFAULT_VALUES) as Array<
-              keyof typeof DATA_GRID_PROPS_DEFAULT_VALUES
-            >
-          ).reduce((acc, key) => {
-            // @ts-ignore
-            acc[key] = undefined;
-            return acc;
-          }, {})}
-          rows={rows}
-          columns={columns}
-        />,
+        <div style={{ height: 300, width: 300 }}>
+          <DataGrid
+            {...(
+              Object.keys(DATA_GRID_PROPS_DEFAULT_VALUES) as Array<
+                keyof typeof DATA_GRID_PROPS_DEFAULT_VALUES
+              >
+            ).reduce((acc, key) => {
+              // @ts-ignore
+              acc[key] = undefined;
+              return acc;
+            }, {})}
+            rows={rows}
+            columns={columns}
+          />
+        </div>,
       );
     }).not.toErrorDev();
   });

@@ -3,7 +3,7 @@ const webpack = require('webpack');
 
 const CI = Boolean(process.env.CI);
 
-process.env.CHROME_BIN = chromium.executablePath();
+process.env.CHROME_BIN ||= chromium.executablePath();
 
 // Karma configuration
 module.exports = function setKarmaConfig(config) {
