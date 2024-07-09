@@ -9,7 +9,7 @@ export default function ZoomLineChart() {
       xAxis={[
         {
           zoom: true,
-          scaleType: 'band',
+          scaleType: 'point',
           data: data.map((v, i) => i),
         },
       ]}
