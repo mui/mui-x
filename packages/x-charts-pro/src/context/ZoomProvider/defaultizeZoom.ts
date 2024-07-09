@@ -55,16 +55,16 @@ function checkZoomOptionsErrors(options: ZoomOptions) {
   const maxSpan = options.maxSpan ?? defaultZoomOptions.maxSpan;
   const span = end - start;
 
-  isBetweenZeroAndHundred(start, 'start');
-  isBetweenZeroAndHundred(end, 'end');
-  isBetweenZeroAndHundred(minSpan, 'minSpan');
-  isBetweenZeroAndHundred(maxSpan, 'maxSpan');
+  isBetween(start, 0, 100, 'start');
+  isBetween(end, 0, 100, 'end');
+  isBetween(minSpan, 1, 100, 'minSpan');
+  isBetween(maxSpan, 1, 100, 'maxSpan');
 
   if (end <= start) {
     throw new Error('MUI X Charts: The end value must be greater than the start value.');
   }
 
-  if (step <= 1) {
+  if (step < 1) {
     throw new Error('MUI X Charts: The step value must be greater than 1.');
   }
 
@@ -87,8 +87,8 @@ function checkZoomOptionsErrors(options: ZoomOptions) {
   }
 }
 
-function isBetweenZeroAndHundred(value: number, name: string) {
+function isBetween(value: number, min: number, max: number, name: string) {
   if (value < 0 || value > 100) {
-    throw new Error(`MUI X Charts: The ${name} value must be between 0 and 100.`);
+    throw new Error(`MUI X Charts: The ${name} value must be between ${min} and ${max}.`);
   }
 }

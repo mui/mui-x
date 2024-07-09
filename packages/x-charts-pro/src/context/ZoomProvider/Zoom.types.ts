@@ -14,23 +14,23 @@ export type ZoomOptions = {
    */
   end?: number;
   /**
-   * The step size of the zoom range. Defines the granularity of the zoom.
+   * The step size of the zooming function. Defines the granularity of the zoom.
    *
    * @default 5
    */
   step?: number;
   /**
-   * Restricts the minimal window size in a percentage. In the range of 0 to 100.
+   * Restricts the minimum span size in the range of 0 to 100.
    *
-   * If the window size is smaller than the minSpan, the window will be resized to the minSpan.
+   * If the span size is smaller than the minSpan, the span will be resized to the minSpan.
    *
    * @default 10
    */
   minSpan?: number;
   /**
-   * Restricts the maximal window size in a percentage. In the range of 0 to 100.
+   * Restricts the maximum span size in the range of 0 to 100.
    *
-   * If the window size is larger than the maxSpan, the window will be resized to the maxSpan.
+   * If the span size is larger than the maxSpan, the span will be resized to the maxSpan.
    *
    * @default 100
    */

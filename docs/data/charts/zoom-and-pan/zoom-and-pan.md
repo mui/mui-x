@@ -24,3 +24,18 @@ The following actions are supported:
 {{"demo": "ZoomScatterChart.js"}}
 {{"demo": "ZoomBarChart.js"}}
 {{"demo": "ZoomLineChart.js"}}
+
+## Zooming Options
+
+You can customize the zooming behavior by setting the `zoomOptions` prop.
+
+The following options are available:
+
+- **start**: The starting percentage of the zoom range. Between 0 and 100.
+- **end**: The ending percentage of the zoom range.
+- **step**: The step of the zooming function. Defines the granularity of the zoom.
+- **minSpan**: Restricts the minimum span size.
+- **maxSpan**: Restricts the maximum span size.
+- **panning**: Enables or disables panning.
+
+{{"demo": "ZoomOptionsNoSnap.js", "hideToolbar": true, "bg": "playground"}}

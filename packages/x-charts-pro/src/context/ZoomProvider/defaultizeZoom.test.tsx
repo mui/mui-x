@@ -26,8 +26,8 @@ describe('defaultizeZoom errors', () => {
     );
   });
 
-  it('should throw an error when zoom.minSpan is below 0', async function test() {
-    expect(() => defaultizeZoom([{ id: '1', zoom: { minSpan: -1 } }], 'x')).throws(
+  it('should throw an error when zoom.minSpan is below 1', async function test() {
+    expect(() => defaultizeZoom([{ id: '1', zoom: { minSpan: 0 } }], 'x')).throws(
       'MUI X Charts: The minSpan value must be between 0 and 100.',
     );
   });
@@ -38,8 +38,8 @@ describe('defaultizeZoom errors', () => {
     );
   });
 
-  it('should throw an error when zoom.maxSpan is below 0', async function test() {
-    expect(() => defaultizeZoom([{ id: '1', zoom: { maxSpan: -1 } }], 'x')).throws(
+  it('should throw an error when zoom.maxSpan is below 1', async function test() {
+    expect(() => defaultizeZoom([{ id: '1', zoom: { maxSpan: 0 } }], 'x')).throws(
       'MUI X Charts: The maxSpan value must be between 0 and 100.',
     );
   });
