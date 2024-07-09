@@ -587,6 +587,24 @@ async function initializeEnvironment(
         expect(groupHeaderWidth).to.equal(groupHeaderColumnsTotalWidth);
         expect(subGroupHeaderWidth).to.equal(subGroupHeaderColumnsTotalWidth);
       });
+
+      it('should not crash when updating columns immediately after scrolling', async () => {
+        await renderFixture('DataGrid/DynamicVirtualizationRange');
+
+        await page.mouse.move(200, 200);
+        await page.mouse.wheel(0, 1000);
+
+        let thrownError: Error | null = null;
+        context.once('weberror', (webError: WebError) => {
+          thrownError = webError.error();
+          console.error(thrownError);
+        });
+
+        await page.click('"Update columns"');
+
+        await sleep(200);
+        expect(thrownError).to.equal(null);
+      });
     });
 
     describe('<DatePicker />', () => {
