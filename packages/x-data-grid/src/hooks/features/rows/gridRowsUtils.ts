@@ -132,7 +132,11 @@ export const getRowsStateFromCache = ({
   loadingProp,
   previousTree,
   previousTreeDepths,
-}: Pick<GridRowTreeCreationParams, 'previousTree' | 'previousTreeDepths'> & {
+  previousGroupsToFetch,
+}: Pick<
+  GridRowTreeCreationParams,
+  'previousTree' | 'previousTreeDepths' | 'previousGroupsToFetch'
+> & {
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>;
   rowCountProp: number | undefined;
   loadingProp: boolean | undefined;
@@ -145,12 +149,14 @@ export const getRowsStateFromCache = ({
     treeDepths: unProcessedTreeDepths,
     dataRowIds: unProcessedDataRowIds,
     groupingName,
+    groupsToFetch = [],
   } = apiRef.current.applyStrategyProcessor('rowTreeCreation', {
     previousTree,
     previousTreeDepths,
     updates: cache.updates,
     dataRowIdToIdLookup: cache.dataRowIdToIdLookup,
     dataRowIdToModelLookup: cache.dataRowIdToModelLookup,
+    previousGroupsToFetch,
   });
 
   // 2. Apply the "hydrateRows" pipe-processing.
@@ -182,6 +188,7 @@ export const getRowsStateFromCache = ({
     }),
     groupingName,
     loading: loadingProp,
+    groupsToFetch,
   };
 };
 
@@ -230,10 +237,12 @@ export const updateCacheWithNewRows = ({
   previousCache,
   getRowId,
   updates,
+  groupKeys,
 }: {
   previousCache: GridRowsInternalCache;
   getRowId: DataGridProcessedProps['getRowId'];
   updates: GridRowModelUpdate[];
+  groupKeys?: string[];
 }): GridRowsInternalCache => {
   if (previousCache.updates.type === 'full') {
     throw new Error(
@@ -267,6 +276,7 @@ export const updateCacheWithNewRows = ({
       remove: [...(previousCache.updates.actions.remove ?? [])],
     },
     idToActionLookup: { ...previousCache.updates.idToActionLookup },
+    groupKeys,
   };
   const dataRowIdToModelLookup = { ...previousCache.dataRowIdToModelLookup };
   const dataRowIdToIdLookup = { ...previousCache.dataRowIdToIdLookup };
@@ -392,4 +402,36 @@ export function calculatePinnedRowsHeight(apiRef: React.MutableRefObject<GridApi
 export function getMinimalContentHeight(apiRef: React.MutableRefObject<GridApiCommunity>) {
   const dimensions = gridDimensionsSelector(apiRef.current.state);
   return `var(--DataGrid-overlayHeight, ${2 * dimensions.rowHeight}px)`;
+}
+
+export function computeRowsUpdates(
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+  updates: GridRowModelUpdate[],
+  getRowId: DataGridProcessedProps['getRowId'],
+) {
+  const nonPinnedRowsUpdates: GridRowModelUpdate[] = [];
+
+  updates.forEach((update) => {
+    const id = getRowIdFromRowModel(
+      update,
+      getRowId,
+      'A row was provided without id when calling updateRows():',
+    );
+
+    const rowNode = apiRef.current.getRowNode(id);
+    if (rowNode?.type === 'pinnedRow') {
+      // @ts-ignore because otherwise `release:build` doesn't work
+      const pinnedRowsCache = apiRef.current.caches.pinnedRows;
+      const prevModel = pinnedRowsCache.idLookup[id];
+      if (prevModel) {
+        pinnedRowsCache.idLookup[id] = {
+          ...prevModel,
+          ...update,
+        };
+      }
+    } else {
+      nonPinnedRowsUpdates.push(update);
+    }
+  });
+  return nonPinnedRowsUpdates;
 }

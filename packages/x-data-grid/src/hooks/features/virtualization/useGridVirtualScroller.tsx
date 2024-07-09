@@ -6,12 +6,12 @@ import {
 } from '@mui/utils';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useTimeout from '@mui/utils/useTimeout';
+import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useTheme, Theme } from '@mui/material/styles';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { useResizeObserver } from '../../utils/useResizeObserver';
 import { useRunOnce } from '../../utils/useRunOnce';
 import {
   gridVisibleColumnDefinitionsSelector,
@@ -517,22 +517,13 @@ export const useGridVirtualScroller = () => {
   );
 
   const contentSize = React.useMemo(() => {
-    // In cases where the columns exceed the available width,
-    // the horizontal scrollbar should be shown even when there're no rows.
-    // Keeping 1px as minimum height ensures that the scrollbar will visible if necessary.
-    const height = Math.max(contentHeight, 1);
-
     const size: React.CSSProperties = {
       width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
-      height,
+      height: contentHeight,
     };
 
-    if (rootProps.autoHeight) {
-      if (currentPage.rows.length === 0) {
-        size.height = getMinimalContentHeight(apiRef); // Give room to show the overlay when there no rows.
-      } else {
-        size.height = contentHeight;
-      }
+    if (rootProps.autoHeight && currentPage.rows.length === 0) {
+      size.height = getMinimalContentHeight(apiRef); // Give room to show the overlay when there no rows.
     }
 
     return size;

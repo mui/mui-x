@@ -14,7 +14,6 @@ import {
   MockedDataTransfer,
   rangeCalendarDayTouches,
   createPickerRenderer,
-  wrapPickerMount,
 } from 'test/utils/pickers';
 import {
   DateRangeCalendar,
@@ -45,9 +44,8 @@ describe('<DateRangeCalendar />', () => {
     inheritComponent: 'div',
     render,
     muiName: 'MuiDateRangeCalendar',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
+    skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
   describe('Selection', () => {
