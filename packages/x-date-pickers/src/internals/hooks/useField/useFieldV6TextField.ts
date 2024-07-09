@@ -168,6 +168,9 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
             if (
               inputRef.current &&
               inputRef.current === getActiveElement(document) &&
+              // The section might loose all selection, where `selectionStart === selectionEnd`
+              // https://github.com/mui/mui-x/pull/13652
+              inputRef.current.selectionStart === inputRef.current.selectionEnd &&
               (inputRef.current.selectionStart !== selectionStart ||
                 inputRef.current.selectionEnd !== selectionEnd)
             ) {
