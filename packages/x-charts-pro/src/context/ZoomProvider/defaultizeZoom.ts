@@ -1,6 +1,6 @@
 import { AxisConfig, ScaleName, ChartsXAxisProps } from '@mui/x-charts';
 import { isDefined } from '@mui/x-charts/internals';
-import { DefaultizedZoomOptions } from './Zoom.types';
+import { DefaultizedZoomOptions, ZoomOptions } from './Zoom.types';
 
 const defaultZoomOptions = {
   start: 0,
@@ -33,6 +33,8 @@ export const defaultizeZoom = (
         };
       }
 
+      checkErrors(v.zoom);
+
       return {
         axisId: v.id,
         axis: axisName,
@@ -44,3 +46,49 @@ export const defaultizeZoom = (
 
   return defaultized.length > 0 ? defaultized : undefined;
 };
+
+function checkErrors(options: ZoomOptions) {
+  const start = options.start ?? defaultZoomOptions.start;
+  const end = options.end ?? defaultZoomOptions.end;
+  const step = options.step ?? defaultZoomOptions.step;
+  const minSpan = options.minSpan ?? defaultZoomOptions.minSpan;
+  const maxSpan = options.maxSpan ?? defaultZoomOptions.maxSpan;
+  const span = end - start;
+
+  if (end <= start) {
+    throw new Error('MUI X Charts: The end value must be greater than the start value.');
+  }
+
+  if (step <= 0) {
+    throw new Error('MUI X Charts: The step value must be greater than 0.');
+  }
+
+  isBetweenZeroAndHundred(start, 'start');
+  isBetweenZeroAndHundred(end, 'end');
+  isBetweenZeroAndHundred(minSpan, 'minSpan');
+  isBetweenZeroAndHundred(maxSpan, 'maxSpan');
+
+  if (minSpan > maxSpan) {
+    throw new Error(
+      'MUI X Charts: The minSpan value must be less than or equal to the maxSpan value.',
+    );
+  }
+
+  if (span < minSpan) {
+    throw new Error(
+      'MUI X Charts: The span value must be greater than or equal to the minSpan value.',
+    );
+  }
+
+  if (span > maxSpan) {
+    throw new Error(
+      'MUI X Charts: The span value must be less than or equal to the maxSpan value.',
+    );
+  }
+}
+
+function isBetweenZeroAndHundred(value: number, name: string) {
+  if (value < 0 || value > 100) {
+    throw new Error(`MUI X Charts: The ${name} value must be between 0 and 100.`);
+  }
+}
