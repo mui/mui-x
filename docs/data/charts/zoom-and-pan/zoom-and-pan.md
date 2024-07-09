@@ -9,13 +9,9 @@ productId: x-charts
 
 Zooming is possible on the **Pro**[<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') versions of the charts: `<LineChartPro />`, `<BarChartPro />`, `<ScatterChartPro />`.
 
-:::warning
-Zooming is currently only possible on the `X axis`.
-:::
-
 ## Basic usage
 
-To enable zooming and panning, set the `zoom` prop to `true` on the chart component.
+To enable zooming and panning, set the `zoom` prop to `true` on the wanted axis.
 
 Enabling zoom will enable all the interactions, which are made to be as intuitive as possible.
 
