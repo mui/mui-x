@@ -9,6 +9,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
 
 const ProSpan = styled('span')({
   display: 'inline-block',
@@ -57,6 +58,7 @@ export default function CommonlyUsedComponents() {
           'TimePicker',
           'DateTimePicker',
           'DateRangePicker',
+          'DateTimeRangePicker',
         ]}
       >
         <DemoItem label={<Label componentName="DatePicker" valueType="date" />}>
@@ -81,6 +83,23 @@ export default function CommonlyUsedComponents() {
           component="DateRangePicker"
         >
           <DateRangePicker
+            localeText={{
+              start: '',
+              end: '',
+            }}
+          />
+        </DemoItem>
+        <DemoItem
+          label={
+            <Label
+              componentName="DateTimeRangePicker"
+              valueType="date time range"
+              isProOnly
+            />
+          }
+          component="DateTimeRangePicker"
+        >
+          <DateTimeRangePicker
             localeText={{
               start: '',
               end: '',
