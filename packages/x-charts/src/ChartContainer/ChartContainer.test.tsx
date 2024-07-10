@@ -22,7 +22,6 @@ describe('<ChartContainer />', () => {
       'themeStyleOverrides',
       'themeVariants',
       'themeCustomPalette',
-      'refForwarding',
     ],
   }));
 });

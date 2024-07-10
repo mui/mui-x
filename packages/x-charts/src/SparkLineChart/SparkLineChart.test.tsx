@@ -11,7 +11,7 @@ describe('<SparkLineChart />', () => {
     render,
     muiName: 'MuiSparkLineChart',
     testComponentPropWith: 'div',
-    refInstanceof: window.HTMLDivElement,
+    refInstanceof: window.SVGSVGElement,
     skip: [
       'componentProp',
       'componentsProp',
@@ -22,7 +22,6 @@ describe('<SparkLineChart />', () => {
       'themeStyleOverrides',
       'themeVariants',
       'themeCustomPalette',
-      'refForwarding',
     ],
   }));
 });

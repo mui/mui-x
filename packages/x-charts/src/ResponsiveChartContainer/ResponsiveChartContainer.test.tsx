@@ -11,7 +11,7 @@ describe('<ResponsiveChartContainer />', () => {
     render,
     muiName: 'MuiResponsiveChartContainer',
     testComponentPropWith: 'div',
-    refInstanceof: window.HTMLDivElement,
+    refInstanceof: window.SVGSVGElement,
     skip: [
       'componentProp',
       'componentsProp',
@@ -22,7 +22,6 @@ describe('<ResponsiveChartContainer />', () => {
       'themeStyleOverrides',
       'themeVariants',
       'themeCustomPalette',
-      'refForwarding',
     ],
   }));
 });

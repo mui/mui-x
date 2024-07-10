@@ -12,7 +12,7 @@ describe('<LineChart />', () => {
       render,
       muiName: 'MuiLineChart',
       testComponentPropWith: 'div',
-      refInstanceof: window.HTMLDivElement,
+      refInstanceof: window.SVGSVGElement,
       skip: [
         'componentProp',
         'componentsProp',
@@ -23,7 +23,6 @@ describe('<LineChart />', () => {
         'themeStyleOverrides',
         'themeVariants',
         'themeCustomPalette',
-        'refForwarding',
       ],
     }),
   );

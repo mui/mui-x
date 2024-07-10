@@ -116,7 +116,7 @@
   "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiSparkLineChart",
-  "forwardsRefTo": "HTMLDivElement",
+  "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/SparkLineChart/SparkLineChart.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/sparkline/\">Charts - Sparkline</a></li></ul>",

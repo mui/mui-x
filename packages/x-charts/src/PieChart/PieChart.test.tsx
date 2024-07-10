@@ -23,7 +23,7 @@ describe('<PieChart />', () => {
       render,
       muiName: 'MuiPieChart',
       testComponentPropWith: 'div',
-      refInstanceof: window.HTMLDivElement,
+      refInstanceof: window.SVGSVGElement,
       skip: [
         'componentProp',
         'componentsProp',
@@ -34,7 +34,6 @@ describe('<PieChart />', () => {
         'themeStyleOverrides',
         'themeVariants',
         'themeCustomPalette',
-        'refForwarding',
       ],
     }),
   );

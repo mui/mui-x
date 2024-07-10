@@ -13,7 +13,7 @@ describe('<BarChart />', () => {
       render,
       muiName: 'MuiBarChart',
       testComponentPropWith: 'div',
-      refInstanceof: window.HTMLDivElement,
+      refInstanceof: window.SVGSVGElement,
       skip: [
         'componentProp',
         'componentsProp',
@@ -24,7 +24,6 @@ describe('<BarChart />', () => {
         'themeStyleOverrides',
         'themeVariants',
         'themeCustomPalette',
-        'refForwarding',
       ],
     }),
   );

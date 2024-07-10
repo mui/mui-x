@@ -11,7 +11,7 @@ describe('<Gauge />', () => {
     render,
     muiName: 'MuiGauge',
     testComponentPropWith: 'div',
-    refInstanceof: window.HTMLDivElement,
+    refInstanceof: window.SVGSVGElement,
     skip: [
       'componentProp',
       'componentsProp',
@@ -22,7 +22,6 @@ describe('<Gauge />', () => {
       'themeStyleOverrides',
       'themeVariants',
       'themeCustomPalette',
-      'refForwarding',
     ],
   }));
 });

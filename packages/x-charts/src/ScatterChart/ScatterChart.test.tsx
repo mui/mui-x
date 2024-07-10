@@ -24,7 +24,7 @@ describe('<ScatterChart />', () => {
       render,
       muiName: 'MuiScatterChart',
       testComponentPropWith: 'div',
-      refInstanceof: window.HTMLDivElement,
+      refInstanceof: window.SVGSVGElement,
       skip: [
         'componentProp',
         'componentsProp',
@@ -35,7 +35,6 @@ describe('<ScatterChart />', () => {
         'themeStyleOverrides',
         'themeVariants',
         'themeCustomPalette',
-        'refForwarding',
       ],
     }),
   );
