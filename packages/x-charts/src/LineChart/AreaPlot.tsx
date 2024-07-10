@@ -91,7 +91,13 @@ const useAggregatedData = () => {
         }>()
           .x((d) => xScale(d.x))
           .defined((_, i) => connectNulls || data[i] != null)
-          .y0((d) => d.y && yScale(d.y[0])!)
+          .y0((d) => {
+            const value = d.y && yScale(d.y[0])!;
+            if (Number.isNaN(value)) {
+              return yScale.range()[0];
+            }
+            return value;
+          })
           .y1((d) => d.y && yScale(d.y[1])!);
 
         const curve = getCurveFactory(series[seriesId].curve);
