@@ -2,7 +2,7 @@ import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
-import { ChartsColorScaleLegend } from '@mui/x-charts/ChartsLegend';
+import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
 import { dataset } from './tempAnomaly';
 
 export default function BasicColorLegend() {
@@ -39,10 +39,9 @@ export default function BasicColorLegend() {
         margin={{ top: 30, right: 150 }}
         slotProps={{ legend: { hidden: true } }}
       >
-        <ChartsColorScaleLegend
+        <PiecewiseColorLegend
           axisDirection="x"
           position={{ vertical: 'top', horizontal: 'right' }}
-          spacing={10}
           direction="column"
         />
         <ChartsReferenceLine y={0} />

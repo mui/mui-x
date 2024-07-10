@@ -1,23 +1,51 @@
 import * as React from 'react';
-import { ScatterChart } from '@mui/x-charts/ScatterChart';
-import { Chance } from 'chance';
-
-const chance = new Chance(42);
-
-const data = Array.from({ length: 50 }, () => ({
-  x: chance.floating({ min: -20, max: 20 }),
-  y: chance.floating({ min: -20, max: 20 }),
-})).map((d, index) => ({ ...d, id: index }));
+import Typography from '@mui/material/Typography';
+import { LineChart } from '@mui/x-charts/LineChart';
+import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
+import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
+import { dataset } from './tempAnomaly';
 
 export default function BasicColorLegend() {
   return (
-    <ScatterChart
-      series={[
-        { type: 'scatter', label: 'Var A', data: data.slice(0, 25) },
-        { type: 'scatter', label: 'Var B', data: data.slice(25) },
-      ]}
-      width={400}
-      height={300}
-    />
+    <div style={{ width: '100%' }}>
+      <Typography variant="body1">
+        Global temperature anomaly relative to 1961-1990 average
+      </Typography>
+      <LineChart
+        dataset={dataset}
+        series={[
+          {
+            label: 'Global temperature anomaly relative to 1961-1990',
+            dataKey: 'anomaly',
+            showMark: false,
+            valueFormatter: (value) => `${value?.toFixed(2)}°`,
+          },
+        ]}
+        xAxis={[
+          {
+            scaleType: 'time',
+            dataKey: 'year',
+            disableLine: true,
+            valueFormatter: (value) => value.getFullYear().toString(),
+            colorMap: {
+              type: 'piecewise',
+              thresholds: [new Date(1961, 0, 1), new Date(1990, 0, 1)],
+              colors: ['blue', 'gray', 'red'],
+            },
+          },
+        ]}
+        yAxis={[{ disableLine: true, valueFormatter: (value) => `${value}°` }]}
+        height={300}
+        margin={{ top: 30, right: 150 }}
+        slotProps={{ legend: { hidden: true } }}
+      >
+        <PiecewiseColorLegend
+          axisDirection="x"
+          position={{ vertical: 'top', horizontal: 'right' }}
+          direction="column"
+        />
+        <ChartsReferenceLine y={0} />
+      </LineChart>
+    </div>
   );
 }

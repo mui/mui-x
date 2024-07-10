@@ -1,5 +1,7 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { ScaleSequential } from 'd3-scale';
+import { useTheme } from '@mui/material/styles';
 import ChartsContinuousGradient from '../internals/components/ChartsAxesGradients/ChartsContinuousGradient';
 import { ContinuousScaleName } from '../models/axis';
 import { useDrawingArea } from '../hooks';
@@ -147,7 +149,7 @@ export interface ContinuousColorLegendProps extends LegendPlacement, ColorLegend
   id: string;
   /**
    * The scale used to display gradient colors.
-   * @default 'linear
+   * @default 'linear'
    */
   scaleType?: ContinuousScaleName;
   /**
@@ -174,11 +176,13 @@ export interface ContinuousColorLegendProps extends LegendPlacement, ColorLegend
   spacing?: number;
   /**
    * The style applied to labels.
+   * @default theme.typography.subtitle1
    */
   labelStyle?: ChartsTextProps['style'];
 }
 
-export function ContinuousColorLegend(props: ContinuousColorLegendProps) {
+function ContinuousColorLegend(props: ContinuousColorLegendProps) {
+  const theme = useTheme();
   const {
     id,
     scaleType = 'linear',
@@ -187,13 +191,7 @@ export function ContinuousColorLegend(props: ContinuousColorLegendProps) {
     thickness = 5,
     spacing = 4,
     alignment = 'middle',
-    labelStyle = {
-      fontSize: 12,
-      fontFamily: 'monospace',
-      fontWeight: 400,
-      lineHeight: 1,
-      letterSpacing: '0.00938em',
-    },
+    labelStyle = theme.typography.subtitle1,
     position,
     axisDirection,
     axisId,
@@ -227,8 +225,8 @@ export function ContinuousColorLegend(props: ContinuousColorLegendProps) {
   const text1 = 'txt1';
   const text2 = 'text long 2';
 
-  const text1Box = getStringSize(text1, labelStyle);
-  const text2Box = getStringSize(text2, labelStyle);
+  const text1Box = getStringSize(text1, { ...labelStyle });
+  const text2Box = getStringSize(text2, { ...labelStyle });
 
   const legendPositions = getElementPositions(text1Box, barBox, text2Box, {
     spacing,
@@ -255,7 +253,6 @@ export function ContinuousColorLegend(props: ContinuousColorLegendProps) {
         colorMap={colorMap}
         gradientUnits="objectBoundingBox"
       />
-
       <ChartsText
         text={text1}
         x={positionOffset.offsetX + legendPositions.text1.x}
@@ -285,3 +282,70 @@ export function ContinuousColorLegend(props: ContinuousColorLegendProps) {
     </React.Fragment>
   );
 }
+
+ContinuousColorLegend.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The alignment of the texts with the gradient bar.
+   * @default 'middle'
+   */
+  alignment: PropTypes.oneOf(['end', 'middle', 'start']),
+  /**
+   * The axis direction containing the color configuration to represent.
+   * @default 'z'
+   */
+  axisDirection: PropTypes.oneOf(['x', 'y', 'z']),
+  /**
+   * The id of the axis item with the color configuration to represent.
+   * @default The first axis item.
+   */
+  axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * The direction of the legend layout.
+   * The default depends on the chart.
+   */
+  direction: PropTypes.oneOf(['column', 'row']),
+  /**
+   * A unique identifier for the gradient.
+   */
+  id: PropTypes.string.isRequired,
+  /**
+   * The style applied to labels.
+   * @default theme.typography.subtitle1
+   */
+  labelStyle: PropTypes.object,
+  /**
+   * The length of the gradient bar.
+   * Can be a number (in px) or a string with a percentage such as '50%'.
+   * The '100%' is the length of the svg.
+   * @default '50%'
+   */
+  length: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * The position of the legend.
+   */
+  position: PropTypes.shape({
+    horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
+    vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
+  }),
+  /**
+   * The scale used to display gradient colors.
+   * @default 'linear'
+   */
+  scaleType: PropTypes.oneOf(['linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
+  /**
+   * The space between the gradient bar and the labels.
+   * @default 4
+   */
+  spacing: PropTypes.number,
+  /**
+   * The thickness of the gradient bar.
+   * @default 5
+   */
+  thickness: PropTypes.number,
+} as any;
+
+export { ContinuousColorLegend };

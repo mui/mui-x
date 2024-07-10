@@ -36,7 +36,7 @@ export interface LegendPerItemProps
    * The ordered array of item to display in the legend.
    */
   itemsToDisplay: LegendItemParams[];
-  classes: Record<'mark' | 'series' | 'root', string>;
+  classes?: Record<'mark' | 'series' | 'root', string>;
   /**
    * Style applied to legend labels.
    * @default theme.typography.subtitle1
@@ -195,15 +195,15 @@ export function LegendPerItem(props: LegendPerItemProps) {
 
   return (
     <NoSsr>
-      <ChartsLegendRoot className={classes.root}>
+      <ChartsLegendRoot className={classes?.root}>
         {itemsWithPosition.map(({ id, label, color, positionX, positionY }) => (
           <g
             key={id}
-            className={classes.series}
+            className={classes?.series}
             transform={`translate(${gapX + (isRTL ? legendWidth - positionX : positionX)} ${gapY + positionY})`}
           >
             <rect
-              className={classes.mark}
+              className={classes?.mark}
               x={isRTL ? -itemMarkWidth : 0}
               y={-itemMarkHeight / 2}
               width={itemMarkWidth}

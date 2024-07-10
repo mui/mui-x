@@ -5,7 +5,6 @@ import getScatterLegend from '../ScatterChart/legend';
 import getLineLegend from '../LineChart/legend';
 import getPieLegend from '../PieChart/legend';
 
-
 const legendGetter: { [T in ChartSeriesType]?: LegendGetter<T> } = {
   bar: getBarLegend,
   scatter: getScatterLegend,

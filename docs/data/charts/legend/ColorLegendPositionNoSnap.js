@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { ChartsColorScaleLegend } from '@mui/x-charts/ChartsLegend';
+import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
 import { dataset } from './tempAnomaly';
 
 export default function ColorLegendPositionNoSnap() {
@@ -20,13 +20,20 @@ export default function ColorLegendPositionNoSnap() {
           knob: 'number',
           defaultValue: 0,
         },
-        // {
-        //   propName: 'itemsNumber',
-        //   knob: 'number',
-        //   defaultValue: 5,
-        //   min: 1,
-        //   max: data.length,
-        // },
+        {
+          propName: 'fontSize',
+          knob: 'number',
+          defaultValue: 10,
+          min: 8,
+          max: 20,
+        },
+        {
+          propName: 'markSize',
+          knob: 'number',
+          defaultValue: 10,
+          min: 5,
+          max: 20,
+        },
       ]}
       renderDemo={(props) => (
         <div style={{ width: '100%' }}>
@@ -72,7 +79,7 @@ export default function ColorLegendPositionNoSnap() {
                 })}
             slotProps={{ legend: { hidden: true } }}
           >
-            <ChartsColorScaleLegend
+            <PiecewiseColorLegend
               axisDirection="x"
               position={
                 props.direction === 'row'
@@ -80,7 +87,10 @@ export default function ColorLegendPositionNoSnap() {
                   : { vertical: 'middle', horizontal: 'right' }
               }
               direction={props.direction}
-              spacing={10}
+              padding={props.padding}
+              labelStyle={{ fontSize: props.fontSize }}
+              itemMarkHeight={props.markSize}
+              itemMarkWidth={props.markSize}
             />
           </LineChart>
         </div>

@@ -27,7 +27,7 @@ DefaultChartsLegend.propTypes = {
   /**
    * Override or extend the styles applied to the component.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * The direction of the legend layout.
    * The default depends on the chart.

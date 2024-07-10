@@ -46,3 +46,22 @@ export interface TextPosition extends Position {
   dominantBaseline: ChartsTextBaseline;
   textAnchor: ChartsTextStyle['textAnchor'];
 }
+
+export type PiecewiseLabelFormatterParams = {
+  /**
+   * The min value of the piece. `null` is infinite.
+   */
+  min: number | Date | null;
+  /**
+   * The max value of the piece. `null` is infinite.
+   */
+  max: number | Date | null;
+  /**
+   * The formatted min value of the piece. `null` is infinite.
+   */
+  formattedMin: string | null;
+  /**
+   * The formatted max value of the piece. `null` is infinite.
+   */
+  formattedMax: string | null;
+};
