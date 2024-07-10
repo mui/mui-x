@@ -351,7 +351,6 @@ const CustomizationPlayground = function CustomizationPlayground({
           {moreInformation}
         </PlaygroundDemoArea>
         {shouldBeInteractive && (
-          // @ts-expect-error - should no longer be a problem when `BrandingProvider` supports `undefined`: https://github.com/mui/material-ui/pull/42833
           <BrandingProvider>
             <PlaygroundConfigArea>
               <ConfigSectionWrapper>
@@ -405,7 +404,6 @@ const CustomizationPlayground = function CustomizationPlayground({
         )}
       </PlaygroundWrapper>
       {selectedDemo && customizationOptions && selectedCustomizationOption && (
-        // @ts-expect-error - should no longer be a problem when `BrandingProvider` supports `undefined`: https://github.com/mui/material-ui/pull/42833
         <BrandingProvider>
           <TabsWrapper>
             <StylingApproachTabs
