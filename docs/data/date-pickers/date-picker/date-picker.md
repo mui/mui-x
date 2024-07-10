@@ -110,9 +110,11 @@ You can show a helper text with the date format accepted:
 
 ## Clearing the value
 
-You can enable the clearable behavior:
+You can enable the clearable behavior using the DesktopDatePicker variant:
 
 {{"demo": "ClearableProp.js"}}
+
+The clearable prop is not supported by the mobile variant. See discussion [in this GitHub issue](https://github.com/mui/mui-x/issues/10842#issuecomment-1951887408) for more information.
 
 ## Localization
 
