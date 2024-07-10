@@ -3,7 +3,7 @@ import { AxisConfig, ScaleName, ChartsXAxisProps, ChartsYAxisProps } from '@mui/
 import { cartesianProviderUtils } from '@mui/x-charts/internals';
 import { ZoomContext, ZoomState } from './ZoomContext';
 import { defaultizeZoom } from './defaultizeZoom';
-import { ZoomData } from './Zoom.types';
+import { AxisConfigForZoom, ZoomData } from './Zoom.types';
 
 const { defaultizeAxis } = cartesianProviderUtils;
 
@@ -14,13 +14,13 @@ type ZoomProviderProps = {
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  xAxis?: Partial<Pick<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id' | 'zoom'>>[];
+  xAxis?: AxisConfigForZoom[];
   /**
    * The configuration of the y-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  yAxis?: Partial<Pick<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id' | 'zoom'>>[];
+  yAxis?: AxisConfigForZoom[];
 };
 
 export function ZoomProvider({ children, xAxis: inXAxis, yAxis: inYAxis }: ZoomProviderProps) {
