@@ -55,7 +55,7 @@ export default function ChartsUsageDemo({
             width: '100%',
           }}
         >
-          {renderDemo(demoProps)}
+          {renderDemo(demoProps, setProps)}
         </Box>
         <BrandingProvider mode="dark">
           <HighlightedCode
@@ -69,7 +69,12 @@ export default function ChartsUsageDemo({
           />
         </BrandingProvider>
       </Box>
-      <DemoPropsForm data={data} componentName={componentName} onPropsChange={setProps} />
+      <DemoPropsForm
+        data={data}
+        props={props}
+        componentName={componentName}
+        onPropsChange={setProps}
+      />
     </Box>
   );
 }
