@@ -8,8 +8,8 @@ import {
   usePreviousMonthDisabled,
   useUtils,
 } from '@mui/x-date-pickers/internals';
-import { styled } from '../internals/zero-styled';
 import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+import { styled } from '../internals/zero-styled';
 import { PickersRangeCalendarHeaderProps } from './PickersRangeCalendarHeader.types';
 
 type PickersRangeCalendarHeaderComponent = (<TDate extends PickerValidDate>(
