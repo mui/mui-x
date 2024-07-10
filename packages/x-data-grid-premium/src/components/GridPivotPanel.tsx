@@ -12,8 +12,12 @@ import type { DataGridPremiumProcessedProps } from '../models/dataGridPremiumPro
 import { useGridRootProps } from '../typeOverloads/reexports';
 import { getAvailableAggregationFunctions } from '../hooks/features/aggregation/gridAggregationUtils';
 
+const GridPivotPanelHeader = styled('div')({
+  padding: '12px 20px',
+});
+
 const GridPivotPanelContainerStyled = styled('div')({
-  width: 250,
+  width: 300,
   overflow: 'hidden',
   position: 'relative',
   display: 'flex',
@@ -69,18 +73,23 @@ const PivotSectionContainer = styled('div')<{ 'data-section': FieldTransferObjec
 
 const PivotSectionTitle = styled('div')(({ theme }) => ({
   ...theme.typography.caption,
-  padding: '0 8px',
+  padding: '4px 16px',
   textTransform: 'uppercase',
+  color: theme.palette.text.secondary,
 }));
 
 const Placeholder = styled('div')(({ theme }) => {
-  const horizontalMargin = 8;
+  const horizontalMargin = 12;
   return {
-    height: 40,
-    border: `1px dashed ${theme.palette.grey[400]}`,
-    borderRadius: 8,
-    margin: `8px ${horizontalMargin}px 0`,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: `calc(100% - ${horizontalMargin * 2}px)`,
+    height: 60,
+    margin: `8px ${horizontalMargin}px 0`,
+    border: `1px dashed ${theme.palette.grey[400]}`,
+    borderRadius: 4,
+    color: theme.palette.text.secondary,
   };
 });
 
@@ -88,10 +97,11 @@ const GridFieldItemContainer = styled('div')<{
   dropPosition: DropPosition;
   section: FieldTransferObject['modelKey'];
 }>(({ theme }) => ({
-  width: '100%',
-  padding: '0 4px',
+  padding: '0 8px 0 12px',
+  height: '32px',
   display: 'flex',
   alignItems: 'center',
+  gap: '4px',
 
   borderWidth: 0,
   borderTopWidth: 1,
@@ -108,7 +118,6 @@ const GridFieldItemContainer = styled('div')<{
     },
     {
       props: { section: null },
-      style: { padding: '4px' },
     },
   ],
 
@@ -117,11 +126,19 @@ const GridFieldItemContainer = styled('div')<{
   },
 }));
 
-const DragHandle = styled('div')({
+const FieldItemLabel = styled('span')({
+  flex: 1,
+  minWidth: 0,
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+});
+
+const DragHandle = styled('div')(({ theme }) => ({
   display: 'flex',
   cursor: 'pointer',
-  marginRight: 4,
-});
+  color: theme.palette.text.secondary,
+}));
 
 interface FieldTransferObject {
   field: string;
@@ -155,7 +172,7 @@ function SortSelect({
     <rootProps.slots.baseSelect
       size="small"
       variant="standard"
-      sx={{ marginLeft: 'auto', fontSize: '12px' }}
+      sx={{ fontSize: '12px' }}
       value={sort || ''}
       onChange={(event) => {
         const newValue = (event.target.value || undefined) as GridSortDirection;
@@ -217,7 +234,7 @@ function AggregationSelect({
     <rootProps.slots.baseSelect
       size="small"
       variant="standard"
-      sx={{ marginLeft: 'auto', fontSize: '12px' }}
+      sx={{ fontSize: '12px' }}
       value={aggFunc}
       onChange={(event) => {
         const newValue = event.target.value as string;
@@ -355,25 +372,23 @@ function GridFieldItem({
       <DragHandle draggable="true" onDragStart={handleDragStart}>
         <slots.columnReorderIcon fontSize="small" />
       </DragHandle>
-      {children}
-      <div style={{ marginLeft: 'auto' }}>
-        {props.modelKey === 'columns' && (
-          <SortSelect sort={props.sort} field={field} onPivotModelChange={onPivotModelChange} />
-        )}
-        {props.modelKey === 'values' && (
-          <AggregationSelect
-            aggFunc={props.aggFunc}
-            field={field}
-            colDef={props.colDef}
-            onPivotModelChange={onPivotModelChange}
-          />
-        )}
-        {props.modelKey !== null && (
-          <slots.baseIconButton onClick={handleDeleteClick} size="small" edge="end">
-            <slots.filterPanelDeleteIcon fontSize="inherit" />
-          </slots.baseIconButton>
-        )}
-      </div>
+      <FieldItemLabel>{children}</FieldItemLabel>
+      {props.modelKey === 'columns' && (
+        <SortSelect sort={props.sort} field={field} onPivotModelChange={onPivotModelChange} />
+      )}
+      {props.modelKey === 'values' && (
+        <AggregationSelect
+          aggFunc={props.aggFunc}
+          field={field}
+          colDef={props.colDef}
+          onPivotModelChange={onPivotModelChange}
+        />
+      )}
+      {props.modelKey !== null && (
+        <slots.baseIconButton onClick={handleDeleteClick} size="small" edge="end">
+          <slots.filterPanelDeleteIcon fontSize="inherit" />
+        </slots.baseIconButton>
+      )}
     </GridFieldItemContainer>
   );
 }
@@ -545,7 +560,7 @@ function GridPivotPanelContent({
         ref={useAutoAnimate()[0]}
       >
         <PivotSectionTitle>Rows</PivotSectionTitle>
-        {pivotModel.rows.length === 0 && <Placeholder />}
+        {pivotModel.rows.length === 0 && <Placeholder>No rows</Placeholder>}
         {pivotModel.rows.length > 0 &&
           pivotModel.rows.map((field) => {
             return (
@@ -574,7 +589,7 @@ function GridPivotPanelContent({
         ref={useAutoAnimate()[0]}
       >
         <PivotSectionTitle>Columns</PivotSectionTitle>
-        {pivotModel.columns.length === 0 && <Placeholder />}
+        {pivotModel.columns.length === 0 && <Placeholder>No columns</Placeholder>}
         {pivotModel.columns.length > 0 &&
           pivotModel.columns.map((item) => {
             const { field, sort } = item;
@@ -604,7 +619,7 @@ function GridPivotPanelContent({
         ref={useAutoAnimate()[0]}
       >
         <PivotSectionTitle>Values</PivotSectionTitle>
-        {pivotModel.values.length === 0 && <Placeholder />}
+        {pivotModel.values.length === 0 && <Placeholder>No values</Placeholder>}
         {pivotModel.values.length > 0 &&
           pivotModel.values.map(({ field, aggFunc }) => {
             return (
@@ -632,7 +647,6 @@ function GridPivotPanelContent({
         onDragLeave={handleDragLeave}
         data-section={null}
         ref={useAutoAnimate()[0]}
-        sx={{ flexShrink: 1, overflow: 'auto' }}
       >
         <PivotSectionTitle>Available fields</PivotSectionTitle>
         {availableFields.map((field) => {
@@ -664,7 +678,7 @@ export function GridPivotPanel({
 
   return (
     <React.Fragment>
-      <div>
+      <GridPivotPanelHeader>
         <FormControlLabel
           control={
             <Switch
@@ -673,10 +687,9 @@ export function GridPivotPanel({
               size="small"
             />
           }
-          sx={{ marginLeft: 0, py: 1 }}
           label="Pivot"
         />
-      </div>
+      </GridPivotPanelHeader>
       <Divider />
       {pivotMode && (
         <GridPivotPanelContent
