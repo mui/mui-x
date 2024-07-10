@@ -23,18 +23,14 @@ describe('<StaticTimePicker />', () => {
     classes: {} as any,
     render,
     muiName: 'MuiStaticTimePicker',
-    refInstanceof: undefined,
+    refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',
       'componentsProp',
       'themeDefaultProps',
-      'themeStyleOverrides',
       'themeVariants',
       'mergeClassName',
       'propsSpread',
-      // TODO: `ref` is typed but has no effect
-      'refForwarding',
-      'rootClass',
     ],
   }));
 
