@@ -16,8 +16,6 @@ describe('<SingleInputDateRangeField /> - Describes', () => {
     skip: [
       'componentProp',
       'componentsProp',
-      'themeDefaultProps',
-      'themeStyleOverrides',
       'themeVariants',
     ],
   }));
