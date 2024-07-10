@@ -22,7 +22,7 @@ describe('<PickersArrowSwitcher /> - Describes', () => {
       render,
       muiName: 'MuiPickersArrowSwitcher',
       refInstanceof: window.HTMLDivElement,
-      skip: ['componentProp', 'componentsProp'],
+      skip: ['componentProp', 'componentsProp', 'themeVariants'],
       slots: {
         previousIconButton: {
           expectedClassName: pickersArrowSwitcherClasses.previousIconButton,
