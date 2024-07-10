@@ -53,7 +53,6 @@ function checkZoomOptionsErrors(options: ZoomOptions) {
   const step = options.step ?? defaultZoomOptions.step;
   const minSpan = options.minSpan ?? defaultZoomOptions.minSpan;
   const maxSpan = options.maxSpan ?? defaultZoomOptions.maxSpan;
-  const span = end - start;
 
   isBetween(start, 0, 100, 'start');
   isBetween(end, 0, 100, 'end');
@@ -71,18 +70,6 @@ function checkZoomOptionsErrors(options: ZoomOptions) {
   if (minSpan > maxSpan) {
     throw new Error(
       'MUI X Charts: The minSpan value must be less than or equal to the maxSpan value.',
-    );
-  }
-
-  if (span < minSpan) {
-    throw new Error(
-      'MUI X Charts: The span value must be greater than or equal to the minSpan value.',
-    );
-  }
-
-  if (span > maxSpan) {
-    throw new Error(
-      'MUI X Charts: The span value must be less than or equal to the maxSpan value.',
     );
   }
 }
