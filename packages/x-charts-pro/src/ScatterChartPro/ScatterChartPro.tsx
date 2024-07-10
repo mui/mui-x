@@ -28,7 +28,6 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   props: ScatterChartProProps,
   ref,
 ) {
-  const { ...restProps } = props;
   const {
     chartContainerProps,
     zAxisProps,
@@ -41,7 +40,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
     axisHighlightProps,
     tooltipProps,
     children,
-  } = useScatterChartProps(restProps);
+  } = useScatterChartProps(props);
   return (
     <ResponsiveChartContainerPro ref={ref} {...chartContainerProps}>
       <ZAxisContextProvider {...zAxisProps}>
