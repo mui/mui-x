@@ -1,9 +1,7 @@
 /* eslint-disable no-console */
-import { ponyfillGlobal } from '@mui/utils';
 import getTelemetryContext, { TelemetryContextType } from './get-context';
 import { getMuiXTelemetryEnv } from './config';
 import { TelemetryEvent } from './types';
-import { md5 } from './encoding/md5';
 
 function shouldSendTelemetry(telemetryContext: TelemetryContextType): boolean {
   // Disable collection of the telemetry
@@ -32,12 +30,6 @@ function shouldSendTelemetry(telemetryContext: TelemetryContextType): boolean {
   return false;
 }
 
-function getLicenseKeyHash(): string | undefined {
-  // eslint-disable-next-line no-underscore-dangle
-  const licenseKey = ponyfillGlobal.__MUI_LICENSE_INFO__?.key || undefined;
-  return licenseKey ? md5(licenseKey) : undefined;
-}
-
 function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
   const telemetryContext = getTelemetryContext();
   if (!event || !shouldSendTelemetry(telemetryContext)) {
@@ -48,7 +40,6 @@ function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
     ...event,
     context: {
       ...telemetryContext.traits,
-      licenseKeyHash: getLicenseKeyHash(),
       ...event.context,
     },
   };
@@ -64,7 +55,7 @@ function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
   }
 
   // TODO: batch events and send them in a single request when there will be more
-  fetch('https://x-telemetry.up.railway.app/api/v1/telemetry/record', {
+  fetch('http://localhost:8000/api/v1/telemetry/record', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify([eventPayload]),

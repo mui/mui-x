@@ -126,14 +126,19 @@ export function verifyLicense({
     return { status: LICENSE_STATUS.Invalid };
   }
 
+  const meta = {
+    licensingModel: license.licensingModel,
+    scope: license.scope,
+  }
+
   if (license.licensingModel == null || !LICENSING_MODELS.includes(license.licensingModel)) {
     console.error('MUI X: Error checking license. Licensing model not found or invalid!');
-    return { status: LICENSE_STATUS.Invalid };
+    return { status: LICENSE_STATUS.Invalid, meta };
   }
 
   if (license.expiryTimestamp == null) {
     console.error('MUI X: Error checking license. Expiry timestamp not found or invalid!');
-    return { status: LICENSE_STATUS.Invalid };
+    return { status: LICENSE_STATUS.Invalid, meta };
   }
 
   if (license.licensingModel === 'perpetual' || process.env.NODE_ENV === 'production') {
@@ -143,7 +148,7 @@ export function verifyLicense({
     }
 
     if (license.expiryTimestamp < pkgTimestamp) {
-      return { status: LICENSE_STATUS.ExpiredVersion };
+      return { status: LICENSE_STATUS.ExpiredVersion, meta };
     }
   } else if (license.licensingModel === 'subscription' || license.licensingModel === 'annual') {
     if (new Date().getTime() > license.expiryTimestamp) {
@@ -154,24 +159,24 @@ export function verifyLicense({
       ) {
         return {
           status: LICENSE_STATUS.ExpiredAnnualGrace,
-          meta: { expiryTimestamp: license.expiryTimestamp, licenseKey },
+          meta: { expiryTimestamp: license.expiryTimestamp, licenseKey, ...meta },
         };
       }
       return {
         status: LICENSE_STATUS.ExpiredAnnual,
-        meta: { expiryTimestamp: license.expiryTimestamp, licenseKey },
+        meta: { expiryTimestamp: license.expiryTimestamp, licenseKey, ...meta },
       };
     }
   }
 
   if (license.scope == null || !LICENSE_SCOPES.includes(license.scope)) {
     console.error('Error checking license. scope not found or invalid!');
-    return { status: LICENSE_STATUS.Invalid };
+    return { status: LICENSE_STATUS.Invalid, meta };
   }
 
   if (!acceptedScopes.includes(license.scope)) {
-    return { status: LICENSE_STATUS.OutOfScope };
+    return { status: LICENSE_STATUS.OutOfScope, meta };
   }
 
-  return { status: LICENSE_STATUS.Valid };
+  return { status: LICENSE_STATUS.Valid, meta };
 }

@@ -68,6 +68,8 @@ export function useLicenseVerifier(
         },
         {
           licenseStatus: licenseStatus?.status,
+          licenseLicensingModel: licenseStatus?.meta?.licensingModel,
+          licenseScope: licenseStatus?.meta?.scope,
         },
       ),
     );

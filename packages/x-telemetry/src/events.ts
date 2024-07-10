@@ -32,6 +32,8 @@ const muiXTelemetryEvents = {
     context: TelemetryEventContext,
     payload: {
       licenseStatus?: string;
+      licenseLicensingModel?: string;
+      licenseScope?: string;
     },
   ) => {
     return oncePerSession({
