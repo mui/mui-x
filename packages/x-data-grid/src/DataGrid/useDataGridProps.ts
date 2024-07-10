@@ -77,6 +77,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   rowPositionsDebounceMs: 166,
   autosizeOnMount: false,
   disableAutosize: false,
+  loading: false,
 };
 
 const defaultSlots = DATA_GRID_DEFAULT_SLOTS_COMPONENTS;
@@ -104,14 +105,26 @@ export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridP
     [themedProps.slots],
   );
 
+  const injectDefaultProps = React.useMemo(() => {
+    return (
+      Object.keys(DATA_GRID_PROPS_DEFAULT_VALUES) as Array<
+        keyof DataGridPropsWithDefaultValues<any>
+      >
+    ).reduce((acc, key) => {
+      // @ts-ignore
+      acc[key] = themedProps[key] ?? DATA_GRID_PROPS_DEFAULT_VALUES[key];
+      return acc;
+    }, {} as DataGridPropsWithDefaultValues<any>);
+  }, [themedProps]);
+
   return React.useMemo<DataGridProcessedProps<R>>(
     () => ({
-      ...DATA_GRID_PROPS_DEFAULT_VALUES,
       ...themedProps,
+      ...injectDefaultProps,
       localeText,
       slots,
       ...DATA_GRID_FORCED_PROPS,
     }),
-    [themedProps, localeText, slots],
+    [themedProps, localeText, slots, injectDefaultProps],
   );
 };

@@ -1,8 +1,9 @@
 import { base64Decode, base64Encode } from '../encoding/base64';
 import { md5 } from '../encoding/md5';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import { LicenseScope, LICENSE_SCOPES } from '../utils/licenseScope';
+import { LicenseScope, LICENSE_SCOPES, PlanVersion } from '../utils/licenseScope';
 import { LicensingModel, LICENSING_MODELS } from '../utils/licensingModel';
+import { MuiCommercialPackageName } from '../utils/commercialPackages';
 
 const getDefaultReleaseDate = () => {
   const today = new Date();
@@ -15,13 +16,35 @@ export function generateReleaseInfo(releaseDate = getDefaultReleaseDate()) {
   return base64Encode(releaseDate.getTime().toString());
 }
 
+function isLicenseScopeSufficient(
+  packageName: MuiCommercialPackageName,
+  licenseScope: LicenseScope,
+) {
+  let acceptedScopes: LicenseScope[];
+  if (packageName.includes('-pro')) {
+    acceptedScopes = ['pro', 'premium'];
+  } else if (packageName.includes('-premium')) {
+    acceptedScopes = ['premium'];
+  } else {
+    acceptedScopes = [];
+  }
+
+  return acceptedScopes.includes(licenseScope);
+}
+
 const expiryReg = /^.*EXPIRY=([0-9]+),.*$/;
 
 interface MuiLicense {
   licensingModel: LicensingModel | null;
   scope: LicenseScope | null;
   expiryTimestamp: number | null;
+  planVersion: PlanVersion;
 }
+
+const PRO_PACKAGES_AVAILABLE_IN_INITIAL_PRO_PLAN: MuiCommercialPackageName[] = [
+  'x-data-grid-pro',
+  'x-date-pickers-pro',
+];
 
 /**
  * Format: ORDER:${orderNumber},EXPIRY=${expiryTimestamp},KEYVERSION=1
@@ -41,17 +64,19 @@ const decodeLicenseVersion1 = (license: string): MuiLicense => {
     scope: 'pro',
     licensingModel: 'perpetual',
     expiryTimestamp,
+    planVersion: 'initial',
   };
 };
 
 /**
- * Format: O=${orderNumber},E=${expiryTimestamp},S=${scope},LM=${licensingModel},KV=2`;
+ * Format: O=${orderNumber},E=${expiryTimestamp},S=${scope},LM=${licensingModel},PV=${planVersion},KV=2`;
  */
 const decodeLicenseVersion2 = (license: string): MuiLicense => {
   const licenseInfo: MuiLicense = {
     scope: null,
     licensingModel: null,
     expiryTimestamp: null,
+    planVersion: 'initial',
   };
 
   license
@@ -72,6 +97,10 @@ const decodeLicenseVersion2 = (license: string): MuiLicense => {
         if (expiryTimestamp && !Number.isNaN(expiryTimestamp)) {
           licenseInfo.expiryTimestamp = expiryTimestamp;
         }
+      }
+
+      if (key === 'PV') {
+        licenseInfo.planVersion = value as PlanVersion;
       }
     });
 
@@ -98,11 +127,11 @@ const decodeLicense = (encodedLicense: string): MuiLicense | null => {
 export function verifyLicense({
   releaseInfo,
   licenseKey,
-  acceptedScopes,
+  packageName,
 }: {
   releaseInfo: string;
-  licenseKey: string | undefined;
-  acceptedScopes: LicenseScope[];
+  licenseKey?: string;
+  packageName: MuiCommercialPackageName;
 }): { status: LicenseStatus; meta?: any } {
   if (!releaseInfo) {
     throw new Error('MUI X: The release information is missing. Not able to validate license.');
@@ -170,12 +199,21 @@ export function verifyLicense({
   }
 
   if (license.scope == null || !LICENSE_SCOPES.includes(license.scope)) {
-    console.error('Error checking license. scope not found or invalid!');
+    console.error('MUI X: Error checking license. scope not found or invalid!');
     return { status: LICENSE_STATUS.Invalid, meta };
   }
 
-  if (!acceptedScopes.includes(license.scope)) {
+  if (!isLicenseScopeSufficient(packageName, license.scope)) {
     return { status: LICENSE_STATUS.OutOfScope, meta };
+  }
+
+  // 'charts-pro' or 'tree-view-pro' can only be used with a newer Pro license
+  if (
+    license.planVersion === 'initial' &&
+    license.scope === 'pro' &&
+    !PRO_PACKAGES_AVAILABLE_IN_INITIAL_PRO_PLAN.includes(packageName)
+  ) {
+    return { status: LICENSE_STATUS.NotAvailableInInitialProPlan, meta };
   }
 
   return { status: LICENSE_STATUS.Valid, meta };

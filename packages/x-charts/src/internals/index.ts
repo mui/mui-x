@@ -7,11 +7,18 @@ export * from '../ResponsiveChartContainer/ResizableContainer';
 // hooks
 export { useReducedMotion } from '../hooks/useReducedMotion';
 export { useSeries } from '../hooks/useSeries';
+export { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+export { useDrawingArea } from '../hooks/useDrawingArea';
 export { useChartContainerHooks } from '../ChartContainer/useChartContainerHooks';
+export { useScatterChartProps } from '../ScatterChart/useScatterChartProps';
+export { useLineChartProps } from '../LineChart/useLineChartProps';
+export { useBarChartProps } from '../BarChart/useBarChartProps';
 
 // utils
 export * from './defaultizeValueFormatter';
 export * from './configInit';
+export * from './getLabel';
+export * from './getSVGPoint';
 
 // contexts
 
