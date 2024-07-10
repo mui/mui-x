@@ -4,12 +4,12 @@ import { PickersCalendarHeader } from '@mui/x-date-pickers/PickersCalendarHeader
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   PickersArrowSwitcher,
-  useLocaleText,
   useNextMonthDisabled,
   usePreviousMonthDisabled,
   useUtils,
 } from '@mui/x-date-pickers/internals';
 import { styled } from '../internals/zero-styled';
+import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
 import { PickersRangeCalendarHeaderProps } from './PickersRangeCalendarHeader.types';
 
 type PickersRangeCalendarHeaderComponent = (<TDate extends PickerValidDate>(
@@ -27,7 +27,7 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
   TDate extends PickerValidDate,
 >(props: PickersRangeCalendarHeaderProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const utils = useUtils<TDate>();
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
 
   const { calendars, month, monthIndex, labelId, ...other } = props;
   const {
@@ -41,7 +41,12 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
     minDate,
     maxDate,
     timezone,
-  } = props;
+    // omit props that are not used in the PickersArrowSwitcher
+    reduceAnimations,
+    views,
+    view,
+    ...otherRangeProps
+  } = other;
 
   const isNextMonthDisabled = useNextMonthDisabled(currentMonth, {
     disableFuture,
@@ -65,15 +70,16 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
 
   return (
     <PickersRangeCalendarHeaderContentMultipleCalendars
+      {...otherRangeProps}
       ref={ref}
       onGoToPrevious={selectPreviousMonth}
       onGoToNext={selectNextMonth}
       isPreviousHidden={monthIndex !== 0}
       isPreviousDisabled={isPreviousMonthDisabled}
-      previousLabel={localeText.previousMonth}
+      previousLabel={translations.previousMonth}
       isNextHidden={monthIndex !== calendars - 1}
       isNextDisabled={isNextMonthDisabled}
-      nextLabel={localeText.nextMonth}
+      nextLabel={translations.nextMonth}
       slots={slots}
       slotProps={slotProps}
       labelId={labelId}

@@ -195,6 +195,20 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridFilteredDescendantRowCountSelector",
+    "returnType": "number",
+    "category": "Filtering",
+    "description": "Get the amount of descendant rows accessible after the filtering process.",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridFilteredRowCountSelector",
+    "returnType": "number",
+    "category": "Filtering",
+    "description": "Get the amount of rows accessible after the filtering process.\nIncludes top level and descendant rows.",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridFilteredSortedRowEntriesSelector",
     "returnType": "GridRowEntry<GridValidRowModel>[]",
     "category": "Filtering",

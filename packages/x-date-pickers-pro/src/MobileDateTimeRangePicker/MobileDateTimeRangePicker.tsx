@@ -11,6 +11,8 @@ import {
   DefaultizedProps,
   PickerViewsRendererProps,
   TimeViewWithMeridiem,
+  resolveDateTimeFormat,
+  useUtils,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { resolveComponentProps } from '@mui/base/utils';
@@ -151,6 +153,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
   ref: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({ props: inProps, name: 'MuiMobileDateTimeRangePicker' });
+  const utils = useUtils<TDate>();
 
   // Props with the default values common to all date time range pickers
   const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
@@ -174,6 +177,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
   const props = {
     ...defaultizedProps,
     viewRenderers,
+    format: resolveDateTimeFormat(utils, defaultizedProps),
     // Force one calendar on mobile to avoid layout issues
     calendars: 1,
     // force true to correctly handle `renderTimeViewClock` as a renderer

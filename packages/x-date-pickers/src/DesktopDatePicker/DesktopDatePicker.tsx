@@ -6,7 +6,8 @@ import { createUseThemeProps } from '../internals/zero-styled';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DesktopDatePickerProps } from './DesktopDatePicker.types';
 import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils } from '../internals/hooks/useUtils';
 import { validateDate } from '../internals/utils/validation/validateDate';
 import { DateView, PickerValidDate } from '../models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
@@ -43,7 +44,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
   inProps: DesktopDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const utils = useUtils<TDate>();
 
   const themeProps = useThemeProps({
@@ -99,7 +100,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
     valueManager: singleItemValueManager,
     valueType: 'date',
     getOpenDialogAriaText:
-      props.localeText?.openDatePickerDialogue ?? localeText.openDatePickerDialogue,
+      props.localeText?.openDatePickerDialogue ?? translations.openDatePickerDialogue,
     validator: validateDate,
   });
 

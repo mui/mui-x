@@ -65,6 +65,9 @@ import {
   useGridHeaderFiltering,
   virtualizationStateInitializer,
   useGridVirtualization,
+  useGridDataSourceTreeDataPreProcessors,
+  useGridDataSource,
+  dataSourceStateInitializer,
 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
@@ -99,6 +102,7 @@ export const useDataGridPremiumComponent = (
   useGridRowReorderPreProcessors(apiRef, props);
   useGridRowGroupingPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
+  useGridDataSourceTreeDataPreProcessors(apiRef, props);
   useGridLazyLoaderPreProcessors(apiRef, props);
   useGridRowPinningPreProcessors(apiRef);
   useGridAggregationPreProcessors(apiRef, props);
@@ -135,10 +139,11 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
   useGridInitializeState(virtualizationStateInitializer, apiRef, props);
+  useGridInitializeState(dataSourceStateInitializer, apiRef, props);
 
   useGridRowGrouping(apiRef, props);
   useGridHeaderFiltering(apiRef, props);
-  useGridTreeData(apiRef);
+  useGridTreeData(apiRef, props);
   useGridAggregation(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);
@@ -174,6 +179,7 @@ export const useDataGridPremiumComponent = (
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
   useGridStatePersistence(apiRef);
+  useGridDataSource(apiRef, props);
   useGridVirtualization(apiRef, props);
 
   return apiRef;

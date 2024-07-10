@@ -10,7 +10,8 @@ import {
   DateTimePickerViewRenderers,
   useDateTimePickerDefaultizedProps,
 } from '../DateTimePicker/shared';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils } from '../internals/hooks/useUtils';
 import { validateDateTime } from '../internals/utils/validation/validateDateTime';
 import { DateOrTimeView, PickerValidDate } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
@@ -46,7 +47,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
   inProps: MobileDateTimePickerProps<TDate, DateOrTimeView, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const utils = useUtils<TDate>();
 
   const themeProps = useThemeProps({ props: inProps, name: 'MuiMobileDateTimePicker' });
@@ -108,7 +109,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
     valueManager: singleItemValueManager,
     valueType: 'date-time',
     getOpenDialogAriaText:
-      props.localeText?.openDatePickerDialogue ?? localeText.openDatePickerDialogue,
+      props.localeText?.openDatePickerDialogue ?? translations.openDatePickerDialogue,
     validator: validateDateTime,
   });
 

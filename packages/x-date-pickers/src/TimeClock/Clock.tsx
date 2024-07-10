@@ -8,7 +8,8 @@ import {
 } from '@mui/utils';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { ClockPointer } from './ClockPointer';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils } from '../internals/hooks/useUtils';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { CLOCK_HOUR_WIDTH, getHours, getMinutes } from './shared';
@@ -235,7 +236,7 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
   const ownerState = props;
 
   const utils = useUtils<TDate>();
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const isMoving = React.useRef(false);
   const classes = useUtilityClasses(ownerState);
 
@@ -374,7 +375,7 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
         )}
         <ClockWrapper
           aria-activedescendant={selectedId}
-          aria-label={localeText.clockLabelText(type, value, utils)}
+          aria-label={translations.clockLabelText(type, value, utils)}
           ref={listboxRef}
           role="listbox"
           onKeyDown={handleKeyDown}

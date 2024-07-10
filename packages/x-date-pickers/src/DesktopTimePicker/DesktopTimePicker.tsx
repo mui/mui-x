@@ -7,7 +7,8 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { DesktopTimePickerProps } from './DesktopTimePicker.types';
 import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils } from '../internals/hooks/useUtils';
 import { validateTime } from '../internals/utils/validation/validateTime';
 import { ClockIcon } from '../icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
@@ -49,7 +50,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   inProps: DesktopTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const utils = useUtils<TDate>();
 
   const themeProps = useThemeProps({
@@ -137,7 +138,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     valueManager: singleItemValueManager,
     valueType: 'time',
     getOpenDialogAriaText:
-      props.localeText?.openTimePickerDialogue ?? localeText.openTimePickerDialogue,
+      props.localeText?.openTimePickerDialogue ?? translations.openTimePickerDialogue,
     validator: validateTime,
   });
 

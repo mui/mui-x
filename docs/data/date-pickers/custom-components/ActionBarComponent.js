@@ -9,11 +9,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
-import { useLocaleText } from '@mui/x-date-pickers/internals';
+import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
 
 function CustomActionBar(props) {
   const { onAccept, onClear, onCancel, onSetToday, actions, className } = props;
-  const localeText = useLocaleText();
+  const translations = usePickersTranslations();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const id = useId();
@@ -34,7 +34,7 @@ function CustomActionBar(props) {
             }}
             key={actionType}
           >
-            {localeText.clearButtonLabel}
+            {translations.clearButtonLabel}
           </MenuItem>
         );
 
@@ -47,7 +47,7 @@ function CustomActionBar(props) {
             }}
             key={actionType}
           >
-            {localeText.cancelButtonLabel}
+            {translations.cancelButtonLabel}
           </MenuItem>
         );
 
@@ -60,7 +60,7 @@ function CustomActionBar(props) {
             }}
             key={actionType}
           >
-            {localeText.okButtonLabel}
+            {translations.okButtonLabel}
           </MenuItem>
         );
 
@@ -74,7 +74,7 @@ function CustomActionBar(props) {
             }}
             key={actionType}
           >
-            {localeText.todayButtonLabel}
+            {translations.todayButtonLabel}
           </MenuItem>
         );
 

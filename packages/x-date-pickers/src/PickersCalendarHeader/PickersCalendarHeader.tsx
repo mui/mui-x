@@ -6,7 +6,8 @@ import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from '../DateCalendar/PickersFadeTransitionGroup';
 import { ArrowDropDownIcon } from '../icons';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
@@ -131,7 +132,7 @@ type PickersCalendarHeaderComponent = (<TDate extends PickerValidDate>(
 const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<
   TDate extends PickerValidDate,
 >(inProps: PickersCalendarHeaderProps<TDate>, ref: React.Ref<HTMLDivElement>) {
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const utils = useUtils<TDate>();
 
   const props = useThemeProps({ props: inProps, name: 'MuiPickersCalendarHeader' });
@@ -167,7 +168,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<
     externalSlotProps: slotProps?.switchViewButton,
     additionalProps: {
       size: 'small',
-      'aria-label': localeText.calendarViewSwitchingButtonAriaLabel(view),
+      'aria-label': translations.calendarViewSwitchingButtonAriaLabel(view),
     },
     ownerState,
     className: classes.switchViewButton,
@@ -254,10 +255,10 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<
           slotProps={slotProps}
           onGoToPrevious={selectPreviousMonth}
           isPreviousDisabled={isPreviousMonthDisabled}
-          previousLabel={localeText.previousMonth}
+          previousLabel={translations.previousMonth}
           onGoToNext={selectNextMonth}
           isNextDisabled={isNextMonthDisabled}
-          nextLabel={localeText.nextMonth}
+          nextLabel={translations.nextMonth}
         />
       </Fade>
     </PickersCalendarHeaderRoot>
