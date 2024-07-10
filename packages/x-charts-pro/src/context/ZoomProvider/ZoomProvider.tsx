@@ -29,8 +29,8 @@ export function ZoomProvider({ children, xAxis: inXAxis, yAxis: inYAxis }: ZoomP
   const options = React.useMemo(
     () =>
       [
-        ...(defaultizeZoom(defaultizeAxis(inXAxis, 'x'), 'x') ?? []),
-        ...(defaultizeZoom(defaultizeAxis(inYAxis, 'y'), 'y') ?? []),
+        ...defaultizeZoom(defaultizeAxis(inXAxis, 'x'), 'x'),
+        ...defaultizeZoom(defaultizeAxis(inYAxis, 'y'), 'y'),
       ].reduce(
         (acc, v) => {
           acc[v.axisId] = v;

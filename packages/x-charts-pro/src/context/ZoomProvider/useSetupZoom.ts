@@ -93,7 +93,7 @@ export const useSetupZoom = () => {
       const newZoomData = zoomData.map((zoom) => {
         const option = options[zoom.axisId];
         const centerRatio =
-          option.axis === 'x'
+          option.axisDirection === 'x'
             ? getHorizontalCenterRatio(point, area)
             : getVerticalCenterRatio(point, area);
 
@@ -150,7 +150,7 @@ export const useSetupZoom = () => {
         const point = getSVGPoint(element, firstEvent);
 
         const centerRatio =
-          option.axis === 'x'
+          option.axisDirection === 'x'
             ? getHorizontalCenterRatio(point, area)
             : getVerticalCenterRatio(point, area);
 
