@@ -41,7 +41,12 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
     minDate,
     maxDate,
     timezone,
-  } = props;
+    // omit props that are not used in the PickersArrowSwitcher
+    reduceAnimations,
+    views,
+    view,
+    ...otherRangeProps
+  } = other;
 
   const isNextMonthDisabled = useNextMonthDisabled(currentMonth, {
     disableFuture,
@@ -65,6 +70,7 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
 
   return (
     <PickersRangeCalendarHeaderContentMultipleCalendars
+      {...otherRangeProps}
       ref={ref}
       onGoToPrevious={selectPreviousMonth}
       onGoToNext={selectNextMonth}
