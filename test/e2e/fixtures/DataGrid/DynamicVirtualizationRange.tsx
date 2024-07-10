@@ -14,7 +14,7 @@ const rows = [
   { id: 9, value: 'H' },
 ];
 
-export default function CheckboxSelectionGrid() {
+export default function DynamicVirtualizationRange() {
   const [columns, setColumns] = React.useState<GridColDef[]>([{ field: 'id' }, { field: 'value' }]);
 
   return (
