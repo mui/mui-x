@@ -45,7 +45,7 @@ type DataType<PropName> = {
    * - `radio`: render group of radios
    * - `slider`: render the slider component
    */
-  knob?:
+  knob:
     | 'switch'
     | 'color'
     | 'select'
@@ -161,7 +161,15 @@ export default function ChartDemoPropsForm<T extends string>({
   props,
   onPropsChange,
 }: ChartDemoPropsFormProps<T>) {
-  const initialProps = React.useRef<Record<T, any>>({} as Record<T, any>);
+  const initialProps = React.useRef<Record<T, any>>(
+    data.reduce(
+      (acc, { propName, defaultValue }) => {
+        acc[propName] = defaultValue;
+        return acc;
+      },
+      {} as Record<T, any>,
+    ),
+  );
 
   React.useEffect(() => {
     data.reduce(
@@ -210,7 +218,7 @@ export default function ChartDemoPropsForm<T extends string>({
           size="small"
           onClick={() => onPropsChange(initialProps.current)}
           sx={{
-            visibility: !shallowEqual(props, initialProps) ? 'visible' : 'hidden',
+            visibility: !shallowEqual(props, initialProps.current) ? 'visible' : 'hidden',
             '--IconButton-size': '30px',
           }}
         >
