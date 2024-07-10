@@ -64,8 +64,8 @@ export type ZoomData = {
 };
 
 export type ZoomProps = {
-  zoom: ZoomData[];
-  onZoomChange: (zoom: ZoomData[]) => void;
+  zoom?: ZoomData[];
+  onZoomChange?: (zoom: ZoomData[]) => void;
 };
 
 export type DefaultizedZoomOptions = Required<ZoomOptions> & { axisId: AxisId; axis: 'x' | 'y' };
