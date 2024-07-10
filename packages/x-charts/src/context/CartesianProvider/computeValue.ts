@@ -27,6 +27,17 @@ const getRange = (drawingArea: DrawingArea, axisName: 'x' | 'y', isReverse?: boo
   return isReverse ? range.reverse() : range;
 };
 
+const zoomedScaleRange = (scaleRange: [number, number] | number[], zoomRange: [number, number]) => {
+  const rangeGap = scaleRange[1] - scaleRange[0];
+  const zoomGap = zoomRange[1] - zoomRange[0];
+
+  // If current zoom show the scale between p1 and p2 percents
+  // The range should be extended by adding [0, p1] and [p2, 100] segments
+  const min = scaleRange[0] - (zoomRange[0] * rangeGap) / zoomGap;
+  const max = scaleRange[1] + ((100 - zoomRange[1]) * rangeGap) / zoomGap;
+
+  return [min, max];
+};
 const isDateData = (data?: any[]): data is Date[] => data?.[0] instanceof Date;
 
 function createDateFormatter(
@@ -48,6 +59,7 @@ export function computeValue(
   axis: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[] | undefined,
   extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
   axisName: 'y',
+  zoomRange?: [number, number],
 ): {
   axis: DefaultizedAxisConfig<ChartsYAxisProps>;
   axisIds: string[];
@@ -58,6 +70,7 @@ export function computeValue(
   inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[] | undefined,
   extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
   axisName: 'x',
+  zoomRange?: [number, number],
 ): {
   axis: DefaultizedAxisConfig<ChartsAxisProps>;
   axisIds: string[];
@@ -68,6 +81,7 @@ export function computeValue(
   inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsAxisProps>, 'id'>[] | undefined,
   extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
   axisName: 'x' | 'y',
+  zoomRange: [number, number] = [0, 100],
 ) {
   const DEFAULT_AXIS_KEY = axisName === 'x' ? DEFAULT_X_AXIS_KEY : DEFAULT_Y_AXIS_KEY;
 
@@ -96,12 +110,13 @@ export function computeValue(
       const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
       // Reverse range because ordinal scales are presented from top to bottom on y-axis
       const scaleRange = axisName === 'x' ? range : [range[1], range[0]];
+      const zoomedRange = zoomedScaleRange(scaleRange, zoomRange);
 
       completeAxis[axis.id] = {
         categoryGapRatio,
         barGapRatio,
         ...axis,
-        scale: scaleBand(axis.data!, scaleRange)
+        scale: scaleBand(axis.data!, zoomedRange)
           .paddingInner(categoryGapRatio)
           .paddingOuter(categoryGapRatio / 2),
         tickNumber: axis.data!.length,
@@ -119,10 +134,11 @@ export function computeValue(
     }
     if (isPointScaleConfig(axis)) {
       const scaleRange = axisName === 'x' ? range : [...range].reverse();
+      const zoomedRange = zoomedScaleRange(scaleRange, zoomRange);
 
       completeAxis[axis.id] = {
         ...axis,
-        scale: scalePoint(axis.data!, scaleRange),
+        scale: scalePoint(axis.data!, zoomedRange),
         tickNumber: axis.data!.length,
         colorScale:
           axis.colorMap &&
@@ -144,9 +160,13 @@ export function computeValue(
     const scaleType = axis.scaleType ?? ('linear' as const);
 
     const extremums = [axis.min ?? minData, axis.max ?? maxData];
-    const tickNumber = getTickNumber({ ...axis, range, domain: extremums });
+    const rawTickNumber = getTickNumber({ ...axis, range, domain: extremums });
+    const tickNumber = rawTickNumber / ((zoomRange[1] - zoomRange[0]) / 100);
 
-    const scale = getScale(scaleType, extremums, range).nice(tickNumber);
+    const zoomedRange = zoomedScaleRange(range, zoomRange);
+
+    // TODO: move nice to prop? Disable when there is zoom?
+    const scale = getScale(scaleType, extremums, zoomedRange).nice(rawTickNumber);
     const [minDomain, maxDomain] = scale.domain();
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 

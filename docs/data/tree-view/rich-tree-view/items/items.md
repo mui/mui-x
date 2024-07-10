@@ -151,12 +151,25 @@ Use the `getItem` API method to get an item by its ID.
 
 ```ts
 const item = apiRef.current.getItem(
-  // The ID of the item to retrieve
+  // The id of the item to retrieve
   itemId,
 );
 ```
 
 {{"demo": "ApiMethodGetItem.js", "defaultCodeOpen": false}}
+
+### Get an item's DOM element by ID
+
+Use the `getItemDOMElement` API method to get an item's DOM element by its ID.
+
+```ts
+const itemElement = apiRef.current.getItemDOMElement(
+  // The id of the item to get the DOM element of
+  itemId,
+);
+```
+
+{{"demo": "ApiMethodGetItemDOMElement.js", "defaultCodeOpen": false}}
 
 ### Get the current item tree
 
@@ -179,7 +192,7 @@ Use the `getItemOrderedChildrenIds` API method to get an item's children by its 
 
 ```ts
 const childrenIds = apiRef.current.getItemOrderedChildrenIds(
-  // The ID of the item to retrieve the children from
+  // The id of the item to retrieve the children from
   itemId,
 );
 ```

@@ -425,6 +425,12 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/react-charts/gauge' },
           {
+            pathname: '/x/react-charts/heatmap',
+            title: 'Heatmap',
+            plan: 'pro',
+            unstable: true,
+          },
+          {
             pathname: '/x/react-charts/common-features',
             subheader: 'Common features',
             children: [
@@ -436,6 +442,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/stacking' },
               { pathname: '/x/react-charts/styling' },
               { pathname: '/x/react-charts/tooltip', title: 'Tooltip & Highlights' },
+              { pathname: '/x/react-charts/zoom-and-pan', title: 'Zoom & Pan', plan: 'pro' },
             ],
           },
           {
@@ -462,12 +469,6 @@ const pages: MuiPage[] = [
             children: [
               { pathname: '/x/react-charts/radar', planned: true },
               { pathname: '/x/react-charts/treemap', title: 'Treemap', planned: true },
-              {
-                pathname: '/x/react-charts/heatmap',
-                title: 'Heatmap',
-                plan: 'pro',
-                planned: true,
-              },
               { pathname: '/x/react-charts/funnel', plan: 'pro', planned: true },
               { pathname: '/x/react-charts/sankey', plan: 'pro', planned: true },
               { pathname: '/x/react-charts/gantt', plan: 'pro', planned: true },

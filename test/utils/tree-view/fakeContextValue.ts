@@ -19,6 +19,8 @@ export const getFakeContextValue = (
     getItem: () => ({}),
     getItemOrderedChildrenIds: () => [],
     setItemExpansion: () => {},
+    getItemDOMElement: () => null,
+    selectItem: () => {},
     getItemTree: () => [],
   },
   runItemPlugins: () => ({

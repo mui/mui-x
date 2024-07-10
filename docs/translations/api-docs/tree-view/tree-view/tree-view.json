@@ -40,14 +40,14 @@
     "onExpandedItemsChange": {
       "description": "Callback fired when tree items are expanded/collapsed.",
       "typeDescriptions": {
-        "event": "The event source of the callback.",
+        "event": "The DOM event that triggered the change.",
         "itemIds": "The ids of the expanded items."
       }
     },
     "onItemExpansionToggle": {
       "description": "Callback fired when a tree item is expanded or collapsed.",
       "typeDescriptions": {
-        "event": "The event source of the callback.",
+        "event": "The DOM event that triggered the change.",
         "itemId": "The itemId of the modified item.",
         "isExpanded": "<code>true</code> if the item has just been expanded, <code>false</code> if it has just been collapsed."
       }
@@ -55,7 +55,7 @@
     "onItemFocus": {
       "description": "Callback fired when tree items are focused.",
       "typeDescriptions": {
-        "event": "The event source of the callback <strong>Warning</strong>: This is a generic event not a focus event.",
+        "event": "The DOM event that triggered the change. <strong>Warning</strong>: This is a generic event not a focus event.",
         "itemId": "The id of the focused item.",
         "value": "of the focused item."
       }
@@ -63,7 +63,7 @@
     "onItemSelectionToggle": {
       "description": "Callback fired when a tree item is selected or deselected.",
       "typeDescriptions": {
-        "event": "The event source of the callback.",
+        "event": "The DOM event that triggered the change.",
         "itemId": "The itemId of the modified item.",
         "isSelected": "<code>true</code> if the item has just been selected, <code>false</code> if it has just been deselected."
       }
@@ -71,7 +71,7 @@
     "onSelectedItemsChange": {
       "description": "Callback fired when tree items are selected/deselected.",
       "typeDescriptions": {
-        "event": "The event source of the callback",
+        "event": "The DOM event that triggered the change.",
         "itemIds": "The ids of the selected items. When <code>multiSelect</code> is <code>true</code>, this is an array of strings; when false (default) a string."
       }
     },

@@ -27,8 +27,7 @@ describe('<DateCalendar /> - Describes', () => {
     render,
     muiName: 'MuiDateCalendar',
     refInstanceof: window.HTMLDivElement,
-    // cannot test reactTestRenderer because of required context
-    skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
+    skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
   describeValue(DateCalendar, () => ({

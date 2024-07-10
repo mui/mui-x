@@ -43,7 +43,6 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
       'mergeClassName',
       'propsSpread',
       'rootClass',
-      'reactTestRenderer',
     ],
   }));
 
