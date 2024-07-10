@@ -162,6 +162,15 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     [state.items.itemOrderedChildrenIds],
   );
 
+  const getItemDOMElement = (itemId: string) => {
+    const itemMeta = instance.getItemMeta(itemId);
+    if (itemMeta == null) {
+      return null;
+    }
+
+    return document.getElementById(instance.getTreeItemIdAttribute(itemId, itemMeta.idAttribute));
+  };
+
   const isItemNavigable = (itemId: string) => {
     if (params.disabledItemsFocusable) {
       return true;
@@ -231,12 +240,14 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     }),
     publicAPI: {
       getItem,
+      getItemDOMElement,
     },
     instance: {
       getItemMeta,
       getItem,
       getItemsToRender,
       getItemIndex,
+      getItemDOMElement,
       getItemOrderedChildrenIds,
       isItemDisabled,
       isItemNavigable,

@@ -92,10 +92,10 @@ export const useTreeItem2Utils = ({
       if (event.shiftKey) {
         instance.expandSelectionRange(event, itemId);
       } else {
-        instance.selectItem(event, itemId, true);
+        instance.selectItem({ event, itemId, keepExistingSelection: true });
       }
     } else {
-      instance.selectItem(event, itemId, false);
+      instance.selectItem({ event, itemId, shouldBeSelected: true });
     }
   };
 
@@ -104,7 +104,12 @@ export const useTreeItem2Utils = ({
     if (multiSelect && hasShift) {
       instance.expandSelectionRange(event, itemId);
     } else {
-      instance.selectItem(event, itemId, multiSelect, event.target.checked);
+      instance.selectItem({
+        event,
+        itemId,
+        keepExistingSelection: multiSelect,
+        shouldBeSelected: event.target.checked,
+      });
     }
   };
 

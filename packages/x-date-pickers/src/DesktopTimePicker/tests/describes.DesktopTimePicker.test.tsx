@@ -44,7 +44,6 @@ describe('<DesktopTimePicker /> - Describes', () => {
       'mergeClassName',
       'propsSpread',
       'rootClass',
-      'reactTestRenderer',
     ],
   }));
 

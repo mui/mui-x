@@ -37,7 +37,6 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
       'mergeClassName',
       'propsSpread',
       'rootClass',
-      'reactTestRenderer',
     ],
   }));
 

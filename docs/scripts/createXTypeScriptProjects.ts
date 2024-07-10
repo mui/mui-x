@@ -37,6 +37,7 @@ export type XProjectNames =
   | 'x-date-pickers'
   | 'x-date-pickers-pro'
   | 'x-charts'
+  | 'x-charts-pro'
   | 'x-tree-view'
   | 'x-tree-view-pro';
 
