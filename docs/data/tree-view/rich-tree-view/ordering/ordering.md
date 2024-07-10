@@ -12,11 +12,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 <p class="description">Drag and drop your items to reorder them.</p>
 
 :::success
-To be able to reorder items, you first have to enable the `indentationAtItemLevel` experimental feature.
-When this flag is enabled, the indentation of nested items is applied by the item itself instead of its ancestors.
-This allows correctly placing the drag & drop overlay.
-
-You can enable it as follows:
+To be able to reorder items, you first have to enable the `indentationAtItemLevel` experimental feature:
 
 ```tsx
 <RichTreeViewPro
@@ -25,8 +21,7 @@ You can enable it as follows:
 />
 ```
 
-If you are building your custom Tree Item, make sure that you do not apply any custom `padding-left` on your Tree Item Content component.
-If you want to change the indentation value, you can use the `itemChildrenIndentation` prop on the Tree View component.
+See [Tree Item Customization—Apply the nested item's indentation at the item level](/x/react-tree-view/tree-item-customization/#apply-the-nested-items-indentation-at-the-item-level) for more details.
 :::
 
 ## Enable drag & drop re-ordering
