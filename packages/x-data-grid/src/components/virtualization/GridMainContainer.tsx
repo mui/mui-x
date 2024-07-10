@@ -4,6 +4,12 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridAriaAttributes } from '../../hooks/utils/useGridAriaAttributes';
 
+const GridPanelAnchor = styled('div')({
+  position: 'absolute',
+  top: `var(--DataGrid-headersTotalHeight)`,
+  left: 0,
+});
+
 type OwnerState = DataGridProcessedProps;
 
 const Element = styled('div', {
@@ -33,6 +39,7 @@ export const GridMainContainer = React.forwardRef<
       tabIndex={-1}
       {...ariaAttributes}
     >
+      <GridPanelAnchor role="presentation" data-id="gridPanelAnchor" />
       {props.children}
     </Element>
   );
