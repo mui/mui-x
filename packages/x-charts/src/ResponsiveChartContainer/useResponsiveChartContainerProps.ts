@@ -1,7 +1,11 @@
 import { ChartContainerProps } from '../ChartContainer';
 import type { ResponsiveChartContainerProps } from './ResponsiveChartContainer';
+import { useChartContainerDimensions } from './useChartContainerDimensions';
 
-export const useResponsiveChartContainerProps = (props: ResponsiveChartContainerProps) => {
+export const useResponsiveChartContainerProps = (
+  props: ResponsiveChartContainerProps,
+  ref: React.ForwardedRef<unknown>,
+) => {
   const {
     width,
     height,
@@ -24,12 +28,19 @@ export const useResponsiveChartContainerProps = (props: ResponsiveChartContainer
     ...rest
   } = props;
 
+  const {
+    containerRef,
+    width: dWidth,
+    height: dHeight,
+  } = useChartContainerDimensions(ref, width, height);
+
   const resizableChartContainerProps = {
     ...rest,
     ownerState: { width, height },
+    ref: containerRef,
   };
 
-  const chartContainerProps: Omit<ChartContainerProps, 'height' | 'width'> = {
+  const chartContainerProps: ChartContainerProps = {
     margin,
     children,
     series,
@@ -46,11 +57,12 @@ export const useResponsiveChartContainerProps = (props: ResponsiveChartContainer
     xAxis,
     yAxis,
     zAxis,
+    width: dWidth,
+    height: dHeight,
   };
 
   return {
-    inWidth: width,
-    inHeight: height,
+    hasIntrinsicSize: dWidth && dHeight,
     chartContainerProps,
     resizableChartContainerProps,
   };
