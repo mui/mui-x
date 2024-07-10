@@ -32,7 +32,7 @@ export const useResponsiveChartContainerProps = (
     containerRef,
     width: dWidth,
     height: dHeight,
-  } = useChartContainerDimensions(ref, width, height);
+  } = useChartContainerDimensions(width, height);
 
   const resizableChartContainerProps = {
     ...rest,
@@ -40,7 +40,7 @@ export const useResponsiveChartContainerProps = (
     ref: containerRef,
   };
 
-  const chartContainerProps: ChartContainerProps = {
+  const chartContainerProps: ChartContainerProps & { ref: React.ForwardedRef<unknown> } = {
     margin,
     children,
     series,
@@ -59,6 +59,7 @@ export const useResponsiveChartContainerProps = (
     zAxis,
     width: dWidth,
     height: dHeight,
+    ref,
   };
 
   return {

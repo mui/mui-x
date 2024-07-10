@@ -22,6 +22,7 @@ describe('<Gauge />', () => {
       'themeStyleOverrides',
       'themeVariants',
       'themeCustomPalette',
+      'refForwarding',
     ],
   }));
 });

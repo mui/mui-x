@@ -36,7 +36,7 @@ export const useChartContainerProps = (
 
   const {
     svgRef,
-    handleRef,
+    chartSurfaceRef,
     xExtremumGetters,
     yExtremumGetters,
     seriesFormatters,
@@ -83,7 +83,7 @@ export const useChartContainerProps = (
     ...rest,
     width,
     height,
-    ref: handleRef,
+    ref: chartSurfaceRef,
     sx,
     title,
     desc,

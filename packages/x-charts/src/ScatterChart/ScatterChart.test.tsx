@@ -35,6 +35,7 @@ describe('<ScatterChart />', () => {
         'themeStyleOverrides',
         'themeVariants',
         'themeCustomPalette',
+        'refForwarding',
       ],
     }),
   );

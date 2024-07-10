@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer, describeConformance } from '@mui/internal-test-utils';
 import { ChartContainer } from './ChartContainer';
 
-describe('<ResponsiveChartContainer />', () => {
+describe('<ChartContainer />', () => {
   const { render } = createRenderer();
 
   describeConformance(<ChartContainer height={100} width={100} series={[]} />, () => ({
@@ -22,6 +22,7 @@ describe('<ResponsiveChartContainer />', () => {
       'themeStyleOverrides',
       'themeVariants',
       'themeCustomPalette',
+      'refForwarding',
     ],
   }));
 });

@@ -22,6 +22,7 @@ describe('<SparkLineChart />', () => {
       'themeStyleOverrides',
       'themeVariants',
       'themeCustomPalette',
+      'refForwarding',
     ],
   }));
 });

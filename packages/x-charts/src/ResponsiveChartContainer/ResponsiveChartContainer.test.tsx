@@ -22,6 +22,7 @@ describe('<ResponsiveChartContainer />', () => {
       'themeStyleOverrides',
       'themeVariants',
       'themeCustomPalette',
+      'refForwarding',
     ],
   }));
 });

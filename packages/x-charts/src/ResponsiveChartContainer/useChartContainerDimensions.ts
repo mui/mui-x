@@ -1,23 +1,17 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
-import useForkRef from '@mui/utils/useForkRef';
 
-export const useChartContainerDimensions = (
-  ref: React.ForwardedRef<unknown> | null,
-  inWidth?: number,
-  inHeight?: number,
-) => {
+export const useChartContainerDimensions = (inWidth?: number, inHeight?: number) => {
   const displayError = React.useRef<boolean>(false);
-  const customRef = React.useRef(null);
-  const rootRef = useForkRef(ref, customRef);
+  const rootRef = React.useRef(null);
 
   const [width, setWidth] = React.useState(0);
   const [height, setHeight] = React.useState(0);
 
   // Adaptation of the `computeSizeAndPublishResizeEvent` from the grid.
   const computeSize = React.useCallback(() => {
-    const mainEl = customRef?.current;
+    const mainEl = rootRef?.current;
 
     if (!mainEl) {
       return;
@@ -44,7 +38,7 @@ export const useChartContainerDimensions = (
     }
     computeSize();
 
-    const elementToObserve = customRef.current;
+    const elementToObserve = rootRef.current;
     if (typeof ResizeObserver === 'undefined') {
       return () => {};
     }

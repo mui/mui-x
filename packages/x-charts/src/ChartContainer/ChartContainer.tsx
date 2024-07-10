@@ -21,7 +21,6 @@ import {
 } from '../context';
 import { ChartsPluginType } from '../models/plugin';
 import { ChartSeriesType } from '../models/seriesType/config';
-import { useChartContainerHooks } from './useChartContainerHooks';
 import { useChartContainerProps } from './useChartContainerProps';
 
 export type ChartContainerProps = Omit<
