@@ -54,8 +54,8 @@ export const useSetupPan = () => {
         const MIN_PERCENT = option.start;
         const MAX_PERCENT = option.end;
 
-        const movement = option.axis === 'x' ? movementX : movementY;
-        const dimension = option.axis === 'x' ? area.width : area.height;
+        const movement = option.axisDirection === 'x' ? movementX : movementY;
+        const dimension = option.axisDirection === 'x' ? area.width : area.height;
 
         let newMinPercent = min - (movement / dimension) * span;
         let newMaxPercent = max - (movement / dimension) * span;
