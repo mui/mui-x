@@ -11,6 +11,8 @@ import {
   DefaultizedProps,
   PickerViewsRendererProps,
   TimeViewWithMeridiem,
+  resolveDateTimeFormat,
+  useUtils,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { resolveComponentProps } from '@mui/base/utils';
@@ -147,6 +149,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
   inProps: MobileDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const utils = useUtils<TDate>();
   // Props with the default values common to all date time range pickers
   const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
     TDate,
@@ -169,6 +172,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
   const props = {
     ...defaultizedProps,
     viewRenderers,
+    format: resolveDateTimeFormat(utils, defaultizedProps),
     // Force one calendar on mobile to avoid layout issues
     calendars: 1,
     // force true to correctly handle `renderTimeViewClock` as a renderer
@@ -215,7 +219,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
 MobileDateTimeRangePicker.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
@@ -382,7 +386,9 @@ MobileDateTimeRangePicker.propTypes = {
   /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onAccept: PropTypes.func,
   /**

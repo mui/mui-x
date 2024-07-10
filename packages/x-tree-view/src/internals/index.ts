@@ -7,18 +7,15 @@ export type {
   TreeViewPlugin,
   TreeViewPluginSignature,
   ConvertPluginsIntoSignatures,
-  MergePluginsProperty,
+  MergeSignaturesProperty,
   TreeViewPublicAPI,
+  TreeViewExperimentalFeatures,
 } from './models';
 
+// Core plugins
+export type { TreeViewCorePluginParameters } from './corePlugins';
+
 // Plugins
-export { DEFAULT_TREE_VIEW_PLUGINS } from './plugins/defaultPlugins';
-export type {
-  DefaultTreeViewPlugins,
-  DefaultTreeViewPluginSlots,
-  DefaultTreeViewPluginSlotProps,
-} from './plugins/defaultPlugins';
-export type { DefaultTreeViewPluginParameters } from './plugins/defaultPlugins';
 export { useTreeViewExpansion } from './plugins/useTreeViewExpansion';
 export type {
   UseTreeViewExpansionSignature,
@@ -36,8 +33,6 @@ export type {
 } from './plugins/useTreeViewFocus';
 export { useTreeViewKeyboardNavigation } from './plugins/useTreeViewKeyboardNavigation';
 export type { UseTreeViewKeyboardNavigationSignature } from './plugins/useTreeViewKeyboardNavigation';
-export { useTreeViewId } from './plugins/useTreeViewId';
-export type { UseTreeViewIdSignature, UseTreeViewIdParameters } from './plugins/useTreeViewId';
 export { useTreeViewIcons } from './plugins/useTreeViewIcons';
 export type {
   UseTreeViewIconsSignature,
@@ -55,4 +50,3 @@ export type {
 } from './plugins/useTreeViewJSXItems';
 
 export { buildWarning } from './utils/warning';
-export { extractPluginParamsFromProps } from './utils/extractPluginParamsFromProps';

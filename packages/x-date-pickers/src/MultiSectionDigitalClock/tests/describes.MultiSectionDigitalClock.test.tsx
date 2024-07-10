@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen } from '@mui-internal/test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
-  wrapPickerMount,
   adapterToUse,
   multiSectionDigitalClockHandler,
   describeValidation,
@@ -28,7 +27,6 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
     classes: {} as any,
     render,
     muiName: 'MuiMultiSectionDigitalClock',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',
@@ -39,7 +37,6 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
       'mergeClassName',
       'propsSpread',
       'rootClass',
-      'reactTestRenderer',
     ],
   }));
 

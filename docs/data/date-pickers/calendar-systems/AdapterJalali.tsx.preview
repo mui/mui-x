@@ -1,7 +1,10 @@
 <ThemeProvider theme={theme}>
   <div dir="rtl">
     <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
-      <DateTimePicker label="Date Picker" defaultValue={new Date(2022, 1, 1)} />
+      <DateTimePicker
+        label="AdapterDateFnsJalali"
+        defaultValue={new Date(2022, 1, 1, 12)}
+      />
     </LocalizationProvider>
   </div>
 </ThemeProvider>

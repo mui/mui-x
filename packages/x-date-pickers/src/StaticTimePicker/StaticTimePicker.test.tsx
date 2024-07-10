@@ -1,13 +1,8 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireTouchChangedEvent, screen, getAllByRole, fireEvent } from '@mui-internal/test-utils';
-import {
-  adapterToUse,
-  wrapPickerMount,
-  createPickerRenderer,
-  describeValidation,
-} from 'test/utils/pickers';
+import { fireTouchChangedEvent, screen, getAllByRole, fireEvent } from '@mui/internal-test-utils';
+import { adapterToUse, createPickerRenderer, describeValidation } from 'test/utils/pickers';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
 
@@ -28,7 +23,6 @@ describe('<StaticTimePicker />', () => {
     classes: {} as any,
     render,
     muiName: 'MuiStaticTimePicker',
-    wrapMount: wrapPickerMount,
     refInstanceof: undefined,
     skip: [
       'componentProp',
@@ -41,7 +35,6 @@ describe('<StaticTimePicker />', () => {
       // TODO: `ref` is typed but has no effect
       'refForwarding',
       'rootClass',
-      'reactTestRenderer',
     ],
   }));
 

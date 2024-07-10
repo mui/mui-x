@@ -22,8 +22,17 @@
     "expandedItems": {
       "description": "Expanded item ids. Used when the item&#39;s expansion is controlled."
     },
+    "expansionTrigger": {
+      "description": "The slot that triggers the item&#39;s expansion when clicked."
+    },
+    "experimentalFeatures": {
+      "description": "Unstable features, breaking changes might be introduced. For each feature, if the flag is not explicitly set to <code>true</code>, the feature will be fully disabled and any property / method call will not have any effect."
+    },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
+    },
+    "itemChildrenIndentation": {
+      "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
     },
     "multiSelect": {
       "description": "If <code>true</code>, <code>ctrl</code> and <code>shift</code> will trigger multiselect."
@@ -31,14 +40,14 @@
     "onExpandedItemsChange": {
       "description": "Callback fired when tree items are expanded/collapsed.",
       "typeDescriptions": {
-        "event": "The event source of the callback.",
+        "event": "The DOM event that triggered the change.",
         "itemIds": "The ids of the expanded items."
       }
     },
     "onItemExpansionToggle": {
       "description": "Callback fired when a tree item is expanded or collapsed.",
       "typeDescriptions": {
-        "event": "The event source of the callback.",
+        "event": "The DOM event that triggered the change.",
         "itemId": "The itemId of the modified item.",
         "isExpanded": "<code>true</code> if the item has just been expanded, <code>false</code> if it has just been collapsed."
       }
@@ -46,7 +55,7 @@
     "onItemFocus": {
       "description": "Callback fired when tree items are focused.",
       "typeDescriptions": {
-        "event": "The event source of the callback <strong>Warning</strong>: This is a generic event not a focus event.",
+        "event": "The DOM event that triggered the change. <strong>Warning</strong>: This is a generic event not a focus event.",
         "itemId": "The id of the focused item.",
         "value": "of the focused item."
       }
@@ -54,7 +63,7 @@
     "onItemSelectionToggle": {
       "description": "Callback fired when a tree item is selected or deselected.",
       "typeDescriptions": {
-        "event": "The event source of the callback.",
+        "event": "The DOM event that triggered the change.",
         "itemId": "The itemId of the modified item.",
         "isSelected": "<code>true</code> if the item has just been selected, <code>false</code> if it has just been deselected."
       }
@@ -62,7 +71,7 @@
     "onSelectedItemsChange": {
       "description": "Callback fired when tree items are selected/deselected.",
       "typeDescriptions": {
-        "event": "The event source of the callback",
+        "event": "The DOM event that triggered the change.",
         "itemIds": "The ids of the selected items. When <code>multiSelect</code> is <code>true</code>, this is an array of strings; when false (default) a string."
       }
     },

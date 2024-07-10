@@ -32,6 +32,7 @@ import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
 import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
 import type { GridAutosizeOptions } from '../../hooks/features/columnResize';
+import type { GridDataSource } from '../gridDataSource';
 
 export interface GridExperimentalFeatures {
   /**
@@ -99,7 +100,7 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
  */
 export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = any> {
   /**
-   * If `true`, the Data Grid height is dynamic and follow the number of rows in the Data Grid.
+   * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
    * @default false
    */
   autoHeight: boolean;
@@ -260,6 +261,11 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * @default "error" ("warn" in dev mode)
    */
   logLevel: keyof Logger | false;
+  /**
+   * If `true`, a loading overlay is displayed.
+   * @default false
+   */
+  loading: boolean;
   /**
    * If `true`, pagination is enabled.
    * @default false
@@ -735,10 +741,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   getRowId?: GridRowIdGetter<R>;
   /**
-   * If `true`, a loading overlay is displayed.
-   */
-  loading?: boolean;
-  /**
    * Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute).
    */
   nonce?: string;
@@ -813,6 +815,7 @@ export interface DataGridProSharedPropsWithoutDefaultValue {
    * Override the height of the header filters.
    */
   headerFilterHeight?: number;
+  unstable_dataSource?: GridDataSource;
 }
 
 export interface DataGridPremiumSharedPropsWithDefaultValue {

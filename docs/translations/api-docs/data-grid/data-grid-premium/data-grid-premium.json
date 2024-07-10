@@ -14,7 +14,7 @@
       "description": "The id of the element containing a label for the Data Grid."
     },
     "autoHeight": {
-      "description": "If <code>true</code>, the Data Grid height is dynamic and follow the number of rows in the Data Grid."
+      "description": "If <code>true</code>, the Data Grid height is dynamic and follows the number of rows in the Data Grid."
     },
     "autoPageSize": {
       "description": "If <code>true</code>, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar."
@@ -1128,6 +1128,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the row&#39;s draggable placeholder element inside the special row reorder cell"
     },
+    "rowSkeleton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the skeleton row element"
+    },
     "scrollArea": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "both scroll area elements"
@@ -1218,6 +1222,7 @@
     "columnFilteredIcon": "Icon displayed on the column header menu to show that a filter has been applied to the column.",
     "columnHeaderFilterIconButton": "Filter icon component rendered in each column header.",
     "columnHeaders": "Component responsible for rendering the column headers.",
+    "columnHeaderSortIcon": "Sort icon component rendered in each column header.",
     "columnMenu": "Column menu component rendered by clicking on the 3 dots &quot;kebab&quot; icon in column headers.",
     "columnMenuAggregationIcon": "Icon displayed in column menu for aggregation",
     "columnMenuClearIcon": "Icon displayed in column menu for clearing values",

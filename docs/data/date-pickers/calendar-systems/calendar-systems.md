@@ -35,6 +35,10 @@ import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV3
 
 :::
 
+The following demo shows how to use the `moment-jalaali` adapter:
+
+{{"demo": "AdapterMomentJalali.js"}}
+
 ## Hijri
 
 :::error

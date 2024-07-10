@@ -13,7 +13,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, act, userEvent, screen } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, act, userEvent, screen } from '@mui/internal-test-utils';
 import { getCell, getRow, spyApi } from 'test/utils/helperFn';
 
 describe('<DataGridPro /> - Row editing', () => {
@@ -1257,6 +1257,15 @@ describe('<DataGridPro /> - Row editing', () => {
         );
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
         setProps({ rowModesModel: { 0: { mode: GridRowModes.View } } });
+        expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
+      });
+
+      it('should stop edit mode when rowModesModel empty', () => {
+        const { setProps } = render(
+          <TestCase rowModesModel={{ 0: { mode: GridRowModes.Edit } }} />,
+        );
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
+        setProps({ rowModesModel: {} });
         expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
       });
 

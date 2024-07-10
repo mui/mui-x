@@ -15,17 +15,14 @@ module.exports = {
       '@mui/x-date-pickers': path.resolve(__dirname, './packages/x-date-pickers/src'),
       '@mui/x-date-pickers-pro': path.resolve(__dirname, './packages/x-date-pickers-pro/src'),
       '@mui/x-charts': path.resolve(__dirname, './packages/x-charts/src'),
+      '@mui/x-charts-pro': path.resolve(__dirname, './packages/x-charts-pro/src'),
       '@mui/x-tree-view': path.resolve(__dirname, './packages/x-tree-view/src'),
       '@mui/x-tree-view-pro': path.resolve(__dirname, './packages/x-tree-view-pro/src'),
       '@mui/x-license': path.resolve(__dirname, './packages/x-license/src'),
+      '@mui/x-internals': path.resolve(__dirname, './packages/x-internals/src'),
       '@mui/material-nextjs': path.resolve(
         __dirname,
         './node_modules/@mui/monorepo/packages/mui-material-nextjs/src',
-      ),
-
-      '@mui-internal/test-utils': path.resolve(
-        __dirname,
-        './node_modules/@mui/monorepo/packages/test-utils/src',
       ),
       docs: path.resolve(__dirname, './node_modules/@mui/monorepo/docs'),
       docsx: path.resolve(__dirname, './docs'),
@@ -47,10 +44,6 @@ module.exports = {
         options: {
           cacheDirectory: true,
         },
-      },
-      {
-        test: /\.md$/,
-        loader: 'raw-loader',
       },
       {
         test: /\.(ts|tsx)$/,

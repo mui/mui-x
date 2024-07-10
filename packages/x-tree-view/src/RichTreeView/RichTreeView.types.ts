@@ -4,22 +4,26 @@ import { SxProps } from '@mui/system';
 import { SlotComponentProps } from '@mui/base/utils';
 import { RichTreeViewClasses } from './richTreeViewClasses';
 import {
-  DefaultTreeViewPluginParameters,
-  DefaultTreeViewPluginSlotProps,
-  DefaultTreeViewPluginSlots,
-  DefaultTreeViewPlugins,
-} from '../internals/plugins/defaultPlugins';
+  RichTreeViewPluginParameters,
+  RichTreeViewPluginSlotProps,
+  RichTreeViewPluginSlots,
+  RichTreeViewPluginSignatures,
+} from './RichTreeView.plugins';
 import { TreeItemProps } from '../TreeItem';
 import { TreeItem2Props } from '../TreeItem2';
 import { TreeViewItemId } from '../models';
-import { SlotComponentPropsFromProps, TreeViewPublicAPI } from '../internals/models';
+import {
+  SlotComponentPropsFromProps,
+  TreeViewExperimentalFeatures,
+  TreeViewPublicAPI,
+} from '../internals/models';
 
 interface RichTreeViewItemSlotOwnerState {
   itemId: TreeViewItemId;
   label: string;
 }
 
-export interface RichTreeViewSlots extends DefaultTreeViewPluginSlots {
+export interface RichTreeViewSlots extends RichTreeViewPluginSlots {
   /**
    * Element rendered at the root.
    * @default RichTreeViewRoot
@@ -33,7 +37,7 @@ export interface RichTreeViewSlots extends DefaultTreeViewPluginSlots {
 }
 
 export interface RichTreeViewSlotProps<R extends {}, Multiple extends boolean | undefined>
-  extends DefaultTreeViewPluginSlotProps {
+  extends RichTreeViewPluginSlotProps {
   root?: SlotComponentProps<'ul', {}, RichTreeViewProps<R, Multiple>>;
   item?: SlotComponentPropsFromProps<
     TreeItemProps | TreeItem2Props,
@@ -43,7 +47,7 @@ export interface RichTreeViewSlotProps<R extends {}, Multiple extends boolean | 
 }
 
 export type RichTreeViewApiRef = React.MutableRefObject<
-  TreeViewPublicAPI<DefaultTreeViewPlugins> | undefined
+  TreeViewPublicAPI<RichTreeViewPluginSignatures> | undefined
 >;
 
 export interface RichTreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement> {
@@ -59,7 +63,7 @@ export interface RichTreeViewPropsBase extends React.HTMLAttributes<HTMLUListEle
 }
 
 export interface RichTreeViewProps<R extends {}, Multiple extends boolean | undefined>
-  extends DefaultTreeViewPluginParameters<R, Multiple>,
+  extends RichTreeViewPluginParameters<R, Multiple>,
     RichTreeViewPropsBase {
   /**
    * Overridable component slots.
@@ -75,4 +79,10 @@ export interface RichTreeViewProps<R extends {}, Multiple extends boolean | unde
    * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
    */
   apiRef?: RichTreeViewApiRef;
+  /**
+   * Unstable features, breaking changes might be introduced.
+   * For each feature, if the flag is not explicitly set to `true`,
+   * the feature will be fully disabled and any property / method call will not have any effect.
+   */
+  experimentalFeatures?: TreeViewExperimentalFeatures<RichTreeViewPluginSignatures>;
 }

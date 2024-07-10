@@ -5,7 +5,8 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import useId from '@mui/utils/useId';
 import { Watermark } from '@mui/x-license';
 import {
   applyDefaultDate,
@@ -33,7 +34,6 @@ import {
 import {
   DateRangeCalendarProps,
   DateRangeCalendarDefaultizedProps,
-  DateRangePosition,
   DateRangeCalendarOwnerState,
 } from './DateRangeCalendar.types';
 import {
@@ -43,7 +43,7 @@ import {
   isWithinRange,
 } from '../internals/utils/date-utils';
 import { calculateRangeChange, calculateRangePreview } from '../internals/utils/date-range-manager';
-import { DateRange } from '../models';
+import { DateRange, RangePosition } from '../models';
 import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../DateRangePickerDay';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { useDragRange } from './useDragRange';
@@ -232,6 +232,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
 
   const utils = useUtils<TDate>();
   const now = useNow<TDate>(timezone);
+  const id = useId();
 
   const { rangePosition, onRangePositionChange } = useRangePosition({
     rangePosition: rangePositionProp,
@@ -239,7 +240,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     onRangePositionChange: inOnRangePositionChange,
   });
 
-  const handleDatePositionChange = useEventCallback((position: DateRangePosition) => {
+  const handleDatePositionChange = useEventCallback((position: RangePosition) => {
     if (rangePosition !== position) {
       onRangePositionChange(position);
     }
@@ -460,7 +461,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
       const isSelectedEndDate = isEndOfRange(utils, day, valueDayRange);
       const shouldInitDragging = !shouldDisableDragEditing && valueDayRange[0] && valueDayRange[1];
       const isElementDraggable = shouldInitDragging && (isSelectedStartDate || isSelectedEndDate);
-      let datePosition: DateRangePosition | undefined;
+      let datePosition: RangePosition | undefined;
       if (isSelectedStartDate) {
         datePosition = 'start';
       } else if (isSelectedEndDate) {
@@ -549,10 +550,16 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
       <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
       {calendarMonths.map((monthIndex) => {
         const month = visibleMonths[monthIndex];
+        const labelId = `${id}-grid-${monthIndex}-label`;
 
         return (
           <DateRangeCalendarMonthContainer key={monthIndex} className={classes.monthContainer}>
-            <CalendarHeader<TDate> {...calendarHeaderProps} month={month} monthIndex={monthIndex} />
+            <CalendarHeader<TDate>
+              {...calendarHeaderProps}
+              month={month}
+              monthIndex={monthIndex}
+              labelId={labelId}
+            />
             <DayCalendarForRange<TDate>
               className={classes.dayCalendar}
               {...calendarState}
@@ -576,6 +583,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
               fixedWeekNumber={fixedWeekNumber}
               displayWeekNumber={displayWeekNumber}
               timezone={timezone}
+              gridLabelId={labelId}
             />
           </DateRangeCalendarMonthContainer>
         );
@@ -587,7 +595,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
 DateRangeCalendar.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * If `true`, the main element is focused during the first mount.

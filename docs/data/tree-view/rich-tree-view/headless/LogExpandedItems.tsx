@@ -1,25 +1,24 @@
 import * as React from 'react';
-import { useThemeProps } from '@mui/material/styles';
-import { useSlotProps } from '@mui/base/utils';
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import {
   RichTreeViewPropsBase,
   RichTreeViewRoot,
+  RICH_TREE_VIEW_PLUGINS,
+  RichTreeViewPluginParameters,
+  RichTreeViewPluginSlots,
+  RichTreeViewPluginSlotProps,
 } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import {
   UseTreeViewExpansionSignature,
   TreeViewPlugin,
   TreeViewPluginSignature,
-  DefaultTreeViewPluginParameters,
-  DefaultTreeViewPluginSlotProps,
-  DefaultTreeViewPluginSlots,
-  DEFAULT_TREE_VIEW_PLUGINS,
-  extractPluginParamsFromProps,
   useTreeView,
   TreeViewProvider,
+  ConvertPluginsIntoSignatures,
 } from '@mui/x-tree-view/internals';
 
 interface TreeViewLogExpandedParameters {
@@ -38,7 +37,7 @@ type TreeViewLogExpandedSignature = TreeViewPluginSignature<{
   // The parameters of this plugin as they are passed to the plugin after calling `plugin.getDefaultizedParams`
   defaultizedParams: TreeViewLogExpandedDefaultizedParameters;
   // Dependencies of this plugin (we need the expansion plugin to access its model)
-  dependantPlugins: [UseTreeViewExpansionSignature];
+  dependencies: [UseTreeViewExpansionSignature];
 }>;
 
 const useTreeViewLogExpanded: TreeViewPlugin<TreeViewLogExpandedSignature> = ({
@@ -68,42 +67,31 @@ useTreeViewLogExpanded.params = {
 };
 
 export interface TreeViewProps<R extends {}, Multiple extends boolean | undefined>
-  extends DefaultTreeViewPluginParameters<R, Multiple>,
+  extends RichTreeViewPluginParameters<R, Multiple>,
     TreeViewLogExpandedParameters,
     RichTreeViewPropsBase {
-  slots?: DefaultTreeViewPluginSlots;
-  slotProps?: DefaultTreeViewPluginSlotProps;
+  slots?: RichTreeViewPluginSlots;
+  slotProps?: RichTreeViewPluginSlotProps;
 }
 
 const TREE_VIEW_PLUGINS = [
-  ...DEFAULT_TREE_VIEW_PLUGINS,
+  ...RICH_TREE_VIEW_PLUGINS,
   useTreeViewLogExpanded,
 ] as const;
 
+type TreeViewPluginSignatures = ConvertPluginsIntoSignatures<
+  typeof TREE_VIEW_PLUGINS
+>;
+
 function TreeView<R extends {}, Multiple extends boolean | undefined>(
-  inProps: TreeViewProps<R, Multiple>,
+  props: TreeViewProps<R, Multiple>,
 ) {
-  const themeProps = useThemeProps({ props: inProps, name: 'HeadlessTreeView' });
-  const ownerState = themeProps as TreeViewProps<any, any>;
-
-  const { pluginParams, otherProps } = extractPluginParamsFromProps<
-    typeof TREE_VIEW_PLUGINS,
-    DefaultTreeViewPluginSlots,
-    DefaultTreeViewPluginSlotProps,
-    TreeViewProps<R, Multiple>
+  const { getRootProps, contextValue, instance } = useTreeView<
+    TreeViewPluginSignatures,
+    typeof props
   >({
-    props: themeProps,
     plugins: TREE_VIEW_PLUGINS,
-  });
-
-  const { getRootProps, contextValue, instance } = useTreeView(pluginParams);
-
-  const rootProps = useSlotProps({
-    elementType: RichTreeViewRoot,
-    externalSlotProps: {},
-    externalForwardedProps: otherProps,
-    getSlotProps: getRootProps,
-    ownerState,
+    props,
   });
 
   const itemsToRender = instance.getItemsToRender();
@@ -121,26 +109,40 @@ function TreeView<R extends {}, Multiple extends boolean | undefined>(
 
   return (
     <TreeViewProvider value={contextValue}>
-      <RichTreeViewRoot {...rootProps}>
+      <RichTreeViewRoot {...getRootProps()}>
         {itemsToRender.map(renderItem)}
       </RichTreeViewRoot>
     </TreeViewProvider>
   );
 }
 
-const ITEMS: TreeViewBaseItem[] = [
+const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   {
-    id: '1',
-    label: 'Applications',
-    children: [{ id: '2', label: 'Calendar' }],
+    id: 'grid',
+    label: 'Data Grid',
+    children: [
+      { id: 'grid-community', label: '@mui/x-data-grid' },
+      { id: 'grid-pro', label: '@mui/x-data-grid-pro' },
+      { id: 'grid-premium', label: '@mui/x-data-grid-premium' },
+    ],
   },
   {
-    id: '5',
-    label: 'Documents',
+    id: 'pickers',
+    label: 'Date and Time Pickers',
     children: [
-      { id: '10', label: 'OSS' },
-      { id: '6', label: 'MUI', children: [{ id: '8', label: 'index.js' }] },
+      { id: 'pickers-community', label: '@mui/x-date-pickers' },
+      { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
     ],
+  },
+  {
+    id: 'charts',
+    label: 'Charts',
+    children: [{ id: 'charts-community', label: '@mui/x-charts' }],
+  },
+  {
+    id: 'tree-view',
+    label: 'Tree View',
+    children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }],
   },
 ];
 
@@ -149,17 +151,17 @@ export default function LogExpandedItems() {
 
   return (
     <Stack spacing={2}>
-      <TreeView
-        aria-label="file system navigator"
-        sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
-        items={ITEMS}
-        areLogsEnabled
-        logMessage={(message) =>
-          setLogs((prev) =>
-            prev[prev.length - 1] === message ? prev : [...prev, message],
-          )
-        }
-      />
+      <Box sx={{ minHeight: 352, minWidth: 250 }}>
+        <TreeView
+          items={MUI_X_PRODUCTS}
+          areLogsEnabled
+          logMessage={(message) =>
+            setLogs((prev) =>
+              prev[prev.length - 1] === message ? prev : [...prev, message],
+            )
+          }
+        />
+      </Box>
       <Stack spacing={1}>
         {logs.map((log, index) => (
           <Typography key={index}>{log}</Typography>

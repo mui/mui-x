@@ -11,7 +11,8 @@ import {
   DateTimePickerViewRenderers,
 } from '../DateTimePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils } from '../internals/hooks/useUtils';
 import { validateDateTime } from '../internals/utils/validation/validateDateTime';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { CalendarIcon } from '../icons';
@@ -28,19 +29,18 @@ import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
 } from '../timeViewRenderers';
-import {
-  DefaultizedProps,
-  UsePickerViewsProps,
-  VIEW_HEIGHT,
-  isDatePickerView,
-  isInternalTimeView,
-} from '../internals';
+
 import {
   multiSectionDigitalClockClasses,
   multiSectionDigitalClockSectionClasses,
 } from '../MultiSectionDigitalClock';
 import { digitalClockClasses } from '../DigitalClock';
 import { DesktopDateTimePickerLayout } from './DesktopDateTimePickerLayout';
+import { VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { DefaultizedProps } from '../internals/models/helpers';
+import { UsePickerViewsProps } from '../internals/hooks/usePicker/usePickerViews';
+import { isInternalTimeView } from '../internals/utils/time-utils';
+import { isDatePickerView } from '../internals/utils/date-utils';
 
 const rendererInterceptor = function rendererInterceptor<
   TDate extends PickerValidDate,
@@ -134,7 +134,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   inProps: DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const utils = useUtils<TDate>();
 
   // Props with the default values common to all date time pickers
@@ -227,7 +227,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
     valueManager: singleItemValueManager,
     valueType: 'date-time',
     getOpenDialogAriaText:
-      props.localeText?.openDatePickerDialogue ?? localeText.openDatePickerDialogue,
+      props.localeText?.openDatePickerDialogue ?? translations.openDatePickerDialogue,
     validator: validateDateTime,
     rendererInterceptor,
   });
@@ -238,7 +238,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
 DesktopDateTimePicker.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
@@ -391,7 +391,9 @@ DesktopDateTimePicker.propTypes = {
   /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onAccept: PropTypes.func,
   /**

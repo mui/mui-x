@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { screen, userEvent } from '@mui-internal/test-utils';
+import { screen, userEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
-  wrapPickerMount,
   adapterToUse,
   expectFieldValueV7,
   describeValidation,
@@ -35,7 +34,6 @@ describe('<DesktopTimePicker /> - Describes', () => {
     classes: {} as any,
     render,
     muiName: 'MuiDesktopTimePicker',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',
@@ -46,7 +44,6 @@ describe('<DesktopTimePicker /> - Describes', () => {
       'mergeClassName',
       'propsSpread',
       'rootClass',
-      'reactTestRenderer',
     ],
   }));
 

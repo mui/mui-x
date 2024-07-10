@@ -1,12 +1,25 @@
 import * as React from 'react';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
-import { DefaultTreeViewPlugins } from '../internals/plugins';
+import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
+import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
+import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
+import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
+
+type UseTreeItemStateMinimalPlugins = readonly [
+  UseTreeViewSelectionSignature,
+  UseTreeViewExpansionSignature,
+  UseTreeViewFocusSignature,
+  UseTreeViewItemsSignature,
+];
+
+type UseTreeItemStateOptionalPlugins = readonly [];
 
 export function useTreeItemState(itemId: string) {
   const {
     instance,
     selection: { multiSelect, checkboxSelection, disableSelection },
-  } = useTreeViewContext<DefaultTreeViewPlugins>();
+    expansion: { expansionTrigger },
+  } = useTreeViewContext<UseTreeItemStateMinimalPlugins, UseTreeItemStateOptionalPlugins>();
 
   const expandable = instance.isItemExpandable(itemId);
   const expanded = instance.isItemExpanded(itemId);
@@ -36,15 +49,14 @@ export function useTreeItemState(itemId: string) {
       }
 
       const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
-
       if (multiple) {
         if (event.shiftKey) {
           instance.expandSelectionRange(event, itemId);
         } else {
-          instance.selectItem(event, itemId, true);
+          instance.selectItem({ event, itemId, keepExistingSelection: true });
         }
       } else {
-        instance.selectItem(event, itemId, false);
+        instance.selectItem({ event, itemId, shouldBeSelected: true });
       }
     }
   };
@@ -58,7 +70,12 @@ export function useTreeItemState(itemId: string) {
     if (multiSelect && hasShift) {
       instance.expandSelectionRange(event, itemId);
     } else {
-      instance.selectItem(event, itemId, multiSelect, event.target.checked);
+      instance.selectItem({
+        event,
+        itemId,
+        keepExistingSelection: multiSelect,
+        shouldBeSelected: event.target.checked,
+      });
     }
   };
 
@@ -80,5 +97,6 @@ export function useTreeItemState(itemId: string) {
     handleSelection,
     handleCheckboxSelection,
     preventSelection,
+    expansionTrigger,
   };
 }

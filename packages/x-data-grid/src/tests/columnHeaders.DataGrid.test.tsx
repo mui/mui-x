@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, within, userEvent } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, screen, within, userEvent } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
 import { getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
@@ -125,7 +125,7 @@ describe('<DataGrid /> - Column headers', () => {
 
       userEvent.mousePress(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
       clock.runToLast();
-      expect(screen.queryByRole('menu')).to.not.equal(null);
+      expect(screen.queryByRole('menu')).not.to.equal(null);
 
       userEvent.mousePress(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
       clock.runToLast();

@@ -8,7 +8,8 @@ import composeClasses from '@mui/utils/composeClasses';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import useForkRef from '@mui/utils/useForkRef';
-import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { getDigitalClockUtilityClass } from './digitalClockClasses';
@@ -163,7 +164,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     valueManager: singleItemValueManager,
   });
 
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const now = useNow<TDate>(timezone);
 
   const ownerState = React.useMemo(
@@ -301,7 +302,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     >
       <DigitalClockList
         role="listbox"
-        aria-label={localeText.timePickerToolbarTitle}
+        aria-label={translations.timePickerToolbarTitle}
         className={classes.list}
       >
         {timeOptions.map((option, index) => {
@@ -339,7 +340,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
 DigitalClock.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.

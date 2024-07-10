@@ -30,7 +30,7 @@ import {
   ChartsOverlayProps,
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
-} from '../ChartsOverlay/ChartsOverlay';
+} from '../ChartsOverlay';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
 import {
@@ -39,22 +39,23 @@ import {
 } from '../ChartsVoronoiHandler/ChartsVoronoiHandler';
 import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
 import { ZAxisContextProvider, ZAxisContextProviderProps } from '../context/ZAxisContextProvider';
+import { useScatterChartProps } from './useScatterChartProps';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,
     ScatterPlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots,
+    ChartsTooltipSlots<'scatter'>,
     ChartsOverlaySlots {}
 export interface ScatterChartSlotProps
   extends ChartsAxisSlotProps,
     ScatterPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps,
+    ChartsTooltipSlotProps<'scatter'>,
     ChartsOverlaySlotProps {}
 
 export interface ScatterChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series'>,
+  extends Omit<ResponsiveChartContainerProps, 'series' | 'plugins'>,
     Omit<ZAxisContextProviderProps, 'children' | 'dataset'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -69,7 +70,7 @@ export interface ScatterChartProps
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    * @default { trigger: 'item' }
    */
-  tooltip?: ChartsTooltipProps;
+  tooltip?: ChartsTooltipProps<'scatter'>;
   /**
    * The configuration of axes highlight.
    * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
@@ -119,71 +120,29 @@ export interface ScatterChartProps
  */
 const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartProps, ref) {
   const {
-    xAxis,
-    yAxis,
-    zAxis,
-    series,
-    tooltip,
-    axisHighlight,
-    voronoiMaxRadius,
-    disableVoronoi,
-    legend,
-    width,
-    height,
-    margin,
-    colors,
-    sx,
-    grid,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
-    onItemClick,
+    chartContainerProps,
+    zAxisProps,
+    voronoiHandlerProps,
+    chartsAxisProps,
+    gridProps,
+    scatterPlotProps,
+    overlayProps,
+    legendProps,
+    axisHighlightProps,
+    tooltipProps,
     children,
-    slots,
-    slotProps,
-    loading,
-  } = props;
+  } = useScatterChartProps(props);
   return (
-    <ResponsiveChartContainer
-      ref={ref}
-      series={series.map((s) => ({ type: 'scatter', ...s }))}
-      width={width}
-      height={height}
-      margin={margin}
-      colors={colors}
-      xAxis={xAxis}
-      yAxis={yAxis}
-      sx={sx}
-    >
-      <ZAxisContextProvider zAxis={zAxis}>
-        {!disableVoronoi && (
-          <ChartsVoronoiHandler
-            voronoiMaxRadius={voronoiMaxRadius}
-            onItemClick={onItemClick as ChartsVoronoiHandlerProps['onItemClick']}
-          />
-        )}
-
-        <ChartsAxis
-          topAxis={topAxis}
-          leftAxis={leftAxis}
-          rightAxis={rightAxis}
-          bottomAxis={bottomAxis}
-          slots={slots}
-          slotProps={slotProps}
-        />
-        {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}
-        <ScatterPlot
-          slots={slots}
-          slotProps={slotProps}
-          onItemClick={
-            disableVoronoi ? (onItemClick as ScatterPlotProps['onItemClick']) : undefined
-          }
-        />
-        <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
-        <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
-        <ChartsAxisHighlight x="none" y="none" {...axisHighlight} />
-        {!loading && <ChartsTooltip trigger="item" {...tooltip} />}
+    <ResponsiveChartContainer ref={ref} {...chartContainerProps}>
+      <ZAxisContextProvider {...zAxisProps}>
+        {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
+        <ChartsAxis {...chartsAxisProps} />
+        {props.grid && <ChartsGrid {...gridProps} />}
+        <ScatterPlot {...scatterPlotProps} />
+        <ChartsOverlay {...overlayProps} />
+        <ChartsLegend {...legendProps} />
+        <ChartsAxisHighlight {...axisHighlightProps} />
+        {!props.loading && <ChartsTooltip {...tooltipProps} />}
         {children}
       </ZAxisContextProvider>
     </ResponsiveChartContainer>
@@ -193,7 +152,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
 ScatterChart.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The configuration of axes highlight.
@@ -245,6 +204,13 @@ ScatterChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * The item currently highlighted. Turns highlighting into a controlled prop.
+   */
+  highlightedItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  }),
+  /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default yAxisIds[0] The id of the first provided axis
@@ -281,6 +247,12 @@ ScatterChart.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  /**
+   * The callback fired when the highlighted item changes.
+   *
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   */
+  onHighlightChange: PropTypes.func,
   /**
    * Callback fired when clicking on a scatter item.
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using Voronoi cells. Or the Mouse event from the scatter element, when `disableVoronoi=true`.
@@ -359,6 +331,15 @@ ScatterChart.propTypes = {
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+        PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
             PropTypes.func,
@@ -374,15 +355,6 @@ ScatterChart.propTypes = {
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
         }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
-        }),
       ]),
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -396,7 +368,7 @@ ScatterChart.propTypes = {
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      position: PropTypes.oneOf(['bottom', 'top']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
@@ -430,6 +402,15 @@ ScatterChart.propTypes = {
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+        PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
             PropTypes.func,
@@ -445,15 +426,6 @@ ScatterChart.propTypes = {
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
         }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
-        }),
       ]),
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -467,7 +439,7 @@ ScatterChart.propTypes = {
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      position: PropTypes.oneOf(['left', 'right']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
@@ -497,6 +469,15 @@ ScatterChart.propTypes = {
     PropTypes.shape({
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+        PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
             PropTypes.func,
@@ -512,19 +493,12 @@ ScatterChart.propTypes = {
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
         }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
-        }),
       ]),
       data: PropTypes.array,
       dataKey: PropTypes.string,
       id: PropTypes.string,
+      max: PropTypes.number,
+      min: PropTypes.number,
     }),
   ),
 } as any;

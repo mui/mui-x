@@ -8,7 +8,7 @@ import {
   GridGroupNode,
   GridFeatureMode,
 } from '@mui/x-data-grid';
-import {
+import type {
   GridExperimentalFeatures,
   DataGridPropsWithoutDefaultValue,
   DataGridPropsWithDefaultValues,
@@ -17,6 +17,8 @@ import {
   GridPinnedColumnFields,
   DataGridProSharedPropsWithDefaultValue,
   DataGridProSharedPropsWithoutDefaultValue,
+  GridDataSourceCache,
+  GridGetRowsParams,
 } from '@mui/x-data-grid/internals';
 import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
 import { GridApiPro } from './gridApiPro';
@@ -137,11 +139,30 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
   keepColumnPositionIfDraggedOutside: boolean;
 }
 
+interface DataGridProDataSourceProps {
+  unstable_dataSourceCache?: GridDataSourceCache | null;
+  unstable_onDataSourceError?: (error: Error, params: GridGetRowsParams) => void;
+}
+
+interface DataGridProRegularProps<R extends GridValidRowModel> {
+  /**
+   * Determines the path of a row in the tree data.
+   * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
+   * Note that all paths must contain at least one element.
+   * @template R
+   * @param {R} row The row from which we want the path.
+   * @returns {string[]} The path to the row.
+   */
+  getTreeDataPath?: (row: R) => string[];
+}
+
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends Omit<
       DataGridPropsWithoutDefaultValue<R>,
       'initialState' | 'componentsProps' | 'slotProps'
     >,
+    DataGridProRegularProps<R>,
+    DataGridProDataSourceProps,
     DataGridProSharedPropsWithoutDefaultValue {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
@@ -158,15 +179,6 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures?: Partial<GridExperimentalProFeatures>;
-  /**
-   * Determines the path of a row in the tree data.
-   * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
-   * Note that all paths must contain at least one element.
-   * @template R
-   * @param {R} row The row from which we want the path.
-   * @returns {string[]} The path to the row.
-   */
-  getTreeDataPath?: (row: R) => string[];
   /**
    * Callback fired when scrolling to the bottom of the grid viewport.
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].

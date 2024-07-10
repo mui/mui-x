@@ -1,9 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTreeViewContext } from './useTreeViewContext';
+import { escapeOperandAttributeSelector } from '../utils/utils';
 import type { UseTreeViewJSXItemsSignature } from '../plugins/useTreeViewJSXItems';
 import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
-import type { UseTreeViewIdSignature } from '../plugins/useTreeViewId';
 
 export const TreeViewChildrenItemContext =
   React.createContext<TreeViewChildrenItemContextValue | null>(null);
@@ -21,9 +21,7 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
   const { children, itemId = null } = props;
 
   const { instance, rootRef } =
-    useTreeViewContext<
-      [UseTreeViewJSXItemsSignature, UseTreeViewItemsSignature, UseTreeViewIdSignature]
-    >();
+    useTreeViewContext<[UseTreeViewJSXItemsSignature, UseTreeViewItemsSignature]>();
   const childrenIdAttrToIdRef = React.useRef<Map<string, string>>(new Map());
 
   React.useEffect(() => {
@@ -47,8 +45,9 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
     }
 
     const previousChildrenIds = instance.getItemOrderedChildrenIds(itemId ?? null) ?? [];
+    const escapedIdAttr = escapeOperandAttributeSelector(idAttr);
     const childrenElements = rootRef.current.querySelectorAll(
-      `${itemId == null ? '' : `*[id="${idAttr}"] `}[role="treeitem"]:not(*[id="${idAttr}"] [role="treeitem"] [role="treeitem"])`,
+      `${itemId == null ? '' : `*[id="${escapedIdAttr}"] `}[role="treeitem"]:not(*[id="${escapedIdAttr}"] [role="treeitem"] [role="treeitem"])`,
     );
     const childrenIds = Array.from(childrenElements).map(
       (child) => childrenIdAttrToIdRef.current.get(child.id)!,

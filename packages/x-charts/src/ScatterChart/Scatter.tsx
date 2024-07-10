@@ -6,14 +6,11 @@ import {
   ScatterValueType,
 } from '../models/seriesType/scatter';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import {
-  getIsFaded,
-  getIsHighlighted,
-  useInteractionItemProps,
-} from '../hooks/useInteractionItemProps';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { InteractionContext } from '../context/InteractionProvider';
 import { D3Scale } from '../models/axis';
-import { HighlightScope } from '../context';
+import { useHighlighted } from '../context';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -46,24 +43,20 @@ export interface ScatterProps {
 function Scatter(props: ScatterProps) {
   const { series, xScale, yScale, color, colorGetter, markerSize, onItemClick } = props;
 
-  const highlightScope: HighlightScope = React.useMemo(
-    () => ({ highlighted: 'item', faded: 'global', ...series.highlightScope }),
-    [series.highlightScope],
-  );
+  const { left, width } = useDrawingArea();
 
-  const { item, useVoronoiInteraction } = React.useContext(InteractionContext);
+  const { useVoronoiInteraction } = React.useContext(InteractionContext);
 
   const skipInteractionHandlers = useVoronoiInteraction || series.disableHover;
-  const getInteractionItemProps = useInteractionItemProps(highlightScope, skipInteractionHandlers);
+  const getInteractionItemProps = useInteractionItemProps(skipInteractionHandlers);
+  const { isFaded, isHighlighted } = useHighlighted();
 
   const cleanData = React.useMemo(() => {
     const getXPosition = getValueToPositionMapper(xScale);
     const getYPosition = getValueToPositionMapper(yScale);
-    const xRange = xScale.range();
+
     const yRange = yScale.range();
 
-    const minXRange = Math.min(...xRange);
-    const maxXRange = Math.max(...xRange);
     const minYRange = Math.min(...yRange);
     const maxYRange = Math.max(...yRange);
 
@@ -81,17 +74,21 @@ function Scatter(props: ScatterProps) {
       const x = getXPosition(scatterPoint.x);
       const y = getYPosition(scatterPoint.y);
 
-      const isInRange = x >= minXRange && x <= maxXRange && y >= minYRange && y <= maxYRange;
+      const isInRange = x >= left && x <= left + width && y >= minYRange && y <= maxYRange;
 
       const pointCtx = { type: 'scatter' as const, seriesId: series.id, dataIndex: i };
 
       if (isInRange) {
-        const isHighlighted = getIsHighlighted(item, pointCtx, highlightScope);
+        const currentItem = {
+          seriesId: pointCtx.seriesId,
+          dataIndex: pointCtx.dataIndex,
+        };
+        const isItemHighlighted = isHighlighted(currentItem);
         temp.push({
           x,
           y,
-          isHighlighted,
-          isFaded: !isHighlighted && getIsFaded(item, pointCtx, highlightScope),
+          isHighlighted: isItemHighlighted,
+          isFaded: !isItemHighlighted && isFaded(currentItem),
           interactionProps: getInteractionItemProps(pointCtx),
           id: scatterPoint.id,
           dataIndex: i,
@@ -104,13 +101,15 @@ function Scatter(props: ScatterProps) {
   }, [
     xScale,
     yScale,
+    left,
+    width,
     series.data,
     series.id,
-    item,
-    highlightScope,
+    isHighlighted,
+    isFaded,
     getInteractionItemProps,
-    color,
     colorGetter,
+    color,
   ]);
 
   return (
@@ -144,7 +143,7 @@ function Scatter(props: ScatterProps) {
 Scatter.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   color: PropTypes.string.isRequired,
   colorGetter: PropTypes.func,

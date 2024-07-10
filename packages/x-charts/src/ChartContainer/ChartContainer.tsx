@@ -1,29 +1,43 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useForkRef from '@mui/utils/useForkRef';
 import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
 import {
   SeriesContextProvider,
   SeriesContextProviderProps,
 } from '../context/SeriesContextProvider';
 import { InteractionProvider } from '../context/InteractionProvider';
-import { useReducedMotion } from '../hooks/useReducedMotion';
+import { ColorProvider } from '../context/ColorProvider';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import {
   CartesianContextProvider,
   CartesianContextProviderProps,
-} from '../context/CartesianContextProvider';
-import { HighlightProvider } from '../context/HighlightProvider';
+} from '../context/CartesianProvider';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
+import {
+  HighlightedProvider,
+  HighlightedProviderProps,
+  ZAxisContextProvider,
+  ZAxisContextProviderProps,
+} from '../context';
+import { ChartsPluginType } from '../models/plugin';
+import { ChartSeriesType } from '../models/seriesType/config';
+import { useChartContainerHooks } from './useChartContainerHooks';
 
 export type ChartContainerProps = Omit<
   ChartsSurfaceProps &
-    SeriesContextProviderProps &
+    Omit<SeriesContextProviderProps, 'seriesFormatters'> &
     Omit<DrawingProviderProps, 'svgRef'> &
-    CartesianContextProviderProps,
+    Omit<CartesianContextProviderProps, 'xExtremumGetters' | 'yExtremumGetters'> &
+    ZAxisContextProviderProps &
+    HighlightedProviderProps,
   'children'
 > & {
   children?: React.ReactNode;
+  /**
+   * An array of plugins defining how to preprocess data.
+   * If not provided, the container supports line, bar, scatter and pie charts.
+   */
+  plugins?: ChartsPluginType<ChartSeriesType>[];
 };
 
 const ChartContainer = React.forwardRef(function ChartContainer(props: ChartContainerProps, ref) {
@@ -34,41 +48,67 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
     margin,
     xAxis,
     yAxis,
+    zAxis,
     colors,
     dataset,
     sx,
     title,
     desc,
     disableAxisListener,
+    highlightedItem,
+    onHighlightChange,
+    plugins,
     children,
   } = props;
-  const svgRef = React.useRef<SVGSVGElement>(null);
-  const handleRef = useForkRef(ref, svgRef);
-
-  useReducedMotion(); // a11y reduce motion (see: https://react-spring.dev/docs/utilities/use-reduced-motion)
+  const {
+    svgRef,
+    handleRef,
+    xExtremumGetters,
+    yExtremumGetters,
+    seriesFormatters,
+    colorProcessors,
+  } = useChartContainerHooks(ref, plugins);
 
   return (
     <DrawingProvider width={width} height={height} margin={margin} svgRef={svgRef}>
-      <SeriesContextProvider series={series} colors={colors} dataset={dataset}>
-        <CartesianContextProvider xAxis={xAxis} yAxis={yAxis} dataset={dataset}>
-          <InteractionProvider>
-            <HighlightProvider>
-              <ChartsSurface
-                width={width}
-                height={height}
-                ref={handleRef}
-                sx={sx}
-                title={title}
-                desc={desc}
-                disableAxisListener={disableAxisListener}
-              >
-                <ChartsAxesGradients />
-                {children}
-              </ChartsSurface>
-            </HighlightProvider>
-          </InteractionProvider>
-        </CartesianContextProvider>
-      </SeriesContextProvider>
+      <ColorProvider colorProcessors={colorProcessors}>
+        <SeriesContextProvider
+          series={series}
+          colors={colors}
+          dataset={dataset}
+          seriesFormatters={seriesFormatters}
+        >
+          <CartesianContextProvider
+            xAxis={xAxis}
+            yAxis={yAxis}
+            dataset={dataset}
+            xExtremumGetters={xExtremumGetters}
+            yExtremumGetters={yExtremumGetters}
+          >
+            <ZAxisContextProvider zAxis={zAxis} dataset={dataset}>
+              <InteractionProvider>
+                <HighlightedProvider
+                  highlightedItem={highlightedItem}
+                  onHighlightChange={onHighlightChange}
+                >
+                  <ChartsSurface
+                    width={width}
+                    height={height}
+                    ref={handleRef}
+                    sx={sx}
+                    title={title}
+                    desc={desc}
+                    disableAxisListener={disableAxisListener}
+                  >
+                    <ChartsAxesGradients />
+                    {children}
+                  </ChartsSurface>
+                </HighlightedProvider>
+              </InteractionProvider>
+            </ZAxisContextProvider>
+          </CartesianContextProvider>
+        </SeriesContextProvider>
+      </ColorProvider>
     </DrawingProvider>
   );
 });
@@ -76,7 +116,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
 ChartContainer.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
   className: PropTypes.string,
@@ -101,6 +141,13 @@ ChartContainer.propTypes = {
    */
   height: PropTypes.number.isRequired,
   /**
+   * The item currently highlighted. Turns highlighting into a controlled prop.
+   */
+  highlightedItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  }),
+  /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
@@ -112,6 +159,17 @@ ChartContainer.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  /**
+   * The callback fired when the highlighted item changes.
+   *
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   */
+  onHighlightChange: PropTypes.func,
+  /**
+   * An array of plugins defining how to preprocess data.
+   * If not provided, the container supports line, bar, scatter and pie charts.
+   */
+  plugins: PropTypes.arrayOf(PropTypes.object),
   /**
    * The array of series to display.
    * Each type of series has its own specificity.
@@ -145,6 +203,15 @@ ChartContainer.propTypes = {
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+        PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
             PropTypes.func,
@@ -160,15 +227,6 @@ ChartContainer.propTypes = {
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
         }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
-        }),
       ]),
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -182,7 +240,7 @@ ChartContainer.propTypes = {
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      position: PropTypes.oneOf(['bottom', 'top']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
@@ -216,6 +274,15 @@ ChartContainer.propTypes = {
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+        PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
             PropTypes.func,
@@ -231,15 +298,6 @@ ChartContainer.propTypes = {
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
         }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
-        }),
       ]),
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -253,7 +311,7 @@ ChartContainer.propTypes = {
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      position: PropTypes.oneOf(['left', 'right']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
@@ -274,6 +332,45 @@ ChartContainer.propTypes = {
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
+    }),
+  ),
+  /**
+   * The configuration of the z-axes.
+   */
+  zAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+        PropTypes.shape({
+          color: PropTypes.oneOfType([
+            PropTypes.arrayOf(PropTypes.string.isRequired),
+            PropTypes.func,
+          ]).isRequired,
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          thresholds: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+          ).isRequired,
+          type: PropTypes.oneOf(['piecewise']).isRequired,
+        }),
+      ]),
+      data: PropTypes.array,
+      dataKey: PropTypes.string,
+      id: PropTypes.string,
+      max: PropTypes.number,
+      min: PropTypes.number,
     }),
   ),
 } as any;

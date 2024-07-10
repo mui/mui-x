@@ -82,6 +82,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     handleSelection,
     handleCheckboxSelection,
     preventSelection,
+    expansionTrigger,
   } = useTreeItemState(itemId);
 
   const icon = iconProp || expansionIcon || displayIcon;
@@ -100,7 +101,9 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
       return;
     }
 
-    handleExpansion(event);
+    if (expansionTrigger === 'content') {
+      handleExpansion(event);
+    }
 
     if (!checkboxSelection) {
       handleSelection(event);
@@ -145,7 +148,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
 TreeItemContent.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Override or extend the styles applied to the component.

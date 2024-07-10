@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describeConformance, screen, userEvent } from '@mui-internal/test-utils';
+import { describeConformance, screen, userEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -7,7 +7,6 @@ import {
   describeValue,
   describePicker,
   describeRangeValidation,
-  wrapPickerMount,
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
 import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
@@ -35,7 +34,6 @@ describe('<DesktopDateTimeRangePicker /> - Describes', () => {
     classes: {} as any,
     render,
     muiName: 'MuiDesktopDateTimeRangePicker',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',
@@ -46,7 +44,6 @@ describe('<DesktopDateTimeRangePicker /> - Describes', () => {
       'mergeClassName',
       'propsSpread',
       'rootClass',
-      'reactTestRenderer',
     ],
   }));
 

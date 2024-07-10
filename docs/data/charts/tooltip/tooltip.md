@@ -17,6 +17,7 @@ The tooltip can be triggered by two kinds of events:
 
 - `'item'`—when the user's mouse hovers over an item on the chart, the tooltip will display data about this specific item.
 - `'axis'`—the user's mouse position is associated with a value of the x-axis. The tooltip will display data about all series at this specific x value.
+- `'none'`—disable the tooltip.
 
 {{"demo": "Interaction.js"}}
 
@@ -40,7 +41,7 @@ axisHighlight={{
 
 ### Highlighting series
 
-In parallel with the tooltip, you can highlight/fade elements.
+In parallel with the tooltip, you can highlight and fade elements.
 
 This kind of interaction is controlled by series properties `highlightScope` which contains two options:
 
@@ -54,6 +55,21 @@ This kind of interaction is controlled by series properties `highlightScope` whi
   - `'global'` Fade all the items of the chart.
 
 {{"demo": "ElementHighlights.js"}}
+
+### Controlled Highlight
+
+The highlight can be controlled by the user when they set `highlightedItem` and `onHighlightChange`.
+
+You can set the `highlightedItem` value based on inputs, and sync it when the user hover over an item themselves.
+
+{{"demo": "ControlledHighlight.js"}}
+
+#### Synchronizing Highlights
+
+Having a controlled highlight allows you to control it in multiple charts at the same time.
+You just need to ensure that the `series` have the same `ids` and the data is in the same order.
+
+{{"demo": "SyncHighlight.js"}}
 
 ## Customization
 
@@ -89,6 +105,26 @@ In this demo, you can see:
 - The label displays annotated data `Country: name (code)`
 
 {{"demo": "AxisFormatter.js"}}
+
+### Label formatting
+
+The label text inside the tooltip can also be formatted conditionally by providing a function to the series `label` property.
+
+```jsx
+<LineChart
+  // ...
+  series={[
+    {
+      data: [ ... ],
+      label: (location) => location === 'tooltip' ? 'BR' : 'Brazil'
+    }
+  ]}
+/>
+```
+
+:::info
+See [Label—Conditional formatting](/x/react-charts/label/#conditional-formatting) for more details.
+:::
 
 ### Hiding values
 

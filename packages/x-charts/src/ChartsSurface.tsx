@@ -35,7 +35,11 @@ export interface ChartsSurfaceProps {
 const ChartChartsSurfaceStyles = styled('svg', {
   name: 'MuiChartsSurface',
   slot: 'Root',
-})(() => ({}));
+})(() => ({
+  // This prevents default touch actions when using the svg on mobile devices.
+  // For example, prevent page scroll & zoom.
+  touchAction: 'none',
+}));
 
 const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(function ChartsSurface(
   props: ChartsSurfaceProps,
@@ -74,7 +78,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
 ChartsSurface.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
   className: PropTypes.string,
