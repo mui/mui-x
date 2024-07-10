@@ -157,7 +157,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         const skipLabel =
           typeof tickLabelInterval === 'function' && !tickLabelInterval?.(value, index);
 
-        const showLabel = offset >= top && offset <= height + top;
+        const showLabel = offset >= top-1 && offset <= height + top+1;
 
         if (!showLabel) {
           return null;
