@@ -146,15 +146,6 @@ function ControlledColorRadio(props: any) {
   );
 }
 
-const a = [
-  {
-    propName: 'yolo',
-  },
-  {
-    propName: 'children',
-  },
-];
-
 export default function ChartDemoPropsForm<T extends string>({
   componentName,
   data,
