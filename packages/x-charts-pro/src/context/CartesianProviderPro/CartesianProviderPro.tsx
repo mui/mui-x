@@ -24,20 +24,20 @@ function CartesianContextProviderPro(props: CartesianContextProviderProProps) {
 
   const formattedSeries = useSeries();
   const drawingArea = useDrawingArea();
-  const { zoomRange } = useZoom();
+  const { zoomData } = useZoom();
 
   const xAxis = React.useMemo(() => normalizeAxis(inXAxis, dataset, 'x'), [inXAxis, dataset]);
 
   const yAxis = React.useMemo(() => normalizeAxis(inYAxis, dataset, 'y'), [inYAxis, dataset]);
 
   const xValues = React.useMemo(
-    () => computeValue(drawingArea, formattedSeries, xAxis, xExtremumGetters, 'x', zoomRange),
-    [drawingArea, formattedSeries, xAxis, xExtremumGetters, zoomRange],
+    () => computeValue(drawingArea, formattedSeries, xAxis, xExtremumGetters, 'x', zoomData),
+    [drawingArea, formattedSeries, xAxis, xExtremumGetters, zoomData],
   );
 
   const yValues = React.useMemo(
-    () => computeValue(drawingArea, formattedSeries, yAxis, yExtremumGetters, 'y'),
-    [drawingArea, formattedSeries, yAxis, yExtremumGetters],
+    () => computeValue(drawingArea, formattedSeries, yAxis, yExtremumGetters, 'y', zoomData),
+    [drawingArea, formattedSeries, yAxis, yExtremumGetters, zoomData],
   );
 
   const value = React.useMemo(
