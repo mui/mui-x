@@ -48,3 +48,33 @@ The default behavior on bluring the tree item that is being edited is to save th
 The demo below shows how to entirely override the editing behavior, and implementit using icons.
 
 {{"demo": "EditWithIcons.js"}}
+
+## Imperative API
+
+:::success
+To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+
+```tsx
+const apiRef = useTreeViewApiRef();
+
+return <RichTreeView apiRef={apiRef} items={ITEMS}>;
+```
+
+When your component first renders, `apiRef` will be `undefined`.
+After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
+:::
+
+### Change the label of an item
+
+Use the `setItemExpansion` API method to change the expansion of an item.
+
+```ts
+apiRef.current.updateItemLabel(
+  // The id of the item to expand or collapse
+  itemId,
+  // The new label of the item.
+  newLabel,
+);
+```
+
+{{"demo": "ApiMethodUpdateItemLabel.js"}}
