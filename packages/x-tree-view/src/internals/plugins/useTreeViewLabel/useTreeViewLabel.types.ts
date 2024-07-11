@@ -6,7 +6,7 @@ export interface UseTreeViewLabelPublicAPI {
   /**
    * Used to update the label of an item.
    * @param {TreeViewItemId} itemId The id of the item that is being edited.
-   * @param {string} newLabel The new label of the items.
+   * @param {string} newLabel The new label of the item.
    */
   updateItemLabel: (itemId: TreeViewItemId, newLabel: string) => void;
 }
