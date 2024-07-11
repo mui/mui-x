@@ -45,7 +45,6 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
       'mergeClassName',
       'propsSpread',
       'rootClass',
-      'reactTestRenderer',
     ],
   }));
 

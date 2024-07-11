@@ -61,9 +61,10 @@ Use the `setItemExpansion` API method to change the expansion of an item.
 apiRef.current.setItemExpansion(
   // The DOM event that triggered the change
   event,
-  // The ID of the item to expand or collapse
+  // The id of the item to expand or collapse
   itemId,
-  // `true` if the item should be expanded, `false` if it should be collapsed
+  // If `true` the item will be expanded
+  // If `false` the item will be collapsed
   isExpanded,
 );
 ```
