@@ -118,7 +118,7 @@ export interface GridDataSourceGroupNode extends GridDataGroupNode {
   /**
    * Number of children this node has on the server. Returns `-1` if unknown.
    */
-  serverChildrenCount: number;
+  serverChildrenCount?: number;
   /**
    * The cached path to be passed on as `groupKey` to the server.
    */

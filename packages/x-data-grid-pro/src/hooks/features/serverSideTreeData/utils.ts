@@ -10,7 +10,8 @@ export function skipFiltering(rowTree: GridRowTreeConfig) {
   for (let i = 0; i < nodes.length; i += 1) {
     const node: any = nodes[i];
     filteredRowsLookup[node.id] = true;
-    filteredChildrenCountLookup[node.id] = node.serverChildrenCount;
+    filteredChildrenCountLookup[node.id] =
+      node.serverChildrenCount !== undefined ? node.serverChildrenCount : -1;
   }
 
   return {

@@ -59,7 +59,7 @@ interface InsertDataRowInTreeParams {
   onDuplicatePath?: GridTreePathDuplicateHandler;
   isGroupExpandedByDefault?: DataGridProProps['isGroupExpandedByDefault'];
   defaultGroupingExpansionDepth: number;
-  serverChildrenCount: number;
+  serverChildrenCount?: number;
   groupsToFetch?: Set<GridRowId>;
 }
 

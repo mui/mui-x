@@ -8,7 +8,7 @@ export interface RowTreeBuilderGroupingCriterion {
 export interface RowTreeBuilderNode {
   id: GridRowId;
   path: RowTreeBuilderGroupingCriterion[];
-  serverChildrenCount: number;
+  serverChildrenCount?: number;
 }
 
 /**
