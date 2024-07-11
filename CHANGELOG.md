@@ -10,6 +10,7 @@ _Jul 11, 2024_
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Add selectors to support showing child row count in footer in the Data Grid
+- ✨ New APIs for retrieving current item tree and item's children IDs in the Tree View
 - 🌍 Improve Spanish (es-ES) locale on the Data Grid
 - 🐞 Bugfixes
 - 📚 Documentation improvements
