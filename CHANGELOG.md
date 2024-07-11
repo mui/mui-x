@@ -3,6 +3,80 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.10.0
+
+_Jul 11, 2024_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add selectors to support showing child row count in footer in the Data Grid
+- ✨ New APIs for retrieving current item tree and item's children IDs in the Tree View
+- 🌍 Improve Spanish (es-ES) locale on the Data Grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.10.0`
+
+- [DataGrid] Add selectors to support showing child row count in footer (#13725) @KenanYusuf
+- [DataGrid] Fix incorrect panels position when using a toolbar (#13474) @oukunan
+- [DataGrid] Set default variant to `'standard'` in `GridFilterInputMultipleValue` (#13129) @tarunrajput
+- [DataGrid] Use `readonly` on more array props (#13331) @pcorpet
+- [l10n] Improve Spanish (es-ES) locale (#13772) @joserealdev
+
+#### `@mui/x-data-grid-pro@7.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.10.0`, plus:
+
+- [DataGridPro] Keep bottom pinned row at the bottom (#13313) @romgrk
+
+#### `@mui/x-data-grid-premium@7.10.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.10.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.10.0`
+
+- [fields] Prevent infinite recursion when ensuring selection (#13779) @LukasTy
+- [fields] Unify fields behavior regardless of the `readOnly` flag (#13688) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.10.0`, plus:
+
+- [DateRangePicker] Fix `calendarHeader` slot props propagation (#13780) @LukasTy
+- [DateTimeRangePicker] Resolve `format` from given `views` (#13743) @LukasTy
+
+### Charts
+
+#### `@mui/x-charts@7.10.0`
+
+- [charts] Fix displaying area of a `LineChart` when using the `log` scale (#13791) @alexfauquette
+- [charts] Use correct click handler prop on pie chart `OnSeriesItemClick` documentation (#13761) @tonyhallett
+
+### Tree View
+
+#### `@mui/x-tree-view@7.10.0`
+
+- [TreeView] Add `getItemTree` and `getItemOrderedChildrenIds` methods to the public API (#13804) @flaviendelangle
+- [TreeView] Add utility function to check if an optional plugin is present (#13788) @flaviendelangle
+
+### Docs
+
+- [docs] Add missing default `loading` prop value (#13604) @oliviertassinari
+- [docs] Add the `DateTimeRangePicker` to the "Commonly used components" demo (#13775) @flaviendelangle
+- [docs] Fix Pickers customization playground overflow (#13742) @LukasTy
+- [docs] Move Pickers dialog guidelines to accessibility page (#13778) @arthurbalduini
+
+### Core
+
+- [core] Sort `DATA_GRID_PROPS_DEFAULT_VALUES` alphabetically (#13783) @oliviertassinari
+- [test] Fix split infinitive use in tests @oliviertassinari
+
 ## 7.9.0
 
 _Jul 5, 2024_
