@@ -198,6 +198,7 @@ export const useTreeView = <
       setState,
       rootRef: innerRootRef,
       models,
+      plugins,
     });
 
     if (pluginResponse.getRootProps) {
