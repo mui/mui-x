@@ -800,6 +800,19 @@ async function initializeEnvironment(
             '04/11/2022',
           );
         });
+
+        it('should have consistent `placeholder` and `value` behavior', async () => {
+          await renderFixture('DatePicker/MobileDatePickerV6WithClearAction');
+
+          const input = page.getByRole('textbox');
+
+          await input.click({ position: { x: 10, y: 2 } });
+          await page.getByRole('button', { name: 'Clear' }).click();
+
+          await input.blur();
+          expect(await input.getAttribute('placeholder')).to.equal('MM/DD/YYYY');
+          expect(await input.inputValue()).to.equal('');
+        });
       });
     });
 
