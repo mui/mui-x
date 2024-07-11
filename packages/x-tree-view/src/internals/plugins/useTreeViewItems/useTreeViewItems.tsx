@@ -118,6 +118,20 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     [state.items.itemMap],
   );
 
+  const getItemTree = React.useCallback(() => {
+    const getItemFromItemId = (id: TreeViewItemId): TreeViewBaseItem => {
+      const { children: oldChildren, ...item } = state.items.itemMap[id];
+      const newChildren = state.items.itemOrderedChildrenIds[id];
+      if (newChildren) {
+        item.children = newChildren.map(getItemFromItemId);
+      }
+
+      return item;
+    };
+
+    return state.items.itemOrderedChildrenIds[TREE_VIEW_ROOT_PARENT_ID].map(getItemFromItemId);
+  }, [state.items.itemMap, state.items.itemOrderedChildrenIds]);
+
   const isItemDisabled = React.useCallback(
     (itemId: string | null): itemId is string => {
       if (itemId == null) {
@@ -242,10 +256,13 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     publicAPI: {
       getItem,
       getItemDOMElement,
+      getItemTree,
+      getItemOrderedChildrenIds,
     },
     instance: {
       getItemMeta,
       getItem,
+      getItemTree,
       getItemsToRender,
       getItemIndex,
       getItemDOMElement,
