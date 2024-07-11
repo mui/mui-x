@@ -22,7 +22,7 @@ const updateItemsState = ({
   isItemDisabled,
   getItemLabel,
   getItemId,
-}: UpdateNodesStateParameters): UseTreeViewItemsState<any>['items'] => {
+}: UpdateNodesStateParameters): State => {
   const itemMetaMap: State['itemMetaMap'] = {};
   const itemMap: State['itemMap'] = {};
   const itemOrderedChildrenIds: State['itemOrderedChildrenIds'] = {
@@ -76,7 +76,6 @@ const updateItemsState = ({
     };
 
     itemMap[id] = item;
-    itemOrderedChildrenIds[id] = [];
     const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
     if (!itemOrderedChildrenIds[parentIdWithDefault]) {
       itemOrderedChildrenIds[parentIdWithDefault] = [];
@@ -237,7 +236,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         label: item.label!,
         itemId: item.id,
         id: item.idAttribute,
-        children: state.items.itemOrderedChildrenIds[id].map(getPropsFromItemId),
+        children: state.items.itemOrderedChildrenIds[id]?.map(getPropsFromItemId),
       };
     };
 
