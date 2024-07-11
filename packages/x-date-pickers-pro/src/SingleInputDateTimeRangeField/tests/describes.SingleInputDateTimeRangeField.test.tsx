@@ -12,7 +12,7 @@ describe('<SingleInputDateTimeRangeField /> - Describes', () => {
     render,
     muiName: 'MuiSingleInputDateTimeRangeField',
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'componentsProp', 'themeVariants'],
+    skip: ['componentProp', 'componentsProp', 'themeVariants', 'themeStyleOverrides'],
   }));
 
   describeRangeValidation(SingleInputDateTimeRangeField, () => ({

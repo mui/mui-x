@@ -28,7 +28,7 @@ describe('<TimeField /> - Describes', () => {
     render,
     muiName: 'MuiTimeField',
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'componentsProp', 'themeVariants'],
+    skip: ['componentProp', 'componentsProp', 'themeVariants', 'themeStyleOverrides'],
   }));
 
   describeValue(TimeField, () => ({

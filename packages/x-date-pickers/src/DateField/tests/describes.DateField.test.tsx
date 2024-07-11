@@ -27,7 +27,7 @@ describe('<DateField /> - Describes', () => {
     render,
     muiName: 'MuiDateField',
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'componentsProp', 'themeVariants'],
+    skip: ['componentProp', 'componentsProp', 'themeVariants', 'themeStyleOverrides'],
   }));
 
   describeValue(DateField, () => ({

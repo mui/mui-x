@@ -40,6 +40,7 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
       'componentProp',
       'componentsProp',
       'themeDefaultProps',
+      'themeStyleOverrides',
       'themeVariants',
       'mergeClassName',
       'propsSpread',

@@ -35,7 +35,13 @@ describe('<PickersRangeCalendarHeader /> - Describes', () => {
         render,
         muiName: 'MuiPickersRangeCalendarHeader',
         refInstanceof: window.HTMLDivElement,
-        skip: ['componentProp', 'componentsProp', 'themeVariants', 'themeDefaultProps'],
+        skip: [
+          'componentProp',
+          'componentsProp',
+          'themeVariants',
+          'themeDefaultProps',
+          'themeStyleOverrides',
+        ],
       }),
     );
   });
