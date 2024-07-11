@@ -305,7 +305,7 @@ In the example below:
 If you are dynamically switching the `leafField` or `mainGroupingCriteria`, the sorting and filtering models will not be cleaned up automatically, and the sorting/filtering will not be re-applied.
 :::
 
-## Propagate row selection
+## Automatic children selection | Selection propagation
 
 By default, selecting a parent row will not select its children.
 Set the `propagateRowSelection` prop to `true` to achieve the following behavior.
