@@ -24,7 +24,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [DataGrid] Add selectors to support showing child row count in footer (#13725) @KenanYusuf
 - [DataGrid] Fix incorrect panels position when using a toolbar (#13474) @oukunan
 - [DataGrid] Use `readonly` on more array props (#13331) @pcorpet
-- [DataGrid] set default variant to` 'standard'` in `GridFilterInputMultipleValue` (#13129) @tarunrajput
+- [DataGrid] set default variant to `'standard'` in `GridFilterInputMultipleValue` (#13129) @tarunrajput
 - [l10n] Improve Spanish (es-ES) locale (#13772) @joserealdev
 
 #### `@mui/x-data-grid-pro@7.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
