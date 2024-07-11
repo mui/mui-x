@@ -6,7 +6,7 @@ import { TreeItem2, TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 import { UseTreeItem2LabelInputSlotProps } from '@mui/x-tree-view/useTreeItem2/useTreeItem2.types';
 import { MUI_X_PRODUCTS } from './products';
 
-const CustomTreeItem2 = React.forwardRef(function MyTreeItem(
+const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
   props: TreeItem2Props,
   ref: React.Ref<HTMLLIElement>,
 ) {
@@ -46,7 +46,6 @@ export default function CustomBehavior() {
         apiRef={apiRef}
         isItemEditable={(item) => Boolean(item?.editable)}
         defaultExpandedItems={['grid', 'pickers']}
-        expansionTrigger="iconContainer"
       />
     </Box>
   );

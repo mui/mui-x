@@ -20,8 +20,8 @@ type State = UseTreeViewItemsState<any>['items'];
 const updateItemsState = ({
   items,
   isItemDisabled,
-  getItemId,
   getItemLabel,
+  getItemId,
 }: UpdateNodesStateParameters): UseTreeViewItemsState<any>['items'] => {
   const itemMetaMap: State['itemMetaMap'] = {};
   const itemMap: State['itemMap'] = {};
@@ -54,7 +54,6 @@ const updateItemsState = ({
     }
 
     const label = getItemLabel ? getItemLabel(item) : (item as { label: string }).label;
-
     if (label == null) {
       throw new Error(
         [
@@ -68,8 +67,8 @@ const updateItemsState = ({
 
     itemMetaMap[id] = {
       id,
-      parentId,
       label,
+      parentId,
       idAttribute: undefined,
       expandable: !!item.children?.length,
       disabled: isItemDisabled ? isItemDisabled(item) : false,
@@ -115,8 +114,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   );
 
   const getItem = React.useCallback(
-    // this needs to throw back the itemof the user
-    (itemId: string) => ({ ...state.items.itemMap[itemId] }),
+    // this needs to throw back the item of the user
+    (itemId: string) => state.items.itemMap[itemId],
     [state.items.itemMap],
   );
 
@@ -243,7 +242,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     }),
     publicAPI: {
       getItem,
-      getItemOrderedChildrenIds,
       getItemDOMElement,
     },
     instance: {
@@ -295,5 +293,4 @@ useTreeViewItems.params = {
   getItemLabel: true,
   getItemId: true,
   itemChildrenIndentation: true,
-  isItemEditable: true,
 };

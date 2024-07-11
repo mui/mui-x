@@ -32,8 +32,7 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
       throw new Error(
         [
           'MUI X: The Tree View component requires all items to have a `label` property.',
-          'Alternatively, you can use the `getItemLabel` prop to specify a custom label for each item.',
-          'An item was provided without label in the `items` prop:',
+          'The label of an item cannot be empty.',
           JSON.stringify(itemId),
         ].join('\n'),
       );
@@ -77,6 +76,6 @@ useTreeViewLabel.getInitialState = () => ({
 });
 
 useTreeViewLabel.params = {
-  items: true,
   onItemLabelChange: true,
+  isItemEditable: true,
 };
