@@ -29,7 +29,7 @@ Once an item is in editing state, the value of the label can be edited. Pressing
 
 You can limit the editing to just the leaves of the tree.
 
-{{"demo": "EditLeaves.js"}}
+<!-- {{"demo": "EditLeaves.js"}} -->
 
 ## Change the default behavior
 

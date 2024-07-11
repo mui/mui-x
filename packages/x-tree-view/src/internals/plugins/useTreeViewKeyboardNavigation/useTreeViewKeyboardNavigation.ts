@@ -12,6 +12,8 @@ import {
   TreeViewFirstCharMap,
   UseTreeViewKeyboardNavigationSignature,
 } from './useTreeViewKeyboardNavigation.types';
+import { hasPlugin } from '../../utils/plugins';
+import { useTreeViewLabel } from '../useTreeViewLabel';
 import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
 
 function isPrintableCharacter(string: string) {
@@ -122,9 +124,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // If the focused item has no children, we select it.
       case key === 'Enter': {
         if (
-          instance.isItemBeingEdited &&
-          instance.isItemEditable &&
-          instance.setEditedItemId &&
+          hasPlugin(instance, useTreeViewLabel) &&
           instance.isItemEditable(itemId) &&
           !instance.isItemBeingEdited(itemId)
         ) {

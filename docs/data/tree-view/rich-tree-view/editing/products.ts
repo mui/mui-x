@@ -30,4 +30,16 @@ export const MUI_X_PRODUCTS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
       { id: 'pickers-pro', label: '@mui/x-date-pickers-pro', editable: true },
     ],
   },
+  {
+    id: 'charts',
+    label: 'Charts',
+    editable: true,
+    children: [{ id: 'charts-community', label: '@mui/x-charts', editable: true }],
+  },
+  {
+    id: 'tree-view',
+    label: 'Tree View',
+    children: [{ id: 'tree-view-community', label: '@mui/x-tree-view', editable: true }],
+    editable: true,
+  },
 ];

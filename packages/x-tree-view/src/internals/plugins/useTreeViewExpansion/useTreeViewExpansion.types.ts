@@ -82,7 +82,7 @@ export interface UseTreeViewExpansionParameters {
 
 export type UseTreeViewExpansionDefaultizedParameters = DefaultizedProps<
   UseTreeViewExpansionParameters,
-  'defaultExpandedItems' | 'expansionTrigger'
+  'defaultExpandedItems'
 >;
 
 interface UseTreeViewExpansionContextValue {

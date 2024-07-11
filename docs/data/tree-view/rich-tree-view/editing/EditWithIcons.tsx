@@ -86,7 +86,7 @@ const CustomLabelInput = React.forwardRef(function CustomLabelInput({
         }}
       />
       <IconButton
-        color="error"
+        color="success"
         size="small"
         onClick={(event: React.MouseEvent) => {
           handleSaveItemLabel(event, labelInputValue);
@@ -94,18 +94,14 @@ const CustomLabelInput = React.forwardRef(function CustomLabelInput({
       >
         <CheckIcon fontSize="small" />
       </IconButton>
-      <IconButton
-        color="success"
-        size="small"
-        onClick={handleCancelItemLabelEditing}
-      >
+      <IconButton color="error" size="small" onClick={handleCancelItemLabelEditing}>
         <CloseRoundedIcon fontSize="small" />
       </IconButton>
     </React.Fragment>
   );
 });
 
-const CustomTreeItem2 = React.forwardRef(function MyTreeItem(
+const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
   props: TreeItem2Props,
   ref: React.Ref<HTMLLIElement>,
 ) {
@@ -165,13 +161,12 @@ const CustomTreeItem2 = React.forwardRef(function MyTreeItem(
 
 export default function EditWithIcons() {
   return (
-    <Box sx={{ minHeight: 200, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
       <RichTreeView
         items={MUI_X_PRODUCTS}
         slots={{ item: CustomTreeItem2 }}
         isItemEditable={(item) => Boolean(item?.editable)}
         defaultExpandedItems={['grid', 'pickers']}
-        expansionTrigger="iconContainer"
       />
     </Box>
   );
