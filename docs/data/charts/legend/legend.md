@@ -62,8 +62,7 @@ Which can lead to label overflow.
 
 ## Color legend
 
-To display legend associated to a [colorMap](https://mui.com/x/react-charts/styling/#values-color), use the `<ChartsColorScaleLegend />`.
-This component support both `'piecewise'` and `'continuous'` type of color mapping.
+To display legend associated to a [colorMap](https://mui.com/x/react-charts/styling/#values-color), use the `<ContinuousColorLegend />` `'continuous'` color mapping or the `<PiecewiseColorLegend />` for color mapping of type `'piecewise'`.
 
 ### Select data
 
@@ -79,6 +78,17 @@ To select the color mapping to represent, use the following props:
 This component position is done exactly the same way as the [legend for series](#position).
 
 ### Continuous color mapping
+
+To modify the shape of the gradient, use the `length` and `thickness` props.
+The `length` can either be a number (in px) or a percentage string. The `"100%"` corresponds to the SVG dimension.
+
+To format labels use the `minLabel`/`maxLabel`.
+They accept either a string to display.
+Or a function `({value, formattedValue}) => string`.
+
+The labels and gradient bar alignment can be modified by the `align` prop.
+
+{{"demo": "ContinuousInteractiveDemoNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
 ### Piecewise color mapping
 
@@ -97,4 +107,4 @@ And returning `null` removes the piece from the legend.
 labelFormatter = ({ min, max, formattedMin, formattedMax }) => string | null;
 ```
 
-{{"demo": "ColorLegendPositionNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "PiecewiseInteractiveDemoNoSnap.js", "hideToolbar": true, "bg": "playground"}}

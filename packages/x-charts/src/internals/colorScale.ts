@@ -12,6 +12,8 @@ export function getSequentialColorScale<Value extends number | Date>(
     return scaleThreshold(config.thresholds, config.colors);
   }
 
+  console.log({ config });
+
   return scaleSequential([config.min ?? 0, config.max ?? 100], config.color);
 }
 

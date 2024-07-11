@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { ScaleSequential } from 'd3-scale';
 import { useTheme } from '@mui/material/styles';
 import ChartsContinuousGradient from '../internals/components/ChartsAxesGradients/ChartsContinuousGradient';
-import { ContinuousScaleName } from '../models/axis';
-import { useDrawingArea } from '../hooks';
+import { AxisDefaultized, ContinuousScaleName } from '../models/axis';
+import { useChartId, useDrawingArea } from '../hooks';
 import { getScale } from '../internals/getScale';
 import { getPercentageValue } from '../internals/utils';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
@@ -51,13 +51,17 @@ function getPositionOffset(position: AnchorPosition, legendBox: BoundingBox, svg
   return { offsetX, offsetY };
 }
 
+/**
+ * Takes placement parameters and element bounding boxes.
+ * Returns the x, y coordinates of the elements. And the textAnchor, dominantBaseline for texts.
+ */
 function getElementPositions(
   text1Box: BoundingBox,
   barBox: BoundingBox,
   text2Box: BoundingBox,
   params: {
     spacing: number;
-    alignment: ContinuousColorLegendProps['alignment'];
+    align: ContinuousColorLegendProps['align'];
     direction: ContinuousColorLegendProps['direction'];
   },
 ): {
@@ -78,7 +82,7 @@ function getElementPositions(
     const totalHeight = text1Box.height + barBox.height + text2Box.height + 2 * params.spacing;
 
     const boundingBox = { width: totalWidth, height: totalHeight };
-    switch (params.alignment) {
+    switch (params.align) {
       case 'start':
         return {
           text1: { ...text1, textAnchor: 'start', x: 0 },
@@ -115,7 +119,7 @@ function getElementPositions(
 
     const boundingBox = { width: totalWidth, height: totalHeight };
 
-    switch (params.alignment) {
+    switch (params.align) {
       case 'start':
         return {
           text1: { ...text1, dominantBaseline: 'hanging', y: 0 },
@@ -142,11 +146,27 @@ function getElementPositions(
   }
 }
 
+type LabelFormatter = (params: { value: number | Date; formattedValue: string }) => string;
+
 export interface ContinuousColorLegendProps extends LegendPlacement, ColorLegendSelector {
   /**
-   * A unique identifier for the gradient.
+   * The label to display at the minimum side of the gradient.
+   * Can either be a string, or a function.
+   * @default ({ formattedValue }) => formattedValue
    */
-  id: string;
+  minLabel?: string | LabelFormatter;
+  /**
+   * The label to display at the maximum side of the gradient.
+   * Can either be a string, or a function.
+   * If not defined, the formatted maximal value is display.
+   * @default ({ formattedValue }) => formattedValue
+   */
+  maxLabel?: string | LabelFormatter;
+  /**
+   * A unique identifier for the gradient.
+   * @default auto-generated id
+   */
+  id?: string;
   /**
    * The scale used to display gradient colors.
    * @default 'linear'
@@ -168,7 +188,7 @@ export interface ContinuousColorLegendProps extends LegendPlacement, ColorLegend
    * The alignment of the texts with the gradient bar.
    * @default 'middle'
    */
-  alignment?: 'start' | 'middle' | 'end';
+  align?: 'start' | 'middle' | 'end';
   /**
    * The space between the gradient bar and the labels.
    * @default 4
@@ -181,21 +201,30 @@ export interface ContinuousColorLegendProps extends LegendPlacement, ColorLegend
   labelStyle?: ChartsTextProps['style'];
 }
 
+const defaultLabelFormatter: LabelFormatter = ({ formattedValue }) => formattedValue;
+
 function ContinuousColorLegend(props: ContinuousColorLegendProps) {
   const theme = useTheme();
   const {
-    id,
+    id: idProp,
+    minLabel = defaultLabelFormatter,
+    maxLabel = defaultLabelFormatter,
     scaleType = 'linear',
     direction,
     length = '50%',
     thickness = 5,
     spacing = 4,
-    alignment = 'middle',
-    labelStyle = theme.typography.subtitle1,
+    align = 'middle',
+    labelStyle = theme.typography.subtitle1 as ChartsTextProps['style'],
     position,
     axisDirection,
     axisId,
   } = props;
+
+  const chartId = useChartId();
+  const id = idProp ?? `gradient-legend-${chartId}`;
+
+  const isRTL = theme.direction === 'rtl';
 
   const axisItem = useAxis({ axisDirection, axisId });
   const { width, height, left, right, top, bottom } = useDrawingArea();
@@ -203,34 +232,58 @@ function ContinuousColorLegend(props: ContinuousColorLegendProps) {
   const refLength = direction === 'column' ? height + top + bottom : width + left + right;
   const size = getPercentageValue(length, refLength);
 
-  const barBox =
-    direction === 'column'
-      ? { width: thickness, height: size }
-      : { width: size, height: thickness };
-
   const isReversed = direction === 'column';
 
   const colorMap = axisItem?.colorMap;
   if (!colorMap || !colorMap.type || colorMap.type !== 'continuous') {
     return null;
   }
+
+  // Define the coordinate to color mapping
+
   const colorScale = axisItem.colorScale as ScaleSequential<string, string | null>;
 
-  const scale = getScale(
-    scaleType,
-    [colorMap.min, colorMap.max],
-    isReversed ? [size, 0] : [0, size],
-  );
+  const minValue = colorMap.min ?? 0;
+  const maxValue = colorMap.max ?? 100;
 
-  const text1 = 'txt1';
-  const text2 = 'text long 2';
+  const scale = getScale(scaleType, [minValue, maxValue], isReversed ? [size, 0] : [0, size]);
+
+  // Get texts to display
+
+  const formattedMin =
+    (axisItem as AxisDefaultized).valueFormatter?.(minValue, { location: 'legend' }) ??
+    minValue.toLocaleString();
+
+  const formattedMax =
+    (axisItem as AxisDefaultized).valueFormatter?.(maxValue, { location: 'legend' }) ??
+    maxValue.toLocaleString();
+
+  const minText =
+    typeof minLabel === 'string'
+      ? minLabel
+      : minLabel({ value: minValue ?? 0, formattedValue: formattedMin });
+
+  const maxText =
+    typeof maxLabel === 'string'
+      ? maxLabel
+      : maxLabel({ value: maxValue ?? 0, formattedValue: formattedMax });
+
+  const text1 = isReversed ? maxText : minText;
+  const text2 = isReversed ? minText : maxText;
 
   const text1Box = getStringSize(text1, { ...labelStyle });
   const text2Box = getStringSize(text2, { ...labelStyle });
 
+  // Place bar and texts
+
+  const barBox =
+    direction === 'column' || (isRTL && direction === 'row')
+      ? { width: thickness, height: size }
+      : { width: size, height: thickness };
+
   const legendPositions = getElementPositions(text1Box, barBox, text2Box, {
     spacing,
-    alignment,
+    align,
     direction,
   });
   const svgBoundingBox = { width: width + left + right, height: height + top + bottom };
@@ -292,7 +345,7 @@ ContinuousColorLegend.propTypes = {
    * The alignment of the texts with the gradient bar.
    * @default 'middle'
    */
-  alignment: PropTypes.oneOf(['end', 'middle', 'start']),
+  align: PropTypes.oneOf(['end', 'middle', 'start']),
   /**
    * The axis direction containing the color configuration to represent.
    * @default 'z'
@@ -310,8 +363,9 @@ ContinuousColorLegend.propTypes = {
   direction: PropTypes.oneOf(['column', 'row']),
   /**
    * A unique identifier for the gradient.
+   * @default auto-generated id
    */
-  id: PropTypes.string.isRequired,
+  id: PropTypes.string,
   /**
    * The style applied to labels.
    * @default theme.typography.subtitle1
@@ -324,6 +378,19 @@ ContinuousColorLegend.propTypes = {
    * @default '50%'
    */
   length: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * The label to display at the maximum side of the gradient.
+   * Can either be a string, or a function.
+   * If not defined, the formatted maximal value is display.
+   * @default ({ formattedValue }) => formattedValue
+   */
+  maxLabel: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  /**
+   * The label to display at the minimum side of the gradient.
+   * Can either be a string, or a function.
+   * @default ({ formattedValue }) => formattedValue
+   */
+  minLabel: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   /**
    * The position of the legend.
    */

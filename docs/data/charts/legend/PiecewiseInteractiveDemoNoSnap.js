@@ -4,11 +4,15 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
 import { dataset } from './tempAnomaly';
 
-export default function ColorLegendPositionNoSnap() {
+export default function PiecewiseInteractiveDemoNoSnap() {
   return (
     <ChartsUsageDemo
       componentName="Legend"
       data={[
+        {
+          propName: 'hideFirst',
+          knob: 'switch',
+        },
         {
           propName: 'direction',
           knob: 'select',
@@ -25,13 +29,6 @@ export default function ColorLegendPositionNoSnap() {
           knob: 'number',
           defaultValue: 10,
           min: 8,
-          max: 20,
-        },
-        {
-          propName: 'markSize',
-          knob: 'number',
-          defaultValue: 10,
-          min: 5,
           max: 20,
         },
       ]}
@@ -62,21 +59,10 @@ export default function ColorLegendPositionNoSnap() {
             ]}
             yAxis={[{ disableLine: true, valueFormatter: (value) => `${value}°` }]}
             height={300}
-            {...(props.direction === 'row'
-              ? {
-                  margin: {
-                    bottom: 30,
-                    top: 50,
-                    right: 20,
-                  },
-                }
-              : {
-                  margin: {
-                    bottom: 30,
-                    top: 20,
-                    right: 150,
-                  },
-                })}
+            margin={{
+              top: props.direction === 'row' ? 50 : 20,
+              right: props.direction === 'row' ? 20 : 150,
+            }}
             slotProps={{ legend: { hidden: true } }}
           >
             <PiecewiseColorLegend
@@ -89,8 +75,7 @@ export default function ColorLegendPositionNoSnap() {
               direction={props.direction}
               padding={props.padding}
               labelStyle={{ fontSize: props.fontSize }}
-              itemMarkHeight={props.markSize}
-              itemMarkWidth={props.markSize}
+              hideFirst={props.hideFirst}
             />
           </LineChart>
         </div>
@@ -98,18 +83,27 @@ export default function ColorLegendPositionNoSnap() {
       getCode={({ props }) => {
         return [
           `import { LineChart } from '@mui/x-charts/LineChart';`,
+          `import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';`,
           '',
           `<LineChart`,
-          '  margin={{ top: 100, bottom: 100, left: 100, right:100 }}',
+          `  margin={{ top: ${props.direction === 'row' ? 50 : 20}, right: ${
+            props.direction === 'row' ? 20 : 150
+          } }}`,
           '  {/** ... */}',
-          `  slotProps={{`,
-          `    legend: {`,
-          `      direction: '${props.direction}',`,
-          `      position: { vertical: '${props.vertical}', horizontal: '${props.horizontal}' },`,
-          `      padding: ${props.padding},`,
-          `    },`,
-          `  }}`,
-          '/>',
+          '>',
+          `  <PiecewiseColorLegend`,
+          `      axisDirection="x"`,
+          `      position={${
+            props.direction === 'row'
+              ? `{ vertical: 'top', horizontal: 'middle' }`
+              : `{ vertical: 'middle', horizontal: 'right' }`
+          }}`,
+          `      direction="${props.direction}"`,
+          ...(props.hideFirst ? ['      hideFirst'] : []),
+          `      padding={${props.padding}}`,
+          `      labelStyle={{ fontSize: ${props.fontSize} }}`,
+          `    />`,
+          '</LineChart>',
         ].join('\n');
       }}
     />

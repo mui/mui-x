@@ -1,7 +1,6 @@
 {
   "props": {
-    "id": { "type": { "name": "string" }, "required": true },
-    "alignment": {
+    "align": {
       "type": {
         "name": "enum",
         "description": "'end'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start'"
@@ -17,10 +16,19 @@
       "default": "The first axis item."
     },
     "direction": { "type": { "name": "enum", "description": "'column'<br>&#124;&nbsp;'row'" } },
+    "id": { "type": { "name": "string" }, "default": "auto-generated id" },
     "labelStyle": { "type": { "name": "object" }, "default": "theme.typography.subtitle1" },
     "length": {
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "'50%'"
+    },
+    "maxLabel": {
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" },
+      "default": "({ formattedValue }) => formattedValue"
+    },
+    "minLabel": {
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" },
+      "default": "({ formattedValue }) => formattedValue"
     },
     "position": {
       "type": {
