@@ -14,7 +14,7 @@ export default function RowGroupingPropagateSelection() {
     apiRef,
     initialState: {
       rowGrouping: {
-        model: ['company'],
+        model: ['company', 'director'],
       },
     },
   });

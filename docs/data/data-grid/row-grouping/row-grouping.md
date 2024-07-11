@@ -310,7 +310,7 @@ If you are dynamically switching the `leafField` or `mainGroupingCriteria`, the 
 By default, selecting a parent row will not select its children.
 Set the `propagateRowSelection` prop to `true` to achieve the following behavior.
 
-1. Selecting/Deselecting a parent row would select/deselect all the children rows.
+1. Selecting/deselecting a parent row would select/deselect all the children rows.
 2. When all child rows are selected, the parent row will be auto selected.
 3. When a child row is deselected, if one or more parent rows are already selected, they will be auto deselected.
 4. Select All checkbox would select/deselect all the rows including child rows.
