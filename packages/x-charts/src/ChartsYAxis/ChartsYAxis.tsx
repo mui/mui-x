@@ -134,6 +134,15 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     ownerState: {},
   });
 
+  const lineSlotProps = useSlotProps({
+    elementType: Line,
+    externalSlotProps: slotProps?.axisLine,
+    additionalProps: {
+      strokeLinecap: 'square' as const,
+    },
+    ownerState: {},
+  });
+
   const domain = yScale.domain();
   if (domain.length === 0 || domain[0] === domain[1]) {
     // Skip axis rendering if
@@ -148,7 +157,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
       className={classes.root}
     >
       {!disableLine && (
-        <Line y1={top - 1} y2={top + height} className={classes.line} {...slotProps?.axisLine} />
+        <Line y1={top} y2={top + height} className={classes.line} {...lineSlotProps} />
       )}
 
       {yTicks.map(({ formattedValue, offset, labelOffset, value }, index) => {
@@ -157,7 +166,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         const skipLabel =
           typeof tickLabelInterval === 'function' && !tickLabelInterval?.(value, index);
 
-        const showLabel = offset >= top-1 && offset <= height + top+1;
+        const showLabel = offset >= top - 1 && offset <= height + top + 1;
 
         if (!showLabel) {
           return null;
