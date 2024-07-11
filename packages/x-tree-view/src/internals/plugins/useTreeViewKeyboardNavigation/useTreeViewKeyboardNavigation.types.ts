@@ -32,9 +32,9 @@ export type UseTreeViewKeyboardNavigationSignature = TreeViewPluginSignature<{
   dependencies: [
     UseTreeViewItemsSignature,
     UseTreeViewSelectionSignature,
+    UseTreeViewFocusSignature,
     UseTreeViewExpansionSignature,
   ];
-  optionalDependencies: [UseTreeViewFocusSignature];
 }>;
 
 export type TreeViewFirstCharMap = { [itemId: string]: string };

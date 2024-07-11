@@ -13,8 +13,6 @@ import {
   UseTreeViewKeyboardNavigationSignature,
 } from './useTreeViewKeyboardNavigation.types';
 import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
-import { hasPlugin } from '../../utils/plugins';
-import { useTreeViewFocus } from '../useTreeViewFocus';
 
 function isPrintableCharacter(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
@@ -79,8 +77,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   const canToggleItemSelection = (itemId: string) =>
     !params.disableSelection && !instance.isItemDisabled(itemId);
 
-  const canToggleItemExpansion = (itemId: string) =>
-    !instance.isItemDisabled(itemId) && instance.isItemExpandable(itemId);
+  const canToggleItemExpansion = (itemId: string) => {
+    return !instance.isItemDisabled(itemId) && instance.isItemExpandable(itemId);
+  };
 
   // ARIA specification: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/#keyboardinteraction
   const handleItemKeyDown = (
@@ -143,9 +142,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         const nextItem = getNextNavigableItem(instance, itemId);
         if (nextItem) {
           event.preventDefault();
-          if (hasPlugin(instance, useTreeViewFocus)) {
-            instance.focusItem(event, nextItem);
-          }
+          instance.focusItem(event, nextItem);
 
           // Multi select behavior when pressing Shift + ArrowDown
           // Toggles the selection state of the next item
@@ -162,9 +159,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         const previousItem = getPreviousNavigableItem(instance, itemId);
         if (previousItem) {
           event.preventDefault();
-          if (hasPlugin(instance, useTreeViewFocus)) {
-            instance.focusItem(event, previousItem);
-          }
+          instance.focusItem(event, previousItem);
 
           // Multi select behavior when pressing Shift + ArrowUp
           // Toggles the selection state of the previous item
@@ -182,9 +177,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         if (instance.isItemExpanded(itemId)) {
           const nextItemId = getNextNavigableItem(instance, itemId);
           if (nextItemId) {
-            if (hasPlugin(instance, useTreeViewFocus)) {
-              instance.focusItem(event, nextItemId);
-            }
+            instance.focusItem(event, nextItemId);
             event.preventDefault();
           }
         } else if (canToggleItemExpansion(itemId)) {
@@ -204,9 +197,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         } else {
           const parent = instance.getItemMeta(itemId).parentId;
           if (parent) {
-            if (hasPlugin(instance, useTreeViewFocus)) {
-              instance.focusItem(event, parent);
-            }
+            instance.focusItem(event, parent);
             event.preventDefault();
           }
         }
@@ -220,7 +211,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         // Selects the focused item and all items up to the first item.
         if (canToggleItemSelection(itemId) && params.multiSelect && ctrlPressed && event.shiftKey) {
           instance.selectRangeFromStartToItem(event, itemId);
-        } else if (hasPlugin(instance, useTreeViewFocus)) {
+        } else {
           instance.focusItem(event, getFirstNavigableItem(instance));
         }
 
@@ -234,7 +225,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         // Selects the focused item and all the items down to the last item.
         if (canToggleItemSelection(itemId) && params.multiSelect && ctrlPressed && event.shiftKey) {
           instance.selectRangeFromItemToEnd(event, itemId);
-        } else if (hasPlugin(instance, useTreeViewFocus)) {
+        } else {
           instance.focusItem(event, getLastNavigableItem(instance));
         }
 
@@ -261,7 +252,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // TODO: Support typing multiple characters
       case !ctrlPressed && !event.shiftKey && isPrintableCharacter(key): {
         const matchingItem = getFirstMatchingItem(itemId, key);
-        if (matchingItem != null && hasPlugin(instance, useTreeViewFocus)) {
+        if (matchingItem != null) {
           instance.focusItem(event, matchingItem);
           event.preventDefault();
         }
