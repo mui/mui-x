@@ -30,7 +30,7 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
    */
   getItemOrderedChildrenIds: (itemId: TreeViewItemId | null) => TreeViewItemId[];
   /**
-   * Get all the items in the same provided as provided by `props.items`.
+   * Get all the items in the same format as provided by `props.items`.
    * @returns {TreeViewItemProps[]} The items in the tree.
    */
   getItemTree: () => TreeViewBaseItem[];
