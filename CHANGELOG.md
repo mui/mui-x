@@ -54,7 +54,7 @@ Same changes as in `@mui/x-date-pickers@7.10.0`, plus:
 
 #### `@mui/x-charts@7.10.0`
 
-- [charts] Fix area with log scale (#13791) @alexfauquette
+- [charts] Fix displaying area of a `LineChart` when using the `log` scale (#13791) @alexfauquette
 - [charts] Use correct click handler prop on pie chart `OnSeriesItemClick` documentation (#13761) @tonyhallett
 
 ### Tree View
