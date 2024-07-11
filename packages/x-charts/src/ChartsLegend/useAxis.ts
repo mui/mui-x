@@ -6,6 +6,9 @@ import { useCartesianContext } from '../context/CartesianProvider/useCartesianCo
 import { ZAxisDefaultized } from '../models/z-axis';
 import { ColorLegendSelector } from './legend.types';
 
+/**
+ * Helper to select an axis definition according to its direction and id.
+ */
 export function useAxis({
   axisDirection,
   axisId,

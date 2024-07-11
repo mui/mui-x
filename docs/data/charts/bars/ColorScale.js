@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { ChartsColorScaleLegend } from '@mui/x-charts/ChartsLegend';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
@@ -47,8 +46,6 @@ export default function ColorScale() {
         margin={{
           top: 10,
           bottom: 20,
-          left: 50,
-          right: 150,
         }}
         yAxis={[
           {
@@ -105,13 +102,7 @@ export default function ColorScale() {
               undefined,
           },
         ]}
-      >
-        <ChartsColorScaleLegend
-          axisDirection={colorY !== 'None' ? 'y' : 'x'}
-          position={{ vertical: 'top', horizontal: 'right' }}
-          direction="column"
-        />
-      </BarChart>
+      />
       <HighlightedCode
         code={[
           `<ScatterChart`,
