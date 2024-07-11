@@ -61,6 +61,7 @@ Same changes as in `@mui/x-date-pickers@7.10.0`, plus:
 
 #### `@mui/x-tree-view@7.10.0`
 
+- [TreeView] Add `getItemTree` and `getItemOrderedChildrenIds` methods to the public API (#13804) @flaviendelangle
 - [TreeView] Add utility function to check if an optional plugin is present (#13788) @flaviendelangle
 
 ### Docs
