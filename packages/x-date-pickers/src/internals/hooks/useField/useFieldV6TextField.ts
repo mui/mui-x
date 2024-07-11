@@ -77,6 +77,7 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
 export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   const isRtl = useRtl();
   const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
+  const selectionSyncTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
 
   const {
     forwardedProps: {
@@ -162,7 +163,8 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
               inputRef.current.setSelectionRange(selectionStart, selectionEnd);
             }
           }
-          setTimeout(() => {
+          clearTimeout(selectionSyncTimeoutRef.current);
+          selectionSyncTimeoutRef.current = setTimeout(() => {
             // handle case when the selection is not updated correctly
             // could happen on Android
             if (
@@ -436,6 +438,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
 
     return () => {
       clearTimeout(focusTimeoutRef.current);
+      clearTimeout(selectionSyncTimeoutRef.current);
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
