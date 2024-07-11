@@ -77,6 +77,7 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
 export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   const isRtl = useRtl();
   const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
+  const selectionSyncTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
 
   const {
     forwardedProps: {
@@ -162,12 +163,16 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
               inputRef.current.setSelectionRange(selectionStart, selectionEnd);
             }
           }
-          setTimeout(() => {
+          clearTimeout(selectionSyncTimeoutRef.current);
+          selectionSyncTimeoutRef.current = setTimeout(() => {
             // handle case when the selection is not updated correctly
             // could happen on Android
             if (
               inputRef.current &&
               inputRef.current === getActiveElement(document) &&
+              // The section might loose all selection, where `selectionStart === selectionEnd`
+              // https://github.com/mui/mui-x/pull/13652
+              inputRef.current.selectionStart === inputRef.current.selectionEnd &&
               (inputRef.current.selectionStart !== selectionStart ||
                 inputRef.current.selectionEnd !== selectionEnd)
             ) {
@@ -428,6 +433,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
 
     return () => {
       clearTimeout(focusTimeoutRef.current);
+      clearTimeout(selectionSyncTimeoutRef.current);
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
