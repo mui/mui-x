@@ -17,7 +17,7 @@ declare module '@mui/x-charts/internals' {
     };
   }
 
-  interface ChartsAxisProps {
+  interface AxisConfigExtension {
     zoom?: boolean | ZoomOptions;
   }
 }
