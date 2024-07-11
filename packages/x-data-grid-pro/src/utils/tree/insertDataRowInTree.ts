@@ -99,7 +99,7 @@ export const insertDataRowInTree = ({
       // We create a leaf node for the data row.
       if (existingNodeIdWithPartialPath == null) {
         let node: GridLeafNode | GridDataSourceGroupNode;
-        if (serverChildrenCount !== 0) {
+        if (serverChildrenCount !== undefined && serverChildrenCount !== 0) {
           node = {
             type: 'group',
             id,
