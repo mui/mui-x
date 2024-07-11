@@ -2,12 +2,9 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
 
-export const useChartContainerDimensions = (
-  inWidth?: number,
-  inHeight?: number,
-): [React.RefObject<HTMLDivElement>, number, number] => {
-  const rootRef = React.useRef<HTMLDivElement>(null);
+export const useChartContainerDimensions = (inWidth?: number, inHeight?: number) => {
   const displayError = React.useRef<boolean>(false);
+  const rootRef = React.useRef(null);
 
   const [width, setWidth] = React.useState(0);
   const [height, setHeight] = React.useState(0);
@@ -84,5 +81,5 @@ export const useChartContainerDimensions = (
     }
   }
 
-  return [rootRef, inWidth ?? width, inHeight ?? height];
+  return { containerRef: rootRef, width: inWidth ?? width, height: inHeight ?? height };
 };

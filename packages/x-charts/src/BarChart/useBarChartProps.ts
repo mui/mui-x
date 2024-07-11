@@ -50,6 +50,8 @@ export const useBarChartProps = (props: BarChartProps) => {
     onHighlightChange,
     borderRadius,
     barLabel,
+    className,
+    ...rest
   } = props;
 
   const id = useId();
@@ -68,6 +70,7 @@ export const useBarChartProps = (props: BarChartProps) => {
   } as const;
 
   const chartContainerProps: ResponsiveChartContainerProps = {
+    ...rest,
     series: series.map((s) => ({
       type: 'bar' as const,
       ...s,
@@ -92,6 +95,7 @@ export const useBarChartProps = (props: BarChartProps) => {
       axisHighlight?.x === 'none' &&
       axisHighlight?.y === 'none' &&
       !onAxisClick,
+    className,
   };
 
   const barPlotProps: BarPlotProps = {

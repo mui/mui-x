@@ -9,7 +9,7 @@ import {
   DrawingProvider,
   InteractionProvider,
   SeriesContextProvider,
-  useChartContainerHooks,
+  useChartContainerProps,
 } from '@mui/x-charts/internals';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
@@ -25,68 +25,28 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
   ref,
 ) {
   const {
-    width,
-    height,
-    series,
-    margin,
-    xAxis,
-    yAxis,
-    zAxis,
-    colors,
-    dataset,
-    sx,
-    title,
-    desc,
-    disableAxisListener,
-    highlightedItem,
-    onHighlightChange,
-    plugins,
     children,
-  } = props;
+    drawingProviderProps,
+    colorProviderProps,
+    seriesContextProps,
+    cartesianContextProps,
+    zAxisContextProps,
+    highlightedProviderProps,
+    chartsSurfaceProps,
+  } = useChartContainerProps(props, ref);
 
   useLicenseVerifier('x-charts-pro', releaseInfo);
 
-  const {
-    svgRef,
-    handleRef,
-    xExtremumGetters,
-    yExtremumGetters,
-    seriesFormatters,
-    colorProcessors,
-  } = useChartContainerHooks(ref, plugins);
-
   return (
-    <DrawingProvider width={width} height={height} margin={margin} svgRef={svgRef}>
-      <ColorProvider colorProcessors={colorProcessors}>
-        <SeriesContextProvider
-          series={series}
-          colors={colors}
-          dataset={dataset}
-          seriesFormatters={seriesFormatters}
-        >
+    <DrawingProvider {...drawingProviderProps}>
+      <ColorProvider {...colorProviderProps}>
+        <SeriesContextProvider {...seriesContextProps}>
           <ZoomProvider>
-            <CartesianContextProviderPro
-              xAxis={xAxis}
-              yAxis={yAxis}
-              dataset={dataset}
-              xExtremumGetters={xExtremumGetters}
-              yExtremumGetters={yExtremumGetters}
-            >
-              <ZAxisContextProvider zAxis={zAxis} dataset={dataset}>
+            <CartesianContextProviderPro {...cartesianContextProps}>
+              <ZAxisContextProvider {...zAxisContextProps}>
                 <InteractionProvider>
-                  <HighlightedProvider
-                    highlightedItem={highlightedItem}
-                    onHighlightChange={onHighlightChange}
-                  >
-                    <ChartsSurface
-                      width={width}
-                      height={height}
-                      ref={handleRef}
-                      sx={sx}
-                      title={title}
-                      desc={desc}
-                      disableAxisListener={disableAxisListener}
-                    >
+                  <HighlightedProvider {...highlightedProviderProps}>
+                    <ChartsSurface {...chartsSurfaceProps}>
                       <ChartsAxesGradients />
                       {children}
                     </ChartsSurface>

@@ -45,9 +45,12 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     loading,
     highlightedItem,
     onHighlightChange,
+    className,
+    ...rest
   } = props;
 
   const chartContainerProps: ResponsiveChartContainerProps = {
+    ...rest,
     series: series.map((s) => ({ type: 'scatter' as const, ...s })),
     width,
     height,
@@ -58,6 +61,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     sx,
     highlightedItem,
     onHighlightChange,
+    className,
   };
   const zAxisProps: Omit<ZAxisContextProviderProps, 'children'> = {
     zAxis,

@@ -53,12 +53,15 @@ export const useLineChartProps = (props: LineChartProps) => {
     loading,
     highlightedItem,
     onHighlightChange,
+    className,
+    ...rest
   } = props;
 
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
   const chartContainerProps: ResponsiveChartContainerProps = {
+    ...rest,
     series: series.map((s) => ({
       disableHighlight: !!disableLineItemHighlight,
       type: 'line' as const,
@@ -88,6 +91,7 @@ export const useLineChartProps = (props: LineChartProps) => {
       axisHighlight?.x === 'none' &&
       axisHighlight?.y === 'none' &&
       !onAxisClick,
+    className,
   };
 
   const axisClickHandlerProps: ChartsOnAxisClickHandlerProps = {
