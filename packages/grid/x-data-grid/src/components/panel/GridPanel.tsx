@@ -78,7 +78,10 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
     () => [
       {
         name: 'flip',
-        enabled: false,
+        enabled: true,
+        options: {
+          rootBoundary: 'document',
+        },
       },
       {
         name: 'isPlaced',
