@@ -31,6 +31,12 @@ You can limit the editing to just the leaves of the tree.
 
 <!-- {{"demo": "EditLeaves.js"}} -->
 
+## Track item label change
+
+Use the `onItemLabelChange` prop to trigger an action when the label of an item changes.
+
+{{"demo": "EditingCallback.js"}}
+
 ## Change the default behavior
 
 The default behavior on bluring the tree item that is being edited is to save the new value if there is one. This can be customized using the `slotProps` of the `TreeItem2`
