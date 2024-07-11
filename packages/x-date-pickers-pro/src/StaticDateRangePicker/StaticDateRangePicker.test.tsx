@@ -16,7 +16,7 @@ describe('<StaticDateRangePicker />', () => {
     classes: {} as any,
     render,
     muiName: 'MuiStaticDateRangePicker',
-    refInstanceof: undefined,
+    refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',
       'componentsProp',
@@ -25,8 +25,6 @@ describe('<StaticDateRangePicker />', () => {
       'themeVariants',
       'mergeClassName',
       'propsSpread',
-      'refForwarding',
-      'rootClass',
     ],
   }));
 
