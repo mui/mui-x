@@ -336,9 +336,6 @@ export const useGridRowSelection = (
     props.signature === GridSignature.DataGrid ? 'private' : 'public',
   );
 
-  /**
-   * EVENTS
-   */
   const removeOutdatedSelection = React.useCallback(() => {
     if (props.keepNonExistentRowsSelected) {
       return;
@@ -572,9 +569,6 @@ export const useGridRowSelection = (
   );
   useGridApiEventHandler(apiRef, 'cellKeyDown', runIfRowSelectionIsEnabled(handleCellKeyDown));
 
-  /**
-   * EFFECTS
-   */
   React.useEffect(() => {
     if (propRowSelectionModel !== undefined) {
       apiRef.current.setRowSelectionModel(propRowSelectionModel);
