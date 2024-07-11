@@ -10,6 +10,7 @@ import {
   GridFilterItem,
   GridColDef,
 } from '@mui/x-data-grid';
+import { value } from '@mui/x-data-grid/internals';
 
 interface GridHeaderFilterMenuProps {
   field: GridColDef['field'];
@@ -59,7 +60,7 @@ function GridHeaderFilterMenu({
       <MenuList aria-labelledby={labelledBy} id={id} onKeyDown={handleListKeyDown}>
         {operators.map((op, i) => {
           const label =
-            op?.headerLabel ??
+            value(op?.headerLabel) ??
             apiRef.current.getLocaleText(
               `headerFilterOperator${capitalize(op.value)}` as 'headerFilterOperatorContains',
             );
@@ -103,10 +104,10 @@ GridHeaderFilterMenu.propTypes = {
     PropTypes.shape({
       getApplyFilterFn: PropTypes.func.isRequired,
       getValueAsString: PropTypes.func,
-      headerLabel: PropTypes.string,
+      headerLabel: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
       InputComponent: PropTypes.elementType,
       InputComponentProps: PropTypes.object,
-      label: PropTypes.string,
+      label: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
       requiresFilterValue: PropTypes.bool,
       value: PropTypes.string.isRequired,
     }),

@@ -579,7 +579,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
                 key={operator.value}
                 value={operator.value}
               >
-                {operator.label ||
+                {value(operator.label) ||
                   apiRef.current.getLocaleText(
                     `filterOperator${capitalize(operator.value)}` as 'filterOperatorContains',
                   )}

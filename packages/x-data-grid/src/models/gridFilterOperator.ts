@@ -25,11 +25,11 @@ export interface GridFilterOperator<R extends GridValidRowModel = any, V = any, 
   /**
    * The label of the filter operator.
    */
-  label?: string;
+  label?: string | { (): React.ReactNode };
   /**
    * The label of the filter shown in header filter row.
    */
-  headerLabel?: string;
+  headerLabel?: string | { (): React.ReactNode };
   /**
    * The name of the filter operator.
    * It will be matched with the `operator` property of the filter items.

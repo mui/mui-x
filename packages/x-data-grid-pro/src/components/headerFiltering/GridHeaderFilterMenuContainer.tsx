@@ -111,10 +111,10 @@ GridHeaderFilterMenuContainer.propTypes = {
     PropTypes.shape({
       getApplyFilterFn: PropTypes.func.isRequired,
       getValueAsString: PropTypes.func,
-      headerLabel: PropTypes.string,
+      headerLabel: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
       InputComponent: PropTypes.elementType,
       InputComponentProps: PropTypes.object,
-      label: PropTypes.string,
+      label: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
       requiresFilterValue: PropTypes.bool,
       value: PropTypes.string.isRequired,
     }),

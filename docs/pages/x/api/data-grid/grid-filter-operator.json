@@ -15,10 +15,10 @@
     "getValueAsString": {
       "type": { "description": "(value: GridFilterItem['value']) =&gt; string" }
     },
-    "headerLabel": { "type": { "description": "string" } },
+    "headerLabel": { "type": { "description": "string | { (): React.ReactNode }" } },
     "InputComponent": { "type": { "description": "React.JSXElementConstructor&lt;any&gt;" } },
     "InputComponentProps": { "type": { "description": "Record&lt;string, any&gt;" } },
-    "label": { "type": { "description": "string" } },
+    "label": { "type": { "description": "string | { (): React.ReactNode }" } },
     "requiresFilterValue": { "type": { "description": "boolean" }, "default": "true" }
   }
 }

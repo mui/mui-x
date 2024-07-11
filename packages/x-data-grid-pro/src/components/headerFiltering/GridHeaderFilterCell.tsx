@@ -301,7 +301,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const isApplied = Boolean(item?.value) || isNoInputOperator;
 
     const label =
-      currentOperator.headerLabel ??
+      value(currentOperator.headerLabel) ??
       apiRef.current.getLocaleText(
         `headerFilterOperator${capitalize(item.operator)}` as 'headerFilterOperatorContains',
       );
@@ -351,7 +351,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
                   }));
                 }
               }}
-              label={capitalize(label)}
+              label={isString(label) ? capitalize(label) : label}
               placeholder=""
               isFilterActive={isFilterActive}
               clearButton={
