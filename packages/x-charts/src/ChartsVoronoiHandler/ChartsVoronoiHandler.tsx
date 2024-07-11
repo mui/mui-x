@@ -97,7 +97,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       | 'outside-voronoi-max-radius'
       | 'no-point-found' {
       // Get mouse coordinate in global SVG space
-      const svgPoint = getSVGPoint(svgRef.current!, event);
+      const svgPoint = getSVGPoint(element, event);
 
       const outsideX = svgPoint.x < left || svgPoint.x > left + width;
       const outsideY = svgPoint.y < top || svgPoint.y > top + height;
@@ -180,12 +180,12 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       onItemClick(event, { type: 'scatter', seriesId, dataIndex });
     };
 
-    element.addEventListener('mouseout', handleMouseOut);
-    element.addEventListener('mousemove', handleMouseMove);
+    element.addEventListener('pointerout', handleMouseOut);
+    element.addEventListener('pointermove', handleMouseMove);
     element.addEventListener('click', handleMouseClick);
     return () => {
-      element.removeEventListener('mouseout', handleMouseOut);
-      element.removeEventListener('mousemove', handleMouseMove);
+      element.removeEventListener('pointerout', handleMouseOut);
+      element.removeEventListener('pointermove', handleMouseMove);
       element.removeEventListener('click', handleMouseClick);
     };
   }, [
