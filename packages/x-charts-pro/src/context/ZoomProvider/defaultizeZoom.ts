@@ -1,10 +1,9 @@
-import { AxisConfig, ScaleName, ChartsXAxisProps } from '@mui/x-charts';
-import { isDefined } from '@mui/x-charts/internals';
-import { DefaultizedZoomOptions, ZoomOptions } from './Zoom.types';
+import { MakeRequired, isDefined } from '@mui/x-charts/internals';
+import { AxisConfigForZoom, DefaultizedZoomOptions } from './Zoom.types';
 
 const defaultZoomOptions = {
-  start: 0,
-  end: 100,
+  minStart: 0,
+  maxEnd: 100,
   step: 5,
   minSpan: 10,
   maxSpan: 100,
@@ -12,7 +11,7 @@ const defaultZoomOptions = {
 };
 
 export const defaultizeZoom = (
-  axis: Pick<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id' | 'zoom'>[] | undefined,
+  axis: MakeRequired<AxisConfigForZoom, 'id'>[] | undefined,
   axisDirection: 'x' | 'y',
 ): DefaultizedZoomOptions[] => {
   if (!axis) {

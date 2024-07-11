@@ -16,8 +16,8 @@ const zoomAtPoint = (
   currentZoomData: ZoomData,
   options: DefaultizedZoomOptions,
 ) => {
-  const MIN_RANGE = options.start;
-  const MAX_RANGE = options.end;
+  const MIN_RANGE = options.minStart;
+  const MAX_RANGE = options.maxEnd;
 
   const MIN_ALLOWED_SPAN = options.minSpan;
 
@@ -222,7 +222,7 @@ function isSpanValid(
     return false;
   }
 
-  if (minRange < option.start || maxRange > option.end) {
+  if (minRange < option.minStart || maxRange > option.maxEnd) {
     return false;
   }
 

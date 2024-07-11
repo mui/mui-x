@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { AxisConfig, ScaleName, ChartsXAxisProps, ChartsYAxisProps } from '@mui/x-charts';
 import { cartesianProviderUtils } from '@mui/x-charts/internals';
 import { ZoomContext, ZoomState } from './ZoomContext';
 import { defaultizeZoom } from './defaultizeZoom';
@@ -42,7 +41,11 @@ export function ZoomProvider({ children, xAxis: inXAxis, yAxis: inYAxis }: ZoomP
   );
 
   const [zoomData, setZoomData] = React.useState<ZoomData[]>(() =>
-    Object.values(options).map(({ axisId, start, end }) => ({ axisId, start, end })),
+    Object.values(options).map(({ axisId, minStart: start, maxEnd: end }) => ({
+      axisId,
+      start,
+      end,
+    })),
   );
 
   const value = React.useMemo(

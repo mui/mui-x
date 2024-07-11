@@ -9,7 +9,7 @@ const knobs = [
     defaultValue: true,
   },
   {
-    propName: 'start',
+    propName: 'minStart',
     knob: 'number',
     defaultValue: 0,
     step: 1,
@@ -17,7 +17,7 @@ const knobs = [
     max: 50,
   },
   {
-    propName: 'end',
+    propName: 'maxEnd',
     knob: 'number',
     defaultValue: 100,
     step: 1,
@@ -80,8 +80,8 @@ export default function ZoomOptionsNoSnap() {
           `    {`,
           `      // ...`,
           `      zoom: {`,
-          `        start: ${props.start},`,
-          `        end: ${props.end},`,
+          `        minStart: ${props.minStart},`,
+          `        maxEnd: ${props.maxEnd},`,
           `        minSpan: ${props.minSpan},`,
           `        maxSpan: ${props.maxSpan},`,
           `        step: ${props.step},`,

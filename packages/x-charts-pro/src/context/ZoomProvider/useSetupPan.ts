@@ -51,8 +51,8 @@ export const useSetupPan = () => {
         const min = zoom.start;
         const max = zoom.end;
         const span = max - min;
-        const MIN_PERCENT = option.start;
-        const MAX_PERCENT = option.end;
+        const MIN_PERCENT = option.minStart;
+        const MAX_PERCENT = option.maxEnd;
 
         const movement = option.axisDirection === 'x' ? movementX : movementY;
         const dimension = option.axisDirection === 'x' ? area.width : area.height;

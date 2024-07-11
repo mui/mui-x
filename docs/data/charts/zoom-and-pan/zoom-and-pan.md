@@ -31,8 +31,8 @@ You can customize the zooming behavior by setting the `zoomOptions` prop.
 
 The following options are available:
 
-- **start**: The starting percentage of the axis range. Between 0 and 100.
-- **end**: The ending percentage of the zoom range.
+- **minStart**: The starting percentage of the axis range. Between 0 and 100.
+- **maxEnd**: The ending percentage of the zoom range.
 - **step**: The step of the zooming function. Defines the granularity of the zoom.
 - **minSpan**: Restricts the minimum span size.
 - **maxSpan**: Restricts the maximum span size.

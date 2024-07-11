@@ -6,13 +6,13 @@ export type ZoomOptions = {
    *
    * @default 0
    */
-  start?: number;
+  minStart?: number;
   /**
    * The ending percentage of the zoom range. In the range of 0 to 100.
    *
    * @default 100
    */
-  end?: number;
+  maxEnd?: number;
   /**
    * The step size of the zooming function. Defines the granularity of the zoom.
    *
