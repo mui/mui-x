@@ -305,7 +305,10 @@ export type AxisConfig<
   reverse?: boolean;
 } & Partial<AxisProps> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
-  TickParams;
+  TickParams &
+  AxisConfigExtension;
+
+export interface AxisConfigExtension {}
 
 export type AxisDefaultized<
   S extends ScaleName = ScaleName,

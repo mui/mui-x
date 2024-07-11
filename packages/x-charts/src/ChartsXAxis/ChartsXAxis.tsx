@@ -208,36 +208,34 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
       )}
 
-      {xTicksWithDimension
-        .filter((tick) => tick.offset >= left - 1 && tick.offset <= left + width + 1)
-        .map(({ formattedValue, offset, labelOffset, skipLabel }, index) => {
-          const xTickLabel = labelOffset ?? 0;
-          const yTickLabel = positionSign * (tickSize + 3);
+      {xTicksWithDimension.map(({ formattedValue, offset, labelOffset, skipLabel }, index) => {
+        const xTickLabel = labelOffset ?? 0;
+        const yTickLabel = positionSign * (tickSize + 3);
 
-          const showTick = offset >= left - 1 && offset <= left + width + 1;
-          const showTickLabel =
-            offset + xTickLabel >= left - 1 && offset + xTickLabel <= left + width + 1;
-          return (
-            <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
-              {!disableTicks && showTick && (
-                <Tick
-                  y2={positionSign * tickSize}
-                  className={classes.tick}
-                  {...slotProps?.axisTick}
-                />
-              )}
+        const showTick = offset >= left - 1 && offset <= left + width + 1;
+        const showTickLabel =
+          offset + xTickLabel >= left - 1 && offset + xTickLabel <= left + width + 1;
+        return (
+          <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
+            {!disableTicks && showTick && (
+              <Tick
+                y2={positionSign * tickSize}
+                className={classes.tick}
+                {...slotProps?.axisTick}
+              />
+            )}
 
-              {formattedValue !== undefined && !skipLabel && showTickLabel && (
-                <TickLabel
-                  x={xTickLabel}
-                  y={yTickLabel}
-                  {...axisTickLabelProps}
-                  text={formattedValue.toString()}
-                />
-              )}
-            </g>
-          );
-        })}
+            {formattedValue !== undefined && !skipLabel && showTickLabel && (
+              <TickLabel
+                x={xTickLabel}
+                y={yTickLabel}
+                {...axisTickLabelProps}
+                text={formattedValue.toString()}
+              />
+            )}
+          </g>
+        );
+      })}
 
       {label && (
         <g className={classes.label}>

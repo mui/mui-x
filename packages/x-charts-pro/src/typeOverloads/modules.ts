@@ -4,6 +4,7 @@ import {
   HeatmapSeriesType,
   DefaultizedHeatmapSeriesType,
 } from '../models/seriesType/heatmap';
+import { ZoomOptions } from '../context/ZoomProvider/Zoom.types';
 
 declare module '@mui/x-charts/internals' {
   interface ChartsSeriesConfig {
@@ -14,5 +15,9 @@ declare module '@mui/x-charts/internals' {
       itemIdentifier: HeatmapItemIdentifier;
       cartesian: true;
     };
+  }
+
+  interface AxisConfigExtension {
+    zoom?: boolean | ZoomOptions;
   }
 }

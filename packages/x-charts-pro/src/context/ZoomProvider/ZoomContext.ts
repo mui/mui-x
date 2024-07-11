@@ -1,9 +1,13 @@
 import * as React from 'react';
-import { Initializable } from '@mui/x-charts/internals';
+import { AxisId, Initializable } from '@mui/x-charts/internals';
+import { DefaultizedZoomOptions, ZoomData } from './Zoom.types';
 
 export type ZoomState = {
-  zoomRange: [number, number];
-  setZoomRange: (range: [number, number]) => void;
+  isZoomEnabled: boolean;
+  isPanEnabled: boolean;
+  options: Record<AxisId, DefaultizedZoomOptions>;
+  zoomData: ZoomData[];
+  setZoomData: (zoomData: ZoomData[]) => void;
   isInteracting: boolean;
   setIsInteracting: (isInteracting: boolean) => void;
 };
@@ -11,8 +15,11 @@ export type ZoomState = {
 export const ZoomContext = React.createContext<Initializable<ZoomState>>({
   isInitialized: false,
   data: {
-    zoomRange: [0, 100],
-    setZoomRange: () => {},
+    isZoomEnabled: false,
+    isPanEnabled: false,
+    options: {},
+    zoomData: [],
+    setZoomData: () => {},
     isInteracting: false,
     setIsInteracting: () => {},
   },
