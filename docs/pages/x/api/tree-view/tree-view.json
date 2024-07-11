@@ -3,7 +3,7 @@
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, selectItem: func, setItemExpansion: func } }"
+        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, selectItem: func, setItemExpansion: func } }"
       }
     },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },

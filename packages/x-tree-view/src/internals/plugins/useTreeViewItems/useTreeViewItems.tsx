@@ -22,7 +22,7 @@ const updateItemsState = ({
   isItemDisabled,
   getItemLabel,
   getItemId,
-}: UpdateNodesStateParameters): UseTreeViewItemsState<any>['items'] => {
+}: UpdateNodesStateParameters): State => {
   const itemMetaMap: State['itemMetaMap'] = {};
   const itemMap: State['itemMap'] = {};
   const itemOrderedChildrenIds: State['itemOrderedChildrenIds'] = {
@@ -76,7 +76,6 @@ const updateItemsState = ({
     };
 
     itemMap[id] = item;
-    itemOrderedChildrenIds[id] = [];
     const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
     if (!itemOrderedChildrenIds[parentIdWithDefault]) {
       itemOrderedChildrenIds[parentIdWithDefault] = [];
@@ -117,6 +116,20 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     (itemId: string) => state.items.itemMap[itemId],
     [state.items.itemMap],
   );
+
+  const getItemTree = React.useCallback(() => {
+    const getItemFromItemId = (id: TreeViewItemId): TreeViewBaseItem => {
+      const { children: oldChildren, ...item } = state.items.itemMap[id];
+      const newChildren = state.items.itemOrderedChildrenIds[id];
+      if (newChildren) {
+        item.children = newChildren.map(getItemFromItemId);
+      }
+
+      return item;
+    };
+
+    return state.items.itemOrderedChildrenIds[TREE_VIEW_ROOT_PARENT_ID].map(getItemFromItemId);
+  }, [state.items.itemMap, state.items.itemOrderedChildrenIds]);
 
   const isItemDisabled = React.useCallback(
     (itemId: string | null): itemId is string => {
@@ -223,7 +236,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         label: item.label!,
         itemId: item.id,
         id: item.idAttribute,
-        children: state.items.itemOrderedChildrenIds[id].map(getPropsFromItemId),
+        children: state.items.itemOrderedChildrenIds[id]?.map(getPropsFromItemId),
       };
     };
 
@@ -242,10 +255,13 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     publicAPI: {
       getItem,
       getItemDOMElement,
+      getItemTree,
+      getItemOrderedChildrenIds,
     },
     instance: {
       getItemMeta,
       getItem,
+      getItemTree,
       getItemsToRender,
       getItemIndex,
       getItemDOMElement,

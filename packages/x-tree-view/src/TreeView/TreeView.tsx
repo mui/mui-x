@@ -96,6 +96,8 @@ TreeView.propTypes = {
       focusItem: PropTypes.func.isRequired,
       getItem: PropTypes.func.isRequired,
       getItemDOMElement: PropTypes.func.isRequired,
+      getItemOrderedChildrenIds: PropTypes.func.isRequired,
+      getItemTree: PropTypes.func.isRequired,
       selectItem: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
     }),

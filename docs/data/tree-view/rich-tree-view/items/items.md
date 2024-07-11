@@ -170,3 +170,26 @@ const itemElement = apiRef.current.getItemDOMElement(
 ```
 
 {{"demo": "ApiMethodGetItemDOMElement.js", "defaultCodeOpen": false}}
+
+### Get the current item tree
+
+Use the `getItemTree` API method to get the current item tree.
+
+```ts
+const itemTree = apiRef.current.getItemTree();
+```
+
+{{"demo": "ApiMethodGetItemTree.js", "defaultCodeOpen": false}}
+
+### Get an item's children by ID
+
+Use the `getItemOrderedChildrenIds` API method to get an item's children by its ID.
+
+```ts
+const childrenIds = apiRef.current.getItemOrderedChildrenIds(
+  // The id of the item to retrieve the children from
+  itemId,
+);
+```
+
+{{"demo": "ApiMethodGetItemOrderedChildrenIds.js", "defaultCodeOpen": false}}
