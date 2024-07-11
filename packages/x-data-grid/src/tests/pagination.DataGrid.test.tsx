@@ -730,12 +730,14 @@ describe('<DataGrid /> - Pagination', () => {
     ];
     expect(() => {
       const { setProps } = render(
-        <DataGrid
-          columns={columns}
-          rows={rows}
-          initialState={{ pagination: { paginationModel: { pageSize: 2, page: 1 } } }}
-          pageSizeOptions={[2]}
-        />,
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            columns={columns}
+            rows={rows}
+            initialState={{ pagination: { paginationModel: { pageSize: 2, page: 1 } } }}
+            pageSizeOptions={[2]}
+          />
+        </div>,
       );
       setProps({ rows: rows.slice(0, 2) });
     }).not.to.throw();

@@ -37,20 +37,20 @@ const getDataGridProForcedProps: GetDataGridProForcedProps = (themedProps) => ({
  */
 export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValue = {
   ...DATA_GRID_PROPS_DEFAULT_VALUES,
-  scrollEndThreshold: 80,
-  treeData: false,
-  defaultGroupingExpansionDepth: 0,
   autosizeOnMount: false,
+  defaultGroupingExpansionDepth: 0,
   disableAutosize: false,
-  disableColumnPinning: false,
-  keepColumnPositionIfDraggedOutside: false,
   disableChildrenFiltering: false,
   disableChildrenSorting: false,
-  rowReordering: false,
-  rowsLoadingMode: 'client',
+  disableColumnPinning: false,
   getDetailPanelHeight: () => 500,
   headerFilters: false,
+  keepColumnPositionIfDraggedOutside: false,
   propagateRowSelection: false,
+  rowReordering: false,
+  rowsLoadingMode: 'client',
+  scrollEndThreshold: 80,
+  treeData: false,
 };
 
 const defaultSlots = DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS;
