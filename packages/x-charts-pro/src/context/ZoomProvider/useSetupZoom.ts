@@ -213,6 +213,9 @@ export const useSetupZoom = () => {
       element.removeEventListener('pointerleave', pointerUpHandler);
       element.removeEventListener('touchstart', preventDefault);
       element.removeEventListener('touchmove', preventDefault);
+      if (interactionTimeoutRef.current) {
+        clearTimeout(interactionTimeoutRef.current);
+      }
     };
   }, [svgRef, setZoomData, zoomData, area, isZoomEnabled, options, setIsInteracting]);
 };
