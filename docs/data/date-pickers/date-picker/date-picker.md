@@ -114,6 +114,16 @@ You can enable the clearable behavior:
 
 {{"demo": "ClearableProp.js"}}
 
+:::info
+See [Field components—Clearable behavior](/x/react-date-pickers/fields/#clearable-behavior) for more details.
+:::
+
+:::warning
+The clearable prop is not supported yet by the mobile Picker variants.
+
+See discussion [in this GitHub issue](https://github.com/mui/mui-x/issues/10842#issuecomment-1951887408) for more information.
+:::
+
 ## Localization
 
 See the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) documentation pages for more details.
