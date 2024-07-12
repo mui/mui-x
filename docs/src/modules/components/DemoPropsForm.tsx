@@ -152,25 +152,17 @@ export default function ChartDemoPropsForm<T extends string>({
   props,
   onPropsChange,
 }: ChartDemoPropsFormProps<T>) {
-  const initialProps = React.useRef<Record<T, any>>(
-    data.reduce(
-      (acc, { propName, defaultValue }) => {
-        acc[propName] = defaultValue;
-        return acc;
-      },
-      {} as Record<T, any>,
-    ),
+  const initialProps = React.useMemo<Record<T, any>>(
+    () =>
+      data.reduce(
+        (acc, { propName, defaultValue }) => {
+          acc[propName] = defaultValue;
+          return acc;
+        },
+        {} as Record<T, any>,
+      ),
+    [data],
   );
-
-  React.useEffect(() => {
-    data.reduce(
-      (acc, { propName, defaultValue }) => {
-        acc[propName] = defaultValue;
-        return acc;
-      },
-      {} as Record<T, any>,
-    );
-  }, [data]);
 
   return (
     <Box
@@ -207,9 +199,9 @@ export default function ChartDemoPropsForm<T extends string>({
         <IconButton
           aria-label="Reset all"
           size="small"
-          onClick={() => onPropsChange(initialProps.current)}
+          onClick={() => onPropsChange(initialProps)}
           sx={{
-            visibility: !shallowEqual(props, initialProps.current) ? 'visible' : 'hidden',
+            visibility: !shallowEqual(props, initialProps) ? 'visible' : 'hidden',
             '--IconButton-size': '30px',
           }}
         >
