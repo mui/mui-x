@@ -229,7 +229,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     const borderLeftWidth = computedStyle.getPropertyValue('border-left-width');
     expect(borderLeftWidth).to.equal('1px');
     // should not be transparent
-    expect(borderLeftColor).to.not.equal('rgba(0, 0, 0, 0)');
+    expect(borderLeftColor).not.to.equal('rgba(0, 0, 0, 0)');
   });
 
   // https://github.com/mui/mui-x/issues/12431

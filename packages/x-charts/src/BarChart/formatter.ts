@@ -70,7 +70,7 @@ const formatter: Formatter<'bar'> = (params, dataset) => {
                 if (process.env.NODE_ENV !== 'production' && !warnOnce && value !== null) {
                   warnOnce = true;
                   console.error([
-                    `MUI-X charts: your dataset key "${dataKey}" is used for plotting bars, but contains nonnumerical elements.`,
+                    `MUI X charts: your dataset key "${dataKey}" is used for plotting bars, but contains nonnumerical elements.`,
                     'Bar plots only support numbers and null values.',
                   ]);
                 }

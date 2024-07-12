@@ -141,7 +141,7 @@
       }
     },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
-    "loading": { "type": { "name": "bool" } },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "logger": {
       "type": {
@@ -1565,6 +1565,12 @@
       "key": "rowReorderCellPlaceholder",
       "className": "MuiDataGrid-rowReorderCellPlaceholder",
       "description": "Styles applied to the row's draggable placeholder element inside the special row reorder cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "rowSkeleton",
+      "className": "MuiDataGrid-rowSkeleton",
+      "description": "Styles applied to the skeleton row element.",
       "isGlobal": false
     },
     {

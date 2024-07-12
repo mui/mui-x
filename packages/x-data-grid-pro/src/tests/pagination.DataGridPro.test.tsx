@@ -105,7 +105,11 @@ describe('<DataGridPro /> - Pagination', () => {
 
   it('should log an error if rowCount is used with client-side pagination', () => {
     expect(() => {
-      render(<DataGridPro rows={[]} columns={[]} paginationMode="client" rowCount={100} />);
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro rows={[]} columns={[]} paginationMode="client" rowCount={100} />
+        </div>,
+      );
     }).toErrorDev([
       'MUI X: Usage of the `rowCount` prop with client side pagination (`paginationMode="client"`) has no effect. `rowCount` is only meant to be used with `paginationMode="server"`.',
     ]);
