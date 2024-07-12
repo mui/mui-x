@@ -1,11 +1,11 @@
 import * as React from 'react';
+import { EventManager } from '@mui/x-internals/EventManager';
 import { Store } from '../../utils/Store';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
 import { GridSignature } from '../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridCoreApi } from '../../models';
 import type { GridApiCommon, GridPrivateApiCommon } from '../../models/api/gridApiCommon';
-import { EventManager } from '../../utils/EventManager';
 
 const SYMBOL_API_PRIVATE = Symbol('mui.api_private');
 

@@ -1345,6 +1345,9 @@ importers:
       '@mui/utils':
         specifier: ^5.16.0
         version: 5.16.0(@types/react@18.3.3)(react@18.3.1)
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
       '@types/react-transition-group':
         specifier: ^4.4.10
         version: 4.4.10
@@ -1398,6 +1401,9 @@ importers:
       '@mui/utils':
         specifier: ^5.16.0
         version: 5.16.0(@types/react@18.3.3)(react@18.3.1)
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
       '@mui/x-license':
         specifier: workspace:*
         version: link:../x-license/build

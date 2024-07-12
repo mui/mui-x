@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { EventManager, EventListenerOptions } from '@mui/x-internals/EventManager';
 import { GridEventPublisher, GridEventListener, GridEvents } from '../events';
 import { Store } from '../../utils/Store';
-import { EventManager, EventListenerOptions } from '../../utils/EventManager';
 import { GridApiCaches } from '../gridApiCaches';
 import type { GridApiCommon, GridPrivateApiCommon } from './gridApiCommon';
 import type { DataGridProcessedProps } from '../props/DataGridProps';

@@ -47,6 +47,7 @@
     "@mui/base": "^5.0.0-beta.40",
     "@mui/system": "^5.16.0",
     "@mui/utils": "^5.16.0",
+    "@mui/x-internals": "workspace:*",
     "@types/react-transition-group": "^4.4.10",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
