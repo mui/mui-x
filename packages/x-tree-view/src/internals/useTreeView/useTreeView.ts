@@ -1,6 +1,6 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import { EventHandlers } from '@mui/base/utils';
+import { EventHandlers } from '@mui/utils';
 import {
   TreeViewAnyPluginSignature,
   TreeViewInstance,

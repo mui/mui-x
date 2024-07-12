@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import Grow from '@mui/material/Grow';
 import Fade from '@mui/material/Fade';
 import MuiPaper, { PaperProps as MuiPaperProps } from '@mui/material/Paper';
@@ -40,7 +41,7 @@ export interface PickersPopperSlots {
   desktopTransition?: React.JSXElementConstructor<MuiTransitionProps>;
   /**
    * Custom component for trapping the focus inside the views on desktop.
-   * @default FocusTrap from '@mui/base'.
+   * @default TrapFocus from '@mui/material'.
    */
   desktopTrapFocus?: React.JSXElementConstructor<MuiTrapFocusProps>;
   /**
