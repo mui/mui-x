@@ -61,3 +61,12 @@ The following demo demonstrates it by synchronizing the first tree view with the
 You can create a custom Tree Item component to render a drag handle icon and only trigger the reordering when dragging from it:
 
 {{"demo": "OnlyReorderFromDragHandle.js"}}
+
+## Common examples
+
+### File explorer
+
+The example below is an improved version of the [File Explorer](/x/react-tree-view/rich-tree-view/customization/#file-explorer) example with drag & drop re-ordering.
+You can re-order items but only inside folders (or inside the trash).
+
+{{"demo": "FileExplorer.js"}}
