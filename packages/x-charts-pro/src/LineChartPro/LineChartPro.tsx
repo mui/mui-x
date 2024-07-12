@@ -1,9 +1,11 @@
 import * as React from 'react';
 import {
   AreaPlot,
+  AreaPlotProps,
   LineChartProps,
   LineHighlightPlot,
   LinePlot,
+  LinePlotProps,
   MarkPlot,
 } from '@mui/x-charts/LineChart';
 import { ChartsOnAxisClickHandler } from '@mui/x-charts/ChartsOnAxisClickHandler';
@@ -56,8 +58,8 @@ const LineChartPro = React.forwardRef(function LineChartPro(props: LineChartProP
       {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
       {props.grid && <ChartsGrid {...gridProps} />}
       <g {...clipPathGroupProps}>
-        <AreaPlot {...areaPlotProps} />
-        <LinePlot {...linePlotProps} />
+        <AreaPlotZoom {...areaPlotProps} />
+        <LinePlotZoom {...linePlotProps} />
         <ChartsOverlay {...overlayProps} />
       </g>
       <ChartsAxis {...chartsAxisProps} />
@@ -76,6 +78,16 @@ const LineChartPro = React.forwardRef(function LineChartPro(props: LineChartProP
 function MarkPlotZoom(props: MarkPlotProps) {
   const { isInteracting } = useZoom();
   return <MarkPlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
+}
+
+function LinePlotZoom(props: LinePlotProps) {
+  const { isInteracting } = useZoom();
+  return <LinePlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
+}
+
+function AreaPlotZoom(props: AreaPlotProps) {
+  const { isInteracting } = useZoom();
+  return <AreaPlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
 }
 
 export { LineChartPro };

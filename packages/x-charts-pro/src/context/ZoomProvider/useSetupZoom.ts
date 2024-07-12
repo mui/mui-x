@@ -64,12 +64,13 @@ const isPointOutside = (
 };
 
 export const useSetupZoom = () => {
-  const { zoomData, setZoomData, isZoomEnabled, options } = useZoom();
+  const { zoomData, setZoomData, isZoomEnabled, options, setIsInteracting } = useZoom();
   const area = useDrawingArea();
 
   const svgRef = useSvgRef();
   const eventCacheRef = React.useRef<PointerEvent[]>([]);
   const eventPrevDiff = React.useRef<number>(0);
+  const interactionTimeoutRef = React.useRef<number | undefined>(undefined);
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -89,6 +90,13 @@ export const useSetupZoom = () => {
       }
 
       event.preventDefault();
+      if (interactionTimeoutRef.current) {
+        clearTimeout(interactionTimeoutRef.current);
+      }
+      setIsInteracting(true);
+      interactionTimeoutRef.current = window.setTimeout(() => {
+        setIsInteracting(false);
+      }, 166);
 
       const newZoomData = zoomData.map((zoom) => {
         const option = options[zoom.axisId];
@@ -112,6 +120,7 @@ export const useSetupZoom = () => {
 
     function pointerDownHandler(event: PointerEvent) {
       eventCacheRef.current.push(event);
+      setIsInteracting(true);
     }
 
     function pointerMoveHandler(event: PointerEvent) {
@@ -176,6 +185,10 @@ export const useSetupZoom = () => {
       if (eventCacheRef.current.length < 2) {
         eventPrevDiff.current = 0;
       }
+
+      if (event.type === 'pointerup' || event.type === 'pointercancel') {
+        setIsInteracting(false);
+      }
     }
 
     element.addEventListener('wheel', wheelHandler);
@@ -201,7 +214,7 @@ export const useSetupZoom = () => {
       element.removeEventListener('touchstart', preventDefault);
       element.removeEventListener('touchmove', preventDefault);
     };
-  }, [svgRef, setZoomData, zoomData, area, isZoomEnabled, options]);
+  }, [svgRef, setZoomData, zoomData, area, isZoomEnabled, options, setIsInteracting]);
 };
 
 /**
