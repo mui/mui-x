@@ -1,5 +1,4 @@
 import { scaleBand, scalePoint, scaleTime } from 'd3-scale';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../../constants';
 import { AxisConfig, ScaleName } from '../../models';
 import {
   ChartsXAxisProps,
@@ -7,6 +6,7 @@ import {
   ChartsYAxisProps,
   isBandScaleConfig,
   isPointScaleConfig,
+  AxisId,
 } from '../../models/axis';
 import { CartesianChartSeriesType, ExtremumGetter } from '../../models/seriesType/config';
 import { DefaultizedAxisConfig } from './CartesianContext';
@@ -17,6 +17,7 @@ import { DrawingArea } from '../DrawingProvider';
 import { FormattedSeries } from '../SeriesContextProvider';
 import { MakeOptional } from '../../models/helpers';
 import { getAxisExtremum } from './getAxisExtremum';
+import { defaultizeAxis } from './defaultizeAxis';
 
 const getRange = (drawingArea: DrawingArea, axisName: 'x' | 'y', isReverse?: boolean) => {
   const range =
@@ -59,7 +60,7 @@ export function computeValue(
   axis: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[] | undefined,
   extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
   axisName: 'y',
-  zoomRange?: [number, number],
+  zoomData?: { axisId: AxisId; start: number; end: number }[],
 ): {
   axis: DefaultizedAxisConfig<ChartsYAxisProps>;
   axisIds: string[];
@@ -70,7 +71,7 @@ export function computeValue(
   inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[] | undefined,
   extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
   axisName: 'x',
-  zoomRange?: [number, number],
+  zoomData?: { axisId: AxisId; start: number; end: number }[],
 ): {
   axis: DefaultizedAxisConfig<ChartsAxisProps>;
   axisIds: string[];
@@ -81,17 +82,9 @@ export function computeValue(
   inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsAxisProps>, 'id'>[] | undefined,
   extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
   axisName: 'x' | 'y',
-  zoomRange: [number, number] = [0, 100],
+  zoomData?: { axisId: AxisId; start: number; end: number }[],
 ) {
-  const DEFAULT_AXIS_KEY = axisName === 'x' ? DEFAULT_X_AXIS_KEY : DEFAULT_Y_AXIS_KEY;
-
-  const allAxis: AxisConfig<ScaleName, any, ChartsAxisProps>[] = [
-    ...(inAxis?.map((axis, index) => ({ id: `defaultized-${axisName}-axis-${index}`, ...axis })) ??
-      []),
-    ...(inAxis === undefined || inAxis.findIndex(({ id }) => id === DEFAULT_AXIS_KEY) === -1
-      ? [{ id: DEFAULT_AXIS_KEY, scaleType: 'linear' as const }]
-      : []),
-  ];
+  const allAxis = defaultizeAxis(inAxis, axisName);
 
   const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((axis, axisIndex) => {
@@ -103,6 +96,8 @@ export function computeValue(
       formattedSeries,
     );
 
+    const zoom = zoomData?.find(({ axisId }) => axisId === axis.id);
+    const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
     const range = getRange(drawingArea, axisName, axis.reverse);
 
     if (isBandScaleConfig(axis)) {

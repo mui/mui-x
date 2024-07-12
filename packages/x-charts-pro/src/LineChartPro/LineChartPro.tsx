@@ -20,12 +20,7 @@ import { ResponsiveChartContainerPro } from '../ResponsiveChartContainerPro';
 import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
 import { useZoom } from '../context/ZoomProvider/useZoom';
 
-export interface LineChartProProps extends LineChartProps {
-  /**
-   * If `true`, the chart will be zoomable.
-   */
-  zoom?: boolean;
-}
+export interface LineChartProProps extends LineChartProps {}
 
 /**
  * Demos:
@@ -38,7 +33,6 @@ export interface LineChartProProps extends LineChartProps {
  * - [LineChart API](https://mui.com/x/api/charts/line-chart/)
  */
 const LineChartPro = React.forwardRef(function LineChartPro(props: LineChartProProps, ref) {
-  const { zoom, ...restProps } = props;
   const {
     chartContainerProps,
     axisClickHandlerProps,
@@ -55,7 +49,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(props: LineChartProP
     legendProps,
     tooltipProps,
     children,
-  } = useLineChartProps(restProps);
+  } = useLineChartProps(props);
 
   return (
     <ResponsiveChartContainerPro ref={ref} {...chartContainerProps}>
@@ -73,7 +67,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(props: LineChartProP
       <ChartsLegend {...legendProps} />
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       <ChartsClipPath {...clipPathProps} />
-      {zoom && <ZoomSetup />}
+      <ZoomSetup />
       {children}
     </ResponsiveChartContainerPro>
   );

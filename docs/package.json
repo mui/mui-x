@@ -28,7 +28,7 @@
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.5",
     "@mui/base": "^5.0.0-beta.40",
-    "@mui/docs": "^6.0.0-alpha.14",
+    "@mui/docs": "6.0.0-alpha.14",
     "@mui/icons-material": "^5.16.0",
     "@mui/joy": "^5.0.0-beta.47",
     "@mui/lab": "^5.0.0-alpha.171",

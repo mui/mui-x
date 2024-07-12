@@ -76,7 +76,6 @@ const updateItemsState = ({
     };
 
     itemMap[id] = item;
-
     const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
     if (!itemOrderedChildrenIds[parentIdWithDefault]) {
       itemOrderedChildrenIds[parentIdWithDefault] = [];
