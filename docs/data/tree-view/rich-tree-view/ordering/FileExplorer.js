@@ -243,7 +243,6 @@ export default function FileExplorer() {
       items={ITEMS}
       apiRef={apiRef}
       defaultExpandedItems={['1', '1.1']}
-      defaultSelectedItems="1.1"
       sx={{ height: 'fit-content', flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
       slots={{ item: CustomTreeItem }}
       experimentalFeatures={{ indentationAtItemLevel: true }}
