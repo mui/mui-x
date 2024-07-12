@@ -8,20 +8,23 @@ import {
   isPointScaleConfig,
   AxisId,
 } from '../../models/axis';
-import { CartesianChartSeriesType, ExtremumGetter } from '../../models/seriesType/config';
+import {
+  CartesianChartSeriesType,
+  DatasetType,
+  ExtremumGetter,
+} from '../../models/seriesType/config';
 import { DefaultizedAxisConfig } from './CartesianContext';
 import { getColorScale, getOrdinalColorScale } from '../../internals/colorScale';
 import { getTickNumber } from '../../hooks/useTicks';
 import { getScale } from '../../internals/getScale';
 import { DrawingArea } from '../DrawingProvider';
 import { FormattedSeries } from '../SeriesContextProvider';
-import { MakeOptional } from '../../models/helpers';
 import { getAxisExtremum } from './getAxisExtremum';
-import { defaultizeAxis } from './defaultizeAxis';
+import { normalizeAxis } from './normalizeAxis';
 
-const getRange = (drawingArea: DrawingArea, axisName: 'x' | 'y', isReverse?: boolean) => {
+const getRange = (drawingArea: DrawingArea, axisDirection: 'x' | 'y', isReverse?: boolean) => {
   const range =
-    axisName === 'x'
+    axisDirection === 'x'
       ? [drawingArea.left, drawingArea.left + drawingArea.width]
       : [drawingArea.top + drawingArea.height, drawingArea.top];
 
@@ -54,37 +57,48 @@ function createDateFormatter(
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 const DEFAULT_BAR_GAP_RATIO = 0.1;
 
-export function computeValue(
-  drawingArea: DrawingArea,
-  formattedSeries: FormattedSeries,
-  axis: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[] | undefined,
-  extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
-  axisName: 'y',
-  zoomData?: { axisId: AxisId; start: number; end: number }[],
-): {
+export function computeValue(options: {
+  drawingArea: DrawingArea;
+  formattedSeries: FormattedSeries;
+  axis: AxisConfig<ScaleName, any, ChartsYAxisProps>[] | undefined;
+  extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> };
+  axisDirection: 'y';
+  dataset: DatasetType | undefined;
+  zoomData?: { axisId: AxisId; start: number; end: number }[];
+}): {
   axis: DefaultizedAxisConfig<ChartsYAxisProps>;
   axisIds: string[];
 };
-export function computeValue(
-  drawingArea: DrawingArea,
-  formattedSeries: FormattedSeries,
-  inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[] | undefined,
-  extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
-  axisName: 'x',
-  zoomData?: { axisId: AxisId; start: number; end: number }[],
-): {
+export function computeValue(options: {
+  drawingArea: DrawingArea;
+  formattedSeries: FormattedSeries;
+  axis: AxisConfig<ScaleName, any, ChartsXAxisProps>[] | undefined;
+  extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> };
+  axisDirection: 'x';
+  dataset: DatasetType | undefined;
+  zoomData?: { axisId: AxisId; start: number; end: number }[];
+}): {
   axis: DefaultizedAxisConfig<ChartsAxisProps>;
   axisIds: string[];
 };
-export function computeValue(
-  drawingArea: DrawingArea,
-  formattedSeries: FormattedSeries,
-  inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsAxisProps>, 'id'>[] | undefined,
-  extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> },
-  axisName: 'x' | 'y',
-  zoomData?: { axisId: AxisId; start: number; end: number }[],
-) {
-  const allAxis = defaultizeAxis(inAxis, axisName);
+export function computeValue({
+  drawingArea,
+  formattedSeries,
+  axis: inAxis,
+  extremumGetters,
+  dataset,
+  axisDirection,
+  zoomData,
+}: {
+  drawingArea: DrawingArea;
+  formattedSeries: FormattedSeries;
+  axis: AxisConfig<ScaleName, any, ChartsAxisProps>[] | undefined;
+  extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> };
+  axisDirection: 'x' | 'y';
+  dataset: DatasetType | undefined;
+  zoomData?: { axisId: AxisId; start: number; end: number }[];
+}) {
+  const allAxis = normalizeAxis(inAxis, dataset, axisDirection);
 
   const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((axis, axisIndex) => {
@@ -98,13 +112,13 @@ export function computeValue(
 
     const zoom = zoomData?.find(({ axisId }) => axisId === axis.id);
     const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
-    const range = getRange(drawingArea, axisName, axis.reverse);
+    const range = getRange(drawingArea, axisDirection, axis.reverse);
 
     if (isBandScaleConfig(axis)) {
       const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
       const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
       // Reverse range because ordinal scales are presented from top to bottom on y-axis
-      const scaleRange = axisName === 'x' ? range : [range[1], range[0]];
+      const scaleRange = axisDirection === 'x' ? range : [range[1], range[0]];
       const zoomedRange = zoomedScaleRange(scaleRange, zoomRange);
 
       completeAxis[axis.id] = {
@@ -128,7 +142,7 @@ export function computeValue(
       }
     }
     if (isPointScaleConfig(axis)) {
-      const scaleRange = axisName === 'x' ? range : [...range].reverse();
+      const scaleRange = axisDirection === 'x' ? range : [...range].reverse();
       const zoomedRange = zoomedScaleRange(scaleRange, zoomRange);
 
       completeAxis[axis.id] = {

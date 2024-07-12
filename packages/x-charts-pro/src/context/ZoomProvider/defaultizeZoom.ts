@@ -1,4 +1,4 @@
-import { MakeRequired, isDefined } from '@mui/x-charts/internals';
+import { isDefined } from '@mui/x-charts/internals';
 import { AxisConfigForZoom, DefaultizedZoomOptions } from './Zoom.types';
 
 const defaultZoomOptions = {
@@ -11,7 +11,7 @@ const defaultZoomOptions = {
 };
 
 export const defaultizeZoom = (
-  axis: MakeRequired<AxisConfigForZoom, 'id'>[] | undefined,
+  axis: AxisConfigForZoom[] | undefined,
   axisDirection: 'x' | 'y',
 ): DefaultizedZoomOptions[] => {
   if (!axis) {

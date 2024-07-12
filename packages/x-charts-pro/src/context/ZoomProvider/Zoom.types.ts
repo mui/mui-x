@@ -74,6 +74,6 @@ export type DefaultizedZoomOptions = Required<ZoomOptions> & {
 };
 
 export type AxisConfigForZoom = {
-  id?: AxisId;
+  id: AxisId;
   zoom?: ZoomOptions | boolean;
 };
