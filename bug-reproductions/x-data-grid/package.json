@@ -2,7 +2,7 @@
   "dependencies": {
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
-    "@mui/icons-material": "latest",
+    "@mui/icons-material": "https://pkg.csb.dev/mui/material-ui/commit/29a6c7f1/@mui/icons-material",
     "@mui/material": "latest",
     "@mui/x-data-grid-generator": "latest",
     "@mui/x-data-grid": "latest",

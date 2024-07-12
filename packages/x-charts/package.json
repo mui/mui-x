@@ -40,8 +40,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.24.7",
-    "@mui/system": "^5.16.0",
-    "@mui/utils": "^5.16.0",
+    "@mui/system": "https://pkg.csb.dev/mui/material-ui/commit/29a6c7f1/@mui/system",
+    "@mui/utils": "https://pkg.csb.dev/mui/material-ui/commit/29a6c7f1/@mui/utils",
     "@react-spring/rafz": "^9.7.3",
     "@react-spring/web": "^9.7.3",
     "clsx": "^2.1.1",
@@ -55,7 +55,7 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.14",
+    "@mui/material": "https://pkg.csb.dev/mui/material-ui/commit/29a6c7f1/@mui/material",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },
