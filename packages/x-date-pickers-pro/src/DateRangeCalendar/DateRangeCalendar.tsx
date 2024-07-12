@@ -136,11 +136,10 @@ function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
   });
 
   const [start, end] = value;
-  let maxDateNew = themeProps.maxDate ?? defaultDates.maxDate;
-  let minDateNew = themeProps.minDate ?? defaultDates.minDate;
+  let overriddenMaxDate = themeProps.maxDate ?? defaultDates.maxDate;
 
   if(start) {
-    maxDateNew = findLastEnabledDate({
+    overriddenMaxDate = findLastEnabledDate({
       start,
       maxDate: themeProps.maxDate || defaultDates.maxDate,
       isDateDisabled,
@@ -158,8 +157,8 @@ function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
     disableFuture: props.disableFuture ?? false,
     openTo: themeProps.openTo ?? 'day',
     views: themeProps.views ?? ['day'],
-    minDate: minDateNew ?? applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: maxDateNew ?? applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
+    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: overriddenMaxDate ?? applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     calendars: themeProps.calendars ?? 2,
     disableDragEditing: themeProps.disableDragEditing ?? false,
     availableRangePositions: themeProps.availableRangePositions ?? ['start', 'end'],
