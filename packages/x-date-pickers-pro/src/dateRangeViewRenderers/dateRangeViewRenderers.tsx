@@ -23,7 +23,7 @@ export const renderDateRangeViewCalendar = <TDate extends PickerValidDate>({
   classes,
   disableFuture,
   disablePast,
-  disableNonContigousRanges,
+  disableNonContiguousRanges,
   minDate,
   maxDate,
   shouldDisableDate,
@@ -64,7 +64,7 @@ export const renderDateRangeViewCalendar = <TDate extends PickerValidDate>({
     classes={classes}
     disableFuture={disableFuture}
     disablePast={disablePast}
-    disableNonContigousRanges={disableNonContigousRanges}
+    disableNonContiguousRanges={disableNonContiguousRanges}
     minDate={minDate}
     maxDate={maxDate}
     shouldDisableDate={shouldDisableDate}
