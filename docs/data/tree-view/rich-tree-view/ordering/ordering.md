@@ -66,7 +66,7 @@ You can create a custom Tree Item component to render a drag handle icon and onl
 
 ### File explorer
 
-The example below is an improved version of the [File Explorer](/x/react-tree-view/rich-tree-view/customization/#file-explorer) example with drag & drop re-ordering.
+The example below is a simplified version of the [File Explorer](/x/react-tree-view/rich-tree-view/customization/#file-explorer) example with drag & drop re-ordering.
 You can re-order items but only inside folders (or inside the trash).
 
 {{"demo": "FileExplorer.js"}}
