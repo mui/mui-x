@@ -1,6 +1,7 @@
 import {
   BaseDateValidationProps,
   BaseTimeValidationProps,
+  DateRangeValidationProps,
   DateTimeValidationProps,
   DayValidationProps,
   MonthValidationProps,
@@ -13,6 +14,7 @@ export const DATE_VALIDATION_PROP_NAMES: (
   | keyof YearValidationProps<any>
   | keyof MonthValidationProps<any>
   | keyof DayValidationProps<any>
+  | keyof DateRangeValidationProps
 )[] = [
   'disablePast',
   'disableFuture',
@@ -21,6 +23,7 @@ export const DATE_VALIDATION_PROP_NAMES: (
   'shouldDisableDate',
   'shouldDisableMonth',
   'shouldDisableYear',
+  'disableNonContigousRanges'
 ];
 
 export const TIME_VALIDATION_PROP_NAMES: (

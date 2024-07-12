@@ -5,8 +5,8 @@ import {
 } from '@mui/x-date-pickers/models';
 
 type RangeValidation<ItemError extends string | null> = [
-  ItemError | 'invalidRange',
-  ItemError | 'invalidRange',
+  ItemError | 'invalidRange' | 'nonContigousRanges',
+  ItemError | 'invalidRange' | 'nonContigousRanges',
 ];
 
 export type DateRangeValidationError = RangeValidation<DateValidationError>;

@@ -12,7 +12,9 @@ import { DateRangeValidationError, DateRange } from '../../../models';
 export interface DateRangeComponentValidationProps<TDate extends PickerValidDate>
   extends DayRangeValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>>,
-    DefaultizedProps<TimezoneProps, 'timezone'> {}
+    DefaultizedProps<TimezoneProps, 'timezone'> {
+      disableNonContigousRanges?: boolean;
+    }
 
 export const validateDateRange: Validator<
   DateRange<any>,
@@ -22,7 +24,17 @@ export const validateDateRange: Validator<
 > = ({ props, value, adapter }) => {
   const [start, end] = value;
 
-  const { shouldDisableDate, ...otherProps } = props;
+  const { shouldDisableDate, disableNonContigousRanges, ...otherProps } = props;
+  if(!!start && !!end && disableNonContigousRanges && shouldDisableDate) {
+    let current = start;
+
+    while (current.isBefore(adapter.utils.addDays(end, 1))) {
+      if(shouldDisableDate(current, 'start')) {
+        return ['nonContigousRanges', 'nonContigousRanges'];
+      }
+      current = adapter.utils.addDays(current, 1);
+    }
+  };
 
   const dateValidations: DateRangeValidationError = [
     validateDate({
