@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils';
 import useSlotProps from '@mui/utils/useSlotProps';
 import Grow from '@mui/material/Grow';
 import Fade from '@mui/material/Fade';
@@ -12,6 +11,7 @@ import BaseFocusTrap, {
   TrapFocusProps as MuiTrapFocusProps,
 } from '@mui/material/Unstable_TrapFocus';
 import {
+  SlotComponentProps,
   unstable_useForkRef as useForkRef,
   unstable_useEventCallback as useEventCallback,
   unstable_ownerDocument as ownerDocument,
