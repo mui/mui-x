@@ -55,7 +55,8 @@
   "name": "ChartsXAxis",
   "imports": [
     "import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';",
-    "import { ChartsXAxis } from '@mui/x-charts';"
+    "import { ChartsXAxis } from '@mui/x-charts';",
+    "import { ChartsXAxis } from '@mui/x-charts-pro';"
   ],
   "classes": [
     {
