@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { createPickerRenderer } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
 
-describe('<DateRangePicker /> - Describes', () => {
+describe('<DateTimePicker /> - Describes', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
 
-  describeConformance(<DateRangePicker />, () => ({
+  describeConformance(<DateTimePicker />, () => ({
     classes: {} as any,
     render,
-    muiName: 'MuiDateRangePicker',
+    muiName: 'MuiDateTimePicker',
     refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',

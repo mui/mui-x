@@ -1,24 +1,24 @@
 import * as React from 'react';
 import { createPickerRenderer, describeValidation, describePicker } from 'test/utils/pickers';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
 
-describe('<StaticDatePicker /> - Describes', () => {
+describe('<StaticDateTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describePicker(StaticDatePicker, { render, fieldType: 'single-input', variant: 'static' });
+  describePicker(StaticDateTimePicker, { render, fieldType: 'single-input', variant: 'static' });
 
-  describeValidation(StaticDatePicker, () => ({
+  describeValidation(StaticDateTimePicker, () => ({
     render,
     clock,
-    views: ['year', 'month', 'day'],
+    views: ['year', 'month', 'day', 'hours', 'minutes'],
     componentFamily: 'static-picker',
   }));
 
-  describeConformance(<StaticDatePicker />, () => ({
+  describeConformance(<StaticDateTimePicker />, () => ({
     classes: {} as any,
     render,
-    muiName: 'MuiStaticDatePicker',
+    muiName: 'MuiStaticDateTimePicker',
     refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',
