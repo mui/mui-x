@@ -94,6 +94,8 @@ export const useSetupZoom = () => {
         clearTimeout(interactionTimeoutRef.current);
       }
       setIsInteracting(true);
+      // Debounce transition to `isInteractive=false`. 
+      // Useful because wheel events don't have an "end" event.
       interactionTimeoutRef.current = window.setTimeout(() => {
         setIsInteracting(false);
       }, 166);
