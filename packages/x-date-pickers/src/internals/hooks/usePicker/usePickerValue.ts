@@ -269,29 +269,36 @@ export const usePickerValue = <
       hasBeenModifiedSinceMount: true,
     }));
 
-    if (shouldPublish) {
-      const validationError =
-        action.name === 'setValueFromField'
-          ? action.context.validationError
-          : validator({
-              adapter,
-              value: action.value,
-              props: { ...props, value: action.value, timezone },
-            });
+    let cachedContext: PickerChangeHandlerContext<TError> | null = null;
+    const getContext = (): PickerChangeHandlerContext<TError> => {
+      if (!cachedContext) {
+        const validationError =
+          action.name === 'setValueFromField'
+            ? action.context.validationError
+            : validator({
+                adapter,
+                value: action.value,
+                props: { ...props, value: action.value, timezone },
+              });
 
-      const context: PickerChangeHandlerContext<TError> = {
-        validationError,
-      };
+        cachedContext = {
+          validationError,
+        };
 
-      if (action.name === 'setValueFromShortcut') {
-        context.shortcut = action.shortcut;
+        if (action.name === 'setValueFromShortcut') {
+          cachedContext.shortcut = action.shortcut;
+        }
       }
 
-      handleValueChange(action.value, context);
+      return cachedContext;
+    };
+
+    if (shouldPublish) {
+      handleValueChange(action.value, getContext());
     }
 
     if (shouldCommit && onAccept) {
-      onAccept(action.value);
+      onAccept(action.value, getContext());
     }
 
     if (shouldClose) {

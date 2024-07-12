@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useForkRef from '@mui/utils/useForkRef';
 import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
 import {
   SeriesContextProvider,
@@ -8,12 +7,11 @@ import {
 } from '../context/SeriesContextProvider';
 import { InteractionProvider } from '../context/InteractionProvider';
 import { ColorProvider } from '../context/ColorProvider';
-import { useReducedMotion } from '../hooks/useReducedMotion';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import {
   CartesianContextProvider,
   CartesianContextProviderProps,
-} from '../context/CartesianContextProvider';
+} from '../context/CartesianProvider';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import {
   HighlightedProvider,
@@ -23,7 +21,7 @@ import {
 } from '../context';
 import { ChartsPluginType } from '../models/plugin';
 import { ChartSeriesType } from '../models/seriesType/config';
-import { usePluginsMerge } from './usePluginsMerge';
+import { useChartContainerProps } from './useChartContainerProps';
 
 export type ChartContainerProps = Omit<
   ChartsSurfaceProps &
@@ -44,62 +42,25 @@ export type ChartContainerProps = Omit<
 
 const ChartContainer = React.forwardRef(function ChartContainer(props: ChartContainerProps, ref) {
   const {
-    width,
-    height,
-    series,
-    margin,
-    xAxis,
-    yAxis,
-    zAxis,
-    colors,
-    dataset,
-    sx,
-    title,
-    desc,
-    disableAxisListener,
-    highlightedItem,
-    onHighlightChange,
-    plugins,
     children,
-  } = props;
-  const svgRef = React.useRef<SVGSVGElement>(null);
-  const handleRef = useForkRef(ref, svgRef);
-
-  const { xExtremumGetters, yExtremumGetters, seriesFormatters, colorProcessors } =
-    usePluginsMerge(plugins);
-  useReducedMotion(); // a11y reduce motion (see: https://react-spring.dev/docs/utilities/use-reduced-motion)
+    drawingProviderProps,
+    colorProviderProps,
+    seriesContextProps,
+    cartesianContextProps,
+    zAxisContextProps,
+    highlightedProviderProps,
+    chartsSurfaceProps,
+  } = useChartContainerProps(props, ref);
 
   return (
-    <DrawingProvider width={width} height={height} margin={margin} svgRef={svgRef}>
-      <ColorProvider colorProcessors={colorProcessors}>
-        <SeriesContextProvider
-          series={series}
-          colors={colors}
-          dataset={dataset}
-          seriesFormatters={seriesFormatters}
-        >
-          <CartesianContextProvider
-            xAxis={xAxis}
-            yAxis={yAxis}
-            dataset={dataset}
-            xExtremumGetters={xExtremumGetters}
-            yExtremumGetters={yExtremumGetters}
-          >
-            <ZAxisContextProvider zAxis={zAxis} dataset={dataset}>
+    <DrawingProvider {...drawingProviderProps}>
+      <ColorProvider {...colorProviderProps}>
+        <SeriesContextProvider {...seriesContextProps}>
+          <CartesianContextProvider {...cartesianContextProps}>
+            <ZAxisContextProvider {...zAxisContextProps}>
               <InteractionProvider>
-                <HighlightedProvider
-                  highlightedItem={highlightedItem}
-                  onHighlightChange={onHighlightChange}
-                >
-                  <ChartsSurface
-                    width={width}
-                    height={height}
-                    ref={handleRef}
-                    sx={sx}
-                    title={title}
-                    desc={desc}
-                    disableAxisListener={disableAxisListener}
-                  >
+                <HighlightedProvider {...highlightedProviderProps}>
+                  <ChartsSurface {...chartsSurfaceProps}>
                     <ChartsAxesGradients />
                     {children}
                   </ChartsSurface>
@@ -369,6 +330,8 @@ ChartContainer.propTypes = {
       data: PropTypes.array,
       dataKey: PropTypes.string,
       id: PropTypes.string,
+      max: PropTypes.number,
+      min: PropTypes.number,
     }),
   ),
 } as any;

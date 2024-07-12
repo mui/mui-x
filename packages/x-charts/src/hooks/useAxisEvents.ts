@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { InteractionContext } from '../context/InteractionProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { isBandScale } from '../internals/isBandScale';
 import { AxisDefaultized } from '../models/axis';
-import { getSVGPoint } from '../internals/utils';
+import { getSVGPoint } from '../internals/getSVGPoint';
 import { useSvgRef } from './useSvgRef';
 import { useDrawingArea } from './useDrawingArea';
 
@@ -13,7 +13,7 @@ function getAsANumber(value: number | Date) {
 export const useAxisEvents = (disableAxisListener: boolean) => {
   const svgRef = useSvgRef();
   const { left, top, width, height } = useDrawingArea();
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = React.useContext(CartesianContext);
+  const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
   const { dispatch } = React.useContext(InteractionContext);
 
   const usedXAxis = xAxisIds[0];
@@ -31,10 +31,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       return () => {};
     }
 
-    const getUpdate = (axisConfig: AxisDefaultized, mouseValue: number) => {
-      if (usedXAxis === null) {
-        return null;
-      }
+    function getNewAxisState(axisConfig: AxisDefaultized, mouseValue: number) {
       const { scale, data: axisData, reverse } = axisConfig;
 
       if (!isBandScale(scale)) {
@@ -93,7 +90,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
         index: dataIndex,
         value: axisData![dataIndex],
       };
-    };
+    }
 
     const handleOut = () => {
       mousePosition.current = {
@@ -105,7 +102,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
 
     const handleMove = (event: MouseEvent | TouchEvent) => {
       const target = 'targetTouches' in event ? event.targetTouches[0] : event;
-      const svgPoint = getSVGPoint(svgRef.current!, target);
+      const svgPoint = getSVGPoint(element, target);
 
       mousePosition.current = {
         x: svgPoint.x,
@@ -118,21 +115,34 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
         dispatch({ type: 'exitChart' });
         return;
       }
-      const newStateX = getUpdate(xAxis[usedXAxis], svgPoint.x);
-      const newStateY = getUpdate(yAxis[usedYAxis], svgPoint.y);
+      const newStateX = getNewAxisState(xAxis[usedXAxis], svgPoint.x);
+      const newStateY = getNewAxisState(yAxis[usedYAxis], svgPoint.y);
 
       dispatch({ type: 'updateAxis', data: { x: newStateX, y: newStateY } });
     };
 
-    element.addEventListener('mouseout', handleOut);
-    element.addEventListener('mousemove', handleMove);
-    element.addEventListener('touchend', handleOut);
-    element.addEventListener('touchmove', handleMove);
+    const handleDown = (event: PointerEvent) => {
+      const target = event.currentTarget;
+      if (!target) {
+        return;
+      }
+
+      if ((target as HTMLElement).hasPointerCapture(event.pointerId)) {
+        (target as HTMLElement).releasePointerCapture(event.pointerId);
+      }
+    };
+
+    element.addEventListener('pointerdown', handleDown);
+    element.addEventListener('pointermove', handleMove);
+    element.addEventListener('pointerout', handleOut);
+    element.addEventListener('pointercancel', handleOut);
+    element.addEventListener('pointerleave', handleOut);
     return () => {
-      element.removeEventListener('mouseout', handleOut);
-      element.removeEventListener('mousemove', handleMove);
-      element.removeEventListener('touchend', handleOut);
-      element.removeEventListener('touchmove', handleMove);
+      element.removeEventListener('pointerdown', handleDown);
+      element.removeEventListener('pointermove', handleMove);
+      element.removeEventListener('pointerout', handleOut);
+      element.removeEventListener('pointercancel', handleOut);
+      element.removeEventListener('pointerleave', handleOut);
     };
   }, [
     svgRef,

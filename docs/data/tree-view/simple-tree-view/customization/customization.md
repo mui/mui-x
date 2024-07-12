@@ -70,19 +70,6 @@ Target the `treeItemClasses.groupTransition` class to add connection borders bet
 
 {{"demo": "BorderedTreeView.js", "defaultCodeOpen": false}}
 
-### Limit expansion to icon container
-
-:::warning
-This example is built using the new `TreeItem2` component
-which adds several slots to modify the content of the Tree Item or change its behavior.
-
-You can learn more about this new component in the [Overview page](/x/react-tree-view/#tree-item-components).
-:::
-
-The demo below shows how to trigger the expansion interaction just by clicking on the icon container instead of the whole Tree Item surface.
-
-{{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
-
 ### Gmail clone
 
 :::warning

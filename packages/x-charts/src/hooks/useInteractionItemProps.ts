@@ -11,7 +11,12 @@ export const useInteractionItemProps = (skip?: boolean) => {
     return () => ({});
   }
   const getInteractionItemProps = (data: SeriesItemIdentifier) => {
-    const onMouseEnter = () => {
+    const onPointerDown = (event: React.PointerEvent) => {
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+    };
+    const onPointerEnter = () => {
       dispatchInteraction({
         type: 'enterItem',
         data,
@@ -21,13 +26,15 @@ export const useInteractionItemProps = (skip?: boolean) => {
         dataIndex: data.dataIndex,
       });
     };
-    const onMouseLeave = () => {
+    const onPointerLeave = (event: React.PointerEvent) => {
+      event.currentTarget.releasePointerCapture(event.pointerId);
       dispatchInteraction({ type: 'leaveItem', data });
       clearHighlighted();
     };
     return {
-      onMouseEnter,
-      onMouseLeave,
+      onPointerEnter,
+      onPointerLeave,
+      onPointerDown,
     };
   };
   return getInteractionItemProps;
