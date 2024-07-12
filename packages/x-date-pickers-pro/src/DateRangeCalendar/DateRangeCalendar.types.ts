@@ -18,6 +18,8 @@ import {
   PickersArrowSwitcherSlotProps,
   DayCalendarProps,
   ExportedUseViewsOptions,
+  MonthValidationProps,
+  YearValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { DayRangeValidationProps } from '../internals/models/dateRange';
 import { DateRange, RangePosition } from '../models';
@@ -106,6 +108,9 @@ export interface ExportedDateRangeCalendarProps<TDate extends PickerValidDate>
 export interface DateRangeCalendarProps<TDate extends PickerValidDate>
   extends ExportedDateRangeCalendarProps<TDate>,
     UseRangePositionProps,
+    DayRangeValidationProps<TDate>,
+    MonthValidationProps<TDate>,
+    YearValidationProps<TDate>,
     ExportedUseViewsOptions<'day'> {
   /**
    * The selected value.
@@ -117,6 +122,11 @@ export interface DateRangeCalendarProps<TDate extends PickerValidDate>
    * Used when the component is not controlled.
    */
   defaultValue?: DateRange<TDate>;
+  /**
+   * If `true`, doesn't allow the selection of ranges containing disabled dates.
+   * @default false
+   */
+  disableNonContigousRanges?: boolean,
   /**
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.

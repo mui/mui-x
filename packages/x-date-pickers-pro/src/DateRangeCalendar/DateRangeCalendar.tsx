@@ -25,6 +25,8 @@ import {
   warnOnce,
   useControlledValueWithTimezone,
   useViews,
+  mergeDateAndTime,
+  findClosestEnabledDate,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
@@ -54,6 +56,8 @@ import {
   PickersRangeCalendarHeader,
   PickersRangeCalendarHeaderProps,
 } from '../PickersRangeCalendarHeader';
+import { useIsDateDisabled } from '@mui/x-date-pickers/DateCalendar/useIsDateDisabled';
+import { findFirstEnabledDate, findLastEnabledDate } from '@mui/x-date-pickers/internals/utils/date-utils';
 
 const releaseInfo = getReleaseInfo();
 
@@ -104,6 +108,15 @@ function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
   props: DateRangeCalendarProps<TDate>,
   name: string,
 ): DateRangeCalendarDefaultizedProps<TDate> {
+  const {
+    shouldDisableDate,
+    shouldDisableMonth,
+    shouldDisableYear,
+    disablePast,
+    disableFuture,
+    timezone,
+    value
+  } = props;
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const defaultReduceAnimations = useDefaultReduceAnimations();
@@ -111,6 +124,29 @@ function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
     props,
     name,
   });
+  const isDateDisabled = useIsDateDisabled({
+    shouldDisableDate,
+    shouldDisableMonth,
+    shouldDisableYear,
+    minDate: themeProps.minDate || defaultDates.minDate,
+    maxDate: themeProps.maxDate || defaultDates.maxDate,
+    disablePast,
+    disableFuture,
+    timezone,
+  });
+
+  const [start, end] = value;
+  let maxDateNew = themeProps.maxDate ?? defaultDates.maxDate;
+  let minDateNew = themeProps.minDate ?? defaultDates.minDate;
+
+  if(start) {
+    maxDateNew = findLastEnabledDate({
+      start,
+      maxDate: themeProps.maxDate || defaultDates.maxDate,
+      isDateDisabled,
+      utils,
+    });
+  }
 
   return {
     ...themeProps,
@@ -122,8 +158,8 @@ function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
     disableFuture: props.disableFuture ?? false,
     openTo: themeProps.openTo ?? 'day',
     views: themeProps.views ?? ['day'],
-    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    minDate: minDateNew ?? applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: maxDateNew ?? applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     calendars: themeProps.calendars ?? 2,
     disableDragEditing: themeProps.disableDragEditing ?? false,
     availableRangePositions: themeProps.availableRangePositions ?? ['start', 'end'],
