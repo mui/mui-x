@@ -130,6 +130,11 @@ SingleInputDateRangeField.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
+   * If `true`, doesn't allow the selection of ranges containing disabled dates.
+   * @default false
+   */
+  disableNonContigousRanges: PropTypes.bool,
+  /**
    * @default false
    */
   enableAccessibleFieldDOMStructure: PropTypes.bool,
