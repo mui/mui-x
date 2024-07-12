@@ -9,7 +9,7 @@ import {
   describeValue,
   formatFullTimeValue,
 } from 'test/utils/pickers';
-import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
+import { DigitalClock, digitalClockClasses as classes } from '@mui/x-date-pickers/DigitalClock';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DigitalClock /> - Describes', () => {
@@ -24,20 +24,12 @@ describe('<DigitalClock /> - Describes', () => {
   }));
 
   describeConformance(<DigitalClock />, () => ({
-    classes: {} as any,
+    classes,
+    inheritComponent: 'div',
     render,
     muiName: 'MuiDigitalClock',
     refInstanceof: window.HTMLDivElement,
-    skip: [
-      'componentProp',
-      'componentsProp',
-      'themeDefaultProps',
-      'themeStyleOverrides',
-      'themeVariants',
-      'mergeClassName',
-      'propsSpread',
-      'rootClass',
-    ],
+    skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
   describeValue(DigitalClock, () => ({

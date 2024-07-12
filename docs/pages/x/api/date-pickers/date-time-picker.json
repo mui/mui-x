@@ -404,9 +404,10 @@
     }
   ],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
+  "spread": false,
+  "themeDefaultProps": false,
   "muiName": "MuiDateTimePicker",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>",

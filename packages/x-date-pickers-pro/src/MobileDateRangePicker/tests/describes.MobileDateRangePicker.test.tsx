@@ -42,7 +42,6 @@ describe('<MobileDateRangePicker /> - Describes', () => {
       'themeVariants',
       'mergeClassName',
       'propsSpread',
-      'rootClass',
     ],
   }));
 

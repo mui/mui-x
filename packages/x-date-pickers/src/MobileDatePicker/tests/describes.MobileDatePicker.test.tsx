@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { screen, userEvent, fireEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
@@ -10,6 +11,7 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MobileDatePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -21,6 +23,22 @@ describe('<MobileDatePicker /> - Describes', () => {
     clock,
     views: ['year', 'month', 'day'],
     componentFamily: 'picker',
+  }));
+
+  describeConformance(<MobileDatePicker />, () => ({
+    classes: {} as any,
+    render,
+    muiName: 'MuiMobileDatePicker',
+    refInstanceof: window.HTMLDivElement,
+    skip: [
+      'componentProp',
+      'componentsProp',
+      'themeDefaultProps',
+      'themeStyleOverrides',
+      'themeVariants',
+      'mergeClassName',
+      'propsSpread',
+    ],
   }));
 
   describeValue(MobileDatePicker, () => ({

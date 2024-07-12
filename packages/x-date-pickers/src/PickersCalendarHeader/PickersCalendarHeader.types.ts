@@ -43,7 +43,7 @@ export interface PickersCalendarHeaderSlotProps<TDate extends PickerValidDate>
   switchViewIcon?: SlotComponentProps<
     typeof SvgIcon,
     PickersCalendarHeaderSlotPropsOverrides,
-    undefined
+    PickersCalendarHeaderOwnerState<TDate>
   >;
 }
 

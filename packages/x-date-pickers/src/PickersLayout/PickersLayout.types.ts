@@ -117,10 +117,6 @@ export interface PickersLayoutProps<
    */
   sx?: SxProps<Theme>;
   /**
-   * Ref to pass to the root element
-   */
-  ref?: React.Ref<HTMLDivElement>;
-  /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<PickersLayoutClasses>;

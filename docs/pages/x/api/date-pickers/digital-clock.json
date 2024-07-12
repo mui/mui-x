@@ -108,8 +108,8 @@
       "isGlobal": false
     }
   ],
-  "spread": false,
-  "themeDefaultProps": false,
+  "spread": true,
+  "themeDefaultProps": true,
   "muiName": "MuiDigitalClock",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DigitalClock/DigitalClock.tsx",

@@ -120,8 +120,8 @@
       "isGlobal": false
     }
   ],
-  "spread": false,
-  "themeDefaultProps": false,
+  "spread": true,
+  "themeDefaultProps": true,
   "muiName": "MuiMultiSectionDigitalClock",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MultiSectionDigitalClock/MultiSectionDigitalClock.tsx",

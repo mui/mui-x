@@ -86,11 +86,11 @@ export interface PickersArrowSwitcherSlotProps {
   leftArrowIcon?: SlotComponentProps<
     typeof SvgIcon,
     PickersArrowSwitcherSlotPropsOverrides,
-    undefined
+    PickersArrowSwitcherButtonSlotOwnerState
   >;
   rightArrowIcon?: SlotComponentProps<
     typeof SvgIcon,
     PickersArrowSwitcherSlotPropsOverrides,
-    undefined
+    PickersArrowSwitcherButtonSlotOwnerState
   >;
 }

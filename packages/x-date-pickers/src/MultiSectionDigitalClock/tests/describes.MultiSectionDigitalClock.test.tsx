@@ -8,7 +8,10 @@ import {
   describeValidation,
   describeValue,
 } from 'test/utils/pickers';
-import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
+import {
+  MultiSectionDigitalClock,
+  multiSectionDigitalClockClasses as classes,
+} from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { formatMeridiem } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
@@ -24,20 +27,12 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
   }));
 
   describeConformance(<MultiSectionDigitalClock />, () => ({
-    classes: {} as any,
+    classes,
+    inheritComponent: 'div',
     render,
     muiName: 'MuiMultiSectionDigitalClock',
     refInstanceof: window.HTMLDivElement,
-    skip: [
-      'componentProp',
-      'componentsProp',
-      'themeDefaultProps',
-      'themeStyleOverrides',
-      'themeVariants',
-      'mergeClassName',
-      'propsSpread',
-      'rootClass',
-    ],
+    skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
   describeValue(MultiSectionDigitalClock, () => ({
