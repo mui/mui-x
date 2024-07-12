@@ -2,8 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, useThemeProps, SxProps, Theme } from '@mui/material/styles';
-import { Popper, PopperProps as BasePopperProps } from '@mui/material/Popper';
-import { NoSsr } from '@mui/material/NoSsr';
+import Popper, { PopperProps as BasePopperProps } from '@mui/material/Popper';
+import NoSsr from '@mui/material/NoSsr';
 import useSlotProps from '@mui/utils/useSlotProps';
 import {
   AxisInteractionData,

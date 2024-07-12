@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { NoSsr } from '@mui/material/NoSsr';
+import NoSsr from '@mui/material/NoSsr';
 import { useTheme, styled } from '@mui/material/styles';
 import { DrawingArea } from '../context/DrawingProvider';
 import { AnchorPosition, Direction } from './utils';
