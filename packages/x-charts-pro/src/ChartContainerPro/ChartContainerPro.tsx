@@ -33,6 +33,8 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
     zAxisContextProps,
     highlightedProviderProps,
     chartsSurfaceProps,
+    xAxis,
+    yAxis,
   } = useChartContainerProps(props, ref);
 
   useLicenseVerifier('x-charts-pro', releaseInfo);
@@ -41,7 +43,7 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
     <DrawingProvider {...drawingProviderProps}>
       <ColorProvider {...colorProviderProps}>
         <SeriesContextProvider {...seriesContextProps}>
-          <ZoomProvider xAxis={props.xAxis} yAxis={props.yAxis}>
+          <ZoomProvider xAxis={xAxis} yAxis={yAxis}>
             <CartesianContextProviderPro {...cartesianContextProps}>
               <ZAxisContextProvider {...zAxisContextProps}>
                 <InteractionProvider>
