@@ -25,7 +25,7 @@ describe('<MobileDateRangePicker />', () => {
           slots={{ field: SingleInputDateRangeField }}
         />,
       );
-      expect(screen.getByRole<HTMLInputElement>('textbox').name).to.equal('test');
+      expect(screen.getByRole<HTMLInputElement>('textbox', { hidden: true }).name).to.equal('test');
 
       v7Response.unmount();
 
