@@ -47,7 +47,13 @@ export default function FeatureHighlight() {
       </Stack>
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
         {featuredItems.map(({ title, description, icon }, index) => (
-          <InfoCard title={title} description={description} icon={icon} key={index} />
+          <InfoCard
+            title={title}
+            description={description}
+            icon={icon}
+            key={index}
+            backgroundColor="subtle"
+          />
         ))}
       </Stack>
     </Stack>

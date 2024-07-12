@@ -6,10 +6,11 @@ import Paper from '@mui/material/Paper';
 
 type InfoCardProps = {
   title: string;
-  description?: string;
+  description?: string | string[];
   icon?: React.ReactNode;
   onClick?: () => void;
   active?: boolean;
+  backgroundColor?: 'gradient' | 'subtle';
 };
 export default function InfoCard({
   title,
@@ -17,6 +18,7 @@ export default function InfoCard({
   icon: Icon,
   onClick,
   active,
+  backgroundColor = 'gradient',
 }: InfoCardProps) {
   const clickable = Boolean(onClick);
 
@@ -29,7 +31,11 @@ export default function InfoCard({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        background: `${(theme.vars || theme).palette.gradients.linearSubtle}`,
+        flexGrow: 1,
+        background:
+          backgroundColor === 'gradient'
+            ? `${(theme.vars || theme).palette.gradients.linearSubtle}`
+            : 'transparent',
         ...(clickable && {
           cursor: 'pointer',
           '&:hover': {
@@ -76,11 +82,18 @@ export default function InfoCard({
           {title}
         </Typography>
       </Stack>
-      {description && (
+      {description && typeof description === 'string' && (
         <Typography color="text.secondary" variant="body2">
           {description}
         </Typography>
       )}
+      {description &&
+        typeof description === 'object' &&
+        description.map((item) => (
+          <Typography color="text.secondary" variant="body2">
+            {item}
+          </Typography>
+        ))}
     </Paper>
   );
 }

@@ -277,6 +277,7 @@ export default function Internationalization() {
               key={index}
               active={activeItem === index}
               onClick={() => setActiveItem(index)}
+              backgroundColor="subtle"
             />
           ))}
         </Stack>
