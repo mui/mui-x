@@ -455,7 +455,7 @@ export default function Keyboard() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Divider />
-      <Stack direction="row" spacing={6} py={4}>
+      <Stack direction={{ md: 'row', xs: 'column' }} alignItems={'center'} spacing={6} py={4}>
         <SectionHeadline
           overline="Accessibility"
           title={

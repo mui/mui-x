@@ -14,6 +14,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 {{"component": "modules/components/overview/MainDemo.tsx"}}
 
 {{"component": "modules/components/overview/FeatureHighlight.tsx"}}
+{{"component": "modules/components/overview/DateLibraries.tsx"}}
 {{"component": "modules/components/overview/Keyboard.tsx"}}
 {{"component": "modules/components/overview/Internationalization.tsx"}}
 
