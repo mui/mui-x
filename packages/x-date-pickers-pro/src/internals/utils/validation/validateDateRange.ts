@@ -13,7 +13,7 @@ export interface DateRangeComponentValidationProps<TDate extends PickerValidDate
   extends DayRangeValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>>,
     DefaultizedProps<TimezoneProps, 'timezone'> {
-      disableNonContigousRanges?: boolean;
+      disableNonContiguousRanges?: boolean;
     }
 
 export const validateDateRange: Validator<
@@ -24,13 +24,13 @@ export const validateDateRange: Validator<
 > = ({ props, value, adapter }) => {
   const [start, end] = value;
 
-  const { shouldDisableDate, disableNonContigousRanges, ...otherProps } = props;
-  if(!!start && !!end && disableNonContigousRanges && shouldDisableDate) {
+  const { shouldDisableDate, disableNonContiguousRanges, ...otherProps } = props;
+  if(!!start && !!end && disableNonContiguousRanges && shouldDisableDate) {
     let current = start;
 
     while (current.isBefore(adapter.utils.addDays(end, 1))) {
       if(shouldDisableDate(current, 'start')) {
-        return ['nonContigousRanges', 'nonContigousRanges'];
+        return ['nonContiguousRanges', 'nonContiguousRanges'];
       }
       current = adapter.utils.addDays(current, 1);
     }

@@ -23,7 +23,7 @@ export const DATE_VALIDATION_PROP_NAMES: (
   'shouldDisableDate',
   'shouldDisableMonth',
   'shouldDisableYear',
-  'disableNonContigousRanges'
+  'disableNonContiguousRanges'
 ];
 
 export const TIME_VALIDATION_PROP_NAMES: (
