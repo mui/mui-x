@@ -107,6 +107,9 @@ commands:
               echo "pnpm install --no-frozen-lockfile"
               pnpm install --no-frozen-lockfile
             fi
+      - run:
+          name: Build charts vendor
+          command: node ./packages/x-charts-vendor/scripts/build.js
       - when:
           condition: << parameters.browsers >>
           steps:
