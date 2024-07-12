@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridEventListener, GridEvents } from '../../models/events';
 import { UnregisterToken, CleanupTracking } from '../../utils/cleanupTracking/CleanupTracking';
-import { EventListenerOptions } from '../../utils/EventManager';
+import { EventListenerOptions } from '@mui/x-internals/EventManager';
 import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
 import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
 import type { GridApiCommon } from '../../models';
