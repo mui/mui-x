@@ -91,7 +91,7 @@
     "@mui/material": "^5.16.0",
     "@mui/monorepo": "github:mui/material-ui#43cb32700af699cd48baaf6922fbe21343f30e2f",
     "@mui/utils": "^5.16.0",
-    "@next/eslint-plugin-next": "14.2.4",
+    "@next/eslint-plugin-next": "14.2.5",
     "@octokit/plugin-retry": "^7.1.1",
     "@octokit/rest": "^21.0.0",
     "@playwright/test": "^1.44.1",
