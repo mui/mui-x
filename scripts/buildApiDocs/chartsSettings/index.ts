@@ -75,6 +75,9 @@ export default apiPages;
   propsSettings: {
     // propsWithoutDefaultVerification: [],
   },
+  sortingStrategies: {
+    slotsSort: (a, b) => a.name.localeCompare(b.name),
+  },
   generateClassName: generateUtilityClass,
   isGlobalClassName: isGlobalState,
 };
