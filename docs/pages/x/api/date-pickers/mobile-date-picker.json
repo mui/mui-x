@@ -188,9 +188,9 @@
   ],
   "slots": [
     {
-      "name": "toolbar",
-      "description": "Custom component for the toolbar rendered above the views.",
-      "default": "DatePickerToolbar",
+      "name": "actionBar",
+      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "default": "PickersActionBar",
       "class": null
     },
     {
@@ -200,69 +200,9 @@
       "class": null
     },
     {
-      "name": "switchViewButton",
-      "description": "Button displayed to switch between different calendar views.",
-      "default": "IconButton",
-      "class": null
-    },
-    {
-      "name": "switchViewIcon",
-      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is \"year\".",
-      "default": "ArrowDropDown",
-      "class": null
-    },
-    {
-      "name": "previousIconButton",
-      "description": "Button allowing to switch to the left view.",
-      "default": "IconButton",
-      "class": null
-    },
-    {
-      "name": "nextIconButton",
-      "description": "Button allowing to switch to the right view.",
-      "default": "IconButton",
-      "class": null
-    },
-    {
-      "name": "leftArrowIcon",
-      "description": "Icon displayed in the left view switch button.",
-      "default": "ArrowLeft",
-      "class": null
-    },
-    {
-      "name": "rightArrowIcon",
-      "description": "Icon displayed in the right view switch button.",
-      "default": "ArrowRight",
-      "class": null
-    },
-    {
       "name": "day",
       "description": "Custom component for day.\nCheck the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.",
       "default": "PickersDay",
-      "class": null
-    },
-    {
-      "name": "monthButton",
-      "description": "Button displayed to render a single month in the \"month\" view.",
-      "default": "MonthCalendarButton",
-      "class": null
-    },
-    {
-      "name": "yearButton",
-      "description": "Button displayed to render a single year in the \"year\" view.",
-      "default": "YearCalendarButton",
-      "class": null
-    },
-    {
-      "name": "actionBar",
-      "description": "Custom component for the action bar, it is placed below the picker views.",
-      "default": "PickersActionBar",
-      "class": null
-    },
-    {
-      "name": "shortcuts",
-      "description": "Custom component for the shortcuts.",
-      "default": "PickersShortcuts",
       "class": null
     },
     {
@@ -272,14 +212,19 @@
       "class": null
     },
     {
-      "name": "textField",
-      "description": "Form control with an input to render the value inside the default field.",
-      "default": "TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.",
+      "name": "field",
+      "description": "Component used to enter the date with the keyboard.",
       "class": null
     },
     {
       "name": "layout",
       "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+      "class": null
+    },
+    {
+      "name": "leftArrowIcon",
+      "description": "Icon displayed in the left view switch button.",
+      "default": "ArrowLeft",
       "class": null
     },
     {
@@ -295,8 +240,63 @@
       "class": null
     },
     {
-      "name": "field",
-      "description": "Component used to enter the date with the keyboard.",
+      "name": "monthButton",
+      "description": "Button displayed to render a single month in the \"month\" view.",
+      "default": "MonthCalendarButton",
+      "class": null
+    },
+    {
+      "name": "nextIconButton",
+      "description": "Button allowing to switch to the right view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "previousIconButton",
+      "description": "Button allowing to switch to the left view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "rightArrowIcon",
+      "description": "Icon displayed in the right view switch button.",
+      "default": "ArrowRight",
+      "class": null
+    },
+    {
+      "name": "shortcuts",
+      "description": "Custom component for the shortcuts.",
+      "default": "PickersShortcuts",
+      "class": null
+    },
+    {
+      "name": "switchViewButton",
+      "description": "Button displayed to switch between different calendar views.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "switchViewIcon",
+      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is \"year\".",
+      "default": "ArrowDropDown",
+      "class": null
+    },
+    {
+      "name": "textField",
+      "description": "Form control with an input to render the value inside the default field.",
+      "default": "TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.",
+      "class": null
+    },
+    {
+      "name": "toolbar",
+      "description": "Custom component for the toolbar rendered above the views.",
+      "default": "DatePickerToolbar",
+      "class": null
+    },
+    {
+      "name": "yearButton",
+      "description": "Button displayed to render a single year in the \"year\" view.",
+      "default": "YearCalendarButton",
       "class": null
     }
   ],
