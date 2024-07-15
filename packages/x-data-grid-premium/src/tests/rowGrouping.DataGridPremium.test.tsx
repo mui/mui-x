@@ -14,6 +14,7 @@ import {
   getColumnValues,
   getCell,
   getSelectByName,
+  getRow,
 } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import {
@@ -2759,6 +2760,27 @@ describe('<DataGridPremium /> - Row grouping', () => {
       expect(apiRef.current.getRowGroupChildren({ groupId, applyFiltering: true })).to.deep.equal([
         2,
       ]);
+    });
+  });
+
+  describe('accessibility', () => {
+    it('should add necessary treegrid aria attributes to the rows', () => {
+      render(
+        <Test
+          initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
+          defaultGroupingExpansionDepth={-1}
+          rowGroupingColumnMode="multiple"
+        />,
+      );
+
+      expect(getRow(0).getAttribute('aria-level')).to.equal('1'); // Cat A
+      expect(getRow(1).getAttribute('aria-level')).to.equal('2'); // Cat 1
+      expect(getRow(1).getAttribute('aria-posinset')).to.equal('1');
+      expect(getRow(1).getAttribute('aria-setsize')).to.equal('2'); // Cat A has Cat 1 & Cat 2
+      expect(getRow(2).getAttribute('aria-level')).to.equal('3'); // Cat 1 row
+      expect(getRow(3).getAttribute('aria-posinset')).to.equal('2'); // Cat 2
+      expect(getRow(4).getAttribute('aria-posinset')).to.equal('1'); // Cat 2 row
+      expect(getRow(4).getAttribute('aria-setsize')).to.equal('2'); // Cat 2 has 2 rows
     });
   });
 
