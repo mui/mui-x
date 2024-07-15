@@ -2,9 +2,9 @@ import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { useRtl } from '@mui/system/RtlProvider';
-import { styled, useThemeProps } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
@@ -25,6 +25,8 @@ import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithT
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { formatMeridiem } from '../internals/utils/date-utils';
+
+const useThemeProps = createUseThemeProps('MuiMultiSectionDigitalClock');
 
 const useUtilityClasses = (ownerState: MultiSectionDigitalClockProps<any>) => {
   const { classes } = ownerState;

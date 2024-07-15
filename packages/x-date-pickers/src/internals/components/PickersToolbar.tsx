@@ -1,11 +1,13 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
-import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { styled, createUseThemeProps } from '../zero-styled';
 import { BaseToolbarProps } from '../models/props/toolbar';
 import { getPickersToolbarUtilityClass, PickersToolbarClasses } from './pickersToolbarClasses';
 import { DateOrTimeViewWithMeridiem } from '../models';
+
+const useThemeProps = createUseThemeProps('MuiPickersToolbar');
 
 export interface PickersToolbarProps<TValue, TView extends DateOrTimeViewWithMeridiem>
   extends Pick<BaseToolbarProps<TValue, TView>, 'isLandscape' | 'hidden' | 'titleId'> {

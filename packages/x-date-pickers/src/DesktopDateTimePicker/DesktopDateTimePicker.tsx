@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
 import Divider from '@mui/material/Divider';
+import { createUseThemeProps } from '../internals/zero-styled';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
 import { DesktopDateTimePickerProps } from './DesktopDateTimePicker.types';
@@ -41,6 +42,8 @@ import { DefaultizedProps } from '../internals/models/helpers';
 import { UsePickerViewsProps } from '../internals/hooks/usePicker/usePickerViews';
 import { isInternalTimeView } from '../internals/utils/time-utils';
 import { isDatePickerView } from '../internals/utils/date-utils';
+
+const useThemeProps = createUseThemeProps('MuiDesktopDateTimePicker');
 
 const rendererInterceptor = function rendererInterceptor<
   TDate extends PickerValidDate,
@@ -137,12 +140,14 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   const translations = usePickersTranslations<TDate>();
   const utils = useUtils<TDate>();
 
+  const themeProps = useThemeProps({ props: inProps, name: 'MuiDesktopDateTimePicker' });
+
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateTimePickerDefaultizedProps<
     TDate,
     DateOrTimeViewWithMeridiem,
     DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiDesktopDateTimePicker');
+  >(themeProps);
 
   const {
     shouldRenderTimeInASingleColumn,

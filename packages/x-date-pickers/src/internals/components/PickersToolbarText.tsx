@@ -1,13 +1,15 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import Typography, { TypographyProps } from '@mui/material/Typography';
-import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { styled, createUseThemeProps } from '../zero-styled';
 import {
   getPickersToolbarTextUtilityClass,
   pickersToolbarTextClasses,
   PickersToolbarTextClasses,
 } from './pickersToolbarTextClasses';
+
+const useThemeProps = createUseThemeProps('MuiPickersToolbarText');
 
 export interface ExportedPickersToolbarTextProps
   extends Omit<TypographyProps, 'classes' | 'variant' | 'align'> {

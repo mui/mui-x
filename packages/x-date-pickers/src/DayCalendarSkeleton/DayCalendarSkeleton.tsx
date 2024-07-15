@@ -2,14 +2,17 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Skeleton from '@mui/material/Skeleton';
-import { styled, useThemeProps, Theme } from '@mui/material/styles';
+import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 import {
   DayCalendarSkeletonClasses,
   getDayCalendarSkeletonUtilityClass,
 } from './dayCalendarSkeletonClasses';
+
+const useThemeProps = createUseThemeProps('MuiDayCalendarSkeleton');
 
 type HTMLDivProps = React.JSX.IntrinsicElements['div'];
 

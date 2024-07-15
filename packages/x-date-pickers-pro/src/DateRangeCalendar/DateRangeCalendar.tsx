@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
-import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
 import { Watermark } from '@mui/x-license';
@@ -26,6 +25,7 @@ import {
   useViews,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import {
   dateRangeCalendarClasses,
@@ -53,6 +53,8 @@ import {
   PickersRangeCalendarHeader,
   PickersRangeCalendarHeaderProps,
 } from '../PickersRangeCalendarHeader';
+
+const useThemeProps = createUseThemeProps('MuiDateRangeCalendar');
 
 const releaseInfo = getReleaseInfo();
 
@@ -106,14 +108,14 @@ const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
 
 function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
   props: DateRangeCalendarProps<TDate>,
-  name: string,
 ): DateRangeCalendarDefaultizedProps<TDate> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const defaultReduceAnimations = useDefaultReduceAnimations();
   const themeProps = useThemeProps({
     props,
-    name,
+    // eslint-disable-next-line material-ui/mui-name-matches-component-name
+    name: 'MuiDateRangeCalendar',
   });
 
   return {
@@ -162,7 +164,7 @@ type DateRangeCalendarComponent = (<TDate extends PickerValidDate>(
 const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
   TDate extends PickerValidDate,
 >(inProps: DateRangeCalendarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
-  const props = useDateRangeCalendarDefaultizedProps(inProps, 'MuiDateRangeCalendar');
+  const props = useDateRangeCalendarDefaultizedProps(inProps);
   const shouldHavePreview = useMediaQuery(DEFAULT_DESKTOP_MODE_MEDIA_QUERY, {
     defaultMatches: false,
   });

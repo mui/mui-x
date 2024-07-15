@@ -25,6 +25,7 @@ import {
   multiSectionDigitalClockSectionClasses,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
+import { createUseThemeProps } from '../internals/zero-styled';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileDateTimeRangePickerProps } from './MobileDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
@@ -42,6 +43,8 @@ import {
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
+
+const useThemeProps = createUseThemeProps('MuiMobileDateTimeRangePicker');
 
 const rendererInterceptor = function rendererInterceptor<
   TDate extends PickerValidDate,
@@ -149,12 +152,14 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
   inProps: MobileDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const themeProps = useThemeProps({ props: inProps, name: 'MuiMobileDateTimeRangePicker' });
   const utils = useUtils<TDate>();
+
   // Props with the default values common to all date time range pickers
   const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
     TDate,
     MobileDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiMobileDateTimeRangePicker');
+  >(themeProps);
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView

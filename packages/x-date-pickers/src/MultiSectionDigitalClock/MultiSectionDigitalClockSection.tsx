@@ -1,10 +1,11 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import useForkRef from '@mui/utils/useForkRef';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   MultiSectionDigitalClockSectionClasses,
   getMultiSectionDigitalClockSectionUtilityClass,
@@ -18,6 +19,8 @@ import {
   DIGITAL_CLOCK_VIEW_HEIGHT,
   MULTI_SECTION_CLOCK_SECTION_WIDTH,
 } from '../internals/constants/dimensions';
+
+const useThemeProps = createUseThemeProps('MuiMultiSectionDigitalClockSection');
 
 export interface ExportedMultiSectionDigitalClockSectionProps {
   className?: string;

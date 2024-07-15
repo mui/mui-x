@@ -1,15 +1,18 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled, useTheme, useThemeProps } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { CSSTransitionProps } from 'react-transition-group/CSSTransition';
 import { TransitionGroupProps } from 'react-transition-group/TransitionGroup';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   getPickersSlideTransitionUtilityClass,
   pickersSlideTransitionClasses,
   PickersSlideTransitionClasses,
 } from './pickersSlideTransitionClasses';
+
+const useThemeProps = createUseThemeProps('MuiPickersSlideTransition');
 
 export type SlideDirection = 'right' | 'left';
 export interface ExportedSlideTransitionProps {

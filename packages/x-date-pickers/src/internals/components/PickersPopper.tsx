@@ -16,12 +16,14 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_composeClasses as composeClasses,
 } from '@mui/utils';
-import { styled, useThemeProps } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
+import { styled, createUseThemeProps } from '../zero-styled';
 import { getPickersPopperUtilityClass, PickersPopperClasses } from './pickersPopperClasses';
 import { getActiveElement } from '../utils/utils';
 import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue.types';
 import { useDefaultReduceAnimations } from '../hooks/useDefaultReduceAnimations';
+
+const useThemeProps = createUseThemeProps('MuiPickersPopper');
 
 interface PickersPopperOwnerState extends PickerPopperProps {
   placement: PopperPlacementType;

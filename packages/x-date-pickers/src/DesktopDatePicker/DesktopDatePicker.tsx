@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { refType } from '@mui/utils';
+import { createUseThemeProps } from '../internals/zero-styled';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DesktopDatePickerProps } from './DesktopDatePicker.types';
 import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
@@ -15,6 +16,8 @@ import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
+
+const useThemeProps = createUseThemeProps('MuiDesktopDatePicker');
 
 type DesktopDatePickerComponent = (<
   TDate extends PickerValidDate,
@@ -44,11 +47,16 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
   const translations = usePickersTranslations<TDate>();
   const utils = useUtils<TDate>();
 
+  const themeProps = useThemeProps({
+    props: inProps,
+    name: 'MuiDesktopDatePicker',
+  });
+
   // Props with the default values common to all date pickers
   const defaultizedProps = useDatePickerDefaultizedProps<
     TDate,
     DesktopDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiDesktopDatePicker');
+  >(themeProps);
 
   const viewRenderers: DatePickerViewRenderers<TDate, DateView, any> = {
     day: renderDateViewCalendar,

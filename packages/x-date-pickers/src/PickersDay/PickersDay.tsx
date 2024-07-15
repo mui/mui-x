@@ -8,7 +8,8 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_useForkRef as useForkRef,
 } from '@mui/utils';
-import { alpha, styled, useThemeProps, Theme } from '@mui/material/styles';
+import { alpha, Theme } from '@mui/material/styles';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { ExtendMui } from '../internals/models/helpers';
 import { useUtils } from '../internals/hooks/useUtils';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
@@ -19,6 +20,8 @@ import {
   pickersDayClasses,
 } from './pickersDayClasses';
 import { PickerValidDate } from '../models';
+
+const useThemeProps = createUseThemeProps('MuiPickersDay');
 
 export interface ExportedPickersDayProps {
   /**

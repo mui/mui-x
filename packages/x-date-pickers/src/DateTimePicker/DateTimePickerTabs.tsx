@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import Tab from '@mui/material/Tab';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
-import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TimeIcon, DateRangeIcon } from '../icons';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
@@ -15,6 +15,8 @@ import {
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
 import { isDatePickerView } from '../internals/utils/date-utils';
 import { PickerValidDate } from '../models';
+
+const useThemeProps = createUseThemeProps('MuiDateTimePickerTabs');
 
 type TabValue = 'date' | 'time';
 

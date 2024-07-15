@@ -2,10 +2,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Fade from '@mui/material/Fade';
-import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from '../DateCalendar/PickersFadeTransitionGroup';
@@ -24,6 +24,8 @@ import {
   PickersCalendarHeaderProps,
 } from './PickersCalendarHeader.types';
 import { PickerValidDate } from '../models';
+
+const useThemeProps = createUseThemeProps('MuiPickersCalendarHeader');
 
 const useUtilityClasses = (ownerState: PickersCalendarHeaderOwnerState<any>) => {
   const { classes } = ownerState;
