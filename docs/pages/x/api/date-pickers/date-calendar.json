@@ -159,27 +159,9 @@
       "class": null
     },
     {
-      "name": "switchViewButton",
-      "description": "Button displayed to switch between different calendar views.",
-      "default": "IconButton",
-      "class": null
-    },
-    {
-      "name": "switchViewIcon",
-      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is \"year\".",
-      "default": "ArrowDropDown",
-      "class": null
-    },
-    {
-      "name": "previousIconButton",
-      "description": "Button allowing to switch to the left view.",
-      "default": "IconButton",
-      "class": null
-    },
-    {
-      "name": "nextIconButton",
-      "description": "Button allowing to switch to the right view.",
-      "default": "IconButton",
+      "name": "day",
+      "description": "Custom component for day.\nCheck the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.",
+      "default": "PickersDay",
       "class": null
     },
     {
@@ -189,21 +171,39 @@
       "class": null
     },
     {
+      "name": "monthButton",
+      "description": "Button displayed to render a single month in the \"month\" view.",
+      "default": "MonthCalendarButton",
+      "class": null
+    },
+    {
+      "name": "nextIconButton",
+      "description": "Button allowing to switch to the right view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "previousIconButton",
+      "description": "Button allowing to switch to the left view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
       "name": "rightArrowIcon",
       "description": "Icon displayed in the right view switch button.",
       "default": "ArrowRight",
       "class": null
     },
     {
-      "name": "day",
-      "description": "Custom component for day.\nCheck the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.",
-      "default": "PickersDay",
+      "name": "switchViewButton",
+      "description": "Button displayed to switch between different calendar views.",
+      "default": "IconButton",
       "class": null
     },
     {
-      "name": "monthButton",
-      "description": "Button displayed to render a single month in the \"month\" view.",
-      "default": "MonthCalendarButton",
+      "name": "switchViewIcon",
+      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is \"year\".",
+      "default": "ArrowDropDown",
       "class": null
     },
     {
