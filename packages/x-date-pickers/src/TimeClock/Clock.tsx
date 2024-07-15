@@ -47,15 +47,15 @@ export interface ClockProps<TDate extends PickerValidDate>
 }
 
 const useUtilityClasses = (ownerState: ClockProps<any>) => {
-  const { classes } = ownerState;
+  const { classes, meridiemMode } = ownerState;
   const slots = {
     root: ['root'],
     clock: ['clock'],
     wrapper: ['wrapper'],
     squareMask: ['squareMask'],
     pin: ['pin'],
-    amButton: ['amButton'],
-    pmButton: ['pmButton'],
+    amButton: ['amButton', meridiemMode === 'am' && 'selected'],
+    pmButton: ['pmButton', meridiemMode === 'pm' && 'selected'],
     meridiemText: ['meridiemText'],
   };
 
