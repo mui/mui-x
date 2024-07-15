@@ -4,7 +4,6 @@ import type { CartesianContextProviderProps } from '../context/CartesianProvider
 import type { SeriesContextProviderProps } from '../context/SeriesContextProvider';
 import type { ZAxisContextProviderProps } from '../context/ZAxisContextProvider';
 import type { ChartContainerProps } from './ChartContainer';
-
 import { useChartContainerHooks } from './useChartContainerHooks';
 import { HighlightedProviderProps } from '../context';
 import { ChartsSurfaceProps } from '../ChartsSurface';
