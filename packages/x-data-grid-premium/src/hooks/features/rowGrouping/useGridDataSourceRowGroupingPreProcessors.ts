@@ -5,7 +5,6 @@ import {
   useGridRegisterStrategyProcessor,
   createRowTree,
   updateRowTree,
-  RowTreeBuilderGroupingCriterion,
   getVisibleRowsLookup,
   skipSorting,
   skipFiltering,
@@ -94,6 +93,7 @@ export const useGridDataSourceRowGroupingPreProcessors = (
       });
     },
     [
+      apiRef,
       props.unstable_dataSource,
       props.defaultGroupingExpansionDepth,
       props.isGroupExpandedByDefault,

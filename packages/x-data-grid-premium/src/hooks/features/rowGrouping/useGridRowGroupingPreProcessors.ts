@@ -266,5 +266,5 @@ export const useGridRowGroupingPreProcessors = (
     } else {
       isFirstRender.current = false;
     }
-  }, [apiRef, props.disableRowGrouping]);
+  }, [apiRef, props.disableRowGrouping, props.unstable_dataSource]);
 };

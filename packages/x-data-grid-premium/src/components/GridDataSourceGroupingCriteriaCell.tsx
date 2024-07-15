@@ -6,7 +6,6 @@ import Badge from '@mui/material/Badge';
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import {
   useGridSelector,
-  gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
   GridRenderCellParams,
   GridGroupNode,

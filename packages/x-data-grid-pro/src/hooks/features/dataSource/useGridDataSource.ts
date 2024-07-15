@@ -11,8 +11,11 @@ import {
 import { gridRowGroupsToFetchSelector, GridStateInitializer } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { gridGetRowsParamsSelector, gridDataSourceErrorsSelector } from './gridDataSourceSelector';
-import { gridRowGroupingSanitizedModelSelector } from './gridDataSourceSelector';
+import {
+  gridGetRowsParamsSelector,
+  gridDataSourceErrorsSelector,
+  gridRowGroupingSanitizedModelSelector,
+} from './gridDataSourceSelector';
 import { GridDataSourceApi, GridDataSourceApiBase, GridDataSourcePrivateApi } from './interfaces';
 import { runIfServerMode, NestedDataManager, RequestStatus } from './utils';
 import { GridDataSourceCache } from '../../../models';
@@ -289,13 +292,9 @@ export const useGridDataSource = (
   }, [props.unstable_dataSourceCache]);
 
   React.useEffect(() => {
-    const refetchRootRows = () => {
+    if (props.unstable_dataSource) {
       apiRef.current.unstable_dataSource.cache.clear();
       apiRef.current.unstable_dataSource.fetchRows();
-    };
-    if (props.unstable_dataSource) {
-      refetchRootRows();
-      return;
     }
   }, [apiRef, props.unstable_dataSource]);
 
