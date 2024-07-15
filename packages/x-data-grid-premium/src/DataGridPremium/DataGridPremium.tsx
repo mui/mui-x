@@ -15,7 +15,6 @@ import {
   propValidatorsDataGridPro,
   PropValidator,
   validateProps,
-  useGridRowAriaAttributes,
 } from '@mui/x-data-grid-pro/internals';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
 import {
@@ -24,6 +23,7 @@ import {
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
+import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
