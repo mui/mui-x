@@ -144,7 +144,7 @@ export const useMobileRangePicker = <
       selectedSections,
       onSelectedSectionsChange,
       timezone,
-      ...(inputRef ? { inputRef, name } : {}),
+      ...(fieldType === 'single-input' ? { inputRef, name } : {}),
     },
     ownerState: props,
   });
