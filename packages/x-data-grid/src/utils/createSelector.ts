@@ -19,7 +19,7 @@ type StateFromSelector<T> = T extends (first: infer F, ...args: any[]) => any
 
 type StateFromSelectorList<Selectors extends readonly any[]> = Selectors extends [
   f: infer F,
-  ...rest: infer R,
+  ...other: infer R,
 ]
   ? StateFromSelector<F> extends StateFromSelectorList<R>
     ? StateFromSelector<F>
@@ -56,9 +56,9 @@ export const createSelector = ((
   d?: Function,
   e?: Function,
   f?: Function,
-  ...rest: any[]
+  ...other: any[]
 ) => {
-  if (rest.length > 0) {
+  if (other.length > 0) {
     throw new Error('Unsupported number of selectors');
   }
 
