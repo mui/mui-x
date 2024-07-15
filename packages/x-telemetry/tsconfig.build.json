@@ -10,7 +10,6 @@
     "outDir": "build",
     "rootDir": "./src"
   },
-  "references": [{ "path": "../x-telemetry/tsconfig.build.json" }],
-  "include": ["src/**/*.ts*"],
+  "include": ["src/**/*.ts*", "src/compiled/**/*.js*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
 }
