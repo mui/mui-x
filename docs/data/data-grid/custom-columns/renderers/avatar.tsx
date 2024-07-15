@@ -1,3 +1,4 @@
+import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import { GridRenderCellParams } from '@mui/x-data-grid';
 

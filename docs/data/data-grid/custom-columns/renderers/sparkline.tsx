@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 import { GridRenderCellParams } from '@mui/x-data-grid';
 
