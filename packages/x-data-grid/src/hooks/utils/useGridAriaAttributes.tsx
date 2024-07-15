@@ -16,7 +16,11 @@ export const useGridAriaAttributes = () => {
   const pinnedRowsCount = useGridSelector(apiRef, gridPinnedRowsCountSelector);
 
   let role = 'grid';
-  if ((rootProps as any).treeData) {
+  if (
+    (rootProps as any).treeData ||
+    (rootProps as any).rowGroupingModel ||
+    (rootProps as any).initialState?.rowGrouping
+  ) {
     role = 'treegrid';
   }
 
