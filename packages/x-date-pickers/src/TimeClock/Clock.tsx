@@ -157,18 +157,13 @@ const ClockAmButton = styled(IconButton, {
   paddingLeft: 4,
   paddingRight: 4,
   width: CLOCK_HOUR_WIDTH,
-  variants: [
-    {
-      props: { meridiemMode: 'am' },
-      style: {
-        backgroundColor: (theme.vars || theme).palette.primary.main,
-        color: (theme.vars || theme).palette.primary.contrastText,
-        '&:hover': {
-          backgroundColor: (theme.vars || theme).palette.primary.light,
-        },
-      },
+  [`&.${clockClasses.selected}`]: {
+    backgroundColor: (theme.vars || theme).palette.primary.main,
+    color: (theme.vars || theme).palette.primary.contrastText,
+    '&:hover': {
+      backgroundColor: (theme.vars || theme).palette.primary.light,
     },
-  ],
+  },
 }));
 
 const ClockPmButton = styled(IconButton, {
@@ -183,18 +178,13 @@ const ClockPmButton = styled(IconButton, {
   paddingLeft: 4,
   paddingRight: 4,
   width: CLOCK_HOUR_WIDTH,
-  variants: [
-    {
-      props: { meridiemMode: 'pm' },
-      style: {
-        backgroundColor: (theme.vars || theme).palette.primary.main,
-        color: (theme.vars || theme).palette.primary.contrastText,
-        '&:hover': {
-          backgroundColor: (theme.vars || theme).palette.primary.light,
-        },
-      },
+  [`&.${clockClasses.selected}`]: {
+    backgroundColor: (theme.vars || theme).palette.primary.main,
+    color: (theme.vars || theme).palette.primary.contrastText,
+    '&:hover': {
+      backgroundColor: (theme.vars || theme).palette.primary.light,
     },
-  ],
+  },
 }));
 
 const ClockMeridiemText = styled(Typography, {
