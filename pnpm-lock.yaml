@@ -634,8 +634,8 @@ importers:
         specifier: ^7.24.7
         version: 7.24.7(@babel/core@7.24.8)
       '@mui/internal-docs-utils':
-        specifier: ^1.0.7
-        version: 1.0.7
+        specifier: ^1.0.8
+        version: 1.0.8
       '@mui/internal-scripts':
         specifier: ^1.0.12
         version: 1.0.12
@@ -2796,8 +2796,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/internal-docs-utils@1.0.7':
-    resolution: {integrity: sha512-vHplixLKu17U7Wa3RDbGv9C3FmXniJKywyZEIeJaTG4ikvl+iWI+BuZPCNniJwj0HSxu3thbyPIrBXijh7j+Xg==}
+  '@mui/internal-docs-utils@1.0.8':
+    resolution: {integrity: sha512-krfqmki6Fjlv3+RAAdcf8wB0sg6KF7s4RdT1X3iXuouCYDiQw/t7TiCUAiF7augBCRfPTiWh/FI8MTH4TRlGiQ==}
 
   '@mui/internal-markdown@1.0.7':
     resolution: {integrity: sha512-DpCOZ+TQPx3GXnA7PY8qq7yUsjUpFu3SzYSBMvmwF/KPHj7prvudSFjg+0qjwQOI7l7fapyfkn6+S8QbzxEOrg==}
@@ -10961,7 +10961,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.3
 
-  '@mui/internal-docs-utils@1.0.7':
+  '@mui/internal-docs-utils@1.0.8':
     dependencies:
       rimraf: 5.0.8
       typescript: 5.5.3
@@ -10980,7 +10980,7 @@ snapshots:
       '@babel/plugin-syntax-jsx': 7.24.7(@babel/core@7.24.8)
       '@babel/plugin-syntax-typescript': 7.24.7(@babel/core@7.24.8)
       '@babel/types': 7.24.8
-      '@mui/internal-docs-utils': 1.0.7
+      '@mui/internal-docs-utils': 1.0.8
       doctrine: 3.0.0
       lodash: 4.17.21
       typescript: 5.5.3
