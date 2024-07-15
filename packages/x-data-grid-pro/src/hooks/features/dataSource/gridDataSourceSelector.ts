@@ -3,6 +3,7 @@ import {
   gridFilterModelSelector,
   gridSortModelSelector,
   gridPaginationModelSelector,
+  gridColumnLookupSelector,
 } from '@mui/x-data-grid';
 import { createSelector } from '@mui/x-data-grid/internals';
 import { GridStatePro } from '../../../models/gridStatePro';
@@ -13,15 +14,33 @@ const computeStartEnd = (paginationModel: GridPaginationModel) => {
   return { start, end };
 };
 
+type GridStateProWithRowGrouping = GridStatePro & {
+  rowGrouping?: {
+    model: string[];
+  };
+};
+
+const EMPTY_ARRAY: string[] = [];
+
+const gridRowGroupingModelSelector = (state: GridStateProWithRowGrouping) =>
+  state.rowGrouping?.model ?? EMPTY_ARRAY;
+
+export const gridRowGroupingSanitizedModelSelector = createSelector(
+  gridRowGroupingModelSelector,
+  gridColumnLookupSelector,
+  (model, columnsLookup) => model.filter((field) => !!columnsLookup[field]),
+);
+
 export const gridGetRowsParamsSelector = createSelector(
   gridFilterModelSelector,
   gridSortModelSelector,
   gridPaginationModelSelector,
-  (filterModel, sortModel, paginationModel) => {
+  gridRowGroupingModelSelector,
+  gridRowGroupingSanitizedModelSelector,
+  (filterModel, sortModel, paginationModel, rowGroupingModel) => {
     return {
       groupKeys: [],
-      // TODO: Implement with `rowGrouping`
-      groupFields: [],
+      groupFields: rowGroupingModel,
       paginationModel,
       sortModel,
       filterModel,

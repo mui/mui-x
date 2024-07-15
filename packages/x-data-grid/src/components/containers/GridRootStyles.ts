@@ -118,6 +118,9 @@ export const GridRootStyles = styled('div', {
     {
       [`& .${c.treeDataGroupingCellLoadingContainer}`]: styles.treeDataGroupingCellLoadingContainer,
     },
+    {
+      [`& .${c.groupingCriteriaCellLoadingContainer}`]: styles.groupingCriteriaCellLoadingContainer,
+    },
     { [`& .${c.detailPanelToggleCell}`]: styles.detailPanelToggleCell },
     {
       [`& .${c['detailPanelToggleCell--expanded']}`]: styles['detailPanelToggleCell--expanded'],
@@ -626,7 +629,7 @@ export const GridRootStyles = styled('div', {
       alignSelf: 'stretch',
       marginRight: t.spacing(2),
     },
-    [`& .${c.treeDataGroupingCellLoadingContainer}`]: {
+    [`& .${c.treeDataGroupingCellLoadingContainer}, .${c.groupingCriteriaCellLoadingContainer}`]: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',

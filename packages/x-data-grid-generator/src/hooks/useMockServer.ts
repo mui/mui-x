@@ -21,11 +21,13 @@ import { addTreeDataOptionsToDemoData } from '../services/tree-data-generator';
 import {
   loadServerRows,
   processTreeDataRows,
+  processRowGroupingRows,
   DEFAULT_DATASET_OPTIONS,
   DEFAULT_SERVER_OPTIONS,
 } from './serverUtils';
 import type { ServerOptions } from './serverUtils';
 import { randomInt } from '../services';
+import { useMovieData } from './useMovieData';
 
 const dataCache = new LRUCache<string, GridDemoData>({
   max: 10,
@@ -76,14 +78,22 @@ const getInitialState = (columns: GridColDefGenerator[], groupingField?: string)
 
 const defaultColDef = getGridDefaultColumnTypes();
 
+function sendEmptyResponse() {
+  return new Promise<GridGetRowsResponse>((resolve) => {
+    resolve({ rows: [], rowCount: 0 });
+  });
+}
+
 export const useMockServer = (
-  dataSetOptions?: Partial<UseDemoDataOptions>,
+  dataSetOptions?: Partial<UseDemoDataOptions> & Partial<{ rowGrouping?: boolean }>,
   serverOptions?: ServerOptions & { verbose?: boolean },
   shouldRequestsFail?: boolean,
 ): UseMockServerResponse => {
   const [data, setData] = React.useState<GridDemoData>();
   const [index, setIndex] = React.useState(0);
   const shouldRequestsFailRef = React.useRef<boolean>(shouldRequestsFail ?? false);
+
+  const rowGroupingData = useMovieData();
 
   React.useEffect(() => {
     if (shouldRequestsFail !== undefined) {
@@ -117,6 +127,7 @@ export const useMockServer = (
   );
 
   const isTreeData = options.treeData?.groupingField != null;
+  const isRowGrouping = dataSetOptions?.rowGrouping;
 
   const getGroupKey = React.useMemo(() => {
     if (isTreeData) {
@@ -134,6 +145,9 @@ export const useMockServer = (
   }, [isTreeData]);
 
   React.useEffect(() => {
+    if (dataSetOptions?.rowGrouping) {
+      return undefined;
+    }
     const cacheKey = `${options.dataSet}-${options.rowLength}-${index}-${options.maxColumns}`;
 
     // Cache to allow fast switch between the JavaScript and TypeScript version
@@ -189,14 +203,13 @@ export const useMockServer = (
     options.dataSet,
     options.maxColumns,
     index,
+    dataSetOptions?.rowGrouping,
   ]);
 
   const fetchRows = React.useCallback(
     async (requestUrl: string): Promise<GridGetRowsResponse> => {
-      if (!data || !requestUrl) {
-        return new Promise<GridGetRowsResponse>((resolve) => {
-          resolve({ rows: [], rowCount: 0 });
-        });
+      if ((!data && !rowGroupingData.rows && isRowGrouping) || !requestUrl) {
+        sendEmptyResponse();
       }
       const params = decodeParams(requestUrl);
       const verbose = serverOptions?.verbose ?? true;
@@ -224,9 +237,9 @@ export const useMockServer = (
         });
       }
 
-      if (isTreeData /* || TODO: `isRowGrouping` */) {
+      if (isTreeData) {
         const { rows, rootRowCount } = await processTreeDataRows(
-          data.rows,
+          data!.rows,
           params,
           serverOptionsWithDefault,
           columnsWithDefaultColDef,
@@ -236,10 +249,21 @@ export const useMockServer = (
           rows: rows.slice().map((row) => ({ ...row, path: undefined })),
           rowCount: rootRowCount,
         };
+      } else if (isRowGrouping) {
+        const { rows, rootRowCount } = await processRowGroupingRows(
+          rowGroupingData.rows,
+          params,
+          serverOptionsWithDefault,
+          rowGroupingData.columns,
+        );
+
+        getRowsResponse = {
+          rows: rows.slice().map((row) => ({ ...row, path: undefined })),
+          rowCount: rootRowCount,
+        };
       } else {
-        // plain data
         const { returnedRows, nextCursor, totalRowCount } = await loadServerRows(
-          data.rows,
+          data!.rows,
           { ...params, ...params.paginationModel },
           serverOptionsWithDefault,
           columnsWithDefaultColDef,
@@ -256,18 +280,20 @@ export const useMockServer = (
     },
     [
       data,
+      rowGroupingData.rows,
       serverOptions?.verbose,
       serverOptions?.minDelay,
       serverOptions?.maxDelay,
       serverOptions?.useCursorPagination,
       isTreeData,
       columnsWithDefaultColDef,
+      isRowGrouping,
     ],
   );
 
   return {
-    columns: columnsWithDefaultColDef,
-    initialState,
+    columns: isRowGrouping ? rowGroupingData.columns : columnsWithDefaultColDef,
+    initialState: isRowGrouping ? {} : initialState,
     getGroupKey,
     getChildrenCount,
     fetchRows,

@@ -54,4 +54,6 @@ export { sortRowTree } from '../utils/tree/sortRowTree';
 export { insertNodeInTree, removeNodeFromTree, getVisibleRowsLookup } from '../utils/tree/utils';
 export type { RowTreeBuilderGroupingCriterion } from '../utils/tree/models';
 
+export { skipSorting, skipFiltering } from '../hooks/features/serverSideTreeData/utils';
+
 export * from './propValidation';
