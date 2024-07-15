@@ -104,6 +104,7 @@
     },
     {
       "groupName": "@mui/docs",
+      "matchPackageNames": ["@mui/docs"],
       "followTag": "next"
     }
   ],
