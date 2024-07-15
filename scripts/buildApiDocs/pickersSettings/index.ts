@@ -71,6 +71,9 @@ export default apiPages;
       'desktopModeMediaQuery',
     ],
   },
+  sortingStrategies: {
+    slotsSort: (a, b) => a.name.localeCompare(b.name),
+  },
   generateClassName: generateUtilityClass,
   isGlobalClassName: isGlobalState,
 };
