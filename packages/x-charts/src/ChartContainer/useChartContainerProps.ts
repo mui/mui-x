@@ -32,7 +32,7 @@ export const useChartContainerProps = (
     onHighlightChange,
     plugins,
     children,
-    ...rest
+    ...other
   } = props;
 
   const {
@@ -83,7 +83,7 @@ export const useChartContainerProps = (
   };
 
   const chartsSurfaceProps: ChartsSurfaceProps & { ref: any } = {
-    ...rest,
+    ...other,
     width,
     height,
     ref: chartSurfaceRef,
