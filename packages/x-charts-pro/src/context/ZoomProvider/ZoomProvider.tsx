@@ -27,6 +27,14 @@ export function ZoomProvider({ children, xAxis, yAxis, zoom, onZoomChange }: Zoo
     state: 'zoom',
   });
 
+  const setZoomDataCallback = React.useCallback(
+    (newZoomData: Parameters<ZoomState['setZoomData']>[0]) => {
+      setZoomData(newZoomData);
+      onZoomChange?.(newZoomData);
+    },
+    [setZoomData, onZoomChange],
+  );
+
   const value = React.useMemo(
     () =>
       ({
@@ -36,15 +44,12 @@ export function ZoomProvider({ children, xAxis, yAxis, zoom, onZoomChange }: Zoo
           isPanEnabled: isPanEnabled(options),
           options,
           zoomData,
-          setZoomData: (newZoomData) => {
-            setZoomData(newZoomData);
-            onZoomChange?.(newZoomData);
-          },
+          setZoomData: setZoomDataCallback,
           isInteracting,
           setIsInteracting,
         },
       }) satisfies Initializable<ZoomState>,
-    [zoomData, setZoomData, isInteracting, setIsInteracting, options, onZoomChange],
+    [zoomData, isInteracting, setIsInteracting, options, setZoomDataCallback],
   );
 
   return <ZoomContext.Provider value={value}>{children}</ZoomContext.Provider>;
