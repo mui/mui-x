@@ -34,7 +34,14 @@ export default function BasicColorLegend() {
             },
           },
         ]}
-        yAxis={[{ disableLine: true, valueFormatter: (value) => `${value}°` }]}
+        yAxis={[
+          {
+            disableLine: true,
+            disableTicks: true,
+            valueFormatter: (value) => `${value}°`,
+          },
+        ]}
+        grid={{ horizontal: true }}
         height={300}
         margin={{ top: 30, right: 150 }}
         slotProps={{ legend: { hidden: true } }}

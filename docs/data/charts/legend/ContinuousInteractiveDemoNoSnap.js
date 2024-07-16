@@ -2,6 +2,7 @@ import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { interpolateRdYlBu } from 'd3-scale-chromatic';
 import { LineChart } from '@mui/x-charts/LineChart';
+import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 import { ContinuousColorLegend } from '@mui/x-charts/ChartsLegend';
 import { dataset } from './tempAnomaly';
 
@@ -67,6 +68,7 @@ export default function ContinuousInteractiveDemoNoSnap() {
             yAxis={[
               {
                 disableLine: true,
+                disableTicks: true,
                 valueFormatter: (value) => `${value}°`,
                 colorMap: {
                   type: 'continuous',
@@ -76,6 +78,7 @@ export default function ContinuousInteractiveDemoNoSnap() {
                 },
               },
             ]}
+            grid={{ horizontal: true }}
             height={300}
             margin={{
               top: props.direction === 'row' ? 50 : 20,
@@ -83,6 +86,7 @@ export default function ContinuousInteractiveDemoNoSnap() {
             }}
             slotProps={{ legend: { hidden: true } }}
           >
+            <ChartsReferenceLine y={0} />
             <ContinuousColorLegend
               axisDirection="y"
               position={

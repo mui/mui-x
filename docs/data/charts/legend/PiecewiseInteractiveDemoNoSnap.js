@@ -2,6 +2,7 @@ import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
+import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 import { dataset } from './tempAnomaly';
 
 export default function PiecewiseInteractiveDemoNoSnap() {
@@ -57,7 +58,14 @@ export default function PiecewiseInteractiveDemoNoSnap() {
                 },
               },
             ]}
-            yAxis={[{ disableLine: true, valueFormatter: (value) => `${value}°` }]}
+            yAxis={[
+              {
+                disableLine: true,
+                disableTicks: true,
+                valueFormatter: (value) => `${value}°`,
+              },
+            ]}
+            grid={{ horizontal: true }}
             height={300}
             margin={{
               top: props.direction === 'row' ? 50 : 20,
@@ -65,6 +73,7 @@ export default function PiecewiseInteractiveDemoNoSnap() {
             }}
             slotProps={{ legend: { hidden: true } }}
           >
+            <ChartsReferenceLine y={0} />
             <PiecewiseColorLegend
               axisDirection="x"
               position={
