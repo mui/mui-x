@@ -29,7 +29,8 @@
   "name": "DefaultChartsLegend",
   "imports": [
     "import { DefaultChartsLegend } from '@mui/x-charts/ChartsLegend';",
-    "import { DefaultChartsLegend } from '@mui/x-charts';"
+    "import { DefaultChartsLegend } from '@mui/x-charts';",
+    "import { DefaultChartsLegend } from '@mui/x-charts-pro';"
   ],
   "classes": [
     {

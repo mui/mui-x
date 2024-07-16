@@ -1,0 +1,8 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
+  },
+  "classDescriptions": {}
+}

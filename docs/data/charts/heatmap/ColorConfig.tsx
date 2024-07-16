@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { interpolateBlues } from 'd3-scale-chromatic';
 import '@mui/x-charts-pro/typeOverloads';
-import { UnstableHeatmap } from '@mui/x-charts-pro/Heatmap';
+import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { HeatmapValueType } from '@mui/x-charts-pro/models';
 
 const dataset = [
@@ -105,7 +105,7 @@ const yData = dataset.flatMap(({ month }) => month);
 
 export default function ColorConfig() {
   return (
-    <UnstableHeatmap
+    <Heatmap
       height={400}
       width={600}
       xAxis={[{ data: xData }]}

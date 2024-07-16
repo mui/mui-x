@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import '@mui/x-charts-pro/typeOverloads';
-import { UnstableHeatmap } from '@mui/x-charts-pro/Heatmap';
+import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { data } from './dumbData';
 
 function CustomCell(props) {
@@ -33,7 +33,7 @@ function CustomCell(props) {
 export default function CustomItem() {
   return (
     <Box sx={{ width: '100%', maxWidth: 400 }}>
-      <UnstableHeatmap
+      <Heatmap
         slots={{ cell: CustomCell }}
         xAxis={[{ data: [1, 2, 3, 4] }]}
         yAxis={[{ data: ['A', 'B', 'C', 'D', 'E'] }]}

@@ -39,7 +39,8 @@
   "name": "PieArcLabelPlot",
   "imports": [
     "import { PieArcLabelPlot } from '@mui/x-charts/PieChart';",
-    "import { PieArcLabelPlot } from '@mui/x-charts';"
+    "import { PieArcLabelPlot } from '@mui/x-charts';",
+    "import { PieArcLabelPlot } from '@mui/x-charts-pro';"
   ],
   "slots": [{ "name": "pieArcLabel", "description": "", "class": null }],
   "classes": [],

@@ -1,6 +1,7 @@
 ---
 title: Zoom & Pan
 productId: x-charts
+components: ScatterChartPro, BarChartPro, LineChartPro
 ---
 
 # Zoom & Pan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') 🚧

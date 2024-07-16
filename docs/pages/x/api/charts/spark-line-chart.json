@@ -70,7 +70,8 @@
   "name": "SparkLineChart",
   "imports": [
     "import { SparkLineChart } from '@mui/x-charts/SparkLineChart';",
-    "import { SparkLineChart } from '@mui/x-charts';"
+    "import { SparkLineChart } from '@mui/x-charts';",
+    "import { SparkLineChart } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {

@@ -3,7 +3,8 @@
   "name": "PieArcLabel",
   "imports": [
     "import { PieArcLabel } from '@mui/x-charts/PieChart';",
-    "import { PieArcLabel } from '@mui/x-charts';"
+    "import { PieArcLabel } from '@mui/x-charts';",
+    "import { PieArcLabel } from '@mui/x-charts-pro';"
   ],
   "classes": [
     {

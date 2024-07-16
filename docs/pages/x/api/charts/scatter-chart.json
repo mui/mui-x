@@ -108,7 +108,8 @@
   "name": "ScatterChart",
   "imports": [
     "import { ScatterChart } from '@mui/x-charts/ScatterChart';",
-    "import { ScatterChart } from '@mui/x-charts';"
+    "import { ScatterChart } from '@mui/x-charts';",
+    "import { ScatterChart } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {

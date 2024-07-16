@@ -19,7 +19,8 @@
   "name": "ChartsLegend",
   "imports": [
     "import { ChartsLegend } from '@mui/x-charts/ChartsLegend';",
-    "import { ChartsLegend } from '@mui/x-charts';"
+    "import { ChartsLegend } from '@mui/x-charts';",
+    "import { ChartsLegend } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {

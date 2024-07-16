@@ -1,13 +1,13 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import '@mui/x-charts-pro/typeOverloads';
-import { UnstableHeatmap, heatmapClasses } from '@mui/x-charts-pro/Heatmap';
+import { Heatmap, heatmapClasses } from '@mui/x-charts-pro/Heatmap';
 import { data } from './dumbData';
 
 export default function HighlightClasses() {
   return (
     <Box sx={{ width: '100%', maxWidth: 400 }}>
-      <UnstableHeatmap
+      <Heatmap
         sx={{
           [`.${heatmapClasses.cell}`]: {
             [`&.${heatmapClasses.highlighted}`]: {

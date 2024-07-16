@@ -112,7 +112,8 @@
   "name": "BarChart",
   "imports": [
     "import { BarChart } from '@mui/x-charts/BarChart';",
-    "import { BarChart } from '@mui/x-charts';"
+    "import { BarChart } from '@mui/x-charts';",
+    "import { BarChart } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {

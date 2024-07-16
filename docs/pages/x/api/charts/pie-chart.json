@@ -101,7 +101,8 @@
   "name": "PieChart",
   "imports": [
     "import { PieChart } from '@mui/x-charts/PieChart';",
-    "import { PieChart } from '@mui/x-charts';"
+    "import { PieChart } from '@mui/x-charts';",
+    "import { PieChart } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
   ChartsItemContentProps,
@@ -11,10 +12,7 @@ import {
 import { useXAxis, useYAxis } from '@mui/x-charts/hooks';
 import { getLabel } from '@mui/x-charts/internals';
 
-/**
- * @ignore - do not document.
- */
-export function DefaultHeatmapTooltip(props: ChartsItemContentProps<'heatmap'>) {
+function DefaultHeatmapTooltip(props: ChartsItemContentProps<'heatmap'>) {
   const { series, itemData, sx, classes, getColor } = props;
 
   const xAxis = useXAxis();
@@ -66,3 +64,39 @@ export function DefaultHeatmapTooltip(props: ChartsItemContentProps<'heatmap'>) 
     </ChartsTooltipPaper>
   );
 }
+
+DefaultHeatmapTooltip.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object.isRequired,
+  /**
+   * Get the color of the item with index `dataIndex`.
+   * @param {number} dataIndex The data index of the item.
+   * @returns {string} The color to display.
+   */
+  getColor: PropTypes.func.isRequired,
+  /**
+   * The data used to identify the triggered item.
+   */
+  itemData: PropTypes.shape({
+    dataIndex: PropTypes.number.isRequired,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    type: PropTypes.oneOf(['heatmap']).isRequired,
+  }).isRequired,
+  /**
+   * The series linked to the triggered axis.
+   */
+  series: PropTypes.object.isRequired,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
+export { DefaultHeatmapTooltip };
