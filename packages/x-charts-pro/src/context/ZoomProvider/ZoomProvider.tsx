@@ -1,10 +1,7 @@
 import * as React from 'react';
-import { cartesianProviderUtils } from '@mui/x-charts/internals';
 import { ZoomContext, ZoomState } from './ZoomContext';
 import { defaultizeZoom } from './defaultizeZoom';
 import { AxisConfigForZoom, ZoomData } from './Zoom.types';
-
-const { defaultizeAxis } = cartesianProviderUtils;
 
 type ZoomProviderProps = {
   children: React.ReactNode;
@@ -22,22 +19,19 @@ type ZoomProviderProps = {
   yAxis?: AxisConfigForZoom[];
 };
 
-export function ZoomProvider({ children, xAxis: inXAxis, yAxis: inYAxis }: ZoomProviderProps) {
+export function ZoomProvider({ children, xAxis, yAxis }: ZoomProviderProps) {
   const [isInteracting, setIsInteracting] = React.useState<boolean>(false);
 
   const options = React.useMemo(
     () =>
-      [
-        ...defaultizeZoom(defaultizeAxis(inXAxis, 'x'), 'x'),
-        ...defaultizeZoom(defaultizeAxis(inYAxis, 'y'), 'y'),
-      ].reduce(
+      [...defaultizeZoom(xAxis, 'x'), ...defaultizeZoom(yAxis, 'y')].reduce(
         (acc, v) => {
           acc[v.axisId] = v;
           return acc;
         },
         {} as ZoomState['options'],
       ),
-    [inXAxis, inYAxis],
+    [xAxis, yAxis],
   );
 
   const [zoomData, setZoomData] = React.useState<ZoomData[]>(() =>

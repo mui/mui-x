@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import composeClasses from '@mui/utils/composeClasses';
@@ -69,7 +70,7 @@ const useUtilityClasses = (ownerState: HeatmapItemOwnerState) => {
   return composeClasses(slots, getHeatmapUtilityClass, classes);
 };
 
-export function HeatmapItem(props: HeatmapItemProps) {
+function HeatmapItem(props: HeatmapItemProps) {
   const { seriesId, dataIndex, color, value, slotProps = {}, slots = {}, ...other } = props;
 
   const getInteractionItemProps = useInteractionItemProps();
@@ -100,3 +101,30 @@ export function HeatmapItem(props: HeatmapItemProps) {
 
   return <Cell {...cellProps} />;
 }
+
+HeatmapItem.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  color: PropTypes.string.isRequired,
+  dataIndex: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
+  seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  value: PropTypes.number.isRequired,
+  width: PropTypes.number.isRequired,
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+} as any;
+
+export { HeatmapItem };

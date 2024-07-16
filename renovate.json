@@ -83,12 +83,18 @@
       "matchPackageNames": [
         "@mui/base",
         "@mui/icons-material",
+        "@mui/joy",
         "@mui/lab",
         "@mui/material",
         "@mui/styles",
         "@mui/system",
+        "@mui/types",
         "@mui/utils"
       ]
+    },
+    {
+      "groupName": "MUI Internal",
+      "matchPackagePatterns": ["@mui/internal-*", "@mui/docs"]
     },
     {
       "groupName": "Playwright",
@@ -104,6 +110,7 @@
     },
     {
       "groupName": "@mui/docs",
+      "matchPackageNames": ["@mui/docs"],
       "followTag": "next"
     }
   ],
