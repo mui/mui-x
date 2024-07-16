@@ -28,7 +28,8 @@
   "name": "ChartsTooltip",
   "imports": [
     "import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';",
-    "import { ChartsTooltip } from '@mui/x-charts';"
+    "import { ChartsTooltip } from '@mui/x-charts';",
+    "import { ChartsTooltip } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {

@@ -1,0 +1,31 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "align": { "description": "The alignment of the texts with the gradient bar." },
+    "axisDirection": {
+      "description": "The axis direction containing the color configuration to represent."
+    },
+    "axisId": {
+      "description": "The id of the axis item with the color configuration to represent."
+    },
+    "direction": {
+      "description": "The direction of the legend layout. The default depends on the chart."
+    },
+    "id": { "description": "A unique identifier for the gradient." },
+    "labelStyle": { "description": "The style applied to labels." },
+    "length": {
+      "description": "The length of the gradient bar. Can be a number (in px) or a string with a percentage such as &#39;50%&#39;. The &#39;100%&#39; is the length of the svg."
+    },
+    "maxLabel": {
+      "description": "The label to display at the maximum side of the gradient. Can either be a string, or a function. If not defined, the formatted maximal value is display."
+    },
+    "minLabel": {
+      "description": "The label to display at the minimum side of the gradient. Can either be a string, or a function."
+    },
+    "position": { "description": "The position of the legend." },
+    "scaleType": { "description": "The scale used to display gradient colors." },
+    "spacing": { "description": "The space between the gradient bar and the labels." },
+    "thickness": { "description": "The thickness of the gradient bar." }
+  },
+  "classDescriptions": {}
+}

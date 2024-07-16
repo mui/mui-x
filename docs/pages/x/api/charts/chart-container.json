@@ -55,7 +55,8 @@
   "name": "ChartContainer",
   "imports": [
     "import { ChartContainer } from '@mui/x-charts/ChartContainer';",
-    "import { ChartContainer } from '@mui/x-charts';"
+    "import { ChartContainer } from '@mui/x-charts';",
+    "import { ChartContainer } from '@mui/x-charts-pro';"
   ],
   "classes": [],
   "spread": true,
