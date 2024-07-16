@@ -230,22 +230,25 @@ export const useGridRowSelection = (
         logger.debug(`Toggling selection for row ${id}`);
 
         const selection = gridRowSelectionStateSelector(apiRef.current.state);
-        let newSelection: GridRowId[] = selection.filter((el) => el !== id);
+
+        let newSelection: Set<GridRowId> = new Set(selection.filter((el) => el !== id));
 
         if (isSelected) {
-          newSelection.push(id);
+          newSelection.add(id);
           if (props.propagateRowSelection) {
             const rowsToSelect = findRowsToSelect(apiRef, tree, id);
-            newSelection.push(...rowsToSelect);
+            rowsToSelect.forEach(newSelection.add, newSelection);
           }
         } else if (props.propagateRowSelection) {
           const rowsToDeselect = findRowsToDeselect(apiRef, tree, id);
-          newSelection = newSelection.filter((el) => !rowsToDeselect.includes(el));
+          rowsToDeselect.forEach((parentId) => {
+            newSelection.delete(parentId);
+          });
         }
 
-        const isSelectionValid = newSelection.length < 2 || canHaveMultipleSelection;
+        const isSelectionValid = newSelection.size < 2 || canHaveMultipleSelection;
         if (isSelectionValid) {
-          apiRef.current.setRowSelectionModel(newSelection);
+          apiRef.current.setRowSelectionModel(Array.from(newSelection));
         }
       }
     },
