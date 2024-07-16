@@ -498,8 +498,8 @@ importers:
         specifier: ^0.4.24
         version: 0.4.24
       chance:
-        specifier: ^1.1.11
-        version: 1.1.11
+        specifier: ^1.1.12
+        version: 1.1.12
       clean-css:
         specifier: ^5.3.3
         version: 5.3.3
@@ -981,8 +981,8 @@ importers:
         specifier: workspace:*
         version: link:../x-data-grid-premium/build
       chance:
-        specifier: ^1.1.11
-        version: 1.1.11
+        specifier: ^1.1.12
+        version: 1.1.12
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -4442,8 +4442,8 @@ packages:
     resolution: {integrity: sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
 
-  chance@1.1.11:
-    resolution: {integrity: sha512-kqTg3WWywappJPqtgrdvbA380VoXO2eu9VCV895JgbyHsaErXdyHK9LOZ911OvAk6L0obK7kDk9CGs8+oBawVA==}
+  chance@1.1.12:
+    resolution: {integrity: sha512-vVBIGQVnwtUG+SYe0ge+3MvF78cvSpuCOEUJr7sVEk2vSBuMW6OXNJjSzdtzrlxNUEaoqH2GBd5Y/+18BEB01Q==}
 
   character-entities-legacy@1.1.4:
     resolution: {integrity: sha512-3Xnr+7ZFS1uxeiUDvV02wQ+QDbc55o97tIV5zHScSPJpcLm/r0DFPcoY3tYRp+VZukxuMeKgXYmsXQHO05zQeA==}
@@ -13017,7 +13017,7 @@ snapshots:
 
   chalk@5.3.0: {}
 
-  chance@1.1.11: {}
+  chance@1.1.12: {}
 
   character-entities-legacy@1.1.4: {}
 
