@@ -6,7 +6,7 @@ import ChartsContinuousGradient from '../internals/components/ChartsAxesGradient
 import { AxisDefaultized, ContinuousScaleName } from '../models/axis';
 import { useChartId, useDrawingArea } from '../hooks';
 import { getScale } from '../internals/getScale';
-import { getPercentageValue } from '../internals/utils';
+import { getPercentageValue } from '../internals/getPercentageValue';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getStringSize } from '../internals/domUtils';
 import { useAxis } from './useAxis';

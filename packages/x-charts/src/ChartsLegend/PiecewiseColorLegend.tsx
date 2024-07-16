@@ -4,7 +4,7 @@ import { AxisDefaultized } from '../models/axis';
 import { useAxis } from './useAxis';
 import { ColorLegendSelector, PiecewiseLabelFormatterParams } from './legend.types';
 import { LegendPerItem, LegendPerItemProps } from './LegendPerItem';
-import { notNull } from '../internals/utils';
+import { notNull } from '../internals/notNull';
 
 function defaultLabelFormatter(params: PiecewiseLabelFormatterParams) {
   if (params.min === null) {
