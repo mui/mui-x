@@ -48,8 +48,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.24.8",
-    "@mui/system": "^5.16.0",
-    "@mui/utils": "^5.16.0",
+    "@mui/system": "^5.16.2",
+    "@mui/utils": "^5.16.2",
     "@mui/x-internals": "workspace:*",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
@@ -62,8 +62,8 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^1.0.4",
-    "@mui/joy": "^5.0.0-beta.47",
-    "@mui/types": "^7.2.14",
+    "@mui/joy": "^5.0.0-beta.48",
+    "@mui/types": "^7.2.15",
     "@types/prop-types": "^15.7.12",
     "rimraf": "^5.0.8"
   },
