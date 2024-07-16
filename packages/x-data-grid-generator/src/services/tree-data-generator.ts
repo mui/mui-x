@@ -40,9 +40,9 @@ export const addTreeDataOptionsToDemoData = (
     return data;
   }
 
-  // if (data.rows.length > 1000) {
-  //   throw new Error('MUI X: useDemoData tree data mode only works up to 1000 rows.');
-  // }
+  if (data.rows.length > 1000) {
+    throw new Error('MUI X: useDemoData tree data mode only works up to 1000 rows.');
+  }
 
   const rowsByTreeDepth: Record<
     number,
