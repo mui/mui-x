@@ -195,7 +195,7 @@ export function DemoContainer(props: DemoGridProps) {
     ...extraSx,
   };
   return (
-    <Stack direction={direction} spacing={spacing} sx={finalSx}>
+    <Stack direction={direction} spacing={spacing} sx={finalSx} alignItems="center">
       {React.Children.map(children, (child) => {
         if (React.isValidElement(child) && isDemoItem(child)) {
           // Inject sx styles to the `DemoItem` if it is a direct child of `DemoContainer`.
