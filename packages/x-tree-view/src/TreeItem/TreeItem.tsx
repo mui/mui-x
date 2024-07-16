@@ -6,7 +6,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { alpha } from '@mui/material/styles';
 import { TransitionProps } from '@mui/material/transitions';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import useSlotProps from '@mui/utils/useSlotProps';
 import unsupportedProp from '@mui/utils/unsupportedProp';
