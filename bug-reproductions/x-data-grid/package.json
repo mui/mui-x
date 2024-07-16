@@ -2,8 +2,8 @@
   "dependencies": {
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
-    "@mui/icons-material": "https://pkg.csb.dev/mui/material-ui/commit/29a6c7f1/@mui/icons-material",
-    "@mui/material": "https://pkg.csb.dev/mui/material-ui/commit/29a6c7f1/@mui/material",
+    "@mui/icons-material": "^5.16.2",
+    "@mui/material": "^5.16.2",
     "@mui/x-data-grid-generator": "latest",
     "@mui/x-data-grid": "latest",
     "@mui/x-data-grid-pro": "latest",

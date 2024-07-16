@@ -48,22 +48,22 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.24.7",
-    "@mui/system": "https://pkg.csb.dev/mui/material-ui/commit/29a6c7f1/@mui/system",
-    "@mui/utils": "https://pkg.csb.dev/mui/material-ui/commit/29a6c7f1/@mui/utils",
+    "@mui/system": "^5.16.2",
+    "@mui/utils": "^5.16.2",
     "@mui/x-internals": "workspace:*",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
     "reselect": "^4.1.8"
   },
   "peerDependencies": {
-    "@mui/material": "https://pkg.csb.dev/mui/material-ui/commit/29a6c7f1/@mui/material",
+    "@mui/material": "^5.16.2",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^1.0.4",
-    "@mui/joy": "https://pkg.csb.dev/mui/material-ui/commit/29a6c7f1/@mui/joy",
-    "@mui/types": "https://pkg.csb.dev/mui/material-ui/commit/29a6c7f1/@mui/types",
+    "@mui/joy": "^5.0.0-beta.47",
+    "@mui/types": "7.2.15",
     "@types/prop-types": "^15.7.12",
     "rimraf": "^5.0.8"
   },
