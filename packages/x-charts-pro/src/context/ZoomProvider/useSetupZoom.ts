@@ -3,6 +3,7 @@ import { useDrawingArea, useSvgRef } from '@mui/x-charts/hooks';
 import { getSVGPoint } from '@mui/x-charts/internals';
 import { useZoom } from './useZoom';
 import { DefaultizedZoomOptions, ZoomData } from './Zoom.types';
+import { initializeZoomData } from './initializeZoomData';
 
 /**
  * Helper to get the range (in percents of a reference range) corresponding to a given scale.
@@ -64,7 +65,7 @@ const isPointOutside = (
 };
 
 export const useSetupZoom = () => {
-  const { zoomData, setZoomData, isZoomEnabled, options, setIsInteracting } = useZoom();
+  const { setZoomData, isZoomEnabled, options, setIsInteracting } = useZoom();
   const area = useDrawingArea();
 
   const svgRef = useSvgRef();
@@ -100,24 +101,24 @@ export const useSetupZoom = () => {
         setIsInteracting(false);
       }, 166);
 
-      const newZoomData = zoomData.map((zoom) => {
-        const option = options[zoom.axisId];
-        const centerRatio =
-          option.axisDirection === 'x'
-            ? getHorizontalCenterRatio(point, area)
-            : getVerticalCenterRatio(point, area);
+      setZoomData((prevZoomData) => {
+        return initializeZoomData(prevZoomData, options).map((zoom) => {
+          const option = options[zoom.axisId];
+          const centerRatio =
+            option.axisDirection === 'x'
+              ? getHorizontalCenterRatio(point, area)
+              : getVerticalCenterRatio(point, area);
 
-        const { scaleRatio, isZoomIn } = getWheelScaleRatio(event, option.step);
-        const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
+          const { scaleRatio, isZoomIn } = getWheelScaleRatio(event, option.step);
+          const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
 
-        if (!isSpanValid(newMinRange, newMaxRange, isZoomIn, option)) {
-          return zoom;
-        }
+          if (!isSpanValid(newMinRange, newMaxRange, isZoomIn, option)) {
+            return zoom;
+          }
 
-        return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
+          return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
+        });
       });
-
-      setZoomData(newZoomData);
     };
 
     function pointerDownHandler(event: PointerEvent) {
@@ -143,39 +144,39 @@ export const useSetupZoom = () => {
       const firstEvent = eventCacheRef.current[0];
       const curDiff = getDiff(eventCacheRef.current);
 
-      const newZoomData = zoomData.map((zoom) => {
-        const option = options[zoom.axisId];
+      setZoomData((prevZoomData) => {
+        const newZoomData = initializeZoomData(prevZoomData, options).map((zoom) => {
+          const option = options[zoom.axisId];
 
-        const { scaleRatio, isZoomIn } = getPinchScaleRatio(
-          curDiff,
-          eventPrevDiff.current,
-          option.step,
-        );
+          const { scaleRatio, isZoomIn } = getPinchScaleRatio(
+            curDiff,
+            eventPrevDiff.current,
+            option.step,
+          );
 
-        // If the scale ratio is 0, it means the pinch gesture is not valid.
-        if (scaleRatio === 0) {
-          eventPrevDiff.current = curDiff;
-          return zoom;
-        }
+          // If the scale ratio is 0, it means the pinch gesture is not valid.
+          if (scaleRatio === 0) {
+            eventPrevDiff.current = curDiff;
+            return zoom;
+          }
 
-        const point = getSVGPoint(element, firstEvent);
+          const point = getSVGPoint(element, firstEvent);
 
-        const centerRatio =
-          option.axisDirection === 'x'
-            ? getHorizontalCenterRatio(point, area)
-            : getVerticalCenterRatio(point, area);
+          const centerRatio =
+            option.axisDirection === 'x'
+              ? getHorizontalCenterRatio(point, area)
+              : getVerticalCenterRatio(point, area);
 
-        const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
+          const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
 
-        if (!isSpanValid(newMinRange, newMaxRange, isZoomIn, option)) {
-          return zoom;
-        }
-
-        return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
+          if (!isSpanValid(newMinRange, newMaxRange, isZoomIn, option)) {
+            return zoom;
+          }
+          return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
+        });
+        eventPrevDiff.current = curDiff;
+        return newZoomData;
       });
-
-      eventPrevDiff.current = curDiff;
-      setZoomData(newZoomData);
     }
 
     function pointerUpHandler(event: PointerEvent) {
@@ -219,7 +220,7 @@ export const useSetupZoom = () => {
         clearTimeout(interactionTimeoutRef.current);
       }
     };
-  }, [svgRef, setZoomData, zoomData, area, isZoomEnabled, options, setIsInteracting]);
+  }, [svgRef, setZoomData, area, isZoomEnabled, options, setIsInteracting]);
 };
 
 /**
