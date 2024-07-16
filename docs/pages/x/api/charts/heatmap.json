@@ -97,6 +97,12 @@
   ],
   "slots": [
     {
+      "name": "axisLabel",
+      "description": "Custom component for axis label.",
+      "default": "ChartsText",
+      "class": null
+    },
+    {
       "name": "axisLine",
       "description": "Custom component for the axis main line.",
       "default": "'line'",
@@ -115,16 +121,10 @@
       "class": null
     },
     {
-      "name": "axisLabel",
-      "description": "Custom component for axis label.",
-      "default": "ChartsText",
-      "class": null
-    },
-    {
-      "name": "popper",
-      "description": "Custom component for the tooltip popper.",
-      "default": "ChartsTooltipRoot",
-      "class": null
+      "name": "cell",
+      "description": "The component that renders the heatmap cell.",
+      "default": "HeatmapCell",
+      "class": "MuiHeatmap-cell"
     },
     {
       "name": "itemContent",
@@ -145,10 +145,10 @@
       "class": null
     },
     {
-      "name": "cell",
-      "description": "The component that renders the heatmap cell.",
-      "default": "HeatmapCell",
-      "class": "MuiHeatmap-cell"
+      "name": "popper",
+      "description": "Custom component for the tooltip popper.",
+      "default": "ChartsTooltipRoot",
+      "class": null
     }
   ],
   "classes": [
