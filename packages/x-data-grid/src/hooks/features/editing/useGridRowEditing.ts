@@ -442,7 +442,28 @@ export const useGridRowEditing = (
 
         let newValue = apiRef.current.getCellValue(id, field);
         if (fieldToFocus === field && (deleteValue || initialValue)) {
-          newValue = deleteValue ? '' : initialValue;
+          if (deleteValue) {
+            const fieldType = apiRef.current.getColumn(field).type;
+            switch (fieldType) {
+              case 'boolean':
+                newValue = false;
+                break;
+              case 'date':
+              case 'dateTime':
+              case 'number':
+                newValue = undefined;
+                break;
+              case 'singleSelect':
+                newValue = null;
+                break;
+              case 'string':
+              default:
+                newValue = '';
+                break;
+            }
+          } else if (initialValue) {
+            newValue = initialValue;
+          }
         }
 
         acc[field] = {

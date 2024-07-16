@@ -33,3 +33,11 @@ By default, the row count in the footer is the number of top level rows that are
 In the demo below, a `CustomFooterRowCount` component is added to the `footerRowCount` slot. This component uses the `gridFilteredDescendantRowCountSelector` to get the number of child rows and display it alongside the number of groups.
 
 {{"demo": "RowGroupingChildRowCount.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Checkbox selection with row grouping
+
+You can combine [Row grouping](/x/react-data-grid/row-grouping/) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') with [Checkbox selection](/x/react-data-grid/row-selection/#checkbox-selection).
+
+The `Select All` checkbox in the header lets you select all rows, including those nested within row groups. Selecting a grouping row selects all its child rows. If some child rows within a group are selected but not all, the grouping row will appear in an indeterminate state.
+
+{{"demo": "RowGroupingCheckboxSelection.js", "bg": "inline", "defaultCodeOpen": false}}
