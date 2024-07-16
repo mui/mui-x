@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import Fade from '@mui/material/Fade';
 import { styled, useThemeProps } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import IconButton from '@mui/material/IconButton';
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils } from '../internals/hooks/useUtils';

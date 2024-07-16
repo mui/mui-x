@@ -1,6 +1,6 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
 import { PickersLayoutProps, SubComponents } from './PickersLayout.types';
 import { getPickersLayoutUtilityClass } from './pickersLayoutClasses';
