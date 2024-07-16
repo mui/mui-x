@@ -167,12 +167,12 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
       setLoading(true);
 
       let newData: DemoTreeDataValue;
-      if (rowLength > 1000) {
-        newData = await getRealGridData(1000, columns);
-        newData = await extrapolateSeed(rowLength, newData);
-      } else {
-        newData = await getRealGridData(rowLength, columns);
-      }
+      // if (rowLength > 1000) {
+      //   newData = await getRealGridData(1000, columns);
+      //   newData = await extrapolateSeed(rowLength, newData);
+      // } else {
+      newData = await getRealGridData(rowLength, columns);
+      // }
 
       if (!active) {
         return;
