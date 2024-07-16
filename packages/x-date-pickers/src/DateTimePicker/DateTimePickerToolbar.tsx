@@ -7,7 +7,8 @@ import clsx from 'clsx';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import {
   dateTimePickerToolbarClasses,
@@ -20,7 +21,7 @@ import { MULTI_SECTION_CLOCK_SECTION_WIDTH } from '../internals/constants/dimens
 import { formatMeridiem } from '../internals/utils/date-utils';
 import { MakeOptional } from '../internals/models/helpers';
 import { pickersToolbarTextClasses } from '../internals/components/pickersToolbarTextClasses';
-import { pickersToolbarClasses } from '../internals';
+import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { PickerValidDate } from '../models';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
@@ -260,9 +261,9 @@ function DateTimePickerToolbar<TDate extends PickerValidDate>(
   const showAmPmControl = Boolean(ampm && !ampmInClock);
   const isDesktop = toolbarVariant === 'desktop';
 
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const classes = useUtilityClasses(ownerState);
-  const toolbarTitle = inToolbarTitle ?? localeText.dateTimePickerToolbarTitle;
+  const toolbarTitle = inToolbarTitle ?? translations.dateTimePickerToolbarTitle;
 
   const formatHours = (time: TDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');

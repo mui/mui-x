@@ -41,14 +41,14 @@ export interface PieChartSlots
   extends ChartsAxisSlots,
     PiePlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots,
+    ChartsTooltipSlots<'pie'>,
     ChartsOverlaySlots {}
 
 export interface PieChartSlotProps
   extends ChartsAxisSlotProps,
     PiePlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps,
+    ChartsTooltipSlotProps<'pie'>,
     ChartsOverlaySlotProps {}
 
 export interface PieChartProps
@@ -81,7 +81,7 @@ export interface PieChartProps
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    * @default { trigger: 'item' }
    */
-  tooltip?: ChartsTooltipProps;
+  tooltip?: ChartsTooltipProps<'pie'>;
   /**
    * The configuration of axes highlight.
    * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
@@ -123,7 +123,7 @@ const defaultRTLMargin = { top: 5, bottom: 5, left: 100, right: 5 };
  *
  * - [PieChart API](https://mui.com/x/api/charts/pie-chart/)
  */
-function PieChart(props: PieChartProps) {
+const PieChart = React.forwardRef(function PieChart(props: PieChartProps, ref) {
   const {
     xAxis,
     yAxis,
@@ -148,6 +148,8 @@ function PieChart(props: PieChartProps) {
     loading,
     highlightedItem,
     onHighlightChange,
+    className,
+    ...rest
   } = props;
   const isRTL = useIsRTL();
 
@@ -160,6 +162,8 @@ function PieChart(props: PieChartProps) {
 
   return (
     <ResponsiveChartContainer
+      {...rest}
+      ref={ref}
       series={series.map((s) => ({ type: 'pie', ...s }))}
       width={width}
       height={height}
@@ -183,6 +187,7 @@ function PieChart(props: PieChartProps) {
       }
       highlightedItem={highlightedItem}
       onHighlightChange={onHighlightChange}
+      className={className}
     >
       <ChartsAxis
         topAxis={topAxis}
@@ -205,7 +210,7 @@ function PieChart(props: PieChartProps) {
       {children}
     </ResponsiveChartContainer>
   );
-}
+});
 
 PieChart.propTypes = {
   // ----------------------------- Warning --------------------------------

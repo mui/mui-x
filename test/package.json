@@ -1,15 +1,15 @@
 {
   "name": "@mui-x-internal/test",
-  "version": "7.2.0",
+  "version": "7.8.0",
   "private": true,
   "scripts": {
     "typescript": "tsc -p tsconfig.json"
   },
   "devDependencies": {
-    "@babel/runtime": "^7.24.7",
+    "@babel/runtime": "^7.24.8",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
-    "@mui/material": "^5.15.20",
+    "@mui/material": "^5.16.0",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-data-grid-pro": "workspace:*",
     "@mui/x-date-pickers": "workspace:*",
@@ -29,7 +29,7 @@
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.23.1",
+    "react-router-dom": "^6.24.1",
     "stylis": "^4.3.2",
     "stylis-plugin-rtl": "^2.1.1"
   }

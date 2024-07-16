@@ -37,6 +37,7 @@ export type XProjectNames =
   | 'x-date-pickers'
   | 'x-date-pickers-pro'
   | 'x-charts'
+  | 'x-charts-pro'
   | 'x-tree-view'
   | 'x-tree-view-pro';
 
@@ -50,7 +51,7 @@ interface CreateXTypeScriptProjectOptions
     > {}
 
 const createXTypeScriptProject = (options: CreateXTypeScriptProjectOptions): XTypeScriptProject => {
-  const { name, rootPath, tsConfigPath, entryPointPath, files, ...rest } = options;
+  const { name, rootPath, tsConfigPath, entryPointPath, files, ...other } = options;
 
   const baseProject = createTypeScriptProject({
     name,
@@ -62,7 +63,7 @@ const createXTypeScriptProject = (options: CreateXTypeScriptProjectOptions): XTy
 
   return {
     ...baseProject,
-    ...rest,
+    ...other,
     name,
     workspaceRoot,
     prettierConfigPath: path.join(workspaceRoot, 'prettier.config.js'),
