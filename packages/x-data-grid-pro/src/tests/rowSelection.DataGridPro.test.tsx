@@ -2,13 +2,15 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
-import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act, within } from '@mui/internal-test-utils';
 import {
   GridApi,
   useGridApiRef,
   DataGridPro,
   DataGridProProps,
   GridRowSelectionModel,
+  GridRowsProp,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
@@ -209,6 +211,191 @@ describe('<DataGridPro /> - Row selection', () => {
         name: /select all rows/i,
       });
       expect(selectAllCheckbox).to.have.attr('data-indeterminate', 'false');
+    });
+  });
+
+  describe('prop: propagateRowSelection', () => {
+    const rows: GridRowsProp = [
+      {
+        hierarchy: ['Sarah'],
+        jobTitle: 'Head of Human Resources',
+        recruitmentDate: new Date(2020, 8, 12),
+        id: 0,
+      },
+      {
+        hierarchy: ['Thomas'],
+        jobTitle: 'Head of Sales',
+        recruitmentDate: new Date(2017, 3, 4),
+        id: 1,
+      },
+      {
+        hierarchy: ['Thomas', 'Robert'],
+        jobTitle: 'Sales Person',
+        recruitmentDate: new Date(2020, 11, 20),
+        id: 2,
+      },
+      {
+        hierarchy: ['Thomas', 'Karen'],
+        jobTitle: 'Sales Person',
+        recruitmentDate: new Date(2020, 10, 14),
+        id: 3,
+      },
+      {
+        hierarchy: ['Thomas', 'Nancy'],
+        jobTitle: 'Sales Person',
+        recruitmentDate: new Date(2017, 10, 29),
+        id: 4,
+      },
+      {
+        hierarchy: ['Thomas', 'Daniel'],
+        jobTitle: 'Sales Person',
+        recruitmentDate: new Date(2020, 7, 21),
+        id: 5,
+      },
+      {
+        hierarchy: ['Thomas', 'Christopher'],
+        jobTitle: 'Sales Person',
+        recruitmentDate: new Date(2020, 7, 20),
+        id: 6,
+      },
+      {
+        hierarchy: ['Thomas', 'Donald'],
+        jobTitle: 'Sales Person',
+        recruitmentDate: new Date(2019, 6, 28),
+        id: 7,
+      },
+      {
+        hierarchy: ['Mary'],
+        jobTitle: 'Head of Engineering',
+        recruitmentDate: new Date(2016, 3, 14),
+        id: 8,
+      },
+      {
+        hierarchy: ['Mary', 'Jennifer'],
+        jobTitle: 'Tech lead front',
+        recruitmentDate: new Date(2016, 5, 17),
+        id: 9,
+      },
+      {
+        hierarchy: ['Mary', 'Jennifer', 'Anna'],
+        jobTitle: 'Front-end developer',
+        recruitmentDate: new Date(2019, 11, 7),
+        id: 10,
+      },
+      {
+        hierarchy: ['Mary', 'Michael'],
+        jobTitle: 'Tech lead devops',
+        recruitmentDate: new Date(2021, 7, 1),
+        id: 11,
+      },
+      {
+        hierarchy: ['Mary', 'Linda'],
+        jobTitle: 'Tech lead back',
+        recruitmentDate: new Date(2017, 0, 12),
+        id: 12,
+      },
+      {
+        hierarchy: ['Mary', 'Linda', 'Elizabeth'],
+        jobTitle: 'Back-end developer',
+        recruitmentDate: new Date(2019, 2, 22),
+        id: 13,
+      },
+      {
+        hierarchy: ['Mary', 'Linda', 'William'],
+        jobTitle: 'Back-end developer',
+        recruitmentDate: new Date(2018, 4, 19),
+        id: 14,
+      },
+    ];
+
+    const columns: GridColDef[] = [
+      { field: 'jobTitle', headerName: 'Job Title', width: 200 },
+      {
+        field: 'recruitmentDate',
+        headerName: 'Recruitment Date',
+        type: 'date',
+        width: 150,
+      },
+    ];
+
+    const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.hierarchy;
+
+    function TreeDataGrid(props: Partial<DataGridProProps>) {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ height: 800, width: '100%' }}>
+          <DataGridPro
+            apiRef={apiRef}
+            treeData
+            rows={rows}
+            columns={columns}
+            getTreeDataPath={getTreeDataPath}
+            propagateRowSelection
+            checkboxSelection
+            {...props}
+          />
+        </div>
+      );
+    }
+    it('should select all the children when selecting a parent', () => {
+      render(<TreeDataGrid />);
+
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+    });
+
+    it('should deselect all the children when deselecting a parent', () => {
+      render(<TreeDataGrid />);
+
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows().size).to.equal(0);
+    });
+
+    it('should put the parent into indeterminate if some but not all the children are selected', () => {
+      render(<TreeDataGrid defaultGroupingExpansionDepth={-1} density="compact" />);
+
+      fireEvent.click(getCell(11, 0).querySelector('input')!);
+      expect(getCell(8, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
+    });
+
+    it('should auto select the parent if all the children are selected', () => {
+      render(<TreeDataGrid defaultGroupingExpansionDepth={-1} density="compact" />);
+
+      fireEvent.click(getCell(9, 0).querySelector('input')!);
+      fireEvent.click(getCell(11, 0).querySelector('input')!);
+      fireEvent.click(getCell(12, 0).querySelector('input')!);
+
+      // The parent row (Mary, id: 8) should be among the selected rows
+      expect(apiRef.current.getSelectedRows()).to.have.keys([9, 10, 11, 12, 8, 13, 14]);
+    });
+
+    it('should deselect auto selected parent if one of the children is deselected', () => {
+      render(<TreeDataGrid defaultGroupingExpansionDepth={-1} density="compact" />);
+
+      fireEvent.click(getCell(9, 0).querySelector('input')!);
+      fireEvent.click(getCell(11, 0).querySelector('input')!);
+      fireEvent.click(getCell(12, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([9, 10, 11, 12, 8, 13, 14]);
+      fireEvent.click(getCell(9, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([11, 12, 13, 14]);
+    });
+
+    it('should deselect unfiltered rows after filtering', () => {
+      render(<TreeDataGrid defaultGroupingExpansionDepth={-1} density="compact" />);
+
+      fireEvent.click(getCell(9, 0).querySelector('input')!);
+      fireEvent.click(getCell(11, 0).querySelector('input')!);
+      fireEvent.click(getCell(12, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([9, 10, 11, 12, 8, 13, 14]);
+      act(() => {
+        apiRef.current.setFilterModel({
+          items: [],
+          quickFilterValues: ['Linda'],
+        });
+      });
+      expect(apiRef.current.getSelectedRows()).to.have.keys([12, 8]);
     });
   });
 
