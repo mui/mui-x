@@ -21,8 +21,9 @@ import { MarkPlotProps } from '@mui/x-charts';
 import { ResponsiveChartContainerPro } from '../ResponsiveChartContainerPro';
 import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
 import { useZoom } from '../context/ZoomProvider/useZoom';
+import { ZoomProps } from '../context/ZoomProvider';
 
-export interface LineChartProProps extends LineChartProps {}
+export interface LineChartProProps extends LineChartProps, ZoomProps {}
 
 /**
  * Demos:
@@ -35,6 +36,7 @@ export interface LineChartProProps extends LineChartProps {}
  * - [LineChart API](https://mui.com/x/api/charts/line-chart/)
  */
 const LineChartPro = React.forwardRef(function LineChartPro(props: LineChartProProps, ref) {
+  const { zoom, onZoomChange, ...restProps } = props;
   const {
     chartContainerProps,
     axisClickHandlerProps,
@@ -51,7 +53,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(props: LineChartProP
     legendProps,
     tooltipProps,
     children,
-  } = useLineChartProps(props);
+  } = useLineChartProps(restProps);
 
   return (
     <ResponsiveChartContainerPro ref={ref} {...chartContainerProps}>
