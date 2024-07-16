@@ -14,8 +14,9 @@ import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { CLOCK_HOUR_WIDTH, getHours, getMinutes } from './shared';
 import { PickerValidDate, TimeView } from '../models';
-import { clockClasses, ClockClasses, getClockUtilityClass } from './clockClasses';
+import { ClockClasses, getClockUtilityClass } from './clockClasses';
 import { formatMeridiem } from '../internals/utils/date-utils';
+import { Meridiem } from '../internals/utils/time-utils';
 
 export interface ClockProps<TDate extends PickerValidDate>
   extends ReturnType<typeof useMeridiemMode> {
@@ -145,19 +146,24 @@ const ClockPin = styled('div', {
   transform: 'translate(-50%, -50%)',
 }));
 
-const meridiemButtonCommonStyles = (theme: Theme) => ({
+const meridiemButtonCommonStyles = (theme: Theme, meridiemMode: Meridiem) => ({
   zIndex: 1,
   bottom: 8,
   paddingLeft: 4,
   paddingRight: 4,
   width: CLOCK_HOUR_WIDTH,
-  [`&.${clockClasses.selected}`]: {
-    backgroundColor: (theme.vars || theme).palette.primary.main,
-    color: (theme.vars || theme).palette.primary.contrastText,
-    '&:hover': {
-      backgroundColor: (theme.vars || theme).palette.primary.light,
+  variants: [
+    {
+      props: { meridiemMode },
+      style: {
+        backgroundColor: (theme.vars || theme).palette.primary.main,
+        color: (theme.vars || theme).palette.primary.contrastText,
+        '&:hover': {
+          backgroundColor: (theme.vars || theme).palette.primary.light,
+        },
+      },
     },
-  },
+  ],
 });
 
 const ClockAmButton = styled(IconButton, {
@@ -165,7 +171,7 @@ const ClockAmButton = styled(IconButton, {
   slot: 'AmButton',
   overridesResolver: (_, styles) => styles.amButton,
 })<{ ownerState: ClockProps<any> }>(({ theme }) => ({
-  ...meridiemButtonCommonStyles(theme),
+  ...meridiemButtonCommonStyles(theme, 'am'),
   // keeping it here to make TS happy
   position: 'absolute',
   left: 8,
@@ -176,7 +182,7 @@ const ClockPmButton = styled(IconButton, {
   slot: 'PmButton',
   overridesResolver: (_, styles) => styles.pmButton,
 })<{ ownerState: ClockProps<any> }>(({ theme }) => ({
-  ...meridiemButtonCommonStyles(theme),
+  ...meridiemButtonCommonStyles(theme, 'pm'),
   // keeping it here to make TS happy
   position: 'absolute',
   right: 8,
