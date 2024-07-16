@@ -28,28 +28,27 @@ function ZoomProvider({ children, xAxis, yAxis, zoom, onZoomChange }: ZoomProvid
     state: 'zoom',
   });
 
-  const setZoomDataCallback = React.useCallback(
-    (newZoomData: Parameters<ZoomState['setZoomData']>[0]) => {
+  const setZoomDataCallback = React.useCallback<ZoomState['setZoomData']>(
+    (newZoomData) => {
       setZoomData(newZoomData);
       onZoomChange?.(newZoomData);
     },
     [setZoomData, onZoomChange],
   );
 
-  const value = React.useMemo(
-    () =>
-      ({
-        isInitialized: true,
-        data: {
-          isZoomEnabled: Object.keys(options).length > 0,
-          isPanEnabled: isPanEnabled(options),
-          options,
-          zoomData,
-          setZoomData: setZoomDataCallback,
-          isInteracting,
-          setIsInteracting,
-        },
-      }) satisfies Initializable<ZoomState>,
+  const value = React.useMemo<Initializable<ZoomState>>(
+    () => ({
+      isInitialized: true,
+      data: {
+        isZoomEnabled: Object.keys(options).length > 0,
+        isPanEnabled: isPanEnabled(options),
+        options,
+        zoomData,
+        setZoomData: setZoomDataCallback,
+        isInteracting,
+        setIsInteracting,
+      },
+    }),
     [zoomData, isInteracting, setIsInteracting, options, setZoomDataCallback],
   );
 
