@@ -337,7 +337,7 @@ describe('<DataGridPro /> - Row selection', () => {
         </div>
       );
     }
-    
+
     it('should select all the children when selecting a parent', () => {
       render(<TreeDataGrid />);
 
