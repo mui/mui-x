@@ -156,7 +156,6 @@ export const useSetupZoom = () => {
 
           // If the scale ratio is 0, it means the pinch gesture is not valid.
           if (scaleRatio === 0) {
-            eventPrevDiff.current = curDiff;
             return zoom;
           }
 
