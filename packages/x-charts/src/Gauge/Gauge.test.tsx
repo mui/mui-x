@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer, describeConformance } from '@mui/internal-test-utils';
-import { Gauge } from './Gauge';
+import { Gauge } from '@mui/x-charts/Gauge';
 
 describe('<Gauge />', () => {
   const { render } = createRenderer();

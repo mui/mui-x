@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer, describeConformance } from '@mui/internal-test-utils';
-import { SparkLineChart } from './SparkLineChart';
+import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 
 describe('<SparkLineChart />', () => {
   const { render } = createRenderer();

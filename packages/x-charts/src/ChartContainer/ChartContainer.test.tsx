@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer, describeConformance } from '@mui/internal-test-utils';
-import { ChartContainer } from './ChartContainer';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
 
 describe('<ChartContainer />', () => {
   const { render } = createRenderer();

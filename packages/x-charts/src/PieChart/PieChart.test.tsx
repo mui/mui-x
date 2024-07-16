@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer, describeConformance } from '@mui/internal-test-utils';
-import { PieChart } from './PieChart';
+import { PieChart } from '@mui/x-charts/PieChart';
 
 describe('<PieChart />', () => {
   const { render } = createRenderer();

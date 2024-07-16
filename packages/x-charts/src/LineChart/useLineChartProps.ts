@@ -54,14 +54,14 @@ export const useLineChartProps = (props: LineChartProps) => {
     highlightedItem,
     onHighlightChange,
     className,
-    ...rest
+    ...other
   } = props;
 
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
   const chartContainerProps: ResponsiveChartContainerProps = {
-    ...rest,
+    ...other,
     series: series.map((s) => ({
       disableHighlight: !!disableLineItemHighlight,
       type: 'line' as const,

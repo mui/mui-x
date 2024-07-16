@@ -25,7 +25,7 @@ export const useResponsiveChartContainerProps = (
     xAxis,
     yAxis,
     zAxis,
-    ...rest
+    ...other
   } = props;
 
   const {
@@ -35,7 +35,7 @@ export const useResponsiveChartContainerProps = (
   } = useChartContainerDimensions(width, height);
 
   const resizableChartContainerProps = {
-    ...rest,
+    ...other,
     ownerState: { width, height },
     ref: containerRef,
   };
