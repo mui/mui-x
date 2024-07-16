@@ -39,7 +39,7 @@
     "directory": "packages/x-charts"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.7",
+    "@babel/runtime": "^7.24.8",
     "@mui/system": "^5.16.2",
     "@mui/utils": "^5.16.2",
     "@react-spring/rafz": "^9.7.3",
