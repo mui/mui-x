@@ -1,0 +1,43 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "axisDirection": {
+      "description": "The axis direction containing the color configuration to represent."
+    },
+    "axisId": {
+      "description": "The id of the axis item with the color configuration to represent."
+    },
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "direction": {
+      "description": "The direction of the legend layout. The default depends on the chart."
+    },
+    "hidden": { "description": "Set to true to hide the legend." },
+    "hideFirst": {
+      "description": "Hide the first item of the legend, corresponding to the [-infinity, min] piece."
+    },
+    "hideLast": {
+      "description": "Hide the last item of the legend, corresponding to the [max, +infinity] piece."
+    },
+    "itemGap": { "description": "Space between two legend items (in px)." },
+    "itemMarkHeight": { "description": "Height of the item mark (in px)." },
+    "itemMarkWidth": { "description": "Width of the item mark (in px)." },
+    "labelFormatter": {
+      "description": "Format the legend labels.",
+      "typeDescriptions": {
+        "params": "The bound of the piece to format.",
+        "string | null": "The displayed label, or <code>null</code> to skip the item."
+      }
+    },
+    "labelStyle": { "description": "Style applied to legend labels." },
+    "markGap": { "description": "Space between the mark and the label (in px)." },
+    "padding": {
+      "description": "Legend padding (in px). Can either be a single number, or an object with top, left, bottom, right properties."
+    },
+    "position": { "description": "The position of the legend." }
+  },
+  "classDescriptions": {
+    "mark": { "description": "" },
+    "root": { "description": "" },
+    "series": { "description": "" }
+  }
+}

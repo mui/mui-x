@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { color as d3Color } from 'd3-color';
 import { animated, useSpring } from '@react-spring/web';
 import { useAnimatedPath } from '../internals/useAnimatedPath';
-import { cleanId } from '../internals/utils';
+import { cleanId } from '../internals/cleanId';
 import type { AreaElementOwnerState } from './AreaElement';
 import { useChartId, useDrawingArea } from '../hooks';
 

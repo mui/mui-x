@@ -6,7 +6,7 @@ import { getValueToPositionMapper } from '../hooks/useScale';
 import { useChartId } from '../hooks/useChartId';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
-import { cleanId } from '../internals/utils';
+import { cleanId } from '../internals/cleanId';
 import getColor from './getColor';
 import { useLineSeries } from '../hooks/useSeries';
 import { useDrawingArea } from '../hooks/useDrawingArea';

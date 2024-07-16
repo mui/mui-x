@@ -1,14 +1,3 @@
-export type SymbolsTypes = 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
-// Returns the index of a defined shape
-export function getSymbol(shape: SymbolsTypes): number {
-  const symbolNames = 'circle cross diamond square star triangle wye'.split(/ /);
-
-  return symbolNames.indexOf(shape) || 0;
-}
-
-type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
-export type XOR<T, U> = T | U extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U;
-
 /**
  * Helper that converts values and percentages into values.
  * @param value The value provided by the developer. Can either be a number or a string with '%' or 'px'.
@@ -36,13 +25,6 @@ export function getPercentageValue(value: number | string, refValue: number) {
     }
   }
   throw Error(
-    `MUI-Charts: Received an unknown value "${value}". It should be a number, or a string with a percentage value.`,
+    `MUI X Charts: Received an unknown value "${value}". It should be a number, or a string with a percentage value.`,
   );
-}
-
-/**
- * Remove spaces to have viable ids
- */
-export function cleanId(id: string) {
-  return id.replace(' ', '_');
 }

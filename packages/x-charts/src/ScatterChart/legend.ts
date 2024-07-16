@@ -1,5 +1,6 @@
+import { LegendItemParams } from '../ChartsLegend/chartsLegend.types';
 import { getLabel } from '../internals/getLabel';
-import { LegendGetter, LegendParams } from '../models/seriesType/config';
+import { LegendGetter } from '../models/seriesType/config';
 
 const legendGetter: LegendGetter<'scatter'> = (params) => {
   const { seriesOrder, series } = params;
@@ -16,7 +17,7 @@ const legendGetter: LegendGetter<'scatter'> = (params) => {
       id: seriesId,
     });
     return acc;
-  }, [] as LegendParams[]);
+  }, [] as LegendItemParams[]);
 };
 
 export default legendGetter;

@@ -66,6 +66,7 @@ export default apiPages;
       'x-charts/src/ChartsOverlay/ChartsOverlay.tsx',
       'x-charts/src/ChartsOverlay/ChartsNoDataOverlay.tsx',
       'x-charts/src/ChartsOverlay/ChartsLoadingOverlay.tsx',
+      'x-charts/src/ChartsLegend/LegendPerItem.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,

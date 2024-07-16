@@ -6,6 +6,7 @@ import { AxisConfig } from '../axis';
 import { DefaultizedProps, MakeOptional } from '../helpers';
 import { StackingGroupsType } from '../../internals/stackSeries';
 import { SeriesId } from './common';
+import { LegendItemParams } from '../../ChartsLegend/chartsLegend.types';
 
 export interface ChartsSeriesConfig {
   bar: {
@@ -117,22 +118,6 @@ export type Formatter<T extends ChartSeriesType> = (
   dataset?: DatasetType,
 ) => FormatterResult<T>;
 
-export type LegendParams = {
-  /**
-   * The color used in the legend
-   */
-  color: string;
-  /**
-   * The label displayed in the legend
-   */
-  label: string;
-  /**
-   * The identifier of the legend element.
-   * Used for internal purpose such as `key` props
-   */
-  id: SeriesId;
-};
-
 export type LegendGetter<T extends ChartSeriesType> = (
   series: FormatterResult<T>,
-) => LegendParams[];
+) => LegendItemParams[];
