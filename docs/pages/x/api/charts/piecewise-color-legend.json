@@ -47,7 +47,8 @@
   "name": "PiecewiseColorLegend",
   "imports": [
     "import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';",
-    "import { PiecewiseColorLegend } from '@mui/x-charts';"
+    "import { PiecewiseColorLegend } from '@mui/x-charts';",
+    "import { PiecewiseColorLegend } from '@mui/x-charts-pro';"
   ],
   "classes": [
     {
