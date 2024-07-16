@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer, describeConformance } from '@mui/internal-test-utils';
-import { BarChart } from './BarChart';
+import { BarChart } from '@mui/x-charts/BarChart';
 
 describe('<BarChart />', () => {
   const { render } = createRenderer();
