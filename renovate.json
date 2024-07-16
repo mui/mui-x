@@ -94,7 +94,7 @@
     },
     {
       "groupName": "MUI Internal",
-      "matchPackagePatterns": "@mui/internal-*"
+      "matchPackagePatterns": ["@mui/internal-*", "@mui/docs"]
     },
     {
       "groupName": "Playwright",
