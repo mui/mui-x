@@ -55,7 +55,8 @@
   "name": "ResponsiveChartContainer",
   "imports": [
     "import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';",
-    "import { ResponsiveChartContainer } from '@mui/x-charts';"
+    "import { ResponsiveChartContainer } from '@mui/x-charts';",
+    "import { ResponsiveChartContainer } from '@mui/x-charts-pro';"
   ],
   "classes": [],
   "spread": true,
