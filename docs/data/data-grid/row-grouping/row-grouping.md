@@ -319,7 +319,8 @@ Set the `propagateRowSelection` prop to `true` to achieve the following behavior
 {{"demo": "RowGroupingPropagateSelection.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
-If the row selection propagation feature enabled, only the filtered rows will be kept selected. If some rows were selected before filtering, they will be auto deselected if they are not among the newly filtered rows.
+When the row selection propagation feature is enabled, only the filtered rows will be kept selected.
+If some rows were selected before filtering, they will be auto deselected if they are not among the newly filtered rows.
 :::
 
 :::warning
