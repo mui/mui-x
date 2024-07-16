@@ -1,3 +1,3 @@
 export * from './ZoomContext';
 export * from './ZoomProvider';
-export * from './Zoom.types';
+export type { ZoomOptions, ZoomData, ZoomProps } from './Zoom.types';
