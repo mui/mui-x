@@ -45,7 +45,12 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   } = useScatterChartProps(restProps);
 
   return (
-    <ResponsiveChartContainerPro ref={ref} {...chartContainerProps}>
+    <ResponsiveChartContainerPro
+      ref={ref}
+      {...chartContainerProps}
+      zoom={zoom}
+      onZoomChange={onZoomChange}
+    >
       <ZAxisContextProvider {...zAxisProps}>
         {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
         <ChartsAxis {...chartsAxisProps} />

@@ -46,7 +46,12 @@ const BarChartPro = React.forwardRef(function BarChartPro(props: BarChartProProp
   } = useBarChartProps(restProps);
 
   return (
-    <ResponsiveChartContainerPro ref={ref} {...chartContainerProps}>
+    <ResponsiveChartContainerPro
+      ref={ref}
+      {...chartContainerProps}
+      zoom={zoom}
+      onZoomChange={onZoomChange}
+    >
       {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
       {props.grid && <ChartsGrid {...gridProps} />}
       <g {...clipPathGroupProps}>
