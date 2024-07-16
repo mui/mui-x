@@ -421,7 +421,7 @@ DataGridPremiumRaw.propTypes = {
    */
   headerFilterHeight: PropTypes.number,
   /**
-   * If `true`, enables the data grid filtering on header feature.
+   * If `true`, the filtering on the header feature is enabled.
    * @default false
    */
   headerFilters: PropTypes.bool,
@@ -896,10 +896,10 @@ DataGridPremiumRaw.propTypes = {
   processRowUpdate: PropTypes.func,
   /**
    * If `true`, following behavior happens with nested data:
-   * 1. Selecting/Deselecting a parent row selects/deselects all the nested rows.
-   * 2. When all nested rows are selected, the parent row is also selected.
-   * 3. When a nested row is deselected, the parent row is also deselected, if already selected.
-   * 4. Select All checkbox selects/deselects all the rows including nested rows.
+   * 1. Selecting/deselecting a parent row would select/deselect all the children rows.
+   * 2. When all the child rows are selected, the parent row will be auto selected.
+   * 3. When a child row is deselected, if one or more parent rows are already selected, they will be moved to an indeterminate state.
+   * 4. Select All checkbox in the header row would select/deselect all the rows including child rows.
    * Works with tree data and row grouping on the client-side only.
    * @default false
    */
