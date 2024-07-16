@@ -16,6 +16,16 @@ export type ZoomProviderProps = {
   yAxis?: AxisConfigForZoom[];
 } & ZoomProps;
 
+export type ZoomState = {
+  isZoomEnabled: boolean;
+  isPanEnabled: boolean;
+  options: Record<AxisId, DefaultizedZoomOptions>;
+  zoomData: ZoomData[];
+  setZoomData: (zoomData: ZoomData[] | ((zoomData: ZoomData[]) => ZoomData[])) => void;
+  isInteracting: boolean;
+  setIsInteracting: (isInteracting: boolean) => void;
+};
+
 export type ZoomOptions = {
   /**
    * The starting percentage of the zoom range. In the range of 0 to 100.
@@ -81,7 +91,7 @@ export type ZoomData = {
 
 export type ZoomProps = {
   zoom?: ZoomData[];
-  onZoomChange?: (zoom: ZoomData[]) => void;
+  onZoomChange?: (zoomData: ZoomData[] | ((zoomData: ZoomData[]) => ZoomData[])) => void;
 };
 
 export type DefaultizedZoomOptions = Required<ZoomOptions> & {

@@ -1,8 +1,9 @@
 import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
-import { ZoomContext, ZoomState } from './ZoomContext';
+import { Initializable } from '@mui/x-charts/internals';
+import { ZoomContext } from './ZoomContext';
 import { defaultizeZoom } from './defaultizeZoom';
-import { ZoomData, ZoomProviderProps } from './Zoom.types';
+import { ZoomData, ZoomProviderProps, ZoomState } from './Zoom.types';
 
 export function ZoomProvider({ children, xAxis, yAxis, zoom, onZoomChange }: ZoomProviderProps) {
   const [isInteracting, setIsInteracting] = React.useState<boolean>(false);
@@ -21,31 +22,28 @@ export function ZoomProvider({ children, xAxis, yAxis, zoom, onZoomChange }: Zoo
 
   const [zoomData, setZoomData] = useControlled<ZoomData[]>({
     controlled: zoom,
-    default: Object.values(options).map(({ axisId, minStart: start, maxEnd: end }) => ({
-      axisId,
-      start,
-      end,
-    })),
+    default: [],
     name: 'ZoomProvider',
     state: 'zoom',
   });
 
   const value = React.useMemo(
-    () => ({
-      isInitialized: true,
-      data: {
-        isZoomEnabled: zoomData.length > 0,
-        isPanEnabled: isPanEnabled(options),
-        options,
-        zoomData,
-        setZoomData: (newZoomData: ZoomData[]) => {
-          setZoomData(newZoomData);
-          onZoomChange?.(newZoomData);
+    () =>
+      ({
+        isInitialized: true,
+        data: {
+          isZoomEnabled: Object.keys(options).length > 0,
+          isPanEnabled: isPanEnabled(options),
+          options,
+          zoomData,
+          setZoomData: (newZoomData) => {
+            setZoomData(newZoomData);
+            onZoomChange?.(newZoomData);
+          },
+          isInteracting,
+          setIsInteracting,
         },
-        isInteracting,
-        setIsInteracting,
-      },
-    }),
+      }) satisfies Initializable<ZoomState>,
     [zoomData, setZoomData, isInteracting, setIsInteracting, options, onZoomChange],
   );
 
