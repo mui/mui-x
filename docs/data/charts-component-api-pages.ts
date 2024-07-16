@@ -90,6 +90,10 @@ const apiPages: MuiPage[] = [
     title: 'ChartsYAxis',
   },
   {
+    pathname: '/x/api/charts/continuous-color-legend',
+    title: 'ContinuousColorLegend',
+  },
+  {
     pathname: '/x/api/charts/default-charts-axis-tooltip-content',
     title: 'DefaultChartsAxisTooltipContent',
   },
@@ -152,6 +156,10 @@ const apiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/pie-arc-plot',
     title: 'PieArcPlot',
+  },
+  {
+    pathname: '/x/api/charts/piecewise-color-legend',
+    title: 'PiecewiseColorLegend',
   },
   {
     pathname: '/x/api/charts/pie-chart',

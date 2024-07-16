@@ -65,6 +65,7 @@
     "date-fns-jalali": "^2.30.0-0",
     "dayjs": "^1.11.11",
     "doctrine": "^3.0.0",
+    "d3-scale-chromatic": "^3.1.0",
     "exceljs": "^4.4.0",
     "fg-loadcss": "^3.1.0",
     "jscodeshift": "0.16.1",
