@@ -162,7 +162,7 @@
     }
   ],
   "spread": true,
-  "themeDefaultProps": false,
+  "themeDefaultProps": true,
   "muiName": "MuiDateTimeField",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DateTimeField/DateTimeField.tsx",

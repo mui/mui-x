@@ -8,36 +8,43 @@ import {
 } from '@mui/x-charts/internals';
 import { useZoom } from '../ZoomProvider/useZoom';
 
-const { normalizeAxis, computeValue } = cartesianProviderUtils;
+const { computeValue } = cartesianProviderUtils;
 
 export interface CartesianContextProviderProProps extends CartesianContextProviderProps {}
 
 function CartesianContextProviderPro(props: CartesianContextProviderProProps) {
-  const {
-    xAxis: inXAxis,
-    yAxis: inYAxis,
-    dataset,
-    xExtremumGetters,
-    yExtremumGetters,
-    children,
-  } = props;
+  const { xAxis, yAxis, dataset, xExtremumGetters, yExtremumGetters, children } = props;
 
   const formattedSeries = useSeries();
   const drawingArea = useDrawingArea();
   const { zoomData } = useZoom();
 
-  const xAxis = React.useMemo(() => normalizeAxis(inXAxis, dataset, 'x'), [inXAxis, dataset]);
-
-  const yAxis = React.useMemo(() => normalizeAxis(inYAxis, dataset, 'y'), [inYAxis, dataset]);
-
   const xValues = React.useMemo(
-    () => computeValue(drawingArea, formattedSeries, xAxis, xExtremumGetters, 'x', zoomData),
-    [drawingArea, formattedSeries, xAxis, xExtremumGetters, zoomData],
+    () =>
+      computeValue({
+        drawingArea,
+        formattedSeries,
+        axis: xAxis,
+        extremumGetters: xExtremumGetters,
+        dataset,
+        axisDirection: 'x',
+        zoomData,
+      }),
+    [drawingArea, formattedSeries, xAxis, xExtremumGetters, dataset, zoomData],
   );
 
   const yValues = React.useMemo(
-    () => computeValue(drawingArea, formattedSeries, yAxis, yExtremumGetters, 'y', zoomData),
-    [drawingArea, formattedSeries, yAxis, yExtremumGetters, zoomData],
+    () =>
+      computeValue({
+        drawingArea,
+        formattedSeries,
+        axis: yAxis,
+        extremumGetters: yExtremumGetters,
+        dataset,
+        axisDirection: 'y',
+        zoomData,
+      }),
+    [drawingArea, formattedSeries, yAxis, yExtremumGetters, dataset, zoomData],
   );
 
   const value = React.useMemo(

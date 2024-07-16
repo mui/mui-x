@@ -19,7 +19,6 @@ describe('<DateTimeRangePicker /> - Describes', () => {
       'themeVariants',
       'mergeClassName',
       'propsSpread',
-      'rootClass',
     ],
   }));
 });

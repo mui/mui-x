@@ -112,6 +112,18 @@
   ],
   "slots": [
     {
+      "name": "axisContent",
+      "description": "Custom component for displaying tooltip content when triggered by axis event.",
+      "default": "DefaultChartsAxisTooltipContent",
+      "class": null
+    },
+    {
+      "name": "axisLabel",
+      "description": "Custom component for axis label.",
+      "default": "ChartsText",
+      "class": null
+    },
+    {
       "name": "axisLine",
       "description": "Custom component for the axis main line.",
       "default": "'line'",
@@ -130,34 +142,15 @@
       "class": null
     },
     {
-      "name": "axisLabel",
-      "description": "Custom component for axis label.",
-      "default": "ChartsText",
+      "name": "itemContent",
+      "description": "Custom component for displaying tooltip content when triggered by item event.",
+      "default": "DefaultChartsItemTooltipContent",
       "class": null
     },
-    { "name": "scatter", "description": "", "class": null },
     {
       "name": "legend",
       "description": "Custom rendering of the legend.",
       "default": "DefaultChartsLegend",
-      "class": null
-    },
-    {
-      "name": "popper",
-      "description": "Custom component for the tooltip popper.",
-      "default": "ChartsTooltipRoot",
-      "class": null
-    },
-    {
-      "name": "axisContent",
-      "description": "Custom component for displaying tooltip content when triggered by axis event.",
-      "default": "DefaultChartsAxisTooltipContent",
-      "class": null
-    },
-    {
-      "name": "itemContent",
-      "description": "Custom component for displaying tooltip content when triggered by item event.",
-      "default": "DefaultChartsItemTooltipContent",
       "class": null
     },
     {
@@ -171,7 +164,14 @@
       "description": "Overlay component rendered when the chart has no data to display.",
       "default": "ChartsNoDataOverlay",
       "class": null
-    }
+    },
+    {
+      "name": "popper",
+      "description": "Custom component for the tooltip popper.",
+      "default": "ChartsTooltipRoot",
+      "class": null
+    },
+    { "name": "scatter", "description": "", "class": null }
   ],
   "classes": [],
   "spread": true,
