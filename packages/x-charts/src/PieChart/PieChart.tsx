@@ -149,7 +149,7 @@ const PieChart = React.forwardRef(function PieChart(props: PieChartProps, ref) {
     highlightedItem,
     onHighlightChange,
     className,
-    ...rest
+    ...other
   } = props;
   const isRTL = useIsRTL();
 
@@ -162,7 +162,7 @@ const PieChart = React.forwardRef(function PieChart(props: PieChartProps, ref) {
 
   return (
     <ResponsiveChartContainer
-      {...rest}
+      {...other}
       ref={ref}
       series={series.map((s) => ({ type: 'pie', ...s }))}
       width={width}

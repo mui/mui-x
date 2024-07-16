@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer, describeConformance } from '@mui/internal-test-utils';
-import { ResponsiveChartContainer } from './ResponsiveChartContainer';
+import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
 
 describe('<ResponsiveChartContainer />', () => {
   const { render } = createRenderer();
