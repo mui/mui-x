@@ -15,6 +15,10 @@ import {
   GRID_CHECKBOX_SELECTION_FIELD,
 } from '@mui/x-data-grid';
 import { getValueOptions, getVisibleRows } from '@mui/x-data-grid/internals';
+import MicrophoneIcon from '@mui/icons-material/Mic';
+import SendIcon from '@mui/icons-material/Send';
+import Box from '@mui/material/Box';
+import InputAdornment from '@mui/material/InputAdornment';
 import * as remoteControl from '../hooks/features/remoteControl/api';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { GridApiPro } from '../models';
@@ -48,6 +52,7 @@ function GridToolbarRemoteControl() {
   const rootProps = useGridRootProps() as DataGridProProcessedProps;
   const classes = useUtilityClasses(rootProps);
   const [isLoading, setLoading] = React.useState(false);
+  const [isRecording, setRecording] = React.useState(false);
   const [query, setQuery] = React.useState('');
 
   const sendRequest = React.useCallback(() => {
@@ -103,18 +108,18 @@ function GridToolbarRemoteControl() {
           result.select === -1
             ? []
             : rows.rows.slice(0, result.select).map((r) => {
-              return apiRef.current.getRowId(r);
-            });
+                return apiRef.current.getRowId(r);
+              });
         apiRef.current.setRowSelectionModel(selectedRowIds);
 
         const columns = apiRef.current.getAllColumns();
         const targetIndex =
-          Number(columns.find(c => c.field === GRID_CHECKBOX_SELECTION_FIELD) !== undefined)
-          + Number(result.grouping.length)
+          Number(columns.find((c) => c.field === GRID_CHECKBOX_SELECTION_FIELD) !== undefined) +
+          Number(result.grouping.length);
 
-        interestColumns.push(...Object.keys(result.aggregation))
-        interestColumns.push(...result.filters.map(f => f.column))
-        interestColumns.reverse().forEach(c => apiRef.current.setColumnIndex(c, targetIndex))
+        interestColumns.push(...Object.keys(result.aggregation));
+        interestColumns.push(...result.filters.map((f) => f.column));
+        interestColumns.reverse().forEach((c) => apiRef.current.setColumnIndex(c, targetIndex));
       })
       .catch((error) => {
         // eslint-disable-next-line no-alert
@@ -143,23 +148,65 @@ function GridToolbarRemoteControl() {
 
   return (
     <Style ownerState={rootProps} className={classes.root}>
-      {BrowserSpeechRecognition && (
-        <RecordButton
-          label={isLoading ? 'Loading…' : undefined}
-          disabled={isLoading}
-          onUpdate={setQuery}
-          onDone={handleDone}
-        />
-      )}
       <rootProps.slots.baseTextField
-        variant="standard"
-        placeholder={apiRef.current.getLocaleText('toolbarRemoteControlPlaceholder')}
+        variant="outlined"
+        placeholder={
+          isRecording
+            ? 'Listening for prompt…'
+            : apiRef.current.getLocaleText('toolbarRemoteControlPlaceholder')
+        }
         aria-label={apiRef.current.getLocaleText('toolbarRemoteControlLabel')}
         disabled={isLoading}
         value={query}
         style={{ flex: 1 }}
         onChange={handleChange}
+        size="small"
         onKeyDown={handleKeyDown}
+        InputProps={
+          BrowserSpeechRecognition && {
+            startAdornment: (
+              <InputAdornment position="start">
+                {isRecording ? (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 34,
+                      height: 34,
+                      borderRadius: '100%',
+                      background: 'secondary',
+                    }}
+                  >
+                    <MicrophoneIcon color="primary" />
+                  </Box>
+                ) : (
+                  <RecordButton
+                    label={isLoading ? 'Loading…' : undefined}
+                    recording={isRecording}
+                    setRecording={setRecording}
+                    disabled={isLoading}
+                    onUpdate={setQuery}
+                    onDone={handleDone}
+                  />
+                )}
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <rootProps.slots.baseIconButton
+                  disabled={isLoading || query === ''}
+                  color="primary"
+                  onClick={sendRequest}
+                  size="small"
+                  aria-label="Send prompt"
+                >
+                  <SendIcon fontSize="small" />
+                </rootProps.slots.baseIconButton>
+              </InputAdornment>
+            ),
+          }
+        }
       />
     </Style>
   );
@@ -169,9 +216,17 @@ type SpeechRecognitionOptions = {
   onUpdate: (value: string) => void;
   onDone: (value: string) => void;
 };
-function RecordButton(props: SpeechRecognitionOptions & { disabled: boolean; label?: string }) {
+function RecordButton(
+  props: SpeechRecognitionOptions & {
+    disabled: boolean;
+    label?: string;
+    recording: boolean;
+    setRecording: (value: boolean) => void;
+  },
+) {
   const rootProps = useGridRootProps() as DataGridProProcessedProps;
-  const [isRecording, setRecording] = React.useState(false);
+  const { recording, setRecording } = props;
+  const buttonRef = React.useRef<HTMLButtonElement>(null);
 
   const recognition = useLazyRef(() => {
     const timeout = new Timeout();
@@ -184,7 +239,7 @@ function RecordButton(props: SpeechRecognitionOptions & { disabled: boolean; lab
     let interimResult = '';
 
     function start(options: SpeechRecognitionOptions) {
-      if (isRecording) {
+      if (recording) {
         return;
       }
       setRecording(true);
@@ -230,11 +285,17 @@ function RecordButton(props: SpeechRecognitionOptions & { disabled: boolean; lab
     recognition.start({ onDone: props.onDone, onUpdate: props.onUpdate });
   });
 
-  // XXX: l11n
   return (
-    <rootProps.slots.baseButton disabled={props.disabled || isRecording} onClick={handleClick}>
-      {props.label ?? (isRecording ? 'Recording…' : 'Voice')}
-    </rootProps.slots.baseButton>
+    <rootProps.slots.baseTooltip title={recording ? 'Stop recording' : props.label ?? 'Record'}>
+      <rootProps.slots.baseIconButton
+        disabled={props.disabled}
+        onClick={handleClick}
+        ref={buttonRef}
+        size="small"
+      >
+        <MicrophoneIcon />
+      </rootProps.slots.baseIconButton>
+    </rootProps.slots.baseTooltip>
   );
 }
 

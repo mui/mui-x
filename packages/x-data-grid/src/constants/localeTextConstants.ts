@@ -30,8 +30,8 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   toolbarQuickFilterDeleteIconLabel: 'Clear',
 
   // Remote control toolbar field
-  toolbarRemoteControlPlaceholder: 'Remote prompt…',
-  toolbarRemoteControlLabel: 'Remote control',
+  toolbarRemoteControlPlaceholder: 'Type or record a prompt…',
+  toolbarRemoteControlLabel: 'Remote prompt',
   toolbarRemoteControlDeleteIconLabel: 'Clear',
 
   // Export selector toolbar button text
