@@ -5,8 +5,12 @@ import { ResponsiveChartContainerProps } from '@mui/x-charts/ResponsiveChartCont
 import { ResizableContainer, useResponsiveChartContainerProps } from '@mui/x-charts/internals';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import { ChartContainerPro } from '../ChartContainerPro';
+import { ZoomProps } from '../context/ZoomProvider';
+import { useResponsiveChartContainerProProps } from './useResponsiveChartContainerProProps';
 
-export interface ResponsiveChartContainerProProps extends ResponsiveChartContainerProps {}
+export interface ResponsiveChartContainerProProps
+  extends ResponsiveChartContainerProps,
+    ZoomProps {}
 
 const releaseInfo = getReleaseInfo();
 
@@ -14,12 +18,15 @@ const ResponsiveChartContainerPro = React.forwardRef(function ResponsiveChartCon
   props: ResponsiveChartContainerProProps,
   ref,
 ) {
+  const { chartContainerProProps, baseProps } = useResponsiveChartContainerProProps(props);
   const { chartContainerProps, resizableChartContainerProps, hasIntrinsicSize } =
-    useResponsiveChartContainerProps(props, ref);
+    useResponsiveChartContainerProps(baseProps, ref);
 
   return (
     <ResizableContainer {...resizableChartContainerProps}>
-      {hasIntrinsicSize ? <ChartContainerPro {...chartContainerProps} /> : null}
+      {hasIntrinsicSize ? (
+        <ChartContainerPro {...chartContainerProps} {...chartContainerProProps} />
+      ) : null}
       <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
     </ResizableContainer>
   );

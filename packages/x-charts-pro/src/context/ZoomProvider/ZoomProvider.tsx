@@ -2,23 +2,7 @@ import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
 import { ZoomContext, ZoomState } from './ZoomContext';
 import { defaultizeZoom } from './defaultizeZoom';
-import { AxisConfigForZoom, ZoomData, ZoomProps } from './Zoom.types';
-
-type ZoomProviderProps = {
-  children: React.ReactNode;
-  /**
-   * The configuration of the x-axes.
-   * If not provided, a default axis config is used.
-   * An array of [[AxisConfig]] objects.
-   */
-  xAxis?: AxisConfigForZoom[];
-  /**
-   * The configuration of the y-axes.
-   * If not provided, a default axis config is used.
-   * An array of [[AxisConfig]] objects.
-   */
-  yAxis?: AxisConfigForZoom[];
-} & ZoomProps;
+import { ZoomData, ZoomProviderProps } from './Zoom.types';
 
 export function ZoomProvider({ children, xAxis, yAxis, zoom, onZoomChange }: ZoomProviderProps) {
   const [isInteracting, setIsInteracting] = React.useState<boolean>(false);

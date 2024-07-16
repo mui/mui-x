@@ -14,16 +14,19 @@ import {
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import { CartesianContextProviderPro } from '../context/CartesianProviderPro';
-import { ZoomProvider } from '../context/ZoomProvider';
+import { ZoomProps, ZoomProvider } from '../context/ZoomProvider';
+import { useChartContainerProProps } from './useChartContainerProProps';
 
 const releaseInfo = getReleaseInfo();
 
-export interface ChartContainerProProps extends ChartContainerProps {}
+export interface ChartContainerProProps extends ChartContainerProps, ZoomProps {}
 
 const ChartContainerPro = React.forwardRef(function ChartContainer(
   props: ChartContainerProProps,
   ref,
 ) {
+  const { zoomProviderProps, baseProps } = useChartContainerProProps(props);
+
   const {
     children,
     drawingProviderProps,
@@ -35,7 +38,7 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
     chartsSurfaceProps,
     xAxis,
     yAxis,
-  } = useChartContainerProps(props, ref);
+  } = useChartContainerProps(baseProps, ref);
 
   useLicenseVerifier('x-charts-pro', releaseInfo);
 
@@ -43,7 +46,7 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
     <DrawingProvider {...drawingProviderProps}>
       <ColorProvider {...colorProviderProps}>
         <SeriesContextProvider {...seriesContextProps}>
-          <ZoomProvider xAxis={xAxis} yAxis={yAxis}>
+          <ZoomProvider xAxis={xAxis} yAxis={yAxis} {...zoomProviderProps}>
             <CartesianContextProviderPro {...cartesianContextProps}>
               <ZAxisContextProvider {...zAxisContextProps}>
                 <InteractionProvider>

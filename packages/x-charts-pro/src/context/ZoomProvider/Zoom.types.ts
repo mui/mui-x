@@ -1,5 +1,21 @@
 import { AxisId } from '@mui/x-charts/internals';
 
+export type ZoomProviderProps = {
+  children: React.ReactNode;
+  /**
+   * The configuration of the x-axes.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
+   */
+  xAxis?: AxisConfigForZoom[];
+  /**
+   * The configuration of the y-axes.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
+   */
+  yAxis?: AxisConfigForZoom[];
+} & ZoomProps;
+
 export type ZoomOptions = {
   /**
    * The starting percentage of the zoom range. In the range of 0 to 100.
