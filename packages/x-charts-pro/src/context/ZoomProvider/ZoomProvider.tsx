@@ -1,7 +1,8 @@
 import * as React from 'react';
+import useControlled from '@mui/utils/useControlled';
 import { ZoomContext, ZoomState } from './ZoomContext';
 import { defaultizeZoom } from './defaultizeZoom';
-import { AxisConfigForZoom, ZoomData } from './Zoom.types';
+import { AxisConfigForZoom, ZoomData, ZoomProps } from './Zoom.types';
 
 type ZoomProviderProps = {
   children: React.ReactNode;
@@ -17,9 +18,9 @@ type ZoomProviderProps = {
    * An array of [[AxisConfig]] objects.
    */
   yAxis?: AxisConfigForZoom[];
-};
+} & ZoomProps;
 
-export function ZoomProvider({ children, xAxis, yAxis }: ZoomProviderProps) {
+export function ZoomProvider({ children, xAxis, yAxis, zoom, onZoomChange }: ZoomProviderProps) {
   const [isInteracting, setIsInteracting] = React.useState<boolean>(false);
 
   const options = React.useMemo(
@@ -34,13 +35,16 @@ export function ZoomProvider({ children, xAxis, yAxis }: ZoomProviderProps) {
     [xAxis, yAxis],
   );
 
-  const [zoomData, setZoomData] = React.useState<ZoomData[]>(() =>
-    Object.values(options).map(({ axisId, minStart: start, maxEnd: end }) => ({
+  const [zoomData, setZoomData] = useControlled<ZoomData[]>({
+    controlled: zoom,
+    default: Object.values(options).map(({ axisId, minStart: start, maxEnd: end }) => ({
       axisId,
       start,
       end,
     })),
-  );
+    name: 'ZoomProvider',
+    state: 'zoom',
+  });
 
   const value = React.useMemo(
     () => ({
@@ -50,12 +54,15 @@ export function ZoomProvider({ children, xAxis, yAxis }: ZoomProviderProps) {
         isPanEnabled: isPanEnabled(options),
         options,
         zoomData,
-        setZoomData,
+        setZoomData: (newZoomData: ZoomData[]) => {
+          setZoomData(newZoomData);
+          onZoomChange?.(newZoomData);
+        },
         isInteracting,
         setIsInteracting,
       },
     }),
-    [zoomData, setZoomData, isInteracting, setIsInteracting, options],
+    [zoomData, setZoomData, isInteracting, setIsInteracting, options, onZoomChange],
   );
 
   return <ZoomContext.Provider value={value}>{children}</ZoomContext.Provider>;
