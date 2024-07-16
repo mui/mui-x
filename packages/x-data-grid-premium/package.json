@@ -57,7 +57,7 @@
     "reselect": "^4.1.8"
   },
   "peerDependencies": {
-    "@mui/material": "^5.16.2",
+    "@mui/material": "^5.16.3",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },

@@ -44,8 +44,8 @@
     "rimraf": "^5.0.8"
   },
   "peerDependencies": {
-    "@mui/icons-material": "^5.16.2",
-    "@mui/material": "^5.16.2",
+    "@mui/icons-material": "^5.16.3",
+    "@mui/material": "^5.16.3",
     "react": "^17.0.0 || ^18.0.0"
   },
   "engines": {
