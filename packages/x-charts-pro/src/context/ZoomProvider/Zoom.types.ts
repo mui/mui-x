@@ -90,7 +90,15 @@ export type ZoomData = {
 };
 
 export type ZoomProps = {
+  /**
+   * The zoom data of type [[ZoomData]] which lists the zoom data related to each axis.
+   */
   zoom?: ZoomData[];
+  /**
+   * Callback fired when the zoom has changed.
+   *
+   * @param {ZoomData[]} zoomData Updated zoom data.
+   */
   onZoomChange?: (zoomData: ZoomData[] | ((zoomData: ZoomData[]) => ZoomData[])) => void;
 };
 
