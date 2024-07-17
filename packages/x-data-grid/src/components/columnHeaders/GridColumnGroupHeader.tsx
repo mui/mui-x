@@ -147,7 +147,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
 
   const label = getColumnHeaderName(
     {
-      headerName: headerName,
+      headerName,
       field: groupId ?? '',
     },
     isReactNodeHeaderName,
