@@ -25,8 +25,11 @@ import {
   GridStateColDef,
 } from '../../../models/colDef/gridColDef';
 import { getValueFromValueOptions, getValueOptions } from './filterPanelUtils';
-import { value } from '../../../utils/value';
-import { isString } from '../../../utils/isString';
+import {
+  getColumnHeaderName,
+  isReactNodeHeaderName,
+  isStringHeaderName,
+} from '../../../utils/getColumnHeaderName';
 
 export interface FilterColumnsArgs {
   field: GridColDef['field'];
@@ -201,11 +204,6 @@ const getLogicOperatorLocaleKey = (logicOperator: GridLogicOperator) => {
   }
 };
 
-const getColumnLabel = (col: GridColDef) => {
-  const headerName = value(col.headerName);
-  return isString(headerName) ? headerName : col.field;
-};
-
 const collator = new Intl.Collator();
 
 const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
@@ -297,12 +295,19 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       switch (columnsSort) {
         case 'asc':
           return filteredColumns.sort((a, b) =>
-            collator.compare(getColumnLabel(a), getColumnLabel(b)),
+            collator.compare(
+              getColumnHeaderName(a, isStringHeaderName),
+              getColumnHeaderName(b, isStringHeaderName),
+            ),
           );
 
         case 'desc':
           return filteredColumns.sort(
-            (a, b) => -collator.compare(getColumnLabel(a), getColumnLabel(b)),
+            (a, b) =>
+              -collator.compare(
+                getColumnHeaderName(a, isStringHeaderName),
+                getColumnHeaderName(b, isStringHeaderName),
+              ),
           );
 
         default:
@@ -537,7 +542,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
                 key={col.field}
                 value={col.field}
               >
-                {value(col.headerName) || col.field}
+                {getColumnHeaderName(col, isReactNodeHeaderName)}
               </rootProps.slots.baseSelectOption>
             ))}
           </rootProps.slots.baseSelect>
@@ -579,10 +584,15 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
                 key={operator.value}
                 value={operator.value}
               >
-                {value(operator.label) ||
-                  apiRef.current.getLocaleText(
-                    `filterOperator${capitalize(operator.value)}` as 'filterOperatorContains',
-                  )}
+                {getColumnHeaderName(
+                  {
+                    headerName: operator.label,
+                    field: apiRef.current.getLocaleText(
+                      `filterOperator${capitalize(operator.value)}` as 'filterOperatorContains',
+                    ),
+                  },
+                  isReactNodeHeaderName,
+                )}
               </rootProps.slots.baseSelectOption>
             ))}
           </rootProps.slots.baseSelect>

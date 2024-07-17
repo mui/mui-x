@@ -27,8 +27,9 @@ import {
   isNavigationKey,
   shouldCellShowLeftBorder,
   shouldCellShowRightBorder,
-  isString,
-  value,
+  getColumnHeaderName,
+  isStringHeaderName,
+  isReactNodeHeaderName,
 } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
@@ -300,15 +301,19 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const isApplied = Boolean(item?.value) || isNoInputOperator;
 
-    const label =
-      value(currentOperator.headerLabel) ??
-      apiRef.current.getLocaleText(
-        `headerFilterOperator${capitalize(item.operator)}` as 'headerFilterOperatorContains',
-      );
+    const label = getColumnHeaderName(
+      {
+        headerName: currentOperator.headerLabel,
+        field: apiRef.current.getLocaleText(
+          `headerFilterOperator${capitalize(item.operator)}` as 'headerFilterOperatorContains',
+        ),
+      },
+      isReactNodeHeaderName,
+      true,
+    );
 
     const isFilterActive = isApplied || hasFocus;
-    const headerName = value(colDef.headerName);
-    const ariaLabel = isString(headerName) ? headerName : colDef.field;
+    const ariaLabel = getColumnHeaderName(colDef, isStringHeaderName, true);
 
     return (
       <div
@@ -351,7 +356,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
                   }));
                 }
               }}
-              label={isString(label) ? capitalize(label) : label}
+              label={typeof label === 'string' ? capitalize(label) : label}
               placeholder=""
               isFilterActive={isFilterActive}
               clearButton={

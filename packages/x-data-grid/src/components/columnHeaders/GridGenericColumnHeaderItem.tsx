@@ -11,7 +11,6 @@ import {
 } from './GridColumnHeaderSeparator';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridColumnGroup } from '../../models/gridColumnGrouping';
-import { isString } from '../../utils/isString';
 
 interface GridGenericColumnHeaderItemProps
   extends Pick<GridStateColDef, 'headerClassName' | 'description' | 'resizable'> {
@@ -112,7 +111,7 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
       tabIndex={tabIndex}
       aria-colindex={colIndex + 1}
       aria-sort={ariaSort}
-      aria-label={headerComponent == null && isString(label) ? label : undefined}
+      aria-label={headerComponent == null && typeof label === 'string' ? label : undefined}
       {...other}
     >
       <div

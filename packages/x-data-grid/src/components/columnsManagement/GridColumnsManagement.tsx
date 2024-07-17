@@ -16,8 +16,11 @@ import type { GridColDef } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useLazyRef } from '../../hooks/utils/useLazyRef';
 import { checkColumnVisibilityModelsSame, defaultSearchPredicate } from './utils';
-import { value } from '../../utils/value';
-import { isString } from '../../utils/isString';
+import {
+  getColumnHeaderName,
+  isReactNodeHeaderName,
+  isStringHeaderName,
+} from '../../utils/getColumnHeaderName';
 
 export interface GridColumnsManagementProps {
   /*
@@ -108,22 +111,16 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
     switch (sort) {
       case 'asc':
         return [...columns].sort((a, b) => {
-          const aHeaderName = value(a.headerName);
-          const bHeaderName = value(b.headerName);
-          return collator.compare(
-            isString(aHeaderName) ? aHeaderName : a.field,
-            isString(bHeaderName) ? bHeaderName : b.field,
-          );
+          const aHeaderName = getColumnHeaderName(a, isStringHeaderName);
+          const bHeaderName = getColumnHeaderName(b, isStringHeaderName);
+          return collator.compare(aHeaderName, bHeaderName);
         });
 
       case 'desc':
         return [...columns].sort((a, b) => {
-          const aHeaderName = value(a.headerName);
-          const bHeaderName = value(b.headerName);
-          return -collator.compare(
-            isString(aHeaderName) ? aHeaderName : a.field,
-            isString(bHeaderName) ? bHeaderName : b.field,
-          );
+          const aHeaderName = getColumnHeaderName(a, isStringHeaderName);
+          const bHeaderName = getColumnHeaderName(b, isStringHeaderName);
+          return -collator.compare(aHeaderName, bHeaderName);
         });
 
       default:
@@ -258,7 +255,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
                 {...rootProps.slotProps?.baseCheckbox}
               />
             }
-            label={value(column.headerName) || column.field}
+            label={getColumnHeaderName(column, isReactNodeHeaderName)}
           />
         ))}
         {currentColumns.length === 0 && (

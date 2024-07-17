@@ -20,7 +20,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { value } from '../../utils/value';
+import { getColumnHeaderName, isReactNodeHeaderName } from '../../utils/getColumnHeaderName';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -77,11 +77,15 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
         const foundOperator = lookup[item.field!].filterOperators!.find(
           (operator) => operator.value === item.operator,
         );
-        return (
-          value(foundOperator!.label) ||
-          apiRef.current
-            .getLocaleText(`filterOperator${capitalize(item.operator!)}` as GridTranslationKeys)!
-            .toString()
+        return getColumnHeaderName(
+          {
+            headerName: foundOperator!.label,
+            field: apiRef.current
+              .getLocaleText(`filterOperator${capitalize(item.operator!)}` as GridTranslationKeys)!
+              .toString(),
+          },
+          isReactNodeHeaderName,
+          true,
         );
       };
 
@@ -100,7 +104,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
             {activeFilters.map((item, index) => ({
               ...(lookup[item.field!] && (
                 <li key={index}>
-                  {`${value(lookup[item.field!].headerName) || item.field}
+                  {`${getColumnHeaderName(lookup[item.field!], isReactNodeHeaderName)}
                   ${getOperatorLabel(item)}
                   ${
                     // implicit check for null and undefined
