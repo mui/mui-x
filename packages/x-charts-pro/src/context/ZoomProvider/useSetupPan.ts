@@ -3,6 +3,7 @@ import { useDrawingArea, useSvgRef } from '@mui/x-charts/hooks';
 import { getSVGPoint } from '@mui/x-charts/internals';
 import { useZoom } from './useZoom';
 import { ZoomData } from './Zoom.types';
+import { initializeZoomData } from './initializeZoomData';
 
 const isPointOutside = (
   point: { x: number; y: number },
@@ -108,7 +109,7 @@ export const useSetupPan = () => {
       touchStartRef.current = {
         x: point.x,
         y: point.y,
-        zoomData,
+        zoomData: initializeZoomData(zoomData, options),
       };
     };
 
