@@ -11,9 +11,6 @@ import { expect } from 'chai';
 import { SinonSpy, spy } from 'sinon';
 import { getCell, getColumnValues, sleep } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import rtlUserEvent from '@testing-library/user-event';
-
-rtlUserEvent.setup();
 
 describe('<DataGridPremium /> - Clipboard', () => {
   const { render } = createRenderer();
@@ -61,19 +58,17 @@ describe('<DataGridPremium /> - Clipboard', () => {
   }
 
   describe('copy', () => {
-    let writeText: SinonSpy;
-
-    beforeEach(function beforeEachHook() {
-      writeText = spy(navigator.clipboard, 'writeText');
-    });
+    let writeText: SinonSpy | undefined;
 
     afterEach(function afterEachHook() {
-      writeText.restore();
+      writeText?.restore();
     });
 
     ['ctrlKey', 'metaKey'].forEach((key) => {
       it(`should copy the selected cells to the clipboard when ${key} + C is pressed`, () => {
         render(<Test />);
+
+        writeText = spy(navigator.clipboard, 'writeText');
 
         const cell = getCell(0, 0);
         cell.focus();
@@ -95,6 +90,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
     it(`should copy cells range selected in one row`, () => {
       render(<Test />);
+
+      writeText = spy(navigator.clipboard, 'writeText');
 
       const cell = getCell(0, 0);
       cell.focus();
@@ -125,6 +122,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         </div>,
       );
 
+      writeText = spy(navigator.clipboard, 'writeText');
+
       const cell = getCell(0, 0);
       cell.focus();
       userEvent.mousePress(cell);
@@ -153,6 +152,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
           />
         </div>,
       );
+
+      writeText = spy(navigator.clipboard, 'writeText');
 
       const cell = getCell(0, 0);
       cell.focus();
