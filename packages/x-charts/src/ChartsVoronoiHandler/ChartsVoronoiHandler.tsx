@@ -38,6 +38,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const { series, seriesOrder } = useScatterSeries() ?? {};
   const voronoiRef = React.useRef<Record<string, VoronoiSeries>>({});
   const delauneyRef = React.useRef<Delaunay<any> | undefined>(undefined);
+  const lastFind = React.useRef<number | undefined>(undefined);
 
   const { setHighlighted, clearHighlighted } = useHighlighted();
 
@@ -88,7 +89,6 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       return undefined;
     }
 
-    // TODO: A perf optimisation of voronoi could be to use the last point as the initial point for the next search.
     function getClosestPoint(
       event: MouseEvent,
     ):
@@ -103,6 +103,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       const outsideX = svgPoint.x < left || svgPoint.x > left + width;
       const outsideY = svgPoint.y < top || svgPoint.y > top + height;
       if (outsideX || outsideY) {
+        lastFind.current = undefined;
         return 'outside-chart';
       }
 
@@ -110,11 +111,12 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
         return 'no-point-found';
       }
 
-      const closestPointIndex = delauneyRef.current.find(svgPoint.x, svgPoint.y);
+      const closestPointIndex = delauneyRef.current.find(svgPoint.x, svgPoint.y, lastFind.current);
       if (closestPointIndex === undefined) {
         return 'no-point-found';
       }
 
+      lastFind.current = closestPointIndex;
       const closestSeries = Object.values(voronoiRef.current).find((value) => {
         return 2 * closestPointIndex >= value.startIndex && 2 * closestPointIndex < value.endIndex;
       });
