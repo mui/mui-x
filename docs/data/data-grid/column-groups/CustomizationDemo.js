@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import BuildIcon from '@mui/icons-material/Build';
 import PersonIcon from '@mui/icons-material/Person';
-import { value } from '@mui/x-data-grid/internals';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 150 },
@@ -51,10 +50,12 @@ const HeaderWithIconRoot = styled('div')(({ theme }) => ({
 
 function HeaderWithIcon(props) {
   const { icon, ...params } = props;
-
+  const { headerName } = props;
+  const resolvedHeaderName =
+    typeof headerName === 'function' ? headerName() : headerName;
   return (
     <HeaderWithIconRoot>
-      <span>{value(params.headerName) ?? params.groupId}</span> {icon}
+      <span>{resolvedHeaderName ?? params.groupId}</span> {icon}
     </HeaderWithIconRoot>
   );
 }
