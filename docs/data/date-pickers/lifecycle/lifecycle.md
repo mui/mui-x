@@ -9,9 +9,7 @@ packageName: '@mui/x-date-pickers'
 
 <p class="description">This page explains when the onChange, onAccept, and onClose callbacks are called.</p>
 
-## Fields lifecycle
-
-### On simple fields
+## Lifecycle on simple fields
 
 :::info
 The information below is applicable to standalone fields (when rendering `<DateField />`),
@@ -31,7 +29,7 @@ The example below shows the last value received by `onChange`.
 
 {{"demo": "LifeCycleDateFieldEmpty.js", "defaultCodeOpen": false}}
 
-### On range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+## Lifecycle on range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 On range fields (`SingleInputDateRangeField` / `MultiInputDateRangeField` / ... ),
 `onChange` is called if the date you are modifying is matching one of the conditions above,
@@ -42,17 +40,15 @@ Note how changing the value of the start date section will call `onChange` even 
 
 {{"demo": "LifeCycleDateRangeField.js", "defaultCodeOpen": false}}
 
-## Pickers lifecycle
+## Lifecycle on pickers: `onClose`
 
-### `onClose`
-
-#### When is `onClose` called?
+### When is `onClose` called?
 
 :::info
 In all the below scenarios, the picker closes when `onClose` is called, except if you are controlling the `open` prop.
 :::
 
-##### When the last view is completed
+#### When the last view is completed
 
 When a selection in the last view is made, `onClose` will be called only if the `closeOnSelect` prop is equal to `true`.
 By default, it is set to `true` on desktop and `false` on mobile.
@@ -126,22 +122,22 @@ For example, on the `DatePicker`, the `year` and `month` views are not in the de
 so the picker will close even if you never went to those views.
 :::
 
-##### When the picker is manually closed
+#### When the picker is manually closed
 
 Pressing <kbd class="key">Escape</kbd> or clicking outside the picker will close the picker.
 
-##### When a value is selected using the action bar
+#### When a value is selected using the action bar
 
 Clicking on any built-in button of the action bar will close the picker.
 
-##### When a shortcut is picked
+#### When a shortcut is picked
 
 Clicking on a shortcut will close the picker, except if the `changeImportance` property has been set to `"set"` instead of the default value `"accept"`.
 You can find more information [in the dedicated doc section](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut).
 
-### `onChange`
+## Lifecycle on pickers: `onChange`
 
-#### Usage
+### Usage
 
 The `onChange` callback is called whenever the current value changes.
 
@@ -167,14 +163,14 @@ You can use the second argument passed to the `onChange` callback to get the val
 
 :::
 
-#### When is `onChange` called?
+### When is `onChange` called?
 
-##### When the field calls `onChange`
+#### When the field calls `onChange`
 
 When editing your value through the input(s) of your field, the picker will just re-publish the `onChange` callback.
 Take a look at the [dedicated section](/x/react-date-pickers/lifecycle/#fields-lifecycle) for more information.
 
-##### When the user interacts with the view
+#### When the user interacts with the view
 
 If the component is controlled (i.e: if it has a `value` prop),
 clicking on a value will call `onChange` if the value to publish is different from the current value
@@ -187,21 +183,21 @@ Some views can decide not to call `onChange` for some value modifications.
 The most common example is the mobile time views (using the [`TimeClock`](/x/react-date-pickers/time-clock/) component).
 The `onChange` is only fired once when the dragging (touching) of the clock hand ends even though the UI updates on each position change.
 
-##### When a value is selected using the action bar
+#### When a value is selected using the action bar
 
 If the component is controlled (i.e: if it has a `value` prop),
 clicking on any built-in actions will call `onChange` if the value to publish is different from the current value.
 
 If the component is not controlled, the behavior is the same, except for the _Clear_, _Today_, and _OK_ actions that will call `onChange` if no value has ever been published, even if the current value equals the value to publish.
 
-##### When a shortcut is picked
+#### When a shortcut is picked
 
 Clicking on a shortcut will call `onChange`.
 You can find more information [in the dedicated doc section](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut).
 
-### `onAccept`
+## Lifecycle on pickers: `onAccept`
 
-#### Usage
+### Usage
 
 The `onAccept` callback allows you to get the final value selected by the user without caring about the intermediary steps.
 
@@ -224,9 +220,9 @@ You can use the second argument passed to the `onAccept` callback to get the val
 
 :::
 
-#### When is `onAccept` called?
+### When is `onAccept` called?
 
-##### When the last view is completed
+#### When the last view is completed
 
 When a selection in the last view is made, `onAccept` will be called only if the `closeOnSelect` prop is equal to `true` and the value has been modified since the last time `onAccept` was called.
 By default, `closeOnSelect`, is set to `true` on desktop and `false` on mobile.
@@ -285,21 +281,21 @@ The examples below are using the desktop and mobile variants of the pickers, but
 
   **Behavior:** The picker will call `onAccept` when selecting the minutes or meridiem (if a 12-hour clock is used).
 
-##### When the picker is manually closed
+#### When the picker is manually closed
 
 When the user presses <kbd class="key">Escape</kbd> or clicks outside the picker, `onAccept` is called with:
 
 - the current value, if the last view has been completed
 - the last accepted value, if the last view has not been completed
 
-##### When a value is selected using the action bar
+#### When a value is selected using the action bar
 
 If the component is controlled (i.e: if it has a `value` prop),
 clicking on any built-in actions will call `onAccept` if the value to publish is different from the current value.
 
 If the component is not controlled, the behavior is the same, except for the _Clear_, _Today_, and _OK_ actions that will call `onAccept` if no value has ever been published, even if the current value equals the value to publish.
 
-##### When a shortcut is picked
+#### When a shortcut is picked
 
 Clicking on a shortcut will call `onAccept`, except if the `changeImportance` property has been set to `"set"` instead of `"accept"`.
 You can find more information [in the dedicated doc section](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut).
