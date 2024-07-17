@@ -46,10 +46,10 @@
       }
     },
     "isItemEditable": {
-      "description": "Used to determine if a given item is editable.",
+      "description": "Determines if a given item is editable or not.",
       "typeDescriptions": {
         "item": "The item to check.",
-        "boolean": "<code>true</code> if the item should be editable."
+        "boolean": "<code>true</code> if the item is editable."
       }
     },
     "itemChildrenIndentation": {
