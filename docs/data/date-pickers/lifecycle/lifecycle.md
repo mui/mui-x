@@ -141,7 +141,7 @@ You can find more information [in the dedicated doc section](/x/react-date-picke
 
 The `onChange` callback is called whenever the current value changes.
 
-If you don't want to listen to the intermediary steps, consider using the [`onAccept` prop](/x/react-date-pickers/lifecycle/#onaccept) instead.
+If you don't want to listen to the intermediary steps, consider using the [`onAccept` prop](/x/react-date-pickers/lifecycle/#lifecycle-on-pickers-onaccept) instead.
 
 ```tsx
 <DatePicker onChange={(value) => setValue(value)} />
@@ -168,7 +168,7 @@ You can use the second argument passed to the `onChange` callback to get the val
 #### When the field calls `onChange`
 
 When editing your value through the input(s) of your field, the picker will just re-publish the `onChange` callback.
-Take a look at the [dedicated section](/x/react-date-pickers/lifecycle/#fields-lifecycle) for more information.
+Take a look at the [dedicated section](/x/react-date-pickers/lifecycle/#lifecycle-on-simple-fields) for more information.
 
 #### When the user interacts with the view
 
@@ -392,6 +392,6 @@ In such a case, the recommended UI is to add a button for validating the form.
 If for some reason, you need to send the data to the server without having the user pressing a validation button, you can debounce the `onChange` as follows.
 
 The following demo shows how to extend the Date Field component by adding an `onAccept` prop, which is a debounced version of `onChange`.
-You can find more information about the `onAccept` prop [in the dedicated doc section](/x/react-date-pickers/lifecycle/#onaccept).
+You can find more information about the `onAccept` prop [in the dedicated doc section](/x/react-date-pickers/lifecycle/#lifecycle-on-pickers-onaccept).
 
 {{"demo": "ServerInteraction.js"}}
