@@ -95,7 +95,8 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       | { seriesId: SeriesId; dataIndex: number }
       | 'outside-chart'
       | 'outside-voronoi-max-radius'
-      | 'no-point-found' {
+      | 'no-point-found'
+      | 'outside-render-area' {
       // Get mouse coordinate in global SVG space
       const svgPoint = getSVGPoint(element, event);
 
@@ -125,19 +126,20 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       const dataIndex =
         (2 * closestPointIndex - voronoiRef.current[closestSeries.seriesId].startIndex) / 2;
 
-      if (voronoiMaxRadius !== undefined) {
-        const pointX = delauneyRef.current.points[2 * closestPointIndex];
-        const pointY = delauneyRef.current.points[2 * closestPointIndex + 1];
-        const dist2 = (pointX - svgPoint.x) ** 2 + (pointY - svgPoint.y) ** 2;
-        if (dist2 > voronoiMaxRadius ** 2) {
-          // The closest point is too far to be considered.
-          return 'outside-voronoi-max-radius';
-        }
+      const pointX = delauneyRef.current.points[2 * closestPointIndex];
+      const pointY = delauneyRef.current.points[2 * closestPointIndex + 1];
+      const dist2 = (pointX - svgPoint.x) ** 2 + (pointY - svgPoint.y) ** 2;
+      if (pointX < left || pointX > left + width || pointY < top || pointY > top + height) {
+        return 'outside-render-area';
+      }
+      if (dist2 > (voronoiMaxRadius ?? Infinity) ** 2) {
+        // The closest point is too far to be considered.
+        return 'outside-voronoi-max-radius';
       }
       return { seriesId: closestSeries.seriesId, dataIndex };
     }
 
-    const handleMouseOut = () => {
+    const handleMouseLeave = () => {
       dispatch({ type: 'exitChart' });
       clearHighlighted();
     };
@@ -151,7 +153,11 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
         return;
       }
 
-      if (closestPoint === 'outside-voronoi-max-radius' || closestPoint === 'no-point-found') {
+      if (
+        closestPoint === 'outside-voronoi-max-radius' ||
+        closestPoint === 'no-point-found' ||
+        closestPoint === 'outside-render-area'
+      ) {
         dispatch({ type: 'leaveItem', data: { type: 'scatter' } });
         clearHighlighted();
         return;
@@ -180,11 +186,11 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       onItemClick(event, { type: 'scatter', seriesId, dataIndex });
     };
 
-    element.addEventListener('pointerout', handleMouseOut);
+    element.addEventListener('pointerleave', handleMouseLeave);
     element.addEventListener('pointermove', handleMouseMove);
     element.addEventListener('click', handleMouseClick);
     return () => {
-      element.removeEventListener('pointerout', handleMouseOut);
+      element.removeEventListener('pointerleave', handleMouseLeave);
       element.removeEventListener('pointermove', handleMouseMove);
       element.removeEventListener('click', handleMouseClick);
     };
