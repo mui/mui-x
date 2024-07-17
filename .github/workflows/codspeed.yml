@@ -13,12 +13,18 @@ jobs:
   benchmarks:
     runs-on: ubuntu-latest
     steps:
-      - uses: 'actions/checkout@v3'
-      - uses: 'actions/setup-node@v3'
-      - name: Install dependencies
-        run: npm install
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        with:
+          run_install: false
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
+        with:
+          node-version: 20
+          cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
+      - run: pnpm install --frozen-lockfile
       - name: Run benchmarks
         uses: CodSpeedHQ/action@v2
         with:
-          run: npm exec vitest bench
+          run: pnpm vitest bench
           token: ${{ secrets.CODSPEED_TOKEN }}
