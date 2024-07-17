@@ -30,7 +30,7 @@ export interface BarChartProProps extends BarChartProps, ZoomProps {}
  * - [BarChart API](https://mui.com/x/api/charts/bar-chart/)
  */
 const BarChartPro = React.forwardRef(function BarChartPro(props: BarChartProProps, ref) {
-  const { zoom, onZoomChange, ...restProps } = props;
+  const { zoom, onZoomChange, ...other } = props;
   const {
     chartContainerProps,
     barPlotProps,
@@ -44,7 +44,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(props: BarChartProProp
     legendProps,
     tooltipProps,
     children,
-  } = useBarChartProps(restProps);
+  } = useBarChartProps(other);
 
   return (
     <ResponsiveChartContainerPro
