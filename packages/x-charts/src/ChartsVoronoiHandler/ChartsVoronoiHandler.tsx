@@ -31,7 +31,7 @@ type VoronoiSeries = { seriesId: SeriesId; startIndex: number; endIndex: number 
 function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const { voronoiMaxRadius, onItemClick } = props;
   const svgRef = useSvgRef();
-  const { left, top, width, height } = useDrawingArea();
+  const drawingArea = useDrawingArea();
   const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
   const { dispatch } = React.useContext(InteractionContext);
 
@@ -75,8 +75,8 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
         const pointX = getXPosition(x);
         const pointY = getYPosition(y);
 
-        if (pointX < left || pointX > left + width || pointY < top || pointY > top + height) {
-          return [0, 0];
+        if (!drawingArea.isPointInside({ x: pointX, y: pointY })) {
+          return [-drawingArea.width, -drawingArea.height];
         }
 
         return [pointX, pointY];
@@ -91,7 +91,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
     });
 
     delauneyRef.current = new Delaunay(points);
-  }, [defaultXAxisId, defaultYAxisId, series, seriesOrder, xAxis, yAxis, left, top, width, height]);
+  }, [defaultXAxisId, defaultYAxisId, series, seriesOrder, xAxis, yAxis, drawingArea]);
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -109,9 +109,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       // Get mouse coordinate in global SVG space
       const svgPoint = getSVGPoint(element, event);
 
-      const outsideX = svgPoint.x < left || svgPoint.x > left + width;
-      const outsideY = svgPoint.y < top || svgPoint.y > top + height;
-      if (outsideX || outsideY) {
+      if (!drawingArea.isPointInside(svgPoint)) {
         lastFind.current = undefined;
         return 'outside-chart';
       }
@@ -203,16 +201,13 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   }, [
     svgRef,
     dispatch,
-    left,
-    width,
-    top,
-    height,
     yAxis,
     xAxis,
     voronoiMaxRadius,
     onItemClick,
     setHighlighted,
     clearHighlighted,
+    drawingArea,
   ]);
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
