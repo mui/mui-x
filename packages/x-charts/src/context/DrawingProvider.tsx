@@ -39,9 +39,10 @@ export type DrawingArea = {
   height: number;
   /**
    * Checks if a point is inside the drawing area.
-   * @param x The x coordinate of the point.
-   * @param y The y coordinate of the point.
-   * @returns `true` if the point is inside the drawing area, `false` otherwise.
+   * @param {Object} point The point to check.
+   * @param {number} point.x The x coordinate of the point.
+   * @param {number} point.y The y coordinate of the point.
+   * @returns {boolean} `true` if the point is inside the drawing area, `false` otherwise.
    */
   isPointInside: (point: { x: number; y: number }) => boolean;
 };
@@ -95,7 +96,7 @@ export function DrawingProvider(props: DrawingProviderProps) {
 
   const value = React.useMemo(
     () => ({ chartId: chartId ?? '', ...drawingArea, isPointInside }),
-    [chartId, drawingArea],
+    [chartId, drawingArea, isPointInside],
   );
 
   const refValue = React.useMemo(() => ({ isInitialized: true, data: svgRef }), [svgRef]);
