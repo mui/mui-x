@@ -113,7 +113,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   );
 
   const getItem = React.useCallback(
-    // this needs to throw back the item of the user
     (itemId: string) => state.items.itemMap[itemId],
     [state.items.itemMap],
   );

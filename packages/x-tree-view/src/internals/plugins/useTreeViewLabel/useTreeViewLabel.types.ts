@@ -13,26 +13,25 @@ export interface UseTreeViewLabelPublicAPI {
 
 export interface UseTreeViewLabelInstance extends UseTreeViewLabelPublicAPI {
   /**
-   * Used to set the state.
-   * @param {TreeViewItemId} itemId The item that is being currently edited.
+   * Updates which item is currently being edited.
+   * @param {TreeViewItemId} itemId The id of the item that is currently being edited.
    * @returns {void}.
    */
   setEditedItemId: (itemId: TreeViewItemId | null) => void;
   /**
-   * Used to determine if an item is currently being edited.
-   * @param {TreeViewItemId} itemId The item to check.
+   * Checks if an item is being edited or not.
+   * @param {TreeViewItemId} itemId The id of the item to check.
    * @returns {void}.
    */
   isItemBeingEdited: (itemId: TreeViewItemId) => boolean;
   /**
-   * Used to determine if a given item is editable.
-   * @param {TreeViewItemId} itemId The item to check.
-   * @returns {boolean} `true` if the item should be editable.
+   * Determines if a given item is editable.
+   * @param {TreeViewItemId} itemId The id of the item to check.
+   * @returns {boolean} `true` if the item is editable.
    */
   isItemEditable: (itemId: TreeViewItemId) => boolean;
   /**
-   * Used to determine if the tree view is editable.
-   * @returns {boolean} `true` if the tree view is editable.
+   * Set to `true` if the tree view is editable.
    */
   isTreeViewEditable: boolean;
 }
@@ -45,10 +44,10 @@ export interface UseTreeViewLabelParameters<R extends {}> {
    */
   onItemLabelChange?: (itemId: TreeViewItemId, newLabel: string) => void;
   /**
-   * Used to determine if a given item is editable.
+   * Determines if a given item is editable or not.
    * @template R
    * @param {R} item The item to check.
-   * @returns {boolean} `true` if the item should be editable.
+   * @returns {boolean} `true` if the item is editable.
    */
   isItemEditable?: (item: R) => boolean;
 }

@@ -40,10 +40,7 @@ export const useTreeItem2 = <
   const { id, itemId, label, children, rootRef } = parameters;
 
   const { rootRef: pluginRootRef, contentRef } = runItemPlugins(parameters);
-  const { interactions, status } = useTreeItem2Utils({
-    itemId,
-    children,
-  });
+  const { interactions, status } = useTreeItem2Utils({ itemId, children });
   const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
   const handleRootRef = useForkRef(rootRef, pluginRootRef)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);

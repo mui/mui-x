@@ -3,6 +3,8 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewPlugin } from '../../models';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 import { TreeViewItemId } from '../../../models';
+import { hasPlugin } from '../../utils/plugins';
+import { useTreeViewLabel } from '../useTreeViewLabel';
 
 export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature> = ({
   instance,
@@ -87,12 +89,12 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     if (params.expansionTrigger) {
       return params.expansionTrigger;
     }
-    if (instance.isTreeViewEditable) {
+    if (hasPlugin(instance, useTreeViewLabel) && instance.isTreeViewEditable) {
       return 'iconContainer';
     }
 
     return 'content';
-  }, [params.expansionTrigger, instance.isTreeViewEditable]);
+  }, [params.expansionTrigger, instance]);
 
   return {
     publicAPI: {
