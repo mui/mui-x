@@ -281,6 +281,11 @@ However, when the term ends, you are not allowed to use the current or older ver
 
 To solve the issue, you can [renew your license](https://mui.com/r/x-get-license/) or stop making changes to code depending on MUI X's APIs.
 
+:::warning
+Make sure to set `process.env.NODE_ENV` to `'production'` in your build process to avoid the watermark in production.
+Most bundlers set this environment variable automatically when building for production, but for custom setups, you might need to set it manually.
+:::
+
 ### 4. License key plan mismatch
 
 This error indicates that your use of MUI X is not compatible with the plan of your license key.
