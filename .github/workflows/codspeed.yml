@@ -27,4 +27,5 @@ jobs:
         uses: CodSpeedHQ/action@v2
         with:
           run: pnpm vitest bench
+          working-directory: test/performance-charts
           token: ${{ secrets.CODSPEED_TOKEN }}
