@@ -18,7 +18,6 @@ import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewCon
 import { MuiCancellableEvent } from '../internals/models/MuiCancellableEvent';
 import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
-import { treeItemClasses } from '../TreeItem';
 
 export const useTreeItem2 = <
   TSignatures extends UseTreeItem2MinimalPlugins = UseTreeItem2MinimalPlugins,
@@ -71,7 +70,7 @@ export const useTreeItem2 = <
         return;
       }
 
-      if (event.relatedTarget?.classList.contains(treeItemClasses.labelInput)) {
+      if ((event.relatedTarget as HTMLElement)?.dataset?.element === 'labelInput') {
         return;
       }
 
@@ -291,6 +290,7 @@ export const useTreeItem2 = <
       label,
       ref: inputRef,
       visible: status.editing,
+      'data-element': 'labelInput',
       ...externalProps,
       onKeyDown: createInputHandleKeydown(externalEventHandlers),
       onChange: createInputHandleChange(externalEventHandlers),
