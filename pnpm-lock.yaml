@@ -90,8 +90,8 @@ importers:
         specifier: ^5.16.2
         version: 5.16.2(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#43cb32700af699cd48baaf6922fbe21343f30e2f
-        version: https://codeload.github.com/mui/material-ui/tar.gz/43cb32700af699cd48baaf6922fbe21343f30e2f(encoding@0.1.13)
+        specifier: github:mui/material-ui#d870aac54b8e00ea5451dfa302dc514798e41db2
+        version: https://codeload.github.com/mui/material-ui/tar.gz/d870aac54b8e00ea5451dfa302dc514798e41db2(encoding@0.1.13)
       '@mui/utils':
         specifier: ^5.16.2
         version: 5.16.2(@types/react@18.3.3)(react@18.3.1)
@@ -2881,10 +2881,10 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/43cb32700af699cd48baaf6922fbe21343f30e2f':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/43cb32700af699cd48baaf6922fbe21343f30e2f}
-    version: 6.0.0-alpha.14
-    engines: {pnpm: 9.4.0}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/d870aac54b8e00ea5451dfa302dc514798e41db2':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/d870aac54b8e00ea5451dfa302dc514798e41db2}
+    version: 6.0.0-beta.2
+    engines: {pnpm: 9.5.0}
 
   '@mui/private-theming@5.16.2':
     resolution: {integrity: sha512-cxztG36hXxhKvD3dmtwrjSqbMtKeYyf2XCZNk0OKRKi81aytSaPImBiCngHIllrkmClwiWRMKxjOHyhSTlqfUg==}
@@ -11084,7 +11084,7 @@ snapshots:
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@types/react': 18.3.3
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/43cb32700af699cd48baaf6922fbe21343f30e2f(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/d870aac54b8e00ea5451dfa302dc514798e41db2(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 8.0.0(encoding@0.1.13)
       '@netlify/functions': 2.8.1
