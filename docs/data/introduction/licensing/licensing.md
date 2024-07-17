@@ -285,7 +285,7 @@ To solve the issue, you can [renew your license](https://mui.com/r/x-get-license
 Make sure to set `process.env.NODE_ENV` to `'production'` in your build process to avoid the watermark in production.
 Most bundlers set this environment variable automatically when building for production, but for custom setups, you might need to set it manually.
 
-Note that `NODE_ENV=production` is not MUI-specific and is a common practice in the JavaScript ecosystem.
+Note that `NODE_ENV=production` is not MUI X-specific and is a common practice in the JavaScript ecosystem.
 It allows bundlers and libraries to optimize the output for production and eliminate dead code, so it's worth checking if it's set correctly in your project.
 See related documentation for [Webpack](https://webpack.js.org/guides/production/#specify-the-mode), [Node.js](https://nodejs.org/en/learn/getting-started/nodejs-the-difference-between-development-and-production) and [Next.js](https://nextjs.org/docs/messages/non-standard-node-env) for more information.
 :::
