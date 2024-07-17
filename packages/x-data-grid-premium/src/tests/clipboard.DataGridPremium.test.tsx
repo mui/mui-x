@@ -6,12 +6,14 @@ import {
   DataGridPremiumProps,
   GridColDef,
 } from '@mui/x-data-grid-premium';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, userEvent, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
-import { stub, SinonStub, spy } from 'sinon';
+import { SinonSpy, spy } from 'sinon';
 import { getCell, getColumnValues, sleep } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
+import rtlUserEvent from '@testing-library/user-event';
+
+rtlUserEvent.setup();
 
 describe('<DataGridPremium /> - Clipboard', () => {
   const { render } = createRenderer();
@@ -59,20 +61,14 @@ describe('<DataGridPremium /> - Clipboard', () => {
   }
 
   describe('copy', () => {
-    let writeText: SinonStub;
-    const originalClipboard = navigator.clipboard;
+    let writeText: SinonSpy;
 
     beforeEach(function beforeEachHook() {
-      writeText = stub().resolves();
-
-      Object.defineProperty(navigator, 'clipboard', {
-        value: { writeText },
-        writable: true,
-      });
+      writeText = spy(navigator.clipboard, 'writeText');
     });
 
     afterEach(function afterEachHook() {
-      Object.defineProperty(navigator, 'clipboard', { value: originalClipboard });
+      writeText.restore();
     });
 
     ['ctrlKey', 'metaKey'].forEach((key) => {
