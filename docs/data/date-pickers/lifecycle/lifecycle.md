@@ -40,9 +40,9 @@ Note how changing the value of the start date section will call `onChange` even 
 
 {{"demo": "LifeCycleDateRangeField.js", "defaultCodeOpen": false}}
 
-## Lifecycle on pickers: `onClose`
+## Lifecycle on pickers: "onClose"
 
-### When is `onClose` called?
+### When is "onClose" called?
 
 :::info
 In all the below scenarios, the picker closes when `onClose` is called, except if you are controlling the `open` prop.
@@ -135,7 +135,7 @@ Clicking on any built-in button of the action bar will close the picker.
 Clicking on a shortcut will close the picker, except if the `changeImportance` property has been set to `"set"` instead of the default value `"accept"`.
 You can find more information [in the dedicated doc section](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut).
 
-## Lifecycle on pickers: `onChange`
+## Lifecycle on pickers: "onChange"
 
 ### Usage
 
@@ -163,9 +163,9 @@ You can use the second argument passed to the `onChange` callback to get the val
 
 :::
 
-### When is `onChange` called?
+### When is "onChange" called?
 
-#### When the field calls `onChange`
+#### When the field calls "onChange"
 
 When editing your value through the input(s) of your field, the picker will just re-publish the `onChange` callback.
 Take a look at the [dedicated section](/x/react-date-pickers/lifecycle/#lifecycle-on-simple-fields) for more information.
@@ -195,7 +195,7 @@ If the component is not controlled, the behavior is the same, except for the _Cl
 Clicking on a shortcut will call `onChange`.
 You can find more information [in the dedicated doc section](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut).
 
-## Lifecycle on pickers: `onAccept`
+## Lifecycle on pickers: "onAccept"
 
 ### Usage
 
@@ -220,7 +220,7 @@ You can use the second argument passed to the `onAccept` callback to get the val
 
 :::
 
-### When is `onAccept` called?
+### When is "onAccept" called?
 
 #### When the last view is completed
 
@@ -302,9 +302,9 @@ You can find more information [in the dedicated doc section](/x/react-date-picke
 
 ## Classic scenarios
 
-### `DatePicker` on desktop
+### "DatePicker" on desktop
 
-#### Controlled `DesktopDatePicker`: basic usage
+#### Controlled "DesktopDatePicker": basic usage
 
 ```tsx
 <DesktopDatePicker value={value} onChange={(newValue) => setValue(newValue)} />
@@ -320,7 +320,7 @@ You can find more information [in the dedicated doc section](/x/react-date-picke
 - Fires `onChange` with the selected day (keeps the time of the previous value)
 - Fires `onAccept` with the selected day (keeps the time of the previous value)
 
-#### Controlled `DesktopDatePicker`: picking year, month and day
+#### Controlled "DesktopDatePicker": picking year, month and day
 
 ```tsx
 <DesktopDatePicker
@@ -352,9 +352,9 @@ You can find more information [in the dedicated doc section](/x/react-date-picke
 - Fires `onChange` with the selected day (keeps the time of the previous value)
 - Fires `onAccept` with the selected day (keeps the time of the previous value)
 
-### `DatePicker` on mobile
+### "DatePicker" on mobile
 
-#### Controlled `MobileDatePicker`: basic usage
+#### Controlled "MobileDatePicker": basic usage
 
 ```tsx
 <MobileDatePicker value={value} onChange={(newValue) => setValue(newValue)} />
