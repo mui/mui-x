@@ -27,5 +27,4 @@ jobs:
         uses: CodSpeedHQ/action@v2
         with:
           run: pnpm performance:charts
-          working-directory: test/performance-charts
           token: ${{ secrets.CODSPEED_TOKEN }}
