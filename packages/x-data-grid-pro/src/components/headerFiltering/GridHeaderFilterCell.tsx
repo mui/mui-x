@@ -301,16 +301,18 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const isApplied = Boolean(item?.value) || isNoInputOperator;
 
-    const label = getColumnHeaderName(
-      {
-        headerName: currentOperator.headerLabel,
-        field: '',
-      },
-      isReactNodeHeaderName,
-      false,
-    ) ?? apiRef.current.getLocaleText(
-      `headerFilterOperator${capitalize(item.operator)}` as 'headerFilterOperatorContains',
-    );
+    const label =
+      getColumnHeaderName(
+        {
+          headerName: currentOperator.headerLabel,
+          field: '',
+        },
+        isReactNodeHeaderName,
+        false,
+      ) ??
+      apiRef.current.getLocaleText(
+        `headerFilterOperator${capitalize(item.operator)}` as 'headerFilterOperatorContains',
+      );
 
     const isFilterActive = isApplied || hasFocus;
     const ariaLabel = getColumnHeaderName(colDef, isStringHeaderName);

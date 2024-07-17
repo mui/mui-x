@@ -59,16 +59,18 @@ function GridHeaderFilterMenu({
     <GridMenu placement="bottom-end" open={open} target={target} onClose={hideMenu}>
       <MenuList aria-labelledby={labelledBy} id={id} onKeyDown={handleListKeyDown}>
         {operators.map((op, i) => {
-          const label = getColumnHeaderName(
-            {
-              headerName: op?.headerLabel,
-              field: '',
-            },
-            isReactNodeHeaderName,
-            false,
-          ) ?? apiRef.current.getLocaleText(
-            `headerFilterOperator${capitalize(op.value)}` as 'headerFilterOperatorContains',
-          );
+          const label =
+            getColumnHeaderName(
+              {
+                headerName: op?.headerLabel,
+                field: '',
+              },
+              isReactNodeHeaderName,
+              false,
+            ) ??
+            apiRef.current.getLocaleText(
+              `headerFilterOperator${capitalize(op.value)}` as 'headerFilterOperatorContains',
+            );
 
           return (
             <MenuItem
