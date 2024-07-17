@@ -22,7 +22,11 @@ export function ZoomProvider({ children, xAxis, yAxis, zoom, onZoomChange }: Zoo
 
   const [zoomData, setZoomData] = useControlled<ZoomData[]>({
     controlled: zoom,
-    default: [],
+    default: Object.values(options).map(({ axisId, minStart: start, maxEnd: end }) => ({
+      axisId,
+      start,
+      end,
+    })),
     name: 'ZoomProvider',
     state: 'zoom',
   });
