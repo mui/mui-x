@@ -281,6 +281,15 @@ However, when the term ends, you are not allowed to use the current or older ver
 
 To solve the issue, you can [renew your license](https://mui.com/r/x-get-license/) or stop making changes to code depending on MUI X's APIs.
 
+:::warning
+Make sure to set `process.env.NODE_ENV` to `'production'` in your build process to avoid the watermark in production.
+Most bundlers set this environment variable automatically when building for production, but for custom setups, you might need to set it manually.
+
+Note that `NODE_ENV=production` is not MUI-specific and is a common practice in the JavaScript ecosystem.
+It allows bundlers and libraries to optimize the output for production and eliminate dead code, so it's worth checking if it's set correctly in your project.
+See related documentation for [Webpack](https://webpack.js.org/guides/production/#specify-the-mode), [Node.js](https://nodejs.org/en/learn/getting-started/nodejs-the-difference-between-development-and-production) and [Next.js](https://nextjs.org/docs/messages/non-standard-node-env) for more information.
+:::
+
 ### 4. License key plan mismatch
 
 This error indicates that your use of MUI X is not compatible with the plan of your license key.
