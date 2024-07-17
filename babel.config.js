@@ -18,6 +18,7 @@ const defaultAlias = {
   '@mui/x-charts-pro': resolveAliasPath('./packages/x-charts-pro/src'),
   '@mui/x-tree-view': resolveAliasPath('./packages/x-tree-view/src'),
   '@mui/x-tree-view-pro': resolveAliasPath('./packages/x-tree-view-pro/src'),
+  '@mui/x-internals': resolveAliasPath('./packages/x-internals/src'),
   '@mui/material-nextjs': '@mui/monorepo/packages/mui-material-nextjs/src',
   '@mui-internal/api-docs-builder': resolveAliasPath(
     './node_modules/@mui/monorepo/packages/api-docs-builder',

@@ -1,14 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { useChartId } from '../hooks/useChartId';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
-import { cleanId } from '../internals/utils';
+import { cleanId } from '../internals/cleanId';
 import getColor from './getColor';
 import { useLineSeries } from '../hooks/useSeries';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -56,8 +57,9 @@ function MarkPlot(props: MarkPlotProps) {
   const { slots, slotProps, skipAnimation, onItemClick, ...other } = props;
 
   const seriesData = useLineSeries();
-  const axisData = React.useContext(CartesianContext);
+  const axisData = useCartesianContext();
   const chartId = useChartId();
+  const { left, width, top, height } = useDrawingArea();
 
   const Mark = slots?.mark ?? MarkElement;
 
@@ -89,14 +91,11 @@ function MarkPlot(props: MarkPlotProps) {
           const yScale = yAxis[yAxisKey].scale;
           const xData = xAxis[xAxisKey].data;
 
-          const xRange = xAxis[xAxisKey].scale.range();
-          const yRange = yScale.range();
-
           const isInRange = ({ x, y }: { x: number; y: number }) => {
-            if (x < Math.min(...xRange) || x > Math.max(...xRange)) {
+            if (x < left || x > left + width) {
               return false;
             }
-            if (y < Math.min(...yRange) || y > Math.max(...yRange)) {
+            if (y < top || y > top + height) {
               return false;
             }
             return true;

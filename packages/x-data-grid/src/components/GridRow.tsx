@@ -376,10 +376,11 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       return (
         <slots.skeletonCell
           key={column.field}
+          type={column.type}
           width={width}
           height={rowHeight}
           field={column.field}
-          align={column.align ?? 'left'}
+          align={column.align}
         />
       );
     }

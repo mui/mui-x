@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { Delaunay } from 'd3-delaunay';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { InteractionContext } from '../context/InteractionProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import { getSVGPoint } from '../internals/utils';
+import { getSVGPoint } from '../internals/getSVGPoint';
 import { ScatterItemIdentifier } from '../models';
 import { SeriesId } from '../models/seriesType/common';
 import { useDrawingArea, useSvgRef } from '../hooks';
@@ -32,7 +32,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const { voronoiMaxRadius, onItemClick } = props;
   const svgRef = useSvgRef();
   const { left, top, width, height } = useDrawingArea();
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = React.useContext(CartesianContext);
+  const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
   const { dispatch } = React.useContext(InteractionContext);
 
   const { series, seriesOrder } = useScatterSeries() ?? {};
@@ -97,7 +97,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       | 'outside-voronoi-max-radius'
       | 'no-point-found' {
       // Get mouse coordinate in global SVG space
-      const svgPoint = getSVGPoint(svgRef.current!, event);
+      const svgPoint = getSVGPoint(element, event);
 
       const outsideX = svgPoint.x < left || svgPoint.x > left + width;
       const outsideY = svgPoint.y < top || svgPoint.y > top + height;
@@ -180,12 +180,12 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       onItemClick(event, { type: 'scatter', seriesId, dataIndex });
     };
 
-    element.addEventListener('mouseout', handleMouseOut);
-    element.addEventListener('mousemove', handleMouseMove);
+    element.addEventListener('pointerout', handleMouseOut);
+    element.addEventListener('pointermove', handleMouseMove);
     element.addEventListener('click', handleMouseClick);
     return () => {
-      element.removeEventListener('mouseout', handleMouseOut);
-      element.removeEventListener('mousemove', handleMouseMove);
+      element.removeEventListener('pointerout', handleMouseOut);
+      element.removeEventListener('pointermove', handleMouseMove);
       element.removeEventListener('click', handleMouseClick);
     };
   }, [

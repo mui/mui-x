@@ -10,9 +10,30 @@ import {
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
+import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
 describe('<MobileDateRangePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
+
+  describe('Field slot: SingleInputDateRangeField', () => {
+    it('should render the input with a given `name` when `SingleInputDateRangeField` is used', () => {
+      // Test with v7 input
+      const v7Response = render(
+        <MobileDateRangePicker
+          name="test"
+          enableAccessibleFieldDOMStructure
+          slots={{ field: SingleInputDateRangeField }}
+        />,
+      );
+      expect(screen.getByRole<HTMLInputElement>('textbox', { hidden: true }).name).to.equal('test');
+
+      v7Response.unmount();
+
+      // Test with v6 input
+      render(<MobileDateRangePicker name="test" slots={{ field: SingleInputDateRangeField }} />);
+      expect(screen.getByRole<HTMLInputElement>('textbox').name).to.equal('test');
+    });
+  });
 
   describe('picker state', () => {
     it('should open when focusing the start input', () => {

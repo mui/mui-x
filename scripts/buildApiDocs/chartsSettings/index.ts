@@ -1,13 +1,8 @@
 import path from 'path';
 import { LANGUAGES } from 'docs/config';
-import { ProjectSettings } from '@mui-internal/api-docs-builder';
+import { ProjectSettings, ComponentReactApi, HookReactApi } from '@mui-internal/api-docs-builder';
 import findApiPages from '@mui-internal/api-docs-builder/utils/findApiPages';
-import { ReactApi as ComponentReactApi } from '@mui-internal/api-docs-builder/ApiBuilders/ComponentApiBuilder';
-import { ReactApi as HookReactApi } from '@mui-internal/api-docs-builder/ApiBuilders/HookApiBuilder';
-import {
-  unstable_generateUtilityClass as generateUtilityClass,
-  unstable_isGlobalState as isGlobalState,
-} from '@mui/utils';
+import generateUtilityClass, { isGlobalState } from '@mui/utils/generateUtilityClass';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
 
 type PageType = { pathname: string; title: string; plan?: 'community' | 'pro' | 'premium' };
@@ -48,12 +43,11 @@ export default apiPages;
       rootPath: path.join(process.cwd(), 'packages/x-charts'),
       entryPointPath: 'src/index.ts',
     },
-    // TODO x-charts-pro
-    // {
-    //   name: 'charts-pro',
-    //   rootPath: path.join(process.cwd(), 'packages/x-charts-pro'),
-    //   entryPointPath: 'src/index.ts',
-    // },
+    {
+      name: 'charts-pro',
+      rootPath: path.join(process.cwd(), 'packages/x-charts-pro'),
+      entryPointPath: 'src/index.ts',
+    },
   ],
   getApiPages: () => findApiPages('docs/pages/x/api/charts'),
   getComponentInfo,
@@ -71,6 +65,7 @@ export default apiPages;
       'x-charts/src/ChartsOverlay/ChartsOverlay.tsx',
       'x-charts/src/ChartsOverlay/ChartsNoDataOverlay.tsx',
       'x-charts/src/ChartsOverlay/ChartsLoadingOverlay.tsx',
+      'x-charts/src/ChartsLegend/LegendPerItem.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,
@@ -79,6 +74,9 @@ export default apiPages;
   getComponentImports,
   propsSettings: {
     // propsWithoutDefaultVerification: [],
+  },
+  sortingStrategies: {
+    slotsSort: (a, b) => a.name.localeCompare(b.name),
   },
   generateClassName: generateUtilityClass,
   isGlobalClassName: isGlobalState,

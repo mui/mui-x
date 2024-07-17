@@ -25,7 +25,7 @@ module.exports = {
       DISABLE_CHANCE_RANDOM: JSON.stringify(true),
     }),
     new webpack.ProvidePlugin({
-      // required by enzyme > cheerio > parse5 > util
+      // required by code accessing `process.env` in the browser
       process: 'process/browser.js',
     }),
   ],
@@ -47,7 +47,7 @@ module.exports = {
     fallback: {
       // Exclude polyfill and treat 'fs' as an empty module since it is not required. next -> gzip-size relies on it.
       fs: false,
-      // needed by enzyme > cheerio
+      // Exclude polyfill and treat 'stream' as an empty module since it is not required. next -> gzip-size relies on it.
       stream: false,
       // Exclude polyfill and treat 'zlib' as an empty module since it is not required. next -> gzip-size relies on it.
       zlib: false,

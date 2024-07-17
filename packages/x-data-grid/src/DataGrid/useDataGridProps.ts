@@ -29,54 +29,55 @@ const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProces
 export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   autoHeight: false,
   autoPageSize: false,
+  autosizeOnMount: false,
   checkboxSelection: false,
   checkboxSelectionVisibleOnly: false,
+  clipboardCopyCellDelimiter: '\t',
   columnBufferPx: 150,
-  rowBufferPx: 150,
-  rows: [],
-  rowSelection: true,
+  columnHeaderHeight: 56,
+  disableAutosize: false,
   disableColumnFilter: false,
   disableColumnMenu: false,
+  disableColumnReorder: false,
+  disableColumnResize: false,
   disableColumnSelector: false,
+  disableColumnSorting: false,
   disableDensitySelector: false,
   disableEval: false,
   disableMultipleColumnsFiltering: false,
-  disableMultipleRowSelection: false,
-  disableColumnSorting: false,
   disableMultipleColumnsSorting: false,
+  disableMultipleRowSelection: false,
   disableRowSelectionOnClick: false,
   disableVirtualization: false,
   editMode: GridEditModes.Cell,
-  filterMode: 'client',
   filterDebounceMs: 150,
-  columnHeaderHeight: 56,
+  filterMode: 'client',
   hideFooter: false,
   hideFooterPagination: false,
   hideFooterRowCount: false,
   hideFooterSelectedRowCount: false,
   ignoreDiacritics: false,
+  ignoreValueFormatterDuringExport: false,
+  keepColumnPositionIfDraggedOutside: false,
+  keepNonExistentRowsSelected: false,
+  loading: false,
   logger: console,
   logLevel: process.env.NODE_ENV === 'production' ? ('error' as const) : ('warn' as const),
+  pageSizeOptions: [25, 50, 100],
   pagination: false,
   paginationMode: 'client',
-  rowHeight: 52,
   resizeThrottleMs: 60,
-  pageSizeOptions: [25, 50, 100],
+  rowBufferPx: 150,
+  rowHeight: 52,
+  rowPositionsDebounceMs: 166,
+  rows: [],
+  rowSelection: true,
   rowSpacingType: 'margin',
   showCellVerticalBorder: false,
   showColumnVerticalBorder: false,
-  sortingOrder: ['asc' as const, 'desc' as const, null],
   sortingMode: 'client',
+  sortingOrder: ['asc' as const, 'desc' as const, null],
   throttleRowsMs: 0,
-  disableColumnReorder: false,
-  disableColumnResize: false,
-  keepNonExistentRowsSelected: false,
-  keepColumnPositionIfDraggedOutside: false,
-  ignoreValueFormatterDuringExport: false,
-  clipboardCopyCellDelimiter: '\t',
-  rowPositionsDebounceMs: 166,
-  autosizeOnMount: false,
-  disableAutosize: false,
 };
 
 const defaultSlots = DATA_GRID_DEFAULT_SLOTS_COMPONENTS;
@@ -104,14 +105,26 @@ export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridP
     [themedProps.slots],
   );
 
+  const injectDefaultProps = React.useMemo(() => {
+    return (
+      Object.keys(DATA_GRID_PROPS_DEFAULT_VALUES) as Array<
+        keyof DataGridPropsWithDefaultValues<any>
+      >
+    ).reduce((acc, key) => {
+      // @ts-ignore
+      acc[key] = themedProps[key] ?? DATA_GRID_PROPS_DEFAULT_VALUES[key];
+      return acc;
+    }, {} as DataGridPropsWithDefaultValues<any>);
+  }, [themedProps]);
+
   return React.useMemo<DataGridProcessedProps<R>>(
     () => ({
-      ...DATA_GRID_PROPS_DEFAULT_VALUES,
       ...themedProps,
+      ...injectDefaultProps,
       localeText,
       slots,
       ...DATA_GRID_FORCED_PROPS,
     }),
-    [themedProps, localeText, slots],
+    [themedProps, localeText, slots, injectDefaultProps],
   );
 };

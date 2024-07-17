@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { AxisDefaultized } from '../models/axis';
 import { FormatterResult } from '../models/seriesType/config';
@@ -89,7 +89,7 @@ const useAggregatedData = (): {
   const seriesData =
     useBarSeries() ??
     ({ series: {}, stackingGroups: [], seriesOrder: [] } as FormatterResult<'bar'>);
-  const axisData = React.useContext(CartesianContext);
+  const axisData = useCartesianContext();
   const chartId = useChartId();
 
   const { series, stackingGroups } = seriesData;
