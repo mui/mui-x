@@ -587,12 +587,14 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
                 {getColumnHeaderName(
                   {
                     headerName: operator.label,
-                    field: apiRef.current.getLocaleText(
-                      `filterOperator${capitalize(operator.value)}` as 'filterOperatorContains',
-                    ),
+                    field: '',
                   },
                   isReactNodeHeaderName,
-                )}
+                  false,
+                ) ??
+                  apiRef.current.getLocaleText(
+                    `filterOperator${capitalize(operator.value)}` as 'filterOperatorContains',
+                  )}
               </rootProps.slots.baseSelectOption>
             ))}
           </rootProps.slots.baseSelect>

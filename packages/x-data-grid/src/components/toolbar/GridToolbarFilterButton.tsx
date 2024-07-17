@@ -77,15 +77,18 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
         const foundOperator = lookup[item.field!].filterOperators!.find(
           (operator) => operator.value === item.operator,
         );
-        return getColumnHeaderName(
-          {
-            headerName: foundOperator!.label,
-            field: apiRef.current
-              .getLocaleText(`filterOperator${capitalize(item.operator!)}` as GridTranslationKeys)!
-              .toString(),
-          },
-          isReactNodeHeaderName,
-          true,
+        return (
+          getColumnHeaderName(
+            {
+              headerName: foundOperator!.label,
+              field: '',
+            },
+            isReactNodeHeaderName,
+            false,
+          ) ??
+          apiRef.current
+            .getLocaleText(`filterOperator${capitalize(item.operator!)}` as GridTranslationKeys)!
+            .toString()
         );
       };
 
