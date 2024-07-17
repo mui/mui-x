@@ -20,7 +20,8 @@
   "name": "BarPlot",
   "imports": [
     "import { BarPlot } from '@mui/x-charts/BarChart';",
-    "import { BarPlot } from '@mui/x-charts';"
+    "import { BarPlot } from '@mui/x-charts';",
+    "import { BarPlot } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {
