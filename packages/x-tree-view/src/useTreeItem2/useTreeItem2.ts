@@ -47,7 +47,6 @@ export const useTreeItem2 = <
   const iconContainerRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const isBeingEdited = status.editing;
   const rootTabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
 
   const createRootHandleFocus =
@@ -291,7 +290,7 @@ export const useTreeItem2 = <
       ...externalEventHandlers,
       label,
       ref: inputRef,
-      visible: isBeingEdited,
+      visible: status.editing,
       ...externalProps,
       onKeyDown: createInputHandleKeydown(externalEventHandlers),
       onChange: createInputHandleChange(externalEventHandlers),
