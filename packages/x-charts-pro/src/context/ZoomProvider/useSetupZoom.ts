@@ -103,6 +103,10 @@ export const useSetupZoom = () => {
       setZoomData((prevZoomData) => {
         return prevZoomData.map((zoom) => {
           const option = options[zoom.axisId];
+          if (!option) {
+            return zoom;
+          }
+
           const centerRatio =
             option.axisDirection === 'x'
               ? getHorizontalCenterRatio(point, area)
@@ -146,6 +150,9 @@ export const useSetupZoom = () => {
       setZoomData((prevZoomData) => {
         const newZoomData = prevZoomData.map((zoom) => {
           const option = options[zoom.axisId];
+          if (!option) {
+            return zoom;
+          }
 
           const { scaleRatio, isZoomIn } = getPinchScaleRatio(
             curDiff,
