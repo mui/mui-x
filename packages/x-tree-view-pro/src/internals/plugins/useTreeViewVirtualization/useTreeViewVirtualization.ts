@@ -156,7 +156,17 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
       renderContext.lastItemIndex + 1,
     );
 
-    const itemsToRenderSet = new Set(itemsToRender);
+    const itemsToRenderWithVisibleContent = new Set(itemsToRender);
+
+    const addItem = (itemId: TreeViewItemId | null) => {
+      if (itemId == null || itemsToRenderWithVisibleContent.has(itemId)) {
+        return;
+      }
+
+      itemsToRender.push(itemId);
+    };
+
+    addItem(state.focusedItemId);
 
     const getPropsFromItemId = (
       id: TreeViewItemId,
@@ -168,7 +178,7 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
         itemId: item.id,
         id: item.idAttribute,
         children: isAncestor ? [] : undefined,
-        isContentHidden: !itemsToRenderSet.has(id),
+        isContentHidden: !itemsToRenderWithVisibleContent.has(id),
       };
     };
 

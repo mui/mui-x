@@ -5,6 +5,7 @@ import {
   UseTreeViewItemsSignature,
   TreeViewItemToRenderProps,
   UseTreeViewExpansionSignature,
+  UseTreeViewFocusSignature,
 } from '@mui/x-tree-view/internals';
 
 export interface UseTreeViewVirtualizationInstance {
@@ -90,5 +91,9 @@ export type UseTreeViewVirtualizationSignature = TreeViewPluginSignature<{
   state: UseTreeViewVirtualizationState;
   contextValue: UseTreeViewVirtualizationContextValue;
   experimentalFeatures: 'virtualization';
-  dependencies: [UseTreeViewItemsSignature, UseTreeViewExpansionSignature];
+  dependencies: [
+    UseTreeViewItemsSignature,
+    UseTreeViewExpansionSignature,
+    UseTreeViewFocusSignature,
+  ];
 }>;
