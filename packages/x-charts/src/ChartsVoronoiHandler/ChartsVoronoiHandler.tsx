@@ -91,6 +91,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
     });
 
     delauneyRef.current = new Delaunay(points);
+    lastFind.current = undefined;
   }, [defaultXAxisId, defaultYAxisId, series, seriesOrder, xAxis, yAxis, drawingArea]);
 
   React.useEffect(() => {
