@@ -102,19 +102,6 @@ For example, in a Time Picker, it allows you to choose the date of your value:
 
 {{"demo": "ReferenceDateExplicitTimePicker.js"}}
 
-## Accessibility
-
-Both `Desktop` and `Mobile` Date and Time Pickers are using `role="dialog"` to display their interactive view parts and thus they should follow [Modal accessibility guidelines](/material-ui/react-modal/#accessibility).
-This behavior is automated as much as possible, ensuring that the Date and Time Pickers are accessible in most cases.
-A correct `aria-labelledby` value is assigned to the dialog component based on the following rules:
-
-- Use `toolbar` id if the toolbar is visible;
-- Use the id of the input label if the toolbar is hidden;
-
-:::info
-Make sure to provide an `aria-labelledby` prop to `popper` and/or `mobilePaper` `slotProps` in case you are using Date and Time Pickers component with **hidden toolbar** and **without a label**.
-:::
-
 ## TypeScript
 
 ### Theme augmentation

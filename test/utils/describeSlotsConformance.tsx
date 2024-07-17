@@ -33,7 +33,7 @@ export function innerDescribeSlotsConformance(params: DescribeSlotsConformancePa
         expect(response.container.querySelector(`.${slotConfig.className}`)).to.equal(null);
 
         // Check if the custom slot is being rendered
-        expect(response.getByTestId('custom-slot')).to.not.equal(null);
+        expect(response.getByTestId('custom-slot')).not.to.equal(null);
       });
 
       it('should pass props to the default slot', () => {

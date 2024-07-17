@@ -205,20 +205,19 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       className={classes.root}
     >
       {!disableLine && (
-        <Line
-          x1={xScale.range()[0]}
-          x2={xScale.range()[1]}
-          className={classes.line}
-          {...slotProps?.axisLine}
-        />
+        <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
       )}
 
       {xTicksWithDimension.map(({ formattedValue, offset, labelOffset, skipLabel }, index) => {
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSign * (tickSize + 3);
+
+        const showTick = offset >= left - 1 && offset <= left + width + 1;
+        const showTickLabel =
+          offset + xTickLabel >= left - 1 && offset + xTickLabel <= left + width + 1;
         return (
           <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
-            {!disableTicks && (
+            {!disableTicks && showTick && (
               <Tick
                 y2={positionSign * tickSize}
                 className={classes.tick}
@@ -226,7 +225,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
               />
             )}
 
-            {formattedValue !== undefined && !skipLabel && (
+            {formattedValue !== undefined && !skipLabel && showTickLabel && (
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}

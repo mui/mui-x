@@ -10,7 +10,7 @@ packageName: '@mui/x-tree-view'
 
 <p class="description">The Tree View component lets users navigate hierarchical lists of data with nested levels that can be expanded and collapsed.</p>
 
-{{"component": "modules/components/ComponentLinkHeader.js"}}
+{{"component": "@mui/docs/ComponentLinkHeader"}}
 
 ## Available components
 

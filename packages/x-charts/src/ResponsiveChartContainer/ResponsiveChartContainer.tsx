@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
-import { useChartContainerDimensions } from './useChartContainerDimensions';
 import { ResizableContainer } from './ResizableContainer';
+import { useResponsiveChartContainerProps } from './useResponsiveChartContainerProps';
 
 export interface ResponsiveChartContainerProps
   extends Omit<ChartContainerProps, 'width' | 'height'> {
@@ -20,14 +20,12 @@ const ResponsiveChartContainer = React.forwardRef(function ResponsiveChartContai
   props: ResponsiveChartContainerProps,
   ref,
 ) {
-  const { width: inWidth, height: inHeight, ...other } = props;
-  const [containerRef, width, height] = useChartContainerDimensions(inWidth, inHeight);
+  const { hasIntrinsicSize, chartContainerProps, resizableChartContainerProps } =
+    useResponsiveChartContainerProps(props, ref);
 
   return (
-    <ResizableContainer ref={containerRef} ownerState={{ width: inWidth, height: inHeight }}>
-      {width && height ? (
-        <ChartContainer {...other} width={width} height={height} ref={ref} />
-      ) : null}
+    <ResizableContainer {...resizableChartContainerProps}>
+      {hasIntrinsicSize ? <ChartContainer {...chartContainerProps} /> : null}
     </ResizableContainer>
   );
 });

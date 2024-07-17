@@ -85,7 +85,7 @@ describe('<DesktopDatePicker />', () => {
 
       openPicker({ type: 'date', variant: 'desktop' });
 
-      expect(screen.getByRole('radio', { checked: true, name: '2018' })).to.not.equal(null);
+      expect(screen.getByRole('radio', { checked: true, name: '2018' })).not.to.equal(null);
 
       // Dismiss the picker
       userEvent.keyPress(document.activeElement!, { key: 'Escape' });
@@ -95,7 +95,7 @@ describe('<DesktopDatePicker />', () => {
       clock.runToLast();
 
       // should have changed the open view
-      expect(screen.getByRole('radio', { checked: true, name: 'January' })).to.not.equal(null);
+      expect(screen.getByRole('radio', { checked: true, name: 'January' })).not.to.equal(null);
     });
 
     it('should move the focus to the newly opened views', function test() {
@@ -122,7 +122,7 @@ describe('<DesktopDatePicker />', () => {
 
       openPicker({ type: 'date', variant: 'desktop' });
 
-      expect(screen.getByRole('radio', { checked: true, name: 'January' })).to.not.equal(null);
+      expect(screen.getByRole('radio', { checked: true, name: 'January' })).not.to.equal(null);
 
       // Dismiss the picker
       userEvent.keyPress(document.activeElement!, { key: 'Escape' });
@@ -132,7 +132,7 @@ describe('<DesktopDatePicker />', () => {
       clock.runToLast();
 
       // should have changed the open view
-      expect(screen.getByRole('radio', { checked: true, name: '2018' })).to.not.equal(null);
+      expect(screen.getByRole('radio', { checked: true, name: '2018' })).not.to.equal(null);
     });
   });
 
@@ -322,7 +322,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      expect(document.querySelector(`.${inputBaseClasses.error}`)).to.not.equal(null);
+      expect(document.querySelector(`.${inputBaseClasses.error}`)).not.to.equal(null);
     });
 
     it('should enable the input error state when the current date has an invalid month', () => {
@@ -333,7 +333,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      expect(document.querySelector(`.${inputBaseClasses.error}`)).to.not.equal(null);
+      expect(document.querySelector(`.${inputBaseClasses.error}`)).not.to.equal(null);
     });
 
     it('should enable the input error state when the current date has an invalid year', () => {
@@ -344,7 +344,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      expect(document.querySelector(`.${inputBaseClasses.error}`)).to.not.equal(null);
+      expect(document.querySelector(`.${inputBaseClasses.error}`)).not.to.equal(null);
     });
   });
 
