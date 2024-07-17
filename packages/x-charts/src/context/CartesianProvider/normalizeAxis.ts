@@ -10,20 +10,22 @@ export const normalizeAxis = <
   axis: R[] | undefined,
   dataset: DatasetType | undefined,
   axisName: 'x' | 'y',
-): R[] | undefined => {
-  return axis?.map((axisConfig) => {
-    const dataKey = axisConfig.dataKey;
-    if (dataKey === undefined || axisConfig.data !== undefined) {
-      return axisConfig;
-    }
-    if (dataset === undefined) {
-      throw Error(
-        `MUI X Charts: ${axisName}-axis uses \`dataKey\` but no \`dataset\` is provided.`,
-      );
-    }
-    return {
-      ...axisConfig,
-      data: dataset.map((d) => d[dataKey]),
-    };
-  });
+): R[] => {
+  return (
+    axis?.map((axisConfig) => {
+      const dataKey = axisConfig.dataKey;
+      if (dataKey === undefined || axisConfig.data !== undefined) {
+        return axisConfig;
+      }
+      if (dataset === undefined) {
+        throw Error(
+          `MUI X Charts: ${axisName}-axis uses \`dataKey\` but no \`dataset\` is provided.`,
+        );
+      }
+      return {
+        ...axisConfig,
+        data: dataset.map((d) => d[dataKey]),
+      };
+    }) ?? []
+  );
 };

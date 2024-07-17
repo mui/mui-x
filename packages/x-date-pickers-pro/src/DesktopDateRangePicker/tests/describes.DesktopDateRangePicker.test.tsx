@@ -42,7 +42,6 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
       'themeVariants',
       'mergeClassName',
       'propsSpread',
-      'rootClass',
     ],
   }));
 

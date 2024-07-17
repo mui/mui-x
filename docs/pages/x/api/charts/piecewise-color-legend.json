@@ -1,0 +1,78 @@
+{
+  "props": {
+    "direction": {
+      "type": { "name": "enum", "description": "'column'<br>&#124;&nbsp;'row'" },
+      "required": true
+    },
+    "position": {
+      "type": {
+        "name": "shape",
+        "description": "{ horizontal: 'left'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'right', vertical: 'bottom'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'top' }"
+      },
+      "required": true
+    },
+    "axisDirection": {
+      "type": { "name": "enum", "description": "'x'<br>&#124;&nbsp;'y'<br>&#124;&nbsp;'z'" },
+      "default": "'z'"
+    },
+    "axisId": {
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "default": "The first axis item."
+    },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "hidden": { "type": { "name": "bool" }, "default": "false" },
+    "hideFirst": { "type": { "name": "bool" }, "default": "false" },
+    "hideLast": { "type": { "name": "bool" }, "default": "false" },
+    "itemGap": { "type": { "name": "number" }, "default": "10" },
+    "itemMarkHeight": { "type": { "name": "number" }, "default": "20" },
+    "itemMarkWidth": { "type": { "name": "number" }, "default": "20" },
+    "labelFormatter": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: PiecewiseLabelFormatterParams) => string | null",
+        "describedArgs": ["params"],
+        "returned": "string | null"
+      }
+    },
+    "labelStyle": { "type": { "name": "object" }, "default": "theme.typography.subtitle1" },
+    "markGap": { "type": { "name": "number" }, "default": "5" },
+    "padding": {
+      "type": {
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+      },
+      "default": "10"
+    }
+  },
+  "name": "PiecewiseColorLegend",
+  "imports": [
+    "import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';",
+    "import { PiecewiseColorLegend } from '@mui/x-charts';",
+    "import { PiecewiseColorLegend } from '@mui/x-charts-pro';"
+  ],
+  "classes": [
+    {
+      "key": "mark",
+      "className": "MuiPiecewiseColorLegend-mark",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiPiecewiseColorLegend-root",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "series",
+      "className": "MuiPiecewiseColorLegend-series",
+      "description": "",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiPiecewiseColorLegend",
+  "filename": "/packages/x-charts/src/ChartsLegend/PiecewiseColorLegend.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/legend/\">Charts - Legend</a></li></ul>",
+  "cssComponent": false
+}

@@ -55,10 +55,14 @@
   "name": "ResponsiveChartContainer",
   "imports": [
     "import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';",
-    "import { ResponsiveChartContainer } from '@mui/x-charts';"
+    "import { ResponsiveChartContainer } from '@mui/x-charts';",
+    "import { ResponsiveChartContainer } from '@mui/x-charts-pro';"
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": false,
   "muiName": "MuiResponsiveChartContainer",
+  "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/ResponsiveChartContainer/ResponsiveChartContainer.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Chart composition</a></li></ul>",

@@ -67,7 +67,7 @@ const formatter: Formatter<'line'> = (params, dataset) => {
                 if (process.env.NODE_ENV !== 'production' && !warnedOnce && value !== null) {
                   warnedOnce = true;
                   console.error([
-                    `MUI-X charts: your dataset key "${dataKey}" is used for plotting line, but contains nonnumerical elements.`,
+                    `MUI X charts: your dataset key "${dataKey}" is used for plotting line, but contains nonnumerical elements.`,
                     'Line plots only support numbers and null values.',
                   ]);
                 }
