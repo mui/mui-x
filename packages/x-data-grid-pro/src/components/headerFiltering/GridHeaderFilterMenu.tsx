@@ -62,12 +62,12 @@ function GridHeaderFilterMenu({
           const label = getColumnHeaderName(
             {
               headerName: op?.headerLabel,
-              field: apiRef.current.getLocaleText(
-                `headerFilterOperator${capitalize(op.value)}` as 'headerFilterOperatorContains',
-              ),
+              field: '',
             },
             isReactNodeHeaderName,
-            true,
+            false,
+          ) ?? apiRef.current.getLocaleText(
+            `headerFilterOperator${capitalize(op.value)}` as 'headerFilterOperatorContains',
           );
 
           return (

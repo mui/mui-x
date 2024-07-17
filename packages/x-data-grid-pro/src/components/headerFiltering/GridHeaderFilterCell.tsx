@@ -304,16 +304,16 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const label = getColumnHeaderName(
       {
         headerName: currentOperator.headerLabel,
-        field: apiRef.current.getLocaleText(
-          `headerFilterOperator${capitalize(item.operator)}` as 'headerFilterOperatorContains',
-        ),
+        field: '',
       },
       isReactNodeHeaderName,
-      true,
+      false,
+    ) ?? apiRef.current.getLocaleText(
+      `headerFilterOperator${capitalize(item.operator)}` as 'headerFilterOperatorContains',
     );
 
     const isFilterActive = isApplied || hasFocus;
-    const ariaLabel = getColumnHeaderName(colDef, isStringHeaderName, true);
+    const ariaLabel = getColumnHeaderName(colDef, isStringHeaderName);
 
     return (
       <div

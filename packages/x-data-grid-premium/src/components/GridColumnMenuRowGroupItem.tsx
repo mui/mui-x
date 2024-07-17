@@ -31,7 +31,7 @@ export function GridColumnMenuRowGroupItem(props: GridColumnMenuItemProps) {
     };
 
     const groupedColumn = columnsLookup[field];
-    const name = getColumnHeaderName(groupedColumn, isStringHeaderName, true);
+    const name = getColumnHeaderName(groupedColumn, isStringHeaderName);
 
     return (
       <MenuItem onClick={ungroupColumn} key={field} disabled={!groupedColumn.groupable}>

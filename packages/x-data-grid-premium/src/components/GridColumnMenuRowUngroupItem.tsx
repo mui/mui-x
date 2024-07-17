@@ -33,7 +33,7 @@ export function GridColumnMenuRowUngroupItem(props: GridColumnMenuItemProps) {
     onClick(event);
   };
 
-  const name = getColumnHeaderName(columnsLookup[colDef.field], isStringHeaderName, true);
+  const name = getColumnHeaderName(columnsLookup[colDef.field], isStringHeaderName);
 
   if (rowGroupingModel.includes(colDef.field)) {
     return (
