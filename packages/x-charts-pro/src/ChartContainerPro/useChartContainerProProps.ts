@@ -1,4 +1,4 @@
-import { ZoomProviderProps } from '../context/ZoomProvider/Zoom.types';
+import { ZoomProviderProps } from '../context/ZoomProvider';
 import type { ChartContainerProProps } from './ChartContainerPro';
 
 export const useChartContainerProProps = (props: ChartContainerProProps) => {

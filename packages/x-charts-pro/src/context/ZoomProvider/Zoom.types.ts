@@ -16,13 +16,41 @@ export type ZoomProviderProps = {
   yAxis?: AxisConfigForZoom[];
 } & ZoomProps;
 
+/**
+ * Represents the state of the ZoomProvider.
+ */
 export type ZoomState = {
+  /**
+   * Whether zooming is enabled.
+   */
   isZoomEnabled: boolean;
+  /**
+   * Whether panning is enabled.
+   */
   isPanEnabled: boolean;
+  /**
+   * The zoom options for each axis.
+   */
   options: Record<AxisId, DefaultizedZoomOptions>;
+  /**
+   * The zoom data for each axis
+   * @default []
+   */
   zoomData: ZoomData[];
+  /**
+   * Set the zoom data for each axis.
+   * @param {ZoomData[]} zoomData The new zoom data.
+   */
   setZoomData: (zoomData: ZoomData[] | ((zoomData: ZoomData[]) => ZoomData[])) => void;
+  /**
+   * Whether the user is currently interacting with the chart.
+   * This is useful to prevent animations from running while the user is interacting.
+   */
   isInteracting: boolean;
+  /**
+   * Set the interaction state of the chart.
+   * @param {boolean} isInteracting The new interaction state.
+   */
   setIsInteracting: (isInteracting: boolean) => void;
 };
 

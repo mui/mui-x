@@ -35,4 +35,4 @@ export * from './BarChartPro';
 export * from './LineChartPro';
 
 // Pro context
-export * from './context/ZoomProvider';
+export * from './context';

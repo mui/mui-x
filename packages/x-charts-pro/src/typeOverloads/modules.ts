@@ -4,7 +4,7 @@ import {
   HeatmapSeriesType,
   DefaultizedHeatmapSeriesType,
 } from '../models/seriesType/heatmap';
-import { ZoomOptions } from '../context/ZoomProvider/Zoom.types';
+import { ZoomOptions } from '../context/ZoomProvider';
 
 declare module '@mui/x-charts/internals' {
   interface ChartsSeriesConfig {
