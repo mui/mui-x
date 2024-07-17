@@ -459,8 +459,8 @@
   "imports": [
     "import { DataGrid } from '@mui/x-data-grid/DataGrid';",
     "import { DataGrid } from '@mui/x-data-grid';",
-    "import { DataGrid } from '@mui/x-data-grid-pro';",
-    "import { DataGrid } from '@mui/x-data-grid-premium';"
+    "import { DataGridPro } from '@mui/x-data-grid-pro';",
+    "import { DataGridPremium } from '@mui/x-data-grid-premium';"
   ],
   "slots": [
     {
