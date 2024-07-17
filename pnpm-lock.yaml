@@ -82,7 +82,7 @@ importers:
         version: 5.16.2(@mui/material@5.16.2(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/internal-markdown':
         specifier: ^1.0.7
-        version: 1.0.7
+        version: 1.0.8
       '@mui/internal-test-utils':
         specifier: ^1.0.4
         version: 1.0.4(@babel/core@7.24.8)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -420,8 +420,8 @@ importers:
         specifier: ^5.0.0-beta.40
         version: 5.0.0-beta.40(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/docs':
-        specifier: 6.0.0-alpha.14
-        version: 6.0.0-alpha.14(qimz45vrjfgxntw64vvd3slogm)
+        specifier: 6.0.0-beta.2
+        version: 6.0.0-beta.2(qimz45vrjfgxntw64vvd3slogm)
       '@mui/icons-material':
         specifier: ^5.16.2
         version: 5.16.2(@mui/material@5.16.2(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
@@ -2769,8 +2769,8 @@ packages:
   '@mui/core-downloads-tracker@5.16.2':
     resolution: {integrity: sha512-BUaUnl3pbd00YR2Da241CYtPw6ldNahyCKZMXXs5F1JZTFKWotNq3qQJC6Yq2YQlK3EflfBqzHj6XwwecocHMg==}
 
-  '@mui/docs@6.0.0-alpha.14':
-    resolution: {integrity: sha512-8pqAvX263HEVpxT3cv1rFh7MC60QFiZvWuoEQtsRJSbGgxrLlOk+oEKMP5fRkDTZBR3nHCPepK/tihDN06Hg0w==}
+  '@mui/docs@6.0.0-beta.2':
+    resolution: {integrity: sha512-VLSVlYs09wVyhxrjIEMoyHcJV60mMePjszbzOcGImbRgCdaSw1cwCTzntmB09dRkaDsMhRul1I+poFyQu0nCAA==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@mui/base': '*'
@@ -2799,8 +2799,8 @@ packages:
   '@mui/internal-docs-utils@1.0.7':
     resolution: {integrity: sha512-vHplixLKu17U7Wa3RDbGv9C3FmXniJKywyZEIeJaTG4ikvl+iWI+BuZPCNniJwj0HSxu3thbyPIrBXijh7j+Xg==}
 
-  '@mui/internal-markdown@1.0.7':
-    resolution: {integrity: sha512-DpCOZ+TQPx3GXnA7PY8qq7yUsjUpFu3SzYSBMvmwF/KPHj7prvudSFjg+0qjwQOI7l7fapyfkn6+S8QbzxEOrg==}
+  '@mui/internal-markdown@1.0.8':
+    resolution: {integrity: sha512-OU/ieH8HhRbciy3fR5i8vSU/Z4wlfE+iwEFvrqP578jBeqg7X0gvev/uvv9d+FSgRnvgmWJzCYXEPlzlI3MmFA==}
 
   '@mui/internal-scripts@1.0.12':
     resolution: {integrity: sha512-7W2OBXKwtDjxFPxQZK796lDDsRtDA/9xWmpmHJMXSJY+gG+8sH6kwsU7pNdf2uB/uC0uCY9kxfWpr+9+0JI5EA==}
@@ -6964,8 +6964,8 @@ packages:
     resolution: {integrity: sha512-qwGyuyKwjkEMOJ10XN6OTKNOVYvOIi35RNvDLNxTof5s8UmyGHlCdpngRHoRGNvQVGuxO3BJ7uNSgdeX166WXw==}
     engines: {node: '>=18'}
 
-  marked@13.0.1:
-    resolution: {integrity: sha512-7kBohS6GrZKvCsNXZyVVXSW7/hGBHe49ng99YPkDCckSUrrG7MSFLCexsRxptzOmyW2eT5dySh4Md1V6my52fA==}
+  marked@13.0.2:
+    resolution: {integrity: sha512-J6CPjP8pS5sgrRqxVRvkCIkZ6MFdRIjDkwUwgJ9nL2fbmM6qGQeB2C16hi8Cc9BOzj6xXzy0jyi0iPIfnMHYzA==}
     engines: {node: '>= 18'}
     hasBin: true
 
@@ -10934,12 +10934,12 @@ snapshots:
 
   '@mui/core-downloads-tracker@5.16.2': {}
 
-  '@mui/docs@6.0.0-alpha.14(qimz45vrjfgxntw64vvd3slogm)':
+  '@mui/docs@6.0.0-beta.2(qimz45vrjfgxntw64vvd3slogm)':
     dependencies:
       '@babel/runtime': 7.24.8
       '@mui/base': 5.0.0-beta.40(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/icons-material': 5.16.2(@mui/material@5.16.2(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
-      '@mui/internal-markdown': 1.0.7
+      '@mui/internal-markdown': 1.0.8
       '@mui/material': 5.16.2(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/system': 5.16.2(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       chai: 4.4.1
@@ -10965,11 +10965,11 @@ snapshots:
       rimraf: 5.0.8
       typescript: 5.5.3
 
-  '@mui/internal-markdown@1.0.7':
+  '@mui/internal-markdown@1.0.8':
     dependencies:
       '@babel/runtime': 7.24.8
       lodash: 4.17.21
-      marked: 13.0.1
+      marked: 13.0.2
       prismjs: 1.29.0
 
   '@mui/internal-scripts@1.0.12':
@@ -16079,7 +16079,7 @@ snapshots:
       markdown-it: 14.1.0
       markdownlint-micromark: 0.1.9
 
-  marked@13.0.1: {}
+  marked@13.0.2: {}
 
   mdast-util-from-markdown@0.8.5:
     dependencies:
