@@ -20,8 +20,8 @@ import {
   DateTimeRangePicker,
   DateTimeField,
   DatePicker,
-  StaticDatePicker,
   DateTimeValidationError,
+  DateCalendar,
 } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvider';
@@ -51,6 +51,58 @@ const internationalizationFeatures = [
     description: 'Advanced validation and error handling out-of-the-box',
   },
 ];
+
+function DemoWrapper({
+  children,
+  controls: ToolbarControls,
+  link,
+}: {
+  children: React.ReactNode;
+  controls?: React.ReactNode;
+  link: string;
+}) {
+  return (
+    <Paper
+      component="div"
+      variant="outlined"
+      sx={(brandingTheme) => ({
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        flexGrow: 1,
+        width: '100%',
+        background: `${(brandingTheme.vars || brandingTheme).palette.gradients.linearSubtle}`,
+        justifyContent: 'space-between',
+      })}
+    >
+      {children}
+      <Paper
+        elevation={0}
+        sx={(brandingTheme) => ({
+          width: '100%',
+          borderTop: '1px solid',
+          borderColor: 'divider',
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
+          padding: brandingTheme.spacing(1),
+        })}
+      >
+        <Stack
+          direction="row"
+          alignItems={{ md: 'center' }}
+          justifyContent="flex-end"
+          spacing={2}
+          sx={{ width: '100%' }}
+        >
+          {ToolbarControls}
+          <Button size="small" href={link} endIcon={<ArrowForwardIcon />}>
+            View all
+          </Button>
+        </Stack>
+      </Paper>
+    </Paper>
+  );
+}
 
 function TimezonesDemo() {
   const [selectedTimezone, setSelectedTimezone] = React.useState<null | string>(null);
@@ -92,6 +144,17 @@ function TimezonesDemo() {
       <Box sx={{ p: 3 }}>
         <WorldMapSvg onClickContinent={handleContinentClick} selectedTimezone={selectedTimezone} />
       </Box>
+      <Stack
+        direction="row"
+        alignItems={{ md: 'center' }}
+        justifyContent="flex-end"
+        spacing={2}
+        sx={{ width: '100%', borderTop: '1px solid', borderColor: 'divider', padding: 1 }}
+      >
+        <Button size="small" href="/x/react-date-pickers/timezone" endIcon={<ArrowForwardIcon />}>
+          View all
+        </Button>
+      </Stack>
     </Stack>
   );
 }
@@ -102,6 +165,36 @@ const locales = {
   en: enUS,
   'zh-cn': zhCN,
 };
+
+function Controls({
+  selectedLanguage,
+  handleLanguageSwitch,
+}: {
+  selectedLanguage: Languages;
+  handleLanguageSwitch: (event: React.MouseEvent<HTMLElement>, newLanguage: Languages) => void;
+}) {
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      <ToggleButtonGroup
+        size="small"
+        aria-label="Select language"
+        value={selectedLanguage}
+        exclusive
+        onChange={handleLanguageSwitch}
+      >
+        <ToggleButton value="ro" key="ro">
+          Română
+        </ToggleButton>
+        <ToggleButton value="en" key="en">
+          English
+        </ToggleButton>
+        <ToggleButton value="zh-cn" key="zh-cn">
+          日本語
+        </ToggleButton>
+      </ToggleButtonGroup>
+    </Box>
+  );
+}
 
 function LanguagesDemo() {
   const brandingTheme = useTheme();
@@ -116,62 +209,41 @@ function LanguagesDemo() {
   };
 
   return (
-    <Stack spacing={2} alignItems="center" flexGrow={1} sx={{ width: '100%' }}>
-      <Stack direction="row" spacing={1}>
-        <ToggleButtonGroup
-          size="small"
-          aria-label="Select language"
-          value={selectedLanguage}
-          exclusive
-          onChange={handleLanguageSwitch}
-        >
-          <ToggleButton value="ro" key="ro">
-            Română
-          </ToggleButton>
-          <ToggleButton value="en" key="en">
-            English
-          </ToggleButton>
-          <ToggleButton value="zh-cn" key="zh-cn">
-            日本語
-          </ToggleButton>
-        </ToggleButtonGroup>
-        <Divider orientation="vertical" flexItem />
-        <Button
-          size="small"
-          href="/x/react-date-pickers/localization/"
-          endIcon={<ArrowForwardIcon />}
-        >
-          View all
-        </Button>
-      </Stack>
-      <Paper
-        component="div"
-        variant="outlined"
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          padding: brandingTheme.spacing(3),
-          flexGrow: 1,
-          width: '100%',
-          background: `${(brandingTheme.vars || brandingTheme).palette.gradients.linearSubtle}`,
-        }}
+    <LocalizationProvider
+      dateAdapter={AdapterDayjs}
+      adapterLocale={selectedLanguage}
+      localeText={
+        locales[selectedLanguage].components.MuiLocalizationProvider.defaultProps.localeText
+      }
+    >
+      <DemoWrapper
+        controls={
+          <Controls
+            handleLanguageSwitch={handleLanguageSwitch}
+            selectedLanguage={selectedLanguage}
+          />
+        }
+        link="/x/react-date-pickers/localization"
       >
-        <LocalizationProvider
-          dateAdapter={AdapterDayjs}
-          adapterLocale={selectedLanguage}
-          localeText={
-            locales[selectedLanguage].components.MuiLocalizationProvider.defaultProps.localeText
-          }
-        >
-          <ThemeProvider theme={theme}>
-            <Box sx={{ width: 'fit-content', height: 'fit-content' }}>
-              <StaticDatePicker defaultValue={dayjs('2022-04-17')} />
-            </Box>
-          </ThemeProvider>
-        </LocalizationProvider>
-      </Paper>
-    </Stack>
+        <ThemeProvider theme={theme}>
+          <Stack spacing={2} flexGrow={1} sx={{ maxWidth: '320px', justifyContent: 'center' }}>
+            <DatePicker
+              defaultValue={dayjs('2024-02-17')}
+              slotProps={{ textField: { fullWidth: true } }}
+              views={['month']}
+            />
+
+            <Paper
+              variant="outlined"
+              elevation={0}
+              sx={{ width: 'fit-content', height: 'fit-content' }}
+            >
+              <DateCalendar defaultValue={dayjs('2024-04-17')} />
+            </Paper>
+          </Stack>
+        </ThemeProvider>
+      </DemoWrapper>
+    </LocalizationProvider>
   );
 }
 
@@ -206,21 +278,14 @@ function ValidationDemo() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      {' '}
-      <Paper
-        component="div"
-        variant="outlined"
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          padding: brandingTheme.spacing(3),
-          width: '100%',
-          background: `${(brandingTheme.vars || brandingTheme).palette.gradients.linearSubtle}`,
-        }}
-      >
+      <DemoWrapper link="/x/react-date-pickers/validation">
         <ThemeProvider theme={theme}>
-          <Stack spacing={2} sx={{ width: '100%', maxWidth: '400px', height: 'fit-content' }}>
+          <Stack
+            spacing={2}
+            justifyContent="center"
+            flexGrow={1}
+            sx={{ width: '100%', maxWidth: '400px' }}
+          >
             <DateTimeField
               defaultValue={dayjs('')}
               onError={(newError) => setFieldError(newError)}
@@ -249,7 +314,7 @@ function ValidationDemo() {
             <DateTimeRangePicker defaultValue={[fiveAM, nineAM]} maxTime={fiveAM} />
           </Stack>
         </ThemeProvider>
-      </Paper>
+      </DemoWrapper>
     </LocalizationProvider>
   );
 }
@@ -284,7 +349,7 @@ export default function Internationalization() {
         <Stack
           justifyContent="center"
           alignItems="center"
-          sx={{ minWidth: '560px', minHeight: { xs: 0, md: '600px' } }}
+          sx={{ minWidth: '560px', minHeight: { xs: 0, md: '500px' } }}
         >
           {activeItem === 0 && (
             <StyledDemoContainer variant="outlined">

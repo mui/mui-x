@@ -13,13 +13,7 @@ import {
 
 interface ButtonFieldProps
   extends UseDateFieldProps<Dayjs, false>,
-    BaseSingleInputFieldProps<
-      Dayjs | null,
-      Dayjs,
-      FieldSection,
-      false,
-      DateValidationError
-    > {
+    BaseSingleInputFieldProps<Dayjs | null, Dayjs, FieldSection, false, DateValidationError> {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -36,6 +30,7 @@ function ButtonField(props: ButtonFieldProps) {
   return (
     <Button
       variant="outlined"
+      size="small"
       id={id}
       disabled={disabled}
       ref={ref}

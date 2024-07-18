@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
@@ -40,32 +41,34 @@ export default function CommunityOrPro() {
             size="small"
             href="/x/introduction/licensing"
             endIcon={<ArrowForwardIcon />}
-            variant="contained"
             sx={{ width: 'fit-content' }}
           >
             About licensing
           </Button>
         </Stack>
         <Stack spacing={2} direction={{ xs: 'column', md: 'row' }} sx={{ width: '100%' }}>
-          <InfoCard
-            title="Community"
-            icon={<img src="/static/x/community.svg" width={16} height={16} alt="" />}
-            description={[
-              'MIT licensed, free forever',
-              'Contains all components to edit dates and times',
-            ]}
-          />
-          <InfoCard
-            title="Pro"
-            icon={<img src="/static/x/pro.svg" width={16} height={16} alt="" />}
-            description={[
-              'Commercially licensed',
-              'Contains additional components to edit date and/or time ranges',
-            ]}
-          />
+          <Box sx={{ flexBasis: '50%' }}>
+            <InfoCard
+              title="Community"
+              icon={<img src="/static/x/community.svg" width={16} height={16} alt="" />}
+              description={[
+                'MIT licensed, free forever',
+                'Contains all components to edit dates and times',
+              ]}
+            />
+          </Box>
+          <Box sx={{ flexBasis: '50%' }}>
+            <InfoCard
+              title="Pro"
+              icon={<img src="/static/x/pro.svg" width={16} height={16} alt="" />}
+              description={[
+                'Commercially licensed',
+                'Contains additional components to edit date and/or time ranges',
+              ]}
+            />
+          </Box>
         </Stack>
       </Stack>
-      <Divider />
     </React.Fragment>
   );
 }

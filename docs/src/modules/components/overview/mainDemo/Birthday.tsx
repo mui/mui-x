@@ -25,7 +25,7 @@ export default function Birthday() {
             ),
           }}
         />
-        <Button variant="contained" fullWidth>
+        <Button variant="contained" fullWidth size="small">
           Submit
         </Button>
       </Stack>

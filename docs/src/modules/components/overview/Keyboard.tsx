@@ -3,10 +3,12 @@ import clsx from 'clsx';
 import dayjs from 'dayjs';
 // @ts-ignore
 import SectionHeadline from 'docs/src/components/typography/SectionHeadline';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { styled, alpha } from '@mui/material/styles';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { styled, alpha, createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateField } from '@mui/x-date-pickers/DateField';
@@ -413,6 +415,9 @@ export default function Keyboard() {
   const ref = React.useRef(null);
   const selectedSection = React.useRef<FieldSelectedSections>(0);
 
+  const brandingTheme = useTheme();
+  const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
+
   const handleKeySelection = (e: React.SyntheticEvent, key: SelectedKey | null) => {
     const sectionContent = (ref.current as any).querySelector(
       `.MuiPickersSectionList-section[data-sectionindex="${selectedSection.current || 0}"] .MuiPickersSectionList-sectionContent`,
@@ -456,34 +461,47 @@ export default function Keyboard() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Divider />
       <Stack direction={{ md: 'row', xs: 'column' }} alignItems={'center'} spacing={6} py={4}>
-        <SectionHeadline
-          overline="Accessibility"
-          title={
-            <Typography variant="h2" fontSize="1.625rem">
-              Keyboard navigation and screen reader support
-            </Typography>
-          }
-          description="Built with accessibility in mind, the date and time pickers ensures all users can navigate effectively using advanced keyboard support, making it fully compliant with accessibility standards like WCAG and ARIA."
-        />
-        <Stack spacing={2}>
-          <DateField
-            defaultValue={dayjs('12/12/2023')}
-            ref={ref}
-            onKeyDown={(e: React.KeyboardEvent) => {
-              setSelectedKey({
-                key: e.key,
-                code: e.code,
-                location: e.location,
-              });
-            }}
-            onKeyUp={() => {
-              setSelectedKey(null);
-            }}
-            enableAccessibleFieldDOMStructure
-            onSelectedSectionsChange={(newSelectedSection) => {
-              selectedSection.current = newSelectedSection;
-            }}
+        <Stack>
+          <SectionHeadline
+            overline="Accessibility"
+            title={
+              <Typography variant="h2" fontSize="1.625rem">
+                Keyboard navigation and screen reader support
+              </Typography>
+            }
+            description="Built with accessibility in mind, the date and time pickers ensures all users can navigate effectively using advanced keyboard support, making it fully compliant with accessibility standards like WCAG and ARIA."
           />
+
+          <Button
+            size="small"
+            href="/x/react-date-pickers/accessibility"
+            endIcon={<ArrowForwardIcon />}
+            sx={{ width: 'fit-content' }}
+          >
+            More info
+          </Button>
+        </Stack>
+        <Stack spacing={2}>
+          <ThemeProvider theme={theme}>
+            <DateField
+              defaultValue={dayjs('12/12/2023')}
+              ref={ref}
+              onKeyDown={(e: React.KeyboardEvent) => {
+                setSelectedKey({
+                  key: e.key,
+                  code: e.code,
+                  location: e.location,
+                });
+              }}
+              onKeyUp={() => {
+                setSelectedKey(null);
+              }}
+              enableAccessibleFieldDOMStructure
+              onSelectedSectionsChange={(newSelectedSection) => {
+                selectedSection.current = newSelectedSection;
+              }}
+            />
+          </ThemeProvider>
           <KeyboardSvg handleKeySelection={handleKeySelection} selectedKey={selectedKey} />
         </Stack>
       </Stack>

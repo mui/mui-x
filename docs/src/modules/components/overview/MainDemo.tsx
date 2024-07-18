@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles';
+import { useTheme, ThemeProvider, createTheme, Theme, Components } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
@@ -12,6 +12,36 @@ import Birthday from './mainDemo/Birthday';
 import DigitalClock from './mainDemo/DigitalClock';
 import DateRangeWithShortcuts from './mainDemo/DateRangeWithShortcuts';
 import PickerButton from './mainDemo/PickerButton';
+import '@mui/x-date-pickers-pro/themeAugmentation';
+
+const components: Components<Theme> = {
+  MuiPickersDay: {
+    styleOverrides: {
+      root: {
+        fontWeight: 400,
+      },
+      today: ({ theme }) => ({
+        fontWeight: 600,
+        borderColor: theme.palette.primary.light,
+      }),
+    },
+  },
+  MuiPickersToolbar: { styleOverrides: { content: { justifyContent: 'space-between' } } },
+  MuiTimePickerToolbar: {
+    styleOverrides: {
+      ampmSelection: { marginRight: 0 },
+    },
+  },
+  MuiButton: {
+    styleOverrides: {
+      root: ({ theme, ownerState }) => ({
+        ...(ownerState.size === 'medium' && {
+          padding: theme.spacing('6px', '8px'),
+        }),
+      }),
+    },
+  },
+};
 
 export default function MainDemo() {
   const brandingTheme = useTheme();
@@ -22,11 +52,16 @@ export default function MainDemo() {
   const [showCustomTheme, setShowCustomTheme] = React.useState(false);
 
   const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
+  const customTheme = createTheme(brandingTheme, {
+    components,
+    shape: { borderRadius: 8 },
+    typography: { fontFamily: ['"Inter", "sans-serif"'].join(',') },
+  });
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Paper component="div" variant="outlined">
-        <ThemeProvider theme={showCustomTheme ? brandingTheme : theme}>
+        <ThemeProvider theme={showCustomTheme ? customTheme : theme}>
           <Stack sx={{ p: 1, width: '100%' }} direction="row" spacing={1}>
             <Stack spacing={1} className="left-panel" sx={{ flexGrow: 1 }}>
               <Stack
