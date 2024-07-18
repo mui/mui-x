@@ -10,6 +10,8 @@ _Jul 18, 2024_
 We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎨 Add [color legend](https://mui.com/x/react-charts/legend/#color-legend) for charts (#13700) @alexfauquette
+- 🌍 Improve Korean (ko-KR) locale on the Date and Time Pickers
+- 🌍 Improve Russian (ru-RU) locale on the Date and Time Pickers and Data Grid
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -53,13 +55,11 @@ Same changes as in `@mui/x-date-pickers@7.11.0`, plus:
 
 #### `@mui/x-charts@7.11.0`
 
-- [charts] Allow controlling the demo form from the example (#13796) @JCQuintas
 - [charts] Create color legend (#13700) @alexfauquette
 - [charts] Defaultize axis on top level `useChartContainerProps` (#13817) @JCQuintas
-- [charts] Fix charts `api` tests (#13863) @JCQuintas
 - [charts] Fix charts not passing `className` to root element (#13647) @JCQuintas
 - [charts] Generate API documentation for pro components (#13822) @alexfauquette
-- [charts] Improve zoomed highlight behaviour (#13868) @JCQuintas
+- [charts] Improve zoomed highlight behaviour (unreleased) (#13868) @JCQuintas
 - [charts] Allow zoom on Y axis and add zoom options to configure zooming behaviour (unreleased) (#13726) @JCQuintas
 - [charts] Disable animations while zooming (unreleased) (#13807) @JCQuintas
 
@@ -72,6 +72,7 @@ Same changes as in `@mui/x-date-pickers@7.11.0`, plus:
 ### Docs
 
 - [docs] Add warning about `process.env.NODE_ENV` in production (#13869) @cherniavskii
+- [docs] Allow controlling the demo form from the example (#13796) @JCQuintas
 - [docs] Clarify Pickers clearable behavior not working on mobile (#13786) @lnhrdt
 - [docs] Improve the documentation of the picker's `onChange` and `onAccept` props (#13543) @flaviendelangle
 - [docs] Replace company name with project name @oliviertassinari
@@ -80,7 +81,6 @@ Same changes as in `@mui/x-date-pickers@7.11.0`, plus:
 ### Core
 
 - [core] Add MUI Internal `renovate` group (#13846) @LukasTy
-- [core] Fix `renovate` config (#13827) @LukasTy
 - [core] Link GitHub issue for `import/prefer-default-export` rule @oliviertassinari
 - [core] Normalize `...other` and test imports in charts (#13844) @JCQuintas
 - [core] Normalize rest / other to match the most common used @oliviertassinari
