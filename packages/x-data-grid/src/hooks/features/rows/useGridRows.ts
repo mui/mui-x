@@ -464,6 +464,8 @@ export const useGridRows = (
         ...state,
         rows: {
           ...state.rows,
+          loading: props.loading,
+          totalRowCount: Math.max(props.rowCount || 0, rootGroupChildren.length),
           dataRowIdToModelLookup,
           dataRowIdToIdLookup,
           dataRowIds,
@@ -472,7 +474,7 @@ export const useGridRows = (
       }));
       apiRef.current.publishEvent('rowsSet');
     },
-    [apiRef, props.signature, props.getRowId],
+    [apiRef, props.signature, props.getRowId, props.loading, props.rowCount],
   );
 
   const rowApi: GridRowApi = {
