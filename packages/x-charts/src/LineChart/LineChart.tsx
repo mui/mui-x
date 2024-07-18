@@ -162,9 +162,9 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
         <AreaPlot {...areaPlotProps} />
         <LinePlot {...linePlotProps} />
         <ChartsOverlay {...overlayProps} />
+        <ChartsAxisHighlight {...axisHighlightProps} />
       </g>
       <ChartsAxis {...chartsAxisProps} />
-      <ChartsAxisHighlight {...axisHighlightProps} />
       <MarkPlot {...markPlotProps} />
       <LineHighlightPlot {...lineHighlightPlotProps} />
       <ChartsLegend {...legendProps} />
