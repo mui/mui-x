@@ -96,7 +96,7 @@ function DemoWrapper({
         >
           {ToolbarControls}
           <Button size="small" href={link} endIcon={<ArrowForwardIcon />}>
-            View all
+            More info
           </Button>
         </Stack>
       </Paper>
@@ -152,7 +152,7 @@ function TimezonesDemo() {
         sx={{ width: '100%', borderTop: '1px solid', borderColor: 'divider', padding: 1 }}
       >
         <Button size="small" href="/x/react-date-pickers/timezone" endIcon={<ArrowForwardIcon />}>
-          View all
+          More info
         </Button>
       </Stack>
     </Stack>
