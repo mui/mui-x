@@ -24,6 +24,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [DataGrid] Fix delete filter inconsistent behavior (#13353) @oukunan
 - [DataGrid] Enable flip on preferences panel (#13803) @romgrk
 - [DataGrid] Support `date` and `datetime-local` input types in `GridFilterInputMultipleValue` type (#13411) @karudedios
+- [l10n] Improve Russian (ru-RU) locale (#13735) @diro-atk
 
 #### `@mui/x-data-grid-pro@7.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
