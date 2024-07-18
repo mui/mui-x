@@ -153,6 +153,12 @@
     "supportsApiRef": false
   },
   {
+    "name": "gridEditRowsStateSelector",
+    "returnType": "GridEditingState",
+    "description": "",
+    "supportsApiRef": false
+  },
+  {
     "name": "gridExpandedRowCountSelector",
     "returnType": "number",
     "category": "Filtering",
