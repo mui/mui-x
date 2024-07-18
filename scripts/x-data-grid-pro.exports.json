@@ -298,6 +298,7 @@
   { "name": "gridFilteredRowsLookupSelector", "kind": "Variable" },
   { "name": "gridFilteredSortedRowEntriesSelector", "kind": "Variable" },
   { "name": "gridFilteredSortedRowIdsSelector", "kind": "Variable" },
+  { "name": "gridFilteredSortedRowIdsSetSelector", "kind": "Variable" },
   { "name": "gridFilteredSortedTopLevelRowEntriesSelector", "kind": "Variable" },
   { "name": "gridFilteredTopLevelRowCountSelector", "kind": "Variable" },
   { "name": "GridFilterForm", "kind": "Variable" },
