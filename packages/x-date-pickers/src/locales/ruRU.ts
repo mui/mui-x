@@ -78,7 +78,7 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'Г'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'ММММ' : 'ММ'),
   fieldDayPlaceholder: () => 'ДД',
-  fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'ДДДД' : 'ДД',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'ДДДД' : 'ДД'),
   fieldHoursPlaceholder: () => 'чч',
   fieldMinutesPlaceholder: () => 'мм',
   fieldSecondsPlaceholder: () => 'сс',
