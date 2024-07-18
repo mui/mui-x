@@ -27,11 +27,14 @@ const BrowserSpeechRecognition = (globalThis as any).webkitSpeechRecognition;
 
 type OwnerState = DataGridProProcessedProps;
 
-const useUtilityClasses = (ownerState: OwnerState) => {
+const useUtilityClasses = (ownerState: OwnerState, recording: boolean) => {
   const { classes } = ownerState;
 
   const slots = {
-    root: ['toolbarRemoteControl'],
+    root: ['toolbarRemoteControl', recording && 'toolbarRemoteControl--recording'],
+    recordingIndicator: ['toolbarRemoteControlRecordingIndicator'],
+    recordButton: ['toolbarRemoteControlRecordButton'],
+    sendButton: ['toolbarRemoteControlSendButton'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -50,9 +53,9 @@ const Style = styled('div', {
 function GridToolbarRemoteControl() {
   const apiRef = useGridApiContext<GridApiPro>();
   const rootProps = useGridRootProps() as DataGridProProcessedProps;
-  const classes = useUtilityClasses(rootProps);
   const [isLoading, setLoading] = React.useState(false);
   const [isRecording, setRecording] = React.useState(false);
+  const classes = useUtilityClasses(rootProps, isRecording);
   const [query, setQuery] = React.useState('');
 
   const sendRequest = React.useCallback(() => {
@@ -168,6 +171,7 @@ function GridToolbarRemoteControl() {
               <InputAdornment position="start">
                 {isRecording ? (
                   <Box
+                    className={classes.recordingIndicator}
                     sx={{
                       display: 'flex',
                       alignItems: 'center',
@@ -182,6 +186,7 @@ function GridToolbarRemoteControl() {
                   </Box>
                 ) : (
                   <RecordButton
+                    className={classes.recordButton}
                     label={isLoading ? 'Loading…' : undefined}
                     recording={isRecording}
                     setRecording={setRecording}
@@ -194,15 +199,18 @@ function GridToolbarRemoteControl() {
             ),
             endAdornment: (
               <InputAdornment position="end">
-                <rootProps.slots.baseIconButton
-                  disabled={isLoading || query === ''}
-                  color="primary"
-                  onClick={sendRequest}
-                  size="small"
-                  aria-label="Send prompt"
-                >
-                  <SendIcon fontSize="small" />
-                </rootProps.slots.baseIconButton>
+                <rootProps.slots.baseTooltip title="Send">
+                  <rootProps.slots.baseIconButton
+                    className={classes.sendButton}
+                    disabled={isLoading || query === ''}
+                    color="primary"
+                    onClick={sendRequest}
+                    size="small"
+                    aria-label="Send prompt"
+                  >
+                    <SendIcon fontSize="small" />
+                  </rootProps.slots.baseIconButton>
+                </rootProps.slots.baseTooltip>
               </InputAdornment>
             ),
           }
@@ -222,6 +230,7 @@ function RecordButton(
     label?: string;
     recording: boolean;
     setRecording: (value: boolean) => void;
+    className: string;
   },
 ) {
   const rootProps = useGridRootProps() as DataGridProProcessedProps;
@@ -288,6 +297,7 @@ function RecordButton(
   return (
     <rootProps.slots.baseTooltip title={recording ? 'Stop recording' : props.label ?? 'Record'}>
       <rootProps.slots.baseIconButton
+        className={props.className}
         disabled={props.disabled}
         onClick={handleClick}
         ref={buttonRef}
