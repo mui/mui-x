@@ -76,6 +76,9 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
         const pointY = getYPosition(y);
 
         if (!drawingArea.isPointInside({ x: pointX, y: pointY })) {
+          // If the point is not displayed we move them to a trash coordinate.
+          // This avoids managing index mapping before/after filtering.
+          // The trash point is far enough such that any point in the drawing area will be closer to the mouse than the trash coordinate.
           return [-drawingArea.width, -drawingArea.height];
         }
 
