@@ -184,7 +184,7 @@
     "groupingColDef": { "description": "The grouping column used by the tree data." },
     "headerFilterHeight": { "description": "Override the height of the header filters." },
     "headerFilters": {
-      "description": "If <code>true</code>, the filtering on the header feature is enabled."
+      "description": "If <code>true</code>, the header filters feature is enabled."
     },
     "hideFooter": { "description": "If <code>true</code>, the footer component is hidden." },
     "hideFooterPagination": {

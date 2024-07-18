@@ -421,7 +421,7 @@ DataGridPremiumRaw.propTypes = {
    */
   headerFilterHeight: PropTypes.number,
   /**
-   * If `true`, the filtering on the header feature is enabled.
+   * If `true`, the header filters feature is enabled.
    * @default false
    */
   headerFilters: PropTypes.bool,
