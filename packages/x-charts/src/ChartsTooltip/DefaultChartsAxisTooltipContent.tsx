@@ -10,8 +10,9 @@ import {
   ChartsTooltipRow,
 } from './ChartsTooltipTable';
 import type { ChartsAxisContentProps } from './ChartsAxisTooltipContent';
-import { isCartesianSeries, utcFormatter } from './utils';
+import { utcFormatter } from './utils';
 import { getLabel } from '../internals/getLabel';
+import { isCartesianSeries } from '../internals/isCartesian';
 
 function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
   const { series, axis, dataIndex, axisValue, sx, classes } = props;
@@ -39,32 +40,28 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
         )}
 
         <tbody>
-          {series
-            .filter(isCartesianSeries)
-            .map(({ color, id, label, valueFormatter, data, getColor }) => {
-              // @ts-ignore
-              const formattedValue = valueFormatter(data[dataIndex] ?? null, { dataIndex });
-              if (formattedValue == null) {
-                return null;
-              }
-              const formattedLabel = getLabel(label, 'tooltip');
-              return (
-                <ChartsTooltipRow key={id} className={classes.row}>
-                  <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
-                    <ChartsTooltipMark
-                      color={getColor(dataIndex) ?? color}
-                      className={classes.mark}
-                    />
-                  </ChartsTooltipCell>
-                  <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
-                    {formattedLabel ? <Typography>{formattedLabel}</Typography> : null}
-                  </ChartsTooltipCell>
-                  <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
-                    <Typography>{formattedValue}</Typography>
-                  </ChartsTooltipCell>
-                </ChartsTooltipRow>
-              );
-            })}
+          {series.filter(isCartesianSeries).map(({ id, label, valueFormatter, data, getColor }) => {
+            // @ts-ignore
+            const formattedValue = valueFormatter(data[dataIndex] ?? null, { dataIndex });
+            if (formattedValue == null) {
+              return null;
+            }
+            const formattedLabel = getLabel(label, 'tooltip');
+            const color = getColor(dataIndex);
+            return (
+              <ChartsTooltipRow key={id} className={classes.row}>
+                <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
+                  {color && <ChartsTooltipMark color={color} className={classes.mark} />}
+                </ChartsTooltipCell>
+                <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
+                  {formattedLabel ? <Typography>{formattedLabel}</Typography> : null}
+                </ChartsTooltipCell>
+                <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
+                  <Typography>{formattedValue}</Typography>
+                </ChartsTooltipCell>
+              </ChartsTooltipRow>
+            );
+          })}
         </tbody>
       </ChartsTooltipTable>
     </ChartsTooltipPaper>

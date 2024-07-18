@@ -21,11 +21,21 @@ const MUI_X_PRODUCTS = [
       { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
     ],
   },
+  {
+    id: 'charts',
+    label: 'Charts',
+    children: [{ id: 'charts-community', label: '@mui/x-charts' }],
+  },
+  {
+    id: 'tree-view',
+    label: 'Tree View',
+    children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }],
+  },
 ];
 
 export default function ItemChildrenIndentationProp() {
   return (
-    <Box sx={{ height: 220, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
       <RichTreeView
         items={MUI_X_PRODUCTS}
         itemChildrenIndentation={24}

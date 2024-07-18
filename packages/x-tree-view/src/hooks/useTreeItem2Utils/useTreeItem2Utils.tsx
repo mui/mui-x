@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { useTreeViewContext } from '../../internals/TreeViewProvider/useTreeViewContext';
-import { DefaultTreeViewPlugins } from '../../internals/plugins';
+import { UseTreeViewSelectionSignature } from '../../internals/plugins/useTreeViewSelection';
+import { UseTreeViewExpansionSignature } from '../../internals/plugins/useTreeViewExpansion';
+import { UseTreeViewItemsSignature } from '../../internals/plugins/useTreeViewItems';
+import { UseTreeViewFocusSignature } from '../../internals/plugins/useTreeViewFocus';
 import type { UseTreeItem2Status } from '../../useTreeItem2';
 
 interface UseTreeItem2Interactions {
@@ -21,6 +24,21 @@ const isItemExpandable = (reactChildren: React.ReactNode) => {
   return Boolean(reactChildren);
 };
 
+/**
+ * Plugins that need to be present in the Tree View in order for `useTreeItem2Utils` to work correctly.
+ */
+type UseTreeItem2UtilsMinimalPlugins = readonly [
+  UseTreeViewSelectionSignature,
+  UseTreeViewExpansionSignature,
+  UseTreeViewItemsSignature,
+  UseTreeViewFocusSignature,
+];
+
+/**
+ * Plugins that `useTreeItem2Utils` can use if they are present, but are not required.
+ */
+export type UseTreeItem2UtilsOptionalPlugins = readonly [];
+
 export const useTreeItem2Utils = ({
   itemId,
   children,
@@ -31,7 +49,7 @@ export const useTreeItem2Utils = ({
   const {
     instance,
     selection: { multiSelect },
-  } = useTreeViewContext<DefaultTreeViewPlugins>();
+  } = useTreeViewContext<UseTreeItem2UtilsMinimalPlugins, UseTreeItem2UtilsOptionalPlugins>();
 
   const status: UseTreeItem2Status = {
     expandable: isItemExpandable(children),
@@ -73,10 +91,10 @@ export const useTreeItem2Utils = ({
       if (event.shiftKey) {
         instance.expandSelectionRange(event, itemId);
       } else {
-        instance.selectItem(event, itemId, true);
+        instance.selectItem({ event, itemId, keepExistingSelection: true });
       }
     } else {
-      instance.selectItem(event, itemId, false);
+      instance.selectItem({ event, itemId, shouldBeSelected: true });
     }
   };
 
@@ -85,7 +103,12 @@ export const useTreeItem2Utils = ({
     if (multiSelect && hasShift) {
       instance.expandSelectionRange(event, itemId);
     } else {
-      instance.selectItem(event, itemId, multiSelect, event.target.checked);
+      instance.selectItem({
+        event,
+        itemId,
+        keepExistingSelection: multiSelect,
+        shouldBeSelected: event.target.checked,
+      });
     }
   };
 

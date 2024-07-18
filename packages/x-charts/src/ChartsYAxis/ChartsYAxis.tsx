@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { useTicks } from '../hooks/useTicks';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { ChartsYAxisProps } from '../models/axis';
@@ -44,15 +44,16 @@ const defaultProps = {
  * - [ChartsYAxis API](https://mui.com/x/api/charts/charts-y-axis/)
  */
 function ChartsYAxis(inProps: ChartsYAxisProps) {
-  const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiChartsYAxis' });
-  const { yAxisIds } = React.useContext(CartesianContext);
-  const {
-    yAxis: {
-      [props.axisId ?? yAxisIds[0]]: { scale: yScale, tickNumber, ...settings },
-    },
-  } = React.useContext(CartesianContext);
+  const { yAxisIds, yAxis } = useCartesianContext();
+  const { scale: yScale, tickNumber, ...settings } = yAxis[inProps.axisId ?? yAxisIds[0]];
 
-  const defaultizedProps = { ...defaultProps, ...settings, ...props };
+  const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsYAxis' });
+
+  const defaultizedProps = {
+    ...defaultProps,
+    ...themedProps,
+  };
+
   const {
     position,
     disableLine,
@@ -73,6 +74,8 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   } = defaultizedProps;
 
   const theme = useTheme();
+  const isRTL = theme.direction === 'rtl';
+
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
 
   const { left, top, width, height } = useDrawingArea();
@@ -100,13 +103,14 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   const TickLabel = slots?.axisTickLabel ?? ChartsText;
   const Label = slots?.axisLabel ?? ChartsText;
 
+  const revertAnchor = (!isRTL && position === 'right') || (isRTL && position !== 'right');
   const axisTickLabelProps = useSlotProps({
     elementType: TickLabel,
     externalSlotProps: slotProps?.axisTickLabel,
     additionalProps: {
       style: {
         fontSize: tickFontSize,
-        textAnchor: position === 'right' ? 'start' : 'end',
+        textAnchor: revertAnchor ? 'start' : 'end',
         dominantBaseline: 'central',
         ...tickLabelStyle,
       },
@@ -130,6 +134,15 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     ownerState: {},
   });
 
+  const lineSlotProps = useSlotProps({
+    elementType: Line,
+    externalSlotProps: slotProps?.axisLine,
+    additionalProps: {
+      strokeLinecap: 'square' as const,
+    },
+    ownerState: {},
+  });
+
   const domain = yScale.domain();
   if (domain.length === 0 || domain[0] === domain[1]) {
     // Skip axis rendering if
@@ -137,18 +150,14 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     // - No data is associated to the axis (other scale types)
     return null;
   }
+
   return (
     <AxisRoot
       transform={`translate(${position === 'right' ? left + width : left}, 0)`}
       className={classes.root}
     >
       {!disableLine && (
-        <Line
-          y1={yScale.range()[0]}
-          y2={yScale.range()[1]}
-          className={classes.line}
-          {...slotProps?.axisLine}
-        />
+        <Line y1={top} y2={top + height} className={classes.line} {...lineSlotProps} />
       )}
 
       {yTicks.map(({ formattedValue, offset, labelOffset, value }, index) => {
@@ -156,6 +165,13 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         const yTickLabel = labelOffset;
         const skipLabel =
           typeof tickLabelInterval === 'function' && !tickLabelInterval?.(value, index);
+
+        const showLabel = offset >= top - 1 && offset <= height + top + 1;
+
+        if (!showLabel) {
+          return null;
+        }
+
         return (
           <g key={index} transform={`translate(0, ${offset})`} className={classes.tickContainer}>
             {!disableTicks && (
@@ -255,10 +271,12 @@ ChartsYAxis.propTypes = {
    */
   tickFontSize: PropTypes.number,
   /**
-   * Defines which ticks are displayed. Its value can be:
+   * Defines which ticks are displayed.
+   * Its value can be:
    * - 'auto' In such case the ticks are computed based on axis scale and other parameters.
-   * - a filtering function of the form `(value, index) => boolean` which is available only if the axis has a data property.
+   * - a filtering function of the form `(value, index) => boolean` which is available only if the axis has "point" scale.
    * - an array containing the values where ticks should be displayed.
+   * @see See {@link https://mui.com/x/react-charts/axis/#fixed-tick-positions}
    * @default 'auto'
    */
   tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),

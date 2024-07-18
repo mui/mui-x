@@ -5,19 +5,27 @@ import Collapse from '@mui/material/Collapse';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import useForkRef from '@mui/utils/useForkRef';
 import { shouldForwardProp } from '@mui/system/createStyled';
-import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 import { TransitionProps } from '@mui/material/transitions';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeItemContent } from './TreeItemContent';
 import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
-import { TreeItemOwnerState, TreeItemProps } from './TreeItem.types';
+import {
+  TreeItemMinimalPlugins,
+  TreeItemOptionalPlugins,
+  TreeItemOwnerState,
+  TreeItemProps,
+} from './TreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
-import { DefaultTreeViewPlugins } from '../internals/plugins';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 import { TreeItem2Provider } from '../TreeItem2Provider';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
+import { useTreeItemState } from './useTreeItemState';
+
+const useThemeProps = createUseThemeProps('MuiTreeItem');
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
@@ -180,10 +188,11 @@ export const TreeItem = React.forwardRef(function TreeItem(
     icons: contextIcons,
     runItemPlugins,
     selection: { multiSelect },
+    expansion: { expansionTrigger },
     disabledItemsFocusable,
     indentationAtItemLevel,
     instance,
-  } = useTreeViewContext<DefaultTreeViewPlugins>();
+  } = useTreeViewContext<TreeItemMinimalPlugins, TreeItemOptionalPlugins>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
   const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
@@ -206,6 +215,8 @@ export const TreeItem = React.forwardRef(function TreeItem(
     ...other
   } = props;
 
+  const { expanded, focused, selected, disabled, handleExpansion } = useTreeItemState(itemId);
+
   const { contentRef, rootRef } = runItemPlugins<TreeItemProps>(props);
   const handleRootRef = useForkRef(inRef, rootRef);
   const handleContentRef = useForkRef(ContentProps?.ref, contentRef);
@@ -225,10 +236,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
     return Boolean(reactChildren);
   };
   const expandable = isExpandable(children);
-  const expanded = instance.isItemExpanded(itemId);
-  const focused = instance.isItemFocused(itemId);
-  const selected = instance.isItemSelected(itemId);
-  const disabled = instance.isItemDisabled(itemId);
 
   const ownerState: TreeItemOwnerState = {
     ...props,
@@ -256,6 +263,11 @@ export const TreeItem = React.forwardRef(function TreeItem(
     className: classes.groupTransition,
   });
 
+  const handleIconContainerClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (expansionTrigger === 'iconContainer') {
+      handleExpansion(event);
+    }
+  };
   const ExpansionIcon = expanded ? slots.collapseIcon : slots.expandIcon;
   const { ownerState: expansionIconOwnerState, ...expansionIconProps } = useSlotProps({
     elementType: ExpansionIcon,
@@ -272,6 +284,9 @@ export const TreeItem = React.forwardRef(function TreeItem(
         ...resolveComponentProps(contextIcons.slotProps.expandIcon, tempOwnerState),
         ...resolveComponentProps(inSlotProps?.expandIcon, tempOwnerState),
       };
+    },
+    additionalProps: {
+      onClick: handleIconContainerClick,
     },
   });
   const expansionIcon =
@@ -435,6 +450,10 @@ TreeItem.propTypes = {
    * Use the `onItemFocus` callback on the tree if you need to monitor a item's focus.
    */
   onFocus: unsupportedProp,
+  /**
+   * Callback fired when a key of the keyboard is pressed on the item.
+   */
+  onKeyDown: PropTypes.func,
   /**
    * The props used for each component slot.
    * @default {}

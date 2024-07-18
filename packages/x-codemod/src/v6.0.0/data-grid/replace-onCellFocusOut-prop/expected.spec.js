@@ -9,7 +9,7 @@ function App() {
     event.defaultMuiPrevented = true;
   };
   return (
-    <React.Fragment>
+    (<React.Fragment>
       <DataGrid
         componentsProps={{
           cell: {
@@ -32,7 +32,7 @@ function App() {
             onBlur: someCustomEvent,
           },
         }} />
-    </React.Fragment>
+    </React.Fragment>)
   );
 }
 

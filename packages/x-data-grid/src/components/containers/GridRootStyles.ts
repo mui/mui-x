@@ -115,6 +115,9 @@ export const GridRootStyles = styled('div', {
     { [`& .${c.withBorderColor}`]: styles.withBorderColor },
     { [`& .${c.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
     { [`& .${c.treeDataGroupingCellToggle}`]: styles.treeDataGroupingCellToggle },
+    {
+      [`& .${c.treeDataGroupingCellLoadingContainer}`]: styles.treeDataGroupingCellLoadingContainer,
+    },
     { [`& .${c.detailPanelToggleCell}`]: styles.detailPanelToggleCell },
     {
       [`& .${c['detailPanelToggleCell--expanded']}`]: styles['detailPanelToggleCell--expanded'],
@@ -145,7 +148,7 @@ export const GridRootStyles = styled('div', {
 
   const selectedHoverBackground = t.vars
     ? `rgba(${t.vars.palette.primary.mainChannel} / calc(
-                ${t.vars.palette.action.selectedOpacity} + 
+                ${t.vars.palette.action.selectedOpacity} +
                 ${t.vars.palette.action.hoverOpacity}
               ))`
     : alpha(
@@ -433,6 +436,9 @@ export const GridRootStyles = styled('div', {
           backgroundColor: 'transparent',
         },
       },
+      [`&.${c.rowSkeleton}:hover`]: {
+        backgroundColor: 'transparent',
+      },
       '&.Mui-selected': selectedStyles,
     },
     [`& .${c['container--top']}, & .${c['container--bottom']}`]: {
@@ -620,6 +626,12 @@ export const GridRootStyles = styled('div', {
       alignSelf: 'stretch',
       marginRight: t.spacing(2),
     },
+    [`& .${c.treeDataGroupingCellLoadingContainer}`]: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100%',
+    },
     [`& .${c.groupingCriteriaCell}`]: {
       display: 'flex',
       alignItems: 'center',
@@ -636,7 +648,7 @@ export const GridRootStyles = styled('div', {
       minWidth: 'calc(var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
       alignSelf: 'stretch',
       [`&.${c['scrollbarFiller--borderTop']}`]: {
-        borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+        borderTop: '1px solid var(--rowBorderColor)',
       },
       [`&.${c['scrollbarFiller--pinnedRight']}`]: {
         backgroundColor: 'var(--DataGrid-pinnedBackground)',
@@ -650,6 +662,13 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['filler--borderTop']}`]: {
       borderTop: '1px solid var(--rowBorderColor)',
+    },
+
+    /* Hide grid rows and vertical scrollbar when skeleton overlay is visible */
+    [`& .${c['main--hasSkeletonLoadingOverlay']}`]: {
+      [`& .${c.virtualScrollerContent}, & .${c['scrollbar--vertical']}, & .${c.pinnedRows}`]: {
+        display: 'none',
+      },
     },
   };
 

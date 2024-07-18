@@ -77,7 +77,7 @@
   { "name": "DesktopDatePickerSlotProps", "kind": "Interface" },
   { "name": "DesktopDatePickerSlots", "kind": "Interface" },
   { "name": "DesktopDateTimePicker", "kind": "Variable" },
-  { "name": "DesktopDateTimePickerLayout", "kind": "Function" },
+  { "name": "DesktopDateTimePickerLayout", "kind": "Variable" },
   { "name": "DesktopDateTimePickerProps", "kind": "Interface" },
   { "name": "DesktopDateTimePickerSlotProps", "kind": "Interface" },
   { "name": "DesktopDateTimePickerSlots", "kind": "Interface" },
@@ -143,6 +143,8 @@
   { "name": "MonthCalendarClasses", "kind": "Interface" },
   { "name": "MonthCalendarClassKey", "kind": "TypeAlias" },
   { "name": "MonthCalendarProps", "kind": "Interface" },
+  { "name": "MonthCalendarSlotProps", "kind": "Interface" },
+  { "name": "MonthCalendarSlots", "kind": "Interface" },
   { "name": "MuiPickersAdapter", "kind": "Interface" },
   { "name": "MuiPickersAdapterContext", "kind": "Variable" },
   { "name": "MultiSectionDigitalClock", "kind": "Variable" },
@@ -296,11 +298,14 @@
   { "name": "UseDateTimeFieldComponentProps", "kind": "TypeAlias" },
   { "name": "UseDateTimeFieldProps", "kind": "Interface" },
   { "name": "usePickerLayout", "kind": "ExportAssignment" },
+  { "name": "usePickersTranslations", "kind": "Variable" },
   { "name": "UseTimeFieldComponentProps", "kind": "TypeAlias" },
   { "name": "UseTimeFieldProps", "kind": "Interface" },
   { "name": "YearCalendar", "kind": "Variable" },
   { "name": "yearCalendarClasses", "kind": "Variable" },
   { "name": "YearCalendarClasses", "kind": "Interface" },
   { "name": "YearCalendarClassKey", "kind": "TypeAlias" },
-  { "name": "YearCalendarProps", "kind": "Interface" }
+  { "name": "YearCalendarProps", "kind": "Interface" },
+  { "name": "YearCalendarSlotProps", "kind": "Interface" },
+  { "name": "YearCalendarSlots", "kind": "Interface" }
 ]

@@ -7,7 +7,6 @@ import {
   describeValue,
   describePicker,
   describeRangeValidation,
-  wrapPickerMount,
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
 import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
@@ -35,7 +34,6 @@ describe('<DesktopDateTimeRangePicker /> - Describes', () => {
     classes: {} as any,
     render,
     muiName: 'MuiDesktopDateTimeRangePicker',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',
@@ -45,8 +43,6 @@ describe('<DesktopDateTimeRangePicker /> - Describes', () => {
       'themeVariants',
       'mergeClassName',
       'propsSpread',
-      'rootClass',
-      'reactTestRenderer',
     ],
   }));
 

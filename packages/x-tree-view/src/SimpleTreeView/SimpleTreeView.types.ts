@@ -7,7 +7,7 @@ import {
   SimpleTreeViewPluginParameters,
   SimpleTreeViewPluginSlotProps,
   SimpleTreeViewPluginSlots,
-  SimpleTreeViewPlugins,
+  SimpleTreeViewPluginSignatures,
 } from './SimpleTreeView.plugins';
 import { TreeViewExperimentalFeatures, TreeViewPublicAPI } from '../internals/models';
 
@@ -24,7 +24,7 @@ export interface SimpleTreeViewSlotProps extends SimpleTreeViewPluginSlotProps {
 }
 
 export type SimpleTreeViewApiRef = React.MutableRefObject<
-  TreeViewPublicAPI<SimpleTreeViewPlugins> | undefined
+  TreeViewPublicAPI<SimpleTreeViewPluginSignatures> | undefined
 >;
 
 export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
@@ -60,5 +60,5 @@ export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
    * For each feature, if the flag is not explicitly set to `true`,
    * the feature will be fully disabled and any property / method call will not have any effect.
    */
-  experimentalFeatures?: TreeViewExperimentalFeatures<SimpleTreeViewPlugins>;
+  experimentalFeatures?: TreeViewExperimentalFeatures<SimpleTreeViewPluginSignatures>;
 }

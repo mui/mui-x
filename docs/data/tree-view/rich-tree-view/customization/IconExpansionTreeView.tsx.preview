@@ -1,5 +1,0 @@
-<RichTreeView
-  aria-label="icon expansion"
-  items={ITEMS}
-  slots={{ item: CustomTreeItem }}
-/>

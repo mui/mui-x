@@ -1,8 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { line as d3Line } from 'd3-shape';
-import { SeriesContext } from '../context/SeriesContextProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import {
   LineElement,
   LineElementProps,
@@ -14,6 +13,8 @@ import getCurveFactory from '../internals/getCurve';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
 import { useChartGradient } from '../internals/components/ChartsAxesGradients';
+import { useLineSeries } from '../hooks/useSeries';
+import { AxisId } from '../models/axis';
 
 export interface LinePlotSlots extends LineElementSlots {}
 
@@ -34,8 +35,8 @@ export interface LinePlotProps
 }
 
 const useAggregatedData = () => {
-  const seriesData = React.useContext(SeriesContext).line;
-  const axisData = React.useContext(CartesianContext);
+  const seriesData = useLineSeries();
+  const axisData = useCartesianContext();
 
   if (seriesData === undefined) {
     return [];
@@ -60,7 +61,7 @@ const useAggregatedData = () => {
       const yScale = yAxis[yAxisKey].scale;
       const xData = xAxis[xAxisKey].data;
 
-      const gradientUsed: [string, 'x' | 'y'] | undefined =
+      const gradientUsed: [AxisId, 'x' | 'y'] | undefined =
         (yAxis[yAxisKey].colorScale && [yAxisKey, 'y']) ||
         (xAxis[xAxisKey].colorScale && [xAxisKey, 'x']) ||
         undefined;
