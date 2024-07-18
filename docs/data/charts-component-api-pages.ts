@@ -134,11 +134,6 @@ const apiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
-    pathname: '/x/api/charts/heatmap-item',
-    title: 'HeatmapItem',
-    plan: 'pro',
-  },
-  {
     pathname: '/x/api/charts/heatmap-plot',
     title: 'HeatmapPlot',
     plan: 'pro',
