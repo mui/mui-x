@@ -1098,6 +1098,7 @@ DataGridPremiumRaw.propTypes = {
     getChildrenCount: PropTypes.func,
     getGroupKey: PropTypes.func,
     getRows: PropTypes.func.isRequired,
+    lazyLoaded: PropTypes.bool,
     updateRow: PropTypes.func,
   }),
   unstable_dataSourceCache: PropTypes.shape({
