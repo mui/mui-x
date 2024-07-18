@@ -113,16 +113,8 @@ const pages: MuiPage[] = [
         children: [
           { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
           {
-            pathname: '/x/react-data-grid/row-grouping-group',
-            title: 'Row grouping',
-            plan: 'premium',
-            children: [
-              { pathname: '/x/react-data-grid/row-grouping', title: 'Overview' },
-              {
-                pathname: '/x/react-data-grid/recipes-row-grouping',
-                title: 'Recipes',
-              },
-            ],
+            pathname: '/x/react-data-grid/server-side-data/lazy-loading',
+            plan: 'pro',
           },
           { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
           { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
@@ -154,12 +146,6 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-data-grid/server-side-data/lazy-loading',
                 plan: 'pro',
-                planned: true,
-              },
-              {
-                pathname: '/x/react-data-grid/server-side-data/infinite-loading',
-                plan: 'pro',
-                planned: true,
               },
               {
                 pathname: '/x/react-data-grid/server-side-data/row-grouping',
