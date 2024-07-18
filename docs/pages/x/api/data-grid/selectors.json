@@ -155,7 +155,7 @@
   {
     "name": "gridEditRowsStateSelector",
     "returnType": "GridEditingState",
-    "description": "",
+    "description": "Select the row editing state.",
     "supportsApiRef": false
   },
   {
