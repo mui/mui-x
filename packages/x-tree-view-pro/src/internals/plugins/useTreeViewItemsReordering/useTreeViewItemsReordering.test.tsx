@@ -74,7 +74,7 @@ describeTreeView<[UseTreeViewItemsReorderingSignature, UseTreeViewItemsSignature
     describe('itemReordering prop', () => {
       it('should allow to drag and drop items when props.itemsReordering={true}', () => {
         const response = render({
-          experimentalFeatures: { indentationAtItemLevel: true },
+          experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
           items: [{ id: '1' }, { id: '2' }, { id: '3' }],
           itemsReordering: true,
         });
@@ -88,7 +88,7 @@ describeTreeView<[UseTreeViewItemsReorderingSignature, UseTreeViewItemsSignature
 
       it('should not allow to drag and drop items when props.itemsReordering={false}', () => {
         const response = render({
-          experimentalFeatures: { indentationAtItemLevel: true },
+          experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
           items: [{ id: '1' }, { id: '2' }, { id: '3' }],
           itemsReordering: false,
         });
@@ -112,7 +112,7 @@ describeTreeView<[UseTreeViewItemsReorderingSignature, UseTreeViewItemsSignature
       it('should call onItemPositionChange when an item is moved', () => {
         const onItemPositionChange = spy();
         const response = render({
-          experimentalFeatures: { indentationAtItemLevel: true },
+          experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
           items: [{ id: '1' }, { id: '2' }, { id: '3' }],
           itemsReordering: true,
           onItemPositionChange,
@@ -131,7 +131,7 @@ describeTreeView<[UseTreeViewItemsReorderingSignature, UseTreeViewItemsSignature
     describe('isItemReorderable prop', () => {
       it('should not allow to drag an item when isItemReorderable returns false', () => {
         const response = render({
-          experimentalFeatures: { indentationAtItemLevel: true },
+          experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
           items: [{ id: '1' }, { id: '2' }, { id: '3' }],
           itemsReordering: true,
           canMoveItemToNewPosition: () => false,
@@ -143,7 +143,7 @@ describeTreeView<[UseTreeViewItemsReorderingSignature, UseTreeViewItemsSignature
 
       it('should allow to drag an item when isItemReorderable returns true', () => {
         const response = render({
-          experimentalFeatures: { indentationAtItemLevel: true },
+          experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
           items: [{ id: '1' }, { id: '2' }, { id: '3' }],
           itemsReordering: true,
           canMoveItemToNewPosition: () => true,
@@ -160,7 +160,7 @@ describeTreeView<[UseTreeViewItemsReorderingSignature, UseTreeViewItemsSignature
     describe('canMoveItemToNewPosition prop', () => {
       it('should not allow to drop an item when canMoveItemToNewPosition returns false', () => {
         const response = render({
-          experimentalFeatures: { indentationAtItemLevel: true },
+          experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
           items: [{ id: '1' }, { id: '2' }, { id: '3' }],
           itemsReordering: true,
           canMoveItemToNewPosition: () => false,
@@ -172,7 +172,7 @@ describeTreeView<[UseTreeViewItemsReorderingSignature, UseTreeViewItemsSignature
 
       it('should allow to drop an item when canMoveItemToNewPosition returns true', () => {
         const response = render({
-          experimentalFeatures: { indentationAtItemLevel: true },
+          experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
           items: [{ id: '1' }, { id: '2' }, { id: '3' }],
           itemsReordering: true,
           canMoveItemToNewPosition: () => true,

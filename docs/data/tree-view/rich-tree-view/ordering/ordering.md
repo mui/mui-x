@@ -12,12 +12,12 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 <p class="description">Drag and drop your items to reorder them.</p>
 
 :::success
-To be able to reorder items, you first have to enable the `indentationAtItemLevel` experimental feature:
+To be able to reorder items, you first have to enable the `indentationAtItemLevel` and the `itemsReordering` experimental features:
 
 ```tsx
 <RichTreeViewPro
   items={ITEMS}
-  experimentalFeatures={{ indentationAtItemLevel: true }}
+  experimentalFeatures={{ indentationAtItemLevel: true, itemsReordering: true }}
 />
 ```
 

@@ -103,7 +103,10 @@ export default function OnlyReorderFromDragHandle() {
       <RichTreeViewPro
         items={MUI_X_PRODUCTS}
         defaultExpandedItems={['grid', 'pickers']}
-        experimentalFeatures={{ indentationAtItemLevel: true }}
+        experimentalFeatures={{
+          indentationAtItemLevel: true,
+          itemsReordering: true,
+        }}
         itemsReordering
         slots={{ item: CustomTreeItem }}
       />

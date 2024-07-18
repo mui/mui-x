@@ -15,8 +15,8 @@ import {
 import { useTreeViewItemsReorderingItemPlugin } from './useTreeViewItemsReordering.itemPlugin';
 
 const wrongIndentationStrategyWarning = buildWarning([
-  'MUI X: The drag and drop feature requires the `indentationAtItemLevel` experimental feature to be enabled.',
-  'You can do it by passing `experimentalFeatures={{ indentationAtItemLevel: true }}` to the `RichTreeViewPro` component.',
+  'MUI X: The items reordering feature requires the `indentationAtItemLevel` and `itemsReordering` experimental features to be enabled.',
+  'You can do it by passing `experimentalFeatures={{ indentationAtItemLevel: true, itemsReordering: true }}` to the `RichTreeViewPro` component.',
   'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/',
 ]);
 
@@ -27,15 +27,21 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
   setState,
   experimentalFeatures,
 }) => {
+  const isItemsReorderingEnabled =
+    params.itemsReordering && !!experimentalFeatures?.itemsReordering;
+
   if (process.env.NODE_END !== 'production') {
-    if (params.itemsReordering && !experimentalFeatures?.indentationAtItemLevel) {
+    if (
+      params.itemsReordering &&
+      (!experimentalFeatures?.indentationAtItemLevel || !experimentalFeatures?.itemsReordering)
+    ) {
       wrongIndentationStrategyWarning();
     }
   }
 
   const canItemBeDragged = React.useCallback(
     (itemId: string) => {
-      if (!params.itemsReordering) {
+      if (!isItemsReorderingEnabled) {
         return false;
       }
 
@@ -46,7 +52,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
       return true;
     },
-    [params.itemsReordering, params.isItemReorderable],
+    [isItemsReorderingEnabled, params.isItemReorderable],
   );
 
   const getDroppingTargetValidActions = React.useCallback(
@@ -249,7 +255,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
     },
     contextValue: {
       itemsReordering: {
-        enabled: params.itemsReordering ?? false,
+        enabled: isItemsReorderingEnabled,
         currentDrag: state.itemsReordering,
       },
     },
