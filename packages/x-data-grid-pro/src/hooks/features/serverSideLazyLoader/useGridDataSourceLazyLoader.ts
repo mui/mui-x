@@ -4,15 +4,21 @@ import {
   useGridSelector,
   gridSortModelSelector,
   gridFilterModelSelector,
-  gridRenderContextSelector,
-  useGridApiOptionHandler,
   GridEventListener,
 } from '@mui/x-data-grid';
-import { getVisibleRows } from '@mui/x-data-grid/internals';
+import {
+  getVisibleRows,
+  GridGetRowsParams,
+  gridRenderContextSelector,
+} from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { GridFetchRowsParams } from '../../../models/gridFetchRowsParams';
-import { findSkeletonRowsSection } from './utils';
+import { findSkeletonRowsSection } from '../lazyLoader/utils';
+
+const INTERVAL_CACHE_INITIAL_STATE = {
+  firstRowToRender: 0,
+  lastRowToRender: 0,
+};
 
 /**
  * @requires useGridRows (state)
@@ -20,20 +26,14 @@ import { findSkeletonRowsSection } from './utils';
  * @requires useGridDimensions (method) - can be after
  * @requires useGridScroll (method
  */
-export const useGridLazyLoader = (
+export const useGridDataSourceLazyLoader = (
   privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
-  props: Pick<
-    DataGridProProcessedProps,
-    'onFetchRows' | 'rowsLoadingMode' | 'pagination' | 'paginationMode' | 'experimentalFeatures'
-  >,
+  props: Pick<DataGridProProcessedProps, 'pagination' | 'paginationMode' | 'unstable_dataSource'>,
 ): void => {
   const sortModel = useGridSelector(privateApiRef, gridSortModelSelector);
   const filterModel = useGridSelector(privateApiRef, gridFilterModelSelector);
-  const renderedRowsIntervalCache = React.useRef({
-    firstRowToRender: 0,
-    lastRowToRender: 0,
-  });
-  const isDisabled = props.rowsLoadingMode !== 'server';
+  const renderedRowsIntervalCache = React.useRef(INTERVAL_CACHE_INITIAL_STATE);
+  const isDisabled = props.unstable_dataSource?.lazyLoaded !== true;
 
   const handleRenderedRowsIntervalChange = React.useCallback<
     GridEventListener<'renderedRowsIntervalChange'>
@@ -43,9 +43,9 @@ export const useGridLazyLoader = (
         return;
       }
 
-      const fetchRowsParams: GridFetchRowsParams = {
-        firstRowToRender: params.firstRowIndex,
-        lastRowToRender: params.lastRowIndex,
+      const fetchRowsParams: GridGetRowsParams = {
+        start: params.firstRowIndex,
+        end: params.lastRowIndex,
         sortModel,
         filterModel,
       };
@@ -80,11 +80,11 @@ export const useGridLazyLoader = (
           return;
         }
 
-        fetchRowsParams.firstRowToRender = skeletonRowsSection.firstRowIndex;
-        fetchRowsParams.lastRowToRender = skeletonRowsSection.lastRowIndex;
+        fetchRowsParams.start = skeletonRowsSection.firstRowIndex;
+        fetchRowsParams.end = skeletonRowsSection.lastRowIndex;
       }
 
-      privateApiRef.current.publishEvent('fetchRows', fetchRowsParams);
+      privateApiRef.current.publishEvent('getRows', fetchRowsParams);
     },
     [privateApiRef, isDisabled, props.pagination, props.paginationMode, sortModel, filterModel],
   );
@@ -95,17 +95,18 @@ export const useGridLazyLoader = (
         return;
       }
 
-      privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
+      privateApiRef.current.setRows([]);
+      renderedRowsIntervalCache.current = INTERVAL_CACHE_INITIAL_STATE;
 
       const renderContext = gridRenderContextSelector(privateApiRef);
-      const fetchRowsParams: GridFetchRowsParams = {
-        firstRowToRender: renderContext.firstRowIndex,
-        lastRowToRender: renderContext.lastRowIndex,
+      const fetchRowsParams: GridGetRowsParams = {
+        start: renderContext.firstRowIndex,
+        end: renderContext.lastRowIndex,
         sortModel: newSortModel,
         filterModel,
       };
 
-      privateApiRef.current.publishEvent('fetchRows', fetchRowsParams);
+      privateApiRef.current.publishEvent('getRows', fetchRowsParams);
     },
     [privateApiRef, isDisabled, filterModel],
   );
@@ -116,17 +117,18 @@ export const useGridLazyLoader = (
         return;
       }
 
-      privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
+      privateApiRef.current.setRows([]);
+      renderedRowsIntervalCache.current = INTERVAL_CACHE_INITIAL_STATE;
 
       const renderContext = gridRenderContextSelector(privateApiRef);
-      const fetchRowsParams: GridFetchRowsParams = {
-        firstRowToRender: renderContext.firstRowIndex,
-        lastRowToRender: renderContext.lastRowIndex,
+      const fetchRowsParams: GridGetRowsParams = {
+        start: renderContext.firstRowIndex,
+        end: renderContext.lastRowIndex,
         sortModel,
         filterModel: newFilterModel,
       };
 
-      privateApiRef.current.publishEvent('fetchRows', fetchRowsParams);
+      privateApiRef.current.publishEvent('getRows', fetchRowsParams);
     },
     [privateApiRef, isDisabled, sortModel],
   );
@@ -136,7 +138,7 @@ export const useGridLazyLoader = (
     'renderedRowsIntervalChange',
     handleRenderedRowsIntervalChange,
   );
+  // TODO: if sorting/filtering happens firther away from the top, sometimes one skeleton row is left
   useGridApiEventHandler(privateApiRef, 'sortModelChange', handleGridSortModelChange);
   useGridApiEventHandler(privateApiRef, 'filterModelChange', handleGridFilterModelChange);
-  useGridApiOptionHandler(privateApiRef, 'fetchRows', props.onFetchRows);
 };
