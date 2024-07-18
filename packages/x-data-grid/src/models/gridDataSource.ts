@@ -12,7 +12,7 @@ export interface GridGetRowsParams {
   /**
    * Alternate to `start` and `end`, maps to `GridPaginationModel` interface.
    */
-  paginationModel: GridPaginationModel;
+  paginationModel?: GridPaginationModel;
   /**
    * First row index to fetch (number) or cursor information (number | string).
    */
@@ -20,7 +20,7 @@ export interface GridGetRowsParams {
   /**
    * Last row index to fetch.
    */
-  end: number; // last row index to fetch
+  end: number;
   /**
    * List of grouped columns (only applicable with `rowGrouping`).
    */
@@ -75,6 +75,11 @@ export interface GridDataSource {
    * @returns {number} The number of children the row has
    */
   getChildrenCount?: (row: GridRowModel) => number;
+  /**
+   * If enabled, the grid will send `start` and `end` instead of `paginationModel` to `getRows` and a new request will be made
+   * whenever the user scrolls to the area that has skeleton rows
+   */
+  lazyLoaded?: boolean;
 }
 
 export interface GridDataSourceCache {
