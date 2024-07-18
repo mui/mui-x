@@ -132,10 +132,10 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
       <g {...clipPathGroupProps}>
         <BarPlot {...barPlotProps} />
         <ChartsOverlay {...overlayProps} />
+        <ChartsAxisHighlight {...axisHighlightProps} />
       </g>
       <ChartsAxis {...chartsAxisProps} />
       <ChartsLegend {...legendProps} />
-      <ChartsAxisHighlight {...axisHighlightProps} />
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       <ChartsClipPath {...clipPathProps} />
       {children}

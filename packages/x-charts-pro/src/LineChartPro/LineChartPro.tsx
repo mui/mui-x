@@ -62,9 +62,9 @@ const LineChartPro = React.forwardRef(function LineChartPro(props: LineChartProP
         <AreaPlotZoom {...areaPlotProps} />
         <LinePlotZoom {...linePlotProps} />
         <ChartsOverlay {...overlayProps} />
+        <ChartsAxisHighlight {...axisHighlightProps} />
       </g>
       <ChartsAxis {...chartsAxisProps} />
-      <ChartsAxisHighlight {...axisHighlightProps} />
       <MarkPlotZoom {...markPlotProps} />
       <LineHighlightPlot {...lineHighlightPlotProps} />
       <ChartsLegend {...legendProps} />
