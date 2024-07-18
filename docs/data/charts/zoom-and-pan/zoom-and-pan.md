@@ -26,7 +26,7 @@ The following actions are supported:
 {{"demo": "ZoomBarChart.js"}}
 {{"demo": "ZoomLineChart.js"}}
 
-## Zooming Options
+## Zooming options
 
 You can customize the zooming behavior by setting the `zoomOptions` prop.
 
