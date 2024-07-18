@@ -43,7 +43,7 @@ export interface ScatterProps {
 function Scatter(props: ScatterProps) {
   const { series, xScale, yScale, color, colorGetter, markerSize, onItemClick } = props;
 
-  const { left, width, top, height } = useDrawingArea();
+  const drawingArea = useDrawingArea();
 
   const { useVoronoiInteraction } = React.useContext(InteractionContext);
 
@@ -69,7 +69,7 @@ function Scatter(props: ScatterProps) {
       const x = getXPosition(scatterPoint.x);
       const y = getYPosition(scatterPoint.y);
 
-      const isInRange = x >= left && x <= left + width && y >= top && y <= top + height;
+      const isInRange = drawingArea.isPointInside({ x, y });
 
       const pointCtx = { type: 'scatter' as const, seriesId: series.id, dataIndex: i };
 
@@ -96,10 +96,7 @@ function Scatter(props: ScatterProps) {
   }, [
     xScale,
     yScale,
-    left,
-    width,
-    top,
-    height,
+    drawingArea,
     series.data,
     series.id,
     isHighlighted,

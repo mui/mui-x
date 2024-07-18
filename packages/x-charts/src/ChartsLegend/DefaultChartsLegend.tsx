@@ -10,7 +10,7 @@ export interface LegendRendererProps extends Omit<LegendPerItemProps, 'itemsToDi
   /**
    * @deprecated Use the `useDrawingArea` hook instead.
    */
-  drawingArea: DrawingArea;
+  drawingArea: Omit<DrawingArea, 'isPointInside'>;
 }
 
 function DefaultChartsLegend(props: LegendRendererProps) {

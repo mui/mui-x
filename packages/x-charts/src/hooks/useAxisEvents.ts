@@ -12,7 +12,7 @@ function getAsANumber(value: number | Date) {
 }
 export const useAxisEvents = (disableAxisListener: boolean) => {
   const svgRef = useSvgRef();
-  const { left, top, width, height } = useDrawingArea();
+  const drawingArea = useDrawingArea();
   const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
   const { dispatch } = React.useContext(InteractionContext);
 
@@ -109,9 +109,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
         y: svgPoint.y,
       };
 
-      const outsideX = svgPoint.x < left || svgPoint.x > left + width;
-      const outsideY = svgPoint.y < top || svgPoint.y > top + height;
-      if (outsideX || outsideY) {
+      if (!drawingArea.isPointInside(svgPoint)) {
         dispatch({ type: 'exitChart' });
         return;
       }
@@ -144,17 +142,5 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       element.removeEventListener('pointercancel', handleOut);
       element.removeEventListener('pointerleave', handleOut);
     };
-  }, [
-    svgRef,
-    dispatch,
-    left,
-    width,
-    top,
-    height,
-    usedYAxis,
-    yAxis,
-    usedXAxis,
-    xAxis,
-    disableAxisListener,
-  ]);
+  }, [svgRef, dispatch, usedYAxis, yAxis, usedXAxis, xAxis, disableAxisListener, drawingArea]);
 };

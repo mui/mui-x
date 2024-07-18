@@ -31,13 +31,14 @@ type VoronoiSeries = { seriesId: SeriesId; startIndex: number; endIndex: number 
 function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const { voronoiMaxRadius, onItemClick } = props;
   const svgRef = useSvgRef();
-  const { left, top, width, height } = useDrawingArea();
+  const drawingArea = useDrawingArea();
   const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
   const { dispatch } = React.useContext(InteractionContext);
 
   const { series, seriesOrder } = useScatterSeries() ?? {};
   const voronoiRef = React.useRef<Record<string, VoronoiSeries>>({});
   const delauneyRef = React.useRef<Delaunay<any> | undefined>(undefined);
+  const lastFind = React.useRef<number | undefined>(undefined);
 
   const { setHighlighted, clearHighlighted } = useHighlighted();
 
@@ -70,7 +71,20 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       const getXPosition = getValueToPositionMapper(xScale);
       const getYPosition = getValueToPositionMapper(yScale);
 
-      const seriesPoints = data.flatMap(({ x, y }) => [getXPosition(x), getYPosition(y)]);
+      const seriesPoints = data.flatMap(({ x, y }) => {
+        const pointX = getXPosition(x);
+        const pointY = getYPosition(y);
+
+        if (!drawingArea.isPointInside({ x: pointX, y: pointY })) {
+          // If the point is not displayed we move them to a trash coordinate.
+          // This avoids managing index mapping before/after filtering.
+          // The trash point is far enough such that any point in the drawing area will be closer to the mouse than the trash coordinate.
+          return [-drawingArea.width, -drawingArea.height];
+        }
+
+        return [pointX, pointY];
+      });
+
       voronoiRef.current[seriesId] = {
         seriesId,
         startIndex: points.length,
@@ -80,7 +94,8 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
     });
 
     delauneyRef.current = new Delaunay(points);
-  }, [defaultXAxisId, defaultYAxisId, series, seriesOrder, xAxis, yAxis]);
+    lastFind.current = undefined;
+  }, [defaultXAxisId, defaultYAxisId, series, seriesOrder, xAxis, yAxis, drawingArea]);
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -88,7 +103,6 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       return undefined;
     }
 
-    // TODO: A perf optimisation of voronoi could be to use the last point as the initial point for the next search.
     function getClosestPoint(
       event: MouseEvent,
     ):
@@ -99,9 +113,8 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       // Get mouse coordinate in global SVG space
       const svgPoint = getSVGPoint(element, event);
 
-      const outsideX = svgPoint.x < left || svgPoint.x > left + width;
-      const outsideY = svgPoint.y < top || svgPoint.y > top + height;
-      if (outsideX || outsideY) {
+      if (!drawingArea.isPointInside(svgPoint)) {
+        lastFind.current = undefined;
         return 'outside-chart';
       }
 
@@ -109,11 +122,12 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
         return 'no-point-found';
       }
 
-      const closestPointIndex = delauneyRef.current.find(svgPoint.x, svgPoint.y);
+      const closestPointIndex = delauneyRef.current.find(svgPoint.x, svgPoint.y, lastFind.current);
       if (closestPointIndex === undefined) {
         return 'no-point-found';
       }
 
+      lastFind.current = closestPointIndex;
       const closestSeries = Object.values(voronoiRef.current).find((value) => {
         return 2 * closestPointIndex >= value.startIndex && 2 * closestPointIndex < value.endIndex;
       });
@@ -137,7 +151,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       return { seriesId: closestSeries.seriesId, dataIndex };
     }
 
-    const handleMouseOut = () => {
+    const handleMouseLeave = () => {
       dispatch({ type: 'exitChart' });
       clearHighlighted();
     };
@@ -180,27 +194,24 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       onItemClick(event, { type: 'scatter', seriesId, dataIndex });
     };
 
-    element.addEventListener('pointerout', handleMouseOut);
+    element.addEventListener('pointerleave', handleMouseLeave);
     element.addEventListener('pointermove', handleMouseMove);
     element.addEventListener('click', handleMouseClick);
     return () => {
-      element.removeEventListener('pointerout', handleMouseOut);
+      element.removeEventListener('pointerleave', handleMouseLeave);
       element.removeEventListener('pointermove', handleMouseMove);
       element.removeEventListener('click', handleMouseClick);
     };
   }, [
     svgRef,
     dispatch,
-    left,
-    width,
-    top,
-    height,
     yAxis,
     xAxis,
     voronoiMaxRadius,
     onItemClick,
     setHighlighted,
     clearHighlighted,
+    drawingArea,
   ]);
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
