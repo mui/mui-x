@@ -3,6 +3,7 @@ import type {
   GridRowScrollEndParams,
   GridRowOrderChangeParams,
   GridFetchRowsParams,
+  GridGetRowsParams,
 } from '../models';
 import type { GridRenderHeaderFilterProps } from '../components/headerFiltering/GridHeaderFilterCell';
 import type { GridColumnPinningInternalCache } from '../hooks/features/columnPinning/gridColumnPinningInterface';
@@ -44,6 +45,10 @@ export interface GridEventLookupPro {
    * Fired when a new batch of rows is requested to be loaded. Called with a [[GridFetchRowsParams]] object.
    */
   fetchRows: { params: GridFetchRowsParams };
+  /**
+   * Fired when the grid needs to fetch a new batch of rows from the data source. Called with a [[GridGetRowsParams]] object.
+   */
+  getRows: { params: GridGetRowsParams };
 }
 
 export interface GridPipeProcessingLookupPro {
