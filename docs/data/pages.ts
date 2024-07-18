@@ -12,13 +12,19 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/introduction-group',
     title: 'Introduction',
-
     children: [
       { pathname: `/x/introduction`, title: 'Overview' },
       { pathname: `/x/introduction/installation` },
       { pathname: `/x/introduction/licensing` },
       { pathname: `/x/introduction/support` },
       { pathname: `/x/introduction/roadmap` },
+    ],
+  },
+  {
+    pathname: '/x/common-features-group',
+    title: 'Common concepts',
+    children: [
+      { pathname: `/x/common-concepts/custom-components`, title: 'Custom slots and subcomponents' },
     ],
   },
   {

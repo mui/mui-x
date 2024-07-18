@@ -2,42 +2,7 @@
 
 <p class="description">The grid is highly customizable. Override components using the <code>slots</code> prop.</p>
 
-## Overriding components
-
-As part of the customization API, the Data Grid allows you to override internal components with the `slots` prop.
-The prop accepts an object of type [`GridSlotsComponent`](/x/api/data-grid/data-grid/#slots).
-
-If you wish to pass additional props in a component slot, you can do it using the `slotProps` prop.
-This prop is of type `GridSlotsComponentsProps`. Note that if you do and you use TypeScript, you'll need to cast your custom component so it can fit in the slot type.
-
-As an example, you could override the column menu and pass additional props as below.
-
-```tsx
-<DataGrid
-  rows={rows}
-  columns={columns}
-  slots={{
-    columnMenu: MyCustomColumnMenu as DataGridProps['slots']['columnMenu'],
-  }}
-  slotProps={{
-    columnMenu: { background: 'red', counter: rows.length },
-  }}
-/>
-```
-
-If you want to ensure type safety, you can declare your component using the slot props typings:
-
-```tsx
-import { GridSlotProps } from '@mui/x-data-grid';
-
-function MyCustomColumnMenu(
-  props: GridSlotProps['columnMenu'] & { background: string; counter: number },
-) {
-  // ...
-}
-```
-
-### Interacting with the data grid
+## Interacting with the data grid
 
 The grid exposes two hooks to help you access the data grid data while overriding component slots.
 
@@ -64,7 +29,11 @@ function CustomPagination() {
 
 ## Component slots
 
-The full list of overridable component slots can be found on the [`GridSlotsComponent`](/x/api/data-grid/data-grid/#slots) API page.
+:::success
+
+- See [Common concepts—Custom slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
+- See [`GridSlotsComponent`](/x/api/data-grid/data-grid/#slots) to learn about the available slots.
+  :::
 
 ### Column menu
 
@@ -153,22 +122,7 @@ As any component slot, every icon can be customized. However, it is not yet poss
 
 See the [Overlays](/x/react-data-grid/overlays/) documentation on how to customize the `loadingOverlay`, `noRowsOverlay`, and `noResultsOverlay`.
 
-## Slot props
-
-To override default props or pass custom props to slot components, use the `slotProps` prop.
-
-```tsx
-<DataGrid
-  slotProps={{
-    toolbar: {
-      // override default props
-      disableDensitySelector: true,
-    }
-  }}
->
-```
-
-### Custom slot props with TypeScript
+## Custom slot props with TypeScript
 
 If the custom component requires additional props to work properly, TypeScript may throw type errors.
 To solve these type errors, use [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) to enhance the props interface.
