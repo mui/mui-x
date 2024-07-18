@@ -25,7 +25,7 @@ function getGridRowGroupChildrenSelector(groupId: GridRowId) {
       const startIndex = sortedRowIds.findIndex((id) => id === groupId) + 1;
       for (
         let index = startIndex;
-        index < sortedRowIds.length && rowTree[sortedRowIds[index]].depth > groupNode.depth;
+        index < sortedRowIds.length && rowTree[sortedRowIds[index]]?.depth > groupNode.depth;
         index += 1
       ) {
         const id = sortedRowIds[index];
@@ -53,7 +53,7 @@ export function getGridSomeChildrenSelectedSelector(groupId: GridRowId) {
       const startIndex = sortedRowIds.findIndex((id) => id === groupId) + 1;
       for (
         let index = startIndex;
-        index < sortedRowIds.length && rowTree[sortedRowIds[index]].depth > groupNode.depth;
+        index < sortedRowIds.length && rowTree[sortedRowIds[index]]?.depth > groupNode.depth;
         index += 1
       ) {
         const id = sortedRowIds[index];
