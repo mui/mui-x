@@ -41,7 +41,7 @@ The following options are available:
 
 {{"demo": "ZoomOptionsNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
-## Controlled Zoom
+## Controlled zoom
 
 You can control the zoom state by setting the `zoom` and `onZoomChange` props.
 This way, you can control the zoom state from outside the chart.
