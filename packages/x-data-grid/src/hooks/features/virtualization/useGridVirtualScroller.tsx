@@ -583,7 +583,6 @@ export const useGridVirtualScroller = () => {
     }),
     getScrollerProps: () => ({
       ref: scrollerRef,
-      tabIndex: -1,
       onScroll: handleScroll,
       onWheel: handleWheel,
       onTouchMove: handleTouchMove,
