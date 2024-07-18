@@ -231,7 +231,8 @@ export const useGridRowSelection = (
 
         const selection = gridRowSelectionStateSelector(apiRef.current.state);
 
-        const newSelection: Set<GridRowId> = new Set(selection.filter((el) => el !== id));
+        const newSelection: Set<GridRowId> = new Set(selection);
+        newSelection.delete(id);
 
         if (isSelected) {
           newSelection.add(id);
