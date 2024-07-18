@@ -31,4 +31,10 @@ export const propValidatorsDataGridPro: PropValidator<DataGridProProcessedProps>
       isNumber(props.rowCount) &&
       'MUI X: Usage of the `rowCount` prop with client side pagination (`paginationMode="client"`) has no effect. `rowCount` is only meant to be used with `paginationMode="server"`.') ||
     undefined,
+  (props) =>
+    (props.signature !== GridSignature.DataGrid &&
+      props.rowsLoadingMode === 'server' &&
+      props.unstable_dataSource?.lazyLoaded === true &&
+      'MUI X: Usage of the client side lazy loading (`rowsLoadingMode="server"`) cannot be used together with server side lazy loading `unstable_dataSource="{ ..., lazyLoaded: true}"`.') ||
+    undefined,
 ];
