@@ -59,7 +59,7 @@ function MarkPlot(props: MarkPlotProps) {
   const seriesData = useLineSeries();
   const axisData = useCartesianContext();
   const chartId = useChartId();
-  const { left, width, top, height } = useDrawingArea();
+  const drawingArea = useDrawingArea();
 
   const Mark = slots?.mark ?? MarkElement;
 
@@ -90,16 +90,6 @@ function MarkPlot(props: MarkPlotProps) {
           const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
           const yScale = yAxis[yAxisKey].scale;
           const xData = xAxis[xAxisKey].data;
-
-          const isInRange = ({ x, y }: { x: number; y: number }) => {
-            if (x < left || x > left + width) {
-              return false;
-            }
-            if (y < top || y > top + height) {
-              return false;
-            }
-            return true;
-          };
 
           if (xData === undefined) {
             throw new Error(
@@ -133,7 +123,7 @@ function MarkPlot(props: MarkPlotProps) {
                     // Remove missing data point
                     return false;
                   }
-                  if (!isInRange({ x, y })) {
+                  if (!drawingArea.isPointInside({ x, y })) {
                     // Remove out of range
                     return false;
                   }

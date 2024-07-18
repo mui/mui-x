@@ -7,6 +7,7 @@ import { InteractionContext } from '../context/InteractionProvider';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import getColor from './getColor';
 import { useLineSeries } from '../hooks/useSeries';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 
 export interface LineHighlightPlotSlots {
   lineHighlight?: React.JSXElementConstructor<LineHighlightElementProps>;
@@ -44,6 +45,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
 
   const seriesData = useLineSeries();
   const axisData = useCartesianContext();
+  const drawingArea = useDrawingArea();
   const { axis } = React.useContext(InteractionContext);
 
   const highlightedIndex = axis.x?.index;
@@ -92,6 +94,10 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
 
           const x = xScale(xData[highlightedIndex]);
           const y = yScale(stackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
+
+          if (!drawingArea.isPointInside({ x, y })) {
+            return null;
+          }
 
           const colorGetter = getColor(series[seriesId], xAxis[xAxisKey], yAxis[yAxisKey]);
           return (
