@@ -277,7 +277,7 @@ export const loadServerRows = (
   }
   const delay = randomInt(minDelay, maxDelay);
 
-  const { cursor, page = 0, pageSize } = queryOptions;
+  const { cursor, page = 0, pageSize, firstRowToRender, lastRowToRender } = queryOptions;
 
   let nextCursor;
   let firstRowIndex;
@@ -289,7 +289,10 @@ export const loadServerRows = (
   filteredRows = [...filteredRows].sort(rowComparator);
 
   const totalRowCount = filteredRows.length;
-  if (!pageSize) {
+  if (firstRowToRender !== undefined && lastRowToRender !== undefined) {
+    firstRowIndex = firstRowToRender;
+    lastRowIndex = lastRowToRender;
+  } else if (!pageSize) {
     firstRowIndex = 0;
     lastRowIndex = filteredRows.length;
   } else if (useCursorPagination) {
