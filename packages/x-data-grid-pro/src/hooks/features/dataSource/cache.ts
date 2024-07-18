@@ -15,6 +15,8 @@ function getKey(params: GridGetRowsParams) {
     params.filterModel,
     params.sortModel,
     params.groupKeys,
+    params.start,
+    params.end,
   ]);
 }
 
