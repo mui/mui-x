@@ -55,18 +55,9 @@ const zoomAtPoint = (
   return [newMinRange, newMaxRange];
 };
 
-const isPointOutside = (
-  point: { x: number; y: number },
-  area: { left: number; top: number; width: number; height: number },
-) => {
-  const outsideX = point.x < area.left || point.x > area.left + area.width;
-  const outsideY = point.y < area.top || point.y > area.top + area.height;
-  return outsideX || outsideY;
-};
-
 export const useSetupZoom = () => {
   const { setZoomData, isZoomEnabled, options, setIsInteracting } = useZoom();
-  const area = useDrawingArea();
+  const drawingArea = useDrawingArea();
 
   const svgRef = useSvgRef();
   const eventCacheRef = React.useRef<PointerEvent[]>([]);
@@ -86,7 +77,7 @@ export const useSetupZoom = () => {
 
       const point = getSVGPoint(element, event);
 
-      if (isPointOutside(point, area)) {
+      if (!drawingArea.isPointInside(point)) {
         return;
       }
 
@@ -110,8 +101,8 @@ export const useSetupZoom = () => {
 
           const centerRatio =
             option.axisDirection === 'x'
-              ? getHorizontalCenterRatio(point, area)
-              : getVerticalCenterRatio(point, area);
+              ? getHorizontalCenterRatio(point, drawingArea)
+              : getVerticalCenterRatio(point, drawingArea);
 
           const { scaleRatio, isZoomIn } = getWheelScaleRatio(event, option.step);
           const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
@@ -170,8 +161,8 @@ export const useSetupZoom = () => {
 
           const centerRatio =
             option.axisDirection === 'x'
-              ? getHorizontalCenterRatio(point, area)
-              : getVerticalCenterRatio(point, area);
+              ? getHorizontalCenterRatio(point, drawingArea)
+              : getVerticalCenterRatio(point, drawingArea);
 
           const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
 
@@ -226,7 +217,7 @@ export const useSetupZoom = () => {
         clearTimeout(interactionTimeoutRef.current);
       }
     };
-  }, [svgRef, setZoomData, area, isZoomEnabled, options, setIsInteracting]);
+  }, [svgRef, setZoomData, drawingArea, isZoomEnabled, options, setIsInteracting]);
 };
 
 /**

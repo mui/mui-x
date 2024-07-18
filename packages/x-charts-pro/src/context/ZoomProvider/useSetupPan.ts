@@ -5,18 +5,9 @@ import { useZoom } from './useZoom';
 import { ZoomData } from './Zoom.types';
 import { initializeZoomData } from './initializeZoomData';
 
-const isPointOutside = (
-  point: { x: number; y: number },
-  area: { left: number; top: number; width: number; height: number },
-) => {
-  const outsideX = point.x < area.left || point.x > area.left + area.width;
-  const outsideY = point.y < area.top || point.y > area.top + area.height;
-  return outsideX || outsideY;
-};
-
 export const useSetupPan = () => {
   const { zoomData, setZoomData, setIsInteracting, isPanEnabled, options } = useZoom();
-  const area = useDrawingArea();
+  const drawingArea = useDrawingArea();
 
   const svgRef = useSvgRef();
 
@@ -56,7 +47,7 @@ export const useSetupPan = () => {
         const MAX_PERCENT = option.maxEnd;
 
         const movement = option.axisDirection === 'x' ? movementX : movementY;
-        const dimension = option.axisDirection === 'x' ? area.width : area.height;
+        const dimension = option.axisDirection === 'x' ? drawingArea.width : drawingArea.height;
 
         let newMinPercent = min - (movement / dimension) * span;
         let newMaxPercent = max - (movement / dimension) * span;
@@ -94,7 +85,7 @@ export const useSetupPan = () => {
       eventCacheRef.current.push(event);
       const point = getSVGPoint(element, event);
 
-      if (isPointOutside(point, area)) {
+      if (!drawingArea.isPointInside(point)) {
         return;
       }
 
@@ -136,5 +127,14 @@ export const useSetupPan = () => {
       document.removeEventListener('pointercancel', handleUp);
       document.removeEventListener('pointerleave', handleUp);
     };
-  }, [area, svgRef, isDraggingRef, setIsInteracting, zoomData, setZoomData, isPanEnabled, options]);
+  }, [
+    drawingArea,
+    svgRef,
+    isDraggingRef,
+    setIsInteracting,
+    zoomData,
+    setZoomData,
+    isPanEnabled,
+    options,
+  ]);
 };
