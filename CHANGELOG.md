@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.20.4
+
+_Jul 18, 2024_
+
+We'd like to offer a big thanks to the 1 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.20.4`
+
+- [DataGrid] Enable flip on preferences panel (#13812) @romgrk
+
+#### `@mui/x-data-grid-pro@6.20.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@6.20.4`.
+
+#### `@mui/x-data-grid-premium@6.20.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@6.20.4`.
+
 ## v6.20.3
 
 _Jun 28, 2024_
