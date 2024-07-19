@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  GridRowId,
+  GridTreeNode,
   useGridSelector,
   gridFilteredTopLevelRowCountSelector,
   gridFilteredChildrenCountLookupSelector,
@@ -30,9 +30,8 @@ export const useGridRowAriaAttributes = (addTreeDataAttributes?: boolean) => {
     addTreeDataAttributes !== undefined ? addTreeDataAttributes : props.treeData === true;
 
   return React.useCallback(
-    (rowId: GridRowId, index: number) => {
-      const rowNode = apiRef.current.getRowNode(rowId);
-      const ariaAttributes = getRowAriaAttributesCommunity(rowId, index);
+    (rowNode: GridTreeNode, index: number) => {
+      const ariaAttributes = getRowAriaAttributesCommunity(rowNode, index);
 
       if (!addAttributes || rowNode === null) {
         return ariaAttributes;
@@ -58,7 +57,6 @@ export const useGridRowAriaAttributes = (addTreeDataAttributes?: boolean) => {
       return ariaAttributes;
     },
     [
-      apiRef,
       addAttributes,
       filteredTopLevelRowCount,
       filteredChildrenCountLookup,

@@ -1,13 +1,13 @@
-import { GridRowId } from '../gridRows';
+import { GridTreeNode } from '../gridRows';
 
 /**
  * Get the ARIA attributes for a row
- * @param {GridRowId} rowId The id of the row
+ * @param {GridTreeNode} rowNode The row node
  * @param {number} index The position index of the row
  * @returns {Record<string, string | number | boolean>} The ARIA attributes
  */
 type GetAriaAttributesFn = (
-  rowId: GridRowId,
+  rowNode: GridTreeNode,
   index: number,
 ) => Record<string, string | number | boolean>;
 
