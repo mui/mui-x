@@ -54,6 +54,7 @@ function GridToolbarRemoteControl() {
   const apiRef = useGridApiContext<GridApiPro>();
   const rootProps = useGridRootProps() as DataGridProProcessedProps;
   const [isLoading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
   const [isRecording, setRecording] = React.useState(false);
   const classes = useUtilityClasses(rootProps, isRecording);
   const [query, setQuery] = React.useState('');
@@ -63,6 +64,8 @@ function GridToolbarRemoteControl() {
     const columnsByField = gridColumnLookupSelector(apiRef);
 
     setLoading(true);
+    setError(null);
+
     apiRef.current.setState((state) => ({ ...state, rows: { ...state.rows, loading: true } }));
     remoteControl
       .controls(context, query)
@@ -124,9 +127,9 @@ function GridToolbarRemoteControl() {
         interestColumns.push(...result.filters.map((f) => f.column));
         interestColumns.reverse().forEach((c) => apiRef.current.setColumnIndex(c, targetIndex));
       })
-      .catch((error) => {
-        // eslint-disable-next-line no-alert
-        alert(error.message);
+      .catch((err) => {
+        console.error(err);
+        setError('Cannot process this request. Please try again with a different prompt.');
       })
       .finally(() => {
         setLoading(false);
@@ -165,6 +168,8 @@ function GridToolbarRemoteControl() {
         onChange={handleChange}
         size="small"
         onKeyDown={handleKeyDown}
+        error={!!error}
+        helperText={error}
         InputProps={
           BrowserSpeechRecognition && {
             startAdornment: (
