@@ -89,16 +89,6 @@ This can happen if you pass additional props to your custom component using `slo
 If we take the example of the `toolbar` slot, you can cast your custom component as below:
 
 ```tsx
-// Ensures type safety to your slots
-type CustomToolbarProps = NonNullable<DataGridProps['slotProps']>['toolbar'] & {
-  name: string;
-  setName: (name: string) => void;
-};
-
-const CustomToolbar = ({ name, setName }: CustomToolbarProps) => (
-  <input value={name} onChange={(event) => setName(event.target.value)} />
-);
-
 function MyApp() {
   const [name, setName] = React.useState('');
   return (
@@ -117,6 +107,19 @@ function MyApp() {
     />
   );
 }
+```
+
+If you want to ensure type safety, you can declare your component using the slot props typings:
+
+```tsx
+type CustomToolbarProps = NonNullable<DataGridProps['slotProps']>['toolbar'] & {
+  name: string;
+  setName: (name: string) => void;
+};
+
+const CustomToolbar = ({ name, setName }: CustomToolbarProps) => (
+  <input value={name} onChange={(event) => setName(event.target.value)} />
+);
 ```
 
 :::success
