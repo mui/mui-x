@@ -72,18 +72,6 @@
     "csstype": "^3.1.3",
     "rimraf": "^5.0.8"
   },
-  "exports": {
-    ".": {
-      "types": "./index.d.ts",
-      "import": "./esm/index.js",
-      "default": "./esm/index.js"
-    },
-    "./*": {
-      "types": "./*/index.d.ts",
-      "import": "./esm/*/index.js",
-      "default": "./esm/*/index.js"
-    }
-  },
   "engines": {
     "node": ">=14.0.0"
   }
