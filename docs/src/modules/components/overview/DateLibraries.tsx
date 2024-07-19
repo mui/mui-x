@@ -48,7 +48,7 @@ export default function DateLibraries() {
   return (
     <React.Fragment>
       <Divider />
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={6} py={4} alignItems="center">
+      <Stack direction={{ xs: 'column', md: 'row' }} spacing={6} py={8} alignItems="center">
         <Stack spacing={2} sx={{ maxWidth: '450px' }}>
           <SectionHeadline
             overline="Date libraries"

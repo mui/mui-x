@@ -34,6 +34,8 @@ dayjs.extend(timezone);
 
 const StyledDemoContainer = styled(Paper)({
   height: '100%',
+  flexGrow: 1,
+  display: 'flex',
 });
 
 const internationalizationFeatures = [
@@ -168,6 +170,7 @@ const locales = {
 
 const ToggleButton = styled(MuiToggleButton)({
   borderColor: 'transparent',
+  padding: '5px 8px',
 });
 const ToggleButtonGroup = styled(MuiToggleButtonGroup)(({ theme }) => ({
   gap: theme.spacing(1),
@@ -336,7 +339,7 @@ export default function Internationalization() {
   return (
     <React.Fragment>
       <Divider />
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={6} py={4} alignItems="center">
+      <Stack direction={{ xs: 'column', md: 'row' }} spacing={6} py={8} alignItems="center">
         <Stack spacing={2} sx={{ maxWidth: '450px' }}>
           <SectionHeadline
             overline="Internationalization"
@@ -360,7 +363,7 @@ export default function Internationalization() {
         <Stack
           justifyContent="center"
           alignItems="center"
-          sx={{ minWidth: '560px', minHeight: { xs: 0, md: '500px' } }}
+          sx={{ minWidth: '560px', minHeight: { xs: 0, md: '526px' } }}
         >
           {activeItem === 0 && (
             <StyledDemoContainer variant="outlined">

@@ -82,7 +82,7 @@ export default function MainDemo() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Paper component="div" variant="outlined">
+      <Paper component="div" variant="outlined" sx={{ mb: 8 }}>
         <ThemeProvider theme={showCustomTheme ? customTheme : theme}>
           <Stack sx={{ p: 1, width: '100%' }} direction="row" spacing={1}>
             <Stack spacing={1} className="left-panel" sx={{ flexGrow: 1 }}>

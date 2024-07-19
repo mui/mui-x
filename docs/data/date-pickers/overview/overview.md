@@ -7,6 +7,8 @@ materialDesign: https://m2.material.io/components/date-pickers
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
 ---
 
+{{"component": "modules/components/overview/XLogo.tsx"}}
+
 # MUI X Date and Time Pickers
 
 <p class="description">An intuitive component library that allows users to select dates and times without confusion</p>

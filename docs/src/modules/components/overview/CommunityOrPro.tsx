@@ -11,7 +11,7 @@ export default function CommunityOrPro() {
   return (
     <React.Fragment>
       <Divider />
-      <Stack direction="column" spacing={2} py={4} alignItems="center">
+      <Stack direction="column" spacing={2} py={8} alignItems="center">
         <Stack
           direction={{ xs: 'column', md: 'row' }}
           alignItems={{ md: 'flex-end', xs: 'space-between' }}
@@ -46,11 +46,16 @@ export default function CommunityOrPro() {
             About licensing
           </Button>
         </Stack>
-        <Stack spacing={2} direction={{ xs: 'column', md: 'row' }} sx={{ width: '100%' }}>
+        <Stack
+          spacing={2}
+          direction={{ xs: 'column', md: 'row' }}
+          sx={{ width: '100%', paddingTop: 2 }}
+        >
           <Box sx={{ flexBasis: '50%' }}>
             <InfoCard
               title="Community"
               icon={<img src="/static/x/community.svg" width={16} height={16} alt="" />}
+              backgroundColor="subtle"
               description={[
                 'MIT licensed, free forever',
                 'Contains all components to edit dates and times',
@@ -61,6 +66,7 @@ export default function CommunityOrPro() {
             <InfoCard
               title="Pro"
               icon={<img src="/static/x/pro.svg" width={16} height={16} alt="" />}
+              backgroundColor="subtle"
               description={[
                 'Commercially licensed',
                 'Contains additional components to edit date and/or time ranges',
