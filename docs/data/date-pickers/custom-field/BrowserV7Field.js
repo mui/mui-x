@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import useForkRef from '@mui/utils/useForkRef';
 import { styled } from '@mui/material/styles';
+import { useForkRef } from '@mui/x-date-pickers/utils';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';

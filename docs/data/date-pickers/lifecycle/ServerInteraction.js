@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import useControlled from '@mui/utils/useControlled';
+import { useControlled } from '@mui/x-date-pickers/utils';
 
 function DisplayEvents(props) {
   const { logs, title } = props;
