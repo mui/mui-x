@@ -5,13 +5,6 @@ import getScatterLegend from '../ScatterChart/legend';
 import getLineLegend from '../LineChart/legend';
 import getPieLegend from '../PieChart/legend';
 
-export type AnchorX = 'left' | 'right' | 'middle';
-export type AnchorY = 'top' | 'bottom' | 'middle';
-
-export type AnchorPosition = { horizontal: AnchorX; vertical: AnchorY };
-
-export type Direction = 'row' | 'column';
-
 const legendGetter: { [T in ChartSeriesType]?: LegendGetter<T> } = {
   bar: getBarLegend,
   scatter: getScatterLegend,

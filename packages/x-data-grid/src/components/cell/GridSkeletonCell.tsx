@@ -5,45 +5,101 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
+import clsx from 'clsx';
 import { fastMemo } from '../../utils/fastMemo';
-import { randomNumberBetween } from '../../utils/utils';
+import { createRandomNumberGenerator } from '../../utils/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { GridColType } from '../../models';
 
-const randomWidth = randomNumberBetween(10000, 20, 80);
+const CIRCULAR_CONTENT_SIZE = '1.3em';
 
-export interface GridSkeletonCellProps {
-  width: number;
-  height: number | 'auto';
-  field: string;
-  align: string;
+const CONTENT_HEIGHT = '1.2em';
+
+const DEFAULT_CONTENT_WIDTH_RANGE = [40, 80] as const;
+
+const CONTENT_WIDTH_RANGE_BY_TYPE: Partial<Record<GridColType, [number, number]>> = {
+  number: [40, 60],
+  string: [40, 80],
+  date: [40, 60],
+  dateTime: [60, 80],
+  singleSelect: [40, 80],
+} as const;
+
+export interface GridSkeletonCellProps extends React.HTMLAttributes<HTMLDivElement> {
+  type?: GridColType;
+  width?: number | string;
+  height?: number | 'auto';
+  field?: string;
+  align?: string;
+  /**
+   * If `true`, the cell will not display the skeleton but still reserve the cell space.
+   * @default false
+   */
+  empty?: boolean;
 }
 
-type OwnerState = Pick<GridSkeletonCellProps, 'align'> & {
+type OwnerState = Pick<GridSkeletonCellProps, 'align' | 'empty'> & {
   classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { align, classes } = ownerState;
+  const { align, classes, empty } = ownerState;
 
   const slots = {
-    root: ['cell', 'cellSkeleton', `cell--text${capitalize(align)}`, 'withBorderColor'],
+    root: [
+      'cell',
+      'cellSkeleton',
+      `cell--text${align ? capitalize(align) : 'Left'}`,
+      empty && 'cellEmpty',
+    ],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-function GridSkeletonCell(props: React.HTMLAttributes<HTMLDivElement> & GridSkeletonCellProps) {
-  const { field, align, width, height, ...other } = props;
+const randomNumberGenerator = createRandomNumberGenerator(12345);
+
+function GridSkeletonCell(props: GridSkeletonCellProps) {
+  const { field, type, align, width, height, empty = false, style, className, ...other } = props;
   const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes, align };
+  const ownerState = { classes: rootProps.classes, align, empty };
   const classes = useUtilityClasses(ownerState);
-  const contentWidth = Math.round(randomWidth());
+
+  // Memo prevents the non-circular skeleton widths changing to random widths on every render
+  const skeletonProps = React.useMemo(() => {
+    const isCircularContent = type === 'boolean' || type === 'actions';
+
+    if (isCircularContent) {
+      return {
+        variant: 'circular',
+        width: CIRCULAR_CONTENT_SIZE,
+        height: CIRCULAR_CONTENT_SIZE,
+      } as const;
+    }
+
+    // The width of the skeleton is a random number between the min and max values
+    // The min and max values are determined by the type of the column
+    const [min, max] = type
+      ? CONTENT_WIDTH_RANGE_BY_TYPE[type] ?? DEFAULT_CONTENT_WIDTH_RANGE
+      : DEFAULT_CONTENT_WIDTH_RANGE;
+
+    return {
+      variant: 'text',
+      width: `${Math.round(randomNumberGenerator(min, max))}%`,
+      height: CONTENT_HEIGHT,
+    } as const;
+  }, [type]);
 
   return (
-    <div className={classes.root} style={{ height, maxWidth: width, minWidth: width }} {...other}>
-      <Skeleton width={`${contentWidth}%`} height={25} />
+    <div
+      data-field={field}
+      className={clsx(classes.root, className)}
+      style={{ height, maxWidth: width, minWidth: width, ...style }}
+      {...other}
+    >
+      {!empty && <Skeleton {...skeletonProps} />}
     </div>
   );
 }
@@ -53,10 +109,25 @@ GridSkeletonCell.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  align: PropTypes.string.isRequired,
-  field: PropTypes.string.isRequired,
-  height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
-  width: PropTypes.number.isRequired,
+  align: PropTypes.string,
+  /**
+   * If `true`, the cell will not display the skeleton but still reserve the cell space.
+   * @default false
+   */
+  empty: PropTypes.bool,
+  field: PropTypes.string,
+  height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
+  type: PropTypes.oneOf([
+    'actions',
+    'boolean',
+    'custom',
+    'date',
+    'dateTime',
+    'number',
+    'singleSelect',
+    'string',
+  ]),
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 } as any;
 
 const Memoized = fastMemo(GridSkeletonCell);

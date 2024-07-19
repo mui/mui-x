@@ -6,9 +6,10 @@ import { getValueToPositionMapper } from '../hooks/useScale';
 import { useChartId } from '../hooks/useChartId';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
-import { cleanId } from '../internals/utils';
+import { cleanId } from '../internals/cleanId';
 import getColor from './getColor';
 import { useLineSeries } from '../hooks/useSeries';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -58,6 +59,7 @@ function MarkPlot(props: MarkPlotProps) {
   const seriesData = useLineSeries();
   const axisData = useCartesianContext();
   const chartId = useChartId();
+  const drawingArea = useDrawingArea();
 
   const Mark = slots?.mark ?? MarkElement;
 
@@ -88,19 +90,6 @@ function MarkPlot(props: MarkPlotProps) {
           const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
           const yScale = yAxis[yAxisKey].scale;
           const xData = xAxis[xAxisKey].data;
-
-          const xRange = xAxis[xAxisKey].scale.range();
-          const yRange = yScale.range();
-
-          const isInRange = ({ x, y }: { x: number; y: number }) => {
-            if (x < Math.min(...xRange) || x > Math.max(...xRange)) {
-              return false;
-            }
-            if (y < Math.min(...yRange) || y > Math.max(...yRange)) {
-              return false;
-            }
-            return true;
-          };
 
           if (xData === undefined) {
             throw new Error(
@@ -134,7 +123,7 @@ function MarkPlot(props: MarkPlotProps) {
                     // Remove missing data point
                     return false;
                   }
-                  if (!isInRange({ x, y })) {
+                  if (!drawingArea.isPointInside({ x, y })) {
                     // Remove out of range
                     return false;
                   }

@@ -50,7 +50,7 @@ export interface LineChartSlots
     MarkPlotSlots,
     LineHighlightPlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots,
+    ChartsTooltipSlots<'line'>,
     ChartsOverlaySlots {}
 export interface LineChartSlotProps
   extends ChartsAxisSlotProps,
@@ -59,7 +59,7 @@ export interface LineChartSlotProps
     MarkPlotSlotProps,
     LineHighlightPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps,
+    ChartsTooltipSlotProps<'line'>,
     ChartsOverlaySlotProps {}
 
 export interface LineChartProps
@@ -77,7 +77,7 @@ export interface LineChartProps
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    * @default { trigger: 'item' }
    */
-  tooltip?: ChartsTooltipProps;
+  tooltip?: ChartsTooltipProps<'line'>;
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -162,9 +162,9 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
         <AreaPlot {...areaPlotProps} />
         <LinePlot {...linePlotProps} />
         <ChartsOverlay {...overlayProps} />
+        <ChartsAxisHighlight {...axisHighlightProps} />
       </g>
       <ChartsAxis {...chartsAxisProps} />
-      <ChartsAxisHighlight {...axisHighlightProps} />
       <MarkPlot {...markPlotProps} />
       <LineHighlightPlot {...lineHighlightPlotProps} />
       <ChartsLegend {...legendProps} />

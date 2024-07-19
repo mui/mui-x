@@ -45,9 +45,12 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     loading,
     highlightedItem,
     onHighlightChange,
+    className,
+    ...other
   } = props;
 
   const chartContainerProps: ResponsiveChartContainerProps = {
+    ...other,
     series: series.map((s) => ({ type: 'scatter' as const, ...s })),
     width,
     height,
@@ -58,6 +61,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     sx,
     highlightedItem,
     onHighlightChange,
+    className,
   };
   const zAxisProps: Omit<ZAxisContextProviderProps, 'children'> = {
     zAxis,
@@ -104,7 +108,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     ...axisHighlight,
   };
 
-  const tooltipProps: ChartsTooltipProps = {
+  const tooltipProps: ChartsTooltipProps<'scatter'> = {
     trigger: 'item' as const,
     ...tooltip,
     slots,

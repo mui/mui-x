@@ -30,14 +30,14 @@ export interface SparkLineChartSlots
     MarkPlotSlots,
     LineHighlightPlotSlots,
     Omit<BarPlotSlots, 'barLabel'>,
-    ChartsTooltipSlots {}
+    ChartsTooltipSlots<'line' | 'bar'> {}
 export interface SparkLineChartSlotProps
   extends AreaPlotSlotProps,
     LinePlotSlotProps,
     MarkPlotSlotProps,
     LineHighlightPlotSlotProps,
     BarPlotSlotProps,
-    ChartsTooltipSlotProps {}
+    ChartsTooltipSlotProps<'line' | 'bar'> {}
 
 export interface SparkLineChartProps
   extends Omit<
@@ -54,7 +54,7 @@ export interface SparkLineChartProps
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>;
-  tooltip?: ChartsTooltipProps;
+  tooltip?: ChartsTooltipProps<'line' | 'bar'>;
   axisHighlight?: ChartsAxisHighlightProps;
   /**
    * Type of plot used.
@@ -155,6 +155,8 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
     valueFormatter = (value: number | null) => (value === null ? '' : value.toString()),
     area,
     curve = 'linear',
+    className,
+    ...other
   } = props;
 
   const defaultXHighlight: { x: 'band' | 'none' } =
@@ -166,6 +168,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
 
   return (
     <ResponsiveChartContainer
+      {...other}
       ref={ref}
       series={[
         {
@@ -178,6 +181,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
       width={width}
       height={height}
       margin={margin}
+      className={className}
       xAxis={[
         {
           id: DEFAULT_X_AXIS_KEY,

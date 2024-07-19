@@ -201,15 +201,9 @@
   ],
   "slots": [
     {
-      "name": "tabs",
-      "description": "Tabs enabling toggling between date and time pickers.",
-      "default": "DateTimeRangePickerTabs",
-      "class": null
-    },
-    {
-      "name": "toolbar",
-      "description": "Custom component for the toolbar rendered above the views.",
-      "default": "DateTimeRangePickerToolbar",
+      "name": "actionBar",
+      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "default": "PickersActionBar",
       "class": null
     },
     {
@@ -219,21 +213,55 @@
       "class": null
     },
     {
+      "name": "clearButton",
+      "description": "Button to clear the value.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "clearIcon",
+      "description": "Icon to display inside the clear button.",
+      "default": "ClearIcon",
+      "class": null
+    },
+    {
       "name": "day",
       "description": "Custom component for day in range pickers.\nCheck the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.",
       "default": "DateRangePickersDay",
       "class": null
     },
     {
-      "name": "previousIconButton",
-      "description": "Button allowing to switch to the left view.",
-      "default": "IconButton",
+      "name": "dialog",
+      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
+      "default": "PickersModalDialogRoot",
       "class": null
     },
     {
-      "name": "nextIconButton",
-      "description": "Button allowing to switch to the right view.",
-      "default": "IconButton",
+      "name": "digitalClockItem",
+      "description": "Component responsible for rendering a single digital clock item.",
+      "default": "MenuItem from '@mui/material'",
+      "class": null
+    },
+    {
+      "name": "digitalClockSectionItem",
+      "description": "Component responsible for rendering a single multi section digital clock section item.",
+      "default": "MenuItem from '@mui/material'",
+      "class": null
+    },
+    { "name": "field", "description": "", "class": null },
+    {
+      "name": "fieldRoot",
+      "description": "Element rendered at the root.\nIgnored if the field has only one input.",
+      "class": null
+    },
+    {
+      "name": "fieldSeparator",
+      "description": "Element rendered between the two inputs.\nIgnored if the field has only one input.",
+      "class": null
+    },
+    {
+      "name": "layout",
+      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
       "class": null
     },
     {
@@ -243,9 +271,39 @@
       "class": null
     },
     {
+      "name": "mobilePaper",
+      "description": "Custom component for the paper rendered inside the mobile picker's Dialog.",
+      "default": "Paper from '@mui/material'.",
+      "class": null
+    },
+    {
+      "name": "mobileTransition",
+      "description": "Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions/).",
+      "default": "Fade from '@mui/material'.",
+      "class": null
+    },
+    {
+      "name": "nextIconButton",
+      "description": "Button allowing to switch to the right view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "previousIconButton",
+      "description": "Button allowing to switch to the left view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
       "name": "rightArrowIcon",
       "description": "Icon displayed in the right view switch button.",
       "default": "ArrowRight",
+      "class": null
+    },
+    {
+      "name": "shortcuts",
+      "description": "Custom component for the shortcuts.",
+      "default": "PickersShortcuts",
       "class": null
     },
     {
@@ -261,48 +319,9 @@
       "class": null
     },
     {
-      "name": "digitalClockItem",
-      "description": "Component responsible for rendering a single digital clock item.",
-      "default": "MenuItem from '@mui/material'",
-      "class": null
-    },
-    {
-      "name": "digitalClockSectionItem",
-      "description": "Component responsible for rendering a single multi section digital clock section item.",
-      "default": "MenuItem from '@mui/material'",
-      "class": null
-    },
-    {
-      "name": "dialog",
-      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
-      "default": "PickersModalDialogRoot",
-      "class": null
-    },
-    {
-      "name": "actionBar",
-      "description": "Custom component for the action bar, it is placed below the picker views.",
-      "default": "PickersActionBar",
-      "class": null
-    },
-    {
-      "name": "shortcuts",
-      "description": "Custom component for the shortcuts.",
-      "default": "PickersShortcuts",
-      "class": null
-    },
-    {
-      "name": "layout",
-      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
-      "class": null
-    },
-    {
-      "name": "fieldRoot",
-      "description": "Element rendered at the root.\nIgnored if the field has only one input.",
-      "class": null
-    },
-    {
-      "name": "fieldSeparator",
-      "description": "Element rendered between the two inputs.\nIgnored if the field has only one input.",
+      "name": "tabs",
+      "description": "Tabs enabling toggling between date and time pickers.",
+      "default": "DateTimeRangePickerTabs",
       "class": null
     },
     {
@@ -312,30 +331,11 @@
       "class": null
     },
     {
-      "name": "clearIcon",
-      "description": "Icon to display inside the clear button.",
-      "default": "ClearIcon",
+      "name": "toolbar",
+      "description": "Custom component for the toolbar rendered above the views.",
+      "default": "DateTimeRangePickerToolbar",
       "class": null
-    },
-    {
-      "name": "clearButton",
-      "description": "Button to clear the value.",
-      "default": "IconButton",
-      "class": null
-    },
-    {
-      "name": "mobilePaper",
-      "description": "Custom component for the paper rendered inside the mobile picker's Dialog.",
-      "default": "Paper from '@mui/material'.",
-      "class": null
-    },
-    {
-      "name": "mobileTransition",
-      "description": "Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions/).",
-      "default": "Fade from '@mui/material'.",
-      "class": null
-    },
-    { "name": "field", "description": "", "class": null }
+    }
   ],
   "classes": [],
   "spread": false,

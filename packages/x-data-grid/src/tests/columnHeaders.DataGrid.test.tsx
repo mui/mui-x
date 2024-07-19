@@ -125,7 +125,7 @@ describe('<DataGrid /> - Column headers', () => {
 
       userEvent.mousePress(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
       clock.runToLast();
-      expect(screen.queryByRole('menu')).to.not.equal(null);
+      expect(screen.queryByRole('menu')).not.to.equal(null);
 
       userEvent.mousePress(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
       clock.runToLast();
