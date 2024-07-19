@@ -107,11 +107,12 @@ export const gridFilteredSortedRowIdsSelector = createSelectorMemoized(
 );
 
 /**
- * Get the row ids accessible after the filtering process to position in the current tree level lookup.
+ * Get the ids to position in the current tree level lookup of the rows accessible after the filtering process.
  * Does not contain the collapsed children.
  * @category Filtering
+ * @ignore - do not document.
  */
-export const gridExpandedSortedRowIdsLookupSelector = createSelectorMemoized(
+export const gridExpandedSortedRowTreeLevelPositionLookupSelector = createSelectorMemoized(
   gridExpandedSortedRowIdsSelector,
   gridRowTreeSelector,
   (visibleSortedRowIds, rowTree) => {

@@ -4,7 +4,7 @@ import {
   useGridSelector,
   gridFilteredTopLevelRowCountSelector,
   gridFilteredChildrenCountLookupSelector,
-  gridExpandedSortedRowIdsLookupSelector,
+  gridExpandedSortedRowTreeLevelPositionLookupSelector,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid';
 import { useGridRowAriaAttributes as useGridRowAriaAttributesCommunity } from '@mui/x-data-grid/internals';
@@ -23,7 +23,7 @@ export const useGridRowAriaAttributes = (addTreeDataAttributes?: boolean) => {
   );
   const sortedVisibleRowPositionsLookup = useGridSelector(
     apiRef,
-    gridExpandedSortedRowIdsLookupSelector,
+    gridExpandedSortedRowTreeLevelPositionLookupSelector,
   );
 
   const addAttributes =
