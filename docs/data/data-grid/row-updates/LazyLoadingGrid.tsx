@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { unstable_debounce as debounce } from '@mui/utils';
+import { debounce } from '@mui/x-data-grid/utils';
 import {
   DataGridPro,
   GridFetchRowsParams,

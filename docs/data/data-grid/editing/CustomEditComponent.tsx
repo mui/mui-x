@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
-import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
+import { useEnhancedEffect } from '@mui/x-data-grid/utils';
 import {
   DataGrid,
   GridRenderCellParams,

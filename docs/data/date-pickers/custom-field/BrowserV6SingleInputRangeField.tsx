@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { Dayjs } from 'dayjs';
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
-import { useSlotProps } from '@mui/x-date-pickers-pro/utils';
+import { useSlotProps, useForkRef } from '@mui/x-date-pickers-pro/utils';
 import { DateRangeIcon } from '@mui/x-date-pickers/icons';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
