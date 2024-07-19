@@ -87,9 +87,9 @@ export function DrawingProvider(props: DrawingProviderProps) {
   const chartId = useId();
 
   const isPointInside = React.useCallback<DrawingArea['isPointInside']>(
-    ({ x, y }, targetEvent) => {
+    ({ x, y }, targetElement) => {
       // For element allowed to overflow, wrapping them in <g data-drawing-container /> make them fully part of the drawing area.
-      if (targetEvent && targetEvent.closest('[data-drawing-container]')) {
+      if (targetElement && targetElement.closest('[data-drawing-container]')) {
         return true;
       }
       return (
