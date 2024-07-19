@@ -46,10 +46,7 @@ function CustomLayout(props: PickersLayoutProps<Dayjs | null, Dayjs, TimeView>) 
 export default function Clock() {
   return (
     <Card variant="outlined">
-      <StaticTimePicker
-        defaultValue={dayjs('2022-04-17T15:30')}
-        slots={{ layout: CustomLayout }}
-      />
+      <StaticTimePicker defaultValue={dayjs('2022-04-17T15:30')} slots={{ layout: CustomLayout }} />
     </Card>
   );
 }
