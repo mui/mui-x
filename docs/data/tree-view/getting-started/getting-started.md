@@ -18,16 +18,17 @@ Using your favorite package manager, install `@mui/x-tree-view`:
 <!-- #default-branch-switch -->
 
 <codeblock storageKey="package-manager">
+
 ```bash npm
 npm install @mui/x-tree-view
 ```
 
-```bash yarn
-yarn add @mui/x-tree-view
-```
-
 ```bash pnpm
 pnpm add @mui/x-tree-view
+```
+
+```bash yarn
+yarn add @mui/x-tree-view
 ```
 
 </codeblock>
@@ -36,15 +37,19 @@ The Tree View package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:
 
 <codeblock storageKey="package-manager">
+
 ```bash npm
 npm install @mui/material @emotion/react @emotion/styled
 ```
-```bash yarn
-yarn add @mui/material @emotion/react @emotion/styled
-```
+
 ```bash pnpm
 pnpm add @mui/material @emotion/react @emotion/styled
 ```
+
+```bash yarn
+yarn add @mui/material @emotion/react @emotion/styled
+```
+
 </codeblock>
 
 <!-- #react-peer-version -->

@@ -32,16 +32,17 @@ If you already have a license for `@mui/x-data-grid-pro`, you can use the same o
 #### Community plan
 
 <codeblock storageKey="package-manager">
+
 ```bash npm
 npm install @mui/x-date-pickers
 ```
 
-```bash yarn
-yarn add @mui/x-date-pickers
-```
-
 ```bash pnpm
 pnpm add @mui/x-date-pickers
+```
+
+```bash yarn
+yarn add @mui/x-date-pickers
 ```
 
 </codeblock>
@@ -54,12 +55,12 @@ pnpm add @mui/x-date-pickers
 npm install @mui/x-date-pickers-pro @mui/x-license-pro
 ```
 
-```bash yarn
-yarn add @mui/x-date-pickers-pro @mui/x-license-pro
-```
-
 ```bash pnpm
 pnpm add @mui/x-date-pickers-pro @mui/x-license-pro
+```
+
+```bash yarn
+yarn add @mui/x-date-pickers-pro @mui/x-license-pro
 ```
 
 </codeblock>

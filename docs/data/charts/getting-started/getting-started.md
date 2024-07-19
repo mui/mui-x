@@ -19,12 +19,12 @@ Run one of the following commands to add the MUI X Charts to your project:
 npm install @mui/x-charts
 ```
 
-```bash yarn
-yarn add @mui/x-charts
-```
-
 ```bash pnpm
 pnpm add @mui/x-charts
+```
+
+```bash yarn
+yarn add @mui/x-charts
 ```
 
 </codeblock>
@@ -33,15 +33,19 @@ The Charts package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:
 
 <codeblock storageKey="package-manager">
+
 ```bash npm
 npm install @mui/material @emotion/react @emotion/styled
 ```
-```bash yarn
-yarn add @mui/material @emotion/react @emotion/styled
-```
+
 ```bash pnpm
 pnpm add @mui/material @emotion/react @emotion/styled
 ```
+
+```bash yarn
+yarn add @mui/material @emotion/react @emotion/styled
+```
+
 </codeblock>
 
 <!-- #react-peer-version -->
@@ -64,12 +68,12 @@ Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styli
 npm install @mui/styled-engine-sc styled-components
 ```
 
-```bash yarn
-yarn add @mui/styled-engine-sc styled-components
-```
-
 ```bash pnpm
 pnpm add @mui/styled-engine-sc styled-components
+```
+
+```bash yarn
+yarn add @mui/styled-engine-sc styled-components
 ```
 
 </codeblock>
