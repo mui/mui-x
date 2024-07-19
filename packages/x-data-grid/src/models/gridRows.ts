@@ -116,7 +116,7 @@ export interface GridDataGroupNode extends GridBasicGroupNode {
 
 export interface GridDataSourceGroupNode extends GridDataGroupNode {
   /**
-   * Number of children this node has on the server. Returns `-1` if there are some children but the count is unknown.
+   * Number of children this node has on the server. Equals to `-1` if there are some children but the count is unknown.
    */
   serverChildrenCount: number;
   /**
