@@ -26,6 +26,28 @@ const components: Components<Theme> = {
       }),
     },
   },
+  MuiPickersMonth: {
+    styleOverrides: {
+      monthButton: ({ theme }) => ({
+        fontWeight: 400,
+        fontSize: '0.875rem',
+        borderRadius: theme.shape.borderRadius,
+        height: 28,
+        width: 64,
+      }),
+    },
+  },
+  MuiPickersYear: {
+    styleOverrides: {
+      yearButton: ({ theme }) => ({
+        fontWeight: 400,
+        fontSize: '0.875rem',
+        borderRadius: theme.shape.borderRadius,
+        height: 28,
+        width: 64,
+      }),
+    },
+  },
   MuiPickersToolbar: { styleOverrides: { content: { justifyContent: 'space-between' } } },
   MuiTimePickerToolbar: {
     styleOverrides: {
