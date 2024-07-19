@@ -208,8 +208,6 @@ export const buildFieldInteractions = <P extends {}>({
           'Delete',
           'ArrowLeft',
           'ArrowRight',
-          'Meta',
-          'Control',
         ].includes(key)
       ) {
         userEvent.keyPress(target, { key });

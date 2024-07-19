@@ -764,8 +764,6 @@ describe('<DateField /> - Editing', () => {
         'Delete',
         'ArrowLeft',
         'ArrowRight',
-        'Meta',
-        'Control',
       ];
 
       v7Response.selectSection('month');
