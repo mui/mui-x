@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Dayjs } from 'dayjs';
 import useForkRef from '@mui/utils/useForkRef';
-import { useSlotProps } from '@mui/base/utils';
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
+import { useSlotProps } from '@mui/x-date-pickers-pro/utils';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
