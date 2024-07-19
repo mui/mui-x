@@ -745,7 +745,7 @@ describe('<DateField /> - Editing', () => {
   });
 
   describeAdapters('Disabled field', DateField, ({ renderWithProps }) => {
-    it('should not key editing on disabled field', () => {
+    it('should not allow key editing on disabled field', () => {
       // Test with v7 input
       const onChangeV7 = spy();
       const v7Response = renderWithProps({
