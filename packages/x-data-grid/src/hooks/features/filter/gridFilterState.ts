@@ -24,7 +24,7 @@ export interface GridFilterState {
   /**
    * Amount of children that are passing the filters or have children that are passing the filter (does not count grand children).
    * If a row is not registered in this lookup, it is supposed to have no descendant passing the filters.
-   * If `GridDataSource` is being used to load the data, the value is `-1` if the children count is unknown.
+   * If `GridDataSource` is being used to load the data, the value is `-1` if there are some children but the count is unknown.
    */
   filteredChildrenCountLookup: Record<GridRowId, number>;
   /**
