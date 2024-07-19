@@ -777,8 +777,8 @@ describe('<DateField /> - Editing', () => {
       });
 
       // digit key press
-      // v7Response.pressKey(0, '2');
-      // expectFieldValueV7(v7Response.getSectionsContainer(), 'MM/DD/YYYY');
+      userEvent.keyPress(v7Response.getActiveSection(0), { key: '2' });
+      expectFieldValueV7(v7Response.getSectionsContainer(), 'MM/DD/YYYY');
 
       v7Response.unmount();
 
