@@ -65,7 +65,10 @@ const LineChartPro = React.forwardRef(function LineChartPro(props: LineChartProP
         <ChartsAxisHighlight {...axisHighlightProps} />
       </g>
       <ChartsAxis {...chartsAxisProps} />
-      <MarkPlotZoom {...markPlotProps} />
+      <g data-drawing-container>
+        {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
+        <MarkPlotZoom {...markPlotProps} />
+      </g>
       <LineHighlightPlot {...lineHighlightPlotProps} />
       <ChartsLegend {...legendProps} />
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
