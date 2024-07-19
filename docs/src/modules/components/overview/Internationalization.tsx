@@ -12,8 +12,8 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import ToggleButton from '@mui/material/ToggleButton';
+import MuiToggleButtonGroup, { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
+import MuiToggleButton from '@mui/material/ToggleButton';
 import Typography from '@mui/material/Typography';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {
@@ -165,6 +165,17 @@ const locales = {
   en: enUS,
   'zh-cn': zhCN,
 };
+
+const ToggleButton = styled(MuiToggleButton)({
+  borderColor: 'transparent',
+});
+const ToggleButtonGroup = styled(MuiToggleButtonGroup)(({ theme }) => ({
+  gap: theme.spacing(1),
+  [`& .${toggleButtonGroupClasses.firstButton}, & .${toggleButtonGroupClasses.lastButton},& .${toggleButtonGroupClasses.middleButton} `]:
+    {
+      borderRadius: theme.shape.borderRadius,
+    },
+}));
 
 function Controls({
   selectedLanguage,
