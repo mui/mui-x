@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridBody, GridFooterPlaceholder, GridHeader, GridRoot } from '../components';
+import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 import { DataGridProcessedProps, DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
@@ -16,7 +17,12 @@ import {
 
 export type { GridSlotsComponent as GridSlots } from '../models';
 
-const configuration = { hooks: { useGridRowAriaAttributes } };
+const configuration = {
+  hooks: {
+    useGridAriaAttributes,
+    useGridRowAriaAttributes,
+  },
+};
 let propValidators: PropValidator<DataGridProcessedProps>[];
 
 if (process.env.NODE_ENV !== 'production') {

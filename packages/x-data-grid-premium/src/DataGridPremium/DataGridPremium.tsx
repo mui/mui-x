@@ -23,11 +23,17 @@ import {
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
+import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
-const configuration = { hooks: { useGridRowAriaAttributes } };
+const configuration = {
+  hooks: {
+    useGridAriaAttributes,
+    useGridRowAriaAttributes,
+  },
+};
 const releaseInfo = getReleaseInfo();
 
 let dataGridPremiumPropValidators: PropValidator<DataGridPremiumProcessedProps>[];

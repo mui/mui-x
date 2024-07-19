@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { gridVisibleColumnDefinitionsSelector } from '../features/columns/gridColumnsSelector';
 import { useGridSelector } from './useGridSelector';
 import { useGridRootProps } from './useGridRootProps';
@@ -7,7 +8,7 @@ import { useGridPrivateApiContext } from './useGridPrivateApiContext';
 import { isMultipleRowSelectionEnabled } from '../features/rowSelection/utils';
 import { gridExpandedRowCountSelector } from '../features/filter/gridFilterSelector';
 
-export const useGridAriaAttributes = () => {
+export const useGridAriaAttributes = (): React.HTMLAttributes<HTMLElement> => {
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
@@ -15,17 +16,8 @@ export const useGridAriaAttributes = () => {
   const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
   const pinnedRowsCount = useGridSelector(apiRef, gridPinnedRowsCountSelector);
 
-  let role = 'grid';
-  if (
-    (rootProps as any).treeData ||
-    (rootProps as any).rowGroupingModel ||
-    (rootProps as any).initialState?.rowGrouping
-  ) {
-    role = 'treegrid';
-  }
-
   return {
-    role,
+    role: 'grid',
     'aria-colcount': visibleColumns.length,
     'aria-rowcount': headerGroupingMaxDepth + 1 + pinnedRowsCount + accessibleRowCount,
     'aria-multiselectable': isMultipleRowSelectionEnabled(rootProps),

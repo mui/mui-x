@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { GridTreeNode } from '../../../models/gridRows';
-import { GridRowInternalHook } from '../../../models/configuration/gridRowConfiguration';
+import { GetRowAriaAttributesFn } from '../../../models/configuration/gridRowConfiguration';
 import { selectedIdsLookupSelector } from '../rowSelection';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 
-export const useGridRowAriaAttributes: GridRowInternalHook = () => {
+export const useGridRowAriaAttributes = (): GetRowAriaAttributesFn => {
   const apiRef = useGridPrivateApiContext();
   const selectedIdsLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
   const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);

@@ -1,6 +1,14 @@
-import { GridRowInternalHook } from './gridRowConfiguration';
+import * as React from 'react';
+import { GridRowAriaAttributesInternalHook } from './gridRowConfiguration';
 
-export type GridInternalHook = GridRowInternalHook;
+export interface GridAriaAttributesInternalHook {
+  useGridAriaAttributes: () => React.HTMLAttributes<HTMLElement>;
+}
+
+export interface GridInternalHook
+  extends GridAriaAttributesInternalHook,
+    GridRowAriaAttributesInternalHook {}
+
 export interface GridConfiguration {
-  hooks: Record<string, GridInternalHook>;
+  hooks: GridInternalHook;
 }

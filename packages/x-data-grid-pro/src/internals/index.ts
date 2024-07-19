@@ -24,6 +24,8 @@ export { useGridDetailPanelPreProcessors } from '../hooks/features/detailPanel/u
 export { useGridInfiniteLoader } from '../hooks/features/infiniteLoader/useGridInfiniteLoader';
 
 // eslint-disable-next-line import/export
+export { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
+// eslint-disable-next-line import/export
 export { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 export { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorder';
 export { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';

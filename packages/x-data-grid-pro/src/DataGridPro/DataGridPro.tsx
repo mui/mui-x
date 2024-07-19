@@ -16,11 +16,17 @@ import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
 import { propValidatorsDataGridPro } from '../internals/propValidation';
+import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 
 export type { GridProSlotsComponent as GridSlots } from '../models';
 
-const configuration = { hooks: { useGridRowAriaAttributes } };
+const configuration = {
+  hooks: {
+    useGridAriaAttributes,
+    useGridRowAriaAttributes,
+  },
+};
 const releaseInfo = getReleaseInfo();
 
 const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValidRowModel>(
