@@ -55,6 +55,18 @@ export * from "${pkg.name}";
 
 // Main.
 const main = async () => {
+  if (process.argv.includes('cached')) {
+    // Test if files already exist, and skip the script if yes
+
+    const EsmBaseFilesCount = (await fs.readdir(path.resolve(__dirname, `../es`))).length;
+    const CjsBaseFilesCount = (await fs.readdir(path.resolve(__dirname, `../lib`))).length;
+
+    if (EsmBaseFilesCount === CjsBaseFilesCount) {
+      console.log('Skipped the @mui/x-charts-vendor since it seems to already be ready.');
+      return;
+    }
+  }
+
   // Lazy ESM imports.
   const { execa } = await import('execa');
 
