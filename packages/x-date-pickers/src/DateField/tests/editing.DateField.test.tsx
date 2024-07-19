@@ -751,7 +751,7 @@ describe('<DateField /> - Editing', () => {
       const v7Response = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         onChange: onChangeV7,
-        disabled: true
+        disabled: true,
       });
 
       const keys = [
@@ -765,7 +765,7 @@ describe('<DateField /> - Editing', () => {
         'ArrowLeft',
         'ArrowRight',
         'Meta',
-        'Control'
+        'Control',
       ];
 
       v7Response.selectSection('month');
@@ -787,12 +787,12 @@ describe('<DateField /> - Editing', () => {
       const v6Response = renderWithProps({
         onChange: onChangeV6,
         enableAccessibleFieldDOMStructure: false,
-        disabled: true
+        disabled: true,
       });
-      
+
       const input = getTextbox();
       v6Response.selectSection('month');
-      
+
       // v6 doesn't allow focusing on sections when disabled
       keys.forEach((key) => {
         fireEvent.change(input, { target: { value: key } });
@@ -1809,7 +1809,7 @@ describe('<DateField /> - Editing', () => {
       const v7Response = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         onChange: onChangeV7,
-        disabled: true
+        disabled: true,
       });
 
       v7Response.selectSection('month');
@@ -1828,7 +1828,7 @@ describe('<DateField /> - Editing', () => {
       const v6Response = renderWithProps({
         onChange: onChangeV6,
         enableAccessibleFieldDOMStructure: false,
-        disabled: true
+        disabled: true,
       });
       const input = getTextbox();
       v6Response.selectSection('month');
