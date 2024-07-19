@@ -84,34 +84,44 @@ function MyApp() {
 
 ### Usage with TypeScript
 
-Note that if you do and you use TypeScript, you'll need to cast your custom component so it can fit in the slot type.
-
-As an example, you could override the column menu and pass additional props as below.
-
-```tsx
-<DataGrid
-  rows={rows}
-  columns={columns}
-  slots={{
-    columnMenu: MyCustomColumnMenu as DataGridProps['slots']['columnMenu'],
-  }}
-  slotProps={{
-    columnMenu: { background: 'red', counter: rows.length },
-  }}
-/>
-```
-
-If you want to ensure type safety, you can declare your component using the slot props typings:
+If your custom component has a different type than the default one, you can cast it to the correct type.
+This can happen if you pass additional props to your custom component using `slotProps`.
+If we take the example of the `toolbar` slot, you can cast your custom component as below:
 
 ```tsx
-import { GridSlotProps } from '@mui/x-data-grid';
+// Ensures type safety to your slots
+type CustomToolbarProps = NonNullable<DataGridProps['slotProps']>['toolbar'] & {
+  name: string;
+  setName: (name: string) => void;
+};
 
-function MyCustomColumnMenu(
-  props: GridSlotProps['columnMenu'] & { background: string; counter: number },
-) {
-  // ...
+const CustomToolbar = ({ name, setName }: CustomToolbarProps) => (
+  <input value={name} onChange={(event) => setName(event.target.value)} />
+);
+
+function MyApp() {
+  const [name, setName] = React.useState('');
+  return (
+    <DataGrid
+      rows={[]}
+      columns={[]}
+      // Cast the custom component to the type expected by the X component
+      slots={{
+        toolbar: CustomToolbar as NonNullable<DataGridProps['slots']>['toolbar'],
+      }}
+      slotProps={{
+        toolbar: { name, setName } as NonNullable<
+          DataGridProps['slotProps']
+        >['toolbar'],
+      }}
+    />
+  );
 }
 ```
+
+:::success
+If you are using the data grid, you can also use [module augmentation to enhance the props interface](/x/react-data-grid/components/#custom-slot-props-with-typescript)
+:::
 
 ## Slots of the X components
 

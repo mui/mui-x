@@ -1,4 +1,4 @@
-# Data Grid - Custom subcomponents
+# Data Grid - Custom slots and subcomponents
 
 <p class="description">The grid is highly customizable. Override components using the <code>slots</code> prop.</p>
 
@@ -155,7 +155,7 @@ declare module '@mui/x-data-grid' {
   }}
   slotProps={{
     toolbar: {
-      // props required by CustomGridToolbar
+      // props used by CustomGridToolbar
       someCustomString: 'Hello',
       someCustomNumber: 42,
     },
@@ -179,7 +179,7 @@ declare module '@mui/x-data-grid-pro' {
   }}
   slotProps={{
     toolbar: {
-      // props required by CustomGridToolbar
+      // props used by CustomGridToolbar
       someCustomString: 'Hello',
       someCustomNumber: 42,
     },
@@ -203,7 +203,7 @@ declare module '@mui/x-data-grid-premium' {
   }}
   slotProps={{
     toolbar: {
-      // props required by CustomGridToolbar
+      // props used by CustomGridToolbar
       someCustomString: 'Hello',
       someCustomNumber: 42,
     },
