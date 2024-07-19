@@ -20,9 +20,8 @@ Those props expect an array of objects.
 
 Here is a demonstration with two lines with the same data.
 But one uses a linear, and the other a log axis.
-
 Each axis definition is identified by its property `id`.
-And series specifies the axis they use with `xAxisKey` and `yAxisKey` properties.
+Then each series specifies the axis they use with the `xAxisKey` and `yAxisKey` properties.
 
 {{"demo": "ScaleExample.js"}}
 
