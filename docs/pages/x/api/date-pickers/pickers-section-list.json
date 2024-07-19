@@ -21,8 +21,12 @@
   "slots": [
     { "name": "root", "description": "", "class": "MuiPickersSectionList-root" },
     { "name": "section", "description": "", "class": "MuiPickersSectionList-section" },
-    { "name": "sectionSeparator", "description": "", "class": null },
-    { "name": "sectionContent", "description": "", "class": "MuiPickersSectionList-sectionContent" }
+    {
+      "name": "sectionContent",
+      "description": "",
+      "class": "MuiPickersSectionList-sectionContent"
+    },
+    { "name": "sectionSeparator", "description": "", "class": null }
   ],
   "classes": [],
   "muiName": "MuiPickersSectionList",

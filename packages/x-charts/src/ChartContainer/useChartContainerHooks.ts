@@ -10,7 +10,7 @@ export const useChartContainerHooks = (
   plugins?: ChartsPluginType<ChartSeriesType>[],
 ) => {
   const svgRef = React.useRef<SVGSVGElement>(null);
-  const handleRef = useForkRef(ref, svgRef);
+  const chartSurfaceRef = useForkRef(ref, svgRef);
 
   const { xExtremumGetters, yExtremumGetters, seriesFormatters, colorProcessors } =
     usePluginsMerge(plugins);
@@ -18,7 +18,7 @@ export const useChartContainerHooks = (
 
   return {
     svgRef,
-    handleRef,
+    chartSurfaceRef,
     xExtremumGetters,
     yExtremumGetters,
     seriesFormatters,
