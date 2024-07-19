@@ -625,6 +625,13 @@ describe('<DataGridPro /> - Tree data', () => {
 
       expect(filteredChildrenCountLookup.C).to.equal(undefined);
       expect(filteredDescendantCountLookup.C).to.equal(undefined);
+
+      act(() => {
+        apiRef.current.updateRows([{ name: 'A.D' }]);
+      });
+
+      expect(apiRef.current.state.filter.filteredChildrenCountLookup.A).to.equal(4);
+      expect(apiRef.current.state.filter.filteredDescendantCountLookup.A).to.equal(6);
     });
   });
 
