@@ -1,3 +1,4 @@
+import { warnOnce } from './warning';
 import { isNumber } from '../../utils/utils';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridSignature } from '../../hooks/utils/useGridApiEventHandler';
@@ -43,23 +44,11 @@ export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps>[] = [
     undefined,
 ];
 
-const warnedOnceCache = new Set();
-function warnOnce(message: string) {
-  if (!warnedOnceCache.has(message)) {
-    console.error(message);
-    warnedOnceCache.add(message);
-  }
-}
-
 export function validateProps<TProps>(props: TProps, validators: PropValidator<TProps>[]) {
   validators.forEach((validator) => {
-    const warning = validator(props);
-    if (warning) {
-      warnOnce(warning);
+    const message = validator(props);
+    if (message) {
+      warnOnce(message, 'error');
     }
   });
-}
-
-export function clearWarningsCache() {
-  warnedOnceCache.clear();
 }
