@@ -3,7 +3,7 @@
   "imports": ["import { AxisConfig } from '@mui/x-charts'"],
   "properties": {
     "id": { "type": { "description": "AxisId" }, "required": true },
-    "scaleType": { "type": { "description": "'band'" }, "required": true },
+    "scaleType": { "type": { "description": "'linear' | 'band' | 'point' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc'" }, "required": true },
     "colorMap": {
       "type": { "description": "OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig" }
     },
