@@ -6,7 +6,7 @@ import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-export const GridPreferencesPanel = function GridPreferencesPanel() {
+export function GridPreferencesPanel() {
   const apiRef = useGridApiContext();
   const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
   const rootProps = useGridRootProps();
