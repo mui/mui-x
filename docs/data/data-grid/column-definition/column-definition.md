@@ -22,7 +22,7 @@ interface GridColDef {
 The `columns` prop should keep the same reference between two renders.
 The columns are designed to be definitions, to never change once the component is mounted.
 Otherwise, you take the risk of losing elements like column width or order.
-You can create the array outside the render function or memorize it.
+You can create the array outside the render function or memoize it.
 :::
 
 ## Providing content
