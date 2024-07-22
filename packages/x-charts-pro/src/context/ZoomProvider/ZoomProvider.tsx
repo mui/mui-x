@@ -24,13 +24,11 @@ export function ZoomProvider({ children, xAxis, yAxis, zoom, onZoomChange }: Zoo
   // Default zoom data is initialized only once when uncontrolled. If the user changes the options
   // after the initial render, the zoom data will not be updated until the next zoom interaction.
   // This is required to avoid warnings about controlled/uncontrolled components.
-  // eslint-disable-next-line react-compiler/react-compiler
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const defaultZoomData = React.useMemo(() => initializeZoomData(options), []);
+  const defaultZoomData = React.useRef<ZoomData[]>(initializeZoomData(options));
 
   const [zoomData, setZoomData] = useControlled<ZoomData[]>({
     controlled: zoom,
-    default: defaultZoomData,
+    default: defaultZoomData.current,
     name: 'ZoomProvider',
     state: 'zoom',
   });
