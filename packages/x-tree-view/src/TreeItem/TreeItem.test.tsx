@@ -47,6 +47,18 @@ describeTreeView<[]>('TreeItem component', ({ render, treeItemComponentName }) =
 
       expect(response.getItemContent('1').textContent).to.equal('ABCDEF');
     });
+
+    it('should render TreeItem when itemId prop is escaping characters without throwing an error', function test() {
+      if (treeItemComponentName === 'TreeItem2') {
+        this.skip();
+      }
+
+      const response = render({
+        items: [{ id: 'C:\\\\', label: 'ABCDEF' }],
+      });
+
+      expect(response.getItemContent('C:\\\\').textContent).to.equal('ABCDEF');
+    });
   });
 });
 
@@ -56,12 +68,6 @@ describe('<TreeItem />', () => {
   describeConformance(<TreeItem itemId="one" label="one" />, () => ({
     classes,
     inheritComponent: 'li',
-    wrapMount: (mount) => (item: React.ReactNode) => {
-      const wrapper = mount(
-        <TreeViewContext.Provider value={getFakeContextValue()}>{item}</TreeViewContext.Provider>,
-      );
-      return wrapper.childAt(0);
-    },
     render: (item) => {
       return render(
         <TreeViewContext.Provider value={getFakeContextValue()}>{item}</TreeViewContext.Provider>,
@@ -69,7 +75,7 @@ describe('<TreeItem />', () => {
     },
     muiName: 'MuiTreeItem',
     refInstanceof: window.HTMLLIElement,
-    skip: ['reactTestRenderer', 'componentProp', 'componentsProp', 'themeVariants'],
+    skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
   describe('PropTypes warnings', () => {

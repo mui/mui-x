@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useForkRef from '@mui/utils/useForkRef';
 import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
 import {
   SeriesContextProvider,
@@ -8,26 +7,45 @@ import {
 } from '../context/SeriesContextProvider';
 import { InteractionProvider } from '../context/InteractionProvider';
 import { ColorProvider } from '../context/ColorProvider';
-import { useReducedMotion } from '../hooks/useReducedMotion';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import {
   CartesianContextProvider,
   CartesianContextProviderProps,
-} from '../context/CartesianContextProvider';
+} from '../context/CartesianProvider';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
-import { HighlightedProvider, HighlightedProviderProps } from '../context';
+import {
+  HighlightedProvider,
+  HighlightedProviderProps,
+  ZAxisContextProvider,
+  ZAxisContextProviderProps,
+} from '../context';
 import { ChartsPluginType } from '../models/plugin';
 import { ChartSeriesType } from '../models/seriesType/config';
-import { usePluginsMerge } from './usePluginsMerge';
+import { useChartContainerProps } from './useChartContainerProps';
+import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
+import { MakeOptional } from '../models/helpers';
 
 export type ChartContainerProps = Omit<
   ChartsSurfaceProps &
     Omit<SeriesContextProviderProps, 'seriesFormatters'> &
     Omit<DrawingProviderProps, 'svgRef'> &
-    Omit<CartesianContextProviderProps, 'xExtremumGetters' | 'yExtremumGetters'> &
+    Pick<CartesianContextProviderProps, 'dataset'> &
+    ZAxisContextProviderProps &
     HighlightedProviderProps,
   'children'
 > & {
+  /**
+   * The configuration of the x-axes.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
+   */
+  xAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[];
+  /**
+   * The configuration of the y-axes.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
+   */
+  yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[];
   children?: React.ReactNode;
   /**
    * An array of plugins defining how to preprocess data.
@@ -38,65 +56,31 @@ export type ChartContainerProps = Omit<
 
 const ChartContainer = React.forwardRef(function ChartContainer(props: ChartContainerProps, ref) {
   const {
-    width,
-    height,
-    series,
-    margin,
-    xAxis,
-    yAxis,
-    colors,
-    dataset,
-    sx,
-    title,
-    desc,
-    disableAxisListener,
-    highlightedItem,
-    onHighlightChange,
-    plugins,
     children,
-  } = props;
-  const svgRef = React.useRef<SVGSVGElement>(null);
-  const handleRef = useForkRef(ref, svgRef);
-
-  const { xExtremumGetters, yExtremumGetters, seriesFormatters, colorProcessors } =
-    usePluginsMerge(plugins);
-  useReducedMotion(); // a11y reduce motion (see: https://react-spring.dev/docs/utilities/use-reduced-motion)
+    drawingProviderProps,
+    colorProviderProps,
+    seriesContextProps,
+    cartesianContextProps,
+    zAxisContextProps,
+    highlightedProviderProps,
+    chartsSurfaceProps,
+  } = useChartContainerProps(props, ref);
 
   return (
-    <DrawingProvider width={width} height={height} margin={margin} svgRef={svgRef}>
-      <ColorProvider colorProcessors={colorProcessors}>
-        <SeriesContextProvider
-          series={series}
-          colors={colors}
-          dataset={dataset}
-          seriesFormatters={seriesFormatters}
-        >
-          <CartesianContextProvider
-            xAxis={xAxis}
-            yAxis={yAxis}
-            dataset={dataset}
-            xExtremumGetters={xExtremumGetters}
-            yExtremumGetters={yExtremumGetters}
-          >
-            <InteractionProvider>
-              <HighlightedProvider
-                highlightedItem={highlightedItem}
-                onHighlightChange={onHighlightChange}
-              >
-                <ChartsSurface
-                  width={width}
-                  height={height}
-                  ref={handleRef}
-                  sx={sx}
-                  title={title}
-                  desc={desc}
-                  disableAxisListener={disableAxisListener}
-                >
-                  <ChartsAxesGradients />
-                  {children}
-                </ChartsSurface>
-              </HighlightedProvider>
-            </InteractionProvider>
+    <DrawingProvider {...drawingProviderProps}>
+      <ColorProvider {...colorProviderProps}>
+        <SeriesContextProvider {...seriesContextProps}>
+          <CartesianContextProvider {...cartesianContextProps}>
+            <ZAxisContextProvider {...zAxisContextProps}>
+              <InteractionProvider>
+                <HighlightedProvider {...highlightedProviderProps}>
+                  <ChartsSurface {...chartsSurfaceProps}>
+                    <ChartsAxesGradients />
+                    {children}
+                  </ChartsSurface>
+                </HighlightedProvider>
+              </InteractionProvider>
+            </ZAxisContextProvider>
           </CartesianContextProvider>
         </SeriesContextProvider>
       </ColorProvider>
@@ -323,6 +307,45 @@ ChartContainer.propTypes = {
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
+    }),
+  ),
+  /**
+   * The configuration of the z-axes.
+   */
+  zAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+        PropTypes.shape({
+          color: PropTypes.oneOfType([
+            PropTypes.arrayOf(PropTypes.string.isRequired),
+            PropTypes.func,
+          ]).isRequired,
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          thresholds: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+          ).isRequired,
+          type: PropTypes.oneOf(['piecewise']).isRequired,
+        }),
+      ]),
+      data: PropTypes.array,
+      dataKey: PropTypes.string,
+      id: PropTypes.string,
+      max: PropTypes.number,
+      min: PropTypes.number,
     }),
   ),
 } as any;

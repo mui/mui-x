@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { Watermark } from '@mui/x-license/Watermark';
 import { ResponsiveChartContainerProps } from '@mui/x-charts/ResponsiveChartContainer';
-import { ResizableContainer, useChartContainerDimensions } from '@mui/x-charts/internals';
+import { ResizableContainer, useResponsiveChartContainerProps } from '@mui/x-charts/internals';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
+import { ChartContainerPro } from '../ChartContainerPro';
 
 export interface ResponsiveChartContainerProProps extends ResponsiveChartContainerProps {}
 
@@ -14,16 +14,12 @@ const ResponsiveChartContainerPro = React.forwardRef(function ResponsiveChartCon
   props: ResponsiveChartContainerProProps,
   ref,
 ) {
-  const { width: inWidth, height: inHeight, ...other } = props;
-  const [containerRef, width, height] = useChartContainerDimensions(inWidth, inHeight);
-
-  useLicenseVerifier('x-charts-pro', releaseInfo);
+  const { chartContainerProps, resizableChartContainerProps, hasIntrinsicSize } =
+    useResponsiveChartContainerProps(props, ref);
 
   return (
-    <ResizableContainer ref={containerRef} ownerState={{ width: inWidth, height: inHeight }}>
-      {width && height ? (
-        <ChartContainer {...other} width={width} height={height} ref={ref} />
-      ) : null}
+    <ResizableContainer {...resizableChartContainerProps}>
+      {hasIntrinsicSize ? <ChartContainerPro {...chartContainerProps} /> : null}
       <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
     </ResizableContainer>
   );
@@ -177,6 +173,17 @@ ResponsiveChartContainerPro.propTypes = {
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
+      zoom: PropTypes.oneOfType([
+        PropTypes.shape({
+          maxEnd: PropTypes.number,
+          maxSpan: PropTypes.number,
+          minSpan: PropTypes.number,
+          minStart: PropTypes.number,
+          panning: PropTypes.bool,
+          step: PropTypes.number,
+        }),
+        PropTypes.bool,
+      ]),
     }),
   ),
   /**
@@ -248,6 +255,56 @@ ResponsiveChartContainerPro.propTypes = {
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
+      zoom: PropTypes.oneOfType([
+        PropTypes.shape({
+          maxEnd: PropTypes.number,
+          maxSpan: PropTypes.number,
+          minSpan: PropTypes.number,
+          minStart: PropTypes.number,
+          panning: PropTypes.bool,
+          step: PropTypes.number,
+        }),
+        PropTypes.bool,
+      ]),
+    }),
+  ),
+  /**
+   * The configuration of the z-axes.
+   */
+  zAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+        PropTypes.shape({
+          color: PropTypes.oneOfType([
+            PropTypes.arrayOf(PropTypes.string.isRequired),
+            PropTypes.func,
+          ]).isRequired,
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          thresholds: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+          ).isRequired,
+          type: PropTypes.oneOf(['piecewise']).isRequired,
+        }),
+      ]),
+      data: PropTypes.array,
+      dataKey: PropTypes.string,
+      id: PropTypes.string,
+      max: PropTypes.number,
+      min: PropTypes.number,
     }),
   ),
 } as any;

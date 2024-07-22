@@ -60,7 +60,7 @@ describe('<DataGrid /> - Cells', () => {
 
       expect(width).to.equal('1px');
       // should not be transparent
-      expect(color).to.not.equal('rgba(0, 0, 0, 0)');
+      expect(color).not.to.equal('rgba(0, 0, 0, 0)');
     }
 
     it('should add right border to cells', function test() {

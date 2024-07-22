@@ -87,6 +87,7 @@ const pages: MuiPage[] = [
       },
       { pathname: '/x/react-data-grid/export' },
       { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste', newFeature: true },
+      { pathname: '/x/react-data-grid/overlays', title: 'Overlays' },
       { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
       {
         pathname: '/x/react-data-grid/style-group',
@@ -115,9 +116,10 @@ const pages: MuiPage[] = [
       {
         pathname: '/x/react-data-grid/server-side-data-group',
         title: 'Server-side data',
-        planned: true,
+        plan: 'pro',
         children: [
-          { pathname: '/x/react-data-grid/server-side-data', title: 'Overview', planned: true },
+          { pathname: '/x/react-data-grid/server-side-data', title: 'Overview' },
+          { pathname: '/x/react-data-grid/server-side-data/tree-data', plan: 'pro' },
           {
             pathname: '/x/react-data-grid/server-side-data/lazy-loading',
             plan: 'pro',
@@ -128,7 +130,6 @@ const pages: MuiPage[] = [
             plan: 'pro',
             planned: true,
           },
-          { pathname: '/x/react-data-grid/server-side-data/tree-data', plan: 'pro', planned: true },
           {
             pathname: '/x/react-data-grid/server-side-data/row-grouping',
             plan: 'pro',
@@ -424,6 +425,12 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/react-charts/gauge' },
           {
+            pathname: '/x/react-charts/heatmap',
+            title: 'Heatmap',
+            plan: 'pro',
+            unstable: true,
+          },
+          {
             pathname: '/x/react-charts/common-features',
             subheader: 'Common features',
             children: [
@@ -435,6 +442,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/stacking' },
               { pathname: '/x/react-charts/styling' },
               { pathname: '/x/react-charts/tooltip', title: 'Tooltip & Highlights' },
+              { pathname: '/x/react-charts/zoom-and-pan', title: 'Zoom & Pan', plan: 'pro' },
             ],
           },
           {
@@ -460,13 +468,7 @@ const pages: MuiPage[] = [
             subheader: 'Future components',
             children: [
               { pathname: '/x/react-charts/radar', planned: true },
-              { pathname: '/x/react-charts/tree-map', title: 'Treemap', planned: true },
-              {
-                pathname: '/x/react-charts/heat-map',
-                title: 'Heatmap',
-                plan: 'pro',
-                planned: true,
-              },
+              { pathname: '/x/react-charts/treemap', title: 'Treemap', planned: true },
               { pathname: '/x/react-charts/funnel', plan: 'pro', planned: true },
               { pathname: '/x/react-charts/sankey', plan: 'pro', planned: true },
               { pathname: '/x/react-charts/gantt', plan: 'pro', planned: true },

@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { AxisScaleComputedConfig, ScaleName } from '../models/axis';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
 
 export function useXColorScale<S extends ScaleName>(
   identifier?: number | string,
 ): AxisScaleComputedConfig[S]['colorScale'] | undefined {
-  const { xAxis, xAxisIds } = React.useContext(CartesianContext);
+  const { xAxis, xAxisIds } = useCartesianContext();
 
   const id = typeof identifier === 'string' ? identifier : xAxisIds[identifier ?? 0];
 
@@ -16,7 +16,7 @@ export function useXColorScale<S extends ScaleName>(
 export function useYColorScale<S extends ScaleName>(
   identifier?: number | string,
 ): AxisScaleComputedConfig[S]['colorScale'] | undefined {
-  const { yAxis, yAxisIds } = React.useContext(CartesianContext);
+  const { yAxis, yAxisIds } = useCartesianContext();
 
   const id = typeof identifier === 'string' ? identifier : yAxisIds[identifier ?? 0];
 

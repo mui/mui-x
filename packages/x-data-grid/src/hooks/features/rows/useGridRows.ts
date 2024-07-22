@@ -2,13 +2,8 @@ import * as React from 'react';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridRowApi, GridRowProApi } from '../../../models/api/gridRowApi';
-import {
-  GridRowId,
-  GridGroupNode,
-  GridLeafNode,
-  GridRowModelUpdate,
-} from '../../../models/gridRows';
+import { GridRowApi, GridRowProApi, GridRowProPrivateApi } from '../../../models/api/gridRowApi';
+import { GridRowId, GridGroupNode, GridLeafNode } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
@@ -20,6 +15,7 @@ import {
   gridDataRowIdsSelector,
   gridRowsDataRowIdToIdLookupSelector,
   gridRowMaximumTreeDepthSelector,
+  gridRowGroupsToFetchSelector,
 } from './gridRowsSelector';
 import { useTimeout } from '../../utils/useTimeout';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -38,14 +34,16 @@ import {
   updateCacheWithNewRows,
   getTopLevelRowCount,
   getRowIdFromRowModel,
+  computeRowsUpdates,
 } from './gridRowsUtils';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 
 export const rowsStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'rows' | 'rowCount' | 'getRowId' | 'loading'>
+  Pick<DataGridProcessedProps, 'unstable_dataSource' | 'rows' | 'rowCount' | 'getRowId' | 'loading'>
 > = (state, props, apiRef) => {
+  const isDataSourceAvailable = !!props.unstable_dataSource;
   apiRef.current.caches.rows = createRowsInternalCache({
-    rows: props.rows,
+    rows: isDataSourceAvailable ? [] : props.rows,
     getRowId: props.getRowId,
     loading: props.loading,
     rowCount: props.rowCount,
@@ -56,7 +54,7 @@ export const rowsStateInitializer: GridStateInitializer<
     rows: getRowsStateFromCache({
       apiRef,
       rowCountProp: props.rowCount,
-      loadingProp: props.loading,
+      loadingProp: isDataSourceAvailable ? true : props.loading,
       previousTree: null,
       previousTreeDepths: null,
     }),
@@ -146,6 +144,7 @@ export const useGridRows = (
             loadingProp: props.loading,
             previousTree: gridRowTreeSelector(apiRef),
             previousTreeDepths: gridRowTreeDepthsSelector(apiRef),
+            previousGroupsToFetch: gridRowGroupsToFetchSelector(apiRef),
           }),
         }));
         apiRef.current.publishEvent('rowsSet');
@@ -203,30 +202,7 @@ export const useGridRows = (
         );
       }
 
-      const nonPinnedRowsUpdates: GridRowModelUpdate[] = [];
-
-      updates.forEach((update) => {
-        const id = getRowIdFromRowModel(
-          update,
-          props.getRowId,
-          'A row was provided without id when calling updateRows():',
-        );
-
-        const rowNode = apiRef.current.getRowNode(id);
-        if (rowNode?.type === 'pinnedRow') {
-          // @ts-ignore because otherwise `release:build` doesn't work
-          const pinnedRowsCache = apiRef.current.caches.pinnedRows;
-          const prevModel = pinnedRowsCache.idLookup[id];
-          if (prevModel) {
-            pinnedRowsCache.idLookup[id] = {
-              ...prevModel,
-              ...update,
-            };
-          }
-        } else {
-          nonPinnedRowsUpdates.push(update);
-        }
-      });
+      const nonPinnedRowsUpdates = computeRowsUpdates(apiRef, updates, props.getRowId);
 
       const cache = updateCacheWithNewRows({
         updates: nonPinnedRowsUpdates,
@@ -237,6 +213,37 @@ export const useGridRows = (
       throttledRowsChange({ cache, throttle: true });
     },
     [props.signature, props.getRowId, throttledRowsChange, apiRef],
+  );
+
+  const updateServerRows = React.useCallback<GridRowProPrivateApi['updateServerRows']>(
+    (updates, groupKeys) => {
+      const nonPinnedRowsUpdates = computeRowsUpdates(apiRef, updates, props.getRowId);
+
+      const cache = updateCacheWithNewRows({
+        updates: nonPinnedRowsUpdates,
+        getRowId: props.getRowId,
+        previousCache: apiRef.current.caches.rows,
+        groupKeys: groupKeys ?? [],
+      });
+
+      throttledRowsChange({ cache, throttle: false });
+    },
+    [props.getRowId, throttledRowsChange, apiRef],
+  );
+
+  const setLoading = React.useCallback<GridRowApi['setLoading']>(
+    (loading) => {
+      if (loading === props.loading) {
+        return;
+      }
+      logger.debug(`Setting loading to ${loading}`);
+      apiRef.current.setState((state) => ({
+        ...state,
+        rows: { ...state.rows, loading },
+      }));
+      apiRef.current.caches.rows.loadingPropBeforePartialUpdates = loading;
+    },
+    [props.loading, apiRef, logger],
   );
 
   const getRowModels = React.useCallback<GridRowApi['getRowModels']>(() => {
@@ -468,6 +475,7 @@ export const useGridRows = (
 
   const rowApi: GridRowApi = {
     getRow,
+    setLoading,
     getRowId,
     getRowModels,
     getRowsCount,
@@ -483,6 +491,10 @@ export const useGridRows = (
     setRowIndex,
     setRowChildrenExpansion,
     getRowGroupChildren,
+  };
+
+  const rowProPrivateApi: GridRowProPrivateApi = {
+    updateServerRows,
   };
 
   /**
@@ -585,6 +597,7 @@ export const useGridRows = (
     rowProApi,
     props.signature === GridSignature.DataGrid ? 'private' : 'public',
   );
+  useGridApiMethod(apiRef, rowProPrivateApi, 'private');
 
   // The effect do not track any value defined synchronously during the 1st render by hooks called after `useGridRows`
   // As a consequence, the state generated by the 1st run of this useEffect will always be equal to the initialization one
@@ -637,7 +650,7 @@ export const useGridRows = (
       }
     }
 
-    logger.debug(`Updating all rows, new length ${props.rows.length}`);
+    logger.debug(`Updating all rows, new length ${props.rows?.length}`);
     throttledRowsChange({
       cache: createRowsInternalCache({
         rows: props.rows,

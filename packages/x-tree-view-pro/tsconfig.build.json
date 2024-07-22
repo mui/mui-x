@@ -12,6 +12,7 @@
     "types": ["node", "@mui/material/themeCssVarsAugmentation"]
   },
   "references": [
+    { "path": "../x-internals/tsconfig.build.json" },
     { "path": "../x-tree-view/tsconfig.build.json" },
     { "path": "../x-license/tsconfig.build.json" }
   ],

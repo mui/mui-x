@@ -83,6 +83,14 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     }
   };
 
+  const expansionTrigger = React.useMemo(() => {
+    if (params.expansionTrigger) {
+      return params.expansionTrigger;
+    }
+
+    return 'content';
+  }, [params.expansionTrigger]);
+
   return {
     publicAPI: {
       setItemExpansion,
@@ -93,6 +101,11 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
       setItemExpansion,
       toggleItemExpansion,
       expandAllSiblings,
+    },
+    contextValue: {
+      expansion: {
+        expansionTrigger,
+      },
     },
   };
 };
@@ -115,4 +128,5 @@ useTreeViewExpansion.params = {
   defaultExpandedItems: true,
   onExpandedItemsChange: true,
   onItemExpansionToggle: true,
+  expansionTrigger: true,
 };

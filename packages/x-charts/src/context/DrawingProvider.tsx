@@ -37,6 +37,15 @@ export type DrawingArea = {
    * The height of the drawing area.
    */
   height: number;
+  /**
+   * Checks if a point is inside the drawing area.
+   * @param {Object} point The point to check.
+   * @param {number} point.x The x coordinate of the point.
+   * @param {number} point.y The y coordinate of the point.
+   * @param {Element} targetElement The target element if relevant.
+   * @returns {boolean} `true` if the point is inside the drawing area, `false` otherwise.
+   */
+  isPointInside: (point: { x: number; y: number }, targetElement?: Element) => boolean;
 };
 
 export const DrawingContext = React.createContext<
@@ -54,6 +63,7 @@ export const DrawingContext = React.createContext<
   height: 300,
   width: 400,
   chartId: '',
+  isPointInside: () => false,
 });
 
 if (process.env.NODE_ENV !== 'production') {
@@ -76,9 +86,25 @@ export function DrawingProvider(props: DrawingProviderProps) {
   const drawingArea = useChartDimensions(width, height, margin);
   const chartId = useId();
 
+  const isPointInside = React.useCallback<DrawingArea['isPointInside']>(
+    ({ x, y }, targetElement) => {
+      // For element allowed to overflow, wrapping them in <g data-drawing-container /> make them fully part of the drawing area.
+      if (targetElement && targetElement.closest('[data-drawing-container]')) {
+        return true;
+      }
+      return (
+        x >= drawingArea.left &&
+        x <= drawingArea.left + drawingArea.width &&
+        y >= drawingArea.top &&
+        y <= drawingArea.top + drawingArea.height
+      );
+    },
+    [drawingArea],
+  );
+
   const value = React.useMemo(
-    () => ({ chartId: chartId ?? '', ...drawingArea }),
-    [chartId, drawingArea],
+    () => ({ chartId: chartId ?? '', ...drawingArea, isPointInside }),
+    [chartId, drawingArea, isPointInside],
   );
 
   const refValue = React.useMemo(() => ({ isInitialized: true, data: svgRef }), [svgRef]);

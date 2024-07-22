@@ -112,9 +112,22 @@
   "name": "BarChart",
   "imports": [
     "import { BarChart } from '@mui/x-charts/BarChart';",
-    "import { BarChart } from '@mui/x-charts';"
+    "import { BarChart } from '@mui/x-charts';",
+    "import { BarChart } from '@mui/x-charts-pro';"
   ],
   "slots": [
+    {
+      "name": "axisContent",
+      "description": "Custom component for displaying tooltip content when triggered by axis event.",
+      "default": "DefaultChartsAxisTooltipContent",
+      "class": null
+    },
+    {
+      "name": "axisLabel",
+      "description": "Custom component for axis label.",
+      "default": "ChartsText",
+      "class": null
+    },
     {
       "name": "axisLine",
       "description": "Custom component for the axis main line.",
@@ -134,12 +147,6 @@
       "class": null
     },
     {
-      "name": "axisLabel",
-      "description": "Custom component for axis label.",
-      "default": "ChartsText",
-      "class": null
-    },
-    {
       "name": "bar",
       "description": "The component that renders the bar.",
       "default": "BarElementPath",
@@ -152,27 +159,15 @@
       "class": null
     },
     {
-      "name": "legend",
-      "description": "Custom rendering of the legend.",
-      "default": "DefaultChartsLegend",
-      "class": null
-    },
-    {
-      "name": "popper",
-      "description": "Custom component for the tooltip popper.",
-      "default": "ChartsTooltipRoot",
-      "class": null
-    },
-    {
-      "name": "axisContent",
-      "description": "Custom component for displaying tooltip content when triggered by axis event.",
-      "default": "DefaultChartsAxisTooltipContent",
-      "class": null
-    },
-    {
       "name": "itemContent",
       "description": "Custom component for displaying tooltip content when triggered by item event.",
       "default": "DefaultChartsItemTooltipContent",
+      "class": null
+    },
+    {
+      "name": "legend",
+      "description": "Custom rendering of the legend.",
+      "default": "DefaultChartsLegend",
       "class": null
     },
     {
@@ -186,10 +181,19 @@
       "description": "Overlay component rendered when the chart has no data to display.",
       "default": "ChartsNoDataOverlay",
       "class": null
+    },
+    {
+      "name": "popper",
+      "description": "Custom component for the tooltip popper.",
+      "default": "ChartsTooltipRoot",
+      "class": null
     }
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": false,
   "muiName": "MuiBarChart",
+  "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/BarChart/BarChart.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/bar-demo/\">Charts - Bar demonstration</a></li>\n<li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li>\n<li><a href=\"/x/react-charts/label/\">Charts - Label</a></li></ul>",

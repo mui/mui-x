@@ -15,6 +15,7 @@ describe('<DataGridPremium /> - License', () => {
         orderNumber: 'Test',
         licensingModel: 'subscription',
         scope: 'pro',
+        planVersion: 'initial',
       }),
     );
     expect(() => render(<DataGridPremium columns={[]} rows={[]} autoHeight />)).toErrorDev([
@@ -30,7 +31,7 @@ describe('<DataGridPremium /> - License', () => {
     ]);
 
     await waitFor(() => {
-      expect(screen.getByText('MUI X Missing license key')).to.not.equal(null);
+      expect(screen.getByText('MUI X Missing license key')).not.to.equal(null);
     });
   });
 });

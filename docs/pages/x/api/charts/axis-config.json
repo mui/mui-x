@@ -3,8 +3,10 @@
   "imports": ["import { AxisConfig } from '@mui/x-charts'"],
   "properties": {
     "id": { "type": { "description": "AxisId" }, "required": true },
-    "scaleType": { "type": { "description": "'linear'" }, "required": true },
-    "colorMap": { "type": { "description": "ContinuousColorConfig | PiecewiseColorConfig" } },
+    "scaleType": { "type": { "description": "'band'" }, "required": true },
+    "colorMap": {
+      "type": { "description": "OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig" }
+    },
     "data": { "type": { "description": "V[]" } },
     "dataKey": { "type": { "description": "string" } },
     "hideTooltip": { "type": { "description": "boolean" } },
