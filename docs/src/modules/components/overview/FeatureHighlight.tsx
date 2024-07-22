@@ -43,7 +43,7 @@ export default function FeatureHighlight() {
             Select dates and times without confusion
           </Typography>
           <Typography variant="body1" color="text.secondary" textAlign="center">
-            An adaptable and reliable suite of date and time components
+            An adaptable and reliable suite of date and time components.
           </Typography>
         </Stack>
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
