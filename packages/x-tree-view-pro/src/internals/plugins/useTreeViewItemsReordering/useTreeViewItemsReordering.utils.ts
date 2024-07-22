@@ -31,6 +31,11 @@ export const isAncestor = (
   return isAncestor(instance, itemMetaA.parentId, itemIdB);
 };
 
+/**
+ * Transforms a CSS string `itemChildrenIndentation` into a number representing the indentation in number.
+ * @param {string | null} itemChildrenIndentation The indentation as passed to the `itemChildrenIndentation` prop.
+ * @param {HTMLElement} contentElement The DOM element to which the indentation will be applied.
+ */
 const parseItemChildrenIndentation = (
   itemChildrenIndentation: string | number,
   contentElement: HTMLElement,
@@ -44,6 +49,7 @@ const parseItemChildrenIndentation = (
     return parseFloat(pixelExec[1]);
   }
 
+  // If the format is neither `px` nor a number, we need to measure the indentation using an actual DOM element.
   const tempElement = document.createElement('div');
   tempElement.style.width = itemChildrenIndentation;
   tempElement.style.position = 'absolute';

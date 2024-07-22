@@ -163,12 +163,12 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
         return;
       }
 
-      setState((prevState) => ({ ...prevState, itemsReordering: null }));
       if (
         state.itemsReordering.draggedItemId === state.itemsReordering.targetItemId ||
         state.itemsReordering.action == null ||
         state.itemsReordering.newPosition == null
       ) {
+        setState((prevState) => ({ ...prevState, itemsReordering: null }));
         return;
       }
 
@@ -183,6 +183,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
       setState((prevState) => ({
         ...prevState,
+        itemsReordering: null,
         items: moveItemInTree({
           itemToMoveId: itemId,
           newPosition,

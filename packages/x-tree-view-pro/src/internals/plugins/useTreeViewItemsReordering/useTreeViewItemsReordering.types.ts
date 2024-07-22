@@ -64,6 +64,8 @@ export type TreeViewItemItemReorderingValidActions = {
 export interface UseTreeViewItemsReorderingParameters {
   /**
    * If `true`, the reordering of items is enabled.
+   * Make sure to also enable the `itemsReordering` experimental feature:
+   * `<RichTreeViewPro experimentalFeatures={{ itemsReordering: true }} itemsReordering />`.
    * @default false
    */
   itemsReordering?: boolean;
