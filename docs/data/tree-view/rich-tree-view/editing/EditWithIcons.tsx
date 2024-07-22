@@ -63,13 +63,17 @@ type CustomLabelInputProps = UseTreeItem2LabelInputSlotProps<{
   label: string;
 }>;
 
-const CustomLabelInput = React.forwardRef(function CustomLabelInput({
-  editing,
-  handleCancelItemLabelEditing,
-  handleSaveItemLabel,
-  label,
-  ...other
-}: CustomLabelInputProps) {
+const CustomLabelInput = React.forwardRef(function CustomLabelInput(
+  props: Omit<CustomLabelInputProps, 'ref'>,
+  ref: React.Ref<HTMLInputElement>,
+) {
+  const {
+    editing,
+    handleCancelItemLabelEditing,
+    handleSaveItemLabel,
+    label,
+    ...other
+  } = props;
   const [labelInputValue, setLabelInputValue] = React.useState(label);
 
   if (!editing) {
@@ -79,6 +83,7 @@ const CustomLabelInput = React.forwardRef(function CustomLabelInput({
   return (
     <React.Fragment>
       <TreeItem2LabelInput
+        ref={ref}
         {...other}
         label={label}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -167,6 +172,7 @@ export default function EditWithIcons() {
         slots={{ item: CustomTreeItem2 }}
         isItemEditable={(item) => Boolean(item?.editable)}
         defaultExpandedItems={['grid', 'pickers']}
+        expansionTrigger="iconContainer"
       />
     </Box>
   );

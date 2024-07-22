@@ -85,16 +85,19 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     }
   };
 
+  const isEditingEnabled = hasPlugin(instance, useTreeViewLabel);
+
   const expansionTrigger = React.useMemo(() => {
     if (params.expansionTrigger) {
       return params.expansionTrigger;
     }
-    if (hasPlugin(instance, useTreeViewLabel) && instance.isTreeViewEditable) {
+
+    if (isEditingEnabled && instance.isTreeViewEditable) {
       return 'iconContainer';
     }
 
     return 'content';
-  }, [params.expansionTrigger, instance]);
+  }, [params.expansionTrigger, isEditingEnabled, instance.isTreeViewEditable]);
 
   return {
     publicAPI: {

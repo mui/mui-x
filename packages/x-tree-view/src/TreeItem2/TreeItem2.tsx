@@ -190,9 +190,21 @@ export const TreeItem2LabelInput = styled(UnstyledLabelInput, {
   name: 'MuiTreeItem2',
   slot: 'LabelInput',
   overridesResolver: (props, styles) => styles.labelInput,
-})({
+})(({ theme }) => ({
+  ...theme.typography.body1,
   width: '100%',
-});
+  fontFamily: theme.typography.fontFamily,
+  fontSize: 'inherit',
+  height: '100%',
+  outline: 'none',
+  backgroundColor: theme.palette.background.paper,
+  borderRadius: theme.shape.borderRadius,
+  borderStyle: 'solid',
+  borderColor: 'transparent',
+  '&:focus': {
+    borderColor: theme.palette.primary.main,
+  },
+}));
 
 export const TreeItem2Checkbox = styled(
   React.forwardRef(
