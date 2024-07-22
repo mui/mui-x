@@ -26,14 +26,13 @@ function ServerSideLazyLoading() {
           rowCount: getRowsResponse.rowCount,
         };
       },
-      lazyLoaded: true,
     }),
     [fetchRows],
   );
 
   return (
     <div style={{ width: '100%', height: 400 }}>
-      <DataGridPro columns={columns} unstable_dataSource={dataSource} />
+      <DataGridPro columns={columns} unstable_dataSource={dataSource} lazyLoading />
     </div>
   );
 }
