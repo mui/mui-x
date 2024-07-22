@@ -88,7 +88,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       inputRef: inputRefProp,
       placeholder: inPlaceholder,
     },
-    internalProps: { readOnly = false },
+    internalProps: { readOnly = false, disabled = false },
     parsedSelectedSections,
     activeSectionIndex,
     state,
@@ -273,7 +273,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
     // prevent default to avoid the input `onChange` handler being called
     event.preventDefault();
 
-    if (readOnly) {
+    if (readOnly || disabled) {
       return;
     }
 

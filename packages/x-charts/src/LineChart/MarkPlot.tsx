@@ -98,7 +98,7 @@ function MarkPlot(props: MarkPlotProps) {
 
           if (xData === undefined) {
             throw new Error(
-              `MUI X Charts: ${
+              `MUI X: ${
                 xAxisId === DEFAULT_X_AXIS_KEY
                   ? 'The first `xAxis`'
                   : `The x-axis with id "${xAxisId}"`

@@ -125,7 +125,7 @@ This number is not the exact number of ticks displayed.
 Thanks to d3, ticks are placed to be human-readable.
 For example, ticks for time axes will be placed on special values (years, days, half-days, ...).
 
-If you set `tickNumber=5` but there are only 4 years to display in the axis, the component might chose to render ticks on the 4 years, instead of putting 5 ticks on some months.
+If you set `tickNumber=5` but there are only 4 years to display in the axis, the component might choose to render ticks on the 4 years, instead of putting 5 ticks on some months.
 :::
 
 As a helper, you can also provide `tickMinStep` and `tickMaxStep` which will compute `tickNumber` such that the step between two ticks respect those min/max values.
