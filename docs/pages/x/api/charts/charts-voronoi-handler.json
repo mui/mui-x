@@ -12,7 +12,8 @@
   "name": "ChartsVoronoiHandler",
   "imports": [
     "import { ChartsVoronoiHandler } from '@mui/x-charts/ChartsVoronoiHandler';",
-    "import { ChartsVoronoiHandler } from '@mui/x-charts';"
+    "import { ChartsVoronoiHandler } from '@mui/x-charts';",
+    "import { ChartsVoronoiHandler } from '@mui/x-charts-pro';"
   ],
   "classes": [],
   "muiName": "MuiChartsVoronoiHandler",

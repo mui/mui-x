@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Watermark } from '@mui/x-license/Watermark';
 import { ResponsiveChartContainerProps } from '@mui/x-charts/ResponsiveChartContainer';
-import { ResizableContainer, useChartContainerDimensions } from '@mui/x-charts/internals';
+import { ResizableContainer, useResponsiveChartContainerProps } from '@mui/x-charts/internals';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import { ChartContainerPro } from '../ChartContainerPro';
 
@@ -14,14 +14,12 @@ const ResponsiveChartContainerPro = React.forwardRef(function ResponsiveChartCon
   props: ResponsiveChartContainerProProps,
   ref,
 ) {
-  const { width: inWidth, height: inHeight, ...other } = props;
-  const [containerRef, width, height] = useChartContainerDimensions(inWidth, inHeight);
+  const { chartContainerProps, resizableChartContainerProps, hasIntrinsicSize } =
+    useResponsiveChartContainerProps(props, ref);
 
   return (
-    <ResizableContainer ref={containerRef} ownerState={{ width: inWidth, height: inHeight }}>
-      {width && height ? (
-        <ChartContainerPro {...other} width={width} height={height} ref={ref} />
-      ) : null}
+    <ResizableContainer {...resizableChartContainerProps}>
+      {hasIntrinsicSize ? <ChartContainerPro {...chartContainerProps} /> : null}
       <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
     </ResizableContainer>
   );
@@ -117,6 +115,15 @@ ResponsiveChartContainerPro.propTypes = {
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+        PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
             PropTypes.func,
@@ -131,15 +138,6 @@ ResponsiveChartContainerPro.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
-        }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
         }),
       ]),
       data: PropTypes.array,
@@ -175,6 +173,17 @@ ResponsiveChartContainerPro.propTypes = {
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
+      zoom: PropTypes.oneOfType([
+        PropTypes.shape({
+          maxEnd: PropTypes.number,
+          maxSpan: PropTypes.number,
+          minSpan: PropTypes.number,
+          minStart: PropTypes.number,
+          panning: PropTypes.bool,
+          step: PropTypes.number,
+        }),
+        PropTypes.bool,
+      ]),
     }),
   ),
   /**
@@ -187,6 +196,15 @@ ResponsiveChartContainerPro.propTypes = {
       axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
         PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
@@ -202,15 +220,6 @@ ResponsiveChartContainerPro.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
-        }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
         }),
       ]),
       data: PropTypes.array,
@@ -246,6 +255,17 @@ ResponsiveChartContainerPro.propTypes = {
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
+      zoom: PropTypes.oneOfType([
+        PropTypes.shape({
+          maxEnd: PropTypes.number,
+          maxSpan: PropTypes.number,
+          minSpan: PropTypes.number,
+          minStart: PropTypes.number,
+          panning: PropTypes.bool,
+          step: PropTypes.number,
+        }),
+        PropTypes.bool,
+      ]),
     }),
   ),
   /**
@@ -254,6 +274,15 @@ ResponsiveChartContainerPro.propTypes = {
   zAxis: PropTypes.arrayOf(
     PropTypes.shape({
       colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
         PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
@@ -270,19 +299,12 @@ ResponsiveChartContainerPro.propTypes = {
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
         }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
-        }),
       ]),
       data: PropTypes.array,
       dataKey: PropTypes.string,
       id: PropTypes.string,
+      max: PropTypes.number,
+      min: PropTypes.number,
     }),
   ),
 } as any;
