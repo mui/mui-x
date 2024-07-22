@@ -49,6 +49,12 @@ The demo below shows how to entirely override the editing behavior, and implemen
 
 {{"demo": "EditWithIcons.js"}}
 
+## Create a custom labelInput
+
+The demo below shows how to use a different component in the `labelInput` slot.
+
+{{"demo": "CustomLabelInput.js"}}
+
 ## Imperative API
 
 :::success

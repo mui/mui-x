@@ -181,7 +181,6 @@ const UnstyledLabelInput = React.forwardRef(function UnstyledLabelInput(
       autoFocus
       type="text"
       ref={ref}
-      style={{}}
     />
   );
 });
