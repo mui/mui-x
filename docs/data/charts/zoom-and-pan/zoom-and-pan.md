@@ -8,6 +8,13 @@ components: ScatterChartPro, BarChartPro, LineChartPro
 
 <p class="description">Enables zooming and panning on specific charts or axis.</p>
 
+:::warning
+The zoom feature is part of the pro package which is **not yet** released.
+
+You can test demos.
+Don't hesitate to open issues to give feedback.
+:::
+
 Zooming is possible on the **Pro**[<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') versions of the charts: `<LineChartPro />`, `<BarChartPro />`, `<ScatterChartPro />`.
 
 ## Basic usage
@@ -26,7 +33,7 @@ The following actions are supported:
 {{"demo": "ZoomBarChart.js"}}
 {{"demo": "ZoomLineChart.js"}}
 
-## Zooming Options
+## Zooming options
 
 You can customize the zooming behavior by setting the `zoomOptions` prop.
 
