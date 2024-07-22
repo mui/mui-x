@@ -89,8 +89,8 @@ export default function InfoCard({
       )}
       {description &&
         typeof description === 'object' &&
-        description.map((item) => (
-          <Typography color="text.secondary" variant="body2">
+        description.map((item, index) => (
+          <Typography color="text.secondary" variant="body2" key={index}>
             {item}
           </Typography>
         ))}

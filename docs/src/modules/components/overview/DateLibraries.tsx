@@ -57,7 +57,7 @@ export default function DateLibraries() {
                 Support for multiple date libraries
               </Typography>
             }
-            description="Flexibility to use any of the most popular date libraries"
+            description="Flexibility to use any of the most popular date libraries."
           />
         </Stack>
         <Stack>
