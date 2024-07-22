@@ -119,7 +119,7 @@ export type ZoomData = {
 
 export type ZoomProps = {
   /**
-   * The zoom data of type [[ZoomData]] which lists the zoom data related to each axis.
+   * The list of zoom data related to each axis.
    */
   zoom?: ZoomData[];
   /**

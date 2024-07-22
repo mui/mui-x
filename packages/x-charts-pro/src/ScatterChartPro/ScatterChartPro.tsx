@@ -449,7 +449,7 @@ ScatterChartPro.propTypes = {
     }),
   ),
   /**
-   * The zoom data of type [[ZoomData]] which lists the zoom data related to each axis.
+   * The list of zoom data related to each axis.
    */
   zoom: PropTypes.arrayOf(
     PropTypes.shape({
