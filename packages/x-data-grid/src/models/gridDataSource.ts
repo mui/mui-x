@@ -76,11 +76,6 @@ export interface GridDataSource {
    * If the children count is not available for some reason, but there are some children, `getChildrenCount` should return `-1`.
    */
   getChildrenCount?: (row: GridRowModel) => number;
-  /**
-   * If enabled, the grid will send `start` and `end` instead of `paginationModel` to `getRows` and a new request will be made
-   * whenever the user scrolls to the area that has skeleton rows
-   */
-  lazyLoaded?: boolean;
 }
 
 export interface GridDataSourceCache {
