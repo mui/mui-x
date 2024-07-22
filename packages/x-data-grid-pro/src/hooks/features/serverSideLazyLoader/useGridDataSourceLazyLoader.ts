@@ -28,12 +28,15 @@ const INTERVAL_CACHE_INITIAL_STATE = {
  */
 export const useGridDataSourceLazyLoader = (
   privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
-  props: Pick<DataGridProProcessedProps, 'pagination' | 'paginationMode' | 'unstable_dataSource'>,
+  props: Pick<
+    DataGridProProcessedProps,
+    'pagination' | 'paginationMode' | 'unstable_dataSource' | 'lazyLoading'
+  >,
 ): void => {
   const sortModel = useGridSelector(privateApiRef, gridSortModelSelector);
   const filterModel = useGridSelector(privateApiRef, gridFilterModelSelector);
   const renderedRowsIntervalCache = React.useRef(INTERVAL_CACHE_INITIAL_STATE);
-  const isDisabled = props.unstable_dataSource?.lazyLoaded !== true;
+  const isDisabled = !props.unstable_dataSource || props.lazyLoading !== true;
 
   const handleRenderedRowsIntervalChange = React.useCallback<
     GridEventListener<'renderedRowsIntervalChange'>

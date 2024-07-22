@@ -10,13 +10,14 @@ const getSkeletonRowId = (index: number) => `${GRID_SKELETON_ROW_ROOT_ID}-${inde
 
 export const useGridDataSourceLazyLoaderPreProcessors = (
   privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
-  props: Pick<DataGridProProcessedProps, 'unstable_dataSource'>,
+  props: Pick<DataGridProProcessedProps, 'unstable_dataSource' | 'lazyLoading'>,
 ) => {
   const addSkeletonRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
     (groupingParams) => {
       const rootGroup = groupingParams.tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
+      const isDisabled = !props.unstable_dataSource || props.lazyLoading !== true;
 
-      if (props.unstable_dataSource?.lazyLoaded !== true) {
+      if (isDisabled) {
         return groupingParams;
       }
 
@@ -46,7 +47,7 @@ export const useGridDataSourceLazyLoaderPreProcessors = (
         tree,
       };
     },
-    [props.unstable_dataSource?.lazyLoaded],
+    [props.unstable_dataSource, props.lazyLoading],
   );
 
   useGridRegisterPipeProcessor(privateApiRef, 'hydrateRows', addSkeletonRows);

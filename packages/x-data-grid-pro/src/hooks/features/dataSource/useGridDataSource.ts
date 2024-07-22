@@ -57,6 +57,7 @@ export const useGridDataSource = (
     | 'filterMode'
     | 'paginationMode'
     | 'treeData'
+    | 'lazyLoading'
   >,
 ) => {
   const nestedDataManager = useLazyRef<NestedDataManager, void>(
@@ -64,9 +65,12 @@ export const useGridDataSource = (
   ).current;
   const groupsToAutoFetch = useGridSelector(apiRef, gridRowGroupsToFetchSelector);
   const scheduledGroups = React.useRef<number>(0);
+
+  const isLazyLoaded = !!props.unstable_dataSource && props.lazyLoading;
   const rowFetchSlice = React.useRef(
-    props.unstable_dataSource?.lazyLoaded ? { start: 0, end: 10 } : {}, // TODO: predict the initial `end` from the viewport
+    isLazyLoaded ? { start: 0, end: 10 } : {}, // TODO: predict the initial `end` from the viewport
   );
+
   const onError = props.unstable_onDataSourceError;
 
   const [cache, setCache] = React.useState<GridDataSourceCache>(() =>
@@ -97,7 +101,7 @@ export const useGridDataSource = (
 
       if (cachedData !== undefined) {
         const rows = cachedData.rows;
-        if (props.unstable_dataSource?.lazyLoaded === true) {
+        if (isLazyLoaded) {
           apiRef.current.unstable_replaceRows(fetchParams.start, rows);
         } else {
           apiRef.current.setRows(rows);
@@ -119,7 +123,7 @@ export const useGridDataSource = (
         if (getRowsResponse.rowCount) {
           apiRef.current.setRowCount(getRowsResponse.rowCount);
         }
-        if (props.unstable_dataSource?.lazyLoaded === true) {
+        if (isLazyLoaded) {
           apiRef.current.unstable_replaceRows(fetchParams.start, getRowsResponse.rows);
         } else {
           apiRef.current.setRows(getRowsResponse.rows);
@@ -135,7 +139,7 @@ export const useGridDataSource = (
       nestedDataManager,
       apiRef,
       props.unstable_dataSource?.getRows,
-      props.unstable_dataSource?.lazyLoaded,
+      isLazyLoaded,
       onError,
       rowFetchSlice,
     ],
@@ -143,12 +147,12 @@ export const useGridDataSource = (
 
   const fetchRowBatch = React.useCallback(
     (fetchParams: GridGetRowsParams) => {
-      if (props.unstable_dataSource?.lazyLoaded && fetchParams.start && fetchParams.end) {
+      if (isLazyLoaded && fetchParams.start && fetchParams.end) {
         rowFetchSlice.current = { start: Number(fetchParams.start), end: fetchParams.end };
       }
       return fetchRows();
     },
-    [props.unstable_dataSource?.lazyLoaded, fetchRows],
+    [isLazyLoaded, fetchRows],
   );
 
   const fetchRowChildren = React.useCallback<GridDataSourcePrivateApi['fetchRowChildren']>(
