@@ -520,6 +520,13 @@ DataGridPremiumRaw.propTypes = {
    */
   keepNonExistentRowsSelected: PropTypes.bool,
   /**
+   * Used together with `unstable_dataSource` to enable lazy loading.
+   * If enabled, the grid will stop adding `paginationModel` to the data requests (`getRows`) and start sending `start` and `end` values depending on the scroll position.
+   * A new request will be made whenever the user scrolls to the area that has skeleton rows.
+   * @default false
+   */
+  lazyLoading: PropTypes.bool,
+  /**
    * If `true`, a loading overlay is displayed.
    * @default false
    */
@@ -1090,7 +1097,6 @@ DataGridPremiumRaw.propTypes = {
     getChildrenCount: PropTypes.func,
     getGroupKey: PropTypes.func,
     getRows: PropTypes.func.isRequired,
-    lazyLoaded: PropTypes.bool,
     updateRow: PropTypes.func,
   }),
   unstable_dataSourceCache: PropTypes.shape({
