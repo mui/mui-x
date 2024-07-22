@@ -14,36 +14,36 @@ const getAxisMessage = (axisDirection: 'x' | 'y', axisKey: AxisId) => {
 export function checkScaleErrors(
   verticalLayout: boolean,
   seriesId: SeriesId,
-  xAxisKey: AxisId,
+  xAxisId: AxisId,
   xAxis: { [axisKey: AxisId]: AxisDefaultized },
-  yAxisKey: AxisId,
+  yAxisId: AxisId,
   yAxis: { [axisKey: AxisId]: AxisDefaultized },
 ): void {
-  const xAxisConfig = xAxis[xAxisKey];
-  const yAxisConfig = yAxis[yAxisKey];
+  const xAxisConfig = xAxis[xAxisId];
+  const yAxisConfig = yAxis[yAxisId];
 
   const discreteAxisConfig = verticalLayout ? xAxisConfig : yAxisConfig;
   const continuousAxisConfig = verticalLayout ? yAxisConfig : xAxisConfig;
 
-  const discreteAxisKey = verticalLayout ? xAxisKey : yAxisKey;
-  const continuousAxisKey = verticalLayout ? yAxisKey : xAxisKey;
+  const discreteAxisId = verticalLayout ? xAxisId : yAxisId;
+  const continuousAxisId = verticalLayout ? yAxisId : xAxisId;
 
   const discreteAxisDirection = verticalLayout ? 'x' : 'y';
   const continuousAxisDirection = verticalLayout ? 'y' : 'x';
 
   if (!isBandScaleConfig(discreteAxisConfig)) {
     throw new Error(
-      `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisKey)} should be of type "band" to display the bar series of id "${seriesId}".`,
+      `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should be of type "band" to display the bar series of id "${seriesId}".`,
     );
   }
   if (discreteAxisConfig.data === undefined) {
     throw new Error(
-      `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisKey)} should have data property.`,
+      `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should have data property.`,
     );
   }
   if (isBandScaleConfig(continuousAxisConfig) || isPointScaleConfig(continuousAxisConfig)) {
     throw new Error(
-      `MUI X Charts: ${getAxisMessage(continuousAxisDirection, continuousAxisKey)} should be a continuous type to display the bar series of id "${seriesId}".`,
+      `MUI X Charts: ${getAxisMessage(continuousAxisDirection, continuousAxisId)} should be a continuous type to display the bar series of id "${seriesId}".`,
     );
   }
 }
