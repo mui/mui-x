@@ -1517,23 +1517,14 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1(stylis@4.3.2)
 
-  tests/date-pickers-unit:
+  test/date-pickers-unit:
     dependencies:
       '@babel/runtime':
         specifier: ^7.24.8
         version: 7.24.8
-      '@emotion/react':
-        specifier: ^11.9.0
-        version: 11.11.4(@types/react@18.3.3)(react@18.3.1)
-      '@emotion/styled':
-        specifier: ^11.8.1
-        version: 11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/base':
         specifier: ^5.0.0-beta.40
         version: 5.0.0-beta.40(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@mui/material':
-        specifier: ^5.15.14
-        version: 5.16.2(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/system':
         specifier: ^5.16.2
         version: 5.16.2(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
@@ -1549,12 +1540,6 @@ importers:
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
-      react:
-        specifier: ^17.0.0 || ^18.0.0
-        version: 18.3.1
-      react-dom:
-        specifier: ^17.0.0 || ^18.0.0
-        version: 18.3.1(react@18.3.1)
       react-transition-group:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
