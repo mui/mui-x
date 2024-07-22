@@ -9,7 +9,7 @@ import {
   expectFieldPlaceholderV6,
   adapterToUse,
   describeAdapters,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 
 describe('<DesktopDatePicker /> - Field', () => {
   describe('Basic behaviors', () => {

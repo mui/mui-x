@@ -7,7 +7,7 @@ import {
   describeValue,
   formatFullTimeValue,
   getFieldInputRoot,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { describeConformance } from 'test/utils/describeConformance';

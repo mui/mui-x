@@ -3,7 +3,7 @@ import { pickersCalendarHeaderClasses } from '@mui/x-date-pickers/PickersCalenda
 import { pickersArrowSwitcherClasses } from '@mui/x-date-pickers/internals';
 import { PickersRangeCalendarHeader } from '@mui/x-date-pickers-pro/PickersRangeCalendarHeader';
 import { ConformanceOptions } from '@mui/internal-test-utils';
-import { adapterToUse, createPickerRenderer } from '@date-pickers-unit/helpers';
+import { adapterToUse, createPickerRenderer } from '@unit/date-pickers/helpers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 const CALENDARS_TO_CLASSES_MAP: Record<1 | 2, ConformanceOptions['classes']> = {

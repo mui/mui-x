@@ -9,7 +9,7 @@ import {
   createPickerRenderer,
   adapterToUse,
   multiSectionDigitalClockHandler,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 import { screen } from '@mui/internal-test-utils';
 
 describe('<MultiSectionDigitalClock />', () => {

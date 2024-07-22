@@ -8,7 +8,7 @@ import {
   describeValue,
   describePicker,
   getFieldInputRoot,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { describeConformance } from 'test/utils/describeConformance';
 

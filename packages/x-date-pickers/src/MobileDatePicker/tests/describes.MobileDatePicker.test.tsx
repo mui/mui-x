@@ -9,7 +9,7 @@ import {
   describeValue,
   describePicker,
   getFieldInputRoot,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { describeConformance } from 'test/utils/describeConformance';
 

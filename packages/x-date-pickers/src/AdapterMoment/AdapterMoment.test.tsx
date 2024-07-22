@@ -11,7 +11,7 @@ import {
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,
   buildFieldInteractions,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 import 'moment/locale/de';
 import 'moment/locale/fr';
 import 'moment/locale/ko';

@@ -1,5 +1,5 @@
 {
-  "name": "@mui-x-test/date-pickers-unit",
+  "name": "@mui-x-test/unit-date-pickers",
   "version": "7.11.0",
   "private": true,
   "scripts": {

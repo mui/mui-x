@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { adapterToUse } from '@date-pickers-unit/helpers';
+import { adapterToUse } from '@unit/date-pickers/helpers';
 import { useFakeTimers } from 'sinon';
 import { findClosestEnabledDate } from './date-utils';
 

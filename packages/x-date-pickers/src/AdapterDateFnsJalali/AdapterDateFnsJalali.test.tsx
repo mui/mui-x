@@ -6,7 +6,7 @@ import {
   expectFieldValueV7,
   describeJalaliAdapter,
   buildFieldInteractions,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 import { enUS } from 'date-fns/locale';
 import faIR from 'date-fns-jalali/locale/fa-IR';
 import faJalaliIR from 'date-fns-jalali/locale/fa-jalali-IR';

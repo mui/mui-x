@@ -7,7 +7,7 @@ import {
   expectFieldValueV6,
   describeAdapters,
   getTextbox,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 
 describe('<SingleInputDateRangeField /> - Editing', () => {
   describeAdapters(`key: Delete`, SingleInputDateRangeField, ({ adapter, renderWithProps }) => {

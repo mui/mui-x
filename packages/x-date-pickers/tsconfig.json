@@ -10,5 +10,5 @@
     ],
     "noImplicitAny": false
   },
-  "include": ["src/**/*", "../../test/date-pickers-unit/setup/chaiAssertions.d.ts"]
+  "include": ["src/**/*", "../../test/unit-date-pickers/setup/chaiAssertions.d.ts"]
 }

@@ -3,7 +3,7 @@ import {
   DateRangePickerDay,
   dateRangePickerDayClasses as classes,
 } from '@mui/x-date-pickers-pro/DateRangePickerDay';
-import { createPickerRenderer, adapterToUse } from '@date-pickers-unit/helpers';
+import { createPickerRenderer, adapterToUse } from '@unit/date-pickers/helpers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DateRangePickerDay />', () => {

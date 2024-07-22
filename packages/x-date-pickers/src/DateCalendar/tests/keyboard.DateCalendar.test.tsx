@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { adapterToUse, createPickerRenderer } from '@date-pickers-unit/helpers';
+import { adapterToUse, createPickerRenderer } from '@unit/date-pickers/helpers';
 
 describe('<DateCalendar /> keyboard interactions', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

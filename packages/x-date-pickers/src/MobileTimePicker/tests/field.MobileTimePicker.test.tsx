@@ -2,7 +2,7 @@ import {
   createPickerRenderer,
   buildFieldInteractions,
   expectFieldValueV7,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 
 describe('<MobileTimePicker /> - Field', () => {

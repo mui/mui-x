@@ -7,7 +7,7 @@ import {
   createPickerRenderer,
   adapterToUse,
   describeRangeValidation,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<StaticDateRangePicker />', () => {

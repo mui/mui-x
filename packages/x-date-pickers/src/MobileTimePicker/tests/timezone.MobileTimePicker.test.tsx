@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
-import { describeAdapters } from '@date-pickers-unit/helpers';
+import { describeAdapters } from '@unit/date-pickers/helpers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import { expect } from 'chai';
 

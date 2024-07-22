@@ -8,7 +8,7 @@ import {
   describePicker,
   describeRangeValidation,
   getFieldSectionsContainer,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
 
 describe('<DesktopDateTimeRangePicker /> - Describes', () => {

@@ -4,7 +4,7 @@ import {
   expectFieldValueV7,
   getTextbox,
   describeAdapters,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 import { DateField } from '@mui/x-date-pickers/DateField';
 
 describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProps }) => {

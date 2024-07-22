@@ -4,7 +4,7 @@ import {
   expectFieldPlaceholderV6,
   expectFieldValueV7,
   buildFieldInteractions,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 import { DesktopTimePicker, DesktopTimePickerProps } from '@mui/x-date-pickers/DesktopTimePicker';
 
 describe('<DesktopTimePicker /> - Field', () => {

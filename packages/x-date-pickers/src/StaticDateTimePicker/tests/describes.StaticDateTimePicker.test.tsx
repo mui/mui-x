@@ -3,7 +3,7 @@ import {
   createPickerRenderer,
   describeValidation,
   describePicker,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
 

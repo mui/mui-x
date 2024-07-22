@@ -7,7 +7,7 @@ import {
   createPickerRenderer,
   getFieldInputRoot,
   stubMatchMedia,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 
 describe('<DateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({

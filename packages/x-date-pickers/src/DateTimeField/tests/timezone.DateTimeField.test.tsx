@@ -7,7 +7,7 @@ import {
   expectFieldValueV7,
   describeAdapters,
   buildFieldInteractions,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 

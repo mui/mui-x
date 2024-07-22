@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createPickerRenderer } from '@date-pickers-unit/helpers';
+import { createPickerRenderer } from '@unit/date-pickers/helpers';
 import { describeConformance } from 'test/utils/describeConformance';
 import { PickersArrowSwitcher } from './PickersArrowSwitcher';
 import { pickersArrowSwitcherClasses } from './pickersArrowSwitcherClasses';

@@ -7,7 +7,7 @@ import {
   openPicker,
   getFieldSectionsContainer,
   expectFieldValueV7,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
 
 describe('<DesktopDateTimeRangePicker />', () => {

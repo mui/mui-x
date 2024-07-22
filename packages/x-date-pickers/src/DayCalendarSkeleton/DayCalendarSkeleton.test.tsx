@@ -3,7 +3,7 @@ import {
   DayCalendarSkeleton,
   dayCalendarSkeletonClasses as classes,
 } from '@mui/x-date-pickers/DayCalendarSkeleton';
-import { createPickerRenderer } from '@date-pickers-unit/helpers';
+import { createPickerRenderer } from '@unit/date-pickers/helpers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DayCalendarSkeleton />', () => {

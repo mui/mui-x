@@ -9,7 +9,7 @@ import {
   openPicker,
   getClockTouchEvent,
   getFieldSectionsContainer,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 
 describe('<MobileDateTimePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

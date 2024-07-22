@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, userEvent } from '@mui/internal-test-utils';
 import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';
-import { createPickerRenderer } from '@date-pickers-unit/helpers';
+import { createPickerRenderer } from '@unit/date-pickers/helpers';
 
 describe('<PickersActionBar />', () => {
   const { render } = createPickerRenderer({

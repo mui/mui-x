@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { createPickerRenderer, AdapterName } from '@date-pickers-unit/helpers';
+import { createPickerRenderer, AdapterName } from '@unit/date-pickers/helpers';
 import { he } from 'date-fns/locale';
 import 'dayjs/locale/he';
 import 'moment/locale/he';

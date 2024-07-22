@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import { fireEvent, userEvent, screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
-import { createPickerRenderer, adapterToUse } from '@date-pickers-unit/helpers';
+import { createPickerRenderer, adapterToUse } from '@unit/date-pickers/helpers';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

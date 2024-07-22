@@ -3,7 +3,7 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import { screen, userEvent } from '@mui/internal-test-utils';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
-import { getDateOffset, describeAdapters } from '@date-pickers-unit/helpers';
+import { getDateOffset, describeAdapters } from '@unit/date-pickers/helpers';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 

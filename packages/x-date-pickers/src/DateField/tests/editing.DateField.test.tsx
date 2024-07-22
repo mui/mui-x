@@ -7,7 +7,7 @@ import {
   getTextbox,
   describeAdapters,
   expectFieldValueV6,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 
 describe('<DateField /> - Editing', () => {
   describeAdapters('key: ArrowDown', DateField, ({ adapter, testFieldKeyPress }) => {

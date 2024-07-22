@@ -9,7 +9,7 @@ import {
   describePicker,
   formatFullTimeValue,
   getFieldInputRoot,
-} from '@date-pickers-unit/helpers';
+} from '@unit/date-pickers/helpers';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
 

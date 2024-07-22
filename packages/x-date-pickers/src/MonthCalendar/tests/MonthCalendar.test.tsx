@@ -3,7 +3,7 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
-import { createPickerRenderer, adapterToUse } from '@date-pickers-unit/helpers';
+import { createPickerRenderer, adapterToUse } from '@unit/date-pickers/helpers';
 
 describe('<MonthCalendar />', () => {
   const { render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date(2019, 0, 1) });
