@@ -1,7 +1,7 @@
 import * as React from 'react';
 import createDescribe from '@mui/internal-test-utils/createDescribe';
 import { BasePickerInputProps, UsePickerValueNonStaticProps } from '@mui/x-date-pickers/internals';
-import { buildFieldInteractions, BuildFieldInteractionsResponse } from 'test/utils/pickers';
+import { buildFieldInteractions, BuildFieldInteractionsResponse } from '@pickers-unit/helpers';
 import { PickerComponentFamily } from '../describe.types';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
 import { testControlledUnControlled } from './testControlledUnControlled';

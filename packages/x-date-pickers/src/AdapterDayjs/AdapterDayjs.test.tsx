@@ -9,7 +9,7 @@ import {
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,
   buildFieldInteractions,
-} from 'test/utils/pickers';
+} from '@pickers-unit/helpers';
 import 'dayjs/locale/fr';
 import 'dayjs/locale/de';
 // We import the plugins here just to have the typing

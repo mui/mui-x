@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, userEvent } from '@mui/internal-test-utils';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
-import { createPickerRenderer, openPicker } from 'test/utils/pickers';
+import { createPickerRenderer, openPicker } from '@pickers-unit/helpers';
 
 describe('<DesktopTimePicker />', () => {
   const { render } = createPickerRenderer({

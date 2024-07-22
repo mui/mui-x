@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
-import { adapterToUse } from 'test/utils/pickers';
+import { adapterToUse } from '@pickers-unit/helpers';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {

@@ -7,7 +7,7 @@ import {
   getAllFieldInputRoot,
   getExpectedOnChangeCount,
   getFieldInputRoot,
-} from 'test/utils/pickers';
+} from '@pickers-unit/helpers';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
 
 export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (

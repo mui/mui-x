@@ -6,7 +6,7 @@ import {
   adapterToUse,
   describeValidation,
   describeValue,
-} from 'test/utils/pickers';
+} from '@pickers-unit/helpers';
 import { MonthCalendar, monthCalendarClasses as classes } from '@mui/x-date-pickers/MonthCalendar';
 import { describeConformance } from 'test/utils/describeConformance';
 

@@ -14,7 +14,7 @@ import {
   openPicker,
   getFieldSectionsContainer,
   getTextbox,
-} from 'test/utils/pickers';
+} from '@pickers-unit/helpers';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

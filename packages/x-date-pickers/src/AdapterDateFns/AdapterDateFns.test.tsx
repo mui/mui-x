@@ -8,7 +8,7 @@ import {
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,
   buildFieldInteractions,
-} from 'test/utils/pickers';
+} from '@pickers-unit/helpers';
 import { enUS, fr, de, ru } from 'date-fns/locale';
 
 describe('<AdapterDateFns />', () => {

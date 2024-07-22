@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
-import { adapterToUse } from 'test/utils/pickers';
+import { adapterToUse } from '@pickers-unit/helpers';
 
 const isDisabled = (el: HTMLElement) => el.getAttribute('disabled') !== null;
 

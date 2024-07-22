@@ -7,7 +7,7 @@ import {
   expectFieldValueV7,
   describeAdapters,
   buildFieldInteractions,
-} from 'test/utils/pickers';
+} from '@pickers-unit/helpers';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 

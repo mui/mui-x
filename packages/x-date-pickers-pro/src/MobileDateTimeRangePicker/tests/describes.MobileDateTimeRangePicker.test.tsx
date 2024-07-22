@@ -9,7 +9,7 @@ import {
   describeRangeValidation,
   getFieldSectionsContainer,
   openPicker,
-} from 'test/utils/pickers';
+} from '@pickers-unit/helpers';
 import { MobileDateTimeRangePicker } from '../MobileDateTimeRangePicker';
 
 describe('<MobileDateTimeRangePicker /> - Describes', () => {

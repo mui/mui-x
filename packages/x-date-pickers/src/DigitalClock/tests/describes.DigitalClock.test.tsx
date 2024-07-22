@@ -8,7 +8,7 @@ import {
   describeValidation,
   describeValue,
   formatFullTimeValue,
-} from 'test/utils/pickers';
+} from '@pickers-unit/helpers';
 import { DigitalClock, digitalClockClasses as classes } from '@mui/x-date-pickers/DigitalClock';
 import { describeConformance } from 'test/utils/describeConformance';
 

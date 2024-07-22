@@ -5,7 +5,7 @@ import {
   FieldPressCharacter,
   FieldSectionSelector,
   OpenPickerParams,
-} from 'test/utils/pickers';
+} from '@pickers-unit/helpers';
 import { PickerComponentFamily } from '../describe.types';
 
 interface DescribeValueBaseOptions<TValue, C extends PickerComponentFamily> {

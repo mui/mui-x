@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { TimeView } from '@mui/x-date-pickers/models';
-import { adapterToUse, getFieldInputRoot } from 'test/utils/pickers';
+import { adapterToUse, getFieldInputRoot } from '@pickers-unit/helpers';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {

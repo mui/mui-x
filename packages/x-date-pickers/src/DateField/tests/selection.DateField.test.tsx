@@ -9,7 +9,7 @@ import {
   getTextbox,
   buildFieldInteractions,
   adapterToUse,
-} from 'test/utils/pickers';
+} from '@pickers-unit/helpers';
 
 describe('<DateField /> - Selection', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

@@ -14,7 +14,7 @@ import {
   MockedDataTransfer,
   rangeCalendarDayTouches,
   createPickerRenderer,
-} from 'test/utils/pickers';
+} from '@pickers-unit/helpers';
 import {
   DateRangeCalendar,
   dateRangeCalendarClasses as classes,

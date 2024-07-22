@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { SinonSpy } from 'sinon';
-import { cleanText } from 'test/utils/pickers';
+import { cleanText } from '@pickers-unit/helpers';
 
 export const expectFieldValueV7 = (
   fieldSectionsContainer: HTMLDivElement,

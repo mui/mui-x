@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { adapterToUse, getAllFieldInputRoot } from 'test/utils/pickers';
+import { adapterToUse, getAllFieldInputRoot } from '@pickers-unit/helpers';
 import { act } from '@mui/internal-test-utils/createRenderer';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 

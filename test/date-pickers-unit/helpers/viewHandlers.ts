@@ -1,5 +1,5 @@
 import { fireTouchChangedEvent, userEvent, screen } from '@mui/internal-test-utils';
-import { getClockTouchEvent, formatFullTimeValue } from 'test/utils/pickers';
+import { getClockTouchEvent, formatFullTimeValue } from '@pickers-unit/helpers';
 import { MuiPickersAdapter, TimeView } from '@mui/x-date-pickers/models';
 import { formatMeridiem } from '@mui/x-date-pickers/internals';
 

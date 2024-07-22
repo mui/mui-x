@@ -6,7 +6,7 @@ import {
   adapterToUse,
   getExpectedOnChangeCount,
   expectPickerChangeHandlerValue,
-} from 'test/utils/pickers';
+} from '@pickers-unit/helpers';
 import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (

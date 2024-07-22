@@ -7,7 +7,7 @@ import {
   buildFieldInteractions,
   BuildFieldInteractionsResponse,
   createPickerRenderer,
-} from 'test/utils/pickers';
+} from '@pickers-unit/helpers';
 
 type AdapterTestRunner<P extends {}> = (
   params: ReturnType<typeof createPickerRenderer> & BuildFieldInteractionsResponse<P>,
