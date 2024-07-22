@@ -11,7 +11,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 # MUI X Date and Time Pickers
 
-<p class="description">An intuitive component library that allows users to select dates and times without confusion</p>
+<p class="description">An intuitive component library that allows users to select dates and times without confusion.</p>
 
 {{"component": "modules/components/overview/MainDemo.tsx"}}
 

@@ -33,7 +33,7 @@ export default function CommunityOrPro() {
               Available in two packages
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              An adaptable and reliable suite of date and time components
+              An adaptable and reliable suite of date and time components.
             </Typography>
           </Stack>
 
