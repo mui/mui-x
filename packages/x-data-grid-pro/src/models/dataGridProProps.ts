@@ -143,6 +143,13 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    * Use in combination with `unstable_listColumn`.
    */
   unstable_listView: boolean;
+  /**
+   * Used together with `unstable_dataSource` to enable lazy loading.
+   * If enabled, the grid will stop adding `paginationModel` to the data requests (`getRows`) and start sending `start` and `end` values depending on the scroll position.
+   * A new request will be made whenever the user scrolls to the area that has skeleton rows.
+   * @default false
+   */
+  lazyLoading: boolean;
 }
 
 interface DataGridProDataSourceProps {
