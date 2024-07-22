@@ -134,7 +134,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
       });
 
       describe('labelInput value', () => {
-        it('equal label value on first render', function test() {
+        it('should equal label value on first render', function test() {
           // This test is not relevant for the TreeItem component or the SimpleTreeView.
           if (!setup.includes('TreeItem2') || treeViewComponentName.startsWith('SimpleTreeView')) {
             this.skip();
@@ -151,7 +151,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
           expect(response.getItemLabelInput('1').value).to.equal('test');
         });
 
-        it('should save new value', function test() {
+        it('should save new value on Enter', function test() {
           // This test is not relevant for the TreeItem component or the SimpleTreeView.
           if (!setup.includes('TreeItem2') || treeViewComponentName.startsWith('SimpleTreeView')) {
             this.skip();
@@ -210,6 +210,19 @@ describeTreeView<[UseTreeViewLabelSignature]>(
           fireEvent.doubleClick(response.getItemContent('1'));
           expect(response.getItemLabelInput('1').value).to.equal('test');
         });
+      });
+    });
+    describe('focusItem api method', () => {
+      it('should focus the item', () => {
+        const response = render({
+          items: [{ id: '1', label: 'test' }],
+        });
+
+        act(() => {
+          response.apiRef.current.updateItemLabel('1', 'new value');
+        });
+
+        expect(response.getItemLabel('1').textContent).to.equal('new value');
       });
     });
   },
