@@ -163,6 +163,16 @@ export const moveItemInTree = <R extends { children?: R[] }>({
 
   // 3. Update the `itemMetaMap`
   const itemMetaMap = { ...prevState.itemMetaMap };
+
+  // 3.1 Update the `expandable` property of the old and the new parent
+  if (oldParentId !== TREE_VIEW_ROOT_PARENT_ID && oldParentId !== newParentId) {
+    itemMetaMap[oldParentId].expandable = itemOrderedChildrenIds[oldParentId].length > 0;
+  }
+  if (newParentId !== TREE_VIEW_ROOT_PARENT_ID && newParentId !== oldParentId) {
+    itemMetaMap[newParentId].expandable = itemOrderedChildrenIds[newParentId].length > 0;
+  }
+
+  // 3.2 Update the `parentId` and `depth` properties of the item to move
   // The depth is always defined because drag&drop is only usable with Rich Tree View components.
   const itemToMoveDepth = newPosition.parentId == null ? 0 : itemMetaMap[newParentId].depth! + 1;
   itemMetaMap[itemToMoveId] = {
@@ -171,6 +181,7 @@ export const moveItemInTree = <R extends { children?: R[] }>({
     depth: itemToMoveDepth,
   };
 
+  // 3.3 Update the depth of all the children of the item to move
   const updateItemDepth = (itemId: string, depth: number) => {
     itemMetaMap[itemId] = { ...itemMetaMap[itemId], depth };
     itemOrderedChildrenIds[itemId]?.forEach((childId) => updateItemDepth(childId, depth + 1));
