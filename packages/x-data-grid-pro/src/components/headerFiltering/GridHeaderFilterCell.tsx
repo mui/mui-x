@@ -27,6 +27,9 @@ import {
   isNavigationKey,
   shouldCellShowLeftBorder,
   shouldCellShowRightBorder,
+  getColumnHeaderName,
+  isStringHeaderName,
+  isReactNodeHeaderName,
 } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
@@ -299,12 +302,20 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const isApplied = Boolean(item?.value) || isNoInputOperator;
 
     const label =
-      currentOperator.headerLabel ??
+      getColumnHeaderName(
+        {
+          headerName: currentOperator.headerLabel,
+          field: '',
+        },
+        isReactNodeHeaderName,
+        false,
+      ) ??
       apiRef.current.getLocaleText(
         `headerFilterOperator${capitalize(item.operator)}` as 'headerFilterOperatorContains',
       );
 
     const isFilterActive = isApplied || hasFocus;
+    const ariaLabel = getColumnHeaderName(colDef, isStringHeaderName);
 
     return (
       <div
@@ -319,7 +330,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
         }}
         role="columnheader"
         aria-colindex={colIndex + 1}
-        aria-label={headerFilterComponent == null ? colDef.headerName ?? colDef.field : undefined}
+        aria-label={headerFilterComponent == null ? ariaLabel : undefined}
         {...other}
         {...mouseEventsHandlers}
       >
@@ -347,7 +358,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
                   }));
                 }
               }}
-              label={capitalize(label)}
+              label={typeof label === 'string' ? capitalize(label) : label}
               placeholder=""
               isFilterActive={isFilterActive}
               clearButton={

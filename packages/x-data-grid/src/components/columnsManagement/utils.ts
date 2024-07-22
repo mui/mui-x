@@ -1,5 +1,6 @@
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 import type { GridColumnsManagementProps } from './GridColumnsManagement';
+import { getColumnHeaderName, isStringHeaderName } from '../../utils/getColumnHeaderName';
 
 export const checkColumnVisibilityModelsSame = (
   a: GridColumnVisibilityModel,
@@ -24,4 +25,6 @@ export const checkColumnVisibilityModelsSame = (
 export const defaultSearchPredicate: NonNullable<GridColumnsManagementProps['searchPredicate']> = (
   column,
   searchValue,
-) => (column.headerName || column.field).toLowerCase().indexOf(searchValue) > -1;
+) => {
+  return getColumnHeaderName(column, isStringHeaderName).toLowerCase().indexOf(searchValue) > -1;
+};

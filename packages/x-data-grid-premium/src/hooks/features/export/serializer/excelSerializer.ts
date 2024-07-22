@@ -16,6 +16,8 @@ import {
   GridColumnGroupLookup,
   isSingleSelectColDef,
   gridHasColSpanSelector,
+  getColumnHeaderName,
+  isStringHeaderName,
 } from '@mui/x-data-grid/internals';
 import { ColumnsStylesInterface, GridExcelExportOptions } from '../gridExcelExportInterface';
 import { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
@@ -230,7 +232,7 @@ export const serializeColumn = (column: GridColDef, columnsStyles: ColumnsStyles
 
   return {
     key: field,
-    headerText: column.headerName ?? column.field,
+    headerText: getColumnHeaderName(column, isStringHeaderName, true),
     // Excel width must stay between 0 and 255 (https://support.microsoft.com/en-us/office/change-the-column-width-and-row-height-72f5e3cc-994d-43e8-ae58-9774a0905f46)
     // From the example of column width behavior (https://docs.microsoft.com/en-US/office/troubleshoot/excel/determine-column-widths#example-of-column-width-behavior)
     // a value of 10 corresponds to 75px. This is an approximation, because column width depends on the font-size
@@ -263,7 +265,19 @@ const addColumnGroupingHeaders = (
     });
 
     const newRow = worksheet.addRow(
-      row.map((group) => (group.groupId === null ? null : group?.headerName ?? group.groupId)),
+      row.map((group) => {
+        if (group.groupId === null) {
+          return null;
+        }
+        return getColumnHeaderName(
+          {
+            headerName: group?.headerName,
+            field: group.groupId,
+          },
+          isStringHeaderName,
+          true,
+        );
+      }),
     );
 
     // use `rowCount`, since worksheet can have additional rows added in `exceljsPreProcess`
@@ -335,7 +349,7 @@ export async function getDataForValueOptionsSheet(
         singleSelectColumn.valueOptions as Array<ValueOptions>,
         api,
       );
-      const header = column.headerName ?? column.field;
+      const header = getColumnHeaderName(column, isStringHeaderName, true);
       const values = [header, ...formattedValueOptions];
 
       const letter = worksheet.getColumn(column.field).letter;
@@ -444,7 +458,9 @@ export async function buildExcel(
   }
 
   if (includeHeaders) {
-    worksheet.addRow(columns.map((column) => column.headerName ?? column.field));
+    worksheet.addRow(
+      columns.map((column) => getColumnHeaderName(column, isStringHeaderName, true)),
+    );
   }
 
   const valueOptionsData = await getDataForValueOptionsSheet(

@@ -7,6 +7,7 @@ import {
   gridColumnLookupSelector,
   GridColumnMenuItemProps,
 } from '@mui/x-data-grid-pro';
+import { getColumnHeaderName, isStringHeaderName } from '@mui/x-data-grid/internals';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { gridRowGroupingSanitizedModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
 import {
@@ -30,7 +31,8 @@ export function GridColumnMenuRowGroupItem(props: GridColumnMenuItemProps) {
     };
 
     const groupedColumn = columnsLookup[field];
-    const name = groupedColumn.headerName ?? field;
+    const name = getColumnHeaderName(groupedColumn, isStringHeaderName);
+
     return (
       <MenuItem onClick={ungroupColumn} key={field} disabled={!groupedColumn.groupable}>
         <ListItemIcon>

@@ -145,6 +145,11 @@ export * from '../utils/utils';
 export * from '../utils/fastMemo';
 export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
+export {
+  getColumnHeaderName,
+  isStringHeaderName,
+  isReactNodeHeaderName,
+} from '../utils/getColumnHeaderName';
 export * from '../utils/getPublicApiRef';
 export * from '../utils/cellBorderUtils';
 export type { GridPrivateOnlyApiCommon } from '../models/api/gridApiCommon';

@@ -20,6 +20,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { getColumnHeaderName, isReactNodeHeaderName } from '../../utils/getColumnHeaderName';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -72,12 +73,24 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
         return apiRef.current.getLocaleText('toolbarFiltersTooltipShow') as React.ReactElement;
       }
 
-      const getOperatorLabel = (item: GridFilterItem): string =>
-        lookup[item.field!].filterOperators!.find((operator) => operator.value === item.operator)!
-          .label ||
-        apiRef.current
-          .getLocaleText(`filterOperator${capitalize(item.operator!)}` as GridTranslationKeys)!
-          .toString();
+      const getOperatorLabel = (item: GridFilterItem): React.ReactNode => {
+        const foundOperator = lookup[item.field!].filterOperators!.find(
+          (operator) => operator.value === item.operator,
+        );
+        return (
+          getColumnHeaderName(
+            {
+              headerName: foundOperator!.label,
+              field: '',
+            },
+            isReactNodeHeaderName,
+            false,
+          ) ??
+          apiRef.current
+            .getLocaleText(`filterOperator${capitalize(item.operator!)}` as GridTranslationKeys)!
+            .toString()
+        );
+      };
 
       const getFilterItemValue = (item: GridFilterItem): string => {
         const { getValueAsString } = lookup[item.field!].filterOperators!.find(
@@ -94,7 +107,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
             {activeFilters.map((item, index) => ({
               ...(lookup[item.field!] && (
                 <li key={index}>
-                  {`${lookup[item.field!].headerName || item.field}
+                  {`${getColumnHeaderName(lookup[item.field!], isReactNodeHeaderName)}
                   ${getOperatorLabel(item)}
                   ${
                     // implicit check for null and undefined

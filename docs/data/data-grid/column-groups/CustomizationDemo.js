@@ -50,10 +50,12 @@ const HeaderWithIconRoot = styled('div')(({ theme }) => ({
 
 function HeaderWithIcon(props) {
   const { icon, ...params } = props;
-
+  const { headerName } = props;
+  const resolvedHeaderName =
+    typeof headerName === 'function' ? headerName() : headerName;
   return (
     <HeaderWithIconRoot>
-      <span>{params.headerName ?? params.groupId}</span> {icon}
+      <span>{resolvedHeaderName ?? params.groupId}</span> {icon}
     </HeaderWithIconRoot>
   );
 }

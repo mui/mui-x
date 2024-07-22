@@ -36,7 +36,7 @@ interface GridGenericColumnHeaderItemProps
   columnMenuIconButton?: React.ReactNode;
   columnMenu?: React.ReactNode;
   columnTitleIconButtons?: React.ReactNode;
-  label: string;
+  label: React.ReactNode;
   draggableContainerProps?: Partial<React.HTMLProps<HTMLDivElement>>;
   columnHeaderSeparatorProps?: Partial<GridColumnHeaderSeparatorProps>;
   style?: React.CSSProperties;
@@ -111,7 +111,7 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
       tabIndex={tabIndex}
       aria-colindex={colIndex + 1}
       aria-sort={ariaSort}
-      aria-label={headerComponent == null ? label : undefined}
+      aria-label={headerComponent == null && typeof label === 'string' ? label : undefined}
       {...other}
     >
       <div

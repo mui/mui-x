@@ -25,6 +25,11 @@ import {
   GridStateColDef,
 } from '../../../models/colDef/gridColDef';
 import { getValueFromValueOptions, getValueOptions } from './filterPanelUtils';
+import {
+  getColumnHeaderName,
+  isReactNodeHeaderName,
+  isStringHeaderName,
+} from '../../../utils/getColumnHeaderName';
 
 export interface FilterColumnsArgs {
   field: GridColDef['field'];
@@ -199,8 +204,6 @@ const getLogicOperatorLocaleKey = (logicOperator: GridLogicOperator) => {
   }
 };
 
-const getColumnLabel = (col: GridColDef) => col.headerName || col.field;
-
 const collator = new Intl.Collator();
 
 const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
@@ -292,12 +295,19 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       switch (columnsSort) {
         case 'asc':
           return filteredColumns.sort((a, b) =>
-            collator.compare(getColumnLabel(a), getColumnLabel(b)),
+            collator.compare(
+              getColumnHeaderName(a, isStringHeaderName),
+              getColumnHeaderName(b, isStringHeaderName),
+            ),
           );
 
         case 'desc':
           return filteredColumns.sort(
-            (a, b) => -collator.compare(getColumnLabel(a), getColumnLabel(b)),
+            (a, b) =>
+              -collator.compare(
+                getColumnHeaderName(a, isStringHeaderName),
+                getColumnHeaderName(b, isStringHeaderName),
+              ),
           );
 
         default:
@@ -523,7 +533,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
                 key={col.field}
                 value={col.field}
               >
-                {getColumnLabel(col)}
+                {getColumnHeaderName(col, isReactNodeHeaderName)}
               </rootProps.slots.baseSelectOption>
             ))}
           </rootProps.slots.baseSelect>
@@ -565,7 +575,14 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
                 key={operator.value}
                 value={operator.value}
               >
-                {operator.label ||
+                {getColumnHeaderName(
+                  {
+                    headerName: operator.label,
+                    field: '',
+                  },
+                  isReactNodeHeaderName,
+                  false,
+                ) ??
                   apiRef.current.getLocaleText(
                     `filterOperator${capitalize(operator.value)}` as 'filterOperatorContains',
                   )}

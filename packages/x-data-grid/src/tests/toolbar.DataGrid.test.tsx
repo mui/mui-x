@@ -3,6 +3,7 @@ import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { DataGrid, GridToolbar, GridColumnsManagementProps } from '@mui/x-data-grid';
+import { getColumnHeaderName, isStringHeaderName } from '@mui/x-data-grid/internals';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -130,7 +131,7 @@ describe('<DataGrid /> - Toolbar', () => {
         searchValue,
       ) => {
         return (
-          (column.headerName || column.field).toLowerCase().indexOf(searchValue) > -1 ||
+          getColumnHeaderName(column, isStringHeaderName).toLowerCase().indexOf(searchValue) > -1 ||
           (column.description || '').toLowerCase().indexOf(searchValue) > -1
         );
       };

@@ -4,6 +4,7 @@ import type { GridCellParams } from '../../../../models/params/gridCellParams';
 import type { GridStateColDef } from '../../../../models/colDef/gridColDef';
 import type { GridApiCommunity } from '../../../../models/api/gridApiCommunity';
 import { buildWarning } from '../../../../utils/warning';
+import { getColumnHeaderName, isStringHeaderName } from '../../../../utils/getColumnHeaderName';
 
 function sanitizeCellValue(value: unknown, csvOptions: CSVOptions): string {
   const valueStr = typeof value === 'string' ? value : `${value}`;
@@ -195,7 +196,19 @@ export function buildCSV(options: BuildCSVOptions): string {
       filteredColumns.forEach((column) => {
         const columnGroupId = (columnGroupPathsLookup[column.field] || [])[i];
         const columnGroup = columnGroupLookup[columnGroupId];
-        headerGroupRow.addValue(columnGroup ? columnGroup.headerName || columnGroup.groupId : '');
+        if (!columnGroup) {
+          headerGroupRow.addValue('');
+          return;
+        }
+        const headerName = getColumnHeaderName(
+          {
+            headerName: columnGroup.headerName,
+            field: columnGroup.groupId,
+          },
+          isStringHeaderName,
+        );
+
+        headerGroupRow.addValue(headerName);
       });
     }
   }
@@ -205,7 +218,8 @@ export function buildCSV(options: BuildCSVOptions): string {
     sanitizeCellValue,
   });
   filteredColumns.forEach((column) => {
-    mainHeaderRow.addValue(column.headerName || column.field);
+    const headerName = getColumnHeaderName(column, isStringHeaderName);
+    mainHeaderRow.addValue(headerName);
   });
   headerRows.push(mainHeaderRow);
 
