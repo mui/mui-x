@@ -14,6 +14,6 @@
     "../../packages/x-date-pickers/**/*",
     "../../packages/x-date-pickers-pro/**/*",
     "../../test",
-    "../../test/utils/addChaiAssertions.ts"
+    "./setup/addChaiAssertions.ts"
   ]
 }
