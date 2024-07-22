@@ -21,14 +21,29 @@ import {
   GridColDef,
   gridStringOrNumberComparator,
 } from '@mui/x-data-grid';
-import { renderAvatar } from './renderers/avatar';
-import { renderEmail } from './renderers/email';
-import { renderEditRating, renderRating } from './renderers/rating';
-import { renderCountry, renderEditCountry } from './renderers/country';
-import { renderSparkline } from './renderers/sparkline';
-import { renderEditProgress, renderProgress } from './renderers/progress';
-import { renderEditStatus, renderStatus } from './renderers/status';
-import { renderEditIncoterm, renderIncoterm } from './renderers/incoterm';
+import { renderAvatar } from '../../components/grid-cell-renderers/avatar';
+import { renderEmail } from '../../components/grid-cell-renderers/email';
+import {
+  renderEditRating,
+  renderRating,
+} from '../../components/grid-cell-renderers/rating';
+import {
+  renderCountry,
+  renderEditCountry,
+} from '../../components/grid-cell-renderers/country';
+import { renderSparkline } from '../../components/grid-cell-renderers/sparkline';
+import {
+  renderEditProgress,
+  renderProgress,
+} from '../../components/grid-cell-renderers/progress';
+import {
+  renderEditStatus,
+  renderStatus,
+} from '../../components/grid-cell-renderers/status';
+import {
+  renderEditIncoterm,
+  renderIncoterm,
+} from '../../components/grid-cell-renderers/incoterm';
 
 const columns: GridColDef<(typeof rows)[number]>[] = [
   {
