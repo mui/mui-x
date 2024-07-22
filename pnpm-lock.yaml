@@ -90,8 +90,8 @@ importers:
         specifier: ^5.16.2
         version: 5.16.2(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#d3d1675b919e937a46e7991856dd8edfa9b53a3e
-        version: https://codeload.github.com/mui/material-ui/tar.gz/d3d1675b919e937a46e7991856dd8edfa9b53a3e(encoding@0.1.13)
+        specifier: github:mui/material-ui#288863bd2f8681a82c4bfbaf13215b41043bc551
+        version: https://codeload.github.com/mui/material-ui/tar.gz/288863bd2f8681a82c4bfbaf13215b41043bc551(encoding@0.1.13)
       '@mui/utils':
         specifier: ^5.16.2
         version: 5.16.2(@types/react@18.3.3)(react@18.3.1)
@@ -2881,8 +2881,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/d3d1675b919e937a46e7991856dd8edfa9b53a3e':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/d3d1675b919e937a46e7991856dd8edfa9b53a3e}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/288863bd2f8681a82c4bfbaf13215b41043bc551':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/288863bd2f8681a82c4bfbaf13215b41043bc551}
     version: 6.0.0-beta.2
     engines: {pnpm: 9.5.0}
 
@@ -11084,7 +11084,7 @@ snapshots:
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@types/react': 18.3.3
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/d3d1675b919e937a46e7991856dd8edfa9b53a3e(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/288863bd2f8681a82c4bfbaf13215b41043bc551(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 8.0.0(encoding@0.1.13)
       '@netlify/functions': 2.8.1
