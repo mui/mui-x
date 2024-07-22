@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { createRenderer, MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
-import {
-  BuildFieldInteractionsResponse,
-  FieldPressCharacter,
-  FieldSectionSelector,
-  OpenPickerParams,
-} from '@pickers-unit/helpers';
 import { PickerComponentFamily } from '../describe.types';
+import {
+  FieldSectionSelector,
+  FieldPressCharacter,
+  BuildFieldInteractionsResponse,
+} from '../fields';
+import { OpenPickerParams } from '../openPicker';
 
 interface DescribeValueBaseOptions<TValue, C extends PickerComponentFamily> {
   componentFamily: C;

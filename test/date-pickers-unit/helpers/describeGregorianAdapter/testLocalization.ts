@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { cleanText } from '@pickers-unit/helpers';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 import { TEST_DATE_ISO_STRING } from './describeGregorianAdapter.utils';
+import { cleanText } from '../fields';
 
 export const testLocalization: DescribeGregorianAdapterTestSuite = ({ adapter }) => {
   const testDateIso = adapter.date(TEST_DATE_ISO_STRING)!;

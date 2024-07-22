@@ -1,13 +1,13 @@
 import * as React from 'react';
 import createDescribe from '@mui/internal-test-utils/createDescribe';
 import { BasePickerInputProps, UsePickerValueNonStaticProps } from '@mui/x-date-pickers/internals';
-import { buildFieldInteractions, BuildFieldInteractionsResponse } from '@pickers-unit/helpers';
 import { PickerComponentFamily } from '../describe.types';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
 import { testControlledUnControlled } from './testControlledUnControlled';
 import { testPickerOpenCloseLifeCycle } from './testPickerOpenCloseLifeCycle';
 import { testPickerActionBar } from './testPickerActionBar';
 import { testShortcuts } from './testShortcuts';
+import { BuildFieldInteractionsResponse, buildFieldInteractions } from '../fields';
 
 const TEST_SUITES: DescribeValueTestSuite<any, any>[] = [
   testControlledUnControlled,

@@ -2,12 +2,9 @@ import * as React from 'react';
 import moment from 'moment';
 import momentTZ from 'moment-timezone';
 import createDescribe from '@mui/internal-test-utils/createDescribe';
-import {
-  AdapterName,
-  buildFieldInteractions,
-  BuildFieldInteractionsResponse,
-  createPickerRenderer,
-} from '@pickers-unit/helpers';
+import { buildFieldInteractions, BuildFieldInteractionsResponse } from '../fields';
+import { createPickerRenderer } from '../createPickerRenderer';
+import { AdapterName } from '../adapters';
 
 type AdapterTestRunner<P extends {}> = (
   params: ReturnType<typeof createPickerRenderer> & BuildFieldInteractionsResponse<P>,

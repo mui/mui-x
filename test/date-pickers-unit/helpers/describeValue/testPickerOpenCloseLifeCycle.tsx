@@ -2,8 +2,10 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, userEvent } from '@mui/internal-test-utils';
-import { getExpectedOnChangeCount, getFieldInputRoot, openPicker } from '@pickers-unit/helpers';
 import { DescribeValueTestSuite } from './describeValue.types';
+import { getFieldInputRoot } from '../fields';
+import { getExpectedOnChangeCount } from '../misc';
+import { openPicker } from '../openPicker';
 
 export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'> = (
   ElementToTest,

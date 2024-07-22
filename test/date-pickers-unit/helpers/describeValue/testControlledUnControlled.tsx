@@ -3,12 +3,9 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, userEvent } from '@mui/internal-test-utils';
 import { inputBaseClasses } from '@mui/material/InputBase';
-import {
-  getAllFieldInputRoot,
-  getExpectedOnChangeCount,
-  getFieldInputRoot,
-} from '@pickers-unit/helpers';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
+import { getAllFieldInputRoot, getFieldInputRoot } from '../fields';
+import { getExpectedOnChangeCount } from '../misc';
 
 export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
   ElementToTest,

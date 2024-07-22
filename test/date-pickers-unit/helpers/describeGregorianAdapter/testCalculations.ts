@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '@mui/x-date-pickers/models';
-import { getDateOffset } from '@pickers-unit/helpers';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 import { TEST_DATE_ISO_STRING, TEST_DATE_LOCALE_STRING } from './describeGregorianAdapter.utils';
+import { getDateOffset } from '../misc';
 
 /**
  * To check if the date has the right offset even after changing its date parts,

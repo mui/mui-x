@@ -2,12 +2,10 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, userEvent } from '@mui/internal-test-utils';
-import {
-  adapterToUse,
-  getExpectedOnChangeCount,
-  expectPickerChangeHandlerValue,
-} from '@pickers-unit/helpers';
 import { DescribeValueTestSuite } from './describeValue.types';
+import { adapterToUse } from '../adapters';
+import { expectPickerChangeHandlerValue } from '../assertions';
+import { getExpectedOnChangeCount } from '../misc';
 
 export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
   ElementToTest,

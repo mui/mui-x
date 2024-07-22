@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { adapterToUse, getAllFieldInputRoot } from '@pickers-unit/helpers';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
+import { adapterToUse } from '../adapters';
+import { getAllFieldInputRoot } from '../fields';
 
 const testInvalidStatus = (expectedAnswer: boolean[], isSingleInput: boolean | undefined) => {
   const answers = isSingleInput ? [expectedAnswer[0] || expectedAnswer[1]] : expectedAnswer;

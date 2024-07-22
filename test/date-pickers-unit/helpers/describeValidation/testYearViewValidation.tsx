@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
-import { adapterToUse } from '@pickers-unit/helpers';
+import { adapterToUse } from '../adapters';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 const queryByTextInView = (text: string) => {

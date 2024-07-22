@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
-import { adapterToUse } from '@pickers-unit/helpers';
 import { DescribeValidationTestSuite } from './describeValidation.types';
+import { adapterToUse } from '../adapters';
 
 const toMinutesLabel = (minutes: number | string) =>
   `${Number(minutes) < 10 ? `0${minutes}` : minutes} minutes`;
