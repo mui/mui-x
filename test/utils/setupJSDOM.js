@@ -2,7 +2,7 @@ const coreExports = require('@mui/internal-test-utils/setupJSDOM');
 
 require('./licenseRelease');
 require('../date-pickers-unit/setup/addChaiAssertions');
-require('./setupPickers');
+require('../date-pickers-unit/setup/setupPickers');
 const { createXMochaHooks } = require('./mochaHooks');
 
 const mochaHooks = createXMochaHooks(coreExports.mochaHooks);
