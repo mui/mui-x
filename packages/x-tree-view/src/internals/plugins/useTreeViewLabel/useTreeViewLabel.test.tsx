@@ -212,8 +212,12 @@ describeTreeView<[UseTreeViewLabelSignature]>(
         });
       });
     });
-    describe('focusItem api method', () => {
-      it('should focus the item', () => {
+    describe('updateItemLabel api method', () => {
+      it('should change the label value', function test() {
+        // This test is not relevant for the TreeItem component or the SimpleTreeView.
+        if (!setup.includes('TreeItem2') || treeViewComponentName.startsWith('SimpleTreeView')) {
+          this.skip();
+        }
         const response = render({
           items: [{ id: '1', label: 'test' }],
         });
