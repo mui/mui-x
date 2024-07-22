@@ -99,12 +99,6 @@ commands:
             # log a patch for maintainers who want to check out this change
             git --no-pager diff HEAD
 
-            if [[ $(git --no-pager diff HEAD) != "" ]];
-            then
-                echo "pnpm install --no-frozen-lock"
-                pnpm install --no-frozen-lock
-            fi
-
       - when:
           condition: << parameters.browsers >>
           steps:
