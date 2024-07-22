@@ -10,10 +10,5 @@
     ],
     "noImplicitAny": false
   },
-  "include": [
-    "../../packages/x-date-pickers/**/*",
-    "../../packages/x-date-pickers-pro/**/*",
-    "../../test",
-    "./setup"
-  ]
+  "include": ["./setup", "./helpers"]
 }

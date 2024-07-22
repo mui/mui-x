@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 
-import { generateTestLicenseKey, setupTestLicenseKey } from './license/testLicense';
+import { generateTestLicenseKey, setupTestLicenseKey } from '../license/testLicense';
 
 export function createSharedMochaHooks(coreMochaHooks = {}) {
   const mochaHooks = {
