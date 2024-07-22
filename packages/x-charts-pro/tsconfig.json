@@ -10,5 +10,5 @@
     ],
     "noImplicitAny": false
   },
-  "include": ["src/**/*", "../../test/utils/addChaiAssertions.ts"]
+  "include": ["src/**/*"]
 }

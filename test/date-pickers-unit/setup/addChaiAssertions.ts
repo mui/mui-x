@@ -1,17 +1,5 @@
 import chai from 'chai';
 
-// https://stackoverflow.com/a/46755166/3406963
-declare global {
-  namespace Chai {
-    interface Assertion {
-      /**
-       * Matcher with useful error messages if the dates don't match.
-       */
-      toEqualDateTime(expected: any): void;
-    }
-  }
-}
-
 chai.use((chaiAPI, utils) => {
   chai.Assertion.addMethod('toEqualDateTime', function toEqualDateTime(expectedDate, message) {
     // eslint-disable-next-line no-underscore-dangle
