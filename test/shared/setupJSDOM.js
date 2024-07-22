@@ -1,8 +1,8 @@
 const coreExports = require('@mui/internal-test-utils/setupJSDOM');
 
-require('../utils/licenseRelease');
-const { createXMochaHooks } = require('../utils/mochaHooks');
+require('./license/licenseRelease');
+const { createSharedMochaHooks } = require('./mochaHooks');
 
-const mochaHooks = createXMochaHooks(coreExports.mochaHooks);
+const mochaHooks = createSharedMochaHooks(coreExports.mochaHooks);
 
 module.exports = { ...coreExports, mochaHooks };
