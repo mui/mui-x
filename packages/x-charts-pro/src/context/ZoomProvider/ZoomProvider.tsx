@@ -4,6 +4,7 @@ import { Initializable } from '@mui/x-charts/internals';
 import { ZoomContext } from './ZoomContext';
 import { defaultizeZoom } from './defaultizeZoom';
 import { ZoomData, ZoomProviderProps, ZoomState } from './Zoom.types';
+import { initializeZoomData } from './initializeZoomData';
 
 export function ZoomProvider({ children, xAxis, yAxis, zoom, onZoomChange }: ZoomProviderProps) {
   const [isInteracting, setIsInteracting] = React.useState<boolean>(false);
@@ -20,9 +21,16 @@ export function ZoomProvider({ children, xAxis, yAxis, zoom, onZoomChange }: Zoo
     [xAxis, yAxis],
   );
 
+  // Default zoom data is initialized only once when uncontrolled. If the user changes the options
+  // after the initial render, the zoom data will not be updated until the next zoom interaction.
+  // This is required to avoid warnings about controlled/uncontrolled components.
+  // eslint-disable-next-line react-compiler/react-compiler
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const defaultZoomData = React.useMemo(() => initializeZoomData(options), []);
+
   const [zoomData, setZoomData] = useControlled<ZoomData[]>({
     controlled: zoom,
-    default: [],
+    default: defaultZoomData,
     name: 'ZoomProvider',
     state: 'zoom',
   });

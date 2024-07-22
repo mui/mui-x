@@ -3,7 +3,6 @@ import { useDrawingArea, useSvgRef } from '@mui/x-charts/hooks';
 import { getSVGPoint } from '@mui/x-charts/internals';
 import { useZoom } from './useZoom';
 import { DefaultizedZoomOptions, ZoomData } from './Zoom.types';
-import { initializeZoomData } from './initializeZoomData';
 
 /**
  * Helper to get the range (in percents of a reference range) corresponding to a given scale.
@@ -93,7 +92,7 @@ export const useSetupZoom = () => {
       }, 166);
 
       setZoomData((prevZoomData) => {
-        return initializeZoomData(prevZoomData, options).map((zoom) => {
+        return prevZoomData.map((zoom) => {
           const option = options[zoom.axisId];
           if (!option) {
             return zoom;
@@ -140,7 +139,7 @@ export const useSetupZoom = () => {
       const curDiff = getDiff(eventCacheRef.current);
 
       setZoomData((prevZoomData) => {
-        const newZoomData = initializeZoomData(prevZoomData, options).map((zoom) => {
+        const newZoomData = prevZoomData.map((zoom) => {
           const option = options[zoom.axisId];
           if (!option) {
             return zoom;
