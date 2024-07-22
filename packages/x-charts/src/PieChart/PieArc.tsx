@@ -118,6 +118,7 @@ function PieArc(props: PieArcProps) {
             outerRadius: oR,
           })!,
       )}
+      visibility={to([startAngle, endAngle], (sA, eA) => (sA === eA ? 'hidden' : 'visible'))}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}
