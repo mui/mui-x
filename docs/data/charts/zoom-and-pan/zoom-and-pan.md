@@ -11,7 +11,7 @@ components: ScatterChartPro, BarChartPro, LineChartPro
 :::warning
 The zoom feature is part of the pro package which is **not yet** released.
 
-You can test demos, and codesandboxes.
+You can test demos.
 Don't hesitate to open issues to give feedback.
 :::
 
