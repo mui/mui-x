@@ -215,6 +215,7 @@ export const GridRootStyles = styled('div', {
     minWidth: 0, // See https://github.com/mui/mui-x/issues/8547
     minHeight: 0,
     flexDirection: 'column',
+    overflow: 'hidden',
     overflowAnchor: 'none', // Keep the same scrolling position
     // The selector we really want here is `:first-child`, but emotion thinks it knows better than use what we
     // want and prints a warning to the console if we use it, about :first-child being "unsafe" in an SSR context.
