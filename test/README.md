@@ -4,7 +4,7 @@
 
 You can check integration of different versions of React (for example different [release channels](https://react.dev/community/versioning-policy) or PRs to React) by running the following commands:
 
-1. `node scripts/useReactVersion.mjs <version>`.
+1. `pnpm use-react-version <version>`.
 
    Possible values for `version`:
 
