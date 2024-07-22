@@ -5,7 +5,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { fireEvent, screen, userEvent } from '@mui/internal-test-utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { createPickerRenderer, adapterToUse, openPicker } from '@pickers-unit/helpers';
+import { createPickerRenderer, adapterToUse, openPicker } from '@date-pickers-unit/helpers';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

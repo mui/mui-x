@@ -10,7 +10,7 @@ import {
   describeValue,
   describePicker,
   getFieldSectionsContainer,
-} from '@pickers-unit/helpers';
+} from '@date-pickers-unit/helpers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MobileDateRangePicker /> - Describes', () => {

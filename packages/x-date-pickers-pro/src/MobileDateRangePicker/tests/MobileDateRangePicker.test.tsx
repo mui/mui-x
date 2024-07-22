@@ -8,7 +8,7 @@ import {
   adapterToUse,
   openPicker,
   getFieldSectionsContainer,
-} from '@pickers-unit/helpers';
+} from '@date-pickers-unit/helpers';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 

@@ -8,7 +8,7 @@ import {
   getTimeClockValue,
   getDateOffset,
   describeAdapters,
-} from '@pickers-unit/helpers';
+} from '@date-pickers-unit/helpers';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 

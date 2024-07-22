@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { createPickerRenderer, describeValidation, describePicker } from '@pickers-unit/helpers';
+import {
+  createPickerRenderer,
+  describeValidation,
+  describePicker,
+} from '@date-pickers-unit/helpers';
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
 

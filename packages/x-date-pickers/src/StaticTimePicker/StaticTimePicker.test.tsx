@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireTouchChangedEvent, screen, getAllByRole, fireEvent } from '@mui/internal-test-utils';
-import { adapterToUse, createPickerRenderer, describeValidation } from '@pickers-unit/helpers';
+import { adapterToUse, createPickerRenderer, describeValidation } from '@date-pickers-unit/helpers';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
 

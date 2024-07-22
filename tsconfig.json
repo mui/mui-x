@@ -39,6 +39,7 @@
       "@mui-internal/api-docs-builder/*": [
         "./node_modules/@mui/monorepo/packages/api-docs-builder/*"
       ],
+      "@date-pickers-unit/*": ["./test/date-pickers-unit/*"],
       "test/*": ["./test/*"],
       "docs/*": ["./node_modules/@mui/monorepo/docs"],
       "docsx/*": ["./docs/*"]

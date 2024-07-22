@@ -14,7 +14,7 @@ import {
   openPicker,
   getFieldSectionsContainer,
   getTextbox,
-} from '@pickers-unit/helpers';
+} from '@date-pickers-unit/helpers';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

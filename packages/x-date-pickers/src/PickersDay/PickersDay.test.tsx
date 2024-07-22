@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import ButtonBase from '@mui/material/ButtonBase';
 import { PickersDay, pickersDayClasses as classes } from '@mui/x-date-pickers/PickersDay';
-import { adapterToUse, createPickerRenderer } from '@pickers-unit/helpers';
+import { adapterToUse, createPickerRenderer } from '@date-pickers-unit/helpers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<PickersDay />', () => {

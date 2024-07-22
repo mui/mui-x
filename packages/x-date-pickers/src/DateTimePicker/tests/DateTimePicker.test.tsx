@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { screen } from '@mui/internal-test-utils/createRenderer';
-import { createPickerRenderer, stubMatchMedia } from '@pickers-unit/helpers';
+import { createPickerRenderer, stubMatchMedia } from '@date-pickers-unit/helpers';
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 
 describe('<DateTimePicker />', () => {

@@ -11,7 +11,7 @@ import {
   describePicker,
   formatFullTimeValue,
   getFieldInputRoot,
-} from '@pickers-unit/helpers';
+} from '@date-pickers-unit/helpers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
 

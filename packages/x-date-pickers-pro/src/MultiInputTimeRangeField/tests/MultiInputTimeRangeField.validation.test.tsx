@@ -4,7 +4,7 @@ import {
   adapterToUse,
   describeRangeValidation,
   setValueOnFieldInput,
-} from '@pickers-unit/helpers';
+} from '@date-pickers-unit/helpers';
 
 describe('<MultiInputTimeRangeField />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { createPickerRenderer, adapterToUse } from '@pickers-unit/helpers';
+import { createPickerRenderer, adapterToUse } from '@date-pickers-unit/helpers';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

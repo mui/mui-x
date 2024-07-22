@@ -7,7 +7,7 @@ import {
   adapterToUse,
   describeValidation,
   describeValue,
-} from '@pickers-unit/helpers';
+} from '@date-pickers-unit/helpers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<YearCalendar /> - Describes', () => {

@@ -3,7 +3,7 @@ import {
   createPickerRenderer,
   expectFieldValueV7,
   buildFieldInteractions,
-} from '@pickers-unit/helpers';
+} from '@date-pickers-unit/helpers';
 
 describe('<MobileDateTimePicker /> - Field', () => {
   const { render, clock } = createPickerRenderer();

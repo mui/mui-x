@@ -7,7 +7,7 @@ import {
   describeValue,
   describePicker,
   getFieldInputRoot,
-} from '@pickers-unit/helpers';
+} from '@date-pickers-unit/helpers';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { expect } from 'chai';
 import * as React from 'react';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createPickerRenderer } from '@pickers-unit/helpers';
+import { createPickerRenderer } from '@date-pickers-unit/helpers';
 import { describeConformance } from 'test/utils/describeConformance';
 import { DateTimeRangePicker } from '../DateTimeRangePicker';
 

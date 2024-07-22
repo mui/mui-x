@@ -25,6 +25,7 @@ const defaultAlias = {
   ),
   docs: resolveAliasPath('./node_modules/@mui/monorepo/docs'),
   test: resolveAliasPath('./test'),
+  '@date-pickers-unit': resolveAliasPath('./test/date-pickers-unit'),
   packages: resolveAliasPath('./packages'),
 };
 

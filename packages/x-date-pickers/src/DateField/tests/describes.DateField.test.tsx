@@ -8,7 +8,7 @@ import {
   describeValidation,
   describeValue,
   getFieldInputRoot,
-} from '@pickers-unit/helpers';
+} from '@date-pickers-unit/helpers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DateField /> - Describes', () => {

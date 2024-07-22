@@ -8,7 +8,7 @@ import {
   getTextbox,
   createPickerRenderer,
   expectFieldValueV7,
-} from '@pickers-unit/helpers';
+} from '@date-pickers-unit/helpers';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { FieldSectionType, MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
 import {

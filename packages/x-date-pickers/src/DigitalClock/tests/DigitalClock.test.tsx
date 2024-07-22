@@ -7,7 +7,7 @@ import {
   createPickerRenderer,
   digitalClockHandler,
   formatFullTimeValue,
-} from '@pickers-unit/helpers';
+} from '@date-pickers-unit/helpers';
 import { screen } from '@mui/internal-test-utils';
 
 describe('<DigitalClock />', () => {

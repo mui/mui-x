@@ -9,7 +9,7 @@ import {
   createPickerRenderer,
   expectFieldValueV7,
   expectFieldValueV6,
-} from '@pickers-unit/helpers';
+} from '@date-pickers-unit/helpers';
 
 describe('<SingleInputDateRangeField /> - Selection', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

@@ -7,7 +7,7 @@ import {
   buildFieldInteractions,
   createPickerRenderer,
   expectFieldValueV7,
-} from '@pickers-unit/helpers';
+} from '@date-pickers-unit/helpers';
 
 describe('<DateTimeField /> - Editing', () => {
   const { render, clock } = createPickerRenderer({

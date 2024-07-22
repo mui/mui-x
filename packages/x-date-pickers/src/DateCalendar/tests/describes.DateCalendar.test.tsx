@@ -8,7 +8,7 @@ import {
   createPickerRenderer,
   describeValidation,
   describeValue,
-} from '@pickers-unit/helpers';
+} from '@date-pickers-unit/helpers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DateCalendar /> - Describes', () => {
