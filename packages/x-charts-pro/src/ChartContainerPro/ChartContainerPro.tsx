@@ -9,7 +9,6 @@ import {
   DrawingProvider,
   InteractionProvider,
   SeriesContextProvider,
-  useChartContainerProps,
 } from '@mui/x-charts/internals';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
@@ -25,20 +24,17 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
   props: ChartContainerProProps,
   ref,
 ) {
-  const { zoomProviderProps, baseProps } = useChartContainerProProps(props);
-
   const {
-    children,
+    zoomProviderProps,
     drawingProviderProps,
     colorProviderProps,
     seriesContextProps,
-    cartesianContextProps,
     zAxisContextProps,
     highlightedProviderProps,
+    cartesianContextProps,
     chartsSurfaceProps,
-    xAxis,
-    yAxis,
-  } = useChartContainerProps(baseProps, ref);
+    children,
+  } = useChartContainerProProps(props, ref);
 
   useLicenseVerifier('x-charts-pro', releaseInfo);
 
@@ -46,7 +42,7 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
     <DrawingProvider {...drawingProviderProps}>
       <ColorProvider {...colorProviderProps}>
         <SeriesContextProvider {...seriesContextProps}>
-          <ZoomProvider xAxis={xAxis} yAxis={yAxis} {...zoomProviderProps}>
+          <ZoomProvider {...zoomProviderProps}>
             <CartesianContextProviderPro {...cartesianContextProps}>
               <ZAxisContextProvider {...zAxisContextProps}>
                 <InteractionProvider>
