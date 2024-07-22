@@ -6,7 +6,8 @@ module.exports = {
   reporter: 'dot',
   require: [
     require.resolve('../../test/utils/setupBabel'),
-    require.resolve('../../test/utils/setupJSDOM'),
+    require.resolve('../../test/shared/setupJSDOM'),
+    require.resolve('./setup/setupJSDOM'),
   ],
   'watch-ignore': [
     '**/node_modules/**',
