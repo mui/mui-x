@@ -10,7 +10,7 @@ import {
   GridSortModel,
   GridSortCellParams,
 } from '../../../models/gridSortModel';
-import { buildWarning } from '../../../utils/warning';
+import { warnOnce } from '../../../internals/utils/warning';
 
 type GridSortingFieldComparator = {
   getSortCellParams: (id: GridRowId) => GridSortCellParams;
@@ -22,18 +22,16 @@ interface GridParsedSortItem {
   getSortCellParams: (id: GridRowId) => GridSortCellParams;
 }
 
-const sortModelDisableMultiColumnsSortingWarning = buildWarning(
-  [
-    'MUI X: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
-    'If you are using the community version of the `DataGrid`, this prop is always `true`.',
-  ],
-  'error',
-);
-
 export const sanitizeSortModel = (model: GridSortModel, disableMultipleColumnsSorting: boolean) => {
   if (disableMultipleColumnsSorting && model.length > 1) {
     if (process.env.NODE_ENV !== 'production') {
-      sortModelDisableMultiColumnsSortingWarning();
+      warnOnce(
+        [
+          'MUI X: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
+          'If you are using the community version of the `DataGrid`, this prop is always `true`.',
+        ],
+        'error',
+      );
     }
     return [model[0]];
   }

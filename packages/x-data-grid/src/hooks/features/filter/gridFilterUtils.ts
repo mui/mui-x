@@ -14,7 +14,7 @@ import {
   GridFilterItemResult,
   GridQuickFilterValueResult,
 } from './gridFilterState';
-import { buildWarning } from '../../../utils/warning';
+import { warnOnce } from '../../../internals/utils/warning';
 import { getPublicApiRef } from '../../../utils/getPublicApiRef';
 import {
   gridColumnFieldsSelector,
@@ -75,24 +75,6 @@ export const cleanFilterItem = (
   return cleanItem;
 };
 
-const filterModelDisableMultiColumnsFilteringWarning = buildWarning(
-  [
-    'MUI X: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
-    'If you are using the community version of the `DataGrid`, this prop is always `true`.',
-  ],
-  'error',
-);
-
-const filterModelMissingItemIdWarning = buildWarning(
-  'MUI X: The `id` field is required on `filterModel.items` when you use multiple filters.',
-  'error',
-);
-
-const filterModelMissingItemOperatorWarning = buildWarning(
-  'MUI X: The `operator` field is required on `filterModel.items`, one or more of your filtering item has no `operator` provided.',
-  'error',
-);
-
 export const sanitizeFilterModel = (
   model: GridFilterModel,
   disableMultipleColumnsFiltering: boolean,
@@ -102,8 +84,15 @@ export const sanitizeFilterModel = (
 
   let items: GridFilterItem[];
   if (hasSeveralItems && disableMultipleColumnsFiltering) {
-    filterModelDisableMultiColumnsFilteringWarning();
-
+    if (process.env.NODE_ENV !== 'production') {
+      warnOnce(
+        [
+          'MUI X: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
+          'If you are using the community version of the `DataGrid`, this prop is always `true`.',
+        ],
+        'error',
+      );
+    }
     items = [model.items[0]];
   } else {
     items = model.items;
@@ -112,12 +101,22 @@ export const sanitizeFilterModel = (
   const hasItemsWithoutIds = hasSeveralItems && items.some((item) => item.id == null);
   const hasItemWithoutOperator = items.some((item) => item.operator == null);
 
-  if (hasItemsWithoutIds) {
-    filterModelMissingItemIdWarning();
+  if (process.env.NODE_ENV !== 'production') {
+    if (hasItemsWithoutIds) {
+      warnOnce(
+        'MUI X: The `id` field is required on `filterModel.items` when you use multiple filters.',
+        'error',
+      );
+    }
   }
 
-  if (hasItemWithoutOperator) {
-    filterModelMissingItemOperatorWarning();
+  if (process.env.NODE_ENV !== 'production') {
+    if (hasItemWithoutOperator) {
+      warnOnce(
+        'MUI X: The `operator` field is required on `filterModel.items`, one or more of your filtering item has no `operator` provided.',
+        'error',
+      );
+    }
   }
 
   if (hasItemWithoutOperator || hasItemsWithoutIds) {

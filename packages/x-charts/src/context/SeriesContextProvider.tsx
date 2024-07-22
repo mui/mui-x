@@ -76,7 +76,7 @@ const preprocessSeries = <T extends ChartSeriesType>(
       seriesGroups[type] = { series: {}, seriesOrder: [] };
     }
     if (seriesGroups[type]?.series[id] !== undefined) {
-      throw new Error(`MUI X Charts: series' id "${id}" is not unique.`);
+      throw new Error(`MUI X: series' id "${id}" is not unique.`);
     }
 
     seriesGroups[type]!.series[id] = {

@@ -14,7 +14,7 @@ import {
   gridExpandedSortedRowIdsSelector,
 } from '@mui/x-data-grid';
 import {
-  buildWarning,
+  warnOnce,
   getRowIdFromRowModel,
   getActiveElement,
   GridPipeProcessor,
@@ -27,15 +27,6 @@ import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-dat
 import { unstable_debounce as debounce } from '@mui/utils';
 import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-
-const missingOnProcessRowUpdateErrorWarning = buildWarning(
-  [
-    'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
-    'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-    'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
-  ],
-  'error',
-);
 
 const columnFieldsToExcludeFromPaste = [
   GRID_CHECKBOX_SELECTION_FIELD,
@@ -176,7 +167,14 @@ class CellValueUpdater {
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
           } else if (process.env.NODE_ENV !== 'production') {
-            missingOnProcessRowUpdateErrorWarning();
+            warnOnce(
+              [
+                'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+                'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
+                'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
+              ],
+              'error',
+            );
           }
         };
 

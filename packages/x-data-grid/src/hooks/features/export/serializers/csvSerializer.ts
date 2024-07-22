@@ -3,7 +3,7 @@ import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../../colDef';
 import type { GridCellParams } from '../../../../models/params/gridCellParams';
 import type { GridStateColDef } from '../../../../models/colDef/gridColDef';
 import type { GridApiCommunity } from '../../../../models/api/gridApiCommunity';
-import { buildWarning } from '../../../../utils/warning';
+import { warnOnce } from '../../../../internals/utils/warning';
 
 function sanitizeCellValue(value: unknown, csvOptions: CSVOptions): string {
   const valueStr = typeof value === 'string' ? value : `${value}`;
@@ -52,11 +52,6 @@ export const serializeCellValue = (
 
   return sanitizeCellValue(value, csvOptions);
 };
-
-const objectFormattedValueWarning = buildWarning([
-  'MUI X: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
-  'You can provide a `valueFormatter` with a string representation to be used.',
-]);
 
 type CSVOptions = Required<
   Pick<GridCsvExportOptions, 'delimiter' | 'shouldAppendQuotes' | 'escapeFormulas'>
@@ -115,7 +110,10 @@ const serializeRow = ({
     const cellParams = getCellParams(id, column.field);
     if (process.env.NODE_ENV !== 'production') {
       if (String(cellParams.formattedValue) === '[object Object]') {
-        objectFormattedValueWarning();
+        warnOnce([
+          'MUI X: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
+          'You can provide a `valueFormatter` with a string representation to be used.',
+        ]);
       }
     }
     row.addValue(

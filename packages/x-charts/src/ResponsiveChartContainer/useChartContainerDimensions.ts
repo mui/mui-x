@@ -69,13 +69,13 @@ export const useChartContainerDimensions = (inWidth?: number, inHeight?: number)
   if (process.env.NODE_ENV !== 'production') {
     if (displayError.current && inWidth === undefined && width === 0) {
       console.error(
-        `MUI X Charts: ChartContainer does not have \`width\` prop, and its container has no \`width\` defined.`,
+        `MUI X: ChartContainer does not have \`width\` prop, and its container has no \`width\` defined.`,
       );
       displayError.current = false;
     }
     if (displayError.current && inHeight === undefined && height === 0) {
       console.error(
-        `MUI X Charts: ChartContainer does not have \`height\` prop, and its container has no \`height\` defined.`,
+        `MUI X: ChartContainer does not have \`height\` prop, and its container has no \`height\` defined.`,
       );
       displayError.current = false;
     }

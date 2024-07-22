@@ -9,7 +9,7 @@ import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { TreeItem, TreeItemProps } from '../TreeItem';
-import { buildWarning } from '../internals/utils/warning';
+import { warnOnce } from '../internals/utils/warning';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -61,12 +61,6 @@ function WrappedTreeItem<R extends {}>({
   return <Item {...itemProps}>{children}</Item>;
 }
 
-const childrenWarning = buildWarning([
-  'MUI X: The `RichTreeView` component does not support JSX children.',
-  'If you want to add items, you need to use the `items` prop',
-  'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/',
-]);
-
 /**
  *
  * Demos:
@@ -85,7 +79,11 @@ const RichTreeView = React.forwardRef(function RichTreeView<
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
-      childrenWarning();
+      warnOnce([
+        'MUI X: The `RichTreeView` component does not support JSX children.',
+        'If you want to add items, you need to use the `items` prop.',
+        'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/.',
+      ]);
     }
   }
 
