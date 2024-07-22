@@ -155,7 +155,7 @@ export default function CustomLabelInput() {
         items={ITEMS}
         slots={{ item: CustomTreeItem2 }}
         isItemEditable={(item) => Boolean(item?.editable)}
-        defaultExpandedItems={['grid', 'pickers']}
+        defaultExpandedItems={['1', '2']}
         getItemLabel={(item) => `${item.firstName} ${item.lastName}`}
       />
     </Box>
