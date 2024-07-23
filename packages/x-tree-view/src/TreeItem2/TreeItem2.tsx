@@ -165,9 +165,11 @@ const UnstyledLabelInput = React.forwardRef(function UnstyledLabelInput(
     setLabelInputValue(event.target.value);
   };
 
+  const resetLabel = React.useCallback(() => setLabelInputValue(label), [label]);
+
   React.useEffect(() => {
-    return () => setLabelInputValue(label);
-  }, [label, visible]);
+    return resetLabel();
+  }, [resetLabel, visible]);
 
   if (!visible) {
     return null;

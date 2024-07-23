@@ -18,7 +18,6 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
   });
 
   const handleInputBlur: UseTreeItem2LabelInputSlotProps['onBlur'] = (event) => {
-    event.defaultMuiPrevented = true;
     handleCancelItemLabelEditing(event);
   };
 

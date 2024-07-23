@@ -153,17 +153,18 @@ export const useTreeItem2 = <
       interactions.handleCancelItemLabelEditing(event);
     }
   };
+
   const createInputHandleBlur =
     (otherHandlers: EventHandlers) =>
     (event: React.FocusEvent<HTMLInputElement> & MuiCancellableEvent) => {
       otherHandlers.onBlur?.(event);
-      event.stopPropagation();
       if (event.defaultMuiPrevented) {
         return;
       }
 
       interactions.handleSaveItemLabel(event, event.target.value);
     };
+
   const createInputHandleChange =
     (otherHandlers: EventHandlers) =>
     (event: React.ChangeEvent<HTMLInputElement> & MuiCancellableEvent) => {

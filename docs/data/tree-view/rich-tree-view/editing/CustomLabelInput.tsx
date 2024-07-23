@@ -43,12 +43,9 @@ type CustomLabelInputProps = UseTreeItem2LabelInputSlotProps<{
 const LabelInput = React.forwardRef(function LabelInput(
   {
     visible = false,
-    onChange,
-    label,
     item,
     handleCancelItemLabelEditing,
     handleSaveItemLabel,
-    ...props
   }: Omit<CustomLabelInputProps, 'ref'>,
   ref: React.Ref<HTMLInputElement>,
 ) {
@@ -82,7 +79,6 @@ const LabelInput = React.forwardRef(function LabelInput(
   return (
     <React.Fragment>
       <input
-        {...props}
         onChange={handleFirstNameChange}
         value={nameValue.firstName as string}
         autoFocus
@@ -90,7 +86,6 @@ const LabelInput = React.forwardRef(function LabelInput(
         ref={ref}
       />
       <input
-        {...props}
         onChange={handleLastNameChange}
         value={nameValue.lastName as string}
         type="text"
@@ -126,7 +121,6 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
 ) {
   const {
     interactions: { handleCancelItemLabelEditing, handleSaveItemLabel },
-    status,
   } = useTreeItem2Utils({
     itemId: props.itemId,
     children: props.children,
@@ -150,14 +144,10 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
       ref={ref}
       slots={{ label: Label, labelInput: LabelInput }}
       slotProps={{
-        label: {
-          editing: status.editing,
-        } as any,
         labelInput: {
           item: publicAPI.getItem(props.itemId),
           onBlur: handleInputBlur,
           onKeyDown: handleInputKeyDown,
-          editing: status.editing,
           handleCancelItemLabelEditing,
           handleSaveItemLabel,
         } as any,

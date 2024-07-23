@@ -21,9 +21,16 @@ export interface UseTreeViewLabelInstance extends UseTreeViewLabelPublicAPI {
   /**
    * Checks if an item is being edited or not.
    * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {void}.
+   * @returns {boolean}.
    */
   isItemBeingEdited: (itemId: TreeViewItemId) => boolean;
+  /**
+   * Checks if an item is being edited or not.
+   * Purely inetrnal use, used to avoid unnecessarily calling `updateItemLabel` twice.
+   * @param {TreeViewItemId} itemId The id of the item to check.
+   * @returns {boolean}.
+   */
+  isItemBeingEditedRef: (itemId: TreeViewItemId) => boolean;
   /**
    * Determines if a given item is editable.
    * @param {TreeViewItemId} itemId The id of the item to check.

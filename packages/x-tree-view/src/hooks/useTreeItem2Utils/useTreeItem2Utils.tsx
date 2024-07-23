@@ -5,8 +5,12 @@ import { UseTreeViewSelectionSignature } from '../../internals/plugins/useTreeVi
 import { UseTreeViewExpansionSignature } from '../../internals/plugins/useTreeViewExpansion';
 import { UseTreeViewItemsSignature } from '../../internals/plugins/useTreeViewItems';
 import { UseTreeViewFocusSignature } from '../../internals/plugins/useTreeViewFocus';
-import { UseTreeViewLabelSignature } from '../../internals/plugins/useTreeViewLabel';
+import {
+  UseTreeViewLabelSignature,
+  useTreeViewLabel,
+} from '../../internals/plugins/useTreeViewLabel';
 import type { UseTreeItem2Status } from '../../useTreeItem2';
+import { hasPlugin } from '../../internals/utils/plugins';
 
 interface UseTreeItem2Interactions {
   handleExpansion: (event: React.MouseEvent) => void;
@@ -67,7 +71,7 @@ export const useTreeItem2Utils = ({
     editable: instance.isItemEditable ? instance.isItemEditable(itemId) : false,
   };
 
-  const editedItemIdRef = React.useRef(status.editing);
+  const isEditingEnabled = hasPlugin(instance, useTreeViewLabel);
 
   const handleExpansion = (event: React.MouseEvent) => {
     if (status.disabled) {
@@ -123,16 +127,14 @@ export const useTreeItem2Utils = ({
   };
 
   const toggleItemEditing = () => {
-    if (!instance.isItemEditable || !instance.isItemBeingEdited || !instance.setEditedItemId) {
+    if (!isEditingEnabled) {
       return;
     }
     if (instance.isItemEditable(itemId)) {
       if (instance.isItemBeingEdited(itemId)) {
-        editedItemIdRef.current = false;
         instance.setEditedItemId(null);
       } else {
         instance.setEditedItemId(itemId);
-        editedItemIdRef.current = true;
       }
     }
   };
@@ -141,7 +143,16 @@ export const useTreeItem2Utils = ({
     event: React.SyntheticEvent & MuiCancellableEvent,
     label: string,
   ) => {
-    if (instance.updateItemLabel && label) {
+    // As a side effect of `instance.focusItem` called here and in `handleCancelItemLabelEditing` the `labelInput` is blurred
+    // The `onBlur` event is triggered, which calls `handleSaveItemLabel` again.
+    // To avoid creating an unwanted behavior we need to check if the item is being edited before calling `updateItemLabel`
+    // using `instance.isItemBeingEditedRef` instead of `instance.isItemBeingEdited` since the state is not yet updated in this point
+    if (
+      instance.updateItemLabel &&
+      label &&
+      isEditingEnabled &&
+      instance.isItemBeingEditedRef(itemId)
+    ) {
       instance.updateItemLabel(itemId, label);
       toggleItemEditing();
       instance.focusItem(event, itemId);
@@ -149,8 +160,10 @@ export const useTreeItem2Utils = ({
   };
 
   const handleCancelItemLabelEditing = (event: React.SyntheticEvent) => {
-    toggleItemEditing();
-    instance.focusItem(event, itemId);
+    if (isEditingEnabled && instance.isItemBeingEditedRef(itemId)) {
+      toggleItemEditing();
+      instance.focusItem(event, itemId);
+    }
   };
 
   const interactions: UseTreeItem2Interactions = {
