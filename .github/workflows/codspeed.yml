@@ -31,7 +31,10 @@ jobs:
       - run: pnpx playwright install --with-deps
       # Ensure we are running on the prod version of our libs
       # Only charts and license are needed for the benchmarks
-      - run: pnpx lerna run --scope "@mui/{x-charts,x-license}*" build
+      # - run: pnpx lerna run --scope "@mui/{x-charts,x-license}*" build
+      - run: pnpm build --filter @mui/x-license
+      - run: pnpm build --filter @mui/x-charts
+      - run: pnpm build --filter @mui/x-charts-pro
       - name: Run benchmarks
         uses: CodSpeedHQ/action@v2
         with:
