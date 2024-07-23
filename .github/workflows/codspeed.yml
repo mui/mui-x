@@ -1,16 +1,21 @@
-name: Benchmarks Charts
+name: Benchmarks
 
 on:
   push:
     branches:
       - 'master'
-  # pull_request:
+      - 'next'
+  pull_request:
+    branches:
+      - 'master'
+      - 'next'
   # `workflow_dispatch` allows CodSpeed to trigger backtest
   # performance analysis in order to generate initial data.
   workflow_dispatch:
 
 jobs:
   benchmarks:
+    name: Benchmarks Charts
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
@@ -23,6 +28,7 @@ jobs:
           node-version: 20
           cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
       - run: pnpm install --frozen-lockfile
+      - run: pnpx playwright install --with-deps
       - name: Run benchmarks
         uses: CodSpeedHQ/action@v2
         with:
