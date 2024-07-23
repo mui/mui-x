@@ -32,9 +32,9 @@ jobs:
       # Ensure we are running on the prod version of our libs
       # Only charts and license are needed for the benchmarks
       # - run: pnpx lerna run --scope "@mui/{x-charts,x-license}*" build
-      - run: pnpm build --filter @mui/x-license
-      - run: pnpm build --filter @mui/x-charts
-      - run: pnpm build --filter @mui/x-charts-pro
+      - run: pnpm --filter @mui/x-license build
+      - run: pnpm --filter @mui/x-charts build
+      - run: pnpm --filter @mui/x-charts-pro build
       - name: Run benchmarks
         uses: CodSpeedHQ/action@v2
         with:
