@@ -9,17 +9,17 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
   setState,
   params,
 }) => {
-  const isItemEditingRef = React.useRef(state.editedItemId);
+  const editedItemRef = React.useRef(state.editedItemId);
 
-  const isItemBeingEditedRef = (itemId) => isItemEditingRef.current === itemId;
+  const isItemBeingEditedRef = (itemId) => editedItemRef.current === itemId;
 
   const setEditedItemId = (editedItemId: TreeViewItemId | null) => {
     setState((prevState) => ({ ...prevState, editedItemId }));
-    isItemEditingRef.current = editedItemId;
+    editedItemRef.current = editedItemId;
   };
 
   const isItemBeingEdited = (itemId: TreeViewItemId) =>
-    itemId === state.editedItemId && isItemEditingRef.current === itemId;
+    itemId === state.editedItemId && editedItemRef.current === itemId;
 
   const isItemEditable = (itemId: TreeViewItemId): boolean => {
     if (itemId == null) {

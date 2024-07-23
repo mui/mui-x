@@ -147,12 +147,7 @@ export const useTreeItem2Utils = ({
     // The `onBlur` event is triggered, which calls `handleSaveItemLabel` again.
     // To avoid creating an unwanted behavior we need to check if the item is being edited before calling `updateItemLabel`
     // using `instance.isItemBeingEditedRef` instead of `instance.isItemBeingEdited` since the state is not yet updated in this point
-    if (
-      instance.updateItemLabel &&
-      label &&
-      isEditingEnabled &&
-      instance.isItemBeingEditedRef(itemId)
-    ) {
+    if (isEditingEnabled && label && instance.isItemBeingEditedRef(itemId)) {
       instance.updateItemLabel(itemId, label);
       toggleItemEditing();
       instance.focusItem(event, itemId);
