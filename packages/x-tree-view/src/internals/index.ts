@@ -61,4 +61,4 @@ export type {
 } from './plugins/useTreeViewJSXItems';
 
 export { isEventTargetInDescendants } from './utils/tree';
-export { buildWarning } from './utils/warning';
+export { warnOnce } from './utils/warning';
