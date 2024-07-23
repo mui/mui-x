@@ -35,5 +35,6 @@ jobs:
       - run: pnpm --filter @mui/x-license build
       - run: pnpm --filter @mui/x-charts build
       - run: pnpm --filter @mui/x-charts-pro build
-      # curl --proto '=https' --tlsv1.2 -LsSf https://github.com/CodSpeedHQ/runner/releases/download/v2.4.3/codspeed-runner-installer.sh | sh
-      - run: pnpm test:performance:charts
+      - run: curl --proto '=https' --tlsv1.2 -LsSf https://github.com/CodSpeedHQ/runner/releases/download/v2.4.3/codspeed-runner-installer.sh | sh
+      - run: codspeed-runner --token=${{ secrets.CODSPEED_TOKEN }} -- pnpm test:performance:charts
+      # - run: pnpm test:performance:charts
