@@ -35,8 +35,5 @@ jobs:
       - run: pnpm --filter @mui/x-license build
       - run: pnpm --filter @mui/x-charts build
       - run: pnpm --filter @mui/x-charts-pro build
-      - name: Run benchmarks
-        uses: CodSpeedHQ/action@v2
-        with:
-          run: pnpm test:performance:charts
-          token: ${{ secrets.CODSPEED_TOKEN }}
+      # https://github.com/CodSpeedHQ/runner/releases/download/v2.4.3/codspeed-runner-installer.sh
+      - run: pnpm test:performance:charts
