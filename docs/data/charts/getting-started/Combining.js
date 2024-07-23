@@ -1,62 +1,100 @@
 import * as React from 'react';
+import Typography from '@mui/material/Typography';
 import { BarPlot } from '@mui/x-charts/BarChart';
-import { LinePlot } from '@mui/x-charts/LineChart';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { LineHighlightPlot, LinePlot } from '@mui/x-charts/LineChart';
+import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
 
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
+import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
+import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
+import alphabetStock from '../dataset/GOOGL.json';
 
 const series = [
   {
     type: 'bar',
-    stack: '',
-    yAxisKey: 'eco',
-    data: [2, 5, 3, 4, 1],
-  },
-  {
-    type: 'bar',
-    stack: '',
-    yAxisKey: 'eco',
-    data: [5, 6, 2, 8, 9],
+    yAxisKey: 'volume',
+    label: 'Volume',
+    data: alphabetStock.map((day) => day.volume),
+    highlightScope: { highlight: 'item' },
   },
   {
     type: 'line',
-    yAxisKey: 'pib',
+    yAxisKey: 'price',
     color: 'red',
-    data: [1000, 1500, 3000, 5000, 10000],
+    label: 'Low',
+    data: alphabetStock.map((day) => day.low),
+    highlightScope: { highlight: 'item' },
+  },
+  {
+    type: 'line',
+    yAxisKey: 'price',
+    color: 'green',
+    label: 'High',
+    data: alphabetStock.map((day) => day.high),
   },
 ];
 
 export default function Combining() {
   return (
-    <ChartContainer
-      series={series}
-      width={500}
-      height={400}
-      xAxis={[
-        {
-          id: 'years',
-          data: [2010, 2011, 2012, 2013, 2014],
-          scaleType: 'band',
-          valueFormatter: (value) => value.toString(),
-        },
-      ]}
-      yAxis={[
-        {
-          id: 'eco',
-          scaleType: 'linear',
-        },
-        {
-          id: 'pib',
-          scaleType: 'log',
-        },
-      ]}
-    >
-      <BarPlot />
-      <LinePlot />
-      <ChartsXAxis label="Years" position="bottom" axisId="years" />
-      <ChartsYAxis label="Results" position="left" axisId="eco" />
-      <ChartsYAxis label="PIB" position="right" axisId="pib" />
-    </ChartContainer>
+    <div style={{ width: '100%' }}>
+      <Typography>Alphabet stocks</Typography>
+      <div>
+        <ResponsiveChartContainer
+          series={series}
+          height={400}
+          margin={{ top: 10 }}
+          xAxis={[
+            {
+              id: 'date',
+              data: alphabetStock.map((day) => new Date(day.date)),
+              scaleType: 'band',
+              valueFormatter: (value) => value.toLocaleDateString(),
+            },
+          ]}
+          yAxis={[
+            {
+              id: 'price',
+              scaleType: 'linear',
+            },
+            {
+              id: 'volume',
+              scaleType: 'linear',
+              valueFormatter: (value) => `${(value / 1000000).toLocaleString()}M`,
+            },
+          ]}
+        >
+          <BarPlot />
+          <LinePlot />
+          <ChartsAxisHighlight x="band" />
+          <LineHighlightPlot />
+          <ChartsXAxis
+            label="date"
+            position="bottom"
+            axisId="date"
+            tickInterval={(value, index) => {
+              return index % 30 === 0;
+            }}
+            tickLabelStyle={{
+              fontSize: 10,
+              // angle: -45, textAnchor: 'end'
+            }}
+          />
+          <ChartsYAxis
+            label="Price (USD)"
+            position="left"
+            axisId="price"
+            tickLabelStyle={{ fontSize: 10 }}
+          />
+          <ChartsYAxis
+            label="Volume"
+            position="right"
+            axisId="volume"
+            tickLabelStyle={{ fontSize: 10 }}
+          />
+          <ChartsTooltip />
+        </ResponsiveChartContainer>
+      </div>
+    </div>
   );
 }
