@@ -54,6 +54,6 @@ type DescribeGregorianAdapter = {
 };
 
 export const describeGregorianAdapter = createDescribe(
-  'Adapter methods',
+  'Gregorian Adapter methods',
   innerGregorianDescribeAdapter,
 ) as DescribeGregorianAdapter;

@@ -31,4 +31,7 @@ function innerJalaliDescribeAdapter<TDate extends PickerValidDate>(
   });
 }
 
-export const describeJalaliAdapter = createDescribe('Adapter methods', innerJalaliDescribeAdapter);
+export const describeJalaliAdapter = createDescribe(
+  'Jalali Adapter methods',
+  innerJalaliDescribeAdapter,
+);
