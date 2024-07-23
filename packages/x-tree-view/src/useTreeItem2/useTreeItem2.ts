@@ -70,6 +70,7 @@ export const useTreeItem2 = <
         return;
       }
 
+      // to do: check status.editing??
       if ((event.relatedTarget as HTMLElement)?.dataset?.element === 'labelInput') {
         return;
       }
@@ -157,7 +158,7 @@ export const useTreeItem2 = <
     (event: React.FocusEvent<HTMLInputElement> & MuiCancellableEvent) => {
       otherHandlers.onBlur?.(event);
       event.stopPropagation();
-      if (event.defaultMuiPrevented || event.relatedTarget?.id === idAttribute) {
+      if (event.defaultMuiPrevented) {
         return;
       }
 
