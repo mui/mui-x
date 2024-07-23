@@ -1,19 +1,10 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import { afterEach, beforeAll, bench, describe } from 'vitest';
+import { afterEach, bench, describe } from 'vitest';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 
-const timeout = (ms: number) =>
-  new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-
 describe('ScatterChart', () => {
-  beforeAll(async () => {
-    await timeout(1000);
-  });
-
   afterEach(() => {
     cleanup();
   });
