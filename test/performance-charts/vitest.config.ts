@@ -6,5 +6,11 @@ export default defineConfig({
   plugins: [react(), codspeedPlugin()],
   test: {
     environment: 'jsdom',
+    browser: {
+      enabled: true,
+      name: 'chromium',
+      headless: true,
+      provider: 'playwright',
+    },
   },
 });

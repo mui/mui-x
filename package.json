@@ -64,7 +64,7 @@
     "release:tag": "node scripts/releaseTag.mjs",
     "validate": "concurrently \"pnpm prettier && pnpm eslint\" \"pnpm proptypes\" \"pnpm docs:typescript:formatted\" \"pnpm docs:api\"",
     "clean:node_modules": "rimraf --glob \"**/node_modules\"",
-    "test:performance:charts": "pnpm --filter performance-charts test"
+    "test:performance:charts": "pnpm --filter performance-charts test:performance"
   },
   "devDependencies": {
     "@argos-ci/core": "^2.3.0",

@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "vitest bench"
+    "test:performance": "vitest bench"
   },
   "devDependencies": {
     "@codspeed/vitest-plugin": "^3.1.0",
@@ -16,10 +16,12 @@
     "@testing-library/user-event": "^14.5.2",
     "@vitejs/plugin-react": "^4.3.1",
     "@vitejs/plugin-react-swc": "^3.7.0",
-    "@vitest/ui": "^2.0.3",
+    "@vitest/browser": "2.0.4",
+    "@vitest/ui": "2.0.4",
     "jsdom": "^24.1.0",
+    "playwright": "^1.45.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "vitest": "^2.0.3"
+    "vitest": "2.0.4"
   }
 }
