@@ -1,8 +1,8 @@
-import { afterEach, bench, describe } from 'vitest';
+import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import * as React from 'react';
-import { BarChart } from '@mui/x-charts';
+import { afterEach, bench, describe } from 'vitest';
+import { BarChart } from '../../../packages/x-charts/src';
 
 describe('BarChart', () => {
   afterEach(() => {

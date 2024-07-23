@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { LineChart } from '@mui/x-charts/LineChart';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
 import { afterEach, bench, describe } from 'vitest';
+import { LineChart } from '../../../packages/x-charts/src';
 
 describe('LineChart', () => {
   afterEach(() => {
