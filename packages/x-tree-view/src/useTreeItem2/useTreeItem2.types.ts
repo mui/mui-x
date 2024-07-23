@@ -87,7 +87,6 @@ export type UseTreeItem2LabelSlotProps<ExternalProps = {}> = ExternalProps &
 export type UseTreeItem2LabelInputSlotOwnProps = {
   onBlur: MuiCancellableEventHandler<React.FocusEvent<HTMLInputElement>>;
   label: React.ReactNode;
-  visible: boolean;
   onKeyDown: MuiCancellableEventHandler<React.KeyboardEvent<HTMLInputElement>>;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   ref: React.RefObject<HTMLInputElement>;

@@ -42,7 +42,6 @@ type CustomLabelInputProps = UseTreeItem2LabelInputSlotProps<{
 
 const LabelInput = React.forwardRef(function LabelInput(
   {
-    visible = false,
     item,
     handleCancelItemLabelEditing,
     handleSaveItemLabel,
@@ -71,10 +70,6 @@ const LabelInput = React.forwardRef(function LabelInput(
   const save = () => {
     setInitialNameValue(nameValue);
   };
-
-  if (!visible) {
-    return null;
-  }
 
   return (
     <React.Fragment>

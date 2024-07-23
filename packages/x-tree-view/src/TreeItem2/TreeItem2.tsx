@@ -155,7 +155,7 @@ export const TreeItem2GroupTransition = styled(Collapse, {
 });
 
 const UnstyledLabelInput = React.forwardRef(function UnstyledLabelInput(
-  { visible = false, onChange, label, ...props }: UseTreeItem2LabelInputSlotOwnProps,
+  { onChange, label, ...props }: UseTreeItem2LabelInputSlotOwnProps,
   ref: React.Ref<HTMLInputElement>,
 ) {
   const [labelInputValue, setLabelInputValue] = React.useState(label);
@@ -169,11 +169,7 @@ const UnstyledLabelInput = React.forwardRef(function UnstyledLabelInput(
 
   React.useEffect(() => {
     return resetLabel();
-  }, [resetLabel, visible]);
-
-  if (!visible) {
-    return null;
-  }
+  }, [resetLabel]);
 
   return (
     <input
@@ -377,8 +373,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
             <TreeItem2Icon status={status} slots={slots} slotProps={slotProps} />
           </IconContainer>
           <Checkbox {...checkboxProps} />
-          <LabelInput value={label as string} {...labelInputProps} />
-          {!labelInputProps.visible && <Label {...labelProps} />}
+          {status.editing ? <LabelInput {...labelInputProps} /> : <Label {...labelProps} />}
         </Content>
         {children && <TreeItem2GroupTransition as={GroupTransition} {...groupTransitionProps} />}
       </Root>

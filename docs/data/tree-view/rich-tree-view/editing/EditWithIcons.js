@@ -38,18 +38,9 @@ function CustomLabel({ editing, editable, children, toggleItemEditing, ...other 
 }
 
 const CustomLabelInput = React.forwardRef(function CustomLabelInput(props, ref) {
-  const {
-    editing,
-    handleCancelItemLabelEditing,
-    handleSaveItemLabel,
-    label,
-    ...other
-  } = props;
+  const { handleCancelItemLabelEditing, handleSaveItemLabel, label, ...other } =
+    props;
   const [labelInputValue, setLabelInputValue] = React.useState(label);
-
-  if (!editing) {
-    return null;
-  }
 
   return (
     <React.Fragment>
@@ -120,7 +111,6 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
         labelInput: {
           onBlur: handleInputBlur,
           onKeyDown: handleInputKeyDown,
-          editing: status.editing,
           handleCancelItemLabelEditing,
           handleSaveItemLabel,
         },

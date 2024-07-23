@@ -57,7 +57,6 @@ function CustomLabel({
 }
 
 type CustomLabelInputProps = UseTreeItem2LabelInputSlotProps<{
-  editing: boolean;
   handleCancelItemLabelEditing: (event: React.SyntheticEvent) => void;
   handleSaveItemLabel: (event: React.SyntheticEvent, label: string) => void;
   label: string;
@@ -67,18 +66,9 @@ const CustomLabelInput = React.forwardRef(function CustomLabelInput(
   props: Omit<CustomLabelInputProps, 'ref'>,
   ref: React.Ref<HTMLInputElement>,
 ) {
-  const {
-    editing,
-    handleCancelItemLabelEditing,
-    handleSaveItemLabel,
-    label,
-    ...other
-  } = props;
+  const { handleCancelItemLabelEditing, handleSaveItemLabel, label, ...other } =
+    props;
   const [labelInputValue, setLabelInputValue] = React.useState(label);
-
-  if (!editing) {
-    return null;
-  }
 
   return (
     <React.Fragment>
@@ -155,7 +145,6 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
         labelInput: {
           onBlur: handleInputBlur,
           onKeyDown: handleInputKeyDown,
-          editing: status.editing,
           handleCancelItemLabelEditing,
           handleSaveItemLabel,
         } as CustomLabelInputProps,
