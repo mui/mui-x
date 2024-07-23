@@ -14,7 +14,6 @@ import {
 } from '../LineChart/extremums';
 import { AxisConfig, AxisDefaultized, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
 import { getScale } from '../internals/getScale';
-import { DrawingContext } from './DrawingProvider';
 import { SeriesContext } from './SeriesContextProvider';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import {
@@ -26,17 +25,21 @@ import {
 } from '../models/seriesType/config';
 import { MakeOptional } from '../models/helpers';
 import { getTickNumber } from '../hooks/useTicks';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 import { SeriesId } from '../models/seriesType/common';
+import { getColorScale, getOrdinalColorScale } from '../internals/colorScale';
 
 export type CartesianContextProviderProps = {
   /**
    * The configuration of the x-axes.
-   * If not provided, a default axis config is used with id set to `DEFAULT_X_AXIS_KEY`.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
    */
   xAxis?: MakeOptional<AxisConfig, 'id'>[];
   /**
    * The configuration of the y-axes.
-   * If not provided, a default axis config is used with id set to `DEFAULT_Y_AXIS_KEY`.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
    */
   yAxis?: MakeOptional<AxisConfig, 'id'>[];
   /**
@@ -97,7 +100,7 @@ if (process.env.NODE_ENV !== 'production') {
 function CartesianContextProvider(props: CartesianContextProviderProps) {
   const { xAxis: inXAxis, yAxis: inYAxis, dataset, children } = props;
   const formattedSeries = React.useContext(SeriesContext);
-  const drawingArea = React.useContext(DrawingContext);
+  const drawingArea = useDrawingArea();
 
   const xAxis = React.useMemo(
     () =>
@@ -206,6 +209,11 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
             .paddingInner(categoryGapRatio)
             .paddingOuter(categoryGapRatio / 2),
           tickNumber: axis.data!.length,
+          colorScale:
+            axis.colorMap &&
+            (axis.colorMap.type === 'ordinal'
+              ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
+              : getColorScale(axis.colorMap)),
         };
       }
       if (isPointScaleConfig(axis)) {
@@ -213,6 +221,11 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
           ...axis,
           scale: scalePoint(axis.data!, range),
           tickNumber: axis.data!.length,
+          colorScale:
+            axis.colorMap &&
+            (axis.colorMap.type === 'ordinal'
+              ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
+              : getColorScale(axis.colorMap)),
         };
       }
       if (axis.scaleType === 'band' || axis.scaleType === 'point') {
@@ -234,6 +247,7 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
         scaleType,
         scale: niceScale.domain(domain),
         tickNumber,
+        colorScale: axis.colorMap && getColorScale(axis.colorMap),
       } as AxisDefaultized<typeof scaleType>;
     });
 
@@ -262,6 +276,11 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
             .paddingInner(categoryGapRatio)
             .paddingOuter(categoryGapRatio / 2),
           tickNumber: axis.data!.length,
+          colorScale:
+            axis.colorMap &&
+            (axis.colorMap.type === 'ordinal'
+              ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
+              : getColorScale(axis.colorMap)),
         };
       }
       if (isPointScaleConfig(axis)) {
@@ -269,6 +288,11 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
           ...axis,
           scale: scalePoint(axis.data!, [range[1], range[0]]),
           tickNumber: axis.data!.length,
+          colorScale:
+            axis.colorMap &&
+            (axis.colorMap.type === 'ordinal'
+              ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
+              : getColorScale(axis.colorMap)),
         };
       }
       if (axis.scaleType === 'band' || axis.scaleType === 'point') {
@@ -290,6 +314,7 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
         scaleType,
         scale: niceScale.domain(domain),
         tickNumber,
+        colorScale: axis.colorMap && getColorScale(axis.colorMap),
       } as AxisDefaultized<typeof scaleType>;
     });
 

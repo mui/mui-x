@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
 import { fastMemo } from '../../utils/fastMemo';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
@@ -9,7 +10,7 @@ import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderSeparatorProps } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { gridClasses, getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
@@ -25,6 +26,7 @@ interface GridColumnHeaderItemProps {
   headerHeight: number;
   isDragging: boolean;
   isResizing: boolean;
+  isLast: boolean;
   sortDirection: GridSortDirection;
   sortIndex?: number;
   filterItemsCounter?: number;
@@ -36,6 +38,7 @@ interface GridColumnHeaderItemProps {
   style?: React.CSSProperties;
   indexInSection: number;
   sectionLength: number;
+  gridHasFiller: boolean;
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
@@ -93,6 +96,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     colIndex,
     headerHeight,
     isResizing,
+    isLast,
     sortDirection,
     sortIndex,
     filterItemsCounter,
@@ -104,6 +108,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     pinnedPosition,
     indexInSection,
     sectionLength,
+    gridHasFiller,
   } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
@@ -129,6 +134,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     indexInSection,
     sectionLength,
     rootProps.showCellVerticalBorder,
+    gridHasFiller,
   );
 
   const ownerState = {
@@ -258,7 +264,9 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || headerCellRef.current;
       elementToFocus?.focus();
-      apiRef.current.columnHeadersContainerRef!.current!.scrollLeft = 0;
+      if (apiRef.current.columnHeadersContainerRef?.current) {
+        apiRef.current.columnHeadersContainerRef.current.scrollLeft = 0;
+      }
     }
   }, [apiRef, hasFocus]);
 
@@ -288,7 +296,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       width={colDef.computedWidth}
       columnMenuIconButton={columnMenuIconButton}
       columnTitleIconButtons={columnTitleIconButtons}
-      headerClassName={headerClassName}
+      headerClassName={clsx(headerClassName, isLast && gridClasses['columnHeader--last'])}
       label={label}
       resizable={!rootProps.disableColumnResize && !!colDef.resizable}
       data-field={colDef.field}
@@ -311,10 +319,12 @@ GridColumnHeaderItem.propTypes = {
   columnMenuOpen: PropTypes.bool.isRequired,
   disableReorder: PropTypes.bool,
   filterItemsCounter: PropTypes.number,
+  gridHasFiller: PropTypes.bool.isRequired,
   hasFocus: PropTypes.bool,
   headerHeight: PropTypes.number.isRequired,
   indexInSection: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
+  isLast: PropTypes.bool.isRequired,
   isResizing: PropTypes.bool.isRequired,
   pinnedPosition: PropTypes.oneOf(['left', 'right']),
   sectionLength: PropTypes.number.isRequired,

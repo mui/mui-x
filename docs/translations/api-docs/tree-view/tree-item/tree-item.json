@@ -42,7 +42,7 @@
     },
     "iconContainer": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the tree node icon"
+      "nodeName": "the tree item icon"
     },
     "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the label element" },
     "root": { "description": "Styles applied to the root element." },

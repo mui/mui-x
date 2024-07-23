@@ -30,14 +30,13 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
 
   const { rootRef: pluginRootRef, contentRef } = runItemPlugins(parameters);
   const { interactions, status } = useTreeItem2Utils({ itemId, children });
-  const idAttribute = instance.getTreeItemId(itemId, id);
+  const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
   const handleRootRef = useForkRef(rootRef, pluginRootRef)!;
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>
     (event: React.FocusEvent<HTMLElement> & MuiCancellableEvent) => {
       otherHandlers.onFocus?.(event);
-
       if (event.defaultMuiPrevented) {
         return;
       }
@@ -52,7 +51,6 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
     (otherHandlers: EventHandlers) =>
     (event: React.FocusEvent<HTMLElement> & MuiCancellableEvent) => {
       otherHandlers.onBlur?.(event);
-
       if (event.defaultMuiPrevented) {
         return;
       }
@@ -64,7 +62,6 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
     (otherHandlers: EventHandlers) =>
     (event: React.KeyboardEvent<HTMLElement> & MuiCancellableEvent) => {
       otherHandlers.onKeyDown?.(event);
-
       if (event.defaultMuiPrevented) {
         return;
       }
@@ -75,7 +72,6 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const createContentHandleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
       otherHandlers.onClick?.(event);
-
       if (event.defaultMuiPrevented) {
         return;
       }
@@ -87,7 +83,6 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const createContentHandleMouseDown =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
       otherHandlers.onMouseDown?.(event);
-
       if (event.defaultMuiPrevented) {
         return;
       }
@@ -138,10 +133,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const getContentProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
   ): UseTreeItem2ContentSlotProps<ExternalProps> => {
-    const externalEventHandlers = {
-      ...extractEventHandlers(parameters),
-      ...extractEventHandlers(externalProps),
-    };
+    const externalEventHandlers = extractEventHandlers(externalProps);
 
     return {
       ...externalEventHandlers,
@@ -171,10 +163,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const getIconContainerProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
   ): UseTreeItemIconContainerSlotProps<ExternalProps> => {
-    const externalEventHandlers = {
-      ...extractEventHandlers(parameters),
-      ...extractEventHandlers(externalProps),
-    };
+    const externalEventHandlers = extractEventHandlers(externalProps);
 
     return {
       ...externalEventHandlers,
@@ -185,10 +174,7 @@ export const useTreeItem2 = <TPlugins extends DefaultTreeViewPlugins = DefaultTr
   const getGroupTransitionProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
   ): UseTreeItem2GroupTransitionSlotProps<ExternalProps> => {
-    const externalEventHandlers = {
-      ...extractEventHandlers(parameters),
-      ...extractEventHandlers(externalProps),
-    };
+    const externalEventHandlers = extractEventHandlers(externalProps);
 
     return {
       ...externalEventHandlers,

@@ -1,16 +1,18 @@
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import TablePagination, {
   tablePaginationClasses,
   TablePaginationProps,
+  LabelDisplayedRowsArgs,
 } from '@mui/material/TablePagination';
-import { styled } from '@mui/material/styles';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
   gridPaginationModelSelector,
   gridPaginationRowCountSelector,
+  gridPageCountSelector,
 } from '../hooks/features/pagination/gridPaginationSelector';
 
 const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
@@ -27,6 +29,25 @@ const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
     },
   },
 })) as typeof TablePagination;
+
+export type WrappedLabelDisplayedRows = (
+  args: LabelDisplayedRowsArgs & { estimated?: number },
+) => React.ReactNode;
+
+const wrapLabelDisplayedRows = (
+  labelDisplayedRows: WrappedLabelDisplayedRows,
+  estimated?: number,
+): TablePaginationProps['labelDisplayedRows'] => {
+  return ({ from, to, count, page }: LabelDisplayedRowsArgs) =>
+    labelDisplayedRows({ from, to, count, page, estimated });
+};
+
+const defaultLabelDisplayedRows: WrappedLabelDisplayedRows = ({ from, to, count, estimated }) => {
+  if (!estimated) {
+    return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  }
+  return `${from}–${to} of ${count !== -1 ? count : `more than ${estimated > to ? estimated : to}`}`;
+};
 
 // A mutable version of a readonly array.
 
@@ -48,11 +69,29 @@ const GridPagination = React.forwardRef<
   const rootProps = useGridRootProps();
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const rowCount = useGridSelector(apiRef, gridPaginationRowCountSelector);
+  const pageCount = useGridSelector(apiRef, gridPageCountSelector);
 
-  const lastPage = React.useMemo(() => {
-    const calculatedValue = Math.ceil(rowCount / (paginationModel.pageSize || 1)) - 1;
-    return Math.max(0, calculatedValue);
-  }, [rowCount, paginationModel.pageSize]);
+  const { paginationMode, loading, estimatedRowCount } = rootProps;
+
+  const computedProps: Partial<TablePaginationProps> = React.useMemo(() => {
+    if (rowCount === -1 && paginationMode === 'server' && loading) {
+      return {
+        backIconButtonProps: { disabled: true },
+        nextIconButtonProps: { disabled: true },
+      };
+    }
+
+    return {};
+  }, [loading, paginationMode, rowCount]);
+
+  const lastPage = React.useMemo(() => Math.max(0, pageCount - 1), [pageCount]);
+
+  const computedPage = React.useMemo(() => {
+    if (rowCount === -1) {
+      return paginationModel.page;
+    }
+    return paginationModel.page <= lastPage ? paginationModel.page : lastPage;
+  }, [lastPage, paginationModel.page, rowCount]);
 
   const handlePageSizeChange = React.useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -95,7 +134,7 @@ const GridPagination = React.forwardRef<
     ) {
       console.warn(
         [
-          `MUI X: The page size \`${paginationModel.pageSize}\` is not preset in the \`pageSizeOptions\`.`,
+          `MUI X: The page size \`${paginationModel.pageSize}\` is not present in the \`pageSizeOptions\`.`,
           `Add it to show the pagination select.`,
         ].join('\n'),
       );
@@ -108,12 +147,18 @@ const GridPagination = React.forwardRef<
     ? rootProps.pageSizeOptions
     : [];
 
+  const locales = apiRef.current.getLocaleText('MuiTablePagination');
+  const wrappedLabelDisplayedRows = wrapLabelDisplayedRows(
+    locales.labelDisplayedRows || defaultLabelDisplayedRows,
+    estimatedRowCount,
+  );
+
   return (
     <GridPaginationRoot
       ref={ref}
       component="div"
       count={rowCount}
-      page={paginationModel.page <= lastPage ? paginationModel.page : lastPage}
+      page={computedPage}
       // TODO: Remove the cast once the type is fixed in Material UI and that the min Material UI version
       // for x-data-grid is past the fix.
       // Note that Material UI will not mutate the array, so this is safe.
@@ -121,7 +166,9 @@ const GridPagination = React.forwardRef<
       rowsPerPage={paginationModel.pageSize}
       onPageChange={handlePageChange}
       onRowsPerPageChange={handlePageSizeChange}
-      {...apiRef.current.getLocaleText('MuiTablePagination')}
+      {...computedProps}
+      {...locales}
+      labelDisplayedRows={wrappedLabelDisplayedRows}
       {...props}
     />
   );

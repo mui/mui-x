@@ -74,7 +74,7 @@
     {
       "key": "iconContainer",
       "className": "MuiTreeItem-iconContainer",
-      "description": "Styles applied to the tree node icon.",
+      "description": "Styles applied to the tree item icon.",
       "isGlobal": false
     },
     {

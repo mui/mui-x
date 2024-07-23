@@ -40,9 +40,11 @@ const formatter: Formatter<'pie'> = (params) => {
           id: item.id ?? `auto-generated-pie-id-${seriesId}-${index}`,
           ...arcs[index],
         }))
-        .map((item) => ({
+        .map((item, index) => ({
           ...item,
-          formattedValue: series[seriesId].valueFormatter?.(item) ?? item.value.toLocaleString(),
+          formattedValue:
+            series[seriesId].valueFormatter?.(item, { dataIndex: index }) ??
+            item.value.toLocaleString(),
         })),
     };
   });

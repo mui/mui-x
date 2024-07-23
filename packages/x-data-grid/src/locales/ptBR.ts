@@ -39,9 +39,10 @@ const ptBRGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Baixar como Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
+  columnsManagementSearchTitle: 'Buscar',
+  columnsManagementNoColumns: 'Nenhuma coluna',
+  columnsManagementShowHideAllText: 'Mostrar/Ocultar Todas',
+  // columnsManagementReset: 'Reset',
 
   // Filter panel text
   filterPanelAddFilter: 'Adicionar filtro',

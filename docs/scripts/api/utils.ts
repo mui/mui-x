@@ -26,11 +26,7 @@ export function getJsdocDefaultValue(jsdoc: Annotation) {
 }
 
 export function escapeCell(value: string) {
-  return value
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/\|/g, '\\|')
-    .replace(/\r?\n/g, '<br />');
+  return value.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r?\n/g, '<br />');
 }
 
 export const formatType = async (rawType: string) => {
@@ -73,6 +69,7 @@ export function linkify(
   text: string | undefined,
   documentedInterfaces: DocumentedInterfaces,
   format: 'markdown' | 'html',
+  folder: string,
 ) {
   if (text == null) {
     return '';
@@ -83,7 +80,7 @@ export function linkify(
     if (!documentedInterfaces.get(content)) {
       return content;
     }
-    const url = `/x/api/data-grid/${kebabCase(content)}/`;
+    const url = `/x/api/${folder}/${kebabCase(content)}/`;
     return format === 'markdown' ? `[${content}](${url})` : `<a href="${url}">${content}</a>`;
   });
 }

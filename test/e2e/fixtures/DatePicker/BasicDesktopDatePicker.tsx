@@ -10,6 +10,7 @@ export default function BasicDesktopDatePicker() {
         enableAccessibleFieldDOMStructure
         label="Desktop Date Picker"
         className="test-date-picker"
+        slotProps={{ field: { clearable: true } }}
       />
     </LocalizationProvider>
   );

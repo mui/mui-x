@@ -383,7 +383,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/custom-layout' },
           { pathname: '/x/react-date-pickers/custom-field' },
           { pathname: '/x/react-date-pickers/custom-opening-button' },
-          { pathname: '/x/react-date-pickers/playground', title: 'Customziation playground' },
+          { pathname: '/x/react-date-pickers/playground', title: 'Customization playground' },
         ],
       },
     ],
@@ -438,11 +438,6 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/react-charts/gauge', title: 'Gauge' },
           {
-            pathname: '/x/api/charts-group',
-            title: 'API Reference',
-            children: [...chartsComponentApi],
-          },
-          {
             pathname: '/x/react-charts/common-features',
             subheader: 'Common features',
             children: [
@@ -453,6 +448,24 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/stacking', title: 'Stacking' },
               { pathname: '/x/react-charts/styling', title: 'Styling' },
               { pathname: '/x/react-charts/tooltip', title: 'Tooltip & Highlights' },
+            ],
+          },
+          {
+            pathname: '/x/api/charts-group',
+            title: 'API Reference',
+            children: [
+              ...chartsComponentApi,
+              {
+                pathname: '/x/api/charts-interfaces-group',
+                subheader: 'Interfaces',
+                children: [
+                  { pathname: '/x/api/charts/axis-config', title: 'AxisConfig' },
+                  { pathname: '/x/api/charts/bar-series-type', title: 'BarSeriesType' },
+                  { pathname: '/x/api/charts/line-series-type', title: 'LineSeriesType' },
+                  { pathname: '/x/api/charts/pie-series-type', title: 'PieSeriesType' },
+                  { pathname: '/x/api/charts/scatter-series-type', title: 'ScatterSeriesType' },
+                ],
+              },
             ],
           },
           {
@@ -483,6 +496,7 @@ const pages: MuiPage[] = [
     children: [
       { pathname: '/x/react-tree-view', title: 'Overview' },
       { pathname: '/x/react-tree-view/getting-started' },
+      { pathname: '/x/react-tree-view/accessibility' },
       {
         pathname: '/x/react-tree-view/simple-tree-view',
         subheader: 'Simple Tree View',
@@ -537,7 +551,7 @@ const pages: MuiPage[] = [
       },
       {
         pathname: '/x/migration-v6',
-        subheader: 'Upgrade to v6',
+        title: 'Upgrade to v6',
         children: [
           { pathname: '/x/migration/migration-data-grid-v5', title: 'Breaking changes: Data Grid' },
           {
@@ -552,7 +566,7 @@ const pages: MuiPage[] = [
       },
       {
         pathname: '/x/migration-earlier',
-        subheader: 'Earlier versions',
+        title: 'Earlier versions',
         children: [
           {
             pathname: '/x/migration/migration-pickers-lab',

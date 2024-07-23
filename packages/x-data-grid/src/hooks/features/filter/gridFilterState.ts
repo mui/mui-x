@@ -14,7 +14,6 @@ export const getDefaultGridFilterModel: () => GridFilterModel = () => ({
 
 export interface GridFilterState {
   filterModel: GridFilterModel;
-
   /**
    * Filtering status for each row.
    * A row is filtered if it is passing the filters, whether its parents are expanded or not.

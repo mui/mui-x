@@ -3,32 +3,32 @@ import { getPickersLocalization } from './utils/getPickersLocalization';
 import { TimeViewWithMeridiem } from '../internals/models';
 
 const views: Record<TimeViewWithMeridiem, string> = {
-  hours: 'las horas',
-  minutes: 'los minutos',
-  seconds: 'los segundos',
-  meridiem: 'meridiano',
+  hours: 'Horas',
+  minutes: 'Minutos',
+  seconds: 'Segundos',
+  meridiem: 'Meridiano',
 };
 
 const esESPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
-  previousMonth: 'Último mes',
-  nextMonth: 'Próximo mes',
+  previousMonth: 'Mes anterior',
+  nextMonth: 'Mes siguiente',
 
   // View navigation
   openPreviousView: 'Abrir la última vista',
   openNextView: 'Abrir la siguiente vista',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
-      ? 'la vista del año está abierta, cambie a la vista de calendario'
-      : 'la vista de calendario está abierta, cambie a la vista del año',
+      ? 'la vista anual está abierta, cambie a la vista de calendario'
+      : 'la vista de calendario está abierta, cambie a la vista anual',
 
   // DateRange labels
   start: 'Empezar',
   end: 'Terminar',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Fecha inicio',
+  startTime: 'Hora inicio',
+  endDate: 'Fecha final',
+  endTime: 'Hora final',
 
   // Action bar
   cancelButtonLabel: 'Cancelar',
@@ -84,17 +84,17 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'Año',
+  month: 'Mes',
+  day: 'Dia',
+  weekDay: 'Dia de la semana',
+  hours: 'Horas',
+  minutes: 'Minutos',
+  seconds: 'Segundos',
+  meridiem: 'Meridiano',
 
   // Common
-  // empty: 'Empty',
+  empty: 'Vacío',
 };
 
 export const esES = getPickersLocalization(esESPickers);

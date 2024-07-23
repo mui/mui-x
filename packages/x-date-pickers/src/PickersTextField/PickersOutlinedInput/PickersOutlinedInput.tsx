@@ -23,7 +23,7 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
   name: 'MuiPickersOutlinedInput',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => {
+})<{ ownerState: OwnerStateType }>(({ theme }) => {
   const borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
   return {
@@ -42,8 +42,6 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
     },
     [`&.${pickersOutlinedInputClasses.focused} .${pickersOutlinedInputClasses.notchedOutline}`]: {
       borderStyle: 'solid',
-      // @ts-ignore
-      borderColor: (theme.vars || theme).palette[ownerState.color].main,
       borderWidth: 2,
     },
     [`&.${pickersOutlinedInputClasses.disabled}`]: {
@@ -57,6 +55,19 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
     [`&.${pickersOutlinedInputClasses.error} .${pickersOutlinedInputClasses.notchedOutline}`]: {
       borderColor: (theme.vars || theme).palette.error.main,
     },
+    variants: Object.keys((theme.vars ?? theme).palette)
+      // @ts-ignore
+      .filter((key) => (theme.vars ?? theme).palette[key].main)
+      .map((color) => ({
+        props: { color },
+        style: {
+          [`&.${pickersOutlinedInputClasses.focused}:not(.${pickersOutlinedInputClasses.error}) .${pickersOutlinedInputClasses.notchedOutline}`]:
+            {
+              // @ts-ignore
+              borderColor: (theme.vars || theme).palette[color].main,
+            },
+        },
+      })),
   };
 });
 
@@ -64,12 +75,17 @@ const PickersOutlinedInputSectionsContainer = styled(PickersInputBaseSectionsCon
   name: 'MuiPickersOutlinedInput',
   slot: 'SectionsContainer',
   overridesResolver: (props, styles) => styles.sectionsContainer,
-})<{ ownerState: OwnerStateType }>(({ ownerState }) => ({
+})<{ ownerState: OwnerStateType }>({
   padding: '16.5px 0',
-  ...(ownerState.size === 'small' && {
-    padding: '8.5px 0',
-  }),
-}));
+  variants: [
+    {
+      props: { size: 'small' },
+      style: {
+        padding: '8.5px 0',
+      },
+    },
+  ],
+});
 
 const useUtilityClasses = (ownerState: OwnerStateType) => {
   const { classes } = ownerState;
@@ -207,6 +223,11 @@ PickersOutlinedInput.propTypes = {
       }),
     }),
   ]),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
   /**
    * The components used for each slot inside.
    *

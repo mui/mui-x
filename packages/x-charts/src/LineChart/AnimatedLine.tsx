@@ -4,9 +4,10 @@ import { animated, useSpring } from '@react-spring/web';
 import { color as d3Color } from 'd3-color';
 import { styled } from '@mui/material/styles';
 import { useAnimatedPath } from '../internals/useAnimatedPath';
-import { DrawingContext } from '../context/DrawingProvider';
 import { cleanId } from '../internals/utils';
 import type { LineElementOwnerState } from './LineElement';
+import { useChartId } from '../hooks/useChartId';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 
 export const LineElementPath = styled(animated.path, {
   name: 'MuiLineElement',
@@ -16,9 +17,10 @@ export const LineElementPath = styled(animated.path, {
   strokeWidth: 2,
   strokeLinejoin: 'round',
   fill: 'none',
-  stroke: ownerState.isHighlighted
-    ? d3Color(ownerState.color)!.brighter(0.5).formatHex()
-    : ownerState.color,
+  stroke:
+    (ownerState.gradientId && `url(#${ownerState.gradientId})`) ||
+    (ownerState.isHighlighted && d3Color(ownerState.color)!.brighter(0.5).formatHex()) ||
+    ownerState.color,
   transition: 'opacity 0.2s ease-in, stroke 0.2s ease-in',
   opacity: ownerState.isFaded ? 0.3 : 1,
 }));
@@ -45,7 +47,8 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
  */
 function AnimatedLine(props: AnimatedLineProps) {
   const { d, skipAnimation, ownerState, ...other } = props;
-  const { left, top, bottom, width, height, right, chartId } = React.useContext(DrawingContext);
+  const { left, top, bottom, width, height, right } = useDrawingArea();
+  const chartId = useChartId();
 
   const path = useAnimatedPath(d, skipAnimation);
 
@@ -78,6 +81,7 @@ AnimatedLine.propTypes = {
   ownerState: PropTypes.shape({
     classes: PropTypes.object,
     color: PropTypes.string.isRequired,
+    gradientId: PropTypes.string,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     isFaded: PropTypes.bool.isRequired,
     isHighlighted: PropTypes.bool.isRequired,

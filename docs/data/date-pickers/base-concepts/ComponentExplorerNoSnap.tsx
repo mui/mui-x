@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';

@@ -64,6 +64,7 @@ export type GridCellProps = {
   pinnedPosition: PinnedPosition;
   sectionIndex: number;
   sectionLength: number;
+  gridHasFiller: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
@@ -77,6 +78,7 @@ export type GridCellProps = {
 type CellParamsWithAPI = GridCellParams<any, any, any, GridTreeNodeWithRender> & {
   api: GridApiCommunity;
 };
+
 const EMPTY_CELL_PARAMS: CellParamsWithAPI = {
   id: -1,
   field: '__unset__',
@@ -163,6 +165,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     pinnedPosition,
     sectionIndex,
     sectionLength,
+    gridHasFiller,
     onClick,
     onDoubleClick,
     onMouseDown,
@@ -212,7 +215,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     }),
   );
 
-  const { cellMode, hasFocus, isEditable = false, value, formattedValue } = cellParamsWithAPI;
+  const { cellMode, hasFocus, isEditable = false, value } = cellParamsWithAPI;
 
   const canManageOwnFocus =
     column.type === 'actions' &&
@@ -253,11 +256,10 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     classNames.push(getCellClassName(cellParamsWithAPI));
   }
 
-  const valueToRender = formattedValue == null ? value : formattedValue;
+  const valueToRender = cellParamsWithAPI.formattedValue ?? value;
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
   const focusElementRef = React.useRef<FocusElement>(null);
-  // @ts-expect-error To access `cellSelection` flag as it's a `premium` feature
   const isSelectionMode = rootProps.cellSelection ?? false;
 
   const position = gridPinnedColumnPositionLookup[pinnedPosition];
@@ -267,6 +269,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     sectionIndex,
     sectionLength,
     rootProps.showCellVerticalBorder,
+    gridHasFiller,
   );
 
   const ownerState = {
@@ -417,9 +420,14 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { changeReason, unstable_updateValueOnRender, ...editCellStateRest } = editCellState;
 
+    const formattedValue = column.valueFormatter
+      ? column.valueFormatter(editCellState.value as never, updatedRow, column, apiRef)
+      : cellParamsWithAPI.formattedValue;
+
     const params: GridRenderEditCellParams = {
       ...cellParamsWithAPI,
       row: updatedRow,
+      formattedValue,
       ...editCellStateRest,
     };
 
@@ -490,6 +498,7 @@ GridCell.propTypes = {
     isValidating: PropTypes.bool,
     value: PropTypes.any,
   }),
+  gridHasFiller: PropTypes.bool.isRequired,
   isNotVisible: PropTypes.bool.isRequired,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,

@@ -52,6 +52,7 @@ export default function PieShapeNoSnap() {
           `      cx: ${props.cx},`,
           `      cy: ${props.cy},`,
           `    }`,
+          `  ]}`,
           '/>',
         ].join('\n');
       }}

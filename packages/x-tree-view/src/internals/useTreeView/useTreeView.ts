@@ -8,6 +8,7 @@ import {
   ConvertPluginsIntoSignatures,
   MergePluginsProperty,
   TreeItemWrapper,
+  TreeRootWrapper,
   TreeViewPublicAPI,
 } from '../models';
 import {
@@ -60,7 +61,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
 
   const publicAPI = useTreeViewApiInitialization<TreeViewPublicAPI<Signatures>>(inParams.apiRef);
 
-  const innerRootRef = React.useRef(null);
+  const innerRootRef: React.RefObject<HTMLUListElement> = React.useRef(null);
   const handleRootRef = useForkRef(innerRootRef, inParams.rootRef);
 
   const [state, setState] = React.useState(() => {
@@ -83,24 +84,31 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   const contextValue = {
     publicAPI,
     instance: instance as TreeViewInstance<any>,
+    rootRef: innerRootRef,
   } as TreeViewContextValue<Signatures>;
 
   const runPlugin = (plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
-    const pluginResponse =
-      plugin({
-        instance,
-        publicAPI,
-        params,
-        slots: params.slots,
-        slotProps: params.slotProps,
-        state,
-        setState,
-        rootRef: innerRootRef,
-        models,
-      }) || {};
+    const pluginResponse = plugin({
+      instance,
+      params,
+      slots: params.slots,
+      slotProps: params.slotProps,
+      state,
+      setState,
+      rootRef: innerRootRef,
+      models,
+    });
 
     if (pluginResponse.getRootProps) {
       rootPropsGetters.push(pluginResponse.getRootProps);
+    }
+
+    if (pluginResponse.publicAPI) {
+      Object.assign(publicAPI, pluginResponse.publicAPI);
+    }
+
+    if (pluginResponse.instance) {
+      Object.assign(instance, pluginResponse.instance);
     }
 
     if (pluginResponse.contextValue) {
@@ -145,6 +153,18 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
     let finalChildren: React.ReactNode = children;
     itemWrappers.forEach((itemWrapper) => {
       finalChildren = itemWrapper({ itemId, children: finalChildren });
+    });
+
+    return finalChildren;
+  };
+
+  const rootWrappers = plugins
+    .map((plugin) => plugin.wrapRoot)
+    .filter((wrapRoot): wrapRoot is TreeRootWrapper => !!wrapRoot);
+  contextValue.wrapRoot = ({ children }) => {
+    let finalChildren: React.ReactNode = children;
+    rootWrappers.forEach((rootWrapper) => {
+      finalChildren = rootWrapper({ children: finalChildren });
     });
 
     return finalChildren;

@@ -60,6 +60,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   pagination: false,
   paginationMode: 'client',
   rowHeight: 52,
+  resizeThrottleMs: 60,
   pageSizeOptions: [25, 50, 100],
   rowSpacingType: 'margin',
   showCellVerticalBorder: false,

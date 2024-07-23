@@ -26,14 +26,17 @@ function convertFilterItemValueToInputValue(
     return '';
   }
   const dateCopy = new Date(itemValue);
-  // The date picker expects the date to be in the local timezone.
-  // But .toISOString() converts it to UTC with zero offset.
-  // So we need to subtract the timezone offset.
-  dateCopy.setMinutes(dateCopy.getMinutes() - dateCopy.getTimezoneOffset());
+  if (Number.isNaN(dateCopy.getTime())) {
+    return '';
+  }
   if (inputType === 'date') {
     return dateCopy.toISOString().substring(0, 10);
   }
   if (inputType === 'datetime-local') {
+    // The date picker expects the date to be in the local timezone.
+    // But .toISOString() converts it to UTC with zero offset.
+    // So we need to subtract the timezone offset.
+    dateCopy.setMinutes(dateCopy.getMinutes() - dateCopy.getTimezoneOffset());
     return dateCopy.toISOString().substring(0, 19);
   }
   return dateCopy.toISOString().substring(0, 10);
@@ -69,7 +72,8 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
 
       setIsApplying(true);
       filterTimeout.start(rootProps.filterDebounceMs, () => {
-        applyValue({ ...item, value: new Date(value) });
+        const date = new Date(value);
+        applyValue({ ...item, value: Number.isNaN(date.getTime()) ? undefined : date });
         setIsApplying(false);
       });
     },

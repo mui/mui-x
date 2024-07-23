@@ -133,11 +133,6 @@ export const useField = <
         break;
       }
 
-      case event.key === 'Enter': {
-        event.preventDefault();
-        break;
-      }
-
       // Move selection to next section
       case event.key === 'ArrowRight': {
         event.preventDefault();
@@ -275,10 +270,12 @@ export const useField = <
     event.preventDefault();
     onClear?.(event, ...(args as []));
     clearValue();
-    setSelectedSections(sectionOrder.startIndex);
 
-    if (!interactions.isFieldFocused) {
+    if (!interactions.isFieldFocused()) {
+      // setSelectedSections is called internally
       interactions.focusField(0);
+    } else {
+      setSelectedSections(sectionOrder.startIndex);
     }
   });
 

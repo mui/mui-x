@@ -30,6 +30,7 @@ interface GridColumnGroupHeaderProps {
   style?: React.CSSProperties;
   indexInSection: number;
   sectionLength: number;
+  gridHasFiller: boolean;
 }
 
 type OwnerState = {
@@ -91,6 +92,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     style,
     indexInSection,
     sectionLength,
+    gridHasFiller,
   } = props;
 
   const rootProps = useGridRootProps();
@@ -129,6 +131,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     indexInSection,
     sectionLength,
     rootProps.showCellVerticalBorder,
+    gridHasFiller,
   );
 
   const ownerState = {

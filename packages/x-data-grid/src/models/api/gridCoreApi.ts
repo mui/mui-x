@@ -64,7 +64,6 @@ export interface GridCorePrivateApi<
    * The generic event emitter manager.
    */
   eventManager: EventManager;
-
   /**
    * The React ref of the grid main container div element.
    */
@@ -81,7 +80,6 @@ export interface GridCorePrivateApi<
    * The React ref of the grid header filter row element.
    */
   headerFiltersElementRef?: React.RefObject<HTMLDivElement>;
-
   register: <
     V extends 'public' | 'private',
     T extends V extends 'public'
@@ -91,7 +89,6 @@ export interface GridCorePrivateApi<
     visibility: V,
     methods: T,
   ) => void;
-
   /**
    * Returns the public API.
    * Can be useful on a feature hook if we want to pass the `apiRef` to a callback.

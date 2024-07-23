@@ -51,6 +51,8 @@ const GridPaperRoot = styled(Paper, {
   minWidth: 300,
   maxHeight: 450,
   display: 'flex',
+  maxWidth: `calc(100vw - ${theme.spacing(0.5)})`,
+  overflow: 'auto',
 }));
 
 const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {

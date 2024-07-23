@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+import { HighlightedCode } from '@mui/docs/HighlightedCode';
 // @ts-ignore
 import BrandingProvider from 'docs/src/BrandingProvider';
 import { styled, Theme, alpha, useTheme } from '@mui/material/styles';

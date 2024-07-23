@@ -175,6 +175,21 @@ At the bottom, you can see one tick for the beginning and the middle of the day 
 
 You can further customize the axis rendering besides the axis definition.
 
+### Fixing overflow issues
+
+If your tick labels are too long, they can either overflow the SVG or overlap with the axis label.
+Resolving this can be achieved in two ways:
+
+- Increase the space between the SVG border and the axis by setting the [margin props](/x/react-charts/styling/#placement).
+- Modify the axis label position by:
+  - Using the axis configuration `labelStyle.transform`.
+  - Applying CSS transform to the class name `axisClasses.label`.
+
+In the following demo, the margin is modified to provide more space to the x and y axes.
+The x-axis label placement is based on the axis configuration, and the y-axis is placed using a CSS selector.
+
+{{"demo": "MarginAndLabelPosition.js"}}
+
 ### Position
 
 Charts components provide 4 props: `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis` allowing to define the 4 axes of the chart.
@@ -182,7 +197,9 @@ Those pros can accept three type of value:
 
 - `null` to not display the axis
 - `string` which should correspond to the id of a `xAxis` for top and bottom. Or to the id of a `yAxis` for left and right.
-- `object` which will be passed as props to `<XAxis />` or `<YAxis />`. It allows to specify which axis should be represent, and to customize the design of the axis.
+- `object` which will be passed as props to `<XAxis />` or `<YAxis />`. It allows to specify which axis should be represent with the `axisId` property, and to customize the design of the axis.
+
+The demo below uses `leftAxis={null}` to remove the left axis, and `rightAxis={{}}` to set a right axis without overriding the default y-axis configuration.
 
 {{"demo": "ModifyAxisPosition.js"}}
 

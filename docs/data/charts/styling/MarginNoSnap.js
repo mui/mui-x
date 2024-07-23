@@ -1,7 +1,6 @@
 import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
 
 const data = ['left', 'right', 'top', 'bottom'].map((propName) => ({
   propName,
@@ -29,13 +28,13 @@ export default function MarginNoSnap() {
             }}
             xAxis={[
               {
-                id: DEFAULT_X_AXIS_KEY,
+                id: 'x-axis',
                 scaleType: 'band',
                 data: ['Page 1', 'Page 2', 'Page 3'],
               },
             ]}
-            topAxis={DEFAULT_X_AXIS_KEY}
-            rightAxis={DEFAULT_Y_AXIS_KEY}
+            topAxis="x-axis"
+            rightAxis={{}}
           />
         </div>
       )}

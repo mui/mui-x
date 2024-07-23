@@ -143,6 +143,22 @@ describe('<DataGridPro /> - Layout', () => {
     });
   });
 
+  it('should work with `headerFilterHeight` prop', () => {
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGridPro
+          {...baselineProps}
+          autoHeight
+          headerFilters
+          columnHeaderHeight={20}
+          headerFilterHeight={32}
+          rowHeight={20}
+        />
+      </div>,
+    );
+    expect(grid('main')!.clientHeight).to.equal(baselineProps.rows.length * 20 + 20 + 32);
+  });
+
   it('should support translations in the theme', () => {
     render(
       <ThemeProvider theme={createTheme({}, ptBR)}>

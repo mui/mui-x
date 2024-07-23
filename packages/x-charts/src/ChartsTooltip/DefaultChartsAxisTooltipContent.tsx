@@ -38,32 +38,31 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
         )}
 
         <tbody>
-          {series.filter(isCartesianSeries).map(({ color, id, label, valueFormatter, data }) => {
-            // @ts-ignore
-            const formattedValue = valueFormatter(data[dataIndex] ?? null);
-            if (formattedValue == null) {
-              return null;
-            }
-            return (
-              <ChartsTooltipRow key={id} className={classes.row}>
-                <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
-                  <ChartsTooltipMark
-                    ownerState={{ color }}
-                    boxShadow={1}
-                    className={classes.mark}
-                  />
-                </ChartsTooltipCell>
-
-                <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
-                  {label ? <Typography>{label}</Typography> : null}
-                </ChartsTooltipCell>
-
-                <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
-                  <Typography>{formattedValue}</Typography>
-                </ChartsTooltipCell>
-              </ChartsTooltipRow>
-            );
-          })}
+          {series
+            .filter(isCartesianSeries)
+            .map(({ color, id, label, valueFormatter, data, getColor }) => {
+              // @ts-ignore
+              const formattedValue = valueFormatter(data[dataIndex] ?? null, { dataIndex });
+              if (formattedValue == null) {
+                return null;
+              }
+              return (
+                <ChartsTooltipRow key={id} className={classes.row}>
+                  <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
+                    <ChartsTooltipMark
+                      color={getColor(dataIndex) ?? color}
+                      className={classes.mark}
+                    />
+                  </ChartsTooltipCell>
+                  <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
+                    {label ? <Typography>{label}</Typography> : null}
+                  </ChartsTooltipCell>
+                  <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
+                    <Typography>{formattedValue}</Typography>
+                  </ChartsTooltipCell>
+                </ChartsTooltipRow>
+              );
+            })}
         </tbody>
       </ChartsTooltipTable>
     </ChartsTooltipPaper>
@@ -97,7 +96,7 @@ DefaultChartsAxisTooltipContent.propTypes = {
   /**
    * The value associated to the current mouse position.
    */
-  axisValue: PropTypes.any.isRequired,
+  axisValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string]),
   /**
    * Override or extend the styles applied to the component.
    */

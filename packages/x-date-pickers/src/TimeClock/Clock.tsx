@@ -104,7 +104,7 @@ const ClockSquareMask = styled('div', {
   name: 'MuiClock',
   slot: 'SquareMask',
   overridesResolver: (_, styles) => styles.squareMask,
-})<{ ownerState: ClockSquareMaskOwnerState }>(({ ownerState }) => ({
+})<{ ownerState: ClockSquareMaskOwnerState }>({
   width: '100%',
   height: '100%',
   position: 'absolute',
@@ -113,9 +113,10 @@ const ClockSquareMask = styled('div', {
   // Disable scroll capabilities.
   touchAction: 'none',
   userSelect: 'none',
-  ...(ownerState.disabled
-    ? {}
-    : {
+  variants: [
+    {
+      props: { disabled: false },
+      style: {
         '@media (pointer: fine)': {
           cursor: 'pointer',
           borderRadius: '50%',
@@ -123,8 +124,10 @@ const ClockSquareMask = styled('div', {
         '&:active': {
           cursor: 'move',
         },
-      }),
-}));
+      },
+    },
+  ],
+});
 
 const ClockPin = styled('div', {
   name: 'MuiClock',
@@ -145,7 +148,7 @@ const ClockAmButton = styled(IconButton, {
   name: 'MuiClock',
   slot: 'AmButton',
   overridesResolver: (_, styles) => styles.amButton,
-})<{ ownerState: ClockProps<any> }>(({ theme, ownerState }) => ({
+})<{ ownerState: ClockProps<any> }>(({ theme }) => ({
   zIndex: 1,
   position: 'absolute',
   bottom: 8,
@@ -153,20 +156,25 @@ const ClockAmButton = styled(IconButton, {
   paddingLeft: 4,
   paddingRight: 4,
   width: CLOCK_HOUR_WIDTH,
-  ...(ownerState.meridiemMode === 'am' && {
-    backgroundColor: (theme.vars || theme).palette.primary.main,
-    color: (theme.vars || theme).palette.primary.contrastText,
-    '&:hover': {
-      backgroundColor: (theme.vars || theme).palette.primary.light,
+  variants: [
+    {
+      props: { meridiemMode: 'am' },
+      style: {
+        backgroundColor: (theme.vars || theme).palette.primary.main,
+        color: (theme.vars || theme).palette.primary.contrastText,
+        '&:hover': {
+          backgroundColor: (theme.vars || theme).palette.primary.light,
+        },
+      },
     },
-  }),
+  ],
 }));
 
 const ClockPmButton = styled(IconButton, {
   name: 'MuiClock',
   slot: 'PmButton',
   overridesResolver: (_, styles) => styles.pmButton,
-})<{ ownerState: ClockProps<any> }>(({ theme, ownerState }) => ({
+})<{ ownerState: ClockProps<any> }>(({ theme }) => ({
   zIndex: 1,
   position: 'absolute',
   bottom: 8,
@@ -174,13 +182,18 @@ const ClockPmButton = styled(IconButton, {
   paddingLeft: 4,
   paddingRight: 4,
   width: CLOCK_HOUR_WIDTH,
-  ...(ownerState.meridiemMode === 'pm' && {
-    backgroundColor: (theme.vars || theme).palette.primary.main,
-    color: (theme.vars || theme).palette.primary.contrastText,
-    '&:hover': {
-      backgroundColor: (theme.vars || theme).palette.primary.light,
+  variants: [
+    {
+      props: { meridiemMode: 'pm' },
+      style: {
+        backgroundColor: (theme.vars || theme).palette.primary.main,
+        color: (theme.vars || theme).palette.primary.contrastText,
+        '&:hover': {
+          backgroundColor: (theme.vars || theme).palette.primary.light,
+        },
+      },
     },
-  }),
+  ],
 }));
 
 const ClockMeridiemText = styled(Typography, {
@@ -212,7 +225,7 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
     selectedId,
     type,
     viewValue,
-    disabled,
+    disabled = false,
     readOnly,
     className,
   } = props;

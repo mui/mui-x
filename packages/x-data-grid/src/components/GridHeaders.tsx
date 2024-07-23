@@ -75,6 +75,7 @@ function GridHeaders() {
       columnVisibility={columnVisibility}
       columnGroupsHeaderStructure={columnGroupsHeaderStructure}
       hasOtherElementInTabSequence={hasOtherElementInTabSequence}
+      {...rootProps.slotProps?.columnHeaders}
     />
   );
 }

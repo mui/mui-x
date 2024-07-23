@@ -25,7 +25,7 @@ export const useGridInitialization = <
   useGridRefs(privateApiRef);
   useGridTheme(privateApiRef);
   useGridLoggerFactory(privateApiRef, props);
-  useGridStateInitialization(privateApiRef, props);
+  useGridStateInitialization(privateApiRef);
   useGridPipeProcessing(privateApiRef);
   useGridStrategyProcessing(privateApiRef);
   useGridLocaleText(privateApiRef, props);

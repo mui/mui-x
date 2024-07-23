@@ -16,7 +16,7 @@ export interface TickParams {
    */
   tickMinStep?: number;
   /**
-   * The number of ticks. This number is not guaranted.
+   * The number of ticks. This number is not guaranteed.
    * Not supported by categorical axis (band, points).
    */
   tickNumber?: number;
@@ -137,6 +137,11 @@ export function useTicks(
         offset: scale(value)!,
         labelOffset: 0,
       }));
+    }
+
+    if (scale.domain().length === 0 || scale.domain()[0] === scale.domain()[1]) {
+      // The axis should not be visible, so ticks should also be hidden.
+      return [];
     }
 
     const ticks = typeof tickInterval === 'object' ? tickInterval : scale.ticks(tickNumber);

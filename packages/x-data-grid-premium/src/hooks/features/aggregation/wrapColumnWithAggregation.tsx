@@ -78,12 +78,7 @@ const getAggregationValueWrappedValueFormatter: ColumnPropertyWrapper<'valueForm
     if (rowId != null) {
       const cellAggregationResult = getCellAggregationResult(rowId, column.field);
       if (cellAggregationResult != null) {
-        return aggregationRule.aggregationFunction.valueFormatter?.({
-          id: rowId,
-          field: column.field,
-          value,
-          api: apiRef.current,
-        });
+        return aggregationRule.aggregationFunction.valueFormatter?.(value, row, column, apiRef);
       }
     }
 

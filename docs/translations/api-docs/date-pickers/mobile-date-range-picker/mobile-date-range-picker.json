@@ -140,7 +140,7 @@
     },
     "value": { "description": "The selected value. Used when the component is controlled." },
     "viewRenderers": {
-      "description": "Define custom view renderers for each section. If <code>null</code>, the section will only have field editing. If <code>undefined</code>, internally defined view will be the used."
+      "description": "Define custom view renderers for each section. If <code>null</code>, the section will only have field editing. If <code>undefined</code>, internally defined view will be used."
     }
   },
   "classDescriptions": {},

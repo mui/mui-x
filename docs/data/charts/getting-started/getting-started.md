@@ -1,5 +1,4 @@
 ---
-title: React Chart library - Getting started
 productId: x-charts
 githubLabel: 'component: charts'
 packageName: '@mui/x-charts'
@@ -108,6 +107,19 @@ Inside this wrapper, render either axis components, such as `XAxis` and `YAxis`,
 Visit the [Composition page](/x/react-charts/composition/) for more details.
 
 {{"demo": "Combining.js"}}
+
+### Positions
+
+Charts are composed of two main areas.
+The SVG defined by its `width` and `height` delimits the available space.
+
+Within this SVG, a dedicated "drawing area" (aka "plot area") serves as the canvas for data representation.
+Here, elements like lines, bars, and areas visually depict the information.
+It's controlled by the `margin = {top, bottom, left, right}` object defining the margin between the SVG and the drawing area.
+
+The space left by margins can display axes, titles, a legend, or any other additional information.
+
+For more information about the position configuration, visit the [styling page](/x/react-charts/styling/#styling).
 
 ## Axis management
 

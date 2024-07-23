@@ -10,6 +10,12 @@ import { AxisDefaultized } from '../models/axis';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsAxisTooltipContent } from './DefaultChartsAxisTooltipContent';
 import { isCartesianSeriesType } from './utils';
+import colorGetter from '../internals/colorGetter';
+import { ZAxisContext } from '../context/ZAxisContextProvider';
+
+type ChartSeriesDefaultizedWithColorGetter = ChartSeriesDefaultized<ChartSeriesType> & {
+  getColor: (dataIndex: number) => string;
+};
 
 export type ChartsAxisContentProps = {
   /**
@@ -19,7 +25,7 @@ export type ChartsAxisContentProps = {
   /**
    * The series linked to the triggered axis.
    */
-  series: ChartSeriesDefaultized<ChartSeriesType>[];
+  series: ChartSeriesDefaultizedWithColorGetter[];
   /**
    * The properties of the triggered axis.
    */
@@ -31,7 +37,7 @@ export type ChartsAxisContentProps = {
   /**
    * The value associated to the current mouse position.
    */
-  axisValue: any;
+  axisValue: string | number | Date | null;
   /**
    * Override or extend the styles applied to the component.
    */
@@ -54,6 +60,7 @@ function ChartsAxisTooltipContent(props: {
   const axisValue = isXaxis ? axisData.x && axisData.x.value : axisData.y && axisData.y.value;
 
   const { xAxisIds, xAxis, yAxisIds, yAxis } = React.useContext(CartesianContext);
+  const { zAxisIds, zAxis } = React.useContext(ZAxisContext);
   const series = React.useContext(SeriesContext);
 
   const USED_AXIS_ID = isXaxis ? xAxisIds[0] : yAxisIds[0];
@@ -67,12 +74,33 @@ function ChartsAxisTooltipContent(props: {
           const item = series[seriesType]!.series[seriesId];
           const axisKey = isXaxis ? item.xAxisKey : item.yAxisKey;
           if (axisKey === undefined || axisKey === USED_AXIS_ID) {
-            rep.push(series[seriesType]!.series[seriesId]);
+            const seriesToAdd = series[seriesType]!.series[seriesId];
+
+            let getColor: (index: number) => string;
+            switch (seriesToAdd.type) {
+              case 'scatter':
+                getColor = colorGetter(
+                  seriesToAdd,
+                  xAxis[seriesToAdd.xAxisKey ?? xAxisIds[0]],
+                  yAxis[seriesToAdd.yAxisKey ?? yAxisIds[0]],
+                  zAxis[seriesToAdd.zAxisKey ?? zAxisIds[0]],
+                );
+                break;
+              default:
+                getColor = colorGetter(
+                  seriesToAdd,
+                  xAxis[seriesToAdd.xAxisKey ?? xAxisIds[0]],
+                  yAxis[seriesToAdd.yAxisKey ?? yAxisIds[0]],
+                );
+                break;
+            }
+
+            rep.push({ ...seriesToAdd, getColor });
           }
         });
       });
     return rep;
-  }, [USED_AXIS_ID, isXaxis, series]);
+  }, [USED_AXIS_ID, isXaxis, series, xAxis, xAxisIds, yAxis, yAxisIds, zAxis, zAxisIds]);
 
   const relevantAxis = React.useMemo(() => {
     return isXaxis ? xAxis[USED_AXIS_ID] : yAxis[USED_AXIS_ID];
@@ -129,7 +157,11 @@ ChartsAxisTooltipContent.propTypes = {
           .isRequired,
       }),
     }),
-    axisValue: PropTypes.any,
+    axisValue: PropTypes.oneOfType([
+      PropTypes.instanceOf(Date),
+      PropTypes.number,
+      PropTypes.string,
+    ]),
     classes: PropTypes.object,
     dataIndex: PropTypes.number,
     series: PropTypes.arrayOf(PropTypes.object),

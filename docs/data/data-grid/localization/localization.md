@@ -24,7 +24,7 @@ One example is the table pagination component used in the Data Grid footer when 
   localeText={{
     MuiTablePagination: {
       labelDisplayedRows: ({ from, to, count }) =>
-        `${from} - ${to} of more than ${count}`,
+        `${from} - ${to} of ${count === -1 ? `more than ${to}` : count}`,
     },
   }}
 />

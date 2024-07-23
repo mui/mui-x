@@ -13,7 +13,7 @@ import { XProjectNames, XTypeScriptProjects } from '../createXTypeScriptProjects
 
 interface BuildEventsDocumentationOptions {
   projects: XTypeScriptProjects;
-  documentedInterfaces: DocumentedInterfaces;
+  interfacesWithDedicatedPage: DocumentedInterfaces;
 }
 
 const GRID_PROJECTS: XProjectNames[] = ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium'];
@@ -21,7 +21,7 @@ const GRID_PROJECTS: XProjectNames[] = ['x-data-grid', 'x-data-grid-pro', 'x-dat
 export default async function buildGridEventsDocumentation(
   options: BuildEventsDocumentationOptions,
 ) {
-  const { projects, documentedInterfaces } = options;
+  const { projects, interfacesWithDedicatedPage } = options;
 
   const events: {
     [eventName: string]: {
@@ -61,8 +61,9 @@ export default async function buildGridEventsDocumentation(
 
           const description = linkify(
             getSymbolDescription(event, project),
-            documentedInterfaces,
+            interfacesWithDedicatedPage,
             'html',
+            'data-grid',
           );
 
           const eventParams: { [key: string]: string } = {};
@@ -80,7 +81,7 @@ export default async function buildGridEventsDocumentation(
             projects: [project.name],
             name: event.name,
             description: renderMarkdown(description),
-            params: linkify(eventParams.params, documentedInterfaces, 'html'),
+            params: linkify(eventParams.params, interfacesWithDedicatedPage, 'html', 'data-grid'),
             event: `MuiEvent<${eventParams.event ?? '{}'}>`,
           };
         }

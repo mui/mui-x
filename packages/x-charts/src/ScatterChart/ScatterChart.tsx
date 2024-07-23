@@ -25,6 +25,12 @@ import {
   ChartsLegendSlotProps,
   ChartsLegendSlots,
 } from '../ChartsLegend';
+import {
+  ChartsOverlay,
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
+} from '../ChartsOverlay/ChartsOverlay';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
 import {
@@ -32,24 +38,30 @@ import {
   ChartsVoronoiHandlerProps,
 } from '../ChartsVoronoiHandler/ChartsVoronoiHandler';
 import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
+import { ZAxisContextProvider, ZAxisContextProviderProps } from '../context/ZAxisContextProvider';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,
     ScatterPlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots {}
+    ChartsTooltipSlots,
+    ChartsOverlaySlots {}
 export interface ScatterChartSlotProps
   extends ChartsAxisSlotProps,
     ScatterPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps {}
+    ChartsTooltipSlotProps,
+    ChartsOverlaySlotProps {}
 
 export interface ScatterChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
+    Omit<ZAxisContextProviderProps, 'children' | 'dataset'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Omit<ChartsVoronoiHandlerProps, 'onItemClick'> {
   /**
    * The series to display in the scatter chart.
+   * An array of [[ScatterSeriesType]] objects.
    */
   series: MakeOptional<ScatterSeriesType, 'type'>[];
   /**
@@ -109,6 +121,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
   const {
     xAxis,
     yAxis,
+    zAxis,
     series,
     tooltip,
     axisHighlight,
@@ -129,6 +142,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
     children,
     slots,
     slotProps,
+    loading,
   } = props;
   return (
     <ResponsiveChartContainer
@@ -142,31 +156,36 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
       yAxis={yAxis}
       sx={sx}
     >
-      {!disableVoronoi && (
-        <ChartsVoronoiHandler
-          voronoiMaxRadius={voronoiMaxRadius}
-          onItemClick={onItemClick as ChartsVoronoiHandlerProps['onItemClick']}
-        />
-      )}
+      <ZAxisContextProvider zAxis={zAxis}>
+        {!disableVoronoi && (
+          <ChartsVoronoiHandler
+            voronoiMaxRadius={voronoiMaxRadius}
+            onItemClick={onItemClick as ChartsVoronoiHandlerProps['onItemClick']}
+          />
+        )}
 
-      <ChartsAxis
-        topAxis={topAxis}
-        leftAxis={leftAxis}
-        rightAxis={rightAxis}
-        bottomAxis={bottomAxis}
-        slots={slots}
-        slotProps={slotProps}
-      />
-      {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}
-      <ScatterPlot
-        slots={slots}
-        slotProps={slotProps}
-        onItemClick={disableVoronoi ? (onItemClick as ScatterPlotProps['onItemClick']) : undefined}
-      />
-      <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
-      <ChartsAxisHighlight x="none" y="none" {...axisHighlight} />
-      <ChartsTooltip trigger="item" {...tooltip} />
-      {children}
+        <ChartsAxis
+          topAxis={topAxis}
+          leftAxis={leftAxis}
+          rightAxis={rightAxis}
+          bottomAxis={bottomAxis}
+          slots={slots}
+          slotProps={slotProps}
+        />
+        {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}
+        <ScatterPlot
+          slots={slots}
+          slotProps={slotProps}
+          onItemClick={
+            disableVoronoi ? (onItemClick as ScatterPlotProps['onItemClick']) : undefined
+          }
+        />
+        <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
+        <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
+        <ChartsAxisHighlight x="none" y="none" {...axisHighlight} />
+        {!loading && <ChartsTooltip trigger="item" {...tooltip} />}
+        {children}
+      </ZAxisContextProvider>
     </ResponsiveChartContainer>
   );
 });
@@ -190,37 +209,7 @@ ScatterChart.propTypes = {
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
    * @default xAxisIds[0] The id of the first provided axis
    */
-  bottomAxis: PropTypes.oneOfType([
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      classes: PropTypes.object,
-      disableLine: PropTypes.bool,
-      disableTicks: PropTypes.bool,
-      fill: PropTypes.string,
-      label: PropTypes.string,
-      labelFontSize: PropTypes.number,
-      labelStyle: PropTypes.object,
-      position: PropTypes.oneOf(['bottom', 'top']),
-      slotProps: PropTypes.object,
-      slots: PropTypes.object,
-      stroke: PropTypes.string,
-      tickFontSize: PropTypes.number,
-      tickInterval: PropTypes.oneOfType([
-        PropTypes.oneOf(['auto']),
-        PropTypes.array,
-        PropTypes.func,
-      ]),
-      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
-      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
-      tickLabelStyle: PropTypes.object,
-      tickMaxStep: PropTypes.number,
-      tickMinStep: PropTypes.number,
-      tickNumber: PropTypes.number,
-      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
-      tickSize: PropTypes.number,
-    }),
-    PropTypes.string,
-  ]),
+  bottomAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   children: PropTypes.node,
   className: PropTypes.string,
   /**
@@ -260,37 +249,7 @@ ScatterChart.propTypes = {
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default yAxisIds[0] The id of the first provided axis
    */
-  leftAxis: PropTypes.oneOfType([
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      classes: PropTypes.object,
-      disableLine: PropTypes.bool,
-      disableTicks: PropTypes.bool,
-      fill: PropTypes.string,
-      label: PropTypes.string,
-      labelFontSize: PropTypes.number,
-      labelStyle: PropTypes.object,
-      position: PropTypes.oneOf(['left', 'right']),
-      slotProps: PropTypes.object,
-      slots: PropTypes.object,
-      stroke: PropTypes.string,
-      tickFontSize: PropTypes.number,
-      tickInterval: PropTypes.oneOfType([
-        PropTypes.oneOf(['auto']),
-        PropTypes.array,
-        PropTypes.func,
-      ]),
-      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
-      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
-      tickLabelStyle: PropTypes.object,
-      tickMaxStep: PropTypes.number,
-      tickMinStep: PropTypes.number,
-      tickNumber: PropTypes.number,
-      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
-      tickSize: PropTypes.number,
-    }),
-    PropTypes.string,
-  ]),
+  leftAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   /**
    * @deprecated Consider using `slotProps.legend` instead.
    */
@@ -305,6 +264,10 @@ ScatterChart.propTypes = {
     slotProps: PropTypes.object,
     slots: PropTypes.object,
   }),
+  /**
+   * If `true`, a loading overlay is displayed.
+   */
+  loading: PropTypes.bool,
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
@@ -328,39 +291,10 @@ ScatterChart.propTypes = {
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default null
    */
-  rightAxis: PropTypes.oneOfType([
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      classes: PropTypes.object,
-      disableLine: PropTypes.bool,
-      disableTicks: PropTypes.bool,
-      fill: PropTypes.string,
-      label: PropTypes.string,
-      labelFontSize: PropTypes.number,
-      labelStyle: PropTypes.object,
-      position: PropTypes.oneOf(['left', 'right']),
-      slotProps: PropTypes.object,
-      slots: PropTypes.object,
-      stroke: PropTypes.string,
-      tickFontSize: PropTypes.number,
-      tickInterval: PropTypes.oneOfType([
-        PropTypes.oneOf(['auto']),
-        PropTypes.array,
-        PropTypes.func,
-      ]),
-      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
-      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
-      tickLabelStyle: PropTypes.object,
-      tickMaxStep: PropTypes.number,
-      tickMinStep: PropTypes.number,
-      tickNumber: PropTypes.number,
-      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
-      tickSize: PropTypes.number,
-    }),
-    PropTypes.string,
-  ]),
+  rightAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   /**
    * The series to display in the scatter chart.
+   * An array of [[ScatterSeriesType]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
@@ -397,37 +331,7 @@ ScatterChart.propTypes = {
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
    * @default null
    */
-  topAxis: PropTypes.oneOfType([
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      classes: PropTypes.object,
-      disableLine: PropTypes.bool,
-      disableTicks: PropTypes.bool,
-      fill: PropTypes.string,
-      label: PropTypes.string,
-      labelFontSize: PropTypes.number,
-      labelStyle: PropTypes.object,
-      position: PropTypes.oneOf(['bottom', 'top']),
-      slotProps: PropTypes.object,
-      slots: PropTypes.object,
-      stroke: PropTypes.string,
-      tickFontSize: PropTypes.number,
-      tickInterval: PropTypes.oneOfType([
-        PropTypes.oneOf(['auto']),
-        PropTypes.array,
-        PropTypes.func,
-      ]),
-      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
-      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
-      tickLabelStyle: PropTypes.object,
-      tickMaxStep: PropTypes.number,
-      tickMinStep: PropTypes.number,
-      tickNumber: PropTypes.number,
-      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
-      tickSize: PropTypes.number,
-    }),
-    PropTypes.string,
-  ]),
+  topAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   viewBox: PropTypes.shape({
     height: PropTypes.number,
     width: PropTypes.number,
@@ -445,12 +349,40 @@ ScatterChart.propTypes = {
   width: PropTypes.number,
   /**
    * The configuration of the x-axes.
-   * If not provided, a default axis config is used with id set to `DEFAULT_X_AXIS_KEY`.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
+      colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          color: PropTypes.oneOfType([
+            PropTypes.arrayOf(PropTypes.string.isRequired),
+            PropTypes.func,
+          ]).isRequired,
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          thresholds: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+          ).isRequired,
+          type: PropTypes.oneOf(['piecewise']).isRequired,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+      ]),
       data: PropTypes.array,
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
@@ -488,12 +420,40 @@ ScatterChart.propTypes = {
   ),
   /**
    * The configuration of the y-axes.
-   * If not provided, a default axis config is used with id set to `DEFAULT_Y_AXIS_KEY`.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
+      colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          color: PropTypes.oneOfType([
+            PropTypes.arrayOf(PropTypes.string.isRequired),
+            PropTypes.func,
+          ]).isRequired,
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          thresholds: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+          ).isRequired,
+          type: PropTypes.oneOf(['piecewise']).isRequired,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+      ]),
       data: PropTypes.array,
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
@@ -527,6 +487,43 @@ ScatterChart.propTypes = {
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
+    }),
+  ),
+  /**
+   * The configuration of the z-axes.
+   */
+  zAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          color: PropTypes.oneOfType([
+            PropTypes.arrayOf(PropTypes.string.isRequired),
+            PropTypes.func,
+          ]).isRequired,
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          thresholds: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+          ).isRequired,
+          type: PropTypes.oneOf(['piecewise']).isRequired,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+      ]),
+      data: PropTypes.array,
+      dataKey: PropTypes.string,
+      id: PropTypes.string,
     }),
   ),
 } as any;

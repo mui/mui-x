@@ -1,2 +1,2 @@
-Broken links found by `yarn docs:link-check` that exist:
+Broken links found by `docs:link-check` that exist:
 

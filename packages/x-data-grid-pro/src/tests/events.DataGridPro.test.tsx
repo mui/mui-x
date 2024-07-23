@@ -340,6 +340,7 @@ describe('<DataGridPro /> - Events params', () => {
         sortingMode="server"
         filterMode="server"
         rowsLoadingMode="server"
+        paginationMode="server"
         rowCount={50}
       />,
     );

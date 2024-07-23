@@ -4,19 +4,19 @@ import { UseTreeItem2Status } from '../useTreeItem2';
 
 export interface TreeItem2IconSlots {
   /**
-   * The icon used to collapse the node.
+   * The icon used to collapse the item.
    */
   collapseIcon?: React.ElementType;
   /**
-   * The icon used to expand the node.
+   * The icon used to expand the item.
    */
   expandIcon?: React.ElementType;
   /**
-   * The icon displayed next to an end node.
+   * The icon displayed next to an end item.
    */
   endIcon?: React.ElementType;
   /**
-   * The icon to display next to the tree node's label.
+   * The icon to display next to the tree item's label.
    */
   icon?: React.ElementType;
 }

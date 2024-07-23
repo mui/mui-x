@@ -8,6 +8,7 @@ import {
   recomposeColor,
   Theme,
 } from '@mui/material/styles';
+import type {} from '../../themeAugmentation/overrides';
 import { gridClasses as c } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
@@ -126,9 +127,9 @@ export const GridRootStyles = styled('div', {
 
   const containerBackground = t.vars
     ? t.vars.palette.background.default
-    : t.palette.background.default;
+    : t.mixins.MuiDataGrid?.containerBackground ?? t.palette.background.default;
 
-  const pinnedBackground = containerBackground;
+  const pinnedBackground = t.mixins.MuiDataGrid?.pinnedBackground ?? containerBackground;
 
   const overlayBackground = t.vars
     ? `rgba(${t.vars.palette.background.defaultChannel} / ${t.vars.palette.action.disabledOpacity})`
@@ -278,6 +279,8 @@ export const GridRootStyles = styled('div', {
       position: 'relative',
       display: 'flex',
       alignItems: 'center',
+    },
+    [`& .${c['columnHeader--last']}`]: {
       overflow: 'hidden',
     },
     [`& .${c['columnHeader--sorted']} .${c.iconButtonContainer}, & .${c['columnHeader--filtered']} .${c.iconButtonContainer}`]:
@@ -460,7 +463,6 @@ export const GridRootStyles = styled('div', {
       userSelect: 'none',
     },
     [`& .${c['row--dynamicHeight']} > .${c.cell}`]: {
-      overflow: 'initial',
       whiteSpace: 'initial',
       lineHeight: 'inherit',
     },
@@ -645,6 +647,9 @@ export const GridRootStyles = styled('div', {
 
     [`& .${c.filler}`]: {
       flex: 1,
+    },
+    [`& .${c['filler--borderTop']}`]: {
+      borderTop: '1px solid var(--DataGrid-rowBorderColor)',
     },
   };
 

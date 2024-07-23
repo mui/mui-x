@@ -85,6 +85,29 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 
 {{"demo": "GridDemo.js"}}
 
+### Color scale
+
+As with other charts, you can modify the [series color](/x/react-charts/styling/#colors) either directly, or with the color palette.
+
+You can also modify the color by using axes `colorMap` which maps values to colors.
+The bar charts use by priority:
+
+1. The value axis color
+2. The band axis color
+3. The series color
+
+Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
+
+{{"demo": "ColorScale.js"}}
+
+### Border Radius
+
+To give your bar chart rounded corners, you can change the value of the `borderRadius` property on the [BarChart](/x/api/charts/bar-chart/#bar-chart-prop-slots).
+
+It will work with any positive value and will be properly applied to horizontal layouts, stacks and negative values.
+
+{{"demo": "BorderRadius.js"}}
+
 ## Click event
 
 Bar charts provides two click handlers:

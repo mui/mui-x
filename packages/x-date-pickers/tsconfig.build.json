@@ -8,14 +8,16 @@
     "noEmit": false,
     "emitDeclarationOnly": true,
     "outDir": "build",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "types": [
+      "node",
+      "@mui/material/themeCssVarsAugmentation",
+      "dayjs/plugin/utc.d.ts",
+      "dayjs/plugin/timezone.d.ts",
+      "moment-timezone",
+      "@emotion/styled"
+    ]
   },
-  "include": [
-    "src/**/*.ts*",
-    "../../node_modules/@mui/material/themeCssVarsAugmentation",
-    "../../node_modules/dayjs/plugin/utc.d.ts",
-    "../../node_modules/dayjs/plugin/timezone.d.ts",
-    "../../node_modules/moment-timezone/index.d.ts"
-  ],
+  "include": ["src/**/*.ts*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*", "src/tests/**/*"]
 }

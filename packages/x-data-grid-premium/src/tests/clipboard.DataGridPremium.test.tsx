@@ -140,6 +140,30 @@ describe('<DataGridPremium /> - Clipboard', () => {
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
       expect(writeText.lastCall.firstArg).to.equal(['Adidas', 'Nike', 'Puma'].join('\r\n'));
     });
+
+    it('should not escape double quotes when copying multiple cells to clipboard', () => {
+      render(
+        <DataGridPremium
+          columns={[{ field: 'value' }]}
+          rows={[
+            { id: 0, value: '1 " 1' },
+            { id: 1, value: '2' },
+          ]}
+          cellSelection
+          disableRowSelectionOnClick
+        />,
+      );
+
+      const cell = getCell(0, 0);
+      cell.focus();
+      userEvent.mousePress(cell);
+
+      fireEvent.keyDown(cell, { key: 'Ctrl' });
+      fireEvent.click(getCell(1, 0), { ctrlKey: true });
+
+      fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
+      expect(writeText.lastCall.firstArg).to.equal(['1 " 1', '2'].join('\r\n'));
+    });
   });
 
   describe('paste', () => {

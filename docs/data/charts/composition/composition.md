@@ -105,6 +105,41 @@ The order of elements in composition is the only way to define how they overlap.
 
 To display data, you have components named `<XxxPlot />` such as `<LinePlot />`, `<AreaPlot />`, `<MarkPlot />`, `<BarPlot />`, etc.
 
+### Clipping
+
+To ensure chart elements stay confined to the designated drawing area, use the `ChartsClipPath` component.
+This component defines a rectangular clip path that acts as a boundary.
+
+1. **Define the Clip Path**: Use `<ChartsClipPath id={clipPathId} />` to establish the clip path for the drawing area. `clipPathId` must be a unique identifier.
+2. **Wrap the Chart**: Enclose the chart elements you want to clip within a `<g>` element. Set the `clipPath` attribute to `url(#${clipPathId})` to reference the previously defined clip path. Example: ``<g clipPath={`url(#${clipPathId})`}>``
+
+```jsx
+<ChartContainer>
+  <g clipPath={`url(#${clipPathId})`}>
+    // The plotting to clip in the drawing area.
+    <ScatterPlot />
+    <LinePlot />
+  </g>
+  <ChartsClipPath id={clipPathId} /> // Defines the clip path of the drawing area.
+</ChartContainer>
+```
+
+The following demo allows you to toggle clipping for scatter and line plots.
+Observe how line markers extend beyond the clip area, rendering on top of the axes.
+
+{{"demo": "LimitOverflow.js" }}
+
+:::warning
+The provided demo is generating a unique ID with `useId()`.
+
+```js
+const id = useId();
+const clipPathId = `${id}-clip-path`;
+```
+
+It's important to generate unique IDs for clip paths, especially when dealing with multiple charts on a page. Assigning a static ID like `"my-id"` would lead to conflicts.
+:::
+
 ### Axis
 
 To add axes, you can use `<ChartsXAxis />` and `<ChartsYAxis />` as defined in the [axis page](/x/react-charts/axis/#composition).

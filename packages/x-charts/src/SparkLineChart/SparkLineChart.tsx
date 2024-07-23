@@ -347,6 +347,31 @@ SparkLineChart.propTypes = {
   xAxis: PropTypes.shape({
     axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     classes: PropTypes.object,
+    colorMap: PropTypes.oneOfType([
+      PropTypes.shape({
+        color: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string.isRequired), PropTypes.func])
+          .isRequired,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        type: PropTypes.oneOf(['continuous']).isRequired,
+      }),
+      PropTypes.shape({
+        colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+        thresholds: PropTypes.arrayOf(
+          PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+        ).isRequired,
+        type: PropTypes.oneOf(['piecewise']).isRequired,
+      }),
+      PropTypes.shape({
+        colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+        type: PropTypes.oneOf(['ordinal']).isRequired,
+        unknownColor: PropTypes.string,
+        values: PropTypes.arrayOf(
+          PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+            .isRequired,
+        ),
+      }),
+    ]),
     data: PropTypes.array,
     dataKey: PropTypes.string,
     disableLine: PropTypes.bool,

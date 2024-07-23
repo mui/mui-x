@@ -4,7 +4,6 @@ import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { DrawingContext } from '../context/DrawingProvider';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
@@ -12,6 +11,7 @@ import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getMinXTranslation } from '../internals/geometry';
 import { useMounted } from '../hooks/useMounted';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 import { getWordsByLines } from '../internals/getWordsByLines';
 
 const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
@@ -61,7 +61,7 @@ function addLabelDimension(
 
   // Filter label to avoid overlap
   let currentTextLimit = 0;
-  let previouseTextLimit = 0;
+  let previousTextLimit = 0;
   const direction = reverse ? -1 : 1;
   return withDimension.map((item, labelIndex) => {
     const { width, offset, labelOffset, height } = item;
@@ -71,12 +71,12 @@ function addLabelDimension(
     const gapRatio = 1.2; // Ratio applied to the minimal distance to add some margin.
 
     currentTextLimit = textPosition - (direction * (gapRatio * distance)) / 2;
-    if (labelIndex > 0 && direction * currentTextLimit < direction * previouseTextLimit) {
+    if (labelIndex > 0 && direction * currentTextLimit < direction * previousTextLimit) {
       // Except for the first label, we skip all label that overlap with the last accepted.
-      // Notice that the early return prevents `previouseTextLimit` from being updated.
+      // Notice that the early return prevents `previousTextLimit` from being updated.
       return { ...item, skipLabel: true };
     }
-    previouseTextLimit = textPosition + (direction * (gapRatio * distance)) / 2;
+    previousTextLimit = textPosition + (direction * (gapRatio * distance)) / 2;
     return item;
   });
 }
@@ -130,8 +130,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   const theme = useTheme();
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
-
-  const { left, top, width, height } = React.useContext(DrawingContext);
+  const { left, top, width, height } = useDrawingArea();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
@@ -193,6 +192,13 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     ownerState: {},
   });
 
+  const domain = xScale.domain();
+  if (domain.length === 0 || domain[0] === domain[1]) {
+    // Skip axis rendering if
+    // - the data is empty (for band and point axis)
+    // - No data is associated to the axis (other scale types)
+    return null;
+  }
   return (
     <AxisRoot
       transform={`translate(0, ${position === 'bottom' ? top + height : top})`}
@@ -347,7 +353,7 @@ ChartsXAxis.propTypes = {
    */
   tickMinStep: PropTypes.number,
   /**
-   * The number of ticks. This number is not guaranted.
+   * The number of ticks. This number is not guaranteed.
    * Not supported by categorical axis (band, points).
    */
   tickNumber: PropTypes.number,

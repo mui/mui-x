@@ -52,12 +52,14 @@ The `preset-safe` codemod will automatically adjust the bulk of your code to acc
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
+<!-- #default-branch-switch -->
+
 ```bash
 // Date and Time Pickers specific
-npx @mui/x-codemod v7.0.0/pickers/preset-safe <path>
+npx @mui/x-codemod@latest v7.0.0/pickers/preset-safe <path>
 
 // Target Data Grid as well
-npx @mui/x-codemod v7.0.0/preset-safe <path>
+npx @mui/x-codemod@latest v7.0.0/preset-safe <path>
 ```
 
 :::info
@@ -84,14 +86,53 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
-## Drop the legacy bundle
+## Breaking changes
 
-The support for IE11 has been removed from all MUI X packages.
-The `legacy` bundle that used to support old browsers like IE11 is no longer included.
+Since v7 is a major release, it contains some changes that affect the public API.
+These changes were done for consistency, improve stability and make room for new features.
+
+### Drop the legacy bundle
+
+The support for IE 11 has been removed from all MUI X packages.
+The `legacy` bundle that used to support old browsers like IE 11 is no longer included.
 
 :::info
-If you need support for IE11, you will need to keep using the latest version of the `v6` release.
+If you need support for IE 11, you will need to keep using the latest version of the `v6` release.
 :::
+
+### Drop Webpack 4 support
+
+Dropping old browsers support also means that we no longer transpile some features that are natively supported by modern browsers – like [Nullish Coalescing](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing) and [Optional Chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining).
+
+These features are not supported by Webpack 4, so if you are using Webpack 4, you will need to transpile these features yourself or upgrade to Webpack 5.
+
+Here is an example of how you can transpile these features on Webpack 4 using the `@babel/preset-env` preset:
+
+```diff
+ // webpack.config.js
+
+ module.exports = (env) => ({
+   // ...
+   module: {
+     rules: [
+       {
+         test: /\.[jt]sx?$/,
+-        exclude: /node_modules/,
++        exclude: [
++          {
++            test: path.resolve(__dirname, 'node_modules'),
++            exclude: [
++              // Covers @mui/x-date-pickers and @mui/x-date-pickers-pro
++              path.resolve(__dirname, 'node_modules/@mui/x-date-pickers'),
++              path.resolve(__dirname, 'node_modules/@mui/x-license'),
++            ],
++          },
++        ],
+       },
+     ],
+   },
+ });
+```
 
 ## Component slots
 
@@ -105,7 +146,7 @@ And are removed from the v7.
 If not already done, this modification can be handled by the codemod
 
 ```bash
-npx @mui/x-codemod v7.0.0/pickers/ <path>
+npx @mui/x-codemod@latest v7.0.0/pickers/ <path>
 ```
 
 Take a look at [the RFC](https://github.com/mui/material-ui/issues/33416) for more information.
@@ -228,7 +269,7 @@ Learn more on this prop on [the `DateCalendar` documentation](/x/react-date-pick
 
 ```diff
 -<DateCalendar defaultCalendarMonth={dayjs('2022-04-01')};
-+<DateCalendar referenceDate{dayjs('2022-04-01')} />
++<DateCalendar referenceDate={dayjs('2022-04-01')} />
 ```
 
 ## Modified props
@@ -292,7 +333,7 @@ To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
 ### Headless fields
 
 :::success
-The following breaking changes only impacts you if you are using hooks like `useDateField` to build a custom UI.
+The following breaking changes only impact you if you are using hooks like `useDateField` to build a custom UI.
 
 If you are just using the regular field components, then you can safely skip this section.
 :::
@@ -302,9 +343,9 @@ If you are just using the regular field components, then you can safely skip thi
 The field hooks now only receive the props instead of an object containing both the props and the `inputRef`.
 
 ```diff
-- const { inputRef, ...otherProps } = props
-- const fieldResponse = useDateField({ props: otherProps, inputRef });
-+ const fieldResponse = useDateField(props);
+-const { inputRef, ...otherProps } = props
+-const fieldResponse = useDateField({ props: otherProps, inputRef });
++const fieldResponse = useDateField(props);
 ```
 
 If you are using a multi input range field hook, the same applies to `startInputRef` and `endInputRef` params
@@ -406,7 +447,8 @@ When building a custom UI, you are most-likely only supporting one DOM structure
   function MyCustomField(props) {
     const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
       ...props,
-+     // If you only support one DOM structure, we advise you to hardcode it here to avoid unwanted switches in your application
++     // If you only support one DOM structure, we advise you to hardcode it
++     // here to avoid unwanted switches in your application.
 +     enableAccessibleFieldDOMStructure: false,
     });
 

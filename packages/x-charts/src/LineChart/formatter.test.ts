@@ -9,7 +9,7 @@ const seriesDataset: FormatterParams<'line'>['series'] = {
     type: 'line',
     id: 'id1',
     color: 'red',
-    // usefull info
+    // useful info
     dataKey: 'k',
   },
 };

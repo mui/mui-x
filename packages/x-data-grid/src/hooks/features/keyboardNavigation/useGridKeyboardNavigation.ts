@@ -93,7 +93,12 @@ export const useGridKeyboardNavigation = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    'pagination' | 'paginationMode' | 'getRowId' | 'experimentalFeatures' | 'signature'
+    | 'pagination'
+    | 'paginationMode'
+    | 'getRowId'
+    | 'experimentalFeatures'
+    | 'signature'
+    | 'headerFilters'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
@@ -105,9 +110,7 @@ export const useGridKeyboardNavigation = (
     [apiRef, initialCurrentPageRows],
   );
 
-  const headerFilteringEnabled =
-    // @ts-expect-error // TODO move relevant code to the `DataGridPro`
-    props.signature !== 'DataGrid' && props.headerFilters;
+  const headerFilteringEnabled = props.signature !== 'DataGrid' && props.headerFilters;
 
   /**
    * @param {number} colIndex Index of the column to focus

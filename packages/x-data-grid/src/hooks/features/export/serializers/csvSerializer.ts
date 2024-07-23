@@ -7,12 +7,13 @@ import { buildWarning } from '../../../../utils/warning';
 
 function sanitizeCellValue(value: any, delimiterCharacter: string, shouldAppendQuotes: boolean) {
   if (typeof value === 'string') {
-    // Make sure value containing delimiter or line break won't be split into multiple rows
-    if ([delimiterCharacter, '\n', '\r', '"'].some((delimiter) => value.includes(delimiter))) {
-      if (shouldAppendQuotes) {
-        return `"${value.replace(/"/g, '""')}"`;
+    if (shouldAppendQuotes) {
+      const escapedValue = value.replace(/"/g, '""');
+      // Make sure value containing delimiter or line break won't be split into multiple rows
+      if ([delimiterCharacter, '\n', '\r', '"'].some((delimiter) => value.includes(delimiter))) {
+        return `"${escapedValue}"`;
       }
-      return `${value.replace(/"/g, '""')}`;
+      return escapedValue;
     }
 
     return value;

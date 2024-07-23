@@ -1,0 +1,20 @@
+diff --git a/lib/adapter.js b/lib/adapter.js
+index 0c8199e4420656b2ad2b764e043dc6812aa520c7..0482a2124fa12a52ffd3a8a2faa3bcd38eeb57f4 100644
+--- a/lib/adapter.js
++++ b/lib/adapter.js
+@@ -55,10 +55,11 @@ var processAssertionError = function (error_) {
+       showDiff: error_.showDiff
+     }
+ 
+-    if (error.showDiff) {
+-      error.actual = window.Mocha.utils.stringify(error_.actual)
+-      error.expected = window.Mocha.utils.stringify(error_.expected)
+-    }
++    // See https://github.com/mochajs/mocha/issues/4910#issuecomment-1224341701
++    // if (error.showDiff) {
++    //   error.actual = window.Mocha.utils.stringify(error_.actual)
++    //   error.expected = window.Mocha.utils.stringify(error_.expected)
++    // }
+   }
+ 
+   return error

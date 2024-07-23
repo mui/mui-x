@@ -641,7 +641,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
     it('should use the aggregation function valueFormatter if defined', () => {
       const customAggregationFunction: GridAggregationFunction = {
         apply: () => 'Agg value',
-        valueFormatter: (params) => `+ ${params.value}`,
+        valueFormatter: (value) => `+ ${value}`,
       };
 
       render(

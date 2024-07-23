@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiCommon } from '../../models/api/gridApiCommon';
+import type { GridApiCommon } from '../../models/api/gridApiCommon';
 import { OutputSelector } from '../../utils/createSelector';
 import { useLazyRef } from './useLazyRef';
 import { useOnMount } from './useOnMount';

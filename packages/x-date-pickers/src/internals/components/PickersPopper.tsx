@@ -112,13 +112,19 @@ const PickersPopperPaper = styled(MuiPaper, {
   overridesResolver: (_, styles) => styles.paper,
 })<{
   ownerState: PickersPopperOwnerState;
-}>(({ ownerState }) => ({
+}>({
   outline: 0,
   transformOrigin: 'top center',
-  ...(ownerState.placement.includes('top') && {
-    transformOrigin: 'bottom center',
-  }),
-}));
+  variants: [
+    {
+      props: ({ placement }: PickersPopperOwnerState) =>
+        ['top', 'top-start', 'top-end'].includes(placement),
+      style: {
+        transformOrigin: 'bottom center',
+      },
+    },
+  ],
+});
 
 function clickedRootScrollbar(event: MouseEvent, doc: Document) {
   return (

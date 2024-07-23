@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  unstable_debounce as debounce,
   unstable_ownerDocument as ownerDocument,
   unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_useEventCallback as useEventCallback,
@@ -14,6 +13,7 @@ import {
   useGridApiOptionHandler,
 } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
+import { throttle } from '../../../utils/throttle';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi, GridDimensionsPrivateApi } from './gridDimensionsApi';
@@ -40,7 +40,9 @@ type RootProps = Pick<
   | 'autoHeight'
   | 'getRowHeight'
   | 'rowHeight'
+  | 'resizeThrottleMs'
   | 'columnHeaderHeight'
+  | 'headerFilterHeight'
 >;
 
 export type GridDimensionsState = GridDimensions;
@@ -57,6 +59,7 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   hasScrollY: false,
   scrollbarSize: 0,
   headerHeight: 0,
+  headerFilterHeight: 0,
   rowWidth: 0,
   rowHeight: 0,
   columnsTotalWidth: 0,
@@ -88,14 +91,20 @@ export function useGridDimensions(
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const rowHeight = Math.floor(props.rowHeight * densityFactor);
   const headerHeight = Math.floor(props.columnHeaderHeight * densityFactor);
+  const headerFilterHeight = Math.floor(
+    (props.headerFilterHeight ?? props.columnHeaderHeight) * densityFactor,
+  );
   const columnsTotalWidth = roundToDecimalPlaces(gridColumnsTotalWidthSelector(apiRef), 6);
-  const headersTotalHeight = getTotalHeaderHeight(apiRef, props.columnHeaderHeight);
+  const headersTotalHeight = getTotalHeaderHeight(apiRef, props);
 
   const leftPinnedWidth = pinnedColumns.left.reduce((w, col) => w + col.computedWidth, 0);
   const rightPinnedWidth = pinnedColumns.right.reduce((w, col) => w + col.computedWidth, 0);
 
   const [savedSize, setSavedSize] = React.useState<ElementSize>();
-  const debouncedSetSavedSize = React.useMemo(() => debounce(setSavedSize, 60), []);
+  const debouncedSetSavedSize = React.useMemo(
+    () => throttle(setSavedSize, props.resizeThrottleMs),
+    [props.resizeThrottleMs],
+  );
   const previousSize = React.useRef<ElementSize>();
 
   const getRootDimensions = () => apiRef.current.state.dimensions;
@@ -240,6 +249,7 @@ export function useGridDimensions(
       hasScrollY,
       scrollbarSize,
       headerHeight,
+      headerFilterHeight,
       rowWidth,
       rowHeight,
       columnsTotalWidth,
@@ -269,6 +279,7 @@ export function useGridDimensions(
     rowsMeta.currentPageTotalHeight,
     rowHeight,
     headerHeight,
+    headerFilterHeight,
     columnsTotalWidth,
     headersTotalHeight,
     leftPinnedWidth,

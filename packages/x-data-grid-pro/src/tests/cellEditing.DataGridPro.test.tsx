@@ -190,6 +190,33 @@ describe('<DataGridPro /> - Cell editing', () => {
         });
       });
 
+      it('should not publish onCellEditStop if field has error', async () => {
+        columnProps.preProcessEditCellProps = spy(({ props }: GridPreProcessEditCellProps) => ({
+          ...props,
+          error: true,
+        }));
+
+        const handleEditCellStop = spy();
+
+        render(<TestCase onCellEditStop={handleEditCellStop} />);
+        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() =>
+          apiRef.current.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+          }),
+        );
+        const cell = getCell(0, 1);
+        cell.focus();
+
+        await act(() => {
+          fireEvent.keyDown(cell, { key: 'Enter' });
+        });
+
+        expect(handleEditCellStop.callCount).to.equal(0);
+      });
+
       it('should pass to renderEditCell the props returned by preProcessEditCellProps', async () => {
         columnProps.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
           ...props,

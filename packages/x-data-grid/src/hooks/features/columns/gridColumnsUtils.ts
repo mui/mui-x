@@ -12,6 +12,7 @@ import {
   GRID_STRING_COL_DEF,
   getGridDefaultColumnTypes,
 } from '../../../colDef';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsStateSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
@@ -21,6 +22,7 @@ import { GridRowEntry } from '../../../models/gridRows';
 import { gridDensityFactorSelector } from '../density/densitySelector';
 import { gridHeaderFilteringEnabledSelector } from '../headerFiltering/gridHeaderFilteringSelectors';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
+import type { GridDimensions } from '../dimensions/gridDimensionsApi';
 
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
@@ -160,7 +162,7 @@ export function computeFlexColumnsWidth({
  */
 export const hydrateColumnsWidth = (
   rawState: GridColumnsRawState,
-  viewportInnerWidth: number,
+  dimensions: GridDimensions | undefined,
 ): GridColumnsState => {
   const columnsLookup: GridColumnLookup = {};
   let totalFlexUnits = 0;
@@ -195,10 +197,14 @@ export const hydrateColumnsWidth = (
     columnsLookup[columnField] = newColumn;
   });
 
-  const initialFreeSpace = Math.max(viewportInnerWidth - widthAllocatedBeforeFlex, 0);
+  const availableWidth =
+    dimensions === undefined
+      ? 0
+      : dimensions.viewportOuterSize.width - (dimensions.hasScrollY ? dimensions.scrollbarSize : 0);
+  const initialFreeSpace = Math.max(availableWidth - widthAllocatedBeforeFlex, 0);
 
   // Allocate the remaining space to the flex columns
-  if (totalFlexUnits > 0 && viewportInnerWidth > 0) {
+  if (totalFlexUnits > 0 && availableWidth > 0) {
     const computedColumnWidths = computeFlexColumnsWidth({
       initialFreeSpace,
       totalFlexUnits,
@@ -394,7 +400,7 @@ export const createColumnsState = ({
 
   return hydrateColumnsWidth(
     columnsStateWithPortableColumns,
-    apiRef.current.getRootDimensions?.().viewportInnerSize.width ?? 0,
+    apiRef.current.getRootDimensions?.() ?? undefined,
   );
 };
 
@@ -431,11 +437,16 @@ export function getFirstNonSpannedColumnToRender({
 
 export function getTotalHeaderHeight(
   apiRef: React.MutableRefObject<GridApiCommunity>,
-  headerHeight: number,
+  props: Pick<DataGridProcessedProps, 'columnHeaderHeight' | 'headerFilterHeight'>,
 ) {
   const densityFactor = gridDensityFactorSelector(apiRef);
   const maxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
   const isHeaderFilteringEnabled = gridHeaderFilteringEnabledSelector(apiRef);
-  const multiplicationFactor = isHeaderFilteringEnabled ? 2 : 1;
-  return Math.floor(headerHeight * densityFactor) * ((maxDepth ?? 0) + multiplicationFactor);
+
+  const columnHeadersHeight = Math.floor(props.columnHeaderHeight * densityFactor);
+  const filterHeadersHeight = isHeaderFilteringEnabled
+    ? Math.floor((props.headerFilterHeight ?? props.columnHeaderHeight) * densityFactor)
+    : 0;
+
+  return columnHeadersHeight * (1 + (maxDepth ?? 0)) + filterHeadersHeight;
 }

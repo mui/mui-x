@@ -42,10 +42,6 @@ try {
 } catch (_) {}
 
 export default withDocsInfra({
-  experimental: {
-    workerThreads: true,
-    cpus: 3,
-  },
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {
@@ -192,7 +188,7 @@ export default withDocsInfra({
 
     return map;
   },
-  // Used to signal we run yarn build
+  // Used to signal we run build
   ...(process.env.NODE_ENV === 'production'
     ? {
         output: 'export',

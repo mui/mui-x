@@ -58,7 +58,6 @@ export interface PickersDayProps<TDate extends PickerValidDate>
    * @default false
    */
   disabled?: boolean;
-
   /**
    * If `true`, days are rendering without margin. Useful for displaying linked range of days.
    * @default false
@@ -127,7 +126,7 @@ const useUtilityClasses = (ownerState: PickersDayProps<any>) => {
   return composeClasses(slots, getPickersDayUtilityClass, classes);
 };
 
-const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState }) => ({
+const styleArg = ({ theme }: { theme: Theme }) => ({
   ...theme.typography.caption,
   width: DAY_SIZE,
   height: DAY_SIZE,
@@ -170,19 +169,28 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
   [`&.${pickersDayClasses.disabled}&.${pickersDayClasses.selected}`]: {
     opacity: 0.6,
   },
-  ...(!ownerState.disableMargin && {
-    margin: `0 ${DAY_MARGIN}px`,
-  }),
-  ...(ownerState.outsideCurrentMonth &&
-    ownerState.showDaysOutsideCurrentMonth && {
-      color: (theme.vars || theme).palette.text.secondary,
-    }),
-  ...(!ownerState.disableHighlightToday &&
-    ownerState.today && {
-      [`&:not(.${pickersDayClasses.selected})`]: {
-        border: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
+  variants: [
+    {
+      props: { disableMargin: false },
+      style: {
+        margin: `0 ${DAY_MARGIN}px`,
       },
-    }),
+    },
+    {
+      props: { outsideCurrentMonth: true, showDaysOutsideCurrentMonth: true },
+      style: {
+        color: (theme.vars || theme).palette.text.secondary,
+      },
+    },
+    {
+      props: { disableHighlightToday: false, today: true },
+      style: {
+        [`&:not(.${pickersDayClasses.selected})`]: {
+          border: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
+        },
+      },
+    },
+  ],
 });
 
 const overridesResolver = (
@@ -213,8 +221,8 @@ const PickersDayFiller = styled('div', {
   name: 'MuiPickersDay',
   slot: 'Root',
   overridesResolver,
-})<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
-  ...styleArg({ theme, ownerState }),
+})<{ ownerState: OwnerState }>(({ theme }) => ({
+  ...styleArg({ theme }),
   // visibility: 'hidden' does not work here as it hides the element from screen readers as well
   opacity: 0,
   pointerEvents: 'none',
@@ -230,7 +238,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate extends PickerV
   inProps: PickersDayProps<TDate>,
   forwardedRef: React.Ref<HTMLButtonElement>,
 ) {
-  const props = useThemeProps<Theme, PickersDayProps<TDate>, 'MuiPickersDay'>({
+  const props = useThemeProps({
     props: inProps,
     name: 'MuiPickersDay',
   });

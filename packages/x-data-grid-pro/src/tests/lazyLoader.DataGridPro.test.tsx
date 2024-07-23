@@ -51,6 +51,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
           sortingMode="server"
           filterMode="server"
           rowsLoadingMode="server"
+          paginationMode="server"
         />
       </div>
     );

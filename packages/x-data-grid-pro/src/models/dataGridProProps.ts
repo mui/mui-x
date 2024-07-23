@@ -15,6 +15,8 @@ import {
   DataGridPropsWithComplexDefaultValueAfterProcessing,
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
   GridPinnedColumnFields,
+  DataGridProSharedPropsWithDefaultValue,
+  DataGridProSharedPropsWithoutDefaultValue,
 } from '@mui/x-data-grid/internals';
 import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
 import { GridApiPro } from './gridApiPro';
@@ -68,7 +70,8 @@ export type DataGridProForcedPropsKey = 'signature';
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
  */
 export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = any>
-  extends DataGridPropsWithDefaultValues<R> {
+  extends DataGridPropsWithDefaultValues<R>,
+    DataGridProSharedPropsWithDefaultValue {
   /**
    * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
    * @default 80
@@ -132,18 +135,14 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    * @default false
    */
   keepColumnPositionIfDraggedOutside: boolean;
-  /**
-   * If `true`, enables the data grid filtering on header feature.
-   * @default false
-   */
-  headerFilters: boolean;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends Omit<
-    DataGridPropsWithoutDefaultValue<R>,
-    'initialState' | 'componentsProps' | 'slotProps'
-  > {
+      DataGridPropsWithoutDefaultValue<R>,
+      'initialState' | 'componentsProps' | 'slotProps'
+    >,
+    DataGridProSharedPropsWithoutDefaultValue {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
