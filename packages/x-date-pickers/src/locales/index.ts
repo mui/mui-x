@@ -20,6 +20,7 @@ export * from './kzKZ';
 export * from './mk';
 export * from './nbNO';
 export * from './nlNL';
+export * from './nnNO';
 export * from './plPL';
 export * from './ptBR';
 export * from './roRO';
