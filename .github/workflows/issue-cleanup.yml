@@ -36,9 +36,9 @@ jobs:
             }
 
             const body = lines.join('\n')
-            
+
             const labels = issue.data.labels.map(label => label.name)
-            
+
             const productMap = {
               'Data Grid': 'data grid',
               'Date and Time Pickers': 'pickers',
