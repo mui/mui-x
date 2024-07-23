@@ -45,7 +45,7 @@ const GridAggregationFunctionLabel = styled('div', {
     color: theme.palette.text.secondary,
     position: 'absolute',
     top: '50%',
-    transform: 'translateY(40%)',
+    transform: 'translateY(50%)',
   };
 });
 
