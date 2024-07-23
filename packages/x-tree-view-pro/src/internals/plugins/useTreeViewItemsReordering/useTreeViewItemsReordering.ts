@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { buildWarning, TreeViewPlugin } from '@mui/x-tree-view/internals';
+import { warnOnce, TreeViewPlugin } from '@mui/x-tree-view/internals';
 import { TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
 import {
   TreeViewItemItemReorderingValidActions,
@@ -13,12 +13,6 @@ import {
   moveItemInTree,
 } from './useTreeViewItemsReordering.utils';
 import { useTreeViewItemsReorderingItemPlugin } from './useTreeViewItemsReordering.itemPlugin';
-
-const wrongIndentationStrategyWarning = buildWarning([
-  'MUI X: The items reordering feature requires the `indentationAtItemLevel` and `itemsReordering` experimental features to be enabled.',
-  'You can do it by passing `experimentalFeatures={{ indentationAtItemLevel: true, itemsReordering: true }}` to the `RichTreeViewPro` component.',
-  'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/',
-]);
 
 export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderingSignature> = ({
   params,
@@ -35,7 +29,11 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       params.itemsReordering &&
       (!experimentalFeatures?.indentationAtItemLevel || !experimentalFeatures?.itemsReordering)
     ) {
-      wrongIndentationStrategyWarning();
+      warnOnce([
+        'MUI X: The items reordering feature requires the `indentationAtItemLevel` and `itemsReordering` experimental features to be enabled.',
+        'You can do it by passing `experimentalFeatures={{ indentationAtItemLevel: true, itemsReordering: true }}` to the `RichTreeViewPro` component.',
+        'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/',
+      ]);
     }
   }
 
