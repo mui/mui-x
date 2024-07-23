@@ -3,6 +3,7 @@ import * as React from 'react';
 import { render, cleanup } from '@testing-library/react';
 import { afterEach, bench, describe } from 'vitest';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { options } from '../utils/options';
 
 describe('ScatterChart', () => {
   afterEach(() => {
@@ -17,20 +18,24 @@ describe('ScatterChart', () => {
 
   const xData = data.map((d) => d.x);
 
-  bench('100_000 data', async () => {
-    const { findByText } = render(
-      <ScatterChart
-        xAxis={[{ data: xData }]}
-        series={[
-          {
-            data,
-          },
-        ]}
-        width={500}
-        height={300}
-      />,
-    );
+  bench(
+    '100_000 data',
+    async () => {
+      const { findByText } = render(
+        <ScatterChart
+          xAxis={[{ data: xData }]}
+          series={[
+            {
+              data,
+            },
+          ]}
+          width={500}
+          height={300}
+        />,
+      );
 
-    await findByText('15,000');
-  });
+      await findByText('15,000');
+    },
+    options,
+  );
 });
