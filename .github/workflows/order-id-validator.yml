@@ -5,8 +5,7 @@ on:
     types: [opened]
 
 jobs:
-
-  check-order-id:
+  validate-order-id:
     runs-on: ubuntu-latest
     name: Label issue based on order ID
     steps:
