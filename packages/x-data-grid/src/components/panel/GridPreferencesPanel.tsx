@@ -6,10 +6,7 @@ import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-export const GridPreferencesPanel = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(function GridPreferencesPanel(props, ref) {
+export function GridPreferencesPanel() {
   const apiRef = useGridApiContext();
   const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
   const rootProps = useGridRootProps();
@@ -23,16 +20,14 @@ export const GridPreferencesPanel = React.forwardRef<
 
   return (
     <rootProps.slots.panel
-      ref={ref}
       as={rootProps.slots.basePopper}
       open={columns.length > 0 && preferencePanelState.open}
       id={preferencePanelState.panelId}
       aria-labelledby={preferencePanelState.labelId}
       {...rootProps.slotProps?.panel}
-      {...props}
       {...rootProps.slotProps?.basePopper}
     >
       {panelContent}
     </rootProps.slots.panel>
   );
-});
+}
