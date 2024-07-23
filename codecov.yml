@@ -4,6 +4,8 @@ coverage:
       default:
         target: auto
         threshold: 1%
+        ignore:
+          - 'packages/x-charts-vendor/**'
       adapters:
         target: 100%
         paths:
