@@ -1,0 +1,20 @@
+name: Order ID validation
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+
+  check-order-id:
+    runs-on: ubuntu-latest
+    name: Label issue based on order ID
+    steps:
+      - name: Label issue
+        uses: michelengelen/mui-order-id-validation@8ab4e02a38c644709820f4f4af1f8d8cd22a441e
+        with:
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          issue_number: ${{ github.event.issue.number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          orderApiToken: ${{ secrets.SHOP_AUTH_TOKEN }}
