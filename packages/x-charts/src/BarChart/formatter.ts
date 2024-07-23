@@ -33,7 +33,7 @@ const formatter: Formatter<'bar'> = (params, dataset) => {
     } else if (dataset === undefined) {
       throw new Error(
         [
-          `MUI X Charts: bar series with id='${id}' has no data.`,
+          `MUI X: bar series with id='${id}' has no data.`,
           'Either provide a data property to the series or use the dataset prop.',
         ].join('\n'),
       );
@@ -69,10 +69,12 @@ const formatter: Formatter<'bar'> = (params, dataset) => {
               if (typeof value !== 'number') {
                 if (process.env.NODE_ENV !== 'production' && !warnOnce && value !== null) {
                   warnOnce = true;
-                  console.error([
-                    `MUI X charts: your dataset key "${dataKey}" is used for plotting bars, but contains nonnumerical elements.`,
-                    'Bar plots only support numbers and null values.',
-                  ]);
+                  console.error(
+                    [
+                      `MUI X charts: your dataset key "${dataKey}" is used for plotting bars, but contains nonnumerical elements.`,
+                      'Bar plots only support numbers and null values.',
+                    ].join('\n'),
+                  );
                 }
                 return 0;
               }

@@ -33,17 +33,17 @@ export function checkScaleErrors(
 
   if (!isBandScaleConfig(discreteAxisConfig)) {
     throw new Error(
-      `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisKey)} should be of type "band" to display the bar series of id "${seriesId}".`,
+      `MUI X: ${getAxisMessage(discreteAxisDirection, discreteAxisKey)} should be of type "band" to display the bar series of id "${seriesId}".`,
     );
   }
   if (discreteAxisConfig.data === undefined) {
     throw new Error(
-      `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisKey)} should have data property.`,
+      `MUI X: ${getAxisMessage(discreteAxisDirection, discreteAxisKey)} should have data property.`,
     );
   }
   if (isBandScaleConfig(continuousAxisConfig) || isPointScaleConfig(continuousAxisConfig)) {
     throw new Error(
-      `MUI X Charts: ${getAxisMessage(continuousAxisDirection, continuousAxisKey)} should be a continuous type to display the bar series of id "${seriesId}".`,
+      `MUI X: ${getAxisMessage(continuousAxisDirection, continuousAxisKey)} should be a continuous type to display the bar series of id "${seriesId}".`,
     );
   }
 }

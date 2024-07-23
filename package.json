@@ -1,5 +1,5 @@
 {
-  "version": "7.10.0",
+  "version": "7.11.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -51,8 +51,9 @@
     "test:regressions:run": "pnpm build:charts:vendor && mocha --config test/regressions/.mocharc.js --delay 'test/regressions/**/*.test.js'",
     "test:regressions:server": "pnpm build:charts:vendor && serve test/regressions -p 5001",
     "test:argos": "node ./scripts/pushArgos.mjs",
-    "typescript": "pnpm build:charts:vendor && lerna run --no-bail --parallel typescript",
-    "typescript:ci": "pnpm build:charts:vendor && lerna run --concurrency 3 --no-bail --no-sort typescript",
+    "typescript": "lerna run --no-bail --parallel typescript",
+    "typescript:ci": "lerna run --concurrency 3 --no-bail --no-sort typescript",
+    "use-react-version": "node scripts/useReactVersion.mjs",
     "build:codesandbox": "pnpm release:build",
     "install:codesandbox": "pnpm install --no-frozen-lockfile",
     "release:changelog": "node scripts/releaseChangelog.mjs",
@@ -89,7 +90,7 @@
     "@mui/internal-markdown": "^1.0.7",
     "@mui/internal-test-utils": "^1.0.4",
     "@mui/material": "^5.16.2",
-    "@mui/monorepo": "github:mui/material-ui#43cb32700af699cd48baaf6922fbe21343f30e2f",
+    "@mui/monorepo": "github:mui/material-ui#288863bd2f8681a82c4bfbaf13215b41043bc551",
     "@mui/utils": "^5.16.2",
     "@next/eslint-plugin-next": "14.2.5",
     "@octokit/plugin-retry": "^7.1.1",
@@ -110,8 +111,8 @@
     "@types/requestidlecallback": "^0.3.7",
     "@types/sinon": "^17.0.3",
     "@types/yargs": "^17.0.32",
-    "@typescript-eslint/eslint-plugin": "^7.15.0",
-    "@typescript-eslint/parser": "^7.15.0",
+    "@typescript-eslint/eslint-plugin": "^7.16.1",
+    "@typescript-eslint/parser": "^7.16.1",
     "autoprefixer": "^10.4.19",
     "axe-core": "4.9.1",
     "babel-loader": "^9.1.3",
@@ -194,9 +195,9 @@
     "react-is": "^18.3.1",
     "@types/node": "^18.19.39"
   },
-  "packageManager": "pnpm@9.4.0",
+  "packageManager": "pnpm@9.5.0",
   "engines": {
-    "pnpm": "9.4.0"
+    "pnpm": "9.5.0"
   },
   "pnpm": {
     "patchedDependencies": {
