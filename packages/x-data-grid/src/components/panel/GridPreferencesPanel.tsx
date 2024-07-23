@@ -30,4 +30,4 @@ export function GridPreferencesPanel() {
       {panelContent}
     </rootProps.slots.panel>
   );
-};
+}
