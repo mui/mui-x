@@ -41,12 +41,12 @@ const StyledDemoContainer = styled(Paper)({
 const internationalizationFeatures = [
   {
     title: 'Support for multiple timezones',
-    description: 'Handle global users and events in various geographical locations with ease.',
+    description: 'Accommodate global users and events in any geographical location.',
   },
   {
     title: 'Support for multiple languages',
     description:
-      "Support for multiple languages and date formats, adapting to the user's locale for a personalized experience.",
+      "Meet users where they're at with support for common date formats and languages used around the world.",
   },
   {
     title: 'Validation and error handling',

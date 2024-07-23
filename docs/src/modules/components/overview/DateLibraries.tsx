@@ -54,10 +54,10 @@ export default function DateLibraries() {
             overline="Date libraries"
             title={
               <Typography variant="h2" fontSize="1.625rem">
-                Support for multiple date libraries
+                Use your favorite date library
               </Typography>
             }
-            description="Flexibility to use any of the most popular date libraries."
+            description="MUI X Date Pickers integrate smoothly with the most popular date libraries available."
           />
         </Stack>
         <Stack>

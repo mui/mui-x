@@ -21,7 +21,7 @@ export default function CommunityOrPro() {
         >
           <Stack>
             <Typography variant="body2" color="primary" fontWeight="semiBold">
-              Community or Pro
+              Community and Pro
             </Typography>
             <Typography
               variant="h4"
@@ -30,10 +30,10 @@ export default function CommunityOrPro() {
               color="text.primary"
               fontSize="1.625rem"
             >
-              Available in two packages
+              Two packages for every need
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              An adaptable and reliable suite of date and time components.
+              Start with the free-forever Community version, then upgrade to Pro when you're ready for additional features and components.
             </Typography>
           </Stack>
 
@@ -57,8 +57,7 @@ export default function CommunityOrPro() {
               icon={<img src="/static/x/community.svg" width={16} height={16} alt="" />}
               backgroundColor="subtle"
               description={[
-                'MIT licensed, free forever',
-                'Contains all components to edit dates and times',
+                'Free forever under an MIT license. Includes Date Pickers, Time Pickers, and Date Time Pickers.'
               ]}
             />
           </Box>
@@ -68,8 +67,7 @@ export default function CommunityOrPro() {
               icon={<img src="/static/x/pro.svg" width={16} height={16} alt="" />}
               backgroundColor="subtle"
               description={[
-                'Commercially licensed',
-                'Contains additional components to edit date and/or time ranges',
+                'Requires a commercial license. Includes all Community components plus the Date and Time Range Pickers.'
               ]}
             />
           </Box>
