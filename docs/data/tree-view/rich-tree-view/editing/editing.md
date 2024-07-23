@@ -1,6 +1,6 @@
 ---
 productId: x-tree-view
-title: Rich Tree View - Focus
+title: Rich Tree View - Editing
 githubLabel: 'component: tree view'
 packageName: '@mui/x-tree-view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
