@@ -19,6 +19,10 @@
       "description": "The callback fired when the highlighted item changes.",
       "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
     },
+    "onZoomChange": {
+      "description": "Callback fired when the zoom has changed.",
+      "typeDescriptions": { "zoomData": "Updated zoom data." }
+    },
     "plugins": {
       "description": "An array of plugins defining how to preprocess data. If not provided, the container supports line, bar, scatter and pie charts."
     },
@@ -32,7 +36,8 @@
     "yAxis": {
       "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
-    "zAxis": { "description": "The configuration of the z-axes." }
+    "zAxis": { "description": "The configuration of the z-axes." },
+    "zoom": { "description": "The list of zoom data related to each axis." }
   },
   "classDescriptions": {}
 }

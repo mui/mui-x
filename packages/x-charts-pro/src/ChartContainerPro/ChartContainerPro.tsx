@@ -9,33 +9,32 @@ import {
   DrawingProvider,
   InteractionProvider,
   SeriesContextProvider,
-  useChartContainerProps,
 } from '@mui/x-charts/internals';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import { CartesianContextProviderPro } from '../context/CartesianProviderPro';
-import { ZoomProvider } from '../context/ZoomProvider';
+import { ZoomProps, ZoomProvider } from '../context/ZoomProvider';
+import { useChartContainerProProps } from './useChartContainerProProps';
 
 const releaseInfo = getReleaseInfo();
 
-export interface ChartContainerProProps extends ChartContainerProps {}
+export interface ChartContainerProProps extends ChartContainerProps, ZoomProps {}
 
 const ChartContainerPro = React.forwardRef(function ChartContainer(
   props: ChartContainerProProps,
   ref,
 ) {
   const {
-    children,
+    zoomProviderProps,
     drawingProviderProps,
     colorProviderProps,
     seriesContextProps,
-    cartesianContextProps,
     zAxisContextProps,
     highlightedProviderProps,
+    cartesianContextProps,
     chartsSurfaceProps,
-    xAxis,
-    yAxis,
-  } = useChartContainerProps(props, ref);
+    children,
+  } = useChartContainerProProps(props, ref);
 
   useLicenseVerifier('x-charts-pro', releaseInfo);
 
@@ -43,7 +42,7 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
     <DrawingProvider {...drawingProviderProps}>
       <ColorProvider {...colorProviderProps}>
         <SeriesContextProvider {...seriesContextProps}>
-          <ZoomProvider xAxis={xAxis} yAxis={yAxis}>
+          <ZoomProvider {...zoomProviderProps}>
             <CartesianContextProviderPro {...cartesianContextProps}>
               <ZAxisContextProvider {...zAxisContextProps}>
                 <InteractionProvider>
@@ -115,6 +114,12 @@ ChartContainerPro.propTypes = {
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * Callback fired when the zoom has changed.
+   *
+   * @param {ZoomData[]} zoomData Updated zoom data.
+   */
+  onZoomChange: PropTypes.func,
   /**
    * An array of plugins defining how to preprocess data.
    * If not provided, the container supports line, bar, scatter and pie charts.
@@ -343,6 +348,16 @@ ChartContainerPro.propTypes = {
       id: PropTypes.string,
       max: PropTypes.number,
       min: PropTypes.number,
+    }),
+  ),
+  /**
+   * The list of zoom data related to each axis.
+   */
+  zoom: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
     }),
   ),
 } as any;

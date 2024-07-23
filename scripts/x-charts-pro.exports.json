@@ -321,6 +321,12 @@
   { "name": "useYColorScale", "kind": "Function" },
   { "name": "useYScale", "kind": "Function" },
   { "name": "useZColorScale", "kind": "Function" },
+  { "name": "useZoom", "kind": "Function" },
   { "name": "ZAxisContextProvider", "kind": "Function" },
-  { "name": "ZAxisContextProviderProps", "kind": "TypeAlias" }
+  { "name": "ZAxisContextProviderProps", "kind": "TypeAlias" },
+  { "name": "ZoomData", "kind": "TypeAlias" },
+  { "name": "ZoomOptions", "kind": "TypeAlias" },
+  { "name": "ZoomProps", "kind": "TypeAlias" },
+  { "name": "ZoomSetup", "kind": "Function" },
+  { "name": "ZoomState", "kind": "TypeAlias" }
 ]

@@ -1,5 +1,59 @@
 import { AxisId } from '@mui/x-charts/internals';
 
+export type ZoomProviderProps = {
+  children: React.ReactNode;
+  /**
+   * The configuration of the x-axes.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
+   */
+  xAxis?: AxisConfigForZoom[];
+  /**
+   * The configuration of the y-axes.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
+   */
+  yAxis?: AxisConfigForZoom[];
+} & ZoomProps;
+
+/**
+ * Represents the state of the ZoomProvider.
+ */
+export type ZoomState = {
+  /**
+   * Whether zooming is enabled.
+   */
+  isZoomEnabled: boolean;
+  /**
+   * Whether panning is enabled.
+   */
+  isPanEnabled: boolean;
+  /**
+   * The zoom options for each axis.
+   */
+  options: Record<AxisId, DefaultizedZoomOptions>;
+  /**
+   * The zoom data for each axis
+   * @default []
+   */
+  zoomData: ZoomData[];
+  /**
+   * Set the zoom data for each axis.
+   * @param {ZoomData[]} zoomData The new zoom data.
+   */
+  setZoomData: (zoomData: ZoomData[] | ((zoomData: ZoomData[]) => ZoomData[])) => void;
+  /**
+   * Whether the user is currently interacting with the chart.
+   * This is useful to prevent animations from running while the user is interacting.
+   */
+  isInteracting: boolean;
+  /**
+   * Set the interaction state of the chart.
+   * @param {boolean} isInteracting The new interaction state.
+   */
+  setIsInteracting: (isInteracting: boolean) => void;
+};
+
 export type ZoomOptions = {
   /**
    * The starting percentage of the zoom range. In the range of 0 to 100.
@@ -64,8 +118,16 @@ export type ZoomData = {
 };
 
 export type ZoomProps = {
+  /**
+   * The list of zoom data related to each axis.
+   */
   zoom?: ZoomData[];
-  onZoomChange?: (zoom: ZoomData[]) => void;
+  /**
+   * Callback fired when the zoom has changed.
+   *
+   * @param {ZoomData[]} zoomData Updated zoom data.
+   */
+  onZoomChange?: (zoomData: ZoomData[] | ((zoomData: ZoomData[]) => ZoomData[])) => void;
 };
 
 export type DefaultizedZoomOptions = Required<ZoomOptions> & {

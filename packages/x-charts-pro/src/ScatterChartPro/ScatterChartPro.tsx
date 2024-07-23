@@ -12,8 +12,9 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useScatterChartProps } from '@mui/x-charts/internals';
 import { ResponsiveChartContainerPro } from '../ResponsiveChartContainerPro';
 import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
+import { ZoomProps } from '../context/ZoomProvider';
 
-export interface ScatterChartProProps extends ScatterChartProps {}
+export interface ScatterChartProProps extends ScatterChartProps, ZoomProps {}
 
 /**
  * Demos:
@@ -29,6 +30,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   props: ScatterChartProProps,
   ref,
 ) {
+  const { zoom, onZoomChange, ...other } = props;
   const {
     chartContainerProps,
     zAxisProps,
@@ -41,9 +43,15 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
     axisHighlightProps,
     tooltipProps,
     children,
-  } = useScatterChartProps(props);
+  } = useScatterChartProps(other);
+
   return (
-    <ResponsiveChartContainerPro ref={ref} {...chartContainerProps}>
+    <ResponsiveChartContainerPro
+      ref={ref}
+      {...chartContainerProps}
+      zoom={zoom}
+      onZoomChange={onZoomChange}
+    >
       <ZAxisContextProvider {...zAxisProps}>
         {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
         <ChartsAxis {...chartsAxisProps} />
@@ -173,6 +181,12 @@ ScatterChartPro.propTypes = {
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick: PropTypes.func,
+  /**
+   * Callback fired when the zoom has changed.
+   *
+   * @param {ZoomData[]} zoomData Updated zoom data.
+   */
+  onZoomChange: PropTypes.func,
   /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
@@ -435,6 +449,16 @@ ScatterChartPro.propTypes = {
       id: PropTypes.string,
       max: PropTypes.number,
       min: PropTypes.number,
+    }),
+  ),
+  /**
+   * The list of zoom data related to each axis.
+   */
+  zoom: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
     }),
   ),
 } as any;
