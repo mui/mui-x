@@ -11,7 +11,7 @@ export default function CommunityOrPro() {
   return (
     <React.Fragment>
       <Divider />
-      <Stack direction="column" spacing={2} py={8} alignItems="center">
+      <Stack direction="column" spacing={{ xs: 1, md: 2 }} py={8} alignItems="center">
         <Stack
           direction={{ xs: 'column', md: 'row' }}
           alignItems={{ md: 'flex-end', xs: 'space-between' }}
@@ -19,7 +19,7 @@ export default function CommunityOrPro() {
           flexGrow={1}
           sx={{ width: '100%' }}
         >
-          <Stack>
+          <Stack flexBasis={{ xs: '100%', md: '65%' }} sx={{ marginBottom: { xs: '16px', md: 0 } }}>
             <Typography variant="body2" color="primary" fontWeight="semiBold">
               Community and Pro
             </Typography>
@@ -33,7 +33,8 @@ export default function CommunityOrPro() {
               Two packages for every need
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              Start with the free-forever Community version, then upgrade to Pro when you're ready for additional features and components.
+              Start with the free-forever Community version, then upgrade to Pro when you are ready
+              for additional features and components.
             </Typography>
           </Stack>
 
@@ -57,7 +58,7 @@ export default function CommunityOrPro() {
               icon={<img src="/static/x/community.svg" width={16} height={16} alt="" />}
               backgroundColor="subtle"
               description={[
-                'Free forever under an MIT license. Includes Date Pickers, Time Pickers, and Date Time Pickers.'
+                'Free forever under an MIT license. Includes Date Pickers, Time Pickers, and Date Time Pickers.',
               ]}
             />
           </Box>
@@ -67,7 +68,7 @@ export default function CommunityOrPro() {
               icon={<img src="/static/x/pro.svg" width={16} height={16} alt="" />}
               backgroundColor="subtle"
               description={[
-                'Requires a commercial license. Includes all Community components plus the Date and Time Range Pickers.'
+                'Requires a commercial license. Includes all Community components plus the Date and Time Range Pickers.',
               ]}
             />
           </Box>

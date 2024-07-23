@@ -20,7 +20,3 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 {{"component": "modules/components/overview/Keyboard.tsx"}}
 {{"component": "modules/components/overview/Internationalization.tsx"}}
 {{"component": "modules/components/overview/DateLibraries.tsx"}}
-
-## What's next?
-
-Continue to the [next page](/x/react-date-pickers/getting-started/) and learn how to prepare your application for the Date and Time Pickers.

@@ -8,18 +8,20 @@ import InfoCard from './InfoCard';
 const featuredItems = [
   {
     title: 'Highly customizable',
-    description: 'Start with our meticulous Material Design implementation, or go fully custom with your own design system.',
+    description:
+      'Start with our meticulous Material Design implementation, or go fully custom with your own design system.',
     icon: <FormatPaintIcon fontSize="small" color="primary" />,
   },
   {
     title: 'Accessibility',
     description:
-      'We're committed to meeting or exceeding global standards for accessibility, and we provide thorough guidance on best practices in our documentation.',
+      'We are committed to meeting or exceeding global standards for accessibility, and we provide thorough guidance on best practices in our documentation.',
     icon: <FormatPaintIcon fontSize="small" color="primary" />,
   },
   {
     title: 'Internationalization',
-    description: 'Serve the needs of users all around the world with built-in support for multiple time zones, languages, and date formats.',
+    description:
+      'Serve the needs of users all around the world with built-in support for multiple time zones, languages, and date formats.',
     icon: <FormatPaintIcon fontSize="small" color="primary" />,
   },
 ];
@@ -43,7 +45,8 @@ export default function FeatureHighlight() {
             First-class developer experience
           </Typography>
           <Typography variant="body1" color="text.secondary" textAlign="center">
-            MUI X Date and Time Pickers are designed to be delightful and intuitive for developers and users alike.
+            MUI X Date and Time Pickers are designed to be delightful and intuitive for developers
+            and users alike.
           </Typography>
         </Stack>
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
