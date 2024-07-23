@@ -7,6 +7,8 @@ import {
   TreeViewAnyPluginSignature,
   TreeViewInstance,
   TreeViewPublicAPI,
+  TreeViewItemPluginSlotPropsEnhancers,
+  TreeViewItemPluginSlotPropsEnhancerParams,
 } from '../models';
 import { TreeViewCorePluginSignatures } from '../corePlugins';
 
@@ -24,6 +26,9 @@ export const useTreeViewBuildContext = <TSignatures extends readonly TreeViewAny
   const runItemPlugins: TreeViewItemPluginsRunner = (itemPluginProps) => {
     let finalRootRef: React.RefCallback<HTMLLIElement> | null = null;
     let finalContentRef: React.RefCallback<HTMLElement> | null = null;
+    const pluginPropEnhancers: TreeViewItemPluginSlotPropsEnhancers[] = [];
+    const pluginPropEnhancersNames: { [key in keyof TreeViewItemPluginSlotPropsEnhancers]?: true } =
+      {};
 
     plugins.forEach((plugin) => {
       if (!plugin.itemPlugin) {
@@ -41,11 +46,47 @@ export const useTreeViewBuildContext = <TSignatures extends readonly TreeViewAny
       if (itemPluginResponse?.contentRef) {
         finalContentRef = itemPluginResponse.contentRef;
       }
+      if (itemPluginResponse?.propsEnhancers) {
+        pluginPropEnhancers.push(itemPluginResponse.propsEnhancers);
+
+        // Prepare a list of all the slots which are enhanced by at least one plugin
+        Object.keys(itemPluginResponse.propsEnhancers).forEach((propsEnhancerName) => {
+          pluginPropEnhancersNames[
+            propsEnhancerName as keyof TreeViewItemPluginSlotPropsEnhancers
+          ] = true;
+        });
+      }
     });
+
+    const resolvePropsEnhancer =
+      (currentSlotName: keyof TreeViewItemPluginSlotPropsEnhancers) =>
+      (currentSlotParams: TreeViewItemPluginSlotPropsEnhancerParams) => {
+        const enhancedProps = {};
+        pluginPropEnhancers.forEach((propsEnhancersForCurrentPlugin) => {
+          const propsEnhancerForCurrentPluginAndSlot =
+            propsEnhancersForCurrentPlugin[currentSlotName];
+          if (propsEnhancerForCurrentPluginAndSlot != null) {
+            Object.assign(enhancedProps, propsEnhancerForCurrentPluginAndSlot(currentSlotParams));
+          }
+        });
+
+        return enhancedProps;
+      };
+
+    const propsEnhancers = Object.fromEntries(
+      Object.keys(pluginPropEnhancersNames).map(
+        (propEnhancerName) =>
+          [
+            propEnhancerName,
+            resolvePropsEnhancer(propEnhancerName as keyof TreeViewItemPluginSlotPropsEnhancers),
+          ] as const,
+      ),
+    );
 
     return {
       contentRef: finalContentRef,
       rootRef: finalRootRef,
+      propsEnhancers,
     };
   };
 
