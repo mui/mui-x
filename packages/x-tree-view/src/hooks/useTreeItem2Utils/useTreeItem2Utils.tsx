@@ -67,6 +67,8 @@ export const useTreeItem2Utils = ({
     editable: instance.isItemEditable ? instance.isItemEditable(itemId) : false,
   };
 
+  const editedItemIdRef = React.useRef(status.editing);
+
   const handleExpansion = (event: React.MouseEvent) => {
     if (status.disabled) {
       return;
@@ -126,9 +128,11 @@ export const useTreeItem2Utils = ({
     }
     if (instance.isItemEditable(itemId)) {
       if (instance.isItemBeingEdited(itemId)) {
+        editedItemIdRef.current = false;
         instance.setEditedItemId(null);
       } else {
         instance.setEditedItemId(itemId);
+        editedItemIdRef.current = true;
       }
     }
   };

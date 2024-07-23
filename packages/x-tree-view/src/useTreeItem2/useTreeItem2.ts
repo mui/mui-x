@@ -70,8 +70,8 @@ export const useTreeItem2 = <
         return;
       }
 
-      // to do: check status.editing??
-      if ((event.relatedTarget as HTMLElement)?.dataset?.element === 'labelInput') {
+      // Don't blur the root when switching to editing mode
+      if (status.editing || event.target.id !== idAttribute) {
         return;
       }
 
