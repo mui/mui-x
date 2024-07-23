@@ -1,22 +1,22 @@
-import { nbNO as nbNOCore } from '@mui/material/locale';
+import { nnNO as nnNOCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
-const nbNOGrid: Partial<GridLocaleText> = {
+const nnNOGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ingen rader',
-  noResultsOverlayLabel: 'Fant ingen resultat.',
+  noResultsOverlayLabel: 'Fann ingen resultat.',
 
   // Density selector toolbar button text
-  toolbarDensity: 'Tetthet',
-  toolbarDensityLabel: 'Tetthet',
+  toolbarDensity: 'Tettheit',
+  toolbarDensityLabel: 'Tettheit',
   toolbarDensityCompact: 'Kompakt',
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Komfortabelt',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Kolonner',
-  toolbarColumnsLabel: 'Velg kolonner',
+  toolbarColumnsLabel: 'Vel kolonner',
 
   // Filters toolbar button text
   toolbarFilters: 'Filter',
@@ -57,19 +57,19 @@ const nbNOGrid: Partial<GridLocaleText> = {
   filterPanelInputPlaceholder: 'Filter verdi',
 
   // Filter operators text
-  filterOperatorContains: 'inneholder',
+  filterOperatorContains: 'inneheld',
   filterOperatorEquals: 'er lik',
-  filterOperatorStartsWith: 'starter med',
-  filterOperatorEndsWith: 'slutter med',
+  filterOperatorStartsWith: 'startar med',
+  filterOperatorEndsWith: 'sluttar med',
   filterOperatorIs: 'er',
-  filterOperatorNot: 'er ikke',
+  filterOperatorNot: 'er ikkje',
   filterOperatorAfter: 'er etter',
   filterOperatorOnOrAfter: 'er på eller etter',
   filterOperatorBefore: 'er før',
   filterOperatorOnOrBefore: 'er på eller før',
   filterOperatorIsEmpty: 'er tom',
-  filterOperatorIsNotEmpty: 'er ikke tom',
-  filterOperatorIsAnyOf: 'er en av',
+  filterOperatorIsNotEmpty: 'er ikkje tom',
+  filterOperatorIsAnyOf: 'er ein av',
   'filterOperator=': '=',
   'filterOperator!=': '!=',
   'filterOperator>': '>',
@@ -78,28 +78,28 @@ const nbNOGrid: Partial<GridLocaleText> = {
   'filterOperator<=': '<=',
 
   // Header filter operators text
-  headerFilterOperatorContains: 'Inneholder',
+  headerFilterOperatorContains: 'Inneheld',
   headerFilterOperatorEquals: 'Lik',
-  headerFilterOperatorStartsWith: 'Starter på',
-  headerFilterOperatorEndsWith: 'Slutter på',
+  headerFilterOperatorStartsWith: 'Startar på',
+  headerFilterOperatorEndsWith: 'Sluttar på',
   headerFilterOperatorIs: 'Er',
-  headerFilterOperatorNot: 'Er ikke',
+  headerFilterOperatorNot: 'Er ikkje',
   headerFilterOperatorAfter: 'Er etter',
   headerFilterOperatorOnOrAfter: 'Er på eller etter',
   headerFilterOperatorBefore: 'Er før',
   headerFilterOperatorOnOrBefore: 'Er på eller før',
   headerFilterOperatorIsEmpty: 'Er tom',
-  headerFilterOperatorIsNotEmpty: 'Er ikke tom',
-  headerFilterOperatorIsAnyOf: 'Er en av',
+  headerFilterOperatorIsNotEmpty: 'Er ikkje tom',
+  headerFilterOperatorIsAnyOf: 'Er ein av',
   'headerFilterOperator=': 'Lik',
-  'headerFilterOperator!=': 'Ikke lik',
+  'headerFilterOperator!=': 'Ikkje lik',
   'headerFilterOperator>': 'Større enn',
   'headerFilterOperator>=': 'Større enn eller lik',
   'headerFilterOperator<': 'Mindre enn',
   'headerFilterOperator<=': 'Mindre enn eller lik',
 
   // Filter values text
-  filterValueAny: 'noen',
+  filterValueAny: 'nokon',
   filterValueTrue: 'sant',
   filterValueFalse: 'usant',
 
@@ -110,8 +110,8 @@ const nbNOGrid: Partial<GridLocaleText> = {
   columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Skjul',
   columnMenuUnsort: 'Usorter',
-  columnMenuSortAsc: 'Sorter ØKENDE',
-  columnMenuSortDesc: 'Sorter SYNKENDE',
+  columnMenuSortAsc: 'Sorter AUKANDE',
+  columnMenuSortDesc: 'Sorter SYNKANDE',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -121,10 +121,10 @@ const nbNOGrid: Partial<GridLocaleText> = {
 
   // Rows selected footer text
   footerRowSelected: (count) =>
-    count !== 1 ? `${count.toLocaleString()} rader valgt` : `${count.toLocaleString()} rad valgt`,
+    count !== 1 ? `${count.toLocaleString()} rader valt` : `${count.toLocaleString()} rad valt`,
 
   // Total row amount footer text
-  footerTotalRows: 'Totalt antall rader:',
+  footerTotalRows: 'Totalt tal rader:',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
@@ -132,26 +132,26 @@ const nbNOGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Avmerkingsboks',
-  checkboxSelectionSelectAllRows: 'Velg alle rader',
-  checkboxSelectionUnselectAllRows: 'Velg bort alle rader',
-  checkboxSelectionSelectRow: 'Velg rad',
-  checkboxSelectionUnselectRow: 'Velg bort rad',
+  checkboxSelectionSelectAllRows: 'Vel alle rader',
+  checkboxSelectionUnselectAllRows: 'Vel vekk alle rader',
+  checkboxSelectionSelectRow: 'Vel rad',
+  checkboxSelectionUnselectRow: 'Vel vekk rad',
 
   // Boolean cell text
   booleanCellTrueLabel: 'sant',
   booleanCellFalseLabel: 'usant',
 
   // Actions cell more text
-  actionsCellMore: 'mer',
+  actionsCellMore: 'meir',
 
   // Column pinning text
   pinToLeft: 'Fest til venstre',
-  pinToRight: 'Fest til høyre',
-  unpin: 'Løsne',
+  pinToRight: 'Fest til høgre',
+  unpin: 'Lausne',
 
   // Tree Data
   treeDataGroupingHeaderName: 'Grupper',
-  treeDataExpand: 'se barn',
+  treeDataExpand: 'vis barn',
   treeDataCollapse: 'skjul barn',
 
   // Grouping columns
@@ -162,7 +162,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Master/detail
   detailPanelToggle: 'Utvid/kollaps detalj panel',
   expandDetailPanel: 'Utvid',
-  collapseDetailPanel: 'Kollaps',
+  collapseDetailPanel: 'Kolaps',
 
   // Row reordering text
   rowReorderingHeaderName: 'Radreorganisering',
@@ -176,4 +176,4 @@ const nbNOGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'størrelse',
 };
 
-export const nbNO: Localization = getGridLocalization(nbNOGrid, nbNOCore);
+export const nnNO: Localization = getGridLocalization(nnNOGrid, nnNOCore);
