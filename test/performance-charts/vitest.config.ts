@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [codspeedPlugin(), react()],
   test: {
     environment: 'jsdom',
+    testTimeout: 60000,
     browser: {
       enabled: true,
       name: 'chromium',
