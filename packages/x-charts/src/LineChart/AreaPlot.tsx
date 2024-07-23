@@ -71,7 +71,7 @@ const useAggregatedData = () => {
         if (process.env.NODE_ENV !== 'production') {
           if (xData === undefined) {
             throw new Error(
-              `MUI X Charts: ${
+              `MUI X: ${
                 xAxisKey === DEFAULT_X_AXIS_KEY
                   ? 'The first `xAxis`'
                   : `The x-axis with id "${xAxisKey}"`
@@ -80,7 +80,7 @@ const useAggregatedData = () => {
           }
           if (xData.length < stackedData.length) {
             throw new Error(
-              `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
+              `MUI X: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
             );
           }
         }
@@ -91,7 +91,13 @@ const useAggregatedData = () => {
         }>()
           .x((d) => xScale(d.x))
           .defined((_, i) => connectNulls || data[i] != null)
-          .y0((d) => d.y && yScale(d.y[0])!)
+          .y0((d) => {
+            const value = d.y && yScale(d.y[0])!;
+            if (Number.isNaN(value)) {
+              return yScale.range()[0];
+            }
+            return value;
+          })
           .y1((d) => d.y && yScale(d.y[1])!);
 
         const curve = getCurveFactory(series[seriesId].curve);

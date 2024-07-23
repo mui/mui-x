@@ -26,8 +26,7 @@ describe('<PickersDay />', () => {
       muiName: 'MuiPickersDay',
       refInstanceof: window.HTMLButtonElement,
       testVariantProps: { variant: 'disableMargin' },
-      // cannot test reactTestRenderer because of required context
-      skip: ['componentProp', 'componentsProp', 'reactTestRenderer'],
+      skip: ['componentProp', 'componentsProp'],
     }),
   );
 

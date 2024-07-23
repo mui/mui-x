@@ -59,13 +59,6 @@ commands:
         description: 'Set to true if you intend to any browser (for example with playwright).'
 
     steps:
-      - run:
-          name: Resolve React version
-          command: |
-            node scripts/useReactVersion.mjs
-            # log a patch for maintainers who want to check out this change
-            git --no-pager diff HEAD
-
       - when:
           condition: << parameters.browsers >>
           steps:
@@ -97,16 +90,14 @@ commands:
             pnpm --version
       - run:
           name: Install js dependencies
+          command: pnpm install
+
+      - run:
+          name: Resolve React version
           command: |
-            echo "React version $REACT_VERSION"
-            if [ $REACT_VERSION == "stable" ];
-            then
-              echo "pnpm install"
-              pnpm install
-            else
-              echo "pnpm install --no-frozen-lockfile"
-              pnpm install --no-frozen-lockfile
-            fi
+            pnpm use-react-version
+            # log a patch for maintainers who want to check out this change
+            git --no-pager diff HEAD
 
       - when:
           condition: << parameters.browsers >>
@@ -132,7 +123,7 @@ jobs:
           name: Should not have any git not staged
           command: git add -A && git diff --exit-code --staged
       - run:
-          name: Check for duplicated packages
+          name: '`pnpm dedupe` was run?'
           command: |
             if [[ $(git diff --name-status next | grep pnpm-lock) == "" ]];
             then

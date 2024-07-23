@@ -19,8 +19,6 @@ describe('<DateRangePicker /> - Describes', () => {
       'themeVariants',
       'mergeClassName',
       'propsSpread',
-      'rootClass',
-      'reactTestRenderer',
     ],
   }));
 });

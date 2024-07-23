@@ -183,21 +183,141 @@ describeTreeView<
       });
     });
 
-    describe('getItemDOMElement api method', () => {
-      it('should return the DOM element of the item', () => {
-        const response = render({
-          items: [{ id: '1' }],
+    describe('API methods', () => {
+      describe('getItem', () => {
+        // This method is only usable with Rich Tree View components
+        if (treeViewComponentName === 'SimpleTreeView') {
+          return;
+        }
+
+        it('should return the tree', () => {
+          const response = render({
+            items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
+          });
+
+          expect(response.apiRef.current.getItem('1')).to.deep.equal({
+            id: '1',
+            children: [{ id: '1.1' }],
+          });
         });
 
-        expect(response.apiRef.current.getItemDOMElement('1')).to.equal(response.getItemRoot('1'));
+        it('should have up to date tree when props.items changes', () => {
+          const response = render({
+            items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
+          });
+
+          response.setItems([{ id: '1' }, { id: '2' }]);
+
+          expect(response.apiRef.current.getItem('1')).to.deep.equal({ id: '1' });
+        });
+
+        it('should contain custom item properties', () => {
+          const response = render({
+            items: [{ id: '1', customProp: 'foo' }],
+          });
+
+          expect(response.apiRef.current.getItem('1')).to.deep.equal({
+            id: '1',
+            customProp: 'foo',
+          });
+        });
       });
 
-      it("should return the null when the item doesn't exist", () => {
-        const response = render({
-          items: [{ id: '1' }],
+      describe('getItemDOMElement', () => {
+        it('should return the DOM element of the item', () => {
+          const response = render({
+            items: [{ id: '1' }],
+          });
+
+          expect(response.apiRef.current.getItemDOMElement('1')).to.equal(
+            response.getItemRoot('1'),
+          );
         });
 
-        expect(response.apiRef.current.getItemDOMElement('2')).to.equal(null);
+        it("should return the null when the item doesn't exist", () => {
+          const response = render({
+            items: [{ id: '1' }],
+          });
+
+          expect(response.apiRef.current.getItemDOMElement('2')).to.equal(null);
+        });
+      });
+
+      describe('getItemTree', () => {
+        // This method is only usable with Rich Tree View components
+        if (treeViewComponentName === 'SimpleTreeView') {
+          return;
+        }
+
+        it('should return the tree', () => {
+          const response = render({
+            items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
+          });
+
+          expect(response.apiRef.current.getItemTree()).to.deep.equal([
+            { id: '1', children: [{ id: '1.1' }] },
+            { id: '2' },
+          ]);
+        });
+
+        it('should have up to date tree when props.items changes', () => {
+          const response = render({
+            items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
+          });
+
+          response.setItems([{ id: '1' }, { id: '2' }]);
+
+          expect(response.apiRef.current.getItemTree()).to.deep.equal([{ id: '1' }, { id: '2' }]);
+        });
+
+        it('should contain custom item properties', () => {
+          const response = render({
+            items: [{ id: '1', customProp: 'foo' }],
+          });
+
+          expect(response.apiRef.current.getItemTree()).to.deep.equal([
+            { id: '1', customProp: 'foo' },
+          ]);
+        });
+      });
+
+      describe('getItemOrderedChildrenIds', () => {
+        // This method is only usable with Rich Tree View components
+        if (treeViewComponentName === 'SimpleTreeView') {
+          return;
+        }
+
+        it('should return the children of an item in their rendering order', () => {
+          const response = render({
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }],
+          });
+
+          expect(response.apiRef.current.getItemOrderedChildrenIds('1')).to.deep.equal([
+            '1.1',
+            '1.2',
+          ]);
+        });
+
+        it('should work for the root items', () => {
+          const response = render({
+            items: [{ id: '1' }, { id: '2' }],
+          });
+
+          expect(response.apiRef.current.getItemOrderedChildrenIds(null)).to.deep.equal(['1', '2']);
+        });
+
+        it('should have up to date children when props.items changes', () => {
+          const response = render({
+            items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
+          });
+
+          response.setItems([{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }]);
+
+          expect(response.apiRef.current.getItemOrderedChildrenIds('1')).to.deep.equal([
+            '1.1',
+            '1.2',
+          ]);
+        });
       });
     });
   },

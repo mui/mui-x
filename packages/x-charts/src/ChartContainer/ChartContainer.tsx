@@ -21,17 +21,31 @@ import {
 } from '../context';
 import { ChartsPluginType } from '../models/plugin';
 import { ChartSeriesType } from '../models/seriesType/config';
-import { useChartContainerHooks } from './useChartContainerHooks';
+import { useChartContainerProps } from './useChartContainerProps';
+import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
+import { MakeOptional } from '../models/helpers';
 
 export type ChartContainerProps = Omit<
   ChartsSurfaceProps &
     Omit<SeriesContextProviderProps, 'seriesFormatters'> &
     Omit<DrawingProviderProps, 'svgRef'> &
-    Omit<CartesianContextProviderProps, 'xExtremumGetters' | 'yExtremumGetters'> &
+    Pick<CartesianContextProviderProps, 'dataset'> &
     ZAxisContextProviderProps &
     HighlightedProviderProps,
   'children'
 > & {
+  /**
+   * The configuration of the x-axes.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
+   */
+  xAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[];
+  /**
+   * The configuration of the y-axes.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
+   */
+  yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[];
   children?: React.ReactNode;
   /**
    * An array of plugins defining how to preprocess data.
@@ -42,64 +56,25 @@ export type ChartContainerProps = Omit<
 
 const ChartContainer = React.forwardRef(function ChartContainer(props: ChartContainerProps, ref) {
   const {
-    width,
-    height,
-    series,
-    margin,
-    xAxis,
-    yAxis,
-    zAxis,
-    colors,
-    dataset,
-    sx,
-    title,
-    desc,
-    disableAxisListener,
-    highlightedItem,
-    onHighlightChange,
-    plugins,
     children,
-  } = props;
-  const {
-    svgRef,
-    handleRef,
-    xExtremumGetters,
-    yExtremumGetters,
-    seriesFormatters,
-    colorProcessors,
-  } = useChartContainerHooks(ref, plugins);
+    drawingProviderProps,
+    colorProviderProps,
+    seriesContextProps,
+    cartesianContextProps,
+    zAxisContextProps,
+    highlightedProviderProps,
+    chartsSurfaceProps,
+  } = useChartContainerProps(props, ref);
 
   return (
-    <DrawingProvider width={width} height={height} margin={margin} svgRef={svgRef}>
-      <ColorProvider colorProcessors={colorProcessors}>
-        <SeriesContextProvider
-          series={series}
-          colors={colors}
-          dataset={dataset}
-          seriesFormatters={seriesFormatters}
-        >
-          <CartesianContextProvider
-            xAxis={xAxis}
-            yAxis={yAxis}
-            dataset={dataset}
-            xExtremumGetters={xExtremumGetters}
-            yExtremumGetters={yExtremumGetters}
-          >
-            <ZAxisContextProvider zAxis={zAxis} dataset={dataset}>
+    <DrawingProvider {...drawingProviderProps}>
+      <ColorProvider {...colorProviderProps}>
+        <SeriesContextProvider {...seriesContextProps}>
+          <CartesianContextProvider {...cartesianContextProps}>
+            <ZAxisContextProvider {...zAxisContextProps}>
               <InteractionProvider>
-                <HighlightedProvider
-                  highlightedItem={highlightedItem}
-                  onHighlightChange={onHighlightChange}
-                >
-                  <ChartsSurface
-                    width={width}
-                    height={height}
-                    ref={handleRef}
-                    sx={sx}
-                    title={title}
-                    desc={desc}
-                    disableAxisListener={disableAxisListener}
-                  >
+                <HighlightedProvider {...highlightedProviderProps}>
+                  <ChartsSurface {...chartsSurfaceProps}>
                     <ChartsAxesGradients />
                     {children}
                   </ChartsSurface>

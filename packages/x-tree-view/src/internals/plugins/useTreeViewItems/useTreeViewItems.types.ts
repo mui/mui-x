@@ -1,5 +1,5 @@
 import { TreeViewItemMeta, DefaultizedProps, TreeViewPluginSignature } from '../../models';
-import { TreeViewItemId } from '../../../models';
+import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 
 interface TreeViewItemProps {
   label: string;
@@ -22,6 +22,18 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
    * @returns {HTMLElement | null} The DOM element of the item with the given id.
    */
   getItemDOMElement: (itemId: TreeViewItemId) => HTMLElement | null;
+  /**
+   * Get the ids of a given item's children.
+   * Those ids are returned in the order they should be rendered.
+   * @param {TreeViewItemId | null} itemId The id of the item to get the children of.
+   * @returns {TreeViewItemId[]} The ids of the item's children.
+   */
+  getItemOrderedChildrenIds: (itemId: TreeViewItemId | null) => TreeViewItemId[];
+  /**
+   * Get all the items in the same format as provided by `props.items`.
+   * @returns {TreeViewItemProps[]} The items in the tree.
+   */
+  getItemTree: () => TreeViewBaseItem[];
 }
 
 export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItemsPublicAPI<R> {
@@ -39,13 +51,6 @@ export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItems
    * @returns {TreeViewItemProps[]} The items to render.
    */
   getItemsToRender: () => TreeViewItemProps[];
-  /**
-   * Get the ids of a given item's children.
-   * Those ids are returned in the order they should be rendered.
-   * @param {TreeViewItemId | null} itemId The id of the item to get the children of.
-   * @returns {TreeViewItemId[]} The ids of the item's children.
-   */
-  getItemOrderedChildrenIds: (itemId: TreeViewItemId | null) => TreeViewItemId[];
   /**
    * Check if a given item is disabled.
    * An item is disabled if it was marked as disabled or if one of its ancestors is disabled.

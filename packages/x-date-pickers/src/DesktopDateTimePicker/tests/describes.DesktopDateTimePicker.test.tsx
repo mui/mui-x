@@ -11,6 +11,7 @@ import {
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { expect } from 'chai';
 import * as React from 'react';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DesktopDateTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -35,6 +36,22 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
     views: ['year', 'month', 'day', 'hours', 'minutes'],
     componentFamily: 'picker',
     variant: 'desktop',
+  }));
+
+  describeConformance(<DesktopDateTimePicker />, () => ({
+    classes: {} as any,
+    render,
+    muiName: 'MuiDesktopDateTimePicker',
+    refInstanceof: window.HTMLDivElement,
+    skip: [
+      'componentProp',
+      'componentsProp',
+      'themeDefaultProps',
+      'themeStyleOverrides',
+      'themeVariants',
+      'mergeClassName',
+      'propsSpread',
+    ],
   }));
 
   describeValue(DesktopDateTimePicker, () => ({

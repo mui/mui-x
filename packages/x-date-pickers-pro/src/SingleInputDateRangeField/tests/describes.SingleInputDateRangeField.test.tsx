@@ -13,15 +13,7 @@ describe('<SingleInputDateRangeField /> - Describes', () => {
     render,
     muiName: 'MuiSingleInputDateRangeField',
     refInstanceof: window.HTMLDivElement,
-    // cannot test reactTestRenderer because of required context
-    skip: [
-      'reactTestRenderer',
-      'componentProp',
-      'componentsProp',
-      'themeDefaultProps',
-      'themeStyleOverrides',
-      'themeVariants',
-    ],
+    skip: ['componentProp', 'componentsProp', 'themeVariants', 'themeStyleOverrides'],
   }));
 
   describeRangeValidation(SingleInputDateRangeField, () => ({

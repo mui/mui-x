@@ -63,7 +63,10 @@
       "isGlobal": false
     }
   ],
+  "spread": true,
+  "themeDefaultProps": false,
   "muiName": "MuiPickersRangeCalendarHeader",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/PickersRangeCalendarHeader/PickersRangeCalendarHeader.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>",
