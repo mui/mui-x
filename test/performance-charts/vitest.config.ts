@@ -3,7 +3,7 @@ import codspeedPlugin from '@codspeed/vitest-plugin';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  plugins: [react(), codspeedPlugin()],
+  plugins: [codspeedPlugin(), react()],
   test: {
     environment: 'jsdom',
     browser: {
