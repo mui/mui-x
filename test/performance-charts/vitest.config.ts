@@ -7,6 +7,9 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     testTimeout: 60000,
+    benchmark: {
+      outputJson: '../../test-results/benchmark-charts.json',
+    },
     browser: {
       enabled: true,
       name: 'chromium',
