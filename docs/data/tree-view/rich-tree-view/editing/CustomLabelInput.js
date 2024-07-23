@@ -28,15 +28,7 @@ function Label({ children, ...other }) {
 }
 
 const LabelInput = React.forwardRef(function LabelInput(
-  {
-    visible = false,
-    onChange,
-    label,
-    item,
-    handleCancelItemLabelEditing,
-    handleSaveItemLabel,
-    ...props
-  },
+  { visible = false, item, handleCancelItemLabelEditing, handleSaveItemLabel },
   ref,
 ) {
   const [initialNameValue, setInitialNameValue] = React.useState({
@@ -69,7 +61,6 @@ const LabelInput = React.forwardRef(function LabelInput(
   return (
     <React.Fragment>
       <input
-        {...props}
         onChange={handleFirstNameChange}
         value={nameValue.firstName}
         autoFocus
@@ -77,7 +68,6 @@ const LabelInput = React.forwardRef(function LabelInput(
         ref={ref}
       />
       <input
-        {...props}
         onChange={handleLastNameChange}
         value={nameValue.lastName}
         type="text"
@@ -110,7 +100,6 @@ const LabelInput = React.forwardRef(function LabelInput(
 const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
   const {
     interactions: { handleCancelItemLabelEditing, handleSaveItemLabel },
-    status,
   } = useTreeItem2Utils({
     itemId: props.itemId,
     children: props.children,
@@ -132,14 +121,10 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
       ref={ref}
       slots={{ label: Label, labelInput: LabelInput }}
       slotProps={{
-        label: {
-          editing: status.editing,
-        },
         labelInput: {
           item: publicAPI.getItem(props.itemId),
           onBlur: handleInputBlur,
           onKeyDown: handleInputKeyDown,
-          editing: status.editing,
           handleCancelItemLabelEditing,
           handleSaveItemLabel,
         },
