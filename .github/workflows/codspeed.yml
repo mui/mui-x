@@ -26,5 +26,5 @@ jobs:
       - name: Run benchmarks
         uses: CodSpeedHQ/action@v2
         with:
-          run: pnpm performance:charts
+          run: pnpm test:performance:charts
           token: ${{ secrets.CODSPEED_TOKEN }}
