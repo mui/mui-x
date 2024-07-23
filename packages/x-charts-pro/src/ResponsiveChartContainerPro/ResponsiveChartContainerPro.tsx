@@ -2,11 +2,15 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Watermark } from '@mui/x-license/Watermark';
 import { ResponsiveChartContainerProps } from '@mui/x-charts/ResponsiveChartContainer';
-import { ResizableContainer, useResponsiveChartContainerProps } from '@mui/x-charts/internals';
+import { ResizableContainer } from '@mui/x-charts/internals';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import { ChartContainerPro } from '../ChartContainerPro';
+import { ZoomProps } from '../context/ZoomProvider';
+import { useResponsiveChartContainerProProps } from './useResponsiveChartContainerProProps';
 
-export interface ResponsiveChartContainerProProps extends ResponsiveChartContainerProps {}
+export interface ResponsiveChartContainerProProps
+  extends ResponsiveChartContainerProps,
+    ZoomProps {}
 
 const releaseInfo = getReleaseInfo();
 
@@ -14,12 +18,12 @@ const ResponsiveChartContainerPro = React.forwardRef(function ResponsiveChartCon
   props: ResponsiveChartContainerProProps,
   ref,
 ) {
-  const { chartContainerProps, resizableChartContainerProps, hasIntrinsicSize } =
-    useResponsiveChartContainerProps(props, ref);
+  const { chartContainerProProps, resizableChartContainerProps, hasIntrinsicSize } =
+    useResponsiveChartContainerProProps(props, ref);
 
   return (
     <ResizableContainer {...resizableChartContainerProps}>
-      {hasIntrinsicSize ? <ChartContainerPro {...chartContainerProps} /> : null}
+      {hasIntrinsicSize ? <ChartContainerPro {...chartContainerProProps} /> : null}
       <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
     </ResizableContainer>
   );
@@ -77,6 +81,12 @@ ResponsiveChartContainerPro.propTypes = {
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * Callback fired when the zoom has changed.
+   *
+   * @param {ZoomData[]} zoomData Updated zoom data.
+   */
+  onZoomChange: PropTypes.func,
   /**
    * An array of plugins defining how to preprocess data.
    * If not provided, the container supports line, bar, scatter and pie charts.
@@ -305,6 +315,16 @@ ResponsiveChartContainerPro.propTypes = {
       id: PropTypes.string,
       max: PropTypes.number,
       min: PropTypes.number,
+    }),
+  ),
+  /**
+   * The list of zoom data related to each axis.
+   */
+  zoom: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
     }),
   ),
 } as any;
