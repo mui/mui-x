@@ -29,8 +29,9 @@ jobs:
           cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
       - run: pnpm install --frozen-lockfile
       - run: pnpx playwright install --with-deps
-      # Ensure we are running on the prod version of our lib
-      - run: pnpm release:build
+      # Ensure we are running on the prod version of our libs
+      # Only charts and license are needed for the benchmarks
+      - run: pnpx lerna run --parallel --scope "@mui/{x-charts,x-license}*" build
       - name: Run benchmarks
         uses: CodSpeedHQ/action@v2
         with:
