@@ -2,7 +2,7 @@ import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
 import { afterEach, bench, describe } from 'vitest';
-import { LineChart } from '../../../packages/x-charts/src';
+import { LineChart } from '@mui/x-charts/LineChart';
 
 describe('LineChart', () => {
   afterEach(() => {
