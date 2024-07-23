@@ -39,21 +39,19 @@ jobs:
             
             const labels = issue.data.labels.map(label => label.name)
             
+            const productMap = {
+              'Data Grid': 'data grid',
+              'Date and Time Pickers': 'pickers',
+              'Charts': 'charts',
+              'Tree View': 'tree view',
+            }
+              
             if (products !== '') {
-              switch (true) {
-                case products.include('Data Grid'):
-                  labels.push('component: data grid')
-                  break
-                case products.include('Date and Time Pickers'):
-                  labels.push('component: pickers')
-                  break
-                case products.include('Charts'):
-                  labels.push('component: charts')
-                  break
-                case products.include('Tree View'):
-                  labels.push('component: tree view')
-                  break
-              }
+              products.split(',').forEach(product => {
+                if (productMap[product.trim()]) {
+                  labels.push(`component: ${productMap[product.trim()]}`)
+                }
+              })
             }
 
             await github.rest.issues.update({
