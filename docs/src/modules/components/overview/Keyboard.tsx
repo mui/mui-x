@@ -466,10 +466,10 @@ export default function Keyboard() {
             overline="Accessibility"
             title={
               <Typography variant="h2" fontSize="1.625rem">
-                Keyboard navigation and screen reader support
+                Assistive technology support
               </Typography>
             }
-            description="Built with accessibility in mind, the date and time pickers ensures all users can navigate effectively using advanced keyboard support, making it fully compliant with accessibility standards like WCAG and ARIA."
+            description="The MUI X Date Pickers feature advanced keyboard support that's compliant with WCAG and WAI-ARIA standards, so users who require assistive technology can navigate your interface with ease."
           />
 
           <Button
