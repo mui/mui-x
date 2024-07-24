@@ -106,6 +106,18 @@ function CustomCalendarHeader({
 }
 ```
 
+:::success
+The `PropsFromSlot` is exported from every package that supports slots:
+
+```ts
+import { PropsFromSlot } from '@mui/x-data-grid';
+import { PropsFromSlot } from '@mui/x-date-pickers/models';
+// ...
+```
+
+It takes a slot (as defined in the `slots` prop of your component) and returns the props that the slot receives.
+:::
+
 ### Using additional props
 
 If you are passing additional props to your slot, you can add them to the props your custom component receives:
