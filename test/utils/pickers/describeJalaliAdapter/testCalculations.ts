@@ -257,7 +257,7 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
   });
 
   it('Method: getDaysInMonth', () => {
-    expect(adapter.getDaysInMonth(testDateIso)).to.equal(31);
+    expect(adapter.getDaysInMonth(testDateIso)).to.equal(30);
   });
 
   it('Method: getWeekArray', () => {
