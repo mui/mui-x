@@ -232,9 +232,6 @@ You can find the list of slots in the API documentation of each component (e.g. 
 
 Most of the slots have a standalone doc example to show how to use them:
 
-| Set of components     | Documentation                                                                                                                                                      |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Data Grid             | [Custom subcomponents](/x/react-date-pickers/custom-components/)                                                                                                   |
-| Date and Time Pickers | [Custom slots and subcomponents](/x/react-date-pickers/custom-components/)                                                                                         |
-| Charts                |                                                                                                                                                                    |
-| Tree View             | [RichTreeView—Customization](/x/react-tree-view/rich-tree-view/customization/), [SimpleTreeView—Customization](/x/react-tree-view/simple-tree-view/customization/) |
+- [Data Grid—Custom slots and subcomponents](/x/react-data-grid/components/)
+- [Date Picker—Custom slots and subcomponents](/x/react-date-pickers/custom-components/)
+- [RichTreeView—Customization](/x/react-tree-view/rich-tree-view/customization/) / [SimpleTreeView—Customization](/x/react-tree-view/simple-tree-view/customization/)
