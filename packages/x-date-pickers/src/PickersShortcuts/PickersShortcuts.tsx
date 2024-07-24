@@ -60,37 +60,6 @@ export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutPr
  * - [PickersShortcuts API](https://mui.com/x/api/date-pickers/pickers-shortcuts/)
  */
 function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
-  const ref = React.useRef<HTMLUListElement | null>(null);
-  const [isAtBottom, setIsAtBottom] = React.useState(false);
-
-  const checkScrollPosition = () => {
-    if (!ref.current) {
-      return;
-    }
-
-    const element = ref.current;
-    const isVerticallyScrolledToEnd =
-      element.scrollTop + element.clientHeight >= element.scrollHeight;
-    setIsAtBottom(isVerticallyScrolledToEnd);
-  };
-
-  React.useEffect(() => {
-    const element = ref.current;
-    if (!element) {
-      return;
-    }
-
-    element.addEventListener('scroll', checkScrollPosition);
-
-    // Initial check in case the list is already at the bottom
-    checkScrollPosition();
-
-    return () => {
-      if (element) {
-        element.removeEventListener('scroll', checkScrollPosition);
-      }
-    };
-  }, []);
   const { items, changeImportance = 'accept', isLandscape, onChange, isValid, ...other } = props;
 
   if (items == null || items.length === 0) {
@@ -112,7 +81,6 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
 
   return (
     <List
-      ref={ref}
       dense
       sx={[
         {
@@ -136,20 +104,6 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
           </ListItem>
         );
       })}
-      {!isAtBottom && (
-        <div
-          style={{
-            content: '""',
-            position: 'fixed',
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: 16 /* Double of default padding coming from material */,
-            background: 'linear-gradient(transparent, white)',
-            pointerEvents: 'none',
-          }}
-        />
-      )}
     </List>
   );
 }
