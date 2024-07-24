@@ -27,11 +27,7 @@ function Label({ children, ...other }) {
   );
 }
 
-const LabelInput = function LabelInput({
-  item,
-  handleCancelItemLabelEditing,
-  handleSaveItemLabel,
-}) {
+function LabelInput({ item, handleCancelItemLabelEditing, handleSaveItemLabel }) {
   const [initialNameValue, setInitialNameValue] = React.useState({
     firstName: item.firstName,
     lastName: item.lastName,
@@ -90,7 +86,7 @@ const LabelInput = function LabelInput({
       </IconButton>
     </React.Fragment>
   );
-};
+}
 
 const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
   const {

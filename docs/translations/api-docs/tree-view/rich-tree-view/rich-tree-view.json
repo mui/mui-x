@@ -46,7 +46,7 @@
       }
     },
     "isItemEditable": {
-      "description": "Determines if a given item is editable or not.",
+      "description": "Determines if a given item is editable or not. The items are not editable by default.",
       "typeDescriptions": {
         "item": "The item to check.",
         "boolean": "<code>true</code> if the item is editable."

@@ -40,7 +40,7 @@ type CustomLabelInputProps = UseTreeItem2LabelInputSlotProps<{
   item: TreeViewBaseItem<Employee>;
 }>;
 
-const LabelInput = function LabelInput({
+function LabelInput({
   item,
   handleCancelItemLabelEditing,
   handleSaveItemLabel,
@@ -103,7 +103,7 @@ const LabelInput = function LabelInput({
       </IconButton>
     </React.Fragment>
   );
-};
+}
 
 const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
   props: TreeItem2Props,

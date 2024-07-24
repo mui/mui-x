@@ -239,6 +239,7 @@ RichTreeView.propTypes = {
   isItemDisabled: PropTypes.func,
   /**
    * Determines if a given item is editable or not.
+   * The items are not editable by default.
    * @template R
    * @param {R} item The item to check.
    * @returns {boolean} `true` if the item is editable.

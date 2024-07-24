@@ -62,9 +62,7 @@ type CustomLabelInputProps = UseTreeItem2LabelInputSlotProps<{
   value: string;
 }>;
 
-const CustomLabelInput = function CustomLabelInput(
-  props: Omit<CustomLabelInputProps, 'ref'>,
-) {
+function CustomLabelInput(props: Omit<CustomLabelInputProps, 'ref'>) {
   const { handleCancelItemLabelEditing, handleSaveItemLabel, value, ...other } =
     props;
   const [labelInputValue, setLabelInputValue] = React.useState(value);
@@ -92,7 +90,7 @@ const CustomLabelInput = function CustomLabelInput(
       </IconButton>
     </React.Fragment>
   );
-};
+}
 
 const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
   props: TreeItem2Props,

@@ -36,7 +36,7 @@ function CustomLabel({ editing, editable, children, toggleItemEditing, ...other 
   );
 }
 
-const CustomLabelInput = function CustomLabelInput(props) {
+function CustomLabelInput(props) {
   const { handleCancelItemLabelEditing, handleSaveItemLabel, value, ...other } =
     props;
   const [labelInputValue, setLabelInputValue] = React.useState(value);
@@ -64,7 +64,7 @@ const CustomLabelInput = function CustomLabelInput(props) {
       </IconButton>
     </React.Fragment>
   );
-};
+}
 
 const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
   const {
