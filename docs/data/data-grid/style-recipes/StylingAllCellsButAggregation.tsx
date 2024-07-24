@@ -1,10 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import {
-  GridColDef,
-  DataGridPremium,
-  gridClasses,
-} from '@mui/x-data-grid-premium';
+import { GridColDef, DataGridPremium, gridClasses } from '@mui/x-data-grid-premium';
 
 // eliminate rounding errors in aggregation row
 const valueFormatter: GridColDef['valueFormatter'] = (value) =>
