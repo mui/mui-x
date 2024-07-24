@@ -50,7 +50,7 @@ const internationalizationFeatures = [
   },
   {
     title: 'Validation and error handling',
-    description: 'Advanced validation and error handling out-of-the-box',
+    description: 'We have all use cases covered for you and your end users.',
   },
 ];
 
