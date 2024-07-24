@@ -168,7 +168,7 @@ This can happen if you pass additional props to your custom component using `slo
 If we take the example of the `calendarHeader` slot, you can cast your custom component as below:
 
 ```tsx
-export default function MyApp() {
+function MyApp() {
   const [displayWeekNumber, setDisplayWeekNumber] = React.useState(false);
   return (
     <DateCalendar
@@ -234,6 +234,7 @@ The module augmentation feature isn't implemented yet for the other sets of comp
 - 👍 Upvote [issue TODO](https://github.com/mui/mui-x/issues/4460) if you want to see it land faster on the Date and Time Pickers.
 - 👍 Upvote [issue TODO](https://github.com/mui/mui-x/issues/4460) if you want to see it land faster on the Charts.
 - 👍 Upvote [issue TODO](https://github.com/mui/mui-x/issues/4460) if you want to see it land faster on the Tree View.
+
   :::
 
 ## Slots of the X components
