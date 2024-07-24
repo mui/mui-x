@@ -168,24 +168,29 @@ export const useGridCellSelection = (
     const selectionModel = apiRef.current.getCellSelectionModel();
     const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
     const visibleRows = getVisibleRows(apiRef, props);
-    const sortedEntries = visibleRows.rows.reduce((result, row) => {
-      if (row.id in selectionModel) {
-        result.push([row.id, selectionModel[row.id]])
-      }
-      return result;
-    }, [] as [GridRowId, Record<string, boolean>][])
+    const sortedEntries = visibleRows.rows.reduce(
+      (result, row) => {
+        if (row.id in selectionModel) {
+          result.push([row.id, selectionModel[row.id]]);
+        }
+        return result;
+      },
+      [] as [GridRowId, Record<string, boolean>][],
+    );
 
     return sortedEntries.reduce<{ id: GridRowId; field: string }[]>(
       (selectedCells, [id, fields]) => {
-        selectedCells.push(...Object.entries(fields).reduce<{ id: GridRowId; field: string }[]>(
-          (selectedFields, [field, isSelected]) => {
-            if (isSelected) {
-              selectedFields.push({ id: idToIdLookup[id], field })
-            }
-            return selectedFields;
-          },
-          [],
-        ));
+        selectedCells.push(
+          ...Object.entries(fields).reduce<{ id: GridRowId; field: string }[]>(
+            (selectedFields, [field, isSelected]) => {
+              if (isSelected) {
+                selectedFields.push({ id: idToIdLookup[id], field });
+              }
+              return selectedFields;
+            },
+            [],
+          ),
+        );
         return selectedCells;
       },
       [],
