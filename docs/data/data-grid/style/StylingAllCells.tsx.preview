@@ -1,7 +1,7 @@
 <DataGrid
   rows={rows}
   columns={columns}
-  getCellClassName={(params: GridCellParams<any, any, number>) => {
+  getCellClassName={(params) => {
     if (params.field === 'city' || params.value == null) {
       return '';
     }

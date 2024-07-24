@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { GridColDef, DataGrid, GridCellParams, gridClasses } from '@mui/x-data-grid';
+import { GridColDef, DataGrid, gridClasses } from '@mui/x-data-grid';
 
 const columns: GridColDef[] = [
   { field: 'city' },
@@ -35,7 +35,7 @@ export default function StylingAllCells() {
       <DataGrid
         rows={rows}
         columns={columns}
-        getCellClassName={(params: GridCellParams<any, any, number>) => {
+        getCellClassName={(params) => {
           if (params.field === 'city' || params.value == null) {
             return '';
           }

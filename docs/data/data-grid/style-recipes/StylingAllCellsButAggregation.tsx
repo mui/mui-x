@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import {
   GridColDef,
   DataGridPremium,
-  GridCellParams,
   gridClasses,
 } from '@mui/x-data-grid-premium';
 
@@ -56,7 +55,7 @@ export default function StylingAllCellsButAggregation() {
       <DataGridPremium
         rows={rows}
         columns={columns}
-        getCellClassName={(params: GridCellParams<any, any, number>) => {
+        getCellClassName={(params) => {
           if (
             params.field === 'city' ||
             params.value == null ||
