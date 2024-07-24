@@ -54,4 +54,4 @@ export type {
   UseTreeViewJSXItemsParameters,
 } from './plugins/useTreeViewJSXItems';
 
-export { buildWarning } from './utils/warning';
+export { warnOnce } from './utils/warning';

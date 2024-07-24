@@ -3,6 +3,10 @@ export type {
   UseTreeItem2Parameters,
   UseTreeItem2ReturnValue,
   UseTreeItem2Status,
+  UseTreeItem2RootSlotOwnProps,
   UseTreeItem2ContentSlotOwnProps,
   UseTreeItem2LabelInputSlotOwnProps,
+  UseTreeItem2LabelSlotOwnProps,
+  UseTreeItem2IconContainerSlotOwnProps,
+  UseTreeItem2GroupTransitionSlotOwnProps,
 } from './useTreeItem2.types';
