@@ -49,8 +49,8 @@
     "@types/d3-path": "^3.0.1",
     "@types/d3-array": "^3.0.3",
     "internmap": "^2.0.3",
-    "execa": "^6.1.0",
-    "rimraf": "^3.0.2"
+    "execa": "^9.3.0",
+    "rimraf": "^5.0.8"
   },
   "publishConfig": {
     "provenance": true

@@ -10,10 +10,8 @@
  */
 const fs = require('fs').promises;
 const path = require('path');
-const { promisify } = require('util');
 
-const rimraf = require('rimraf');
-const rimrafP = promisify(rimraf);
+const { rimraf } = require('rimraf');
 
 const vendorPkg = require('../package.json');
 const VENDOR_PKGS = new Set(Object.keys(vendorPkg.dependencies));
@@ -87,7 +85,7 @@ const main = async () => {
   );
 
   log('Cleaning old vendor directories.');
-  await Promise.all(cleanGlobs.map((glob) => rimrafP(glob)));
+  await Promise.all(cleanGlobs.map((glob) => rimraf(glob)));
   log('Creating empty vendor directories.');
   await Promise.all(baseDirs.map((libPath) => fs.mkdir(libPath, { recursive: true })));
 
