@@ -36,7 +36,6 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
   {
     label: "New Year's Day",
     getValue: () => {
-      // (January 1)
       const today = dayjs();
       return today.month(0).date(1);
     },
@@ -44,14 +43,33 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
   {
     label: 'Birthday of MLK Jr.',
     getValue: () => {
-      // (third Monday in January)
       return getMonthWeekday(0, 1, 3);
+    },
+  },
+  {
+    label: "Valentine's Day",
+    getValue: () => {
+      const today = dayjs();
+      return today.month(1).date(14);
+    },
+  },
+  {
+    label: 'Earth Day',
+    getValue: () => {
+      const today = dayjs();
+      return today.month(3).date(22);
+    },
+  },
+  {
+    label: "International Workers' Day",
+    getValue: () => {
+      const today = dayjs();
+      return today.month(4).date(1);
     },
   },
   {
     label: 'Independence Day',
     getValue: () => {
-      // (July 4)
       const today = dayjs();
       return today.month(6).date(4);
     },
@@ -59,21 +77,25 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
   {
     label: 'Labor Day',
     getValue: () => {
-      // (first Monday in September)
       return getMonthWeekday(8, 1, 1);
+    },
+  },
+  {
+    label: 'Halloween',
+    getValue: () => {
+      const today = dayjs();
+      return today.month(9).date(31);
     },
   },
   {
     label: 'Thanksgiving Day',
     getValue: () => {
-      // (fourth Thursday in November)
       return getMonthWeekday(10, 4, 4);
     },
   },
   {
     label: 'Christmas Day',
     getValue: () => {
-      // (December 25)
       const today = dayjs();
       return today.month(11).date(25);
     },
