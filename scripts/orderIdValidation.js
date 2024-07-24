@@ -1,16 +1,9 @@
 /**
- * We import these just for type checking as the actual imports
- * are passed as arguments to the function
- * https://github.com/marketplace/actions/github-script#run-a-separate-file
+ * @param {import("@actions/core")} core
+ * @param {import("@actions/github").context} context
+ * @param {ReturnType<import("@actions/github").getOctokit>} github
  */
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const core = require('@actions/core');
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const github = require('@actions/github');
-
-// eslint-disable-next-line @typescript-eslint/no-shadow
-module.exports = async ({ core, github, context }) => {
+module.exports = async ({ core, context, github }) => {
   try {
     const owner = context.repo.owner;
     const repo = context.repo.repo;
