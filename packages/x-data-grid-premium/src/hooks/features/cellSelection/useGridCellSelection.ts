@@ -167,7 +167,6 @@ export const useGridCellSelection = (
   >(() => {
     const selectionModel = apiRef.current.getCellSelectionModel();
     const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
-    const visibleRows = getVisibleRows(apiRef, props);
     const sortedEntries = visibleRows.rows.reduce(
       (result, row) => {
         if (row.id in selectionModel) {
