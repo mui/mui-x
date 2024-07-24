@@ -34,3 +34,4 @@ export * from './zhTW';
 export * from './hrHR';
 export * from './ptPT';
 export * from './zhHK';
+export * from './isIS';
