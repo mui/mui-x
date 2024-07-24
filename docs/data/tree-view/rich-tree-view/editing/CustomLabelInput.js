@@ -9,7 +9,7 @@ import { TreeItem2, TreeItem2Label } from '@mui/x-tree-view/TreeItem2';
 import { useTreeItem2 } from '@mui/x-tree-view/useTreeItem2/useTreeItem2';
 import { useTreeItem2Utils } from '@mui/x-tree-view/hooks/useTreeItem2Utils';
 
-import { ITEMS } from './items';
+import { EMPLOYEES } from './employees';
 
 function Label({ children, ...other }) {
   return (
@@ -132,7 +132,7 @@ export default function CustomLabelInput() {
   return (
     <Box sx={{ minHeight: 224, minWidth: 250 }}>
       <RichTreeView
-        items={ITEMS}
+        items={EMPLOYEES}
         slots={{ item: CustomTreeItem2 }}
         isItemEditable={(item) => Boolean(item?.editable)}
         defaultExpandedItems={['1', '2']}

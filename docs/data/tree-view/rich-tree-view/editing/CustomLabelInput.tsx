@@ -16,7 +16,7 @@ import {
 import { useTreeItem2 } from '@mui/x-tree-view/useTreeItem2/useTreeItem2';
 import { useTreeItem2Utils } from '@mui/x-tree-view/hooks/useTreeItem2Utils';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { ExtendedTreeItemProps, ITEMS } from './items';
+import { EMPLOYEES, Employee } from './employees';
 
 function Label({ children, ...other }: UseTreeItem2LabelSlotProps) {
   return (
@@ -37,7 +37,7 @@ function Label({ children, ...other }: UseTreeItem2LabelSlotProps) {
 type CustomLabelInputProps = UseTreeItem2LabelInputSlotProps<{
   handleCancelItemLabelEditing: (event: React.SyntheticEvent) => void;
   handleSaveItemLabel: (event: React.SyntheticEvent, label: string) => void;
-  item: TreeViewBaseItem<ExtendedTreeItemProps>;
+  item: TreeViewBaseItem<Employee>;
 }>;
 
 const LabelInput = function LabelInput({
@@ -150,7 +150,7 @@ export default function CustomLabelInput() {
   return (
     <Box sx={{ minHeight: 224, minWidth: 250 }}>
       <RichTreeView
-        items={ITEMS}
+        items={EMPLOYEES}
         slots={{ item: CustomTreeItem2 }}
         isItemEditable={(item) => Boolean(item?.editable)}
         defaultExpandedItems={['1', '2']}

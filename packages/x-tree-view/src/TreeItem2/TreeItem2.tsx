@@ -176,17 +176,17 @@ const StyledTreeItem2LabelInput = styled('input', {
 
 export const TreeItem2LabelInput = function UnstyledLabelInput({
   onChange,
-  label,
+  value,
   ...props
 }: UseTreeItem2LabelInputSlotOwnProps) {
-  const [labelInputValue, setLabelInputValue] = React.useState(label);
+  const [labelInputValue, setLabelInputValue] = React.useState(value);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange?.(event);
     setLabelInputValue(event.target.value);
   };
 
-  const resetLabel = React.useCallback(() => setLabelInputValue(label), [label]);
+  const resetLabel = React.useCallback(() => setLabelInputValue(value), [value]);
 
   React.useEffect(() => {
     return resetLabel();

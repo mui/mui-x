@@ -59,21 +59,21 @@ function CustomLabel({
 type CustomLabelInputProps = UseTreeItem2LabelInputSlotProps<{
   handleCancelItemLabelEditing: (event: React.SyntheticEvent) => void;
   handleSaveItemLabel: (event: React.SyntheticEvent, label: string) => void;
-  label: string;
+  value: string;
 }>;
 
 const CustomLabelInput = function CustomLabelInput(
   props: Omit<CustomLabelInputProps, 'ref'>,
 ) {
-  const { handleCancelItemLabelEditing, handleSaveItemLabel, label, ...other } =
+  const { handleCancelItemLabelEditing, handleSaveItemLabel, value, ...other } =
     props;
-  const [labelInputValue, setLabelInputValue] = React.useState(label);
+  const [labelInputValue, setLabelInputValue] = React.useState(value);
 
   return (
     <React.Fragment>
       <TreeItem2LabelInput
         {...other}
-        label={label}
+        value={value}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
           setLabelInputValue(event.target.value);
         }}
@@ -156,7 +156,7 @@ export default function EditWithIcons() {
       <RichTreeView
         items={MUI_X_PRODUCTS}
         slots={{ item: CustomTreeItem2 }}
-        isItemEditable={(item) => Boolean(item?.editable)}
+        isItemEditable={() => true}
         defaultExpandedItems={['grid', 'pickers']}
         expansionTrigger="iconContainer"
       />

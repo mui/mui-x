@@ -43,7 +43,7 @@ export default function CustomBehavior() {
         items={MUI_X_PRODUCTS}
         slots={{ item: CustomTreeItem2 }}
         apiRef={apiRef}
-        isItemEditable={(item) => Boolean(item?.editable)}
+        isItemEditable={() => true}
         defaultExpandedItems={['grid', 'pickers']}
       />
     </Box>

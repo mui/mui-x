@@ -11,13 +11,18 @@ packageName: '@mui/x-tree-view'
 
 <p class="description">Learn how to edit the label of Tree View items.</p>
 
-:::warning
-this doc page is stip WIP
-:::
-
-## Enable editing on certain items
+## Enable label editing
 
 You can use the `isItemEditable` prop to enable editing on certain items.
+
+:::success
+You can enable editing on all items by always returning true
+
+```jsx
+<RichTreeView items={ITEMS} isItemEditable={() => true} />
+```
+
+:::
 
 If an item is editable, the editing state can be toggled by double clicking on it, or by pressing <kbd class="key">Enter</kbd> on the keyboard when the item is in focus.
 
@@ -45,7 +50,7 @@ The default behavior on bluring the tree item that is being edited is to save th
 
 ## Enable editing using only icons
 
-The demo below shows how to entirely override the editing behavior, and implementit using icons.
+The demo below shows how to entirely override the editing behavior, and implement it using icons.
 
 {{"demo": "EditWithIcons.js"}}
 
@@ -76,7 +81,7 @@ Use the `setItemExpansion` API method to change the expansion of an item.
 
 ```ts
 apiRef.current.updateItemLabel(
-  // The id of the item to expand or collapse
+  // The id of the item to to update
   itemId,
   // The new label of the item.
   newLabel,
