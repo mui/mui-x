@@ -22,7 +22,7 @@ Here is a demonstration with two lines with the same data.
 But one uses a linear, and the other a log axis.
 
 Each axis definition is identified by its property `id`.
-And series specify the axis they use with `xAxisKey` and `yAxisKey` properties.
+And series specify the axis they use with `xAxisId` and `yAxisId` properties.
 
 {{"demo": "ScaleExample.js"}}
 
@@ -30,9 +30,9 @@ And series specify the axis they use with `xAxisKey` and `yAxisKey` properties.
 The management of those ids is for advanced use cases, such as charts with multiple axes.
 Or customized axes.
 
-If you do not provide a `xAxisKey` or `yAxisKey`, the series will use the first axis defined.
+If you do not provide a `xAxisId` or `yAxisId`, the series will use the first axis defined.
 
-That's why in most of the demonstrations with single x and y axis you will not see definitions of axis `id`, `xAxisKey`, or `yAxisKey`.
+That's why in most of the demonstrations with single x and y axis you will not see definitions of axis `id`, `xAxisId`, or `yAxisId`.
 Those demonstrations use the defaultized values.
 :::
 

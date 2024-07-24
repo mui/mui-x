@@ -54,16 +54,16 @@ function ChartsItemTooltipContent<T extends ChartSeriesType>(
   const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
   const colorProcessors = useColorProcessor();
 
-  const xAxisKey = (series as any).xAxisKey ?? xAxisIds[0];
-  const yAxisKey = (series as any).yAxisKey ?? yAxisIds[0];
-  const zAxisKey = (series as any).zAxisKey ?? zAxisIds[0];
+  const xAxisId = (series as any).xAxisId ?? (series as any).xAxisKey ?? xAxisIds[0];
+  const yAxisId = (series as any).yAxisId ?? (series as any).yAxisKey ?? yAxisIds[0];
+  const zAxisId = (series as any).zAxisId ?? (series as any).zAxisKey ?? zAxisIds[0];
 
   const getColor =
     colorProcessors[series.type]?.(
       series as any,
-      xAxisKey && xAxis[xAxisKey],
-      yAxisKey && yAxis[yAxisKey],
-      zAxisKey && zAxis[zAxisKey],
+      xAxisId && xAxis[xAxisId],
+      yAxisId && yAxis[yAxisId],
+      zAxisId && zAxis[zAxisId],
     ) ?? (() => '');
 
   const Content = content ?? DefaultChartsItemTooltipContent;

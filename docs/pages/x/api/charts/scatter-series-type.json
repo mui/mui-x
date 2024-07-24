@@ -13,8 +13,11 @@
     },
     "markerSize": { "type": { "description": "number" } },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
+    "xAxisId": { "type": { "description": "string" } },
     "xAxisKey": { "type": { "description": "string" } },
+    "yAxisId": { "type": { "description": "string" } },
     "yAxisKey": { "type": { "description": "string" } },
+    "zAxisId": { "type": { "description": "string" } },
     "zAxisKey": { "type": { "description": "string" } }
   }
 }
