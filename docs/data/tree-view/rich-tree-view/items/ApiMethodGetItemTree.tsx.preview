@@ -1,0 +1,8 @@
+<Stack direction="row" spacing={2}>
+  <Button onClick={handleInvertItems}>Invert first tree</Button>
+  <Button onClick={handleUpdateItemOnTop}>Update item on top</Button>
+</Stack>
+<Typography>Item on top: {itemOnTop}</Typography>
+<Box sx={{ minHeight: 352, minWidth: 300 }}>
+  <RichTreeView apiRef={apiRef} items={items} />
+</Box>

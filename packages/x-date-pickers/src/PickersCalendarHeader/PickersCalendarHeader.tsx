@@ -106,7 +106,9 @@ const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon, {
   name: 'MuiPickersCalendarHeader',
   slot: 'SwitchViewIcon',
   overridesResolver: (_, styles) => styles.switchViewIcon,
-})(({ theme }) => ({
+})<{
+  ownerState: PickersCalendarHeaderOwnerState<any>;
+}>(({ theme }) => ({
   willChange: 'transform',
   transition: theme.transitions.create('transform'),
   transform: 'rotate(0deg)',
@@ -177,7 +179,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<
   const { ownerState: switchViewIconOwnerState, ...switchViewIconProps } = useSlotProps({
     elementType: SwitchViewIcon,
     externalSlotProps: slotProps?.switchViewIcon,
-    ownerState: undefined,
+    ownerState,
     className: classes.switchViewIcon,
   });
 

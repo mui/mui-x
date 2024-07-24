@@ -6,8 +6,8 @@ import ToggleOptions from './ToggleOptions';
 
 const defaultPackageManagers: Record<string, string> = {
   npm: 'npm install',
-  yarn: 'yarn add',
   pnpm: 'pnpm add',
+  yarn: 'yarn add',
 };
 
 export default function InstallationInstructions(props: {

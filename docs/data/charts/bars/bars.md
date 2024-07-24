@@ -1,7 +1,7 @@
 ---
 title: React Bar chart
 productId: x-charts
-components: BarChart, BarElement, BarPlot, ChartsGrid, ChartsOnAxisClickHandler, BarLabel
+components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, ChartsOnAxisClickHandler, BarLabel
 ---
 
 # Charts - Bars
@@ -155,7 +155,7 @@ Their is a slight difference between the `event` of `onItemClick` and `onAxisCli
 
 ### Composition
 
-If you're using composition, you can get those click event as follow.
+If you're using composition, you can get those click event as follows.
 Notice that the `onAxisClick` will handle both bar and line series if you mix them.
 
 ```jsx

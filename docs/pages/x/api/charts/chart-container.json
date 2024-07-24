@@ -55,10 +55,14 @@
   "name": "ChartContainer",
   "imports": [
     "import { ChartContainer } from '@mui/x-charts/ChartContainer';",
-    "import { ChartContainer } from '@mui/x-charts';"
+    "import { ChartContainer } from '@mui/x-charts';",
+    "import { ChartContainer } from '@mui/x-charts-pro';"
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": false,
   "muiName": "MuiChartContainer",
+  "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/ChartContainer/ChartContainer.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Chart composition</a></li></ul>",

@@ -29,10 +29,11 @@ export const useReducedMotion = () => {
 
     handleMediaChange(mql);
 
-    mql.addEventListener('change', handleMediaChange);
+    // MatchMedia is not fully supported in all environments, so we need to check if it exists before calling addEventListener
+    mql.addEventListener?.('change', handleMediaChange);
 
     return () => {
-      mql.removeEventListener('change', handleMediaChange);
+      mql.removeEventListener?.('change', handleMediaChange);
     };
   }, []);
 };
