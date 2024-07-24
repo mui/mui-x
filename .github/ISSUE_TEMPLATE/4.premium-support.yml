@@ -32,6 +32,16 @@ body:
       options:
         - label: I have tested the latest version
           required: true
+  - type: dropdown
+    attributes:
+      label: Affected products
+      description: Which products are affected by this issue? If you're not sure, leave this blank.
+      multiple: true
+      options:
+        - Data Grid
+        - Date and Time Pickers
+        - Charts
+        - Tree View
   - type: textarea
     attributes:
       label: The problem in depth
