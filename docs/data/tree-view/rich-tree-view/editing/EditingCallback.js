@@ -16,7 +16,7 @@ export default function EditingCallback() {
         <RichTreeView
           items={MUI_X_PRODUCTS}
           slots={{ item: TreeItem2 }}
-          isItemEditable={(item) => Boolean(item?.editable)}
+          isItemEditable={() => true}
           defaultExpandedItems={['grid', 'pickers']}
           onItemLabelChange={(itemId, label) => {
             setLastEditedItem(
