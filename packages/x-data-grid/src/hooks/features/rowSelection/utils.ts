@@ -2,14 +2,20 @@ import type { DataGridProcessedProps } from '../../../models/props/DataGridProps
 import { GridSignature } from '../../utils/useGridApiEventHandler';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import type { GridGroupNode, GridRowId, GridRowTreeConfig } from '../../../models/gridRows';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type {
+  GridPrivateApiCommunity,
+  GridApiCommunity,
+} from '../../../models/api/gridApiCommunity';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
 import { selectedIdsLookupSelector } from './gridRowSelectionSelector';
 import { gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { createSelector } from '../../../utils/createSelector';
 
-function getGridRowGroupChildrenSelector(groupId: GridRowId) {
+function getGridRowGroupSelectableChildrenSelector(
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+  groupId: GridRowId,
+) {
   return createSelector(
     gridRowTreeSelector,
     gridSortedRowIdsSelector,
@@ -29,7 +35,7 @@ function getGridRowGroupChildrenSelector(groupId: GridRowId) {
         index += 1
       ) {
         const id = sortedRowIds[index];
-        if (filteredRowsLookup[id] !== false) {
+        if (filteredRowsLookup[id] !== false && apiRef.current.isRowSelectable(id)) {
           children.push(id);
         }
       }
@@ -132,7 +138,7 @@ export const findRowsToSelect = (
     ) {
       const rowNode = apiRef.current.getRowNode(rowId) as GridGroupNode;
       const parent = rowNode.parent;
-      if (parent && parent !== GRID_ROOT_GROUP_ID) {
+      if (parent && parent !== GRID_ROOT_GROUP_ID && apiRef.current.isRowSelectable(parent)) {
         rowsToSelect.push(parent);
         traverseParents(parent);
       }
@@ -143,7 +149,7 @@ export const findRowsToSelect = (
   const rowNode = apiRef.current.getRowNode(selectedRow);
 
   if (rowNode?.type === 'group') {
-    const rowGroupChildrenSelector = getGridRowGroupChildrenSelector(selectedRow);
+    const rowGroupChildrenSelector = getGridRowGroupSelectableChildrenSelector(apiRef, selectedRow);
     const children = rowGroupChildrenSelector(apiRef);
     return rowsToSelect.concat(children);
   }
@@ -167,7 +173,10 @@ export const findRowsToDeselect = (
 
   const rowNode = apiRef.current.getRowNode(deselectedRow);
   if (rowNode?.type === 'group') {
-    const rowGroupChildrenSelector = getGridRowGroupChildrenSelector(deselectedRow);
+    const rowGroupChildrenSelector = getGridRowGroupSelectableChildrenSelector(
+      apiRef,
+      deselectedRow,
+    );
     const children = rowGroupChildrenSelector(apiRef);
     return rowsToDeselect.concat(children);
   }
