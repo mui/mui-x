@@ -69,7 +69,7 @@
   "devDependencies": {
     "@argos-ci/core": "^2.3.0",
     "@babel/cli": "^7.24.8",
-    "@babel/core": "^7.24.8",
+    "@babel/core": "^7.24.9",
     "@babel/node": "^7.24.8",
     "@babel/plugin-transform-class-properties": "^7.24.7",
     "@babel/plugin-transform-object-rest-spread": "^7.24.7",
@@ -82,7 +82,7 @@
     "@babel/preset-typescript": "^7.24.7",
     "@babel/register": "^7.24.6",
     "@babel/traverse": "^7.24.8",
-    "@babel/types": "^7.24.8",
+    "@babel/types": "^7.24.9",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
