@@ -167,7 +167,8 @@ export const useGridCellSelection = (
   >(() => {
     const selectionModel = apiRef.current.getCellSelectionModel();
     const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
-    const sortedEntries = visibleRows.rows.reduce(
+    const currentVisibleRows = getVisibleRows(apiRef, props);
+    const sortedEntries = currentVisibleRows.rows.reduce(
       (result, row) => {
         if (row.id in selectionModel) {
           result.push([row.id, selectionModel[row.id]]);
@@ -194,7 +195,7 @@ export const useGridCellSelection = (
       },
       [],
     );
-  }, [apiRef]);
+  }, [apiRef, props]);
 
   const cellSelectionApi: GridCellSelectionApi = {
     isCellSelected,
