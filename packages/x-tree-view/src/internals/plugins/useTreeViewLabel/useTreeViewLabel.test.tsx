@@ -20,7 +20,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
           act(() => {
             response.getItemRoot('1').focus();
           });
-          fireEvent.doubleClick(response.getItemContent('1'));
+          fireEvent.doubleClick(response.getItemLabel('1'));
 
           expect(response.getItemLabelInput('1')).to.equal(null);
         });
@@ -37,7 +37,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
           act(() => {
             response.getItemRoot('1').focus();
           });
-          fireEvent.doubleClick(response.getItemContent('1'));
+          fireEvent.doubleClick(response.getItemLabel('1'));
 
           expect(response.getItemLabelInput('1')).not.to.equal(null);
         });
@@ -54,7 +54,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
           act(() => {
             response.getItemRoot('1').focus();
           });
-          fireEvent.doubleClick(response.getItemContent('1'));
+          fireEvent.doubleClick(response.getItemLabel('1'));
 
           expect(response.getItemLabel('1')).to.equal(null);
         });
@@ -106,7 +106,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
           act(() => {
             response.getItemRoot('1').focus();
           });
-          fireEvent.doubleClick(response.getItemContent('1'));
+          fireEvent.doubleClick(response.getItemLabel('1'));
           fireEvent.keyDown(response.getItemLabelInput('1'), { key: 'Enter' });
 
           expect(response.getItemLabelInput('1')).to.equal(null);
@@ -125,7 +125,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
           act(() => {
             response.getItemRoot('1').focus();
           });
-          fireEvent.doubleClick(response.getItemContent('1'));
+          fireEvent.doubleClick(response.getItemLabel('1'));
           fireEvent.keyDown(response.getItemLabelInput('1'), { key: 'Esc' });
 
           expect(response.getItemLabelInput('1')).to.equal(null);
@@ -146,7 +146,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
           act(() => {
             response.getItemRoot('1').focus();
           });
-          fireEvent.doubleClick(response.getItemContent('1'));
+          fireEvent.doubleClick(response.getItemLabel('1'));
 
           expect(response.getItemLabelInput('1').value).to.equal('test');
         });
@@ -163,7 +163,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
           act(() => {
             response.getItemRoot('1').focus();
           });
-          fireEvent.doubleClick(response.getItemContent('1'));
+          fireEvent.doubleClick(response.getItemLabel('1'));
           fireEvent.change(response.getItemLabelInput('1'), { target: { value: 'new value' } });
           fireEvent.keyDown(response.getItemLabelInput('1'), { key: 'Enter' });
 
@@ -182,10 +182,10 @@ describeTreeView<[UseTreeViewLabelSignature]>(
           act(() => {
             response.getItemRoot('1').focus();
           });
-          fireEvent.doubleClick(response.getItemContent('1'));
+          fireEvent.doubleClick(response.getItemLabel('1'));
           fireEvent.change(response.getItemLabelInput('1'), { target: { value: 'new value' } });
           fireEvent.keyDown(response.getItemLabelInput('1'), { key: 'Enter' });
-          fireEvent.doubleClick(response.getItemContent('1'));
+          fireEvent.doubleClick(response.getItemLabel('1'));
 
           expect(response.getItemLabelInput('1').value).to.equal('new value');
         });
@@ -202,12 +202,12 @@ describeTreeView<[UseTreeViewLabelSignature]>(
           act(() => {
             response.getItemRoot('1').focus();
           });
-          fireEvent.doubleClick(response.getItemContent('1'));
+          fireEvent.doubleClick(response.getItemLabel('1'));
           fireEvent.change(response.getItemLabelInput('1'), { target: { value: 'new value' } });
           fireEvent.keyDown(response.getItemLabelInput('1'), { key: 'Esc' });
           expect(response.getItemLabel('1').textContent).to.equal('test');
 
-          fireEvent.doubleClick(response.getItemContent('1'));
+          fireEvent.doubleClick(response.getItemLabel('1'));
           expect(response.getItemLabelInput('1').value).to.equal('test');
         });
       });
