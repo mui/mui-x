@@ -116,7 +116,7 @@ export const TreeItem2Label = styled('div', {
   slot: 'Label',
   overridesResolver: (props, styles) => styles.label,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'editable',
-})<{ editable: boolean }>(({ theme }) => ({
+})<{ editable?: boolean }>(({ theme }) => ({
   width: '100%',
   boxSizing: 'border-box', // prevent width + padding to overflow
   // fixes overflow - see https://github.com/mui/material-ui/issues/27372

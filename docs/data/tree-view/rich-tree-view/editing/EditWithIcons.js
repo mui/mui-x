@@ -15,6 +15,7 @@ function CustomLabel({ editing, editable, children, toggleItemEditing, ...other 
   return (
     <TreeItem2Label
       {...other}
+      editable={editable}
       sx={{
         display: 'flex',
         alignItems: 'center',
