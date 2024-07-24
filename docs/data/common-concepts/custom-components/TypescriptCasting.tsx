@@ -11,7 +11,7 @@ import {
   DateCalendarSlotProps,
 } from '@mui/x-date-pickers/DateCalendar';
 import { PropsFromSlot } from '@mui/x-date-pickers/models';
-import { PickersCalendarHeader } from '@mui/x-date-pickers';
+import { PickersCalendarHeader } from '@mui/x-date-pickers/PickersCalendarHeader';
 
 function DisplayWeekNumberToggle({
   value,
