@@ -154,36 +154,7 @@ export const TreeItem2GroupTransition = styled(Collapse, {
   ],
 });
 
-const UnstyledLabelInput = React.forwardRef(function UnstyledLabelInput(
-  { onChange, label, ...props }: UseTreeItem2LabelInputSlotOwnProps,
-  ref: React.Ref<HTMLInputElement>,
-) {
-  const [labelInputValue, setLabelInputValue] = React.useState(label);
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange?.(event);
-    setLabelInputValue(event.target.value);
-  };
-
-  const resetLabel = React.useCallback(() => setLabelInputValue(label), [label]);
-
-  React.useEffect(() => {
-    return resetLabel();
-  }, [resetLabel]);
-
-  return (
-    <input
-      {...props}
-      onChange={handleInputChange}
-      value={labelInputValue as string}
-      autoFocus
-      type="text"
-      ref={ref}
-    />
-  );
-});
-
-export const TreeItem2LabelInput = styled(UnstyledLabelInput, {
+const StyledTreeItem2LabelInput = styled('input', {
   name: 'MuiTreeItem2',
   slot: 'LabelInput',
   overridesResolver: (props, styles) => styles.labelInput,
@@ -202,6 +173,35 @@ export const TreeItem2LabelInput = styled(UnstyledLabelInput, {
     borderColor: theme.palette.primary.main,
   },
 }));
+
+export const TreeItem2LabelInput = function UnstyledLabelInput({
+  onChange,
+  label,
+  ...props
+}: UseTreeItem2LabelInputSlotOwnProps) {
+  const [labelInputValue, setLabelInputValue] = React.useState(label);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onChange?.(event);
+    setLabelInputValue(event.target.value);
+  };
+
+  const resetLabel = React.useCallback(() => setLabelInputValue(label), [label]);
+
+  React.useEffect(() => {
+    return resetLabel();
+  }, [resetLabel]);
+
+  return (
+    <StyledTreeItem2LabelInput
+      {...props}
+      onChange={handleInputChange}
+      value={labelInputValue as string}
+      autoFocus
+      type="text"
+    />
+  );
+};
 
 export const TreeItem2Checkbox = styled(
   React.forwardRef(

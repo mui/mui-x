@@ -27,10 +27,11 @@ function Label({ children, ...other }) {
   );
 }
 
-const LabelInput = React.forwardRef(function LabelInput(
-  { item, handleCancelItemLabelEditing, handleSaveItemLabel },
-  ref,
-) {
+const LabelInput = function LabelInput({
+  item,
+  handleCancelItemLabelEditing,
+  handleSaveItemLabel,
+}) {
   const [initialNameValue, setInitialNameValue] = React.useState({
     firstName: item.firstName,
     lastName: item.lastName,
@@ -61,13 +62,11 @@ const LabelInput = React.forwardRef(function LabelInput(
         value={nameValue.firstName}
         autoFocus
         type="text"
-        ref={ref}
       />
       <input
         onChange={handleLastNameChange}
         value={nameValue.lastName}
         type="text"
-        ref={ref}
       />
       <IconButton
         color="success"
@@ -91,7 +90,7 @@ const LabelInput = React.forwardRef(function LabelInput(
       </IconButton>
     </React.Fragment>
   );
-});
+};
 
 const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
   const {

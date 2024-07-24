@@ -57,7 +57,6 @@ export type UseTreeItem2RootSlotProps<ExternalProps = {}> = ExternalProps &
 
 export interface UseTreeItem2ContentSlotOwnProps {
   onClick: MuiCancellableEventHandler<React.MouseEvent>;
-  onDoubleClick: MuiCancellableEventHandler<React.MouseEvent>;
   onMouseDown: MuiCancellableEventHandler<React.MouseEvent>;
   ref: React.RefCallback<HTMLDivElement> | null;
   status: UseTreeItem2Status;
@@ -79,6 +78,7 @@ export type UseTreeItemIconContainerSlotProps<ExternalProps = {}> = ExternalProp
 
 export interface UseTreeItem2LabelSlotOwnProps {
   children: React.ReactNode;
+  onDoubleClick: MuiCancellableEventHandler<React.MouseEvent>;
 }
 
 export type UseTreeItem2LabelSlotProps<ExternalProps = {}> = ExternalProps &
@@ -89,7 +89,6 @@ export type UseTreeItem2LabelInputSlotOwnProps = {
   label: React.ReactNode;
   onKeyDown: MuiCancellableEventHandler<React.KeyboardEvent<HTMLInputElement>>;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
-  ref: React.RefObject<HTMLInputElement>;
 };
 
 export type UseTreeItem2LabelInputSlotProps<ExternalProps = {}> = ExternalProps &

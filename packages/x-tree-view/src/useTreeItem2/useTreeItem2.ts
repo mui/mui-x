@@ -43,9 +43,6 @@ export const useTreeItem2 = <
   const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
   const handleRootRef = useForkRef(rootRef, pluginRootRef)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
-  const iconContainerRef = React.useRef<HTMLDivElement>(null);
-  const inputRef = React.useRef<HTMLInputElement>(null);
-
   const rootTabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
 
   const createRootHandleFocus =
@@ -89,10 +86,10 @@ export const useTreeItem2 = <
       instance.handleItemKeyDown(event, itemId);
     };
 
-  const createCotentHandleDoubleClick =
+  const createLabelHandleDoubleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
       otherHandlers.onDoubleClick?.(event);
-      if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
+      if (event.defaultMuiPrevented) {
         return;
       }
       interactions.toggleItemEditing();
@@ -238,7 +235,6 @@ export const useTreeItem2 = <
       ...externalProps,
       ref: contentRef,
       onClick: createContentHandleClick(externalEventHandlers),
-      onDoubleClick: createCotentHandleDoubleClick(externalEventHandlers),
       onMouseDown: createContentHandleMouseDown(externalEventHandlers),
       status,
     };
@@ -279,6 +275,7 @@ export const useTreeItem2 = <
       ...externalEventHandlers,
       children: label,
       ...externalProps,
+      onDoubleClick: createLabelHandleDoubleClick(externalEventHandlers),
     };
   };
 
@@ -290,7 +287,6 @@ export const useTreeItem2 = <
     return {
       ...externalEventHandlers,
       label,
-      ref: inputRef,
       'data-element': 'labelInput',
       ...externalProps,
       onKeyDown: createInputHandleKeydown(externalEventHandlers),
@@ -307,7 +303,6 @@ export const useTreeItem2 = <
     return {
       ...externalEventHandlers,
       ...externalProps,
-      ref: iconContainerRef,
       onClick: createIconContainerHandleClick(externalEventHandlers),
     };
   };

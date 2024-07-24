@@ -2,7 +2,6 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
-
 import { TreeItem2, TreeItem2Label } from '@mui/x-tree-view/TreeItem2';
 import { IconButton } from '@mui/material';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -37,7 +36,7 @@ function CustomLabel({ editing, editable, children, toggleItemEditing, ...other 
   );
 }
 
-const CustomLabelInput = React.forwardRef(function CustomLabelInput(props, ref) {
+const CustomLabelInput = function CustomLabelInput(props) {
   const { handleCancelItemLabelEditing, handleSaveItemLabel, label, ...other } =
     props;
   const [labelInputValue, setLabelInputValue] = React.useState(label);
@@ -45,7 +44,6 @@ const CustomLabelInput = React.forwardRef(function CustomLabelInput(props, ref) 
   return (
     <React.Fragment>
       <TreeItem2LabelInput
-        ref={ref}
         {...other}
         label={label}
         onChange={(event) => {
@@ -66,7 +64,7 @@ const CustomLabelInput = React.forwardRef(function CustomLabelInput(props, ref) 
       </IconButton>
     </React.Fragment>
   );
-});
+};
 
 const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
   const {
@@ -100,10 +98,8 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
       ref={ref}
       slots={{ label: CustomLabel, labelInput: CustomLabelInput }}
       slotProps={{
-        content: {
-          onDoubleClick: handleContentDoubleClick,
-        },
         label: {
+          onDoubleClick: handleContentDoubleClick,
           editable: status.editable,
           editing: status.editing,
           toggleItemEditing,

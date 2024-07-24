@@ -40,14 +40,11 @@ type CustomLabelInputProps = UseTreeItem2LabelInputSlotProps<{
   item: TreeViewBaseItem<ExtendedTreeItemProps>;
 }>;
 
-const LabelInput = React.forwardRef(function LabelInput(
-  {
-    item,
-    handleCancelItemLabelEditing,
-    handleSaveItemLabel,
-  }: Omit<CustomLabelInputProps, 'ref'>,
-  ref: React.Ref<HTMLInputElement>,
-) {
+const LabelInput = function LabelInput({
+  item,
+  handleCancelItemLabelEditing,
+  handleSaveItemLabel,
+}: Omit<CustomLabelInputProps, 'ref'>) {
   const [initialNameValue, setInitialNameValue] = React.useState({
     firstName: item.firstName,
     lastName: item.lastName,
@@ -78,13 +75,11 @@ const LabelInput = React.forwardRef(function LabelInput(
         value={nameValue.firstName as string}
         autoFocus
         type="text"
-        ref={ref}
       />
       <input
         onChange={handleLastNameChange}
         value={nameValue.lastName as string}
         type="text"
-        ref={ref}
       />
       <IconButton
         color="success"
@@ -108,7 +103,7 @@ const LabelInput = React.forwardRef(function LabelInput(
       </IconButton>
     </React.Fragment>
   );
-});
+};
 
 const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
   props: TreeItem2Props,
