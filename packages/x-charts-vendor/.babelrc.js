@@ -8,7 +8,7 @@
 const path = require('path');
 
 module.exports = {
-  only: ['node_modules/*/src/**/*.js', 'node_modules/*/**/*.js'],
+  only: [/node_modules\/(d3-.*|internmap|delaunator|robust-predicates)\/.*\.js/],
   plugins: [
     [
       '@babel/transform-modules-commonjs',
