@@ -51,7 +51,7 @@
     "languageTag": "da-DK",
     "importName": "daDK",
     "localeName": "Danish",
-    "missingKeysCount": 14,
+    "missingKeysCount": 0,
     "totalKeysCount": 50,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/daDK.ts"
   },
@@ -147,7 +147,7 @@
     "languageTag": "ko-KR",
     "importName": "koKR",
     "localeName": "Korean",
-    "missingKeysCount": 14,
+    "missingKeysCount": 1,
     "totalKeysCount": 50,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/koKR.ts"
   },
@@ -166,6 +166,14 @@
     "missingKeysCount": 14,
     "totalKeysCount": 50,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/nbNO.ts"
+  },
+  {
+    "languageTag": "nn-NO",
+    "importName": "nnNO",
+    "localeName": "Norwegian (Nynorsk)",
+    "missingKeysCount": 0,
+    "totalKeysCount": 50,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/nnNO.ts"
   },
   {
     "languageTag": "fa-IR",
@@ -203,7 +211,7 @@
     "languageTag": "ru-RU",
     "importName": "ruRU",
     "localeName": "Russian",
-    "missingKeysCount": 14,
+    "missingKeysCount": 0,
     "totalKeysCount": 50,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/ruRU.ts"
   },

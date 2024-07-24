@@ -17,11 +17,16 @@ export const getFakeContextValue = (
   publicAPI: {
     focusItem: () => {},
     getItem: () => ({}),
+    getItemOrderedChildrenIds: () => [],
     setItemExpansion: () => {},
+    getItemDOMElement: () => null,
+    selectItem: () => {},
+    getItemTree: () => [],
   },
   runItemPlugins: () => ({
     rootRef: null,
     contentRef: null,
+    propsEnhancers: {},
   }),
   wrapItem: ({ children }) => children,
   wrapRoot: ({ children }) => children,
@@ -39,4 +44,5 @@ export const getFakeContextValue = (
   rootRef: {
     current: null,
   },
+  expansion: { expansionTrigger: 'content' },
 });

@@ -15,7 +15,7 @@ describe('<DataGridPro /> - License', () => {
     ]);
 
     await waitFor(() => {
-      expect(screen.getByText('MUI X Missing license key')).to.not.equal(null);
+      expect(screen.getByText('MUI X Missing license key')).not.to.equal(null);
     });
   });
 });

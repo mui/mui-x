@@ -273,12 +273,14 @@ const exceljsPostProcess = ({ worksheet }) => {
 
 const excelOptions = { exceljsPreProcess, exceljsPostProcess };
 
+const getTreeDataPath = (row) => row.path;
+
 export default function ExcelCustomExport() {
   return (
     <div style={{ height: 500, width: '100%' }}>
       <DataGridPremium
         treeData
-        getTreeDataPath={(row) => row.path}
+        getTreeDataPath={getTreeDataPath}
         rows={rows}
         columns={columns}
         groupingColDef={groupingColDef}

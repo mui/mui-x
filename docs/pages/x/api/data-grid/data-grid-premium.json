@@ -205,7 +205,7 @@
     },
     "keepColumnPositionIfDraggedOutside": { "type": { "name": "bool" }, "default": "false" },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
-    "loading": { "type": { "name": "bool" } },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "logger": {
       "type": {
@@ -662,6 +662,12 @@
       "name": "columnHeaderFilterIconButton",
       "description": "Filter icon component rendered in each column header.",
       "default": "GridColumnHeaderFilterIconButton",
+      "class": null
+    },
+    {
+      "name": "columnHeaderSortIcon",
+      "description": "Sort icon component rendered in each column header.",
+      "default": "GridColumnHeaderSortIcon",
       "class": null
     },
     {
@@ -1756,6 +1762,12 @@
       "key": "rowReorderCellPlaceholder",
       "className": "MuiDataGridPremium-rowReorderCellPlaceholder",
       "description": "Styles applied to the row's draggable placeholder element inside the special row reorder cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "rowSkeleton",
+      "className": "MuiDataGridPremium-rowSkeleton",
+      "description": "Styles applied to the skeleton row element.",
       "isGlobal": false
     },
     {

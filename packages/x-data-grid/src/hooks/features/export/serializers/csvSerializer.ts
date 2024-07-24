@@ -3,29 +3,27 @@ import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../../colDef';
 import type { GridCellParams } from '../../../../models/params/gridCellParams';
 import type { GridStateColDef } from '../../../../models/colDef/gridColDef';
 import type { GridApiCommunity } from '../../../../models/api/gridApiCommunity';
-import { buildWarning } from '../../../../utils/warning';
+import { warnOnce } from '../../../../internals/utils/warning';
 
-function sanitizeCellValue(value: any, csvOptions: CSVOptions) {
-  if (typeof value === 'string') {
-    if (csvOptions.shouldAppendQuotes || csvOptions.escapeFormulas) {
-      const escapedValue = value.replace(/"/g, '""');
-      // Make sure value containing delimiter or line break won't be split into multiple cells
-      if ([csvOptions.delimiter, '\n', '\r', '"'].some((delimiter) => value.includes(delimiter))) {
-        return `"${escapedValue}"`;
+function sanitizeCellValue(value: unknown, csvOptions: CSVOptions): string {
+  const valueStr = typeof value === 'string' ? value : `${value}`;
+
+  if (csvOptions.shouldAppendQuotes || csvOptions.escapeFormulas) {
+    const escapedValue = valueStr.replace(/"/g, '""');
+    if (csvOptions.escapeFormulas) {
+      // See https://owasp.org/www-community/attacks/CSV_Injection
+      if (['=', '+', '-', '@', '\t', '\r'].includes(escapedValue[0])) {
+        return `"'${escapedValue}"`;
       }
-      if (csvOptions.escapeFormulas) {
-        // See https://owasp.org/www-community/attacks/CSV_Injection
-        if (['=', '+', '-', '@', '\t', '\r'].includes(escapedValue[0])) {
-          return `'${escapedValue}`;
-        }
-      }
-      return escapedValue;
     }
-
-    return value;
+    // Make sure value containing delimiter or line break won't be split into multiple cells
+    if ([csvOptions.delimiter, '\n', '\r', '"'].some((delimiter) => valueStr.includes(delimiter))) {
+      return `"${escapedValue}"`;
+    }
+    return escapedValue;
   }
 
-  return value;
+  return valueStr;
 }
 
 export const serializeCellValue = (
@@ -54,11 +52,6 @@ export const serializeCellValue = (
 
   return sanitizeCellValue(value, csvOptions);
 };
-
-const objectFormattedValueWarning = buildWarning([
-  'MUI X: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
-  'You can provide a `valueFormatter` with a string representation to be used.',
-]);
 
 type CSVOptions = Required<
   Pick<GridCsvExportOptions, 'delimiter' | 'shouldAppendQuotes' | 'escapeFormulas'>
@@ -117,7 +110,10 @@ const serializeRow = ({
     const cellParams = getCellParams(id, column.field);
     if (process.env.NODE_ENV !== 'production') {
       if (String(cellParams.formattedValue) === '[object Object]') {
-        objectFormattedValueWarning();
+        warnOnce([
+          'MUI X: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
+          'You can provide a `valueFormatter` with a string representation to be used.',
+        ]);
       }
     }
     row.addValue(

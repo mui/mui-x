@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, useThemeProps } from '@mui/material/styles';
 
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { useTicks } from '../hooks/useTicks';
 import {
   ChartsGridClasses,
@@ -69,7 +69,7 @@ function ChartsGrid(props: ChartsGridProps) {
   const themeProps = useThemeProps({ props, name: 'MuiChartsGrid' });
 
   const { vertical, horizontal, ...other } = themeProps;
-  const { xAxis, xAxisIds, yAxis, yAxisIds } = React.useContext(CartesianContext);
+  const { xAxis, xAxisIds, yAxis, yAxisIds } = useCartesianContext();
 
   const classes = useUtilityClasses(themeProps);
 

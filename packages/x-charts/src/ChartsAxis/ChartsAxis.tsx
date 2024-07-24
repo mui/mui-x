@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { ChartsXAxis } from '../ChartsXAxis';
 import { ChartsYAxis } from '../ChartsYAxis';
 import {
@@ -49,8 +49,8 @@ export interface ChartsAxisProps {
 }
 
 const getAxisId = (
-  propsValue: undefined | null | string | ChartsXAxisProps | ChartsYAxisProps,
-  defaultAxisId?: string,
+  propsValue: undefined | null | AxisId | ChartsXAxisProps | ChartsYAxisProps,
+  defaultAxisId?: AxisId,
 ): AxisId | null => {
   if (propsValue == null) {
     return null;
@@ -62,7 +62,7 @@ const getAxisId = (
 };
 
 const mergeProps = (
-  axisConfig: undefined | null | string | ChartsXAxisProps | ChartsYAxisProps,
+  axisConfig: undefined | null | AxisId | ChartsXAxisProps | ChartsYAxisProps,
   slots?: Partial<ChartsAxisSlots>,
   slotProps?: Partial<ChartsAxisSlotProps>,
 ) => {
@@ -86,7 +86,7 @@ const mergeProps = (
  */
 function ChartsAxis(props: ChartsAxisProps) {
   const { topAxis, leftAxis, rightAxis, bottomAxis, slots, slotProps } = props;
-  const { xAxis, xAxisIds, yAxis, yAxisIds } = React.useContext(CartesianContext);
+  const { xAxis, xAxisIds, yAxis, yAxisIds } = useCartesianContext();
 
   // TODO: use for plotting line without ticks or any thing
   // const drawingArea = React.useContext(DrawingContext);
@@ -99,7 +99,7 @@ function ChartsAxis(props: ChartsAxisProps) {
   if (topId !== null && !xAxis[topId]) {
     throw Error(
       [
-        `MUI X Charts: id used for top axis "${topId}" is not defined.`,
+        `MUI X: id used for top axis "${topId}" is not defined.`,
         `Available ids are: ${xAxisIds.join(', ')}.`,
       ].join('\n'),
     );
@@ -107,7 +107,7 @@ function ChartsAxis(props: ChartsAxisProps) {
   if (leftId !== null && !yAxis[leftId]) {
     throw Error(
       [
-        `MUI X Charts: id used for left axis "${leftId}" is not defined.`,
+        `MUI X: id used for left axis "${leftId}" is not defined.`,
         `Available ids are: ${yAxisIds.join(', ')}.`,
       ].join('\n'),
     );
@@ -115,7 +115,7 @@ function ChartsAxis(props: ChartsAxisProps) {
   if (rightId !== null && !yAxis[rightId]) {
     throw Error(
       [
-        `MUI X Charts: id used for right axis "${rightId}" is not defined.`,
+        `MUI X: id used for right axis "${rightId}" is not defined.`,
         `Available ids are: ${yAxisIds.join(', ')}.`,
       ].join('\n'),
     );
@@ -123,7 +123,7 @@ function ChartsAxis(props: ChartsAxisProps) {
   if (bottomId !== null && !xAxis[bottomId]) {
     throw Error(
       [
-        `MUI X Charts: id used for bottom axis "${bottomId}" is not defined.`,
+        `MUI X: id used for bottom axis "${bottomId}" is not defined.`,
         `Available ids are: ${xAxisIds.join(', ')}.`,
       ].join('\n'),
     );

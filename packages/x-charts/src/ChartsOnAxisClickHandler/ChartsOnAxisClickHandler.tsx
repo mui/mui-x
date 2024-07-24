@@ -1,9 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { InteractionContext } from '../context/InteractionProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
 import { useSeries } from '../hooks/useSeries';
 import { useSvgRef } from '../hooks';
+import { useCartesianContext } from '../context/CartesianProvider';
 
 type AxisData = {
   dataIndex: number;
@@ -27,7 +27,7 @@ function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
   const svgRef = useSvgRef();
   const series = useSeries();
   const { axis } = React.useContext(InteractionContext);
-  const { xAxisIds, xAxis, yAxisIds, yAxis } = React.useContext(CartesianContext);
+  const { xAxisIds, xAxis, yAxisIds, yAxis } = useCartesianContext();
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -53,7 +53,11 @@ function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
         .forEach((seriesType) => {
           series[seriesType]?.seriesOrder.forEach((seriesId) => {
             const seriesItem = series[seriesType]!.series[seriesId];
-            const axisKey = isXaxis ? seriesItem.xAxisKey : seriesItem.yAxisKey;
+
+            const providedXAxisId = seriesItem.xAxisId ?? seriesItem.xAxisKey;
+            const providedYAxisId = seriesItem.yAxisId ?? seriesItem.yAxisKey;
+
+            const axisKey = isXaxis ? providedXAxisId : providedYAxisId;
             if (axisKey === undefined || axisKey === USED_AXIS_ID) {
               seriesValues[seriesId] = seriesItem.data[dataIndex];
             }

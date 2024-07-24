@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { area as d3Area } from 'd3-shape';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import {
   AreaElement,
   AreaElementProps,
@@ -14,6 +14,7 @@ import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
 import { useChartGradient } from '../internals/components/ChartsAxesGradients';
 import { useLineSeries } from '../hooks/useSeries';
+import { AxisId } from '../models/axis';
 
 export interface AreaPlotSlots extends AreaElementSlots {}
 
@@ -35,7 +36,7 @@ export interface AreaPlotProps
 
 const useAggregatedData = () => {
   const seriesData = useLineSeries();
-  const axisData = React.useContext(CartesianContext);
+  const axisData = useCartesianContext();
 
   if (seriesData === undefined) {
     return [];
@@ -51,6 +52,8 @@ const useAggregatedData = () => {
       .reverse() // Revert stacked area for a more pleasant animation
       .map((seriesId) => {
         const {
+          xAxisId: xAxisIdProp,
+          yAxisId: yAxisIdProp,
           xAxisKey = defaultXAxisId,
           yAxisKey = defaultYAxisId,
           stackedData,
@@ -58,28 +61,31 @@ const useAggregatedData = () => {
           connectNulls,
         } = series[seriesId];
 
-        const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
-        const yScale = yAxis[yAxisKey].scale;
-        const xData = xAxis[xAxisKey].data;
+        const xAxisId = xAxisIdProp ?? xAxisKey;
+        const yAxisId = yAxisIdProp ?? yAxisKey;
 
-        const gradientUsed: [string, 'x' | 'y'] | undefined =
-          (yAxis[yAxisKey].colorScale && [yAxisKey, 'y']) ||
-          (xAxis[xAxisKey].colorScale && [xAxisKey, 'x']) ||
+        const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
+        const yScale = yAxis[yAxisId].scale;
+        const xData = xAxis[xAxisId].data;
+
+        const gradientUsed: [AxisId, 'x' | 'y'] | undefined =
+          (yAxis[yAxisId].colorScale && [yAxisId, 'y']) ||
+          (xAxis[xAxisId].colorScale && [xAxisId, 'x']) ||
           undefined;
 
         if (process.env.NODE_ENV !== 'production') {
           if (xData === undefined) {
             throw new Error(
-              `MUI X Charts: ${
-                xAxisKey === DEFAULT_X_AXIS_KEY
+              `MUI X: ${
+                xAxisId === DEFAULT_X_AXIS_KEY
                   ? 'The first `xAxis`'
-                  : `The x-axis with id "${xAxisKey}"`
+                  : `The x-axis with id "${xAxisId}"`
               } should have data property to be able to display a line plot.`,
             );
           }
           if (xData.length < stackedData.length) {
             throw new Error(
-              `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
+              `MUI X: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
             );
           }
         }
@@ -90,7 +96,13 @@ const useAggregatedData = () => {
         }>()
           .x((d) => xScale(d.x))
           .defined((_, i) => connectNulls || data[i] != null)
-          .y0((d) => d.y && yScale(d.y[0])!)
+          .y0((d) => {
+            const value = d.y && yScale(d.y[0])!;
+            if (Number.isNaN(value)) {
+              return yScale.range()[0];
+            }
+            return value;
+          })
           .y1((d) => d.y && yScale(d.y[1])!);
 
         const curve = getCurveFactory(series[seriesId].curve);
