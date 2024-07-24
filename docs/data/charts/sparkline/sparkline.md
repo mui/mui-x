@@ -11,7 +11,7 @@ components: SparkLineChart
 ## Basics
 
 A sparkline is a small chart drawn without axes or coordinates, that presents the general shape of a variation in a simplified way.
-The `<SparklineChart />` requires only the `data` props which is an array of numbers.
+The `<SparkLineChart />` requires only the `data` props which is an array of numbers.
 You can also switch from line to a bar plot with `plotType="bar"`.
 
 {{"demo": "BasicSparkLine.js"}}
