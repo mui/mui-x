@@ -1,7 +1,8 @@
 /**
- * @param {import("@actions/core")} core
- * @param {import("@actions/github").context} context
- * @param {ReturnType<import("@actions/github").getOctokit>} github
+ * @param {Object} params
+ * @param {import("@actions/core")} params.core
+ * @param {ReturnType<import("@actions/github").getOctokit>} params.github
+ * @param {import("@actions/github").context} params.context
  */
 module.exports = async ({ core, context, github }) => {
   try {
