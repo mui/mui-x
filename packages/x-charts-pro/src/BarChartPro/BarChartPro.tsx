@@ -14,8 +14,9 @@ import { BarPlotProps } from '@mui/x-charts';
 import { ResponsiveChartContainerPro } from '../ResponsiveChartContainerPro';
 import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
 import { useZoom } from '../context/ZoomProvider/useZoom';
+import { ZoomProps } from '../context/ZoomProvider';
 
-export interface BarChartProProps extends BarChartProps {}
+export interface BarChartProProps extends BarChartProps, ZoomProps {}
 
 /**
  * Demos:
@@ -29,6 +30,7 @@ export interface BarChartProProps extends BarChartProps {}
  * - [BarChart API](https://mui.com/x/api/charts/bar-chart/)
  */
 const BarChartPro = React.forwardRef(function BarChartPro(props: BarChartProProps, ref) {
+  const { zoom, onZoomChange, ...other } = props;
   const {
     chartContainerProps,
     barPlotProps,
@@ -42,10 +44,15 @@ const BarChartPro = React.forwardRef(function BarChartPro(props: BarChartProProp
     legendProps,
     tooltipProps,
     children,
-  } = useBarChartProps(props);
+  } = useBarChartProps(other);
 
   return (
-    <ResponsiveChartContainerPro ref={ref} {...chartContainerProps}>
+    <ResponsiveChartContainerPro
+      ref={ref}
+      {...chartContainerProps}
+      zoom={zoom}
+      onZoomChange={onZoomChange}
+    >
       {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
       {props.grid && <ChartsGrid {...gridProps} />}
       <g {...clipPathGroupProps}>
