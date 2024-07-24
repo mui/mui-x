@@ -14,6 +14,7 @@ import {
   unstable_useTreeItem2 as useTreeItem2,
   UseTreeItem2ContentSlotOwnProps,
   UseTreeItem2LabelInputSlotOwnProps,
+  UseTreeItem2LabelSlotOwnProps,
   UseTreeItem2Status,
 } from '../useTreeItem2';
 import { getTreeItemUtilityClass } from '../TreeItem';
@@ -114,13 +115,22 @@ export const TreeItem2Label = styled('div', {
   name: 'MuiTreeItem2',
   slot: 'Label',
   overridesResolver: (props, styles) => styles.label,
-})(({ theme }) => ({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'editable',
+})<{ editable: boolean }>(({ theme }) => ({
   width: '100%',
   boxSizing: 'border-box', // prevent width + padding to overflow
   // fixes overflow - see https://github.com/mui/material-ui/issues/27372
   minWidth: 0,
   position: 'relative',
   ...theme.typography.body1,
+  variants: [
+    {
+      props: ({ editable }: UseTreeItem2LabelSlotOwnProps) => editable === true,
+      style: {
+        paddingLeft: '3px',
+      },
+    },
+  ],
 }));
 
 export const TreeItem2IconContainer = styled('div', {
@@ -186,14 +196,13 @@ export const TreeItem2LabelInput = styled(UnstyledLabelInput, {
 })(({ theme }) => ({
   ...theme.typography.body1,
   width: '100%',
-  fontFamily: theme.typography.fontFamily,
-  fontSize: 'inherit',
-  height: '100%',
   outline: 'none',
   backgroundColor: theme.palette.background.paper,
   borderRadius: theme.shape.borderRadius,
   borderStyle: 'solid',
   borderColor: 'transparent',
+  lineHeight: '1.25rem',
+  borderWidth: 1,
   '&:focus': {
     borderColor: theme.palette.primary.main,
   },

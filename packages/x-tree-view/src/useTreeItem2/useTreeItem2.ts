@@ -276,6 +276,7 @@ export const useTreeItem2 = <
       children: label,
       ...externalProps,
       onDoubleClick: createLabelHandleDoubleClick(externalEventHandlers),
+      editable: status.editable,
     };
   };
 
