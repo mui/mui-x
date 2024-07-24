@@ -114,6 +114,11 @@ export const useDesktopPicker = <
   });
 
   const OpenPickerIcon = slots.openPickerIcon;
+  const openPickerIconProps = useSlotProps({
+    elementType: OpenPickerIcon,
+    externalSlotProps: innerSlotProps?.openPickerIcon,
+    ownerState: { open },
+  });
 
   const Field = slots.field;
   const fieldProps = useSlotProps<
@@ -163,7 +168,7 @@ export const useDesktopPicker = <
         [`${inputAdornmentProps.position}Adornment`]: (
           <InputAdornment {...inputAdornmentProps}>
             <OpenPickerButton {...openPickerButtonProps}>
-              <OpenPickerIcon {...innerSlotProps?.openPickerIcon} />
+              <OpenPickerIcon {...openPickerIconProps} />
             </OpenPickerButton>
           </InputAdornment>
         ),

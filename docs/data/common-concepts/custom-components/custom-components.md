@@ -22,6 +22,12 @@ You can also use both `slots` and `slotProps` on the same component:
 
 {{"demo": "CustomSlotAndSlotProps.js"}}
 
+Most components also support a callback version of `slotProps`.
+This callback receives an object that contains information about the current state of the component,
+that information can vary depending on the slot being used:
+
+{{"demo": "CustomSlotPropsCallback.js"}}
+
 ## Recommended usage
 
 A slot is a React component; therefore, it should follow some basic rules:
@@ -32,16 +38,18 @@ Slots should keep the same JavaScript reference between two renders.
 If the JavaScript reference of component changes between two renders, React will remount it.
 You can avoid it by not inlining the component definition in the `slots` prop.
 
-The first two examples below are buggy because the toolbar will remount after each keystroke, leading to a loss of focus.
+The first two examples below are buggy because the calendar header will remount after each keystroke, leading to a loss of focus.
 
 ```jsx
-// ❌ The `toolbar` slot is re-defined each time the parent component renders,
+// ❌ The `calendarHeader` slot is re-defined each time the parent component renders,
 // causing the component to remount.
 function MyApp() {
+  const [name, setName] = React.useState('');
+
   return (
-    <DataGrid
+    <DateCalendar
       slots={{
-        toolbar: () => (
+        calendarHeader: () => (
           <input value={name} onChange={(event) => setName(event.target.value)} />
         ),
       }}
@@ -51,75 +59,105 @@ function MyApp() {
 ```
 
 ```jsx
-// ❌ The `toolbar` slot is re-defined each time `name` is updated,
+// ❌ The `calendarHeader` slot is re-defined each time `name` is updated,
 // causing the component to remount.
 function MyApp() {
   const [name, setName] = React.useState('');
 
-  const CustomToolbar = React.useCallback(
+  const CustomCalendarHeader = React.useCallback(
     () => <input value={name} onChange={(event) => setName(event.target.value)} />,
     [name],
   );
 
-  return <DataGrid slots={{ toolbar: CustomToolbar }} />;
+  return <DateCalendar slots={{ calendarHeader: CustomCalendarHeader }} />;
 }
 ```
 
 ```jsx
-// ✅ The `toolbar` slot is defined only once, it will never remount.
-const CustomToolbar = ({ name, setName }) => (
+// ✅ The `calendarHeader` slot is defined only once, it will never remount.
+const CustomCalendarHeader = ({ name, setName }) => (
   <input value={name} onChange={(event) => setName(event.target.value)} />
 );
 
 function MyApp() {
   const [name, setName] = React.useState('');
   return (
-    <DataGrid
-      slots={{ toolbar: CustomToolbar }}
-      slotProps={{ toolbar: { name, setName } }}
+    <DateCalendar
+      slots={{ calendarHeader: CustomCalendarHeader }}
+      slotProps={{ calendarHeader: { name, setName } }}
     />
   );
 }
 ```
 
-### Usage with TypeScript
+## Usage with TypeScript
+
+### Type custom slot component
+
+If you want to ensure type safety on your custom slot component,
+you can declare your component using the `PropsFromSlot` interface:
+
+```tsx
+interface CustomCalendarHeaderProps
+  extends PropsFromSlot<DatePickerSlots<Dayjs>['calendarHeader']> {}
+
+function CustomCalendarHeader({ currentMonth }: CustomCalendarHeaderProps) {
+  return <div>{currentMonth?.format('MM-DD-YYYY')}</div>;
+}
+```
+
+If you are passing custom props to your slot, you can add them to the props your custom component receives:
+
+```tsx
+interface CustomCalendarHeaderProps
+  extends PropsFromSlot<DatePickerSlots<Dayjs>['calendarHeader']> {
+  name: string;
+  setName: (name: string) => void;
+}
+
+function CustomCalendarHeader({
+  currentMonth,
+  name,
+  setName,
+}: CustomCalendarHeaderProps) {
+  return (
+    <div>
+      <div>{currentMonth?.format('MM-DD-YYYY')}</div>
+      <input value={name} onChange={(event) => setName(event.target.value)} />
+    </div>
+  );
+}
+```
+
+:::success
+If you are using the data grid, you can also use [module augmentation to enhance the props interface](/x/react-data-grid/components/#custom-slot-props-with-typescript)
+:::
+
+### Cast custom component and props
 
 If your custom component has a different type than the default one, you can cast it to the correct type.
 This can happen if you pass additional props to your custom component using `slotProps`.
-If we take the example of the `toolbar` slot, you can cast your custom component as below:
+If we take the example of the `calendarHeader` slot, you can cast your custom component as below:
 
 ```tsx
 function MyApp() {
   const [name, setName] = React.useState('');
   return (
-    <DataGrid
-      rows={[]}
-      columns={[]}
+    <DatePicker
       // Cast the custom component to the type expected by the X component
       slots={{
-        toolbar: CustomToolbar as NonNullable<DataGridProps['slots']>['toolbar'],
+        calendarHeader:
+          CustomCalendarHeader as DatePickerSlots<Dayjs>['calendarHeader'],
       }}
       slotProps={{
-        toolbar: { name, setName } as NonNullable<
-          DataGridProps['slotProps']
-        >['toolbar'],
+        calendarHeader: {
+          name,
+          setName,
+        } as DatePickerSlotProps<Dayjs>['calendarHeader'],
       }}
     />
   );
 }
-```
-
-If you want to ensure type safety, you can declare your component using the slot props typings:
-
-```tsx
-type CustomToolbarProps = NonNullable<DataGridProps['slotProps']>['toolbar'] & {
-  name: string;
-  setName: (name: string) => void;
-};
-
-const CustomToolbar = ({ name, setName }: CustomToolbarProps) => (
-  <input value={name} onChange={(event) => setName(event.target.value)} />
-);
 ```
 
 :::success

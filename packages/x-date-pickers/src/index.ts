@@ -57,3 +57,6 @@ export * from './models';
 export * from './icons';
 
 export * from './hooks';
+
+// Utils shared across the X packages
+export { PropsFromSlot } from '@mui/x-internals/slots';
