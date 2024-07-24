@@ -3,6 +3,7 @@ name: Order ID validation
 on:
   issues:
     types: [opened]
+  workflow_dispatch:
 
 jobs:
   validate-order-id:
@@ -20,5 +21,4 @@ jobs:
           OWNER: ${{ github.repository_owner }}
           REPO: ${{ github.event.repository.name }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ORDER_API_TOKEN: ${{ secrets.SHOP_AUTH_TOKEN }}

@@ -1,33 +1,20 @@
-/**
- * We import these just for type checking as the actual imports
- * are passed as arguments to the function
- * https://github.com/marketplace/actions/github-script#run-a-separate-file
- */
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const core = require('@actions/core');
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const github = require('@actions/github');
+// The actual imports are passed as arguments to the function
+// https://github.com/marketplace/actions/github-script#run-a-separate-file
 
 /**
  *
- * @param {core} core
- * @param {github} github
+ * @param {import("@actions/core")} core
+ * @param {ReturnType<import("@actions/github").getOctokit>} github
  */
-// eslint-disable-next-line @typescript-eslint/no-shadow
 module.exports = async (core, github) => {
   try {
     const owner = process.env.OWNER;
     const repo = process.env.REPO;
     const issueNumber = process.env.ISSUE_NUMBER;
-    const token = process.env.TOKEN;
 
     const orderApiToken = process.env.ORDER_API_TOKEN;
     const orderApi = 'https://store-wp.mui.com/wp-json/wc/v3/orders/';
-
-    const octokit = github.getOctokit(token);
-
-    const issue = octokit.rest.issues.get({
+    const issue = github.rest.issues.get({
       owner,
       repo,
       issue_number: issueNumber,
@@ -59,13 +46,13 @@ module.exports = async (core, github) => {
       const planName = plan.match(/\b(pro|premium)\b/i)[0].toLowerCase();
       const labelName = `support: ${planName}`;
 
-      const label = octokit.rest.issues.getLabel({
+      const label = github.rest.issues.getLabel({
         owner,
         repo,
         name: labelName,
       });
 
-      octokit.rest.issues.addLabels({
+      github.rest.issues.addLabels({
         owner,
         repo,
         issue_number: issueNumber,
