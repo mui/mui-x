@@ -92,16 +92,6 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
           '&:hover, &:focus-within': {
             overflow: 'auto',
           },
-          '&::after': {
-            content: '""',
-            position: 'fixed',
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: 16 /* Double of default padding coming from material, would have to manipulate for RangePickers */,
-            background: 'linear-gradient(transparent, white)',
-            pointerEvents: 'none',
-          },
         },
         ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
       ]}
