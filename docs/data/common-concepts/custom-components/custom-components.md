@@ -110,12 +110,24 @@ function CustomCalendarHeader({
 The `PropsFromSlot` is exported from every package that supports slots:
 
 ```ts
-import { PropsFromSlot } from '@mui/x-data-grid';
+import { PropsFromSlot } from '@mui/x-data-grid/models';
 import { PropsFromSlot } from '@mui/x-date-pickers/models';
 // ...
 ```
 
 It takes a slot (as defined in the `slots` prop of your component) and returns the props that the slot receives.
+
+```ts
+import { Dayjs } from 'dayjs';
+import { PropsFromSlot, GridSlots } from '@mui/x-data-grid';
+import { DateCalendarSlots } from '@mui/x-date-pickers';
+
+type ToolbarProps = PropsFromSlot<GridSlots['toolbar']>;
+
+// Most of the picker slots interfaces need to receive the date type as a generic.
+type CalendarHeaderProps = PropsFromSlot<DateCalendarSlots<Dayjs>['calendarHeader']>;
+```
+
 :::
 
 ### Using additional props
@@ -183,39 +195,31 @@ export default function MyApp() {
 If you are using one of the data grid packages,
 you can also use [module augmentation](/x/react-data-grid/components/#custom-slot-props-with-typescript) to let TypeScript know about your custom props:
 
-```tsx
-import { DataGrid, GridSlots, PropsFromSlot } from '@mui/x-data-grid';
-
-// Augment the props for the toolbar slot
+```ts
 declare module '@mui/x-data-grid' {
   interface ToolbarPropsOverrides {
     name: string;
     setName: (name: string) => void;
   }
 }
+```
 
+You can then use your custom slot without any type casting:
+
+```tsx
 function CustomToolbar({ name, setName }: PropsFromSlot<GridSlots['toolbar']>) {
   return <input value={name} onChange={(event) => setName(event.target.value)} />;
 }
 
 function MyApp() {
   const [name, setName] = React.useState('');
-
   return (
     <DataGrid
       rows={[]}
       columns={[]}
-      slots={{
-        // Pass your custom component to the toolbar slot.
-        toolbar: CustomToolbar,
-      }}
+      slots={{ toolbar: CustomToolbar }}
       slotProps={{
-        toolbar: {
-          // Pass your custom props to CustomToolbar.
-          // Since you are using module augmentation, you don't need to cast the props.
-          name,
-          setName,
-        },
+        toolbar: { name, setName },
       }}
     />
   );
