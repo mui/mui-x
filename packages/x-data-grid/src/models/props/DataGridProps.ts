@@ -421,7 +421,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {string} The CSS class to apply to the cell.
    */
-  getCellClassName?: (params: GridCellParams<any, R>) => string;
+  getCellClassName?: (params: GridCellParams<R>) => string;
   /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowClassNameParams} params With all properties from [[GridRowClassNameParams]].
