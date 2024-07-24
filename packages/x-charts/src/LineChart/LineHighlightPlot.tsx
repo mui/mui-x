@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { SlotComponentPropsFromProps } from '../internals/SlotComponentPropsFromProps';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { LineHighlightElement, LineHighlightElementProps } from './LineHighlightElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
@@ -14,7 +15,7 @@ export interface LineHighlightPlotSlots {
 }
 
 export interface LineHighlightPlotSlotProps {
-  lineHighlight?: Partial<LineHighlightElementProps>;
+  lineHighlight?: SlotComponentPropsFromProps<LineHighlightElementProps, {}, {}>;
 }
 
 export interface LineHighlightPlotProps extends React.SVGAttributes<SVGSVGElement> {
