@@ -36,6 +36,7 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
   {
     label: "New Year's Day",
     getValue: () => {
+      // (January 1)
       const today = dayjs();
       return today.month(0).date(1);
     },
@@ -43,6 +44,7 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
   {
     label: 'Birthday of MLK Jr.',
     getValue: () => {
+      // (third Monday in January)
       return getMonthWeekday(0, 1, 3);
     },
   },
@@ -50,6 +52,7 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
     label: "Valentine's Day",
     getValue: () => {
       const today = dayjs();
+      // (February 14)
       return today.month(1).date(14);
     },
   },
@@ -57,6 +60,7 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
     label: 'Earth Day',
     getValue: () => {
       const today = dayjs();
+      // (April 22)
       return today.month(3).date(22);
     },
   },
@@ -64,6 +68,7 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
     label: "International Workers' Day",
     getValue: () => {
       const today = dayjs();
+      // (May 1)
       return today.month(4).date(1);
     },
   },
@@ -71,12 +76,14 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
     label: 'Independence Day',
     getValue: () => {
       const today = dayjs();
+      // (July 4)
       return today.month(6).date(4);
     },
   },
   {
     label: 'Labor Day',
     getValue: () => {
+      // (first Monday in September)
       return getMonthWeekday(8, 1, 1);
     },
   },
@@ -84,12 +91,14 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
     label: 'Halloween',
     getValue: () => {
       const today = dayjs();
+      // (October 31)
       return today.month(9).date(31);
     },
   },
   {
     label: 'Thanksgiving Day',
     getValue: () => {
+      // (fourth Thursday in November
       return getMonthWeekday(10, 4, 4);
     },
   },
@@ -97,6 +106,7 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
     label: 'Christmas Day',
     getValue: () => {
       const today = dayjs();
+      // (December 25)
       return today.month(11).date(25);
     },
   },
