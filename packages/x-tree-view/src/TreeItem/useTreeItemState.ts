@@ -1,12 +1,25 @@
 import * as React from 'react';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
-import { DefaultTreeViewPlugins } from '../internals/plugins';
+import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
+import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
+import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
+import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
+
+type UseTreeItemStateMinimalPlugins = readonly [
+  UseTreeViewSelectionSignature,
+  UseTreeViewExpansionSignature,
+  UseTreeViewFocusSignature,
+  UseTreeViewItemsSignature,
+];
+
+type UseTreeItemStateOptionalPlugins = readonly [];
 
 export function useTreeItemState(itemId: string) {
   const {
     instance,
-    selection: { multiSelect },
-  } = useTreeViewContext<DefaultTreeViewPlugins>();
+    selection: { multiSelect, checkboxSelection, disableSelection },
+    expansion: { expansionTrigger },
+  } = useTreeViewContext<UseTreeItemStateMinimalPlugins, UseTreeItemStateOptionalPlugins>();
 
   const expandable = instance.isItemExpandable(itemId);
   const expanded = instance.isItemExpanded(itemId);
@@ -29,23 +42,40 @@ export function useTreeItemState(itemId: string) {
     }
   };
 
-  const handleSelection = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleSelection = (event: React.MouseEvent) => {
     if (!disabled) {
       if (!focused) {
         instance.focusItem(event, itemId);
       }
 
       const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
-
       if (multiple) {
         if (event.shiftKey) {
           instance.expandSelectionRange(event, itemId);
         } else {
-          instance.selectItem(event, itemId, true);
+          instance.selectItem({ event, itemId, keepExistingSelection: true });
         }
       } else {
-        instance.selectItem(event, itemId);
+        instance.selectItem({ event, itemId, shouldBeSelected: true });
       }
+    }
+  };
+
+  const handleCheckboxSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (disableSelection || disabled) {
+      return;
+    }
+
+    const hasShift = (event.nativeEvent as PointerEvent).shiftKey;
+    if (multiSelect && hasShift) {
+      instance.expandSelectionRange(event, itemId);
+    } else {
+      instance.selectItem({
+        event,
+        itemId,
+        keepExistingSelection: multiSelect,
+        shouldBeSelected: event.target.checked,
+      });
     }
   };
 
@@ -61,8 +91,12 @@ export function useTreeItemState(itemId: string) {
     expanded,
     selected,
     focused,
+    disableSelection,
+    checkboxSelection,
     handleExpansion,
     handleSelection,
+    handleCheckboxSelection,
     preventSelection,
+    expansionTrigger,
   };
 }

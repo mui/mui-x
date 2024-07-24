@@ -130,10 +130,11 @@ export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 
 export type * from '../models/props/DataGridProps';
-
+export type * from '../models/gridDataSource';
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
 export { createSelector, createSelectorMemoized } from '../utils/createSelector';
+export { gridRowGroupsToFetchSelector } from '../hooks/features/rows/gridRowsSelector';
 export {
   findParentElementFromClassName,
   getActiveElement,
@@ -142,7 +143,6 @@ export {
 export { isNavigationKey, isPasteShortcut } from '../utils/keyboardUtils';
 export * from '../utils/utils';
 export * from '../utils/fastMemo';
-export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
 export * from '../utils/getPublicApiRef';
 export * from '../utils/cellBorderUtils';

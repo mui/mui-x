@@ -399,16 +399,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     );
 
     const handleDeleteFilter = () => {
-      if (rootProps.disableMultipleColumnsFiltering) {
-        if (item.value === undefined) {
-          deleteFilter(item);
-        } else {
-          // TODO v6: simplify the behavior by always remove the filter form
-          applyFilterChanges({ ...item, value: undefined });
-        }
-      } else {
-        deleteFilter(item);
-      }
+      deleteFilter(item);
     };
 
     React.useImperativeHandle(
@@ -615,7 +606,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 GridFilterForm.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Callback called when the operator, column field or value is changed.

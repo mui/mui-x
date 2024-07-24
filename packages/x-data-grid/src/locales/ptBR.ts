@@ -42,6 +42,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   columnsManagementSearchTitle: 'Buscar',
   columnsManagementNoColumns: 'Nenhuma coluna',
   columnsManagementShowHideAllText: 'Mostrar/Ocultar Todas',
+  columnsManagementReset: 'Redefinir',
 
   // Filter panel text
   filterPanelAddFilter: 'Adicionar filtro',

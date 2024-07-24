@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, fireEvent, userEvent, act, getByRole } from '@mui-internal/test-utils';
+import { screen, fireEvent, userEvent, act, getByRole } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
-import { DateRange, LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import {
   createPickerRenderer,
@@ -17,8 +18,8 @@ import {
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-const getPickerDay = (name: string, picker = 'January 2018'): HTMLButtonElement =>
-  getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
+const getPickerDay = (name: string, picker = 'January 2018') =>
+  getByRole(screen.getByRole('grid', { name: picker }), 'gridcell', { name });
 
 describe('<DesktopDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({
@@ -113,6 +114,24 @@ describe('<DesktopDateRangePicker />', () => {
       act(() => input.focus());
 
       expect(input.parentElement).to.have.class('Mui-focused');
+    });
+
+    it('should render the input with a given `name` when `SingleInputDateRangeField` is used', () => {
+      // Test with v7 input
+      const v7Response = render(
+        <DesktopDateRangePicker
+          name="test"
+          enableAccessibleFieldDOMStructure
+          slots={{ field: SingleInputDateRangeField }}
+        />,
+      );
+      expect(screen.getByRole<HTMLInputElement>('textbox', { hidden: true }).name).to.equal('test');
+
+      v7Response.unmount();
+
+      // Test with v6 input
+      render(<DesktopDateRangePicker name="test" slots={{ field: SingleInputDateRangeField }} />);
+      expect(screen.getByRole<HTMLInputElement>('textbox').name).to.equal('test');
     });
   });
 

@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { color as d3Color } from 'd3-color';
 import { animated, useSpring } from '@react-spring/web';
 import { useAnimatedPath } from '../internals/useAnimatedPath';
-import { cleanId } from '../internals/utils';
+import { cleanId } from '../internals/cleanId';
 import type { AreaElementOwnerState } from './AreaElement';
 import { useChartId, useDrawingArea } from '../hooks';
 
@@ -47,7 +47,7 @@ function AnimatedArea(props: AnimatedAreaProps) {
   const { left, top, right, bottom, width, height } = useDrawingArea();
   const chartId = useChartId();
 
-  const path = useAnimatedPath(d!, skipAnimation);
+  const path = useAnimatedPath(d, skipAnimation);
 
   const { animatedWidth } = useSpring({
     from: { animatedWidth: left },
@@ -72,7 +72,7 @@ function AnimatedArea(props: AnimatedAreaProps) {
 AnimatedArea.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   d: PropTypes.string.isRequired,
   ownerState: PropTypes.shape({

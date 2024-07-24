@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { fireEvent, screen } from '@mui-internal/test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 
@@ -165,7 +165,7 @@ describe('<MonthCalendar />', () => {
     it('should not mark the `referenceDate` month as selected', () => {
       render(<MonthCalendar referenceDate={adapterToUse.date('2018-02-02')} />);
 
-      expect(screen.getByRole('radio', { name: 'February', checked: false })).to.not.equal(null);
+      expect(screen.getByRole('radio', { name: 'February', checked: false })).not.to.equal(null);
     });
   });
 });

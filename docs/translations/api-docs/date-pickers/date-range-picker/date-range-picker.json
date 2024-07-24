@@ -75,7 +75,10 @@
     },
     "onAccept": {
       "description": "Callback fired when the value is accepted.",
-      "typeDescriptions": { "value": "The value that was just accepted." }
+      "typeDescriptions": {
+        "value": "The value that was just accepted.",
+        "context": "The context containing the validation result of the current value."
+      }
     },
     "onChange": {
       "description": "Callback fired when the value changes.",
@@ -146,7 +149,7 @@
     },
     "value": { "description": "The selected value. Used when the component is controlled." },
     "viewRenderers": {
-      "description": "Define custom view renderers for each section. If <code>null</code>, the section will only have field editing. If <code>undefined</code>, internally defined view will be the used."
+      "description": "Define custom view renderers for each section. If <code>null</code>, the section will only have field editing. If <code>undefined</code>, internally defined view will be used."
     }
   },
   "classDescriptions": {},
@@ -173,7 +176,7 @@
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "shortcuts": "Custom component for the shortcuts.",
     "switchViewButton": "Button displayed to switch between different calendar views.",
-    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
+    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &quot;year&quot;.",
     "textField": "Form control with an input to render a date or time inside the default field. It is rendered twice: once for the start element and once for the end element.",
     "toolbar": "Custom component for the toolbar rendered above the views."
   }

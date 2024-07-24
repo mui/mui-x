@@ -6,7 +6,7 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 
 export type GridFilterInputMultipleValueProps = {
-  type?: 'text' | 'number';
+  type?: 'text' | 'number' | 'date' | 'datetime-local';
 } & GridFilterInputValueProps &
   Omit<AutocompleteProps<string, true, false, true>, 'options' | 'renderInput'>;
 
@@ -21,7 +21,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
     error,
     helperText,
     size,
-    variant,
+    variant = 'standard',
     ...other
   } = props;
   const TextFieldProps = {
@@ -97,7 +97,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
 GridFilterInputMultipleValue.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
     current: PropTypes.object.isRequired,
@@ -113,7 +113,7 @@ GridFilterInputMultipleValue.propTypes = {
     operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
-  type: PropTypes.oneOf(['number', 'text']),
+  type: PropTypes.oneOf(['date', 'datetime-local', 'number', 'text']),
 } as any;
 
 export { GridFilterInputMultipleValue };

@@ -1,5 +1,5 @@
 import { TreeViewItemMeta, DefaultizedProps, TreeViewPluginSignature } from '../../models';
-import { TreeViewItemId } from '../../../models';
+import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 
 interface TreeViewItemProps {
   label: string;
@@ -11,19 +11,66 @@ interface TreeViewItemProps {
 export interface UseTreeViewItemsPublicAPI<R extends {}> {
   /**
    * Get the item with the given id.
-   * @param {string} itemId The id of the item to return.
+   * When used in the `SimpleTreeView`, it returns an object with the `id` and `label` properties.
+   * @param {string} itemId The id of the item to retrieve.
    * @returns {R} The item with the given id.
    */
-  getItem: (itemId: string) => R;
+  getItem: (itemId: TreeViewItemId) => R;
+  /**
+   * Get the DOM element of the item with the given id.
+   * @param {TreeViewItemId} itemId The id of the item to get the DOM element of.
+   * @returns {HTMLElement | null} The DOM element of the item with the given id.
+   */
+  getItemDOMElement: (itemId: TreeViewItemId) => HTMLElement | null;
+  /**
+   * Get the ids of a given item's children.
+   * Those ids are returned in the order they should be rendered.
+   * @param {TreeViewItemId | null} itemId The id of the item to get the children of.
+   * @returns {TreeViewItemId[]} The ids of the item's children.
+   */
+  getItemOrderedChildrenIds: (itemId: TreeViewItemId | null) => TreeViewItemId[];
+  /**
+   * Get all the items in the same format as provided by `props.items`.
+   * @returns {TreeViewItemProps[]} The items in the tree.
+   */
+  getItemTree: () => TreeViewBaseItem[];
 }
 
 export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItemsPublicAPI<R> {
-  getItemMeta: (itemId: string) => TreeViewItemMeta;
+  /**
+   * Get the meta-information of an item.
+   * Check the `TreeViewItemMeta` type for more information.
+   * @param {TreeViewItemId} itemId The id of the item to get the meta-information of.
+   * @returns {TreeViewItemMeta} The meta-information of the item.
+   */
+  getItemMeta: (itemId: TreeViewItemId) => TreeViewItemMeta;
+  /**
+   * Get the item that should be rendered.
+   * This method is only used on Rich Tree View components.
+   * Check the `TreeViewItemProps` type for more information.
+   * @returns {TreeViewItemProps[]} The items to render.
+   */
   getItemsToRender: () => TreeViewItemProps[];
-  getItemOrderedChildrenIds: (parentId: string | null) => string[];
-  isItemDisabled: (itemId: string) => itemId is string;
-  isItemNavigable: (itemId: string) => boolean;
-  getItemIndex: (itemId: string) => number;
+  /**
+   * Check if a given item is disabled.
+   * An item is disabled if it was marked as disabled or if one of its ancestors is disabled.
+   * @param {TreeViewItemId} itemId The id of the item to check.
+   * @returns {boolean} `true` if the item is disabled, `false` otherwise.
+   */
+  isItemDisabled: (itemId: TreeViewItemId) => boolean;
+  /**
+   * Check if a given item is navigable (i.e.: if it can be accessed through keyboard navigation).
+   * An item is navigable if it is not disabled or if the `disabledItemsFocusable` prop is `true`.
+   * @param {TreeViewItemId} itemId The id of the item to check.
+   * @returns {boolean} `true` if the item is navigable, `false` otherwise.
+   */
+  isItemNavigable: (itemId: TreeViewItemId) => boolean;
+  /**
+   * Get the index of a given item in its parent's children list.
+   * @param {TreeViewItemId} itemId The id of the item to get the index of.
+   * @returns {number} The index of the item in its parent's children list.
+   */
+  getItemIndex: (itemId: TreeViewItemId) => number;
   /**
    * Freeze any future update to the state based on the `items` prop.
    * This is useful when `useTreeViewJSXItems` is used to avoid having conflicting sources of truth.
@@ -69,11 +116,17 @@ export interface UseTreeViewItemsParameters<R extends {}> {
    * @default (item) => item.id
    */
   getItemId?: (item: R) => TreeViewItemId;
+  /**
+   * Horizontal indentation between an item and its children.
+   * Examples: 24, "24px", "2rem", "2em".
+   * @default 12px
+   */
+  itemChildrenIndentation?: string | number;
 }
 
 export type UseTreeViewItemsDefaultizedParameters<R extends {}> = DefaultizedProps<
   UseTreeViewItemsParameters<R>,
-  'disabledItemsFocusable'
+  'disabledItemsFocusable' | 'itemChildrenIndentation'
 >;
 
 interface UseTreeViewItemsEventLookup {
@@ -92,7 +145,9 @@ export interface UseTreeViewItemsState<R extends {}> {
 }
 
 interface UseTreeViewItemsContextValue
-  extends Pick<UseTreeViewItemsDefaultizedParameters<any>, 'disabledItemsFocusable'> {}
+  extends Pick<UseTreeViewItemsDefaultizedParameters<any>, 'disabledItemsFocusable'> {
+  indentationAtItemLevel: boolean;
+}
 
 export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   params: UseTreeViewItemsParameters<any>;
@@ -102,6 +157,7 @@ export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   events: UseTreeViewItemsEventLookup;
   state: UseTreeViewItemsState<any>;
   contextValue: UseTreeViewItemsContextValue;
+  experimentalFeatures: 'indentationAtItemLevel';
 }>;
 
 export type TreeViewItemMetaMap = { [itemId: string]: TreeViewItemMeta };

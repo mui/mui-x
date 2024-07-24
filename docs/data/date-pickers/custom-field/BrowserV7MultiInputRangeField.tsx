@@ -19,8 +19,8 @@ import {
   MultiInputFieldSlotTextFieldProps,
   DateRangeValidationError,
   DateRange,
+  UseDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/models';
-import { UseDateRangeFieldProps } from '@mui/x-date-pickers-pro';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/joy/Box';
-import BrandingProvider from 'docs/src/BrandingProvider';
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+import { BrandingProvider } from '@mui/docs/branding';
+import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import DemoPropsForm from './DemoPropsForm';
 
 export default function ChartsUsageDemo({
@@ -12,26 +12,22 @@ export default function ChartsUsageDemo({
   renderDemo,
   getCode,
 }) {
-  const initialProps = {};
-  let demoProps = {};
-  let codeBlockProps = {};
-  data.forEach((p) => {
-    demoProps[p.propName] = p.defaultValue;
-    if (p.codeBlockDisplay) {
-      initialProps[p.propName] = p.defaultValue;
-    }
-    if (!p.knob) {
-      codeBlockProps[p.propName] = p.defaultValue;
-    }
-  });
-  const [props, setProps] = React.useState(initialProps);
-  demoProps = { ...demoProps, ...props };
-  codeBlockProps = { ...props, ...codeBlockProps };
-  data.forEach((p) => {
-    if (p.codeBlockDisplay === false) {
-      delete codeBlockProps[p.propName];
-    }
-  });
+  const [props, setProps] = React.useState(
+    data.reduce((acc, { propName, defaultValue }) => {
+      acc[propName] = defaultValue;
+      return acc;
+    }, {}),
+  );
+
+  React.useEffect(() => {
+    setProps(
+      data.reduce((acc, { propName, defaultValue }) => {
+        acc[propName] = defaultValue;
+        return acc;
+      }, {}),
+    );
+  }, [data]);
+
   return (
     <Box
       sx={{
@@ -55,13 +51,18 @@ export default function ChartsUsageDemo({
             width: '100%',
           }}
         >
-          {renderDemo(demoProps)}
+          {renderDemo(props, setProps)}
         </Box>
         <BrandingProvider mode="dark">
           <HighlightedCode
             code={getCode({
               name: componentName,
-              props: codeBlockProps,
+              props: Object.entries(props).reduce((acc, [key, value]) => {
+                if (data.find((d) => d.propName === key)?.codeBlockDisplay !== false) {
+                  acc[key] = value;
+                }
+                return acc;
+              }, {}),
               childrenAccepted,
             })}
             language="jsx"
@@ -69,7 +70,12 @@ export default function ChartsUsageDemo({
           />
         </BrandingProvider>
       </Box>
-      <DemoPropsForm data={data} componentName={componentName} onPropsChange={setProps} />
+      <DemoPropsForm
+        data={data}
+        props={props}
+        componentName={componentName}
+        onPropsChange={setProps}
+      />
     </Box>
   );
 }

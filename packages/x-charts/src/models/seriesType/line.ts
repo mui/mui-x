@@ -51,12 +51,15 @@ export interface LineSeriesType
    */
   data?: (number | null)[];
   /**
-   * The key used to retrive data from the dataset.
+   * The key used to retrieve data from the dataset.
    */
   dataKey?: string;
   stack?: string;
   area?: boolean;
-  label?: string;
+  /**
+   * The label to display on the tooltip or the legend. It can be a string or a function.
+   */
+  label?: string | ((location: 'tooltip' | 'legend') => string);
   curve?: CurveType;
   /**
    * Define which items of the series should display a mark.

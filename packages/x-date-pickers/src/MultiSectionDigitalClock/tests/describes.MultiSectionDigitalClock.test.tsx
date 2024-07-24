@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen } from '@mui-internal/test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
-  wrapPickerMount,
   adapterToUse,
   multiSectionDigitalClockHandler,
   describeValidation,
   describeValue,
 } from 'test/utils/pickers';
-import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
+import {
+  MultiSectionDigitalClock,
+  multiSectionDigitalClockClasses as classes,
+} from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { formatMeridiem } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
@@ -25,22 +27,12 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
   }));
 
   describeConformance(<MultiSectionDigitalClock />, () => ({
-    classes: {} as any,
+    classes,
+    inheritComponent: 'div',
     render,
     muiName: 'MuiMultiSectionDigitalClock',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
-    skip: [
-      'componentProp',
-      'componentsProp',
-      'themeDefaultProps',
-      'themeStyleOverrides',
-      'themeVariants',
-      'mergeClassName',
-      'propsSpread',
-      'rootClass',
-      'reactTestRenderer',
-    ],
+    skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
   describeValue(MultiSectionDigitalClock, () => ({

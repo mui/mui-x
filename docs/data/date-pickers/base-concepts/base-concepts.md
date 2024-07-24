@@ -102,22 +102,11 @@ For example, in a Time Picker, it allows you to choose the date of your value:
 
 {{"demo": "ReferenceDateExplicitTimePicker.js"}}
 
-## Accessibility
-
-Both `Desktop` and `Mobile` Date and Time Pickers are using `role="dialog"` to display their interactive view parts and thus they should follow [Modal accessibility guidelines](/material-ui/react-modal/#accessibility).
-This behavior is automated as much as possible, ensuring that the Date and Time Pickers are accessible in most cases.
-A correct `aria-labelledby` value is assigned to the dialog component based on the following rules:
-
-- Use `toolbar` id if the toolbar is visible;
-- Use the id of the input label if the toolbar is hidden;
-
-:::info
-Make sure to provide an `aria-labelledby` prop to `popper` and/or `mobilePaper` `slotProps` in case you are using Date and Time Pickers component with **hidden toolbar** and **without a label**.
-:::
-
 ## TypeScript
 
-In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users need to import the following types.
+### Theme augmentation
+
+To benefit from the [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users need to import the following types.
 Internally, it uses module augmentation to extend the default theme structure.
 
 ```tsx
@@ -145,6 +134,24 @@ const theme = createTheme({
 You don't have to import the theme augmentation from both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` when using `@mui/x-date-pickers-pro`.
 Importing it from `@mui/x-date-pickers-pro` is enough.
 :::
+
+### Typing of the date
+
+The Date and Time Pickers components are compatible with several date libraries
+that use different formats to represent their dates
+(`Date` object for `date-fns`, `daysjs.Dayjs` object for `days-js`, etc.).
+To correctly type all the props that are date-related, the adapters override a global type named `PickerValidDate`
+to allow the usage of their own date format.
+This allows TypeScript to throw an error if you try to pass `value={new Date()}` to a component using `AdapterDayjs` for instance.
+
+If you run into TypeScript errors such as `DesktopDatePickerProps<Date> error Type 'Date' does not satisfy the constraint 'never'`,
+it is probably because you are not importing the adapter in the same TypeScript project as the rest of your codebase.
+You can fix it by manually importing the adapter in some file of your project as follows:
+
+```ts
+// Replace `AdapterDayjs` with the adapter you are using.
+import type {} from '@mui/x-date-pickers/AdapterDayjs';
+```
 
 ## Testing caveats
 

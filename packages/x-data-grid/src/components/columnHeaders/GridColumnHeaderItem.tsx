@@ -6,7 +6,6 @@ import { fastMemo } from '../../utils/fastMemo';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
-import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderSeparatorProps } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
@@ -248,11 +247,13 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       )}
 
       {showSortIcon && (
-        <GridColumnHeaderSortIcon
+        <rootProps.slots.columnHeaderSortIcon
+          field={colDef.field}
           direction={sortDirection}
           index={sortIndex}
           sortingOrder={sortingOrder}
           disabled={!colDef.sortable}
+          {...rootProps.slotProps?.columnHeaderSortIcon}
         />
       )}
     </React.Fragment>
@@ -312,7 +313,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 GridColumnHeaderItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   colDef: PropTypes.object.isRequired,
   colIndex: PropTypes.number.isRequired,

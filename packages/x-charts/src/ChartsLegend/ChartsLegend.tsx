@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
-import { AnchorPosition, Direction, getSeriesToDisplay } from './utils';
-import { SeriesContext } from '../context/SeriesContextProvider';
+import { getSeriesToDisplay } from './utils';
 import { ChartsLegendClasses, getLegendUtilityClass } from './chartsLegendClasses';
 import { DefaultizedProps } from '../models/helpers';
 import { DefaultChartsLegend, LegendRendererProps } from './DefaultChartsLegend';
 import { useDrawingArea } from '../hooks';
+import { useSeries } from '../hooks/useSeries';
+import { LegendPlacement } from './legend.types';
 
 export interface ChartsLegendSlots {
   /**
@@ -22,11 +23,7 @@ export interface ChartsLegendSlotProps {
   legend?: Partial<LegendRendererProps>;
 }
 
-export type ChartsLegendProps = {
-  /**
-   * The position of the legend.
-   */
-  position?: AnchorPosition;
+export interface ChartsLegendProps extends LegendPlacement {
   /**
    * Override or extend the styles applied to the component.
    */
@@ -37,11 +34,6 @@ export type ChartsLegendProps = {
    */
   hidden?: boolean;
   /**
-   * The direction of the legend layout.
-   * The default depends on the chart.
-   */
-  direction?: Direction;
-  /**
    * Overridable component slots.
    * @default {}
    */
@@ -51,7 +43,7 @@ export type ChartsLegendProps = {
    * @default {}
    */
   slotProps?: ChartsLegendSlotProps;
-};
+}
 
 type DefaultizedChartsLegendProps = DefaultizedProps<ChartsLegendProps, 'direction' | 'position'>;
 
@@ -83,7 +75,7 @@ function ChartsLegend(inProps: ChartsLegendProps) {
   const classes = useUtilityClasses({ ...props, theme });
 
   const drawingArea = useDrawingArea();
-  const series = React.useContext(SeriesContext);
+  const series = useSeries();
 
   const seriesToDisplay = getSeriesToDisplay(series);
 
@@ -109,7 +101,7 @@ function ChartsLegend(inProps: ChartsLegendProps) {
 ChartsLegend.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Override or extend the styles applied to the component.

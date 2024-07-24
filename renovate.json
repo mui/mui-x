@@ -6,7 +6,6 @@
   "commitMessageTopic": "{{depName}}",
   "dependencyDashboard": true,
   "rebaseWhen": "conflicted",
-  "ignoreDeps": ["jsdom"],
   "labels": ["dependencies"],
   "stopUpdatingLabel": "on hold",
   "packageRules": [
@@ -33,11 +32,6 @@
     {
       "groupName": "core-js",
       "matchPackageNames": ["core-js"],
-      "allowedVersions": "< 2.0.0"
-    },
-    {
-      "groupName": "raw-loader",
-      "matchPackageNames": ["raw-loader"],
       "allowedVersions": "< 2.0.0"
     },
     {
@@ -94,8 +88,13 @@
         "@mui/material",
         "@mui/styles",
         "@mui/system",
+        "@mui/types",
         "@mui/utils"
       ]
+    },
+    {
+      "groupName": "MUI Internal",
+      "matchPackagePatterns": ["@mui/internal-*", "@mui/docs"]
     },
     {
       "groupName": "Playwright",
@@ -108,6 +107,11 @@
     {
       "groupName": "GitHub Actions",
       "matchManagers": ["github-actions"]
+    },
+    {
+      "groupName": "@mui/docs",
+      "matchPackageNames": ["@mui/docs"],
+      "followTag": "next"
     }
   ],
   "postUpdateOptions": ["pnpmDedupe"],

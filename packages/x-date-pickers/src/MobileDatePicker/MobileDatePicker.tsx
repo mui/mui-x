@@ -5,7 +5,8 @@ import { refType } from '@mui/utils';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { MobileDatePickerProps } from './MobileDatePicker.types';
 import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
-import { useUtils, useLocaleText } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils } from '../internals/hooks/useUtils';
 import { validateDate } from '../internals/utils/validation/validateDate';
 import { DateView, PickerValidDate } from '../models';
 import { DateField } from '../DateField';
@@ -39,7 +40,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
   inProps: MobileDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const utils = useUtils<TDate>();
 
   // Props with the default values common to all date pickers
@@ -88,7 +89,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
     valueManager: singleItemValueManager,
     valueType: 'date',
     getOpenDialogAriaText:
-      props.localeText?.openDatePickerDialogue ?? localeText.openDatePickerDialogue,
+      props.localeText?.openDatePickerDialogue ?? translations.openDatePickerDialogue,
     validator: validateDate,
   });
 
@@ -98,7 +99,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
 MobileDatePicker.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * If `true`, the main element is focused during the first mount.
@@ -213,7 +214,9 @@ MobileDatePicker.propTypes = {
   /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onAccept: PropTypes.func,
   /**
@@ -398,7 +401,7 @@ MobileDatePicker.propTypes = {
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
-   * If `undefined`, internally defined view will be the used.
+   * If `undefined`, internally defined view will be used.
    */
   viewRenderers: PropTypes.shape({
     day: PropTypes.func,

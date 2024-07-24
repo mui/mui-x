@@ -58,7 +58,6 @@ export interface PickersDayProps<TDate extends PickerValidDate>
    * @default false
    */
   disabled?: boolean;
-
   /**
    * If `true`, days are rendering without margin. Useful for displaying linked range of days.
    * @default false
@@ -239,7 +238,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate extends PickerV
   inProps: PickersDayProps<TDate>,
   forwardedRef: React.Ref<HTMLButtonElement>,
 ) {
-  const props = useThemeProps<Theme, PickersDayProps<TDate>, 'MuiPickersDay'>({
+  const props = useThemeProps({
     props: inProps,
     name: 'MuiPickersDay',
   });
@@ -354,7 +353,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate extends PickerV
 PickersDayRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * A ref for imperative actions.

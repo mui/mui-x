@@ -21,7 +21,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Filters toolbar button text
   toolbarFilters: 'Filter',
   toolbarFiltersLabel: 'Vis filter',
-  toolbarFiltersTooltipHide: 'Skjul fitler',
+  toolbarFiltersTooltipHide: 'Skjul filter',
   toolbarFiltersTooltipShow: 'Vis filter',
   toolbarFiltersTooltipActive: (count) =>
     count !== 1 ? `${count} aktive filter` : `${count} aktivt filter`,
@@ -39,16 +39,17 @@ const nbNOGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Last ned som Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
+  columnsManagementSearchTitle: 'Søk',
+  columnsManagementNoColumns: 'Ingen kolonner',
+  columnsManagementShowHideAllText: 'Vis/skjul alle',
+  columnsManagementReset: 'Nullstill',
 
   // Filter panel text
   filterPanelAddFilter: 'Legg til filter',
   filterPanelRemoveAll: 'Fjern alle',
   filterPanelDeleteIconLabel: 'Slett',
   filterPanelLogicOperator: 'Logisk operator',
-  filterPanelOperator: 'Operatører',
+  filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'Og',
   filterPanelOperatorOr: 'Eller',
   filterPanelColumns: 'Kolonner',
@@ -69,33 +70,33 @@ const nbNOGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'er tom',
   filterOperatorIsNotEmpty: 'er ikke tom',
   filterOperatorIsAnyOf: 'er en av',
-  // 'filterOperator=': '=',
-  // 'filterOperator!=': '!=',
-  // 'filterOperator>': '>',
-  // 'filterOperator>=': '>=',
-  // 'filterOperator<': '<',
-  // 'filterOperator<=': '<=',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
 
   // Header filter operators text
-  // headerFilterOperatorContains: 'Contains',
-  // headerFilterOperatorEquals: 'Equals',
-  // headerFilterOperatorStartsWith: 'Starts with',
-  // headerFilterOperatorEndsWith: 'Ends with',
-  // headerFilterOperatorIs: 'Is',
-  // headerFilterOperatorNot: 'Is not',
-  // headerFilterOperatorAfter: 'Is after',
-  // headerFilterOperatorOnOrAfter: 'Is on or after',
-  // headerFilterOperatorBefore: 'Is before',
-  // headerFilterOperatorOnOrBefore: 'Is on or before',
-  // headerFilterOperatorIsEmpty: 'Is empty',
-  // headerFilterOperatorIsNotEmpty: 'Is not empty',
-  // headerFilterOperatorIsAnyOf: 'Is any of',
-  // 'headerFilterOperator=': 'Equals',
-  // 'headerFilterOperator!=': 'Not equals',
-  // 'headerFilterOperator>': 'Greater than',
-  // 'headerFilterOperator>=': 'Greater than or equal to',
-  // 'headerFilterOperator<': 'Less than',
-  // 'headerFilterOperator<=': 'Less than or equal to',
+  headerFilterOperatorContains: 'Inneholder',
+  headerFilterOperatorEquals: 'Lik',
+  headerFilterOperatorStartsWith: 'Starter på',
+  headerFilterOperatorEndsWith: 'Slutter på',
+  headerFilterOperatorIs: 'Er',
+  headerFilterOperatorNot: 'Er ikke',
+  headerFilterOperatorAfter: 'Er etter',
+  headerFilterOperatorOnOrAfter: 'Er på eller etter',
+  headerFilterOperatorBefore: 'Er før',
+  headerFilterOperatorOnOrBefore: 'Er på eller før',
+  headerFilterOperatorIsEmpty: 'Er tom',
+  headerFilterOperatorIsNotEmpty: 'Er ikke tom',
+  headerFilterOperatorIsAnyOf: 'Er en av',
+  'headerFilterOperator=': 'Lik',
+  'headerFilterOperator!=': 'Ikke lik',
+  'headerFilterOperator>': 'Større enn',
+  'headerFilterOperator>=': 'Større enn eller lik',
+  'headerFilterOperator<': 'Mindre enn',
+  'headerFilterOperator<=': 'Mindre enn eller lik',
 
   // Filter values text
   filterValueAny: 'noen',
@@ -130,7 +131,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
     `${visibleCount.toLocaleString()} av ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
-  checkboxSelectionHeaderName: 'Avmerkingsboks valgt',
+  checkboxSelectionHeaderName: 'Avmerkingsboks',
   checkboxSelectionSelectAllRows: 'Velg alle rader',
   checkboxSelectionUnselectAllRows: 'Velg bort alle rader',
   checkboxSelectionSelectRow: 'Velg rad',
@@ -156,7 +157,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Grouping columns
   groupingColumnHeaderName: 'Grupper',
   groupColumn: (name) => `Grupper på ${name}`,
-  unGroupColumn: (name) => `Stopp å grupper på ${name}`,
+  unGroupColumn: (name) => `Slutt å grupper på ${name}`,
 
   // Master/detail
   detailPanelToggle: 'Utvid/kollaps detalj panel',
@@ -164,7 +165,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   collapseDetailPanel: 'Kollaps',
 
   // Row reordering text
-  rowReorderingHeaderName: 'Rad reorganisering',
+  rowReorderingHeaderName: 'Radreorganisering',
 
   // Aggregation
   aggregationMenuItemHeader: 'Aggregering',

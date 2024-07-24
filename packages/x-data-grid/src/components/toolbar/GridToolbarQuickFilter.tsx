@@ -39,13 +39,6 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
   '& .MuiInput-underline:before': {
     borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
-  [`& input[type=search]::-ms-clear,
-& input[type=search]::-ms-reveal`]: {
-    /* clears the 'X' icon from IE */
-    display: 'none',
-    width: 0,
-    height: 0,
-  },
   [`& input[type="search"]::-webkit-search-decoration,
   & input[type="search"]::-webkit-search-cancel-button,
   & input[type="search"]::-webkit-search-results-button,
@@ -181,7 +174,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
 GridToolbarQuickFilter.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The debounce time in milliseconds.

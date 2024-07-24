@@ -156,10 +156,10 @@ export interface ChartsXAxisProps extends ChartsAxisProps {
   position?: 'top' | 'bottom';
 }
 
-export type ScaleName = 'linear' | 'band' | 'point' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
+export type ScaleName = keyof AxisScaleConfig;
 export type ContinuousScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
 
-interface AxisScaleConfig {
+export interface AxisScaleConfig {
   band: {
     scaleType: 'band';
     scale: ScaleBand<number | Date | string>;
@@ -214,7 +214,7 @@ interface AxisScaleConfig {
   };
 }
 
-interface AxisScaleComputedConfig {
+export interface AxisScaleComputedConfig {
   band: {
     colorScale?:
       | ScaleOrdinal<string | number | Date, string, string | null>
@@ -257,11 +257,16 @@ export type AxisValueFormatterContext = {
    * Location indicates where the value will be displayed.
    * - `'tick'` The value is displayed on the axis ticks.
    * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
+   * - `'legend'` The value is displayed in the legend when using color legend.
    */
-  location: 'tick' | 'tooltip';
+  location: 'tick' | 'tooltip' | 'legend';
 };
 
-export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
+export type AxisConfig<
+  S extends ScaleName = ScaleName,
+  V = any,
+  AxisProps = ChartsXAxisProps | ChartsYAxisProps,
+> = {
   /**
    * Id used to identify the axis.
    */
@@ -299,14 +304,18 @@ export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * If `true`, Reverse the axis scaleBand.
    */
   reverse?: boolean;
-} & Partial<ChartsXAxisProps | ChartsYAxisProps> &
+} & Partial<AxisProps> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
-  TickParams;
+  TickParams &
+  AxisConfigExtension;
 
-export type AxisDefaultized<S extends ScaleName = ScaleName, V = any> = Omit<
-  AxisConfig<S, V>,
-  'scaleType'
-> &
+export interface AxisConfigExtension {}
+
+export type AxisDefaultized<
+  S extends ScaleName = ScaleName,
+  V = any,
+  AxisProps = ChartsXAxisProps | ChartsYAxisProps,
+> = Omit<AxisConfig<S, V, AxisProps>, 'scaleType'> &
   AxisScaleConfig[S] &
   AxisScaleComputedConfig[S] & {
     /**

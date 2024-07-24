@@ -26,10 +26,10 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Kezdő dátum',
   end: 'Záró dátum',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Kezdő dátum',
+  startTime: 'Kezdő idő',
+  endDate: 'Záró dátum',
+  endTime: 'Záró idő',
 
   // Action bar
   cancelButtonLabel: 'Mégse',
@@ -78,24 +78,24 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'É'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'HHHH' : 'HH'),
   fieldDayPlaceholder: () => 'NN',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'NNNN' : 'NN'),
   fieldHoursPlaceholder: () => 'óó',
   fieldMinutesPlaceholder: () => 'pp',
   fieldSecondsPlaceholder: () => 'mm',
   fieldMeridiemPlaceholder: () => 'dd',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'Év',
+  month: 'Hónap',
+  day: 'Nap',
+  weekDay: 'Hétköznap',
+  hours: timeViews.hours,
+  minutes: timeViews.minutes,
+  seconds: timeViews.seconds,
+  meridiem: timeViews.meridiem,
 
   // Common
-  // empty: 'Empty',
+  empty: 'Üres',
 };
 
 export const huHU = getPickersLocalization(huHUPickers);

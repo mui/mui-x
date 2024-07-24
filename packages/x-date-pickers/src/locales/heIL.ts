@@ -25,10 +25,10 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'תחילה',
   end: 'סיום',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'תאריך תחילה',
+  startTime: 'שעת תחילה',
+  endDate: 'תאריך סיום',
+  endTime: 'שעת סיום',
 
   // Action bar
   cancelButtonLabel: 'ביטול',
@@ -67,7 +67,7 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `בחירת שעה, השעה שנבחרה היא ${utils.format(value, 'fullTime')}`
       : 'בחירת שעה',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: 'נקה ערך',
 
   // Table labels
   timeTableLabel: 'בחירת שעה',
@@ -84,17 +84,17 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
+  year: 'שנה',
+  month: 'חודש',
+  day: 'יום',
+  weekDay: 'יום בשבוע',
+  hours: 'שעות',
+  minutes: 'דקות',
+  seconds: 'שניות',
   // meridiem: 'Meridiem',
 
   // Common
-  // empty: 'Empty',
+  empty: 'ריק',
 };
 
 export const heIL = getPickersLocalization(heILPickers);

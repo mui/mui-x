@@ -1,0 +1,24 @@
+name: Order ID validation
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  validate-order-id:
+    runs-on: ubuntu-latest
+    name: Label issue based on order ID
+    steps:
+      - uses: actions/checkout@v3
+      - name: Label issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const script = require('./scripts/orderIdValidation.js')
+            await script(core, github)
+        env:
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ORDER_API_TOKEN: ${{ secrets.SHOP_AUTH_TOKEN }}

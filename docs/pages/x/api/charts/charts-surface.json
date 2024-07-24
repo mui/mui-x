@@ -7,7 +7,8 @@
   "name": "ChartsSurface",
   "imports": [
     "import { ChartsSurface } from '/packages/x-charts/src/ChartsSurface.tsx';",
-    "import { ChartsSurface } from '@mui/x-charts';"
+    "import { ChartsSurface } from '@mui/x-charts';",
+    "import { ChartsSurface } from '@mui/x-charts-pro';"
   ],
   "classes": [],
   "muiName": "MuiChartsSurface",

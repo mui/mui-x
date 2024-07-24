@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-premium",
-  "version": "7.3.0",
+  "version": "7.11.0",
   "description": "The Premium plan edition of the Data Grid Components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -43,14 +43,15 @@
     "directory": "packages/x-data-grid-premium"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.0",
-    "@mui/system": "^5.15.14",
-    "@mui/utils": "^5.15.14",
+    "@babel/runtime": "^7.24.8",
+    "@mui/system": "^5.16.2",
+    "@mui/utils": "^5.16.2",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-data-grid-pro": "workspace:*",
+    "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
     "@types/format-util": "^1.0.4",
-    "clsx": "^2.1.0",
+    "clsx": "^2.1.1",
     "exceljs": "^4.4.0",
     "prop-types": "^15.8.1",
     "reselect": "^4.1.8"
@@ -61,13 +62,11 @@
     "react-dom": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "@types/prop-types": "^15.7.11",
+    "@mui/internal-test-utils": "^1.0.4",
+    "@types/prop-types": "^15.7.12",
     "date-fns": "^2.30.0",
-    "rimraf": "^5.0.5"
+    "rimraf": "^5.0.9"
   },
-  "setupFiles": [
-    "<rootDir>/src/setupTests.js"
-  ],
   "engines": {
     "node": ">=14.0.0"
   }
