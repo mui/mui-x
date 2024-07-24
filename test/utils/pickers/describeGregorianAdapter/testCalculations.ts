@@ -814,6 +814,10 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     expect(adapter.getDaysInMonth(adapter.addMonths(testDateIso, 1))).to.equal(30);
   });
 
+  it('Method: getDayOfWeek', () => {
+    expect(adapter.getDayOfWeek(testDateIso)).to.equal(adapter.lib === 'luxon' ? 2 : 3);
+  });
+
   describe('Method: getWeekArray', () => {
     it('should work without timezones', () => {
       const weekArray = adapter.getWeekArray(testDateIso);

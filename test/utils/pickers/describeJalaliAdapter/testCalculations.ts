@@ -19,6 +19,16 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
 
     expect(adapter.isEqual(testDateIso, anotherDate)).to.equal(true);
     expect(adapter.isEqual(null, null)).to.equal(true);
+    expect(adapter.isEqual(testDateIso, null)).to.equal(false);
+  });
+
+  it('Method: isValid', () => {
+    expect(adapter.isValid(testDateIso)).to.equal(true);
+    if (adapter.lib !== 'moment-jalaali') {
+      // moment-jalaali just throw errors
+      expect(adapter.isValid(null)).to.equal(false);
+      expect(adapter.isValid(adapter.date('invalid'))).to.equal(false);
+    }
   });
 
   it('Method: isSameYear', () => {
@@ -202,6 +212,10 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
     expect(adapter.getDate(testDateIso)).to.equal(8);
   });
 
+  it('Method: getHours', () => {
+    expect(adapter.getHours(testDateIso)).to.equal(11);
+  });
+
   it('Method: getMinutes', () => {
     expect(adapter.getMinutes(testDateIso)).to.equal(44);
   });
@@ -240,6 +254,10 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
 
   it('Method: setMilliseconds', () => {
     expect(adapter.setMilliseconds(testDateIso, 11)).toEqualDateTime('2018-10-30T11:44:00.011Z');
+  });
+
+  it('Method: getDaysInMonth', () => {
+    expect(adapter.getDaysInMonth(testDateIso)).to.equal(31);
   });
 
   it('Method: getWeekArray', () => {
