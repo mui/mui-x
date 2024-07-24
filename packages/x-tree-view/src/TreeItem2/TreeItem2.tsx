@@ -125,7 +125,7 @@ export const TreeItem2Label = styled('div', {
   ...theme.typography.body1,
   variants: [
     {
-      props: ({ editable }: UseTreeItem2LabelSlotOwnProps) => editable === true,
+      props: ({ editable }: UseTreeItem2LabelSlotOwnProps) => editable,
       style: {
         paddingLeft: '3px',
       },
