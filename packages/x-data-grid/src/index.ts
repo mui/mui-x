@@ -49,4 +49,4 @@ export type GridState = GridStateCommunity;
 export type GridInitialState = GridInitialStateCommunity;
 
 // Utils shared across the X packages
-export { PropsFromSlot } from '@mui/x-internals/slots';
+export type { PropsFromSlot } from '@mui/x-internals/slots';
