@@ -273,7 +273,7 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
   });
 
   it('Method: getWeekNumber', () => {
-    expect(adapter.getWeekNumber!(testDateIso)).to.equal(33);
+    expect(adapter.getWeekNumber(testDateIso)).to.equal(33);
   });
 
   it('Method: getYearRange', () => {
