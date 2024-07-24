@@ -30,13 +30,9 @@ that information can vary depending on the slot being used:
 
 {{"demo": "CustomSlotPropsCallback.js"}}
 
-## Recommended usage
+## Correct usage
 
-A slot is a React component; therefore, it should follow some basic rules:
-
-### Stable JavaScript reference
-
-Slots should keep the same JavaScript reference between two renders.
+A slot is a React component; therefore, it should keep the same JavaScript reference between two renders.
 If the JavaScript reference of component changes between two renders, React will remount it.
 You can avoid it by not inlining the component definition in the `slots` prop.
 
