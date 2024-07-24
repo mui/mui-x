@@ -26,6 +26,7 @@ export const getFakeContextValue = (
   runItemPlugins: () => ({
     rootRef: null,
     contentRef: null,
+    propsEnhancers: {},
   }),
   wrapItem: ({ children }) => children,
   wrapRoot: ({ children }) => children,
