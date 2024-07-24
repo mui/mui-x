@@ -1,12 +1,12 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = _default;
 var _noop = _interopRequireDefault(require("../noop.js"));
 var _basis = require("./basis.js");
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function BasisClosed(context) {
   this._context = context;
 }

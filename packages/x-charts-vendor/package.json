@@ -24,6 +24,7 @@
     }
   },
   "dependencies": {
+    "@babel/runtime": "^7.24.8",
     "d3-color": "^3.1.0",
     "d3-delaunay": "^6.0.4",
     "d3-interpolate": "^3.0.1",
@@ -50,7 +51,8 @@
     "@types/d3-array": "^3.0.3",
     "internmap": "^2.0.3",
     "execa": "^9.3.0",
-    "rimraf": "^5.0.8"
+    "rimraf": "^5.0.8",
+    "@babel/plugin-transform-runtime": "^7.24.7"
   },
   "publishConfig": {
     "provenance": true

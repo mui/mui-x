@@ -1,5 +1,6 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -8,7 +9,6 @@ var _index = _interopRequireDefault(require("../../../lib-vendor/delaunator/inde
 var _path = _interopRequireDefault(require("./path.js"));
 var _polygon = _interopRequireDefault(require("./polygon.js"));
 var _voronoi = _interopRequireDefault(require("./voronoi.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const tau = 2 * Math.PI,
   pow = Math.pow;
 function pointX(p) {

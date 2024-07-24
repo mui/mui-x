@@ -1,5 +1,6 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -8,7 +9,6 @@ exports.point = point;
 var _index = require("../../../lib-vendor/d3-array/src/index.js");
 var _init = require("./init.js");
 var _ordinal = _interopRequireDefault(require("./ordinal.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function band() {
   var scale = (0, _ordinal.default)().unknown(undefined),
     domain = scale.domain,

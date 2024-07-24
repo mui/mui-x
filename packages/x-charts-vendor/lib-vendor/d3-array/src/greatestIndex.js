@@ -1,12 +1,12 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = greatestIndex;
 var _ascending = _interopRequireDefault(require("./ascending.js"));
 var _maxIndex = _interopRequireDefault(require("./maxIndex.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function greatestIndex(values, compare = _ascending.default) {
   if (compare.length === 1) return (0, _maxIndex.default)(values, compare);
   let maxValue;

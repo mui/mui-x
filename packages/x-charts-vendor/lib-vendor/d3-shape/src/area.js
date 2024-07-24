@@ -1,5 +1,6 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -10,7 +11,6 @@ var _linear = _interopRequireDefault(require("./curve/linear.js"));
 var _line = _interopRequireDefault(require("./line.js"));
 var _path = require("./path.js");
 var _point = require("./point.js");
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _default(x0, y0, y1) {
   var x1 = null,
     defined = (0, _constant.default)(true),

@@ -1,5 +1,6 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -7,7 +8,6 @@ exports.CardinalClosed = CardinalClosed;
 exports.default = void 0;
 var _noop = _interopRequireDefault(require("../noop.js"));
 var _cardinal = require("./cardinal.js");
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function CardinalClosed(context, tension) {
   this._context = context;
   this._k = (1 - tension) / 6;

@@ -1,5 +1,6 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -7,7 +8,6 @@ exports.default = _default;
 var _constant = _interopRequireDefault(require("./constant.js"));
 var _math = require("./math.js");
 var _path = require("./path.js");
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function arcInnerRadius(d) {
   return d.innerRadius;
 }

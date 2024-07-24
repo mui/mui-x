@@ -1,5 +1,6 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -12,7 +13,6 @@ var _formatTrim = _interopRequireDefault(require("./formatTrim.js"));
 var _formatTypes = _interopRequireDefault(require("./formatTypes.js"));
 var _formatPrefixAuto = require("./formatPrefixAuto.js");
 var _identity = _interopRequireDefault(require("./identity.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 var map = Array.prototype.map,
   prefixes = ["y", "z", "a", "f", "p", "n", "µ", "m", "", "k", "M", "G", "T", "P", "E", "Z", "Y"];
 function _default(locale) {

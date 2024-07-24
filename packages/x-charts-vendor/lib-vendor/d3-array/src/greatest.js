@@ -1,11 +1,11 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = greatest;
 var _ascending = _interopRequireDefault(require("./ascending.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function greatest(values, compare = _ascending.default) {
   let max;
   let defined = false;

@@ -1,5 +1,6 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -13,7 +14,6 @@ exports.rollup = rollup;
 exports.rollups = rollups;
 var _index = require("../../../lib-vendor/internmap/src/index.js");
 var _identity = _interopRequireDefault(require("./identity.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function group(values, ...keys) {
   return nest(values, _identity.default, _identity.default, keys);
 }

@@ -1,12 +1,12 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.interpolateTransformSvg = exports.interpolateTransformCss = void 0;
 var _number = _interopRequireDefault(require("../number.js"));
 var _parse = require("./parse.js");
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function interpolateTransform(parse, pxComma, pxParen, degParen) {
   function pop(s) {
     return s.length ? s.pop() + " " : "";

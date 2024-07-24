@@ -1,5 +1,6 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -10,7 +11,6 @@ var _index2 = require("../../../lib-vendor/d3-format/src/index.js");
 var _nice = _interopRequireDefault(require("./nice.js"));
 var _continuous = require("./continuous.js");
 var _init = require("./init.js");
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function transformLog(x) {
   return Math.log(x);
 }

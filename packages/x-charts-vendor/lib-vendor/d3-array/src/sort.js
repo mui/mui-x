@@ -1,5 +1,6 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -8,7 +9,6 @@ exports.compareDefined = compareDefined;
 exports.default = sort;
 var _ascending = _interopRequireDefault(require("./ascending.js"));
 var _permute = _interopRequireDefault(require("./permute.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function sort(values, ...F) {
   if (typeof values[Symbol.iterator] !== "function") throw new TypeError("values is not iterable");
   values = Array.from(values);

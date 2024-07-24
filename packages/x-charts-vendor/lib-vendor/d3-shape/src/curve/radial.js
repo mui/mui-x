@@ -1,12 +1,12 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.curveRadialLinear = void 0;
 exports.default = curveRadial;
 var _linear = _interopRequireDefault(require("./linear.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 var curveRadialLinear = exports.curveRadialLinear = curveRadial(_linear.default);
 function Radial(curve) {
   this._curve = curve;

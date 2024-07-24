@@ -1,12 +1,12 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = thresholdFreedmanDiaconis;
 var _count = _interopRequireDefault(require("../count.js"));
 var _quantile = _interopRequireDefault(require("../quantile.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function thresholdFreedmanDiaconis(values, min, max) {
   const c = (0, _count.default)(values),
     d = (0, _quantile.default)(values, 0.75) - (0, _quantile.default)(values, 0.25);

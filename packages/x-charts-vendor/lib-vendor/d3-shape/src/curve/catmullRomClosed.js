@@ -1,5 +1,6 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -7,7 +8,6 @@ exports.default = void 0;
 var _cardinalClosed = require("./cardinalClosed.js");
 var _noop = _interopRequireDefault(require("../noop.js"));
 var _catmullRom = require("./catmullRom.js");
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function CatmullRomClosed(context, alpha) {
   this._context = context;
   this._alpha = alpha;

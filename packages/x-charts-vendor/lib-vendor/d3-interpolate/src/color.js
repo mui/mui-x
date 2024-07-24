@@ -1,5 +1,6 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -7,7 +8,6 @@ exports.default = nogamma;
 exports.gamma = gamma;
 exports.hue = hue;
 var _constant = _interopRequireDefault(require("./constant.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function linear(a, d) {
   return function (t) {
     return a + t * d;

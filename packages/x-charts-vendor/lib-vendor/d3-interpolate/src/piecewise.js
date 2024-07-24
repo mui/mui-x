@@ -1,11 +1,11 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = piecewise;
 var _value = _interopRequireDefault(require("./value.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function piecewise(interpolate, values) {
   if (values === undefined) values = interpolate, interpolate = _value.default;
   var i = 0,

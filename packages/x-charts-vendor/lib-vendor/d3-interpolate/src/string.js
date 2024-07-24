@@ -1,11 +1,11 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = _default;
 var _number = _interopRequireDefault(require("./number.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 var reA = /[-+]?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]?\d+)?/g,
   reB = new RegExp(reA.source, "g");
 function zero(b) {

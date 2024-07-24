@@ -1,5 +1,6 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -7,7 +8,6 @@ exports.default = exports.bisectRight = exports.bisectLeft = exports.bisectCente
 var _ascending = _interopRequireDefault(require("./ascending.js"));
 var _bisector = _interopRequireDefault(require("./bisector.js"));
 var _number = _interopRequireDefault(require("./number.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const ascendingBisect = (0, _bisector.default)(_ascending.default);
 const bisectRight = exports.bisectRight = ascendingBisect.right;
 const bisectLeft = exports.bisectLeft = ascendingBisect.left;

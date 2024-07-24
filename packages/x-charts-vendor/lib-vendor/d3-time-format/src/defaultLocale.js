@@ -1,12 +1,12 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = defaultLocale;
 exports.utcParse = exports.utcFormat = exports.timeParse = exports.timeFormat = void 0;
 var _locale = _interopRequireDefault(require("./locale.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 var locale;
 var timeFormat;
 var timeParse;

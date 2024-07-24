@@ -1,5 +1,6 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -11,7 +12,6 @@ var _index = require("../../../lib-vendor/d3-array/src/index.js");
 var _index2 = require("../../../lib-vendor/d3-interpolate/src/index.js");
 var _constant = _interopRequireDefault(require("./constant.js"));
 var _number = _interopRequireDefault(require("./number.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 var unit = [0, 1];
 function identity(x) {
   return x;

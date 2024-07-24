@@ -1,5 +1,6 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -7,7 +8,6 @@ exports.default = void 0;
 var _formatDecimal = _interopRequireDefault(require("./formatDecimal.js"));
 var _formatPrefixAuto = _interopRequireDefault(require("./formatPrefixAuto.js"));
 var _formatRounded = _interopRequireDefault(require("./formatRounded.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 var _default = exports.default = {
   "%": (x, p) => (x * 100).toFixed(p),
   "b": x => Math.round(x).toString(2),

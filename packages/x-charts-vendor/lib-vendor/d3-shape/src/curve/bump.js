@@ -1,5 +1,6 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -7,7 +8,6 @@ exports.bumpRadial = bumpRadial;
 exports.bumpX = bumpX;
 exports.bumpY = bumpY;
 var _pointRadial = _interopRequireDefault(require("../pointRadial.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 class Bump {
   constructor(context, x) {
     this._context = context;

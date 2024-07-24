@@ -1,5 +1,6 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -20,7 +21,6 @@ var _triangle = _interopRequireDefault(require("./symbol/triangle.js"));
 var _triangle2 = _interopRequireDefault(require("./symbol/triangle2.js"));
 var _wye = _interopRequireDefault(require("./symbol/wye.js"));
 var _times = _interopRequireDefault(require("./symbol/times.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 // These symbols are designed to be filled.
 const symbolsFill = exports.symbolsFill = [_circle.default, _cross.default, _diamond.default, _square.default, _star.default, _triangle.default, _wye.default];
 

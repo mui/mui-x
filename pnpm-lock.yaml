@@ -875,6 +875,9 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2
     devDependencies:
+      '@babel/plugin-transform-runtime':
+        specifier: ^7.24.7
+        version: 7.24.7(@babel/core@7.24.8)
       '@types/d3-array':
         specifier: ^3.0.3
         version: 3.2.1
