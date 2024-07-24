@@ -86,6 +86,7 @@
         "@mui/joy",
         "@mui/lab",
         "@mui/material",
+        "@mui/material-nextjs",
         "@mui/styles",
         "@mui/system",
         "@mui/types",
