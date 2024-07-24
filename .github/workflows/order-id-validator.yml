@@ -15,10 +15,6 @@ jobs:
         with:
           script: |
             const script = require('./scripts/orderIdValidation.js')
-            await script(core, github)
+            await script({core, github, context})
         env:
-          OWNER: ${{ github.repository_owner }}
-          REPO: ${{ github.event.repository.name }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ORDER_API_TOKEN: ${{ secrets.SHOP_AUTH_TOKEN }}
