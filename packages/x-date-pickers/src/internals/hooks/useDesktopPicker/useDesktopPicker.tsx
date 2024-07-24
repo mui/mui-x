@@ -92,7 +92,7 @@ export const useDesktopPicker = <
   });
 
   // TODO v8: Apply this ownerState to all the slots in this hook.
-  const ownerStateV8: UseDesktopPickerOwnerState<TDate> = {
+  const ownerStateV8: UseDesktopPickerOwnerState = {
     open,
   };
 

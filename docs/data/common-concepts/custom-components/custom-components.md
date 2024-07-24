@@ -6,13 +6,15 @@
 
 A slot is a part of a component that can be overridden and / or customized.
 
-## How to override a slot?
+## Basic usage
+
+### How to override a slot?
 
 You can override a slot by providing a custom component to the `slots` prop:
 
 {{"demo": "CustomSlot.js"}}
 
-## How to customize a slot?
+### How to customize a slot?
 
 You can pass props to any slot using the `slotProps` prop:
 
@@ -45,7 +47,6 @@ The first two examples below are buggy because the calendar header will remount 
 // causing the component to remount.
 function MyApp() {
   const [name, setName] = React.useState('');
-
   return (
     <DateCalendar
       slots={{
@@ -92,76 +93,125 @@ function MyApp() {
 
 ## Usage with TypeScript
 
-### Type custom slot component
+### Type custom slots
 
 If you want to ensure type safety on your custom slot component,
 you can declare your component using the `PropsFromSlot` interface:
 
 ```tsx
-interface CustomCalendarHeaderProps
-  extends PropsFromSlot<DatePickerSlots<Dayjs>['calendarHeader']> {}
-
-function CustomCalendarHeader({ currentMonth }: CustomCalendarHeaderProps) {
+function CustomCalendarHeader({
+  currentMonth,
+}: PropsFromSlot<DateCalendarSlots<Dayjs>['calendarHeader']>) {
   return <div>{currentMonth?.format('MM-DD-YYYY')}</div>;
 }
 ```
 
-If you are passing custom props to your slot, you can add them to the props your custom component receives:
+### Using additional props
+
+If you are passing additional props to your slot, you can add them to the props your custom component receives:
+
+```ts
+interface CustomCalendarHeaderProps
+  extends PropsFromSlot<DateCalendarSlots<Dayjs>['calendarHeader']> {
+  displayWeekNumber: boolean;
+  setDisplayWeekNumber: (displayWeekNumber: boolean) => void;
+}
+```
+
+You can then use these props in your custom component and access both the props provided by the host component
+and the props you added:
 
 ```tsx
-interface CustomCalendarHeaderProps
-  extends PropsFromSlot<DatePickerSlots<Dayjs>['calendarHeader']> {
-  name: string;
-  setName: (name: string) => void;
-}
-
 function CustomCalendarHeader({
-  currentMonth,
-  name,
-  setName,
+  displayWeekNumber,
+  setDisplayWeekNumber,
+  ...other
 }: CustomCalendarHeaderProps) {
   return (
-    <div>
-      <div>{currentMonth?.format('MM-DD-YYYY')}</div>
-      <input value={name} onChange={(event) => setName(event.target.value)} />
-    </div>
+    <Stack>
+      <DisplayWeekNumberToggle
+        value={displayWeekNumber}
+        onChange={setDisplayWeekNumber}
+      />
+      <PickersCalendarHeader {...other} />
+    </Stack>
   );
 }
 ```
 
-:::success
-If you are using the data grid, you can also use [module augmentation to enhance the props interface](/x/react-data-grid/components/#custom-slot-props-with-typescript)
-:::
-
-### Cast custom component and props
-
-If your custom component has a different type than the default one, you can cast it to the correct type.
+If your custom component has a different type than the default one, you will need to cast it to the correct type.
 This can happen if you pass additional props to your custom component using `slotProps`.
 If we take the example of the `calendarHeader` slot, you can cast your custom component as below:
 
 ```tsx
-function MyApp() {
-  const [name, setName] = React.useState('');
+export default function MyApp() {
+  const [displayWeekNumber, setDisplayWeekNumber] = React.useState(false);
   return (
-    <DatePicker
-      // Cast the custom component to the type expected by the X component
+    <DateCalendar
+      displayWeekNumber={displayWeekNumber}
       slots={{
         calendarHeader:
-          CustomCalendarHeader as DatePickerSlots<Dayjs>['calendarHeader'],
+          CustomCalendarHeader as DateCalendarSlots<Dayjs>['calendarHeader'],
       }}
       slotProps={{
         calendarHeader: {
-          name,
-          setName,
-        } as DatePickerSlotProps<Dayjs>['calendarHeader'],
+          displayWeekNumber,
+          setDisplayWeekNumber,
+        } as DateCalendarSlotProps<Dayjs>['calendarHeader'],
       }}
     />
   );
 }
 ```
 
-:::success
-If you are using the data grid, you can also use [module augmentation to enhance the props interface](/x/react-data-grid/components/#custom-slot-props-with-typescript)
+{{"demo": "TypescriptCasting.js", "defaultCodeOpen": false}}
+
+### Using module augmentation
+
+If you are using one of the data grid packages,
+you can also use [module augmentation](/x/react-data-grid/components/#custom-slot-props-with-typescript) to let TypeScript know about your custom props:
+
+```tsx
+import { DataGrid, GridSlots, PropsFromSlot } from '@mui/x-data-grid';
+
+// Augment the props for the toolbar slot
+declare module '@mui/x-data-grid' {
+  interface ToolbarPropsOverrides {
+    name: string;
+    setName: (name: string) => void;
+  }
+}
+
+function CustomToolbar({ name, setName }: PropsFromSlot<GridSlots['toolbar']>) {
+  return <input value={name} onChange={(event) => setName(event.target.value)} />;
+}
+
+function MyApp() {
+  const [name, setName] = React.useState('');
+
+  return (
+    <DataGrid
+      rows={[]}
+      columns={[]}
+      slots={{
+        // Pass your custom component to the toolbar slot.
+        toolbar: CustomToolbar,
+      }}
+      slotProps={{
+        toolbar: {
+          // Pass your custom props to CustomToolbar.
+          // Since you are using module augmentation, you don't need to cast the props.
+          name,
+          setName,
+        },
+      }}
+    />
+  );
+}
+```
+
+:::info
+See [Data Grid - Custom slots and subcomponents—Custom slot props with TypeScript](/x/react-data-grid/components/#custom-slot-props-with-typescript) for more details.
 :::
 
 ## Slots of the X components

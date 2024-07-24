@@ -47,3 +47,6 @@ export type GridState = GridStateCommunity;
  * The initial state of `DataGrid`.
  */
 export type GridInitialState = GridInitialStateCommunity;
+
+// Utils shared across the X packages
+export { PropsFromSlot } from '@mui/x-internals/slots';
