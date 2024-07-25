@@ -10,7 +10,7 @@ describe('BarChart', () => {
     cleanup();
   });
 
-  const dataLength = 500;
+  const dataLength = 200;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,

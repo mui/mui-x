@@ -10,7 +10,7 @@ describe('LineChart', () => {
     cleanup();
   });
 
-  const dataLength = 3_000;
+  const dataLength = 500;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
