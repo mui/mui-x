@@ -170,56 +170,54 @@ function GridToolbarRemoteControl() {
         onKeyDown={handleKeyDown}
         error={!!error}
         helperText={error}
-        InputProps={
-          BrowserSpeechRecognition && {
-            startAdornment: (
-              <InputAdornment position="start">
-                {isRecording ? (
-                  <Box
-                    className={classes.recordingIndicator}
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 34,
-                      height: 34,
-                      borderRadius: '100%',
-                      background: 'secondary',
-                    }}
-                  >
-                    <MicrophoneIcon color="primary" />
-                  </Box>
-                ) : (
-                  <RecordButton
-                    className={classes.recordButton}
-                    label={isLoading ? 'Loading…' : undefined}
-                    recording={isRecording}
-                    setRecording={setRecording}
-                    disabled={isLoading}
-                    onUpdate={setQuery}
-                    onDone={handleDone}
-                  />
-                )}
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <InputAdornment position="end">
-                <rootProps.slots.baseTooltip title="Send">
-                  <rootProps.slots.baseIconButton
-                    className={classes.sendButton}
-                    disabled={isLoading || query === ''}
-                    color="primary"
-                    onClick={sendRequest}
-                    size="small"
-                    aria-label="Send prompt"
-                  >
-                    <SendIcon fontSize="small" />
-                  </rootProps.slots.baseIconButton>
-                </rootProps.slots.baseTooltip>
-              </InputAdornment>
-            ),
-          }
-        }
+        InputProps={{
+          startAdornment: BrowserSpeechRecognition && (
+            <InputAdornment position="start">
+              {isRecording ? (
+                <Box
+                  className={classes.recordingIndicator}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 34,
+                    height: 34,
+                    borderRadius: '100%',
+                    background: 'secondary',
+                  }}
+                >
+                  <MicrophoneIcon color="primary" />
+                </Box>
+              ) : (
+                <RecordButton
+                  className={classes.recordButton}
+                  label={isLoading ? 'Loading…' : undefined}
+                  recording={isRecording}
+                  setRecording={setRecording}
+                  disabled={isLoading}
+                  onUpdate={setQuery}
+                  onDone={handleDone}
+                />
+              )}
+            </InputAdornment>
+          ),
+          endAdornment: (
+            <InputAdornment position="end">
+              <rootProps.slots.baseTooltip title="Send">
+                <rootProps.slots.baseIconButton
+                  className={classes.sendButton}
+                  disabled={isLoading || query === ''}
+                  color="primary"
+                  onClick={sendRequest}
+                  size="small"
+                  aria-label="Send prompt"
+                >
+                  <SendIcon fontSize="small" />
+                </rootProps.slots.baseIconButton>
+              </rootProps.slots.baseTooltip>
+            </InputAdornment>
+          ),
+        }}
       />
     </Style>
   );
