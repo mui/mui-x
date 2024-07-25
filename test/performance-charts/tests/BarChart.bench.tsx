@@ -10,7 +10,7 @@ describe('BarChart', () => {
     cleanup();
   });
 
-  const dataLength = 1_000;
+  const dataLength = 500;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
@@ -28,10 +28,13 @@ describe('BarChart', () => {
             {
               scaleType: 'band',
               data: xData,
-              tickInterval: (v, i) => i % 100 === 0,
             },
           ]}
-          series={[{ data: yData }]}
+          series={[
+            {
+              data: yData,
+            },
+          ]}
           width={500}
           height={300}
         />,

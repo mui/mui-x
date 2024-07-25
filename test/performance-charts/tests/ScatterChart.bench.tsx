@@ -10,8 +10,8 @@ describe('ScatterChart', () => {
     cleanup();
   });
 
-  const dataLength = 10_000;
-  const data = Array.from({ length: 10_000 }).map((_, i) => ({
+  const dataLength = 5_000;
+  const data = Array.from({ length: dataLength }).map((_, i) => ({
     id: i,
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
