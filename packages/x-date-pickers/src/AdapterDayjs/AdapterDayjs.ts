@@ -13,7 +13,7 @@ import {
   PickersTimezone,
   DateBuilderReturnType,
 } from '../models';
-import { warnUndefinedDayjsLocale } from '../internals/utils/adapters';
+import { warnOnce } from '../internals/utils/warning';
 
 defaultDayjs.extend(localizedFormatPlugin);
 defaultDayjs.extend(weekOfYearPlugin);
@@ -248,7 +248,15 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     let localeObject = locales[locale];
 
     if (localeObject === undefined) {
-      warnUndefinedDayjsLocale();
+      /* istanbul ignore next */
+      if (process.env.NODE_ENV !== 'production') {
+        warnOnce([
+          'MUI X: Your locale has not been found.',
+          'Either the locale key is not a supported one. Locales supported by dayjs are available here: https://github.com/iamkun/dayjs/tree/dev/src/locale.',
+          "Or you forget to import the locale from 'dayjs/locale/{localeUsed}'",
+          'fallback on English locale.',
+        ]);
+      }
       localeObject = locales.en;
     }
 
