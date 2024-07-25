@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [codspeedPlugin(), react()],
   test: {
     environment: 'jsdom',
-    testTimeout: 20000,
+    // testTimeout: 20000,
     // benchmark: {
     //   outputJson: '../../test-results/benchmark-charts.json',
     // },
