@@ -40,7 +40,7 @@ describe('<AdapterDayjs />', () => {
   });
 
   describe('Adapter timezone', () => {
-    it('setTimezone: should throw warning if no pluggin is available', () => {
+    it('setTimezone: should throw warning if no plugin is available', () => {
       const modifiedAdapter = new AdapterDayjs();
       // @ts-ignore
       modifiedAdapter.hasTimezonePlugin = () => false;
