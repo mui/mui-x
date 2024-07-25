@@ -14,8 +14,8 @@ export default function ScaleExample() {
           { id: 'logAxis', scaleType: 'log' },
         ]}
         series={[
-          { yAxisKey: 'linearAxis', data: sample, label: 'linear' },
-          { yAxisKey: 'logAxis', data: sample, label: 'log' },
+          { yAxisId: 'linearAxis', data: sample, label: 'linear' },
+          { yAxisId: 'logAxis', data: sample, label: 'log' },
         ]}
         leftAxis="linearAxis"
         rightAxis="logAxis"
