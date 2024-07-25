@@ -284,7 +284,8 @@ export const GridRootStyles = styled('div', {
       borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
     },
     [`&.${c['root--noToolbar']} [aria-rowindex="1"] [aria-colindex="${visibleColumns.length}"]`]: {
-      borderTopRightRadius: 'calc((1 - var(--DataGrid-hasScrollY)) * var(--unstable_DataGrid-radius))', // if (!hasScrollY) { style.borderTopRightRadius = radius }
+      borderTopRightRadius:
+        'calc((1 - var(--DataGrid-hasScrollY)) * var(--unstable_DataGrid-radius))', // if (!hasScrollY) { style.borderTopRightRadius = radius }
     },
     [`& .${c.columnHeaderCheckbox}, & .${c.cellCheckbox}`]: {
       padding: 0,
