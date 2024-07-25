@@ -1,5 +1,5 @@
 <DataGridPremium
-  {...data}
+  rows={rows}
   columns={columns}
   apiRef={apiRef}
   initialState={initialState}
