@@ -24,10 +24,13 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
 
   it('Method: isValid', () => {
     expect(adapter.isValid(testDateIso)).to.equal(true);
+    expect(adapter.isValid(null)).to.equal(false);
     if (adapter.lib !== 'moment-jalaali') {
-      // moment-jalaali just throw errors
-      expect(adapter.isValid(null)).to.equal(false);
       expect(adapter.isValid(adapter.date('invalid'))).to.equal(false);
+    } else {
+      expect(() => adapter.isValid(adapter.date('invalid'))).toWarnDev(
+        'Deprecation warning: value provided is not in a recognized RFC2822 or ISO format. moment construction falls back to js Date(), which is not rel',
+      );
     }
   });
 
