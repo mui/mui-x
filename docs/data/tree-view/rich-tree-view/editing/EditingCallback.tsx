@@ -7,21 +7,28 @@ import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
 import { MUI_X_PRODUCTS } from './products';
 
 export default function EditingCallback() {
-  const [lastEditedItem, setLastEditedItem] = React.useState<{ itemId: string; label: string } | null>(null);
+  const [lastEditedItem, setLastEditedItem] = React.useState<{
+    itemId: string;
+    label: string;
+  } | null>(null);
 
   return (
     <Stack spacing={2} sx={{ width: 400 }}>
-      {lastEditedItem
-         ? <Typography>No item has been edited yet</Typography>
-         : <Typography>The label of item with id <em>{itemId}</em> has been edited to <em>{label}</em></Typography>
-     }
+      {lastEditedItem ? (
+        <Typography>No item has been edited yet</Typography>
+      ) : (
+        <Typography>
+          The label of item with id <em>{itemId}</em> has been edited to{' '}
+          <em>{label}</em>
+        </Typography>
+      )}
       <Box sx={{ minHeight: 352, minWidth: 250 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
           slots={{ item: TreeItem2 }}
           isItemEditable={() => true}
           defaultExpandedItems={['grid', 'pickers']}
-          onItemLabelChange={(itemId, label) => setLastEditedItem({itemId, label})}
+          onItemLabelChange={(itemId, label) => setLastEditedItem({ itemId, label })}
         />
       </Box>
     </Stack>

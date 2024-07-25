@@ -11,18 +11,22 @@ export default function EditingCallback() {
 
   return (
     <Stack spacing={2} sx={{ width: 400 }}>
-      <Typography>{lastEditedItem || 'No item has been edited yet'}</Typography>
+      {lastEditedItem ? (
+        <Typography>No item has been edited yet</Typography>
+      ) : (
+        <Typography>
+          The label of item with id <em>{itemId}</em> has been edited to{' '}
+          <em>{label}</em>
+        </Typography>
+      )}
+
       <Box sx={{ minHeight: 352, minWidth: 250 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
           slots={{ item: TreeItem2 }}
           isItemEditable={() => true}
           defaultExpandedItems={['grid', 'pickers']}
-          onItemLabelChange={(itemId, label) => {
-            setLastEditedItem(
-              `The label of item ${itemId} has been edited to ${label}`,
-            );
-          }}
+          onItemLabelChange={(itemId, label) => setLastEditedItem({ itemId, label })}
         />
       </Box>
     </Stack>
