@@ -35,11 +35,12 @@ module.exports = async ({ core, context, github }) => {
       });
       const orderDetails = await order.json();
       const plan =
-        orderDetails.line_items?.filter((item) => item.name.test(/\b(pro|premium)\b/i))[0].name ||
+        orderDetails.line_items?.filter((item) => /\b(pro|premium)\b/i.test(item.name))[0].name ||
         '';
 
       if (!plan) {
-        core.setFailed('No Pro or Premium plan found in order');
+        core.info('No Pro or Premium plan found in order');
+        return;
       }
 
       const planName = plan.match(/\b(pro|premium)\b/i)[0].toLowerCase();
