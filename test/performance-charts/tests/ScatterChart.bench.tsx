@@ -10,7 +10,7 @@ describe('ScatterChart', () => {
     cleanup();
   });
 
-  const dataLength = 2_000;
+  const dataLength = 2_200;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     id: i,
     x: i,
