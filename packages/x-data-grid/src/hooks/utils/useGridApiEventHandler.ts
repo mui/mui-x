@@ -13,6 +13,7 @@ import type { GridApiCommon } from '../../models';
 enum GridSignature {
   DataGrid = 'DataGrid',
   DataGridPro = 'DataGridPro',
+  DataGridPremium = 'DataGridPremium',
 }
 
 interface RegistryContainer {
