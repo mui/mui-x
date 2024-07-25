@@ -9,6 +9,7 @@ _Jul 25, 2024_
 
 We'd like to offer a big thanks to the 18 contributors who made this release possible. Here are some highlights ✨:
 
+- 🔎 Allow `Zoom` to be controllable for charts (#13858) @JCQuintas
 - 🌍 Add Icelandic (is-IS) and Norwegian Nynorsk (nn-NO) locales on the Data Grid
 - 🌍 Improve Norwegian Bokmål (nb-NO) and German (de-DE) locales on the Data Grid
 - 🌍 Add Norwegian Nynorsk (nn-NO) locale on the Date and Time Pickers
@@ -50,7 +51,7 @@ Same changes as in `@mui/x-data-grid-pro@7.11.1`, plus:
 Same changes as in `@mui/x-date-pickers@7.11.1`.
 
 ### Charts
- 
+
 #### `@mui/x-charts@7.11.1`
 
 - [charts] Add `ownerState` function to `slotProps` typing when available (#13965) @alexfauquette
