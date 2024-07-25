@@ -297,6 +297,9 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       alignItems: 'center',
     },
+    [`& .${c['row--borderBottom']} .${c.columnHeader}`]: {
+      borderBottom: `1px solid var(--DataGrid-rowBorderColor)`,
+    },
     [`& .${c['columnHeader--last']}`]: {
       overflow: 'hidden',
     },
@@ -475,6 +478,9 @@ export const GridRootStyles = styled('div', {
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
       '&.Mui-selected': selectedStyles,
+    },
+    [`& .${c['row--borderBottom']} .${c.cell}`]: {
+      borderBottom: `1px solid var(--rowBorderColor)`,
     },
     [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
       borderTopColor: 'transparent',

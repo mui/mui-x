@@ -375,6 +375,7 @@ export const useGridVirtualScroller = () => {
 
     rowIndexes.forEach((rowIndexInPage) => {
       const { id, model } = rowModels[rowIndexInPage];
+      const rowIndex = (currentPage?.range?.firstRowIndex || 0) + rowIndexOffset + rowIndexInPage;
 
       // NOTE: This is an expensive feature, the colSpan code could be optimized.
       if (hasColSpan) {
@@ -426,6 +427,7 @@ export const useGridVirtualScroller = () => {
       }
 
       let isLastVisible = false;
+      let isLastVisibleInSection = rowIndexInPage === rowModels.length - 1;
       if (isLastSection) {
         if (!isPinnedSection) {
           const lastIndex = currentPage.rows.length - 1;
@@ -435,7 +437,7 @@ export const useGridVirtualScroller = () => {
             isLastVisible = true;
           }
         } else {
-          isLastVisible = rowIndexInPage === rowModels.length - 1;
+          isLastVisible = isLastVisibleInSection;
         }
       }
 
@@ -464,8 +466,7 @@ export const useGridVirtualScroller = () => {
         theme.direction,
         pinnedColumns.left.length,
       );
-
-      const rowIndex = (currentPage?.range?.firstRowIndex || 0) + rowIndexOffset + rowIndexInPage;
+      const showBottomBorder = isLastVisibleInSection && params.position === 'top';
 
       rows.push(
         <rootProps.slots.row
@@ -486,6 +487,7 @@ export const useGridVirtualScroller = () => {
           isFirstVisible={isFirstVisible}
           isLastVisible={isLastVisible}
           isNotVisible={isNotVisible}
+          showBottomBorder={showBottomBorder}
           {...rowProps}
         />,
       );

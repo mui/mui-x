@@ -478,6 +478,11 @@ export interface GridClasses {
    */
   'row--detailPanelExpanded': string;
   /**
+   * Styles applied to the row cells if the row needs a bottom border.
+   * @ignore - do not document.
+   */
+  'row--borderBottom': string;
+  /**
    * Styles applied to the row element.
    */
   row: string;
@@ -743,6 +748,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'row--dragging',
   'row--dynamicHeight',
   'row--detailPanelExpanded',
+  'row--borderBottom',
   'rowReorderCellPlaceholder',
   'rowCount',
   'rowReorderCellContainer',
