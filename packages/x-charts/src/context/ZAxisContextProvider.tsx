@@ -18,7 +18,7 @@ export type ZAxisContextProviderProps = {
 };
 
 type DefaultizedZAxisConfig = {
-  [axisKey: string]: ZAxisDefaultized;
+  [axisId: string]: ZAxisDefaultized;
 };
 
 export const ZAxisContext = React.createContext<{

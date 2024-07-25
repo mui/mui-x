@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@types/chance": "^1.1.6",
-    "rimraf": "^5.0.8"
+    "rimraf": "^5.0.9"
   },
   "peerDependencies": {
     "@mui/icons-material": "^5.4.1",
