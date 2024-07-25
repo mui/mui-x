@@ -9,7 +9,7 @@
     "@babel/runtime": "^7.24.8",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
-    "@mui/material": "^5.16.2",
+    "@mui/material": "^5.16.5",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-data-grid-pro": "workspace:*",
     "@mui/x-date-pickers": "workspace:*",

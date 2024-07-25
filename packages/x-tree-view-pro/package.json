@@ -45,8 +45,8 @@
   "dependencies": {
     "@babel/runtime": "^7.24.8",
     "@mui/base": "^5.0.0-beta.40",
-    "@mui/system": "^5.16.2",
-    "@mui/utils": "^5.16.2",
+    "@mui/system": "^5.16.5",
+    "@mui/utils": "^5.16.5",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
     "@mui/x-tree-view": "workspace:*",
