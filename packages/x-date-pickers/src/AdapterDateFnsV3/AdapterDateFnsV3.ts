@@ -50,6 +50,7 @@ import { enUS } from 'date-fns/locale/en-US';
 import { Locale as DateFnsLocale } from 'date-fns/locale/types';
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
+import { assertDateFnsAdapterV3 } from '../internals/utils/assertDateAdapters';
 
 declare module '@mui/x-date-pickers/models' {
   interface PickerValidDateLookup {
@@ -87,19 +88,7 @@ export class AdapterDateFns
   implements MuiPickersAdapter<Date, DateFnsLocale>
 {
   constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
-    if (typeof addDays !== 'function') {
-      throw new Error(
-        [
-          `MUI: The \`date-fns\` package v2.x is not compatible with this adapter.`,
-          'Please, install v3.x of the package or use the `AdapterDateFns` instead.',
-        ].join('\n'),
-      );
-    }
-    if (!longFormatters) {
-      throw new Error(
-        'MUI: The minimum supported `date-fns` package version compatible with this adapter is `3.2.x`.',
-      );
-    }
+    assertDateFnsAdapterV3(addDays, longFormatters);
     super({ locale: locale ?? enUS, formats, longFormatters });
   }
 

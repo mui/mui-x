@@ -46,6 +46,7 @@ import defaultLocale from 'date-fns/locale/en-US';
 import longFormatters from 'date-fns/_lib/format/longFormatters';
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
+import { assertDateFnsAdapter } from '../internals/utils/assertDateAdapters';
 
 type DateFnsLocale = typeof defaultLocale;
 
@@ -85,14 +86,7 @@ export class AdapterDateFns
   implements MuiPickersAdapter<Date, DateFnsLocale>
 {
   constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
-    if (typeof addDays !== 'function') {
-      throw new Error(
-        [
-          'MUI: The `date-fns` package v3.x is not compatible with this adapter.',
-          'Please, install v2.x of the package or use the `AdapterDateFnsV3` instead.',
-        ].join('\n'),
-      );
-    }
+    assertDateFnsAdapter(addDays);
     super({ locale: locale ?? defaultLocale, formats, longFormatters });
   }
 
