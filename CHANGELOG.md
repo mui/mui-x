@@ -10,8 +10,8 @@ _Jul 25, 2024_
 We'd like to offer a big thanks to the 18 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌍 Add Icelandic (is-IS) and Norwegian Nynorsk (nn-NO) locales on the Data Grid
-- 🌍 Improve Norwegian bokmål (nb-NO) and German (de-DE) locales on the Data Grid
-- 🌍 Improve Norwegian Nynorsk (nn-NO) locale on the Date and Time Pickers
+- 🌍 Improve Norwegian Bokmål (nb-NO) and German (de-DE) locales on the Data Grid
+- 🌍 Add Norwegian Nynorsk (nn-NO) locale on the Date and Time Pickers
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -22,9 +22,7 @@ We'd like to offer a big thanks to the 18 contributors who made this release pos
 #### `@mui/x-data-grid@7.11.1`
 
 - [DataGrid] Remove dead code in internal `GridPreferencesPanel` (#13934) @k-rajat19
-- [DataGrid] Also send the API with events in Premium (#13893) @pcorpet
 - [DataGrid] Do not miss to escape formulas in CSV export (#13888) @arminmeh
-- [DataGrid] Fix paste to selected cells (#13967) @romgrk
 - [l10n] Add Icelandic (is-IS) locale (#13283) @magnimarels
 - [l10n] Add Norwegian nynorsk (nn-NO) locale and improve Norwegian bokmål (nb-NO) locale (#13588) @AnderzL7
 - [l10n] Improve German (de-DE) locale (#13910) @lhilgert9
@@ -35,7 +33,10 @@ Same changes as in `@mui/x-data-grid@7.11.1`.
 
 #### `@mui/x-data-grid-premium@7.11.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@7.11.1`.
+Same changes as in `@mui/x-data-grid-pro@7.11.1`, plus:
+
+- [DataGridPremium] Pass the `api` object to events (#13893) @pcorpet
+- [DataGridPremium] Fix paste to selected cells (#13967) @romgrk
 
 ### Date and Time Pickers
 
