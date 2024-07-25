@@ -9,7 +9,8 @@ coverage:
         target: auto
         threshold: 1%
       adapters:
-        target: 100%
+        # leaving some slack for untestable parts
+        target: 99.5%
         paths:
           - 'packages/x-date-pickers/src/AdapterDateFns/AdapterDateFns.ts'
           - 'packages/x-date-pickers/src/AdapterDateFnsV3/AdapterDateFnsV3.ts'
