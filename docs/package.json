@@ -102,8 +102,8 @@
   "devDependencies": {
     "@babel/plugin-transform-react-constant-elements": "^7.24.7",
     "@babel/preset-typescript": "^7.24.7",
-    "@mui/internal-docs-utils": "^1.0.7",
-    "@mui/internal-scripts": "^1.0.12",
+    "@mui/internal-docs-utils": "^1.0.8",
+    "@mui/internal-scripts": "^1.0.13",
     "@types/chance": "^1.1.6",
     "@types/d3-scale": "^4.0.8",
     "@types/d3-scale-chromatic": "^3.0.3",
