@@ -38,7 +38,7 @@ export default function CustomBehavior() {
   const apiRef = useTreeViewApiRef();
 
   return (
-    <Box sx={{ minHeight: 352, minWidth: 250 }}>
+    <Box sx={{ minHeight: 352, minWidth: 260 }}>
       <RichTreeView
         items={MUI_X_PRODUCTS}
         slots={{ item: CustomTreeItem2 }}

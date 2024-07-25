@@ -127,7 +127,7 @@ export const TreeItem2Label = styled('div', {
     {
       props: ({ editable }: UseTreeItem2LabelSlotOwnProps) => editable,
       style: {
-        paddingLeft: '3px',
+        paddingLeft: '2px',
       },
     },
   ],
@@ -196,15 +196,13 @@ export const TreeItem2LabelInput = styled(UnstyledLabelInput, {
 })(({ theme }) => ({
   ...theme.typography.body1,
   width: '100%',
-  outline: 'none',
   backgroundColor: theme.palette.background.paper,
   borderRadius: theme.shape.borderRadius,
-  borderStyle: 'solid',
-  borderColor: 'transparent',
-  lineHeight: '1.25rem',
-  borderWidth: 1,
+  border: 'none',
+  padding: '0 2px',
+  boxSizing: 'border-box',
   '&:focus': {
-    borderColor: theme.palette.primary.main,
+    outline: `1px solid ${theme.palette.primary.main}`,
   },
 }));
 

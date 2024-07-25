@@ -118,7 +118,7 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
 
 export default function EditWithIcons() {
   return (
-    <Box sx={{ minHeight: 352, minWidth: 250 }}>
+    <Box sx={{ minHeight: 352, minWidth: 260 }}>
       <RichTreeView
         items={MUI_X_PRODUCTS}
         slots={{ item: CustomTreeItem2 }}

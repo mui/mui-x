@@ -148,7 +148,7 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
 
 export default function CustomLabelInput() {
   return (
-    <Box sx={{ minHeight: 224, minWidth: 250 }}>
+    <Box sx={{ minHeight: 224, minWidth: 260 }}>
       <RichTreeView
         items={EMPLOYEES}
         slots={{ item: CustomTreeItem2 }}

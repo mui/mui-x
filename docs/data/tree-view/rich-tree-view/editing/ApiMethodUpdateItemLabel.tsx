@@ -27,7 +27,7 @@ export default function ApiMethodUpdateItemLabel() {
           {isLabelUpdated ? 'Reset Data Grid label' : 'Change Data Grid label'}
         </Button>
       </Stack>
-      <Box sx={{ minHeight: 352, minWidth: 250 }}>
+      <Box sx={{ minHeight: 352, minWidth: 260 }}>
         <RichTreeView items={MUI_X_PRODUCTS} apiRef={apiRef} />
       </Box>
     </Stack>

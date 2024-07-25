@@ -20,7 +20,7 @@ export default function EditingCallback() {
         <Typography>No item has been edited yet</Typography>
       )}
 
-      <Box sx={{ minHeight: 352, minWidth: 250 }}>
+      <Box sx={{ minHeight: 352, minWidth: 260 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
           slots={{ item: TreeItem2 }}

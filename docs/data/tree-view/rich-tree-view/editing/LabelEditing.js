@@ -6,7 +6,7 @@ import { MUI_X_PRODUCTS } from './products';
 
 export default function LabelEditing() {
   return (
-    <Box sx={{ minHeight: 352, minWidth: 250 }}>
+    <Box sx={{ minHeight: 352, minWidth: 260 }}>
       <RichTreeView
         items={MUI_X_PRODUCTS}
         slots={{ item: TreeItem2 }}
