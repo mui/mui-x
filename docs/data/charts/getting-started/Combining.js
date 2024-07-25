@@ -8,6 +8,7 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
+import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import alphabetStock from '../dataset/GOOGL.json';
 
 const series = [
@@ -15,6 +16,7 @@ const series = [
     type: 'bar',
     yAxisKey: 'volume',
     label: 'Volume',
+    color: 'lightgray',
     data: alphabetStock.map((day) => day.volume),
     highlightScope: { highlight: 'item' },
   },
@@ -64,9 +66,9 @@ export default function Combining() {
             },
           ]}
         >
+          <ChartsAxisHighlight x="line" />
           <BarPlot />
           <LinePlot />
-          <ChartsAxisHighlight x="band" />
           <LineHighlightPlot />
           <ChartsXAxis
             label="date"
@@ -77,7 +79,6 @@ export default function Combining() {
             }}
             tickLabelStyle={{
               fontSize: 10,
-              // angle: -45, textAnchor: 'end'
             }}
           />
           <ChartsYAxis
@@ -85,12 +86,22 @@ export default function Combining() {
             position="left"
             axisId="price"
             tickLabelStyle={{ fontSize: 10 }}
+            sx={{
+              [`& .${axisClasses.label}`]: {
+                transform: 'translateX(-5px)',
+              },
+            }}
           />
           <ChartsYAxis
             label="Volume"
             position="right"
             axisId="volume"
             tickLabelStyle={{ fontSize: 10 }}
+            sx={{
+              [`& .${axisClasses.label}`]: {
+                transform: 'translateX(5px)',
+              },
+            }}
           />
           <ChartsTooltip />
         </ResponsiveChartContainer>

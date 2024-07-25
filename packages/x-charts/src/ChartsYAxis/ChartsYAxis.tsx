@@ -71,6 +71,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     tickLabelPlacement,
     tickInterval,
     tickLabelInterval,
+    sx,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -155,6 +156,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     <AxisRoot
       transform={`translate(${position === 'right' ? left + width : left}, 0)`}
       className={classes.root}
+      sx={sx}
     >
       {!disableLine && (
         <Line y1={top} y2={top + height} className={classes.line} {...lineSlotProps} />
