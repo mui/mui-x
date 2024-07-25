@@ -71,8 +71,6 @@ export const useTreeItem2Utils = ({
     editable: instance.isItemEditable ? instance.isItemEditable(itemId) : false,
   };
 
-  const isEditingEnabled = hasPlugin(instance, useTreeViewLabel);
-
   const handleExpansion = (event: React.MouseEvent) => {
     if (status.disabled) {
       return;
@@ -127,7 +125,7 @@ export const useTreeItem2Utils = ({
   };
 
   const toggleItemEditing = () => {
-    if (!isEditingEnabled) {
+    if (!hasPlugin(instance, useTreeViewLabel)) {
       return;
     }
     if (instance.isItemEditable(itemId)) {
@@ -147,7 +145,7 @@ export const useTreeItem2Utils = ({
     // The `onBlur` event is triggered, which calls `handleSaveItemLabel` again.
     // To avoid creating an unwanted behavior we need to check if the item is being edited before calling `updateItemLabel`
     // using `instance.isItemBeingEditedRef` instead of `instance.isItemBeingEdited` since the state is not yet updated in this point
-    if (isEditingEnabled && label && instance.isItemBeingEditedRef(itemId)) {
+    if (hasPlugin(instance, useTreeViewLabel) && label && instance.isItemBeingEditedRef(itemId)) {
       instance.updateItemLabel(itemId, label);
       toggleItemEditing();
       instance.focusItem(event, itemId);
@@ -155,7 +153,7 @@ export const useTreeItem2Utils = ({
   };
 
   const handleCancelItemLabelEditing = (event: React.SyntheticEvent) => {
-    if (isEditingEnabled && instance.isItemBeingEditedRef(itemId)) {
+    if (hasPlugin(instance, useTreeViewLabel) && instance.isItemBeingEditedRef(itemId)) {
       toggleItemEditing();
       instance.focusItem(event, itemId);
     }
