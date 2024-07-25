@@ -16,8 +16,7 @@ import {
 } from '../hooks/features/pagination/gridPaginationSelector';
 
 const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
-  maxHeight: '100%',
-
+  maxHeight: 'calc(100% + 1px)', // border width
   [`& .${tablePaginationClasses.selectLabel}`]: {
     display: 'none',
     [theme.breakpoints.up('sm')]: {
