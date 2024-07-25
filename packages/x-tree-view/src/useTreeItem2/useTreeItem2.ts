@@ -79,7 +79,10 @@ export const useTreeItem2 = <
     (otherHandlers: EventHandlers) =>
     (event: React.KeyboardEvent<HTMLElement> & MuiCancellableEvent) => {
       otherHandlers.onKeyDown?.(event);
-      if (event.defaultMuiPrevented) {
+      if (
+        event.defaultMuiPrevented ||
+        (event.target as HTMLElement)?.dataset?.element === 'labelInput'
+      ) {
         return;
       }
 
@@ -140,7 +143,6 @@ export const useTreeItem2 = <
 
   const createInputHandleKeydown = (otherHandlers: EventHandlers) => (event: any) => {
     otherHandlers.onKeyDown?.(event);
-    event.stopPropagation();
     if (event.defaultMuiPrevented) {
       return;
     }
@@ -289,6 +291,7 @@ export const useTreeItem2 = <
       ...externalEventHandlers,
       value: label,
       ...externalProps,
+      'data-element': 'labelInput',
       onKeyDown: createInputHandleKeydown(externalEventHandlers),
       onChange: createInputHandleChange(externalEventHandlers),
       onBlur: createInputHandleBlur(externalEventHandlers),
