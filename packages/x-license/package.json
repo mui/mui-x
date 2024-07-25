@@ -35,14 +35,14 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.24.8",
-    "@mui/utils": "^5.16.2"
+    "@mui/utils": "^5.16.5"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^1.0.4",
-    "rimraf": "^5.0.8"
+    "rimraf": "^5.0.9"
   },
   "engines": {
     "node": ">=14.0.0"

@@ -10,15 +10,15 @@ function sanitizeCellValue(value: unknown, csvOptions: CSVOptions): string {
 
   if (csvOptions.shouldAppendQuotes || csvOptions.escapeFormulas) {
     const escapedValue = valueStr.replace(/"/g, '""');
-    // Make sure value containing delimiter or line break won't be split into multiple cells
-    if ([csvOptions.delimiter, '\n', '\r', '"'].some((delimiter) => valueStr.includes(delimiter))) {
-      return `"${escapedValue}"`;
-    }
     if (csvOptions.escapeFormulas) {
       // See https://owasp.org/www-community/attacks/CSV_Injection
       if (['=', '+', '-', '@', '\t', '\r'].includes(escapedValue[0])) {
-        return `'${escapedValue}`;
+        return `"'${escapedValue}"`;
       }
+    }
+    // Make sure value containing delimiter or line break won't be split into multiple cells
+    if ([csvOptions.delimiter, '\n', '\r', '"'].some((delimiter) => valueStr.includes(delimiter))) {
+      return `"${escapedValue}"`;
     }
     return escapedValue;
   }

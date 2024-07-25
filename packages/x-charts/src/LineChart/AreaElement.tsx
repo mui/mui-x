@@ -4,6 +4,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useSlotProps } from '@mui/base/utils';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { SlotComponentPropsFromProps } from '../internals/SlotComponentPropsFromProps';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { AnimatedArea, AnimatedAreaProps } from './AnimatedArea';
 import { SeriesId } from '../models/seriesType/common';
@@ -57,7 +58,7 @@ export interface AreaElementSlots {
 }
 
 export interface AreaElementSlotProps {
-  area?: AnimatedAreaProps;
+  area?: SlotComponentPropsFromProps<AnimatedAreaProps, {}, AreaElementOwnerState>;
 }
 
 export interface AreaElementProps
