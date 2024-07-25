@@ -152,10 +152,6 @@ export class AdapterDateFnsJalali
     return dateFnsParse(value, format, new Date(), { locale: this.locale });
   };
 
-  public getCurrentLocaleCode = (): string => {
-    return this.locale?.code || 'fa-IR';
-  };
-
   public isValid = (value: Date | null): boolean => {
     if (value == null) {
       return false;

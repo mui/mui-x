@@ -215,8 +215,8 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
     return value;
   };
 
-  public getCurrentLocaleCode = () => {
-    // `code` is undefined only in `date-fns` types, but all locales have it 
+  public getCurrentLocaleCode = (): string => {
+    // `code` is undefined only in `date-fns` types, but all locales have it
     return this.locale.code!;
   };
 
