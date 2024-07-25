@@ -1,8 +1,6 @@
 coverage:
   ignore:
     - '**/*.test.tsx'
-    # ignore date adapter parts that are hardly testable
-    - '**/internals/utils/adapters.ts'
   status:
     project:
       default:
