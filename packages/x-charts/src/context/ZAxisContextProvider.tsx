@@ -18,7 +18,7 @@ export type ZAxisContextProviderProps = {
 };
 
 type DefaultizedZAxisConfig = {
-  [axisKey: string]: ZAxisDefaultized;
+  [axisId: string]: ZAxisDefaultized;
 };
 
 export const ZAxisContext = React.createContext<{
@@ -47,7 +47,7 @@ function ZAxisContextProvider(props: ZAxisContextProviderProps) {
           return axisConfig;
         }
         if (dataset === undefined) {
-          throw Error('MUI X Charts: z-axis uses `dataKey` but no `dataset` is provided.');
+          throw Error('MUI X: z-axis uses `dataKey` but no `dataset` is provided.');
         }
         return {
           ...axisConfig,

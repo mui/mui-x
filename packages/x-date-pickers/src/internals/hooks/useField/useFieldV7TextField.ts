@@ -311,7 +311,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       // prevent default to avoid the input `onInput` handler being called
       event.preventDefault();
 
-      if (readOnly || typeof parsedSelectedSections !== 'number') {
+      if (readOnly || disabled || typeof parsedSelectedSections !== 'number') {
         return;
       }
 
