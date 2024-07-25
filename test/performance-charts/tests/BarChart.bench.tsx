@@ -19,7 +19,7 @@ describe('BarChart', () => {
   const yData = data.map((d) => d.y);
 
   bench(
-    '2_000 data',
+    'Big data amount',
     async () => {
       const { findByText } = render(
         <BarChart

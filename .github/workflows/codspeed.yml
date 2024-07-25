@@ -28,14 +28,13 @@ jobs:
           node-version: 20
           cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
       - run: pnpm install --frozen-lockfile
-      - run: pnpx playwright install --with-deps
       # Ensure we are running on the prod version of our libs
       # Only charts and license are needed for the benchmarks
-      # - run: pnpx lerna run --scope "@mui/{x-charts,x-license}*" build
       - run: pnpm --filter @mui/x-license build
       - run: pnpm --filter @mui/x-charts build
       - run: pnpm --filter @mui/x-charts-pro build
-      - run: curl --proto '=https' --tlsv1.2 -LsSf https://github.com/CodSpeedHQ/runner/releases/download/v2.4.3/codspeed-runner-installer.sh | sh
-      - run: PATH=$PATH:$HOME/.cargo/env
-      - run: codspeed-runner --token=${{ secrets.CODSPEED_TOKEN }} -- pnpm test:performance:charts
-      # - run: pnpm test:performance:charts
+      - name: Run benchmarks
+        uses: CodSpeedHQ/action@a58b84c0b61569a9cbb7cfb378cc849d65cf1ce5
+        with:
+          run: pnpm test:performance:charts
+          token: ${{ secrets.CODSPEED_TOKEN }}

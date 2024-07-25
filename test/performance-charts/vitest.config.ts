@@ -6,17 +6,17 @@ export default defineConfig({
   plugins: [codspeedPlugin(), react()],
   test: {
     environment: 'jsdom',
-    testTimeout: 60000,
-    benchmark: {
-      outputJson: '../../test-results/benchmark-charts.json',
-    },
-    browser: {
-      enabled: true,
-      name: 'chromium',
-      provider: 'playwright',
-      providerOptions: {
-        timeout: 60000,
-      },
-    },
+    // testTimeout: 60000,
+    // benchmark: {
+    //   outputJson: '../../test-results/benchmark-charts.json',
+    // },
+    // browser: {
+    //   enabled: true,
+    //   name: 'chromium',
+    //   provider: 'playwright',
+    //   providerOptions: {
+    //     timeout: 60000,
+    //   },
+    // },
   },
 });

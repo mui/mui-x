@@ -1546,18 +1546,12 @@ importers:
       '@vitejs/plugin-react-swc':
         specifier: ^3.7.0
         version: 3.7.0(@swc/helpers@0.5.5)(vite@5.3.4(@types/node@18.19.39)(terser@5.27.0))
-      '@vitest/browser':
-        specifier: 2.0.4
-        version: 2.0.4(playwright@1.45.3)(typescript@5.5.3)(vitest@2.0.4)
       '@vitest/ui':
         specifier: 2.0.4
         version: 2.0.4(vitest@2.0.4)
       jsdom:
         specifier: ^24.1.0
         version: 24.1.0
-      playwright:
-        specifier: ^1.45.3
-        version: 1.45.3
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -8226,11 +8220,6 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  playwright-core@1.45.3:
-    resolution: {integrity: sha512-+ym0jNbcjikaOwwSZycFbwkWgfruWvYlJfThKYAlImbxUgdWFO2oW70ojPm4OpE4t6TAo2FY/smM+hpVTtkhDA==}
-    engines: {node: '>=18'}
-    hasBin: true
-
   playwright@1.44.1:
     resolution: {integrity: sha512-qr/0UJ5CFAtloI3avF95Y0L1xQo6r3LQArLIg/z/PoGJ6xa+EwzrwO5lpNr/09STxdHuUoP2mvuELJS+hLdtgg==}
     engines: {node: '>=16'}
@@ -8238,11 +8227,6 @@ packages:
 
   playwright@1.45.1:
     resolution: {integrity: sha512-Hjrgae4kpSQBr98nhCj3IScxVeVUixqj+5oyif8TdIn2opTCPEzqAqNMeK42i3cWDCVu9MI+ZsGWw+gVR4ISBg==}
-    engines: {node: '>=18'}
-    hasBin: true
-
-  playwright@1.45.3:
-    resolution: {integrity: sha512-QhVaS+lpluxCaioejDZ95l4Y4jSFCsBvl2UZkpeXlzxmqS+aABr5c82YmfMHrL6x27nvrvykJAFpkzT2eWdJww==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -11031,10 +11015,12 @@ snapshots:
   '@bundled-es-modules/cookie@2.0.0':
     dependencies:
       cookie: 0.5.0
+    optional: true
 
   '@bundled-es-modules/statuses@1.0.1':
     dependencies:
       statuses: 2.0.1
+    optional: true
 
   '@codspeed/core@3.1.0':
     dependencies:
@@ -11421,6 +11407,7 @@ snapshots:
     dependencies:
       '@inquirer/core': 9.0.5
       '@inquirer/type': 1.5.1
+    optional: true
 
   '@inquirer/core@9.0.5':
     dependencies:
@@ -11437,12 +11424,15 @@ snapshots:
       strip-ansi: 6.0.1
       wrap-ansi: 6.2.0
       yoctocolors-cjs: 2.1.2
+    optional: true
 
-  '@inquirer/figures@1.0.5': {}
+  '@inquirer/figures@1.0.5':
+    optional: true
 
   '@inquirer/type@1.5.1':
     dependencies:
       mute-stream: 1.0.0
+    optional: true
 
   '@isaacs/cliui@8.0.2':
     dependencies:
@@ -11573,7 +11563,8 @@ snapshots:
       - supports-color
       - typescript
 
-  '@mswjs/cookies@1.1.1': {}
+  '@mswjs/cookies@1.1.1':
+    optional: true
 
   '@mswjs/interceptors@0.29.1':
     dependencies:
@@ -11583,6 +11574,7 @@ snapshots:
       is-node-process: 1.2.0
       outvariant: 1.4.3
       strict-event-emitter: 0.5.1
+    optional: true
 
   '@mui/base@5.0.0-beta.40(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -12311,14 +12303,17 @@ snapshots:
     dependencies:
       '@octokit/openapi-types': 18.1.1
 
-  '@open-draft/deferred-promise@2.2.0': {}
+  '@open-draft/deferred-promise@2.2.0':
+    optional: true
 
   '@open-draft/logger@0.3.0':
     dependencies:
       is-node-process: 1.2.0
       outvariant: 1.4.3
+    optional: true
 
-  '@open-draft/until@2.1.0': {}
+  '@open-draft/until@2.1.0':
+    optional: true
 
   '@opentelemetry/api@1.8.0':
     optional: true
@@ -12707,7 +12702,8 @@ snapshots:
 
   '@types/cookie@0.4.1': {}
 
-  '@types/cookie@0.6.0': {}
+  '@types/cookie@0.6.0':
+    optional: true
 
   '@types/cors@2.8.17':
     dependencies:
@@ -12835,6 +12831,7 @@ snapshots:
   '@types/mute-stream@0.0.4':
     dependencies:
       '@types/node': 18.19.39
+    optional: true
 
   '@types/node@18.19.39':
     dependencies:
@@ -12903,7 +12900,8 @@ snapshots:
 
   '@types/sinonjs__fake-timers@8.1.5': {}
 
-  '@types/statuses@2.0.5': {}
+  '@types/statuses@2.0.5':
+    optional: true
 
   '@types/stylis@4.2.5': {}
 
@@ -12924,7 +12922,8 @@ snapshots:
       - uglify-js
       - webpack-cli
 
-  '@types/wrap-ansi@3.0.0': {}
+  '@types/wrap-ansi@3.0.0':
+    optional: true
 
   '@types/ws@7.4.7':
     dependencies:
@@ -13037,7 +13036,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/browser@2.0.4(playwright@1.45.3)(typescript@5.5.3)(vitest@2.0.4)':
+  '@vitest/browser@2.0.4(typescript@5.5.3)(vitest@2.0.4)':
     dependencies:
       '@testing-library/dom': 10.3.1
       '@testing-library/user-event': 14.5.2(@testing-library/dom@10.3.1)
@@ -13047,12 +13046,11 @@ snapshots:
       sirv: 2.0.4
       vitest: 2.0.4(@types/node@18.19.39)(@vitest/browser@2.0.4)(@vitest/ui@2.0.4)(jsdom@24.1.0)(terser@5.27.0)
       ws: 8.18.0
-    optionalDependencies:
-      playwright: 1.45.3
     transitivePeerDependencies:
       - bufferutil
       - typescript
       - utf-8-validate
+    optional: true
 
   '@vitest/expect@2.0.4':
     dependencies:
@@ -13972,7 +13970,8 @@ snapshots:
 
   cli-width@3.0.0: {}
 
-  cli-width@4.1.0: {}
+  cli-width@4.1.0:
+    optional: true
 
   client-only@0.0.1: {}
 
@@ -15766,7 +15765,8 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  graphql@16.9.0: {}
+  graphql@16.9.0:
+    optional: true
 
   gtoken@7.0.1(encoding@0.1.13):
     dependencies:
@@ -15826,7 +15826,8 @@ snapshots:
 
   he@1.2.0: {}
 
-  headers-polyfill@4.0.3: {}
+  headers-polyfill@4.0.3:
+    optional: true
 
   hermes-estree@0.20.1: {}
 
@@ -16133,7 +16134,8 @@ snapshots:
 
   is-negative-zero@2.0.3: {}
 
-  is-node-process@1.2.0: {}
+  is-node-process@1.2.0:
+    optional: true
 
   is-number-object@1.0.7:
     dependencies:
@@ -17272,6 +17274,7 @@ snapshots:
       yargs: 17.7.2
     optionalDependencies:
       typescript: 5.5.3
+    optional: true
 
   multimatch@5.0.0:
     dependencies:
@@ -17695,7 +17698,8 @@ snapshots:
 
   os-tmpdir@1.0.2: {}
 
-  outvariant@1.4.3: {}
+  outvariant@1.4.3:
+    optional: true
 
   override-require@1.1.1: {}
 
@@ -17982,8 +17986,6 @@ snapshots:
 
   playwright-core@1.45.1: {}
 
-  playwright-core@1.45.3: {}
-
   playwright@1.44.1:
     dependencies:
       playwright-core: 1.44.1
@@ -17993,12 +17995,6 @@ snapshots:
   playwright@1.45.1:
     dependencies:
       playwright-core: 1.45.1
-    optionalDependencies:
-      fsevents: 2.3.2
-
-  playwright@1.45.3:
-    dependencies:
-      playwright-core: 1.45.3
     optionalDependencies:
       fsevents: 2.3.2
 
@@ -18913,7 +18909,8 @@ snapshots:
 
   streamsearch@1.1.0: {}
 
-  strict-event-emitter@0.5.1: {}
+  strict-event-emitter@0.5.1:
+    optional: true
 
   string-replace-loader@3.1.0(webpack@5.92.1(@swc/core@1.6.13)(webpack-cli@5.1.4)):
     dependencies:
@@ -19295,7 +19292,8 @@ snapshots:
 
   type-fest@2.19.0: {}
 
-  type-fest@4.23.0: {}
+  type-fest@4.23.0:
+    optional: true
 
   type-is@1.6.18:
     dependencies:
@@ -19560,7 +19558,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 18.19.39
-      '@vitest/browser': 2.0.4(playwright@1.45.3)(typescript@5.5.3)(vitest@2.0.4)
+      '@vitest/browser': 2.0.4(typescript@5.5.3)(vitest@2.0.4)
       '@vitest/ui': 2.0.4(vitest@2.0.4)
       jsdom: 24.1.0
     transitivePeerDependencies:
@@ -19856,7 +19854,8 @@ snapshots:
 
   ws@8.17.0: {}
 
-  ws@8.18.0: {}
+  ws@8.18.0:
+    optional: true
 
   xcase@2.0.1: {}
 
@@ -19936,7 +19935,8 @@ snapshots:
 
   yocto-queue@1.0.0: {}
 
-  yoctocolors-cjs@2.1.2: {}
+  yoctocolors-cjs@2.1.2:
+    optional: true
 
   yoctocolors@2.0.2: {}
 
