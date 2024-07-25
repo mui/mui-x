@@ -427,7 +427,7 @@ export const useGridVirtualScroller = () => {
       }
 
       let isLastVisible = false;
-      let isLastVisibleInSection = rowIndexInPage === rowModels.length - 1;
+      const isLastVisibleInSection = rowIndexInPage === rowModels.length - 1;
       if (isLastSection) {
         if (!isPinnedSection) {
           const lastIndex = currentPage.rows.length - 1;
