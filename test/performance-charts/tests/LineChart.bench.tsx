@@ -20,7 +20,7 @@ describe('LineChart', () => {
   const yData = data.map((d) => d.y);
 
   bench(
-    'Big data amount',
+    'LineChart with big data amount',
     async () => {
       const { findByText } = render(
         <LineChart

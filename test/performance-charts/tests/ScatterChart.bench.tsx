@@ -20,7 +20,7 @@ describe('ScatterChart', () => {
   const xData = data.map((d) => d.x);
 
   bench(
-    'Big data amount',
+    'ScatterChart with big data amount',
     async () => {
       const { findByText } = render(
         <ScatterChart
