@@ -12,12 +12,12 @@ export default function EditingCallback() {
   return (
     <Stack spacing={2} sx={{ width: 400 }}>
       {lastEditedItem ? (
-        <Typography>No item has been edited yet</Typography>
-      ) : (
         <Typography>
-          The label of item with id <em>{itemId}</em> has been edited to{' '}
-          <em>{label}</em>
+          The label of item with id <em>{lastEditedItem.itemId}</em> has been edited
+          to <em>{lastEditedItem.label}</em>
         </Typography>
+      ) : (
+        <Typography>No item has been edited yet</Typography>
       )}
 
       <Box sx={{ minHeight: 352, minWidth: 250 }}>
