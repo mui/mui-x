@@ -98,7 +98,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.4",
+    "@mui/internal-test-utils": "^1.0.5",
     "@types/luxon": "^3.4.2",
     "@types/moment-hijri": "^2.1.4",
     "@types/moment-jalaali": "^0.7.9",

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, act, userEvent } from '@mui/internal-test-utils';
 import { expect } from 'chai';
-import { stub, SinonStub } from 'sinon';
+import { SinonSpy, spy } from 'sinon';
 import { getCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -39,25 +39,18 @@ describe('<DataGridPro /> - Clipboard', () => {
   }
 
   describe('copy to clipboard', () => {
-    let writeText: SinonStub;
-    const originalClipboard = navigator.clipboard;
-
-    beforeEach(function beforeEachHook() {
-      writeText = stub().resolves();
-
-      Object.defineProperty(navigator, 'clipboard', {
-        value: { writeText },
-        writable: true,
-      });
-    });
+    let writeText: SinonSpy | undefined;
 
     afterEach(function afterEachHook() {
-      Object.defineProperty(navigator, 'clipboard', { value: originalClipboard });
+      writeText?.restore();
     });
 
     ['ctrlKey', 'metaKey'].forEach((key) => {
       it(`should copy the selected rows to the clipboard when ${key} + C is pressed`, () => {
         render(<Test disableRowSelectionOnClick />);
+
+        writeText = spy(navigator.clipboard, 'writeText');
+
         act(() => apiRef.current.selectRows([0, 1]));
         const cell = getCell(0, 0);
         userEvent.mousePress(cell);
@@ -74,6 +67,8 @@ describe('<DataGridPro /> - Clipboard', () => {
           disableRowSelectionOnClick
         />,
       );
+
+      writeText = spy(navigator.clipboard, 'writeText');
 
       const cell = getCell(0, 0);
       cell.focus();
@@ -94,6 +89,8 @@ describe('<DataGridPro /> - Clipboard', () => {
           disableRowSelectionOnClick
         />,
       );
+
+      writeText = spy(navigator.clipboard, 'writeText');
 
       act(() => apiRef.current.selectRows([0, 1]));
       const cell = getCell(0, 0);
