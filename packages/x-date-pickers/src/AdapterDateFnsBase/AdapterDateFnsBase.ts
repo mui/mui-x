@@ -216,7 +216,8 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
   };
 
   public getCurrentLocaleCode = () => {
-    return this.locale.code || 'en-US';
+    // `code` is undefined only in `date-fns` types, but all locales have it 
+    return this.locale.code!;
   };
 
   // Note: date-fns input types are more lenient than this adapter, so we need to expose our more
