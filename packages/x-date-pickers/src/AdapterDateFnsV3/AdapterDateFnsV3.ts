@@ -50,7 +50,7 @@ import { enUS } from 'date-fns/locale/en-US';
 import { Locale as DateFnsLocale } from 'date-fns/locale/types';
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
-import { assertDateFnsAdapterV3 } from '../internals/utils/assertDateAdapters';
+import { assertDateFnsAdapterV3 } from '../internals/utils/adapters';
 
 declare module '@mui/x-date-pickers/models' {
   interface PickerValidDateLookup {

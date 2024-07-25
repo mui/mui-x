@@ -49,7 +49,7 @@ import { faIR as defaultLocale } from 'date-fns-jalali/locale/fa-IR';
 import { Locale as DateFnsLocale } from 'date-fns-jalali/locale/types';
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
-import { assertDateFnsAdapterV3 } from '../internals/utils/assertDateAdapters';
+import { assertDateFnsAdapterV3 } from '../internals/utils/adapters';
 
 const defaultFormats: AdapterFormats = {
   year: 'yyyy',

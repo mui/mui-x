@@ -46,7 +46,7 @@ import defaultLocale from 'date-fns-jalali/locale/fa-IR';
 import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
-import { assertDateFnsAdapter } from '../internals/utils/assertDateAdapters';
+import { assertDateFnsAdapter } from '../internals/utils/adapters';
 
 type DateFnsLocale = typeof defaultLocale;
 

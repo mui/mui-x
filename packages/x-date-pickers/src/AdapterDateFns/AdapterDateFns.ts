@@ -46,7 +46,7 @@ import defaultLocale from 'date-fns/locale/en-US';
 import longFormatters from 'date-fns/_lib/format/longFormatters';
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
-import { assertDateFnsAdapter } from '../internals/utils/assertDateAdapters';
+import { assertDateFnsAdapter } from '../internals/utils/adapters';
 
 type DateFnsLocale = typeof defaultLocale;
 

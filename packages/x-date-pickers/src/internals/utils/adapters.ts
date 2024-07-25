@@ -1,3 +1,5 @@
+import { warnOnce } from './warning';
+
 export const assertDateFnsAdapter = (
   addDays: any,
   lib = 'date-fns',
@@ -31,5 +33,16 @@ export const assertDateFnsAdapterV3 = (
     throw new Error(
       `MUI: The minimum supported \`${lib}\` package version compatible with this adapter is \`3.2.x\`.`,
     );
+  }
+};
+
+export const warnUndefinedDayjsLocale = () => {
+  if (process.env.NODE_ENV !== 'production') {
+    warnOnce([
+      'MUI X: Your locale has not been found.',
+      'Either the locale key is not a supported one. Locales supported by dayjs are available here: https://github.com/iamkun/dayjs/tree/dev/src/locale.',
+      "Or you forget to import the locale from 'dayjs/locale/{localeUsed}'",
+      'fallback on English locale.',
+    ]);
   }
 };
