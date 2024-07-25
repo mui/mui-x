@@ -46,7 +46,6 @@ import defaultLocale from 'date-fns-jalali/locale/fa-IR';
 import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
-import { assertDateFnsAdapter } from '../internals/utils/adapters';
 
 type DateFnsLocale = typeof defaultLocale;
 
@@ -127,7 +126,17 @@ export class AdapterDateFnsJalali
   implements MuiPickersAdapter<Date, DateFnsLocale>
 {
   constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
-    assertDateFnsAdapter(addDays, 'date-fns-jalali', 'AdapterDateFnsJalaliV3');
+    /* istanbul ignore next */
+    if (process.env.NODE_ENV !== 'production') {
+      if (typeof addDays !== 'function') {
+        throw new Error(
+          [
+            'MUI: The `date-fns-jalali` package v3.x is not compatible with this adapter.',
+            'Please, install v2.x of the package or use the `AdapterDateFnsJalaliV3` instead.',
+          ].join('\n'),
+        );
+      }
+    }
     super({
       locale: locale ?? defaultLocale,
       // some formats are different in jalali adapter,
