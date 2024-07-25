@@ -8,7 +8,7 @@ import {
 } from '@mui/x-data-grid-premium';
 import { createRenderer, fireEvent, userEvent, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
-import { SinonSpy, spy } from 'sinon';
+import { SinonSpy, spy, stub, SinonStub } from 'sinon';
 import { getCell, getColumnValues, sleep } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
@@ -845,17 +845,14 @@ describe('<DataGridPremium /> - Clipboard', () => {
         clipboardData = data;
         return Promise.resolve();
       };
-      const originalClipboard = navigator.clipboard;
+      let writeTextStub: SinonStub;
 
-      beforeEach(function beforeEachHook() {
-        Object.defineProperty(navigator, 'clipboard', {
-          value: { writeText },
-          writable: true,
-        });
-      });
+      const stubClipboard = () => {
+        writeTextStub = stub(navigator.clipboard, 'writeText').callsFake(writeText);
+      };
 
       afterEach(function afterEachHook() {
-        Object.defineProperty(navigator, 'clipboard', { value: originalClipboard });
+        writeTextStub.restore();
         clipboardData = '';
       });
 
@@ -889,6 +886,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         ];
 
         render(<CopyPasteTest columns={columns} rows={rows} />);
+        // Call after render to override the `@testing-library/user-event` stub
+        stubClipboard();
 
         const sourceCell = getCell(0, 1);
         const targetCell = getCell(1, 1);
@@ -911,6 +910,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         ];
 
         render(<CopyPasteTest columns={columns} rows={rows} />);
+        // Call after render to override the `@testing-library/user-event` stub
+        stubClipboard();
 
         const sourceCell = getCell(0, 1);
         const targetCell = getCell(1, 1);
@@ -933,6 +934,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         ];
 
         render(<CopyPasteTest columns={columns} rows={rows} />);
+        // Call after render to override the `@testing-library/user-event` stub
+        stubClipboard();
 
         const sourceCell = getCell(0, 1);
         const targetCell = getCell(1, 1);
@@ -964,6 +967,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         ];
 
         render(<CopyPasteTest columns={columns} rows={rows} />);
+        // Call after render to override the `@testing-library/user-event` stub
+        stubClipboard();
 
         const sourceCell = getCell(0, 1);
         const targetCell = getCell(1, 1);
@@ -986,6 +991,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         ];
 
         render(<CopyPasteTest columns={columns} rows={rows} />);
+        // Call after render to override the `@testing-library/user-event` stub
+        stubClipboard();
 
         const sourceCell = getCell(0, 1);
         const targetCell = getCell(1, 1);
@@ -1013,6 +1020,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         ];
 
         render(<CopyPasteTest columns={columns} rows={rows} />);
+        // Call after render to override the `@testing-library/user-event` stub
+        stubClipboard();
 
         const sourceCell = getCell(0, 1);
         const targetCell = getCell(1, 1);
@@ -1052,6 +1061,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         ];
 
         render(<CopyPasteTest columns={columns} rows={rows} />);
+        // Call after render to override the `@testing-library/user-event` stub
+        stubClipboard();
 
         const sourceCell = getCell(0, 1);
         const targetCell = getCell(1, 1);
