@@ -10,7 +10,8 @@ describe('BarChart', () => {
     cleanup();
   });
 
-  const data = Array.from({ length: 2_000 }).map((_, i) => ({
+  const dataLength = 1_000;
+  const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
   }));
@@ -36,7 +37,7 @@ describe('BarChart', () => {
         />,
       );
 
-      await findByText('1100');
+      await findByText(dataLength / 2);
     },
     options,
   );

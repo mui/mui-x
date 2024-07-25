@@ -10,7 +10,8 @@ describe('LineChart', () => {
     cleanup();
   });
 
-  const data = Array.from({ length: 10_000 }).map((_, i) => ({
+  const dataLength = 5_000;
+  const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
   }));
@@ -34,7 +35,7 @@ describe('LineChart', () => {
         />,
       );
 
-      await findByText('5,000');
+      await findByText((dataLength / 2).toLocaleString());
     },
     options,
   );
