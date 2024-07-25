@@ -265,6 +265,7 @@
   { "name": "GridEditModes", "kind": "Enum" },
   { "name": "GridEditRowApi", "kind": "TypeAlias" },
   { "name": "GridEditRowProps", "kind": "TypeAlias" },
+  { "name": "gridEditRowsStateSelector", "kind": "Variable" },
   { "name": "GridEditSingleSelectCell", "kind": "Function" },
   { "name": "GridEditSingleSelectCellProps", "kind": "Interface" },
   { "name": "GridEventListener", "kind": "TypeAlias" },

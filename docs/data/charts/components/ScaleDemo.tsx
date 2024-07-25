@@ -103,14 +103,14 @@ export default function ScaleDemo() {
         {
           type: 'line',
           data: [5, 15, 20, 24, 30, 38, 40, 51, 52, 61],
-          yAxisKey: 'left_axis_id',
+          yAxisId: 'left_axis_id',
         },
         {
           type: 'line',
           data: [
             50134, 48361, 46362, 44826, 42376, 40168, 38264, 36159, 34259, 32168,
           ],
-          yAxisKey: 'right_axis_id',
+          yAxisId: 'right_axis_id',
         },
       ]}
       xAxis={[{ data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], scaleType: 'point' }]}

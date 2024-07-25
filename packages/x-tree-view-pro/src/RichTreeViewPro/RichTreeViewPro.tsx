@@ -3,7 +3,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import { useSlotProps } from '@mui/base/utils';
 import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import { useTreeView, TreeViewProvider, buildWarning } from '@mui/x-tree-view/internals';
+import { useTreeView, TreeViewProvider, warnOnce } from '@mui/x-tree-view/internals';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
 import { RichTreeViewProProps } from './RichTreeViewPro.types';
@@ -65,12 +65,6 @@ function WrappedTreeItem<R extends {}>({
 
 const releaseInfo = getReleaseInfo();
 
-const childrenWarning = buildWarning([
-  'MUI X: The `RichTreeViewPro` component does not support JSX children.',
-  'If you want to add items, you need to use the `items` prop',
-  'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/',
-]);
-
 /**
  *
  * Demos:
@@ -91,7 +85,11 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
-      childrenWarning();
+      warnOnce([
+        'MUI X: The `RichTreeViewPro` component does not support JSX children.',
+        'If you want to add items, you need to use the `items` prop.',
+        'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/.',
+      ]);
     }
   }
 

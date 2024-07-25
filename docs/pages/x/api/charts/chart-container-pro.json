@@ -32,6 +32,13 @@
         "describedArgs": ["highlightedItem"]
       }
     },
+    "onZoomChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(zoomData: Array<ZoomData>) => void",
+        "describedArgs": ["zoomData"]
+      }
+    },
     "plugins": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "xAxis": {
       "type": {
@@ -49,6 +56,12 @@
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;{ colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, id?: string, max?: number, min?: number }&gt;"
+      }
+    },
+    "zoom": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
       }
     }
   },

@@ -168,6 +168,14 @@
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/nbNO.ts"
   },
   {
+    "languageTag": "nn-NO",
+    "importName": "nnNO",
+    "localeName": "Norwegian (Nynorsk)",
+    "missingKeysCount": 0,
+    "totalKeysCount": 50,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/nnNO.ts"
+  },
+  {
     "languageTag": "fa-IR",
     "importName": "faIR",
     "localeName": "Persian",
@@ -203,7 +211,7 @@
     "languageTag": "ru-RU",
     "importName": "ruRU",
     "localeName": "Russian",
-    "missingKeysCount": 14,
+    "missingKeysCount": 0,
     "totalKeysCount": 50,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/ruRU.ts"
   },
