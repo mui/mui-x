@@ -7,7 +7,7 @@ import {
   getLastNavigableItem,
   getNextNavigableItem,
   getPreviousNavigableItem,
-  isEventTargetInDescendants,
+  isTargetInDescendants,
 } from '../../utils/tree';
 import {
   TreeViewFirstCharMap,
@@ -90,7 +90,10 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       return;
     }
 
-    if (event.altKey || isEventTargetInDescendants(event, event.currentTarget as HTMLElement)) {
+    if (
+      event.altKey ||
+      isTargetInDescendants(event.target as HTMLElement, event.currentTarget as HTMLElement)
+    ) {
       return;
     }
 

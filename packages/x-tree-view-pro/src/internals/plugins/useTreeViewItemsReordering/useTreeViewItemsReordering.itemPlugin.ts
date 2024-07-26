@@ -4,7 +4,7 @@ import {
   TreeViewItemPlugin,
   useTreeViewContext,
   UseTreeViewItemsSignature,
-  isEventTargetInDescendants,
+  isTargetInDescendants,
 } from '@mui/x-tree-view/internals';
 import { TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 import {
@@ -46,7 +46,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
 
           // We don't use `event.currentTarget` here.
           // This is to allow people to pass `onDragStart` to another element than the root.
-          if (isEventTargetInDescendants(event, rootRefObject.current)) {
+          if (isTargetInDescendants(event.target as HTMLElement, rootRefObject.current)) {
             return;
           }
 

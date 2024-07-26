@@ -1,6 +1,6 @@
 name: Feature request 💄
 description: Suggest a new idea for MUI X.
-labels: ['status: waiting for maintainer']
+labels: ['status: waiting for maintainer', 'new feature']
 body:
   - type: markdown
     attributes:
