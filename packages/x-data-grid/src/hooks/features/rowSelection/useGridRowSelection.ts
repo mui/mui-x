@@ -56,7 +56,9 @@ export const rowSelectionStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'rowSelectionModel' | 'rowSelection'>
 > = (state, props) => ({
   ...state,
-  rowSelection: props.rowSelection ? getSelectionModelPropValue(props.rowSelectionModel) ?? [] : [],
+  rowSelection: props.rowSelection
+    ? (getSelectionModelPropValue(props.rowSelectionModel) ?? [])
+    : [],
 });
 
 /**

@@ -125,7 +125,8 @@ jobs:
       - run:
           name: '`pnpm dedupe` was run?'
           command: |
-            if [[ $(git diff --name-status next | grep pnpm-lock) == "" ]];
+            # #default-branch-switch
+            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
             then
                 echo "No changes to dependencies detected. Skipping..."
             else
@@ -176,7 +177,14 @@ jobs:
       - install_js
       - run:
           name: '`pnpm prettier` changes committed?'
-          command: pnpm prettier --check
+          command: |
+            # #default-branch-switch
+            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
+            then
+                pnpm prettier --check
+            else
+                pnpm prettier:check
+            fi
       - run:
           name: Generate PropTypes
           command: pnpm proptypes

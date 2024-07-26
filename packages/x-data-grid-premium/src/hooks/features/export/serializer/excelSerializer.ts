@@ -264,7 +264,7 @@ const addColumnGroupingHeaders = (
     });
 
     const newRow = worksheet.addRow(
-      row.map((group) => (group.groupId === null ? null : group?.headerName ?? group.groupId)),
+      row.map((group) => (group.groupId === null ? null : (group?.headerName ?? group.groupId))),
     );
 
     // use `rowCount`, since worksheet can have additional rows added in `exceljsPreProcess`

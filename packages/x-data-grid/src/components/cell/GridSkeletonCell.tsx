@@ -82,7 +82,7 @@ function GridSkeletonCell(props: GridSkeletonCellProps) {
     // The width of the skeleton is a random number between the min and max values
     // The min and max values are determined by the type of the column
     const [min, max] = type
-      ? CONTENT_WIDTH_RANGE_BY_TYPE[type] ?? DEFAULT_CONTENT_WIDTH_RANGE
+      ? (CONTENT_WIDTH_RANGE_BY_TYPE[type] ?? DEFAULT_CONTENT_WIDTH_RANGE)
       : DEFAULT_CONTENT_WIDTH_RANGE;
 
     return {
