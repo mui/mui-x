@@ -287,7 +287,7 @@ export const GridRootStyles = styled('div', {
     },
     [`&.${c['root--noToolbar']} [aria-rowindex="1"] [aria-colindex="${visibleColumns.length}"]`]: {
       borderTopRightRadius:
-        !dimensions.hasScrollY && dimensions.scrollbarSize > 0
+        !dimensions.hasScrollY || dimensions.scrollbarSize === 0
           ? 'var(--unstable_DataGrid-radius)'
           : undefined,
     },
