@@ -210,10 +210,17 @@ jobs:
             pnpm docs:link-check
             git add -A && git diff --exit-code --staged
       - run:
-          name: '`pnpm build:charts:vendor` changes committed?'
+          name: '`pnpm --filter @mui/x-charts-vendor build` was run?'
           command: |
-            pnpm build:charts:vendor
-            git add -A && git diff --exit-code --staged
+            # #default-branch-switch 
+            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]]; 
+            then
+              echo "No changes to dependencies detected. Skipping..."
+            else
+              pnpm build:charts:vendor
+              git add -A && git diff --exit-code --staged
+            fi
+
   test_browser:
     <<: *default-job
     docker:
