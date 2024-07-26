@@ -127,18 +127,21 @@ export class AdapterDateFnsJalali
   implements MuiPickersAdapter<Date, DateFnsLocale>
 {
   constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
-    if (typeof addDays !== 'function') {
-      throw new Error(
-        [
-          `MUI: The \`date-fns-jalali\` package v2.x is not compatible with this adapter.`,
-          'Please, install v3.x of the package or use the `AdapterDateFnsJalali` instead.',
-        ].join('\n'),
-      );
-    }
-    if (!longFormatters) {
-      throw new Error(
-        'MUI: The minimum supported `date-fns-jalali` package version compatible with this adapter is `3.2.x`.',
-      );
+    /* istanbul ignore next */
+    if (process.env.NODE_ENV !== 'production') {
+      if (typeof addDays !== 'function') {
+        throw new Error(
+          [
+            `MUI: The \`date-fns-jalali\` package v2.x is not compatible with this adapter.`,
+            'Please, install v3.x of the package or use the `AdapterDateFnsJalali` instead.',
+          ].join('\n'),
+        );
+      }
+      if (!longFormatters) {
+        throw new Error(
+          'MUI: The minimum supported `date-fns-jalali` package version compatible with this adapter is `3.2.x`.',
+        );
+      }
     }
     super({
       locale: locale ?? defaultLocale,
@@ -157,10 +160,6 @@ export class AdapterDateFnsJalali
     }
 
     return dateFnsParse(value, format, new Date(), { locale: this.locale });
-  };
-
-  public getCurrentLocaleCode = (): string => {
-    return this.locale?.code || 'fa-IR';
   };
 
   public isValid = (value: Date | null): boolean => {

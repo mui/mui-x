@@ -19,6 +19,14 @@ describe('<AdapterDateFns />', () => {
   });
 
   describe('Adapter localization', () => {
+    describe('Default locale', () => {
+      const adapter = new AdapterDateFns();
+
+      it('getCurrentLocaleCode: should return locale code', () => {
+        expect(adapter.getCurrentLocaleCode()).to.equal('en-US');
+      });
+    });
+
     describe('English', () => {
       const adapter = new AdapterDateFns({ locale: enUS });
       const date = adapter.date(TEST_DATE_ISO_STRING)!;

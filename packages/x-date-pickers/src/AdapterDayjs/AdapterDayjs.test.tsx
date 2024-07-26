@@ -39,6 +39,17 @@ describe('<AdapterDayjs />', () => {
     },
   });
 
+  describe('Adapter timezone', () => {
+    it('setTimezone: should throw warning if no plugin is available', () => {
+      const modifiedAdapter = new AdapterDayjs();
+      // @ts-ignore
+      modifiedAdapter.hasTimezonePlugin = () => false;
+
+      const date = modifiedAdapter.date(TEST_DATE_ISO_STRING)!;
+      expect(() => modifiedAdapter.setTimezone(date, 'Europe/London')).to.throw();
+    });
+  });
+
   describe('Adapter localization', () => {
     describe('English', () => {
       const adapter = new AdapterDayjs({ locale: 'en' });
