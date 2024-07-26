@@ -248,6 +248,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     let localeObject = locales[locale];
 
     if (localeObject === undefined) {
+      /* istanbul ignore next */
       if (process.env.NODE_ENV !== 'production') {
         warnOnce([
           'MUI X: Your locale has not been found.',
@@ -277,7 +278,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     if (timezone !== 'UTC') {
       const fixedValue = value.tz(this.cleanTimezone(timezone), true);
       // @ts-ignore
-      if ((fixedValue.$offset ?? 0) === (value.$offset ?? 0)) {
+      if (fixedValue.$offset === (value.$offset ?? 0)) {
         return value;
       }
       // Change only what is needed to avoid creating a new object with unwanted data

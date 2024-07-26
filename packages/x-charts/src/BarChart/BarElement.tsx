@@ -7,6 +7,7 @@ import { styled } from '@mui/material/styles';
 import { color as d3Color } from 'd3-color';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { AnimatedProps, animated } from '@react-spring/web';
+import { SlotComponentPropsFromProps } from '../internals/SlotComponentPropsFromProps';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../context';
@@ -78,9 +79,8 @@ export interface BarElementSlots {
    */
   bar?: React.ElementType<BarProps>;
 }
-
 export interface BarElementSlotProps {
-  bar?: Partial<BarProps>;
+  bar?: SlotComponentPropsFromProps<BarProps, {}, BarElementOwnerState>;
 }
 
 export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted'> &
