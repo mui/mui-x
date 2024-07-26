@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { TreeViewInstance } from '../models';
 import type { UseTreeViewExpansionSignature } from '../plugins/useTreeViewExpansion';
 import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
