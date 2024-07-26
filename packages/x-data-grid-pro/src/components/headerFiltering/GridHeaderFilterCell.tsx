@@ -319,7 +319,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
         }}
         role="columnheader"
         aria-colindex={colIndex + 1}
-        aria-label={headerFilterComponent == null ? colDef.headerName ?? colDef.field : undefined}
+        aria-label={headerFilterComponent == null ? (colDef.headerName ?? colDef.field) : undefined}
         {...other}
         {...mouseEventsHandlers}
       >
