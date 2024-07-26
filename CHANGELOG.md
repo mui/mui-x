@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.11.1
+
+_Jul 25, 2024_
+
+We'd like to offer a big thanks to the 18 contributors who made this release possible. Here are some highlights ✨:
+
+- 🔎 Allow `Zoom` to be controllable for charts (#13858) @JCQuintas
+- 🌍 Add Icelandic (is-IS) and Norwegian Nynorsk (nn-NO) locales on the Data Grid
+- 🌍 Improve Norwegian Bokmål (nb-NO) and German (de-DE) locales on the Data Grid
+- 🌍 Add Norwegian Nynorsk (nn-NO) locale on the Date and Time Pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.11.1`
+
+- [DataGrid] Remove dead code in internal `GridPreferencesPanel` (#13934) @k-rajat19
+- [DataGrid] Do not miss to escape formulas in CSV export (#13888) @arminmeh
+- [l10n] Add Icelandic (is-IS) locale (#13283) @magnimarels
+- [l10n] Add Norwegian nynorsk (nn-NO) locale and improve Norwegian bokmål (nb-NO) locale (#13588) @AnderzL7
+- [l10n] Improve German (de-DE) locale (#13910) @lhilgert9
+
+#### `@mui/x-data-grid-pro@7.11.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.11.1`.
+
+#### `@mui/x-data-grid-premium@7.11.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.11.1`, plus:
+
+- [DataGridPremium] Pass the `api` object to events (#13893) @pcorpet
+- [DataGridPremium] Fix paste to selected cells (#13967) @romgrk
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.11.1`
+
+- [fields] Prevent keyboard editing when disabled (#13900) @arthurbalduini
+- [l10n] Add Norwegian Nynorsk (nn-NO) locale (#13946) @AnderzL7
+
+#### `@mui/x-date-pickers-pro@7.11.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.11.1`.
+
+### Charts
+
+#### `@mui/x-charts@7.11.1`
+
+- [charts] Add `ownerState` function to `slotProps` typing when available (#13965) @alexfauquette
+- [charts] Allow `Zoom` to be controllable (#13858) @JCQuintas
+- [charts] Deprecate `xAxisKey` /`zAxisKey` in favor of `xAxisId`/`zAxisId` (#13940) @alexfauquette
+- [charts] Hide empty arcs in the PieChart (#13897) @alexfauquette
+- [charts] Limit the trigger of exit charts (#13682) @alexfauquette
+
+### Tree View
+
+#### `@mui/x-tree-view@7.11.1`
+
+- [TreeView] Allow the plugins to enrich the props passed to the item slots (#13953) @flaviendelangle
+
+### Docs
+
+- [docs] Bump pnpm priority as a package manager (#13894) @oliviertassinari
+- [docs] Explicitly mark charts pro as not released (#13905) @alexfauquette
+- [docs] Fix dot consistency a11y table @oliviertassinari
+- [docs] Fix some typos in charts docs (#13906) @cratiu222
+- [docs] Fix spelling (#13902) @nnsW3
+- [docs] Improve error message when moving between plans (#13874) @oliviertassinari
+- [docs] Update `SparkLineChart` reference not being correctly capitalised (#13960) @duckboy81
+- [docs] Fix scroll demos disorientation (#13909) @oliviertassinari
+
+### Core
+
+- [core] Add `@mui/material-nextjs` to `MUI Core` renovate group (#13966) @LukasTy
+- [core] Remove warning message in production (#13911) @oliviertassinari
+- [code-infra] Reuse `useReactVersion` script from the monorepo (#13710) @cherniavskii
+- [infra] Adds order id validation action (#13957) @michelengelen
+- [infra] Fix order id validator action (#13971) @michelengelen
+- [infra] Fix regex in order id validation (#13976) @michelengelen
+- [infra] Issue template improvement (#13954) @michelengelen
+
 ## 7.11.0
 
 _Jul 18, 2024_
