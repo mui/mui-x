@@ -21,11 +21,11 @@ module.exports = async ({ core, context, github }) => {
 
     // add to this regex the possibility that the ORDER ID is wrapped in ** or __
     const orderIdRegex = /(?:\*|_){0,2}?Order ID(?:\*|_){0,2}?: (\d+)/;
-    const orderIdMatch = issue.data.body.match(orderIdRegex)[1];
+    const orderIdMatch = issue.data.body.match(orderIdRegex);
     const orderId = orderIdMatch ? orderIdMatch[1] : null;
 
     if (!orderId) {
-      core.setFailed('No Order ID found in issue body');
+      core.info('No Order ID found in issue body');
     } else {
       const order = await fetch(`${orderApi}${orderId}`, {
         headers: {
