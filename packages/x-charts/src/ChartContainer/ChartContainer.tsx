@@ -39,13 +39,13 @@ export type ChartContainerProps = Omit<
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  xAxis?: Omit<MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>, 'axisId'>[];
+  xAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[];
   /**
    * The configuration of the y-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  yAxis?: Omit<MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>, 'axisId'>[];
+  yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[];
   children?: React.ReactNode;
   /**
    * An array of plugins defining how to preprocess data.
