@@ -14,7 +14,7 @@ import alphabetStock from '../dataset/GOOGL.json';
 const series = [
   {
     type: 'bar',
-    yAxisKey: 'volume',
+    yAxisId: 'volume',
     label: 'Volume',
     color: 'lightgray',
     data: alphabetStock.map((day) => day.volume),
@@ -22,7 +22,7 @@ const series = [
   },
   {
     type: 'line',
-    yAxisKey: 'price',
+    yAxisId: 'price',
     color: 'red',
     label: 'Low',
     data: alphabetStock.map((day) => day.low),
@@ -30,7 +30,7 @@ const series = [
   },
   {
     type: 'line',
-    yAxisKey: 'price',
+    yAxisId: 'price',
     color: 'green',
     label: 'High',
     data: alphabetStock.map((day) => day.high),

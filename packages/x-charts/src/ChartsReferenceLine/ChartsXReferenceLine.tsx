@@ -103,8 +103,8 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
 
   const classes = getXReferenceLineClasses(inClasses);
 
-  const spacingX = typeof spacing === 'object' ? spacing.x ?? 0 : spacing;
-  const spacingY = typeof spacing === 'object' ? spacing.y ?? 0 : spacing;
+  const spacingX = typeof spacing === 'object' ? (spacing.x ?? 0) : spacing;
+  const spacingY = typeof spacing === 'object' ? (spacing.y ?? 0) : spacing;
 
   const textParams = {
     x: xPosition + spacingX,

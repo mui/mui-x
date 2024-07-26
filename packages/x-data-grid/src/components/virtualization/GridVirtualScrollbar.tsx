@@ -152,7 +152,12 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
     const Container = props.position === 'vertical' ? ScrollbarVertical : ScrollbarHorizontal;
 
     return (
-      <Container ref={useForkRef(ref, scrollbarRef)} className={classes.root} tabIndex={-1}>
+      <Container
+        ref={useForkRef(ref, scrollbarRef)}
+        className={classes.root}
+        tabIndex={-1}
+        aria-hidden="true"
+      >
         <Content ref={contentRef} className={classes.content} />
       </Container>
     );

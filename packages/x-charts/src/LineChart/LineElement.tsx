@@ -4,6 +4,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useSlotProps } from '@mui/base/utils';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { SlotComponentPropsFromProps } from '../internals/SlotComponentPropsFromProps';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { AnimatedLine, AnimatedLineProps } from './AnimatedLine';
 import { SeriesId } from '../models/seriesType/common';
@@ -57,7 +58,7 @@ export interface LineElementSlots {
 }
 
 export interface LineElementSlotProps {
-  line?: AnimatedLineProps;
+  line?: SlotComponentPropsFromProps<AnimatedLineProps, {}, LineElementOwnerState>;
 }
 
 export interface LineElementProps
