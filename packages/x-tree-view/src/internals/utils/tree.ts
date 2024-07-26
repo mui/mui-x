@@ -268,5 +268,5 @@ export const getAllNavigableItems = (
  * @returns {boolean} Whether the target is in a descendant of this item
  */
 export const isTargetInDescendants = (target: HTMLElement, itemRoot: HTMLElement | null) => {
-  return itemRoot !== target.closest('*[role="treeitem"]');
+  return itemRoot !== target?.closest('*[role="treeitem"]');
 };

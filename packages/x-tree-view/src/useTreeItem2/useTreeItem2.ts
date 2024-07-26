@@ -18,6 +18,7 @@ import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewCon
 import { MuiCancellableEvent } from '../internals/models/MuiCancellableEvent';
 import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
+import { isTargetInDescendants } from '../internals/utils/tree';
 
 export const useTreeItem2 = <
   TSignatures extends UseTreeItem2MinimalPlugins = UseTreeItem2MinimalPlugins,
@@ -67,8 +68,12 @@ export const useTreeItem2 = <
         return;
       }
 
+      const rootElement = instance.getItemDOMElement(itemId);
       // Don't blur the root when switching to editing mode
-      if (status.editing || event.target.id !== idAttribute) {
+      if (
+        status.editing ||
+        isTargetInDescendants(event.relatedTarget as HTMLElement, rootElement)
+      ) {
         return;
       }
 
