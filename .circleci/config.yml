@@ -176,7 +176,13 @@ jobs:
       - install_js
       - run:
           name: '`pnpm prettier` changes committed?'
-          command: pnpm prettier --check
+          command: |
+            if [[ $(git diff --name-status next | grep pnpm-lock) == "" ]];
+            then
+                pnpm prettier --check
+            else
+                pnpm prettier:check
+            fi
       - run:
           name: Generate PropTypes
           command: pnpm proptypes
