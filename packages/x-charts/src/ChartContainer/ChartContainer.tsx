@@ -39,13 +39,13 @@ export type ChartContainerProps = Omit<
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  xAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[];
+  xAxis?: Omit<MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>, 'axisId'>[];
   /**
    * The configuration of the y-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[];
+  yAxis?: Omit<MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>, 'axisId'>[];
   children?: React.ReactNode;
   /**
    * An array of plugins defining how to preprocess data.
@@ -174,7 +174,6 @@ ChartContainer.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -245,7 +244,6 @@ ChartContainer.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
