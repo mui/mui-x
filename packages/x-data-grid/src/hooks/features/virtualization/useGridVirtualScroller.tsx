@@ -25,6 +25,7 @@ import { GridPinnedRowsPosition } from '../rows/gridRowsInterfaces';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
 import { useGridApiEventHandler } from '../../utils';
+import * as platform from '../../../utils/platform';
 import { clamp, range } from '../../../utils/utils';
 import type {
   GridRenderContext,
@@ -583,12 +584,14 @@ export const useGridVirtualScroller = () => {
     }),
     getScrollerProps: () => ({
       ref: scrollerRef,
-      tabIndex: -1,
       onScroll: handleScroll,
       onWheel: handleWheel,
       onTouchMove: handleTouchMove,
       style: scrollerStyle,
       role: 'presentation',
+      // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
+      // https://github.com/mui/mui-x/pull/13891#discussion_r1683416024
+      tabIndex: platform.isFirefox ? -1 : undefined,
     }),
     getContentProps: () => ({
       style: contentSize,
