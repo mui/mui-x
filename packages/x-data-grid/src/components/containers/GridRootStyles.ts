@@ -14,6 +14,7 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { gridVisibleColumnDefinitionsSelector } from '../../hooks/features/columns/gridColumnsSelector';
+import { gridDimensionsSelector } from '../../hooks/features/dimensions/gridDimensionsSelectors';
 
 export type OwnerState = DataGridProcessedProps;
 
@@ -135,6 +136,7 @@ export const GridRootStyles = styled('div', {
 })<{ ownerState: OwnerState }>(({ theme: t }) => {
   const apiRef = useGridPrivateApiContext();
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
+  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
 
   const borderColor = getBorderColor(t);
   const radius = t.shape.borderRadius;
@@ -285,7 +287,9 @@ export const GridRootStyles = styled('div', {
     },
     [`&.${c['root--noToolbar']} [aria-rowindex="1"] [aria-colindex="${visibleColumns.length}"]`]: {
       borderTopRightRadius:
-        'calc((1 - var(--DataGrid-hasScrollY)) * var(--unstable_DataGrid-radius))', // if (!hasScrollY) { style.borderTopRightRadius = radius }
+        !dimensions.hasScrollY && dimensions.scrollbarSize > 0
+          ? 'var(--unstable_DataGrid-radius)'
+          : undefined,
     },
     [`& .${c.columnHeaderCheckbox}, & .${c.cellCheckbox}`]: {
       padding: 0,
