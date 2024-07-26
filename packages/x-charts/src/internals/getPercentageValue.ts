@@ -25,6 +25,6 @@ export function getPercentageValue(value: number | string, refValue: number) {
     }
   }
   throw Error(
-    `MUI X Charts: Received an unknown value "${value}". It should be a number, or a string with a percentage value.`,
+    `MUI X: Received an unknown value "${value}". It should be a number, or a string with a percentage value.`,
   );
 }

@@ -43,6 +43,10 @@
         "scatterItemIdentifier": "The scatter item identifier."
       }
     },
+    "onZoomChange": {
+      "description": "Callback fired when the zoom has changed.",
+      "typeDescriptions": { "zoomData": "Updated zoom data." }
+    },
     "rightAxis": {
       "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
     },
@@ -70,7 +74,8 @@
     "yAxis": {
       "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
-    "zAxis": { "description": "The configuration of the z-axes." }
+    "zAxis": { "description": "The configuration of the z-axes." },
+    "zoom": { "description": "The list of zoom data related to each axis." }
   },
   "classDescriptions": {}
 }
