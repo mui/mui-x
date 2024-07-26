@@ -228,6 +228,10 @@ export class AdapterMomentJalaali
     return value.jDate();
   };
 
+  public getDaysInMonth = (value: Moment) => {
+    return this.moment.jDaysInMonth(value.jYear(), value.jMonth());
+  };
+
   public setYear = (value: Moment, year: number) => {
     return value.clone().jYear(year);
   };

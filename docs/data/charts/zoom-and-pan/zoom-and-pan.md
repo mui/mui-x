@@ -47,3 +47,18 @@ The following options are available:
 - **panning**: Enables or disables panning.
 
 {{"demo": "ZoomOptionsNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+
+## Controlled zoom
+
+You can control the zoom state by setting the `zoom` and `onZoomChange` props.
+This way, you can control the zoom state from outside the chart.
+
+The `onZoomChange` prop is a function that receives the new zoom state.
+
+While the `zoom` prop is an array of objects that define the zoom state for each axis with zoom enabled.
+
+- **axisId**: The id of the axis to control.
+- **start**: The starting percentage of the axis range.
+- **end**: The ending percentage of the zoom range.
+
+{{"demo": "ZoomControlled.js"}}

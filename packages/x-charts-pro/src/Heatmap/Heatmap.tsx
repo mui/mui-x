@@ -50,7 +50,10 @@ export interface HeatmapSlotProps
     HeatmapItemSlotProps {}
 
 export interface HeatmapProps
-  extends Omit<ResponsiveChartContainerProProps, 'series' | 'plugins' | 'xAxis' | 'yAxis'>,
+  extends Omit<
+      ResponsiveChartContainerProProps,
+      'series' | 'plugins' | 'xAxis' | 'yAxis' | 'zoom' | 'onZoomChange'
+    >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     ChartsOnAxisClickHandlerProps {

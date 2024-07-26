@@ -220,16 +220,24 @@ function defaultPasteResolver({
   const cellSelectionModel = apiRef.current.getCellSelectionModel();
   const selectedCellsArray = apiRef.current.getSelectedCellsAsArray();
   if (cellSelectionModel && selectedCellsArray.length > 1) {
-    Object.keys(cellSelectionModel).forEach((rowId, rowIndex) => {
+    let lastRowId = selectedCellsArray[0].id;
+    let rowIndex = 0;
+    let colIndex = 0;
+    selectedCellsArray.forEach(({ id: rowId, field }) => {
+      if (rowId !== lastRowId) {
+        lastRowId = rowId;
+        rowIndex += 1;
+        colIndex = 0;
+      }
+
       const rowDataArr = pastedData[isSingleValuePasted ? 0 : rowIndex];
       const hasRowData = isSingleValuePasted ? true : rowDataArr !== undefined;
-      if (!hasRowData) {
-        return;
-      }
-      Object.keys(cellSelectionModel[rowId]).forEach((field, colIndex) => {
+      if (hasRowData) {
         const cellValue = isSingleValuePasted ? rowDataArr[0] : rowDataArr[colIndex];
         updateCell({ rowId, field, pastedCellValue: cellValue });
-      });
+      }
+
+      colIndex += 1;
     });
 
     return;

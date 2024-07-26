@@ -38,7 +38,7 @@ The ratio is obtained by dividing the size of the gap by the size of the categor
 The `barGapRatio` defines the gap between two bars of the same category.
 It's the size of the gap divided by the size of the bar.
 So a value of `1` will result in a gap between bars equal to the bar width.
-And a value of `-1` will make bars overlap on top of each over.
+And a value of `-1` will make bars overlap on top of each other.
 
 {{"demo": "BarGapNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
