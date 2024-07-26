@@ -130,7 +130,7 @@ export const GridRootStyles = styled('div', {
 
   const containerBackground = t.vars
     ? t.vars.palette.background.default
-    : t.mixins.MuiDataGrid?.containerBackground ?? t.palette.background.default;
+    : (t.mixins.MuiDataGrid?.containerBackground ?? t.palette.background.default);
 
   const pinnedBackground = t.mixins.MuiDataGrid?.pinnedBackground ?? containerBackground;
 
