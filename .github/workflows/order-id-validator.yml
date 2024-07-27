@@ -4,10 +4,15 @@ on:
   issues:
     types: [opened]
 
+permissions: {}
+
 jobs:
   validate-order-id:
     runs-on: ubuntu-latest
     name: Label issue based on order ID
+    permissions:
+      contents: read
+      issues: write
     steps:
       - uses: actions/checkout@v3
       - name: Label issue
