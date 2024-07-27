@@ -1,8 +1,10 @@
 name: Order ID validation
 
 on:
-  issues:
-    types: [opened]
+  workflow_run:
+    workflows: [Issue cleanup]
+    types:
+      - completed
 
 permissions: {}
 
