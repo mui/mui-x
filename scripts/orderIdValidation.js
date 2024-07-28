@@ -19,10 +19,14 @@ module.exports = async ({ core, context, github }) => {
       issue_number: issueNumber,
     });
 
+    core.debug(`>>> Issue Body: ${issue.data.body}`);
+
     // add to this regex the possibility that the ORDER ID is wrapped in ** or __
     const orderIdRegex = /(?:\*|_){0,2}?Order ID(?:\*|_){0,2}?: (\d+)/;
     const orderIdMatch = issue.data.body.match(orderIdRegex);
     const orderId = orderIdMatch ? orderIdMatch[1] : null;
+
+    core.debug(`>>> Order ID: ${orderId}`);
 
     if (!orderId) {
       core.info('No Order ID found in issue body');
@@ -33,7 +37,11 @@ module.exports = async ({ core, context, github }) => {
           'User-Agent': 'MUI-Tools-Private/X-Orders-Inspector v1',
         },
       });
+
       const orderDetails = await order.json();
+
+      core.debug(`>>> Order Items: ${orderDetails.line_items?.join(',')}`);
+
       const plan =
         orderDetails.line_items?.filter((item) => /\b(pro|premium)\b/i.test(item.name))[0].name ||
         '';
@@ -46,11 +54,16 @@ module.exports = async ({ core, context, github }) => {
       const planName = plan.match(/\b(pro|premium)\b/i)[0].toLowerCase();
       const labelName = `support: ${planName}`;
 
+      core.debug(`>>> planName: ${planName}`);
+      core.debug(`>>> labelName: ${labelName}`);
+
       const label = await github.rest.issues.getLabel({
         owner,
         repo,
         name: labelName,
       });
+
+      core.debug(`>>> new label: ${label.name}`);
 
       await github.rest.issues.addLabels({
         owner,
