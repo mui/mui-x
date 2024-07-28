@@ -1,4 +1,5 @@
 name: Cleanup issue comment
+run-name: Issue cleanup
 
 on:
   issues:
