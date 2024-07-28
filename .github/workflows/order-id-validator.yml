@@ -9,9 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Label issue based on order ID
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
       - name: Label issue
-        uses: actions/github-script@v7
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
         with:
           script: |
             const script = require('./scripts/orderIdValidation.js')
