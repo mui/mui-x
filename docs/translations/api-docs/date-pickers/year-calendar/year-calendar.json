@@ -45,7 +45,7 @@
     "reverseYears": {
       "description": "Display years in descending order from the most recent."
     },
-    "yearsPerRow": { "description": "Years rendered per row." },
+    "yearsPerRow": { "description": "Years rendered per row." }
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": {
