@@ -1,13 +1,20 @@
 name: Order ID validation
 
 on:
-  issues:
-    types: [opened]
+  workflow_run:
+    workflows: [Issue cleanup]
+    types:
+      - completed
+
+permissions: {}
 
 jobs:
   validate-order-id:
     runs-on: ubuntu-latest
     name: Label issue based on order ID
+    permissions:
+      contents: read
+      issues: write
     steps:
       - uses: actions/checkout@v3
       - name: Label issue
