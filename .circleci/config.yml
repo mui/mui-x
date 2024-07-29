@@ -210,14 +210,14 @@ jobs:
             pnpm docs:link-check
             git add -A && git diff --exit-code --staged
       - run:
-          name: '`pnpm --filter @mui/x-charts-vendor build` was run?'
+          name: '`pnpm @mui/x-charts-vendor build` was run?'
           command: |
             # #default-branch-switch 
             if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]]; 
             then
               echo "No changes to dependencies detected. Skipping..."
             else
-              pnpm build:charts:vendor
+              pnpm --filter @mui/x-charts-vendor build
               git add -A && git diff --exit-code --staged
             fi
 
