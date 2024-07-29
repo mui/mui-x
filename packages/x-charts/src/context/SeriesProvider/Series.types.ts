@@ -24,7 +24,7 @@ export type SeriesProviderProps<T extends ChartSeriesType = ChartSeriesType> = {
   series: AllSeriesType<T>[];
   /**
    * Color palette used to colorize multiple series.
-   * @default
+   * @default blueberryTwilightPalette
    */
   colors?: ChartsColorPalette;
   /**
