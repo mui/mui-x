@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
-export default function OnItemToggle() {
+export default function OnItemClick() {
   const [lastClickedItem, setLastClickedItem] = React.useState(null);
 
   return (
