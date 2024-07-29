@@ -301,6 +301,10 @@ DateTimePicker.propTypes = {
    */
   renderLoading: PropTypes.func,
   /**
+   * Display years in descending order from the most recent.
+   */
+  reverseYears: PropTypes.bool,
+  /**
    * The currently selected sections.
    * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
@@ -445,10 +449,6 @@ DateTimePicker.propTypes = {
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ),
-  /**
-   * Display years in descending order from the most recent.
-   */
-  reverseYears: PropTypes.bool,
   /**
    * Years rendered per row.
    * @default 4 on desktop, 3 on mobile
