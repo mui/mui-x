@@ -377,7 +377,6 @@ SparkLineChart.propTypes = {
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   xAxis: PropTypes.shape({
-    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     classes: PropTypes.object,
     colorMap: PropTypes.oneOfType([
       PropTypes.shape({
@@ -439,7 +438,6 @@ SparkLineChart.propTypes = {
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   yAxis: PropTypes.shape({
-    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     classes: PropTypes.object,
     colorMap: PropTypes.oneOfType([
       PropTypes.shape({
