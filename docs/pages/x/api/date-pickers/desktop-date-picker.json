@@ -31,8 +31,8 @@
     "label": { "type": { "name": "node" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
-    "maxDate": { "type": { "name": "object" }, "default": "new Date('2099-12-31T00:00:00.000')" },
-    "minDate": { "type": { "name": "object" }, "default": "new Date('1900-01-01T00:00:00.000')" },
+    "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
+    "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
     "monthsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "3"
