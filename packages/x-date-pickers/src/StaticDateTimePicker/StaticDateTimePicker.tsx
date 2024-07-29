@@ -281,6 +281,10 @@ StaticDateTimePicker.propTypes = {
    */
   renderLoading: PropTypes.func,
   /**
+   * Display years in descending order from the most recent.
+   */
+  reverseYears: PropTypes.bool,
+  /**
    * Disable specific date.
    *
    * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
@@ -379,10 +383,6 @@ StaticDateTimePicker.propTypes = {
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ),
-  /**
-   * Display years in descending order from the most recent.
-   */
-  reverseYears: PropTypes.bool,
   /**
    * Years rendered per row.
    * @default 3

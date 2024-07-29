@@ -310,6 +310,10 @@ MobileDatePicker.propTypes = {
    */
   renderLoading: PropTypes.func,
   /**
+   * Display years in descending order from the most recent.
+   */
+  reverseYears: PropTypes.bool,
+  /**
    * The currently selected sections.
    * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
@@ -419,10 +423,6 @@ MobileDatePicker.propTypes = {
    * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
-  /**
-   * Display years in descending order from the most recent.
-   */
-  reverseYears: PropTypes.bool,
   /**
    * Years rendered per row.
    * @default 3

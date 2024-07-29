@@ -397,6 +397,10 @@ YearCalendar.propTypes = {
    */
   referenceDate: PropTypes.object,
   /**
+   * Display years in descending order from the most recent.
+   */
+  reverseYears: PropTypes.bool,
+  /**
    * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
