@@ -83,7 +83,7 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
             label={label}
             color="primary"
             onChange={handleAggregationItemChange}
-            onBlur={(e) => e.stopPropagation()}
+            onBlur={(event) => event.stopPropagation()}
             fullWidth
           >
             <MenuItem value="">...</MenuItem>
