@@ -37,8 +37,8 @@
     "fixedWeekNumber": { "type": { "name": "number" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
-    "maxDate": { "type": { "name": "object" } },
-    "minDate": { "type": { "name": "object" } },
+    "maxDate": { "type": { "name": "object" }, "default": "new Date('2099-12-31T00:00:00.000')" },
+    "minDate": { "type": { "name": "object" }, "default": "new Date('1900-01-01T00:00:00.000')" },
     "onAccept": {
       "type": { "name": "func" },
       "signature": {
