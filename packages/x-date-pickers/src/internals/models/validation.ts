@@ -61,10 +61,12 @@ export interface BaseDateValidationProps<TDate extends PickerValidDate>
   extends FutureAndPastValidationProps {
   /**
    * Maximal selectable date.
+   * @default new Date('2099-12-31T00:00:00.000')
    */
   maxDate?: TDate;
   /**
    * Minimal selectable date.
+   * @default new Date('1900-01-01T00:00:00.000')
    */
   minDate?: TDate;
 }
