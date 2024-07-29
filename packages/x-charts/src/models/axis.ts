@@ -304,7 +304,7 @@ export type AxisConfig<
    * If `true`, Reverse the axis scaleBand.
    */
   reverse?: boolean;
-} & Partial<AxisProps> &
+} & Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
   TickParams &
   AxisConfigExtension;

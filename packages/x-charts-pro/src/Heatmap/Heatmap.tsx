@@ -345,7 +345,6 @@ Heatmap.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       barGapRatio: PropTypes.number,
       categoryGapRatio: PropTypes.number,
       classes: PropTypes.object,
@@ -429,7 +428,6 @@ Heatmap.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       barGapRatio: PropTypes.number,
       categoryGapRatio: PropTypes.number,
       classes: PropTypes.object,
