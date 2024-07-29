@@ -1,6 +1,6 @@
 # Data Grid - Custom slots and subcomponents
 
-<p class="description">The grid is highly customizable. Override components using the <code>slots</code> prop.</p>
+<p class="description">Learn how to override parts of the grid.</p>
 
 ## Interacting with the data grid
 
