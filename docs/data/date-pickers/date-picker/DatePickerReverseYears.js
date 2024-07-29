@@ -10,7 +10,6 @@ export default function DatePickerReverseYears() {
       <DemoContainer components={['DatePicker']}>
         <DatePicker
           label="Years in reverse"
-          views={['year']}
           openTo="year"
           reverseYears
         />

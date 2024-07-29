@@ -25,7 +25,7 @@
     "referenceDate": {
       "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty."
     },
-    "reverseYears": { "description": "Display years in descending order from the most recent." },
+    "reverseYears": { "description": "Display years in descending order starting from the maximum value." },
     "shouldDisableYear": {
       "description": "Disable specific year.",
       "typeDescriptions": {

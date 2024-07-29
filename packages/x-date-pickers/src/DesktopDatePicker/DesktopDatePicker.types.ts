@@ -27,7 +27,7 @@ export interface DesktopDatePickerProps<
 > extends BaseDatePickerProps<TDate>,
     DesktopOnlyPickerProps {
   /**
-   * Display years in descending order from the most recent.
+   * Display years in descending order starting from the maximum value.
    */
   reverseYears?: boolean;
   /**
