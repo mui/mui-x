@@ -4,7 +4,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 
-export default function YearMonthCalendar() {
+export default function ReverseYearCalendar() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['YearCalendar']}>
