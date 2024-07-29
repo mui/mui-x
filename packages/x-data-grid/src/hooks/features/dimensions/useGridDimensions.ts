@@ -22,7 +22,7 @@ import {
   gridVisiblePinnedColumnDefinitionsSelector,
 } from '../columns';
 import { gridDimensionsSelector } from './gridDimensionsSelectors';
-import { gridDensityFactorSelector } from '../density';
+import { gridDensityFactorSelector, gridHeaderDensityFactorSelector } from '../density';
 import { gridRenderContextSelector } from '../virtualization';
 import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
@@ -91,9 +91,10 @@ export function useGridDimensions(
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const rowHeight = Math.floor(props.rowHeight * densityFactor);
-  const headerHeight = Math.floor(props.columnHeaderHeight * densityFactor);
+  const headerDensityFactor = useGridSelector(apiRef, gridHeaderDensityFactorSelector);
+  const headerHeight = Math.floor(props.columnHeaderHeight * headerDensityFactor);
   const headerFilterHeight = Math.floor(
-    (props.headerFilterHeight ?? props.columnHeaderHeight) * densityFactor,
+    (props.headerFilterHeight ?? props.columnHeaderHeight) * headerDensityFactor,
   );
   const columnsTotalWidth = roundToDecimalPlaces(gridColumnsTotalWidthSelector(apiRef), 6);
   const headersTotalHeight = getTotalHeaderHeight(apiRef, props);
