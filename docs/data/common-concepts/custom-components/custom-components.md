@@ -111,7 +111,7 @@ import { PropsFromSlot } from '@mui/x-date-pickers/models';
 // ...
 ```
 
-It takes a slot (as defined in the `slots` prop of your component) and returns the props that the slot receives.
+It takes the slot type (as defined in the `slots` prop of your component) and returns the props that the slot receives.
 
 ```ts
 import { Dayjs } from 'dayjs';
