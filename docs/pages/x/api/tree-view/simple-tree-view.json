@@ -40,7 +40,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemId: string) => void",
+        "type": "function(event: React.MouseEvent, itemId: string) => void",
         "describedArgs": ["event", "itemId"]
       }
     },
@@ -54,7 +54,7 @@
     "onItemFocus": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemId: string) => void",
+        "type": "function(event: React.SyntheticEvent | null, itemId: string) => void",
         "describedArgs": ["event", "itemId"]
       }
     },

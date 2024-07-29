@@ -119,10 +119,10 @@ export interface UseTreeViewItemsParameters<R extends {}> {
   getItemId?: (item: R) => TreeViewItemId;
   /**
    * Callback fired when the `content` slot of a given tree item is clicked.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {React.MouseEvent} event The DOM event that triggered the change.
    * @param {string} itemId The id of the focused item.
    */
-  onItemClick?: (event: React.SyntheticEvent | null, itemId: string) => void;
+  onItemClick?: (event: React.MouseEvent, itemId: string) => void;
   /**
    * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".

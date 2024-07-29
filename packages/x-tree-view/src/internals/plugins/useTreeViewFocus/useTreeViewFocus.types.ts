@@ -41,7 +41,7 @@ export interface UseTreeViewFocusInstance extends UseTreeViewFocusPublicAPI {
 export interface UseTreeViewFocusParameters {
   /**
    * Callback fired when a given tree item is focused.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change. **Warning**: This is a generic event not a focus event.
+   * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. **Warning**: This is a generic event not a focus event.
    * @param {string} itemId The id of the focused item.
    */
   onItemFocus?: (event: React.SyntheticEvent | null, itemId: string) => void;
