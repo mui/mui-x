@@ -25,6 +25,7 @@
     "referenceDate": {
       "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty."
     },
+    "reverseYears": { "description": "Display years in descending order from the most recent." },
     "shouldDisableYear": {
       "description": "Disable specific year.",
       "typeDescriptions": {
@@ -42,9 +43,6 @@
       "seeMoreText": "See the {{link}} for more details."
     },
     "value": { "description": "The selected value. Used when the component is controlled." },
-    "reverseYears": {
-      "description": "Display years in descending order from the most recent."
-    },
     "yearsPerRow": { "description": "Years rendered per row." }
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },

@@ -81,6 +81,7 @@
         "returned": "React.ReactNode"
       }
     },
+    "reverseYears": { "type": { "name": "bool" } },
     "shouldDisableDate": {
       "type": { "name": "func" },
       "signature": {
@@ -140,7 +141,6 @@
         "description": "Array&lt;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'&gt;"
       }
     },
-    "reverseYears": { "type": { "name": "bool" } },
     "yearsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "3"
