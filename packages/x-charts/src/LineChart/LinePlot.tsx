@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { line as d3Line } from 'd3-shape';
+import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { useCartesianContext } from '../context/CartesianProvider';
 import {
   LineElement,
