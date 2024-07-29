@@ -1,6 +1,6 @@
 # Custom slots and subcomponents
 
-<p class="description">Learn how to override the default DOM structure of the MUI X components.</p>
+<p class="description">Learn how to override parts of the MUI X components.</p>
 
 ## What is a slot?
 
