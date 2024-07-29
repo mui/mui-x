@@ -191,6 +191,7 @@ DateTimeRangePicker.propTypes = {
   localeText: PropTypes.object,
   /**
    * Maximal selectable date.
+   * @default new Date('2099-12-31T00:00:00.000')
    */
   maxDate: PropTypes.object,
   /**
@@ -204,6 +205,7 @@ DateTimeRangePicker.propTypes = {
   maxTime: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default new Date('1900-01-01T00:00:00.000')
    */
   minDate: PropTypes.object,
   /**

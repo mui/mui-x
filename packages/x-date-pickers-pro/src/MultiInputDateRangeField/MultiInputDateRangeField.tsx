@@ -252,10 +252,12 @@ MultiInputDateRangeField.propTypes = {
   formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Maximal selectable date.
+   * @default new Date('2099-12-31T00:00:00.000')
    */
   maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default new Date('1900-01-01T00:00:00.000')
    */
   minDate: PropTypes.object,
   /**
