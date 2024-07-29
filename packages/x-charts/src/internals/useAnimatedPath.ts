@@ -1,29 +1,34 @@
 import * as React from 'react';
 import { interpolateString } from 'd3-interpolate';
-import { useSpring, to } from '@react-spring/web';
-
-function usePrevious<T>(value: T) {
-  const ref = React.useRef<T | null>(null);
-  React.useEffect(() => {
-    ref.current = value;
-  }, [value]);
-  return ref.current;
-}
+import { useSpring } from '@react-spring/web';
 
 // Taken from Nivo
 export const useAnimatedPath = (path: string, skipAnimation?: boolean) => {
-  const previousPath = usePrevious(path);
-  const interpolator = React.useMemo(
-    () => (previousPath ? interpolateString(previousPath, path) : () => path),
-    [previousPath, path],
-  );
+  const previousPathRef = React.useRef<string | null>(null);
+  const currentPathRef = React.useRef<string | null>(path);
 
-  const { value } = useSpring({
+  React.useEffect(() => {
+    previousPathRef.current = currentPathRef.current;
+    currentPathRef.current = path;
+  }, [path]);
+
+  const spring = useSpring({
     from: { value: 0 },
     to: { value: 1 },
     reset: true,
     immediate: skipAnimation,
+    onResolve() {
+      previousPathRef.current = path;
+      currentPathRef.current = path;
+    },
   });
 
-  return to([value], interpolator);
+  const interpolation = React.useMemo(() => {
+    if (previousPathRef.current === null) {
+      return () => path;
+    }
+    return interpolateString(previousPathRef.current, path);
+  }, [path]);
+
+  return spring.value.to(interpolation);
 };
