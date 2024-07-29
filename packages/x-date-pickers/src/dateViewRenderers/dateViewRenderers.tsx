@@ -40,8 +40,8 @@ export const renderDateViewCalendar = <TDate extends PickerValidDate>({
   onMonthChange,
   monthsPerRow,
   onYearChange,
+  reverseYears,
   yearsPerRow,
-  yearsReversed,
   slots,
   slotProps,
   loading,
@@ -80,8 +80,8 @@ export const renderDateViewCalendar = <TDate extends PickerValidDate>({
     onMonthChange={onMonthChange}
     monthsPerRow={monthsPerRow}
     onYearChange={onYearChange}
+    reverseYears={reverseYears}
     yearsPerRow={yearsPerRow}
-    yearsReversed={yearsReversed}
     slots={slots}
     slotProps={slotProps}
     loading={loading}

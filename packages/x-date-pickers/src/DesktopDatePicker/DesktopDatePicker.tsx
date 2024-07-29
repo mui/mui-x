@@ -423,14 +423,14 @@ DesktopDatePicker.propTypes = {
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
   /**
+   * Display years in descending order from the most recent.
+   */
+  reverseYears: PropTypes.bool,
+  /**
    * Years rendered per row.
    * @default 4
    */
   yearsPerRow: PropTypes.oneOf([3, 4]),
-  /**
-   * Years displayed in reverse order (used on year only picker)
-   */
-  yearsReversed: PropTypes.bool,
 } as any;
 
 export { DesktopDatePicker };

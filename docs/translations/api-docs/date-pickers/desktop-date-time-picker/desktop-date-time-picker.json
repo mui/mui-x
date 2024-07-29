@@ -193,10 +193,10 @@
       "description": "Define custom view renderers for each section. If <code>null</code>, the section will only have field editing. If <code>undefined</code>, internally defined view will be used."
     },
     "views": { "description": "Available views." },
-    "yearsPerRow": { "description": "Years rendered per row." },
-    "yearsReversed": {
-      "description": "Display years from newest to oldest (used on year only picker)"
-    }
+    "reverseYears": {
+      "description": "Display years in descending order from the most recent."
+    },
+    "yearsPerRow": { "description": "Years rendered per row." }
   },
   "classDescriptions": {},
   "slotDescriptions": {

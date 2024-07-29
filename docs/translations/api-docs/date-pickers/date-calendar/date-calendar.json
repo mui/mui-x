@@ -115,10 +115,10 @@
       "description": "The visible view. Used when the component view is controlled. Must be a valid option from <code>views</code> list."
     },
     "views": { "description": "Available views." },
-    "yearsPerRow": { "description": "Years rendered per row." },
-    "yearsReversed": {
-      "description": "Display years from newest to oldest (used on year only picker)"
-    }
+    "reverseYears": {
+      "description": "Display years in descending order from the most recent."
+    },
+    "yearsPerRow": { "description": "Years rendered per row." }
   },
   "classDescriptions": {
     "root": { "description": "Styles applied to the root element." },
