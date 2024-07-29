@@ -446,14 +446,14 @@ DateTimePicker.propTypes = {
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ),
   /**
+   * Display years in descending order from the most recent.
+   */
+  reverseYears: PropTypes.bool,
+  /**
    * Years rendered per row.
    * @default 4 on desktop, 3 on mobile
    */
   yearsPerRow: PropTypes.oneOf([3, 4]),
-  /**
-   * Display years from newest to oldest (used on year only picker)
-   */
-  yearsReversed: PropTypes.bool,
 } as any;
 
 export { DateTimePicker };

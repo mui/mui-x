@@ -42,10 +42,10 @@
       "seeMoreText": "See the {{link}} for more details."
     },
     "value": { "description": "The selected value. Used when the component is controlled." },
+    "reverseYears": {
+      "description": "Display years in descending order from the most recent."
+    },
     "yearsPerRow": { "description": "Years rendered per row." },
-    "yearsReversed": {
-      "description": "Display years from newest to oldest (used on year only picker)"
-    }
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": {

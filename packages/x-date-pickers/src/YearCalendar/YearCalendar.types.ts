@@ -25,14 +25,14 @@ export interface YearCalendarSlotProps {
 
 export interface ExportedYearCalendarProps {
   /**
+   * Display years in descending order from the most recent.
+   */
+  reverseYears?: boolean,
+  /**
    * Years rendered per row.
    * @default 3
    */
   yearsPerRow?: 3 | 4;
-  /**
-   * Display years from newest to oldest (used on year only picker)
-   */
-  yearsReversed?: boolean;
 }
 
 export interface YearCalendarProps<TDate extends PickerValidDate>

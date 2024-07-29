@@ -27,14 +27,14 @@ export interface DesktopDatePickerProps<
 > extends BaseDatePickerProps<TDate>,
     DesktopOnlyPickerProps {
   /**
+   * Display years in descending order from the most recent.
+   */
+  reverseYears?: boolean,
+  /**
    * Years rendered per row.
    * @default 4
    */
   yearsPerRow?: 3 | 4;
-  /**
-   * Years displayed in reverse order (used on year only picker)
-   */
-  yearsReversed?: boolean;
   /**
    * Overridable component slots.
    * @default {}

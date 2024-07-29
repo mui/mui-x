@@ -47,11 +47,11 @@
       }
     },
     "value": { "type": { "name": "object" } },
+    "reverseYears": { "type": { "name": "bool" } },
     "yearsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "3"
-    },
-    "yearsReversed": { "type": { "name": "bool" } }
+    }
   },
   "name": "YearCalendar",
   "imports": [

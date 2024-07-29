@@ -111,8 +111,8 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
     onYearFocus,
     hasFocus,
     onFocusedViewChange,
+    reverseYears,
     yearsPerRow,
-    yearsReversed,
     timezone: timezoneProp,
     gridLabelId,
     slots,
@@ -224,7 +224,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
     );
   }, [selectedYear]);
 
-  const verticalDirection = !yearsReversed ? yearsPerRow * 1 : yearsPerRow * -1;
+  const verticalDirection = !reverseYears ? yearsPerRow * 1 : yearsPerRow * -1;
 
   const handleKeyDown = useEventCallback((event: React.KeyboardEvent, year: number) => {
     switch (event.key) {
@@ -288,7 +288,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
   }, [autoFocus]);
 
   const yearRange = utils.getYearRange([minDate, maxDate]);
-  if (yearsReversed) {
+  if (reverseYears) {
     yearRange.reverse();
   }
 
@@ -434,12 +434,12 @@ YearCalendar.propTypes = {
    */
   value: PropTypes.object,
   /**
+   * Display years in descending order from the most recent.
+   */
+  reverseYears: PropTypes.bool,
+  /**
    * Years rendered per row.
    * @default 3
    */
   yearsPerRow: PropTypes.oneOf([3, 4]),
-  /**
-   * Display years from newest to oldest (used on year only picker)
-   */
-  yearsReversed: PropTypes.bool,
 } as any;
