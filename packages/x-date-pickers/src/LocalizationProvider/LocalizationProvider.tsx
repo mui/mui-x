@@ -133,8 +133,8 @@ export const LocalizationProvider = function LocalizationProvider<
       }
 
       return {
-        minDate: utils.date('1900-01-01T00:00:00.000')!,
-        maxDate: utils.date('2099-12-31T00:00:00.000')!,
+        minDate: utils.date('1900-01-01T00:00:00.000'),
+        maxDate: utils.date('2099-12-31T00:00:00.000'),
       };
     }, [utils]);
 
