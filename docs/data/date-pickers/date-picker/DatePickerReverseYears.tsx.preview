@@ -1,6 +1,5 @@
 <DatePicker
   label="Years in reverse"
-  views={['year']}
   openTo="year"
   reverseYears
 />

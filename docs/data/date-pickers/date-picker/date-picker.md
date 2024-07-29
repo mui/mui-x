@@ -91,7 +91,9 @@ If the view defined in `openTo` is not the first view, then the views before wil
 (for example view the default behaviors, the `year` is only accessible when clicking on the toolbar).
 :::
 
-Intended for use with the standalone year picker, the `reverseYears` prop can be set to show the maximum year first and minimum year at the end of the list.
+## Reverse years
+
+The `reverseYears` prop can be set to show the years in descending order starting from the maximum value.
 
 {{"demo": "DatePickerReverseYears.js"}}
 
