@@ -156,7 +156,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
     area,
     curve = 'linear',
     className,
-    ...rest
+    ...other
   } = props;
 
   const defaultXHighlight: { x: 'band' | 'none' } =
@@ -168,7 +168,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
 
   return (
     <ResponsiveChartContainer
-      {...rest}
+      {...other}
       ref={ref}
       series={[
         {
@@ -377,7 +377,6 @@ SparkLineChart.propTypes = {
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   xAxis: PropTypes.shape({
-    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     classes: PropTypes.object,
     colorMap: PropTypes.oneOfType([
       PropTypes.shape({
@@ -439,7 +438,6 @@ SparkLineChart.propTypes = {
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   yAxis: PropTypes.shape({
-    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     classes: PropTypes.object,
     colorMap: PropTypes.oneOfType([
       PropTypes.shape({

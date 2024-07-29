@@ -8,7 +8,7 @@ import type {
   ScaleOrdinal,
   ScaleSequential,
   ScaleThreshold,
-} from 'd3-scale';
+} from '@mui/x-charts-vendor/d3-scale';
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';
@@ -257,8 +257,9 @@ export type AxisValueFormatterContext = {
    * Location indicates where the value will be displayed.
    * - `'tick'` The value is displayed on the axis ticks.
    * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
+   * - `'legend'` The value is displayed in the legend when using color legend.
    */
-  location: 'tick' | 'tooltip';
+  location: 'tick' | 'tooltip' | 'legend';
 };
 
 export type AxisConfig<
@@ -303,9 +304,12 @@ export type AxisConfig<
    * If `true`, Reverse the axis scaleBand.
    */
   reverse?: boolean;
-} & Partial<AxisProps> &
+} & Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
-  TickParams;
+  TickParams &
+  AxisConfigExtension;
+
+export interface AxisConfigExtension {}
 
 export type AxisDefaultized<
   S extends ScaleName = ScaleName,

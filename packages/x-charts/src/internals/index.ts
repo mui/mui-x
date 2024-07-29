@@ -20,6 +20,7 @@ export * from './defaultizeValueFormatter';
 export * from './configInit';
 export * from './getLabel';
 export * from './getSVGPoint';
+export * from './isDefined';
 
 // contexts
 

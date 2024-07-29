@@ -4,10 +4,10 @@ import type { CartesianContextProviderProps } from '../context/CartesianProvider
 import type { SeriesContextProviderProps } from '../context/SeriesContextProvider';
 import type { ZAxisContextProviderProps } from '../context/ZAxisContextProvider';
 import type { ChartContainerProps } from './ChartContainer';
-
 import { useChartContainerHooks } from './useChartContainerHooks';
 import { HighlightedProviderProps } from '../context';
 import { ChartsSurfaceProps } from '../ChartsSurface';
+import { useDefaultizeAxis } from './useDefaultizeAxis';
 
 export const useChartContainerProps = (
   props: ChartContainerProps,
@@ -31,7 +31,7 @@ export const useChartContainerProps = (
     onHighlightChange,
     plugins,
     children,
-    ...rest
+    ...other
   } = props;
 
   const {
@@ -42,6 +42,8 @@ export const useChartContainerProps = (
     seriesFormatters,
     colorProcessors,
   } = useChartContainerHooks(ref, plugins);
+
+  const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis);
 
   const drawingProviderProps: Omit<DrawingProviderProps, 'children'> = {
     width,
@@ -62,8 +64,8 @@ export const useChartContainerProps = (
   };
 
   const cartesianContextProps: Omit<CartesianContextProviderProps, 'children'> = {
-    xAxis,
-    yAxis,
+    xAxis: defaultizedXAxis,
+    yAxis: defaultizedYAxis,
     dataset,
     xExtremumGetters,
     yExtremumGetters,
@@ -80,7 +82,7 @@ export const useChartContainerProps = (
   };
 
   const chartsSurfaceProps: ChartsSurfaceProps & { ref: any } = {
-    ...rest,
+    ...other,
     width,
     height,
     ref: chartSurfaceRef,
@@ -99,5 +101,7 @@ export const useChartContainerProps = (
     zAxisContextProps,
     highlightedProviderProps,
     chartsSurfaceProps,
+    xAxis: defaultizedXAxis,
+    yAxis: defaultizedYAxis,
   };
 };

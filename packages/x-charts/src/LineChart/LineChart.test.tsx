@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer, describeConformance } from '@mui/internal-test-utils';
-import { LineChart } from './LineChart';
+import { LineChart } from '@mui/x-charts/LineChart';
 
 describe('<LineChart />', () => {
   const { render } = createRenderer();

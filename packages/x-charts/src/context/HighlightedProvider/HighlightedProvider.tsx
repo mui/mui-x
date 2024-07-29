@@ -29,11 +29,11 @@ export type HighlightedProviderProps = {
 };
 
 const mergeDeprecatedOptions = (options?: Partial<HighlightScope>): HighlightScope => {
-  const { highlighted, faded, ...rest } = options ?? {};
+  const { highlighted, faded, ...other } = options ?? {};
   return {
     highlight: highlighted,
     fade: faded,
-    ...rest,
+    ...other,
   };
 };
 
@@ -65,7 +65,7 @@ function HighlightedProvider({
 
   const highlightScope =
     highlightedItem && highlightedItem.seriesId
-      ? seriesById.get(highlightedItem.seriesId) ?? undefined
+      ? (seriesById.get(highlightedItem.seriesId) ?? undefined)
       : undefined;
 
   const providerValue = React.useMemo<Initializable<HighlightedState>>(() => {
