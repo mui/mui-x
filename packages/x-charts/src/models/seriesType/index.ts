@@ -1,31 +1,29 @@
-import { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
-import { DefaultizedLineSeriesType, LineItemIdentifier, LineSeriesType } from './line';
-import { DefaultizedScatterSeriesType, ScatterItemIdentifier, ScatterSeriesType } from './scatter';
-import { DefaultizedPieSeriesType, PieSeriesType, PieItemIdentifier, PieValueType } from './pie';
-import { MakeOptional } from '../helpers';
+import { BarSeriesType, DefaultizedBarSeriesType } from './bar';
+import {
+  CartesianChartSeriesType,
+  ChartSeriesType,
+  ChartsSeriesConfig,
+  StackableChartSeriesType,
+} from './config';
 
-type AllSeriesType =
-  | BarSeriesType
-  | LineSeriesType
-  | ScatterSeriesType
-  | PieSeriesType<MakeOptional<PieValueType, 'id'>>;
+// Series definition
 
-type CartesianSeriesType = BarSeriesType | LineSeriesType | ScatterSeriesType;
+type AllSeriesType<T extends ChartSeriesType = ChartSeriesType> =
+  ChartsSeriesConfig[T]['seriesProp'];
 
-type DefaultizedCartesianSeriesType =
-  | DefaultizedBarSeriesType
-  | DefaultizedLineSeriesType
-  | DefaultizedScatterSeriesType;
+type CartesianSeriesType = AllSeriesType<CartesianChartSeriesType>;
 
-type DefaultizedSeriesType = DefaultizedCartesianSeriesType | DefaultizedPieSeriesType;
+type DefaultizedSeriesType<T extends ChartSeriesType = ChartSeriesType> =
+  ChartsSeriesConfig[T]['series'];
 
-type StackableSeriesType = DefaultizedBarSeriesType | DefaultizedLineSeriesType;
+type DefaultizedCartesianSeriesType = DefaultizedSeriesType<CartesianChartSeriesType>;
 
-export type SeriesItemIdentifier =
-  | BarItemIdentifier
-  | LineItemIdentifier
-  | ScatterItemIdentifier
-  | PieItemIdentifier;
+type StackableSeriesType = DefaultizedSeriesType<StackableChartSeriesType>;
+
+// item identifier
+
+export type SeriesItemIdentifier<T extends ChartSeriesType = ChartSeriesType> =
+  ChartsSeriesConfig[T]['itemIdentifier'];
 
 export * from './line';
 export * from './bar';
@@ -38,6 +36,8 @@ export type {
   DefaultizedCartesianSeriesType,
   StackableSeriesType,
 };
+
+// Helpers
 
 export function isDefaultizedBarSeries(
   series: DefaultizedSeriesType,

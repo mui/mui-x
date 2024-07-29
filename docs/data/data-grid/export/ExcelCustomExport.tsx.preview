@@ -1,6 +1,6 @@
 <DataGridPremium
   treeData
-  getTreeDataPath={(row) => row.path}
+  getTreeDataPath={getTreeDataPath}
   rows={rows}
   columns={columns}
   groupingColDef={groupingColDef}

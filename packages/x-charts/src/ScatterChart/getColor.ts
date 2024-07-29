@@ -4,13 +4,13 @@ import { DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
 
 export default function getColor(
   series: DefaultizedScatterSeriesType,
-  xAxis: AxisDefaultized,
-  yAxis: AxisDefaultized,
+  xAxis?: AxisDefaultized,
+  yAxis?: AxisDefaultized,
   zAxis?: ZAxisDefaultized,
 ) {
   const zColorScale = zAxis?.colorScale;
-  const yColorScale = yAxis.colorScale;
-  const xColorScale = xAxis.colorScale;
+  const yColorScale = yAxis?.colorScale;
+  const xColorScale = xAxis?.colorScale;
 
   if (zColorScale) {
     return (dataIndex: number) => {

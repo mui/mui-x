@@ -26,7 +26,8 @@
   "name": "DefaultChartsItemTooltipContent",
   "imports": [
     "import { DefaultChartsItemTooltipContent } from '@mui/x-charts/ChartsTooltip';",
-    "import { DefaultChartsItemTooltipContent } from '@mui/x-charts';"
+    "import { DefaultChartsItemTooltipContent } from '@mui/x-charts';",
+    "import { DefaultChartsItemTooltipContent } from '@mui/x-charts-pro';"
   ],
   "classes": [
     {

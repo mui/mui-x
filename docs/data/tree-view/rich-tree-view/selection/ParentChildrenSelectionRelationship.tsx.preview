@@ -1,0 +1,9 @@
+<RichTreeView
+  multiSelect
+  checkboxSelection
+  apiRef={apiRef}
+  items={MUI_X_PRODUCTS}
+  selectedItems={selectedItems}
+  onSelectedItemsChange={handleSelectedItemsChange}
+  onItemSelectionToggle={handleItemSelectionToggle}
+/>

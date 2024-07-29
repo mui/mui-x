@@ -21,7 +21,7 @@
     "endAngle": { "description": "The end angle (deg) of the last item." },
     "faded": { "description": "Override the arc attributes when it is faded." },
     "highlighted": { "description": "Override the arc attributes when it is highlighted." },
-    "highlightScope": { "description": "" },
+    "highlightScope": { "description": "The scope to apply when the series is highlighted." },
     "id": { "description": "" },
     "innerRadius": {
       "description": "The radius between circle center and the beginning of the arc.<br />Can be a number (in px) or a string with a percentage such as &#39;50%&#39;.<br />The &#39;100%&#39; is the maximal radius that fit into the drawing area."

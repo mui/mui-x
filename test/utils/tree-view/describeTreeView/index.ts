@@ -1,2 +1,5 @@
 export { describeTreeView } from './describeTreeView';
-export type { DescribeTreeViewRendererReturnValue } from './describeTreeView.types';
+export type {
+  DescribeTreeViewRendererReturnValue,
+  DescribeTreeViewRendererUtils,
+} from './describeTreeView.types';

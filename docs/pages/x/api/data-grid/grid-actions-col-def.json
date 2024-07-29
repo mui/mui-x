@@ -10,7 +10,7 @@
     "field": { "type": { "description": "string" }, "required": true },
     "getActions": {
       "type": {
-        "description": "(params: GridRowParams&lt;R&gt;) =&gt; React.ReactElement&lt;GridActionsCellItemProps&gt;[]"
+        "description": "(params: GridRowParams&lt;R&gt;) =&gt; readonly React.ReactElement&lt;GridActionsCellItemProps&gt;[]"
       },
       "required": true
     },
@@ -37,7 +37,9 @@
     "display": { "type": { "description": "'text' | 'flex'" } },
     "editable": { "type": { "description": "boolean" }, "default": "false" },
     "filterable": { "type": { "description": "boolean" }, "default": "true" },
-    "filterOperators": { "type": { "description": "GridFilterOperator&lt;R, V, F&gt;[]" } },
+    "filterOperators": {
+      "type": { "description": "readonly GridFilterOperator&lt;R, V, F&gt;[]" }
+    },
     "flex": { "type": { "description": "number" } },
     "getApplyQuickFilterFn": { "type": { "description": "GetApplyQuickFilterFn&lt;R, V&gt;" } },
     "getSortComparator": {
@@ -89,7 +91,7 @@
     "resizable": { "type": { "description": "boolean" }, "default": "true" },
     "sortable": { "type": { "description": "boolean" }, "default": "true" },
     "sortComparator": { "type": { "description": "GridComparatorFn&lt;V&gt;" } },
-    "sortingOrder": { "type": { "description": "GridSortDirection[]" } },
+    "sortingOrder": { "type": { "description": "readonly GridSortDirection[]" } },
     "valueFormatter": { "type": { "description": "GridValueFormatter&lt;R, V, F&gt;" } },
     "valueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F&gt;" } },
     "valueParser": { "type": { "description": "GridValueParser&lt;R, V, F&gt;" } },

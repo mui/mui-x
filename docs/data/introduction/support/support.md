@@ -40,7 +40,7 @@ You can browse the documentation, find an example close to your use case, and th
 </span>
 </a>
 
-- [Data Grid](/x/react-data-grid/#mit-version-free-forever)
+- [Data Grid](/x/react-data-grid/#mit-license-free-forever)
 - [Date Pickers](/x/react-date-pickers/getting-started/#render-your-first-component)
 - [Charts](/x/react-charts/getting-started/#single-charts)
 - [Tree View](/x/react-tree-view/#simple-tree-view)
@@ -106,7 +106,7 @@ This includes issues introduced by external sources, like browser upgrades or ch
 
 ### Social media
 
-The MUI X community is active on both [X/Twitter](https://twitter.com/MUI_hq) and [LinkedIn](https://www.linkedin.com/company/mui/).
+The MUI X community is active on both [X/Twitter](https://x.com/MUI_hq) and [LinkedIn](https://www.linkedin.com/company/mui/).
 These are great platforms to share what you're working on and connect with other developers.
 
 ### Discord

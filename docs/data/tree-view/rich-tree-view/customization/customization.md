@@ -51,7 +51,7 @@ The demo below shows how to pass an `id` attribute to the Tree Item label:
 {{"demo": "LabelSlotProps.js", "defaultCodeOpen": false }}
 
 The `slots` prop allows you to replace the default label with your own component:
-The demo below shows how to add a tooltip on the Tree Item label:
+The demo below shows how to add a basic edition feature on the Tree Item label:
 
 {{"demo": "LabelSlots.js", "defaultCodeOpen": false}}
 
@@ -60,15 +60,9 @@ The demo below shows how to add a tooltip on the Tree Item label:
 Use the `useTreeItem2` hook to create your own component.
 The demo below shows how to add an avatar and custom typography elements.
 
-{{"demo": "CustomContentTreeView.js", "defaultCodeOpen": false}}
+{{"demo": "HeadlessAPI.js", "defaultCodeOpen": false}}
 
 ## Common examples
-
-### Limit expansion to icon container
-
-The demo below shows how to trigger the expansion interaction just by clicking on the icon container instead of the whole Tree Item surface.
-
-{{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
 
 ### File explorer
 

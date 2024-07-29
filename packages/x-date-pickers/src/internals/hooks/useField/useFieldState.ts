@@ -1,7 +1,8 @@
 import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
-import { useTheme } from '@mui/material/styles';
-import { useUtils, useLocaleText, useLocalizationContext } from '../useUtils';
+import { useRtl } from '@mui/system/RtlProvider';
+import { usePickersTranslations } from '../../../hooks/usePickersTranslations';
+import { useUtils, useLocalizationContext } from '../useUtils';
 import {
   UseFieldInternalProps,
   UseFieldParams,
@@ -86,10 +87,9 @@ export const useFieldState = <
   >,
 ): UseFieldStateResponse<TValue, TDate, TSection> => {
   const utils = useUtils<TDate>();
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const adapter = useLocalizationContext<TDate>();
-  const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
+  const isRtl = useRtl();
 
   const {
     valueManager,
@@ -137,22 +137,22 @@ export const useFieldState = <
         buildSectionsFromFormat({
           utils,
           timezone,
-          localeText,
+          localeText: translations,
           localizedDigits,
           format,
           date,
           formatDensity,
           shouldRespectLeadingZeros,
           enableAccessibleFieldDOMStructure,
-          isRTL,
+          isRtl,
         }),
       ),
     [
       fieldValueManager,
       format,
-      localeText,
+      translations,
       localizedDigits,
-      isRTL,
+      isRtl,
       shouldRespectLeadingZeros,
       utils,
       formatDensity,
@@ -286,14 +286,14 @@ export const useFieldState = <
       const sections = buildSectionsFromFormat({
         utils,
         timezone,
-        localeText,
+        localeText: translations,
         localizedDigits,
         format,
         date,
         formatDensity,
         shouldRespectLeadingZeros,
         enableAccessibleFieldDOMStructure,
-        isRTL,
+        isRtl,
       });
       return mergeDateIntoReferenceDate(utils, timezone, date, sections, referenceDate, false);
     };
@@ -385,7 +385,7 @@ export const useFieldState = <
       ...prevState,
       sections,
     }));
-  }, [format, utils.locale, isRTL]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [format, utils.locale, isRtl]); // eslint-disable-line react-hooks/exhaustive-deps
 
   React.useEffect(() => {
     let shouldUpdate: boolean;

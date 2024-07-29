@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { screen, userEvent, fireDiscreteEvent } from '@mui-internal/test-utils';
+import { screen, userEvent, fireDiscreteEvent } from '@mui/internal-test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import {
   adapterToUse,
   createPickerRenderer,
-  wrapPickerMount,
   openPicker,
   expectFieldValueV7,
   describeRangeValidation,
@@ -34,7 +33,6 @@ describe('<MobileDateRangePicker /> - Describes', () => {
     classes: {} as any,
     render,
     muiName: 'MuiMobileDateRangePicker',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',
@@ -44,8 +42,6 @@ describe('<MobileDateRangePicker /> - Describes', () => {
       'themeVariants',
       'mergeClassName',
       'propsSpread',
-      'rootClass',
-      'reactTestRenderer',
     ],
   }));
 

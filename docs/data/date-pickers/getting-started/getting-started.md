@@ -31,15 +31,19 @@ The Date and Time Pickers package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:
 
 <codeblock storageKey="package-manager">
+
 ```bash npm
 npm install @mui/material @emotion/react @emotion/styled
 ```
-```bash yarn
-yarn add @mui/material @emotion/react @emotion/styled
-```
+
 ```bash pnpm
 pnpm add @mui/material @emotion/react @emotion/styled
 ```
+
+```bash yarn
+yarn add @mui/material @emotion/react @emotion/styled
+```
+
 </codeblock>
 
 <!-- #react-peer-version -->
@@ -58,16 +62,17 @@ Please note that [react](https://www.npmjs.com/package/react) and [react-dom](ht
 Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
 
 <codeblock storageKey="package-manager">
+
 ```bash npm
 npm install @mui/styled-engine-sc styled-components
 ```
 
-```bash yarn
-yarn add @mui/styled-engine-sc styled-components
-```
-
 ```bash pnpm
 pnpm add @mui/styled-engine-sc styled-components
+```
+
+```bash yarn
+yarn add @mui/styled-engine-sc styled-components
 ```
 
 </codeblock>

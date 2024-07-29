@@ -6,3 +6,10 @@ export type {
   RichTreeViewSlots,
   RichTreeViewSlotProps,
 } from './RichTreeView.types';
+
+export { RICH_TREE_VIEW_PLUGINS } from './RichTreeView.plugins';
+export type {
+  RichTreeViewPluginSlots,
+  RichTreeViewPluginSlotProps,
+  RichTreeViewPluginParameters,
+} from './RichTreeView.plugins';

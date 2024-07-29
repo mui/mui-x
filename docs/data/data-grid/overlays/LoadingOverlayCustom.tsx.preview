@@ -1,0 +1,7 @@
+<DataGrid
+  slots={{
+    loadingOverlay: CustomLoadingOverlay,
+  }}
+  loading
+  {...data}
+/>

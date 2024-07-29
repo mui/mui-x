@@ -1,0 +1,12 @@
+<BarChartPro
+  width={600}
+  height={300}
+  xAxis={[
+    {
+      scaleType: 'band',
+      data: data.map((v, i) => i),
+      zoom: true,
+    },
+  ]}
+  series={series}
+/>

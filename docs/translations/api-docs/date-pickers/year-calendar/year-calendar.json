@@ -32,6 +32,8 @@
         "boolean": "If <code>true</code>, the year will be disabled."
       }
     },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
@@ -45,5 +47,8 @@
       "description": "Display years from newest to oldest (used on year only picker)"
     }
   },
-  "classDescriptions": { "root": { "description": "Styles applied to the root element." } }
+  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
+  "slotDescriptions": {
+    "yearButton": "Button displayed to render a single year in the &quot;year&quot; view."
+  }
 }

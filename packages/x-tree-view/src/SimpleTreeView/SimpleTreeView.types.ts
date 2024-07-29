@@ -7,9 +7,9 @@ import {
   SimpleTreeViewPluginParameters,
   SimpleTreeViewPluginSlotProps,
   SimpleTreeViewPluginSlots,
-  SimpleTreeViewPlugins,
+  SimpleTreeViewPluginSignatures,
 } from './SimpleTreeView.plugins';
-import { TreeViewPublicAPI } from '../internals/models';
+import { TreeViewExperimentalFeatures, TreeViewPublicAPI } from '../internals/models';
 
 export interface SimpleTreeViewSlots extends SimpleTreeViewPluginSlots {
   /**
@@ -24,7 +24,7 @@ export interface SimpleTreeViewSlotProps extends SimpleTreeViewPluginSlotProps {
 }
 
 export type SimpleTreeViewApiRef = React.MutableRefObject<
-  TreeViewPublicAPI<SimpleTreeViewPlugins> | undefined
+  TreeViewPublicAPI<SimpleTreeViewPluginSignatures> | undefined
 >;
 
 export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
@@ -55,4 +55,10 @@ export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
    * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
    */
   apiRef?: SimpleTreeViewApiRef;
+  /**
+   * Unstable features, breaking changes might be introduced.
+   * For each feature, if the flag is not explicitly set to `true`,
+   * the feature will be fully disabled and any property / method call will not have any effect.
+   */
+  experimentalFeatures?: TreeViewExperimentalFeatures<SimpleTreeViewPluginSignatures>;
 }

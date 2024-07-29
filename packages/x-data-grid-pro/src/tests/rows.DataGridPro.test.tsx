@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, act, userEvent } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, act, userEvent } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -27,8 +27,12 @@ import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
+interface BaselineProps extends DataGridProProps {
+  rows: GridValidRowModel[];
+}
+
 describe('<DataGridPro /> - Rows', () => {
-  let baselineProps: DataGridProProps & { rows: GridValidRowModel };
+  let baselineProps: BaselineProps;
 
   const { clock, render } = createRenderer({ clock: 'fake' });
 

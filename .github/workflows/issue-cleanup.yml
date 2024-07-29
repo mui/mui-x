@@ -27,6 +27,7 @@ jobs:
             const _ = extractInputSection(lines, 'Latest version')
             const searchKeywords = extractInputSection(lines, 'Search keywords')
             const orderID = extractInputSection(lines, 'Order ID or Support key')
+            const products = extractInputSection(lines, 'Affected products')
 
             lines.push('')
             lines.push('**Search keywords**: ' + searchKeywords)
@@ -36,11 +37,29 @@ jobs:
 
             const body = lines.join('\n')
 
+            const labels = issue.data.labels.map(label => label.name)
+
+            const productMap = {
+              'Data Grid': 'data grid',
+              'Date and Time Pickers': 'pickers',
+              'Charts': 'charts',
+              'Tree View': 'tree view',
+            }
+              
+            if (products !== '') {
+              products.split(',').forEach(product => {
+                if (productMap[product.trim()]) {
+                  labels.push(`component: ${productMap[product.trim()]}`)
+                }
+              })
+            }
+
             await github.rest.issues.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
               body,
+              labels,
             })
 
             function extractInputSection(lines, title) {

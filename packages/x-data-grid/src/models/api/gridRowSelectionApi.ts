@@ -31,9 +31,9 @@ export interface GridRowSelectionApi {
   /**
    * Updates the selected rows to be those passed to the `rowIds` argument.
    * Any row already selected will be unselected.
-   * @param {GridRowId[]} rowIds The row ids to select.
+   * @param {readonly GridRowId[]} rowIds The row ids to select.
    */
-  setRowSelectionModel: (rowIds: GridRowId[]) => void;
+  setRowSelectionModel: (rowIds: readonly GridRowId[]) => void;
 }
 
 export interface GridRowMultiSelectionApi {

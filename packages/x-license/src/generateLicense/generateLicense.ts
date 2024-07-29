@@ -1,6 +1,6 @@
 import { md5 } from '../encoding/md5';
 import { base64Encode } from '../encoding/base64';
-import { LICENSE_SCOPES, LicenseScope } from '../utils/licenseScope';
+import { LICENSE_SCOPES, LicenseScope, PlanVersion } from '../utils/licenseScope';
 import { LICENSING_MODELS, LicensingModel } from '../utils/licensingModel';
 
 const licenseVersion = '2';
@@ -10,6 +10,7 @@ export interface LicenseDetails {
   expiryDate: Date;
   scope: LicenseScope;
   licensingModel: LicensingModel;
+  planVersion: PlanVersion;
 }
 
 function getClearLicenseString(details: LicenseDetails) {
@@ -21,9 +22,16 @@ function getClearLicenseString(details: LicenseDetails) {
     throw new Error('MUI X: Invalid licensing model');
   }
 
-  return `O=${details.orderNumber},E=${details.expiryDate.getTime()},S=${details.scope},LM=${
-    details.licensingModel
-  },KV=${licenseVersion}`;
+  const keyParts = [
+    `O=${details.orderNumber}`,
+    `E=${details.expiryDate.getTime()}`,
+    `S=${details.scope}`,
+    `LM=${details.licensingModel}`,
+    `PV=${details.planVersion}`,
+    `KV=${licenseVersion}`,
+  ];
+
+  return keyParts.join(',');
 }
 
 export function generateLicense(details: LicenseDetails) {

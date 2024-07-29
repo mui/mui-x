@@ -25,7 +25,8 @@
   "name": "DefaultChartsAxisTooltipContent",
   "imports": [
     "import { DefaultChartsAxisTooltipContent } from '@mui/x-charts/ChartsTooltip';",
-    "import { DefaultChartsAxisTooltipContent } from '@mui/x-charts';"
+    "import { DefaultChartsAxisTooltipContent } from '@mui/x-charts';",
+    "import { DefaultChartsAxisTooltipContent } from '@mui/x-charts-pro';"
   ],
   "classes": [
     {

@@ -1,15 +1,4 @@
-import {
-  BaseDateValidationProps,
-  MakeOptional,
-  UseFieldInternalProps,
-} from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import {
-  DateRangeValidationError,
-  RangeFieldSection,
-  DateRange,
-  RangeFieldSeparatorProps,
-} from '../../models';
 
 /**
  * Props used to validate a day value in range pickers.
@@ -27,23 +16,3 @@ export interface DayRangeValidationProps<TDate extends PickerValidDate> {
    */
   shouldDisableDate?: (day: TDate, position: 'start' | 'end') => boolean;
 }
-
-export interface UseDateRangeFieldProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends MakeOptional<
-      Omit<
-        UseFieldInternalProps<
-          DateRange<TDate>,
-          TDate,
-          RangeFieldSection,
-          TEnableAccessibleFieldDOMStructure,
-          DateRangeValidationError
-        >,
-        'unstableFieldRef'
-      >,
-      'format'
-    >,
-    RangeFieldSeparatorProps,
-    DayRangeValidationProps<TDate>,
-    BaseDateValidationProps<TDate> {}

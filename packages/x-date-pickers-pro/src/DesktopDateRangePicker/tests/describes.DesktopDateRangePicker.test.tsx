@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { screen, userEvent } from '@mui-internal/test-utils';
+import { screen, userEvent } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   createPickerRenderer,
-  wrapPickerMount,
   expectFieldValueV7,
   describePicker,
   describeValue,
@@ -34,7 +33,6 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
     classes: {} as any,
     render,
     muiName: 'MuiDesktopDateRangePicker',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',
@@ -44,8 +42,6 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
       'themeVariants',
       'mergeClassName',
       'propsSpread',
-      'rootClass',
-      'reactTestRenderer',
     ],
   }));
 

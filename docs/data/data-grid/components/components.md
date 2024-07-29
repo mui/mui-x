@@ -128,23 +128,6 @@ The next demo reuses `GridPagination` but replaces the previous and next page bu
 
 {{"demo": "CustomPaginationGrid.js", "bg": "inline"}}
 
-### Loading overlay
-
-By default, the loading overlay displays a circular progress.
-This demo replaces it with a linear progress.
-
-{{"demo": "CustomLoadingOverlayGrid.js", "bg": "inline"}}
-
-### No rows overlay
-
-In the following demo, an illustration is added on top of the default "No Rows" message.
-
-{{"demo": "CustomEmptyOverlayGrid.js", "bg": "inline"}}
-
-:::info
-As with the no-rows overlay, the Data Grid also lets you override the no-results overlay using the `NoResultsOverlay` slot.
-:::
-
 ### Row
 
 The `slotProps.row` prop can be used to pass additional props to the row component.
@@ -165,6 +148,10 @@ Try it by hovering a cell with the mouse and it should display the number of cha
 As any component slot, every icon can be customized. However, it is not yet possible to use the `slotProps` with icons.
 
 {{"demo": "CustomSortIcons.js", "bg": "inline"}}
+
+### Overlays
+
+See the [Overlays](/x/react-data-grid/overlays/) documentation on how to customize the `loadingOverlay`, `noRowsOverlay`, and `noResultsOverlay`.
 
 ## Slot props
 

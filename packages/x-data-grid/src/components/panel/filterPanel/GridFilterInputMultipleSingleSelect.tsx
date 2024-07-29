@@ -108,14 +108,18 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
       onChange={handleChange}
       getOptionLabel={getOptionLabel}
       renderTags={(value, getTagProps) =>
-        value.map((option, index) => (
-          <rootProps.slots.baseChip
-            variant="outlined"
-            size="small"
-            label={getOptionLabel(option)}
-            {...getTagProps({ index })}
-          />
-        ))
+        value.map((option, index) => {
+          const { key, ...tagProps } = getTagProps({ index });
+          return (
+            <rootProps.slots.baseChip
+              key={key}
+              variant="outlined"
+              size="small"
+              label={getOptionLabel(option)}
+              {...tagProps}
+            />
+          );
+        })
       }
       renderInput={(params) => (
         <rootProps.slots.baseTextField
@@ -140,7 +144,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
 GridFilterInputMultipleSingleSelect.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
     current: PropTypes.object.isRequired,

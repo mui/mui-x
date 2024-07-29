@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, screen } from '@mui-internal/test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { DateTimePickerTabs, DateTimePickerTabsProps } from '../../DateTimePicker';

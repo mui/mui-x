@@ -8,7 +8,7 @@ import {
   GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
-import { createRenderer, act } from '@mui-internal/test-utils';
+import { createRenderer, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { getColumnValues } from 'test/utils/helperFn';
 

@@ -134,7 +134,7 @@
     }
   ],
   "spread": true,
-  "themeDefaultProps": false,
+  "themeDefaultProps": true,
   "muiName": "MuiSingleInputTimeRangeField",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/SingleInputTimeRangeField/SingleInputTimeRangeField.tsx",

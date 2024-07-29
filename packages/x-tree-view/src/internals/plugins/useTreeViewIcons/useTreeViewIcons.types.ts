@@ -43,5 +43,5 @@ export type UseTreeViewIconsSignature = TreeViewPluginSignature<{
   contextValue: UseTreeViewIconsContextValue;
   slots: UseTreeViewIconsSlots;
   slotProps: UseTreeViewIconsSlotProps;
-  dependantPlugins: [UseTreeViewItemsSignature, UseTreeViewSelectionSignature];
+  dependencies: [UseTreeViewItemsSignature, UseTreeViewSelectionSignature];
 }>;

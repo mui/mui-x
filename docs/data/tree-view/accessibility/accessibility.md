@@ -8,11 +8,11 @@ packageName: '@mui/x-tree-view'
 
 # Accessibility
 
-<p class="description">The Tree View has complete accessibility support, including built-in keyboard interactions that follow international standards.</p>
+<p class="description">Learn how the Tree View implements accessibility features and guidelines, including keyboard navigation that follows international standards.</p>
 
 ## Guidelines
 
-The most commonly encountered conformance guidelines for accessibility are:
+Common conformance guidelines for accessibility include:
 
 - Globally accepted standard: [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/)
 - US:
@@ -21,30 +21,34 @@ The most commonly encountered conformance guidelines for accessibility are:
 - Europe: [EAA](https://ec.europa.eu/social/main.jsp?catId=1202) (European Accessibility Act)
 
 WCAG 2.1 has three levels of conformance: A, AA, and AAA.
-Level AA meets the most commonly encountered conformance guidelines.
-This is the most common target for organizations, so we aim to support it very well.
+Level AA exceeds the basic criteria for accessibility and is a common target for most organizations, so this is what we aim to support.
 
 The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/) provide valuable information on how to optimize the accessibility of a Tree View.
 
 ## Keyboard interactions
 
 :::info
-The following key assignments apply to Windows and Linux users.
+The key assignments in the table below apply to Windows and Linux users.
 
 On macOS replace <kbd class="key">Ctrl</kbd> with <kbd class="key">⌘ Command</kbd>.
+
+Some devices may lack certain keys, requiring the use of key combinations. In this case, replace:
+
+- <kbd class="key">Home</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Left</kbd>
+- <kbd class="key">End</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Right</kbd>
 
 :::
 
 |                                                                                          Keys | Description                                                                                                                                                                                                          |
 | --------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |                                                                  <kbd class="key">Enter</kbd> | Activates the focused item. <ul><li>If item has children, it is expanded or collapsed</li><li>If the item does not have children, it is selected</li></ul>                                                           |
-|                                                               <kbd class="key">Arrow Up</kbd> | Moves focus to the previous focusable item, without expanding or collapsing it.                                                                                                                                      |
-|                                                             <kbd class="key">Arrow Down</kbd> | Moves focus to the next focusable item, without expanding or collapsing it.                                                                                                                                          |
+|                                                               <kbd class="key">Arrow Up</kbd> | Moves focus to the previous focusable item, without expanding or collapsing it                                                                                                                                       |
+|                                                             <kbd class="key">Arrow Down</kbd> | Moves focus to the next focusable item, without expanding or collapsing it                                                                                                                                           |
 | <kbd class="key">Arrow Right</kbd> + RTL off </br> <kbd class="key">Arrow Left</kbd> + RTL on | <ul><li>If focus is on a collapsed item, expands the item without moving focus</li><li>If focus is on an expanded item, moves focus to the first child</li><li>If focus is on an end item, nothing happens</li></ul> |
 |   <kbd class="key">Arrow Left</kbd> + RTL off </br> <kbd class="key">Arrow Right</kbd> RTL on | <ul><li>If focus is on an expanded item, collapses the item</li><li>If focus is on a collapsed item that has a parent, moves focus to its parent</li><li>If focus is on a root item, nothing happens</li></ul>       |
 |                                                                   <kbd class="key">Home</kbd> | Focuses the first item in the tree                                                                                                                                                                                   |
 |                                                                    <kbd class="key">End</kbd> | Focuses the last item in the tree                                                                                                                                                                                    |
-|                                                                     <kbd class="key">\*</kbd> | Expands all siblings that are at the same level as the focused item without moving focus.                                                                                                                            |
+|                                                                     <kbd class="key">\*</kbd> | Expands all siblings that are at the same level as the focused item without moving focus                                                                                                                             |
 
 Type-ahead is supported for single characters. When typing a character, focus moves to the next item with a label that starts with the typed character.
 
@@ -60,6 +64,11 @@ When a single-select tree receives focus:
 
 - If none of the items are selected when the tree receives focus, focus is set on the first item.
 - If an item is selected before the tree receives focus, focus is set on the selected item.
+
+|                         Keys | Description                                                  |
+| ---------------------------: | :----------------------------------------------------------- |
+| <kbd class="key">Space</kbd> | Selects the focused item.                                    |
+| <kbd class="key">Enter</kbd> | Selects the focused item if the item does not have children. |
 
 ### On multi-select trees
 

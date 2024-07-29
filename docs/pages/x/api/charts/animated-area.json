@@ -3,7 +3,8 @@
   "name": "AnimatedArea",
   "imports": [
     "import { AnimatedArea } from '@mui/x-charts/LineChart';",
-    "import { AnimatedArea } from '@mui/x-charts';"
+    "import { AnimatedArea } from '@mui/x-charts';",
+    "import { AnimatedArea } from '@mui/x-charts-pro';"
   ],
   "classes": [],
   "muiName": "MuiAnimatedArea",

@@ -3,7 +3,8 @@
   "name": "PieArc",
   "imports": [
     "import { PieArc } from '@mui/x-charts/PieChart';",
-    "import { PieArc } from '@mui/x-charts';"
+    "import { PieArc } from '@mui/x-charts';",
+    "import { PieArc } from '@mui/x-charts-pro';"
   ],
   "classes": [
     {

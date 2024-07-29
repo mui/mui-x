@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { interpolateString } from 'd3-interpolate';
+import { interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
 import { useSpring, to } from '@react-spring/web';
 
 function usePrevious<T>(value: T) {

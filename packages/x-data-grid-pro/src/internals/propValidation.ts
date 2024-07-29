@@ -16,6 +16,7 @@ export const propValidatorsDataGridPro: PropValidator<DataGridProProcessedProps>
   (props) =>
     (props.treeData &&
       props.filterMode === 'server' &&
+      !props.unstable_dataSource &&
       'MUI X: The `filterMode="server"` prop is not available when the `treeData` is enabled.') ||
     undefined,
   (props) =>

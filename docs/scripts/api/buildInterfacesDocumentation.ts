@@ -2,7 +2,7 @@ import * as ts from 'typescript';
 import { EOL } from 'os';
 import kebabCase from 'lodash/kebabCase';
 import path from 'path';
-import { renderMarkdown } from '@mui/monorepo/packages/markdown';
+import { renderMarkdown } from '@mui/internal-markdown';
 import {
   getSymbolDescription,
   getSymbolJSDocTags,
@@ -103,11 +103,9 @@ const parseInterfaceSymbol = async (
   };
 
   const properties: Record<string, ParsedProperty> = {};
-  // eslint-disable-next-line no-restricted-syntax
   for (const { type, project } of projectInterfaces) {
     const propertiesOnProject = type.getProperties();
 
-    // eslint-disable-next-line no-restricted-syntax
     for (const propertySymbol of propertiesOnProject) {
       if (properties[propertySymbol.name]) {
         properties[propertySymbol.name].projects.push(project.name);
@@ -281,7 +279,6 @@ export async function buildInterfacesDocumentationPage(
     documentedInterfaces.set(interfaceName, packagesWithThisInterface);
   });
 
-  // eslint-disable-next-line no-restricted-syntax
   for (const [interfaceName, packagesWithThisInterface] of Array.from(
     documentedInterfaces.entries(),
   )) {

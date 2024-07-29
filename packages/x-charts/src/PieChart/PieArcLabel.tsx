@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { animated, SpringValue, to } from '@react-spring/web';
-import { arc as d3Arc } from 'd3-shape';
+import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
@@ -54,10 +54,11 @@ const PieArcLabelRoot = styled(animated.text, {
   fill: (theme.vars || theme).palette.text.primary,
   textAnchor: 'middle',
   dominantBaseline: 'middle',
+  pointerEvents: 'none',
 }));
 
 export type PieArcLabelProps = PieArcLabelOwnerState &
-  Omit<React.ComponentPropsWithoutRef<'text'>, 'id'> & {
+  Omit<React.SVGProps<SVGTextElement>, 'ref' | 'color' | 'id'> & {
     startAngle: SpringValue<number>;
     endAngle: SpringValue<number>;
     innerRadius: SpringValue<number>;
@@ -150,9 +151,10 @@ function PieArcLabel(props: PieArcLabelProps) {
 PieArcLabel.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
+  color: PropTypes.string.isRequired,
   formattedArcLabel: PropTypes.string,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   isFaded: PropTypes.bool.isRequired,

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import {
   TreeItem2,
   TreeItem2Label,
@@ -6,10 +7,8 @@ import {
 } from '@mui/x-tree-view/TreeItem2';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import {
-  UseTreeItem2ContentSlotOwnProps,
-  useTreeItem2Utils,
-} from '@mui/x-tree-view';
+import { UseTreeItem2ContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem2';
+import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
 
 interface CustomLabelProps {
   children: string;
@@ -133,6 +132,16 @@ const DEFAULT_MUI_X_PRODUCTS: TreeViewBaseItem[] = [
       { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
     ],
   },
+  {
+    id: 'charts',
+    label: 'Charts',
+    children: [{ id: 'charts-community', label: '@mui/x-charts' }],
+  },
+  {
+    id: 'tree-view',
+    label: 'Tree View',
+    children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }],
+  },
 ];
 
 const DEFAULT_EXPANDED_ITEMS = ['pickers'];
@@ -162,14 +171,15 @@ export default function LabelSlots() {
   );
 
   return (
-    <TreeItemContext.Provider value={context}>
-      <RichTreeView
-        items={products}
-        aria-label="customized"
-        defaultExpandedItems={DEFAULT_EXPANDED_ITEMS}
-        sx={{ overflowX: 'hidden', minHeight: 224, flexGrow: 1, maxWidth: 300 }}
-        slots={{ item: CustomTreeItem }}
-      />
-    </TreeItemContext.Provider>
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
+      <TreeItemContext.Provider value={context}>
+        <RichTreeView
+          items={products}
+          aria-label="customized"
+          defaultExpandedItems={DEFAULT_EXPANDED_ITEMS}
+          slots={{ item: CustomTreeItem }}
+        />
+      </TreeItemContext.Provider>
+    </Box>
   );
 }

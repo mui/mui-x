@@ -14,24 +14,42 @@ import {
 import { GridProSlotsComponent } from '../models';
 import { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridProDefaultSlotsComponents';
 
+interface GetDataGridProPropsDefaultValues extends DataGridProProps {}
+
+type DataGridProForcedProps = { [key in keyof DataGridProProps]?: DataGridProProcessedProps[key] };
+type GetDataGridProForcedProps = (
+  themedProps: GetDataGridProPropsDefaultValues,
+) => DataGridProForcedProps;
+
+const getDataGridProForcedProps: GetDataGridProForcedProps = (themedProps) => ({
+  signature: 'DataGridPro',
+  ...(themedProps.unstable_dataSource
+    ? {
+        filterMode: 'server',
+        sortingMode: 'server',
+        paginationMode: 'server',
+      }
+    : {}),
+});
+
 /**
  * The default values of `DataGridProPropsWithDefaultValue` to inject in the props of DataGridPro.
  */
 export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValue = {
   ...DATA_GRID_PROPS_DEFAULT_VALUES,
-  scrollEndThreshold: 80,
-  treeData: false,
-  defaultGroupingExpansionDepth: 0,
   autosizeOnMount: false,
+  defaultGroupingExpansionDepth: 0,
   disableAutosize: false,
-  disableColumnPinning: false,
-  keepColumnPositionIfDraggedOutside: false,
   disableChildrenFiltering: false,
   disableChildrenSorting: false,
-  rowReordering: false,
-  rowsLoadingMode: 'client',
+  disableColumnPinning: false,
   getDetailPanelHeight: () => 500,
   headerFilters: false,
+  keepColumnPositionIfDraggedOutside: false,
+  rowReordering: false,
+  rowsLoadingMode: 'client',
+  scrollEndThreshold: 80,
+  treeData: false,
 };
 
 const defaultSlots = DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS;
@@ -65,7 +83,7 @@ export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGr
       ...themedProps,
       localeText,
       slots,
-      signature: 'DataGridPro',
+      ...getDataGridProForcedProps(themedProps),
     }),
     [themedProps, localeText, slots],
   );

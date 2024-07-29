@@ -19,8 +19,8 @@ export default function BiaxialLineChart() {
       width={500}
       height={300}
       series={[
-        { data: pData, label: 'pv', yAxisKey: 'leftAxisId' },
-        { data: uData, label: 'uv', yAxisKey: 'rightAxisId' },
+        { data: pData, label: 'pv', yAxisId: 'leftAxisId' },
+        { data: uData, label: 'uv', yAxisId: 'rightAxisId' },
       ]}
       xAxis={[{ scaleType: 'point', data: xLabels }]}
       yAxis={[{ id: 'leftAxisId' }, { id: 'rightAxisId' }]}

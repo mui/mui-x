@@ -134,8 +134,9 @@
     }
   ],
   "spread": true,
-  "themeDefaultProps": null,
+  "themeDefaultProps": true,
   "muiName": "MuiTimeField",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/TimeField/TimeField.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li>\n<li><a href=\"/x/react-date-pickers/time-field/\">Time Field</a></li></ul>",

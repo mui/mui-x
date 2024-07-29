@@ -116,6 +116,12 @@
       "required": true,
       "isProPlan": true
     },
+    "getFilterState": {
+      "type": {
+        "description": "(filterModel: GridFilterModel) =&gt; GridStateCommunity['filter']"
+      },
+      "required": true
+    },
     "getLocaleText": {
       "type": {
         "description": "&lt;T extends GridTranslationKeys&gt;(key: T) =&gt; GridLocaleText[T]"
@@ -344,6 +350,7 @@
       },
       "required": true
     },
+    "setLoading": { "type": { "description": "(loading: boolean) =&gt; void" }, "required": true },
     "setPage": { "type": { "description": "(page: number) =&gt; void" }, "required": true },
     "setPageSize": { "type": { "description": "(pageSize: number) =&gt; void" }, "required": true },
     "setPaginationMeta": {
@@ -388,7 +395,7 @@
     },
     "setRows": { "type": { "description": "(rows: GridRowModel[]) =&gt; void" }, "required": true },
     "setRowSelectionModel": {
-      "type": { "description": "(rowIds: GridRowId[]) =&gt; void" },
+      "type": { "description": "(rowIds: readonly GridRowId[]) =&gt; void" },
       "required": true
     },
     "setSortModel": {
@@ -457,6 +464,11 @@
     },
     "unpinColumn": {
       "type": { "description": "(field: string) =&gt; void" },
+      "required": true,
+      "isProPlan": true
+    },
+    "unstable_dataSource": {
+      "type": { "description": "GridDataSourceApiBase" },
       "required": true,
       "isProPlan": true
     },

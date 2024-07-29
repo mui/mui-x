@@ -79,6 +79,14 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 
 {{"demo": "LocalizationLuxon.js"}}
 
+:::warning
+`AdapterLuxon` does not support `Settings.throwOnInvalid = true` [setting](https://moment.github.io/luxon/api-docs/index.html#settingsthrowoninvalid).
+
+👍 Upvote [issue #11853](https://github.com/mui/mui-x/issues/11853) if you need support for it.
+
+Don't hesitate to leave feedback on how you would like the data entry to behave.
+:::
+
 ### With `moment`
 
 For `moment`, import the locale and then pass its name to `LocalizationProvider`:

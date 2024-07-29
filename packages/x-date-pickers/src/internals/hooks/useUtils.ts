@@ -50,9 +50,6 @@ export const useUtils = <TDate extends PickerValidDate>() => useLocalizationCont
 export const useDefaultDates = <TDate extends PickerValidDate>() =>
   useLocalizationContext<TDate>().defaultDates;
 
-export const useLocaleText = <TDate extends PickerValidDate>() =>
-  useLocalizationContext<TDate>().localeText;
-
 export const useNow = <TDate extends PickerValidDate>(timezone: PickersTimezone): TDate => {
   const utils = useUtils<TDate>();
 

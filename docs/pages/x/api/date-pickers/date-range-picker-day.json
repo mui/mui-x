@@ -161,7 +161,7 @@
       "isGlobal": false
     }
   ],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiDateRangePickerDay",
   "forwardsRefTo": "HTMLButtonElement",

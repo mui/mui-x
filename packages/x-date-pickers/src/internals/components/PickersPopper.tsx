@@ -402,7 +402,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
     }
   };
 
-  const Transition = slots?.desktopTransition ?? reduceAnimations ? Fade : Grow;
+  const Transition = (slots?.desktopTransition ?? reduceAnimations) ? Fade : Grow;
   const FocusTrap = slots?.desktopTrapFocus ?? BaseFocusTrap;
 
   const Paper = slots?.desktopPaper ?? PickersPopperPaper;

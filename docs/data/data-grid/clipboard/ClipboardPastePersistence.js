@@ -186,19 +186,21 @@ const initialRows = [
   },
 ];
 
+const visibleFields = [
+  'commodity',
+  'traderName',
+  'traderEmail',
+  'quantity',
+  'filledQuantity',
+];
+
 const useSessionStorageData = () => {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 0,
     maxColumns: 7,
     editable: true,
-    visibleFields: [
-      'commodity',
-      'traderName',
-      'traderEmail',
-      'quantity',
-      'filledQuantity',
-    ],
+    visibleFields,
   });
 
   const [rows] = React.useState(() => {

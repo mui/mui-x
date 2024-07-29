@@ -84,7 +84,7 @@ SingleInputDateTimeRangeField.fieldType = 'single-input';
 SingleInputDateTimeRangeField.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
@@ -213,6 +213,7 @@ SingleInputDateTimeRangeField.propTypes = {
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
@@ -226,6 +227,7 @@ SingleInputDateTimeRangeField.propTypes = {
   maxTime: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**

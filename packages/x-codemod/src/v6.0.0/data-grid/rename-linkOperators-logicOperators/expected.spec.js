@@ -38,7 +38,7 @@ function App ({ apiRef, initialState }) {
   const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(1);
   const localeText = apiRef.current.getLocaleText('filterPanelLogicOperator');
   return (
-    <React.Fragment>
+    (<React.Fragment>
       <DataGrid
         className={classes.root}
         initialState={{
@@ -68,7 +68,7 @@ function App ({ apiRef, initialState }) {
         }}
       />
       <DataGridPremium initialState={initialState} />
-    </React.Fragment>
+    </React.Fragment>)
   );
 }
 

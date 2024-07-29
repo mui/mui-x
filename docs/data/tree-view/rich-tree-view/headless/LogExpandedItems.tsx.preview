@@ -1,14 +1,14 @@
-<TreeView
-  aria-label="file system navigator"
-  sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
-  items={ITEMS}
-  areLogsEnabled
-  logMessage={(message) =>
-    setLogs((prev) =>
-      prev[prev.length - 1] === message ? prev : [...prev, message],
-    )
-  }
-/>
+<Box sx={{ minHeight: 352, minWidth: 250 }}>
+  <TreeView
+    items={MUI_X_PRODUCTS}
+    areLogsEnabled
+    logMessage={(message) =>
+      setLogs((prev) =>
+        prev[prev.length - 1] === message ? prev : [...prev, message],
+      )
+    }
+  />
+</Box>
 <Stack spacing={1}>
   {logs.map((log, index) => (
     <Typography key={index}>{log}</Typography>

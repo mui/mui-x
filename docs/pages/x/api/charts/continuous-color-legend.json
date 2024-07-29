@@ -1,0 +1,61 @@
+{
+  "props": {
+    "align": {
+      "type": {
+        "name": "enum",
+        "description": "'end'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start'"
+      },
+      "default": "'middle'"
+    },
+    "axisDirection": {
+      "type": { "name": "enum", "description": "'x'<br>&#124;&nbsp;'y'<br>&#124;&nbsp;'z'" },
+      "default": "'z'"
+    },
+    "axisId": {
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "default": "The first axis item."
+    },
+    "direction": { "type": { "name": "enum", "description": "'column'<br>&#124;&nbsp;'row'" } },
+    "id": { "type": { "name": "string" }, "default": "auto-generated id" },
+    "labelStyle": { "type": { "name": "object" }, "default": "theme.typography.subtitle1" },
+    "length": {
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "default": "'50%'"
+    },
+    "maxLabel": {
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" },
+      "default": "({ formattedValue }) => formattedValue"
+    },
+    "minLabel": {
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" },
+      "default": "({ formattedValue }) => formattedValue"
+    },
+    "position": {
+      "type": {
+        "name": "shape",
+        "description": "{ horizontal: 'left'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'right', vertical: 'bottom'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'top' }"
+      }
+    },
+    "scaleType": {
+      "type": {
+        "name": "enum",
+        "description": "'linear'<br>&#124;&nbsp;'log'<br>&#124;&nbsp;'pow'<br>&#124;&nbsp;'sqrt'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'utc'"
+      },
+      "default": "'linear'"
+    },
+    "spacing": { "type": { "name": "number" }, "default": "4" },
+    "thickness": { "type": { "name": "number" }, "default": "5" }
+  },
+  "name": "ContinuousColorLegend",
+  "imports": [
+    "import { ContinuousColorLegend } from '@mui/x-charts/ChartsLegend';",
+    "import { ContinuousColorLegend } from '@mui/x-charts';",
+    "import { ContinuousColorLegend } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiContinuousColorLegend",
+  "filename": "/packages/x-charts/src/ChartsLegend/ContinuousColorLegend.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/legend/\">Charts - Legend</a></li></ul>",
+  "cssComponent": false
+}

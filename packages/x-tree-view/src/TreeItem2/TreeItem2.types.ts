@@ -3,6 +3,7 @@ import { SlotComponentProps } from '@mui/base/utils';
 import { UseTreeItem2Parameters, UseTreeItem2Status } from '../useTreeItem2';
 import { TreeItemClasses } from '../TreeItem';
 import { TreeItem2IconSlotProps, TreeItem2IconSlots } from '../TreeItem2Icon';
+import { MuiCancellableEventHandler } from '../internals/models/MuiCancellableEvent';
 
 export interface TreeItem2Slots extends TreeItem2IconSlots {
   /**
@@ -27,6 +28,11 @@ export interface TreeItem2Slots extends TreeItem2IconSlots {
    */
   iconContainer?: React.ElementType;
   /**
+   * The component that renders the item checkbox for selection.
+   * @default TreeItem2Checkbox
+   */
+  checkbox?: React.ElementType;
+  /**
    * The component that renders the item label.
    * @default TreeItem2Label
    */
@@ -38,6 +44,7 @@ export interface TreeItem2SlotProps extends TreeItem2IconSlotProps {
   content?: SlotComponentProps<'div', {}, {}>;
   groupTransition?: SlotComponentProps<'div', {}, {}>;
   iconContainer?: SlotComponentProps<'div', {}, {}>;
+  checkbox?: SlotComponentProps<'button', {}, {}>;
   label?: SlotComponentProps<'div', {}, {}>;
 }
 
@@ -61,9 +68,17 @@ export interface TreeItem2Props
   slotProps?: TreeItem2SlotProps;
   /**
    * This prop isn't supported.
-   * Use the `onItemFocus` callback on the tree if you need to monitor a item's focus.
+   * Use the `onItemFocus` callback on the tree if you need to monitor an item's focus.
    */
   onFocus?: null;
+  /**
+   * Callback fired when the item root is blurred.
+   */
+  onBlur?: MuiCancellableEventHandler<React.FocusEvent<HTMLLIElement>>;
+  /**
+   * Callback fired when a key is pressed on the keyboard and the tree is in focus.
+   */
+  onKeyDown?: MuiCancellableEventHandler<React.KeyboardEvent<HTMLLIElement>>;
 }
 
 export interface TreeItem2OwnerState extends Omit<TreeItem2Props, 'disabled'>, UseTreeItem2Status {}

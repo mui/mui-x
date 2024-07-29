@@ -1,6 +1,6 @@
 // @ignore - do not document.
 import * as React from 'react';
-import { getPercentageValue } from '../internals/utils';
+import { getPercentageValue } from '../internals/getPercentageValue';
 import { getArcRatios, getAvailableRadius } from './utils';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 

@@ -1,52 +1,92 @@
 import * as React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
+import Stack from '@mui/material/Stack';
+import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Slider from '@mui/material/Slider';
+import Typography from '@mui/material/Typography';
 
 export default function BorderRadius() {
+  const [layout, setLayout] = React.useState<'horizontal' | 'vertical'>('vertical');
+  const [radius, setRadius] = React.useState(10);
+
   return (
-    <div style={{ width: '100%' }}>
+    <Stack direction="column" spacing={1} sx={{ width: '100%', maxWidth: 600 }}>
+      <Stack direction="row" spacing={4}>
+        <Stack direction="column" spacing={1} flex={1}>
+          <Typography gutterBottom>Border Radius</Typography>
+          <Slider
+            value={radius}
+            onChange={(e, v) => setRadius(v as number)}
+            valueLabelDisplay="auto"
+            min={0}
+            max={50}
+            sx={{ mt: 2 }}
+          />
+        </Stack>
+        <TextField
+          select
+          sx={{ minWidth: 150 }}
+          label="layout"
+          value={layout}
+          onChange={(event) =>
+            setLayout(event.target.value as 'horizontal' | 'vertical')
+          }
+        >
+          <MenuItem value="horizontal">Horizontal</MenuItem>
+          <MenuItem value="vertical">Vertical</MenuItem>
+        </TextField>
+      </Stack>
       <BarChart
-        dataset={dataset}
-        {...chartSetting}
-        slotProps={{
-          bar: {
-            clipPath: `inset(0px round 10px 10px 0px 0px)`,
-          },
-        }}
+        series={[
+          { dataKey: 'high', label: 'High', layout, stack: 'stack' },
+          { dataKey: 'low', label: 'Low', layout, stack: 'stack' },
+        ]}
+        {...(layout === 'vertical' ? chartSettingsV : chartSettingsH)}
+        borderRadius={radius}
       />
-    </div>
+      <HighlightedCode
+        code={[`<BarChart`, `  /* ... */`, `  borderRadius={${radius}}`, `/>`].join(
+          '\n',
+        )}
+        language="jsx"
+        copyButtonHidden
+      />
+    </Stack>
   );
 }
 
 const dataset = [
-  [59, 57, 86, 21, 'Jan'],
-  [50, 52, 78, 28, 'Fev'],
-  [47, 53, 106, 41, 'Mar'],
-  [54, 56, 92, 73, 'Apr'],
-  [57, 69, 92, 99, 'May'],
-  [60, 63, 103, 144, 'June'],
-  [59, 60, 105, 319, 'July'],
-  [65, 60, 106, 249, 'Aug'],
-  [51, 51, 95, 131, 'Sept'],
-  [60, 65, 97, 55, 'Oct'],
-  [67, 64, 76, 48, 'Nov'],
-  [61, 70, 103, 25, 'Dec'],
-].map(([london, paris, newYork, seoul, month]) => ({
-  london,
-  paris,
-  newYork,
-  seoul,
-  month,
+  [3, -7, 'First'],
+  [0, -5, 'Second'],
+  [10, 0, 'Third'],
+  [9, 6, 'Fourth'],
+].map(([high, low, order]) => ({
+  high,
+  low,
+  order,
 }));
-
-const valueFormatter = (value: number | null) => `${value}mm`;
-
-const chartSetting = {
-  series: [{ dataKey: 'seoul', label: 'Seoul rainfall', valueFormatter }],
+const chartSettingsH: Partial<BarChartProps> = {
+  dataset,
   height: 300,
+  yAxis: [{ scaleType: 'band', dataKey: 'order' }],
   sx: {
     [`& .${axisClasses.directionY} .${axisClasses.label}`]: {
       transform: 'translateX(-10px)',
     },
   },
+  slotProps: {
+    legend: {
+      direction: 'row',
+      position: { vertical: 'bottom', horizontal: 'middle' },
+      padding: -5,
+    },
+  },
+};
+const chartSettingsV: Partial<BarChartProps> = {
+  ...chartSettingsH,
+  xAxis: [{ scaleType: 'band', dataKey: 'order' }],
+  yAxis: undefined,
 };

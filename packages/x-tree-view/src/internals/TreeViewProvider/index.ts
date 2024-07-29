@@ -1,2 +1,6 @@
 export { TreeViewProvider } from './TreeViewProvider';
-export type { TreeViewProviderProps, TreeViewContextValue } from './TreeViewProvider.types';
+export type {
+  TreeViewProviderProps,
+  TreeViewContextValue,
+  TreeViewItemPluginsRunner,
+} from './TreeViewProvider.types';

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
 import { AreaPlot, AreaPlotProps, AreaPlotSlotProps, AreaPlotSlots } from './AreaPlot';
 import { LinePlot, LinePlotProps, LinePlotSlotProps, LinePlotSlots } from './LinePlot';
@@ -11,7 +10,6 @@ import { MarkPlot, MarkPlotProps, MarkPlotSlotProps, MarkPlotSlots } from './Mar
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
 import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';
-import { DEFAULT_X_AXIS_KEY } from '../constants';
 import {
   ChartsTooltip,
   ChartsTooltipProps,
@@ -42,7 +40,8 @@ import {
   ChartsOverlayProps,
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
-} from '../ChartsOverlay/ChartsOverlay';
+} from '../ChartsOverlay';
+import { useLineChartProps } from './useLineChartProps';
 
 export interface LineChartSlots
   extends ChartsAxisSlots,
@@ -51,7 +50,7 @@ export interface LineChartSlots
     MarkPlotSlots,
     LineHighlightPlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots,
+    ChartsTooltipSlots<'line'>,
     ChartsOverlaySlots {}
 export interface LineChartSlotProps
   extends ChartsAxisSlotProps,
@@ -60,11 +59,11 @@ export interface LineChartSlotProps
     MarkPlotSlotProps,
     LineHighlightPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps,
+    ChartsTooltipSlotProps<'line'>,
     ChartsOverlaySlotProps {}
 
 export interface LineChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series'>,
+  extends Omit<ResponsiveChartContainerProps, 'series' | 'plugins' | 'zAxis'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     ChartsOnAxisClickHandlerProps {
@@ -78,7 +77,7 @@ export interface LineChartProps
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    * @default { trigger: 'item' }
    */
-  tooltip?: ChartsTooltipProps;
+  tooltip?: ChartsTooltipProps<'line'>;
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -138,108 +137,42 @@ export interface LineChartProps
  */
 const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref) {
   const {
-    xAxis,
-    yAxis,
-    series,
-    width,
-    height,
-    margin,
-    colors,
-    dataset,
-    sx,
-    tooltip,
-    onAxisClick,
-    onAreaClick,
-    onLineClick,
-    onMarkClick,
-    axisHighlight = { x: 'line' },
-    disableLineItemHighlight,
-    legend,
-    grid,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
+    chartContainerProps,
+    axisClickHandlerProps,
+    gridProps,
+    clipPathProps,
+    clipPathGroupProps,
+    areaPlotProps,
+    linePlotProps,
+    markPlotProps,
+    overlayProps,
+    chartsAxisProps,
+    axisHighlightProps,
+    lineHighlightPlotProps,
+    legendProps,
+    tooltipProps,
     children,
-    slots,
-    slotProps,
-    skipAnimation,
-    loading,
-  } = props;
-
-  const id = useId();
-  const clipPathId = `${id}-clip-path`;
+  } = useLineChartProps(props);
 
   return (
-    <ResponsiveChartContainer
-      ref={ref}
-      series={series.map((s) => ({
-        disableHighlight: !!disableLineItemHighlight,
-        type: 'line',
-        ...s,
-      }))}
-      width={width}
-      height={height}
-      margin={margin}
-      xAxis={
-        xAxis ?? [
-          {
-            id: DEFAULT_X_AXIS_KEY,
-            scaleType: 'point',
-            data: Array.from(
-              { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
-              (_, index) => index,
-            ),
-          },
-        ]
-      }
-      yAxis={yAxis}
-      colors={colors}
-      dataset={dataset}
-      sx={sx}
-      disableAxisListener={
-        tooltip?.trigger !== 'axis' &&
-        axisHighlight?.x === 'none' &&
-        axisHighlight?.y === 'none' &&
-        !onAxisClick
-      }
-    >
-      {onAxisClick && <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />}
-      {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}
-      <g clipPath={`url(#${clipPathId})`}>
-        <AreaPlot
-          slots={slots}
-          slotProps={slotProps}
-          onItemClick={onAreaClick}
-          skipAnimation={skipAnimation}
-        />
-        <LinePlot
-          slots={slots}
-          slotProps={slotProps}
-          onItemClick={onLineClick}
-          skipAnimation={skipAnimation}
-        />
-        <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
+    <ResponsiveChartContainer ref={ref} {...chartContainerProps}>
+      {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
+      {props.grid && <ChartsGrid {...gridProps} />}
+      <g {...clipPathGroupProps}>
+        <AreaPlot {...areaPlotProps} />
+        <LinePlot {...linePlotProps} />
+        <ChartsOverlay {...overlayProps} />
+        <ChartsAxisHighlight {...axisHighlightProps} />
       </g>
-      <ChartsAxis
-        topAxis={topAxis}
-        leftAxis={leftAxis}
-        rightAxis={rightAxis}
-        bottomAxis={bottomAxis}
-        slots={slots}
-        slotProps={slotProps}
-      />
-      <ChartsAxisHighlight {...axisHighlight} />
-      <MarkPlot
-        slots={slots}
-        slotProps={slotProps}
-        onItemClick={onMarkClick}
-        skipAnimation={skipAnimation}
-      />
-      <LineHighlightPlot slots={slots} slotProps={slotProps} />
-      <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
-      {!loading && <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />}
-      <ChartsClipPath id={clipPathId} />
+      <ChartsAxis {...chartsAxisProps} />
+      <g data-drawing-container>
+        {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
+        <MarkPlot {...markPlotProps} />
+      </g>
+      <LineHighlightPlot {...lineHighlightPlotProps} />
+      <ChartsLegend {...legendProps} />
+      {!props.loading && <ChartsTooltip {...tooltipProps} />}
+      <ChartsClipPath {...clipPathProps} />
       {children}
     </ResponsiveChartContainer>
   );
@@ -248,7 +181,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
 LineChart.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The configuration of axes highlight.
@@ -299,6 +232,13 @@ LineChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * The item currently highlighted. Turns highlighting into a controlled prop.
+   */
+  highlightedItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  }),
+  /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default yAxisIds[0] The id of the first provided axis
@@ -320,6 +260,7 @@ LineChart.propTypes = {
   }),
   /**
    * If `true`, a loading overlay is displayed.
+   * @default false
    */
   loading: PropTypes.bool,
   /**
@@ -345,6 +286,12 @@ LineChart.propTypes = {
    * @param {null | AxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
+  /**
+   * The callback fired when the highlighted item changes.
+   *
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   */
+  onHighlightChange: PropTypes.func,
   /**
    * Callback fired when a line element is clicked.
    */
@@ -421,9 +368,17 @@ LineChart.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
         PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
@@ -440,15 +395,6 @@ LineChart.propTypes = {
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
         }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
-        }),
       ]),
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -462,7 +408,7 @@ LineChart.propTypes = {
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      position: PropTypes.oneOf(['bottom', 'top']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
@@ -492,9 +438,17 @@ LineChart.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
         PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
@@ -511,15 +465,6 @@ LineChart.propTypes = {
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
         }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
-        }),
       ]),
       data: PropTypes.array,
       dataKey: PropTypes.string,
@@ -533,7 +478,7 @@ LineChart.propTypes = {
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      position: PropTypes.oneOf(['left', 'right']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,

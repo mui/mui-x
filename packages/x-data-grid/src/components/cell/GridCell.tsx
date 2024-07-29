@@ -146,7 +146,7 @@ let warnedOnce = false;
 
 // TODO(v7): Removing the wrapper will break the docs performance visualization demo.
 
-const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) => {
+const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCell(props, ref) {
   const {
     column,
     rowId,
@@ -484,7 +484,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
 GridCell.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   align: PropTypes.oneOf(['center', 'left', 'right']).isRequired,
   className: PropTypes.string,

@@ -21,13 +21,23 @@ const MUI_X_PRODUCTS = [
       { internalId: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
     ],
   },
+  {
+    internalId: 'charts',
+    label: 'Charts',
+    children: [{ internalId: 'charts-community', label: '@mui/x-charts' }],
+  },
+  {
+    internalId: 'tree-view',
+    label: 'Tree View',
+    children: [{ internalId: 'tree-view-community', label: '@mui/x-tree-view' }],
+  },
 ];
 
 const getItemId = (item) => item.internalId;
 
 export default function GetItemId() {
   return (
-    <Box sx={{ minHeight: 200, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
       <RichTreeView items={MUI_X_PRODUCTS} getItemId={getItemId} />
     </Box>
   );

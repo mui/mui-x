@@ -39,10 +39,10 @@ const fiFIGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Lataa Excel-muodossa',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: 'Hae',
+  columnsManagementNoColumns: 'Ei sarakkeita näytettäväksi',
+  columnsManagementShowHideAllText: 'Näytä/Piilota kaikki',
+  columnsManagementReset: 'Palauta',
 
   // Filter panel text
   filterPanelAddFilter: 'Lisää suodatin',

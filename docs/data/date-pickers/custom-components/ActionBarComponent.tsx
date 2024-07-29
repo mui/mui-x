@@ -9,11 +9,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
-import { useLocaleText } from '@mui/x-date-pickers/internals';
+import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
 
 function CustomActionBar(props: PickersActionBarProps) {
   const { onAccept, onClear, onCancel, onSetToday, actions, className } = props;
-  const localeText = useLocaleText();
+  const translations = usePickersTranslations();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
   const id = useId();
@@ -34,7 +34,7 @@ function CustomActionBar(props: PickersActionBarProps) {
             }}
             key={actionType}
           >
-            {localeText.clearButtonLabel}
+            {translations.clearButtonLabel}
           </MenuItem>
         );
       case 'cancel':
@@ -46,7 +46,7 @@ function CustomActionBar(props: PickersActionBarProps) {
             }}
             key={actionType}
           >
-            {localeText.cancelButtonLabel}
+            {translations.cancelButtonLabel}
           </MenuItem>
         );
       case 'accept':
@@ -58,7 +58,7 @@ function CustomActionBar(props: PickersActionBarProps) {
             }}
             key={actionType}
           >
-            {localeText.okButtonLabel}
+            {translations.okButtonLabel}
           </MenuItem>
         );
       case 'today':
@@ -71,7 +71,7 @@ function CustomActionBar(props: PickersActionBarProps) {
             }}
             key={actionType}
           >
-            {localeText.todayButtonLabel}
+            {translations.todayButtonLabel}
           </MenuItem>
         );
       default:

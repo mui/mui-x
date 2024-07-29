@@ -3,7 +3,7 @@
 import childProcess from 'child_process';
 import { promises as fs } from 'fs';
 import path from 'path';
-import yargs, { CommandModule } from 'yargs';
+import yargs, { ArgumentsCamelCase, CommandModule } from 'yargs';
 
 const jscodeshiftPackage = require('jscodeshift/package.json');
 
@@ -72,7 +72,7 @@ Not all use cases are covered by codemods. In some scenarios, like props spreadi
 For example, if a codemod tries to rename a prop, but this prop is hidden with the spread operator, it won't be transformed as expected.
 <DatePicker {...pickerProps} />
   
-After running the codemods, make sure to test your application and that you don't have any console errors.
+After running the codemods, make sure to test your application and that you don't have any formatting or console errors.
 `);
   const jscodeshiftProcess = childProcess.spawnSync('node', args, { stdio: 'inherit' });
 
@@ -86,7 +86,7 @@ interface HandlerArgv extends Flags {
   paths: string[];
 }
 
-function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
+function run(argv: ArgumentsCamelCase<HandlerArgv>) {
   const { codemod, paths, _: other, jscodeshift, parser } = argv;
 
   return runTransform(
@@ -97,7 +97,7 @@ function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
   );
 }
 
-yargs
+yargs(process.argv.slice(2))
   .command({
     command: '$0 <codemod> <paths...>',
     describe: 'Applies a `@mui/x-codemod` to the specified paths',

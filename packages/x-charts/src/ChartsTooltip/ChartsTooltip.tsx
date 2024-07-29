@@ -28,7 +28,7 @@ export type PopperProps = BasePopperProps & {
   sx?: SxProps<Theme>;
 };
 
-export interface ChartsTooltipSlots {
+export interface ChartsTooltipSlots<T extends ChartSeriesType> {
   /**
    * Custom component for the tooltip popper.
    * @default ChartsTooltipRoot
@@ -43,16 +43,16 @@ export interface ChartsTooltipSlots {
    * Custom component for displaying tooltip content when triggered by item event.
    * @default DefaultChartsItemTooltipContent
    */
-  itemContent?: React.ElementType<ChartsItemContentProps>;
+  itemContent?: React.ElementType<ChartsItemContentProps<T>>;
 }
 
-export interface ChartsTooltipSlotProps {
+export interface ChartsTooltipSlotProps<T extends ChartSeriesType> {
   popper?: Partial<PopperProps>;
   axisContent?: Partial<ChartsAxisContentProps>;
-  itemContent?: Partial<ChartsItemContentProps>;
+  itemContent?: Partial<ChartsItemContentProps<T>>;
 }
 
-export type ChartsTooltipProps = {
+export interface ChartsTooltipProps<T extends ChartSeriesType> {
   /**
    * Select the kind of tooltip to display
    * - 'item': Shows data about the item below the mouse.
@@ -79,15 +79,17 @@ export type ChartsTooltipProps = {
    * Overridable component slots.
    * @default {}
    */
-  slots?: ChartsTooltipSlots;
+  slots?: ChartsTooltipSlots<T>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: ChartsTooltipSlotProps;
-};
+  slotProps?: ChartsTooltipSlotProps<T>;
+}
 
-const useUtilityClasses = (ownerState: { classes: ChartsTooltipProps['classes'] }) => {
+const useUtilityClasses = <T extends ChartSeriesType>(ownerState: {
+  classes: ChartsTooltipProps<T>['classes'];
+}) => {
   const { classes } = ownerState;
 
   const slots = {
@@ -122,7 +124,7 @@ const ChartsTooltipRoot = styled(Popper, {
  *
  * - [ChartsTooltip API](https://mui.com/x/api/charts/charts-tool-tip/)
  */
-function ChartsTooltip(props: ChartsTooltipProps) {
+function ChartsTooltip<T extends ChartSeriesType>(props: ChartsTooltipProps<T>) {
   const themeProps = useThemeProps({
     props,
     name: 'MuiChartsTooltip',
@@ -146,8 +148,17 @@ function ChartsTooltip(props: ChartsTooltipProps) {
     externalSlotProps: slotProps?.popper,
     additionalProps: {
       open: popperOpen,
-      placement: 'right-start' as const,
+      placement:
+        mousePosition?.pointerType === 'mouse' ? ('right-start' as const) : ('top' as const),
       anchorEl: generateVirtualElement(mousePosition),
+      modifiers: [
+        {
+          name: 'offset',
+          options: {
+            offset: [0, mousePosition?.pointerType === 'touch' ? 40 - mousePosition.height : 0],
+          },
+        },
+      ],
     },
     ownerState: {},
   });
@@ -162,9 +173,9 @@ function ChartsTooltip(props: ChartsTooltipProps) {
         <PopperComponent {...popperProps}>
           {trigger === 'item' ? (
             <ChartsItemTooltipContent
-              itemData={displayedData as ItemInteractionData<ChartSeriesType>}
-              content={slots?.itemContent ?? itemContent}
-              contentProps={slotProps?.itemContent}
+              itemData={displayedData as ItemInteractionData<T>}
+              content={(slots?.itemContent ?? itemContent) as any}
+              contentProps={slotProps?.itemContent as Partial<ChartsItemContentProps<T>>}
               sx={{ mx: 2 }}
               classes={classes}
             />
@@ -186,7 +197,7 @@ function ChartsTooltip(props: ChartsTooltipProps) {
 ChartsTooltip.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Component to override the tooltip content when trigger is set to 'axis'.

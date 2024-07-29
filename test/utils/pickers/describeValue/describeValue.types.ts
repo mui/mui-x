@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, MuiRenderResult } from '@mui-internal/test-utils/createRenderer';
+import { createRenderer, MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 import {
   BuildFieldInteractionsResponse,
   FieldPressCharacter,

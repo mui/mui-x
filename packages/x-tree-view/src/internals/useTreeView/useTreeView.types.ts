@@ -3,34 +3,28 @@ import { EventHandlers } from '@mui/base/utils';
 import type { TreeViewContextValue } from '../TreeViewProvider';
 import {
   TreeViewAnyPluginSignature,
-  TreeViewPlugin,
-  ConvertPluginsIntoSignatures,
-  MergePluginsProperty,
+  ConvertSignaturesIntoPlugins,
+  MergeSignaturesProperty,
   TreeViewInstance,
   TreeViewPublicAPI,
+  TreeViewExperimentalFeatures,
 } from '../models';
 
-export type UseTreeViewParameters<
-  TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
-> = UseTreeViewBaseParameters<TPlugins> &
-  MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'params'>;
-
-export interface UseTreeViewBaseParameters<
-  TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
+export interface UseTreeViewParameters<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+  TProps extends Partial<UseTreeViewBaseProps<TSignatures>>,
 > {
-  apiRef:
-    | React.MutableRefObject<TreeViewPublicAPI<ConvertPluginsIntoSignatures<TPlugins>>>
-    | undefined;
+  plugins: ConvertSignaturesIntoPlugins<TSignatures>;
   rootRef?: React.Ref<HTMLUListElement> | undefined;
-  plugins: TPlugins;
-  slots: MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'slots'>;
-  slotProps: MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'slotProps'>;
+  props: TProps; // Omit<MergeSignaturesProperty<TSignatures, 'params'>, keyof UseTreeViewBaseParameters<any>>
 }
 
-export type UseTreeViewDefaultizedParameters<
-  TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
-> = UseTreeViewBaseParameters<TPlugins> &
-  MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'defaultizedParams'>;
+export interface UseTreeViewBaseProps<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
+  apiRef: React.MutableRefObject<TreeViewPublicAPI<TSignatures> | undefined> | undefined;
+  slots: MergeSignaturesProperty<TSignatures, 'slots'>;
+  slotProps: MergeSignaturesProperty<TSignatures, 'slotProps'>;
+  experimentalFeatures: TreeViewExperimentalFeatures<TSignatures>;
+}
 
 export interface UseTreeViewRootSlotProps
   extends Pick<
@@ -40,11 +34,11 @@ export interface UseTreeViewRootSlotProps
   ref: React.Ref<HTMLUListElement>;
 }
 
-export interface UseTreeViewReturnValue<TPlugins extends readonly TreeViewAnyPluginSignature[]> {
+export interface UseTreeViewReturnValue<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
   getRootProps: <TOther extends EventHandlers = {}>(
     otherHandlers?: TOther,
   ) => UseTreeViewRootSlotProps;
   rootRef: React.RefCallback<HTMLUListElement> | null;
-  contextValue: TreeViewContextValue<TPlugins>;
-  instance: TreeViewInstance<TPlugins>;
+  contextValue: TreeViewContextValue<TSignatures>;
+  instance: TreeViewInstance<TSignatures>;
 }

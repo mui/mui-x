@@ -1,5 +1,5 @@
 import { DrawingArea } from '../context/DrawingProvider';
-import { getPercentageValue } from '../internals/utils';
+import { getPercentageValue } from '../internals/getPercentageValue';
 import { DefaultizedPieSeriesType } from '../models/seriesType/pie';
 
 export function getPieCoordinates(

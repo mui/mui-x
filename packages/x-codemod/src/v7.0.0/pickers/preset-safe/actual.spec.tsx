@@ -1,7 +1,12 @@
 // @ts-nocheck
 import * as React from 'react';
-import { DatePicker, dayPickerClasses } from '@mui/x-date-pickers';
-import { DateRangePicker, DateRangePickerSlotsComponentsProps } from '@mui/x-date-pickers-pro';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { dayPickerClasses } from '@mui/x-date-pickers/DateCalendar';
+// prettier-ignore
+import {
+  DateRangePicker,
+  DateRangePickerSlotsComponentsProps,
+} from '@mui/x-date-pickers-pro/DateRangePicker';
 import TextField from '@mui/material/TextField';
 
 const className = dayPickerClasses.root;

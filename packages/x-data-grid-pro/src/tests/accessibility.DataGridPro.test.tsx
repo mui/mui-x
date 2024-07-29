@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import axe from 'axe-core';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-import { createRenderer } from '@mui-internal/test-utils';
+import { createRenderer } from '@mui/internal-test-utils';
 
 function logViolations(violations: any) {
   if (violations.length !== 0) {

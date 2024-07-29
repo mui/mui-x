@@ -3,13 +3,8 @@ import type { GridApiCommon } from '../../models/api/gridApiCommon';
 import { OutputSelector } from '../../utils/createSelector';
 import { useLazyRef } from './useLazyRef';
 import { useOnMount } from './useOnMount';
-import { buildWarning } from '../../utils/warning';
+import { warnOnce } from '../../internals/utils/warning';
 import { fastObjectShallowCompare } from '../../utils/fastObjectShallowCompare';
-
-const stateNotInitializedWarning = buildWarning([
-  'MUI X: `useGridSelector` has been called before the initialization of the state.',
-  'This hook can only be used inside the context of the grid.',
-]);
 
 function isOutputSelector<Api extends GridApiCommon, T>(
   selector: any,
@@ -39,7 +34,10 @@ export const useGridSelector = <Api extends GridApiCommon, T>(
 ) => {
   if (process.env.NODE_ENV !== 'production') {
     if (!apiRef.current.state) {
-      stateNotInitializedWarning();
+      warnOnce([
+        'MUI X: `useGridSelector` has been called before the initialization of the state.',
+        'This hook can only be used inside the context of the grid.',
+      ]);
     }
   }
 

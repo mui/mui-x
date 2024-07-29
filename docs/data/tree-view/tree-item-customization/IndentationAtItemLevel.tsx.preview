@@ -1,0 +1,5 @@
+<RichTreeView
+  items={MUI_X_PRODUCTS}
+  experimentalFeatures={{ indentationAtItemLevel: true }}
+  defaultExpandedItems={['grid']}
+/>

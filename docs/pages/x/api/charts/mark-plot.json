@@ -18,7 +18,8 @@
   "name": "MarkPlot",
   "imports": [
     "import { MarkPlot } from '@mui/x-charts/LineChart';",
-    "import { MarkPlot } from '@mui/x-charts';"
+    "import { MarkPlot } from '@mui/x-charts';",
+    "import { MarkPlot } from '@mui/x-charts-pro';"
   ],
   "slots": [{ "name": "mark", "description": "", "class": null }],
   "classes": [],

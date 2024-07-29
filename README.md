@@ -5,8 +5,24 @@
 
 <h1 align="center">MUI X</h1>
 
-MUI X is a collection of advanced React UI components for complex use cases. Use the native integration with [Material UI](https://github.com/mui/material-ui/) or extend your design system.
+[MUI X](https://mui.com/x/) is a collection of advanced React UI components for complex use cases. Use the native integration with [Material UI](https://github.com/mui/material-ui/) or extend your design system.
 They feature state-of-the-art functionality and complex UX workflows for data-rich applications and support a wide range of use cases.
+
+<div align="center">
+
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mui/mui-x/blob/HEAD/LICENSE)
+[![npm latest package](https://img.shields.io/npm/v/@mui/x-data-grid/latest.svg)](https://www.npmjs.com/package/@mui/x-data-grid)
+[![npm downloads](https://img.shields.io/npm/dm/@mui/x-data-grid.svg)](https://www.npmjs.com/package/@mui/x-data-grid)
+[![GitHub branch status](https://img.shields.io/github/checks-status/mui/mui-x/HEAD)](https://github.com/mui/mui-x/commits/HEAD/)
+[![Coverage status](https://img.shields.io/codecov/c/github/mui/mui-x.svg)](https://codecov.io/gh/mui/mui-x/)
+[![Follow on X](https://img.shields.io/twitter/follow/MUI_X_.svg?label=follow+MUI+X)](https://x.com/MUI_X_)
+[![Renovate status](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://github.com/mui/mui-x/issues/2081)
+[![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/mui/mui-x.svg)](https://isitmaintained.com/project/mui/mui-x 'Average time to resolve an issue')
+[![Open Collective backers and sponsors](https://img.shields.io/opencollective/all/mui-org)](https://opencollective.com/mui-org)
+
+<!-- [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8715/badge)](https://www.bestpractices.dev/projects/8715) -->
+
+</div>
 
 MUI X is **open core**—base components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
 See the [Licensing page](https://mui.com/x/introduction/licensing/) for details.

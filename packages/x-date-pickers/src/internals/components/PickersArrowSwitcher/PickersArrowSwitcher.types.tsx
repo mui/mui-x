@@ -38,6 +38,7 @@ export interface PickersArrowSwitcherProps
   isNextHidden?: boolean;
   onGoToNext: () => void;
   nextLabel: string;
+  labelId?: string;
 }
 
 export type PickersArrowSwitcherOwnerState = PickersArrowSwitcherProps;
@@ -85,11 +86,11 @@ export interface PickersArrowSwitcherSlotProps {
   leftArrowIcon?: SlotComponentProps<
     typeof SvgIcon,
     PickersArrowSwitcherSlotPropsOverrides,
-    undefined
+    PickersArrowSwitcherButtonSlotOwnerState
   >;
   rightArrowIcon?: SlotComponentProps<
     typeof SvgIcon,
     PickersArrowSwitcherSlotPropsOverrides,
-    undefined
+    PickersArrowSwitcherButtonSlotOwnerState
   >;
 }

@@ -25,14 +25,14 @@ export default function BiaxialBarChart() {
           label: 'pv',
           id: 'pvId',
 
-          yAxisKey: 'leftAxisId',
+          yAxisId: 'leftAxisId',
         },
         {
           data: uData,
           label: 'uv',
           id: 'uvId',
 
-          yAxisKey: 'rightAxisId',
+          yAxisId: 'rightAxisId',
         },
       ]}
       xAxis={[{ data: xLabels, scaleType: 'band' }]}

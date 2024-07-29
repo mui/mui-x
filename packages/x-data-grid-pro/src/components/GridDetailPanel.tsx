@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { GridRowId } from '@mui/x-data-grid';
-import { useResizeObserver } from '@mui/x-data-grid/internals';
+import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';

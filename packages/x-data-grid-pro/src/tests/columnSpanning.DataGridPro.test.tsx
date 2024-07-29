@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, act, userEvent } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, act, userEvent } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGridPro, GridApi, useGridApiRef, GridColDef, gridClasses } from '@mui/x-data-grid-pro';
 import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';

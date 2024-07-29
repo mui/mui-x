@@ -1,0 +1,15 @@
+<Button onClick={() => queryClient.clear()}>Reset cache</Button>
+<div style={{ height: 400 }}>
+  <DataGridPro
+    {...props}
+    unstable_dataSource={dataSource}
+    unstable_dataSourceCache={cache}
+    treeData
+    apiRef={apiRef}
+    pagination
+    pageSizeOptions={pageSizeOptions}
+    initialState={initialState}
+    slots={{ toolbar: GridToolbar }}
+    slotProps={{ toolbar: { showQuickFilter: true } }}
+  />
+</div>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, screen, waitFor } from '@mui-internal/test-utils';
+import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { LicenseInfo } from '@mui/x-license';
 
@@ -15,7 +15,7 @@ describe('<DataGridPro /> - License', () => {
     ]);
 
     await waitFor(() => {
-      expect(screen.getByText('MUI X Missing license key')).to.not.equal(null);
+      expect(screen.getByText('MUI X Missing license key')).not.to.equal(null);
     });
   });
 });

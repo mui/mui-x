@@ -3,14 +3,14 @@ import { DefaultizedBarSeriesType } from '../models/seriesType/bar';
 
 export default function getColor(
   series: DefaultizedBarSeriesType,
-  xAxis: AxisDefaultized,
-  yAxis: AxisDefaultized,
+  xAxis?: AxisDefaultized,
+  yAxis?: AxisDefaultized,
 ) {
   const verticalLayout = series.layout === 'vertical';
 
-  const bandColorScale = verticalLayout ? xAxis.colorScale : yAxis.colorScale;
-  const valueColorScale = verticalLayout ? yAxis.colorScale : xAxis.colorScale;
-  const bandValues = verticalLayout ? xAxis.data! : yAxis.data!;
+  const bandColorScale = verticalLayout ? xAxis?.colorScale : yAxis?.colorScale;
+  const valueColorScale = verticalLayout ? yAxis?.colorScale : xAxis?.colorScale;
+  const bandValues = verticalLayout ? xAxis?.data : yAxis?.data;
 
   if (valueColorScale) {
     return (dataIndex: number) => {
@@ -22,7 +22,7 @@ export default function getColor(
       return color;
     };
   }
-  if (bandColorScale) {
+  if (bandColorScale && bandValues) {
     return (dataIndex: number) => {
       const value = bandValues[dataIndex];
       const color = value === null ? series.color : bandColorScale(value);

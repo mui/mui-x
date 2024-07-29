@@ -8,7 +8,7 @@ import { DateField } from '@mui/x-date-pickers/DateField';
 export default function MaterialV7Field() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DateField', 'DatePicker']}>
+      <DemoContainer components={['DatePicker', 'DateField']}>
         <DateField enableAccessibleFieldDOMStructure />
         <DatePicker enableAccessibleFieldDOMStructure />
       </DemoContainer>

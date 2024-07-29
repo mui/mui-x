@@ -4,7 +4,7 @@ import MuiIconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { SxProps } from '@mui/system';
 import { ClearIcon } from '../icons';
-import { useLocaleText } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from './usePickersTranslations';
 
 export interface ExportedUseClearableFieldProps {
   /**
@@ -51,7 +51,7 @@ export type UseClearableFieldResponse<TFieldProps extends UseClearableFieldProps
 export const useClearableField = <TFieldProps extends UseClearableFieldProps>(
   props: TFieldProps,
 ): UseClearableFieldResponse<TFieldProps> => {
-  const localeText = useLocaleText();
+  const translations = usePickersTranslations();
 
   const { clearable, onClear, InputProps, sx, slots, slotProps, ...other } = props;
 
@@ -63,7 +63,7 @@ export const useClearableField = <TFieldProps extends UseClearableFieldProps>(
     ownerState: {},
     className: 'clearButton',
     additionalProps: {
-      title: localeText.fieldClearLabel,
+      title: translations.fieldClearLabel,
     },
   });
   const EndClearIcon = slots?.clearIcon ?? ClearIcon;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
-import InfoCard from 'docs/src/components/action/InfoCard';
+import { InfoCard } from '@mui/docs/InfoCard';
 import AccountTreeRounded from '@mui/icons-material/AccountTreeRounded';
 import PivotTableChartRoundedIcon from '@mui/icons-material/PivotTableChartRounded';
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';

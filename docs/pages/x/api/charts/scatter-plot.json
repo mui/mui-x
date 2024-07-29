@@ -17,7 +17,8 @@
   "name": "ScatterPlot",
   "imports": [
     "import { ScatterPlot } from '@mui/x-charts/ScatterChart';",
-    "import { ScatterPlot } from '@mui/x-charts';"
+    "import { ScatterPlot } from '@mui/x-charts';",
+    "import { ScatterPlot } from '@mui/x-charts-pro';"
   ],
   "slots": [{ "name": "scatter", "description": "", "class": null }],
   "classes": [],

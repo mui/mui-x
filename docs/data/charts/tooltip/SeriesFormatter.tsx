@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PieChart, PieChartProps } from '@mui/x-charts/PieChart';
-import { legendClasses } from '@mui/x-charts';
+import { legendClasses } from '@mui/x-charts/ChartsLegend';
 
 const otherProps: Partial<PieChartProps> = {
   width: 400,

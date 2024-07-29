@@ -2,11 +2,11 @@
   "name": "PieSeriesType",
   "imports": ["import { PieSeriesType } from '@mui/x-charts'"],
   "properties": {
-    "data": { "type": { "description": "Tdata[]" }, "required": true },
+    "data": { "type": { "description": "TData[]" }, "required": true },
     "type": { "type": { "description": "'pie'" }, "required": true },
     "arcLabel": {
       "type": {
-        "description": "'formattedValue' | 'label' | 'value' | ((item: DefaultizedPieValueType) =&gt; string)"
+        "description": "'formattedValue' | 'label' | 'value' | ((item: Omit&lt;DefaultizedPieValueType, 'label'&gt; & { label?: string }) =&gt; string)"
       }
     },
     "arcLabelMinAngle": { "type": { "description": "number" }, "default": "0" },

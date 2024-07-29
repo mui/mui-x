@@ -6,3 +6,5 @@ export * from './ChartsItemTooltipContent';
 
 export * from './DefaultChartsAxisTooltipContent';
 export * from './DefaultChartsItemTooltipContent';
+
+export * from './ChartsTooltipTable';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, screen } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { grid } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { DataGrid, DataGridProps, GridToolbar, gridClasses } from '@mui/x-data-grid';

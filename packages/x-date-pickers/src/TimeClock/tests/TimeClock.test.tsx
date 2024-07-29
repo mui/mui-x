@@ -7,7 +7,7 @@ import {
   screen,
   within,
   getAllByRole,
-} from '@mui-internal/test-utils';
+} from '@mui/internal-test-utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import { createPickerRenderer, adapterToUse, timeClockHandler } from 'test/utils/pickers';
 

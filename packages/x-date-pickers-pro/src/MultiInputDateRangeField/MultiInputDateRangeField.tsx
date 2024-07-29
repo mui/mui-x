@@ -22,8 +22,7 @@ import {
   MultiInputDateRangeFieldSlotProps,
 } from './MultiInputDateRangeField.types';
 import { useMultiInputDateRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
-import { UseDateRangeFieldProps } from '../internals/models/dateRange';
-import { MultiInputRangeFieldClasses, RangePosition } from '../models';
+import { MultiInputRangeFieldClasses, RangePosition, UseDateRangeFieldProps } from '../models';
 
 export const multiInputDateRangeFieldClasses: MultiInputRangeFieldClasses = generateUtilityClasses(
   'MuiMultiInputDateRangeField',
@@ -187,7 +186,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
 MultiInputDateRangeField.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * If `true`, the `input` element is focused during the first mount.
@@ -253,10 +252,12 @@ MultiInputDateRangeField.propTypes = {
   formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**

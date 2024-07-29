@@ -2,6 +2,9 @@ import { styled } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system';
 import { chartsTooltipClasses } from './chartsTooltipClasses';
 
+/**
+ * @ignore - internal component.
+ */
 export const ChartsTooltipPaper = styled('div', {
   name: 'MuiChartsTooltip',
   slot: 'Container',
@@ -13,6 +16,9 @@ export const ChartsTooltipPaper = styled('div', {
   borderRadius: theme.shape.borderRadius,
 }));
 
+/**
+ * @ignore - internal component.
+ */
 export const ChartsTooltipTable = styled('table', {
   name: 'MuiChartsTooltip',
   slot: 'Table',
@@ -23,6 +29,9 @@ export const ChartsTooltipTable = styled('table', {
   },
 }));
 
+/**
+ * @ignore - internal component.
+ */
 export const ChartsTooltipRow = styled('tr', {
   name: 'MuiChartsTooltip',
   slot: 'Row',
@@ -35,6 +44,9 @@ export const ChartsTooltipRow = styled('tr', {
   },
 }));
 
+/**
+ * @ignore - internal component.
+ */
 export const ChartsTooltipCell = styled('td', {
   name: 'MuiChartsTooltip',
   slot: 'Cell',
@@ -56,6 +68,9 @@ export const ChartsTooltipCell = styled('td', {
   },
 }));
 
+/**
+ * @ignore - internal component.
+ */
 export const ChartsTooltipMark = styled('div', {
   name: 'MuiChartsTooltip',
   slot: 'Mark',

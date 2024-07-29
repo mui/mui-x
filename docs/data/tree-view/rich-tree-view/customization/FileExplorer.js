@@ -17,6 +17,7 @@ import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { unstable_useTreeItem2 as useTreeItem2 } from '@mui/x-tree-view/useTreeItem2';
 import {
+  TreeItem2Checkbox,
   TreeItem2Content,
   TreeItem2IconContainer,
   TreeItem2Label,
@@ -96,9 +97,6 @@ const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
   padding: theme.spacing(0.5),
   paddingRight: theme.spacing(1),
   fontWeight: 500,
-  [`& .${treeItemClasses.iconContainer}`]: {
-    marginRight: theme.spacing(2),
-  },
   [`&.Mui-expanded `]: {
     '&:not(.Mui-focused, .Mui-selected, .Mui-selected.Mui-focused) .labelIcon': {
       color:
@@ -211,6 +209,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     getRootProps,
     getContentProps,
     getIconContainerProps,
+    getCheckboxProps,
     getLabelProps,
     getGroupTransitionProps,
     status,
@@ -242,7 +241,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
           <TreeItem2IconContainer {...getIconContainerProps()}>
             <TreeItem2Icon status={status} />
           </TreeItem2IconContainer>
-
+          <TreeItem2Checkbox {...getCheckboxProps()} />
           <CustomLabel
             {...getLabelProps({ icon, expandable: expandable && status.expanded })}
           />
@@ -257,7 +256,6 @@ export default function FileExplorer() {
   return (
     <RichTreeView
       items={ITEMS}
-      aria-label="file explorer"
       defaultExpandedItems={['1', '1.1']}
       defaultSelectedItems="1.1"
       sx={{ height: 'fit-content', flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}

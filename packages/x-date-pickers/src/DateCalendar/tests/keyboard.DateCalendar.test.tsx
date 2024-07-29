@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { act, fireEvent, screen } from '@mui-internal/test-utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
 

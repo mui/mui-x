@@ -49,6 +49,7 @@ const COLUMNS: GridColDef[] = [
     field: 'year',
     headerName: 'Year',
     type: 'number',
+    valueFormatter: (value) => (typeof value === 'number' ? `${value}` : ''),
     availableAggregationFunctions: ['max', 'min'],
   },
   {

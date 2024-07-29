@@ -485,6 +485,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public getWeekNumber = (value: DateTime) => {
+    /* istanbul ignore next */
     return value.localWeekNumber ?? value.weekNumber;
   };
 

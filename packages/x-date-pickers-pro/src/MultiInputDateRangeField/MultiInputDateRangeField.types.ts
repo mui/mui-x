@@ -4,9 +4,13 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { UseDateRangeFieldProps } from '../internals/models/dateRange';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
-import { MultiInputFieldRefs, MultiInputRangeFieldClasses, RangePosition } from '../models';
+import {
+  MultiInputFieldRefs,
+  MultiInputRangeFieldClasses,
+  RangePosition,
+  UseDateRangeFieldProps,
+} from '../models';
 
 export type UseMultiInputDateRangeFieldParams<
   TDate extends PickerValidDate,

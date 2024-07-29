@@ -55,7 +55,7 @@ You don't need extra work to take into account the drawing area.
 #### Value to coordinate
 
 The `d3-scale` default method maps from values to coordinates.
-For example, you can get the `x=0` coordinate as follow:
+For example, you can get the `x=0` coordinate as follows:
 
 ```jsx
 const xAxisScale = useXScale(); // get the default X scale

@@ -14,6 +14,7 @@ import {
   useTransformData,
 } from './dataTransform/useTransformData';
 import { PieArcLabel, PieArcLabelProps } from './PieArcLabel';
+import { getLabel } from '../internals/getLabel';
 
 const RATIO = 180 / Math.PI;
 
@@ -30,11 +31,19 @@ function getItemLabel(
     return null;
   }
 
-  if (typeof arcLabel === 'string') {
-    return item[arcLabel]?.toString();
+  switch (arcLabel) {
+    case 'label':
+      return getLabel(item.label, 'arc');
+    case 'value':
+      return item.value?.toString();
+    case 'formattedValue':
+      return item.formattedValue;
+    default:
+      return arcLabel({
+        ...item,
+        label: getLabel(item.label, 'arc'),
+      });
   }
-
-  return arcLabel(item);
 }
 
 export interface PieArcLabelPlotSlots {
@@ -56,7 +65,6 @@ export interface PieArcLabelPlotProps
       | 'arcLabel'
       | 'arcLabelMinAngle'
       | 'id'
-      | 'highlightScope'
     >,
     ComputedPieRadius {
   /**
@@ -90,7 +98,6 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
     data,
     faded = { additionalRadius: -5 },
     highlighted,
-    highlightScope,
     id,
     innerRadius,
     outerRadius,
@@ -108,7 +115,6 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
     cornerRadius,
     paddingAngle,
     id,
-    highlightScope,
     highlighted,
     faded,
     data,
@@ -167,7 +173,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
 PieArcLabelPlot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The label displayed into the arc.
@@ -198,7 +204,7 @@ PieArcLabelPlot.propTypes = {
       formattedValue: PropTypes.string.isRequired,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       index: PropTypes.number.isRequired,
-      label: PropTypes.string,
+      label: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
       padAngle: PropTypes.number.isRequired,
       startAngle: PropTypes.number.isRequired,
       value: PropTypes.number.isRequired,
@@ -228,10 +234,6 @@ PieArcLabelPlot.propTypes = {
     innerRadius: PropTypes.number,
     outerRadius: PropTypes.number,
     paddingAngle: PropTypes.number,
-  }),
-  highlightScope: PropTypes.shape({
-    faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**

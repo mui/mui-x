@@ -1,10 +1,10 @@
 # Data Grid - Accessibility
 
-<p class="description">The Data Grid has complete accessibility support, including built-in keyboard navigation that follows international standards.</p>
+<p class="description">Learn how the Data Grid implements accessibility features and guidelines, including keyboard navigation that follows international standards.</p>
 
 ## Guidelines
 
-The most commonly encountered conformance guidelines for accessibility are:
+Common conformance guidelines for accessibility include:
 
 - Globally accepted standard: [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/)
 - US:
@@ -13,8 +13,7 @@ The most commonly encountered conformance guidelines for accessibility are:
 - Europe: [EAA](https://ec.europa.eu/social/main.jsp?catId=1202) (European Accessibility Act)
 
 WCAG 2.1 has three levels of conformance: A, AA, and AAA.
-Level AA meets the most commonly encountered conformance guidelines.
-This is the most common target for organizations so what we aims to support very well.
+Level AA exceeds the basic criteria for accessibility and is a common target for most organizations, so this is what we aim to support.
 
 The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a data grid.
 
@@ -106,17 +105,27 @@ renderCell: (params) => (
 
 ### Navigation
 
-The following key assignments apply to Windows and Linux users.
+:::info
+The key assignments in the table below apply to Windows and Linux users.
 
-On macOS:
+On macOS replace:
 
-- replace <kbd class="key">Ctrl</kbd> with <kbd class="key">⌘ Command</kbd>
-- replace <kbd class="key">Alt</kbd> with <kbd class="key">⌥ Option</kbd>
+- <kbd class="key">Ctrl</kbd> with <kbd class="key">⌘ Command</kbd>
+- <kbd class="key">Alt</kbd> with <kbd class="key">⌥ Option</kbd>
+
+Some devices may lack certain keys, requiring the use of key combinations. In this case, replace:
+
+- <kbd class="key">Page Up</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Up</kbd>
+- <kbd class="key">Page Down</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Down</kbd>
+- <kbd class="key">Home</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Left</kbd>
+- <kbd class="key">End</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Right</kbd>
+
+:::
 
 |                                                               Keys | Description                                                 |
 | -----------------------------------------------------------------: | :---------------------------------------------------------- |
 |                                  <kbd class="key">Arrow Left</kbd> | Navigate between cell elements                              |
-|                                <kbd class="key">Arrow Bottom</kbd> | Navigate between cell elements                              |
+|                                  <kbd class="key">Arrow Down</kbd> | Navigate between cell elements                              |
 |                                 <kbd class="key">Arrow Right</kbd> | Navigate between cell elements                              |
 |                                    <kbd class="key">Arrow Up</kbd> | Navigate between cell elements                              |
 |                                        <kbd class="key">Home</kbd> | Navigate to the first cell of the current row               |

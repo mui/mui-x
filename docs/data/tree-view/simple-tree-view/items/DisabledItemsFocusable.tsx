@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -12,20 +13,18 @@ export default function DisabledItemsFocusable() {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
-      <Box sx={{ mb: 1 }}>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={disabledItemsFocusable}
-              onChange={handleToggle}
-              name="disabledItemsFocusable"
-            />
-          }
-          label="Allow focusing disabled items"
-        />
-      </Box>
-      <Box sx={{ minHeight: 200, flexGrow: 1, maxWidth: 400 }}>
+    <Stack spacing={2}>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={disabledItemsFocusable}
+            onChange={handleToggle}
+            name="disabledItemsFocusable"
+          />
+        }
+        label="Allow focusing disabled items"
+      />
+      <Box sx={{ minHeight: 352, minWidth: 250 }}>
         <SimpleTreeView disabledItemsFocusable={disabledItemsFocusable}>
           <TreeItem itemId="grid" label="Data Grid">
             <TreeItem itemId="grid-community" label="@mui/x-data-grid" />
@@ -37,17 +36,13 @@ export default function DisabledItemsFocusable() {
             <TreeItem itemId="pickers-pro" label="@mui/x-date-pickers-pro" />
           </TreeItem>
           <TreeItem itemId="charts" label="Charts">
-            <TreeItem itemId="charts-community" label="@mui/x-charts" />
+            <TreeItem itemId="charts-community" label="@mui/x-charts" disabled />
           </TreeItem>
-          <TreeItem itemId="tree-view" label="Tree View">
+          <TreeItem itemId="tree-view" label="Tree View" disabled>
             <TreeItem itemId="tree-view-community" label="@mui/x-tree-view" />
-            <TreeItem itemId="tree-view-pro" label="@mui/x-tree-view-pro" disabled />
-          </TreeItem>
-          <TreeItem itemId="scheduler" label="Scheduler" disabled>
-            <TreeItem itemId="scheduler-community" label="@mui/x-scheduler" />
           </TreeItem>
         </SimpleTreeView>
       </Box>
-    </Box>
+    </Stack>
   );
 }

@@ -22,7 +22,7 @@ export default function TimeValidationMinTime() {
         <DemoItem label="DateTimePicker">
           <DateTimePicker defaultValue={fiveAM} minTime={nineAM} />
         </DemoItem>
-        <DemoItem label="DateTimeRangePicker">
+        <DemoItem label="DateTimeRangePicker" component="DateTimeRangePicker">
           <DateTimeRangePicker defaultValue={[fiveAM, nineAM]} minTime={nineAM} />
         </DemoItem>
       </DemoContainer>

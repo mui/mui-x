@@ -17,24 +17,29 @@ const Pinned = styled('div')({
   position: 'sticky',
   height: '100%',
   boxSizing: 'border-box',
-  borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+  borderTop: '1px solid var(--rowBorderColor)',
   backgroundColor: 'var(--DataGrid-pinnedBackground)',
 });
 const PinnedLeft = styled(Pinned)({
   left: 0,
-  borderRight: '1px solid var(--DataGrid-rowBorderColor)',
+  borderRight: '1px solid var(--rowBorderColor)',
 });
 const PinnedRight = styled(Pinned)({
   right: 0,
-  borderLeft: '1px solid var(--DataGrid-rowBorderColor)',
+  borderLeft: '1px solid var(--rowBorderColor)',
 });
 
 const Main = styled('div')({
   flexGrow: 1,
-  borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+  borderTop: '1px solid var(--rowBorderColor)',
 });
 
-function GridVirtualScrollerFiller() {
+type Props = {
+  /** The number of rows */
+  rowsLength: number;
+};
+
+function GridVirtualScrollerFiller({ rowsLength }: Props) {
   const apiRef = useGridApiContext();
   const {
     viewportOuterSize,
@@ -54,7 +59,16 @@ function GridVirtualScrollerFiller() {
   }
 
   return (
-    <Filler className={gridClasses.filler} role="presentation" style={{ height }}>
+    <Filler
+      className={gridClasses.filler}
+      role="presentation"
+      style={
+        {
+          height,
+          '--rowBorderColor': rowsLength === 0 ? 'transparent' : 'var(--DataGrid-rowBorderColor)',
+        } as React.CSSProperties
+      }
+    >
       {leftPinnedWidth > 0 && (
         <PinnedLeft
           className={gridClasses['filler--pinnedLeft']}

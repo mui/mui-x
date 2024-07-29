@@ -57,7 +57,7 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
     },
     variants: Object.keys((theme.vars ?? theme).palette)
       // @ts-ignore
-      .filter((key) => (theme.vars ?? theme).palette[key].main)
+      .filter((key) => (theme.vars ?? theme).palette[key]?.main ?? false)
       .map((color) => ({
         props: { color },
         style: {
@@ -164,7 +164,7 @@ const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
 PickersOutlinedInput.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Is `true` if the current values equals the empty value.

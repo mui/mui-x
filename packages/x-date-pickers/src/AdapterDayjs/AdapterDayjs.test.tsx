@@ -1,5 +1,5 @@
 import dayjs, { Dayjs } from 'dayjs';
-import { DateTimeField } from '@mui/x-date-pickers';
+import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { expect } from 'chai';
@@ -37,6 +37,17 @@ describe('<AdapterDayjs />', () => {
       // Makes sure that we don't run timezone related tests, that would not work.
       adapter.isTimezoneCompatible = false;
     },
+  });
+
+  describe('Adapter timezone', () => {
+    it('setTimezone: should throw warning if no plugin is available', () => {
+      const modifiedAdapter = new AdapterDayjs();
+      // @ts-ignore
+      modifiedAdapter.hasTimezonePlugin = () => false;
+
+      const date = modifiedAdapter.date(TEST_DATE_ISO_STRING)!;
+      expect(() => modifiedAdapter.setTimezone(date, 'Europe/London')).to.throw();
+    });
   });
 
   describe('Adapter localization', () => {

@@ -131,3 +131,17 @@ You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-date
 
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
 Note that these translations of the date and time picker components depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.
+
+## Access the translations in slots and subcomponents
+
+You can use the `usePickersTranslations` hook to access the translations in your custom components.
+
+```tsx
+import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+
+const translations = usePickersTranslations();
+```
+
+:::info
+See [Custom slots and subcomponents—Action bar](/x/react-date-pickers/custom-components/#component) for more details.
+:::
