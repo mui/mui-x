@@ -29,7 +29,7 @@ export interface DesktopDatePickerProps<
   /**
    * Display years in descending order from the most recent.
    */
-  reverseYears?: boolean,
+  reverseYears?: boolean;
   /**
    * Years rendered per row.
    * @default 4
