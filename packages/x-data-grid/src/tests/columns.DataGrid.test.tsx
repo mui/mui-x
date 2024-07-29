@@ -123,7 +123,11 @@ describe('<DataGrid /> - Columns', () => {
   });
 
   // https://github.com/mui/mui-x/issues/13719
-  it('should not crash when updating columns immediately after scrolling', () => {
+  it('should not crash when updating columns immediately after scrolling', function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+
     const data = [
       { id: 1, value: 'A' },
       { id: 2, value: 'B' },
