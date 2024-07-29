@@ -225,6 +225,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
   }, [selectedYear]);
 
   const verticalDirection = !reverseYears ? yearsPerRow * 1 : yearsPerRow * -1;
+  const horizontalDirection = isRtl || reverseYears ? -1 : 1;
 
   const handleKeyDown = useEventCallback((event: React.KeyboardEvent, year: number) => {
     switch (event.key) {
@@ -237,11 +238,11 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
         event.preventDefault();
         break;
       case 'ArrowLeft':
-        focusYear(year + (isRtl ? 1 : -1));
+        focusYear(year - horizontalDirection);
         event.preventDefault();
         break;
       case 'ArrowRight':
-        focusYear(year + (isRtl ? -1 : 1));
+        focusYear(year + horizontalDirection);
         event.preventDefault();
         break;
       default:
