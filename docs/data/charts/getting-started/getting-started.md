@@ -80,16 +80,11 @@ yarn add @mui/styled-engine-sc styled-components
 
 Take a look at the [Styled engine guide](/material-ui/integrations/styled-components/) for more information about how to configure `styled-components` as the style engine.
 
-### Usage with Next.js
+### Usage with D3
 
-If you're using MUI X Charts with Next.js, you might face the following error:
+To help folks using CommonJS, the `@mui/x-charts` package uses a vendored package named `@mui/x-charts-vendor` to access D3 libraries.
 
-```bash
-[ESM][charts] Doesn't build due to require() of ES Module (ERR_REQUIRE_ESM)
-```
-
-To solve it, transpile the package by adding `transpilePackages: ['@mui/x-charts']` to your `next.config.js` file.
-Visit [this GitHub issue and comment](https://github.com/mui/mui-x/issues/9826#issuecomment-1658333978) for details.
+If you need some D3 functions, you can import them with `@mui/x-charts-vendor/d3-color`.
 
 ## Displaying Charts
 

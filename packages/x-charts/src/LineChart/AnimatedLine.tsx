@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { animated, useSpring } from '@react-spring/web';
-import { color as d3Color } from 'd3-color';
+import { color as d3Color } from '@mui/x-charts-vendor/d3-color';
 import { styled } from '@mui/material/styles';
 import { useAnimatedPath } from '../internals/useAnimatedPath';
 import { cleanId } from '../internals/cleanId';

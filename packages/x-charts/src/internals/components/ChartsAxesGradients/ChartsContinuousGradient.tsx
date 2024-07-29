@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { interpolateDate, interpolateNumber } from 'd3-interpolate';
+import { interpolateDate, interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 import { ContinuousColorConfig } from '../../../models/colorMapping';
 
 const PX_PRECISION = 10;

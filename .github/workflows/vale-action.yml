@@ -1,6 +1,9 @@
 name: Vale action
 
-on: [pull_request]
+on:
+  pull_request:
+    paths:
+      - 'docs/data/**.md'
 
 permissions: {}
 

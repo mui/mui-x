@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ScaleSequential } from 'd3-scale';
+import { ScaleSequential } from '@mui/x-charts-vendor/d3-scale';
 import { useTheme } from '@mui/material/styles';
 import ChartsContinuousGradient from '../internals/components/ChartsAxesGradients/ChartsContinuousGradient';
 import { AxisDefaultized, ContinuousScaleName } from '../models/axis';
