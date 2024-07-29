@@ -273,6 +273,12 @@
     "supportsApiRef": false
   },
   {
+    "name": "gridHeaderDensityFactorSelector",
+    "returnType": "number",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridHeaderFilteringEditFieldSelector",
     "returnType": "string | null",
     "description": "",
