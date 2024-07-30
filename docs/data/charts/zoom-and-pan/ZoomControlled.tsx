@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { ZoomData } from '@mui/x-charts-pro/context';
-import { Button } from '@mui/base';
 
 export default function ZoomControlled() {
   const [zoom, setZoom] = React.useState<ZoomData[]>([
@@ -14,9 +13,9 @@ export default function ZoomControlled() {
 
   return (
     <div>
-      <Button onClick={() => setZoom([{ axisId: 'my-x-axis', start: 0, end: 100 }])}>
+      <button onClick={() => setZoom([{ axisId: 'my-x-axis', start: 0, end: 100 }])}>
         Reset zoom
-      </Button>
+      </button>
       <LineChartPro
         {...chartProps}
         zoom={zoom}

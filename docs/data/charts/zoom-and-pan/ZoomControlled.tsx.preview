@@ -1,6 +1,6 @@
-<Button onClick={() => setZoom([{ axisId: 'my-x-axis', start: 0, end: 100 }])}>
+<button onClick={() => setZoom([{ axisId: 'my-x-axis', start: 0, end: 100 }])}>
   Reset zoom
-</Button>
+</button>
 <LineChartPro
   {...chartProps}
   zoom={zoom}
