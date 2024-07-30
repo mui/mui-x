@@ -62,6 +62,13 @@
         "describedArgs": ["event", "itemIds"]
       }
     },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent, itemId: string) => void",
+        "describedArgs": ["event", "itemId"]
+      }
+    },
     "onItemExpansionToggle": {
       "type": { "name": "func" },
       "signature": {
@@ -72,8 +79,8 @@
     "onItemFocus": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemId: string, value: string) => void",
-        "describedArgs": ["event", "itemId", "value"]
+        "type": "function(event: React.SyntheticEvent | null, itemId: string) => void",
+        "describedArgs": ["event", "itemId"]
       }
     },
     "onItemSelectionToggle": {

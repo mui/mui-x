@@ -143,6 +143,12 @@ When it's set to true:
 
 {{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}
 
+## Track item clicks
+
+Use the `onItemClick` prop to track the clicked item:
+
+{{"demo": "OnItemClick.js"}}
+
 ## Imperative API
 
 ### Get an item by ID

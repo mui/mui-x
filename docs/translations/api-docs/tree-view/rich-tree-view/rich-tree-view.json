@@ -58,6 +58,13 @@
         "itemIds": "The ids of the expanded items."
       }
     },
+    "onItemClick": {
+      "description": "Callback fired when the <code>content</code> slot of a given tree item is clicked.",
+      "typeDescriptions": {
+        "event": "The DOM event that triggered the change.",
+        "itemId": "The id of the focused item."
+      }
+    },
     "onItemExpansionToggle": {
       "description": "Callback fired when a tree item is expanded or collapsed.",
       "typeDescriptions": {
@@ -67,11 +74,10 @@
       }
     },
     "onItemFocus": {
-      "description": "Callback fired when tree items are focused.",
+      "description": "Callback fired when a given tree item is focused.",
       "typeDescriptions": {
         "event": "The DOM event that triggered the change. <strong>Warning</strong>: This is a generic event not a focus event.",
-        "itemId": "The id of the focused item.",
-        "value": "of the focused item."
+        "itemId": "The id of the focused item."
       }
     },
     "onItemSelectionToggle": {

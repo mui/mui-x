@@ -30,8 +30,10 @@ export const getFakeContextValue = (
   }),
   wrapItem: ({ children }) => children,
   wrapRoot: ({ children }) => children,
-  disabledItemsFocusable: false,
-  indentationAtItemLevel: false,
+  items: {
+    disabledItemsFocusable: false,
+    indentationAtItemLevel: false,
+  },
   icons: {
     slots: {},
     slotProps: {},
