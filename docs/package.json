@@ -46,7 +46,7 @@
     "@mui/x-date-pickers": "workspace:*",
     "@mui/x-date-pickers-pro": "workspace:*",
     "@mui/x-tree-view": "workspace:*",
-    "@react-spring/web": "^9.7.3",
+    "@react-spring/web": "^9.7.4",
     "@tanstack/query-core": "^5.50.1",
     "ast-types": "^0.14.2",
     "autoprefixer": "^10.4.19",

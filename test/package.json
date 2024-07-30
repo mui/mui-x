@@ -19,7 +19,7 @@
     "@mui/x-charts-vendor": "workspace:*",
     "@mui/x-license": "workspace:*",
     "@playwright/test": "^1.44.1",
-    "@react-spring/web": "^9.7.3",
+    "@react-spring/web": "^9.7.4",
     "@types/chai": "^4.3.16",
     "@types/karma": "^6.3.8",
     "@types/moment-jalaali": "^0.7.9",
