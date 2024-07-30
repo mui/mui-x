@@ -16,6 +16,12 @@ describe('<AdapterDateFnsJalali />', () => {
   describeJalaliAdapter(AdapterDateFnsJalali, {});
 
   describe('Adapter localization', () => {
+    it('getCurrentLocaleCode: should return locale code', () => {
+      const adapter = new AdapterDateFnsJalali({ locale: enUS });
+
+      expect(adapter.getCurrentLocaleCode()).to.equal('en-US');
+    });
+
     it('Formatting', () => {
       const adapter = new AdapterDateFnsJalali();
 
