@@ -9,3 +9,6 @@ export type {
   ScaleName,
   ContinuousScaleName,
 } from './axis';
+
+// Utils shared across the X packages
+export type { PropsFromSlot } from '@mui/x-internals/slots';
