@@ -833,7 +833,7 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
   switch (section.type) {
     case 'month': {
       if (section.contentType === 'digit') {
-        return utils.format(utils.setMonth(utils.date()!, Number(section.value) - 1), 'month');
+        return utils.format(utils.setMonth(utils.date(), Number(section.value) - 1), 'month');
       }
       const parsedDate = utils.parse(section.value, section.format);
       return parsedDate ? utils.format(parsedDate, 'month') : undefined;
@@ -841,7 +841,7 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
     case 'day':
       return section.contentType === 'digit'
         ? utils.format(
-            utils.setDate(utils.startOfYear(utils.date()!), Number(section.value)),
+            utils.setDate(utils.startOfYear(utils.date()), Number(section.value)),
             'dayOfMonthFull',
           )
         : section.value;
