@@ -744,6 +744,63 @@ describe('<DateField /> - Editing', () => {
     });
   });
 
+  describeAdapters('Disabled field', DateField, ({ renderWithProps }) => {
+    it('should not allow key editing on disabled field', () => {
+      // Test with v7 input
+      const onChangeV7 = spy();
+      const v7Response = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        onChange: onChangeV7,
+        disabled: true,
+      });
+
+      const keys = [
+        'ArrowUp',
+        'ArrowDown',
+        'PageUp',
+        'PageDown',
+        'Home',
+        'End',
+        'Delete',
+        'ArrowLeft',
+        'ArrowRight',
+      ];
+
+      v7Response.selectSection('month');
+
+      keys.forEach((key) => {
+        v7Response.pressKey(0, key);
+        expectFieldValueV7(v7Response.getSectionsContainer(), 'MM/DD/YYYY');
+        expect(onChangeV7.callCount).to.equal(0);
+      });
+
+      // digit key press
+      userEvent.keyPress(v7Response.getActiveSection(0), { key: '2' });
+      expectFieldValueV7(v7Response.getSectionsContainer(), 'MM/DD/YYYY');
+
+      v7Response.unmount();
+
+      // Test with v6 input
+      const onChangeV6 = spy();
+      const v6Response = renderWithProps({
+        onChange: onChangeV6,
+        enableAccessibleFieldDOMStructure: false,
+        disabled: true,
+      });
+
+      const input = getTextbox();
+      v6Response.selectSection('month');
+
+      // v6 doesn't allow focusing on sections when disabled
+      keys.forEach((key) => {
+        fireEvent.change(input, { target: { value: key } });
+        expect(document.activeElement).not.to.equal(input);
+        expectFieldValueV6(input, '');
+      });
+      expect(onChangeV6.callCount).to.equal(0);
+    });
+  });
+
   describeAdapters('Digit editing', DateField, ({ adapter, testFieldChange, renderWithProps }) => {
     it('should set the day to the digit pressed when no digit no value is provided', () => {
       testFieldChange({
@@ -1742,6 +1799,43 @@ describe('<DateField /> - Editing', () => {
       v6Response.selectSection('month'); // move back to month section
       fireEvent.change(input, { target: { value: '2/05/2018' } }); // check that the search query has been cleared after pasting
       expectFieldValueV6(input, '02/05/2018'); // If internal state is not reset it would be 12 instead of 02
+    });
+
+    it('should not allow pasting on disabled field', () => {
+      // Test with v7 input
+      const onChangeV7 = spy();
+      const v7Response = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        onChange: onChangeV7,
+        disabled: true,
+      });
+
+      v7Response.selectSection('month');
+
+      // Select all sections
+      fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'a', ctrlKey: true });
+
+      firePasteEventV7(v7Response.getSectionsContainer(), '09/16/2022');
+      expect(onChangeV7.callCount).to.equal(0);
+      expectFieldValueV7(v7Response.getSectionsContainer(), 'MM/DD/YYYY');
+
+      v7Response.unmount();
+
+      // Test with v6 input
+      const onChangeV6 = spy();
+      const v6Response = renderWithProps({
+        onChange: onChangeV6,
+        enableAccessibleFieldDOMStructure: false,
+        disabled: true,
+      });
+      const input = getTextbox();
+      v6Response.selectSection('month');
+      firePasteEventV6(input, '9');
+
+      // v6 doesn't allow focusing on sections when disabled
+      expect(document.activeElement).not.to.equal(input);
+      expect(onChangeV6.callCount).to.equal(0);
+      expectFieldValueV6(input, '');
     });
   });
 

@@ -49,8 +49,8 @@
     "label": { "type": { "name": "node" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
-    "maxDate": { "type": { "name": "object" } },
-    "minDate": { "type": { "name": "object" } },
+    "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
+    "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
     "name": { "type": { "name": "string" } },
     "onAccept": {
       "type": { "name": "func" },

@@ -31,11 +31,10 @@ export const getExtremumY: ExtremumGetter<'line'> = (params) => {
   const { series, axis, isDefaultAxis } = params;
 
   return Object.keys(series)
-    .filter(
-      (seriesId) =>
-        series[seriesId].yAxisKey === axis.id ||
-        (isDefaultAxis && series[seriesId].yAxisKey === undefined),
-    )
+    .filter((seriesId) => {
+      const yAxisId = series[seriesId].yAxisId ?? series[seriesId].yAxisKey;
+      return yAxisId === axis.id || (isDefaultAxis && yAxisId === undefined);
+    })
     .reduce(
       (acc: ExtremumGetterResult, seriesId) => {
         const { area, stackedData } = series[seriesId];

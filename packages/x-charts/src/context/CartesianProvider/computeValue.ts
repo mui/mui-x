@@ -1,4 +1,4 @@
-import { scaleBand, scalePoint, scaleTime } from 'd3-scale';
+import { scaleBand, scalePoint, scaleTime } from '@mui/x-charts-vendor/d3-scale';
 import { AxisConfig, ScaleName } from '../../models';
 import {
   ChartsXAxisProps,
