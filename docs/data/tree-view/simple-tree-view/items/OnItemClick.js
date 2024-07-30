@@ -5,24 +5,18 @@ import Typography from '@mui/material/Typography';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
-export default function TrackItemSelectionToggle() {
-  const [lastSelectedItem, setLastSelectedItem] = React.useState(null);
-
-  const handleItemSelectionToggle = (event, itemId, isSelected) => {
-    if (isSelected) {
-      setLastSelectedItem(itemId);
-    }
-  };
+export default function OnItemClick() {
+  const [lastClickedItem, setLastClickedItem] = React.useState(null);
 
   return (
     <Stack spacing={2}>
       <Typography>
-        {lastSelectedItem == null
-          ? 'No item selection recorded'
-          : `Last selected item: ${lastSelectedItem}`}
+        {lastClickedItem == null
+          ? 'No item click recorded'
+          : `Last clicked item: ${lastClickedItem}`}
       </Typography>
       <Box sx={{ minHeight: 352, minWidth: 300 }}>
-        <SimpleTreeView onItemSelectionToggle={handleItemSelectionToggle}>
+        <SimpleTreeView onItemClick={(event, itemId) => setLastClickedItem(itemId)}>
           <TreeItem itemId="grid" label="Data Grid">
             <TreeItem itemId="grid-community" label="@mui/x-data-grid" />
             <TreeItem itemId="grid-pro" label="@mui/x-data-grid-pro" />
