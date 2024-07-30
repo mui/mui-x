@@ -24,12 +24,13 @@ jobs:
     # L1: Run the benchmarks for pushes to the master or next branch and if the changes are in the charts package based on on.push.paths
     # L2: Run the benchmarks if we add the label 'component: charts' to the pull request
     # L3: Run the benchmarks for pull requests with the label 'component: charts'
-    if: >
-      "
-      ${{ github.event_name == 'push' }} ||
-      ${{ github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'component: charts' }} ||
-      ${{ github.event_name == 'pull_request' && github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'component: charts')}}
-      "
+    # Yaml syntax looks a little weird, but it is correct.
+    if: >-
+      ${{ 
+          (github.event_name == 'push') || 
+          (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'component: charts') || 
+          (github.event_name == 'pull_request' && github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'component: charts')) 
+      }}
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
