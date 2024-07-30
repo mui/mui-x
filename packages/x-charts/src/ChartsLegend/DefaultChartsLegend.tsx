@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedSeries } from '../context/SeriesContextProvider';
+import { FormattedSeries } from '../context/SeriesProvider';
 import { LegendPerItem, LegendPerItemProps } from './LegendPerItem';
 import { DrawingArea } from '../context/DrawingProvider';
 

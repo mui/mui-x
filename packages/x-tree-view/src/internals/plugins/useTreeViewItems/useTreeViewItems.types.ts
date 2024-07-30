@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { TreeViewItemMeta, DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 
@@ -117,6 +118,12 @@ export interface UseTreeViewItemsParameters<R extends {}> {
    */
   getItemId?: (item: R) => TreeViewItemId;
   /**
+   * Callback fired when the `content` slot of a given tree item is clicked.
+   * @param {React.MouseEvent} event The DOM event that triggered the change.
+   * @param {string} itemId The id of the focused item.
+   */
+  onItemClick?: (event: React.MouseEvent, itemId: string) => void;
+  /**
    * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".
    * @default 12px
@@ -144,9 +151,13 @@ export interface UseTreeViewItemsState<R extends {}> {
   };
 }
 
-interface UseTreeViewItemsContextValue
-  extends Pick<UseTreeViewItemsDefaultizedParameters<any>, 'disabledItemsFocusable'> {
-  indentationAtItemLevel: boolean;
+interface UseTreeViewItemsContextValue {
+  items: Pick<
+    UseTreeViewItemsDefaultizedParameters<any>,
+    'disabledItemsFocusable' | 'onItemClick'
+  > & {
+    indentationAtItemLevel: boolean;
+  };
 }
 
 export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
