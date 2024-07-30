@@ -257,8 +257,12 @@ export const useGridVirtualScroller = () => {
       // otherwise we would call an update directly on mount
       const isReady = gridDimensionsSelector(apiRef).isReady;
       if (isReady && didRowsIntervalChange) {
+        const isFirstRenderContextHydration = previousRowContext.current === EMPTY_RENDER_CONTEXT;
         previousRowContext.current = nextRenderContext;
-        apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
+
+        if (!isFirstRenderContextHydration) {
+            apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
+        }
       }
 
       previousContextScrollPosition.current = scrollPosition.current;
