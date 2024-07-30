@@ -32,8 +32,5 @@ function groupForwardedProps<
 }
 
 export function useProps<T extends Record<string, any>>(allProps: T) {
-  return React.useMemo(() => {
-    const { ...themedProps } = allProps;
-    return groupForwardedProps(themedProps);
-  }, [allProps]);
+  return React.useMemo(() => groupForwardedProps(allProps), [allProps]);
 }
