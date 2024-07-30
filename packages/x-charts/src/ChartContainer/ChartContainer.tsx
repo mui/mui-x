@@ -1,10 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
-import {
-  SeriesContextProvider,
-  SeriesContextProviderProps,
-} from '../context/SeriesContextProvider';
+import { SeriesProvider, SeriesProviderProps } from '../context/SeriesProvider';
 import { InteractionProvider } from '../context/InteractionProvider';
 import { ColorProvider } from '../context/ColorProvider';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
@@ -27,7 +24,7 @@ import { MakeOptional } from '../models/helpers';
 
 export type ChartContainerProps = Omit<
   ChartsSurfaceProps &
-    Omit<SeriesContextProviderProps, 'seriesFormatters'> &
+    Omit<SeriesProviderProps, 'seriesFormatters'> &
     Omit<DrawingProviderProps, 'svgRef'> &
     Pick<CartesianContextProviderProps, 'dataset'> &
     ZAxisContextProviderProps &
@@ -59,7 +56,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
     children,
     drawingProviderProps,
     colorProviderProps,
-    seriesContextProps,
+    seriesProviderProps,
     cartesianContextProps,
     zAxisContextProps,
     highlightedProviderProps,
@@ -69,7 +66,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
   return (
     <DrawingProvider {...drawingProviderProps}>
       <ColorProvider {...colorProviderProps}>
-        <SeriesContextProvider {...seriesContextProps}>
+        <SeriesProvider {...seriesProviderProps}>
           <CartesianContextProvider {...cartesianContextProps}>
             <ZAxisContextProvider {...zAxisContextProps}>
               <InteractionProvider>
@@ -82,7 +79,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
               </InteractionProvider>
             </ZAxisContextProvider>
           </CartesianContextProvider>
-        </SeriesContextProvider>
+        </SeriesProvider>
       </ColorProvider>
     </DrawingProvider>
   );

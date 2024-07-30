@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { ErrorBoundary, createRenderer } from '@mui/internal-test-utils';
 import { useSeries } from './useSeries';
 import barFormatter from '../BarChart/formatter';
-import { SeriesContextProvider } from '../context/SeriesContextProvider';
+import { SeriesProvider } from '../context/SeriesProvider';
 
 function UseSeries() {
   const { bar } = useSeries();
@@ -42,12 +42,12 @@ describe('useSeries', () => {
 
   it('should not throw an error when parent context is present', () => {
     const { getByText } = render(
-      <SeriesContextProvider
+      <SeriesProvider
         series={[{ type: 'bar', id: 'test-id', data: [1, 2] }]}
         seriesFormatters={{ bar: barFormatter }}
       >
         <UseSeries />
-      </SeriesContextProvider>,
+      </SeriesProvider>,
     );
 
     expect(getByText('test-id')).toBeVisible();
