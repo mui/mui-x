@@ -41,7 +41,7 @@
     "directory": "packages/x-internals"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.8",
+    "@babel/runtime": "^7.25.0",
     "@mui/utils": "^5.16.5"
   },
   "peerDependencies": {
