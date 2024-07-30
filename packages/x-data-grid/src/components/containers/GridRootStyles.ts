@@ -13,7 +13,6 @@ import { gridClasses as c } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
-import { gridVisibleColumnDefinitionsSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { gridDimensionsSelector } from '../../hooks/features/dimensions/gridDimensionsSelectors';
 
 export type OwnerState = DataGridProcessedProps;
@@ -135,7 +134,6 @@ export const GridRootStyles = styled('div', {
   ],
 })<{ ownerState: OwnerState }>(({ theme: t }) => {
   const apiRef = useGridPrivateApiContext();
-  const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
 
   const borderColor = getBorderColor(t);
@@ -285,7 +283,7 @@ export const GridRootStyles = styled('div', {
     [`&.${c['root--noToolbar']} [aria-rowindex="1"] [aria-colindex="1"]`]: {
       borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
     },
-    [`&.${c['root--noToolbar']} [aria-rowindex="1"] [aria-colindex="${visibleColumns.length}"]`]: {
+    [`&.${c['root--noToolbar']} [aria-rowindex="1"] .${c['columnHeader--last']}`]: {
       borderTopRightRadius:
         !dimensions.hasScrollY || dimensions.scrollbarSize === 0
           ? 'var(--unstable_DataGrid-radius)'
