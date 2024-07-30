@@ -18,7 +18,7 @@ import { getColorScale, getOrdinalColorScale } from '../../internals/colorScale'
 import { getTickNumber } from '../../hooks/useTicks';
 import { getScale } from '../../internals/getScale';
 import { DrawingArea } from '../DrawingProvider';
-import { FormattedSeries } from '../SeriesContextProvider';
+import { FormattedSeries } from '../SeriesProvider';
 import { getAxisExtremum } from './getAxisExtremum';
 import { normalizeAxis } from './normalizeAxis';
 

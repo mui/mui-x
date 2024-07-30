@@ -1,6 +1,6 @@
 import { AxisConfig, ExtremumGettersConfig } from '../../models';
 import { CartesianChartSeriesType, ExtremumGetterResult } from '../../models/seriesType/config';
-import { FormattedSeries } from '../SeriesContextProvider';
+import { FormattedSeries } from '../SeriesProvider';
 
 const axisExtremumCallback = <T extends CartesianChartSeriesType>(
   acc: ExtremumGetterResult,

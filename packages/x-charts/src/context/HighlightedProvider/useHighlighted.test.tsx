@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { ErrorBoundary, createRenderer } from '@mui/internal-test-utils';
 import { useHighlighted } from './useHighlighted';
 import { HighlightedProvider } from './HighlightedProvider';
-import { SeriesContextProvider } from '../SeriesContextProvider';
+import { SeriesProvider } from '../SeriesProvider';
 
 function UseHighlighted() {
   const { highlightedItem } = useHighlighted();
@@ -42,11 +42,11 @@ describe('useHighlighted', () => {
 
   it('should not throw an error when parent context is present', () => {
     const { getByText } = render(
-      <SeriesContextProvider series={[]} seriesFormatters={{}}>
+      <SeriesProvider series={[]} seriesFormatters={{}}>
         <HighlightedProvider highlightedItem={{ seriesId: 'test-id' }}>
           <UseHighlighted />
         </HighlightedProvider>
-      </SeriesContextProvider>,
+      </SeriesProvider>,
     );
 
     expect(getByText('test-id')).toBeVisible();

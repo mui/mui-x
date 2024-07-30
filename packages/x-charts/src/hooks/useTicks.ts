@@ -46,7 +46,7 @@ export interface TickParams {
 
 export function getTickNumber(
   params: TickParams & {
-    range: any[];
+    range: number[];
     domain: any[];
   },
 ) {
