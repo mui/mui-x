@@ -143,8 +143,8 @@ Same changes as in `@mui/x-date-pickers@7.11.0`, plus:
 - [charts] Defaultize axis on top level `useChartContainerProps` (#13817) @JCQuintas
 - [charts] Fix charts not passing `className` to root element (#13647) @JCQuintas
 - [charts] Generate API documentation for pro components (#13822) @alexfauquette
-- [charts] Improve zoomed highlight behaviour (unreleased) (#13868) @JCQuintas
-- [charts] Allow zoom on Y axis and add zoom options to configure zooming behaviour (unreleased) (#13726) @JCQuintas
+- [charts] Improve zoomed highlight behavior (unreleased) (#13868) @JCQuintas
+- [charts] Allow zoom on Y axis and add zoom options to configure zooming behavior (unreleased) (#13726) @JCQuintas
 - [charts] Disable animations while zooming (unreleased) (#13807) @JCQuintas
 
 ### Tree View
@@ -617,7 +617,7 @@ Same changes as in `@mui/x-date-pickers@7.6.2`.
 
 #### `@mui/x-charts@7.6.2`
 
-- [charts] Add `Initializable` type and behaviour to allow checking if a complex context has been initialized. (#13365) @JCQuintas
+- [charts] Add `Initializable` type and behavior to allow checking if a complex context has been initialized. (#13365) @JCQuintas
 - [charts] Fix some props not working in `xAxis` and `yAxis` (#13372) @Valyok26
 - [charts] Harmonize charts types (#13366) @alexfauquette
 - [charts] Introduce plugins system (#13367) @alexfauquette
@@ -625,7 +625,7 @@ Same changes as in `@mui/x-date-pickers@7.6.2`.
 
 ### Docs
 
-- [docs] Add badges like in Material UI @oliviertassinari
+- [docs] Add badges like in Material UI @oliviertassinari
 - [docs] Update twitter.com to x.com @oliviertassinari
 - [docs] Fix the description of `tickInterval` (#13355) @alexfauquette
 - [docs] Adjust the code example for `quickFilterValues` (#12919) @michelengelen

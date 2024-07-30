@@ -58,7 +58,7 @@ This example only scratches the surface with a lot of problems still unsolved li
 
 - Performance optimization
 - Caching data/deduping requests
-- More complex use-cases on the server like grouping, tree data, etc.
+- More complex use cases on the server like grouping, tree data, etc.
 - Server-side row editing
 - Lazy loading of data
 - Handling updates to the data like row editing, row deletion, etc.
@@ -70,17 +70,17 @@ Trying to solve these problems one after the other can make the code complex and
 
 The idea for a centralized data source is to simplify server-side data fetching.
 It's an abstraction layer between the Data Grid and the server, providing a simple interface for interacting with the server.
-Think of it like a middleman handling the communication between the Data Grid (client) and the actual data source (server).
+Think of it like an intermediary handling the communication between the Data Grid (client) and the actual data source (server).
 
 :::warning
 
 This feature is under development and is marked as **unstable**.
-The information shared on this page could change in future.
+The information shared on this page could change in the future.
 Feel free to subscribe or comment on the official GitHub [umbrella issue](https://github.com/mui/mui-x/issues/8179).
 
 :::
 
-It has an initial set of required methods that you need to implement. The data grid will use these methods internally to fetch a sub-set of data when needed.
+It has an initial set of required methods that you need to implement. The data grid will use these methods internally to fetch a subset of data when needed.
 
 Let's take a look at the minimal `GridDataSource` interface configuration.
 
@@ -177,7 +177,7 @@ The following demo showcases this behavior.
 
 :::info
 The data source demos use a utility function `useMockServer` to simulate the server-side data fetching.
-In a real-world scenario, you should replace this with your own server-side data fetching logic.
+In a real-world scenario, you should replace this with your own server-side data-fetching logic.
 
 Open info section of the browser console to see the requests being made and the data being fetched in response.
 :::
@@ -187,7 +187,7 @@ Open info section of the browser console to see the requests being made and the 
 The data source caches fetched data by default.
 This means that if the user navigates to a page or expands a node that has already been fetched, the grid will not call the `getRows` function again to avoid unnecessary calls to the server.
 
-The `GridDataSourceCacheDefault` is used by default which is a simple in-memory cache that stores the data in a plain object. It could be seen in action in the demo below.
+The `GridDataSourceCacheDefault` is used by default which is a simple in-memory cache that stores the data in a plain object. It can be seen in action in the demo below.
 
 {{"demo": "ServerSideDataGrid.js", "bg": "inline"}}
 
@@ -211,7 +211,7 @@ const lowTTLCache = new GridDataSourceCacheDefault({ ttl: 1000 * 10 }); // 10 se
 
 ### Custom cache
 
-To provide a custom cache, use `unstable_dataSourceCache` prop, which could be either written from scratch or based out of another cache library.
+To provide a custom cache, use `unstable_dataSourceCache` prop, which could be either written from scratch or based on another cache library.
 This prop accepts a generic interface of type `GridDataSourceCache`.
 
 ```tsx

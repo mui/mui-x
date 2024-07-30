@@ -50,21 +50,21 @@ An animated placeholder of the data grid.
 
 ### Custom component
 
-If you want to customize the no rows overlay, a component can be passed to the `loadingOverlay` slot.
+If you want to customize the no-rows overlay, a component can be passed to the `loadingOverlay` slot.
 
-In the following demo, a labelled determinate [CircularProgress](/material-ui/react-progress/#circular-determinate) component is rendered in place of the default loading overlay, with some additional _Loading rows…_ text.
+In the following demo, a labeled determinate [CircularProgress](/material-ui/react-progress/#circular-determinate) component is rendered in place of the default loading overlay, with some additional _Loading rows…_ text.
 
 {{"demo": "LoadingOverlayCustom.js", "bg": "inline"}}
 
 ## No rows overlay
 
-The no rows overlay is displayed when the data grid has no rows.
+The no-rows overlay is displayed when the data grid has no rows.
 
 {{"demo": "NoRowsOverlay.js", "bg": "inline"}}
 
 ### Custom component
 
-If you want to customize the no rows overlay, a component can be passed to the `noRowsOverlay` slot and rendered in place.
+If you want to customize the no-rows overlay, a component can be passed to the `noRowsOverlay` slot and rendered in place.
 
 In the following demo, an illustration is added on top of the default "No rows" message.
 
@@ -72,7 +72,7 @@ In the following demo, an illustration is added on top of the default "No rows" 
 
 ## No results overlay
 
-The no results overlay is displayed when the data grid has no results after filtering.
+The no-results overlay is displayed when the data grid has no results after filtering.
 
 {{"demo": "NoResultsOverlay.js", "bg": "inline"}}
 
