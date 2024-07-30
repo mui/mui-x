@@ -441,10 +441,12 @@ describe('<DataGridPro /> - Rows', () => {
       const rowBufferPx = n * rowHeight;
       const nbRows = 996;
       const height = 600;
+      const headerHeight = rowHeight;
+      const innerHeight = height - headerHeight;
       render(
         <TestCaseVirtualization
           nbRows={nbRows}
-          columnHeaderHeight={0}
+          columnHeaderHeight={headerHeight}
           rowHeight={rowHeight}
           rowBufferPx={rowBufferPx}
           hideFooter
@@ -461,11 +463,13 @@ describe('<DataGridPro /> - Rows', () => {
 
       const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
       expect(lastCell).to.have.text('995');
-      expect(renderingZone.children.length).to.equal(Math.floor(height / rowHeight) + n);
+      expect(renderingZone.children.length).to.equal(Math.floor(innerHeight / rowHeight) + n);
       const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
       const distanceToFirstRow = (nbRows - renderingZone.children.length) * rowHeight;
       expect(gridOffsetTop()).to.equal(distanceToFirstRow);
-      expect(virtualScroller.scrollHeight - scrollbarSize).to.equal(nbRows * rowHeight);
+      expect(virtualScroller.scrollHeight - scrollbarSize - headerHeight).to.equal(
+        nbRows * rowHeight,
+      );
     });
 
     it('should have all the rows rendered of the page in the DOM when autoPageSize: true', () => {
