@@ -10,7 +10,6 @@ on:
   pull_request:
     types:
       - labeled
-      - unlabeled
       - opened
       - synchronize
       - reopened
@@ -18,13 +17,19 @@ on:
       - 'master'
       - 'next'
 
+env:
+  # Run the benchmarks if we add the label 'component: charts' to the pull request
+  JUST_LABELED: "${{ github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'component: charts' }}"
+  # Run the benchmarks for pull requests with the label 'component: charts'
+  PR_HAS_LABEL: "${{ github.event_name == 'pull_request' && github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'component: charts')}}"
+  # Run the benchmarks for pushes to the master or next branch and if the changes are in the charts package based on on.push.paths
+  IS_PUSH: "${{ github.event_name == 'push' }}"
+
 jobs:
   benchmarks:
     name: Benchmarks Charts
     runs-on: ubuntu-latest
-    # Only run the benchmarks for pull requests with the label 'component: charts'
-    # Or for pushes to the master or next branch
-    if: "${{ github.event_name == 'push' ||  contains(github.event.pull_request.labels.*.name, 'component: charts') }}"
+    if: ${{ github.env.JUST_LABELED == 'true' || github.env.PR_HAS_LABEL == 'true' || github.env.IS_PUSH == 'true' }}
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
@@ -44,5 +49,5 @@ jobs:
       - name: Run benchmarks
         uses: CodSpeedHQ/action@a58b84c0b61569a9cbb7cfb378cc849d65cf1ce5
         with:
-          run: pnpm test:performance:charts
+          run: pnpm --filter @mui-x-internal/performance-charts test:performance
           token: ${{ secrets.CODSPEED_TOKEN }}

@@ -35,7 +35,7 @@ describe('LineChart', () => {
         />,
       );
 
-      await findByText((dataLength / 2).toLocaleString());
+      await findByText(dataLength.toLocaleString(), { ignore: 'span' });
     },
     options,
   );

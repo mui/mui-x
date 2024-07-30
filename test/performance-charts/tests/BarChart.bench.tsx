@@ -11,7 +11,7 @@ describe('BarChart', () => {
   });
 
   const dataLength = 250;
-  const data = Array.from({ length: dataLength }).map((_, i) => ({
+  const data = Array.from({ length: dataLength + 1 }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
   }));
@@ -40,7 +40,7 @@ describe('BarChart', () => {
         />,
       );
 
-      await findByText(dataLength / 2);
+      await findByText(dataLength.toLocaleString(), { ignore: 'span' });
     },
     options,
   );
