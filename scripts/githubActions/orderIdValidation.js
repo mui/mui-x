@@ -10,7 +10,9 @@ module.exports = async ({ core, context, github }) => {
     const repo = context.repo.repo;
     const issueNumber = context.issue.number;
 
+    const orderId = process.env.ORDER_ID;
     const orderApiToken = process.env.ORDER_API_TOKEN;
+
     const orderApi = 'https://store-wp.mui.com/wp-json/wc/v3/orders/';
 
     const issue = await github.rest.issues.get({
@@ -19,17 +21,10 @@ module.exports = async ({ core, context, github }) => {
       issue_number: issueNumber,
     });
 
-    core.debug(`>>> Issue Body: ${issue.data.body}`);
-
-    // add to this regex the possibility that the ORDER ID is wrapped in ** or __
-    const orderIdRegex = /(?:\*|_){0,2}?Order ID(?:\*|_){0,2}?: (\d+)/;
-    const orderIdMatch = issue.data.body.match(orderIdRegex);
-    const orderId = orderIdMatch ? orderIdMatch[1] : null;
-
     core.debug(`>>> Order ID: ${orderId}`);
 
     if (!orderId) {
-      core.info('No Order ID found in issue body');
+      core.info('No Order ID');
     } else {
       const order = await fetch(`${orderApi}${orderId}`, {
         headers: {
