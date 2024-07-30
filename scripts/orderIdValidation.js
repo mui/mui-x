@@ -52,7 +52,14 @@ module.exports = async ({ core, context, github }) => {
       }
 
       const planName = plan.match(/\b(pro|premium)\b/i)[0].toLowerCase();
-      const labelName = `support: ${planName}`;
+
+      if (planName !== 'pro' && planName !== 'premium') {
+        core.debug(`>>> planName: ${planName}`);
+        core.info('planName could not be extracted');
+        return;
+      }
+
+      const labelName = `support: ${planName} standard`;
 
       core.debug(`>>> planName: ${planName}`);
       core.debug(`>>> labelName: ${labelName}`);
