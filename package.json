@@ -125,7 +125,7 @@
     "babel-plugin-replace-imports": "^1.0.2",
     "babel-plugin-search-and-replace": "^1.1.1",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
-    "chai": "^4.4.1",
+    "chai": "^4.5.0",
     "chai-dom": "^1.12.0",
     "compression-webpack-plugin": "^11.1.0",
     "concurrently": "^8.2.2",
@@ -185,7 +185,7 @@
     "string-replace-loader": "^3.1.0",
     "terser-webpack-plugin": "^5.3.10",
     "tsx": "^4.16.2",
-    "typescript": "^5.5.3",
+    "typescript": "^5.5.4",
     "unist-util-visit": "^2.0.3",
     "util": "^0.12.5",
     "webpack": "^5.92.1",
@@ -197,9 +197,9 @@
     "react-is": "^18.3.1",
     "@types/node": "^18.19.42"
   },
-  "packageManager": "pnpm@9.5.0",
+  "packageManager": "pnpm@9.6.0",
   "engines": {
-    "pnpm": "9.5.0"
+    "pnpm": "9.6.0"
   },
   "pnpm": {
     "patchedDependencies": {
