@@ -300,7 +300,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         role="row"
         aria-rowindex={headerGroupingMaxDepth + 1}
         ownerState={rootProps}
-        className={clsx(pinnedRows.top.length === 0 && gridClasses['row--borderBottom'])}
+        className={pinnedRows.top.length === 0 ? gridClasses['row--borderBottom'] : undefined}
       >
         {leftRenderContext &&
           getColumnHeaders(
