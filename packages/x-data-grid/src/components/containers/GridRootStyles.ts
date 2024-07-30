@@ -281,7 +281,7 @@ export const GridRootStyles = styled('div', {
       outline: `solid ${t.palette.primary.main} 1px`,
     },
     [`&.${c['root--noToolbar']} [aria-rowindex="1"] [aria-colindex="1"]`]: {
-      borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
+      borderTopLeftRadius: 'calc(var(--unstable_DataGrid-radius) - 1px)',
     },
     [`&.${c['root--noToolbar']} [aria-rowindex="1"] .${c['columnHeader--last']}`]: {
       borderTopRightRadius:
