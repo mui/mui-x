@@ -286,7 +286,7 @@ export const GridRootStyles = styled('div', {
     [`&.${c['root--noToolbar']} [aria-rowindex="1"] .${c['columnHeader--last']}`]: {
       borderTopRightRadius:
         !dimensions.hasScrollY || dimensions.scrollbarSize === 0
-          ? 'var(--unstable_DataGrid-radius)'
+          ? 'calc(var(--unstable_DataGrid-radius) - 1px)'
           : undefined,
     },
     [`& .${c.columnHeaderCheckbox}, & .${c.cellCheckbox}`]: {
