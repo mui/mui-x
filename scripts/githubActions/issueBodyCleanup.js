@@ -29,7 +29,11 @@ module.exports = async ({ core, context, github }) => {
     const searchKeywords = extractInputSection(lines, 'Search keywords');
 
     // get the order id and set it as an output for the support label step
-    const orderID = extractInputSection(lines, 'Order ID or Support key');
+    let orderID = extractInputSection(lines, 'Order ID or Support key');
+    if (orderID === '_No response_') {
+      orderID = '';
+    }
+
     core.setOutput('ORDER_ID', orderID);
 
     const products = extractInputSection(lines, 'Affected products');
@@ -41,7 +45,7 @@ module.exports = async ({ core, context, github }) => {
 
     lines.push('');
     lines.push(`**Search keywords**: ${searchKeywords}`);
-    if (orderID !== '' && orderID !== '_No response_') {
+    if (orderID !== '') {
       lines.push(`**Order ID**: ${orderID}`);
     }
 

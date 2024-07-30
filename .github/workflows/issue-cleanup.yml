@@ -1,4 +1,4 @@
-name: Cleanup issue
+name: Issue cleanup
 
 on:
   issues:
@@ -10,13 +10,13 @@ permissions: {}
 jobs:
   issue_cleanup:
     runs-on: ubuntu-latest
-    name: Clean issue body
+    name: Clean issue body and add support label
     permissions:
       issues: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-      - name: Cleanup issue body
+      - name: Clean issue body
         id: cleanup
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
