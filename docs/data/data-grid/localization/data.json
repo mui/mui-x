@@ -251,7 +251,7 @@
     "languageTag": "tr-TR",
     "importName": "trTR",
     "localeName": "Turkish",
-    "missingKeysCount": 19,
+    "missingKeysCount": 0,
     "totalKeysCount": 118,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/trTR.ts"
   },
