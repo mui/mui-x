@@ -11,6 +11,9 @@ import {
 import type {} from '../../themeAugmentation/overrides';
 import { gridClasses as c } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
+import { gridDimensionsSelector } from '../../hooks/features/dimensions/gridDimensionsSelectors';
 
 export type OwnerState = DataGridProcessedProps;
 
@@ -41,6 +44,11 @@ const columnHeaderStyles = {
     visibility: 'visible',
   },
 };
+
+// Emotion thinks it knows better than us which selector we should use.
+// https://github.com/emotion-js/emotion/issues/1105#issuecomment-1722524968
+const ignoreSsrWarning =
+  '/* emotion-disable-server-rendering-unsafe-selector-warning-please-do-not-use-this-the-warning-exists-for-a-reason */';
 
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
@@ -125,6 +133,9 @@ export const GridRootStyles = styled('div', {
     styles.root,
   ],
 })<{ ownerState: OwnerState }>(({ theme: t }) => {
+  const apiRef = useGridPrivateApiContext();
+  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
+
   const borderColor = getBorderColor(t);
   const radius = t.shape.borderRadius;
 
@@ -215,13 +226,9 @@ export const GridRootStyles = styled('div', {
     minWidth: 0, // See https://github.com/mui/mui-x/issues/8547
     minHeight: 0,
     flexDirection: 'column',
+    overflow: 'hidden',
     overflowAnchor: 'none', // Keep the same scrolling position
-    // The selector we really want here is `:first-child`, but emotion thinks it knows better than use what we
-    // want and prints a warning to the console if we use it, about :first-child being "unsafe" in an SSR context.
-    // https://github.com/emotion-js/emotion/issues/1105
-    // Using `:first-of-type instead` is ironically less "safe" because if all our elements aren't `div`, this style
-    // will fail to apply.
-    [`.${c.main} > *:first-of-type`]: {
+    [`.${c.main} > *:first-child${ignoreSsrWarning}`]: {
       borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
       borderTopRightRadius: 'var(--unstable_DataGrid-radius)',
     },
@@ -272,6 +279,15 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c.columnHeader}:focus, & .${c.cell}:focus`]: {
       outline: `solid ${t.palette.primary.main} 1px`,
+    },
+    [`&.${c['root--noToolbar']} [aria-rowindex="1"] [aria-colindex="1"]`]: {
+      borderTopLeftRadius: 'calc(var(--unstable_DataGrid-radius) - 1px)',
+    },
+    [`&.${c['root--noToolbar']} [aria-rowindex="1"] .${c['columnHeader--last']}`]: {
+      borderTopRightRadius:
+        !dimensions.hasScrollY || dimensions.scrollbarSize === 0
+          ? 'calc(var(--unstable_DataGrid-radius) - 1px)'
+          : undefined,
     },
     [`& .${c.columnHeaderCheckbox}, & .${c.cellCheckbox}`]: {
       padding: 0,
@@ -415,6 +431,16 @@ export const GridRootStyles = styled('div', {
         boxSizing: 'border-box',
         borderTop: '1px solid var(--DataGrid-rowBorderColor)',
       },
+    },
+
+    /* Bottom border of the top-container */
+    [`& .${c['row--borderBottom']} .${c.columnHeader},
+      & .${c['row--borderBottom']} .${c.filler},
+      & .${c['row--borderBottom']} .${c.scrollbarFiller}`]: {
+      borderBottom: `1px solid var(--DataGrid-rowBorderColor)`,
+    },
+    [`& .${c['row--borderBottom']} .${c.cell}`]: {
+      borderBottom: `1px solid var(--rowBorderColor)`,
     },
 
     /* Row styles */

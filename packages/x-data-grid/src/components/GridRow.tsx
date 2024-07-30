@@ -1,18 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useForkRef as useForkRef,
-} from '@mui/utils';
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { fastMemo } from '../utils/fastMemo';
 import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridRowModes, GridCellModes } from '../models/gridEditRowModel';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
+import { gridClasses } from '../constants/gridClasses';
+import { composeGridClasses } from '../utils/composeGridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridPinnedColumns } from '../hooks/features/columns';
 import type { GridStateColDef } from '../models/colDef/gridColDef';
 import type { GridRenderContext } from '../models/params/gridScrollParams';
@@ -62,39 +59,13 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   isFirstVisible: boolean;
   isLastVisible: boolean;
   isNotVisible: boolean;
+  showBottomBorder: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
   onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
   [x: string]: any; // Allow custom attributes like data-* and aria-*
 }
-
-type OwnerState = Pick<GridRowProps, 'selected'> & {
-  editable: boolean;
-  editing: boolean;
-  isFirstVisible: boolean;
-  isLastVisible: boolean;
-  classes?: DataGridProcessedProps['classes'];
-  rowHeight: GridRowProps['rowHeight'];
-};
-
-const useUtilityClasses = (ownerState: OwnerState) => {
-  const { editable, editing, selected, isFirstVisible, isLastVisible, rowHeight, classes } =
-    ownerState;
-  const slots = {
-    root: [
-      'row',
-      selected && 'selected',
-      editable && 'row--editable',
-      editing && 'row--editing',
-      isFirstVisible && 'row--firstVisible',
-      isLastVisible && 'row--lastVisible',
-      rowHeight === 'auto' && 'row--dynamicHeight',
-    ],
-  };
-
-  return composeClasses(slots, getDataGridUtilityClass, classes);
-};
 
 function EmptyCell({ width }: { width: number }) {
   if (!width) {
@@ -129,6 +100,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     isFirstVisible,
     isLastVisible,
     isNotVisible,
+    showBottomBorder,
     focusedCell,
     tabbableCell,
     onClick,
@@ -152,6 +124,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const rowNode = apiRef.current.getRowNode(rowId);
   const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
   const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
+  const editing = apiRef.current.getRowMode(rowId) === GridRowModes.Edit;
+  const editable = rootProps.editMode === GridEditModes.Row;
 
   const hasFocusCell = focusedColumnIndex !== undefined;
   const hasVirtualFocusCellLeft =
@@ -165,17 +139,18 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   const ariaRowIndex = index + headerGroupingMaxDepth + 2; // 1 for the header row and 1 as it's 1-based
 
-  const ownerState = {
-    selected,
-    isFirstVisible,
-    isLastVisible,
-    classes: rootProps.classes,
-    editing: apiRef.current.getRowMode(rowId) === GridRowModes.Edit,
-    editable: rootProps.editMode === GridEditModes.Row,
-    rowHeight,
-  };
-
-  const classes = useUtilityClasses(ownerState);
+  const classes = composeGridClasses(rootProps.classes, {
+    root: [
+      'row',
+      selected && 'selected',
+      editable && 'row--editable',
+      editing && 'row--editing',
+      isFirstVisible && 'row--firstVisible',
+      isLastVisible && 'row--lastVisible',
+      showBottomBorder && 'row--borderBottom',
+      rowHeight === 'auto' && 'row--dynamicHeight',
+    ],
+  });
 
   React.useLayoutEffect(() => {
     if (currentPage.range) {
@@ -596,6 +571,7 @@ GridRow.propTypes = {
   rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   selected: PropTypes.bool.isRequired,
+  showBottomBorder: PropTypes.bool.isRequired,
   /**
    * Determines which cell should be tabbable by having tabIndex=0.
    * If `null`, no cell in this row is in the tab sequence.

@@ -28,6 +28,7 @@ import {
   gridColumnPositionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
 } from '../columns';
+import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfaces';
 import { gridColumnGroupsUnwrappedModelSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import { GridScrollbarFillerCell as ScrollbarFiller } from '../../../components/GridScrollbarFillerCell';
@@ -105,6 +106,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
+  const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
   const offsetLeft = computeOffsetLeft(
     columnPositions,
     renderContext,
@@ -298,6 +300,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         role="row"
         aria-rowindex={headerGroupingMaxDepth + 1}
         ownerState={rootProps}
+        className={pinnedRows.top.length === 0 ? gridClasses['row--borderBottom'] : undefined}
       >
         {leftRenderContext &&
           getColumnHeaders(

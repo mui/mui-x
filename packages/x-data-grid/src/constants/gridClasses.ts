@@ -445,6 +445,11 @@ export interface GridClasses {
    */
   'root--disableUserSelection': string;
   /**
+   * Used to fix header outline border radius.
+   * @ignore - do not document.
+   */
+  'root--noToolbar': string;
+  /**
    * Styles applied to the row element if the row is editable.
    */
   'row--editable': string;
@@ -472,6 +477,11 @@ export interface GridClasses {
    * Styles applied to the row if its detail panel is open.
    */
   'row--detailPanelExpanded': string;
+  /**
+   * Styles applied to the row cells if the row needs a bottom border.
+   * @ignore - do not document.
+   */
+  'row--borderBottom': string;
   /**
    * Styles applied to the row element.
    */
@@ -729,6 +739,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'root--densityComfortable',
   'root--densityCompact',
   'root--disableUserSelection',
+  'root--noToolbar',
   'row',
   'row--editable',
   'row--editing',
@@ -737,6 +748,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'row--dragging',
   'row--dynamicHeight',
   'row--detailPanelExpanded',
+  'row--borderBottom',
   'rowReorderCellPlaceholder',
   'rowCount',
   'rowReorderCellContainer',

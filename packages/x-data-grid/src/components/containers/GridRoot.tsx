@@ -25,18 +25,17 @@ export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
   sx?: SxProps<Theme>;
 }
 
-type OwnerState = DataGridProcessedProps & {
-  density: GridDensity;
-};
+type OwnerState = DataGridProcessedProps;
 
-const useUtilityClasses = (ownerState: OwnerState) => {
-  const { autoHeight, density, classes, showCellVerticalBorder } = ownerState;
+const useUtilityClasses = (ownerState: OwnerState, density: GridDensity) => {
+  const { autoHeight, classes, showCellVerticalBorder } = ownerState;
 
   const slots = {
     root: [
       'root',
       autoHeight && 'autoHeight',
       `root--density${capitalize(density)}`,
+      ownerState.slots.toolbar === null && 'root--noToolbar',
       'withBorderColor',
       showCellVerticalBorder && 'withVerticalBorder',
     ],
@@ -53,12 +52,9 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
   const rootElementRef = apiRef.current.rootElementRef;
   const handleRef = useForkRef(rootElementRef, ref);
 
-  const ownerState = {
-    ...rootProps,
-    density,
-  };
+  const ownerState = rootProps;
 
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(ownerState, density);
 
   // Our implementation of <NoSsr />
   const [mountedState, setMountedState] = React.useState(false);
