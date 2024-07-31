@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { ErrorBoundary, createRenderer } from '@mui/internal-test-utils';
 import { useSeries } from './useSeries';
 import { SeriesProvider } from '../context/SeriesProvider';
+import { PluginProvider } from '../internals';
 
 function UseSeries() {
   const { bar } = useSeries();
@@ -41,9 +42,11 @@ describe('useSeries', () => {
 
   it('should not throw an error when parent context is present', () => {
     const { getByText } = render(
-      <SeriesProvider series={[{ type: 'bar', id: 'test-id', data: [1, 2] }]}>
-        <UseSeries />
-      </SeriesProvider>,
+      <PluginProvider>
+        <SeriesProvider series={[{ type: 'bar', id: 'test-id', data: [1, 2] }]}>
+          <UseSeries />
+        </SeriesProvider>
+      </PluginProvider>,
     );
 
     expect(getByText('test-id')).toBeVisible();

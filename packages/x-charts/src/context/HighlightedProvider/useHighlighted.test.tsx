@@ -4,6 +4,7 @@ import { ErrorBoundary, createRenderer } from '@mui/internal-test-utils';
 import { useHighlighted } from './useHighlighted';
 import { HighlightedProvider } from './HighlightedProvider';
 import { SeriesProvider } from '../SeriesProvider';
+import { PluginProvider } from '../PluginProvider';
 
 function UseHighlighted() {
   const { highlightedItem } = useHighlighted();
@@ -42,11 +43,13 @@ describe('useHighlighted', () => {
 
   it('should not throw an error when parent context is present', () => {
     const { getByText } = render(
-      <SeriesProvider series={[]}>
-        <HighlightedProvider highlightedItem={{ seriesId: 'test-id' }}>
-          <UseHighlighted />
-        </HighlightedProvider>
-      </SeriesProvider>,
+      <PluginProvider>
+        <SeriesProvider series={[]}>
+          <HighlightedProvider highlightedItem={{ seriesId: 'test-id' }}>
+            <UseHighlighted />
+          </HighlightedProvider>
+        </SeriesProvider>
+      </PluginProvider>,
     );
 
     expect(getByText('test-id')).toBeVisible();
