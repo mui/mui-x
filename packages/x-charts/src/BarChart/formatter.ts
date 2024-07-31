@@ -4,7 +4,7 @@ import { ChartSeries, DatasetElementType, DatasetType } from '../models/seriesTy
 import { defaultizeValueFormatter } from '../internals/defaultizeValueFormatter';
 import { DefaultizedProps } from '../models/helpers';
 import { SeriesId } from '../models/seriesType/common';
-import { SeriesFormatter } from '../context/PluginProvider';
+import { SeriesFormatter } from '../context/PluginProvider/SeriesFormatter.types';
 
 let warnOnce = false;
 

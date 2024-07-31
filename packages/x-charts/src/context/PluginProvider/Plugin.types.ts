@@ -4,7 +4,7 @@ import type { ExtremumGetter, ExtremumGettersConfig } from './ExtremumGetter.typ
 import type { SeriesFormatter, SeriesFormatterConfig } from './SeriesFormatter.types';
 
 export type PluginProviderProps = {
-  plugins?: ChartsPluginType<ChartSeriesType>[];
+  plugins?: ChartsPlugin<ChartSeriesType>[];
   children: React.ReactNode;
 };
 
@@ -15,7 +15,7 @@ export type PluginContextState = {
   yExtremumGetters: ExtremumGettersConfig<ChartSeriesType>;
 };
 
-export type ChartsPluginType<T> = T extends ChartSeriesType
+export type ChartsPlugin<T> = T extends ChartSeriesType
   ? {
       seriesType: T;
       seriesFormatter: SeriesFormatter<T>;

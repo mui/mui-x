@@ -16,7 +16,7 @@ import {
   ZAxisContextProvider,
   ZAxisContextProviderProps,
 } from '../context';
-import { ChartsPluginType } from '../context/PluginProvider';
+import { ChartsPlugin } from '../context/PluginProvider';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { useChartContainerProps } from './useChartContainerProps';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
@@ -48,7 +48,7 @@ export type ChartContainerProps = Omit<
    * An array of plugins defining how to preprocess data.
    * If not provided, the container supports line, bar, scatter and pie charts.
    */
-  plugins?: ChartsPluginType<ChartSeriesType>[];
+  plugins?: ChartsPlugin<ChartSeriesType>[];
 };
 
 const ChartContainer = React.forwardRef(function ChartContainer(props: ChartContainerProps, ref) {

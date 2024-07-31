@@ -1,4 +1,7 @@
-import { ExtremumGetter, ExtremumGetterResult } from '../context/PluginProvider';
+import {
+  ExtremumGetter,
+  ExtremumGetterResult,
+} from '../context/PluginProvider/ExtremumGetter.types';
 
 const mergeMinMax = (
   acc: ExtremumGetterResult,

@@ -3,7 +3,7 @@ import { ChartSeriesDefaultized } from '../models/seriesType/config';
 import { ChartsPieSorting, PieValueType } from '../models/seriesType/pie';
 import { SeriesId } from '../models/seriesType/common';
 import { getLabel } from '../internals/getLabel';
-import { SeriesFormatter } from '../context/PluginProvider';
+import { SeriesFormatter } from '../context/PluginProvider/SeriesFormatter.types';
 
 const getSortingComparator = (comparator: ChartsPieSorting = 'none') => {
   if (typeof comparator === 'function') {

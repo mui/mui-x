@@ -1,9 +1,9 @@
-import { ChartsPluginType } from '../context/PluginProvider';
+import type { ChartsPlugin } from '../context/PluginProvider';
 import { getExtremumX, getExtremumY } from './extremums';
 import formatter from './formatter';
 import getColor from './getColor';
 
-export const plugin: ChartsPluginType<'scatter'> = {
+export const plugin: ChartsPlugin<'scatter'> = {
   seriesType: 'scatter',
   seriesFormatter: formatter,
   colorProcessor: getColor,
