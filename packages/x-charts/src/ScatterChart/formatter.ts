@@ -1,7 +1,7 @@
 import { defaultizeValueFormatter } from '../internals/defaultizeValueFormatter';
-import { Formatter } from '../context/PluginProvider';
+import { SeriesFormatter } from '../context/PluginProvider';
 
-const formatter: Formatter<'scatter'> = ({ series, seriesOrder }) => {
+const formatter: SeriesFormatter<'scatter'> = ({ series, seriesOrder }) => {
   return {
     series: defaultizeValueFormatter(series, (v) => `(${v.x}, ${v.y})`),
     seriesOrder,

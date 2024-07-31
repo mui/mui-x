@@ -3,9 +3,9 @@ import {
   ChartsPluginType,
   ColorProcessorsConfig,
   ExtremumGettersConfig,
+  SeriesFormatterConfig,
 } from '../context/PluginProvider';
 import { ChartSeriesType } from '../models/seriesType/config';
-import { SeriesFormatterConfig } from '../context/SeriesProvider';
 import { defaultPlugins } from './defaultPlugins';
 
 export function usePluginsMerge<T extends ChartSeriesType>(plugins?: ChartsPluginType<T>[]) {

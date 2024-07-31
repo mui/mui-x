@@ -4,12 +4,12 @@ import { ChartSeries, DatasetElementType, DatasetType } from '../models/seriesTy
 import { defaultizeValueFormatter } from '../internals/defaultizeValueFormatter';
 import { DefaultizedProps } from '../models/helpers';
 import { SeriesId } from '../models/seriesType/common';
-import { Formatter } from '../context/PluginProvider';
+import { SeriesFormatter } from '../context/PluginProvider';
 
 let warnedOnce = false;
 
 // For now it's a copy past of bar charts formatter, but maybe will diverge later
-const formatter: Formatter<'line'> = (params, dataset) => {
+const formatter: SeriesFormatter<'line'> = (params, dataset) => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
 

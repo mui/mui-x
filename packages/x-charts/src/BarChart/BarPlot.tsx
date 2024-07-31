@@ -13,7 +13,7 @@ import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { checkScaleErrors } from './checkScaleErrors';
 import { useBarSeries } from '../hooks/useSeries';
-import { FormatterResult } from '../context/PluginProvider';
+import { SeriesFormatterResult } from '../context/PluginProvider';
 
 /**
  * Solution of the equations
@@ -88,7 +88,7 @@ const useAggregatedData = (): {
 } => {
   const seriesData =
     useBarSeries() ??
-    ({ series: {}, stackingGroups: [], seriesOrder: [] } as FormatterResult<'bar'>);
+    ({ series: {}, stackingGroups: [], seriesOrder: [] } as SeriesFormatterResult<'bar'>);
   const axisData = useCartesianContext();
   const chartId = useChartId();
 
