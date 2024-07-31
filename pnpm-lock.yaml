@@ -426,8 +426,8 @@ importers:
         specifier: ^5.0.0-beta.40
         version: 5.0.0-beta.40(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/docs':
-        specifier: 6.0.0-beta.2
-        version: 6.0.0-beta.2(2aynwhh2o77ide7mtb5em7e6t4)
+        specifier: 6.0.0-beta.4
+        version: 6.0.0-beta.4(v73oylu5qs3cavoyvfoft6xvce)
       '@mui/icons-material':
         specifier: ^5.16.5
         version: 5.16.5(@mui/material@5.16.5(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
@@ -2947,9 +2947,9 @@ packages:
   '@mui/core-downloads-tracker@5.16.5':
     resolution: {integrity: sha512-ziFn1oPm6VjvHQcdGcAO+fXvOQEgieIj0BuSqcltFU+JXIxjPdVYNTdn2HU7/Ak5Gabk6k2u7+9PV7oZ6JT5sA==}
 
-  '@mui/docs@6.0.0-beta.2':
-    resolution: {integrity: sha512-VLSVlYs09wVyhxrjIEMoyHcJV60mMePjszbzOcGImbRgCdaSw1cwCTzntmB09dRkaDsMhRul1I+poFyQu0nCAA==}
-    engines: {node: '>=12.0.0'}
+  '@mui/docs@6.0.0-beta.4':
+    resolution: {integrity: sha512-zQ/0CPWRmNBDYwLE10FrBm4wnLUCm5200ZsyqFowcHr2Utajmlsby4BIkhjlZ7/XurQr2SW67bA+VIWT+GKvDQ==}
+    engines: {node: '>=14.0.0'}
     peerDependencies:
       '@mui/base': '*'
       '@mui/icons-material': ^5.0.0
@@ -2957,6 +2957,7 @@ packages:
       '@mui/system': ^5.0.0
       '@types/react': ^17.0.0 || ^18.0.0
       chai: ^4.4.1
+      csstype: ^3.1.3
       next: ^13.5.1 || ^14
       react: ^17.0.0 || ^18.0.0
     peerDependenciesMeta:
@@ -11744,7 +11745,7 @@ snapshots:
 
   '@mui/core-downloads-tracker@5.16.5': {}
 
-  '@mui/docs@6.0.0-beta.2(2aynwhh2o77ide7mtb5em7e6t4)':
+  '@mui/docs@6.0.0-beta.4(v73oylu5qs3cavoyvfoft6xvce)':
     dependencies:
       '@babel/runtime': 7.25.0
       '@mui/base': 5.0.0-beta.40(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -11755,6 +11756,7 @@ snapshots:
       chai: 5.1.1
       clipboard-copy: 4.0.1
       clsx: 2.1.1
+      csstype: 3.1.3
       next: 14.2.5(@babel/core@7.25.2)(@opentelemetry/api@1.8.0)(@playwright/test@1.44.1)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nprogress: 0.2.0
       prop-types: 15.8.1
