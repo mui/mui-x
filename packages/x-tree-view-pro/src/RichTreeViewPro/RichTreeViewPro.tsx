@@ -1,7 +1,7 @@
 import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import { useTreeView, TreeViewProvider, warnOnce } from '@mui/x-tree-view/internals';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
