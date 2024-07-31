@@ -16,7 +16,7 @@ import {
   ZAxisContextProvider,
   ZAxisContextProviderProps,
 } from '../context';
-import { ChartsPluginType } from '../models/plugin';
+import { ChartsPluginType } from '../context/PluginProvider';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { useChartContainerProps } from './useChartContainerProps';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';

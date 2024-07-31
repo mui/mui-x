@@ -1,4 +1,4 @@
-import { ChartsPluginType } from '../models/plugin';
+import { ChartsPluginType } from '../context/PluginProvider';
 import { getExtremumX, getExtremumY } from './extremums';
 import formatter from './formatter';
 import getColor from './getColor';
