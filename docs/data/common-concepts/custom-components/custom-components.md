@@ -4,7 +4,7 @@
 
 ## What is a slot?
 
-A slot is a part of a component that can be overridden and / or customized.
+A slot is a part of a component that can be overridden and/or customized.
 
 ## Basic usage
 
