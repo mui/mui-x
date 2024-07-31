@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
+import { useTreeViewContext } from '../internals/TreeViewProvider';
 import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
 import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
 import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';

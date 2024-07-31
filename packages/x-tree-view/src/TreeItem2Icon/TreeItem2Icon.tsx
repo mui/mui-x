@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { TreeItem2IconProps } from './TreeItem2Icon.types';
-import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
+import { useTreeViewContext } from '../internals/TreeViewProvider';
 import { UseTreeViewIconsSignature } from '../internals/plugins/useTreeViewIcons';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 
