@@ -2,7 +2,7 @@ import * as React from 'react';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { InputAdornmentProps } from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import {
   BaseNonStaticPickerProps,
   BasePickerProps,

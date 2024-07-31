@@ -18,7 +18,7 @@ import {
   GridStateColDef,
   GridColumnHeaderRow,
 } from '@mui/x-data-grid/internals';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 

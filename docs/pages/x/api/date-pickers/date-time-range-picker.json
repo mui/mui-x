@@ -253,7 +253,7 @@
     {
       "name": "desktopTrapFocus",
       "description": "Custom component for trapping the focus inside the views on desktop.",
-      "default": "FocusTrap from '@mui/base'.",
+      "default": "TrapFocus from '@mui/material'.",
       "class": null
     },
     {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import PropTypes from 'prop-types';
 import { SlotComponentPropsFromProps } from '../../internals/SlotComponentPropsFromProps';
 import { useUtilityClasses } from './barLabelClasses';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { EventHandlers } from '@mui/base/utils';
+import { EventHandlers } from '@mui/utils';
 import type {
   UseTreeItem2ContentSlotOwnProps,
   UseTreeItem2DragAndDropOverlaySlotOwnProps,

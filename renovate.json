@@ -81,7 +81,6 @@
     {
       "groupName": "MUI Core",
       "matchPackageNames": [
-        "@mui/base",
         "@mui/icons-material",
         "@mui/joy",
         "@mui/lab",

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NoSsr } from '@mui/base/NoSsr';
+import NoSsr from '@mui/material/NoSsr';
 import { useTheme, styled } from '@mui/material/styles';
 import { DrawingArea } from '../context/DrawingProvider';
 import { DefaultizedProps } from '../models/helpers';

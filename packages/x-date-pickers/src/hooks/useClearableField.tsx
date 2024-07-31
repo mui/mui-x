@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { SlotComponentProps, useSlotProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import MuiIconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { SxProps } from '@mui/system';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import { UseTreeItem2Parameters, UseTreeItem2Status } from '../useTreeItem2';
 import { TreeItemClasses } from '../TreeItem';
 import { TreeItem2IconSlotProps, TreeItem2IconSlots } from '../TreeItem2Icon';
