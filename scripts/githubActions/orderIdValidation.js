@@ -15,12 +15,6 @@ module.exports = async ({ core, context, github }) => {
 
     const orderApi = 'https://store-wp.mui.com/wp-json/wc/v3/orders/';
 
-    const issue = await github.rest.issues.get({
-      owner,
-      repo,
-      issue_number: issueNumber,
-    });
-
     core.debug(`>>> Order ID: ${orderId}`);
 
     if (!orderId) {
@@ -59,19 +53,11 @@ module.exports = async ({ core, context, github }) => {
       core.debug(`>>> planName: ${planName}`);
       core.debug(`>>> labelName: ${labelName}`);
 
-      const label = await github.rest.issues.getLabel({
-        owner,
-        repo,
-        name: labelName,
-      });
-
-      core.debug(`>>> new label: ${label.name}`);
-
       await github.rest.issues.addLabels({
         owner,
         repo,
         issue_number: issueNumber,
-        labels: [...issue.data.labels, label],
+        labels: [labelName],
       });
     }
   } catch (error) {
