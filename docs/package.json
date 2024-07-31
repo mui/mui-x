@@ -109,6 +109,7 @@
     "@types/d3-scale": "^4.0.8",
     "@types/d3-scale-chromatic": "^3.0.3",
     "@types/doctrine": "^0.0.9",
+    "@types/gtag.js": "^0.0.20",
     "@types/lodash": "^4.17.7",
     "@types/luxon": "^3.4.2",
     "@types/moment-hijri": "^2.1.4",

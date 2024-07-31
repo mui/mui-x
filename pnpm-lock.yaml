@@ -96,8 +96,8 @@ importers:
         specifier: ^5.16.5
         version: 5.16.5(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#288863bd2f8681a82c4bfbaf13215b41043bc551
-        version: https://codeload.github.com/mui/material-ui/tar.gz/288863bd2f8681a82c4bfbaf13215b41043bc551(encoding@0.1.13)
+        specifier: github:mui/material-ui#4a82b6b0e0395db8fa0a0d49b6b76de4516b1579
+        version: https://codeload.github.com/mui/material-ui/tar.gz/4a82b6b0e0395db8fa0a0d49b6b76de4516b1579(encoding@0.1.13)
       '@mui/utils':
         specifier: ^5.16.5
         version: 5.16.5(@types/react@18.3.3)(react@18.3.1)
@@ -660,6 +660,9 @@ importers:
       '@types/doctrine':
         specifier: ^0.0.9
         version: 0.0.9
+      '@types/gtag.js':
+        specifier: ^0.0.20
+        version: 0.0.20
       '@types/lodash':
         specifier: ^4.17.7
         version: 4.17.7
@@ -3060,9 +3063,9 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/288863bd2f8681a82c4bfbaf13215b41043bc551':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/288863bd2f8681a82c4bfbaf13215b41043bc551}
-    version: 6.0.0-beta.2
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/4a82b6b0e0395db8fa0a0d49b6b76de4516b1579':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/4a82b6b0e0395db8fa0a0d49b6b76de4516b1579}
+    version: 6.0.0-beta.4
     engines: {pnpm: 9.5.0}
 
   '@mui/private-theming@5.16.5':
@@ -4010,6 +4013,9 @@ packages:
 
   '@types/fs-extra@11.0.4':
     resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
+
+  '@types/gtag.js@0.0.20':
+    resolution: {integrity: sha512-wwAbk3SA2QeU67unN7zPxjEHmPmlXwZXZvQEpbEUQuMCRGgKyE1m6XDuTUA9b6pCGb/GqJmdfMOY5LuDjJSbbg==}
 
   '@types/history@4.7.11':
     resolution: {integrity: sha512-qjDJRrmvBMiTx+jyLxvLfJU7UznFuokDv4f3WRuriHKERccVpFU+8XMQUAbDzoiJCsmexxRExQeMwwCdamSKDA==}
@@ -6405,8 +6411,8 @@ packages:
     resolution: {integrity: sha512-4kKdWXTtgQ4biIo7hZA396HT062nDVVHPjQcurNZ3o/voYN+o5FUC5kOwuORbpExp3XbTJ3SU7iRipiIhQtovw==}
     engines: {node: '>=14'}
 
-  google-auth-library@9.11.0:
-    resolution: {integrity: sha512-epX3ww/mNnhl6tL45EQ/oixsY8JLEgUFoT4A5E/5iAR4esld9Kqv6IJGk7EmGuOgDvaarwF95hU2+v7Irql9lw==}
+  google-auth-library@9.12.0:
+    resolution: {integrity: sha512-5pWjpxJMNJ5UTuhK7QPD5KFPsbosWkX4ajMDeZwXllTtwwqeiIzPWbHIddkLBkkn0mUPboTmukT5rd30Ec9igQ==}
     engines: {node: '>=14'}
 
   googleapis-common@7.0.1:
@@ -11898,13 +11904,13 @@ snapshots:
       '@emotion/styled': 11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@types/react': 18.3.3
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/288863bd2f8681a82c4bfbaf13215b41043bc551(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/4a82b6b0e0395db8fa0a0d49b6b76de4516b1579(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 8.0.0(encoding@0.1.13)
       '@netlify/functions': 2.8.1
       '@slack/bolt': 3.19.0
       execa: 9.3.0
-      google-auth-library: 9.11.0(encoding@0.1.13)
+      google-auth-library: 9.12.0(encoding@0.1.13)
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -12981,6 +12987,8 @@ snapshots:
     dependencies:
       '@types/jsonfile': 6.1.4
       '@types/node': 18.19.42
+
+  '@types/gtag.js@0.0.20': {}
 
   '@types/history@4.7.11': {}
 
@@ -15939,7 +15947,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  google-auth-library@9.11.0(encoding@0.1.13):
+  google-auth-library@9.12.0(encoding@0.1.13):
     dependencies:
       base64-js: 1.5.1
       ecdsa-sig-formatter: 1.0.11
@@ -15955,7 +15963,7 @@ snapshots:
     dependencies:
       extend: 3.0.2
       gaxios: 6.1.1(encoding@0.1.13)
-      google-auth-library: 9.11.0(encoding@0.1.13)
+      google-auth-library: 9.12.0(encoding@0.1.13)
       qs: 6.11.2
       url-template: 2.0.8
       uuid: 9.0.1
