@@ -9,4 +9,5 @@ export type {
   UseTreeItem2LabelSlotOwnProps,
   UseTreeItem2IconContainerSlotOwnProps,
   UseTreeItem2GroupTransitionSlotOwnProps,
+  UseTreeItem2DragAndDropOverlaySlotOwnProps,
 } from './useTreeItem2.types';

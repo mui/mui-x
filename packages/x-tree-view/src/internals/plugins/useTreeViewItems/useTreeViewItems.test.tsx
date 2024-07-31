@@ -183,6 +183,35 @@ describeTreeView<
       });
     });
 
+    describe('onItemClick prop', () => {
+      it('should call onItemClick when clicking on the content of an item', () => {
+        const onItemClick = spy();
+
+        const response = render({
+          items: [{ id: '1' }],
+          onItemClick,
+        });
+
+        fireEvent.click(response.getItemContent('1'));
+        expect(onItemClick.callCount).to.equal(1);
+        expect(onItemClick.lastCall.lastArg).to.equal('1');
+      });
+
+      it('should not call onItemClick for the ancestors on the clicked item', () => {
+        const onItemClick = spy();
+
+        const response = render({
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          defaultExpandedItems: ['1'],
+          onItemClick,
+        });
+
+        fireEvent.click(response.getItemContent('1.1'));
+        expect(onItemClick.callCount).to.equal(1);
+        expect(onItemClick.lastCall.lastArg).to.equal('1.1');
+      });
+    });
+
     describe('API methods', () => {
       describe('getItem', () => {
         // This method is only usable with Rich Tree View components

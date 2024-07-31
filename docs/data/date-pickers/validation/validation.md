@@ -87,12 +87,20 @@ The `minDate` prop prevents the selection of all values before `props.minDate`.
 
 {{"demo": "DateValidationMinDate.js", "defaultCodeOpen": false}}
 
+:::info
+The default value of `minDate` is `1900-01-01`.
+:::
+
 The `maxDate` prop prevents the selection of all values after `props.maxDate`.
 
 - On the `day` view—all the days after the `maxDate` won't be selectable.
 - On the `month` and `year` views—all the values starting after the `maxDate` won't be selectable.
 
 {{"demo": "DateValidationMaxDate.js", "defaultCodeOpen": false}}
+
+:::info
+The default value of `maxDate` is `2099-12-31`.
+:::
 
 ### Disable specific dates
 

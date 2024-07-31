@@ -4,7 +4,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from 'd3-shape';
+import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
 import { animated, to, useSpring } from '@react-spring/web';
 import { getSymbol } from '../internals/getSymbol';
 import { InteractionContext } from '../context/InteractionProvider';

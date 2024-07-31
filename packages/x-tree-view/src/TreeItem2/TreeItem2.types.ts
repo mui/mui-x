@@ -42,6 +42,12 @@ export interface TreeItem2Slots extends TreeItem2IconSlots {
    * @default TreeItem2LabelInput
    */
   labelInput?: React.ElementType;
+  /**
+   * The component that renders the overlay when an item reordering is ongoing.
+   * Warning: This slot is only useful when using the `RichTreeViewPro` component.
+   * @default TreeItem2DragAndDropOverlay
+   */
+  dragAndDropOverlay?: React.ElementType;
 }
 
 export interface TreeItem2SlotProps extends TreeItem2IconSlotProps {
@@ -52,6 +58,7 @@ export interface TreeItem2SlotProps extends TreeItem2IconSlotProps {
   checkbox?: SlotComponentProps<'button', {}, {}>;
   label?: SlotComponentProps<'div', {}, {}>;
   labelInput?: SlotComponentProps<'input', {}, {}>;
+  dragAndDropOverlay?: SlotComponentProps<'div', {}, {}>;
 }
 
 export interface TreeItem2Props

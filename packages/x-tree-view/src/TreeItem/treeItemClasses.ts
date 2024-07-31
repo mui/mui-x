@@ -28,6 +28,8 @@ export interface TreeItemClasses {
   editing: string;
   /** Styles applied to the content of the items that are editable. */
   editable: string;
+  /** Styles applied to the drag and drop overlay. */
+  dragAndDropOverlay: string;
 }
 
 export type TreeItemClassKey = keyof TreeItemClasses;
@@ -50,4 +52,5 @@ export const treeItemClasses: TreeItemClasses = generateUtilityClasses('MuiTreeI
   'labelInput',
   'editable',
   'editing',
+  'dragAndDropOverlay',
 ]);

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { EventHandlers } from '@mui/base/utils';
 import type {
   UseTreeItem2ContentSlotOwnProps,
+  UseTreeItem2DragAndDropOverlaySlotOwnProps,
   UseTreeItem2RootSlotOwnProps,
 } from '../../useTreeItem2';
 
@@ -18,6 +19,7 @@ type TreeViewItemPluginSlotPropsEnhancer<TSlotProps> = (
 export interface TreeViewItemPluginSlotPropsEnhancers {
   root?: TreeViewItemPluginSlotPropsEnhancer<UseTreeItem2RootSlotOwnProps>;
   content?: TreeViewItemPluginSlotPropsEnhancer<UseTreeItem2ContentSlotOwnProps>;
+  dragAndDropOverlay?: TreeViewItemPluginSlotPropsEnhancer<UseTreeItem2DragAndDropOverlaySlotOwnProps>;
 }
 
 export interface TreeViewItemPluginResponse {

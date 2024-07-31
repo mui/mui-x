@@ -37,6 +37,10 @@
       "nodeName": "the element",
       "conditions": "disabled"
     },
+    "dragAndDropOverlay": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the drag and drop overlay"
+    },
     "editable": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the content of the items that are editable"

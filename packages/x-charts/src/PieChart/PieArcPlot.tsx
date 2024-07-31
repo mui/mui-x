@@ -168,13 +168,9 @@ PieArcPlot.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       color: PropTypes.string.isRequired,
-      endAngle: PropTypes.number.isRequired,
       formattedValue: PropTypes.string.isRequired,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      index: PropTypes.number.isRequired,
       label: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-      padAngle: PropTypes.number.isRequired,
-      startAngle: PropTypes.number.isRequired,
       value: PropTypes.number.isRequired,
     }),
   ).isRequired,
