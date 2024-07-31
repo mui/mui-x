@@ -1,5 +1,5 @@
 export { useTreeView } from './useTreeView';
-export { TreeViewProvider } from './TreeViewProvider';
+export { TreeViewProvider, useTreeViewContext } from './TreeViewProvider';
 
 export { unstable_resetCleanupTracking } from './hooks/useInstanceEventHandler';
 
@@ -10,6 +10,12 @@ export type {
   MergeSignaturesProperty,
   TreeViewPublicAPI,
   TreeViewExperimentalFeatures,
+  TreeViewItemMeta,
+  TreeViewInstance,
+  DefaultizedProps,
+  TreeViewItemPlugin,
+  MuiCancellableEvent,
+  MuiCancellableEventHandler,
 } from './models';
 
 // Core plugins
@@ -38,10 +44,15 @@ export type {
   UseTreeViewIconsSignature,
   UseTreeViewIconsParameters,
 } from './plugins/useTreeViewIcons';
-export { useTreeViewItems } from './plugins/useTreeViewItems';
+export {
+  useTreeViewItems,
+  buildSiblingIndexes,
+  TREE_VIEW_ROOT_PARENT_ID,
+} from './plugins/useTreeViewItems';
 export type {
   UseTreeViewItemsSignature,
   UseTreeViewItemsParameters,
+  UseTreeViewItemsState,
 } from './plugins/useTreeViewItems';
 export { useTreeViewJSXItems } from './plugins/useTreeViewJSXItems';
 export type {
@@ -49,4 +60,5 @@ export type {
   UseTreeViewJSXItemsParameters,
 } from './plugins/useTreeViewJSXItems';
 
+export { isTargetInDescendants } from './utils/tree';
 export { warnOnce } from './utils/warning';

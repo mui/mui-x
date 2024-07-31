@@ -187,6 +187,11 @@ const itemTree = apiRef.current.getItemTree();
 
 {{"demo": "ApiMethodGetItemTree.js", "defaultCodeOpen": false}}
 
+:::info
+This method is mostly useful when the Tree View has some internal updates on the items.
+For now, the only features causing updates on the items is the [re-ordering](/x/react-tree-view/rich-tree-view/ordering/).
+:::
+
 ### Get an item's children by ID
 
 Use the `getItemOrderedChildrenIds` API method to get an item's children by its ID.

@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Checkbox from '@mui/material/Checkbox';
 import { useTreeItemState } from './useTreeItemState';
+import {
+  TreeItem2DragAndDropOverlay,
+  TreeItem2DragAndDropOverlayProps,
+} from '../TreeItem2DragAndDropOverlay';
 
 export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
@@ -47,6 +51,7 @@ export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> 
    * The icon to display next to the tree item's label. Either a parent or end icon.
    */
   displayIcon?: React.ReactNode;
+  dragAndDropOverlayProps?: TreeItem2DragAndDropOverlayProps;
 }
 
 export type TreeItemContentClassKey = keyof NonNullable<TreeItemContentProps['classes']>;
@@ -68,6 +73,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     itemId,
     onClick,
     onMouseDown,
+    dragAndDropOverlayProps,
     ...other
   } = props;
 
@@ -144,6 +150,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
       )}
 
       <div className={classes.label}>{label}</div>
+      {dragAndDropOverlayProps && <TreeItem2DragAndDropOverlay {...dragAndDropOverlayProps} />}
     </div>
   );
 });
@@ -162,6 +169,10 @@ TreeItemContent.propTypes = {
    * The icon to display next to the tree item's label. Either a parent or end icon.
    */
   displayIcon: PropTypes.node,
+  dragAndDropOverlayProps: PropTypes.shape({
+    action: PropTypes.oneOf(['make-child', 'move-to-parent', 'reorder-above', 'reorder-below']),
+    style: PropTypes.object,
+  }),
   /**
    * The icon to display next to the tree item's label. Either an expansion or collapse icon.
    */

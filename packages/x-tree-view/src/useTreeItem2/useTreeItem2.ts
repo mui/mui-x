@@ -12,9 +12,12 @@ import {
   UseTreeItem2CheckboxSlotProps,
   UseTreeItem2MinimalPlugins,
   UseTreeItem2OptionalPlugins,
+  UseTreeItem2DragAndDropOverlaySlotProps,
+  UseTreeItem2RootSlotPropsFromUseTreeItem,
+  UseTreeItem2ContentSlotPropsFromUseTreeItem,
 } from './useTreeItem2.types';
-import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
-import { MuiCancellableEvent } from '../internals/models/MuiCancellableEvent';
+import { useTreeViewContext } from '../internals/TreeViewProvider';
+import { MuiCancellableEvent } from '../internals/models';
 import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 
@@ -36,10 +39,13 @@ export const useTreeItem2 = <
 
   const { id, itemId, label, children, rootRef } = parameters;
 
-  const { rootRef: pluginRootRef, contentRef } = runItemPlugins(parameters);
+  const { rootRef: pluginRootRef, contentRef, propsEnhancers } = runItemPlugins(parameters);
   const { interactions, status } = useTreeItem2Utils({ itemId, children });
+  const rootRefObject = React.useRef<HTMLLIElement>(null);
+  const contentRefObject = React.useRef<HTMLDivElement>(null);
   const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
-  const handleRootRef = useForkRef(rootRef, pluginRootRef)!;
+  const handleRootRef = useForkRef(rootRef, pluginRootRef, rootRefObject)!;
+  const handleContentRef = useForkRef(contentRef, contentRefObject)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
   const createRootHandleFocus =
@@ -156,7 +162,7 @@ export const useTreeItem2 = <
       ariaSelected = true;
     }
 
-    const response: UseTreeItem2RootSlotProps<ExternalProps> = {
+    const props: UseTreeItem2RootSlotPropsFromUseTreeItem = {
       ...externalEventHandlers,
       ref: handleRootRef,
       role: 'treeitem',
@@ -172,13 +178,19 @@ export const useTreeItem2 = <
     };
 
     if (indentationAtItemLevel) {
-      response.style = {
+      props.style = {
         '--TreeView-itemDepth':
           typeof depthContext === 'function' ? depthContext(itemId) : depthContext,
       } as React.CSSProperties;
     }
 
-    return response;
+    const enhancedRootProps =
+      propsEnhancers.root?.({ rootRefObject, contentRefObject, externalEventHandlers }) ?? {};
+
+    return {
+      ...props,
+      ...enhancedRootProps,
+    } as UseTreeItem2RootSlotProps<ExternalProps>;
   };
 
   const getContentProps = <ExternalProps extends Record<string, any> = {}>(
@@ -186,20 +198,26 @@ export const useTreeItem2 = <
   ): UseTreeItem2ContentSlotProps<ExternalProps> => {
     const externalEventHandlers = extractEventHandlers(externalProps);
 
-    const response: UseTreeItem2ContentSlotProps<ExternalProps> = {
+    const props: UseTreeItem2ContentSlotPropsFromUseTreeItem = {
       ...externalEventHandlers,
       ...externalProps,
-      ref: contentRef,
+      ref: handleContentRef,
       onClick: createContentHandleClick(externalEventHandlers),
       onMouseDown: createContentHandleMouseDown(externalEventHandlers),
       status,
     };
 
     if (indentationAtItemLevel) {
-      response.indentationAtItemLevel = true;
+      props.indentationAtItemLevel = true;
     }
 
-    return response;
+    const enhancedContentProps =
+      propsEnhancers.content?.({ rootRefObject, contentRefObject, externalEventHandlers }) ?? {};
+
+    return {
+      ...props,
+      ...enhancedContentProps,
+    } as UseTreeItem2ContentSlotProps<ExternalProps>;
   };
 
   const getCheckboxProps = <ExternalProps extends Record<string, any> = {}>(
@@ -223,7 +241,6 @@ export const useTreeItem2 = <
     externalProps: ExternalProps = {} as ExternalProps,
   ): UseTreeItem2LabelSlotProps<ExternalProps> => {
     const externalEventHandlers = {
-      ...extractEventHandlers(parameters),
       ...extractEventHandlers(externalProps),
     };
 
@@ -268,6 +285,26 @@ export const useTreeItem2 = <
     return response;
   };
 
+  const getDragAndDropOverlayProps = <ExternalProps extends Record<string, any> = {}>(
+    externalProps: ExternalProps = {} as ExternalProps,
+  ): UseTreeItem2DragAndDropOverlaySlotProps<ExternalProps> => {
+    const externalEventHandlers = {
+      ...extractEventHandlers(externalProps),
+    };
+
+    const enhancedDragAndDropOverlayProps =
+      propsEnhancers.dragAndDropOverlay?.({
+        rootRefObject,
+        contentRefObject,
+        externalEventHandlers,
+      }) ?? {};
+
+    return {
+      ...externalProps,
+      ...enhancedDragAndDropOverlayProps,
+    } as UseTreeItem2DragAndDropOverlaySlotProps<ExternalProps>;
+  };
+
   return {
     getRootProps,
     getContentProps,
@@ -275,6 +312,7 @@ export const useTreeItem2 = <
     getIconContainerProps,
     getCheckboxProps,
     getLabelProps,
+    getDragAndDropOverlayProps,
     rootRef: handleRootRef,
     status,
     publicAPI,

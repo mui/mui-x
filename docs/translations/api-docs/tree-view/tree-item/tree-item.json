@@ -37,6 +37,10 @@
       "nodeName": "the element",
       "conditions": "disabled"
     },
+    "dragAndDropOverlay": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the drag and drop overlay"
+    },
     "expanded": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the content element",

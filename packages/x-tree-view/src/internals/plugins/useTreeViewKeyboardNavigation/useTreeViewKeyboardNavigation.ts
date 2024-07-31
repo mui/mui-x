@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { TreeViewItemMeta, TreeViewPlugin } from '../../models';
+import { TreeViewItemMeta, TreeViewPlugin, MuiCancellableEvent } from '../../models';
 import {
   getFirstNavigableItem,
   getLastNavigableItem,
   getNextNavigableItem,
   getPreviousNavigableItem,
+  isTargetInDescendants,
 } from '../../utils/tree';
 import {
   TreeViewFirstCharMap,
   UseTreeViewKeyboardNavigationSignature,
 } from './useTreeViewKeyboardNavigation.types';
-import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
 
 function isPrintableCharacter(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
@@ -92,7 +92,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
     if (
       event.altKey ||
-      event.currentTarget !== (event.target as HTMLElement).closest('*[role="treeitem"]')
+      isTargetInDescendants(event.target as HTMLElement, event.currentTarget as HTMLElement)
     ) {
       return;
     }

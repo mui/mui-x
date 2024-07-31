@@ -6,6 +6,7 @@ import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
+import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { TreeViewAnyPluginSignature, TreeViewPublicAPI } from '@mui/x-tree-view/internals/models';
 import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 import {
@@ -14,6 +15,7 @@ import {
   DescribeTreeViewJSXRenderer,
   DescribeTreeViewItem,
   DescribeTreeViewRendererUtils,
+  TreeViewItemIdTreeElement,
 } from './describeTreeView.types';
 
 const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>(
@@ -22,11 +24,33 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
 ): void => {
   const { render } = createRenderer();
 
-  const getUtils = (result: MuiRenderResult): DescribeTreeViewRendererUtils => {
+  const getUtils = (
+    result: MuiRenderResult,
+    apiRef?: { current: TreeViewPublicAPI<TSignatures> },
+  ): DescribeTreeViewRendererUtils => {
     const getRoot = () => result.getByRole('tree');
 
     const getAllTreeItemIds = () =>
       result.queryAllByRole('treeitem').map((item) => item.dataset.testid!);
+
+    const getItemIdTree = (): TreeViewItemIdTreeElement[] => {
+      if (!apiRef) {
+        throw new Error(
+          'Cannot use getItemIdTree in renderFromJSX because the apiRef is not defined',
+        );
+      }
+
+      const cleanItem = (item: TreeViewBaseItem) => {
+        if (item.children) {
+          return { id: item.id, children: item.children.map(cleanItem) };
+        }
+
+        return { id: item.id };
+      };
+
+      // @ts-ignore
+      return apiRef.current!.getItemTree().map(cleanItem);
+    };
 
     const getFocusedItemId = () => {
       const activeElement = document.activeElement;
@@ -77,6 +101,7 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
       isItemExpanded,
       isItemSelected,
       getSelectedTreeItems,
+      getItemIdTree,
     };
   };
 
@@ -133,7 +158,7 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
         setProps: result.setProps,
         setItems: (newItems) => result.setProps({ items: newItems }),
         apiRef: apiRef as unknown as { current: TreeViewPublicAPI<TSignatures> },
-        ...getUtils(result),
+        ...getUtils(result, apiRef as unknown as { current: TreeViewPublicAPI<TSignatures> }),
       };
     };
 
