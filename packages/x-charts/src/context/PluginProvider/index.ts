@@ -4,3 +4,7 @@ export * from './PluginContext';
 export * from './ColorProcessor.types';
 export * from './SeriesFormatter.types';
 export * from './ExtremumGetter.types';
+export * from './useColorProcessor';
+export * from './useSeriesFormatter';
+export * from './useXExtremumGetter';
+export * from './useYExtremumGetter';

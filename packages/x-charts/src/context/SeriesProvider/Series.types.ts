@@ -2,7 +2,7 @@ import * as React from 'react';
 import { AllSeriesType } from '../../models/seriesType';
 import { ChartSeriesType, DatasetType } from '../../models/seriesType/config';
 import { ChartsColorPalette } from '../../colorPalettes';
-import { SeriesFormatterResult, SeriesFormatterConfig } from '../PluginProvider';
+import { SeriesFormatterResult } from '../PluginProvider';
 
 export type SeriesFormatterType<T extends ChartSeriesType> = (
   series: AllSeriesType<T>[],
@@ -23,10 +23,6 @@ export type SeriesProviderProps<T extends ChartSeriesType = ChartSeriesType> = {
    * @default blueberryTwilightPalette
    */
   colors?: ChartsColorPalette;
-  /**
-   * Preprocessors for each series types.
-   */
-  seriesFormatters: SeriesFormatterConfig<T>;
   children: React.ReactNode;
 };
 

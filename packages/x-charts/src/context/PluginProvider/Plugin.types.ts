@@ -4,6 +4,10 @@ import type { ExtremumGetter, ExtremumGettersConfig } from './ExtremumGetter.typ
 import type { SeriesFormatter, SeriesFormatterConfig } from './SeriesFormatter.types';
 
 export type PluginProviderProps = {
+  /**
+   * An array of plugins defining how to preprocess data.
+   * If not provided, the container supports line, bar, scatter and pie charts.
+   */
   plugins?: ChartsPlugin<ChartSeriesType>[];
   children: React.ReactNode;
 };
