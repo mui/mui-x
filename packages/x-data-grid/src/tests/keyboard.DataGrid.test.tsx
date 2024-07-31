@@ -848,6 +848,7 @@ describe('<DataGrid /> - Keyboard', () => {
     function setupTest(
       rows: Record<string, string | number | Date | boolean>[],
       columns: GridColDef[],
+      editMode: DataGridProps['editMode'],
     ) {
       const valueSetterMock = spy<GridValueSetter<(typeof columns)[number]>>(
         (value, row, column) => {
@@ -861,23 +862,26 @@ describe('<DataGrid /> - Keyboard', () => {
         column.valueSetter = valueSetterMock;
       });
 
-      render(<DataGrid rows={rows} columns={columns} autoHeight />);
+      render(<DataGrid rows={rows} columns={columns} editMode={editMode} autoHeight />);
 
       return { valueSetterMock };
     }
 
-    function testResetValue(
-      keyType: 'Delete' | 'Backspace',
-      field: string,
-      type: GridColType,
-      value: string | number | Date | boolean,
-    ) {
+    type TestResetValueParams = {
+      editMode: DataGridProps['editMode'];
+      keyType: 'Delete' | 'Backspace';
+      field: string;
+      type: GridColType;
+      value: string | number | Date | boolean;
+    };
+
+    function testResetValue({ editMode, keyType, field, type, value }: TestResetValueParams) {
       const columns: GridColDef[] = [
         { field: 'id', editable: true },
         { field, editable: true, type },
       ];
       const rows = [{ id: 1, [field]: value }];
-      const { valueSetterMock } = setupTest(rows, columns);
+      const { valueSetterMock } = setupTest(rows, columns, editMode);
       const cell = getCell(0, 1);
 
       cell.focus();
@@ -889,83 +893,137 @@ describe('<DataGrid /> - Keyboard', () => {
       };
     }
 
+    const defaultParams: TestResetValueParams = {
+      editMode: 'cell',
+      keyType: 'Backspace',
+      field: 'name',
+      type: 'string',
+      value: 'John Doe',
+    };
+
     it(`should reset value on Backspace key press for number type`, () => {
-      const { cell, deletedValue } = testResetValue('Backspace', 'age', 'number', 24);
+      const { cell, deletedValue } = testResetValue({
+        ...defaultParams,
+        field: 'age',
+        type: 'number',
+        value: 24,
+      });
       expect(cell).to.equal('');
       expect(deletedValue).to.equal(undefined);
     });
 
     it(`should reset value on Backspace key press for date type`, () => {
-      const { cell, deletedValue } = testResetValue('Backspace', 'birthdate', 'date', new Date());
+      const { cell, deletedValue } = testResetValue({
+        ...defaultParams,
+        field: 'birthdate',
+        type: 'date',
+        value: new Date(),
+      });
       expect(cell).to.equal('');
       expect(deletedValue).to.equal(undefined);
     });
 
     it(`should reset value on Backspace key press for dateTime type`, () => {
-      const { cell, deletedValue } = testResetValue(
-        'Backspace',
-        'appointment',
-        'dateTime',
-        new Date(),
-      );
+      const { cell, deletedValue } = testResetValue({
+        ...defaultParams,
+        field: 'appointment',
+        type: 'dateTime',
+        value: new Date(),
+      });
       expect(cell).to.equal('');
       expect(deletedValue).to.equal(undefined);
     });
 
     it(`should reset value on Backspace key press for boolean type`, () => {
-      const { cell, deletedValue } = testResetValue('Backspace', 'isVerified', 'boolean', true);
+      const { cell, deletedValue } = testResetValue({
+        ...defaultParams,
+        field: 'isVerified',
+        type: 'boolean',
+        value: true,
+      });
       expect(cell).to.equal('');
       expect(deletedValue).to.equal(false);
     });
 
     it(`should reset value on Backspace key press for singleSelect type`, () => {
-      const { cell, deletedValue } = testResetValue(
-        'Backspace',
-        'status',
-        'singleSelect',
-        'active',
-      );
+      const { cell, deletedValue } = testResetValue({
+        ...defaultParams,
+        field: 'status',
+        type: 'singleSelect',
+        value: 'active',
+      });
       expect(cell).to.equal('');
       expect(deletedValue).to.equal(null);
     });
 
     it(`should reset value on Delete key press for string type`, () => {
-      const { cell, deletedValue } = testResetValue('Delete', 'name', 'string', 'John Doe');
+      const { cell, deletedValue } = testResetValue({
+        ...defaultParams,
+        keyType: 'Delete',
+        field: 'name',
+        type: 'string',
+        value: 'John Doe',
+      });
       expect(cell).to.equal('');
       expect(deletedValue).to.equal('');
     });
 
     it(`should reset value on Delete key press for number type`, () => {
-      const { cell, deletedValue } = testResetValue('Delete', 'age', 'number', 24);
+      const { cell, deletedValue } = testResetValue({
+        ...defaultParams,
+        keyType: 'Delete',
+        field: 'age',
+        type: 'number',
+        value: 24,
+      });
       expect(cell).to.equal('');
       expect(deletedValue).to.equal(undefined);
     });
 
     it(`should reset value on Delete key press for date type`, () => {
-      const { cell, deletedValue } = testResetValue('Delete', 'birthdate', 'date', new Date());
+      const { cell, deletedValue } = testResetValue({
+        ...defaultParams,
+        keyType: 'Delete',
+        field: 'birthdate',
+        type: 'date',
+        value: new Date(),
+      });
       expect(cell).to.equal('');
       expect(deletedValue).to.equal(undefined);
     });
 
     it(`should reset value on Delete key press for dateTime type`, () => {
-      const { cell, deletedValue } = testResetValue(
-        'Delete',
-        'appointment',
-        'dateTime',
-        new Date(),
-      );
+      const { cell, deletedValue } = testResetValue({
+        ...defaultParams,
+        keyType: 'Delete',
+        field: 'appointment',
+        type: 'dateTime',
+        value: new Date(),
+      });
       expect(cell).to.equal('');
       expect(deletedValue).to.equal(undefined);
     });
 
     it(`should reset value on Delete key press for boolean type`, () => {
-      const { cell, deletedValue } = testResetValue('Delete', 'isVerified', 'boolean', true);
+      const { cell, deletedValue } = testResetValue({
+        ...defaultParams,
+        keyType: 'Delete',
+        field: 'isVerified',
+        type: 'boolean',
+        value: true,
+      });
       expect(cell).to.equal('');
       expect(deletedValue).to.equal(false);
     });
 
     it(`should reset value on Delete key press for singleSelect type`, () => {
-      const { cell, deletedValue } = testResetValue('Delete', 'status', 'singleSelect', 'active');
+      const { cell, deletedValue } = testResetValue({
+        ...defaultParams,
+        keyType: 'Delete',
+        field: 'status',
+        type: 'singleSelect',
+        value: 'active',
+      });
       expect(cell).to.equal('');
       expect(deletedValue).to.equal(null);
     });
