@@ -42,7 +42,7 @@ describe('useHighlighted', () => {
 
   it('should not throw an error when parent context is present', () => {
     const { getByText } = render(
-      <SeriesProvider series={[]} seriesFormatters={{}}>
+      <SeriesProvider series={[]}>
         <HighlightedProvider highlightedItem={{ seriesId: 'test-id' }}>
           <UseHighlighted />
         </HighlightedProvider>

@@ -1,14 +1,6 @@
-import { AxisDefaultized } from '../models/axis';
-import { ZAxisDefaultized } from '../models/z-axis';
-import { DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
 import { ColorProcessor } from '../context/PluginProvider/ColorProcessor.types';
 
-const getColor: ColorProcessor<'scatter'> = (
-  series: DefaultizedScatterSeriesType,
-  xAxis?: AxisDefaultized,
-  yAxis?: AxisDefaultized,
-  zAxis?: ZAxisDefaultized,
-) => {
+const getColor: ColorProcessor<'scatter'> = (series, xAxis, yAxis, zAxis) => {
   const zColorScale = zAxis?.colorScale;
   const yColorScale = yAxis?.colorScale;
   const xColorScale = xAxis?.colorScale;

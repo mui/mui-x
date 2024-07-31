@@ -1,12 +1,6 @@
-import { AxisDefaultized } from '../models/axis';
-import { DefaultizedBarSeriesType } from '../models/seriesType/bar';
 import { ColorProcessor } from '../context/PluginProvider/ColorProcessor.types';
 
-const getColor: ColorProcessor<'bar'> = (
-  series: DefaultizedBarSeriesType,
-  xAxis?: AxisDefaultized,
-  yAxis?: AxisDefaultized,
-) => {
+const getColor: ColorProcessor<'bar'> = (series, xAxis, yAxis) => {
   const verticalLayout = series.layout === 'vertical';
 
   const bandColorScale = verticalLayout ? xAxis?.colorScale : yAxis?.colorScale;
