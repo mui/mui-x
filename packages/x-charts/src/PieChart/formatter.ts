@@ -1,8 +1,9 @@
 import { pie as d3Pie } from '@mui/x-charts-vendor/d3-shape';
-import { ChartSeriesDefaultized, Formatter } from '../models/seriesType/config';
+import { ChartSeriesDefaultized } from '../models/seriesType/config';
 import { ChartsPieSorting, PieValueType } from '../models/seriesType/pie';
 import { SeriesId } from '../models/seriesType/common';
 import { getLabel } from '../internals/getLabel';
+import { Formatter } from '../context/PluginProvider';
 
 const getSortingComparator = (comparator: ChartsPieSorting = 'none') => {
   if (typeof comparator === 'function') {

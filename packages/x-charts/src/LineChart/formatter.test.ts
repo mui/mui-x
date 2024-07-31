@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { FormatterParams } from '../models/seriesType/config';
 import lineFormatter from './formatter';
+import { FormatterParams } from '../context/PluginProvider';
 
 const seriesOrder = ['id1'];
 const seriesDataset: FormatterParams<'line'>['series'] = {

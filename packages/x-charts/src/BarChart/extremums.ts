@@ -1,4 +1,4 @@
-import { ExtremumGetter, ExtremumGetterResult } from '../models/seriesType/config';
+import { ExtremumGetter, ExtremumGetterResult } from '../context/PluginProvider';
 
 const getBaseExtremum: ExtremumGetter<'bar'> = (params) => {
   const { axis } = params;

@@ -1,14 +1,10 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { getStackingGroups } from '../internals/stackSeries';
-import {
-  ChartSeries,
-  DatasetElementType,
-  DatasetType,
-  Formatter,
-} from '../models/seriesType/config';
+import { ChartSeries, DatasetElementType, DatasetType } from '../models/seriesType/config';
 import { defaultizeValueFormatter } from '../internals/defaultizeValueFormatter';
 import { DefaultizedProps } from '../models/helpers';
 import { SeriesId } from '../models/seriesType/common';
+import { Formatter } from '../context/PluginProvider';
 
 let warnedOnce = false;
 

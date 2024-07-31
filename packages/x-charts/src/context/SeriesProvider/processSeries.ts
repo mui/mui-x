@@ -1,7 +1,8 @@
 import { AllSeriesType } from '../../models/seriesType';
 import { defaultizeColor } from '../../internals/defaultizeColor';
-import { ChartSeriesType, DatasetType, FormatterParams } from '../../models/seriesType/config';
+import { ChartSeriesType, DatasetType } from '../../models/seriesType/config';
 import { FormattedSeries, SeriesFormatterConfig } from './Series.types';
+import { FormatterParams } from '../PluginProvider';
 
 /**
  * This methods is the interface between what the developer is providing and what components receives

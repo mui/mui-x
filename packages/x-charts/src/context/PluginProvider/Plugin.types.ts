@@ -1,18 +1,25 @@
 import type {
   CartesianChartSeriesType,
+  ChartSeries,
+  ChartSeriesDefaultized,
   ChartSeriesType,
-  ExtremumGetter,
-  Formatter,
+  ChartsSeriesConfig,
+  DatasetType,
 } from '../../models/seriesType/config';
-import type { AxisDefaultized } from '../../models/axis';
+import type { AxisConfig, AxisDefaultized } from '../../models/axis';
 import type { DefaultizedSeriesType } from '../../models/seriesType';
 import type { ZAxisDefaultized } from '../../models/z-axis';
+import { SeriesId } from '../../models/seriesType/common';
+import { StackingGroupsType } from '../../internals/stackSeries';
+import { LegendItemParams } from '../../ChartsLegend/chartsLegend.types';
 
 export type PluginProviderProps = {
+  plugins?: ChartsPluginType<ChartSeriesType>[];
   children: React.ReactNode;
 };
 
-export type PluginContextState = {};
+// TODO: wrong
+export type PluginContextState = ChartsPluginType<ChartSeriesType>;
 
 type ColorProcessor<T extends ChartSeriesType> = (
   series: DefaultizedSeriesType<T>,
@@ -38,3 +45,38 @@ export type ChartsPluginType<T> = T extends ChartSeriesType
 export type ExtremumGettersConfig<T extends ChartSeriesType = CartesianChartSeriesType> = {
   [K in T]?: ExtremumGetter<K>;
 };
+
+type ExtremumGetterParams<T extends ChartSeriesType> = {
+  series: Record<SeriesId, ChartSeries<T>>;
+  axis: AxisConfig;
+  isDefaultAxis: boolean;
+};
+
+export type ExtremumGetterResult = [number, number] | [null, null];
+
+export type ExtremumGetter<T extends ChartSeriesType> = (
+  params: ExtremumGetterParams<T>,
+) => ExtremumGetterResult;
+
+export type FormatterParams<T extends ChartSeriesType> = {
+  series: Record<SeriesId, ChartsSeriesConfig[T]['seriesInput']>;
+  seriesOrder: SeriesId[];
+};
+
+export type FormatterResult<T extends ChartSeriesType> = {
+  series: Record<SeriesId, ChartSeriesDefaultized<T>>;
+  seriesOrder: SeriesId[];
+} & (ChartsSeriesConfig[T] extends {
+  canBeStacked: true;
+}
+  ? { stackingGroups: StackingGroupsType }
+  : {});
+
+export type Formatter<T extends ChartSeriesType> = (
+  params: FormatterParams<T>,
+  dataset?: DatasetType,
+) => FormatterResult<T>;
+
+export type LegendGetter<T extends ChartSeriesType> = (
+  series: FormatterResult<T>,
+) => LegendItemParams[];

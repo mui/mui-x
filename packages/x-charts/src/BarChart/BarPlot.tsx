@@ -4,7 +4,6 @@ import { useTransition } from '@react-spring/web';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { AxisDefaultized } from '../models/axis';
-import { FormatterResult } from '../models/seriesType/config';
 import { BarItemIdentifier } from '../models';
 import getColor from './getColor';
 import { useChartId } from '../hooks';
@@ -14,6 +13,7 @@ import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { checkScaleErrors } from './checkScaleErrors';
 import { useBarSeries } from '../hooks/useSeries';
+import { FormatterResult } from '../context/PluginProvider';
 
 /**
  * Solution of the equations

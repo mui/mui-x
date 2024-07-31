@@ -5,7 +5,7 @@ import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useSeries } from '../../hooks/useSeries';
 import { CartesianContext } from './CartesianContext';
 import { computeValue } from './computeValue';
-import { ExtremumGettersConfig } from '../../models';
+import { ExtremumGettersConfig } from '../PluginProvider';
 
 export type CartesianContextProviderProps = {
   /**

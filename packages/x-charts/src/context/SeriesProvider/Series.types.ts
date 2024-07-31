@@ -1,12 +1,8 @@
 import * as React from 'react';
 import { AllSeriesType } from '../../models/seriesType';
-import {
-  ChartSeriesType,
-  DatasetType,
-  FormatterParams,
-  FormatterResult,
-} from '../../models/seriesType/config';
+import { ChartSeriesType, DatasetType } from '../../models/seriesType/config';
 import { ChartsColorPalette } from '../../colorPalettes';
+import { FormatterResult, FormatterParams } from '../PluginProvider';
 
 export type SeriesFormatterType<T extends ChartSeriesType> = (
   series: AllSeriesType<T>[],
