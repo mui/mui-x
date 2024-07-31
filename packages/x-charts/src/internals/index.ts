@@ -28,7 +28,7 @@ export * from '../context/CartesianProvider';
 export * from '../context/DrawingProvider';
 export * from '../context/ColorProvider';
 export * from '../context/InteractionProvider';
-export * from '../context/SeriesContextProvider';
+export * from '../context/SeriesProvider';
 export * from '../context/ZAxisContextProvider';
 export type * from '../context/context.types';
 

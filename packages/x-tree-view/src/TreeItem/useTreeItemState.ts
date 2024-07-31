@@ -17,6 +17,7 @@ type UseTreeItemStateOptionalPlugins = readonly [];
 export function useTreeItemState(itemId: string) {
   const {
     instance,
+    items: { onItemClick },
     selection: { multiSelect, checkboxSelection, disableSelection },
     expansion: { expansionTrigger },
   } = useTreeViewContext<UseTreeItemStateMinimalPlugins, UseTreeItemStateOptionalPlugins>();
@@ -96,6 +97,7 @@ export function useTreeItemState(itemId: string) {
     handleExpansion,
     handleSelection,
     handleCheckboxSelection,
+    handleContentClick: onItemClick,
     preventSelection,
     expansionTrigger,
   };

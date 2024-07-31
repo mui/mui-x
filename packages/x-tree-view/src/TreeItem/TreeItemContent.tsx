@@ -87,6 +87,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     handleExpansion,
     handleSelection,
     handleCheckboxSelection,
+    handleContentClick,
     preventSelection,
     expansionTrigger,
   } = useTreeItemState(itemId);
@@ -103,6 +104,8 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
   };
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    handleContentClick?.(event, itemId);
+
     if (checkboxRef.current?.contains(event.target as HTMLElement)) {
       return;
     }

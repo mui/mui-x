@@ -29,10 +29,9 @@ export const useTreeItem2 = <
 ): UseTreeItem2ReturnValue<TSignatures, TOptionalSignatures> => {
   const {
     runItemPlugins,
+    items: { onItemClick, disabledItemsFocusable, indentationAtItemLevel },
     selection: { multiSelect, disableSelection, checkboxSelection },
     expansion: { expansionTrigger },
-    disabledItemsFocusable,
-    indentationAtItemLevel,
     instance,
     publicAPI,
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
@@ -88,6 +87,8 @@ export const useTreeItem2 = <
   const createContentHandleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
       otherHandlers.onClick?.(event);
+      onItemClick?.(event, itemId);
+
       if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;
       }

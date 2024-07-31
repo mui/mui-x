@@ -1,5 +1,6 @@
 coverage:
   ignore:
+    - 'packages/x-charts-vendor'
     - '**/*.test.tsx'
   status:
     project:

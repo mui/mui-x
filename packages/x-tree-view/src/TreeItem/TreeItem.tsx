@@ -188,10 +188,9 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const {
     icons: contextIcons,
     runItemPlugins,
+    items: { disabledItemsFocusable, indentationAtItemLevel },
     selection: { multiSelect },
     expansion: { expansionTrigger },
-    disabledItemsFocusable,
-    indentationAtItemLevel,
     instance,
   } = useTreeViewContext<TreeItemMinimalPlugins, TreeItemOptionalPlugins>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
