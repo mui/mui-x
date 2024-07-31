@@ -124,6 +124,7 @@ export const TreeItem2Label = styled('div', {
   // fixes overflow - see https://github.com/mui/material-ui/issues/27372
   minWidth: 0,
   position: 'relative',
+  overflow: 'hidden',
   ...theme.typography.body1,
   variants: [
     {

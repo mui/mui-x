@@ -74,10 +74,13 @@ export const useTreeItem2 = <
       }
 
       const rootElement = instance.getItemDOMElement(itemId);
+
       // Don't blur the root when switching to editing mode
       if (
         status.editing ||
-        isTargetInDescendants(event.relatedTarget as HTMLElement, rootElement)
+        ((event.relatedTarget && (event.relatedTarget as HTMLElement))?.dataset?.element ===
+          'labelInput' &&
+          isTargetInDescendants(event.relatedTarget as HTMLElement, rootElement))
       ) {
         return;
       }

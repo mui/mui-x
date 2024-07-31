@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import CheckIcon from '@mui/icons-material/Check';
 import IconButton from '@mui/material/IconButton';
@@ -9,7 +10,47 @@ import { TreeItem2, TreeItem2Label } from '@mui/x-tree-view/TreeItem2';
 import { useTreeItem2 } from '@mui/x-tree-view/useTreeItem2/useTreeItem2';
 import { useTreeItem2Utils } from '@mui/x-tree-view/hooks/useTreeItem2Utils';
 
-import { EMPLOYEES } from './employees';
+const StyledLabelInput = styled('input')(({ theme }) => ({
+  ...theme.typography.body1,
+  backgroundColor: theme.palette.background.paper,
+  borderRadius: theme.shape.borderRadius,
+  border: 'none',
+  padding: '0 2px',
+  boxSizing: 'border-box',
+  width: 100,
+  '&:focus': {
+    outline: `1px solid ${theme.palette.primary.main}`,
+  },
+}));
+
+export const ITEMS = [
+  {
+    id: '1',
+    firstName: 'Jane',
+    lastName: 'Doe',
+    editable: true,
+    children: [
+      { id: '1.1', firstName: 'Elena', lastName: 'Kim', editable: true },
+      { id: '1.2', firstName: 'Noah', lastName: 'Rodriguez', editable: true },
+      { id: '1.3', firstName: 'Maya', lastName: 'Patel', editable: true },
+    ],
+  },
+  {
+    id: '2',
+    firstName: 'Liam',
+    lastName: 'Clarke',
+    editable: true,
+    children: [
+      {
+        id: '2.1',
+        firstName: 'Ethan',
+        lastName: 'Lee',
+        editable: true,
+      },
+      { id: '2.2', firstName: 'Ava', lastName: 'Jones', editable: true },
+    ],
+  },
+];
 
 function Label({ children, ...other }) {
   return (
@@ -20,6 +61,7 @@ function Label({ children, ...other }) {
         alignItems: 'center',
         gap: 2,
         justifyContent: 'space-between',
+        minHeight: 30,
       }}
     >
       {children}
@@ -27,7 +69,10 @@ function Label({ children, ...other }) {
   );
 }
 
-function LabelInput({ item, handleCancelItemLabelEditing, handleSaveItemLabel }) {
+const LabelInput = React.forwardRef(function LabelInput(
+  { onChange, item, handleCancelItemLabelEditing, handleSaveItemLabel, ...props },
+  ref,
+) {
   const [initialNameValue, setInitialNameValue] = React.useState({
     firstName: item.firstName,
     lastName: item.lastName,
@@ -53,16 +98,20 @@ function LabelInput({ item, handleCancelItemLabelEditing, handleSaveItemLabel })
 
   return (
     <React.Fragment>
-      <input
+      <StyledLabelInput
+        {...props}
         onChange={handleFirstNameChange}
         value={nameValue.firstName}
         autoFocus
         type="text"
+        ref={ref}
       />
-      <input
+      <StyledLabelInput
+        {...props}
         onChange={handleLastNameChange}
         value={nameValue.lastName}
         type="text"
+        ref={ref}
       />
       <IconButton
         color="success"
@@ -86,7 +135,7 @@ function LabelInput({ item, handleCancelItemLabelEditing, handleSaveItemLabel })
       </IconButton>
     </React.Fragment>
   );
-}
+});
 
 const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
   const {
@@ -99,7 +148,6 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
 
   const handleInputBlur = (event) => {
     event.defaultMuiPrevented = true;
-    event.stopPropagation();
   };
 
   const handleInputKeyDown = (event) => {
@@ -126,11 +174,11 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
 
 export default function CustomLabelInput() {
   return (
-    <Box sx={{ minHeight: 224, minWidth: 260 }}>
+    <Box sx={{ minHeight: 352, minWidth: 340 }}>
       <RichTreeView
-        items={EMPLOYEES}
+        items={ITEMS}
         slots={{ item: CustomTreeItem2 }}
-        isItemEditable={(item) => Boolean(item?.editable)}
+        isItemEditable={() => true}
         defaultExpandedItems={['1', '2']}
         getItemLabel={(item) => `${item.firstName} ${item.lastName}`}
       />
