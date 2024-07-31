@@ -75,7 +75,7 @@ export function getComponentImports(name: string, filename: string) {
 
   const reExportPackage = [rootImportPath];
 
-  if (rootImportPath === '@mui/x-tree-view') {
+  if (rootImportPath === '@mui/x-tree-view' && name !== 'RichTreeView') {
     reExportPackage.push('@mui/x-tree-view-pro');
   }
 

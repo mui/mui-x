@@ -115,8 +115,7 @@
   "name": "RichTreeView",
   "imports": [
     "import { RichTreeView } from '@mui/x-tree-view/RichTreeView';",
-    "import { RichTreeView } from '@mui/x-tree-view';",
-    "import { RichTreeView } from '@mui/x-tree-view-pro';"
+    "import { RichTreeView } from '@mui/x-tree-view';"
   ],
   "slots": [
     {
