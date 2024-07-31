@@ -1,7 +1,7 @@
 import type { DrawingProviderProps } from '../context/DrawingProvider';
 import type { ColorProviderProps } from '../context/ColorProvider';
 import type { CartesianContextProviderProps } from '../context/CartesianProvider';
-import type { SeriesContextProviderProps } from '../context/SeriesContextProvider';
+import type { SeriesProviderProps } from '../context/SeriesProvider';
 import type { ZAxisContextProviderProps } from '../context/ZAxisContextProvider';
 import type { ChartContainerProps } from './ChartContainer';
 import { useChartContainerHooks } from './useChartContainerHooks';
@@ -56,7 +56,7 @@ export const useChartContainerProps = (
     colorProcessors,
   };
 
-  const seriesContextProps: Omit<SeriesContextProviderProps, 'children'> = {
+  const seriesProviderProps: Omit<SeriesProviderProps, 'children'> = {
     series,
     colors,
     dataset,
@@ -96,7 +96,7 @@ export const useChartContainerProps = (
     children,
     drawingProviderProps,
     colorProviderProps,
-    seriesContextProps,
+    seriesProviderProps,
     cartesianContextProps,
     zAxisContextProps,
     highlightedProviderProps,
