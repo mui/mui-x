@@ -29,7 +29,8 @@
   "name": "TreeItem",
   "imports": [
     "import { TreeItem } from '@mui/x-tree-view/TreeItem';",
-    "import { TreeItem } from '@mui/x-tree-view';"
+    "import { TreeItem } from '@mui/x-tree-view';",
+    "import { TreeItem } from '@mui/x-tree-view-pro';"
   ],
   "slots": [
     { "name": "collapseIcon", "description": "The icon used to collapse the item.", "class": null },
