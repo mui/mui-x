@@ -1,15 +1,19 @@
 import type { ChartSeriesType } from '../../models/seriesType/config';
-import type { ColorProcessor } from './ColorProcessor.types';
-import type { ExtremumGetter } from './ExtremumGetter.types';
-import { SeriesFormatter } from './SeriesFormatter.types';
+import type { ColorProcessor, ColorProcessorsConfig } from './ColorProcessor.types';
+import type { ExtremumGetter, ExtremumGettersConfig } from './ExtremumGetter.types';
+import type { SeriesFormatter, SeriesFormatterConfig } from './SeriesFormatter.types';
 
 export type PluginProviderProps = {
   plugins?: ChartsPluginType<ChartSeriesType>[];
   children: React.ReactNode;
 };
 
-// TODO: wrong
-export type PluginContextState = ChartsPluginType<ChartSeriesType>;
+export type PluginContextState = {
+  seriesFormatters: SeriesFormatterConfig<ChartSeriesType>;
+  colorProcessors: ColorProcessorsConfig<ChartSeriesType>;
+  xExtremumGetters: ExtremumGettersConfig<ChartSeriesType>;
+  yExtremumGetters: ExtremumGettersConfig<ChartSeriesType>;
+};
 
 export type ChartsPluginType<T> = T extends ChartSeriesType
   ? {
