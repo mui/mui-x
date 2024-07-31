@@ -5,7 +5,7 @@ import { SeriesFormatterConfig } from './SeriesFormatter.types';
 
 export function useSeriesFormatter<T extends ChartSeriesType>(
   seriesType: T,
-): SeriesFormatterConfig<ChartSeriesType>;
+): SeriesFormatterConfig<T>[T];
 export function useSeriesFormatter(): SeriesFormatterConfig<ChartSeriesType>;
 export function useSeriesFormatter(seriesType?: ChartSeriesType) {
   const { isInitialized, data } = React.useContext(PluginContext);

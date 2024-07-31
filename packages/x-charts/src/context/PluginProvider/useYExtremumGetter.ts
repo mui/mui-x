@@ -5,7 +5,7 @@ import { ExtremumGettersConfig } from './ExtremumGetter.types';
 
 export function useYExtremumGetter<T extends ChartSeriesType>(
   seriesType: T,
-): ExtremumGettersConfig<ChartSeriesType>;
+): ExtremumGettersConfig<T>[T];
 export function useYExtremumGetter(): ExtremumGettersConfig<ChartSeriesType>;
 export function useYExtremumGetter(seriesType?: ChartSeriesType) {
   const { isInitialized, data } = React.useContext(PluginContext);
