@@ -8,7 +8,12 @@ function PluginProvider(props: PluginProviderProps) {
   const formattedSeries = React.useMemo(
     () => ({
       isInitialized: true,
-      data: {},
+      data: {
+        colorProcessors: {},
+        seriesFormatters: {},
+        xExtremumGetters: {},
+        yExtremumGetters: {},
+      },
     }),
     [],
   );

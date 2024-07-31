@@ -4,7 +4,12 @@ import { PluginContextState } from './Plugin.types';
 
 export const PluginContext = React.createContext<Initializable<PluginContextState>>({
   isInitialized: false,
-  data: {},
+  data: {
+    colorProcessors: {},
+    seriesFormatters: {},
+    xExtremumGetters: {},
+    yExtremumGetters: {},
+  },
 });
 
 if (process.env.NODE_ENV !== 'production') {
