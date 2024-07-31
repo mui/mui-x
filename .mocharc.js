@@ -7,9 +7,6 @@ module.exports = {
     // Mocha seems to ignore .next anyway (maybe because dotfiles?).
     // We're leaving this to make sure.
     'docs/.next/**',
-    // x-charts requires 'tsx/cjs' which conflict with the babel date-fns override for picker tests
-    'packages/x-charts/**',
-    'packages/x-charts-pro/**',
   ],
   recursive: true,
   timeout: (process.env.CIRCLECI === 'true' ? 5 : 2) * 1000, // Circle CI has low-performance CPUs.
