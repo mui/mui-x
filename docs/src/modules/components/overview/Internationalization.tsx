@@ -32,12 +32,6 @@ import WorldMapSvg, { ContinentClickHandler } from './WorldMapSvg';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const StyledDemoContainer = styled(Paper)({
-  height: '100%',
-  flexGrow: 1,
-  display: 'flex',
-});
-
 const internationalizationFeatures = [
   {
     title: 'Support for multiple timezones',
@@ -64,45 +58,45 @@ function DemoWrapper({
   link: string;
 }) {
   return (
-    <Paper
+    <Box
       component="div"
-      variant="outlined"
       sx={(brandingTheme) => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 1,
         flexGrow: 1,
         width: '100%',
-        background: `${(brandingTheme.vars || brandingTheme).palette.gradients.linearSubtle}`,
         justifyContent: 'space-between',
+        background: (brandingTheme.vars || brandingTheme).palette.gradients.linearSubtle,
       })}
     >
       {children}
+
       <Paper
+        component="div"
         elevation={0}
         sx={(brandingTheme) => ({
           width: '100%',
-          borderTop: '1px solid',
-          borderColor: 'divider',
+          border: '1px solid transparent',
+          borderTopColor: 'divider',
           borderTopLeftRadius: 0,
           borderTopRightRadius: 0,
+          display: 'flex',
           padding: brandingTheme.spacing(1),
+          justifyContent: 'flex-end',
+          alignItems: { md: 'center' },
+          gap: 2,
         })}
       >
-        <Stack
-          direction="row"
-          alignItems={{ md: 'center' }}
-          justifyContent="flex-end"
-          spacing={2}
-          sx={{ width: '100%' }}
-        >
-          {ToolbarControls}
-          <Button size="small" href={link} endIcon={<ArrowForwardIcon />}>
-            More info
-          </Button>
-        </Stack>
+        {ToolbarControls}
+        <Button size="small" href={link} endIcon={<ArrowForwardIcon />}>
+          More info
+        </Button>
       </Paper>
-    </Paper>
+    </Box>
   );
 }
 
@@ -120,44 +114,46 @@ function TimezonesDemo() {
   };
 
   return (
-    <Stack>
-      <Stack
-        p={3}
-        spacing={2}
-        flexGrow={1}
-        sx={{
-          background: `${(brandingTheme.vars || brandingTheme).palette.gradients.linearSubtle}`,
-        }}
-      >
-        <Typography fontWeight="semiBold">
-          {selectedTimezone ? `Selected timezone: ${selectedTimezone}` : 'Select timezone'}
-        </Typography>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoWrapper link="/x/react-date-pickers/timezone">
+        <Stack
+          spacing={2}
+          flexGrow={1}
+          justifyContent="center"
+          sx={{ maxWidth: '320px', width: '100%' }}
+        >
+          <Typography fontWeight="semiBold">
+            {selectedTimezone ? `Selected timezone: ${selectedTimezone}` : 'Select timezone'}
+          </Typography>
 
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
           <ThemeProvider theme={theme}>
             <DateTimeField
               timezone={selectedTimezone || 'UTC'}
               value={dayjs.utc('2024-06-25T15:30')}
             />
           </ThemeProvider>
-        </LocalizationProvider>
-      </Stack>
-      <Divider />
-      <Box sx={{ p: 3 }}>
-        <WorldMapSvg onClickContinent={handleContinentClick} selectedTimezone={selectedTimezone} />
-      </Box>
-      <Stack
-        direction="row"
-        alignItems={{ md: 'center' }}
-        justifyContent="flex-end"
-        spacing={2}
-        sx={{ width: '100%', borderTop: '1px solid', borderColor: 'divider', padding: 1 }}
-      >
-        <Button size="small" href="/x/react-date-pickers/timezone" endIcon={<ArrowForwardIcon />}>
-          More info
-        </Button>
-      </Stack>
-    </Stack>
+        </Stack>
+
+        <Paper
+          elevation={0}
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            width: '100%',
+            borderRadius: 0,
+            borderTop: '1px solid',
+            borderTopColor: 'divider',
+          }}
+        >
+          <Box sx={{ p: 3, backgroundColor: 'background.paper' }}>
+            <WorldMapSvg
+              onClickContinent={handleContinentClick}
+              selectedTimezone={selectedTimezone}
+            />
+          </Box>
+        </Paper>
+      </DemoWrapper>
+    </LocalizationProvider>
   );
 }
 
@@ -365,11 +361,7 @@ export default function Internationalization() {
           alignItems="center"
           sx={{ minWidth: '560px', minHeight: { xs: 0, md: '526px' } }}
         >
-          {activeItem === 0 && (
-            <StyledDemoContainer variant="outlined">
-              <TimezonesDemo />
-            </StyledDemoContainer>
-          )}
+          {activeItem === 0 && <TimezonesDemo />}
           {activeItem === 1 && <LanguagesDemo />}
           {activeItem === 2 && <ValidationDemo />}
         </Stack>
