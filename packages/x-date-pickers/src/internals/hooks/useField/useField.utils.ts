@@ -747,7 +747,7 @@ export const mergeDateIntoReferenceDate = <TDate extends PickerValidDate>(
       return mergedDate;
     }, referenceDate);
 
-export const isAndroid = () => navigator.userAgent.toLowerCase().indexOf('android') > -1;
+export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
 // TODO v8: Remove if we drop the v6 TextField approach.
 export const getSectionOrder = (
@@ -833,7 +833,7 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
   switch (section.type) {
     case 'month': {
       if (section.contentType === 'digit') {
-        return utils.format(utils.setMonth(utils.date()!, Number(section.value) - 1), 'month');
+        return utils.format(utils.setMonth(utils.date(), Number(section.value) - 1), 'month');
       }
       const parsedDate = utils.parse(section.value, section.format);
       return parsedDate ? utils.format(parsedDate, 'month') : undefined;
@@ -841,7 +841,7 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
     case 'day':
       return section.contentType === 'digit'
         ? utils.format(
-            utils.setDate(utils.startOfYear(utils.date()!), Number(section.value)),
+            utils.setDate(utils.startOfYear(utils.date()), Number(section.value)),
             'dayOfMonthFull',
           )
         : section.value;

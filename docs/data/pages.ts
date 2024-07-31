@@ -428,7 +428,7 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts/heatmap',
             title: 'Heatmap',
             plan: 'pro',
-            unstable: true,
+            planned: true,
           },
           {
             pathname: '/x/react-charts/common-features',
@@ -442,7 +442,12 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/stacking' },
               { pathname: '/x/react-charts/styling' },
               { pathname: '/x/react-charts/tooltip', title: 'Tooltip & Highlights' },
-              { pathname: '/x/react-charts/zoom-and-pan', title: 'Zoom & Pan', plan: 'pro' },
+              {
+                pathname: '/x/react-charts/zoom-and-pan',
+                title: 'Zoom & Pan',
+                plan: 'pro',
+                planned: true,
+              },
             ],
           },
           {
@@ -505,6 +510,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/rich-tree-view/expansion' },
           { pathname: '/x/react-tree-view/rich-tree-view/customization' },
           { pathname: '/x/react-tree-view/rich-tree-view/focus' },
+          { pathname: '/x/react-tree-view/rich-tree-view/ordering', plan: 'pro' },
         ],
       },
       {
