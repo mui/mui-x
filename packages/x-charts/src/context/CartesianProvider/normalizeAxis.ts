@@ -18,9 +18,7 @@ export const normalizeAxis = <
         return axisConfig;
       }
       if (dataset === undefined) {
-        throw Error(
-          `MUI X Charts: ${axisName}-axis uses \`dataKey\` but no \`dataset\` is provided.`,
-        );
+        throw Error(`MUI X: ${axisName}-axis uses \`dataKey\` but no \`dataset\` is provided.`);
       }
       return {
         ...axisConfig,

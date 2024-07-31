@@ -5,6 +5,7 @@ import {
   useColorScheme as useMaterialColorScheme,
   Experimental_CssVarsProvider as MaterialCssVarsProvider,
 } from '@mui/material/styles';
+import useSlotProps from '@mui/utils/useSlotProps';
 import {
   extendTheme as extendJoyTheme,
   useColorScheme,

@@ -1,4 +1,4 @@
-import { scaleBand, scalePoint, scaleTime } from 'd3-scale';
+import { scaleBand, scalePoint, scaleTime } from '@mui/x-charts-vendor/d3-scale';
 import { AxisConfig, ScaleName } from '../../models';
 import {
   ChartsXAxisProps,
@@ -18,7 +18,7 @@ import { getColorScale, getOrdinalColorScale } from '../../internals/colorScale'
 import { getTickNumber } from '../../hooks/useTicks';
 import { getScale } from '../../internals/getScale';
 import { DrawingArea } from '../DrawingProvider';
-import { FormattedSeries } from '../SeriesContextProvider';
+import { FormattedSeries } from '../SeriesProvider';
 import { getAxisExtremum } from './getAxisExtremum';
 import { normalizeAxis } from './normalizeAxis';
 

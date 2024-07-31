@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { refType } from '@mui/utils';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
@@ -203,10 +203,12 @@ SingleInputDateRangeField.propTypes = {
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**
