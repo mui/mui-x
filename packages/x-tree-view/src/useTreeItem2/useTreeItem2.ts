@@ -317,7 +317,7 @@ export const useTreeItem2 = <
 
     return {
       ...externalEventHandlers,
-      value: label,
+      value: label as string,
       ...externalProps,
       'data-element': 'labelInput',
       onKeyDown: createInputHandleKeydown(externalEventHandlers),

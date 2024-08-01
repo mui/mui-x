@@ -7,7 +7,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 packageName: '@mui/x-tree-view'
 ---
 
-# Rich Tree View - label editing
+# Rich Tree View - Label editing
 
 <p class="description">Learn how to edit the label of Tree View items.</p>
 

@@ -175,20 +175,12 @@ function UnstyledLabelInput({ onChange, value, ...props }: UseTreeItem2LabelInpu
     setLabelInputValue(event.target.value);
   };
 
-  const resetLabel = React.useCallback(() => setLabelInputValue(value), [value]);
-
   React.useEffect(() => {
-    return resetLabel();
-  }, [resetLabel]);
+    return () => setLabelInputValue(value);
+  }, [value]);
 
   return (
-    <input
-      {...props}
-      onChange={handleInputChange}
-      value={labelInputValue as string}
-      autoFocus
-      type="text"
-    />
+    <input {...props} onChange={handleInputChange} value={labelInputValue} autoFocus type="text" />
   );
 }
 
