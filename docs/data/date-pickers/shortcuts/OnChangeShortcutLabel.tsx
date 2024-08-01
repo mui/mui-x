@@ -98,7 +98,7 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
   {
     label: 'Thanksgiving Day',
     getValue: () => {
-      // (fourth Thursday in November
+      // (fourth Thursday in November)
       return getMonthWeekday(10, 4, 4);
     },
   },
