@@ -19,7 +19,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
   - So in order to fix this, we are providing a CJS version of D3.
     ![image](https://github.com/user-attachments/assets/56387fe6-85d8-4750-bb9d-9866d5be68fa)
 - 🌍 Improve Turkish (tr-TR) locale on the Data Grid
-- 🌍 Improve Finnish (fi-FI) locale (#14054) on the Date and Time Pickers
+- 🌍 Improve Finnish (fi-FI) locale on the Date and Time Pickers
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
