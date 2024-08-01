@@ -18,7 +18,7 @@ export interface UseTreeViewItemsReorderingInstance {
   /**
    * Get the valid reordering action if a given item is the target of the ongoing reordering.
    * @param {TreeViewItemId} itemId The id of the item to get the action of.
-   * @returns {TreeViewItemItemReorderingValidActions} The valid actions for theF item.
+   * @returns {TreeViewItemItemReorderingValidActions} The valid actions for the item.
    */
   getDroppingTargetValidActions: (itemId: TreeViewItemId) => TreeViewItemItemReorderingValidActions;
   /**
