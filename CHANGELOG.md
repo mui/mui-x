@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Aug 1, 2024_
 
-### 💵 Our commercial offering is evolving!
+### 💵 Our commercial offering is evolving
 
 The [Pro plan](https://mui.com/x/introduction/licensing/#pro-plan) is receiving two new packages:
 
