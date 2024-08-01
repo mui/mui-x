@@ -259,6 +259,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
           if (inputRef.current?.contains?.(event.target as HTMLElement)) {
             inputRef.current.focus();
           }
+          apiRef.current.startHeaderFilterEditMode(colDef.field);
           apiRef.current.setColumnHeaderFilterFocus(colDef.field, event);
         }
       },
