@@ -11,7 +11,15 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 <!-- Blogpost for price changes, use it on tree view pro announcement -->
 
-[Upcoming changes to MUI X pricing in 2024](https://mui.com/blog/mui-x-sep-2024-price-update/)
+- 💵 Our commercial offering is evolving!
+
+  The pro plan is receiving two new packages:
+  - `@mui/x-tree-view-pro` (available today!)
+  - `@mui/x-charts-pro` (available in the coming weeks)
+  
+  As always, every feature released as part of the MIT plan will remain free and MIT licensed forever.
+ 
+ This expansion of the pro plan comes with some adjustments to our pricing strategy. Learn more about those in the [Upcoming changes to MUI X pricing in 2024](https://mui.com/blog/mui-x-sep-2024-price-update/) blog post.
 
 - 📦 Introduce [item reordering using drag and drop](https://mui.com/x/react-tree-view/rich-tree-view/ordering/) on the `RichTreeViewPro` component
 
