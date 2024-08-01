@@ -24,17 +24,23 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 - 📦 Introduce [item reordering using drag and drop](https://mui.com/x/react-tree-view/rich-tree-view/ordering/) on the `RichTreeViewPro` component
 
-![Item reordering using drag and drop](https://github.com/user-attachments/assets/52329632-b7d0-4754-8561-fe26a831e2b2)
-
+  ![Item reordering using drag and drop](https://github.com/user-attachments/assets/52329632-b7d0-4754-8561-fe26a831e2b2)
 
 - 📦 Support Common JS bundle out of the box on `@mui/x-charts` by adding vendored D3 dependencies.
+
   - This modifies how the package imports D3.js. It should impact you if you are using `d3` directly from `x-charts` and don't have them in your `package.json`. You should be unaffected otherwise.
   - For more context, the initial issue is caused by D3 only exporting ESM.
+
     ![image](https://github.com/user-attachments/assets/d705b4de-0c93-420e-a416-528e7a044c1d)
+
   - The solution up until now was to export charts with only ESM. But some frameworks are confused by this configuration.
+
     ![image](https://github.com/user-attachments/assets/18a09703-9dd4-4226-a33d-167af059219c)
+
   - So in order to fix this, we are providing a CJS version of D3.
+
     ![image](https://github.com/user-attachments/assets/56387fe6-85d8-4750-bb9d-9866d5be68fa)
+
 - 🌍 Improve Turkish (tr-TR) locale on the Data Grid
 - 🌍 Improve Finnish (fi-FI) locale on the Date and Time Pickers
 - 🐞 Bugfixes
