@@ -4,7 +4,7 @@
 
 ## What is a slot?
 
-A slot is a part of a component that can be overridden and / or customized.
+A slot is a part of a component that can be overridden and/or customized.
 
 ## Basic usage
 
@@ -24,7 +24,7 @@ You can also use both `slots` and `slotProps` on the same component:
 
 {{"demo": "CustomSlotAndSlotProps.js"}}
 
-Most components also support a callback version of `slotProps`.
+Most slots also support a callback version of `slotProps`.
 This callback receives an object that contains information about the current state of the component,
 that information can vary depending on the slot being used:
 
