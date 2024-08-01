@@ -24,7 +24,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 - 📦 Introduce [item reordering using drag and drop](https://mui.com/x/react-tree-view/rich-tree-view/ordering/) on the `RichTreeViewPro` component
 
-  ![Item reordering using drag and drop](https://github.com/user-attachments/assets/52329632-b7d0-4754-8561-fe26a831e2b2)
+  <img width="384" src="https://github.com/user-attachments/assets/78bd83c5-7ce4-4ed7-acf9-be70b2dbce54" alt="Item reordering using drag and drop" />
 
 - 📦 Support Common JS bundle out of the box on `@mui/x-charts` by adding vendored D3 dependencies.
 
