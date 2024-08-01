@@ -1,4 +1,4 @@
-import { FormattedSeries } from '../context/SeriesContextProvider';
+import { FormattedSeries } from '../context/SeriesProvider';
 import { ChartSeriesType, LegendGetter } from '../models/seriesType/config';
 import getBarLegend from '../BarChart/legend';
 import getScatterLegend from '../ScatterChart/legend';

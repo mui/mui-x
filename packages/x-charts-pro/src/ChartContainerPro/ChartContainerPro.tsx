@@ -8,7 +8,7 @@ import {
   ColorProvider,
   DrawingProvider,
   InteractionProvider,
-  SeriesContextProvider,
+  SeriesProvider,
 } from '@mui/x-charts/internals';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
@@ -28,7 +28,7 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
     zoomProviderProps,
     drawingProviderProps,
     colorProviderProps,
-    seriesContextProps,
+    seriesProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
     cartesianContextProps,
@@ -41,7 +41,7 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
   return (
     <DrawingProvider {...drawingProviderProps}>
       <ColorProvider {...colorProviderProps}>
-        <SeriesContextProvider {...seriesContextProps}>
+        <SeriesProvider {...seriesProviderProps}>
           <ZoomProvider {...zoomProviderProps}>
             <CartesianContextProviderPro {...cartesianContextProps}>
               <ZAxisContextProvider {...zAxisContextProps}>
@@ -56,7 +56,7 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
               </ZAxisContextProvider>
             </CartesianContextProviderPro>
           </ZoomProvider>
-        </SeriesContextProvider>
+        </SeriesProvider>
       </ColorProvider>
     </DrawingProvider>
   );
@@ -154,7 +154,6 @@ ChartContainerPro.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -236,7 +235,6 @@ ChartContainerPro.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({

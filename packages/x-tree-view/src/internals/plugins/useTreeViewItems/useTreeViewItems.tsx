@@ -272,8 +272,11 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       areItemUpdatesPrevented,
     },
     contextValue: {
-      disabledItemsFocusable: params.disabledItemsFocusable,
-      indentationAtItemLevel: experimentalFeatures.indentationAtItemLevel ?? false,
+      items: {
+        onItemClick: params.onItemClick,
+        disabledItemsFocusable: params.disabledItemsFocusable,
+        indentationAtItemLevel: experimentalFeatures.indentationAtItemLevel ?? false,
+      },
     },
   };
 };
@@ -307,5 +310,6 @@ useTreeViewItems.params = {
   isItemDisabled: true,
   getItemLabel: true,
   getItemId: true,
+  onItemClick: true,
   itemChildrenIndentation: true,
 };
