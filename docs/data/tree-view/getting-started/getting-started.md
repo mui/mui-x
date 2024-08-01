@@ -13,25 +13,11 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ## Installation
 
-Using your favorite package manager, install `@mui/x-tree-view`:
+Using your favorite package manager, install `@mui/x-tree-view-pro` for the commercial version, or `@mui/x-tree-view` for the free community version.
 
 <!-- #default-branch-switch -->
 
-<codeblock storageKey="package-manager">
-
-```bash npm
-npm install @mui/x-tree-view
-```
-
-```bash pnpm
-pnpm add @mui/x-tree-view
-```
-
-```bash yarn
-yarn add @mui/x-tree-view
-```
-
-</codeblock>
+{{"component": "modules/components/TreeViewInstallationInstructions.js"}}
 
 The Tree View package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:
