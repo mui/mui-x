@@ -33,6 +33,9 @@ const TreeViewVirtualScrollbarContent = styled('div')({
   display: 'inline-block',
 });
 
+/**
+ * @ignore - do not document.
+ */
 export const TreeViewVirtualScrollbar = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>

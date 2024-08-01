@@ -62,6 +62,9 @@ const TreeViewVirtualScrollerRenderZone = styled('div', {
 
 const releaseInfo = getReleaseInfo();
 
+/**
+ * @ignore - do not document.
+ */
 export const TreeViewVirtualScroller = React.forwardRef(function TreeViewVirtualScroller(
   props: TreeViewVirtualScrollerProps,
   ref: React.Ref<HTMLUListElement>,
