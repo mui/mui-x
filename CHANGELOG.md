@@ -34,7 +34,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 #### `@mui/x-data-grid@7.12.0`
 
 - [DataGrid] Fix crash when updating columns immediately after scrolling (#13781) @cherniavskii
-- [DataGrid] Fix role=presentation a11y issue (#13891) @romgrk
+- [DataGrid] Fix `role=presentation` a11y issue (#13891) @romgrk
 - [DataGrid] Fix top corner pixels & outline radius (#13943) @romgrk
 - [DataGrid] Refactor: remove useless copy (#14039) @romgrk
 - [l10n] Improve Turkish (tr-TR) locale (#13996) @bagcivan
@@ -62,8 +62,8 @@ Same changes as in `@mui/x-date-pickers@7.12.0`.
 #### `@mui/x-charts@7.12.0`
 
 - [charts] Fix incorrect `axisId` prop being allowed in xAxis/yAxis config. Use `id` instead. (#13986) @JCQuintas
-- [charts] Use vendor to have CJS working out of the box (#13608) @alexfauquette
-- [charts] Divide the SeriesProvider to use in filtering (#14026) @JCQuintas
+- [charts] Use vendor to have Common JS bundle working out of the box (#13608) @alexfauquette
+- [charts] Divide the `SeriesProvider` to use in filtering (#14026) @JCQuintas
 
 ### Tree View
 
