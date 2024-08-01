@@ -3,8 +3,6 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-<!--/ NEW_RELEASE /-->
-
 ## **7.12.0**
 
 _Aug 1, 2024_
