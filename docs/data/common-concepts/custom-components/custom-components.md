@@ -227,9 +227,9 @@ See [Data Grid - Custom slots and subcomponents—Custom slot props with TypeScr
 :::warning
 The module augmentation feature isn't implemented yet for the other sets of components. It's coming.
 
-- 👍 Upvote [issue TODO](https://github.com/mui/mui-x/issues/4460) if you want to see it land faster on the Date and Time Pickers.
-- 👍 Upvote [issue TODO](https://github.com/mui/mui-x/issues/4460) if you want to see it land faster on the Charts.
-- 👍 Upvote [issue TODO](https://github.com/mui/mui-x/issues/4460) if you want to see it land faster on the Tree View.
+- 👍 Upvote [issue 9775](https://github.com/mui/mui-x/issues/9775) if you want to see it land faster on the Date and Time Pickers.
+- 👍 Upvote [issue 14063](https://github.com/mui/mui-x/issues/14063) if you want to see it land faster on the Charts.
+- 👍 Upvote [issue 14062](https://github.com/mui/mui-x/issues/14062) if you want to see it land faster on the Tree View.
 
   :::
 
