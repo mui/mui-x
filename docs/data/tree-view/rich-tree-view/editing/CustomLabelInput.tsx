@@ -210,7 +210,7 @@ export default function CustomLabelInput() {
       <RichTreeView
         items={ITEMS}
         slots={{ item: CustomTreeItem2 }}
-        isItemEditable={() => true}
+        isItemEditable
         defaultExpandedItems={['1', '2']}
         getItemLabel={(item) => `${item.firstName} ${item.lastName}`}
       />

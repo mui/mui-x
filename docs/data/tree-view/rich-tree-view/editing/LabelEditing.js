@@ -10,7 +10,7 @@ export default function LabelEditing() {
       <RichTreeView
         items={MUI_X_PRODUCTS}
         slots={{ item: TreeItem2 }}
-        isItemEditable={() => true}
+        isItemEditable
         defaultExpandedItems={['grid', 'pickers']}
       />
     </Box>

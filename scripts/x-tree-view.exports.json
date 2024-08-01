@@ -37,6 +37,7 @@
   { "name": "TreeItem2IconSlotProps", "kind": "Interface" },
   { "name": "TreeItem2IconSlots", "kind": "Interface" },
   { "name": "TreeItem2Label", "kind": "Variable" },
+  { "name": "TreeItem2LabelInput", "kind": "Variable" },
   { "name": "TreeItem2Props", "kind": "Interface" },
   { "name": "TreeItem2Provider", "kind": "Function" },
   { "name": "TreeItem2ProviderProps", "kind": "Interface" },

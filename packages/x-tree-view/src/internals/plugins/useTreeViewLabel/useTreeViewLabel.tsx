@@ -29,7 +29,9 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
     if (!item) {
       return false;
     }
-    return params.isItemEditable ? params.isItemEditable(item) : false;
+    return typeof params.isItemEditable === 'function'
+      ? params.isItemEditable(item)
+      : Boolean(params.isItemEditable);
   };
 
   const isTreeViewEditable = Boolean(params.isItemEditable);

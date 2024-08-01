@@ -19,7 +19,7 @@ You can use the `isItemEditable` prop to enable editing on certain items.
 You can enable editing on all items by always returning true
 
 ```jsx
-<RichTreeView items={ITEMS} isItemEditable={() => true} />
+<RichTreeView items={ITEMS} isItemEditable />
 ```
 
 :::

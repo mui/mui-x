@@ -57,7 +57,7 @@ export interface UseTreeViewLabelParameters<R extends {}> {
    * @param {R} item The item to check.
    * @returns {boolean} `true` if the item is editable.
    */
-  isItemEditable?: (item: R) => boolean;
+  isItemEditable?: boolean | ((item: R) => boolean);
 }
 
 export interface UseTreeViewLabelState {

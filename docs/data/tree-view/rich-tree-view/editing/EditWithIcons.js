@@ -125,7 +125,7 @@ export default function EditWithIcons() {
       <RichTreeView
         items={MUI_X_PRODUCTS}
         slots={{ item: CustomTreeItem2 }}
-        isItemEditable={() => true}
+        isItemEditable
         defaultExpandedItems={['grid', 'pickers']}
         expansionTrigger="iconContainer"
       />

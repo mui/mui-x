@@ -50,14 +50,7 @@
         "returned": "boolean"
       }
     },
-    "isItemEditable": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(item: R) => boolean",
-        "describedArgs": ["item"],
-        "returned": "boolean"
-      }
-    },
+    "isItemEditable": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;bool" } },
     "itemChildrenIndentation": {
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "12px"
