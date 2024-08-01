@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { area as d3Area } from 'd3-shape';
+import { area as d3Area } from '@mui/x-charts-vendor/d3-shape';
 import { useCartesianContext } from '../context/CartesianProvider';
 import {
   AreaElement,
@@ -52,6 +52,8 @@ const useAggregatedData = () => {
       .reverse() // Revert stacked area for a more pleasant animation
       .map((seriesId) => {
         const {
+          xAxisId: xAxisIdProp,
+          yAxisId: yAxisIdProp,
           xAxisKey = defaultXAxisId,
           yAxisKey = defaultYAxisId,
           stackedData,
@@ -59,28 +61,31 @@ const useAggregatedData = () => {
           connectNulls,
         } = series[seriesId];
 
-        const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
-        const yScale = yAxis[yAxisKey].scale;
-        const xData = xAxis[xAxisKey].data;
+        const xAxisId = xAxisIdProp ?? xAxisKey;
+        const yAxisId = yAxisIdProp ?? yAxisKey;
+
+        const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
+        const yScale = yAxis[yAxisId].scale;
+        const xData = xAxis[xAxisId].data;
 
         const gradientUsed: [AxisId, 'x' | 'y'] | undefined =
-          (yAxis[yAxisKey].colorScale && [yAxisKey, 'y']) ||
-          (xAxis[xAxisKey].colorScale && [xAxisKey, 'x']) ||
+          (yAxis[yAxisId].colorScale && [yAxisId, 'y']) ||
+          (xAxis[xAxisId].colorScale && [xAxisId, 'x']) ||
           undefined;
 
         if (process.env.NODE_ENV !== 'production') {
           if (xData === undefined) {
             throw new Error(
-              `MUI X Charts: ${
-                xAxisKey === DEFAULT_X_AXIS_KEY
+              `MUI X: ${
+                xAxisId === DEFAULT_X_AXIS_KEY
                   ? 'The first `xAxis`'
-                  : `The x-axis with id "${xAxisKey}"`
+                  : `The x-axis with id "${xAxisId}"`
               } should have data property to be able to display a line plot.`,
             );
           }
           if (xData.length < stackedData.length) {
             throw new Error(
-              `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
+              `MUI X: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
             );
           }
         }

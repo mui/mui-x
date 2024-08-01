@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import { RichTreeViewItems } from '@mui/x-tree-view/internals';
 import { styled } from '../internals/zero-styled';

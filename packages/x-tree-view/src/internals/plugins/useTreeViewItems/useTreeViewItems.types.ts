@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { TreeViewItemMeta, DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 
@@ -26,6 +27,7 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
   /**
    * Get the ids of a given item's children.
    * Those ids are returned in the order they should be rendered.
+   * To get the root items, pass `null` as the `itemId`.
    * @param {TreeViewItemId | null} itemId The id of the item to get the children of.
    * @returns {TreeViewItemId[]} The ids of the item's children.
    */
@@ -85,7 +87,7 @@ export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItems
   areItemUpdatesPrevented: () => boolean;
 }
 
-export interface UseTreeViewItemsParameters<R extends {}> {
+export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
   /**
    * If `true`, will allow focus on disabled items.
    * @default false
@@ -118,6 +120,12 @@ export interface UseTreeViewItemsParameters<R extends {}> {
    */
   getItemId?: (item: R) => TreeViewItemId;
   /**
+   * Callback fired when the `content` slot of a given tree item is clicked.
+   * @param {React.MouseEvent} event The DOM event that triggered the change.
+   * @param {string} itemId The id of the focused item.
+   */
+  onItemClick?: (event: React.MouseEvent, itemId: string) => void;
+  /**
    * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".
    * @default 12px
@@ -125,7 +133,7 @@ export interface UseTreeViewItemsParameters<R extends {}> {
   itemChildrenIndentation?: string | number;
 }
 
-export type UseTreeViewItemsDefaultizedParameters<R extends {}> = DefaultizedProps<
+export type UseTreeViewItemsDefaultizedParameters<R extends { children?: R[] }> = DefaultizedProps<
   UseTreeViewItemsParameters<R>,
   'disabledItemsFocusable' | 'itemChildrenIndentation'
 >;
@@ -145,9 +153,13 @@ export interface UseTreeViewItemsState<R extends {}> {
   };
 }
 
-interface UseTreeViewItemsContextValue
-  extends Pick<UseTreeViewItemsDefaultizedParameters<any>, 'disabledItemsFocusable'> {
-  indentationAtItemLevel: boolean;
+interface UseTreeViewItemsContextValue {
+  items: Pick<
+    UseTreeViewItemsDefaultizedParameters<any>,
+    'disabledItemsFocusable' | 'onItemClick'
+  > & {
+    indentationAtItemLevel: boolean;
+  };
 }
 
 export type UseTreeViewItemsSignature = TreeViewPluginSignature<{

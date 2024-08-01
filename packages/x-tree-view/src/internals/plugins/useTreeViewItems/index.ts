@@ -5,5 +5,6 @@ export type {
   UseTreeViewItemsDefaultizedParameters,
   TreeViewItemToRenderProps,
   TreeViewItemMetaMap,
+  UseTreeViewItemsState,
 } from './useTreeViewItems.types';
-export { TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
+export { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';

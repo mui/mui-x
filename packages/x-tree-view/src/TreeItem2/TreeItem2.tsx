@@ -5,7 +5,7 @@ import unsupportedProp from '@mui/utils/unsupportedProp';
 import { alpha } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import MuiCheckbox, { CheckboxProps } from '@mui/material/Checkbox';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
@@ -17,6 +17,7 @@ import {
 } from '../useTreeItem2';
 import { getTreeItemUtilityClass } from '../TreeItem';
 import { TreeItem2Icon } from '../TreeItem2Icon';
+import { TreeItem2DragAndDropOverlay } from '../TreeItem2DragAndDropOverlay';
 import { TreeItem2Provider } from '../TreeItem2Provider';
 import { fastMemo } from '../internals/utils/fastMemo';
 
@@ -47,6 +48,7 @@ export const TreeItem2Content = styled('div', {
   borderRadius: theme.shape.borderRadius,
   width: '100%',
   boxSizing: 'border-box', // prevent width + padding to overflow
+  position: 'relative',
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
@@ -197,6 +199,7 @@ const useUtilityClasses = (ownerState: TreeItem2OwnerState) => {
     checkbox: ['checkbox'],
     label: ['label'],
     groupTransition: ['groupTransition'],
+    dragAndDropOverlay: ['dragAndDropOverlay'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);
@@ -241,6 +244,7 @@ const TreeItem2 = React.forwardRef(function TreeItem2(
     getCheckboxProps,
     getLabelProps,
     getGroupTransitionProps,
+    getDragAndDropOverlayProps,
     status,
   } = useTreeItem2({
     id,
@@ -320,6 +324,16 @@ const TreeItem2 = React.forwardRef(function TreeItem2(
     className: classes.groupTransition,
   });
 
+  const DragAndDropOverlay: React.ElementType | undefined =
+    slots.dragAndDropOverlay ?? TreeItem2DragAndDropOverlay;
+  const dragAndDropOverlayProps = useSlotProps({
+    elementType: DragAndDropOverlay,
+    getSlotProps: getDragAndDropOverlayProps,
+    externalSlotProps: slotProps.dragAndDropOverlay,
+    ownerState: {},
+    className: classes.dragAndDropOverlay,
+  });
+
   return (
     <TreeItem2Provider itemId={itemId}>
       <Root {...rootProps}>
@@ -329,6 +343,7 @@ const TreeItem2 = React.forwardRef(function TreeItem2(
           </IconContainer>
           <Checkbox {...checkboxProps} />
           <Label {...labelProps} />
+          <DragAndDropOverlay {...dragAndDropOverlayProps} />
         </Content>
         {children && <TreeItem2GroupTransition as={GroupTransition} {...groupTransitionProps} />}
       </Root>

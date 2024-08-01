@@ -53,7 +53,11 @@ function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
         .forEach((seriesType) => {
           series[seriesType]?.seriesOrder.forEach((seriesId) => {
             const seriesItem = series[seriesType]!.series[seriesId];
-            const axisKey = isXaxis ? seriesItem.xAxisKey : seriesItem.yAxisKey;
+
+            const providedXAxisId = seriesItem.xAxisId ?? seriesItem.xAxisKey;
+            const providedYAxisId = seriesItem.yAxisId ?? seriesItem.yAxisKey;
+
+            const axisKey = isXaxis ? providedXAxisId : providedYAxisId;
             if (axisKey === undefined || axisKey === USED_AXIS_ID) {
               seriesValues[seriesId] = seriesItem.data[dataIndex];
             }

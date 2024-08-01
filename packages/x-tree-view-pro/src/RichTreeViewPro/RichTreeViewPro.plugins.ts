@@ -15,6 +15,10 @@ import {
   TreeViewCorePluginParameters,
 } from '@mui/x-tree-view/internals';
 import {
+  useTreeViewItemsReordering,
+  UseTreeViewItemsReorderingParameters,
+} from '../internals/plugins/useTreeViewItemsReordering';
+import {
   useTreeViewVirtualization,
   UseTreeViewVirtualizationParameters,
 } from '../internals/plugins/useTreeViewVirtualization';
@@ -26,6 +30,7 @@ export const RICH_TREE_VIEW_PRO_PLUGINS = [
   useTreeViewFocus,
   useTreeViewKeyboardNavigation,
   useTreeViewIcons,
+  useTreeViewItemsReordering,
   useTreeViewVirtualization,
 ] as const;
 
@@ -51,4 +56,5 @@ export interface RichTreeViewProPluginParameters<R extends {}, Multiple extends 
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,
     UseTreeViewIconsParameters,
+    UseTreeViewItemsReorderingParameters,
     UseTreeViewVirtualizationParameters {}

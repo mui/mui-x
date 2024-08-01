@@ -2,7 +2,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerWindow from '@mui/utils/ownerWindow';
 import {
-  buildWarning,
+  warnOnce,
   clamp,
   TreeViewPlugin,
   TREE_VIEW_ROOT_PARENT_ID,
@@ -20,14 +20,6 @@ import {
   getBufferFromScrollDirection,
 } from './useTreeViewVirtualization.utils';
 import { throttle } from './throttle';
-
-const emptyParentHeightWarning = buildWarning([
-  'The parent DOM element of the data grid has an empty height.',
-  'Please make sure that this element has an intrinsic height.',
-  'The grid displays with a height of 0px.',
-  '',
-  'More details: https://mui.com/r/x-data-grid-no-dimensions.',
-]);
 
 export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualizationSignature> = ({
   params,
@@ -86,8 +78,17 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
       // jsdom has no layout capabilities
       const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-      if (newSize.height === 0 && !isJSDOM) {
-        emptyParentHeightWarning();
+      if (process.env.NODE_ENV !== 'production') {
+        if (newSize.height === 0 && !isJSDOM) {
+          warnOnce([
+            'The parent DOM element of the tree view has an empty height.',
+            'Please make sure that this element has an intrinsic height.',
+            'The tree view displays with a height of 0px.',
+            '',
+            // TODO: Add a link to the tree view docs
+            'More details: https://mui.com/r/x-data-grid-no-dimensions.',
+          ]);
+        }
       }
 
       if (prevDimensions == null) {

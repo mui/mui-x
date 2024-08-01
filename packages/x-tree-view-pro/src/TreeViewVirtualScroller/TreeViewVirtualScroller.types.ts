@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import { RichTreeViewItemsSlots, RichTreeViewItemsSlotProps } from '@mui/x-tree-view/internals';
 
 export interface TreeViewVirtualScrollerSlots extends RichTreeViewItemsSlots {

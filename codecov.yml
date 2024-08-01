@@ -1,4 +1,7 @@
 coverage:
+  ignore:
+    - 'packages/x-charts-vendor'
+    - '**/*.test.tsx'
   status:
     project:
       default:
@@ -16,8 +19,6 @@ coverage:
           - 'packages/x-date-pickers/src/AdapterMoment/AdapterMoment.ts'
           - 'packages/x-date-pickers/src/AdapterMomentHijri/AdapterMomentHijri.ts'
           - 'packages/x-date-pickers/src/AdapterMomentJalaali/AdapterMomentJalaali.ts'
-        ignore:
-          - '**/*.test.tsx'
     patch: off
 
 comment: false

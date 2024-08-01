@@ -2,14 +2,16 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Collapse from '@mui/material/Collapse';
-import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import useForkRef from '@mui/utils/useForkRef';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { alpha } from '@mui/material/styles';
 import { TransitionProps } from '@mui/material/transitions';
+import composeClasses from '@mui/utils/composeClasses';
+import extractEventHandlers from '@mui/utils/extractEventHandlers';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
+import useSlotProps from '@mui/utils/useSlotProps';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
-import { unstable_composeClasses as composeClasses } from '@mui/base';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeItemContent } from './TreeItemContent';
 import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
@@ -19,7 +21,7 @@ import {
   TreeItemOwnerState,
   TreeItemProps,
 } from './TreeItem.types';
-import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
+import { useTreeViewContext } from '../internals/TreeViewProvider';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 import { TreeItem2Provider } from '../TreeItem2Provider';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
@@ -77,6 +79,7 @@ const StyledTreeItemContent = styled(TreeItemContent, {
   borderRadius: theme.shape.borderRadius,
   width: '100%',
   boxSizing: 'border-box', // prevent width + padding to overflow
+  position: 'relative',
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
@@ -194,10 +197,9 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const {
     icons: contextIcons,
     runItemPlugins,
+    items: { disabledItemsFocusable, indentationAtItemLevel },
     selection: { multiSelect },
     expansion: { expansionTrigger },
-    disabledItemsFocusable,
-    indentationAtItemLevel,
     instance,
   } = useTreeViewContext<TreeItemMinimalPlugins, TreeItemOptionalPlugins>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
@@ -224,9 +226,11 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
   const { expanded, focused, selected, disabled, handleExpansion } = useTreeItemState(itemId);
 
-  const { contentRef, rootRef } = runItemPlugins<TreeItemProps>(props);
-  const handleRootRef = useForkRef(inRef, rootRef);
-  const handleContentRef = useForkRef(ContentProps?.ref, contentRef);
+  const { contentRef, rootRef, propsEnhancers } = runItemPlugins<TreeItemProps>(props);
+  const rootRefObject = React.useRef<HTMLLIElement>(null);
+  const contentRefObject = React.useRef<HTMLDivElement>(null);
+  const handleRootRef = useForkRef(inRef, rootRef, rootRefObject);
+  const handleContentRef = useForkRef(ContentProps?.ref, contentRef, contentRefObject);
 
   const slots = {
     expandIcon: inSlots?.expandIcon ?? contextIcons.slots.expandIcon ?? TreeViewExpandIcon,
@@ -352,6 +356,25 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
   const tabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
 
+  const enhancedRootProps =
+    propsEnhancers.root?.({
+      rootRefObject,
+      contentRefObject,
+      externalEventHandlers: extractEventHandlers(other),
+    }) ?? {};
+  const enhancedContentProps =
+    propsEnhancers.content?.({
+      rootRefObject,
+      contentRefObject,
+      externalEventHandlers: extractEventHandlers(ContentProps),
+    }) ?? {};
+  const enhancedDragAndDropOverlayProps =
+    propsEnhancers.dragAndDropOverlay?.({
+      rootRefObject,
+      contentRefObject,
+      externalEventHandlers: {},
+    }) ?? {};
+
   return (
     <TreeItem2Provider itemId={itemId}>
       <TreeItemRoot
@@ -377,6 +400,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
               } as React.CSSProperties)
             : other.style
         }
+        {...enhancedRootProps}
       >
         <StyledTreeItemContent
           as={ContentComponent}
@@ -399,6 +423,10 @@ export const TreeItem = React.forwardRef(function TreeItem(
           displayIcon={displayIcon}
           ownerState={ownerState}
           {...ContentProps}
+          {...enhancedContentProps}
+          {...((enhancedDragAndDropOverlayProps as any).action == null
+            ? {}
+            : { dragAndDropOverlayProps: enhancedDragAndDropOverlayProps })}
           ref={handleContentRef}
         />
         {children && (
