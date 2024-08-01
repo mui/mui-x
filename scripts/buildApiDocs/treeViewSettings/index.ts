@@ -43,11 +43,11 @@ export default apiPages;
       rootPath: path.join(process.cwd(), 'packages/x-tree-view'),
       entryPointPath: 'src/index.ts',
     },
-    // {
-    //   name: 'tree-view-pro',
-    //   rootPath: path.join(process.cwd(), 'packages/x-tree-view-pro'),
-    //   entryPointPath: 'src/index.ts',
-    // },
+    {
+      name: 'tree-view-pro',
+      rootPath: path.join(process.cwd(), 'packages/x-tree-view-pro'),
+      entryPointPath: 'src/index.ts',
+    },
   ],
   getApiPages: () => findApiPages('docs/pages/x/api/tree-view'),
   getComponentInfo,
