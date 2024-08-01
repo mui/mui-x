@@ -571,7 +571,6 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 - The field `mainElementRef` is now always non-null.
 - The field `rootElementRef` is now always non-null.
 - The field `virtualScrollerRef` is now always non-null.
-- The field `columnHeadersContainerRef` is now always non-null.
 - The event `renderedRowsIntervalChange` params changed from `GridRenderedRowsIntervalChangeParams` to `GridRenderContext`, and the former has been removed.
 
 ### Changes to slots
