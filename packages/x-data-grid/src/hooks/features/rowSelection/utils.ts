@@ -2,75 +2,72 @@ import type { DataGridProcessedProps } from '../../../models/props/DataGridProps
 import { GridSignature } from '../../utils/useGridApiEventHandler';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import type { GridGroupNode, GridRowId, GridRowTreeConfig } from '../../../models/gridRows';
-import type {
-  GridPrivateApiCommunity,
-  GridApiCommunity,
-} from '../../../models/api/gridApiCommunity';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
 import { selectedIdsLookupSelector } from './gridRowSelectionSelector';
 import { gridRowTreeSelector } from '../rows/gridRowsSelector';
-import { createSelector } from '../../../utils/createSelector';
+import { createSelectorV8 } from '../../../utils/createSelectorV8';
 
-function getGridRowGroupSelectableChildrenSelector(
-  apiRef: React.MutableRefObject<GridApiCommunity>,
-  groupId: GridRowId,
-) {
-  return createSelector(
-    gridRowTreeSelector,
-    gridSortedRowIdsSelector,
-    gridFilteredRowsLookupSelector,
-    (rowTree, sortedRowIds, filteredRowsLookup) => {
-      const groupNode = rowTree[groupId];
-      if (!groupNode || groupNode.type !== 'group') {
-        return [];
-      }
-
-      const children: GridRowId[] = [];
-
-      const startIndex = sortedRowIds.findIndex((id) => id === groupId) + 1;
-      for (
-        let index = startIndex;
-        index < sortedRowIds.length && rowTree[sortedRowIds[index]]?.depth > groupNode.depth;
-        index += 1
-      ) {
-        const id = sortedRowIds[index];
-        if (filteredRowsLookup[id] !== false && apiRef.current.isRowSelectable(id)) {
-          children.push(id);
-        }
-      }
+export const gridRowGroupSelectableChildrenSelector = createSelectorV8(
+  gridRowTreeSelector,
+  gridSortedRowIdsSelector,
+  gridFilteredRowsLookupSelector,
+  (rowTree, sortedRowIds, filteredRowsLookup, args) => {
+    const children = new Set<GridRowId>();
+    const { groupId, apiRef } = args;
+    if (groupId === undefined || apiRef === undefined) {
       return children;
-    },
-  );
-}
+    }
+    const groupNode = rowTree[groupId];
+    if (!groupNode || groupNode.type !== 'group') {
+      return children;
+    }
 
-export function getGridSomeChildrenSelectedSelector(groupId: GridRowId) {
-  return createSelector(
-    gridRowTreeSelector,
-    gridSortedRowIdsSelector,
-    gridFilteredRowsLookupSelector,
-    selectedIdsLookupSelector,
-    (rowTree, sortedRowIds, filteredRowsLookup, rowSelectionLookup) => {
-      const groupNode = rowTree[groupId];
-      if (!groupNode || groupNode.type !== 'group') {
-        return false;
+    const startIndex = sortedRowIds.findIndex((id) => id === groupId) + 1;
+    for (
+      let index = startIndex;
+      index < sortedRowIds.length && rowTree[sortedRowIds[index]]?.depth > groupNode.depth;
+      index += 1
+    ) {
+      const id = sortedRowIds[index];
+      if (filteredRowsLookup[id] !== false && apiRef.current.isRowSelectable(id)) {
+        children.add(id);
       }
+    }
+    return children;
+  },
+);
 
-      const startIndex = sortedRowIds.findIndex((id) => id === groupId) + 1;
-      for (
-        let index = startIndex;
-        index < sortedRowIds.length && rowTree[sortedRowIds[index]]?.depth > groupNode.depth;
-        index += 1
-      ) {
-        const id = sortedRowIds[index];
-        if (filteredRowsLookup[id] !== false && rowSelectionLookup[id] !== undefined) {
-          return true;
-        }
-      }
+export const gridSomeChildrenSelectedSelector = createSelectorV8(
+  gridRowTreeSelector,
+  gridSortedRowIdsSelector,
+  gridFilteredRowsLookupSelector,
+  selectedIdsLookupSelector,
+  (rowTree, sortedRowIds, filteredRowsLookup, rowSelectionLookup, args) => {
+    const groupId = args.groupId;
+    if (groupId === undefined) {
       return false;
-    },
-  );
-}
+    }
+    const groupNode = rowTree[groupId];
+    if (!groupNode || groupNode.type !== 'group') {
+      return false;
+    }
+
+    const startIndex = sortedRowIds.findIndex((id) => id === groupId) + 1;
+    for (
+      let index = startIndex;
+      index < sortedRowIds.length && rowTree[sortedRowIds[index]]?.depth > groupNode.depth;
+      index += 1
+    ) {
+      const id = sortedRowIds[index];
+      if (filteredRowsLookup[id] !== false && rowSelectionLookup[id] !== undefined) {
+        return true;
+      }
+    }
+    return false;
+  },
+);
 
 export function isMultipleRowSelectionEnabled(
   props: Pick<
@@ -149,9 +146,11 @@ export const findRowsToSelect = (
   const rowNode = apiRef.current.getRowNode(selectedRow);
 
   if (rowNode?.type === 'group') {
-    const rowGroupChildrenSelector = getGridRowGroupSelectableChildrenSelector(apiRef, selectedRow);
-    const children = rowGroupChildrenSelector(apiRef);
-    return rowsToSelect.concat(children);
+    const children = gridRowGroupSelectableChildrenSelector(apiRef, {
+      groupId: selectedRow,
+      apiRef,
+    });
+    return rowsToSelect.concat(Array.from(children));
   }
   return rowsToSelect;
 };
@@ -173,12 +172,11 @@ export const findRowsToDeselect = (
 
   const rowNode = apiRef.current.getRowNode(deselectedRow);
   if (rowNode?.type === 'group') {
-    const rowGroupChildrenSelector = getGridRowGroupSelectableChildrenSelector(
+    const children = gridRowGroupSelectableChildrenSelector(apiRef, {
+      groupId: deselectedRow,
       apiRef,
-      deselectedRow,
-    );
-    const children = rowGroupChildrenSelector(apiRef);
-    return rowsToDeselect.concat(children);
+    });
+    return rowsToDeselect.concat(Array.from(children));
   }
   return rowsToDeselect;
 };

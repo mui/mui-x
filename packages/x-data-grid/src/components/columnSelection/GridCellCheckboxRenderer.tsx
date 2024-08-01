@@ -10,8 +10,8 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
-import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { getGridSomeChildrenSelectedSelector } from '../../hooks/features/rowSelection/utils';
+import { useGridSelectorV8 } from '../../hooks/utils/useGridSelectorV8';
+import { gridSomeChildrenSelectedSelector } from '../../hooks/features/rowSelection/utils';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -52,8 +52,9 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     const classes = useUtilityClasses(ownerState);
     const checkboxElement = React.useRef<HTMLElement>(null);
 
-    const someChildrenSelectedSelector = getGridSomeChildrenSelectedSelector(id);
-    const someChildrenSelected = useGridSelector(apiRef, someChildrenSelectedSelector);
+    const someChildrenSelected = useGridSelectorV8(apiRef, gridSomeChildrenSelectedSelector, {
+      groupId: id,
+    });
 
     const rippleRef = React.useRef<TouchRippleActions>(null);
     const handleRef = useForkRef(checkboxElement, ref);
