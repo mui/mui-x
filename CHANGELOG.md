@@ -9,6 +9,10 @@ _Aug 1, 2024_
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
+<!-- Blogpost for price changes, use it on tree view pro announcement -->
+
+[Upcoming changes to MUI X pricing in 2024](https://mui.com/blog/mui-x-sep-2024-price-update/)
+
 - 📦 [TreeView] Support item reordering using drag and drop (#12213)
 - 📦 [charts] Use vendor to have CJS working out of the box (#13608)
   - This modifies how the package imports D3.js. It should impact you if you are using `d3` directly from `x-charts` and don't have them in your `package.json`. You should be unaffected otherwise.
