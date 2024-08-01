@@ -58,12 +58,12 @@ Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styli
 npm install @mui/styled-engine-sc styled-components
 ```
 
-```bash yarn
-yarn add @mui/styled-engine-sc styled-components
-```
-
 ```bash pnpm
 pnpm add @mui/styled-engine-sc styled-components
+```
+
+```bash yarn
+yarn add @mui/styled-engine-sc styled-components
 ```
 
 </codeblock>
