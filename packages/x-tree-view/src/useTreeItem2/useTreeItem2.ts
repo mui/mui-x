@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { EventHandlers, extractEventHandlers } from '@mui/base/utils';
+import { EventHandlers } from '@mui/utils';
+import extractEventHandlers from '@mui/utils/extractEventHandlers';
 import useForkRef from '@mui/utils/useForkRef';
 import {
   UseTreeItem2Parameters,
