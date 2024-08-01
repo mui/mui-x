@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
@@ -694,10 +695,12 @@ DateRangeCalendar.propTypes = {
   loading: PropTypes.bool,
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**

@@ -1,4 +1,4 @@
-import { stack as d3Stack } from 'd3-shape';
+import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { getStackingGroups } from '../internals/stackSeries';
 import {
   ChartSeries,

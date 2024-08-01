@@ -45,8 +45,7 @@
     "directory": "packages/x-date-pickers"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.8",
-    "@mui/base": "^5.0.0-beta.40",
+    "@babel/runtime": "^7.25.0",
     "@mui/system": "^5.16.5",
     "@mui/utils": "^5.16.5",
     "@types/react-transition-group": "^4.4.10",
@@ -108,7 +107,7 @@
     "dayjs": "^1.11.11",
     "luxon": "^3.4.4",
     "moment": "^2.30.1",
-    "moment-hijri": "^2.1.2",
+    "moment-hijri": "^2.30.0",
     "moment-jalaali": "^0.10.1",
     "moment-timezone": "^0.5.45",
     "rimraf": "^5.0.9"

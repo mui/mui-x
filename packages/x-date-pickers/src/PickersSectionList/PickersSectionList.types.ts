@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import { PickersSectionListClasses } from './pickersSectionListClasses';
 
 export interface PickersSectionListSlots {
