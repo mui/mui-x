@@ -9,8 +9,6 @@ _Aug 1, 2024_
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-<!-- Blogpost for price changes, use it on tree view pro announcement -->
-
 - 💵 Our commercial offering is evolving!
 
   The pro plan is receiving two new packages:
