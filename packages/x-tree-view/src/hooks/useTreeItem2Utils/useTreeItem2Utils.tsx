@@ -141,11 +141,15 @@ export const useTreeItem2Utils = ({
     event: React.SyntheticEvent & MuiCancellableEvent,
     label: string,
   ) => {
+    if (!hasPlugin(instance, useTreeViewLabel)) {
+      return;
+    }
+
     // As a side effect of `instance.focusItem` called here and in `handleCancelItemLabelEditing` the `labelInput` is blurred
     // The `onBlur` event is triggered, which calls `handleSaveItemLabel` again.
     // To avoid creating an unwanted behavior we need to check if the item is being edited before calling `updateItemLabel`
     // using `instance.isItemBeingEditedRef` instead of `instance.isItemBeingEdited` since the state is not yet updated in this point
-    if (hasPlugin(instance, useTreeViewLabel) && label && instance.isItemBeingEditedRef(itemId)) {
+    if (instance.isItemBeingEditedRef(itemId)) {
       instance.updateItemLabel(itemId, label);
       toggleItemEditing();
       instance.focusItem(event, itemId);

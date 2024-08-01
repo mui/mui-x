@@ -128,7 +128,7 @@ const LabelInput = React.forwardRef(function LabelInput(
       <StyledLabelInput
         {...props}
         onChange={handleFirstNameChange}
-        value={nameValue.firstName as string}
+        value={nameValue.firstName}
         autoFocus
         type="text"
         ref={ref}
@@ -136,7 +136,7 @@ const LabelInput = React.forwardRef(function LabelInput(
       <StyledLabelInput
         {...props}
         onChange={handleLastNameChange}
-        value={nameValue.lastName as string}
+        value={nameValue.lastName}
         type="text"
         ref={ref}
       />

@@ -161,7 +161,7 @@ export const useTreeItem2 = <
     if (event.defaultMuiPrevented) {
       return;
     }
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && event.target.value) {
       interactions.handleSaveItemLabel(event, event.target.value);
     } else if (event.key === 'Escape') {
       interactions.handleCancelItemLabelEditing(event);
@@ -176,7 +176,9 @@ export const useTreeItem2 = <
         return;
       }
 
-      interactions.handleSaveItemLabel(event, event.target.value);
+      if (event.target.value) {
+        interactions.handleSaveItemLabel(event, event.target.value);
+      }
     };
 
   const createInputHandleChange =

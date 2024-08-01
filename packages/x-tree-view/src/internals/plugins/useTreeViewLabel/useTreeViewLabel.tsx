@@ -40,7 +40,7 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
         [
           'MUI X: The Tree View component requires all items to have a `label` property.',
           'The label of an item cannot be empty.',
-          JSON.stringify(itemId),
+          itemId,
         ].join('\n'),
       );
     }

@@ -1,29 +1,28 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import CheckIcon from '@mui/icons-material/Check';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
 import {
   TreeItem2,
   TreeItem2Label,
   TreeItem2Props,
+  TreeItem2LabelInput,
 } from '@mui/x-tree-view/TreeItem2';
-import { IconButton } from '@mui/material';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import CheckIcon from '@mui/icons-material/Check';
-import { TreeItem2LabelInput } from '@mui/x-tree-view/TreeItem2/TreeItem2';
 import {
-  UseTreeItem2LabelInputSlotProps,
+  UseTreeItem2LabelInputSlotOwnProps,
   UseTreeItem2LabelSlotOwnProps,
-  UseTreeItem2LabelSlotProps,
-} from '@mui/x-tree-view/useTreeItem2/useTreeItem2.types';
+} from '@mui/x-tree-view/useTreeItem2';
 import { MUI_X_PRODUCTS } from './products';
 
-type CustomLabelProps = UseTreeItem2LabelSlotProps<{
+interface CustomLabelProps extends UseTreeItem2LabelSlotOwnProps {
   editable: boolean;
   editing: boolean;
   toggleItemEditing: () => void;
-}>;
+}
 
 function CustomLabel({
   editing,
@@ -57,11 +56,11 @@ function CustomLabel({
   );
 }
 
-type CustomLabelInputProps = UseTreeItem2LabelInputSlotProps<{
+interface CustomLabelInputProps extends UseTreeItem2LabelInputSlotOwnProps {
   handleCancelItemLabelEditing: (event: React.SyntheticEvent) => void;
   handleSaveItemLabel: (event: React.SyntheticEvent, label: string) => void;
   value: string;
-}>;
+}
 
 function CustomLabelInput(props: Omit<CustomLabelInputProps, 'ref'>) {
   const { handleCancelItemLabelEditing, handleSaveItemLabel, value, ...other } =
@@ -115,12 +114,12 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
     event.defaultMuiPrevented = true;
   };
 
-  const handleInputBlur: UseTreeItem2LabelInputSlotProps['onBlur'] = (event) => {
+  const handleInputBlur: UseTreeItem2LabelInputSlotOwnProps['onBlur'] = (event) => {
     event.defaultMuiPrevented = true;
     event.stopPropagation();
   };
 
-  const handleInputKeyDown: UseTreeItem2LabelInputSlotProps['onKeyDown'] = (
+  const handleInputKeyDown: UseTreeItem2LabelInputSlotOwnProps['onKeyDown'] = (
     event,
   ) => {
     event.defaultMuiPrevented = true;

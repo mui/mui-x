@@ -5,12 +5,15 @@ import { UseTreeViewLabelSignature } from '@mui/x-tree-view/internals';
 
 describeTreeView<[UseTreeViewLabelSignature]>(
   'useTreeViewLabel plugin',
-  ({ render, setup, treeViewComponentName }) => {
+  ({ render, treeViewComponentName, treeItemComponentName }) => {
     describe('interaction', () => {
       describe('render labelInput when needed', () => {
         it('should not render labelInput when double clicked if item is not editable', function test() {
           // This test is not relevant for the TreeItem component or the SimpleTreeView.
-          if (!setup.includes('TreeItem2') || treeViewComponentName.startsWith('SimpleTreeView')) {
+          if (
+            treeItemComponentName !== 'TreeItem2' ||
+            treeViewComponentName.startsWith('SimpleTreeView')
+          ) {
             this.skip();
           }
           const response = render({
@@ -27,7 +30,10 @@ describeTreeView<[UseTreeViewLabelSignature]>(
 
         it('should render labelInput when double clicked if item is editable', function test() {
           // This test is not relevant for the TreeItem component or the SimpleTreeView.
-          if (!setup.includes('TreeItem2') || treeViewComponentName.startsWith('SimpleTreeView')) {
+          if (
+            treeItemComponentName !== 'TreeItem2' ||
+            treeViewComponentName.startsWith('SimpleTreeView')
+          ) {
             this.skip();
           }
           const response = render({
@@ -44,7 +50,10 @@ describeTreeView<[UseTreeViewLabelSignature]>(
 
         it('should not render label when double clicked if item is editable', function test() {
           // This test is not relevant for the TreeItem component or the SimpleTreeView.
-          if (!setup.includes('TreeItem2') || treeViewComponentName.startsWith('SimpleTreeView')) {
+          if (
+            treeItemComponentName !== 'TreeItem2' ||
+            treeViewComponentName.startsWith('SimpleTreeView')
+          ) {
             this.skip();
           }
           const response = render({
@@ -61,7 +70,10 @@ describeTreeView<[UseTreeViewLabelSignature]>(
 
         it('should not render labelInput on Enter if item is not editable', function test() {
           // This test is not relevant for the TreeItem component or the SimpleTreeView.
-          if (!setup.includes('TreeItem2') || treeViewComponentName.startsWith('SimpleTreeView')) {
+          if (
+            treeItemComponentName !== 'TreeItem2' ||
+            treeViewComponentName.startsWith('SimpleTreeView')
+          ) {
             this.skip();
           }
           const response = render({
@@ -79,7 +91,10 @@ describeTreeView<[UseTreeViewLabelSignature]>(
 
         it('should render labelInput on Enter if item is editable', function test() {
           // This test is not relevant for the TreeItem component or the SimpleTreeView.
-          if (!setup.includes('TreeItem2') || treeViewComponentName.startsWith('SimpleTreeView')) {
+          if (
+            treeItemComponentName !== 'TreeItem2' ||
+            treeViewComponentName.startsWith('SimpleTreeView')
+          ) {
             this.skip();
           }
           const response = render({
@@ -96,7 +111,10 @@ describeTreeView<[UseTreeViewLabelSignature]>(
 
         it('should unmount labelInput after save', function test() {
           // This test is not relevant for the TreeItem component or the SimpleTreeView.
-          if (!setup.includes('TreeItem2') || treeViewComponentName.startsWith('SimpleTreeView')) {
+          if (
+            treeItemComponentName !== 'TreeItem2' ||
+            treeViewComponentName.startsWith('SimpleTreeView')
+          ) {
             this.skip();
           }
           const response = render({
@@ -115,7 +133,10 @@ describeTreeView<[UseTreeViewLabelSignature]>(
 
         it('should unmount labelInput after cancel', function test() {
           // This test is not relevant for the TreeItem component or the SimpleTreeView.
-          if (!setup.includes('TreeItem2') || treeViewComponentName.startsWith('SimpleTreeView')) {
+          if (
+            treeItemComponentName !== 'TreeItem2' ||
+            treeViewComponentName.startsWith('SimpleTreeView')
+          ) {
             this.skip();
           }
           const response = render({
@@ -136,7 +157,10 @@ describeTreeView<[UseTreeViewLabelSignature]>(
       describe('labelInput value', () => {
         it('should equal label value on first render', function test() {
           // This test is not relevant for the TreeItem component or the SimpleTreeView.
-          if (!setup.includes('TreeItem2') || treeViewComponentName.startsWith('SimpleTreeView')) {
+          if (
+            treeItemComponentName !== 'TreeItem2' ||
+            treeViewComponentName.startsWith('SimpleTreeView')
+          ) {
             this.skip();
           }
           const response = render({
@@ -153,7 +177,10 @@ describeTreeView<[UseTreeViewLabelSignature]>(
 
         it('should save new value on Enter', function test() {
           // This test is not relevant for the TreeItem component or the SimpleTreeView.
-          if (!setup.includes('TreeItem2') || treeViewComponentName.startsWith('SimpleTreeView')) {
+          if (
+            treeItemComponentName !== 'TreeItem2' ||
+            treeViewComponentName.startsWith('SimpleTreeView')
+          ) {
             this.skip();
           }
           const response = render({
@@ -172,7 +199,10 @@ describeTreeView<[UseTreeViewLabelSignature]>(
 
         it('should hold new value on render after save', function test() {
           // This test is not relevant for the TreeItem component or the SimpleTreeView.
-          if (!setup.includes('TreeItem2') || treeViewComponentName.startsWith('SimpleTreeView')) {
+          if (
+            treeItemComponentName !== 'TreeItem2' ||
+            treeViewComponentName.startsWith('SimpleTreeView')
+          ) {
             this.skip();
           }
           const response = render({
@@ -192,7 +222,10 @@ describeTreeView<[UseTreeViewLabelSignature]>(
 
         it('should hold initial value on render after cancel', function test() {
           // This test is not relevant for the TreeItem component or the SimpleTreeView.
-          if (!setup.includes('TreeItem2') || treeViewComponentName.startsWith('SimpleTreeView')) {
+          if (
+            treeItemComponentName !== 'TreeItem2' ||
+            treeViewComponentName.startsWith('SimpleTreeView')
+          ) {
             this.skip();
           }
           const response = render({
@@ -215,7 +248,10 @@ describeTreeView<[UseTreeViewLabelSignature]>(
     describe('updateItemLabel api method', () => {
       it('should change the label value', function test() {
         // This test is not relevant for the TreeItem component or the SimpleTreeView.
-        if (!setup.includes('TreeItem2') || treeViewComponentName.startsWith('SimpleTreeView')) {
+        if (
+          treeItemComponentName !== 'TreeItem2' ||
+          treeViewComponentName.startsWith('SimpleTreeView')
+        ) {
           this.skip();
         }
         const response = render({

@@ -5,7 +5,7 @@ import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 export interface UseTreeViewLabelPublicAPI {
   /**
    * Used to update the label of an item.
-   * @param {TreeViewItemId} itemId The id of the item that is being edited.
+   * @param {TreeViewItemId} itemId The id of the item to update the label of.
    * @param {string} newLabel The new label of the item.
    */
   updateItemLabel: (itemId: TreeViewItemId, newLabel: string) => void;
@@ -52,7 +52,7 @@ export interface UseTreeViewLabelParameters<R extends {}> {
   onItemLabelChange?: (itemId: TreeViewItemId, newLabel: string) => void;
   /**
    * Determines if a given item is editable or not.
-   * The items are not editable by default.
+   * By default, the items are not editable.
    * @template R
    * @param {R} item The item to check.
    * @returns {boolean} `true` if the item is editable.
