@@ -9,14 +9,14 @@ _Aug 1, 2024_
 
 ### 💵 Our commercial offering is evolving!
 
-The pro plan is receiving two new packages:
+The [Pro plan](https://mui.com/x/introduction/licensing/#pro-plan) is receiving two new packages:
 
 - `@mui/x-tree-view-pro` (available today!)
 - `@mui/x-charts-pro` (available in the coming weeks)
 
 As always, every feature released as part of the MIT plan will remain free and MIT licensed forever.
 
-This expansion of the pro plan comes with some adjustments to our pricing strategy. Learn more about those in the [Upcoming changes to MUI X pricing in 2024](https://mui.com/blog/mui-x-sep-2024-price-update/) blog post.
+This expansion of the Pro plan comes with some adjustments to our pricing strategy. Learn more about those in the [Upcoming changes to MUI X pricing in 2024](https://mui.com/blog/mui-x-sep-2024-price-update/) blog post.
 
 ### Highlights
 
@@ -28,7 +28,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 - 📦 Support Common JS bundle out of the box on `@mui/x-charts` by adding vendored D3 dependencies.
 
-  - This modifies how the package imports D3.js. It should impact you if you are using `d3` directly from `x-charts` and don't have them in your `package.json`. You should be unaffected otherwise.
+  - This modifies how the package imports D3.js. It will impact you if you use `d3` packages installed by `@mui/x-charts` and don't have them in your `package.json`. You shouldn't be affected otherwise.
   - For more context, the initial issue is caused by D3 only exporting ESM.
 
     ![image](https://github.com/user-attachments/assets/d705b4de-0c93-420e-a416-528e7a044c1d)
