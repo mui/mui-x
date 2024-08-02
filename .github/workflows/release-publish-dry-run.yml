@@ -41,11 +41,12 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
+      - run: sudo apt-get update && sudo apt-get install -y expect
       - run: pnpm install --frozen-lockfile
       - run: pnpm release:build
       - run: echo "registry=${{ env.REGISTRY }}" >> .npmrc
       - run: cat .npmrc
-      - run: |
+      - run: >-
           /usr/bin/expect <<EOD
           spawn pnpm adduser --registry ${{ env.REGISTRY }} --auth-type legacy
           expect {
@@ -54,7 +55,7 @@ jobs:
             "Email: (this IS public)" {send "${{ env.EMAIL }}\r"; exp_continue}
           }
           EOD
-      - run: |
+      - run: >-
           /usr/bin/expect <<EOD
           spawn pnpm login --registry ${{ env.REGISTRY }} --auth-type legacy
           expect {
