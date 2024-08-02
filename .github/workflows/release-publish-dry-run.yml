@@ -33,4 +33,4 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm release:build
-      - run: pnpm release:publish --dry-run --publish-branch=${{ github.head_ref || github.ref_name }}
+      - run: pnpm release:publish --dry-run --no-git-checks
