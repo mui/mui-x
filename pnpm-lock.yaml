@@ -703,6 +703,12 @@ importers:
         specifier: ^7.16.1
         version: 7.16.1(eslint@8.57.0)(typescript@5.5.4)
 
+  packages/netlify-plugin-cache-docs:
+    dependencies:
+      fs-extra:
+        specifier: ^11.2.0
+        version: 11.2.0
+
   packages/x-charts:
     dependencies:
       '@babel/runtime':
