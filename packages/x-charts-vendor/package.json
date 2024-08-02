@@ -55,7 +55,7 @@
     "rimraf": "^5.0.8"
   },
   "publishConfig": {
-    "provenance": true
+    "access": "public"
   },
   "scripts": {
     "build": "node ./scripts/build.js"
