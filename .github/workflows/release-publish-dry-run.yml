@@ -47,24 +47,24 @@ jobs:
       - run: echo "registry=${{ env.REGISTRY }}" >> .npmrc
       - run: cat .npmrc
       - run: |
-          echo "/#!/usr/bin/expect -f
+          echo '/#!/usr/bin/expect -f
           spawn pnpm adduser --registry ${{ env.REGISTRY }} --auth-type legacy
           expect {
             "Username:" {send "${{ env.USERNAME }}\r"; exp_continue}
             "Password:" {send "${{ env.PASSWORD }}\r"; exp_continue}
             "Email: (this IS public)" {send "${{ env.EMAIL }}\r"; exp_continue}
           }
-          " > adduser.sh
+          ' > adduser.sh
       - run: chmod +x adduser.sh
       - run: ./adduser.sh
       - run: |
-          echo "/#!/usr/bin/expect -f
+          echo '/#!/usr/bin/expect -f
           spawn pnpm login --registry ${{ env.REGISTRY }} --auth-type legacy
           expect {
             "Username:" {send "${{ env.USERNAME }}\r"; exp_continue}
             "Password:" {send "${{ env.PASSWORD }}\r"; exp_continue}
           }
-          " > login.sh
+          ' > login.sh
       - run: chmod +x login.sh
       - run: ./login.sh
       - run: pnpm release:publish:dry-run --no-git-checks --force --registry ${{ env.REGISTRY }}
