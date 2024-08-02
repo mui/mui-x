@@ -60,5 +60,4 @@ jobs:
       - run: echo "//${{ env.REGISTRY }}/:_authToken=fake" > ~/.npmrc
       - run: pnpm release:build
       - run: nohup verdaccio --listen ${{ env.REGISTRY }} --config ~/.verdaccio.yaml &
-      - run: npm-auth-to-token -u test -p test -e test@test.com -r ${{ env.REGISTRY }}
       - run: pnpm release:publish:dry-run --no-git-checks --force --registry ${{ env.REGISTRY }}
