@@ -46,8 +46,6 @@ jobs:
           store:
             memory:
               limit: 1000
-          ## we don't need any remote request
-          uplinks:
           packages:
             '@*/*':
               access: $all
