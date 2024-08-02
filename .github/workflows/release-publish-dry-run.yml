@@ -40,6 +40,8 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm release:build
-      - run: echo "//${{ env.REGISTRY }}/:_authToken="fooBar"" >> .npmrc
+      # - run: echo "//${{ env.REGISTRY }}/:_authToken="fooBar"" >> .npmrc
       # - run: pnpm adduser --registry ${{ env.REGISTRY }}
       - run: pnpm release:publish:dry-run --no-git-checks --force --registry ${{ env.REGISTRY }}
+        env:
+          NODE_AUTH_TOKEN: 'mui-x-fake'
