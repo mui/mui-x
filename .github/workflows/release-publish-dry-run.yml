@@ -61,6 +61,6 @@ jobs:
           log: {type: stdout, format: pretty, level: trace}
           " > ~/.verdaccio.yaml
       - run: pnpm release:build
-      - run: npm-auth-to-token -u test -p test -e test@test.com -r ${{ env.REGISTRY }}
       - run: nohup verdaccio -c ~/.verdaccio.yaml &
+      - run: npm-auth-to-token -u test -p test -e test@test.com -r ${{ env.REGISTRY }}
       - run: pnpm release:publish:dry-run --no-git-checks --force --registry ${{ env.REGISTRY }}
