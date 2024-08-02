@@ -167,21 +167,8 @@ export const TreeItem2GroupTransition = styled(Collapse, {
   ],
 });
 
-function UnstyledLabelInput({ onChange, value, ...props }: UseTreeItem2LabelInputSlotOwnProps) {
-  const [labelInputValue, setLabelInputValue] = React.useState(value);
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange?.(event);
-    setLabelInputValue(event.target.value);
-  };
-
-  React.useEffect(() => {
-    return () => setLabelInputValue(value);
-  }, [value]);
-
-  return (
-    <input {...props} onChange={handleInputChange} value={labelInputValue} autoFocus type="text" />
-  );
+function UnstyledLabelInput(props: UseTreeItem2LabelInputSlotOwnProps) {
+  return <input {...props} autoFocus type="text" />;
 }
 
 export const TreeItem2LabelInput = styled(UnstyledLabelInput, {

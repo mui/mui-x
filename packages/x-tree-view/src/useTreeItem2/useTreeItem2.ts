@@ -77,11 +77,18 @@ export const useTreeItem2 = <
       const rootElement = instance.getItemDOMElement(itemId);
 
       // Don't blur the root when switching to editing mode
+      // the input that triggers the root blur can be either the relatedTarget (when entering editing state) or the target (when exiting editing state)
+      // when we enter the editing state, we focus the input -> we don't want to remove the focused item from the state
       if (
         status.editing ||
-        ((event.relatedTarget && (event.relatedTarget as HTMLElement))?.dataset?.element ===
-          'labelInput' &&
-          isTargetInDescendants(event.relatedTarget as HTMLElement, rootElement))
+        // we can exit the editing state by clicking outside the input (within the tree item) or by pressing Enter or Escape -> we don't want to remove the focused item from the state in these cases
+        // we can also exit the editing state by clicking on the root itself -> want to remove the focused item from the state in this case
+        (event.relatedTarget &&
+          isTargetInDescendants(event.relatedTarget as HTMLElement, rootElement) &&
+          ((event.target &&
+            (event.target as HTMLElement)?.dataset?.element === 'labelInput' &&
+            isTargetInDescendants(event.target as HTMLElement, rootElement)) ||
+            (event.relatedTarget as HTMLElement)?.dataset?.element === 'labelInput'))
       ) {
         return;
       }
@@ -180,12 +187,6 @@ export const useTreeItem2 = <
       if (event.target.value) {
         interactions.handleSaveItemLabel(event, event.target.value);
       }
-    };
-
-  const createInputHandleChange =
-    (otherHandlers: EventHandlers) =>
-    (event: React.ChangeEvent<HTMLInputElement> & MuiCancellableEvent) => {
-      otherHandlers.onChange?.(event);
     };
 
   const createIconContainerHandleClick =
@@ -316,15 +317,20 @@ export const useTreeItem2 = <
   ): UseTreeItem2LabelInputSlotProps<ExternalProps> => {
     const externalEventHandlers = extractEventHandlers(externalProps);
 
-    return {
+    const props = {
       ...externalEventHandlers,
-      value: label as string,
       ...externalProps,
-      'data-element': 'labelInput',
       onKeyDown: createInputHandleKeydown(externalEventHandlers),
-      onChange: createInputHandleChange(externalEventHandlers),
       onBlur: createInputHandleBlur(externalEventHandlers),
     };
+
+    const enhancedlabelInputProps =
+      propsEnhancers.labelInput?.({ rootRefObject, contentRefObject, externalEventHandlers }) ?? {};
+
+    return {
+      ...props,
+      ...enhancedlabelInputProps,
+    } as UseTreeItem2LabelInputSlotProps<ExternalProps>;
   };
 
   const getIconContainerProps = <ExternalProps extends Record<string, any> = {}>(

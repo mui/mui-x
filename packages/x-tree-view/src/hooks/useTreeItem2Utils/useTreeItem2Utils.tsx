@@ -157,7 +157,11 @@ export const useTreeItem2Utils = ({
   };
 
   const handleCancelItemLabelEditing = (event: React.SyntheticEvent) => {
-    if (hasPlugin(instance, useTreeViewLabel) && instance.isItemBeingEditedRef(itemId)) {
+    if (!hasPlugin(instance, useTreeViewLabel)) {
+      return;
+    }
+
+    if (instance.isItemBeingEditedRef(itemId)) {
       toggleItemEditing();
       instance.focusItem(event, itemId);
     }

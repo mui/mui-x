@@ -2,6 +2,7 @@ import * as React from 'react';
 import { TreeViewPlugin } from '../../models';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewLabelSignature } from './useTreeViewLabel.types';
+import { useTreeViewLabelItemPlugin } from './useTreeViewLabel.itemPlugin';
 
 export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
   instance,
@@ -80,6 +81,8 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
     },
   };
 };
+
+useTreeViewLabel.itemPlugin = useTreeViewLabelItemPlugin;
 
 useTreeViewLabel.getInitialState = () => ({
   editedItemId: null,
