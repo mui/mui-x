@@ -20,7 +20,7 @@ jobs:
     name: Release Publish Dry-Run
     runs-on: ubuntu-latest
     env:
-      REGISTRY: http://0.0.0.0:4873
+      REGISTRY: http://localhost:4873
     if: >
       ${{ contains(github.event.pull_request.labels.*.name, 'release')}}
     steps:
@@ -33,16 +33,10 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
-      - run: pnpm install -g verdaccio@5.32.1 verdaccio-auth-memory@10.2.2 verdaccio-memory@10.3.2 npm-auth-to-token@1.0.0
+      - run: pnpm install -g verdaccio@5.32.1 verdaccio-auth-memory@10.2.2 verdaccio-memory@10.3.2
       - run: pnpm install --frozen-lockfile
       - run: |
           echo "
-          auth:
-            auth-memory:
-              users:
-                foo:
-                  name: test
-                  password: test
           store:
             memory:
               limit: 1000
@@ -51,18 +45,19 @@ jobs:
               url: https://registry.npmjs.org/
           packages:
             '@*/*':
-              access: $all
-              publish: $authenticated
+              access: $anonymous
+              publish: $anonymous
               proxy: npmjs
             '**':
-              access: $all
-              publish: $authenticated
+              access: $anonymous
+              publish: $anonymous
               proxy: npmjs
           middlewares:
             audit:
               enabled: true
           log: {type: stdout, format: pretty, level: trace}
           " > ~/.verdaccio.yaml
+      - run: echo "//${{ env.REGISTRY }}/:_authToken=fake" > ~/.npmrc
       - run: pnpm release:build
       - run: nohup verdaccio --listen ${{ env.REGISTRY }} --config ~/.verdaccio.yaml &
       - run: npm-auth-to-token -u test -p test -e test@test.com -r ${{ env.REGISTRY }}
