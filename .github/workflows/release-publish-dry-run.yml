@@ -52,11 +52,11 @@ jobs:
           packages:
             '@*/*':
               access: $all
-              publish: $all
+              publish: $authenticated
               proxy: npmjs
             '**':
               access: $all
-              publish: $all
+              publish: $authenticated
               proxy: npmjs
           middlewares:
             audit:
