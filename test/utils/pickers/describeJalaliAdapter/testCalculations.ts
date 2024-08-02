@@ -19,6 +19,19 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
 
     expect(adapter.isEqual(testDateIso, anotherDate)).to.equal(true);
     expect(adapter.isEqual(null, null)).to.equal(true);
+    expect(adapter.isEqual(testDateIso, null)).to.equal(false);
+  });
+
+  it('Method: isValid', () => {
+    expect(adapter.isValid(testDateIso)).to.equal(true);
+    expect(adapter.isValid(null)).to.equal(false);
+    if (adapter.lib !== 'moment-jalaali') {
+      expect(adapter.isValid(adapter.date('invalid'))).to.equal(false);
+    } else {
+      expect(() => adapter.isValid(adapter.date('invalid'))).toWarnDev(
+        'Deprecation warning: value provided is not in a recognized RFC2822 or ISO format. moment construction falls back to js Date(), which is not rel',
+      );
+    }
   });
 
   it('Method: isSameYear', () => {
@@ -202,6 +215,10 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
     expect(adapter.getDate(testDateIso)).to.equal(8);
   });
 
+  it('Method: getHours', () => {
+    expect(adapter.getHours(testDateIso)).to.equal(11);
+  });
+
   it('Method: getMinutes', () => {
     expect(adapter.getMinutes(testDateIso)).to.equal(44);
   });
@@ -242,6 +259,10 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
     expect(adapter.setMilliseconds(testDateIso, 11)).toEqualDateTime('2018-10-30T11:44:00.011Z');
   });
 
+  it('Method: getDaysInMonth', () => {
+    expect(adapter.getDaysInMonth(testDateIso)).to.equal(30);
+  });
+
   it('Method: getWeekArray', () => {
     const weekArray = adapter.getWeekArray(testDateIso);
     const expectedDate = new Date('2018-10-20T00:00:00.000Z');
@@ -255,7 +276,7 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
   });
 
   it('Method: getWeekNumber', () => {
-    expect(adapter.getWeekNumber!(testDateIso)).to.equal(33);
+    expect(adapter.getWeekNumber(testDateIso)).to.equal(33);
   });
 
   it('Method: getYearRange', () => {

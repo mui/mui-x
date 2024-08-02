@@ -22,6 +22,8 @@ export interface TreeItemClasses {
   label: string;
   /** Styles applied to the checkbox element. */
   checkbox: string;
+  /** Styles applied to the drag and drop overlay. */
+  dragAndDropOverlay: string;
 }
 
 export type TreeItemClassKey = keyof TreeItemClasses;
@@ -41,4 +43,5 @@ export const treeItemClasses: TreeItemClasses = generateUtilityClasses('MuiTreeI
   'iconContainer',
   'label',
   'checkbox',
+  'dragAndDropOverlay',
 ]);
