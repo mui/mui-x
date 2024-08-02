@@ -48,14 +48,16 @@ jobs:
               limit: 1000
           uplinks:
             npmjs:
-              url: https://registry.npmjs.org
+              url: https://registry.npmjs.org/
           packages:
             '@*/*':
               access: $all
               publish: $all
+              proxy: npmjs
             '**':
               access: $all
               publish: $all
+              proxy: npmjs
           middlewares:
             audit:
               enabled: true
@@ -65,5 +67,3 @@ jobs:
       - run: nohup verdaccio --listen ${{ env.REGISTRY }} --config ~/.verdaccio.yaml &
       - run: npm-auth-to-token -u test -p test -e test@test.com -r ${{ env.REGISTRY }}
       - run: pnpm release:publish:dry-run --no-git-checks --force --registry ${{ env.REGISTRY }}
-        continue-on-error: true
-      - run: cat /home/runner/.npm/_logs/2024-08-02T*
