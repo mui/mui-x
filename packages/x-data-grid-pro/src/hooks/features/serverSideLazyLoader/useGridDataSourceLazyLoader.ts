@@ -65,27 +65,26 @@ export const useGridDataSourceLazyLoader = (
         lastRowToRender: params.lastRowIndex,
       };
 
-      if (sortModel.length === 0 && filterModel.items.length === 0) {
-        const currentVisibleRows = getVisibleRows(privateApiRef, {
-          pagination: props.pagination,
-          paginationMode: props.paginationMode,
-        });
-        const skeletonRowsSection = findSkeletonRowsSection({
-          apiRef: privateApiRef,
-          visibleRows: currentVisibleRows.rows,
-          range: {
-            firstRowIndex: params.firstRowIndex,
-            lastRowIndex: params.lastRowIndex,
-          },
-        });
+      const currentVisibleRows = getVisibleRows(privateApiRef, {
+        pagination: props.pagination,
+        paginationMode: props.paginationMode,
+      });
 
-        if (!skeletonRowsSection) {
-          return;
-        }
+      const skeletonRowsSection = findSkeletonRowsSection({
+        apiRef: privateApiRef,
+        visibleRows: currentVisibleRows.rows,
+        range: {
+          firstRowIndex: params.firstRowIndex,
+          lastRowIndex: params.lastRowIndex,
+        },
+      });
 
-        fetchRowsParams.start = skeletonRowsSection.firstRowIndex;
-        fetchRowsParams.end = skeletonRowsSection.lastRowIndex;
+      if (!skeletonRowsSection) {
+        return;
       }
+
+      fetchRowsParams.start = skeletonRowsSection.firstRowIndex;
+      fetchRowsParams.end = skeletonRowsSection.lastRowIndex;
 
       privateApiRef.current.publishEvent('getRows', fetchRowsParams);
     },
@@ -141,7 +140,6 @@ export const useGridDataSourceLazyLoader = (
     'renderedRowsIntervalChange',
     handleRenderedRowsIntervalChange,
   );
-  // TODO: if sorting/filtering happens firther away from the top, sometimes one skeleton row is left
   useGridApiEventHandler(privateApiRef, 'sortModelChange', handleGridSortModelChange);
   useGridApiEventHandler(privateApiRef, 'filterModelChange', handleGridFilterModelChange);
 };
