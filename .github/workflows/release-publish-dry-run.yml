@@ -1,0 +1,36 @@
+name: Release Publish Dry-Run
+
+on:
+  pull_request:
+    branches:
+      - master
+      - next
+    types:
+      - labeled
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  test-publishing:
+    name: Release Publish Dry-Run
+    runs-on: ubuntu-latest
+    if: >
+      ${{ contains(github.event.pull_request.labels.*.name, 'release')}}
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+      - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2
+        with:
+          run_install: false
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - run: pnpm install -g verdaccio@5.32.1
+      - run: pnpm install --frozen-lockfile
+      - run: |
+          echo "logs:\n - {type: stdout, format: pretty, level: trace}" > ./verdaccio.yaml
+      - run: verdaccio --config ./verdaccio.yaml &
+      - run: pnpm release:build
+      - run: pnpm release:publish:dry-run
