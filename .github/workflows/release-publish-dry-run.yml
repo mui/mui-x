@@ -19,8 +19,6 @@ jobs:
   test-publishing:
     name: Release Publish Dry-Run
     runs-on: ubuntu-latest
-    env:
-      REGISTRY: http://localhost:4873
     if: >
       ${{ contains(github.event.pull_request.labels.*.name, 'release')}}
     steps:
@@ -33,32 +31,6 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
-      - run: pnpm install -g verdaccio@5.32.1 verdaccio-auth-memory@10.2.2 verdaccio-memory@10.3.2
       - run: pnpm install --frozen-lockfile
-      - run: |
-          echo "
-          store:
-            memory:
-              limit: 1000
-          uplinks:
-            npmjs:
-              url: https://registry.npmjs.org/
-          packages:
-            '@*/*':
-              access: $anonymous
-              publish: $anonymous
-              proxy: npmjs
-            '**':
-              access: $anonymous
-              publish: $anonymous
-              proxy: npmjs
-          middlewares:
-            audit:
-              enabled: true
-          log: {type: stdout, format: pretty, level: trace}
-          " > ~/.verdaccio.yaml
-      - run: echo "//${{ env.REGISTRY }}/:_authToken=fake" > ~/.npmrc
       - run: pnpm release:build
-      - run: nohup verdaccio --listen ${{ env.REGISTRY }} --config ~/.verdaccio.yaml &
-      - run: pnpm adduser --registry ${{ env.REGISTRY }}
-      - run: pnpm release:publish:dry-run --no-git-checks --force --registry ${{ env.REGISTRY }}
+      - run: pnpm release:publish --dry-run
