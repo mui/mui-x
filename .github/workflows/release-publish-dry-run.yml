@@ -19,8 +19,15 @@ jobs:
   test-publishing:
     name: Release Publish Dry-Run
     runs-on: ubuntu-latest
+    env:
+      REGISTRY: http://localhost:4873
     if: >
       ${{ contains(github.event.pull_request.labels.*.name, 'release')}}
+    services:
+      verdaccio:
+        image: verdaccio/verdaccio:5.32.1
+        ports:
+          - 4873:4873
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
       - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2
@@ -33,4 +40,6 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm release:build
-      - run: pnpm release:publish --dry-run --no-git-checks
+      - run: echo "//${{ env.REGISTRY }}/:_authToken="fooBar"" >> .npmrc
+      # - run: pnpm adduser --registry ${{ env.REGISTRY }}
+      - run: pnpm release:publish:dry-run --no-git-checks --force --registry ${{ env.REGISTRY }}
