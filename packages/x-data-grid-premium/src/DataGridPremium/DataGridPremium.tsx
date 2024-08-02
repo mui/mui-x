@@ -25,7 +25,8 @@ import {
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
-import { GridPivotPanelContainer, GridPivotPanel } from '../components/GridPivotPanel';
+import { GridSidebar } from '../components/GridSidebar';
+import { GridSidebarColumnPanel } from '../components/GridSidebarColumnPanel';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
@@ -73,9 +74,9 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
           <GridFooterPlaceholder />
         </div>
         {hasPivotModel && (
-          <GridPivotPanelContainer>
-            <GridPivotPanel pivotParams={pivotParams} />
-          </GridPivotPanelContainer>
+          <GridSidebar>
+            <GridSidebarColumnPanel pivotParams={pivotParams} />
+          </GridSidebar>
         )}
       </GridRoot>
     </GridContextProvider>

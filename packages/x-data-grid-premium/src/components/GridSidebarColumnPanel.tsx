@@ -7,65 +7,23 @@ import { GridColDef, GridSortDirection } from '@mui/x-data-grid';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { PivotModel } from '../hooks/features/pivoting/useGridPivoting';
-import { useResize } from '../hooks/utils/useResize';
 import type { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 import { useGridRootProps } from '../typeOverloads/reexports';
 import { getAvailableAggregationFunctions } from '../hooks/features/aggregation/gridAggregationUtils';
+import { GridSidebarCloseButton, GridSidebarHeader } from './GridSidebar';
 
-const GridPivotPanelHeader = styled('div')({
-  padding: '12px 20px',
-});
-
-const GridPivotPanelContainerStyled = styled('div')({
-  width: 300,
-  overflow: 'hidden',
-  position: 'relative',
+const PivotSectionContainer = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-});
-
-const ResizeHandle = styled('div')(({ theme }) => ({
-  position: 'absolute',
-  zIndex: 2,
-  top: 0,
-  left: 0,
-  height: '100%',
-  width: 6,
-  cursor: 'ew-resize',
-  borderLeft: '1px solid var(--DataGrid-rowBorderColor)',
-  transition: 'border-left 0.1s ease-in-out',
-  userSelect: 'none',
-  touchAction: 'pan-x',
-  '&:hover': {
-    borderLeft: `2px solid ${theme.palette.primary.main}`,
-  },
+  gap: theme.spacing(1),
+  padding: theme.spacing(1, 0),
+  overflow: 'hidden',
+  flexShrink: 1,
 }));
 
-export function GridPivotPanelContainer({ children }: { children: React.ReactNode }) {
-  const { ref } = useResize({
-    getInitialWidth: (handle) => {
-      return handle.parentElement!.offsetWidth;
-    },
-    onWidthChange: (newWidth, handle) => {
-      handle.parentElement!.style.width = `${newWidth}px`;
-    },
-  });
-
-  return (
-    <GridPivotPanelContainerStyled>
-      <ResizeHandle ref={ref as any} />
-      {children}
-    </GridPivotPanelContainerStyled>
-  );
-}
-
-const PivotSectionContainer = styled('div')<{ 'data-section': FieldTransferObject['modelKey'] }>(
+const PivotSection = styled('div')<{ 'data-section': FieldTransferObject['modelKey'] }>(
   ({ theme }) => ({
-    padding: theme.spacing(1, 0),
     flexShrink: 0,
-    '&[data-drag-over="true"]': {
-      backgroundColor: theme.palette.action.selected,
-    },
   }),
 );
 
@@ -76,18 +34,20 @@ const PivotSectionTitle = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 2),
 }));
 
-const Placeholder = styled('div')(({ theme }) => {
-  const horizontalMargin = 12;
+const PivotSectionPlaceholder = styled('div')(({ theme }) => {
   return {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: `calc(100% - ${horizontalMargin * 2}px)`,
     height: 60,
-    margin: `8px ${horizontalMargin}px 0`,
+    margin: theme.spacing(1, 2),
     border: `1px dashed ${theme.palette.grey[400]}`,
     borderRadius: 4,
     color: theme.palette.text.secondary,
+    '[data-drag-over="true"] &': {
+      color: theme.palette.primary.main,
+      borderColor: theme.palette.primary.main,
+    },
   };
 });
 
@@ -95,12 +55,11 @@ const GridFieldItemContainer = styled('div')<{
   dropPosition: DropPosition;
   section: FieldTransferObject['modelKey'];
 }>(({ theme }) => ({
-  padding: '0 8px 0 12px',
-  height: '32px',
+  padding: theme.spacing(0, 2),
+  height: '35px',
   display: 'flex',
   alignItems: 'center',
   gap: '4px',
-
   borderWidth: 0,
   borderTopWidth: 1,
   borderBottomWidth: 1,
@@ -118,7 +77,6 @@ const GridFieldItemContainer = styled('div')<{
       props: { section: null },
     },
   ],
-
   '&:hover': {
     backgroundColor: theme.palette.action.hover,
   },
@@ -136,6 +94,7 @@ const DragHandle = styled('div')(({ theme }) => ({
   display: 'flex',
   cursor: 'pointer',
   color: theme.palette.text.secondary,
+  marginLeft: '-5px',
 }));
 
 interface FieldTransferObject {
@@ -351,14 +310,6 @@ function GridFieldItem({
     [field, updatePivotModel, props.modelKey, getDropPosition],
   );
 
-  const handleDeleteClick = React.useCallback(() => {
-    updatePivotModel({
-      field,
-      targetSection: null,
-      originSection: props.modelKey,
-    });
-  }, [field, props.modelKey, updatePivotModel]);
-
   return (
     <GridFieldItemContainer
       onDragOver={handleDragOver}
@@ -382,16 +333,11 @@ function GridFieldItem({
           onPivotModelChange={onPivotModelChange}
         />
       )}
-      {props.modelKey !== null && (
-        <slots.baseIconButton onClick={handleDeleteClick} size="small" edge="end">
-          <slots.filterPanelDeleteIcon fontSize="inherit" />
-        </slots.baseIconButton>
-      )}
     </GridFieldItemContainer>
   );
 }
 
-function GridPivotPanelContent({
+function GridSidebarColumnBody({
   pivotModel,
   columns,
   onPivotModelChange,
@@ -541,15 +487,8 @@ function GridPivotPanelContent({
   }, []);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-        flexShrink: 1,
-      }}
-    >
-      <PivotSectionContainer
+    <PivotSectionContainer>
+      <PivotSection
         onDrop={handleDrop}
         onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
@@ -557,7 +496,9 @@ function GridPivotPanelContent({
         data-section={null}
         ref={useAutoAnimate()[0]}
       >
-        {availableFields.length === 0 && <Placeholder>Drag unused fields here</Placeholder>}
+        {availableFields.length === 0 && (
+          <PivotSectionPlaceholder>Drag here to remove from pivot</PivotSectionPlaceholder>
+        )}
         {availableFields.length > 0 &&
           availableFields.map((field) => {
             return (
@@ -574,9 +515,11 @@ function GridPivotPanelContent({
               </GridFieldItem>
             );
           })}
-      </PivotSectionContainer>
+      </PivotSection>
+
       <Divider />
-      <PivotSectionContainer
+
+      <PivotSection
         onDrop={handleDrop}
         onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
@@ -585,7 +528,9 @@ function GridPivotPanelContent({
         ref={useAutoAnimate()[0]}
       >
         <PivotSectionTitle>Rows</PivotSectionTitle>
-        {pivotModel.rows.length === 0 && <Placeholder>Drag here to create rows</Placeholder>}
+        {pivotModel.rows.length === 0 && (
+          <PivotSectionPlaceholder>Drag here to create rows</PivotSectionPlaceholder>
+        )}
         {pivotModel.rows.length > 0 &&
           pivotModel.rows.map((field) => {
             return (
@@ -603,9 +548,9 @@ function GridPivotPanelContent({
               </GridFieldItem>
             );
           })}
-      </PivotSectionContainer>
+      </PivotSection>
 
-      <PivotSectionContainer
+      <PivotSection
         onDrop={handleDrop}
         onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
@@ -614,7 +559,9 @@ function GridPivotPanelContent({
         ref={useAutoAnimate()[0]}
       >
         <PivotSectionTitle>Columns</PivotSectionTitle>
-        {pivotModel.columns.length === 0 && <Placeholder>Drag here to create columns</Placeholder>}
+        {pivotModel.columns.length === 0 && (
+          <PivotSectionPlaceholder>Drag here to create columns</PivotSectionPlaceholder>
+        )}
         {pivotModel.columns.length > 0 &&
           pivotModel.columns.map((item) => {
             const { field, sort } = item;
@@ -633,9 +580,9 @@ function GridPivotPanelContent({
               </GridFieldItem>
             );
           })}
-      </PivotSectionContainer>
+      </PivotSection>
 
-      <PivotSectionContainer
+      <PivotSection
         onDrop={handleDrop}
         onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
@@ -644,7 +591,9 @@ function GridPivotPanelContent({
         ref={useAutoAnimate()[0]}
       >
         <PivotSectionTitle>Values</PivotSectionTitle>
-        {pivotModel.values.length === 0 && <Placeholder>Drag here to create values</Placeholder>}
+        {pivotModel.values.length === 0 && (
+          <PivotSectionPlaceholder>Drag here to create values</PivotSectionPlaceholder>
+        )}
         {pivotModel.values.length > 0 &&
           pivotModel.values.map(({ field, aggFunc }) => {
             return (
@@ -663,12 +612,12 @@ function GridPivotPanelContent({
               </GridFieldItem>
             );
           })}
-      </PivotSectionContainer>
-    </div>
+      </PivotSection>
+    </PivotSectionContainer>
   );
 }
 
-export function GridPivotPanel({
+export function GridSidebarColumnPanel({
   pivotParams,
 }: {
   pivotParams: NonNullable<DataGridPremiumProcessedProps['pivotParams']>;
@@ -677,7 +626,7 @@ export function GridPivotPanel({
 
   return (
     <React.Fragment>
-      <GridPivotPanelHeader>
+      <GridSidebarHeader>
         <FormControlLabel
           control={
             <Switch
@@ -686,12 +635,20 @@ export function GridPivotPanel({
               size="small"
             />
           }
+          sx={{ ml: -1 }}
           label="Pivot"
+          slotProps={{
+            typography: {
+              sx: (theme) => ({
+                fontSize: theme.typography.body2.fontSize,
+              }),
+            },
+          }}
         />
-      </GridPivotPanelHeader>
-      <Divider />
+        <GridSidebarCloseButton />
+      </GridSidebarHeader>
       {pivotMode && (
-        <GridPivotPanelContent
+        <GridSidebarColumnBody
           pivotModel={pivotModel}
           columns={pivotParams.initialColumns ?? []}
           onPivotModelChange={onPivotModelChange}
