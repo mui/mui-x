@@ -1,6 +1,7 @@
 import { TreeViewPluginSignature } from '../../models';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
+import { TreeItem2LabelInputProps } from '../../../TreeItem2LabelInput';
 
 export interface UseTreeViewLabelPublicAPI {
   /**
@@ -72,3 +73,5 @@ export type UseTreeViewLabelSignature = TreeViewPluginSignature<{
   state: UseTreeViewLabelState;
   dependencies: [UseTreeViewItemsSignature];
 }>;
+export interface UseTreeItem2LabelInputSlotPropsFromItemsReordering
+  extends TreeItem2LabelInputProps {}

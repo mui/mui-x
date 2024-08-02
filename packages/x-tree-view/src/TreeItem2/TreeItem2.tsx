@@ -13,7 +13,6 @@ import { TreeItem2Props, TreeItem2OwnerState } from './TreeItem2.types';
 import {
   unstable_useTreeItem2 as useTreeItem2,
   UseTreeItem2ContentSlotOwnProps,
-  UseTreeItem2LabelInputSlotOwnProps,
   UseTreeItem2LabelSlotOwnProps,
   UseTreeItem2Status,
 } from '../useTreeItem2';
@@ -21,6 +20,7 @@ import { getTreeItemUtilityClass } from '../TreeItem';
 import { TreeItem2Icon } from '../TreeItem2Icon';
 import { TreeItem2DragAndDropOverlay } from '../TreeItem2DragAndDropOverlay';
 import { TreeItem2Provider } from '../TreeItem2Provider';
+import { TreeItem2LabelInput } from '../TreeItem2LabelInput';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem2');
 
@@ -166,27 +166,6 @@ export const TreeItem2GroupTransition = styled(Collapse, {
     },
   ],
 });
-
-function UnstyledLabelInput(props: UseTreeItem2LabelInputSlotOwnProps) {
-  return <input {...props} autoFocus type="text" />;
-}
-
-export const TreeItem2LabelInput = styled(UnstyledLabelInput, {
-  name: 'MuiTreeItem2',
-  slot: 'LabelInput',
-  overridesResolver: (props, styles) => styles.labelInput,
-})(({ theme }) => ({
-  ...theme.typography.body1,
-  width: '100%',
-  backgroundColor: theme.palette.background.paper,
-  borderRadius: theme.shape.borderRadius,
-  border: 'none',
-  padding: '0 2px',
-  boxSizing: 'border-box',
-  '&:focus': {
-    outline: `1px solid ${theme.palette.primary.main}`,
-  },
-}));
 
 export const TreeItem2Checkbox = styled(
   React.forwardRef(

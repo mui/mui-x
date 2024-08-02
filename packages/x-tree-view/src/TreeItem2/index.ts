@@ -6,6 +6,5 @@ export {
   TreeItem2GroupTransition,
   TreeItem2Checkbox,
   TreeItem2Label,
-  TreeItem2LabelInput,
 } from './TreeItem2';
 export type { TreeItem2Props, TreeItem2Slots, TreeItem2SlotProps } from './TreeItem2.types';

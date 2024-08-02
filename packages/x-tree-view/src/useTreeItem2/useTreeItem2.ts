@@ -164,17 +164,21 @@ export const useTreeItem2 = <
       interactions.handleCheckboxSelection(event);
     };
 
-  const createInputHandleKeydown = (otherHandlers: EventHandlers) => (event: any) => {
-    otherHandlers.onKeyDown?.(event);
-    if (event.defaultMuiPrevented) {
-      return;
-    }
-    if (event.key === 'Enter' && event.target.value) {
-      interactions.handleSaveItemLabel(event, event.target.value);
-    } else if (event.key === 'Escape') {
-      interactions.handleCancelItemLabelEditing(event);
-    }
-  };
+  const createInputHandleKeydown =
+    (otherHandlers: EventHandlers) =>
+    (event: React.KeyboardEvent<HTMLInputElement> & MuiCancellableEvent) => {
+      otherHandlers.onKeyDown?.(event);
+      if (event.defaultMuiPrevented) {
+        return;
+      }
+      const target = event.target as HTMLInputElement;
+
+      if (event.key === 'Enter' && target.value) {
+        interactions.handleSaveItemLabel(event, target.value);
+      } else if (event.key === 'Escape') {
+        interactions.handleCancelItemLabelEditing(event);
+      }
+    };
 
   const createInputHandleBlur =
     (otherHandlers: EventHandlers) =>

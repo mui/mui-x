@@ -91,13 +91,7 @@ export type UseTreeItem2LabelSlotProps<ExternalProps = {}> = ExternalProps &
 
 export type UseTreeItem2LabelInputSlotOwnProps = {
   onBlur: MuiCancellableEventHandler<React.FocusEvent<HTMLInputElement>>;
-  value: string;
   onKeyDown: MuiCancellableEventHandler<React.KeyboardEvent<HTMLInputElement>>;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
-  /**
-   * Used to determine if the target of keydown or blur events is the input and prevent the event from propagating to the root.
-   */
-  'data-element': 'labelInput';
 };
 
 export type UseTreeItem2LabelInputSlotProps<ExternalProps = {}> = ExternalProps &

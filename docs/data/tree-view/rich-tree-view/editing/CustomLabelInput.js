@@ -70,7 +70,7 @@ function Label({ children, ...other }) {
 }
 
 const LabelInput = React.forwardRef(function LabelInput(
-  { onChange, item, handleCancelItemLabelEditing, handleSaveItemLabel, ...props },
+  { item, handleCancelItemLabelEditing, handleSaveItemLabel, ...props },
   ref,
 ) {
   const [initialNameValue, setInitialNameValue] = React.useState({

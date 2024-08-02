@@ -190,6 +190,7 @@ RichTreeViewPro.propTypes = {
       getItemTree: PropTypes.func.isRequired,
       selectItem: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
+      updateItemLabel: PropTypes.func.isRequired,
     }),
   }),
   /**
@@ -283,6 +284,14 @@ RichTreeViewPro.propTypes = {
    */
   isItemDisabled: PropTypes.func,
   /**
+   * Determines if a given item is editable or not.
+   * By default, the items are not editable.
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {boolean} `true` if the item is editable.
+   */
+  isItemEditable: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+  /**
    * Used to determine if a given item can be reordered.
    * @param {string} itemId The id of the item to check.
    * @returns {boolean} `true` if the item can be reordered.
@@ -333,6 +342,12 @@ RichTreeViewPro.propTypes = {
    * @param {string} itemId The id of the focused item.
    */
   onItemFocus: PropTypes.func,
+  /**
+   * Callback fired when the label of an item changes.
+   * @param {TreeViewItemId} itemId The id of the item that was edited.
+   * @param {string} newLabel The new label of the items.
+   */
+  onItemLabelChange: PropTypes.func,
   /**
    * Callback fired when a tree item is moved in the tree.
    * @param {object} params The params describing the item re-ordering.

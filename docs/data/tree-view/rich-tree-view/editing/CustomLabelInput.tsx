@@ -92,7 +92,6 @@ type CustomLabelInputProps = UseTreeItem2LabelInputSlotProps<{
 
 const LabelInput = React.forwardRef(function LabelInput(
   {
-    onChange,
     item,
     handleCancelItemLabelEditing,
     handleSaveItemLabel,

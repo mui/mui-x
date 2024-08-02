@@ -4,7 +4,6 @@ import type { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import type { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 import { TreeViewItemId } from '../../../models';
-import { UseTreeViewLabelSignature } from '../useTreeViewLabel';
 
 export interface UseTreeViewFocusPublicAPI {
   /**
@@ -65,5 +64,4 @@ export type UseTreeViewFocusSignature = TreeViewPluginSignature<{
     UseTreeViewSelectionSignature,
     UseTreeViewExpansionSignature,
   ];
-  optionalDependencies: [UseTreeViewLabelSignature];
 }>;

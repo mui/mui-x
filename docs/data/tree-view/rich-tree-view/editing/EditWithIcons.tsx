@@ -10,8 +10,8 @@ import {
   TreeItem2,
   TreeItem2Label,
   TreeItem2Props,
-  TreeItem2LabelInput,
 } from '@mui/x-tree-view/TreeItem2';
+import { TreeItem2LabelInput } from '@mui/x-tree-view/TreeItem2LabelInput';
 import {
   UseTreeItem2LabelInputSlotOwnProps,
   UseTreeItem2LabelSlotOwnProps,

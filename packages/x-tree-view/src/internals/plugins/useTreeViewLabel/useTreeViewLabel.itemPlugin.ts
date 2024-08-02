@@ -2,7 +2,10 @@ import * as React from 'react';
 import { useTreeViewContext } from '../../TreeViewProvider';
 import { TreeViewItemPlugin } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
-import { UseTreeViewLabelSignature } from './useTreeViewLabel.types';
+import {
+  UseTreeItem2LabelInputSlotPropsFromItemsReordering,
+  UseTreeViewLabelSignature,
+} from './useTreeViewLabel.types';
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
@@ -22,7 +25,9 @@ export const useTreeViewLabelItemPlugin: TreeViewItemPlugin<any> = ({ props }) =
 
   return {
     propsEnhancers: {
-      labelInput: ({ externalEventHandlers }) => {
+      labelInput: ({
+        externalEventHandlers,
+      }): UseTreeItem2LabelInputSlotPropsFromItemsReordering => {
         const editable = instance.isItemEditable(itemId);
 
         if (!editable) {
@@ -38,6 +43,8 @@ export const useTreeViewLabelItemPlugin: TreeViewItemPlugin<any> = ({ props }) =
           value: labelInputValue,
           'data-element': 'labelInput',
           onChange: handleInputChange,
+          autoFocus: true,
+          type: 'text',
         };
       },
     },

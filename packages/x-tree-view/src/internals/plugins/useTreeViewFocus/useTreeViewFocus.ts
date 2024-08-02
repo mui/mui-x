@@ -7,8 +7,6 @@ import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
 import { getActiveElement } from '../../utils/utils';
 import { getFirstNavigableItem } from '../../utils/tree';
-import { hasPlugin } from '../../utils/plugins';
-import { useTreeViewLabel } from '../useTreeViewLabel';
 import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
 import { convertSelectedItemsToArray } from '../useTreeViewSelection/useTreeViewSelection.utils';
 
@@ -98,12 +96,6 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       );
 
       if (itemElement) {
-        if (
-          hasPlugin(instance, useTreeViewLabel) &&
-          instance.isItemBeingEdited(state.focusedItemId)
-        ) {
-          instance.setEditedItemId(null);
-        }
         itemElement.blur();
       }
     }
