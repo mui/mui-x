@@ -46,9 +46,8 @@ jobs:
       - run: pnpm release:build
       - run: echo "registry=${{ env.REGISTRY }}" >> .npmrc
       - run: cat .npmrc
-      - run: >-
-          echo "
-          /#!/usr/bin/expect -f
+      - run: |
+          echo "/#!/usr/bin/expect -f
           spawn pnpm adduser --registry ${{ env.REGISTRY }} --auth-type legacy
           expect {
             "Username:" {send "${{ env.USERNAME }}\r"; exp_continue}
@@ -58,9 +57,8 @@ jobs:
           " > adduser.sh
       - run: chmod +x adduser.sh
       - run: ./adduser.sh
-      - run: >-
-          echo "
-          /#!/usr/bin/expect -f
+      - run: |
+          echo "/#!/usr/bin/expect -f
           spawn pnpm login --registry ${{ env.REGISTRY }} --auth-type legacy
           expect {
             "Username:" {send "${{ env.USERNAME }}\r"; exp_continue}
