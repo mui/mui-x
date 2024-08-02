@@ -47,26 +47,26 @@ jobs:
       - run: echo "registry=${{ env.REGISTRY }}" >> .npmrc
       - run: cat .npmrc
       - run: |
-          echo '/#!/usr/bin/expect -f
+          echo '#!/usr/bin/expect -f
           spawn pnpm adduser --registry ${{ env.REGISTRY }} --auth-type legacy
           expect {
             "Username:" {send "${{ env.USERNAME }}\r"; exp_continue}
             "Password:" {send "${{ env.PASSWORD }}\r"; exp_continue}
             "Email: (this IS public)" {send "${{ env.EMAIL }}\r"; exp_continue}
           }
-          ' > adduser.sh
-      - run: chmod +x adduser.sh
-      - run: ./adduser.sh
+          ' > adduser
+      - run: chmod +x adduser
+      - run: ./adduser
       - run: |
-          echo '/#!/usr/bin/expect -f
+          echo '#!/usr/bin/expect -f
           spawn pnpm login --registry ${{ env.REGISTRY }} --auth-type legacy
           expect {
             "Username:" {send "${{ env.USERNAME }}\r"; exp_continue}
             "Password:" {send "${{ env.PASSWORD }}\r"; exp_continue}
           }
-          ' > login.sh
-      - run: chmod +x login.sh
-      - run: ./login.sh
+          ' > login
+      - run: chmod +x login
+      - run: ./login
       - run: pnpm release:publish:dry-run --no-git-checks --force --registry ${{ env.REGISTRY }}
         env:
           NODE_AUTH_TOKEN: 'muix'
