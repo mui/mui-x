@@ -35,11 +35,13 @@ You can also provide the GitHub token by setting `process.env.GITHUB_TOKEN` vari
 In case of a problem, another method to generate the changelog is available at the end of this page.
 
 2. Clean the generated changelog, to match the format of [https://github.com/mui/mui-x/releases](https://github.com/mui/mui-x/releases).
-3. Update the root `package.json`'s version
+3. Update the root `package.json`'s version.
 4. Update the versions of the other `package.json` files and of the dependencies with `pnpm release:version` (`pnpm release:version prerelease` for alpha / beta releases).
-5. Open PR with changes and wait for review and green CI.
-6. Once CI is green and you have enough approvals, send a message on the `team-x` slack channel announcing a merge freeze.
-7. Merge PR.
+5. Open PR with changes and wait for review.
+6. Ensure the PR has the `release` label.
+7. Once CI is green and you have enough approvals, send a message on the `team-x` slack channel announcing a merge freeze.
+8. Merge PR.
+9. Unfreeze the merge.
 
 ### Release the packages
 
