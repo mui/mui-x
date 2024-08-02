@@ -65,22 +65,15 @@ interface CustomLabelInputProps extends UseTreeItem2LabelInputSlotOwnProps {
 function CustomLabelInput(props: Omit<CustomLabelInputProps, 'ref'>) {
   const { handleCancelItemLabelEditing, handleSaveItemLabel, value, ...other } =
     props;
-  const [labelInputValue, setLabelInputValue] = React.useState(value);
 
   return (
     <React.Fragment>
-      <TreeItem2LabelInput
-        {...other}
-        value={value}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          setLabelInputValue(event.target.value);
-        }}
-      />
+      <TreeItem2LabelInput {...other} value={value} />
       <IconButton
         color="success"
         size="small"
         onClick={(event: React.MouseEvent) => {
-          handleSaveItemLabel(event, labelInputValue);
+          handleSaveItemLabel(event, value);
         }}
       >
         <CheckIcon fontSize="small" />

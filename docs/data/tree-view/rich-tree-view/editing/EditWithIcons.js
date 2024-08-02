@@ -40,22 +40,15 @@ function CustomLabel({ editing, editable, children, toggleItemEditing, ...other 
 function CustomLabelInput(props) {
   const { handleCancelItemLabelEditing, handleSaveItemLabel, value, ...other } =
     props;
-  const [labelInputValue, setLabelInputValue] = React.useState(value);
 
   return (
     <React.Fragment>
-      <TreeItem2LabelInput
-        {...other}
-        value={value}
-        onChange={(event) => {
-          setLabelInputValue(event.target.value);
-        }}
-      />
+      <TreeItem2LabelInput {...other} value={value} />
       <IconButton
         color="success"
         size="small"
         onClick={(event) => {
-          handleSaveItemLabel(event, labelInputValue);
+          handleSaveItemLabel(event, value);
         }}
       >
         <CheckIcon fontSize="small" />
