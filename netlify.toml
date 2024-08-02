@@ -5,7 +5,7 @@
   publish = "docs/export/"
 
   # Default build command.
-  command = "pnpm list --filter docs && rm -rf docs/.next/static && rm -rf docs/.next/server && rm -f docs/.next/* 2> /dev/null && ls -la docs/.next && pnpm docs:build"
+  command = "pnpm list --filter docs && rm -rf docs/.next/static && rm -rf docs/.next/server && rm -f docs/.next/* || true && ls -la docs/.next && pnpm docs:build"
 
 [build.environment]
   NODE_VERSION = "18"
