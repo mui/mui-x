@@ -20,8 +20,10 @@ jobs:
     name: Release Publish Dry-Run
     runs-on: ubuntu-latest
     env:
-      REGISTRY: localhost:4873
-      HTTP_REGISTRY: http://localhost:4873
+      REGISTRY: http://localhost:4873
+      USERNAME: mui-x
+      PASSWORD: mui-x-password
+      EMAIL: x@mui.com
     if: >
       ${{ contains(github.event.pull_request.labels.*.name, 'release')}}
     services:
@@ -41,10 +43,25 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm release:build
-      - run: echo "always-auth = false" >> .npmrc
-      - run: echo "registry=${{ env.HTTP_REGISTRY }}" >> .npmrc
-      - run: echo "//${{ env.REGISTRY }}/:_authToken="muix"" >> .npmrc
+      - run: echo "registry=${{ env.REGISTRY }}" >> .npmrc
       - run: cat .npmrc
-      - run: pnpm release:publish:dry-run --no-git-checks --force --registry ${{ env.HTTP_REGISTRY }}
+      - run: |
+          /usr/bin/expect <<EOD
+          spawn pnpm adduser --registry ${{ env.REGISTRY }} --auth-type legacy
+          expect {
+            "Username:" {send "${{ env.USERNAME }}\r"; exp_continue}
+            "Password:" {send "${{ env.PASSWORD }}\r"; exp_continue}
+            "Email: (this IS public)" {send "${{ env.EMAIL }}\r"; exp_continue}
+          }
+          EOD
+      - run: |
+          /usr/bin/expect <<EOD
+          spawn pnpm login --registry ${{ env.REGISTRY }} --auth-type legacy
+          expect {
+            "Username:" {send "${{ env.USERNAME }}\r"; exp_continue}
+            "Password:" {send "${{ env.PASSWORD }}\r"; exp_continue}
+          }
+          EOD
+      - run: pnpm release:publish:dry-run --no-git-checks --force --registry ${{ env.REGISTRY }}
         env:
           NODE_AUTH_TOKEN: 'muix'
