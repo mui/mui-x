@@ -11,6 +11,10 @@ on:
       - synchronize
       - reopened
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test-publishing:
     name: Release Publish Dry-Run
@@ -27,8 +31,33 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
-      - run: pnpm install -g verdaccio@5.32.1
+      - run: pnpm install -g verdaccio@5.32.1 verdaccio-auth-memory@10.2.2 verdaccio-memory@10.3.2 npm-auth-to-token@1.0.0
       - run: pnpm install --frozen-lockfile
-      - run: nohup verdaccio &
+      - run: |
+          echo "
+          auth:
+            auth-memory:
+              users:
+                foo:
+                  name: test
+                  password: test
+          store:
+            memory:
+              limit: 1000
+          ## we don't need any remote request
+          uplinks:
+          packages:
+            '@*/*':
+              access: $all
+              publish: $all
+            '**':
+              access: $all
+              publish: $all
+          middlewares:
+            audit:
+              enabled: true
+          logs: {type: stdout, format: pretty, level: trace}
+          " > ~/.verdaccio.yaml
       - run: pnpm release:build
+      - run: nohup verdaccio -c ~/.verdaccio.yaml &
       - run: pnpm release:publish:dry-run --no-git-checks --force

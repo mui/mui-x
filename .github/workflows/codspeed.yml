@@ -17,6 +17,10 @@ on:
       - 'master'
       - 'next'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   benchmarks:
     name: Benchmarks Charts
