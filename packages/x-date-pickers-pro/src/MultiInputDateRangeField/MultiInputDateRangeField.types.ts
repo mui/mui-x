@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';

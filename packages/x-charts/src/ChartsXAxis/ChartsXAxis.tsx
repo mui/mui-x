@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useSlotProps } from '@mui/base/utils';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
+import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { useTicks, TickItemType } from '../hooks/useTicks';

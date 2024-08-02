@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
+import { useTreeViewContext } from '../internals/TreeViewProvider';
 import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
 import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
 import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
@@ -17,6 +17,7 @@ type UseTreeItemStateOptionalPlugins = readonly [];
 export function useTreeItemState(itemId: string) {
   const {
     instance,
+    items: { onItemClick },
     selection: { multiSelect, checkboxSelection, disableSelection },
     expansion: { expansionTrigger },
   } = useTreeViewContext<UseTreeItemStateMinimalPlugins, UseTreeItemStateOptionalPlugins>();
@@ -96,6 +97,7 @@ export function useTreeItemState(itemId: string) {
     handleExpansion,
     handleSelection,
     handleCheckboxSelection,
+    handleContentClick: onItemClick,
     preventSelection,
     expansionTrigger,
   };

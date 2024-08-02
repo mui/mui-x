@@ -5,6 +5,7 @@ import {
   useColorScheme as useMaterialColorScheme,
   Experimental_CssVarsProvider as MaterialCssVarsProvider,
 } from '@mui/material/styles';
+import useSlotProps from '@mui/utils/useSlotProps';
 import {
   extendTheme as extendJoyTheme,
   useColorScheme,
@@ -12,7 +13,6 @@ import {
   CssVarsProvider,
   THEME_ID,
 } from '@mui/joy/styles';
-import { useSlotProps } from '@mui/base/utils';
 import Input, { InputProps } from '@mui/joy/Input';
 import Stack, { StackProps } from '@mui/joy/Stack';
 import FormControl from '@mui/joy/FormControl';

@@ -8,7 +8,7 @@ import type {
   ScaleOrdinal,
   ScaleSequential,
   ScaleThreshold,
-} from 'd3-scale';
+} from '@mui/x-charts-vendor/d3-scale';
 import { SxProps } from '@mui/system';
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
@@ -306,7 +306,7 @@ export type AxisConfig<
    * If `true`, Reverse the axis scaleBand.
    */
   reverse?: boolean;
-} & Partial<AxisProps> &
+} & Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
   TickParams &
   AxisConfigExtension;
