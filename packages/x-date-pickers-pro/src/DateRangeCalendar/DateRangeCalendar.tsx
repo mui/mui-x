@@ -25,8 +25,6 @@ import {
   warnOnce,
   useControlledValueWithTimezone,
   useViews,
-  mergeDateAndTime,
-  findClosestEnabledDate,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
@@ -40,6 +38,7 @@ import {
   DateRangeCalendarOwnerState,
 } from './DateRangeCalendar.types';
 import {
+  findLastEnabledDate,
   isEndOfRange,
   isRangeValid,
   isStartOfRange,
@@ -56,8 +55,6 @@ import {
   PickersRangeCalendarHeader,
   PickersRangeCalendarHeaderProps,
 } from '../PickersRangeCalendarHeader';
-import { useIsDateDisabled } from '@mui/x-date-pickers/DateCalendar/useIsDateDisabled';
-import { findFirstEnabledDate, findLastEnabledDate } from '@mui/x-date-pickers/internals/utils/date-utils';
 
 const releaseInfo = getReleaseInfo();
 
@@ -108,15 +105,6 @@ function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
   props: DateRangeCalendarProps<TDate>,
   name: string,
 ): DateRangeCalendarDefaultizedProps<TDate> {
-  const {
-    shouldDisableDate,
-    shouldDisableMonth,
-    shouldDisableYear,
-    disablePast,
-    disableFuture,
-    timezone,
-    value
-  } = props;
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const defaultReduceAnimations = useDefaultReduceAnimations();
@@ -124,28 +112,6 @@ function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
     props,
     name,
   });
-  const isDateDisabled = useIsDateDisabled({
-    shouldDisableDate,
-    shouldDisableMonth,
-    shouldDisableYear,
-    minDate: themeProps.minDate || defaultDates.minDate,
-    maxDate: themeProps.maxDate || defaultDates.maxDate,
-    disablePast,
-    disableFuture,
-    timezone,
-  });
-
-  const [start, end] = value;
-  let overriddenMaxDate = themeProps.maxDate ?? defaultDates.maxDate;
-
-  if(start) {
-    overriddenMaxDate = findLastEnabledDate({
-      start,
-      maxDate: themeProps.maxDate || defaultDates.maxDate,
-      isDateDisabled,
-      utils,
-    });
-  }
 
   return {
     ...themeProps,
@@ -158,7 +124,7 @@ function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
     openTo: themeProps.openTo ?? 'day',
     views: themeProps.views ?? ['day'],
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: overriddenMaxDate ?? applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
     calendars: themeProps.calendars ?? 2,
     disableDragEditing: themeProps.disableDragEditing ?? false,
     availableRangePositions: themeProps.availableRangePositions ?? ['start', 'end'],
@@ -206,9 +172,11 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     className,
     disableFuture,
     disablePast,
+    disableNonContiguousRanges,
     minDate,
     maxDate,
     shouldDisableDate,
+    shouldDisableMonth,
     reduceAnimations,
     onMonthChange,
     rangePosition: rangePositionProp,
@@ -277,6 +245,11 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     }
   });
 
+  const [contiguousRangeBoundaries, setcontiguousRangeBoundaries] = React.useState<{
+    maxDate: TDate | null;
+    minDate: TDate | null;
+  } | null>(null);
+
   const handleSelectedDayChange = useEventCallback(
     (
       newDate: TDate | null,
@@ -290,6 +263,10 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
         rangePosition,
         allowRangeFlip,
         shouldMergeDateAndTime: true,
+        disableNonContiguousRanges,
+        maxDate,
+        minDate,
+        contiguousRangeBoundaries,
       });
 
       const isNextSectionAvailable = availableRangePositions.includes(nextSelection);
@@ -365,6 +342,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     changeMonth,
     handleChangeMonth,
     onMonthSwitchingAnimationEnd,
+    isDateDisabled,
   } = useCalendarState<TDate>({
     value: value[0] || value[1],
     referenceDate,
@@ -378,6 +356,23 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     shouldDisableDate: wrappedShouldDisableDate,
     timezone,
   });
+
+  const shouldRecalculateMaxMinDates =
+    disableNonContiguousRanges && shouldDisableDate && value.some((date) => date !== null);
+
+  React.useEffect(() => {
+    if (shouldRecalculateMaxMinDates) {
+      setcontiguousRangeBoundaries(
+        findLastEnabledDate({
+          range: value,
+          maxDate,
+          minDate,
+          isDateDisabled,
+          utils,
+        }),
+      );
+    }
+  }, [maxDate, minDate, isDateDisabled, shouldRecalculateMaxMinDates, utils, value]);
 
   const CalendarHeader = slots?.calendarHeader ?? PickersRangeCalendarHeader;
   const calendarHeaderProps: Omit<
@@ -440,11 +435,22 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     }
   }, [rangePosition, value]); // eslint-disable-line
 
+  const applyBoundaries = (contiguousRangeBoundary, defaultBoundary) => {
+    const [start, end] = value;
+
+    if (disableNonContiguousRanges) {
+      if ((start && !end) || (!start && end)) {
+        return contiguousRangeBoundary;
+      }
+    }
+    return defaultBoundary;
+  };
+
   const baseDateValidationProps: Required<BaseDateValidationProps<TDate>> = {
     disablePast,
     disableFuture,
-    maxDate,
-    minDate,
+    maxDate: applyBoundaries(contiguousRangeBoundaries?.maxDate, maxDate),
+    minDate: applyBoundaries(contiguousRangeBoundaries?.minDate, minDate),
   };
 
   const commonViewProps = {
@@ -467,6 +473,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     range: valueDayRange,
     newDate: rangePreviewDay,
     rangePosition,
+    disableNonContiguousRanges,
+    contiguousRangeBoundaries,
   });
 
   const handleDayMouseEnter = useEventCallback(

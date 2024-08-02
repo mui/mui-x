@@ -14,6 +14,13 @@ interface CalculateRangeChangeOptions<TDate extends PickerValidDate> {
    */
   allowRangeFlip?: boolean;
   shouldMergeDateAndTime?: boolean;
+  disableNonContiguousRanges?: boolean;
+  maxDate?: TDate;
+  minDate?: TDate;
+  contiguousRangeBoundaries?: {
+    maxDate: TDate | null;
+    minDate: TDate | null;
+  } | null;
 }
 
 interface CalculateRangeChangeResponse<TDate extends PickerValidDate> {
@@ -28,8 +35,29 @@ export function calculateRangeChange<TDate extends PickerValidDate>({
   rangePosition,
   allowRangeFlip = false,
   shouldMergeDateAndTime = false,
+  disableNonContiguousRanges,
+  contiguousRangeBoundaries,
 }: CalculateRangeChangeOptions<TDate>): CalculateRangeChangeResponse<TDate> {
   const [start, end] = range;
+
+  if (disableNonContiguousRanges && selectedDate && start && end) {
+    if (rangePosition === 'start') {
+      if (
+        contiguousRangeBoundaries?.minDate &&
+        utils.isBefore(selectedDate, contiguousRangeBoundaries.minDate)
+      ) {
+        return { nextSelection: 'end', newRange: [selectedDate, null] };
+      }
+    }
+    if (rangePosition === 'end') {
+      if (
+        contiguousRangeBoundaries?.maxDate &&
+        utils.isAfter(selectedDate, contiguousRangeBoundaries.maxDate)
+      ) {
+        return { nextSelection: 'end', newRange: [selectedDate, null] };
+      }
+    }
+  }
 
   if (shouldMergeDateAndTime && selectedDate) {
     // If there is a date already selected, then we want to keep its time
@@ -66,12 +94,32 @@ export function calculateRangePreview<TDate extends PickerValidDate>(
   }
 
   const [start, end] = options.range;
+  const { utils, rangePosition, contiguousRangeBoundaries } = options;
   const { newRange } = calculateRangeChange(options as CalculateRangeChangeOptions<TDate>);
 
   if (!start || !end) {
     return newRange;
   }
 
+  if (rangePosition === 'start' && contiguousRangeBoundaries?.minDate) {
+    if (utils.isAfter(contiguousRangeBoundaries?.minDate, options.newDate)) {
+      return [start, options.newDate];
+    }
+    if (utils.isBefore(contiguousRangeBoundaries?.minDate, options.newDate)) {
+      return [options.newDate, end];
+    }
+  }
+
+  if (rangePosition === 'end' && contiguousRangeBoundaries?.maxDate) {
+    if (utils.isAfter(contiguousRangeBoundaries?.maxDate, options.newDate)) {
+      return [start, options.newDate];
+    }
+    if (utils.isBefore(contiguousRangeBoundaries?.maxDate, options.newDate)) {
+      return [options.newDate, null];
+    }
+  }
+
   const [previewStart, previewEnd] = newRange;
-  return options.rangePosition === 'end' ? [end, previewEnd] : [previewStart, start];
+
+  return rangePosition === 'end' ? [end, previewEnd] : [previewStart, start];
 }
