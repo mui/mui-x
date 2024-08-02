@@ -29,6 +29,9 @@ jobs:
     services:
       verdaccio:
         image: verdaccio/verdaccio:5.32.1
+        volumes:
+          - ${{ github.workspace }}/verdaccio/conf:/verdaccio/conf
+        options: --name verdaccio
         ports:
           - 4873:4873
     steps:
@@ -42,11 +45,37 @@ jobs:
           node-version: 20
           cache: 'pnpm'
       - run: sudo apt-get update && sudo apt-get install -y expect
+
+      - name: Create Verdaccio configuration
+        run: |
+          echo "
+          auth:
+            htpasswd:
+              file: ./htpasswd
+              algorithm: bcrypt
+          packages:
+            '@*/*':
+              access: $all
+              publish: $all
+            '**':
+              access: $all
+              publish: $all
+          middlewares:
+            audit:
+              enabled: true
+          log: {type: stdout, format: pretty, level: trace}
+          " > /verdaccio/conf/config.yaml
+
+      - name: Restart Verdaccio to apply the new configuration
+        uses: docker://docker
+        with:
+          args: docker restart verdaccio
+
       - run: pnpm install --frozen-lockfile
       - run: pnpm release:build
-      - run: echo "registry=${{ env.REGISTRY }}" >> .npmrc
-      - run: cat .npmrc
-      - run: |
+
+      - name: Add user
+        run: |
           echo '#!/usr/bin/expect -f
           spawn pnpm adduser --registry ${{ env.REGISTRY }} --auth-type legacy
           expect {
@@ -54,19 +83,18 @@ jobs:
             "Password:" {send "${{ env.PASSWORD }}\r"; exp_continue}
             "Email: (this IS public)" {send "${{ env.EMAIL }}\r"; exp_continue}
           }
-          ' > adduser
-      - run: chmod +x adduser
-      - run: ./adduser
-      - run: |
+          ' > adduser && chmod +x adduser && ./adduser
+      - name: Login
+        run: |
           echo '#!/usr/bin/expect -f
           spawn pnpm login --registry ${{ env.REGISTRY }} --auth-type legacy
           expect {
             "Username:" {send "${{ env.USERNAME }}\r"; exp_continue}
             "Password:" {send "${{ env.PASSWORD }}\r"; exp_continue}
           }
-          ' > login
-      - run: chmod +x login
-      - run: ./login
-      - run: pnpm release:publish:dry-run --no-git-checks --force --registry ${{ env.REGISTRY }}
+          ' > login && chmod +x login && ./login
+
+      - name: Release Publish Dry-Run
+        run: pnpm release:publish:dry-run --no-git-checks --force --registry ${{ env.REGISTRY }}
         env:
           NODE_AUTH_TOKEN: 'muix'
