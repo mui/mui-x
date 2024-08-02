@@ -29,6 +29,6 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install -g verdaccio@5.32.1
       - run: pnpm install --frozen-lockfile
-      - run: verdaccio &
+      - run: nohup verdaccio &
       - run: pnpm release:build
-      - run: pnpm release:publish:dry-run --no-git-checks
+      - run: pnpm release:publish:dry-run --no-git-checks --force
