@@ -93,30 +93,6 @@ export const findClosestEnabledDate = <TDate extends PickerValidDate>({
   return null;
 };
 
-interface FindLastEnabledDateParams<TDate extends PickerValidDate> {
-  start: TDate;
-  maxDate: TDate;
-  isDateDisabled: (date: TDate) => boolean;
-  utils: MuiPickersAdapter<TDate>;
-}
-
-export const findLastEnabledDate = <TDate extends PickerValidDate>({
-  start,
-  maxDate,
-  isDateDisabled,
-  utils,
-}: FindLastEnabledDateParams<TDate>) => {
-  let current = start;
-  
-  while (utils.isBefore(current, maxDate)) {
-    if(isDateDisabled(current)) {
-      return utils.addDays(current, -1);
-    }
-    current = utils.addDays(current, 1);
-  }
-  return maxDate;
-}
-
 export const replaceInvalidDateByNull = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
   value: TDate | null,
