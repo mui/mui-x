@@ -5,7 +5,7 @@
   publish = "docs/export/"
 
   # Default build command.
-  command = "pnpm docs:build"
+  command = "pnpm list --filter docs && pnpm docs:build"
 
 [build.environment]
   NODE_VERSION = "18"
