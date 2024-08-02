@@ -112,8 +112,10 @@ export const useGridDataSource = (
         return;
       }
 
+      // with lazy loading, only the initial load should show the loading overlay
+      const useLoadingIndicator = !isLazyLoaded || apiRef.current.getRowsCount() === 0;
       const isLoading = gridRowsLoadingSelector(apiRef);
-      if (!isLoading) {
+      if (!isLoading && useLoadingIndicator) {
         apiRef.current.setLoading(true);
       }
 
@@ -147,7 +149,7 @@ export const useGridDataSource = (
 
   const fetchRowBatch = React.useCallback(
     (fetchParams: GridGetRowsParams) => {
-      if (isLazyLoaded && fetchParams.start && fetchParams.end) {
+      if (isLazyLoaded) {
         rowFetchSlice.current = { start: Number(fetchParams.start), end: fetchParams.end };
       }
       return fetchRows();
