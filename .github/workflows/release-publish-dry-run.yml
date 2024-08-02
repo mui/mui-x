@@ -96,5 +96,3 @@ jobs:
 
       - name: Release Publish Dry-Run
         run: pnpm release:publish:dry-run --no-git-checks --force --registry ${{ env.REGISTRY }}
-        env:
-          NODE_AUTH_TOKEN: 'muix'
