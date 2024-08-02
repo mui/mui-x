@@ -83,6 +83,9 @@ export type UseTreeItemIconContainerSlotProps<ExternalProps = {}> = ExternalProp
 export interface UseTreeItem2LabelSlotOwnProps {
   children: React.ReactNode;
   onDoubleClick: MuiCancellableEventHandler<React.MouseEvent>;
+  /**
+   * Only defined when the `isItemEditable` experimental feature is enabled.
+   */
   editable?: boolean;
 }
 

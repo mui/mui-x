@@ -307,13 +307,18 @@ export const useTreeItem2 = <
       ...extractEventHandlers(externalProps),
     };
 
-    return {
+    const props: UseTreeItem2LabelSlotProps<ExternalProps> = {
       ...externalEventHandlers,
       children: label,
       ...externalProps,
       onDoubleClick: createLabelHandleDoubleClick(externalEventHandlers),
-      editable: status.editable,
     };
+
+    if (instance.isTreeViewEditable) {
+      props.editable = status.editable;
+    }
+
+    return props;
   };
 
   const getLabelInputProps = <ExternalProps extends Record<string, any> = {}>(
