@@ -19,6 +19,8 @@ jobs:
   test-publishing:
     name: Release Publish Dry-Run
     runs-on: ubuntu-latest
+    env:
+      REGISTRY: http://0.0.0.0:4873
     if: >
       ${{ contains(github.event.pull_request.labels.*.name, 'release')}}
     steps:
@@ -56,8 +58,9 @@ jobs:
           middlewares:
             audit:
               enabled: true
-          logs: {type: stdout, format: pretty, level: trace}
+          log: {type: stdout, format: pretty, level: trace}
           " > ~/.verdaccio.yaml
       - run: pnpm release:build
+      - run: npm-auth-to-token -u test -p test -e test@test.com -r ${{ env.REGISTRY }}
       - run: nohup verdaccio -c ~/.verdaccio.yaml &
-      - run: pnpm release:publish:dry-run --no-git-checks --force
+      - run: pnpm release:publish:dry-run --no-git-checks --force --registry ${{ env.REGISTRY }}
