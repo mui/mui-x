@@ -54,9 +54,7 @@
     "internmap": "^2.0.3",
     "rimraf": "^5.0.8"
   },
-  "publishConfig": {
-    "provenance": true
-  },
+  "publishConfig": {},
   "scripts": {
     "build": "node ./scripts/build.js"
   }
