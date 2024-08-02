@@ -31,4 +31,4 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: verdaccio &
       - run: pnpm release:build
-      - run: pnpm release:publish:dry-run
+      - run: pnpm release:publish:dry-run --no-git-checks
