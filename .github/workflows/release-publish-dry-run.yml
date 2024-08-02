@@ -39,7 +39,6 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
-          registry-url: ${{ env.HTTP_REGISTRY }}
       - run: pnpm install --frozen-lockfile
       - run: pnpm release:build
       - run: echo "always-auth = false" >> .npmrc
