@@ -46,6 +46,9 @@ jobs:
           store:
             memory:
               limit: 1000
+          uplinks:
+            npmjs:
+              url: https://registry.npmjs.org
           packages:
             '@*/*':
               access: $all
