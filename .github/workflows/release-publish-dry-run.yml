@@ -38,10 +38,14 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
+          registry-url: ${{ env.REGISTRY }}
       - run: pnpm install --frozen-lockfile
       - run: pnpm release:build
-      # - run: echo "//${{ env.REGISTRY }}/:_authToken="fooBar"" >> .npmrc
+      - run: echo "always-auth = false" >> .npmrc
+      - run: echo "registry=${{ env.REGISTRY }}" >> .npmrc
+      - run: echo "//${{ env.REGISTRY }}/:_authToken="muix"" >> .npmrc
+      - run: cat .npmrc
       # - run: pnpm adduser --registry ${{ env.REGISTRY }}
       - run: pnpm release:publish:dry-run --no-git-checks --force --registry ${{ env.REGISTRY }}
         env:
-          NODE_AUTH_TOKEN: 'mui-x-fake'
+          NODE_AUTH_TOKEN: 'muix'
