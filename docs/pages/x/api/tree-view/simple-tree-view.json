@@ -86,7 +86,8 @@
   "name": "SimpleTreeView",
   "imports": [
     "import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';",
-    "import { SimpleTreeView } from '@mui/x-tree-view';"
+    "import { SimpleTreeView } from '@mui/x-tree-view';",
+    "import { SimpleTreeView } from '@mui/x-tree-view-pro';"
   ],
   "slots": [
     {

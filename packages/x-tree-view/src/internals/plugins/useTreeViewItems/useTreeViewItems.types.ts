@@ -26,6 +26,7 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
   /**
    * Get the ids of a given item's children.
    * Those ids are returned in the order they should be rendered.
+   * To get the root items, pass `null` as the `itemId`.
    * @param {TreeViewItemId | null} itemId The id of the item to get the children of.
    * @returns {TreeViewItemId[]} The ids of the item's children.
    */
@@ -85,7 +86,7 @@ export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItems
   areItemUpdatesPrevented: () => boolean;
 }
 
-export interface UseTreeViewItemsParameters<R extends {}> {
+export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
   /**
    * If `true`, will allow focus on disabled items.
    * @default false
@@ -131,7 +132,7 @@ export interface UseTreeViewItemsParameters<R extends {}> {
   itemChildrenIndentation?: string | number;
 }
 
-export type UseTreeViewItemsDefaultizedParameters<R extends {}> = DefaultizedProps<
+export type UseTreeViewItemsDefaultizedParameters<R extends { children?: R[] }> = DefaultizedProps<
   UseTreeViewItemsParameters<R>,
   'disabledItemsFocusable' | 'itemChildrenIndentation'
 >;

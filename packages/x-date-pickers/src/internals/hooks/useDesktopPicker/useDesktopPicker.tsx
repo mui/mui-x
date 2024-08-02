@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import MuiInputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import useForkRef from '@mui/utils/useForkRef';

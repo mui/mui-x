@@ -747,7 +747,7 @@ export const mergeDateIntoReferenceDate = <TDate extends PickerValidDate>(
       return mergedDate;
     }, referenceDate);
 
-export const isAndroid = () => navigator.userAgent.toLowerCase().indexOf('android') > -1;
+export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
 // TODO v8: Remove if we drop the v6 TextField approach.
 export const getSectionOrder = (
