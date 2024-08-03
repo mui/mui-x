@@ -47,9 +47,13 @@ jobs:
       - name: Create Verdaccio configuration
         run: |
           echo "
+          storage: /verdaccio/storage/data
+          plugins: /verdaccio/plugins
+          web:
+            title: Verdaccio
           auth:
             htpasswd:
-              file: ./htpasswd
+              file: /verdaccio/storage/htpasswd
               algorithm: bcrypt
           packages:
             '@*/*':
