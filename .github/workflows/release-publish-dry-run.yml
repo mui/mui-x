@@ -20,10 +20,12 @@ jobs:
     name: Release Publish Dry-Run
     runs-on: ubuntu-latest
     env:
-      REGISTRY: http://localhost:4873
+      REGISTRY: localhost:4873
+      HTTP_REGISTRY: http://localhost:4873
       USERNAME: mui-x
       PASSWORD: mui-x-password
       EMAIL: x@mui.com
+      VERDACCIO_CONFIG: ./verdaccio.yaml
     if: >
       ${{ contains(github.event.pull_request.labels.*.name, 'release')}}
     services:
@@ -56,27 +58,28 @@ jobs:
               file: /verdaccio/storage/htpasswd
               algorithm: bcrypt
           packages:
-            '@*/*':
-              access: $all
-              publish: $all
-            '**':
+            '@mui/*':
               access: $all
               publish: $all
           middlewares:
             audit:
               enabled: true
           log: {type: stdout, format: pretty, level: trace}
-          " > ./verdaccio.yaml
+          " > ${{ env.VERDACCIO_CONFIG }}
 
       - name: Copy config to Verdaccio container
         uses: docker://docker
         with:
-          args: docker cp ./verdaccio.yaml verdaccio:/verdaccio/conf/config.yaml
+          args: docker cp ${{ env.VERDACCIO_CONFIG }} verdaccio:/verdaccio/conf/config.yaml
 
       - name: Restart Verdaccio to apply the new configuration
         uses: docker://docker
         with:
           args: docker restart verdaccio
+
+      # https://github.com/verdaccio/verdaccio/issues/212#issuecomment-308578500
+      - name: Add fake auth token to .npmrc
+        run: echo "//${{ env.REGISTRY }}/:_authToken=foo" >> .npmrc
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm release:build
@@ -84,7 +87,7 @@ jobs:
       - name: Add user
         run: |
           echo '#!/usr/bin/expect -f
-          spawn pnpm adduser --scope=@mui --registry ${{ env.REGISTRY }} --auth-type legacy
+          spawn pnpm adduser --scope=@mui --registry ${{ env.HTTP_REGISTRY }} --auth-type legacy
           expect {
             "Username:" {send "${{ env.USERNAME }}\r"; exp_continue}
             "Password:" {send "${{ env.PASSWORD }}\r"; exp_continue}
@@ -94,7 +97,7 @@ jobs:
       - name: Login
         run: |
           echo '#!/usr/bin/expect -f
-          spawn pnpm login --scope=@mui --registry ${{ env.REGISTRY }} --auth-type legacy
+          spawn pnpm login --scope=@mui --registry ${{ env.HTTP_REGISTRY }} --auth-type legacy
           expect {
             "Username:" {send "${{ env.USERNAME }}\r"; exp_continue}
             "Password:" {send "${{ env.PASSWORD }}\r"; exp_continue}
@@ -102,4 +105,4 @@ jobs:
           ' > login && chmod +x login && ./login
 
       - name: Release Publish Dry-Run
-        run: pnpm release:publish:dry-run --no-git-checks --force --registry ${{ env.REGISTRY }}
+        run: pnpm release:publish:dry-run --no-git-checks --force --registry ${{ env.HTTP_REGISTRY }}
