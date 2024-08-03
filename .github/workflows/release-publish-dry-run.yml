@@ -35,6 +35,8 @@ jobs:
         ports:
           - 4873:4873
     steps:
+      - name: chown files before checkout tries to change them
+        run: chown -R $USER:$USER /verdaccio
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
         with:
           clean: false
