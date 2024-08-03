@@ -38,8 +38,6 @@ jobs:
       - name: chown files before checkout tries to change them
         run: sudo chown -R $USER:$USER ${{ github.workspace }}/verdaccio
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
-        with:
-          clean: false
       - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2
         with:
           run_install: false
@@ -50,6 +48,10 @@ jobs:
           cache: 'pnpm'
       - run: sudo apt-get update && sudo apt-get install -y expect
 
+      - run: |
+          mkdir ${{ github.workspace }}/verdaccio && 
+          mkdir ${{ github.workspace }}/verdaccio/conf && 
+          touch ${{ github.workspace }}/verdaccio/conf/config.yaml
       - name: Create Verdaccio configuration
         run: |
           echo "
