@@ -29,14 +29,10 @@ jobs:
     services:
       verdaccio:
         image: verdaccio/verdaccio:5.32.1
-        volumes:
-          - ${{ github.workspace }}/verdaccio/conf:/verdaccio/conf
         options: --name verdaccio
         ports:
           - 4873:4873
     steps:
-      - name: chown files before checkout tries to change them
-        run: sudo chown -R $USER:$USER ${{ github.workspace }}/verdaccio
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
       - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2
         with:
@@ -48,9 +44,6 @@ jobs:
           cache: 'pnpm'
       - run: sudo apt-get update && sudo apt-get install -y expect
 
-      - run: |
-          mkdir ${{ github.workspace }}/verdaccio && 
-          mkdir ${{ github.workspace }}/verdaccio/conf
       - name: Create Verdaccio configuration
         run: |
           echo "
@@ -69,7 +62,12 @@ jobs:
             audit:
               enabled: true
           log: {type: stdout, format: pretty, level: trace}
-          " > ${{ github.workspace }}/verdaccio/conf/config.yaml
+          " > ./verdaccio.yaml
+
+      - name: Copy config to Verdaccio container
+        uses: docker://docker
+        with:
+          args: docker cp ./verdaccio.yaml verdaccio:/verdaccio/conf/config.yaml
 
       - name: Restart Verdaccio to apply the new configuration
         uses: docker://docker
