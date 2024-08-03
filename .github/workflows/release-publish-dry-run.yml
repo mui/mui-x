@@ -50,8 +50,7 @@ jobs:
 
       - run: |
           mkdir ${{ github.workspace }}/verdaccio && 
-          mkdir ${{ github.workspace }}/verdaccio/conf && 
-          touch ${{ github.workspace }}/verdaccio/conf/config.yaml
+          mkdir ${{ github.workspace }}/verdaccio/conf
       - name: Create Verdaccio configuration
         run: |
           echo "
