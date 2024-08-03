@@ -68,7 +68,7 @@ jobs:
             audit:
               enabled: true
           log: {type: stdout, format: pretty, level: trace}
-          " > /verdaccio/conf/config.yaml
+          " > ${{ github.workspace }}/verdaccio/conf/config.yaml
 
       - name: Restart Verdaccio to apply the new configuration
         uses: docker://docker
