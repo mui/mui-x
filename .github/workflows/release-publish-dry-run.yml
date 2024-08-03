@@ -84,7 +84,7 @@ jobs:
       - name: Add user
         run: |
           echo '#!/usr/bin/expect -f
-          spawn pnpm adduser --registry ${{ env.REGISTRY }} --auth-type legacy
+          spawn pnpm adduser --scope=@mui --registry ${{ env.REGISTRY }} --auth-type legacy
           expect {
             "Username:" {send "${{ env.USERNAME }}\r"; exp_continue}
             "Password:" {send "${{ env.PASSWORD }}\r"; exp_continue}
@@ -94,7 +94,7 @@ jobs:
       - name: Login
         run: |
           echo '#!/usr/bin/expect -f
-          spawn pnpm login --registry ${{ env.REGISTRY }} --auth-type legacy
+          spawn pnpm login --scope=@mui --registry ${{ env.REGISTRY }} --auth-type legacy
           expect {
             "Username:" {send "${{ env.USERNAME }}\r"; exp_continue}
             "Password:" {send "${{ env.PASSWORD }}\r"; exp_continue}
