@@ -882,25 +882,25 @@ importers:
         specifier: ^7.24.7
         version: 7.24.7(@babel/core@7.25.2)
       '@types/d3-array':
-        specifier: ^3.0.3
+        specifier: ^3.2.1
         version: 3.2.1
       '@types/d3-format':
         specifier: ^3.0.4
         version: 3.0.4
       '@types/d3-path':
-        specifier: ^3.0.1
+        specifier: ^3.1.0
         version: 3.1.0
       '@types/d3-time-format':
         specifier: ^4.0.3
         version: 4.0.3
       d3-array:
-        specifier: ^3.1.6
+        specifier: ^3.2.4
         version: 3.2.4
       d3-format:
         specifier: ^3.1.0
         version: 3.1.0
       d3-path:
-        specifier: ^3.0.1
+        specifier: ^3.1.0
         version: 3.1.0
       d3-time-format:
         specifier: ^4.1.0
