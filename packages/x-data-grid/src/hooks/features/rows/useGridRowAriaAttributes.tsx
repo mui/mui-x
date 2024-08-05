@@ -18,8 +18,8 @@ export const useGridRowAriaAttributes = (): GetRowAriaAttributesFn => {
       const ariaRowIndex = index + headerGroupingMaxDepth + 2; // 1 for the header row and 1 as it's 1-based
       ariaAttributes['aria-rowindex'] = ariaRowIndex;
 
-      if (selectedIdsLookup[rowNode.id]) {
-        ariaAttributes['aria-selected'] = true;
+      if (apiRef.current.isRowSelectable(rowNode.id)) {
+        ariaAttributes['aria-selected'] = selectedIdsLookup[rowNode.id] !== undefined;
       }
 
       return ariaAttributes;
