@@ -527,6 +527,60 @@ describe('<DateRangeCalendar />', () => {
     expect(screen.getAllByMuiTest('pickers-calendar')).to.have.length(3);
   });
 
+  describe('prop: disableNonContiguousRanges', () => {
+    const shouldDisableDate = (value) => adapterToUse.getDate(value) === 20;
+    const maxDate = adapterToUse.date('25');
+
+    it('should allow non contiguous ranges when prop is false', () => {
+      const onChange = spy();
+
+      render(
+        <DateRangeCalendar
+          disableNonContiguousRanges={false}
+          shouldDisableDate={shouldDisableDate}
+          maxDate={maxDate}
+          onChange={onChange}
+          calendars={1}
+        />,
+      );
+
+      fireEvent.click(getPickerDay('19', 'January 2018'));
+
+      expect(screen.getByRole('gridcell', { name: '5' })).not.to.have.attribute('disabled');
+      fireEvent.click(getPickerDay('21', 'January 2018'));
+
+      expect(onChange.callCount).to.equal(2);
+    });
+
+    it('should disable dates dynamically after startDay selection to prevent non contiguous range when prop is true', () => {
+      const onChange = spy();
+
+      render(
+        <DateRangeCalendar
+          disableNonContiguousRanges
+          shouldDisableDate={shouldDisableDate}
+          maxDate={maxDate}
+          onChange={onChange}
+          calendars={1}
+        />,
+      );
+
+      [21, 22, 23, 24, 25].forEach((day) => {
+        expect(screen.getByRole('gridcell', { name: day.toString() })).not.to.have.attribute(
+          'disabled',
+        );
+      });
+
+      fireEvent.click(getPickerDay('19', 'January 2018'));
+
+      [21, 22, 23, 24, 25].forEach((day) => {
+        expect(screen.getByRole('gridcell', { name: day.toString() })).to.have.attribute(
+          'disabled',
+        );
+      });
+    });
+  });
+
   describe('Performance', () => {
     it('should only render the new start day when selecting a start day without a previously selected start day', () => {
       const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
