@@ -3,6 +3,8 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import FormatPaintIcon from '@mui/icons-material/FormatPaint';
+import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
+import LanguageIcon from '@mui/icons-material/Language';
 import InfoCard from './InfoCard';
 
 const featuredItems = [
@@ -16,13 +18,13 @@ const featuredItems = [
     title: 'Accessibility',
     description:
       'We are committed to meeting or exceeding global standards for accessibility, and we provide thorough guidance on best practices in our documentation.',
-    icon: <FormatPaintIcon fontSize="small" color="primary" />,
+    icon: <AccessibilityNewIcon fontSize="small" color="primary" />,
   },
   {
     title: 'Internationalization',
     description:
       'Serve the needs of users all around the world with built-in support for multiple time zones, languages, and date formats.',
-    icon: <FormatPaintIcon fontSize="small" color="primary" />,
+    icon: <LanguageIcon fontSize="small" color="primary" />,
   },
 ];
 
