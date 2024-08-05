@@ -10,24 +10,11 @@ packageName: '@mui/x-charts'
 
 ## Installation
 
-Run one of the following commands to add the MUI X Charts to your project:
+Using your favorite package manager, install `@mui/x-charts-pro` for the commercial version, or `@mui/x-charts` for the free community version.
 
 <!-- #default-branch-switch -->
 
-<codeblock storageKey="package-manager">
-```bash npm
-npm install @mui/x-charts
-```
-
-```bash pnpm
-pnpm add @mui/x-charts
-```
-
-```bash yarn
-yarn add @mui/x-charts
-```
-
-</codeblock>
+{{"component": "modules/components/ChartsInstallationInstructions.js"}}
 
 The Charts package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:

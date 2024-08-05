@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { interpolateBlues } from 'd3-scale-chromatic';
-import '@mui/x-charts-pro/typeOverloads';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { HeatmapValueType } from '@mui/x-charts-pro/models';
 

@@ -3,5 +3,5 @@ import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
 import * as pageProps from 'docsx/data/charts/zoom-and-pan/zoom-and-pan.md?muiMarkdown';
 
 export default function Page() {
-  return <MarkdownDocs {...pageProps} />;
+  return <MarkdownDocs {...pageProps} disableAd />;
 }

@@ -95,63 +95,13 @@
     "import { Heatmap } from '@mui/x-charts-pro/Heatmap';",
     "import { Heatmap } from '@mui/x-charts-pro';"
   ],
-  "slots": [
-    {
-      "name": "axisLabel",
-      "description": "Custom component for axis label.",
-      "default": "ChartsText",
-      "class": null
-    },
-    {
-      "name": "axisLine",
-      "description": "Custom component for the axis main line.",
-      "default": "'line'",
-      "class": null
-    },
-    {
-      "name": "axisTick",
-      "description": "Custom component for the axis tick.",
-      "default": "'line'",
-      "class": null
-    },
-    {
-      "name": "axisTickLabel",
-      "description": "Custom component for tick label.",
-      "default": "ChartsText",
-      "class": null
-    },
-    {
-      "name": "cell",
-      "description": "The component that renders the heatmap cell.",
-      "default": "HeatmapCell",
-      "class": "MuiHeatmap-cell"
-    },
-    {
-      "name": "itemContent",
-      "description": "Custom component for displaying tooltip content when triggered by item event.",
-      "default": "DefaultChartsItemTooltipContent",
-      "class": null
-    },
-    {
-      "name": "loadingOverlay",
-      "description": "Overlay component rendered when the chart is in a loading state.",
-      "default": "ChartsLoadingOverlay",
-      "class": null
-    },
-    {
-      "name": "noDataOverlay",
-      "description": "Overlay component rendered when the chart has no data to display.",
-      "default": "ChartsNoDataOverlay",
-      "class": null
-    },
-    {
-      "name": "popper",
-      "description": "Custom component for the tooltip popper.",
-      "default": "ChartsTooltipRoot",
-      "class": null
-    }
-  ],
   "classes": [
+    {
+      "key": "cell",
+      "className": "MuiHeatmap-cell",
+      "description": "Styles applied to the heatmap cells.",
+      "isGlobal": false
+    },
     {
       "key": "faded",
       "className": "MuiHeatmap-faded",
@@ -168,6 +118,6 @@
   "muiName": "MuiHeatmap",
   "filename": "/packages/x-charts-pro/src/Heatmap/Heatmap.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/heatmap/\">Charts - Heatmap <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a> 🚧</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/heatmap/\">Charts - Heatmap <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
   "cssComponent": false
 }

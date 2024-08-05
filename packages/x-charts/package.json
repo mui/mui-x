@@ -3,7 +3,7 @@
   "version": "7.12.0",
   "description": "The community edition of the Charts components (MUI X).",
   "author": "MUI Team",
-  "main": "./src/index.js",
+  "main": "src/index.js",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
