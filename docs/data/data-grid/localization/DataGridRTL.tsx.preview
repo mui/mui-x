@@ -1,5 +1,7 @@
-<ThemeProvider theme={theme}>
-  <div dir="rtl" style={{ height: 400, width: '100%' }}>
-    <DataGrid rows={rows} columns={columns} />
-  </div>
-</ThemeProvider>
+<CacheProvider value={cacheRtl}>
+  <ThemeProvider theme={theme}>
+    <div dir="rtl" style={{ height: 400, width: '100%' }}>
+      <DataGrid rows={rows} columns={columns} />
+    </div>
+  </ThemeProvider>
+</CacheProvider>
