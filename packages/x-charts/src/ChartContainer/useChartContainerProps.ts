@@ -1,13 +1,15 @@
+import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 import type { DrawingProviderProps } from '../context/DrawingProvider';
-import type { ColorProviderProps } from '../context/ColorProvider';
 import type { CartesianContextProviderProps } from '../context/CartesianProvider';
 import type { SeriesProviderProps } from '../context/SeriesProvider';
 import type { ZAxisContextProviderProps } from '../context/ZAxisContextProvider';
 import type { ChartContainerProps } from './ChartContainer';
-import { useChartContainerHooks } from './useChartContainerHooks';
 import { HighlightedProviderProps } from '../context';
 import { ChartsSurfaceProps } from '../ChartsSurface';
 import { useDefaultizeAxis } from './useDefaultizeAxis';
+import { PluginProviderProps } from '../context/PluginProvider';
+import { useReducedMotion } from '../hooks/useReducedMotion';
 
 export const useChartContainerProps = (
   props: ChartContainerProps,
@@ -33,15 +35,10 @@ export const useChartContainerProps = (
     children,
     ...other
   } = props;
+  const svgRef = React.useRef<SVGSVGElement>(null);
+  const chartSurfaceRef = useForkRef(ref, svgRef);
 
-  const {
-    svgRef,
-    chartSurfaceRef,
-    xExtremumGetters,
-    yExtremumGetters,
-    seriesFormatters,
-    colorProcessors,
-  } = useChartContainerHooks(ref, plugins);
+  useReducedMotion(); // a11y reduce motion (see: https://react-spring.dev/docs/utilities/use-reduced-motion)
 
   const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis);
 
@@ -52,23 +49,20 @@ export const useChartContainerProps = (
     svgRef,
   };
 
-  const colorProviderProps: Omit<ColorProviderProps, 'children'> = {
-    colorProcessors,
+  const pluginProviderProps: Omit<PluginProviderProps, 'children'> = {
+    plugins,
   };
 
   const seriesProviderProps: Omit<SeriesProviderProps, 'children'> = {
     series,
     colors,
     dataset,
-    seriesFormatters,
   };
 
   const cartesianContextProps: Omit<CartesianContextProviderProps, 'children'> = {
     xAxis: defaultizedXAxis,
     yAxis: defaultizedYAxis,
     dataset,
-    xExtremumGetters,
-    yExtremumGetters,
   };
 
   const zAxisContextProps: Omit<ZAxisContextProviderProps, 'children'> = {
@@ -95,12 +89,12 @@ export const useChartContainerProps = (
   return {
     children,
     drawingProviderProps,
-    colorProviderProps,
     seriesProviderProps,
     cartesianContextProps,
     zAxisContextProps,
     highlightedProviderProps,
     chartsSurfaceProps,
+    pluginProviderProps,
     xAxis: defaultizedXAxis,
     yAxis: defaultizedYAxis,
   };

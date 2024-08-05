@@ -11,12 +11,12 @@ export const useChartContainerProProps = (
   const {
     children,
     drawingProviderProps,
-    colorProviderProps,
     seriesProviderProps,
     cartesianContextProps,
     zAxisContextProps,
     highlightedProviderProps,
     chartsSurfaceProps,
+    pluginProviderProps,
     xAxis,
     yAxis,
   } = useChartContainerProps(baseProps, ref);
@@ -32,7 +32,7 @@ export const useChartContainerProProps = (
     zoomProviderProps,
     children,
     drawingProviderProps,
-    colorProviderProps,
+    pluginProviderProps,
     seriesProviderProps,
     cartesianContextProps,
     zAxisContextProps,

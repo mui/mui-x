@@ -1,18 +1,14 @@
 import * as React from 'react';
 import { AllSeriesType } from '../../models/seriesType';
-import {
-  ChartSeriesType,
-  DatasetType,
-  FormatterParams,
-  FormatterResult,
-} from '../../models/seriesType/config';
+import { ChartSeriesType, DatasetType } from '../../models/seriesType/config';
 import { ChartsColorPalette } from '../../colorPalettes';
+import { SeriesFormatterResult } from '../PluginProvider';
 
 export type SeriesFormatterType<T extends ChartSeriesType> = (
   series: AllSeriesType<T>[],
   colors: string[],
   dataset?: DatasetType,
-) => { [type in T]?: FormatterResult<type> };
+) => { [type in T]?: SeriesFormatterResult<type> };
 
 export type SeriesProviderProps<T extends ChartSeriesType = ChartSeriesType> = {
   dataset?: DatasetType;
@@ -27,16 +23,7 @@ export type SeriesProviderProps<T extends ChartSeriesType = ChartSeriesType> = {
    * @default blueberryTwilightPalette
    */
   colors?: ChartsColorPalette;
-  /**
-   * Preprocessors for each series types.
-   */
-  seriesFormatters: SeriesFormatterConfig<T>;
   children: React.ReactNode;
 };
 
-export type FormattedSeries = { [type in ChartSeriesType]?: FormatterResult<type> };
-
-export type SeriesFormatterConfig<T extends ChartSeriesType = ChartSeriesType> = {
-  // TODO replace the function type by Formatter<K>
-  [K in T]?: (series: FormatterParams<K>, dataset?: DatasetType) => any;
-};
+export type FormattedSeries = { [type in ChartSeriesType]?: SeriesFormatterResult<type> };

@@ -2,11 +2,7 @@ import { ScatterSeriesType, DefaultizedScatterSeriesType, ScatterItemIdentifier 
 import { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from './line';
 import { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
 import { PieSeriesType, DefaultizedPieSeriesType, PieItemIdentifier, PieValueType } from './pie';
-import { AxisConfig } from '../axis';
 import { DefaultizedProps, MakeOptional } from '../helpers';
-import { StackingGroupsType } from '../../internals/stackSeries';
-import { SeriesId } from './common';
-import { LegendItemParams } from '../../ChartsLegend/chartsLegend.types';
 
 export interface ChartsSeriesConfig {
   bar: {
@@ -82,42 +78,7 @@ export type ChartSeriesDefaultized<T extends ChartSeriesType> = ChartsSeriesConf
 export type ChartItemIdentifier<T extends ChartSeriesType> =
   ChartsSeriesConfig[T]['itemIdentifier'];
 
-type ExtremumGetterParams<T extends ChartSeriesType> = {
-  series: Record<SeriesId, ChartSeries<T>>;
-  axis: AxisConfig;
-  isDefaultAxis: boolean;
-};
-
-export type ExtremumGetterResult = [number, number] | [null, null];
-
-export type ExtremumGetter<T extends ChartSeriesType> = (
-  params: ExtremumGetterParams<T>,
-) => ExtremumGetterResult;
-
-export type FormatterParams<T extends ChartSeriesType> = {
-  series: Record<SeriesId, ChartsSeriesConfig[T]['seriesInput']>;
-  seriesOrder: SeriesId[];
-};
-
-export type FormatterResult<T extends ChartSeriesType> = {
-  series: Record<SeriesId, ChartSeriesDefaultized<T>>;
-  seriesOrder: SeriesId[];
-} & (ChartsSeriesConfig[T] extends {
-  canBeStacked: true;
-}
-  ? { stackingGroups: StackingGroupsType }
-  : {});
-
 export type DatasetElementType<T> = {
   [key: string]: T;
 };
 export type DatasetType<T = number | string | Date | null | undefined> = DatasetElementType<T>[];
-
-export type Formatter<T extends ChartSeriesType> = (
-  params: FormatterParams<T>,
-  dataset?: DatasetType,
-) => FormatterResult<T>;
-
-export type LegendGetter<T extends ChartSeriesType> = (
-  series: FormatterResult<T>,
-) => LegendItemParams[];

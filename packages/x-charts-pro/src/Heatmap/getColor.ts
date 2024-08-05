@@ -1,12 +1,6 @@
-import { DefaultizedSeriesType } from '@mui/x-charts';
-import { AxisDefaultized, ZAxisDefaultized } from '@mui/x-charts/internals';
+import { ColorProcessor } from '@mui/x-charts/internals';
 
-export default function getColor(
-  series: DefaultizedSeriesType<'heatmap'>,
-  xAxis?: AxisDefaultized,
-  yAxis?: AxisDefaultized,
-  zAxis?: ZAxisDefaultized,
-) {
+const getColor: ColorProcessor<'heatmap'> = (series, xAxis, yAxis, zAxis) => {
   const zColorScale = zAxis?.colorScale;
 
   if (zColorScale) {
@@ -21,4 +15,6 @@ export default function getColor(
   }
 
   return () => '';
-}
+};
+
+export default getColor;
