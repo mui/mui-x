@@ -121,6 +121,7 @@ function TimezonesDemo() {
           flexGrow={1}
           justifyContent="center"
           sx={{ maxWidth: '320px', width: '100%' }}
+          py={2}
         >
           <Typography fontWeight="semiBold">
             {selectedTimezone ? `Selected timezone: ${selectedTimezone}` : 'Select timezone'}
@@ -143,14 +144,13 @@ function TimezonesDemo() {
             borderRadius: 0,
             borderTop: '1px solid',
             borderTopColor: 'divider',
+            p: 3,
           }}
         >
-          <Box sx={{ p: 3, backgroundColor: 'background.paper' }}>
-            <WorldMapSvg
-              onClickContinent={handleContinentClick}
-              selectedTimezone={selectedTimezone}
-            />
-          </Box>
+          <WorldMapSvg
+            onClickContinent={handleContinentClick}
+            selectedTimezone={selectedTimezone}
+          />
         </Paper>
       </DemoWrapper>
     </LocalizationProvider>
@@ -236,7 +236,12 @@ function LanguagesDemo() {
         link="/x/react-date-pickers/localization"
       >
         <ThemeProvider theme={theme}>
-          <Stack spacing={2} flexGrow={1} sx={{ maxWidth: '320px', justifyContent: 'center' }}>
+          <Stack
+            spacing={2}
+            flexGrow={1}
+            sx={{ maxWidth: '320px', justifyContent: 'center' }}
+            py={2}
+          >
             <DatePicker
               defaultValue={dayjs('2024-02-17')}
               slotProps={{ textField: { fullWidth: true } }}
@@ -295,6 +300,7 @@ function ValidationDemo() {
             justifyContent="center"
             flexGrow={1}
             sx={{ width: '100%', maxWidth: '400px' }}
+            py={2}
           >
             <DateTimeField
               defaultValue={dayjs('')}
@@ -336,7 +342,7 @@ export default function Internationalization() {
     <React.Fragment>
       <Divider />
       <Stack direction={{ xs: 'column', md: 'row' }} spacing={6} py={8} alignItems="center">
-        <Stack spacing={2} sx={{ maxWidth: '450px' }}>
+        <Stack spacing={2} sx={{ maxWidth: '400px' }} flexShrink={1}>
           <SectionHeadline
             overline="Internationalization"
             title={
@@ -359,7 +365,10 @@ export default function Internationalization() {
         <Stack
           justifyContent="center"
           alignItems="center"
-          sx={{ minWidth: '560px', minHeight: { xs: 0, md: '526px' } }}
+          sx={{
+            minWidth: { xs: '100%', md: '450px', lg: '560px' },
+            minHeight: { xs: 0, md: '526px' },
+          }}
         >
           {activeItem === 0 && <TimezonesDemo />}
           {activeItem === 1 && <LanguagesDemo />}

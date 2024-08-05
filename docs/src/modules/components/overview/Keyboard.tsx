@@ -281,14 +281,7 @@ type KeyboardSvgProps = {
 
 export function KeyboardSvg({ selectedKey, handleKeySelection }: KeyboardSvgProps) {
   return (
-    <svg
-      width="432"
-      height="188"
-      viewBox="0 0 432 188"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      tabIndex={-1}
-    >
+    <svg viewBox="0 0 432 188" fill="none" xmlns="http://www.w3.org/2000/svg" tabIndex={-1}>
       <g className="root">
         <RootRectangle x="0.5" y="0.5" width="431" height="187" rx="7.5" />
       </g>
@@ -481,7 +474,7 @@ export default function Keyboard() {
             More info
           </Button>
         </Stack>
-        <Stack spacing={2}>
+        <Stack spacing={2} sx={{ width: '100%', maxWidth: '450px' }}>
           <ThemeProvider theme={theme}>
             <DateField
               defaultValue={dayjs('12/12/2023')}

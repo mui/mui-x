@@ -19,12 +19,12 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
 
 export type ThemeToggleGroupProps = {
   showCustomTheme: boolean;
-  setShowCustomTheme: (showCustomTheme: boolean) => void;
+  toggleCustomTheme: () => void;
 };
 
 export default function ThemeToggleGroup({
   showCustomTheme,
-  setShowCustomTheme,
+  toggleCustomTheme,
 }: ThemeToggleGroupProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -41,9 +41,7 @@ export default function ThemeToggleGroup({
       <StyledToggleButtonGroup
         orientation={isMobile ? 'horizontal' : 'vertical'}
         value={showCustomTheme}
-        onChange={(_event, nextView) => {
-          setShowCustomTheme(nextView);
-        }}
+        onChange={toggleCustomTheme}
         exclusive
         size="small"
       >

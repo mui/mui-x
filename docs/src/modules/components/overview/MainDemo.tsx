@@ -73,6 +73,10 @@ export default function MainDemo() {
 
   const [showCustomTheme, setShowCustomTheme] = React.useState(false);
 
+  const toggleCustomTheme = () => {
+    setShowCustomTheme((prev) => !prev);
+  };
+
   const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
   const customTheme = createTheme(brandingTheme, {
     components,
@@ -92,7 +96,7 @@ export default function MainDemo() {
                 sx={{ height: 'fit-content' }}
               >
                 <ThemeToggleGroup
-                  setShowCustomTheme={setShowCustomTheme}
+                  toggleCustomTheme={toggleCustomTheme}
                   showCustomTheme={showCustomTheme}
                 />
                 <FlightPicker />
