@@ -6,7 +6,7 @@
   base = "docs/"
 
   # Default build command.
-  command = "pnpm docs:build"
+  command = "pnpm build"
 
 [build.environment]
   NODE_VERSION = "18"
