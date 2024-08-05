@@ -109,7 +109,6 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
 
   const handleInputBlur: UseTreeItem2LabelInputSlotOwnProps['onBlur'] = (event) => {
     event.defaultMuiPrevented = true;
-    event.stopPropagation();
   };
 
   const handleInputKeyDown: UseTreeItem2LabelInputSlotOwnProps['onKeyDown'] = (

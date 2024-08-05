@@ -49,6 +49,12 @@ To modify this behavior, use the `slotProps` of the `TreeItem2`.
 
 {{"demo": "CustomBehavior.js"}}
 
+## Validation
+
+You can override the event handlers of the `labelInput` and implement a custom validation logic using the interaction methods from `useTreeItem2Utils`.
+
+{{"demo": "Validation.js"}}
+
 ## Enable editing using only icons
 
 The demo below shows how to entirely override the editing behavior, and implement it using icons.
