@@ -201,7 +201,7 @@ export const useGridRowSelection = (
 
       return true;
     },
-    [apiRef, propIsRowSelectable],
+    [apiRef, props.rowSelection, propIsRowSelectable],
   );
 
   const getSelectedRows = React.useCallback<GridRowSelectionApi['getSelectedRows']>(

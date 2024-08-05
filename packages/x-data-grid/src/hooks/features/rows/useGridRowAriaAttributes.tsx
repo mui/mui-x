@@ -24,6 +24,6 @@ export const useGridRowAriaAttributes = (): GetRowAriaAttributesFn => {
 
       return ariaAttributes;
     },
-    [selectedIdsLookup, headerGroupingMaxDepth],
+    [apiRef, selectedIdsLookup, headerGroupingMaxDepth],
   );
 };
