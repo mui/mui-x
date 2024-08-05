@@ -53,7 +53,7 @@
     "test:regressions:server": "serve test/regressions -p 5001",
     "test:argos": "node ./scripts/pushArgos.mjs",
     "typescript": "lerna run --no-bail --parallel typescript",
-    "typescript:ci": "lerna run --concurrency 3 --no-bail --no-sort typescript",
+    "typescript:ci": "lerna run --concurrency 1 --no-bail --no-sort typescript",
     "use-react-version": "node scripts/useReactVersion.mjs",
     "build:codesandbox": "lerna run --concurrency 3 --no-private --scope \"@mui/*\" build",
     "install:codesandbox": "pnpm install --no-frozen-lockfile",
