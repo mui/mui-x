@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { alpha } from '@mui/material/styles';
+import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
@@ -11,6 +12,7 @@ type InfoCardProps = {
   onClick?: () => void;
   active?: boolean;
   backgroundColor?: 'gradient' | 'subtle';
+  link?: string;
 };
 export default function InfoCard({
   title,
@@ -19,19 +21,25 @@ export default function InfoCard({
   onClick,
   active,
   backgroundColor = 'gradient',
+  link,
 }: InfoCardProps) {
   const clickable = Boolean(onClick);
 
   return (
     <Paper
       variant="outlined"
+      component={link ? Link : 'div'}
+      href={link}
       onClick={onClick}
       sx={(theme) => ({
         p: 2.5,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
+        textAlign: 'left',
         flexGrow: 1,
+        height: '100%',
+        boxShadow: 'transparent',
         background:
           backgroundColor === 'gradient'
             ? `${(theme.vars || theme).palette.gradients.linearSubtle}`
@@ -70,7 +78,7 @@ export default function InfoCard({
         }),
       })}
     >
-      <Stack direction="row" spacing={2} sx={{ mb: description ? 2 : 0 }}>
+      <Stack direction="row" spacing={2} sx={{ mb: description ? 2 : 0, width: '100%' }}>
         {Icon}
         <Typography
           gutterBottom

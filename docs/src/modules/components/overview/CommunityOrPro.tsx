@@ -56,20 +56,22 @@ export default function CommunityOrPro() {
             <InfoCard
               title="Community"
               icon={<img src="/static/x/community.svg" width={16} height={16} alt="" />}
-              backgroundColor="subtle"
               description={[
                 'Free forever under an MIT license. Includes Date Pickers, Time Pickers, and Date Time Pickers.',
               ]}
+              backgroundColor="subtle"
+              link="/pricing"
             />
           </Box>
           <Box sx={{ flexBasis: '50%' }}>
             <InfoCard
               title="Pro"
               icon={<img src="/static/x/pro.svg" width={16} height={16} alt="" />}
-              backgroundColor="subtle"
               description={[
                 'Requires a commercial license. Includes all Community components plus the Date and Time Range Pickers.',
               ]}
+              backgroundColor="subtle"
+              link="/pricing"
             />
           </Box>
         </Stack>
