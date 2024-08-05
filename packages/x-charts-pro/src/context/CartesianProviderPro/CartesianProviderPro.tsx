@@ -19,7 +19,7 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
 
   const formattedSeries = useSeries();
   const drawingArea = useDrawingArea();
-  const { zoomData } = useZoom();
+  const { zoomData, options } = useZoom();
   const xExtremumGetters = useXExtremumGetter();
   const yExtremumGetters = useYExtremumGetter();
 
@@ -33,8 +33,9 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
         dataset,
         axisDirection: 'x',
         zoomData,
+        zoomOptions: options,
       }),
-    [drawingArea, formattedSeries, xAxis, xExtremumGetters, dataset, zoomData],
+    [drawingArea, formattedSeries, xAxis, xExtremumGetters, dataset, zoomData, options],
   );
 
   const yValues = React.useMemo(
@@ -47,8 +48,9 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
         dataset,
         axisDirection: 'y',
         zoomData,
+        zoomOptions: options,
       }),
-    [drawingArea, formattedSeries, yAxis, yExtremumGetters, dataset, zoomData],
+    [drawingArea, formattedSeries, yAxis, yExtremumGetters, dataset, zoomData, options],
   );
 
   const value = React.useMemo(

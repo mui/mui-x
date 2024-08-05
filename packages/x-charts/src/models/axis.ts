@@ -214,6 +214,15 @@ export interface AxisScaleConfig {
   };
 }
 
+interface FilteredExtremums {
+  min: number | null;
+  max: number | null;
+}
+
+/**
+ * Use this type instead of `AxisScaleConfig` when the values
+ * shouldn't be provided by the user.
+ */
 export interface AxisScaleComputedConfig {
   band: {
     colorScale?:
@@ -221,6 +230,7 @@ export interface AxisScaleComputedConfig {
       | ScaleOrdinal<number, string, string | null>
       | ScaleSequential<string, string | null>
       | ScaleThreshold<number | Date, string | null>;
+    filteredExtremums: FilteredExtremums;
   };
   point: {
     colorScale?:
@@ -228,28 +238,35 @@ export interface AxisScaleComputedConfig {
       | ScaleOrdinal<number, string, string | null>
       | ScaleSequential<string, string | null>
       | ScaleThreshold<number | Date, string | null>;
+    filteredExtremums: FilteredExtremums;
   };
   log: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
+    filteredExtremums: FilteredExtremums;
   };
   pow: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
+    filteredExtremums: FilteredExtremums;
   };
   sqrt: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
+    filteredExtremums: FilteredExtremums;
   };
   time: {
     colorScale?:
       | ScaleSequential<string, string | null>
       | ScaleThreshold<number | Date, string | null>;
+    filteredExtremums: FilteredExtremums;
   };
   utc: {
     colorScale?:
       | ScaleSequential<string, string | null>
       | ScaleThreshold<number | Date, string | null>;
+    filteredExtremums: FilteredExtremums;
   };
   linear: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
+    filteredExtremums: FilteredExtremums;
   };
 }
 export type AxisValueFormatterContext = {
