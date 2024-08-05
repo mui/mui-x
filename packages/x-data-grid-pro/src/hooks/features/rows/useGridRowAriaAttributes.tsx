@@ -26,14 +26,11 @@ export const useGridRowAriaAttributes = (addTreeDataAttributes?: boolean) => {
     gridExpandedSortedRowTreeLevelPositionLookupSelector,
   );
 
-  const addAttributes =
-    addTreeDataAttributes !== undefined ? addTreeDataAttributes : props.treeData === true;
-
   return React.useCallback(
     (rowNode: GridTreeNode, index: number) => {
       const ariaAttributes = getRowAriaAttributesCommunity(rowNode, index);
 
-      if (!addAttributes || rowNode === null) {
+      if (rowNode === null || !(props.treeData || addTreeDataAttributes)) {
         return ariaAttributes;
       }
 
@@ -57,7 +54,8 @@ export const useGridRowAriaAttributes = (addTreeDataAttributes?: boolean) => {
       return ariaAttributes;
     },
     [
-      addAttributes,
+      props.treeData,
+      addTreeDataAttributes,
       filteredTopLevelRowCount,
       filteredChildrenCountLookup,
       sortedVisibleRowPositionsLookup,
