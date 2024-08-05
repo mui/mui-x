@@ -55,7 +55,7 @@
     "typescript": "lerna run --no-bail --parallel typescript",
     "typescript:ci": "lerna run --concurrency 3 --no-bail --no-sort typescript",
     "use-react-version": "node scripts/useReactVersion.mjs",
-    "build:codesandbox": "pnpm release:build",
+    "build:codesandbox": "lerna run --concurrency 3 --no-private --scope \"@mui/*\" build",
     "install:codesandbox": "pnpm install --no-frozen-lockfile",
     "release:changelog": "node scripts/releaseChangelog.mjs",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version --no-private",

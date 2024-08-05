@@ -70,6 +70,9 @@ const useUtilityClasses = (ownerState: HeatmapItemOwnerState) => {
   return composeClasses(slots, getHeatmapUtilityClass, classes);
 };
 
+/**
+ * @ignore - internal component.
+ */
 function HeatmapItem(props: HeatmapItemProps) {
   const { seriesId, dataIndex, color, value, slotProps = {}, slots = {}, ...other } = props;
 
