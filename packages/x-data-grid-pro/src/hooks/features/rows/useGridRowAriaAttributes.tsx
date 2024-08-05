@@ -34,6 +34,11 @@ export const useGridRowAriaAttributes = (addTreeDataAttributes?: boolean) => {
         return ariaAttributes;
       }
 
+      // pinned and footer rows are not part of the rowgroup and should not get the set specific aria attributes
+      if (rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
+        return ariaAttributes;
+      }
+
       ariaAttributes['aria-level'] = rowNode.depth + 1;
 
       const filteredChildrenCount = filteredChildrenCountLookup[rowNode.id] ?? 0;

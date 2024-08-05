@@ -769,7 +769,7 @@ describe('<DataGridPro /> - Tree data', () => {
 
   describe('accessibility', () => {
     it('should add necessary treegrid aria attributes to the rows', () => {
-      render(<Test defaultGroupingExpansionDepth={2} />);
+      render(<Test defaultGroupingExpansionDepth={-1} />);
 
       expect(getRow(0).getAttribute('aria-level')).to.equal('1'); // A
       expect(getRow(1).getAttribute('aria-level')).to.equal('2'); // A.A
@@ -782,7 +782,7 @@ describe('<DataGridPro /> - Tree data', () => {
     it('should adjust treegrid aria attributes after filtering', () => {
       render(
         <Test
-          defaultGroupingExpansionDepth={2}
+          defaultGroupingExpansionDepth={-1}
           initialState={{
             filter: {
               filterModel: {
@@ -801,6 +801,30 @@ describe('<DataGridPro /> - Tree data', () => {
       expect(getRow(2).getAttribute('aria-level')).to.equal('1'); // B
       expect(getRow(3).getAttribute('aria-posinset')).to.equal('1'); // B.A
       expect(getRow(3).getAttribute('aria-setsize')).to.equal('2'); // B.A & B.B
+    });
+
+    it('should not add the set specific aria attributes to pinned rows', () => {
+      render(
+        <Test
+          defaultGroupingExpansionDepth={-1}
+          pinnedRows={{
+            top: [
+              {
+                name: 'Pin',
+              },
+            ],
+          }}
+        />,
+      );
+
+      expect(getRow(0).getAttribute('aria-rowindex')).to.equal('2'); // header row is 1
+      expect(getRow(0).getAttribute('aria-level')).to.equal(null);
+      expect(getRow(0).getAttribute('aria-posinset')).to.equal(null);
+      expect(getRow(0).getAttribute('aria-setsize')).to.equal(null);
+      expect(getRow(1).getAttribute('aria-rowindex')).to.equal('3');
+      expect(getRow(1).getAttribute('aria-level')).to.equal('1'); // A
+      expect(getRow(1).getAttribute('aria-posinset')).to.equal('1');
+      expect(getRow(1).getAttribute('aria-setsize')).to.equal('3'); // A, B, C
     });
   });
 
