@@ -38,7 +38,7 @@ import {
   DateRangeCalendarOwnerState,
 } from './DateRangeCalendar.types';
 import {
-  findLastEnabledDate,
+  findRangeBoundaries,
   isEndOfRange,
   isRangeValid,
   isStartOfRange,
@@ -245,7 +245,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     }
   });
 
-  const [contiguousRangeBoundaries, setcontiguousRangeBoundaries] = React.useState<{
+  const [contiguousRangeBoundaries, setContiguousRangeBoundaries] = React.useState<{
     maxDate: TDate | null;
     minDate: TDate | null;
   } | null>(null);
@@ -357,13 +357,13 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     timezone,
   });
 
-  const shouldRecalculateMaxMinDates =
+  const shouldComputeRangeBoundaries =
     disableNonContiguousRanges && shouldDisableDate && value.some((date) => date !== null);
 
   React.useEffect(() => {
-    if (shouldRecalculateMaxMinDates) {
-      setcontiguousRangeBoundaries(
-        findLastEnabledDate({
+    if (shouldComputeRangeBoundaries) {
+      setContiguousRangeBoundaries(
+        findRangeBoundaries({
           range: value,
           maxDate,
           minDate,
@@ -372,7 +372,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
         }),
       );
     }
-  }, [maxDate, minDate, isDateDisabled, shouldRecalculateMaxMinDates, utils, value]);
+  }, [maxDate, minDate, isDateDisabled, shouldComputeRangeBoundaries, utils, value]);
 
   const CalendarHeader = slots?.calendarHeader ?? PickersRangeCalendarHeader;
   const calendarHeaderProps: Omit<

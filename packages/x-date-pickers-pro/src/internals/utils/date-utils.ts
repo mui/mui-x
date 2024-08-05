@@ -32,7 +32,7 @@ export const isEndOfRange = <TDate extends PickerValidDate>(
   return isRangeValid(utils, range) && utils.isSameDay(day, range[1]!);
 };
 
-interface FindLastEnabledDateParams<TDate extends PickerValidDate> {
+interface FindRangeBoundariesParams<TDate extends PickerValidDate> {
   range: DateRange<TDate>;
   maxDate: TDate;
   minDate: TDate;
@@ -40,13 +40,13 @@ interface FindLastEnabledDateParams<TDate extends PickerValidDate> {
   utils: MuiPickersAdapter<TDate>;
 }
 
-export const findLastEnabledDate = <TDate extends PickerValidDate>({
+export const findRangeBoundaries = <TDate extends PickerValidDate>({
   range,
   maxDate,
   minDate,
   isDateDisabled,
   utils,
-}: FindLastEnabledDateParams<TDate>) => {
+}: FindRangeBoundariesParams<TDate>) => {
   const [start, end] = range;
   const rangeBoundaries: { maxDate: TDate | null; minDate: TDate | null } = {
     maxDate: null,
