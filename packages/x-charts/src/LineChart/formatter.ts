@@ -1,19 +1,15 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { getStackingGroups } from '../internals/stackSeries';
-import {
-  ChartSeries,
-  DatasetElementType,
-  DatasetType,
-  Formatter,
-} from '../models/seriesType/config';
+import { ChartSeries, DatasetElementType, DatasetType } from '../models/seriesType/config';
 import { defaultizeValueFormatter } from '../internals/defaultizeValueFormatter';
 import { DefaultizedProps } from '../models/helpers';
 import { SeriesId } from '../models/seriesType/common';
+import { SeriesFormatter } from '../context/PluginProvider/SeriesFormatter.types';
 
 let warnedOnce = false;
 
 // For now it's a copy past of bar charts formatter, but maybe will diverge later
-const formatter: Formatter<'line'> = (params, dataset) => {
+const formatter: SeriesFormatter<'line'> = (params, dataset) => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
 
