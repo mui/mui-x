@@ -8,11 +8,7 @@ import {
   isPointScaleConfig,
   AxisId,
 } from '../../models/axis';
-import {
-  CartesianChartSeriesType,
-  DatasetType,
-  ExtremumGetter,
-} from '../../models/seriesType/config';
+import { CartesianChartSeriesType, DatasetType } from '../../models/seriesType/config';
 import { DefaultizedAxisConfig } from './CartesianContext';
 import { getColorScale, getOrdinalColorScale } from '../../internals/colorScale';
 import { getTickNumber } from '../../hooks/useTicks';
@@ -21,6 +17,7 @@ import { DrawingArea } from '../DrawingProvider';
 import { FormattedSeries } from '../SeriesProvider';
 import { getAxisExtremum } from './getAxisExtremum';
 import { normalizeAxis } from './normalizeAxis';
+import { ExtremumGetter } from '../PluginProvider';
 
 const getRange = (drawingArea: DrawingArea, axisDirection: 'x' | 'y', isReverse?: boolean) => {
   const range =

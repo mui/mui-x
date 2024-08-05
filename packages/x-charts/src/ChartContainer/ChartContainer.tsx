@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
 import { SeriesProvider, SeriesProviderProps } from '../context/SeriesProvider';
 import { InteractionProvider } from '../context/InteractionProvider';
-import { ColorProvider } from '../context/ColorProvider';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import {
   CartesianContextProvider,
@@ -16,8 +15,7 @@ import {
   ZAxisContextProvider,
   ZAxisContextProviderProps,
 } from '../context';
-import { ChartsPluginType } from '../models/plugin';
-import { ChartSeriesType } from '../models/seriesType/config';
+import { PluginProvider, PluginProviderProps } from '../context/PluginProvider';
 import { useChartContainerProps } from './useChartContainerProps';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
 import { MakeOptional } from '../models/helpers';
@@ -28,7 +26,8 @@ export type ChartContainerProps = Omit<
     Omit<DrawingProviderProps, 'svgRef'> &
     Pick<CartesianContextProviderProps, 'dataset'> &
     ZAxisContextProviderProps &
-    HighlightedProviderProps,
+    HighlightedProviderProps &
+    PluginProviderProps,
   'children'
 > & {
   /**
@@ -44,28 +43,23 @@ export type ChartContainerProps = Omit<
    */
   yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[];
   children?: React.ReactNode;
-  /**
-   * An array of plugins defining how to preprocess data.
-   * If not provided, the container supports line, bar, scatter and pie charts.
-   */
-  plugins?: ChartsPluginType<ChartSeriesType>[];
 };
 
 const ChartContainer = React.forwardRef(function ChartContainer(props: ChartContainerProps, ref) {
   const {
     children,
     drawingProviderProps,
-    colorProviderProps,
     seriesProviderProps,
     cartesianContextProps,
     zAxisContextProps,
     highlightedProviderProps,
     chartsSurfaceProps,
+    pluginProviderProps,
   } = useChartContainerProps(props, ref);
 
   return (
     <DrawingProvider {...drawingProviderProps}>
-      <ColorProvider {...colorProviderProps}>
+      <PluginProvider {...pluginProviderProps}>
         <SeriesProvider {...seriesProviderProps}>
           <CartesianContextProvider {...cartesianContextProps}>
             <ZAxisContextProvider {...zAxisContextProps}>
@@ -80,7 +74,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
             </ZAxisContextProvider>
           </CartesianContextProvider>
         </SeriesProvider>
-      </ColorProvider>
+      </PluginProvider>
     </DrawingProvider>
   );
 });

@@ -1,7 +1,8 @@
 import { AllSeriesType } from '../../models/seriesType';
 import { defaultizeColor } from '../../internals/defaultizeColor';
-import { ChartSeriesType, DatasetType, FormatterParams } from '../../models/seriesType/config';
-import { FormattedSeries, SeriesFormatterConfig } from './Series.types';
+import { ChartSeriesType, DatasetType } from '../../models/seriesType/config';
+import { FormattedSeries } from './Series.types';
+import { SeriesFormatterConfig, SeriesFormatterParams } from '../PluginProvider';
 
 /**
  * This methods is the interface between what the developer is providing and what components receives
@@ -23,7 +24,7 @@ export const preprocessSeries = <T extends ChartSeriesType>({
   dataset?: DatasetType;
 }) => {
   // Group series by type
-  const seriesGroups: { [type in ChartSeriesType]?: FormatterParams<type> } = {};
+  const seriesGroups: { [type in ChartSeriesType]?: SeriesFormatterParams<type> } = {};
   series.forEach((seriesData, seriesIndex: number) => {
     const { id = `auto-generated-id-${seriesIndex}`, type } = seriesData;
 
