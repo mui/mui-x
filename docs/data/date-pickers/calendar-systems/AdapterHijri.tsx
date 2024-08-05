@@ -11,7 +11,7 @@ import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 
 // Create rtl cache
 const cacheRtl = createCache({
-  key: 'adapter-hijri-demo',
+  key: 'mui-x-demo',
   stylisPlugins: [prefixer, rtlPlugin],
 });
 
