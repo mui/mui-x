@@ -186,6 +186,10 @@ export const useGridRowSelection = (
 
   const isRowSelectable = React.useCallback<GridRowSelectionApi['isRowSelectable']>(
     (id) => {
+      if (props.rowSelection === false) {
+        return false;
+      }
+
       if (propIsRowSelectable && !propIsRowSelectable(apiRef.current.getRowParams(id))) {
         return false;
       }
