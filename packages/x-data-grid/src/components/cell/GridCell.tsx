@@ -34,6 +34,10 @@ import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
 import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
+import {
+  gridRowSpanningHiddenCellsSelector,
+  gridRowSpanningSpannedCellsSelector,
+} from '../../hooks/features/rows/gridRowSpanningSelectors';
 
 export enum PinnedPosition {
   NONE,
@@ -373,6 +377,9 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     }
   }, [hasFocus, cellMode, apiRef]);
 
+  const hiddenCells = useGridSelector(apiRef, gridRowSpanningHiddenCellsSelector);
+  const spannedCells = useGridSelector(apiRef, gridRowSpanningSpannedCellsSelector);
+
   if (cellParamsWithAPI === EMPTY_CELL_PARAMS) {
     return null;
   }
@@ -453,6 +460,12 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
         onDragOver: publish('cellDragOver', onDragOver),
       };
 
+  const isHidden = hiddenCells[rowId]?.[field] ?? false;
+  if (isHidden) {
+    return <div style={{ ...style, width }} />;
+  }
+  const rowSpan = spannedCells[rowId]?.[field] ?? 1;
+
   return (
     <div
       ref={handleRef}
@@ -462,7 +475,20 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}
       aria-colspan={colSpan}
-      style={style}
+      aria-rowspan={rowSpan}
+      style={
+        rowSpan === 1
+          ? style
+          : {
+              ...style,
+              height: `calc(var(--height) * ${rowSpan})`,
+              background: 'white',
+              zIndex: 5,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }
+      }
       title={title}
       tabIndex={tabIndex}
       onClick={publish('cellClick', onClick)}

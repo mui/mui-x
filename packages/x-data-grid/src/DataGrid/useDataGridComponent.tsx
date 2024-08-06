@@ -53,6 +53,10 @@ import {
   columnResizeStateInitializer,
   useGridColumnResize,
 } from '../hooks/features/columnResize/useGridColumnResize';
+import {
+  rowSpanningStateInitializer,
+  useGridRowSpanning,
+} from '../hooks/features/rows/useGridRowSpanning';
 
 export const useDataGridComponent = (
   inputApiRef: React.MutableRefObject<GridApiCommunity> | undefined,
@@ -76,6 +80,7 @@ export const useDataGridComponent = (
   useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
+  useGridInitializeState(rowSpanningStateInitializer, apiRef, props);
   useGridInitializeState(editingStateInitializer, apiRef, props);
   useGridInitializeState(focusStateInitializer, apiRef, props);
   useGridInitializeState(sortingStateInitializer, apiRef, props);
@@ -93,6 +98,7 @@ export const useDataGridComponent = (
   useGridRowSelection(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
+  useGridRowSpanning(apiRef, props);
   useGridParamsApi(apiRef);
   useGridColumnSpanning(apiRef);
   useGridColumnGrouping(apiRef, props);
