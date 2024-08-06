@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
 type ExtendedTreeItemProps = {
   editable?: boolean;
