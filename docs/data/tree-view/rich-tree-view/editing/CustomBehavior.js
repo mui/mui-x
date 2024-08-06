@@ -7,15 +7,13 @@ import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
 import { MUI_X_PRODUCTS } from './products';
 
 const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
-  const {
-    interactions: { handleCancelItemLabelEditing },
-  } = useTreeItem2Utils({
+  const { interactions } = useTreeItem2Utils({
     itemId: props.itemId,
     children: props.children,
   });
 
   const handleInputBlur = (event) => {
-    handleCancelItemLabelEditing(event);
+    interactions.handleCancelItemLabelEditing(event);
   };
 
   return (

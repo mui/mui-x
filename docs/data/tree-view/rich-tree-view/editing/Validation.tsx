@@ -43,9 +43,7 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
   ref: React.Ref<HTMLLIElement>,
 ) {
   const [error, setError] = React.useState<null | keyof typeof ERRORS>(null);
-  const {
-    interactions: { handleCancelItemLabelEditing, handleSaveItemLabel },
-  } = useTreeItem2Utils({
+  const { interactions } = useTreeItem2Utils({
     itemId: props.itemId,
     children: props.children,
   });
@@ -76,10 +74,10 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
         return;
       }
       setError(null);
-      handleSaveItemLabel(event, target.value);
+      interactions.handleSaveItemLabel(event, target.value);
     } else if (event.key === 'Escape') {
       setError(null);
-      handleCancelItemLabelEditing(event);
+      interactions.handleCancelItemLabelEditing(event);
     }
   };
 

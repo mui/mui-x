@@ -10,15 +10,13 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
   props: TreeItem2Props,
   ref: React.Ref<HTMLLIElement>,
 ) {
-  const {
-    interactions: { handleCancelItemLabelEditing },
-  } = useTreeItem2Utils({
+  const { interactions } = useTreeItem2Utils({
     itemId: props.itemId,
     children: props.children,
   });
 
   const handleInputBlur: UseTreeItem2LabelInputSlotOwnProps['onBlur'] = (event) => {
-    handleCancelItemLabelEditing(event);
+    interactions.handleCancelItemLabelEditing(event);
   };
 
   return (

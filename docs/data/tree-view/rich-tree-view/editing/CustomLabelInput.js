@@ -137,9 +137,7 @@ const LabelInput = React.forwardRef(function LabelInput(
 });
 
 const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
-  const {
-    interactions: { handleCancelItemLabelEditing, handleSaveItemLabel },
-  } = useTreeItem2Utils({
+  const { interactions } = useTreeItem2Utils({
     itemId: props.itemId,
     children: props.children,
   });
@@ -163,8 +161,8 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
           item: publicAPI.getItem(props.itemId),
           onBlur: handleInputBlur,
           onKeyDown: handleInputKeyDown,
-          handleCancelItemLabelEditing,
-          handleSaveItemLabel,
+          handleCancelItemLabelEditing: interactions.handleCancelItemLabelEditing,
+          handleSaveItemLabel: interactions.handleSaveItemLabel,
         },
       }}
     />

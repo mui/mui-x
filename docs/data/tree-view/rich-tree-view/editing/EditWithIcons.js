@@ -61,14 +61,7 @@ function CustomLabelInput(props) {
 }
 
 const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
-  const {
-    interactions: {
-      toggleItemEditing,
-      handleCancelItemLabelEditing,
-      handleSaveItemLabel,
-    },
-    status,
-  } = useTreeItem2Utils({
+  const { interactions, status } = useTreeItem2Utils({
     itemId: props.itemId,
     children: props.children,
   });
@@ -95,13 +88,13 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
           onDoubleClick: handleContentDoubleClick,
           editable: status.editable,
           editing: status.editing,
-          toggleItemEditing,
+          toggleItemEditing: interactions.toggleItemEditing,
         },
         labelInput: {
           onBlur: handleInputBlur,
           onKeyDown: handleInputKeyDown,
-          handleCancelItemLabelEditing,
-          handleSaveItemLabel,
+          handleCancelItemLabelEditing: interactions.handleCancelItemLabelEditing,
+          handleSaveItemLabel: interactions.handleSaveItemLabel,
         },
       }}
     />
