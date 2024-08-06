@@ -5,7 +5,8 @@ import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useSeries } from '../../hooks/useSeries';
 import { CartesianContext } from './CartesianContext';
 import { computeValue } from './computeValue';
-import { ExtremumGettersConfig } from '../../models';
+import { useXExtremumGetter } from '../PluginProvider/useXExtremumGetter';
+import { useYExtremumGetter } from '../PluginProvider';
 
 export type CartesianContextProviderProps = {
   /**
@@ -24,22 +25,16 @@ export type CartesianContextProviderProps = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset?: DatasetType;
-  /**
-   * An object with x-axis extremum getters per series type.
-   */
-  xExtremumGetters: ExtremumGettersConfig;
-  /**
-   * An object with y-axis extremum getters per series type.
-   */
-  yExtremumGetters: ExtremumGettersConfig;
   children: React.ReactNode;
 };
 
 function CartesianContextProvider(props: CartesianContextProviderProps) {
-  const { xAxis, yAxis, dataset, xExtremumGetters, yExtremumGetters, children } = props;
+  const { xAxis, yAxis, dataset, children } = props;
 
   const formattedSeries = useSeries();
   const drawingArea = useDrawingArea();
+  const xExtremumGetters = useXExtremumGetter();
+  const yExtremumGetters = useYExtremumGetter();
 
   const xValues = React.useMemo(
     () =>

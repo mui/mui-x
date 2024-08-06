@@ -1,5 +1,7 @@
 import { FormattedSeries } from '../context/SeriesProvider';
-import { ChartSeriesType, LegendGetter } from '../models/seriesType/config';
+import { ChartSeriesType } from '../models/seriesType/config';
+import { LegendGetter } from '../context/PluginProvider';
+
 import getBarLegend from '../BarChart/legend';
 import getScatterLegend from '../ScatterChart/legend';
 import getLineLegend from '../LineChart/legend';
