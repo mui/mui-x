@@ -53,6 +53,7 @@ export default function RowSpanning() {
         pageSizeOptions={[10]}
         disableRowSelectionOnClick
         unstable_rowSpanning
+        disableVirtualization
         sx={{
           '& .MuiDataGrid-row.Mui-hovered': {
             backgroundColor: 'transparent',

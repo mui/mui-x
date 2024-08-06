@@ -6,7 +6,7 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
+import { gridFilteredSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { gridColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 
 export interface GridRowSpanningState {
@@ -27,14 +27,16 @@ export const useGridRowSpanning = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'unstable_rowSpanning'>,
 ): void => {
-  const handleSortedRowsSet = React.useCallback<GridEventListener<'sortedRowsSet'>>(() => {
+  const updateRowSpanningState = React.useCallback<
+    GridEventListener<'sortedRowsSet' | 'filteredRowsSet'>
+  >(() => {
     if (!props.unstable_rowSpanning) {
       return;
     }
     const spannedCells: Record<GridRowId, Record<GridColDef['field'], number>> = {};
     const hiddenCells: Record<GridRowId, Record<GridColDef['field'], boolean>> = {};
     // only span `string` columns for POC
-    const filteredSortedRowIds = gridSortedRowIdsSelector(apiRef);
+    const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef);
     const colDefs = gridColumnDefinitionsSelector(apiRef);
     colDefs.forEach((colDef) => {
       if (colDef.type !== 'string') {
@@ -80,5 +82,6 @@ export const useGridRowSpanning = (
     }));
   }, [apiRef, props.unstable_rowSpanning]);
 
-  useGridApiEventHandler(apiRef, 'sortedRowsSet', handleSortedRowsSet);
+  useGridApiEventHandler(apiRef, 'sortedRowsSet', updateRowSpanningState);
+  useGridApiEventHandler(apiRef, 'filteredRowsSet', updateRowSpanningState);
 };
