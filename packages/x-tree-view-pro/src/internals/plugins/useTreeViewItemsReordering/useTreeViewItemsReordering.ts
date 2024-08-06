@@ -24,7 +24,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
   const isItemsReorderingEnabled =
     params.itemsReordering && !!experimentalFeatures?.itemsReordering;
 
-  if (process.env.NODE_END !== 'production') {
+  if (process.env.NODE_ENV !== 'production') {
     if (
       params.itemsReordering &&
       (!experimentalFeatures?.indentationAtItemLevel || !experimentalFeatures?.itemsReordering)
