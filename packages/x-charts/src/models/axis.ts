@@ -215,8 +215,8 @@ export interface AxisScaleConfig {
 }
 
 interface FilteredExtremums {
-  min: number | null;
-  max: number | null;
+  min: number;
+  max: number;
 }
 
 /**

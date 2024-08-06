@@ -27,15 +27,21 @@ export const zoomScaleRange = (
   return [min, max];
 };
 
-export const zoomExtremums = (
+const zoomExtremums = (
   extremums: [number, number] | number[],
   zoomRange: [number, number],
 ): [number, number] => {
-  const rangeGap = extremums[1] - extremums[0];
   const zoomGap = zoomRange[1] - zoomRange[0];
+  const extremumsGap = extremums[1] - extremums[0];
 
-  const minZoomed = extremums[0] + (zoomRange[0] * rangeGap) / zoomGap;
-  const maxZoomed = extremums[0] + (zoomRange[1] * rangeGap) / zoomGap;
+  // const minZoomed = extremums[0] + extremumsGap * ((100 - zoomGap) / 100);
+  // const maxZoomed = extremums[1] - extremumsGap * ((100 - zoomGap) / 100);
+
+  const minZoomed = extremums[0] + (zoomRange[0] * extremumsGap) / zoomGap;
+  const maxZoomed = extremums[1] - ((100 - zoomRange[1]) * extremumsGap) / zoomGap;
+
+  // const minZoomed = extremums[0] * ((zoomRange[0] + 100) / 100);
+  // const maxZoomed = extremums[1] * (1 - (zoomRange[1] - zoomRange[0]) / 100);
 
   return [minZoomed, maxZoomed];
 };
@@ -58,17 +64,18 @@ export const applyZoomFilter = ({
   const [minData, maxData] = getAxisExtremum(axis, getters, isDefaultAxis, formattedSeries);
   const data = axis.data ?? [];
 
-  if (!zoomOption || zoomOption.filterMode !== 'discard' || !minData || !maxData) {
+  if (!zoomOption || zoomOption.filterMode === 'keep' || !minData || !maxData) {
     return { minData, maxData, data, minFiltered: minData, maxFiltered: maxData };
   }
 
   const [minZoomed, maxZoomed] = zoomExtremums([minData, maxData], zoomRange);
+  console.table({ data: [minData, maxData], zoomRange, zoomed: [minZoomed, maxZoomed] });
 
   // TODO: gotta create a getter/filterer like ExtremumGettersConfig for this kind of rule
   const filteredData = data.filter((value) => {
     const isDateAndOutOfBounds =
-      value instanceof Date && (value.getTime() < minZoomed || value.getTime() > maxZoomed);
-    const isOutOfBounds = typeof value === 'number' && (value < minZoomed || value > maxZoomed);
+      value instanceof Date && (value.getTime() <= minZoomed || value.getTime() >= maxZoomed);
+    const isOutOfBounds = typeof value === 'number' && (value <= minZoomed || value >= maxZoomed);
 
     if (isDateAndOutOfBounds || isOutOfBounds) {
       return false;

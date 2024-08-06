@@ -116,7 +116,7 @@ export function computeValue({
         scale: scaleBand(data, zoomedRange)
           .paddingInner(categoryGapRatio)
           .paddingOuter(categoryGapRatio / 2),
-        filteredExtremums: { min: minFiltered, max: maxFiltered },
+        filteredExtremums: { min: minFiltered ?? -Infinity, max: maxFiltered ?? Infinity },
         tickNumber: data.length,
         colorScale:
           axis.colorMap &&
@@ -138,7 +138,7 @@ export function computeValue({
         ...axis,
         data,
         scale: scalePoint(data, zoomedRange),
-        filteredExtremums: { min: minFiltered, max: maxFiltered },
+        filteredExtremums: { min: minFiltered ?? -Infinity, max: maxFiltered ?? Infinity },
         tickNumber: data.length,
         colorScale:
           axis.colorMap &&
@@ -176,7 +176,7 @@ export function computeValue({
       data,
       scaleType: scaleType as any,
       scale: scale as any,
-      filteredExtremums: { min: minFiltered, max: maxFiltered },
+      filteredExtremums: { min: minFiltered ?? -Infinity, max: maxFiltered ?? Infinity },
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
     };
