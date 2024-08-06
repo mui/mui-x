@@ -253,7 +253,7 @@ jobs:
           name: Tests TypeScript definitions
           command: pnpm typescript:ci
           environment:
-            NODE_OPTIONS: --max-old-space-size=1536
+            NODE_OPTIONS: --max-old-space-size=3584
   test_e2e:
     <<: *default-job
     docker:
