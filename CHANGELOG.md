@@ -24,9 +24,9 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 - 🎁 Introduce [item reordering using drag and drop](https://mui.com/x/react-tree-view/rich-tree-view/ordering/) on the `RichTreeViewPro` component
 
-  <img width="384" src="https://github.com/user-attachments/assets/78bd83c5-7ce4-4ed7-acf9-be70b2dbce54" alt="Item reordering using drag and drop" />
+  <img width="287" src="https://github.com/user-attachments/assets/78bd83c5-7ce4-4ed7-acf9-be70b2dbce54" alt="Item reordering using drag and drop" />
 
-- 📦 Support Common JS bundle out of the box on `@mui/x-charts` by adding vendored D3 dependencies.
+- 📦 Support CommonJS bundle out of the box on `@mui/x-charts` by adding vendored D3 dependencies.
 
   - This modifies how the package imports D3.js. It will impact you if you use `d3` packages installed by `@mui/x-charts` and don't have them in your `package.json`. You shouldn't be affected otherwise.
   - For more context, the initial issue is caused by D3 only exporting ESM.
