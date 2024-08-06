@@ -13,22 +13,23 @@ packageName: '@mui/x-tree-view'
 
 ## Enable label editing
 
-You can use the `isItemEditable` prop to enable editing on certain items.
+You can use the `isItemEditable` prop to enable editing.
+If set to `true`, this prop will enable label editing on all items:
+
+{{"demo": "LabelEditingAllItems.js"}}
 
 :::success
-You can enable editing on all items by always returning true
-
-```jsx
-<RichTreeView items={ITEMS} isItemEditable />
-```
-
-:::
-
 If an item is editable, the editing state can be toggled by double clicking on it, or by pressing <kbd class="key">Enter</kbd> on the keyboard when the item is in focus.
 
 Once an item is in editing state, the value of the label can be edited. Pressing <kbd class="key">Enter</kbd> again or bluring the item will save the new value. Pressing <kbd class="key">Esc</kbd> will cancel the action and restore the item to its original state.
 
-{{"demo": "LabelEditing.js"}}
+:::
+
+## Limit editing to some items
+
+If you pass a method to `isItemEditable`, only the items for which the method returns `true` will be editable:
+
+{{"demo": "LabelEditingSomeItems.js"}}
 
 ### Limit editing to leaves
 
