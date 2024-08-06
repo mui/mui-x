@@ -30,7 +30,7 @@ export default function AdapterHijri() {
         <div dir="rtl">
           <LocalizationProvider dateAdapter={AdapterMomentHijri}>
             <DateTimePicker
-              label="Date Picker"
+              label="AdapterMomentHijri"
               defaultValue={moment(new Date(2022, 1, 1))}
               // moment-hijri support dates between 1356-01-01 and 1499-12-29 H (1937-03-14 and 2076-11-26)
               minDate={moment(new Date(1938, 0, 1))}
