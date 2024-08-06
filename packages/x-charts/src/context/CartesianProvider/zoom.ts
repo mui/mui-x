@@ -61,28 +61,7 @@ export const applyZoomFilter = ({
     return { minData, maxData, data, minFiltered: minData, maxFiltered: maxData };
   }
 
-  const [minZoomed, maxZoomed] = zoomExtremums([minData, maxData], zoomRange);
-  console.table({ data: [minData, maxData], zoomRange, zoomed: [minZoomed, maxZoomed] });
-
-  // TODO: gotta create a getter/filterer like ExtremumGettersConfig for this kind of rule
-  const filteredData = data.filter((value) => {
-    const isDateAndOutOfBounds =
-      value instanceof Date && (value.getTime() <= minZoomed || value.getTime() >= maxZoomed);
-    const isOutOfBounds = typeof value === 'number' && (value <= minZoomed || value >= maxZoomed);
-
-    if (isDateAndOutOfBounds || isOutOfBounds) {
-      return false;
-    }
-
-    return true;
-  });
-
-  const [minFiltered, maxFiltered] = getAxisExtremum(
-    { ...axis, data: filteredData },
-    getters,
-    isDefaultAxis,
-    formattedSeries,
-  );
+  const [minFiltered, maxFiltered] = zoomExtremums([minData, maxData], zoomRange);
 
   return { minData, maxData, data, minFiltered, maxFiltered };
 };
