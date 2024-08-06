@@ -6,7 +6,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import { refType } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import visuallyHidden from '@mui/utils/visuallyHidden';
 import { useRtl } from '@mui/system/RtlProvider';
 import {

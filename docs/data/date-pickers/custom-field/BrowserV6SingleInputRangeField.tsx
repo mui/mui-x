@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Dayjs } from 'dayjs';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
