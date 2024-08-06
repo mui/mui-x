@@ -56,9 +56,7 @@ export const rowSelectionStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'rowSelectionModel' | 'rowSelection'>
 > = (state, props) => ({
   ...state,
-  rowSelection: props.rowSelection
-    ? (getSelectionModelPropValue(props.rowSelectionModel) ?? [])
-    : [],
+  rowSelection: props.rowSelection ? getSelectionModelPropValue(props.rowSelectionModel) ?? [] : [],
 });
 
 /**
@@ -443,11 +441,8 @@ export const useGridRowSelection = (
     GridEventListener<'headerSelectionCheckboxChange'>
   >(
     (params) => {
-      const shouldLimitSelectionToCurrentPage =
-        props.checkboxSelectionVisibleOnly && props.pagination;
-
       const rowsToBeSelected =
-        shouldLimitSelectionToCurrentPage && props.paginationMode === 'client'
+        props.pagination && props.checkboxSelectionVisibleOnly && props.paginationMode === 'client'
           ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
           : gridExpandedSortedRowIdsSelector(apiRef);
 
