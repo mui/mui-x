@@ -574,7 +574,7 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
             key={i.toString()}
             variant="caption"
             role="columnheader"
-            aria-label={utils.format(utils.addDays(startOfCurrentWeek, i), 'weekday')}
+            aria-label={utils.format(weekday, 'weekday')}
             className={classes.weekDayLabel}
           >
             {dayOfWeekFormatter(weekday)}

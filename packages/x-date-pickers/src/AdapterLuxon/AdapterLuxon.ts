@@ -137,15 +137,6 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     this.formats = { ...defaultFormats, ...formats };
   }
 
-  private setLocaleToValue = (value: DateTime) => {
-    const expectedLocale = this.getCurrentLocaleCode();
-    if (expectedLocale === value.locale) {
-      return value;
-    }
-
-    return value.setLocale(expectedLocale);
-  };
-
   public date = <T extends string | null | undefined>(
     value?: T,
     timezone: PickersTimezone = 'default',
@@ -208,6 +199,15 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return Boolean(
       new Intl.DateTimeFormat(this.locale, { hour: 'numeric' })?.resolvedOptions()?.hour12,
     );
+  };
+
+  public setLocaleToValue = (value: DateTime) => {
+    const expectedLocale = this.getCurrentLocaleCode();
+    if (expectedLocale === value.locale) {
+      return value;
+    }
+
+    return value.setLocale(expectedLocale);
   };
 
   public expandFormat = (format: string) => {
