@@ -53,6 +53,8 @@ export interface UseTreeViewLabelParameters<R extends {}> {
   onItemLabelChange?: (itemId: TreeViewItemId, newLabel: string) => void;
   /**
    * Determines if a given item is editable or not.
+   * Make sure to also enable the `labelEditing` experimental feature:
+   * `<RichTreeViewPro experimentalFeatures={{ labelEditing: true }}  />`.
    * By default, the items are not editable.
    * @template R
    * @param {R} item The item to check.
@@ -71,6 +73,7 @@ export type UseTreeViewLabelSignature = TreeViewPluginSignature<{
   publicAPI: UseTreeViewLabelPublicAPI;
   instance: UseTreeViewLabelInstance;
   state: UseTreeViewLabelState;
+  experimentalFeatures: 'labelEditing';
   dependencies: [UseTreeViewItemsSignature];
 }>;
 export interface UseTreeItem2LabelInputSlotPropsFromItemsReordering

@@ -31,7 +31,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ indentationAtItemLevel?: bool, itemsReordering?: bool }"
+        "description": "{ indentationAtItemLevel?: bool, itemsReordering?: bool, labelEditing?: bool }"
       }
     },
     "getItemId": {

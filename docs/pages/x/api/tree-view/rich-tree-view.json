@@ -21,7 +21,10 @@
       "default": "'content'"
     },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ indentationAtItemLevel?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ indentationAtItemLevel?: bool, labelEditing?: bool }"
+      }
     },
     "getItemId": {
       "type": { "name": "func" },

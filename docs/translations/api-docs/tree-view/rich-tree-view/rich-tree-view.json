@@ -46,7 +46,7 @@
       }
     },
     "isItemEditable": {
-      "description": "Determines if a given item is editable or not. By default, the items are not editable."
+      "description": "Determines if a given item is editable or not. Make sure to also enable the <code>labelEditing</code> experimental feature: <code>&lt;RichTreeViewPro experimentalFeatures={{ labelEditing: true }}  /&gt;</code>. By default, the items are not editable."
     },
     "itemChildrenIndentation": {
       "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."

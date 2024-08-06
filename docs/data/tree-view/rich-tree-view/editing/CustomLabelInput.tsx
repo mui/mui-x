@@ -11,10 +11,10 @@ import {
   TreeItem2Props,
 } from '@mui/x-tree-view/TreeItem2';
 import {
-  UseTreeItem2LabelInputSlotProps,
-  UseTreeItem2LabelSlotProps,
-} from '@mui/x-tree-view/useTreeItem2/useTreeItem2.types';
-import { useTreeItem2 } from '@mui/x-tree-view/useTreeItem2/useTreeItem2';
+  UseTreeItem2LabelInputSlotOwnProps,
+  UseTreeItem2LabelSlotOwnProps,
+  unstable_useTreeItem2 as useTreeItem2,
+} from '@mui/x-tree-view/useTreeItem2';
 import { useTreeItem2Utils } from '@mui/x-tree-view/hooks/useTreeItem2Utils';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
@@ -67,7 +67,7 @@ export const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
   },
 ];
 
-function Label({ children, ...other }: UseTreeItem2LabelSlotProps) {
+function Label({ children, ...other }: UseTreeItem2LabelSlotOwnProps) {
   return (
     <TreeItem2Label
       {...other}
@@ -84,11 +84,11 @@ function Label({ children, ...other }: UseTreeItem2LabelSlotProps) {
   );
 }
 
-type CustomLabelInputProps = UseTreeItem2LabelInputSlotProps<{
+interface CustomLabelInputProps extends UseTreeItem2LabelInputSlotOwnProps {
   handleCancelItemLabelEditing: (event: React.SyntheticEvent) => void;
   handleSaveItemLabel: (event: React.SyntheticEvent, label: string) => void;
   item: TreeViewBaseItem<ExtendedTreeItemProps>;
-}>;
+}
 
 const LabelInput = React.forwardRef(function LabelInput(
   {
@@ -175,11 +175,11 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
   });
   const { publicAPI } = useTreeItem2(props);
 
-  const handleInputBlur: UseTreeItem2LabelInputSlotProps['onBlur'] = (event) => {
+  const handleInputBlur: UseTreeItem2LabelInputSlotOwnProps['onBlur'] = (event) => {
     event.defaultMuiPrevented = true;
   };
 
-  const handleInputKeyDown: UseTreeItem2LabelInputSlotProps['onKeyDown'] = (
+  const handleInputKeyDown: UseTreeItem2LabelInputSlotOwnProps['onKeyDown'] = (
     event,
   ) => {
     event.defaultMuiPrevented = true;
@@ -209,6 +209,7 @@ export default function CustomLabelInput() {
       <RichTreeView
         items={ITEMS}
         slots={{ item: CustomTreeItem2 }}
+        experimentalFeatures={{ labelEditing: true }}
         isItemEditable
         defaultExpandedItems={['1', '2']}
         getItemLabel={(item) => `${item.firstName} ${item.lastName}`}

@@ -6,7 +6,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
 import { TreeItem2, TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
-import { UseTreeItem2LabelInputSlotProps } from '@mui/x-tree-view/useTreeItem2/useTreeItem2.types';
+import { UseTreeItem2LabelInputSlotOwnProps } from '@mui/x-tree-view/useTreeItem2';
 import { TreeItem2LabelInput } from '@mui/x-tree-view/TreeItem2LabelInput';
 import { MUI_X_PRODUCTS } from './products';
 
@@ -15,7 +15,7 @@ const ERRORS = {
   INVALID: 'The label cannot contain digits',
 };
 
-interface CustomLabelInputProps extends UseTreeItem2LabelInputSlotProps {
+interface CustomLabelInputProps extends UseTreeItem2LabelInputSlotOwnProps {
   error: null | keyof typeof ERRORS;
 }
 
@@ -59,13 +59,13 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
     }
   };
 
-  const handleInputBlur: UseTreeItem2LabelInputSlotProps['onBlur'] = (event) => {
+  const handleInputBlur: UseTreeItem2LabelInputSlotOwnProps['onBlur'] = (event) => {
     if (error) {
       event.defaultMuiPrevented = true;
     }
   };
 
-  const handleInputKeyDown: UseTreeItem2LabelInputSlotProps['onKeyDown'] = (
+  const handleInputKeyDown: UseTreeItem2LabelInputSlotOwnProps['onKeyDown'] = (
     event,
   ) => {
     event.defaultMuiPrevented = true;

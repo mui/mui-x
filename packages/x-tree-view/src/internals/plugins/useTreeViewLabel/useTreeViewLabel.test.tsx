@@ -14,6 +14,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
             this.skip();
           }
           const response = render({
+            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', editable: false }],
             isItemEditable: (item) => item.editable,
           });
@@ -31,6 +32,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
             this.skip();
           }
           const response = render({
+            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', editable: true }],
             isItemEditable: (item) => item.editable,
           });
@@ -48,6 +50,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
             this.skip();
           }
           const response = render({
+            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', editable: true }],
             isItemEditable: (item) => item.editable,
           });
@@ -65,6 +68,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
             this.skip();
           }
           const response = render({
+            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', editable: false }],
             isItemEditable: (item) => item.editable,
           });
@@ -83,6 +87,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
             this.skip();
           }
           const response = render({
+            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', editable: true }],
             isItemEditable: (item) => item.editable,
           });
@@ -100,6 +105,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
             this.skip();
           }
           const response = render({
+            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', label: 'test', editable: true }],
             isItemEditable: (item) => item.editable,
           });
@@ -119,6 +125,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
             this.skip();
           }
           const response = render({
+            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', label: 'test', editable: true }],
             isItemEditable: (item) => item.editable,
           });
@@ -140,6 +147,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
             this.skip();
           }
           const response = render({
+            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', label: 'test', editable: true }],
             isItemEditable: (item) => item.editable,
           });
@@ -157,6 +165,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
             this.skip();
           }
           const response = render({
+            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', label: 'test', editable: true }],
             isItemEditable: (item) => item.editable,
           });
@@ -176,6 +185,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
             this.skip();
           }
           const response = render({
+            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', label: 'test', editable: true }],
             isItemEditable: (item) => item.editable,
           });
@@ -196,6 +206,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
             this.skip();
           }
           const response = render({
+            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', label: 'test', editable: true }],
             isItemEditable: (item) => item.editable,
           });

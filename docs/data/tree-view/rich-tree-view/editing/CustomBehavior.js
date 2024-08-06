@@ -37,6 +37,7 @@ export default function CustomBehavior() {
       <RichTreeView
         items={MUI_X_PRODUCTS}
         slots={{ item: CustomTreeItem2 }}
+        experimentalFeatures={{ labelEditing: true }}
         isItemEditable
         defaultExpandedItems={['grid', 'pickers']}
       />

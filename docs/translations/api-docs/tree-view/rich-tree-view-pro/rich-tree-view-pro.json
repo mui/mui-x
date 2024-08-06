@@ -56,7 +56,7 @@
       }
     },
     "isItemEditable": {
-      "description": "Determines if a given item is editable or not. By default, the items are not editable."
+      "description": "Determines if a given item is editable or not. Make sure to also enable the <code>labelEditing</code> experimental feature: <code>&lt;RichTreeViewPro experimentalFeatures={{ labelEditing: true }}  /&gt;</code>. By default, the items are not editable."
     },
     "isItemReorderable": {
       "description": "Used to determine if a given item can be reordered.",

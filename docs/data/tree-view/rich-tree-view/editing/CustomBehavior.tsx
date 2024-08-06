@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
 import { TreeItem2, TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
-import { UseTreeItem2LabelInputSlotProps } from '@mui/x-tree-view/useTreeItem2/useTreeItem2.types';
+import { UseTreeItem2LabelInputSlotOwnProps } from '@mui/x-tree-view/useTreeItem2';
 import { MUI_X_PRODUCTS } from './products';
 
 const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
@@ -17,7 +17,7 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
     children: props.children,
   });
 
-  const handleInputBlur: UseTreeItem2LabelInputSlotProps['onBlur'] = (event) => {
+  const handleInputBlur: UseTreeItem2LabelInputSlotOwnProps['onBlur'] = (event) => {
     handleCancelItemLabelEditing(event);
   };
 
@@ -40,6 +40,7 @@ export default function CustomBehavior() {
       <RichTreeView
         items={MUI_X_PRODUCTS}
         slots={{ item: CustomTreeItem2 }}
+        experimentalFeatures={{ labelEditing: true }}
         isItemEditable
         defaultExpandedItems={['grid', 'pickers']}
       />

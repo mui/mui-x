@@ -455,7 +455,9 @@ export const TreeItem = React.forwardRef(function TreeItem(
           {...((enhancedDragAndDropOverlayProps as any).action == null
             ? {}
             : { dragAndDropOverlayProps: enhancedDragAndDropOverlayProps })}
-          labelInputProps={enhancedLabelInputProps}
+          {...((enhancedLabelInputProps as any).value == null
+            ? {}
+            : { labelInputProps: enhancedLabelInputProps })}
           ref={handleContentRef}
         />
         {children && (
