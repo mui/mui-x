@@ -31,17 +31,10 @@ const zoomExtremums = (
   extremums: [number, number] | number[],
   zoomRange: [number, number],
 ): [number, number] => {
-  const zoomGap = zoomRange[1] - zoomRange[0];
   const extremumsGap = extremums[1] - extremums[0];
 
-  // const minZoomed = extremums[0] + extremumsGap * ((100 - zoomGap) / 100);
-  // const maxZoomed = extremums[1] - extremumsGap * ((100 - zoomGap) / 100);
-
-  const minZoomed = extremums[0] + (zoomRange[0] * extremumsGap) / zoomGap;
-  const maxZoomed = extremums[1] - ((100 - zoomRange[1]) * extremumsGap) / zoomGap;
-
-  // const minZoomed = extremums[0] * ((zoomRange[0] + 100) / 100);
-  // const maxZoomed = extremums[1] * (1 - (zoomRange[1] - zoomRange[0]) / 100);
+  const minZoomed = extremums[0] + (zoomRange[0] / 100) * extremumsGap;
+  const maxZoomed = extremums[1] - ((100 - zoomRange[1]) / 100) * extremumsGap;
 
   return [minZoomed, maxZoomed];
 };
