@@ -57,7 +57,7 @@ export const applyZoomFilter = ({
   const [minData, maxData] = getAxisExtremum(axis, getters, isDefaultAxis, formattedSeries);
   const data = axis.data ?? [];
 
-  if (!zoomOption || zoomOption.filterMode === 'keep' || !minData || !maxData) {
+  if (!zoomOption || zoomOption.filterMode === 'keep' || minData === null || maxData === null) {
     return { minData, maxData, data, minFiltered: minData, maxFiltered: maxData };
   }
 
