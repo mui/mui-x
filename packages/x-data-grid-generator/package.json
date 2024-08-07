@@ -44,9 +44,19 @@
     "rimraf": "^5.0.9"
   },
   "peerDependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
     "@mui/icons-material": "^5.4.1",
     "@mui/material": "^5.15.14",
     "react": "^17.0.0 || ^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@emotion/react": {
+      "optional": true
+    },
+    "@emotion/styled": {
+      "optional": true
+    }
   },
   "engines": {
     "node": ">=14.0.0"
