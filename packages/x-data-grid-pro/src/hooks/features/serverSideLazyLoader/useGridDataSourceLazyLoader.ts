@@ -5,6 +5,9 @@ import {
   gridSortModelSelector,
   gridFilterModelSelector,
   GridEventListener,
+  GRID_ROOT_GROUP_ID,
+  GridGroupNode,
+  GridSkeletonRowNode,
 } from '@mui/x-data-grid';
 import {
   getVisibleRows,
@@ -14,11 +17,14 @@ import {
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { findSkeletonRowsSection } from '../lazyLoader/utils';
+import { GRID_SKELETON_ROW_ROOT_ID } from '../lazyLoader/useGridLazyLoaderPreProcessors';
 
 const INTERVAL_CACHE_INITIAL_STATE = {
   firstRowToRender: 0,
   lastRowToRender: 0,
 };
+
+const getSkeletonRowId = (index: number) => `${GRID_SKELETON_ROW_ROOT_ID}-${index}`;
 
 /**
  * @requires useGridRows (state)
@@ -37,6 +43,48 @@ export const useGridDataSourceLazyLoader = (
   const filterModel = useGridSelector(privateApiRef, gridFilterModelSelector);
   const renderedRowsIntervalCache = React.useRef(INTERVAL_CACHE_INITIAL_STATE);
   const isDisabled = !props.unstable_dataSource || props.lazyLoading !== true;
+
+  const addSkeletonRows = React.useCallback(() => {
+    if (isDisabled) {
+      return;
+    }
+
+    const tree = privateApiRef.current.state.rows.tree;
+    const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
+    const rootGroupChildren = [...rootGroup.children];
+
+    const pageRowCount = privateApiRef.current.state.pagination.rowCount;
+    const rowCount = privateApiRef.current.getRowsCount();
+
+    for (let i = 0; i < pageRowCount - rowCount; i += 1) {
+      const skeletonId = getSkeletonRowId(i);
+
+      rootGroupChildren.push(skeletonId);
+
+      const skeletonRowNode: GridSkeletonRowNode = {
+        type: 'skeletonRow',
+        id: skeletonId,
+        parent: GRID_ROOT_GROUP_ID,
+        depth: 0,
+      };
+
+      tree[skeletonId] = skeletonRowNode;
+    }
+
+    tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren };
+
+    privateApiRef.current.setState(
+      (state) => ({
+        ...state,
+        rows: {
+          ...state.rows,
+          tree,
+        },
+      }),
+      'addSkeletonRows',
+    );
+    privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
+  }, [privateApiRef, isDisabled]);
 
   const handleRenderedRowsIntervalChange = React.useCallback<
     GridEventListener<'renderedRowsIntervalChange'>
@@ -97,10 +145,10 @@ export const useGridDataSourceLazyLoader = (
         return;
       }
 
+      const renderContext = gridRenderContextSelector(privateApiRef);
       privateApiRef.current.setRows([]);
       renderedRowsIntervalCache.current = INTERVAL_CACHE_INITIAL_STATE;
 
-      const renderContext = gridRenderContextSelector(privateApiRef);
       const fetchRowsParams: GridGetRowsParams = {
         start: renderContext.firstRowIndex,
         end: renderContext.lastRowIndex,
@@ -122,10 +170,9 @@ export const useGridDataSourceLazyLoader = (
       privateApiRef.current.setRows([]);
       renderedRowsIntervalCache.current = INTERVAL_CACHE_INITIAL_STATE;
 
-      const renderContext = gridRenderContextSelector(privateApiRef);
       const fetchRowsParams: GridGetRowsParams = {
-        start: renderContext.firstRowIndex,
-        end: renderContext.lastRowIndex,
+        start: 0,
+        end: privateApiRef.current.state.pagination.paginationModel.pageSize,
         sortModel,
         filterModel: newFilterModel,
       };
@@ -135,6 +182,7 @@ export const useGridDataSourceLazyLoader = (
     [privateApiRef, isDisabled, sortModel],
   );
 
+  useGridApiEventHandler(privateApiRef, 'rowResponseLoaded', addSkeletonRows);
   useGridApiEventHandler(
     privateApiRef,
     'renderedRowsIntervalChange',

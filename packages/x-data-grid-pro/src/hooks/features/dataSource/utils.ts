@@ -3,9 +3,9 @@ import { GridPrivateApiPro } from '../../../models/gridApiPro';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
 
-export const runIfServerMode = (modeProp: 'server' | 'client', fn: Function) => () => {
-  if (modeProp === 'server') {
-    fn();
+export const runIf = (condition: boolean, fn: Function) => (params: unknown) => {
+  if (condition) {
+    fn(params);
   }
 };
 
