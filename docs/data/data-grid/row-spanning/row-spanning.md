@@ -9,8 +9,7 @@ This is very close to the "row spanning" in an HTML `<table>`.
 To enable, pass the `unstable_rowSpanning` prop to the Data Grid.
 
 The Data Grid will automatically merge cells with the same value in a specified column.
-
-Additionally, you could manually provide the value used in row spanning using `colDef.valueGetter` prop.
+Additionally, you could customize the value used in row spanning computation using `colDef.rowSpanValueGetter` prop and both the value used in row spanning computation and the value used in cell using `colDef.valueGetter` prop.
 
 {{"demo": "RowSpanning.js", "bg": "inline", "defaultCodeOpen": false}}
 
