@@ -13,6 +13,7 @@ import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';
 import { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from './colorMapping';
+import type { ZoomFilterMode } from '../context/CartesianProvider';
 
 export type AxisId = string | number;
 
@@ -231,6 +232,7 @@ export interface AxisScaleComputedConfig {
       | ScaleSequential<string, string | null>
       | ScaleThreshold<number | Date, string | null>;
     filteredExtremums: FilteredExtremums;
+    filterMode: ZoomFilterMode;
   };
   point: {
     colorScale?:
@@ -239,36 +241,44 @@ export interface AxisScaleComputedConfig {
       | ScaleSequential<string, string | null>
       | ScaleThreshold<number | Date, string | null>;
     filteredExtremums: FilteredExtremums;
+    filterMode: ZoomFilterMode;
   };
   log: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
     filteredExtremums: FilteredExtremums;
+    filterMode: ZoomFilterMode;
   };
   pow: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
     filteredExtremums: FilteredExtremums;
+    filterMode: ZoomFilterMode;
   };
   sqrt: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
     filteredExtremums: FilteredExtremums;
+    filterMode: ZoomFilterMode;
   };
   time: {
     colorScale?:
       | ScaleSequential<string, string | null>
       | ScaleThreshold<number | Date, string | null>;
     filteredExtremums: FilteredExtremums;
+    filterMode: ZoomFilterMode;
   };
   utc: {
     colorScale?:
       | ScaleSequential<string, string | null>
       | ScaleThreshold<number | Date, string | null>;
     filteredExtremums: FilteredExtremums;
+    filterMode: ZoomFilterMode;
   };
   linear: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
     filteredExtremums: FilteredExtremums;
+    filterMode: ZoomFilterMode;
   };
 }
+
 export type AxisValueFormatterContext = {
   /**
    * Location indicates where the value will be displayed.

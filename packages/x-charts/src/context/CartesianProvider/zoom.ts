@@ -1,6 +1,7 @@
 import { AxisConfig } from '../../models';
 import { ExtremumGettersConfig } from '../PluginProvider';
 import { FormattedSeries } from '../SeriesProvider';
+import { ZoomFilterMode } from './Cartesian.types';
 import { getAxisExtremum } from './getAxisExtremum';
 
 /**
@@ -45,19 +46,19 @@ export const applyZoomFilter = ({
   isDefaultAxis,
   formattedSeries,
   zoomRange,
-  zoomOption,
+  filterMode,
 }: {
   axis: AxisConfig;
   getters: ExtremumGettersConfig;
   isDefaultAxis: boolean;
   formattedSeries: FormattedSeries;
   zoomRange: [number, number];
-  zoomOption?: { filterMode: 'keep' | 'discard' | 'empty' };
+  filterMode: ZoomFilterMode;
 }) => {
   const [minData, maxData] = getAxisExtremum(axis, getters, isDefaultAxis, formattedSeries);
   const data = axis.data ?? [];
 
-  if (!zoomOption || zoomOption.filterMode === 'keep' || minData === null || maxData === null) {
+  if (filterMode === 'keep' || minData === null || maxData === null) {
     return { minData, maxData, data, minFiltered: minData, maxFiltered: maxData };
   }
 

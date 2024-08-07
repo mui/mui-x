@@ -6,7 +6,6 @@ import {
   ChartsYAxisProps,
   isBandScaleConfig,
   isPointScaleConfig,
-  AxisId,
 } from '../../models/axis';
 import { CartesianChartSeriesType, DatasetType } from '../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../internals/colorScale';
@@ -17,7 +16,7 @@ import { FormattedSeries } from '../SeriesProvider';
 import { normalizeAxis } from './normalizeAxis';
 import { applyZoomFilter, zoomScaleRange } from './zoom';
 import { ExtremumGetter } from '../PluginProvider';
-import { DefaultizedAxisConfig } from './Cartesian.types';
+import { DefaultizedAxisConfig, ZoomData, ZoomOptions } from './Cartesian.types';
 
 const getRange = (drawingArea: DrawingArea, axisDirection: 'x' | 'y', isReverse?: boolean) => {
   const range =
@@ -53,8 +52,8 @@ type ComputeCommonParams = {
   formattedSeries: FormattedSeries;
   extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> };
   dataset: DatasetType | undefined;
-  zoomData?: { axisId: AxisId; start: number; end: number }[];
-  zoomOptions?: Record<AxisId, { filterMode: 'discard' | 'keep' | 'empty' }>;
+  zoomData?: ZoomData[];
+  zoomOptions?: ZoomOptions;
 };
 
 export function computeValue(
@@ -87,7 +86,7 @@ export function computeValue({
   const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((axis, axisIndex) => {
     const isDefaultAxis = axisIndex === 0;
-    const zoomOption = zoomOptions?.[axis.id];
+    const filterMode = zoomOptions?.[axis.id]?.filterMode ?? 'keep';
     const zoom = zoomData?.find(({ axisId }) => axisId === axis.id);
     const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
     const range = getRange(drawingArea, axisDirection, axis.reverse);
@@ -98,7 +97,7 @@ export function computeValue({
       isDefaultAxis,
       formattedSeries,
       zoomRange,
-      zoomOption,
+      filterMode,
     });
 
     if (isBandScaleConfig(axis)) {
@@ -113,6 +112,7 @@ export function computeValue({
         barGapRatio,
         ...axis,
         data,
+        filterMode,
         scale: scaleBand(data, zoomedRange)
           .paddingInner(categoryGapRatio)
           .paddingOuter(categoryGapRatio / 2),
@@ -137,6 +137,7 @@ export function computeValue({
       completeAxis[axis.id] = {
         ...axis,
         data,
+        filterMode,
         scale: scalePoint(data, zoomedRange),
         filteredExtremums: { min: minFiltered ?? -Infinity, max: maxFiltered ?? Infinity },
         tickNumber: data.length,
@@ -174,6 +175,7 @@ export function computeValue({
     completeAxis[axis.id] = {
       ...axis,
       data,
+      filterMode,
       scaleType: scaleType as any,
       scale: scale as any,
       filteredExtremums: { min: minFiltered ?? -Infinity, max: maxFiltered ?? Infinity },

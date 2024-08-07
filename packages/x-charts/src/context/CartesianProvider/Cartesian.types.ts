@@ -50,3 +50,8 @@ export type CartesianContextState = {
    */
   yAxisIds: AxisId[];
 };
+
+export type ZoomData = { axisId: AxisId; start: number; end: number };
+
+export type ZoomFilterMode = 'keep' | 'discard' | 'empty';
+export type ZoomOptions = Record<AxisId, { filterMode: ZoomFilterMode }>;
