@@ -40,7 +40,7 @@ export const useTreeViewLabelItemPlugin: TreeViewItemPlugin<any> = ({ props }) =
         };
 
         return {
-          value: labelInputValue,
+          value: labelInputValue ?? '',
           'data-element': 'labelInput',
           onChange: handleInputChange,
           autoFocus: true,
