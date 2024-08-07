@@ -2,6 +2,7 @@ import * as React from 'react';
 // @ts-ignore
 import SectionHeadline from 'docs/src/components/typography/SectionHeadline';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
@@ -61,7 +62,7 @@ export default function DateLibraries() {
           />
         </Stack>
         <Stack>
-          <Stack direction="row" spacing={2} sx={{ minWidth: '560px' }}>
+          <Stack direction="row" spacing={2} sx={{ minWidth: { xs: 0, sm: '560px' } }}>
             <ToggleButtonGroup
               value={selectedLibrary}
               onChange={handleLibrarySwitch}
@@ -70,9 +71,9 @@ export default function DateLibraries() {
               exclusive
             >
               {dateLibraries.map((library, index) => (
-                <ToggleButton key={index} value={index} sx={{ gap: 1 }}>
-                  <img src={library.link} width={16} height={16} alt="" />
-                  {library.name}
+                <ToggleButton key={index} value={index} sx={{ gap: 1 }} title={library.name}>
+                  <img src={library.link} width={16} height={16} alt={library.name} />
+                  <Box sx={{ display: { xs: 'none', sm: 'flex' } }}>{library.name}</Box>
                 </ToggleButton>
               ))}
             </ToggleButtonGroup>
