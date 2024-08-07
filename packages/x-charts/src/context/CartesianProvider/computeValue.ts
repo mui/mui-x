@@ -16,8 +16,9 @@ import { getScale } from '../../internals/getScale';
 import { DrawingArea } from '../DrawingProvider';
 import { FormattedSeries } from '../SeriesProvider';
 import { normalizeAxis } from './normalizeAxis';
-import { applyZoomFilter, zoomScaleRange } from './zoom';
+import { zoomScaleRange } from './zoom';
 import { ExtremumGetter } from '../PluginProvider';
+import { getAxisExtremum } from './getAxisExtremum';
 
 const getRange = (drawingArea: DrawingArea, axisDirection: 'x' | 'y', isReverse?: boolean) => {
   const range =
@@ -55,6 +56,7 @@ type ComputeCommonParams = {
   dataset: DatasetType | undefined;
   zoomData?: { axisId: AxisId; start: number; end: number }[];
   zoomOptions?: Record<AxisId, { filterMode: 'discard' | 'keep' | 'empty' }>;
+  zoomFilter?: (index: number) => boolean;
 };
 
 export function computeValue(
@@ -78,6 +80,7 @@ export function computeValue({
   axisDirection,
   zoomData,
   zoomOptions,
+  zoomFilter,
 }: ComputeCommonParams & {
   axis: AxisConfig<ScaleName, any, ChartsAxisProps>[] | undefined;
   axisDirection: 'x' | 'y';
@@ -92,14 +95,13 @@ export function computeValue({
     const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
     const range = getRange(drawingArea, axisDirection, axis.reverse);
 
-    const { minData, maxData, data, minFiltered, maxFiltered } = applyZoomFilter({
+    const [minData, maxData] = getAxisExtremum(
       axis,
-      getters: extremumGetters,
+      extremumGetters,
       isDefaultAxis,
       formattedSeries,
-      zoomRange,
-      zoomOption,
-    });
+      zoom === undefined && !zoomOption ? zoomFilter : undefined, // Do not apply filtering if zoom is already defined.
+    );
 
     if (isBandScaleConfig(axis)) {
       const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
@@ -112,21 +114,19 @@ export function computeValue({
         categoryGapRatio,
         barGapRatio,
         ...axis,
-        data,
-        scale: scaleBand(data, zoomedRange)
+        scale: scaleBand(axis.data!, zoomedRange)
           .paddingInner(categoryGapRatio)
           .paddingOuter(categoryGapRatio / 2),
-        filteredExtremums: { min: minFiltered ?? -Infinity, max: maxFiltered ?? Infinity },
-        tickNumber: data.length,
+        tickNumber: axis.data!.length,
         colorScale:
           axis.colorMap &&
           (axis.colorMap.type === 'ordinal'
-            ? getOrdinalColorScale({ values: data, ...axis.colorMap })
+            ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
             : getColorScale(axis.colorMap)),
       };
 
-      if (isDateData(data)) {
-        const dateFormatter = createDateFormatter({ ...axis, data }, scaleRange);
+      if (isDateData(axis.data)) {
+        const dateFormatter = createDateFormatter(axis, scaleRange);
         completeAxis[axis.id].valueFormatter = axis.valueFormatter ?? dateFormatter;
       }
     }
@@ -136,22 +136,21 @@ export function computeValue({
 
       completeAxis[axis.id] = {
         ...axis,
-        data,
-        scale: scalePoint(data, zoomedRange),
-        filteredExtremums: { min: minFiltered ?? -Infinity, max: maxFiltered ?? Infinity },
-        tickNumber: data.length,
+        scale: scalePoint(axis.data!, zoomedRange),
+        tickNumber: axis.data!.length,
         colorScale:
           axis.colorMap &&
           (axis.colorMap.type === 'ordinal'
-            ? getOrdinalColorScale({ values: data, ...axis.colorMap })
+            ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
             : getColorScale(axis.colorMap)),
       };
 
-      if (isDateData(data)) {
-        const dateFormatter = createDateFormatter({ ...axis, data }, scaleRange);
+      if (isDateData(axis.data)) {
+        const dateFormatter = createDateFormatter(axis, scaleRange);
         completeAxis[axis.id].valueFormatter = axis.valueFormatter ?? dateFormatter;
       }
     }
+
     if (axis.scaleType === 'band' || axis.scaleType === 'point') {
       // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
       return;
@@ -159,29 +158,25 @@ export function computeValue({
 
     const scaleType = axis.scaleType ?? ('linear' as const);
 
-    const extremums = [axis.min ?? minData, axis.max ?? maxData];
-    const rawTickNumber = getTickNumber({ ...axis, range, domain: extremums });
+    const axisExtremums = [axis.min ?? minData, axis.max ?? maxData];
+    const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
     const tickNumber = rawTickNumber / ((zoomRange[1] - zoomRange[0]) / 100);
 
     const zoomedRange = zoomScaleRange(range, zoomRange);
 
     // TODO: move nice to prop? Disable when there is zoom?
-    const scale = getScale(scaleType, extremums, zoomedRange).nice(rawTickNumber);
+    const scale = getScale(scaleType, axisExtremums, zoomedRange).nice(rawTickNumber);
     const [minDomain, maxDomain] = scale.domain();
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
-    scale.domain(domain);
 
     completeAxis[axis.id] = {
       ...axis,
-      data,
       scaleType: scaleType as any,
-      scale: scale as any,
-      filteredExtremums: { min: minFiltered ?? -Infinity, max: maxFiltered ?? Infinity },
+      scale: scale.domain(domain) as any,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
     };
   });
-
   return {
     axis: completeAxis,
     axisIds: allAxis.map(({ id }) => id),

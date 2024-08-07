@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../../models/axis';
+import {
+  AxisConfig,
+  AxisId,
+  ChartsXAxisProps,
+  ChartsYAxisProps,
+  ScaleName,
+} from '../../models/axis';
 import { DatasetType } from '../../models/seriesType/config';
 import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useSeries } from '../../hooks/useSeries';
@@ -7,6 +13,7 @@ import { CartesianContext } from './CartesianContext';
 import { computeValue } from './computeValue';
 import { useXExtremumGetter } from '../PluginProvider/useXExtremumGetter';
 import { useYExtremumGetter } from '../PluginProvider';
+import { getAxisExtremum } from './getAxisExtremum';
 
 export type CartesianProviderProps = {
   /**
@@ -35,6 +42,28 @@ function CartesianProvider(props: CartesianProviderProps) {
   const drawingArea = useDrawingArea();
   const xExtremumGetters = useXExtremumGetter();
   const yExtremumGetters = useYExtremumGetter();
+
+  const xAxesExtremums: Record<AxisId, [null, null] | [number, number]> = {};
+  const yAxesExtremums: Record<AxisId, [null, null] | [number, number]> = {};
+
+  xAxis.forEach((axis, axisIndex) => {
+    xAxesExtremums[axis.id] = getAxisExtremum(
+      axis,
+      xExtremumGetters,
+      axisIndex === 0,
+      formattedSeries,
+    );
+  });
+  yAxis.forEach((axis, axisIndex) => {
+    yAxesExtremums[axis.id] = getAxisExtremum(
+      axis,
+      yExtremumGetters,
+      axisIndex === 0,
+      formattedSeries,
+    );
+  });
+
+  
 
   const xValues = React.useMemo(
     () =>
