@@ -5,10 +5,10 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { HighlightedProvider, ZAxisContextProvider } from '@mui/x-charts/context';
 import {
   ChartsAxesGradients,
-  ColorProvider,
   DrawingProvider,
   InteractionProvider,
-  SeriesContextProvider,
+  PluginProvider,
+  SeriesProvider,
 } from '@mui/x-charts/internals';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
@@ -27,12 +27,12 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
   const {
     zoomProviderProps,
     drawingProviderProps,
-    colorProviderProps,
-    seriesContextProps,
+    seriesProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
     cartesianContextProps,
     chartsSurfaceProps,
+    pluginProviderProps,
     children,
   } = useChartContainerProProps(props, ref);
 
@@ -40,8 +40,8 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
 
   return (
     <DrawingProvider {...drawingProviderProps}>
-      <ColorProvider {...colorProviderProps}>
-        <SeriesContextProvider {...seriesContextProps}>
+      <PluginProvider {...pluginProviderProps}>
+        <SeriesProvider {...seriesProviderProps}>
           <ZoomProvider {...zoomProviderProps}>
             <CartesianContextProviderPro {...cartesianContextProps}>
               <ZAxisContextProvider {...zAxisContextProps}>
@@ -56,8 +56,8 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
               </ZAxisContextProvider>
             </CartesianContextProviderPro>
           </ZoomProvider>
-        </SeriesContextProvider>
-      </ColorProvider>
+        </SeriesProvider>
+      </PluginProvider>
     </DrawingProvider>
   );
 });
