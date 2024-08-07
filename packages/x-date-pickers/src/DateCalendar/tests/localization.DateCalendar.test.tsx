@@ -6,8 +6,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { createPickerRenderer, AdapterName, availableAdapters } from 'test/utils/pickers';
 import { he, fr } from 'date-fns/locale';
 import 'dayjs/locale/he';
-import 'moment/locale/he';
 import 'dayjs/locale/fr';
+import 'moment/locale/he';
 import 'moment/locale/fr';
 
 const ADAPTERS_TO_USE: AdapterName[] = ['date-fns', 'dayjs', 'luxon', 'moment'];
@@ -31,7 +31,7 @@ describe('<DateCalendar /> - localization', () => {
       it('should correctly switch between locale with week starting in Monday and week starting in Sunday', () => {
         const { setProps } = renderWithoutWrapper(
           <LocalizationProvider dateAdapter={availableAdapters[adapterName]}>
-            <DateCalendar />
+            <DateCalendar reduceAnimations />
           </LocalizationProvider>,
         );
 
