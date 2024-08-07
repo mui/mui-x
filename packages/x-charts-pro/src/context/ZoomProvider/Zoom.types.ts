@@ -101,11 +101,10 @@ export type ZoomOptions = {
    *
    * - `keep`: The data outside of the zoomed range is kept. Though it will not be displayed.
    * - `discard`: The data outside of the zoomed range is discarded.
-   * - `empty`: The data outside of the zoomed range is replaced with empty values.
    *
    * @default 'keep'
    */
-  filterMode?: 'discard' | 'keep' | 'empty';
+  filterMode?: 'discard' | 'keep';
 };
 
 export type ZoomData = {

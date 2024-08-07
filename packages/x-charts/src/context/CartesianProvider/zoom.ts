@@ -1,5 +1,3 @@
-import { ZoomFilterMode } from './Cartesian.types';
-
 /**
  * Applies the zoom into the scale range.
  * It changes the screen coordinates that the scale covers.
@@ -22,40 +20,4 @@ export const zoomScaleRange = (
   const max = scaleRange[1] + ((100 - zoomRange[1]) * rangeGap) / zoomGap;
 
   return [min, max];
-};
-
-const zoomExtremums = (
-  extremums: [number, number],
-  zoomRange: [number, number],
-): [number, number] => {
-  const extremumsGap = extremums[1] - extremums[0];
-
-  const minZoomed = extremums[0] + (zoomRange[0] / 100) * extremumsGap;
-  const maxZoomed = extremums[1] - ((100 - zoomRange[1]) / 100) * extremumsGap;
-
-  return [minZoomed, maxZoomed];
-};
-
-export const applyZoomFilter = ({
-  extremums,
-  zoomRange,
-  filterMode,
-}: {
-  extremums: [number | null | Date, number | null | Date] | (number | null | Date)[];
-  zoomRange: [number, number];
-  filterMode: ZoomFilterMode;
-}) => {
-  const minExtremum = extremums[0];
-  const maxExtremum = extremums[1];
-
-  if (minExtremum instanceof Date || maxExtremum instanceof Date) {
-    throw new Error('Date values are not supported in zoom filtering.');
-  }
-
-  if (filterMode === 'keep' || minExtremum === null || maxExtremum === null) {
-    return { min: minExtremum ?? -Infinity, max: maxExtremum ?? Infinity };
-  }
-
-  const [filteredMin, filteredMax] = zoomExtremums([minExtremum, maxExtremum], zoomRange);
-  return { min: filteredMin, max: filteredMax };
 };
