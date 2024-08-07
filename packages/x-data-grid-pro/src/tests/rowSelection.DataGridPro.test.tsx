@@ -210,6 +210,49 @@ describe('<DataGridPro /> - Row selection', () => {
       });
       expect(selectAllCheckbox).to.have.attr('data-indeterminate', 'false');
     });
+
+    it('should allow to select all the current page rows when props.paginationMode="server"', () => {
+      function TestDataGridSelectionServerSide({
+        rowLength = 4,
+      }: Omit<DataGridProProps, 'rows' | 'columns' | 'apiRef'> &
+        Partial<Pick<DataGridProProps, 'rows' | 'columns'>> & { rowLength?: number }) {
+        apiRef = useGridApiRef();
+        const paginationModel = { pageSize: 2, page: 1 };
+
+        const data = React.useMemo(() => getBasicGridData(rowLength, 2), [rowLength]);
+
+        const rows = data.rows.slice(
+          paginationModel.pageSize * paginationModel.page,
+          paginationModel.pageSize * (paginationModel.page + 1),
+        );
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...data}
+              rows={rows}
+              checkboxSelection
+              checkboxSelectionVisibleOnly
+              initialState={{ pagination: { paginationModel } }}
+              pagination
+              paginationMode="server"
+              pageSizeOptions={[2]}
+              apiRef={apiRef}
+              rowCount={rowLength}
+              disableVirtualization
+            />
+          </div>
+        );
+      }
+      render(<TestDataGridSelectionServerSide />);
+
+      const selectAllCheckbox = screen.getByRole('checkbox', {
+        name: /select all rows/i,
+      });
+
+      fireEvent.click(selectAllCheckbox);
+      expect(apiRef.current.getSelectedRows()).to.have.length(2);
+    });
   });
 
   describe('apiRef: getSelectedRows', () => {
