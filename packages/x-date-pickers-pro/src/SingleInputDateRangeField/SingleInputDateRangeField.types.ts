@@ -49,11 +49,6 @@ export type SingleInputDateRangeFieldProps<
      * @default {}
      */
     slotProps?: SingleInputDateRangeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
-    /**
-     * If `true`, doesn't allow the selection of ranges containing disabled dates.
-     * @default false
-     */
-    disableNonContiguousRanges?: boolean;
   };
 
 export interface SingleInputDateRangeFieldSlots extends UseClearableFieldSlots {
