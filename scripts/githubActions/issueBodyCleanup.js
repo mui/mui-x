@@ -27,8 +27,7 @@ module.exports = async ({ core, context, github }) => {
     const lines = issue.data.body.split('\n');
 
     // this is here to remove this section from the issue body
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/naming-convention
-    const _ = extractInputSection(lines, 'Latest version');
+    extractInputSection(lines, 'Latest version');
 
     const searchKeywords = extractInputSection(lines, 'Search keywords');
     const products = extractInputSection(lines, 'Affected products');
