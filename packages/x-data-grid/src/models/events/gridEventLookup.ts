@@ -434,10 +434,10 @@ export interface GridEventLookup
 
   // Data source
   /**
-   * Fired when the new data is successfully added to the grid
+   * Fired when the new data is successfully added to the grid either directly from the data source or from the cache
    * @ignore - do not document.
    */
-  rowResponseLoaded: {};
+  rowsFetched: {};
 
   // Columns
   /**
