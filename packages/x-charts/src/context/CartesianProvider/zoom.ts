@@ -1,8 +1,4 @@
-import { AxisConfig } from '../../models';
-import { ExtremumGettersConfig } from '../PluginProvider';
-import { FormattedSeries } from '../SeriesProvider';
 import { ZoomFilterMode } from './Cartesian.types';
-import { getAxisExtremum } from './getAxisExtremum';
 
 /**
  * Applies the zoom into the scale range.
@@ -29,7 +25,7 @@ export const zoomScaleRange = (
 };
 
 const zoomExtremums = (
-  extremums: [number, number] | number[],
+  extremums: [number, number],
   zoomRange: [number, number],
 ): [number, number] => {
   const extremumsGap = extremums[1] - extremums[0];
@@ -41,28 +37,25 @@ const zoomExtremums = (
 };
 
 export const applyZoomFilter = ({
-  axis,
-  getters,
-  isDefaultAxis,
-  formattedSeries,
+  extremums,
   zoomRange,
   filterMode,
 }: {
-  axis: AxisConfig;
-  getters: ExtremumGettersConfig;
-  isDefaultAxis: boolean;
-  formattedSeries: FormattedSeries;
+  extremums: [number | null | Date, number | null | Date] | (number | null | Date)[];
   zoomRange: [number, number];
   filterMode: ZoomFilterMode;
 }) => {
-  const [minData, maxData] = getAxisExtremum(axis, getters, isDefaultAxis, formattedSeries);
-  const data = axis.data ?? [];
+  const minExtremum = extremums[0];
+  const maxExtremum = extremums[1];
 
-  if (filterMode === 'keep' || minData === null || maxData === null) {
-    return { minData, maxData, data, minFiltered: minData, maxFiltered: maxData };
+  if (minExtremum instanceof Date || maxExtremum instanceof Date) {
+    throw new Error('Date values are not supported in zoom filtering.');
   }
 
-  const [minFiltered, maxFiltered] = zoomExtremums([minData, maxData], zoomRange);
+  if (filterMode === 'keep' || minExtremum === null || maxExtremum === null) {
+    return { min: minExtremum ?? -Infinity, max: maxExtremum ?? Infinity };
+  }
 
-  return { minData, maxData, data, minFiltered, maxFiltered };
+  const [filteredMin, filteredMax] = zoomExtremums([minExtremum, maxExtremum], zoomRange);
+  return { min: filteredMin, max: filteredMax };
 };

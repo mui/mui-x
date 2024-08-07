@@ -17,6 +17,7 @@ import { normalizeAxis } from './normalizeAxis';
 import { applyZoomFilter, zoomScaleRange } from './zoom';
 import { ExtremumGetter } from '../PluginProvider';
 import { DefaultizedAxisConfig, ZoomData, ZoomOptions } from './Cartesian.types';
+import { getAxisExtremum } from './getAxisExtremum';
 
 const getRange = (drawingArea: DrawingArea, axisDirection: 'x' | 'y', isReverse?: boolean) => {
   const range =
@@ -91,14 +92,13 @@ export function computeValue({
     const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
     const range = getRange(drawingArea, axisDirection, axis.reverse);
 
-    const { minData, maxData, data, minFiltered, maxFiltered } = applyZoomFilter({
+    const [minData, maxData] = getAxisExtremum(
       axis,
-      getters: extremumGetters,
+      extremumGetters,
       isDefaultAxis,
       formattedSeries,
-      zoomRange,
-      filterMode,
-    });
+    );
+    const data = axis.data ?? [];
 
     if (isBandScaleConfig(axis)) {
       const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
@@ -106,17 +106,21 @@ export function computeValue({
       // Reverse range because ordinal scales are presented from top to bottom on y-axis
       const scaleRange = axisDirection === 'x' ? range : [range[1], range[0]];
       const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
+      const filteredExtremums = applyZoomFilter({
+        extremums: [minData, maxData],
+        zoomRange,
+        filterMode,
+      });
 
       completeAxis[axis.id] = {
         categoryGapRatio,
         barGapRatio,
         ...axis,
-        data,
         filterMode,
         scale: scaleBand(data, zoomedRange)
           .paddingInner(categoryGapRatio)
           .paddingOuter(categoryGapRatio / 2),
-        filteredExtremums: { min: minFiltered ?? -Infinity, max: maxFiltered ?? Infinity },
+        filteredExtremums,
         tickNumber: data.length,
         colorScale:
           axis.colorMap &&
@@ -133,13 +137,17 @@ export function computeValue({
     if (isPointScaleConfig(axis)) {
       const scaleRange = axisDirection === 'x' ? range : [...range].reverse();
       const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
+      const filteredExtremums = applyZoomFilter({
+        extremums: [minData, maxData],
+        zoomRange,
+        filterMode,
+      });
 
       completeAxis[axis.id] = {
         ...axis,
-        data,
         filterMode,
         scale: scalePoint(data, zoomedRange),
-        filteredExtremums: { min: minFiltered ?? -Infinity, max: maxFiltered ?? Infinity },
+        filteredExtremums,
         tickNumber: data.length,
         colorScale:
           axis.colorMap &&
@@ -172,13 +180,18 @@ export function computeValue({
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
     scale.domain(domain);
 
+    const filteredExtremums = applyZoomFilter({
+      extremums: [minDomain, maxDomain],
+      zoomRange,
+      filterMode,
+    });
+
     completeAxis[axis.id] = {
       ...axis,
-      data,
       filterMode,
       scaleType: scaleType as any,
       scale: scale as any,
-      filteredExtremums: { min: minFiltered ?? -Infinity, max: maxFiltered ?? Infinity },
+      filteredExtremums,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
     };

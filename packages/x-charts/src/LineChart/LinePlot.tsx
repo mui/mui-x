@@ -98,8 +98,8 @@ const useAggregatedData = () => {
         .defined((_, i) => {
           if (
             filterMode === 'discard' &&
-            ((data[i] ?? -Infinity) <= yFilteredExtremums.min ||
-              (data[i] ?? Infinity) >= yFilteredExtremums.max)
+            ((data[i] ?? -Infinity) < yFilteredExtremums.min ||
+              (data[i] ?? Infinity) > yFilteredExtremums.max)
           ) {
             return false;
           }
@@ -115,9 +115,9 @@ const useAggregatedData = () => {
 
       const d3Data = formattedData.filter((_, i) => {
         if (
-          filterMode === 'discard' &&
-          ((data[i] ?? -Infinity) <= yFilteredExtremums.min ||
-            (data[i] ?? Infinity) >= yFilteredExtremums.max)
+          filterMode === 'empty' &&
+          ((data[i] ?? -Infinity) < yFilteredExtremums.min ||
+            (data[i] ?? Infinity) > yFilteredExtremums.max)
         ) {
           return false;
         }
