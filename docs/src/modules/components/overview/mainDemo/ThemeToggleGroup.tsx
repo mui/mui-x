@@ -53,11 +53,7 @@ export default function ThemeToggleGroup({
           <AutoFixHighIcon />
           {isMobile && 'Custom Theme'}
         </ToggleButton>
-        <ToggleButton
-          value={false}
-          title="Default theme"
-          sx={{ flexGrow: 1 }}
-        >
+        <ToggleButton value={false} title="Default theme" sx={{ flexGrow: 1 }}>
           <SettingsSuggestIcon />
           {isMobile && 'Default Theme'}
         </ToggleButton>
