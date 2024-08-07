@@ -65,8 +65,6 @@ const useAggregatedData = () => {
       const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
       const yScale = yAxis[yAxisId].scale;
       const xData = xAxis[xAxisId].data;
-      const yFilteredExtremums = yAxis[yAxisId].filteredExtremums;
-      const filterMode = yAxis[yAxisId].filterMode;
 
       const gradientUsed: [AxisId, 'x' | 'y'] | undefined =
         (yAxis[yAxisId].colorScale && [yAxisId, 'y']) ||
@@ -95,35 +93,11 @@ const useAggregatedData = () => {
         y: [number, number];
       }>()
         .x((d) => xScale(d.x))
-        .defined((_, i) => {
-          if (
-            filterMode === 'discard' &&
-            ((data[i] ?? -Infinity) < yFilteredExtremums.min ||
-              (data[i] ?? Infinity) > yFilteredExtremums.max)
-          ) {
-            return false;
-          }
-
-          return connectNulls || data[i] != null;
-        })
+        .defined((_, i) => connectNulls || data[i] != null)
         .y((d) => yScale(d.y[1])!);
 
-      // Filter out the data points that are outside the y-axis domain
-      // Maybe filtering should run on `data[i]` instead of `stackedData[i]`?
-      // This way we will be able to fully remove the values that are outside the domain as well
       const formattedData = xData?.map((x, index) => ({ x, y: stackedData[index] })) ?? [];
-
-      const d3Data = formattedData.filter((_, i) => {
-        if (
-          filterMode === 'empty' &&
-          ((data[i] ?? -Infinity) < yFilteredExtremums.min ||
-            (data[i] ?? Infinity) > yFilteredExtremums.max)
-        ) {
-          return false;
-        }
-
-        return connectNulls || data[i] != null;
-      });
+      const d3Data = connectNulls ? formattedData.filter((_, i) => data[i] != null) : formattedData;
 
       const d = linePath.curve(getCurveFactory(series[seriesId].curve))(d3Data) || '';
       return {
