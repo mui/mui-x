@@ -7,7 +7,7 @@ import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsItemTooltipContent } from './DefaultChartsItemTooltipContent';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
-import { useColorProcessor } from '../hooks/useColor';
+import { useColorProcessor } from '../context/PluginProvider/useColorProcessor';
 import { useSeries } from '../hooks/useSeries';
 
 export interface ChartsItemContentProps<T extends ChartSeriesType> {
