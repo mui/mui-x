@@ -22,15 +22,17 @@ const getValueExtremum: ExtremumGetter<'bar'> = (params) => {
     })
     .reduce(
       (acc: ExtremumGetterResult, seriesId) => {
-        const data =
-          filter !== undefined
-            ? series[seriesId].stackedData.filter((v, i) => filter(v[0], i) && filter(v[1], i))
-            : series[seriesId].stackedData;
-        const [seriesMin, seriesMax] = data?.reduce(
-          (seriesAcc, values) => [
-            Math.min(...values, ...(seriesAcc[0] === null ? [] : [seriesAcc[0]])),
-            Math.max(...values, ...(seriesAcc[1] === null ? [] : [seriesAcc[1]])),
-          ],
+        const [seriesMin, seriesMax] = series[seriesId].stackedData?.reduce(
+          (seriesAcc, values, index) => {
+            if (filter && (!filter(values[0], index) || !filter(values[1], index))) {
+              return seriesAcc;
+            }
+
+            return [
+              Math.min(...values, ...(seriesAcc[0] === null ? [] : [seriesAcc[0]])),
+              Math.max(...values, ...(seriesAcc[1] === null ? [] : [seriesAcc[1]])),
+            ];
+          },
           series[seriesId].stackedData[0],
         ) ?? [null, null];
 
