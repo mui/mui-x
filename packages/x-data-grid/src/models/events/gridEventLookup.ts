@@ -389,6 +389,7 @@ export interface GridControlledStateReasonLookup {
     | 'restoreState'
     | 'removeAllFilterItems';
   pagination: 'setPaginationModel' | 'stateRestorePreProcessing';
+  rows: 'addSkeletonRows';
 }
 
 export interface GridEventLookup
@@ -430,6 +431,13 @@ export interface GridEventLookup
    * @ignore - do not document.
    */
   strategyAvailabilityChange: {};
+
+  // Data source
+  /**
+   * Fired when the new data is successfully added to the grid
+   * @ignore - do not document.
+   */
+  rowResponseLoaded: {};
 
   // Columns
   /**
