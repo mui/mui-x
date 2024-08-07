@@ -17,7 +17,7 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
       warnOnce([
         'MUI X: The label editing feature requires the `labelEditing` experimental feature to be enabled.',
         'You can do it by passing `experimentalFeatures={{ labelEditing: true}}` to the `RichTreeViewPro` component.',
-        'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/',
+        'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/editing/',
       ]);
     }
   }
