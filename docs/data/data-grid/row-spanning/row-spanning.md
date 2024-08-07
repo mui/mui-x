@@ -1,4 +1,4 @@
-# Data Grid - Row spanning 🚧
+# Data Grid - Row spanning
 
 <p class="description">Span cells across several columns.</p>
 
@@ -7,6 +7,10 @@ Row spanning lets you change this default behavior, so cells can span multiple r
 This is very close to the "row spanning" in an HTML `<table>`.
 
 To enable, pass the `unstable_rowSpanning` prop to the Data Grid.
+
+The Data Grid will automatically merge cells with the same value in a specified column.
+
+Additionally, you could manually provide the value used in row spanning using `colDef.valueGetter` prop.
 
 {{"demo": "RowSpanning.js", "bg": "inline", "defaultCodeOpen": false}}
 
