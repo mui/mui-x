@@ -82,7 +82,6 @@ import {
   useGridDataSource,
   dataSourceStateInitializer,
 } from '../hooks/features/dataSource/useGridDataSource';
-import { useGridDataSourceLazyLoaderPreProcessors } from '../hooks/features/serverSideLazyLoader/useGridDataSourceLazyLoaderPreProcessors';
 import { useGridDataSourceLazyLoader } from '../hooks/features/serverSideLazyLoader/useGridDataSourceLazyLoader';
 
 export const useDataGridProComponent = (
@@ -99,7 +98,6 @@ export const useDataGridProComponent = (
   useGridTreeDataPreProcessors(apiRef, props);
   useGridDataSourceTreeDataPreProcessors(apiRef, props);
   useGridLazyLoaderPreProcessors(apiRef, props);
-  useGridDataSourceLazyLoaderPreProcessors(apiRef, props);
   useGridRowPinningPreProcessors(apiRef);
   useGridDetailPanelPreProcessors(apiRef, props);
   // The column pinning `hydrateColumns` pre-processor must be after every other `hydrateColumns` pre-processors
