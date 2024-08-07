@@ -3,7 +3,7 @@ import { GridEventListener } from '../../../models/events';
 import { GridColDef } from '../../../models/colDef';
 import { GridRowId } from '../../../models/gridRows';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { gridFilteredSortedRowIdsSelector } from '../filter/gridFilterSelector';
@@ -23,6 +23,19 @@ export const rowSpanningStateInitializer: GridStateInitializer = (state) => {
   };
 };
 
+const getCellValue = (
+  rowId: GridRowId,
+  colDef: GridColDef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+) => {
+  const row = apiRef.current.getRow(rowId);
+  let cellValue = row?.[colDef.field];
+  if (colDef.valueGetter) {
+    cellValue = colDef.valueGetter(cellValue as never, row, colDef, apiRef);
+  }
+  return cellValue;
+};
+
 export const useGridRowSpanning = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'unstable_rowSpanning'>,
@@ -35,25 +48,23 @@ export const useGridRowSpanning = (
     }
     const spannedCells: Record<GridRowId, Record<GridColDef['field'], number>> = {};
     const hiddenCells: Record<GridRowId, Record<GridColDef['field'], boolean>> = {};
-    // only span `string` columns for POC
     const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef);
     const colDefs = gridColumnDefinitionsSelector(apiRef);
     colDefs.forEach((colDef) => {
-      if (colDef.type !== 'string') {
-        return;
-      }
       // TODO Perf: Process rendered rows first and lazily process the rest
       filteredSortedRowIds.forEach((rowId, index) => {
-        const cellValue = apiRef.current.getRow(rowId)[colDef.field];
-        if (cellValue === undefined || hiddenCells[rowId]?.[colDef.field]) {
+        if (hiddenCells[rowId]?.[colDef.field]) {
+          return;
+        }
+        const cellValue = getCellValue(rowId, colDef, apiRef);
+
+        if (cellValue == null) {
           return;
         }
         // for each valid cell value, check if subsequent rows have the same value
         let relativeIndex = index + 1;
         let rowSpan = 0;
-        while (
-          apiRef.current.getRow(filteredSortedRowIds[relativeIndex])?.[colDef.field] === cellValue
-        ) {
+        while (getCellValue( filteredSortedRowIds[relativeIndex], colDef, apiRef) === cellValue) {
           if (hiddenCells[filteredSortedRowIds[relativeIndex]]) {
             hiddenCells[filteredSortedRowIds[relativeIndex]][colDef.field] = true;
           } else {
