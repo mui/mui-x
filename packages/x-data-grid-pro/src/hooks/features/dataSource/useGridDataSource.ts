@@ -99,7 +99,7 @@ export const useGridDataSource = (
         ...apiRef.current.unstable_applyPipeProcessors('getRowsParams', {}),
         ...rowFetchSlice.current,
       };
-
+      const startingIndex = fetchParams.start;
       const cachedData = apiRef.current.unstable_dataSource.cache.get(fetchParams);
 
       if (cachedData !== undefined) {
@@ -108,10 +108,11 @@ export const useGridDataSource = (
           apiRef.current.setRowCount(cachedData.rowCount);
         }
         if (isLazyLoaded) {
-          apiRef.current.unstable_replaceRows(fetchParams.start, rows);
+          apiRef.current.unstable_replaceRows(startingIndex, rows);
         } else {
           apiRef.current.setRows(rows);
         }
+        apiRef.current.publishEvent('rowsFetched');
         return;
       }
 
@@ -129,12 +130,12 @@ export const useGridDataSource = (
           apiRef.current.setRowCount(getRowsResponse.rowCount);
         }
         if (isLazyLoaded) {
-          apiRef.current.unstable_replaceRows(fetchParams.start, getRowsResponse.rows);
+          apiRef.current.unstable_replaceRows(startingIndex, getRowsResponse.rows);
         } else {
           apiRef.current.setRows(getRowsResponse.rows);
         }
         apiRef.current.setLoading(false);
-        apiRef.current.publishEvent('rowResponseLoaded');
+        apiRef.current.publishEvent('rowsFetched');
       } catch (error) {
         apiRef.current.setRows([]);
         apiRef.current.setLoading(false);
