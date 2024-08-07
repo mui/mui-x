@@ -17,7 +17,7 @@ export default function CommunityOrPro() {
           alignItems={{ md: 'flex-end', xs: 'space-between' }}
           justifyContent={{ md: 'space-between', xs: 'flex-end' }}
           flexGrow={1}
-          sx={{ width: '100%' }}
+          sx={{ maxWidth: { xs: '500px', md: '100%' } }}
         >
           <Stack flexBasis={{ xs: '100%', md: '65%' }} sx={{ marginBottom: { xs: '16px', md: 0 } }}>
             <Typography variant="body2" color="primary" fontWeight="semiBold">
@@ -50,7 +50,7 @@ export default function CommunityOrPro() {
         <Stack
           spacing={2}
           direction={{ xs: 'column', md: 'row' }}
-          sx={{ width: '100%', paddingTop: 2 }}
+          sx={{ paddingTop: 2, maxWidth: { xs: '500px', md: '100%' } }}
         >
           <Box sx={{ flexBasis: '50%' }}>
             <InfoCard

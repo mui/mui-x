@@ -342,7 +342,13 @@ export default function Internationalization() {
     <React.Fragment>
       <Divider />
       <Stack direction={{ xs: 'column', md: 'row' }} spacing={6} py={8} alignItems="center">
-        <Stack spacing={2} sx={{ maxWidth: '400px' }} flexShrink={1}>
+        <Stack
+          spacing={2}
+          sx={{
+            minWidth: '260px',
+            maxWidth: { xs: '500px', md: '400px' },
+          }}
+        >
           <SectionHeadline
             overline="Internationalization"
             title={
@@ -366,7 +372,8 @@ export default function Internationalization() {
           justifyContent="center"
           alignItems="center"
           sx={{
-            minWidth: { xs: '100%', md: '450px', lg: '560px' },
+            width: { xs: '100%' },
+            maxWidth: { xs: '500px', md: '100%' },
             minHeight: { xs: 0, md: '526px' },
           }}
         >

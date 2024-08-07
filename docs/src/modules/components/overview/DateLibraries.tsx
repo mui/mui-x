@@ -49,8 +49,13 @@ export default function DateLibraries() {
   return (
     <React.Fragment>
       <Divider />
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={6} py={8} alignItems="center">
-        <Stack spacing={2} sx={{ maxWidth: '450px' }}>
+      <Stack
+        direction={{ xs: 'column', md: 'row' }}
+        spacing={{ xs: 2, md: 6 }}
+        py={8}
+        alignItems="center"
+      >
+        <Stack spacing={2} sx={{ minWidth: '300px', maxWidth: { xs: '500px', md: '400px' } }}>
           <SectionHeadline
             overline="Date libraries"
             title={
@@ -61,8 +66,13 @@ export default function DateLibraries() {
             description="MUI X Date Pickers integrate smoothly with the most popular date libraries available."
           />
         </Stack>
-        <Stack>
-          <Stack direction="row" spacing={2} sx={{ minWidth: { xs: 0, sm: '560px' } }}>
+        <Stack
+          alignItems={{ xs: 'flex-start', sm: 'center', md: 'flex-start' }}
+          sx={{
+            width: { xs: '100%' },
+          }}
+        >
+          <Stack direction="row" spacing={2} flexGrow={1}>
             <ToggleButtonGroup
               value={selectedLibrary}
               onChange={handleLibrarySwitch}
@@ -87,7 +97,7 @@ export default function DateLibraries() {
             </Button>
           </Stack>
           <HighlightedCode
-            sx={{ flexGrow: 1, width: '100%' }}
+            sx={{ width: '100%', maxWidth: '600px' }}
             code={[
               `<LocalizationProvider adapter={${dateLibraries[selectedLibrary].adapter}}>`,
               `  <DatePicker defaultValue={${dateLibraries[selectedLibrary].value}} />`,

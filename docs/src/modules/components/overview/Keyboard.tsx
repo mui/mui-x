@@ -454,7 +454,7 @@ export default function Keyboard() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Divider />
       <Stack direction={{ md: 'row', xs: 'column' }} alignItems={'center'} spacing={6} py={8}>
-        <Stack>
+        <Stack sx={{ maxWidth: { xs: '500px', md: '100%' } }}>
           <SectionHeadline
             overline="Accessibility"
             title={
@@ -474,7 +474,7 @@ export default function Keyboard() {
             More info
           </Button>
         </Stack>
-        <Stack spacing={2} sx={{ width: '100%', maxWidth: '450px' }}>
+        <Stack spacing={2} sx={{ width: '100%', maxWidth: '500px' }}>
           <ThemeProvider theme={theme}>
             <DateField
               defaultValue={dayjs('12/12/2023')}

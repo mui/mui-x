@@ -32,8 +32,8 @@ export default function FeatureHighlight() {
   return (
     <React.Fragment>
       <Divider />
-      <Stack spacing={4} py={8}>
-        <Stack spacing={1}>
+      <Stack spacing={4} py={8} alignItems="center">
+        <Stack spacing={1} sx={{ maxWidth: { xs: '500px', md: '100%' } }}>
           <Typography variant="body2" color="primary" fontWeight="semiBold" textAlign="center">
             Using MUI X Date Pickers
           </Typography>
@@ -51,7 +51,11 @@ export default function FeatureHighlight() {
             and users alike.
           </Typography>
         </Stack>
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+        <Stack
+          direction={{ xs: 'column', md: 'row' }}
+          spacing={2}
+          sx={{ maxWidth: { xs: '500px', md: '100%' } }}
+        >
           {featuredItems.map(({ title, description, icon }, index) => (
             <InfoCard
               title={title}
