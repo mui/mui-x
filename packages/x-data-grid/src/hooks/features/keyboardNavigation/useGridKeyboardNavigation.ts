@@ -7,14 +7,17 @@ import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSele
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
+import {
+  gridExpandedSortedRowEntriesSelector,
+  gridFilteredSortedRowIdsSelector,
+} from '../filter/gridFilterSelector';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
 import { gridClasses } from '../../../constants/gridClasses';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
-import { GridRowEntry, GridRowId } from '../../../models';
+import { GridColDef, GridRowEntry, GridRowId } from '../../../models';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { gridFocusColumnGroupHeaderSelector } from '../focus';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
@@ -24,6 +27,8 @@ import {
 } from '../headerFiltering/gridHeaderFilteringSelectors';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { isEventTargetInPortal } from '../../../utils/domUtils';
+import { useGridSelector } from '../../utils/useGridSelector';
+import { gridRowSpanningHiddenCellsSelector } from '../rows/gridRowSpanningSelectors';
 
 function enrichPageRowsWithPinnedRows(
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -105,6 +110,9 @@ export const useGridKeyboardNavigation = (
   const initialCurrentPageRows = useGridVisibleRows(apiRef, props).rows;
   const theme = useTheme();
 
+  const rowSpanHiddenCells = useGridSelector(apiRef, gridRowSpanningHiddenCellsSelector);
+  const filteredSortedRowIds = useGridSelector(apiRef, gridFilteredSortedRowIdsSelector);
+
   const currentPageRows = React.useMemo(
     () => enrichPageRowsWithPinnedRows(apiRef, initialCurrentPageRows),
     [apiRef, initialCurrentPageRows],
@@ -114,7 +122,7 @@ export const useGridKeyboardNavigation = (
 
   /**
    * @param {number} colIndex Index of the column to focus
-   * @param {number} rowIndex index of the row to focus
+   * @param {GridRowId} rowId index of the row to focus
    * @param {string} closestColumnToUse Which closest column cell to use when the cell is spanned by `colSpan`.
    * TODO replace with apiRef.current.moveFocusToRelativeCell()
    */
@@ -508,6 +516,25 @@ export const useGridKeyboardNavigation = (
     [apiRef, currentPageRows.length, goToHeader, goToGroupHeader, goToCell, getRowIdFromIndex],
   );
 
+  const findNonRowSpannedCell = React.useCallback(
+    (rowId: GridRowId, field: GridColDef['field'], direction: 'up' | 'down') => {
+      if (!rowSpanHiddenCells[rowId]?.[field]) {
+        return rowId;
+      }
+      // find closest non row spanned cell in the given `direction`
+      let nextRowIndex = filteredSortedRowIds.indexOf(rowId) + (direction === 'down' ? 1 : -1);
+      while (nextRowIndex >= 0 && nextRowIndex < filteredSortedRowIds.length) {
+        const nextRowId = filteredSortedRowIds[nextRowIndex];
+        if (!rowSpanHiddenCells[nextRowId]?.[field]) {
+          return nextRowId;
+        }
+        nextRowIndex += direction === 'down' ? 1 : -1;
+      }
+      return rowId;
+    },
+    [filteredSortedRowIds, rowSpanHiddenCells],
+  );
+
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       // Ignore portal
@@ -552,14 +579,24 @@ export const useGridKeyboardNavigation = (
         case 'ArrowDown': {
           // "Enter" is only triggered by the row / cell editing feature
           if (rowIndexBefore < lastRowIndexInPage) {
-            goToCell(colIndexBefore, getRowIdFromIndex(rowIndexBefore + 1));
+            const rowId = findNonRowSpannedCell(
+              getRowIdFromIndex(rowIndexBefore + 1),
+              (params as GridCellParams).field,
+              'down',
+            );
+            goToCell(colIndexBefore, rowId);
           }
           break;
         }
 
         case 'ArrowUp': {
           if (rowIndexBefore > firstRowIndexInPage) {
-            goToCell(colIndexBefore, getRowIdFromIndex(rowIndexBefore - 1));
+            const rowId = findNonRowSpannedCell(
+              getRowIdFromIndex(rowIndexBefore - 1),
+              (params as GridCellParams).field,
+              'up',
+            );
+            goToCell(colIndexBefore, rowId);
           } else if (headerFilteringEnabled) {
             goToHeaderFilter(colIndexBefore, event);
           } else {
@@ -576,11 +613,13 @@ export const useGridKeyboardNavigation = (
             direction,
           });
           if (rightColIndex !== null) {
-            goToCell(
-              rightColIndex,
+            const rightColField = apiRef.current.getVisibleColumns()[rightColIndex].field;
+            const rowId = findNonRowSpannedCell(
               getRowIdFromIndex(rowIndexBefore),
-              direction === 'rtl' ? 'left' : 'right',
+              rightColField,
+              'up',
             );
+            goToCell(rightColIndex, rowId, direction === 'rtl' ? 'left' : 'right');
           }
           break;
         }
@@ -593,11 +632,13 @@ export const useGridKeyboardNavigation = (
             direction,
           });
           if (leftColIndex !== null) {
-            goToCell(
-              leftColIndex,
+            const leftColField = apiRef.current.getVisibleColumns()[leftColIndex].field;
+            const rowId = findNonRowSpannedCell(
               getRowIdFromIndex(rowIndexBefore),
-              direction === 'rtl' ? 'right' : 'left',
+              leftColField,
+              'up',
             );
+            goToCell(leftColIndex, rowId, direction === 'rtl' ? 'right' : 'left');
           }
           break;
         }
@@ -686,8 +727,9 @@ export const useGridKeyboardNavigation = (
       apiRef,
       currentPageRows,
       theme.direction,
-      goToCell,
+      findNonRowSpannedCell,
       getRowIdFromIndex,
+      goToCell,
       headerFilteringEnabled,
       goToHeaderFilter,
       goToHeader,
