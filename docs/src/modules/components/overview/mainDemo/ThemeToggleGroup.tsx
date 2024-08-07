@@ -49,13 +49,12 @@ export default function ThemeToggleGroup({
         exclusive
         size="small"
       >
-        <ToggleButton value aria-label="custom-theme" title="Custom theme" sx={{ flexGrow: 1 }}>
+        <ToggleButton value title="Custom theme" sx={{ flexGrow: 1 }}>
           <AutoFixHighIcon />
           {isMobile && 'Custom Theme'}
         </ToggleButton>
         <ToggleButton
           value={false}
-          aria-label="default-theme"
           title="Default theme"
           sx={{ flexGrow: 1 }}
         >
