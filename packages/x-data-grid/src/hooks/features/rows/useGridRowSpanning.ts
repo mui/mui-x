@@ -30,8 +30,9 @@ const getCellValue = (
 ) => {
   const row = apiRef.current.getRow(rowId);
   let cellValue = row?.[colDef.field];
-  if (colDef.valueGetter) {
-    cellValue = colDef.valueGetter(cellValue as never, row, colDef, apiRef);
+  const valueGetter = colDef.rowSpanValueGetter ?? colDef.valueGetter;
+  if (valueGetter) {
+    cellValue = valueGetter(cellValue as never, row, colDef, apiRef);
   }
   return cellValue;
 };
@@ -64,7 +65,7 @@ export const useGridRowSpanning = (
         // for each valid cell value, check if subsequent rows have the same value
         let relativeIndex = index + 1;
         let rowSpan = 0;
-        while (getCellValue( filteredSortedRowIds[relativeIndex], colDef, apiRef) === cellValue) {
+        while (getCellValue(filteredSortedRowIds[relativeIndex], colDef, apiRef) === cellValue) {
           if (hiddenCells[filteredSortedRowIds[relativeIndex]]) {
             hiddenCells[filteredSortedRowIds[relativeIndex]][colDef.field] = true;
           } else {

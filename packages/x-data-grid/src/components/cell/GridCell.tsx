@@ -483,9 +483,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
               ...style,
               height: `calc(var(--height) * ${rowSpan})`,
               zIndex: 5,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
             }
       }
       title={title}
