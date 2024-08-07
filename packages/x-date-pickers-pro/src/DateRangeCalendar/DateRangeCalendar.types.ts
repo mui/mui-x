@@ -18,8 +18,6 @@ import {
   PickersArrowSwitcherSlotProps,
   DayCalendarProps,
   ExportedUseViewsOptions,
-  MonthValidationProps,
-  YearValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { DayRangeValidationProps } from '../internals/models/dateRange';
 import { DateRange, RangePosition } from '../models';
@@ -109,8 +107,6 @@ export interface DateRangeCalendarProps<TDate extends PickerValidDate>
   extends ExportedDateRangeCalendarProps<TDate>,
     UseRangePositionProps,
     DayRangeValidationProps<TDate>,
-    MonthValidationProps<TDate>,
-    YearValidationProps<TDate>,
     ExportedUseViewsOptions<'day'> {
   /**
    * The selected value.
