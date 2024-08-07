@@ -8,11 +8,13 @@ import {
   GRID_ROOT_GROUP_ID,
   GridGroupNode,
   GridSkeletonRowNode,
+  gridPaginationModelSelector,
 } from '@mui/x-data-grid';
 import {
   getVisibleRows,
   GridGetRowsParams,
   gridRenderContextSelector,
+  throttle,
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -41,6 +43,7 @@ export const useGridDataSourceLazyLoader = (
 ): void => {
   const sortModel = useGridSelector(privateApiRef, gridSortModelSelector);
   const filterModel = useGridSelector(privateApiRef, gridFilterModelSelector);
+  const paginationModel = useGridSelector(privateApiRef, gridPaginationModelSelector);
   const renderedRowsIntervalCache = React.useRef(INTERVAL_CACHE_INITIAL_STATE);
   const isDisabled = !props.unstable_dataSource || props.lazyLoading !== true;
 
@@ -94,7 +97,7 @@ export const useGridDataSourceLazyLoader = (
         return;
       }
 
-      const fetchRowsParams: GridGetRowsParams = {
+      const getRowsParams: GridGetRowsParams = {
         start: params.firstRowIndex,
         end: params.lastRowIndex,
         sortModel,
@@ -131,12 +134,17 @@ export const useGridDataSourceLazyLoader = (
         return;
       }
 
-      fetchRowsParams.start = skeletonRowsSection.firstRowIndex;
-      fetchRowsParams.end = skeletonRowsSection.lastRowIndex;
+      getRowsParams.start = skeletonRowsSection.firstRowIndex;
+      getRowsParams.end = skeletonRowsSection.lastRowIndex;
 
-      privateApiRef.current.publishEvent('getRows', fetchRowsParams);
+      privateApiRef.current.publishEvent('getRows', getRowsParams);
     },
     [privateApiRef, isDisabled, props.pagination, props.paginationMode, sortModel, filterModel],
+  );
+
+  const throttledHandleRenderedRowsIntervalChange = React.useMemo(
+    () => throttle(handleRenderedRowsIntervalChange, 300), // TODO: make it configurable
+    [handleRenderedRowsIntervalChange],
   );
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
@@ -146,19 +154,22 @@ export const useGridDataSourceLazyLoader = (
       }
 
       const renderContext = gridRenderContextSelector(privateApiRef);
+      // replace all rows with skeletons to maintain the same scroll position
       privateApiRef.current.setRows([]);
+      addSkeletonRows();
+
       renderedRowsIntervalCache.current = INTERVAL_CACHE_INITIAL_STATE;
 
-      const fetchRowsParams: GridGetRowsParams = {
+      const getRowsParams: GridGetRowsParams = {
         start: renderContext.firstRowIndex,
         end: renderContext.lastRowIndex,
         sortModel: newSortModel,
         filterModel,
       };
 
-      privateApiRef.current.publishEvent('getRows', fetchRowsParams);
+      privateApiRef.current.publishEvent('getRows', getRowsParams);
     },
-    [privateApiRef, isDisabled, filterModel],
+    [privateApiRef, isDisabled, filterModel, addSkeletonRows],
   );
 
   const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
@@ -170,23 +181,23 @@ export const useGridDataSourceLazyLoader = (
       privateApiRef.current.setRows([]);
       renderedRowsIntervalCache.current = INTERVAL_CACHE_INITIAL_STATE;
 
-      const fetchRowsParams: GridGetRowsParams = {
+      const getRowsParams: GridGetRowsParams = {
         start: 0,
-        end: privateApiRef.current.state.pagination.paginationModel.pageSize,
+        end: paginationModel.pageSize,
         sortModel,
         filterModel: newFilterModel,
       };
 
-      privateApiRef.current.publishEvent('getRows', fetchRowsParams);
+      privateApiRef.current.publishEvent('getRows', getRowsParams);
     },
-    [privateApiRef, isDisabled, sortModel],
+    [privateApiRef, isDisabled, sortModel, paginationModel.pageSize],
   );
 
-  useGridApiEventHandler(privateApiRef, 'rowResponseLoaded', addSkeletonRows);
+  useGridApiEventHandler(privateApiRef, 'rowsFetched', addSkeletonRows);
   useGridApiEventHandler(
     privateApiRef,
     'renderedRowsIntervalChange',
-    handleRenderedRowsIntervalChange,
+    throttledHandleRenderedRowsIntervalChange,
   );
   useGridApiEventHandler(privateApiRef, 'sortModelChange', handleGridSortModelChange);
   useGridApiEventHandler(privateApiRef, 'filterModelChange', handleGridFilterModelChange);
