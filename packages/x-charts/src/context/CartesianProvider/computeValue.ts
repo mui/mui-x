@@ -9,7 +9,6 @@ import {
   AxisId,
 } from '../../models/axis';
 import { CartesianChartSeriesType, DatasetType } from '../../models/seriesType/config';
-import { DefaultizedAxisConfig } from './CartesianContext';
 import { getColorScale, getOrdinalColorScale } from '../../internals/colorScale';
 import { getTickNumber } from '../../hooks/useTicks';
 import { getScale } from '../../internals/getScale';
@@ -18,6 +17,7 @@ import { FormattedSeries } from '../SeriesProvider';
 import { normalizeAxis } from './normalizeAxis';
 import { applyZoomFilter, zoomScaleRange } from './zoom';
 import { ExtremumGetter } from '../PluginProvider';
+import { DefaultizedAxisConfig } from './Cartesian.types';
 
 const getRange = (drawingArea: DrawingArea, axisDirection: 'x' | 'y', isReverse?: boolean) => {
   const range =
