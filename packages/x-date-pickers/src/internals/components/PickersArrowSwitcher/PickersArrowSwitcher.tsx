@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
 import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { useSlotProps } from '@mui/base/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import useSlotProps from '@mui/utils/useSlotProps';
 import IconButton from '@mui/material/IconButton';
 import { ArrowLeftIcon, ArrowRightIcon } from '../../../icons';
 import {

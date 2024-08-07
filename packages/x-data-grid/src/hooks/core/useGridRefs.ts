@@ -7,6 +7,7 @@ export const useGridRefs = <PrivateApi extends GridPrivateApiCommon>(
   const rootElementRef = React.useRef<HTMLDivElement>(null);
   const mainElementRef = React.useRef<HTMLDivElement>(null);
   const virtualScrollerRef = React.useRef<HTMLDivElement>(null);
+  const columnHeadersContainerRef = React.useRef<HTMLDivElement>(null);
 
   apiRef.current.register('public', {
     rootElementRef,
@@ -15,5 +16,6 @@ export const useGridRefs = <PrivateApi extends GridPrivateApiCommon>(
   apiRef.current.register('private', {
     mainElementRef,
     virtualScrollerRef,
+    columnHeadersContainerRef,
   });
 };

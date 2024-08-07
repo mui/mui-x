@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Delaunay } from 'd3-delaunay';
+import { Delaunay } from '@mui/x-charts-vendor/d3-delaunay';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { InteractionContext } from '../context/InteractionProvider';
 import { useCartesianContext } from '../context/CartesianProvider';
@@ -63,10 +63,10 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
     voronoiRef.current = {};
     let points: number[] = [];
     seriesOrder.forEach((seriesId) => {
-      const { data, xAxisKey, yAxisKey } = series[seriesId];
+      const { data, xAxisId, yAxisId, xAxisKey, yAxisKey } = series[seriesId];
 
-      const xScale = xAxis[xAxisKey ?? defaultXAxisId].scale;
-      const yScale = yAxis[yAxisKey ?? defaultYAxisId].scale;
+      const xScale = xAxis[xAxisId ?? xAxisKey ?? defaultXAxisId].scale;
+      const yScale = yAxis[yAxisId ?? yAxisKey ?? defaultYAxisId].scale;
 
       const getXPosition = getValueToPositionMapper(xScale);
       const getYPosition = getValueToPositionMapper(yScale);

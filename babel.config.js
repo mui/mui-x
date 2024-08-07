@@ -16,6 +16,7 @@ const defaultAlias = {
   '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
   '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),
   '@mui/x-charts-pro': resolveAliasPath('./packages/x-charts-pro/src'),
+  '@mui/x-charts-vendor': resolveAliasPath('./packages/x-charts-vendor'),
   '@mui/x-tree-view': resolveAliasPath('./packages/x-tree-view/src'),
   '@mui/x-tree-view-pro': resolveAliasPath('./packages/x-tree-view-pro/src'),
   '@mui/x-internals': resolveAliasPath('./packages/x-internals/src'),

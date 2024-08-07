@@ -5,7 +5,7 @@ import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/i
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { useThemeProps } from '@mui/material/styles';
 import { refType } from '@mui/utils';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { SingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
@@ -213,6 +213,7 @@ SingleInputDateTimeRangeField.propTypes = {
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
@@ -226,6 +227,7 @@ SingleInputDateTimeRangeField.propTypes = {
   maxTime: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**
