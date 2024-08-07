@@ -74,6 +74,7 @@ export {
 export { useGridEditing, editingStateInitializer } from '../hooks/features/editing/useGridEditing';
 export { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
 export { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
+export { useGridRowSpanning, rowSpanningStateInitializer } from '../hooks/features/rows/useGridRowSpanning';
 export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 export type {
   GridRowTreeCreationParams,
