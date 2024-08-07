@@ -176,7 +176,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     minDate,
     maxDate,
     shouldDisableDate,
-    shouldDisableMonth,
     reduceAnimations,
     onMonthChange,
     rangePosition: rangePositionProp,
@@ -438,7 +437,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
   const applyBoundaries = (contiguousRangeBoundary, defaultBoundary) => {
     const [start, end] = value;
 
-    if (disableNonContiguousRanges) {
+    if (disableNonContiguousRanges && contiguousRangeBoundary) {
       if ((start && !end) || (!start && end)) {
         return contiguousRangeBoundary;
       }
