@@ -20,17 +20,9 @@ const axisExtremumCallback = <T extends CartesianChartSeriesType>(
     axis,
     isDefaultAxis,
     filter: filter !== undefined ? (v: any, i: number) => filter(i) : undefined,
-  }) ?? [null, null];
+  }) ?? [Infinity, -Infinity];
 
   const [minData, maxData] = acc;
-
-  if (minData === null || maxData === null) {
-    return [minChartTypeData!, maxChartTypeData!];
-  }
-
-  if (minChartTypeData === null || maxChartTypeData === null) {
-    return [minData, maxData];
-  }
 
   return [Math.min(minChartTypeData, minData), Math.max(maxChartTypeData, maxData)];
 };
@@ -44,9 +36,15 @@ export const getAxisExtremum = (
 ) => {
   const charTypes = Object.keys(getters) as CartesianChartSeriesType[];
 
-  return charTypes.reduce<ExtremumGetterResult>(
+  const extremums = charTypes.reduce<ExtremumGetterResult>(
     (acc, charType) =>
       axisExtremumCallback(acc, charType, axis, getters, isDefaultAxis, formattedSeries, filter),
     [Infinity, -Infinity],
   );
+
+  if (Number.isNaN(extremums[0]) || Number.isNaN(extremums[1])) {
+    return [Infinity, -Infinity];
+  }
+
+  return extremums;
 };

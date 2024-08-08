@@ -7,12 +7,6 @@ const mergeMinMax = (
   acc: ExtremumGetterResult,
   val: ExtremumGetterResult,
 ): ExtremumGetterResult => {
-  if (acc[0] === null || acc[1] === null) {
-    return val;
-  }
-  if (val[0] === null || val[1] === null) {
-    return acc;
-  }
   return [Math.min(acc[0], val[0]), Math.max(acc[1], val[1])];
 };
 
