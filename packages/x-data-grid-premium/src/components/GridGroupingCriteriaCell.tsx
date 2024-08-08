@@ -75,13 +75,16 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   return (
     <Box
       className={classes.root}
-      sx={{
-        ml:
-          rootProps.rowGroupingColumnMode === 'multiple'
-            ? 0
-            : (theme) =>
+      sx={[
+        rootProps.rowGroupingColumnMode === 'multiple'
+          ? {
+              ml: 0,
+            }
+          : {
+              ml: (theme) =>
                 `calc(var(--DataGrid-cellOffsetMultiplier) * ${theme.spacing(rowNode.depth)})`,
-      }}
+            },
+      ]}
     >
       <div className={classes.toggle}>
         {filteredDescendantCount > 0 && (
