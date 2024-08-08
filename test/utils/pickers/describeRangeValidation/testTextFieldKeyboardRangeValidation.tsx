@@ -338,5 +338,73 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxTime', 'maxTime']);
       testInvalidStatus([true, true], isSingleInput);
     });
+
+    it('should accept non contiguous ranges by default', () => {
+      if (!withDate || withTime) {
+        return;
+      }
+
+      const onErrorMock = spy();
+      const shouldDisableDate = (date) =>
+        adapterToUse.isEqual(date, adapterToUse.date('2018-03-20'));
+
+      render(
+        <ElementToTest
+          enableAccessibleFieldDOMStructure
+          onError={onErrorMock}
+          shouldDisableDate={shouldDisableDate}
+        />,
+      );
+
+      expect(onErrorMock.callCount).to.equal(0);
+
+      act(() => {
+        [adapterToUse.date('2018-03-19'), adapterToUse.date('2018-03-21')].forEach(
+          (date, index) => {
+            setValue(date, { setEndDate: index === 1 });
+          },
+        );
+      });
+
+      expect(onErrorMock.callCount).to.equal(0);
+    });
+
+    it('should not accept non contiguous ranges when prop is set to true', () => {
+      if (!withDate || withTime) {
+        return;
+      }
+
+      // console.log(ElementToTest);
+
+      const onErrorMock = spy();
+      const shouldDisableDate = (date) =>
+        adapterToUse.isEqual(date, adapterToUse.date('2018-03-20'));
+
+      render(
+        <ElementToTest
+          enableAccessibleFieldDOMStructure
+          onError={onErrorMock}
+          shouldDisableDate={shouldDisableDate}
+          disableNonContiguousRanges
+        />,
+      );
+
+      expect(onErrorMock.callCount).to.equal(0);
+
+      act(() => {
+        [adapterToUse.date('2018-03-19'), adapterToUse.date('2018-03-21')].forEach(
+          (date, index) => {
+            setValue(date, { setEndDate: index === 1 });
+          },
+        );
+      });
+
+      expect(onErrorMock.callCount).to.equal(1);
+      expect(onErrorMock.lastCall.args[0]).to.deep.equal([
+        'nonContiguousRanges',
+        'nonContiguousRanges',
+      ]);
+      testInvalidStatus([true, true], isSingleInput);
+    });
   });
 };

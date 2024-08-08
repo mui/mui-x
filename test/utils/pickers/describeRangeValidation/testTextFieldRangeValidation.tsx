@@ -666,5 +666,68 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
       testInvalidStatus([false, false], isSingleInput);
     });
+
+    it('should accept non contiguous ranges by default', () => {
+      if (!withDate || withTime) {
+        return;
+      }
+
+      const onErrorMock = spy();
+      const shouldDisableDate = (date) =>
+        adapterToUse.isEqual(date, adapterToUse.date('2018-03-20'));
+
+      const { setProps } = render(
+        <ElementToTest
+          enableAccessibleFieldDOMStructure
+          onError={onErrorMock}
+          shouldDisableDate={shouldDisableDate}
+          value={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-01')]}
+        />,
+      );
+
+      expect(onErrorMock.callCount).to.equal(0);
+      testInvalidStatus([false, false], isSingleInput);
+
+      setProps({
+        value: [adapterToUse.date('2018-03-19'), adapterToUse.date('2018-03-21')],
+      });
+
+      expect(onErrorMock.callCount).to.equal(0);
+      testInvalidStatus([false, false], isSingleInput);
+    });
+
+    it('should not accept non contiguous ranges when prop is set to true', () => {
+      if (!withDate || withTime) {
+        return;
+      }
+
+      const onErrorMock = spy();
+      const shouldDisableDate = (date) =>
+        adapterToUse.isEqual(date, adapterToUse.date('2018-03-20'));
+
+      const { setProps } = render(
+        <ElementToTest
+          enableAccessibleFieldDOMStructure
+          onError={onErrorMock}
+          shouldDisableDate={shouldDisableDate}
+          value={[adapterToUse.date('2018-03-01'), adapterToUse.date('2018-03-01')]}
+          disableNonContiguousRanges
+        />,
+      );
+
+      expect(onErrorMock.callCount).to.equal(0);
+      testInvalidStatus([false, false], isSingleInput);
+
+      setProps({
+        value: [adapterToUse.date('2018-03-19'), adapterToUse.date('2018-03-21')],
+      });
+
+      expect(onErrorMock.callCount).to.equal(1);
+      expect(onErrorMock.lastCall.args[0]).to.deep.equal([
+        'nonContiguousRanges',
+        'nonContiguousRanges',
+      ]);
+      testInvalidStatus([true, true], isSingleInput);
+    });
   });
 };

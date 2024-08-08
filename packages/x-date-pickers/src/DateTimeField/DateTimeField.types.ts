@@ -12,6 +12,7 @@ import { MakeOptional } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,
   BaseTimeValidationProps,
+  DateRangeValidationProps,
   DateTimeValidationProps,
   DayValidationProps,
   MonthValidationProps,
@@ -41,6 +42,7 @@ export interface UseDateTimeFieldProps<
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
     BaseDateValidationProps<TDate>,
+    DateRangeValidationProps,
     TimeValidationProps<TDate>,
     BaseTimeValidationProps,
     DateTimeValidationProps<TDate>,

@@ -28,7 +28,7 @@ export const validateDateRange: Validator<
   if (!!start && !!end && disableNonContiguousRanges && shouldDisableDate) {
     let current = start;
 
-    while (current.isBefore(adapter.utils.addDays(end, 1))) {
+    while (adapter.utils.isBefore(current, adapter.utils.addDays(end, 1))) {
       if (shouldDisableDate(current, 'start')) {
         return ['nonContiguousRanges', 'nonContiguousRanges'];
       }
