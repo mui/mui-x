@@ -56,6 +56,11 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
             // If the value does not exist because of missing data point, or out of range index, we just ignore.
             return true;
           }
+
+          if (axis.scaleType === 'point' || axis.scaleType === 'band') {
+            return dataIndex >= minVal && dataIndex <= maxVal;
+          }
+
           return val >= minVal && val <= maxVal;
         };
       })
@@ -91,6 +96,11 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
             // If the value does not exist because of missing data point, or out of range index, we just ignore.
             return true;
           }
+
+          if (axis.scaleType === 'point' || axis.scaleType === 'band') {
+            return dataIndex >= minVal && dataIndex <= maxVal;
+          }
+
           // Will not work if zooming along y-axis on a line chart because the y-axis has no `data`.
           return val >= minVal && val <= maxVal;
         };
