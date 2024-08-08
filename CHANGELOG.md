@@ -45,7 +45,7 @@ Same changes as in `@mui/x-data-grid-pro@7.12.1`.
 Same changes as in `@mui/x-date-pickers@7.12.1`.
 
 ### Charts
- 
+
 #### `@mui/x-charts@7.12.1`
 
 - [charts] Fix charts vendor publish config (#14073) @JCQuintas
