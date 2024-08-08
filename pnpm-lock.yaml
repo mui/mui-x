@@ -87,11 +87,11 @@ importers:
         specifier: ^5.16.5
         version: 5.16.5(@mui/material@5.16.5(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/internal-markdown':
-        specifier: ^1.0.8
-        version: 1.0.8
+        specifier: ^1.0.9
+        version: 1.0.9
       '@mui/internal-test-utils':
-        specifier: ^1.0.5
-        version: 1.0.5(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^1.0.7
+        version: 1.0.7(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
         specifier: ^5.16.5
         version: 5.16.5(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -355,7 +355,7 @@ importers:
         version: 13.0.0
       rimraf:
         specifier: ^5.0.9
-        version: 5.0.9
+        version: 5.0.10
       serve:
         specifier: ^14.2.3
         version: 14.2.3
@@ -616,7 +616,7 @@ importers:
         version: 0.23.9
       rimraf:
         specifier: ^5.0.9
-        version: 5.0.9
+        version: 5.0.10
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
@@ -640,11 +640,11 @@ importers:
         specifier: ^7.24.7
         version: 7.24.7(@babel/core@7.25.2)
       '@mui/internal-docs-utils':
-        specifier: ^1.0.8
-        version: 1.0.8
+        specifier: ^1.0.9
+        version: 1.0.9
       '@mui/internal-scripts':
-        specifier: ^1.0.13
-        version: 1.0.13
+        specifier: ^1.0.15
+        version: 1.0.15
       '@types/chance':
         specifier: ^1.1.6
         version: 1.1.6
@@ -746,8 +746,8 @@ importers:
         version: 18.3.1(react@18.3.1)
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: ^1.0.5
-        version: 1.0.5(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^1.0.7
+        version: 1.0.7(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@react-spring/core':
         specifier: ^9.7.4
         version: 9.7.4(react@18.3.1)
@@ -762,7 +762,7 @@ importers:
         version: 3.1.3
       rimraf:
         specifier: ^5.0.9
-        version: 5.0.9
+        version: 5.0.10
     publishDirectory: build
 
   packages/x-charts-pro:
@@ -827,7 +827,7 @@ importers:
         version: 3.1.3
       rimraf:
         specifier: ^5.0.9
-        version: 5.0.9
+        version: 5.0.10
     publishDirectory: build
 
   packages/x-charts-vendor:
@@ -913,7 +913,7 @@ importers:
         version: 2.0.3
       rimraf:
         specifier: ^5.0.8
-        version: 5.0.9
+        version: 5.0.10
 
   packages/x-codemod:
     dependencies:
@@ -944,7 +944,7 @@ importers:
         version: 0.5.45
       rimraf:
         specifier: ^5.0.9
-        version: 5.0.9
+        version: 5.0.10
     publishDirectory: build
 
   packages/x-data-grid:
@@ -987,8 +987,8 @@ importers:
         version: 4.1.8
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: ^1.0.5
-        version: 1.0.5(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^1.0.7
+        version: 1.0.7(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/joy':
         specifier: ^5.0.0-beta.48
         version: 5.0.0-beta.48(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1000,7 +1000,7 @@ importers:
         version: 15.7.12
       rimraf:
         specifier: ^5.0.9
-        version: 5.0.9
+        version: 5.0.10
     publishDirectory: build
 
   packages/x-data-grid-generator:
@@ -1041,7 +1041,7 @@ importers:
         version: 1.1.6
       rimraf:
         specifier: ^5.0.9
-        version: 5.0.9
+        version: 5.0.10
     publishDirectory: build
 
   packages/x-data-grid-premium:
@@ -1099,8 +1099,8 @@ importers:
         version: 4.1.8
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: ^1.0.5
-        version: 1.0.5(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^1.0.7
+        version: 1.0.7(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/prop-types':
         specifier: ^15.7.12
         version: 15.7.12
@@ -1109,7 +1109,7 @@ importers:
         version: 2.30.0
       rimraf:
         specifier: ^5.0.9
-        version: 5.0.9
+        version: 5.0.10
     publishDirectory: build
 
   packages/x-data-grid-pro:
@@ -1161,14 +1161,14 @@ importers:
         version: 4.1.8
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: ^1.0.5
-        version: 1.0.5(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^1.0.7
+        version: 1.0.7(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/prop-types':
         specifier: ^15.7.12
         version: 15.7.12
       rimraf:
         specifier: ^5.0.9
-        version: 5.0.9
+        version: 5.0.10
     publishDirectory: build
 
   packages/x-date-pickers:
@@ -1211,8 +1211,8 @@ importers:
         version: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: ^1.0.5
-        version: 1.0.5(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^1.0.7
+        version: 1.0.7(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/luxon':
         specifier: ^3.4.2
         version: 3.4.2
@@ -1251,7 +1251,7 @@ importers:
         version: 0.5.45
       rimraf:
         specifier: ^5.0.9
-        version: 5.0.9
+        version: 5.0.10
     publishDirectory: build
 
   packages/x-date-pickers-pro:
@@ -1303,8 +1303,8 @@ importers:
         version: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: ^1.0.5
-        version: 1.0.5(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^1.0.7
+        version: 1.0.7(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/luxon':
         specifier: ^3.4.2
         version: 3.4.2
@@ -1328,7 +1328,7 @@ importers:
         version: 2.30.1
       rimraf:
         specifier: ^5.0.9
-        version: 5.0.9
+        version: 5.0.10
     publishDirectory: build
 
   packages/x-internals:
@@ -1344,11 +1344,11 @@ importers:
         version: 18.3.1
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: ^1.0.5
-        version: 1.0.5(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^1.0.7
+        version: 1.0.7(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       rimraf:
         specifier: ^5.0.9
-        version: 5.0.9
+        version: 5.0.10
     publishDirectory: build
 
   packages/x-license:
@@ -1364,11 +1364,11 @@ importers:
         version: 18.3.1
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: ^1.0.5
-        version: 1.0.5(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^1.0.7
+        version: 1.0.7(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       rimraf:
         specifier: ^5.0.9
-        version: 5.0.9
+        version: 5.0.10
     publishDirectory: build
 
   packages/x-tree-view:
@@ -1414,14 +1414,14 @@ importers:
         version: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: ^1.0.5
-        version: 1.0.5(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^1.0.7
+        version: 1.0.7(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/prop-types':
         specifier: ^15.7.12
         version: 15.7.12
       rimraf:
         specifier: ^5.0.9
-        version: 5.0.9
+        version: 5.0.10
     publishDirectory: build
 
   packages/x-tree-view-pro:
@@ -1473,14 +1473,14 @@ importers:
         version: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: ^1.0.5
-        version: 1.0.5(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^1.0.7
+        version: 1.0.7(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/prop-types':
         specifier: ^15.7.12
         version: 15.7.12
       rimraf:
         specifier: ^5.0.9
-        version: 5.0.9
+        version: 5.0.10
 
   test:
     devDependencies:
@@ -1591,10 +1591,10 @@ importers:
         version: 6.4.6(vitest@2.0.4(@types/node@18.19.42)(@vitest/browser@2.0.4)(@vitest/ui@2.0.5)(jsdom@24.1.1)(terser@5.27.0))
       '@testing-library/react':
         specifier: ^16.0.0
-        version: 16.0.0(@testing-library/dom@10.3.1)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 16.0.0(@testing-library/dom@10.4.0)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@testing-library/user-event':
         specifier: ^14.5.2
-        version: 14.5.2(@testing-library/dom@10.3.1)
+        version: 14.5.2(@testing-library/dom@10.4.0)
       '@vitejs/plugin-react':
         specifier: ^4.3.1
         version: 4.3.1(vite@5.3.4(@types/node@18.19.42)(terser@5.27.0))
@@ -2981,17 +2981,17 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/internal-docs-utils@1.0.8':
-    resolution: {integrity: sha512-krfqmki6Fjlv3+RAAdcf8wB0sg6KF7s4RdT1X3iXuouCYDiQw/t7TiCUAiF7augBCRfPTiWh/FI8MTH4TRlGiQ==}
+  '@mui/internal-docs-utils@1.0.9':
+    resolution: {integrity: sha512-ml62NikMdZEimDhJGMtyGVilhLjK8AkiruojJ8OCArj8qsw0pUCr1L/2Xo7GLEg4K5EI3/vdITUU0RBKBwDl/g==}
 
-  '@mui/internal-markdown@1.0.8':
-    resolution: {integrity: sha512-OU/ieH8HhRbciy3fR5i8vSU/Z4wlfE+iwEFvrqP578jBeqg7X0gvev/uvv9d+FSgRnvgmWJzCYXEPlzlI3MmFA==}
+  '@mui/internal-markdown@1.0.9':
+    resolution: {integrity: sha512-YbX1+GAOoJ1iiwIDZEgKV8wo4PUabgKoKi/M/WX+BX346J0pHiVjaV1BpjkMw3RM2hy1RpqiVLPVb8McXINTKQ==}
 
-  '@mui/internal-scripts@1.0.13':
-    resolution: {integrity: sha512-3g8kl1UEFK6WxoHfstWMDZCW8DimVgfRDh/j2D0CNaKbupfmfdC5e6Of9KDKXV45ATs5LaYfozAKbxMQK7xyhA==}
+  '@mui/internal-scripts@1.0.15':
+    resolution: {integrity: sha512-sNEUPh5cEuJN20kC0N1kJdSfEw4ZZXuKP1Hsz8QWgKPQtlcmvRS30LGdNzHb9sS8dcFPqhITn+W2GAIxPCjuoA==}
 
-  '@mui/internal-test-utils@1.0.5':
-    resolution: {integrity: sha512-5reErcYMSi+PbcuHigno150UDii4pC9TYfL9sY1YcQUtDhQMdNkByvblQZw3X0K2h5puiBYs/cnj670J1JKztA==}
+  '@mui/internal-test-utils@1.0.7':
+    resolution: {integrity: sha512-KrPhm8QLYui8LCsuzV6VUDrfs6qIsqr96HTohEMUMnIApGdVOW2lxK4DAa6nwdOx0VW813OSgpcllFUW2jiUDw==}
     peerDependencies:
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -3863,8 +3863,8 @@ packages:
   '@tanstack/query-core@5.51.15':
     resolution: {integrity: sha512-xyobHDJ0yhPE3+UkSQ2/4X1fLSg7ICJI5J1JyU9yf7F3deQfEwSImCDrB1WSRrauJkMtXW7YIEcC0oA6ZZWt5A==}
 
-  '@testing-library/dom@10.3.1':
-    resolution: {integrity: sha512-q/WL+vlXMpC0uXDyfsMtc1rmotzLV8Y0gq6q1gfrrDjQeHoeLrqHbxdPvPNAh1i+xuJl7+BezywcXArz7vLqKQ==}
+  '@testing-library/dom@10.4.0':
+    resolution: {integrity: sha512-pemlzrSESWbdAloYml3bAJMEfNh1Z7EduzqPKprCH5S341frlpYnUEW0H72dLxa6IsYr+mPno20GiSm+h9dEdQ==}
     engines: {node: '>=18'}
 
   '@testing-library/jest-dom@6.4.6':
@@ -5591,6 +5591,9 @@ packages:
 
   dom-accessibility-api@0.6.3:
     resolution: {integrity: sha512-7ZgogeTnjuHbo+ct10G9Ffp0mif17idi0IyWNVA/wcwcm7NPOD/WEHVP3n7n3MhXqxoIYm8d6MuZohYWIZ4T3w==}
+
+  dom-accessibility-api@0.7.0:
+    resolution: {integrity: sha512-LjjdFmd9AITAet3Hy6Y6rwB7Sq1+x5NiwbOpnkLHC1bCXJqJKiV9DyppSSWobuSKvjKXt9G2u3hW402MPt6m+g==}
 
   dom-converter@0.2.0:
     resolution: {integrity: sha512-gd3ypIPfOMr9h5jIKq8E3sHOTCjeirnl0WK5ZdS1AW0Odt0b1PaWaHdJ4Qk4klv+YB9aJBS7mESXjFoDQPu6DA==}
@@ -7523,8 +7526,8 @@ packages:
     resolution: {integrity: sha512-qwGyuyKwjkEMOJ10XN6OTKNOVYvOIi35RNvDLNxTof5s8UmyGHlCdpngRHoRGNvQVGuxO3BJ7uNSgdeX166WXw==}
     engines: {node: '>=18'}
 
-  marked@13.0.2:
-    resolution: {integrity: sha512-J6CPjP8pS5sgrRqxVRvkCIkZ6MFdRIjDkwUwgJ9nL2fbmM6qGQeB2C16hi8Cc9BOzj6xXzy0jyi0iPIfnMHYzA==}
+  marked@13.0.3:
+    resolution: {integrity: sha512-rqRix3/TWzE9rIoFGIn8JmsVfhiuC8VIQ8IdX5TfzmeBucdY05/0UlzKaw0eVtpcN/OdVFpBk7CjKGo9iHJ/zA==}
     engines: {node: '>= 18'}
     hasBin: true
 
@@ -8354,8 +8357,8 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
-  playwright-core@1.45.1:
-    resolution: {integrity: sha512-LF4CUUtrUu2TCpDw4mcrAIuYrEjVDfT1cHbJMfwnE2+1b8PZcFzPNgvZCvq2JfQ4aTjRCCHw5EJ2tmr2NSzdPg==}
+  playwright-core@1.46.0:
+    resolution: {integrity: sha512-9Y/d5UIwuJk8t3+lhmMSAJyNP1BUC/DqP3cQJDQQL/oWqAiuPTLgy7Q5dzglmTLwcBRdetzgNM/gni7ckfTr6A==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -8364,8 +8367,8 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
-  playwright@1.45.1:
-    resolution: {integrity: sha512-Hjrgae4kpSQBr98nhCj3IScxVeVUixqj+5oyif8TdIn2opTCPEzqAqNMeK42i3cWDCVu9MI+ZsGWw+gVR4ISBg==}
+  playwright@1.46.0:
+    resolution: {integrity: sha512-XYJ5WvfefWONh1uPAUAi0H2xXV5S3vrtcnXe6uAOgdGi3aSpqOSXX08IAjXW34xitfuOJsvXU5anXZxPSEQiJw==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -8841,9 +8844,8 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
-  rimraf@5.0.9:
-    resolution: {integrity: sha512-3i7b8OcswU6CpU8Ej89quJD4O98id7TtVM5U4Mybh84zQXdrFmDLouWBEEaD/QfO3gDDfH+AGFCGsR7kngzQnA==}
-    engines: {node: 14 >=14.20 || 16 >=16.20 || >=18}
+  rimraf@5.0.10:
+    resolution: {integrity: sha512-l0OE8wL34P4nJH/H2ffoaniAokM2qSmrtXHmlpvYr5AVVX8msAyW0l8NVJFDxlSK4u3Uh/f41cQheDVdnYijwQ==}
     hasBin: true
 
   robust-predicates@3.0.2:
@@ -11765,7 +11767,7 @@ snapshots:
       '@babel/runtime': 7.25.0
       '@mui/base': 5.0.0-beta.40(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/icons-material': 5.16.5(@mui/material@5.16.5(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
-      '@mui/internal-markdown': 1.0.8
+      '@mui/internal-markdown': 1.0.9
       '@mui/material': 5.16.5(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/system': 5.16.5(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       chai: 5.1.1
@@ -11787,26 +11789,26 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.3
 
-  '@mui/internal-docs-utils@1.0.8':
+  '@mui/internal-docs-utils@1.0.9':
     dependencies:
-      rimraf: 5.0.9
+      rimraf: 5.0.10
       typescript: 5.5.4
 
-  '@mui/internal-markdown@1.0.8':
+  '@mui/internal-markdown@1.0.9':
     dependencies:
       '@babel/runtime': 7.25.0
       lodash: 4.17.21
-      marked: 13.0.2
+      marked: 13.0.3
       prismjs: 1.29.0
 
-  '@mui/internal-scripts@1.0.13':
+  '@mui/internal-scripts@1.0.15':
     dependencies:
       '@babel/core': 7.25.2
       '@babel/plugin-syntax-class-properties': 7.12.13(@babel/core@7.25.2)
       '@babel/plugin-syntax-jsx': 7.24.7(@babel/core@7.25.2)
       '@babel/plugin-syntax-typescript': 7.24.7(@babel/core@7.25.2)
       '@babel/types': 7.25.2
-      '@mui/internal-docs-utils': 1.0.8
+      '@mui/internal-docs-utils': 1.0.9
       doctrine: 3.0.0
       lodash: 4.17.21
       typescript: 5.5.4
@@ -11814,7 +11816,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mui/internal-test-utils@1.0.5(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@mui/internal-test-utils@1.0.7(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/plugin-transform-modules-commonjs': 7.24.8(@babel/core@7.25.2)
       '@babel/preset-typescript': 7.24.7(@babel/core@7.25.2)
@@ -11822,18 +11824,18 @@ snapshots:
       '@babel/runtime': 7.25.0
       '@emotion/cache': 11.13.1
       '@emotion/react': 11.13.0(@types/react@18.3.3)(react@18.3.1)
-      '@testing-library/dom': 10.3.1
-      '@testing-library/react': 16.0.0(@testing-library/dom@10.3.1)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@testing-library/user-event': 14.5.2(@testing-library/dom@10.3.1)
+      '@testing-library/dom': 10.4.0
+      '@testing-library/react': 16.0.0(@testing-library/dom@10.4.0)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@testing-library/user-event': 14.5.2(@testing-library/dom@10.4.0)
       chai: 4.5.0
       chai-dom: 1.12.0(chai@4.5.0)
-      dom-accessibility-api: 0.6.3
+      dom-accessibility-api: 0.7.0
       format-util: 1.0.5
       fs-extra: 11.2.0
       jsdom: 24.1.1
       lodash: 4.17.21
       mocha: 10.7.0
-      playwright: 1.45.1
+      playwright: 1.46.0
       prop-types: 15.8.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -12838,7 +12840,7 @@ snapshots:
 
   '@tanstack/query-core@5.51.15': {}
 
-  '@testing-library/dom@10.3.1':
+  '@testing-library/dom@10.4.0':
     dependencies:
       '@babel/code-frame': 7.24.7
       '@babel/runtime': 7.25.0
@@ -12862,19 +12864,19 @@ snapshots:
     optionalDependencies:
       vitest: 2.0.4(@types/node@18.19.42)(@vitest/browser@2.0.4)(@vitest/ui@2.0.5)(jsdom@24.1.1)(terser@5.27.0)
 
-  '@testing-library/react@16.0.0(@testing-library/dom@10.3.1)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@testing-library/react@16.0.0(@testing-library/dom@10.4.0)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.25.0
-      '@testing-library/dom': 10.3.1
+      '@testing-library/dom': 10.4.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
     optionalDependencies:
       '@types/react': 18.3.3
       '@types/react-dom': 18.3.0
 
-  '@testing-library/user-event@14.5.2(@testing-library/dom@10.3.1)':
+  '@testing-library/user-event@14.5.2(@testing-library/dom@10.4.0)':
     dependencies:
-      '@testing-library/dom': 10.3.1
+      '@testing-library/dom': 10.4.0
 
   '@tootallnate/once@2.0.0': {}
 
@@ -13271,8 +13273,8 @@ snapshots:
 
   '@vitest/browser@2.0.4(typescript@5.5.4)(vitest@2.0.4)':
     dependencies:
-      '@testing-library/dom': 10.3.1
-      '@testing-library/user-event': 14.5.2(@testing-library/dom@10.3.1)
+      '@testing-library/dom': 10.4.0
+      '@testing-library/user-event': 14.5.2(@testing-library/dom@10.4.0)
       '@vitest/utils': 2.0.4
       magic-string: 0.30.10
       msw: 2.3.2(typescript@5.5.4)
@@ -14817,6 +14819,8 @@ snapshots:
   dom-accessibility-api@0.5.16: {}
 
   dom-accessibility-api@0.6.3: {}
+
+  dom-accessibility-api@0.7.0: {}
 
   dom-converter@0.2.0:
     dependencies:
@@ -17261,7 +17265,7 @@ snapshots:
       markdown-it: 14.1.0
       markdownlint-micromark: 0.1.9
 
-  marked@13.0.2: {}
+  marked@13.0.3: {}
 
   mdast-util-from-markdown@0.8.5:
     dependencies:
@@ -18219,7 +18223,7 @@ snapshots:
 
   playwright-core@1.44.1: {}
 
-  playwright-core@1.45.1: {}
+  playwright-core@1.46.0: {}
 
   playwright@1.44.1:
     dependencies:
@@ -18227,9 +18231,9 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.2
 
-  playwright@1.45.1:
+  playwright@1.46.0:
     dependencies:
-      playwright-core: 1.45.1
+      playwright-core: 1.46.0
     optionalDependencies:
       fsevents: 2.3.2
 
@@ -18733,7 +18737,7 @@ snapshots:
     dependencies:
       glob: 9.3.5
 
-  rimraf@5.0.9:
+  rimraf@5.0.10:
     dependencies:
       glob: 10.3.10
 

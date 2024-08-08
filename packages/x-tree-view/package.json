@@ -68,7 +68,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.5",
+    "@mui/internal-test-utils": "^1.0.7",
     "@types/prop-types": "^15.7.12",
     "rimraf": "^5.0.9"
   },
