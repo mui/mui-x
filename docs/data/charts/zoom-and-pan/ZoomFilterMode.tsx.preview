@@ -1,0 +1,10 @@
+<BarChartPro
+  xAxis={[
+    {
+      scaleType: 'band',
+      data: axisData,
+      zoom: { filterMode: 'discard' },
+    },
+  ]}
+  {...chartProps}
+/>

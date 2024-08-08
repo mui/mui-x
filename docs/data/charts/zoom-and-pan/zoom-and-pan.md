@@ -55,3 +55,13 @@ While the `zoom` prop is an array of objects that define the zoom state for each
 - **end**: The ending percentage of the zoom range.
 
 {{"demo": "ZoomControlled.js"}}
+
+## Zoom filtering
+
+You can filter the zooming behavior by setting the `zoom.filterMode` prop on the axis config.
+
+It allows the `secondary` axis to adapt to the data in the visible part of the `primary` axis.
+
+The `filterMode` will affect the axis opposite of the one with the filter mode set.
+
+{{"demo": "ZoomFilterMode.js"}}
