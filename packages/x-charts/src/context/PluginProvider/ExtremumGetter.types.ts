@@ -17,7 +17,7 @@ type ExtremumGetterParams<T extends ChartSeriesType> = {
   filter?: (v: number | Date | string, i: number) => boolean;
 };
 
-export type ExtremumGetterResult = [number, number] | [null, null];
+export type ExtremumGetterResult = [number, number];
 
 export type ExtremumGetter<T extends ChartSeriesType> = (
   params: ExtremumGetterParams<T>,

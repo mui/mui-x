@@ -47,6 +47,6 @@ export const getAxisExtremum = (
   return charTypes.reduce<ExtremumGetterResult>(
     (acc, charType) =>
       axisExtremumCallback(acc, charType, axis, getters, isDefaultAxis, formattedSeries, filter),
-    [null, null],
+    [Infinity, -Infinity],
   );
 };
