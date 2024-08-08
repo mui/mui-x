@@ -64,4 +64,9 @@ It allows the `secondary` axis to adapt to the data in the visible part of the `
 
 The `filterMode` will affect the axis opposite of the one with the filter mode set.
 
+- **keep** (default): The secondary axis will keep its original range.
+- **discard**: The secondary axis will discard values outside its view and adapt to the visible part of the primary axis.
+
+See how the secondary axis adapts to the visible part of the primary axis in the following example.
+
 {{"demo": "ZoomFilterMode.js"}}
