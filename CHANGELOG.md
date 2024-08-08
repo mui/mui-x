@@ -9,7 +9,7 @@ _Aug 8, 2024_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎨 Charts get a new component to display color mapping in the legend.
+- 🎨 Charts get a new component to display color mapping in the legend
 - 🚀 The `@mui/x-charts-pro` is released in alpha version 🧪. This new package introduces two main features:
   - The Heatmap component
   - The zoom interaction on the bar, line, and scatter charts
