@@ -5,7 +5,6 @@ export {
   gridQuickFilterValuesSelector,
   gridVisibleRowsLookupSelector,
   gridFilteredRowsLookupSelector,
-  gridFilteredChildrenCountLookupSelector,
   gridFilteredDescendantCountLookupSelector,
   gridExpandedSortedRowEntriesSelector,
   gridExpandedSortedRowIdsSelector,

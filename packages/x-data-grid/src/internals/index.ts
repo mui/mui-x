@@ -56,7 +56,10 @@ export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
 export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
-export { gridExpandedSortedRowTreeLevelPositionLookupSelector } from '../hooks/features/filter/gridFilterSelector';
+export {
+  gridFilteredChildrenCountLookupSelector,
+  gridExpandedSortedRowTreeLevelPositionLookupSelector,
+} from '../hooks/features/filter/gridFilterSelector';
 export { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
 export type {
   GridAggregatedFilterItemApplier,

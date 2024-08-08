@@ -3,11 +3,11 @@ import {
   GridTreeNode,
   useGridSelector,
   gridFilteredTopLevelRowCountSelector,
-  gridFilteredChildrenCountLookupSelector,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid';
 import {
   useGridRowAriaAttributes as useGridRowAriaAttributesCommunity,
+  gridFilteredChildrenCountLookupSelector,
   gridExpandedSortedRowTreeLevelPositionLookupSelector,
 } from '@mui/x-data-grid/internals';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
