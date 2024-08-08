@@ -40,6 +40,7 @@
     "lru-cache": "^10.4.3"
   },
   "devDependencies": {
+    "@mui/material": "next",
     "@types/chance": "^1.1.6",
     "rimraf": "^5.0.9"
   },

@@ -70,6 +70,7 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^1.0.7",
+    "@mui/material": "next",
     "@types/prop-types": "^15.7.12",
     "rimraf": "^5.0.9"
   },
