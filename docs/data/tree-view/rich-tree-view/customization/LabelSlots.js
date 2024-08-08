@@ -1,8 +1,9 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import { TreeItem2, TreeItem2Label } from '@mui/x-tree-view/TreeItem2';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
-import { useTreeItem2Utils } from '@mui/x-tree-view';
+import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
 
 function CustomLabel(props) {
   const { children, onChange, ...other } = props;
@@ -59,14 +60,14 @@ const TreeItemContext = React.createContext({ onLabelValueChange: () => {} });
 
 const CustomTreeItem = React.forwardRef((props, ref) => {
   const { interactions } = useTreeItem2Utils({
-    nodeId: props.nodeId,
+    itemId: props.itemId,
     children: props.children,
   });
 
   const { onLabelValueChange } = React.useContext(TreeItemContext);
 
   const handleLabelValueChange = (newLabel) => {
-    onLabelValueChange(props.nodeId, newLabel);
+    onLabelValueChange(props.itemId, newLabel);
   };
 
   const handleContentClick = (event) => {
@@ -114,19 +115,29 @@ const DEFAULT_MUI_X_PRODUCTS = [
       { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
     ],
   },
+  {
+    id: 'charts',
+    label: 'Charts',
+    children: [{ id: 'charts-community', label: '@mui/x-charts' }],
+  },
+  {
+    id: 'tree-view',
+    label: 'Tree View',
+    children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }],
+  },
 ];
 
-const DEFAULT_EXPANDED_NODES = ['pickers'];
+const DEFAULT_EXPANDED_ITEMS = ['pickers'];
 
 export default function LabelSlots() {
   const [products, setProducts] = React.useState(DEFAULT_MUI_X_PRODUCTS);
 
   const context = React.useMemo(
     () => ({
-      onLabelValueChange: (nodeId, label) =>
+      onLabelValueChange: (itemId, label) =>
         setProducts((prev) => {
           const walkTree = (item) => {
-            if (item.id === nodeId) {
+            if (item.id === itemId) {
               return { ...item, label };
             }
             if (item.children) {
@@ -143,14 +154,15 @@ export default function LabelSlots() {
   );
 
   return (
-    <TreeItemContext.Provider value={context}>
-      <RichTreeView
-        items={products}
-        aria-label="customized"
-        defaultExpandedNodes={DEFAULT_EXPANDED_NODES}
-        sx={{ overflowX: 'hidden', minHeight: 224, flexGrow: 1, maxWidth: 300 }}
-        slots={{ item: CustomTreeItem }}
-      />
-    </TreeItemContext.Provider>
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
+      <TreeItemContext.Provider value={context}>
+        <RichTreeView
+          items={products}
+          aria-label="customized"
+          defaultExpandedItems={DEFAULT_EXPANDED_ITEMS}
+          slots={{ item: CustomTreeItem }}
+        />
+      </TreeItemContext.Provider>
+    </Box>
   );
 }

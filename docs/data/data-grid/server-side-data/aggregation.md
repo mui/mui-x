@@ -4,7 +4,7 @@ title: React Server-side row grouping
 
 # Data Grid - Server-side aggregation [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🚧
 
-<p class="description">Aggregation with server side data source.</p>
+<p class="description">Aggregation with server-side data source.</p>
 
 :::warning
 This feature isn't implemented yet. It's coming.

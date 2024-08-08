@@ -1,0 +1,16 @@
+<Box sx={{ minHeight: 352, minWidth: 250 }}>
+  <TreeView
+    items={MUI_X_PRODUCTS}
+    areLogsEnabled
+    logMessage={(message) =>
+      setLogs((prev) =>
+        prev[prev.length - 1] === message ? prev : [...prev, message],
+      )
+    }
+  />
+</Box>
+<Stack spacing={1}>
+  {logs.map((log, index) => (
+    <Typography key={index}>{log}</Typography>
+  ))}
+</Stack>

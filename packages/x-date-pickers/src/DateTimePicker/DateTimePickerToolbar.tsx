@@ -1,12 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, useThemeProps, useTheme, Theme } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
+import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import {
   dateTimePickerToolbarClasses,
@@ -19,7 +21,7 @@ import { MULTI_SECTION_CLOCK_SECTION_WIDTH } from '../internals/constants/dimens
 import { formatMeridiem } from '../internals/utils/date-utils';
 import { MakeOptional } from '../internals/models/helpers';
 import { pickersToolbarTextClasses } from '../internals/components/pickersToolbarTextClasses';
-import { pickersToolbarClasses } from '../internals';
+import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { PickerValidDate } from '../models';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
@@ -41,13 +43,19 @@ export interface DateTimePickerToolbarProps<TDate extends PickerValidDate>
   ampmInClock?: boolean;
 }
 
-const useUtilityClasses = (ownerState: DateTimePickerToolbarProps<any> & { theme: Theme }) => {
-  const { classes, theme, isLandscape } = ownerState;
+interface DateTimePickerToolbarOwnerState<TDate extends PickerValidDate>
+  extends DateTimePickerToolbarProps<TDate> {
+  isRtl: boolean;
+}
+
+const useUtilityClasses = (ownerState: DateTimePickerToolbarOwnerState<any>) => {
+  const { classes, isLandscape, isRtl } = ownerState;
+
   const slots = {
     root: ['root'],
     dateContainer: ['dateContainer'],
-    timeContainer: ['timeContainer', theme.direction === 'rtl' && 'timeLabelReverse'],
-    timeDigitsContainer: ['timeDigitsContainer', theme.direction === 'rtl' && 'timeLabelReverse'],
+    timeContainer: ['timeContainer', isRtl && 'timeLabelReverse'],
+    timeDigitsContainer: ['timeDigitsContainer', isRtl && 'timeLabelReverse'],
     separator: ['separator'],
     ampmSelection: ['ampmSelection', isLandscape && 'ampmLandscape'],
     ampmLabel: ['ampmLabel'],
@@ -60,54 +68,43 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDateTimePickerToolbar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme, ownerState }) => ({
-  paddingLeft: ownerState.toolbarVariant === 'desktop' && !ownerState.isLandscape ? 24 : 16,
-  paddingRight: ownerState.toolbarVariant === 'desktop' && !ownerState.isLandscape ? 0 : 16,
-  borderBottom:
-    ownerState.toolbarVariant === 'desktop'
-      ? `1px solid ${(theme.vars || theme).palette.divider}`
-      : undefined,
-  borderRight:
-    ownerState.toolbarVariant === 'desktop' && ownerState.isLandscape
-      ? `1px solid ${(theme.vars || theme).palette.divider}`
-      : undefined,
+})<{ ownerState: DateTimePickerToolbarOwnerState<any> }>(({ theme }) => ({
+  paddingLeft: 16,
+  paddingRight: 16,
   justifyContent: 'space-around',
   position: 'relative',
-  ...(ownerState.toolbarVariant === 'desktop' && {
-    [`& .${pickersToolbarClasses.content} .${pickersToolbarTextClasses.selected}`]: {
-      color: (theme.vars || theme).palette.primary.main,
-      fontWeight: theme.typography.fontWeightBold,
+  variants: [
+    {
+      props: { toolbarVariant: 'desktop' },
+      style: {
+        borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+        [`& .${pickersToolbarClasses.content} .${pickersToolbarTextClasses.selected}`]: {
+          color: (theme.vars || theme).palette.primary.main,
+          fontWeight: theme.typography.fontWeightBold,
+        },
+      },
     },
-  }),
+    {
+      props: { toolbarVariant: 'desktop', isLandscape: true },
+      style: {
+        borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+      },
+    },
+    {
+      props: { toolbarVariant: 'desktop', isLandscape: false },
+      style: {
+        paddingLeft: 24,
+        paddingRight: 0,
+      },
+    },
+  ],
 }));
-
-DateTimePickerToolbarRoot.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  as: PropTypes.elementType,
-  classes: PropTypes.object,
-  className: PropTypes.string,
-  isLandscape: PropTypes.bool.isRequired,
-  isMobileKeyboardViewOpen: PropTypes.bool,
-  landscapeDirection: PropTypes.oneOf(['column', 'row']),
-  ownerState: PropTypes.object.isRequired,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-  toggleMobileKeyboardView: PropTypes.func,
-  toolbarTitle: PropTypes.node,
-  viewType: PropTypes.oneOf(['date', 'time']),
-} as any;
 
 const DateTimePickerToolbarDateContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'DateContainer',
   overridesResolver: (props, styles) => styles.dateContainer,
-})<{ ownerState: DateTimePickerToolbarProps<any> }>({
+})<{ ownerState: DateTimePickerToolbarOwnerState<any> }>({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
@@ -117,61 +114,79 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'TimeContainer',
   overridesResolver: (props, styles) => styles.timeContainer,
-})<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme, ownerState }) => {
-  const direction =
-    ownerState.isLandscape && ownerState.toolbarVariant !== 'desktop' ? 'column' : 'row';
-  return {
-    display: 'flex',
-    flexDirection: direction,
-    ...(ownerState.toolbarVariant === 'desktop' && {
-      ...(!ownerState.isLandscape && {
+})<{ ownerState: DateTimePickerToolbarOwnerState<any> }>({
+  display: 'flex',
+  flexDirection: 'row',
+  variants: [
+    {
+      props: { isRtl: true },
+      style: {
+        flexDirection: 'row-reverse',
+      },
+    },
+    {
+      props: { toolbarVariant: 'desktop', isLandscape: false },
+      style: {
         gap: 9,
         marginRight: 4,
         alignSelf: 'flex-end',
-      }),
-    }),
-    ...(theme.direction === 'rtl' && {
-      flexDirection: `${direction}-reverse`,
-    }),
-  };
+      },
+    },
+    {
+      props: ({ isLandscape, toolbarVariant }: DateTimePickerToolbarOwnerState<any>) =>
+        isLandscape && toolbarVariant !== 'desktop',
+      style: {
+        flexDirection: 'column',
+      },
+    },
+    {
+      props: ({ isLandscape, toolbarVariant, isRtl }: DateTimePickerToolbarOwnerState<any>) =>
+        isLandscape && toolbarVariant !== 'desktop' && isRtl,
+      style: {
+        flexDirection: 'column-reverse',
+      },
+    },
+  ],
 });
 
 const DateTimePickerToolbarTimeDigitsContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'TimeDigitsContainer',
   overridesResolver: (props, styles) => styles.timeDigitsContainer,
-})<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme, ownerState }) => ({
+})<{ ownerState: DateTimePickerToolbarOwnerState<any> }>({
   display: 'flex',
-  ...(ownerState.toolbarVariant === 'desktop' && { gap: 1.5 }),
-  ...(theme.direction === 'rtl' && {
-    flexDirection: 'row-reverse',
-  }),
-}));
-
-DateTimePickerToolbarTimeContainer.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  as: PropTypes.elementType,
-  ownerState: PropTypes.object.isRequired,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-} as any;
+  variants: [
+    {
+      props: { isRtl: true },
+      style: {
+        flexDirection: 'row-reverse',
+      },
+    },
+    {
+      props: { toolbarVariant: 'desktop' },
+      style: { gap: 1.5 },
+    },
+  ],
+});
 
 const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
   name: 'MuiDateTimePickerToolbar',
   slot: 'Separator',
   overridesResolver: (props, styles) => styles.separator,
 })<{
-  ownerState: DateTimePickerToolbarProps<any>;
-}>(({ ownerState }) => ({
-  margin: ownerState.toolbarVariant === 'desktop' ? 0 : '0 4px 0 2px',
+  ownerState: DateTimePickerToolbarOwnerState<any>;
+}>({
+  margin: '0 4px 0 2px',
   cursor: 'default',
-}));
+  variants: [
+    {
+      props: { toolbarVariant: 'desktop' },
+      style: {
+        margin: 0,
+      },
+    },
+  ],
+});
 
 // Taken from TimePickerToolbar
 const DateTimePickerToolbarAmPmSelection = styled('div', {
@@ -184,21 +199,26 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
   ],
 })<{
   ownerState: DateTimePickerToolbarProps<any>;
-}>(({ ownerState }) => ({
+}>({
   display: 'flex',
   flexDirection: 'column',
   marginRight: 'auto',
   marginLeft: 12,
-  ...(ownerState.isLandscape && {
-    margin: '4px 0 auto',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-  }),
   [`& .${dateTimePickerToolbarClasses.ampmLabel}`]: {
     fontSize: 17,
   },
-}));
+  variants: [
+    {
+      props: { isLandscape: true },
+      style: {
+        margin: '4px 0 auto',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '100%',
+      },
+    },
+  ],
+});
 
 /**
  * Demos:
@@ -232,17 +252,18 @@ function DateTimePickerToolbar<TDate extends PickerValidDate>(
     className,
     ...other
   } = props;
-  const ownerState = props;
+
+  const isRtl = useRtl();
+  const ownerState: DateTimePickerToolbarOwnerState<TDate> = { ...props, isRtl };
   const utils = useUtils<TDate>();
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
 
   const showAmPmControl = Boolean(ampm && !ampmInClock);
   const isDesktop = toolbarVariant === 'desktop';
 
-  const localeText = useLocaleText<TDate>();
-  const theme = useTheme();
-  const classes = useUtilityClasses({ ...ownerState, theme });
-  const toolbarTitle = inToolbarTitle ?? localeText.dateTimePickerToolbarTitle;
+  const translations = usePickersTranslations<TDate>();
+  const classes = useUtilityClasses(ownerState);
+  const toolbarTitle = inToolbarTitle ?? translations.dateTimePickerToolbarTitle;
 
   const formatHours = (time: TDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
@@ -384,7 +405,7 @@ function DateTimePickerToolbar<TDate extends PickerValidDate>(
 DateTimePickerToolbar.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   ampm: PropTypes.bool,
   ampmInClock: PropTypes.bool,

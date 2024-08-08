@@ -13,7 +13,7 @@ import {
   GridCellModes,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, act, userEvent } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, act, userEvent } from '@mui/internal-test-utils';
 import { getCell, spyApi } from 'test/utils/helperFn';
 
 describe('<DataGridPro /> - Cell editing', () => {
@@ -188,6 +188,33 @@ describe('<DataGridPro /> - Cell editing', () => {
           isProcessingProps: true,
           changeReason: 'setEditCellValue',
         });
+      });
+
+      it('should not publish onCellEditStop if field has error', async () => {
+        columnProps.preProcessEditCellProps = spy(({ props }: GridPreProcessEditCellProps) => ({
+          ...props,
+          error: true,
+        }));
+
+        const handleEditCellStop = spy();
+
+        render(<TestCase onCellEditStop={handleEditCellStop} />);
+        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() =>
+          apiRef.current.setEditCellValue({
+            id: 0,
+            field: 'currencyPair',
+            value: 'USD GBP',
+          }),
+        );
+        const cell = getCell(0, 1);
+        cell.focus();
+
+        await act(() => {
+          fireEvent.keyDown(cell, { key: 'Enter' });
+        });
+
+        expect(handleEditCellStop.callCount).to.equal(0);
       });
 
       it('should pass to renderEditCell the props returned by preProcessEditCellProps', async () => {
@@ -873,7 +900,7 @@ describe('<DataGridPro /> - Cell editing', () => {
           apiRef.current.subscribeEvent('cellEditStart', listener);
           const cell = getCell(0, 1);
           userEvent.mousePress(cell);
-          fireEvent.keyDown(cell, { key: 'a', [key]: true }); // e.g. Ctrl + A, copy
+          fireEvent.keyDown(cell, { key: 'a', [key]: true }); // for example Ctrl + A, copy
           expect(listener.callCount).to.equal(0);
         });
       });

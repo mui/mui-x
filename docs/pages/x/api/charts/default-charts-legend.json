@@ -1,14 +1,17 @@
 {
   "props": {
-    "classes": {
-      "type": { "name": "object" },
-      "required": true,
-      "additionalInfo": { "cssApi": true }
-    },
     "direction": {
       "type": { "name": "enum", "description": "'column'<br>&#124;&nbsp;'row'" },
       "required": true
     },
+    "position": {
+      "type": {
+        "name": "shape",
+        "description": "{ horizontal: 'left'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'right', vertical: 'bottom'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'top' }"
+      },
+      "required": true
+    },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "hidden": { "type": { "name": "bool" }, "default": "false" },
     "itemGap": { "type": { "name": "number" }, "default": "10" },
     "itemMarkHeight": { "type": { "name": "number" }, "default": "20" },
@@ -26,7 +29,8 @@
   "name": "DefaultChartsLegend",
   "imports": [
     "import { DefaultChartsLegend } from '@mui/x-charts/ChartsLegend';",
-    "import { DefaultChartsLegend } from '@mui/x-charts';"
+    "import { DefaultChartsLegend } from '@mui/x-charts';",
+    "import { DefaultChartsLegend } from '@mui/x-charts-pro';"
   ],
   "classes": [
     {

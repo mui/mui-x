@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen, ErrorBoundary, waitFor } from '@mui-internal/test-utils';
+import { createRenderer, screen, ErrorBoundary, waitFor } from '@mui/internal-test-utils';
 import { stub, spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -1174,7 +1174,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
     }
 
     render(
-      <div style={{ height: '100%', width: 400.6 }}>
+      <div style={{ height: 300, width: 400.6 }}>
         <DataGrid rows={[{ id: 1 }]} columns={[{ field: 'id', flex: 1 }]} />
       </div>,
     );
@@ -1202,8 +1202,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
     }).toErrorDev([
       'Warning: Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
       'Warning: Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
-      'Warning: Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
-      'Warning: Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
     ]);
   });
 
@@ -1215,7 +1213,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
     }
 
     render(
-      <div style={{ height: 'auto', width: 1584 }}>
+      <div style={{ height: 300, width: 1584 }}>
         <DataGrid
           rows={[{ id: 1 }]}
           columns={[

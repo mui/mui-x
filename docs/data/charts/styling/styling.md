@@ -42,6 +42,100 @@ Here is an example of the d3 Categorical color palette.
 
 {{"demo": "ColorTemplate.js"}}
 
+### Values color
+
+Colors can also be set according to item values using the `colorMap` property of the corresponding axis.
+
+Learn more about how to use this feature with each chart component in their dedicated docs section:
+
+- [bar charts](/x/react-charts/bars/#color-scale)
+- [line charts](/x/react-charts/lines/#color-scale)
+- [scatter charts](/x/react-charts/scatter/#color-scale)
+
+The `colorMap` property can accept three kinds of objects defined below.
+
+#### Piecewise color map
+
+The piecewise configuration takes an array of _n_ `thresholds` values and _n+1_ `colors`.
+
+```ts
+{
+  type: 'piecewise';
+  thresholds: Value[];
+  colors: string[];
+}
+```
+
+#### Continuous color map
+
+The continuous configuration lets you map values from `min` to `max` properties to their corresponding colors.
+
+The `color` property can either be an array of two colors to interpolate, or an interpolation function that returns a color corresponding to a number _t_ with a value between 0 and 1.
+The [d3-scale-chromatic](https://d3js.org/d3-scale-chromatic) offers a lot of those functions.
+
+Values lower than the `min` get the color of the `min` value; similarly, values higher than the `max` get the color of the `max` value.
+By default, the `min`/`max` range is set to 0 / 100.
+
+```ts
+{
+  type: 'continuous';
+  min?: Value;
+  max?: Value;
+  color: [string, string] | ((t: number) => string);
+}
+```
+
+#### Ordinal color map
+
+This configuration takes two properties—`values` and `colors`—and maps those values to their respective colors.
+
+If a value is not defined, it will fall back to the `unknownColor`, and if this is also undefined, then it falls back on the series color.
+
+This configuration can be used in Bar Charts to set colors according to string categories.
+
+```ts
+{
+  type: 'ordinal';
+  values: Value[];
+  colors: string[];
+  unknownColor?: string;
+}
+```
+
+## Overlay
+
+Charts have a _loading_ and _noData_ overlays that appear if:
+
+- `loading` prop is set to `true`.
+- There is no data to display.
+
+{{"demo": "Overlay.js"}}
+
+### Axis display
+
+You can provide the axes data to display them while loading the data.
+
+{{"demo": "OverlayWithAxis.js"}}
+
+### Custom overlay
+
+To modify the overlay message, you can use the `message` props as follows:
+
+```jsx
+<BarChart
+  slotProps={{
+    // Custom loading message
+    loadingOverlay: { message: 'Data should be available soon.' },
+    // Custom message for empty chart
+    noDataOverlay: { message: 'Select some data to display.' },
+  }}
+/>
+```
+
+For more advanced customization, use the `loadingOverlay` and `noDataOverlay` slots link in the following demo.
+
+{{"demo": "CustomOverlay.js"}}
+
 ## Styling
 
 ### Size
@@ -68,3 +162,5 @@ Since the library relies on SVG for rendering, you can customize them as you do 
 
 Chart components accept the `sx` props.
 From here, you can target any subcomponents with its class name.
+
+{{"demo": "SxStyling.js"}}

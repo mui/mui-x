@@ -1,7 +1,7 @@
 ---
 title: Charts - Axis
 productId: x-charts
-components: ChartsAxis, ChartsReferenceLine, ChartsText
+components: ChartsAxis, ChartsReferenceLine, ChartsText, ChartsXAxis, ChartsYAxis, ChartsReferenceLine
 ---
 
 # Charts - Axis
@@ -20,9 +20,8 @@ Those props expect an array of objects.
 
 Here is a demonstration with two lines with the same data.
 But one uses a linear, and the other a log axis.
-
 Each axis definition is identified by its property `id`.
-And series specify the axis they use with `xAxisKey` and `yAxisKey` properties.
+Then each series specifies the axis they use with the `xAxisId` and `yAxisId` properties.
 
 {{"demo": "ScaleExample.js"}}
 
@@ -30,9 +29,9 @@ And series specify the axis they use with `xAxisKey` and `yAxisKey` properties.
 The management of those ids is for advanced use cases, such as charts with multiple axes.
 Or customized axes.
 
-If you do not provide a `xAxisKey` or `yAxisKey`, the series will use the first axis defined.
+If you do not provide a `xAxisId` or `yAxisId`, the series will use the first axis defined.
 
-That's why in most of the demonstrations with single x and y axis you will not see definitions of axis `id`, `xAxisKey`, or `yAxisKey`.
+That's why in most of the demonstrations with single x and y axis you will not see definitions of axis `id`, `xAxisId`, or `yAxisId`.
 Those demonstrations use the defaultized values.
 :::
 
@@ -125,7 +124,7 @@ This number is not the exact number of ticks displayed.
 Thanks to d3, ticks are placed to be human-readable.
 For example, ticks for time axes will be placed on special values (years, days, half-days, ...).
 
-If you set `tickNumber=5` but there are only 4 years to display in the axis, the component might chose to render ticks on the 4 years, instead of putting 5 ticks on some months.
+If you set `tickNumber=5` but there are only 4 years to display in the axis, the component might choose to render ticks on the 4 years, instead of putting 5 ticks on some months.
 :::
 
 As a helper, you can also provide `tickMinStep` and `tickMaxStep` which will compute `tickNumber` such that the step between two ticks respect those min/max values.
@@ -175,6 +174,21 @@ At the bottom, you can see one tick for the beginning and the middle of the day 
 
 You can further customize the axis rendering besides the axis definition.
 
+### Fixing overflow issues
+
+If your tick labels are too long, they can either overflow the SVG or overlap with the axis label.
+Resolving this can be achieved in two ways:
+
+- Increase the space between the SVG border and the axis by setting the [margin props](/x/react-charts/styling/#placement).
+- Modify the axis label position by:
+  - Using the axis configuration `labelStyle.transform`.
+  - Applying CSS transform to the class name `axisClasses.label`.
+
+In the following demo, the margin is modified to provide more space to the x and y axes.
+The x-axis label placement is based on the axis configuration, and the y-axis is placed using a CSS selector.
+
+{{"demo": "MarginAndLabelPosition.js"}}
+
 ### Position
 
 Charts components provide 4 props: `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis` allowing to define the 4 axes of the chart.
@@ -182,7 +196,9 @@ Those pros can accept three type of value:
 
 - `null` to not display the axis
 - `string` which should correspond to the id of a `xAxis` for top and bottom. Or to the id of a `yAxis` for left and right.
-- `object` which will be passed as props to `<XAxis />` or `<YAxis />`. It allows to specify which axis should be represent, and to customize the design of the axis.
+- `object` which will be passed as props to `<XAxis />` or `<YAxis />`. It allows to specify which axis should be represent with the `axisId` property, and to customize the design of the axis.
+
+The demo below uses `leftAxis={null}` to remove the left axis, and `rightAxis={{}}` to set a right axis without overriding the default y-axis configuration.
 
 {{"demo": "ModifyAxisPosition.js"}}
 

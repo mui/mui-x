@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   useField,
   splitFieldInternalAndForwardedProps,
@@ -5,7 +6,7 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { UseSingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
-import { rangeValueManager, rangeFieldValueManager } from '../internals/utils/valueManagers';
+import { rangeValueManager, getRangeFieldValueManager } from '../internals/utils/valueManagers';
 import { validateTimeRange } from '../internals/utils/validation/validateTimeRange';
 import { RangeFieldSection, DateRange } from '../models';
 
@@ -27,6 +28,11 @@ export const useSingleInputTimeRangeField = <
     keyof UseSingleInputTimeRangeFieldProps<any, any>
   >(props, 'time');
 
+  const fieldValueManager = React.useMemo(
+    () => getRangeFieldValueManager<TDate>({ dateSeparator: internalProps.dateSeparator }),
+    [internalProps.dateSeparator],
+  );
+
   return useField<
     DateRange<TDate>,
     TDate,
@@ -38,7 +44,7 @@ export const useSingleInputTimeRangeField = <
     forwardedProps,
     internalProps,
     valueManager: rangeValueManager,
-    fieldValueManager: rangeFieldValueManager,
+    fieldValueManager,
     validator: validateTimeRange,
     valueType: 'time',
   });

@@ -14,27 +14,19 @@ import {
   gridExpandedSortedRowIdsSelector,
 } from '@mui/x-data-grid';
 import {
-  buildWarning,
+  warnOnce,
   getRowIdFromRowModel,
   getActiveElement,
   GridPipeProcessor,
   useGridRegisterPipeProcessor,
   getPublicApiRef,
   isPasteShortcut,
+  useGridLogger,
 } from '@mui/x-data-grid/internals';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
 import { unstable_debounce as debounce } from '@mui/utils';
 import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-
-const missingOnProcessRowUpdateErrorWarning = buildWarning(
-  [
-    'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
-    'To handle the error pass a callback to the `onProcessRowUpdateError` prop, e.g. `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-    'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
-  ],
-  'error',
-);
 
 const columnFieldsToExcludeFromPaste = [
   GRID_CHECKBOX_SELECTION_FIELD,
@@ -175,7 +167,14 @@ class CellValueUpdater {
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
           } else if (process.env.NODE_ENV !== 'production') {
-            missingOnProcessRowUpdateErrorWarning();
+            warnOnce(
+              [
+                'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+                'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
+                'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
+              ],
+              'error',
+            );
           }
         };
 
@@ -219,17 +218,26 @@ function defaultPasteResolver({
   const isSingleValuePasted = pastedData.length === 1 && pastedData[0].length === 1;
 
   const cellSelectionModel = apiRef.current.getCellSelectionModel();
-  if (cellSelectionModel && apiRef.current.getSelectedCellsAsArray().length > 1) {
-    Object.keys(cellSelectionModel).forEach((rowId, rowIndex) => {
+  const selectedCellsArray = apiRef.current.getSelectedCellsAsArray();
+  if (cellSelectionModel && selectedCellsArray.length > 1) {
+    let lastRowId = selectedCellsArray[0].id;
+    let rowIndex = 0;
+    let colIndex = 0;
+    selectedCellsArray.forEach(({ id: rowId, field }) => {
+      if (rowId !== lastRowId) {
+        lastRowId = rowId;
+        rowIndex += 1;
+        colIndex = 0;
+      }
+
       const rowDataArr = pastedData[isSingleValuePasted ? 0 : rowIndex];
       const hasRowData = isSingleValuePasted ? true : rowDataArr !== undefined;
-      if (!hasRowData) {
-        return;
-      }
-      Object.keys(cellSelectionModel[rowId]).forEach((field, colIndex) => {
+      if (hasRowData) {
         const cellValue = isSingleValuePasted ? rowDataArr[0] : rowDataArr[colIndex];
         updateCell({ rowId, field, pastedCellValue: cellValue });
-      });
+      }
+
+      colIndex += 1;
     });
 
     return;
@@ -274,7 +282,11 @@ function defaultPasteResolver({
     return;
   }
 
-  const selectedCell = gridFocusCellSelector(apiRef);
+  let selectedCell = gridFocusCellSelector(apiRef);
+  if (!selectedCell && selectedCellsArray.length === 1) {
+    selectedCell = selectedCellsArray[0];
+  }
+
   if (!selectedCell) {
     return;
   }
@@ -318,6 +330,7 @@ export const useGridClipboardImport = (
     | 'onClipboardPasteEnd'
     | 'splitClipboardPastedText'
     | 'disableClipboardPaste'
+    | 'onBeforeClipboardPasteStart'
   >,
 ): void => {
   const processRowUpdate = props.processRowUpdate;
@@ -325,8 +338,11 @@ export const useGridClipboardImport = (
   const getRowId = props.getRowId;
   const enableClipboardPaste = !props.disableClipboardPaste;
   const rootEl = apiRef.current.rootElementRef?.current;
+  const logger = useGridLogger(apiRef, 'useGridClipboardImport');
 
   const splitClipboardPastedText = props.splitClipboardPastedText;
+
+  const { pagination, onBeforeClipboardPasteStart } = props;
 
   const handlePaste = React.useCallback<GridEventListener<'cellKeyDown'>>(
     async (params, event) => {
@@ -360,6 +376,15 @@ export const useGridClipboardImport = (
         return;
       }
 
+      if (onBeforeClipboardPasteStart) {
+        try {
+          await onBeforeClipboardPasteStart({ data: pastedData });
+        } catch (error) {
+          logger.debug('Clipboard paste operation cancelled');
+          return;
+        }
+      }
+
       const cellUpdater = new CellValueUpdater({
         apiRef,
         processRowUpdate,
@@ -377,7 +402,7 @@ export const useGridClipboardImport = (
         updateCell: (...args) => {
           cellUpdater.updateCell(...args);
         },
-        pagination: props.pagination,
+        pagination,
       });
 
       cellUpdater.applyUpdates();
@@ -390,7 +415,9 @@ export const useGridClipboardImport = (
       enableClipboardPaste,
       rootEl,
       splitClipboardPastedText,
-      props.pagination,
+      pagination,
+      onBeforeClipboardPasteStart,
+      logger,
     ],
   );
 

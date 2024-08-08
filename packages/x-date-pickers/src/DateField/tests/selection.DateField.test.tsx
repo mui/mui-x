@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { act, fireEvent } from '@mui-internal/test-utils';
+import { act, fireEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   expectFieldValueV7,
@@ -184,7 +184,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select all sections with start separator', () => {
-      // Test with v6 input
+      // Test with v7 input
       const v7Response = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: `- ${adapterToUse.formats.year}`,

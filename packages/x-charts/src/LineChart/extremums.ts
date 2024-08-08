@@ -1,4 +1,7 @@
-import { ExtremumGetter, ExtremumGetterResult } from '../models/seriesType/config';
+import {
+  ExtremumGetter,
+  ExtremumGetterResult,
+} from '../context/PluginProvider/ExtremumGetter.types';
 
 export const getExtremumX: ExtremumGetter<'line'> = (params) => {
   const { axis } = params;
@@ -31,17 +34,17 @@ export const getExtremumY: ExtremumGetter<'line'> = (params) => {
   const { series, axis, isDefaultAxis } = params;
 
   return Object.keys(series)
-    .filter(
-      (seriesId) =>
-        series[seriesId].yAxisKey === axis.id ||
-        (isDefaultAxis && series[seriesId].yAxisKey === undefined),
-    )
+    .filter((seriesId) => {
+      const yAxisId = series[seriesId].yAxisId ?? series[seriesId].yAxisKey;
+      return yAxisId === axis.id || (isDefaultAxis && yAxisId === undefined);
+    })
     .reduce(
       (acc: ExtremumGetterResult, seriesId) => {
         const { area, stackedData } = series[seriesId];
         const isArea = area !== undefined;
 
-        const getValues: GetValuesTypes = isArea ? (d) => d : (d) => [d[1], d[1]]; // Since this series is not used to display an area, we do not consider the base (the d[0]).
+        const getValues: GetValuesTypes =
+          isArea && axis.scaleType !== 'log' ? (d) => d : (d) => [d[1], d[1]]; // Since this series is not used to display an area, we do not consider the base (the d[0]).
 
         const seriesExtremums = getSeriesExtremums(getValues, stackedData);
 

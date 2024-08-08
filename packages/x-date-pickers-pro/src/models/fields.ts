@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import { BaseFieldProps, UseFieldResponse } from '@mui/x-date-pickers/internals';
 import {
   BaseSingleInputPickersTextFieldProps,
@@ -9,9 +9,11 @@ import {
 } from '@mui/x-date-pickers/models';
 import { UseClearableFieldResponse } from '@mui/x-date-pickers/hooks';
 import { SxProps } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
+import { RangePosition } from './range';
 
 export interface RangeFieldSection extends FieldSection {
-  dateName: 'start' | 'end';
+  dateName: RangePosition;
 }
 
 export type FieldType = 'single-input' | 'multi-input';
@@ -47,6 +49,14 @@ export interface MultiInputFieldRefs {
   unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
 }
 
+export interface RangeFieldSeparatorProps {
+  /**
+   * String displayed between the start and the end dates.
+   * @default "–"
+   */
+  dateSeparator?: string;
+}
+
 /**
  * Props the multi input field can receive when used inside a picker.
  * Only contains what the MUI components are passing to the field,
@@ -59,9 +69,10 @@ export interface BaseMultiInputFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > extends Omit<
-    BaseFieldProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>,
-    'unstableFieldRef'
-  > {
+      BaseFieldProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>,
+      'unstableFieldRef'
+    >,
+    RangeFieldSeparatorProps {
   sx?: SxProps<any>;
   unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
   unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
@@ -77,9 +88,9 @@ export interface BaseMultiInputFieldProps<
       Record<string, any>
     >;
     textField?: SlotComponentProps<
-      React.ElementType<MultiInputFieldSlotTextFieldProps>,
+      typeof TextField,
       {},
-      { position?: 'start' | 'end' } & Record<string, any>
+      { position?: RangePosition } & Record<string, any>
     >;
   };
 }

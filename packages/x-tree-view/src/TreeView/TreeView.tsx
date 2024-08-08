@@ -1,10 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getTreeViewUtilityClass } from './treeViewClasses';
 import { TreeViewProps } from './TreeView.types';
 import { SimpleTreeView, SimpleTreeViewRoot } from '../SimpleTreeView';
+
+const useThemeProps = createUseThemeProps('MuiTreeView');
 
 const useUtilityClasses = <Multiple extends boolean | undefined>(
   ownerState: TreeViewProps<Multiple>,
@@ -48,7 +50,7 @@ const warn = () => {
 
 /**
  * This component has been deprecated in favor of the new `SimpleTreeView` component.
- * You can have a look at how to migrate to the new component in the v7 [migration guide](https://next.mui.com/x/migration/migration-tree-view-v6/#use-simpletreeview-instead-of-treeview)
+ * You can have a look at how to migrate to the new component in the v7 [migration guide](https://mui.com/x/migration/migration-tree-view-v6/#use-simpletreeview-instead-of-treeview)
  *
  * Demos:
  *
@@ -84,17 +86,27 @@ const TreeView = React.forwardRef(function TreeView<
 TreeView.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
    */
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
-      focusNode: PropTypes.func.isRequired,
+      focusItem: PropTypes.func.isRequired,
       getItem: PropTypes.func.isRequired,
+      getItemDOMElement: PropTypes.func.isRequired,
+      getItemOrderedChildrenIds: PropTypes.func.isRequired,
+      getItemTree: PropTypes.func.isRequired,
+      selectItem: PropTypes.func.isRequired,
+      setItemExpansion: PropTypes.func.isRequired,
     }),
   }),
+  /**
+   * If `true`, the tree view renders a checkbox at the left of its label that allows selecting it.
+   * @default false
+   */
+  checkboxSelection: PropTypes.bool,
   /**
    * The content of the component.
    */
@@ -105,17 +117,17 @@ TreeView.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * Expanded node ids.
+   * Expanded item ids.
    * Used when the item's expansion is not controlled.
    * @default []
    */
-  defaultExpandedNodes: PropTypes.arrayOf(PropTypes.string),
+  defaultExpandedItems: PropTypes.arrayOf(PropTypes.string),
   /**
-   * Selected node ids. (Uncontrolled)
+   * Selected item ids. (Uncontrolled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    * @default []
    */
-  defaultSelectedNodes: PropTypes.any,
+  defaultSelectedItems: PropTypes.any,
   /**
    * If `true`, will allow focus on disabled items.
    * @default false
@@ -127,59 +139,83 @@ TreeView.propTypes = {
    */
   disableSelection: PropTypes.bool,
   /**
-   * Expanded node ids.
+   * Expanded item ids.
    * Used when the item's expansion is controlled.
    */
-  expandedNodes: PropTypes.arrayOf(PropTypes.string),
+  expandedItems: PropTypes.arrayOf(PropTypes.string),
+  /**
+   * The slot that triggers the item's expansion when clicked.
+   * @default 'content'
+   */
+  expansionTrigger: PropTypes.oneOf(['content', 'iconContainer']),
+  /**
+   * Unstable features, breaking changes might be introduced.
+   * For each feature, if the flag is not explicitly set to `true`,
+   * the feature will be fully disabled and any property / method call will not have any effect.
+   */
+  experimentalFeatures: PropTypes.shape({
+    indentationAtItemLevel: PropTypes.bool,
+  }),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
   /**
-   * If true `ctrl` and `shift` will trigger multiselect.
+   * Horizontal indentation between an item and its children.
+   * Examples: 24, "24px", "2rem", "2em".
+   * @default 12px
+   */
+  itemChildrenIndentation: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * If `true`, `ctrl` and `shift` will trigger multiselect.
    * @default false
    */
   multiSelect: PropTypes.bool,
   /**
    * Callback fired when tree items are expanded/collapsed.
-   * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeIds The ids of the expanded nodes.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {array} itemIds The ids of the expanded items.
    */
-  onExpandedNodesChange: PropTypes.func,
+  onExpandedItemsChange: PropTypes.func,
+  /**
+   * Callback fired when the `content` slot of a given tree item is clicked.
+   * @param {React.MouseEvent} event The DOM event that triggered the change.
+   * @param {string} itemId The id of the focused item.
+   */
+  onItemClick: PropTypes.func,
   /**
    * Callback fired when a tree item is expanded or collapsed.
-   * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeId The nodeId of the modified node.
-   * @param {array} isExpanded `true` if the node has just been expanded, `false` if it has just been collapsed.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {array} itemId The itemId of the modified item.
+   * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
-  onNodeExpansionToggle: PropTypes.func,
+  onItemExpansionToggle: PropTypes.func,
   /**
-   * Callback fired when tree items are focused.
-   * @param {React.SyntheticEvent} event The event source of the callback **Warning**: This is a generic event not a focus event.
-   * @param {string} nodeId The id of the node focused.
-   * @param {string} value of the focused node.
+   * Callback fired when a given tree item is focused.
+   * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. **Warning**: This is a generic event not a focus event.
+   * @param {string} itemId The id of the focused item.
    */
-  onNodeFocus: PropTypes.func,
+  onItemFocus: PropTypes.func,
   /**
    * Callback fired when a tree item is selected or deselected.
-   * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeId The nodeId of the modified node.
-   * @param {array} isSelected `true` if the node has just been selected, `false` if it has just been deselected.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {array} itemId The itemId of the modified item.
+   * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
-  onNodeSelectionToggle: PropTypes.func,
+  onItemSelectionToggle: PropTypes.func,
   /**
    * Callback fired when tree items are selected/deselected.
-   * @param {React.SyntheticEvent} event The event source of the callback
-   * @param {string[] | string} nodeIds The ids of the selected nodes.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {string[] | string} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */
-  onSelectedNodesChange: PropTypes.func,
+  onSelectedItemsChange: PropTypes.func,
   /**
-   * Selected node ids. (Controlled)
+   * Selected item ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
-  selectedNodes: PropTypes.any,
+  selectedItems: PropTypes.any,
   /**
    * The props used for each component slot.
    */

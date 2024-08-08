@@ -16,15 +16,17 @@ export interface TickParams {
    */
   tickMinStep?: number;
   /**
-   * The number of ticks. This number is not guaranted.
+   * The number of ticks. This number is not guaranteed.
    * Not supported by categorical axis (band, points).
    */
   tickNumber?: number;
   /**
-   * Defines which ticks are displayed. Its value can be:
+   * Defines which ticks are displayed.
+   * Its value can be:
    * - 'auto' In such case the ticks are computed based on axis scale and other parameters.
-   * - a filtering function of the form `(value, index) => boolean` which is available only if the axis has a data property.
+   * - a filtering function of the form `(value, index) => boolean` which is available only if the axis has "point" scale.
    * - an array containing the values where ticks should be displayed.
+   * @see See {@link https://mui.com/x/react-charts/axis/#fixed-tick-positions}
    * @default 'auto'
    */
   tickInterval?: 'auto' | ((value: any, index: number) => boolean) | any[];
@@ -44,7 +46,7 @@ export interface TickParams {
 
 export function getTickNumber(
   params: TickParams & {
-    range: any[];
+    range: number[];
     domain: any[];
   },
 ) {
@@ -99,8 +101,12 @@ export function useTicks(
 
       if (scale.bandwidth() > 0) {
         // scale type = 'band'
+        const filteredDomain =
+          (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
+          (typeof tickInterval === 'object' && tickInterval) ||
+          domain;
         return [
-          ...domain.map((value) => ({
+          ...filteredDomain.map((value) => ({
             value,
             formattedValue: valueFormatter?.(value, { location: 'tick' }) ?? `${value}`,
             offset:
@@ -137,6 +143,11 @@ export function useTicks(
         offset: scale(value)!,
         labelOffset: 0,
       }));
+    }
+
+    if (scale.domain().length === 0 || scale.domain()[0] === scale.domain()[1]) {
+      // The axis should not be visible, so ticks should also be hidden.
+      return [];
     }
 
     const ticks = typeof tickInterval === 'object' ? tickInterval : scale.ticks(tickNumber);

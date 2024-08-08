@@ -4,21 +4,20 @@ productId: x-date-pickers
 
 # Migration from v6 to v7
 
-<!-- #default-branch-switch -->
-
 <p class="description">This guide describes the changes needed to migrate the Date and Time Pickers from v6 to v7.</p>
 
 ## Introduction
 
-TBD
+This is a reference guide for upgrading `@mui/x-date-pickers` from v6 to v7.
+To read more about the changes from the new major, check out [the blog post about the release of MUI X v7](https://mui.com/blog/mui-x-v7-beta/).
 
 ## Start using the new release
 
-In `package.json`, change the version of the date pickers package to `next`.
+In `package.json`, change the version of the date pickers package to `^7.0.0`.
 
 ```diff
 -"@mui/x-date-pickers": "6.x.x",
-+"@mui/x-date-pickers": "next",
++"@mui/x-date-pickers": "^7.0.0",
 ```
 
 Since `v7` is a major release, it contains changes that affect the public API.
@@ -27,7 +26,7 @@ Described below are the steps needed to migrate from v6 to v7.
 
 ## Update `@mui/material` package
 
-To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.0`.
+To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.14`.
 It is a change in minor version only, so it should not cause any breaking changes.
 Please update your `@mui/material` package to this or a newer version.
 
@@ -44,7 +43,7 @@ If you have `@mui/x-license-pro` in the `dependencies` section of your `package.
 
 ```diff
 -"@mui/x-license-pro": "6.x.x",
-+"@mui/x-license": "next",
++"@mui/x-license": "^7.0.0",
 ```
 
 ## Run codemods
@@ -53,12 +52,14 @@ The `preset-safe` codemod will automatically adjust the bulk of your code to acc
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
+<!-- #default-branch-switch -->
+
 ```bash
 // Date and Time Pickers specific
-npx @mui/x-codemod@next v7.0.0/pickers/preset-safe <path>
+npx @mui/x-codemod@latest v7.0.0/pickers/preset-safe <path>
 
 // Target Data Grid as well
-npx @mui/x-codemod@next v7.0.0/preset-safe <path>
+npx @mui/x-codemod@latest v7.0.0/preset-safe <path>
 ```
 
 :::info
@@ -85,6 +86,54 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
+## Breaking changes
+
+Since v7 is a major release, it contains some changes that affect the public API.
+These changes were done for consistency, improve stability and make room for new features.
+
+### Drop the legacy bundle
+
+The support for IE 11 has been removed from all MUI X packages.
+The `legacy` bundle that used to support old browsers like IE 11 is no longer included.
+
+:::info
+If you need support for IE 11, you will need to keep using the latest version of the `v6` release.
+:::
+
+### Drop Webpack 4 support
+
+Dropping old browsers support also means that we no longer transpile some features that are natively supported by modern browsers – like [Nullish Coalescing](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing) and [Optional Chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining).
+
+These features are not supported by Webpack 4, so if you are using Webpack 4, you will need to transpile these features yourself or upgrade to Webpack 5.
+
+Here is an example of how you can transpile these features on Webpack 4 using the `@babel/preset-env` preset:
+
+```diff
+ // webpack.config.js
+
+ module.exports = (env) => ({
+   // ...
+   module: {
+     rules: [
+       {
+         test: /\.[jt]sx?$/,
+-        exclude: /node_modules/,
++        exclude: [
++          {
++            test: path.resolve(__dirname, 'node_modules'),
++            exclude: [
++              // Covers @mui/x-date-pickers and @mui/x-date-pickers-pro
++              path.resolve(__dirname, 'node_modules/@mui/x-date-pickers'),
++              path.resolve(__dirname, 'node_modules/@mui/x-license'),
++            ],
++          },
++        ],
+       },
+     ],
+   },
+ });
+```
+
 ## Component slots
 
 ### Rename `components` to `slots`
@@ -97,7 +146,7 @@ And are removed from the v7.
 If not already done, this modification can be handled by the codemod
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/pickers/ <path>
+npx @mui/x-codemod@latest v7.0.0/pickers/ <path>
 ```
 
 Take a look at [the RFC](https://github.com/mui/material-ui/issues/33416) for more information.
@@ -215,12 +264,12 @@ The deprecated `defaultCalendarMonth` prop has been removed in favor of the more
 The new `referenceDate` prop is not limited to the default month.
 It will also impact year, day, and time.
 
-Learn more on this prop on [the `DateCalendar` documentation](/x/react-date-pickers/date-calendar/#choose-the-initial-year-month) or [the `referenceDate` documentation](/x/react-date-pickers/base-concepts/#reference-date-when-no-value-is-defined) pages.
+See [Date Calendar—Choose the initial year / month](/x/react-date-pickers/date-calendar/#choose-the-initial-year-month) or [Base concepts—Reference date when no value is defined](/x/react-date-pickers/base-concepts/#reference-date-when-no-value-is-defined) for more details.
 :::
 
 ```diff
 -<DateCalendar defaultCalendarMonth={dayjs('2022-04-01')};
-+<DateCalendar referenceDate{dayjs('2022-04-01')} />
++<DateCalendar referenceDate={dayjs('2022-04-01')} />
 ```
 
 ## Modified props
@@ -240,6 +289,15 @@ The string argument of the `dayOfWeekFormatter` prop has been replaced in favor 
 +  dayOfWeekFormatter={day => `${day.format('dd')}.`}
  />
 ```
+
+### Strict typing of the date-related props
+
+All the date-related props are now strictly typed to only accept the date format supported by your adapter
+(`Date` object for `date-fns`, `daysjs.Dayjs` object for `days-js`, etc.).
+
+:::info
+See [Base concepts—Typing of the date](/x/react-date-pickers/base-concepts/#typing-of-the-date) for more details.
+:::
 
 ## Field components
 
@@ -284,7 +342,7 @@ To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
 ### Headless fields
 
 :::success
-The following breaking changes only impacts you if you are using hooks like `useDateField` to build a custom UI.
+The following breaking changes only impact you if you are using hooks like `useDateField` to build a custom UI.
 
 If you are just using the regular field components, then you can safely skip this section.
 :::
@@ -294,9 +352,9 @@ If you are just using the regular field components, then you can safely skip thi
 The field hooks now only receive the props instead of an object containing both the props and the `inputRef`.
 
 ```diff
-- const { inputRef, ...otherProps } = props
-- const fieldResponse = useDateField({ props: otherProps, inputRef });
-+ const fieldResponse = useDateField(props);
+-const { inputRef, ...otherProps } = props
+-const fieldResponse = useDateField({ props: otherProps, inputRef });
++const fieldResponse = useDateField(props);
 ```
 
 If you are using a multi input range field hook, the same applies to `startInputRef` and `endInputRef` params
@@ -379,7 +437,10 @@ then you can look at the page to see all the examples improved and updated to us
 
 The headless field hooks (e.g.: `useDateField`) now return a new prop called `enableAccessibleFieldDOMStructure`.
 This is used to know if the current UI expected is built using the accessible DOM structure or not.
-Learn more about this new [accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure).
+
+:::info
+See [Fields—Accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure) for more details.
+:::
 
 When building a custom UI, you are most-likely only supporting one DOM structure, so you can remove `enableAccessibleFieldDOMStructure` before it is passed to the DOM:
 
@@ -398,7 +459,8 @@ When building a custom UI, you are most-likely only supporting one DOM structure
   function MyCustomField(props) {
     const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
       ...props,
-+     // If you only support one DOM structure, we advise you to hardcode it here to avoid unwanted switches in your application
++     // If you only support one DOM structure, we advise you to hardcode it
++     // here to avoid unwanted switches in your application.
 +     enableAccessibleFieldDOMStructure: false,
     });
 
@@ -421,7 +483,7 @@ If you want to keep the start of the week on Monday even if your locale says oth
 You can hardcode the week settings as follows:
 
 ```ts
-import { Settings } from 'luxon';
+import { Settings, Info } from 'luxon';
 
 Settings.defaultWeekSettings = {
   firstDay: 1,
@@ -467,7 +529,10 @@ The `dayPickerClasses` variable has been renamed `dayCalendarClasses` to be cons
 
 The `dateLibInstance` prop of `LocalizationProvider` does not work with `AdapterDayjs` anymore.
 This prop was used to set the pickers in UTC mode before the implementation of a proper timezone support in the components.
-You can learn more about the new approach on the [dedicated doc page](https://mui.com/x/react-date-pickers/timezone/).
+
+:::info
+See [Timezone](/x/react-date-pickers/timezone/) for more details.
+:::
 
 ```diff
  // When a `value` or a `defaultValue` is provided
@@ -511,12 +576,22 @@ The `locales` export has been removed from the root of the packages.
 In an effort to reduce the bundle size, the locales are now only available from the `@mui/x-date-pickers/locales` or `@mui/x-date-pickers-pro/locales` paths.
 If you were still relying on the root level export, please update your code.
 
-Before v7, it was possible to import locales from the package root (i.e. `import { frFR } from '@mui/x-date-pickers'`).
+Before v7, it was possible to import locales from the package root (that is `import { frFR } from '@mui/x-date-pickers'`).
 
 ```diff
 -import { frFR } from '@mui/x-date-pickers';
 +import { frFR } from '@mui/x-date-pickers/locales';
 ```
+
+## Remove `dateTimeViewRenderers` export
+
+The `dateTimeViewRenderers` export has been removed in favor of reusing existing time view renderers (`renderTimeViewClock`, `renderDigitalClockTimeView` and `renderMultiSectionDigitalClockTimeView`) and date view renderer (`renderDateViewCalendar`) to render the `DesktopDateTimePicker`.
+
+If you were relying on this import, you can refer to the implementation of the `DesktopDateTimePicker` to see how to combine the renderers yourself.
+
+:::info
+The additional side-effect of this change is that passing `renderTimeViewClock` to time view renderers will no longer revert to the old behavior of rendering only date or time view.
+:::
 
 ## Adapters internal changes
 

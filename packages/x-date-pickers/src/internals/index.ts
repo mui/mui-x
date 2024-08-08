@@ -70,6 +70,7 @@ export type {
   UsePickerParams,
   UsePickerProps,
   UsePickerValueFieldResponse,
+  PickerViewsRendererProps,
 } from './hooks/usePicker';
 export type {
   UsePickerValueNonStaticProps,
@@ -88,13 +89,7 @@ export type {
   UseStaticPickerSlots,
   UseStaticPickerSlotProps,
 } from './hooks/useStaticPicker';
-export {
-  useLocalizationContext,
-  useDefaultDates,
-  useUtils,
-  useLocaleText,
-  useNow,
-} from './hooks/useUtils';
+export { useLocalizationContext, useDefaultDates, useUtils, useNow } from './hooks/useUtils';
 export type { ExportedUseViewsOptions, UseViewsOptions } from './hooks/useViews';
 export { useViews } from './hooks/useViews';
 export { useValidation } from './hooks/useValidation';
@@ -136,7 +131,7 @@ export {
   mergeDateAndTime,
   formatMeridiem,
 } from './utils/date-utils';
-export { resolveTimeViewsResponse } from './utils/date-time-utils';
+export { resolveTimeViewsResponse, resolveDateTimeFormat } from './utils/date-time-utils';
 export { splitFieldInternalAndForwardedProps } from './utils/fields';
 export { getDefaultReferenceDate } from './utils/getDefaultReferenceDate';
 export {
@@ -156,7 +151,7 @@ export { validateDate } from './utils/validation/validateDate';
 export { validateDateTime } from './utils/validation/validateDateTime';
 export { validateTime } from './utils/validation/validateTime';
 export { applyDefaultViewProps } from './utils/views';
-export { buildDeprecatedPropsWarning, buildWarning } from './utils/warning';
+export { warnOnce } from './utils/warning';
 
 export { DayCalendar } from '../DateCalendar/DayCalendar';
 export type {

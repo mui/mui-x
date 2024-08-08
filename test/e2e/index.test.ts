@@ -10,6 +10,8 @@ import {
   devices,
   BrowserContextOptions,
   BrowserType,
+  WebError,
+  Locator,
 } from '@playwright/test';
 import { pickersTextFieldClasses } from '@mui/x-date-pickers/PickersTextField';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
@@ -23,8 +25,8 @@ function sleep(timeoutMS: number): Promise<void> {
 // A simplified version of https://github.com/testing-library/dom-testing-library/blob/main/src/wait-for.js
 function waitFor(callback: () => Promise<void>): Promise<void> {
   return new Promise((resolve, reject) => {
-    let intervalId: NodeJS.Timer | null = null;
-    let timeoutId: NodeJS.Timer | null = null;
+    let intervalId: NodeJS.Timeout | null = null;
+    let timeoutId: NodeJS.Timeout | null = null;
     let lastError: any = null;
 
     function handleTimeout() {
@@ -131,7 +133,7 @@ async function initializeEnvironment(
   const isServerRunning = await attemptGoto(page, `${baseUrl}#no-dev`);
   if (!isServerRunning) {
     throw new Error(
-      `Unable to navigate to ${baseUrl} after multiple attempts. Did you forget to run \`yarn test:e2e:server\` and \`yarn test:e2e:build\`?`,
+      `Unable to navigate to ${baseUrl} after multiple attempts. Did you forget to run \`pnpm test:e2e:server\` and \`pnpm test:e2e:build\`?`,
     );
   }
   return { browser, context, page };
@@ -514,6 +516,77 @@ async function initializeEnvironment(
           await page.locator('[role="gridcell"][data-field="brand"] input').inputValue(),
         ).not.to.equal('v');
       });
+
+      // https://github.com/mui/mui-x/issues/12705
+      it('should not crash if the date is invalid', async () => {
+        await renderFixture('DataGrid/KeyboardEditDate');
+
+        await page.hover('div[role="columnheader"][data-field="birthday"]');
+        await page.click(
+          'div[role="columnheader"][data-field="birthday"] button[aria-label="Menu"]',
+        );
+        await page.click('"Filter"');
+        await page.keyboard.type('08/04/2024', { delay: 10 });
+
+        let thrownError: Error | null = null;
+        context.once('weberror', (webError: WebError) => {
+          thrownError = webError.error();
+          console.error(thrownError);
+        });
+
+        await page.keyboard.press('Backspace');
+
+        await sleep(200);
+        expect(thrownError).to.equal(null);
+      });
+
+      // https://github.com/mui/mui-x/issues/12290
+      it('should properly set the width of a group header if the resize happened in a group with fluid columns', async () => {
+        await renderFixture('DataGrid/ResizeWithFlex');
+
+        const headers = await page.locator('.MuiDataGrid-columnHeaders > div').all();
+        const columnHeader = headers.pop()!;
+
+        const columns = columnHeader.locator('.MuiDataGrid-columnHeader');
+        const separators = await columnHeader
+          .locator('.MuiDataGrid-columnSeparator--resizable')
+          .all();
+
+        const moveSeparator = async (separator: Locator) => {
+          const boundingBox = (await separator?.boundingBox())!;
+          const x = boundingBox.x + boundingBox.width / 2;
+          const y = boundingBox.y + boundingBox.height / 2;
+
+          await page.mouse.move(x, y, { steps: 5 });
+          await page.mouse.down();
+          await page.mouse.move(x - 20, y, { steps: 5 });
+          await page.mouse.up();
+        };
+
+        await moveSeparator(separators[0]);
+        await moveSeparator(separators[1]);
+
+        const groupHeaderWidth = await headers[0]
+          .locator('.MuiDataGrid-columnHeader--filledGroup')
+          .first()
+          .evaluate((node) => node.clientWidth);
+        const subGroupHeaderWidth = await headers[1]
+          .locator('.MuiDataGrid-columnHeader--filledGroup')
+          .first()
+          .evaluate((node) => node.clientWidth);
+
+        const groupHeaderColumnsTotalWidth = await columns.evaluateAll((elements) =>
+          // last column is not part of the group
+          elements.slice(0, -1).reduce((acc, element) => acc + element.clientWidth, 0),
+        );
+        const subGroupHeaderColumnsTotalWidth = await columns.evaluateAll((elements) =>
+          // first and last columns are not part of the sub-group
+          elements.slice(1, -1).reduce((acc, element) => acc + element.clientWidth, 0),
+        );
+
+        expect(groupHeaderWidth).to.equal(groupHeaderColumnsTotalWidth);
+        expect(subGroupHeaderWidth).to.equal(subGroupHeaderColumnsTotalWidth);
+      });
     });
 
     describe('<DatePicker />', () => {
@@ -532,6 +605,23 @@ async function initializeEnvironment(
           expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
             '04/11/2022',
           );
+        });
+
+        // assertion for: https://github.com/mui/mui-x/issues/12652
+        it('should allow field editing after opening and closing the picker', async () => {
+          await renderFixture('DatePicker/BasicClearableDesktopDatePicker');
+          // open picker
+          await page.getByRole('button').click();
+          await page.waitForSelector('[role="dialog"]', { state: 'attached' });
+          // close picker
+          await page.getByRole('button', { name: 'Choose date' }).click();
+          await page.waitForSelector('[role="dialog"]', { state: 'detached' });
+
+          // click on the input to focus it
+          await page.getByRole('textbox').click();
+
+          // test that the input value is set after focus
+          expect(await page.getByRole('textbox').inputValue()).to.equal('MM/DD/YYYY');
         });
 
         it('should allow filling in a value and clearing a value', async () => {
@@ -563,9 +653,9 @@ async function initializeEnvironment(
           await page.locator(`.${pickersSectionListClasses.root}`).click();
           await input.fill('02/12/2020');
 
-          expect(await page.getByRole('button').getAttribute('aria-label')).to.equal(
-            'Choose date, selected date is Feb 12, 2020',
-          );
+          expect(
+            await page.getByRole('button', { name: /Choose date/ }).getAttribute('aria-label'),
+          ).to.equal('Choose date, selected date is Feb 12, 2020');
         });
 
         it('should allow pasting a section', async () => {
@@ -612,6 +702,81 @@ async function initializeEnvironment(
           await monthSection.press('2');
           expect(await input.inputValue()).to.equal('02/11/2022');
         });
+
+        it('should focus the first field section after clearing a value', async () => {
+          await renderFixture('DatePicker/BasicDesktopDatePicker');
+
+          const monthSection = page.getByRole('spinbutton', { name: 'Month' });
+          await monthSection.press('2');
+          await page.getByRole('button', { name: 'Clear value' }).click();
+
+          expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('MM');
+        });
+
+        it('should focus the first field section after clearing a value in v6 input', async () => {
+          await renderFixture('DatePicker/BasicClearableDesktopDatePicker');
+
+          const textbox = page.getByRole('textbox');
+          // locator.fill('2') does not work reliably for this case in all browsers
+          await textbox.focus();
+          await textbox.press('2');
+          await page.getByRole('button', { name: 'Clear value' }).click();
+
+          // firefox does not support document.getSelection().toString() on input elements
+          if (browserType.name() === 'firefox') {
+            expect(
+              await page.evaluate(() => {
+                return (
+                  document.activeElement?.tagName === 'INPUT' &&
+                  // only focused input has value set
+                  (document.activeElement as HTMLInputElement)?.value === 'MM/DD/YYYY'
+                );
+              }),
+            ).to.equal(true);
+          } else {
+            expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('MM');
+          }
+        });
+
+        it('should submit a form when clicking "Enter" key', async () => {
+          await renderFixture('DatePicker/DesktopDatePickerForm');
+
+          const textbox = page.getByRole('textbox');
+          await textbox.focus();
+          await textbox.press('Enter');
+
+          expect(await page.getByRole('textbox').inputValue()).to.equal('04/17/2022');
+          const status = page.getByRole('status');
+          expect(await status.isVisible()).to.equal(true);
+          expect(await status.textContent()).to.equal('Submitted: 04/17/2022');
+        });
+
+        // TODO: enable when v7 fields form submitting is fixed
+        // it('should submit a form when clicking "Enter" key with v7 field', async () => {
+        //   await renderFixture('DatePicker/DesktopDatePickerFormV7');
+
+        //   const monthSpinbutton = page.getByRole(`spinbutton`, { name: 'Month' });
+        //   await monthSpinbutton.focus();
+        //   await monthSpinbutton.press('Enter');
+
+        //   expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
+        //     '04/17/2022',
+        //   );
+        //   const status = page.getByRole('status');
+        //   expect(await status.isVisible()).to.equal(true);
+        //   expect(await status.textContent()).to.equal('Submitted: 04/17/2022');
+        // });
+
+        it('should correctly select a day in a calendar with "AdapterMomentJalaali"', async () => {
+          await renderFixture('DatePicker/MomentJalaliDateCalendar');
+
+          await page.getByRole('gridcell', { name: '11' }).click();
+
+          const day11 = page.getByRole('gridcell', { name: '11' });
+          expect(await day11.getAttribute('aria-selected')).to.equal('true');
+          // check that selecting a day doesn't change the day text
+          expect(await day11.textContent()).to.equal('11');
+        });
       });
 
       describe('<MobileDatePicker />', () => {
@@ -634,6 +799,19 @@ async function initializeEnvironment(
           expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
             '04/11/2022',
           );
+        });
+
+        it('should have consistent `placeholder` and `value` behavior', async () => {
+          await renderFixture('DatePicker/MobileDatePickerV6WithClearAction');
+
+          const input = page.getByRole('textbox');
+
+          await input.click({ position: { x: 10, y: 2 } });
+          await page.getByRole('button', { name: 'Clear' }).click();
+
+          await input.blur();
+          expect(await input.getAttribute('placeholder')).to.equal('MM/DD/YYYY');
+          expect(await input.inputValue()).to.equal('');
         });
       });
     });
@@ -721,6 +899,33 @@ async function initializeEnvironment(
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
         });
       });
+
+      it('should correctly select hours section when there are no time renderers on v6', async () => {
+        // The test is flaky on webkit
+        if (browserType.name() === 'webkit') {
+          return;
+        }
+        await renderFixture(
+          'DatePicker/DesktopDateTimePickerNoTimeRenderers?enableAccessibleFieldDOMStructure=false',
+        );
+
+        await page.getByRole('button').click();
+        await page.getByRole('gridcell', { name: '11' }).click();
+
+        // assert that the hours section has been selected using two APIs
+        await waitFor(async () => {
+          // firefox does not support document.getSelection().toString() on input elements
+          if (browserType.name() === 'firefox') {
+            expect(
+              await page.evaluate(
+                () => (document.activeElement as HTMLInputElement | null)?.selectionStart,
+              ),
+            ).to.equal(11);
+          } else {
+            expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('12');
+          }
+        });
+      });
     });
 
     describe('<DateRangePicker />', () => {
@@ -770,6 +975,74 @@ async function initializeEnvironment(
         await page.keyboard.press('Escape');
 
         await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
+      });
+
+      it('should have the same selection process when "readOnly" with single input v7 field', async () => {
+        // firefox in CI is not happy with this test
+        if (browserType.name() === 'firefox') {
+          return;
+        }
+
+        await renderFixture('DatePicker/ReadonlyDesktopDateRangePickerSingleV7');
+
+        await page.locator(`.${pickersSectionListClasses.root}`).first().click();
+
+        // assert that the tooltip has been opened
+        await page.waitForSelector('[role="tooltip"]', { state: 'attached' });
+
+        await page.getByRole('gridcell', { name: '11' }).first().click();
+        await page.getByRole('gridcell', { name: '13' }).first().click();
+
+        // assert that the tooltip closes after selection is complete
+        await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
+
+        expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
+          '04/11/2022 – 04/13/2022',
+        );
+      });
+
+      it('should have the same selection process when "readOnly" with single input v6 field', async () => {
+        // firefox in CI is not happy with this test
+        if (browserType.name() === 'firefox') {
+          return;
+        }
+
+        await renderFixture('DatePicker/ReadonlyDesktopDateRangePickerSingleV6');
+
+        await page.getByRole('textbox').click();
+
+        // assert that the tooltip has been opened
+        await page.waitForSelector('[role="tooltip"]', { state: 'attached' });
+
+        await page.getByRole('gridcell', { name: '11' }).first().click();
+        await page.getByRole('gridcell', { name: '13' }).first().click();
+
+        // assert that the tooltip closes after selection is complete
+        await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
+
+        expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022 – 04/13/2022');
+      });
+
+      it('should not change timezone when changing the start date from non DST to DST', async () => {
+        // firefox in CI is not happy with this test
+        if (browserType.name() === 'firefox') {
+          return;
+        }
+        const thrownErrors: string[] = [];
+        context.on('weberror', (webError) => {
+          thrownErrors.push(webError.error().message);
+        });
+
+        await renderFixture('DatePicker/SingleDesktopDateRangePickerWithTZ');
+
+        // open the picker
+        await page.getByRole('group').click();
+
+        await page.getByRole('spinbutton', { name: 'Month' }).first().press('ArrowDown');
+
+        expect(thrownErrors).not.to.contain(
+          'MUI X: The timezone of the start and the end date should be the same.',
+        );
       });
     });
   });

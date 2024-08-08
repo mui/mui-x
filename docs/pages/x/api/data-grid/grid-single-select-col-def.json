@@ -1,0 +1,106 @@
+{
+  "name": "GridSingleSelectColDef",
+  "imports": [
+    "import { GridSingleSelectColDef } from '@mui/x-data-grid-premium'",
+    "import { GridSingleSelectColDef } from '@mui/x-data-grid-pro'",
+    "import { GridSingleSelectColDef } from '@mui/x-data-grid'"
+  ],
+  "demos": "<ul><li><a href=\"/x/react-data-grid/column-definition/#special-properties\">Special column properties</a></li></ul>",
+  "properties": {
+    "field": { "type": { "description": "string" }, "required": true },
+    "type": {
+      "type": { "description": "'singleSelect'" },
+      "default": "'singleSelect'",
+      "required": true
+    },
+    "aggregable": {
+      "type": { "description": "boolean" },
+      "default": "true",
+      "isPremiumPlan": true
+    },
+    "align": { "type": { "description": "GridAlignment" } },
+    "availableAggregationFunctions": {
+      "type": { "description": "string[]" },
+      "isPremiumPlan": true
+    },
+    "cellClassName": { "type": { "description": "GridCellClassNamePropType&lt;R, V&gt;" } },
+    "colSpan": {
+      "type": { "description": "number | GridColSpanFn&lt;R, V, F&gt;" },
+      "default": "1"
+    },
+    "description": { "type": { "description": "string" } },
+    "disableColumnMenu": { "type": { "description": "boolean" }, "default": "false" },
+    "disableExport": { "type": { "description": "boolean" }, "default": "false" },
+    "disableReorder": { "type": { "description": "boolean" }, "default": "false" },
+    "display": { "type": { "description": "'text' | 'flex'" } },
+    "editable": { "type": { "description": "boolean" }, "default": "false" },
+    "filterable": { "type": { "description": "boolean" }, "default": "true" },
+    "filterOperators": {
+      "type": { "description": "readonly GridFilterOperator&lt;R, V, F&gt;[]" }
+    },
+    "flex": { "type": { "description": "number" } },
+    "getApplyQuickFilterFn": { "type": { "description": "GetApplyQuickFilterFn&lt;R, V&gt;" } },
+    "getOptionLabel": { "type": { "description": "(value: ValueOptions) =&gt; string" } },
+    "getOptionValue": { "type": { "description": "(value: ValueOptions) =&gt; any" } },
+    "getSortComparator": {
+      "type": {
+        "description": "(sortDirection: GridSortDirection) =&gt; GridComparatorFn&lt;V&gt; | undefined"
+      }
+    },
+    "groupable": { "type": { "description": "boolean" }, "default": "true" },
+    "groupingValueGetter": {
+      "type": { "description": "GridGroupingValueGetter&lt;R&gt;" },
+      "isPremiumPlan": true
+    },
+    "headerAlign": { "type": { "description": "GridAlignment" } },
+    "headerClassName": { "type": { "description": "GridColumnHeaderClassNamePropType" } },
+    "headerName": { "type": { "description": "string" } },
+    "hideable": { "type": { "description": "boolean" }, "default": "true" },
+    "hideSortIcons": { "type": { "description": "boolean" }, "default": "false" },
+    "maxWidth": { "type": { "description": "number" }, "default": "Infinity" },
+    "minWidth": { "type": { "description": "number" }, "default": "50" },
+    "pastedValueParser": {
+      "type": { "description": "GridPastedValueParser&lt;R, V, F&gt;" },
+      "isPremiumPlan": true
+    },
+    "pinnable": { "type": { "description": "boolean" }, "default": "true" },
+    "preProcessEditCellProps": {
+      "type": {
+        "description": "(params: GridPreProcessEditCellProps) =&gt; GridEditCellProps | Promise&lt;GridEditCellProps&gt;"
+      }
+    },
+    "renderCell": {
+      "type": {
+        "description": "(params: GridRenderCellParams&lt;R, V, F&gt;) =&gt; React.ReactNode"
+      }
+    },
+    "renderEditCell": {
+      "type": {
+        "description": "(params: GridRenderEditCellParams&lt;R, V, F&gt;) =&gt; React.ReactNode"
+      }
+    },
+    "renderHeader": {
+      "type": {
+        "description": "(params: GridColumnHeaderParams&lt;R, V, F&gt;) =&gt; React.ReactNode"
+      }
+    },
+    "renderHeaderFilter": {
+      "type": { "description": "(params: GridRenderHeaderFilterProps) =&gt; React.ReactNode" },
+      "isProPlan": true
+    },
+    "resizable": { "type": { "description": "boolean" }, "default": "true" },
+    "sortable": { "type": { "description": "boolean" }, "default": "true" },
+    "sortComparator": { "type": { "description": "GridComparatorFn&lt;V&gt;" } },
+    "sortingOrder": { "type": { "description": "readonly GridSortDirection[]" } },
+    "valueFormatter": { "type": { "description": "GridValueFormatter&lt;R, V, F&gt;" } },
+    "valueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F&gt;" } },
+    "valueOptions": {
+      "type": {
+        "description": "Array&lt;ValueOptions&gt; | ((params: GridValueOptionsParams&lt;R&gt;) =&gt; Array&lt;ValueOptions&gt;)"
+      }
+    },
+    "valueParser": { "type": { "description": "GridValueParser&lt;R, V, F&gt;" } },
+    "valueSetter": { "type": { "description": "GridValueSetter&lt;R, V, F&gt;" } },
+    "width": { "type": { "description": "number" }, "default": "100" }
+  }
+}

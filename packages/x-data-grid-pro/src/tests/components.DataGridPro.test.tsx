@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, EventType, fireEvent, userEvent } from '@mui-internal/test-utils';
+import { createRenderer, EventType, fireEvent, userEvent } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -62,7 +62,7 @@ describe('<DataGridPro/> - Components', () => {
 
         const eventToFire = prop.replace(/^on([A-Z])/, (match) =>
           match.slice(2).toLowerCase(),
-        ) as EventType; // e.g. onDoubleClick -> doubleClick
+        ) as EventType; // for example onDoubleClick -> doubleClick
         const cell = getCell(0, 0);
 
         if (event !== 'cellMouseUp') {
@@ -111,7 +111,7 @@ describe('<DataGridPro/> - Components', () => {
 
         const eventToFire = prop.replace(/^on([A-Z])/, (match) =>
           match.slice(2).toLowerCase(),
-        ) as EventType; // e.g. onDoubleClick -> doubleClick
+        ) as EventType; // for example onDoubleClick -> doubleClick
         fireEvent[eventToFire](getRow(0));
 
         expect(propHandler.callCount).to.equal(1);

@@ -1,4 +1,4 @@
-import { fireEvent } from '@mui-internal/test-utils';
+import { fireEvent } from '@mui/internal-test-utils';
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
 import {
   createPickerRenderer,
@@ -97,6 +97,75 @@ describe('<DesktopDatePicker /> - Field', () => {
       testFormat({ views: ['year', 'month'] }, 'MMMM YYYY');
       testFormat({ views: ['year', 'month', 'day'] }, 'MM/DD/YYYY');
       testFormat({ views: ['year', 'day'] }, 'MM/DD/YYYY');
+    });
+  });
+
+  describe('slots: field', () => {
+    const { render, clock } = createPickerRenderer({
+      clock: 'fake',
+      clockConfig: new Date('2018-01-01T10:05:05.000'),
+    });
+    const { renderWithProps } = buildFieldInteractions({
+      clock,
+      render,
+      Component: DesktopDatePicker,
+    });
+
+    it('should allow to override the placeholder (v6 only)', () => {
+      renderWithProps({
+        enableAccessibleFieldDOMStructure: false,
+        slotProps: {
+          field: {
+            // @ts-ignore
+            placeholder: 'Custom placeholder',
+          },
+        },
+      });
+
+      const input = getTextbox();
+      expectFieldPlaceholderV6(input, 'Custom placeholder');
+    });
+  });
+
+  describe('slots: textField', () => {
+    const { render, clock } = createPickerRenderer({
+      clock: 'fake',
+      clockConfig: new Date('2018-01-01T10:05:05.000'),
+    });
+    const { renderWithProps } = buildFieldInteractions({
+      clock,
+      render,
+      Component: DesktopDatePicker,
+    });
+
+    describe('placeholder override (v6 only)', () => {
+      it('should allow to override the placeholder', () => {
+        renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          slotProps: {
+            textField: {
+              placeholder: 'Custom placeholder',
+            },
+          },
+        });
+
+        const input = getTextbox();
+        expectFieldPlaceholderV6(input, 'Custom placeholder');
+      });
+
+      it('should render blank placeholder when prop is an empty string', () => {
+        renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          slotProps: {
+            textField: {
+              placeholder: '',
+            },
+          },
+        });
+
+        const input = getTextbox();
+        expectFieldPlaceholderV6(input, '');
+      });
     });
   });
 

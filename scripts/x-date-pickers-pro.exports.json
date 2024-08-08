@@ -122,6 +122,7 @@
   { "name": "DesktopDateRangePickerSlotProps", "kind": "Interface" },
   { "name": "DesktopDateRangePickerSlots", "kind": "Interface" },
   { "name": "DesktopDateTimePicker", "kind": "Variable" },
+  { "name": "DesktopDateTimePickerLayout", "kind": "Variable" },
   { "name": "DesktopDateTimePickerProps", "kind": "Interface" },
   { "name": "DesktopDateTimePickerSlotProps", "kind": "Interface" },
   { "name": "DesktopDateTimePickerSlots", "kind": "Interface" },
@@ -212,6 +213,8 @@
   { "name": "MonthCalendarClasses", "kind": "Interface" },
   { "name": "MonthCalendarClassKey", "kind": "TypeAlias" },
   { "name": "MonthCalendarProps", "kind": "Interface" },
+  { "name": "MonthCalendarSlotProps", "kind": "Interface" },
+  { "name": "MonthCalendarSlots", "kind": "Interface" },
   { "name": "MuiPickersAdapter", "kind": "Interface" },
   { "name": "MuiPickersAdapterContext", "kind": "Variable" },
   { "name": "MultiInputDateRangeField", "kind": "Variable" },
@@ -326,6 +329,7 @@
   { "name": "PickerValidDate", "kind": "TypeAlias" },
   { "name": "PickerValidDateLookup", "kind": "Interface" },
   { "name": "RangeFieldSection", "kind": "Interface" },
+  { "name": "RangeFieldSeparatorProps", "kind": "Interface" },
   { "name": "RangePosition", "kind": "TypeAlias" },
   { "name": "renderDateRangeViewCalendar", "kind": "Variable" },
   { "name": "renderDateViewCalendar", "kind": "Variable" },
@@ -409,6 +413,7 @@
   { "name": "UseMultiInputTimeRangeFieldComponentProps", "kind": "TypeAlias" },
   { "name": "UseMultiInputTimeRangeFieldProps", "kind": "Interface" },
   { "name": "usePickerLayout", "kind": "ExportAssignment" },
+  { "name": "usePickersTranslations", "kind": "Variable" },
   { "name": "UseSingleInputDateRangeFieldProps", "kind": "Interface" },
   { "name": "UseSingleInputDateTimeRangeFieldProps", "kind": "Interface" },
   { "name": "UseSingleInputTimeRangeFieldProps", "kind": "Interface" },
@@ -418,5 +423,7 @@
   { "name": "yearCalendarClasses", "kind": "Variable" },
   { "name": "YearCalendarClasses", "kind": "Interface" },
   { "name": "YearCalendarClassKey", "kind": "TypeAlias" },
-  { "name": "YearCalendarProps", "kind": "Interface" }
+  { "name": "YearCalendarProps", "kind": "Interface" },
+  { "name": "YearCalendarSlotProps", "kind": "Interface" },
+  { "name": "YearCalendarSlots", "kind": "Interface" }
 ]

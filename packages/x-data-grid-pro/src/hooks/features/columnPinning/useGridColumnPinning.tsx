@@ -278,16 +278,16 @@ export const useGridColumnPinning = (
      * on must be moved to left or right to make room for it. The ^^^ below represents the column
      * which gave space to receive X.
      *
-     * | X | B | C | D | -> | B | C | D | X | (e.g. X moved to after D, so delta=1)
+     * | X | B | C | D | -> | B | C | D | X | (for example X moved to after D, so delta=1)
      *              ^^^              ^^^
      *
-     * | A | B | C | X | -> | X | A | B | C | (e.g. X moved before A, so delta=-1)
+     * | A | B | C | X | -> | X | A | B | C | (for example X moved before A, so delta=-1)
      *  ^^^                      ^^^
      *
      * If column P is pinned, it will not move to provide space. However, it will jump to the next
      * non-pinned column.
      *
-     * | X | B | P | D | -> | B | D | P | X | (e.g. X moved to after D, with P pinned)
+     * | X | B | P | D | -> | B | D | P | X | (for example X moved to after D, with P pinned)
      *              ^^^          ^^^
      */
     const siblingField = latestColumnFields[targetIndex - delta];

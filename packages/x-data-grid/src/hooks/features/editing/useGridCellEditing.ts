@@ -30,7 +30,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditingSelectors';
 import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
-import { buildWarning } from '../../../utils/warning';
+import { warnOnce } from '../../../internals/utils/warning';
 import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
@@ -39,15 +39,6 @@ import {
   GridCellEditStartReasons,
   GridCellEditStopReasons,
 } from '../../../models/params/gridEditCellParams';
-
-const missingOnProcessRowUpdateErrorWarning = buildWarning(
-  [
-    'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
-    'To handle the error pass a callback to the `onProcessRowUpdateError` prop, e.g. `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-    'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
-  ],
-  'error',
-);
 
 export const useGridCellEditing = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
@@ -234,6 +225,21 @@ export const useGridCellEditing = (
     [apiRef],
   );
 
+  const runIfNoFieldErrors =
+    <Args extends Parameters<GridEventListener<'cellEditStop'>>>(
+      callback?: (...args: Args) => void,
+    ) =>
+    async (...args: Args) => {
+      if (callback) {
+        const { id, field } = args[0];
+        const editRowsState = apiRef.current.state.editRows;
+        const hasFieldErrors = editRowsState[id][field]?.error;
+        if (!hasFieldErrors) {
+          callback(...args);
+        }
+      }
+    };
+
   useGridApiEventHandler(apiRef, 'cellDoubleClick', runIfEditModeIsCell(handleCellDoubleClick));
   useGridApiEventHandler(apiRef, 'cellFocusOut', runIfEditModeIsCell(handleCellFocusOut));
   useGridApiEventHandler(apiRef, 'cellKeyDown', runIfEditModeIsCell(handleCellKeyDown));
@@ -242,7 +248,7 @@ export const useGridCellEditing = (
   useGridApiEventHandler(apiRef, 'cellEditStop', runIfEditModeIsCell(handleCellEditStop));
 
   useGridApiOptionHandler(apiRef, 'cellEditStart', props.onCellEditStart);
-  useGridApiOptionHandler(apiRef, 'cellEditStop', props.onCellEditStop);
+  useGridApiOptionHandler(apiRef, 'cellEditStop', runIfNoFieldErrors(props.onCellEditStop));
 
   const getCellMode = React.useCallback<GridCellEditingApi['getCellMode']>(
     (id, field) => {
@@ -257,7 +263,9 @@ export const useGridCellEditing = (
     const isNewModelDifferentFromProp = newModel !== props.cellModesModel;
 
     if (onCellModesModelChange && isNewModelDifferentFromProp) {
-      onCellModesModelChange(newModel, {});
+      onCellModesModelChange(newModel, {
+        api: apiRef.current,
+      });
     }
 
     if (props.cellModesModel && isNewModelDifferentFromProp) {
@@ -328,8 +336,27 @@ export const useGridCellEditing = (
       const { id, field, deleteValue, initialValue } = params;
 
       let newValue = apiRef.current.getCellValue(id, field);
-      if (deleteValue || initialValue) {
-        newValue = deleteValue ? '' : initialValue;
+      if (deleteValue) {
+        const fieldType = apiRef.current.getColumn(field).type;
+        switch (fieldType) {
+          case 'boolean':
+            newValue = false;
+            break;
+          case 'date':
+          case 'dateTime':
+          case 'number':
+            newValue = undefined;
+            break;
+          case 'singleSelect':
+            newValue = null;
+            break;
+          case 'string':
+          default:
+            newValue = '';
+            break;
+        }
+      } else if (initialValue) {
+        newValue = initialValue;
       }
 
       const newProps = {
@@ -399,7 +426,14 @@ export const useGridCellEditing = (
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
           } else if (process.env.NODE_ENV !== 'production') {
-            missingOnProcessRowUpdateErrorWarning();
+            warnOnce(
+              [
+                'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+                'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
+                'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
+              ],
+              'error',
+            );
           }
         };
 

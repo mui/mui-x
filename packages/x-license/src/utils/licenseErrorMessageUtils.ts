@@ -32,6 +32,18 @@ export function showLicenseKeyPlanMismatchError() {
   ]);
 }
 
+export function showNotAvailableInInitialProPlanError() {
+  showError([
+    'MUI X: Component not included in your license.',
+    '',
+    'The component you are trying to use is not included in the Pro Plan you purchased.',
+    '',
+    'Your license is from an old version of the Pro Plan that is only compatible with the `@mui/x-data-grid-pro` and `@mui/x-date-pickers-pro` commercial packages.',
+    '',
+    'To start using another Pro package, please consider reaching to our sales team to upgrade your license or visit https://mui.com/r/x-get-license to get a new license key.',
+  ]);
+}
+
 export function showMissingLicenseKeyError({
   plan,
   packageName,
@@ -71,7 +83,7 @@ export function showExpiredAnnualGraceLicenseKeyError({
   showError([
     'MUI X: Expired license key.',
     '',
-    `Your annual license key to use MUI X ${plan}'s on non-production environments is expired. If you are seeing this development console message, you might be close to breach the license terms by making direct or indirect changes to the frontend of an app that render a MUI X ${plan} component (more details in https://mui.com/r/x-license-annual).`,
+    `Your annual license key to use MUI X ${plan} in non-production environments has expired. If you are seeing this development console message, you might be close to breach the license terms by making direct or indirect changes to the frontend of an app that render a MUI X ${plan} component (more details in https://mui.com/r/x-license-annual).`,
     '',
     'To solve the problem you can either:',
     '',
@@ -99,7 +111,7 @@ export function showExpiredAnnualLicenseKeyError({
     [
       'MUI X: Expired license key.',
       '',
-      `Your annual license key to use MUI X ${plan}'s on non-production environments is expired. If you are seeing this development console message, you might be close to breach the license terms by making direct or indirect changes to the frontend of an app that render a MUI X ${plan} component (more details in https://mui.com/r/x-license-annual).`,
+      `Your annual license key to use MUI X ${plan} in non-production environments has expired. If you are seeing this development console message, you might be close to breach the license terms by making direct or indirect changes to the frontend of an app that render a MUI X ${plan} component (more details in https://mui.com/r/x-license-annual).`,
       '',
       'To solve the problem you can either:',
       '',

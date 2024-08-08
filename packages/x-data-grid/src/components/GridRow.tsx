@@ -1,19 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useForkRef as useForkRef,
-} from '@mui/utils';
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { fastMemo } from '../utils/fastMemo';
 import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridRowModes, GridCellModes } from '../models/gridEditRowModel';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
+import { gridClasses } from '../constants/gridClasses';
+import { composeGridClasses } from '../utils/composeGridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import type { DataGridProcessedProps } from '../models/props/DataGridProps';
-import type { GridPinnedColumns } from '../hooks/features/columns';
+import { GridPinnedColumns } from '../hooks/features/columns';
 import type { GridStateColDef } from '../models/colDef/gridColDef';
 import type { GridRenderContext } from '../models/params/gridScrollParams';
 import { gridColumnPositionsSelector } from '../hooks/features/columns/gridColumnsSelector';
@@ -29,8 +26,9 @@ import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSele
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
-import { PinnedPosition } from './cell/GridCell';
+import { PinnedPosition, gridPinnedColumnPositionLookup } from './cell/GridCell';
 import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
+import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 
 export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   row: GridRowModel;
@@ -61,39 +59,13 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   isFirstVisible: boolean;
   isLastVisible: boolean;
   isNotVisible: boolean;
+  showBottomBorder: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
   onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
   [x: string]: any; // Allow custom attributes like data-* and aria-*
 }
-
-type OwnerState = Pick<GridRowProps, 'selected'> & {
-  editable: boolean;
-  editing: boolean;
-  isFirstVisible: boolean;
-  isLastVisible: boolean;
-  classes?: DataGridProcessedProps['classes'];
-  rowHeight: GridRowProps['rowHeight'];
-};
-
-const useUtilityClasses = (ownerState: OwnerState) => {
-  const { editable, editing, selected, isFirstVisible, isLastVisible, rowHeight, classes } =
-    ownerState;
-  const slots = {
-    root: [
-      'row',
-      selected && 'selected',
-      editable && 'row--editable',
-      editing && 'row--editing',
-      isFirstVisible && 'row--firstVisible',
-      isLastVisible && 'row--lastVisible',
-      rowHeight === 'auto' && 'row--dynamicHeight',
-    ],
-  };
-
-  return composeClasses(slots, getDataGridUtilityClass, classes);
-};
 
 function EmptyCell({ width }: { width: number }) {
   if (!width) {
@@ -128,6 +100,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     isFirstVisible,
     isLastVisible,
     isNotVisible,
+    showBottomBorder,
     focusedCell,
     tabbableCell,
     onClick,
@@ -150,6 +123,9 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const handleRef = useForkRef(ref, refProp);
   const rowNode = apiRef.current.getRowNode(rowId);
   const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
+  const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
+  const editing = apiRef.current.getRowMode(rowId) === GridRowModes.Edit;
+  const editable = rootProps.editMode === GridEditModes.Row;
 
   const hasFocusCell = focusedColumnIndex !== undefined;
   const hasVirtualFocusCellLeft =
@@ -163,24 +139,18 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   const ariaRowIndex = index + headerGroupingMaxDepth + 2; // 1 for the header row and 1 as it's 1-based
 
-  const ownerState = {
-    selected,
-    isFirstVisible,
-    isLastVisible,
-    classes: rootProps.classes,
-    editing: apiRef.current.getRowMode(rowId) === GridRowModes.Edit,
-    editable: rootProps.editMode === GridEditModes.Row,
-    rowHeight,
-  };
-
-  const classes = useUtilityClasses(ownerState);
-
-  React.useLayoutEffect(() => {
-    if (rowHeight === 'auto' && ref.current && typeof ResizeObserver === 'undefined') {
-      // Fallback for IE
-      apiRef.current.unstable_storeRowHeightMeasurement(rowId, ref.current.clientHeight);
-    }
-  }, [apiRef, rowHeight, rowId]);
+  const classes = composeGridClasses(rootProps.classes, {
+    root: [
+      'row',
+      selected && 'selected',
+      editable && 'row--editable',
+      editing && 'row--editing',
+      isFirstVisible && 'row--firstVisible',
+      isLastVisible && 'row--lastVisible',
+      showBottomBorder && 'row--borderBottom',
+      rowHeight === 'auto' && 'row--dynamicHeight',
+    ],
+  });
 
   React.useLayoutEffect(() => {
     if (currentPage.range) {
@@ -369,34 +339,23 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     const width = cellColSpanInfo?.cellProps.width ?? column.computedWidth;
     const colSpan = cellColSpanInfo?.cellProps.colSpan ?? 1;
 
-    let pinnedOffset: number;
-    // FIXME: Why is the switch check exhaustiveness not validated with typescript-eslint?
-    // eslint-disable-next-line default-case
-    switch (pinnedPosition) {
-      case PinnedPosition.LEFT:
-        pinnedOffset = columnPositions[indexRelativeToAllColumns];
-        break;
-      case PinnedPosition.RIGHT:
-        pinnedOffset =
-          dimensions.columnsTotalWidth -
-          columnPositions[indexRelativeToAllColumns] -
-          column.computedWidth +
-          scrollbarWidth;
-        break;
-      case PinnedPosition.NONE:
-      case PinnedPosition.VIRTUAL:
-        pinnedOffset = 0;
-        break;
-    }
+    const pinnedOffset = getPinnedCellOffset(
+      gridPinnedColumnPositionLookup[pinnedPosition],
+      column.computedWidth,
+      indexRelativeToAllColumns,
+      columnPositions,
+      dimensions,
+    );
 
     if (rowNode?.type === 'skeletonRow') {
       return (
         <slots.skeletonCell
           key={column.field}
+          type={column.type}
           width={width}
           height={rowHeight}
           field={column.field}
-          align={column.align ?? 'left'}
+          align={column.align}
         />
       );
     }
@@ -431,6 +390,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         pinnedPosition={pinnedPosition}
         sectionIndex={indexInSection}
         sectionLength={sectionLength}
+        gridHasFiller={gridHasFiller}
         {...slotProps?.cell}
       />
     );
@@ -533,7 +493,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       />
       {cells}
       {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
-      {rightCells.length > 0 && <div role="presentation" style={{ flex: '1' }} />}
+      {rightCells.length > 0 && <div role="presentation" className={gridClasses.filler} />}
       {rightCells}
       {scrollbarWidth !== 0 && <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} />}
     </div>
@@ -543,7 +503,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 GridRow.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   dimensions: PropTypes.shape({
     bottomContainerHeight: PropTypes.number.isRequired,
@@ -554,6 +514,7 @@ GridRow.propTypes = {
     }).isRequired,
     hasScrollX: PropTypes.bool.isRequired,
     hasScrollY: PropTypes.bool.isRequired,
+    headerFilterHeight: PropTypes.number.isRequired,
     headerHeight: PropTypes.number.isRequired,
     headersTotalHeight: PropTypes.number.isRequired,
     isReady: PropTypes.bool.isRequired,
@@ -610,6 +571,7 @@ GridRow.propTypes = {
   rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   selected: PropTypes.bool.isRequired,
+  showBottomBorder: PropTypes.bool.isRequired,
   /**
    * Determines which cell should be tabbable by having tabIndex=0.
    * If `null`, no cell in this row is in the tab sequence.

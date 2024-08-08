@@ -1,15 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Delaunay } from 'd3-delaunay';
+import { Delaunay } from '@mui/x-charts-vendor/d3-delaunay';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { InteractionContext } from '../context/InteractionProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
-import { SvgContext, DrawingContext } from '../context/DrawingProvider';
-import { SeriesContext } from '../context/SeriesContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import { getSVGPoint } from '../internals/utils';
+import { getSVGPoint } from '../internals/getSVGPoint';
 import { ScatterItemIdentifier } from '../models';
 import { SeriesId } from '../models/seriesType/common';
+import { useDrawingArea, useSvgRef } from '../hooks';
+import { useHighlighted } from '../context';
+import { useScatterSeries } from '../hooks/useSeries';
 
 export type ChartsVoronoiHandlerProps = {
   /**
@@ -19,23 +20,27 @@ export type ChartsVoronoiHandlerProps = {
   voronoiMaxRadius?: number | undefined;
   /**
    * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event Mouse event catched at the svg level
-   * @param {ScatterItemIdentifier} scatterItemIdentifier Identify whihc item got clicked
+   * @param {MouseEvent} event Mouse event caught at the svg level
+   * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
   onItemClick?: (event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void;
 };
 
+type VoronoiSeries = { seriesId: SeriesId; startIndex: number; endIndex: number };
+
 function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const { voronoiMaxRadius, onItemClick } = props;
-  const svgRef = React.useContext(SvgContext);
-  const { width, height, top, left } = React.useContext(DrawingContext);
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = React.useContext(CartesianContext);
+  const svgRef = useSvgRef();
+  const drawingArea = useDrawingArea();
+  const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
   const { dispatch } = React.useContext(InteractionContext);
 
-  const { series, seriesOrder } = React.useContext(SeriesContext).scatter ?? {};
-  const voronoiRef = React.useRef<
-    Record<string, { startIndex: number; endIndex: number }> & { delauney?: Delaunay<any> }
-  >({});
+  const { series, seriesOrder } = useScatterSeries() ?? {};
+  const voronoiRef = React.useRef<Record<string, VoronoiSeries>>({});
+  const delauneyRef = React.useRef<Delaunay<any> | undefined>(undefined);
+  const lastFind = React.useRef<number | undefined>(undefined);
+
+  const { setHighlighted, clearHighlighted } = useHighlighted();
 
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
@@ -58,24 +63,39 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
     voronoiRef.current = {};
     let points: number[] = [];
     seriesOrder.forEach((seriesId) => {
-      const { data, xAxisKey, yAxisKey } = series[seriesId];
+      const { data, xAxisId, yAxisId, xAxisKey, yAxisKey } = series[seriesId];
 
-      const xScale = xAxis[xAxisKey ?? defaultXAxisId].scale;
-      const yScale = yAxis[yAxisKey ?? defaultYAxisId].scale;
+      const xScale = xAxis[xAxisId ?? xAxisKey ?? defaultXAxisId].scale;
+      const yScale = yAxis[yAxisId ?? yAxisKey ?? defaultYAxisId].scale;
 
       const getXPosition = getValueToPositionMapper(xScale);
       const getYPosition = getValueToPositionMapper(yScale);
 
-      const seriesPoints = data.flatMap(({ x, y }) => [getXPosition(x), getYPosition(y)]);
+      const seriesPoints = data.flatMap(({ x, y }) => {
+        const pointX = getXPosition(x);
+        const pointY = getYPosition(y);
+
+        if (!drawingArea.isPointInside({ x: pointX, y: pointY })) {
+          // If the point is not displayed we move them to a trash coordinate.
+          // This avoids managing index mapping before/after filtering.
+          // The trash point is far enough such that any point in the drawing area will be closer to the mouse than the trash coordinate.
+          return [-drawingArea.width, -drawingArea.height];
+        }
+
+        return [pointX, pointY];
+      });
+
       voronoiRef.current[seriesId] = {
+        seriesId,
         startIndex: points.length,
         endIndex: points.length + seriesPoints.length,
       };
       points = points.concat(seriesPoints);
     });
 
-    voronoiRef.current.delauney = new Delaunay(points);
-  }, [defaultXAxisId, defaultYAxisId, series, seriesOrder, xAxis, yAxis]);
+    delauneyRef.current = new Delaunay(points);
+    lastFind.current = undefined;
+  }, [defaultXAxisId, defaultYAxisId, series, seriesOrder, xAxis, yAxis, drawingArea]);
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -83,7 +103,6 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       return undefined;
     }
 
-    // TODO: A perf optimisation of voronoi could be to use the last point as the intial point for the next search.
     function getClosestPoint(
       event: MouseEvent,
     ):
@@ -92,52 +111,49 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       | 'outside-voronoi-max-radius'
       | 'no-point-found' {
       // Get mouse coordinate in global SVG space
-      const svgPoint = getSVGPoint(svgRef.current!, event);
+      const svgPoint = getSVGPoint(element, event);
 
-      const outsideX = svgPoint.x < left || svgPoint.x > left + width;
-      const outsideY = svgPoint.y < top || svgPoint.y > top + height;
-      if (outsideX || outsideY) {
+      if (!drawingArea.isPointInside(svgPoint)) {
+        lastFind.current = undefined;
         return 'outside-chart';
       }
 
-      if (!voronoiRef.current.delauney) {
+      if (!delauneyRef.current) {
         return 'no-point-found';
       }
 
-      const closestPointIndex = voronoiRef.current.delauney?.find(svgPoint.x, svgPoint.y);
+      const closestPointIndex = delauneyRef.current.find(svgPoint.x, svgPoint.y, lastFind.current);
       if (closestPointIndex === undefined) {
         return 'no-point-found';
       }
 
-      const seriesId = Object.keys(voronoiRef.current).find((id) => {
-        if (id === 'delauney') {
-          return false;
-        }
-        return (
-          2 * closestPointIndex >= voronoiRef.current[id].startIndex &&
-          2 * closestPointIndex < voronoiRef.current[id].endIndex
-        );
+      lastFind.current = closestPointIndex;
+      const closestSeries = Object.values(voronoiRef.current).find((value) => {
+        return 2 * closestPointIndex >= value.startIndex && 2 * closestPointIndex < value.endIndex;
       });
-      if (seriesId === undefined) {
+
+      if (closestSeries === undefined) {
         return 'no-point-found';
       }
 
-      const dataIndex = (2 * closestPointIndex - voronoiRef.current[seriesId].startIndex) / 2;
+      const dataIndex =
+        (2 * closestPointIndex - voronoiRef.current[closestSeries.seriesId].startIndex) / 2;
 
       if (voronoiMaxRadius !== undefined) {
-        const pointX = voronoiRef.current.delauney.points[2 * closestPointIndex];
-        const pointY = voronoiRef.current.delauney.points[2 * closestPointIndex + 1];
+        const pointX = delauneyRef.current.points[2 * closestPointIndex];
+        const pointY = delauneyRef.current.points[2 * closestPointIndex + 1];
         const dist2 = (pointX - svgPoint.x) ** 2 + (pointY - svgPoint.y) ** 2;
         if (dist2 > voronoiMaxRadius ** 2) {
           // The closest point is too far to be considered.
           return 'outside-voronoi-max-radius';
         }
       }
-      return { seriesId, dataIndex };
+      return { seriesId: closestSeries.seriesId, dataIndex };
     }
 
-    const handleMouseOut = () => {
+    const handleMouseLeave = () => {
       dispatch({ type: 'exitChart' });
+      clearHighlighted();
     };
 
     const handleMouseMove = (event: MouseEvent) => {
@@ -145,16 +161,22 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
 
       if (closestPoint === 'outside-chart') {
         dispatch({ type: 'exitChart' });
+        clearHighlighted();
         return;
       }
 
       if (closestPoint === 'outside-voronoi-max-radius' || closestPoint === 'no-point-found') {
         dispatch({ type: 'leaveItem', data: { type: 'scatter' } });
+        clearHighlighted();
         return;
       }
 
       const { seriesId, dataIndex } = closestPoint;
       dispatch({ type: 'enterItem', data: { type: 'scatter', seriesId, dataIndex } });
+      setHighlighted({
+        seriesId,
+        dataIndex,
+      });
     };
 
     const handleMouseClick = (event: MouseEvent) => {
@@ -172,15 +194,25 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       onItemClick(event, { type: 'scatter', seriesId, dataIndex });
     };
 
-    element.addEventListener('mouseout', handleMouseOut);
-    element.addEventListener('mousemove', handleMouseMove);
+    element.addEventListener('pointerleave', handleMouseLeave);
+    element.addEventListener('pointermove', handleMouseMove);
     element.addEventListener('click', handleMouseClick);
     return () => {
-      element.removeEventListener('mouseout', handleMouseOut);
-      element.removeEventListener('mousemove', handleMouseMove);
+      element.removeEventListener('pointerleave', handleMouseLeave);
+      element.removeEventListener('pointermove', handleMouseMove);
       element.removeEventListener('click', handleMouseClick);
     };
-  }, [svgRef, dispatch, left, width, top, height, yAxis, xAxis, voronoiMaxRadius, onItemClick]);
+  }, [
+    svgRef,
+    dispatch,
+    yAxis,
+    xAxis,
+    voronoiMaxRadius,
+    onItemClick,
+    setHighlighted,
+    clearHighlighted,
+    drawingArea,
+  ]);
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
   return <React.Fragment />;
@@ -189,12 +221,12 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
 ChartsVoronoiHandler.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event Mouse event catched at the svg level
-   * @param {ScatterItemIdentifier} scatterItemIdentifier Identify whihc item got clicked
+   * @param {MouseEvent} event Mouse event caught at the svg level
+   * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
   onItemClick: PropTypes.func,
   /**

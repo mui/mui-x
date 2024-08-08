@@ -54,7 +54,10 @@
     "minDate": { "description": "Minimal selectable date." },
     "onAccept": {
       "description": "Callback fired when the value is accepted.",
-      "typeDescriptions": { "value": "The value that was just accepted." }
+      "typeDescriptions": {
+        "value": "The value that was just accepted.",
+        "context": "The context containing the validation result of the current value."
+      }
     },
     "onChange": {
       "description": "Callback fired when the value changes.",
@@ -93,7 +96,7 @@
       "typeDescriptions": { "React.ReactNode": "The node to render when loading." }
     },
     "shouldDisableDate": {
-      "description": "Disable specific date.<br>Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
+      "description": "Disable specific date.<br>Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
       "typeDescriptions": {
         "day": "The date to test.",
         "position": "The date to test, &#39;start&#39; or &#39;end&#39;.",
@@ -114,7 +117,7 @@
     },
     "value": { "description": "The selected value. Used when the component is controlled." },
     "viewRenderers": {
-      "description": "Define custom view renderers for each section. If <code>null</code>, the section will only have field editing. If <code>undefined</code>, internally defined view will be the used."
+      "description": "Define custom view renderers for each section. If <code>null</code>, the section will only have field editing. If <code>undefined</code>, internally defined view will be used."
     }
   },
   "classDescriptions": {},
@@ -129,7 +132,7 @@
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "shortcuts": "Custom component for the shortcuts.",
     "switchViewButton": "Button displayed to switch between different calendar views.",
-    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
+    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &quot;year&quot;.",
     "toolbar": "Custom component for the toolbar rendered above the views."
   }
 }

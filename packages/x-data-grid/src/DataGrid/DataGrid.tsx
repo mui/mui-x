@@ -19,20 +19,24 @@ export type { GridSlotsComponent as GridSlots } from '../models';
 
 export type GridUseThemeProps = typeof useThemeProps;
 
-const propValidators: PropValidator<DataGridProcessedProps>[] = [
-  ...propValidatorsDataGrid,
-  // Only validate in MIT version
-  (props) =>
-    (props.columns &&
-      props.columns.some((column) => column.resizable) &&
-      [
-        `MUI X: \`column.resizable = true\` is not a valid prop.`,
-        'Column resizing is not available in the MIT version.',
-        '',
-        'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
-      ].join('\n')) ||
-    undefined,
-];
+let propValidators: PropValidator<DataGridProcessedProps>[];
+
+if (process.env.NODE_ENV !== 'production') {
+  propValidators = [
+    ...propValidatorsDataGrid,
+    // Only validate in MIT version
+    (props) =>
+      (props.columns &&
+        props.columns.some((column) => column.resizable) &&
+        [
+          `MUI X: \`column.resizable = true\` is not a valid prop.`,
+          'Column resizing is not available in the MIT version.',
+          '',
+          'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
+        ].join('\n')) ||
+      undefined,
+  ];
+}
 
 export interface DataGridComponent {
   <R extends GridValidRowModel = any>(
@@ -55,8 +59,9 @@ export const DataGridRaw = fastMemo(React.forwardRef(function DataGrid<R extends
   const props = useDataGridProps(inProps);
   const privateApiRef = useDataGridComponent(props.apiRef, props);
 
-  validateProps(props, propValidators);
-
+  if (process.env.NODE_ENV !== 'production') {
+    validateProps(props, propValidators);
+  }
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot
@@ -77,7 +82,7 @@ export const DataGridRaw = fastMemo(React.forwardRef(function DataGrid<R extends
 DataGridRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The ref object that allows Data Grid manipulation. Can be instantiated with `useGridApiRef()`.
@@ -94,7 +99,7 @@ DataGridRaw.propTypes = {
    */
   'aria-labelledby': PropTypes.string,
   /**
-   * If `true`, the Data Grid height is dynamic and follow the number of rows in the Data Grid.
+   * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
    * @default false
    */
   autoHeight: PropTypes.bool,
@@ -103,6 +108,21 @@ DataGridRaw.propTypes = {
    * @default false
    */
   autoPageSize: PropTypes.bool,
+  /**
+   * If `true`, columns are autosized after the datagrid is mounted.
+   * @default false
+   */
+  autosizeOnMount: PropTypes.bool,
+  /**
+   * The options for autosize when user-initiated.
+   */
+  autosizeOptions: PropTypes.shape({
+    columns: PropTypes.arrayOf(PropTypes.string),
+    expand: PropTypes.bool,
+    includeHeaders: PropTypes.bool,
+    includeOutliers: PropTypes.bool,
+    outliersFactor: PropTypes.number,
+  }),
   /**
    * Controls the modes of the cells.
    */
@@ -122,10 +142,10 @@ DataGridRaw.propTypes = {
    */
   clipboardCopyCellDelimiter: PropTypes.string,
   /**
-   * Number of extra columns to be rendered before/after the visible slice.
-   * @default 3
+   * Column region in pixels to render before/after the viewport
+   * @default 150
    */
-  columnBuffer: PropTypes.number,
+  columnBufferPx: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
    * Sets the height in pixel of the column headers in the Data Grid.
@@ -137,11 +157,6 @@ DataGridRaw.propTypes = {
    */
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
-   * Number of rows from the `columnBuffer` that can be visible before a new slice is rendered.
-   * @default 3
-   */
-  columnThreshold: PropTypes.number,
-  /**
    * Set the column visibility model of the Data Grid.
    * If defined, the Data Grid will ignore the `hide` property in [[GridColDef]].
    */
@@ -152,6 +167,11 @@ DataGridRaw.propTypes = {
    */
   density: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
   /**
+   * If `true`, column autosizing on header separator double-click is disabled.
+   * @default false
+   */
+  disableAutosize: PropTypes.bool,
+  /**
    * If `true`, column filters are disabled.
    * @default false
    */
@@ -161,6 +181,11 @@ DataGridRaw.propTypes = {
    * @default false
    */
   disableColumnMenu: PropTypes.bool,
+  /**
+   * If `true`, resizing columns is disabled.
+   * @default false
+   */
+  disableColumnResize: PropTypes.bool,
   /**
    * If `true`, hiding/showing columns is disabled.
    * @default false
@@ -202,6 +227,12 @@ DataGridRaw.propTypes = {
    * @default "cell"
    */
   editMode: PropTypes.oneOf(['cell', 'row']),
+  /**
+   * Use if the actual rowCount is not known upfront, but an estimation is available.
+   * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
+   * Applicable only with `paginationMode="server"` and when `rowCount="-1"`
+   */
+  estimatedRowCount: PropTypes.number,
   /**
    * Unstable features, breaking changes might be introduced.
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
@@ -343,7 +374,8 @@ DataGridRaw.propTypes = {
    */
   keepNonExistentRowsSelected: PropTypes.bool,
   /**
-   * If `true`, a  loading overlay is displayed.
+   * If `true`, a loading overlay is displayed.
+   * @default false
    */
   loading: PropTypes.bool,
   /**
@@ -464,11 +496,30 @@ DataGridRaw.propTypes = {
    */
   onColumnOrderChange: PropTypes.func,
   /**
+   * Callback fired while a column is being resized.
+   * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
+   * @param {MuiEvent<React.MouseEvent>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onColumnResize: PropTypes.func,
+  /**
    * Callback fired when the column visibility model changes.
    * @param {GridColumnVisibilityModel} model The new model.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnVisibilityModelChange: PropTypes.func,
+  /**
+   * Callback fired when the width of a column is changed.
+   * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
+   * @param {MuiEvent<React.MouseEvent>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onColumnWidthChange: PropTypes.func,
+  /**
+   * Callback fired when the density changes.
+   * @param {GridDensity} density New density value.
+   */
+  onDensityChange: PropTypes.func,
   /**
    * Callback fired when the Filter model changes before the filters are applied.
    * @param {GridFilterModel} model With all properties from [[GridFilterModel]].
@@ -489,6 +540,11 @@ DataGridRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onMenuOpen: PropTypes.func,
+  /**
+   * Callback fired when the pagination meta has changed.
+   * @param {GridPaginationMeta} paginationMeta Updated pagination meta.
+   */
+  onPaginationMetaChange: PropTypes.func,
   /**
    * Callback fired when the pagination model has changed.
    * @param {GridPaginationModel} model Updated pagination model.
@@ -594,6 +650,13 @@ DataGridRaw.propTypes = {
   ),
   pagination: PropTypes.oneOf([true]),
   /**
+   * The extra information about the pagination state of the Data Grid.
+   * Only applicable with `paginationMode="server"`.
+   */
+  paginationMeta: PropTypes.shape({
+    hasNextPage: PropTypes.bool,
+  }),
+  /**
    * Pagination can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle the pagination on the client-side.
    * Set it to 'server' if you would like to handle the pagination on the server-side.
@@ -616,13 +679,19 @@ DataGridRaw.propTypes = {
    */
   processRowUpdate: PropTypes.func,
   /**
-   * Number of extra rows to be rendered before/after the visible slice.
-   * @default 3
+   * The milliseconds throttle delay for resizing the grid.
+   * @default 60
    */
-  rowBuffer: PropTypes.number,
+  resizeThrottleMs: PropTypes.number,
+  /**
+   * Row region in pixels to render before/after the viewport
+   * @default 150
+   */
+  rowBufferPx: PropTypes.number,
   /**
    * Set the total number of rows, if it is different from the length of the value `rows` prop.
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
+   * Only works with `paginationMode="server"`, ignored when `paginationMode="client"`.
    */
   rowCount: PropTypes.number,
   /**
@@ -643,8 +712,9 @@ DataGridRaw.propTypes = {
   rowPositionsDebounceMs: PropTypes.number,
   /**
    * Set of rows of type [[GridRowsProp]].
+   * @default []
    */
-  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  rows: PropTypes.arrayOf(PropTypes.object),
   /**
    * If `false`, the row selection mode is disabled.
    * @default true
@@ -663,11 +733,6 @@ DataGridRaw.propTypes = {
    * @default "margin"
    */
   rowSpacingType: PropTypes.oneOf(['border', 'margin']),
-  /**
-   * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
-   * @default 3
-   */
-  rowThreshold: PropTypes.number,
   /**
    * Override the height/width of the Data Grid inner scrollbar.
    */

@@ -13,6 +13,11 @@
       "type": "(pageSize: number) => void"
     },
     {
+      "name": "setPaginationMeta",
+      "description": "Sets the <code>paginationMeta</code> to a new value.",
+      "type": "(paginationMeta: GridPaginationMeta) => void"
+    },
+    {
       "name": "setPaginationModel",
       "description": "Sets the <code>paginationModel</code> to a new value.",
       "type": "(model: GridPaginationModel) => void"

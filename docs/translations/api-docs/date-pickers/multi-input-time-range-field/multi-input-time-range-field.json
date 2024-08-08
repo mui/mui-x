@@ -6,6 +6,7 @@
       "description": "If <code>true</code>, the <code>input</code> element is focused during the first mount."
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
+    "dateSeparator": { "description": "String displayed between the start and the end dates." },
     "defaultValue": {
       "description": "The default value. Use when the component is not controlled."
     },

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, act } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
   DataGridPro,
@@ -336,13 +336,11 @@ describe('<DataGridPro /> - Events params', () => {
     const handleFetchRows = spy();
     render(
       <TestEvents
-        experimentalFeatures={{
-          lazyLoading: true,
-        }}
         onFetchRows={handleFetchRows}
         sortingMode="server"
         filterMode="server"
         rowsLoadingMode="server"
+        paginationMode="server"
         rowCount={50}
       />,
     );

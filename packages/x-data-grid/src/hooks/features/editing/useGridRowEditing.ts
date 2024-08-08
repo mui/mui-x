@@ -36,7 +36,7 @@ import {
   gridVisibleColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { buildWarning } from '../../../utils/warning';
+import { warnOnce } from '../../../internals/utils/warning';
 import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
@@ -46,15 +46,6 @@ import {
   GridRowEditStartReasons,
 } from '../../../models/params/gridRowParams';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
-
-const missingOnProcessRowUpdateErrorWarning = buildWarning(
-  [
-    'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
-    'To handle the error pass a callback to the `onProcessRowUpdateError` prop, e.g. `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-    'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
-  ],
-  'error',
-);
 
 export const useGridRowEditing = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
@@ -110,6 +101,14 @@ export const useGridRowEditing = (
     [apiRef],
   );
 
+  const hasFieldsWithErrors = React.useCallback(
+    (rowId: GridRowId) => {
+      const editingState = gridEditRowsStateSelector(apiRef.current.state);
+      return Object.values(editingState[rowId]).some((fieldProps) => fieldProps.error);
+    },
+    [apiRef],
+  );
+
   const handleCellDoubleClick = React.useCallback<GridEventListener<'cellDoubleClick'>>(
     (params, event) => {
       if (!params.isEditable) {
@@ -159,8 +158,12 @@ export const useGridRowEditing = (
             return;
           }
 
+          if (hasFieldsWithErrors(params.id)) {
+            return;
+          }
+
           const rowParams = apiRef.current.getRowParams(params.id);
-          const newParams = {
+          const newParams: GridRowEditStopParams = {
             ...rowParams,
             field: params.field,
             reason: GridRowEditStopReasons.rowFocusOut,
@@ -169,7 +172,7 @@ export const useGridRowEditing = (
         }
       });
     },
-    [apiRef],
+    [apiRef, hasFieldsWithErrors],
   );
 
   React.useEffect(() => {
@@ -223,6 +226,9 @@ export const useGridRowEditing = (
         }
 
         if (reason) {
+          if (reason !== GridRowEditStopReasons.escapeKeyDown && hasFieldsWithErrors(params.id)) {
+            return;
+          }
           const newParams: GridRowEditStopParams = {
             ...apiRef.current.getRowParams(params.id),
             reason,
@@ -264,7 +270,7 @@ export const useGridRowEditing = (
         }
       }
     },
-    [apiRef],
+    [apiRef, hasFieldsWithErrors],
   );
 
   const handleRowEditStart = React.useCallback<GridEventListener<'rowEditStart'>>(
@@ -334,7 +340,9 @@ export const useGridRowEditing = (
     const isNewModelDifferentFromProp = newModel !== props.rowModesModel;
 
     if (onRowModesModelChange && isNewModelDifferentFromProp) {
-      onRowModesModelChange(newModel, {});
+      onRowModesModelChange(newModel, {
+        api: apiRef.current,
+      });
     }
 
     if (props.rowModesModel && isNewModelDifferentFromProp) {
@@ -487,11 +495,7 @@ export const useGridRowEditing = (
         return;
       }
 
-      const hasSomeFieldWithError = Object.values(editingState[id]).some(
-        (fieldProps) => fieldProps.error,
-      );
-
-      if (hasSomeFieldWithError) {
+      if (hasFieldsWithErrors(id)) {
         prevRowModesModel.current[id].mode = GridRowModes.Edit;
         // Revert the mode in the rowModesModel prop back to "edit"
         updateRowInRowModesModel(id, { mode: GridRowModes.Edit });
@@ -509,7 +513,14 @@ export const useGridRowEditing = (
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
           } else if (process.env.NODE_ENV !== 'production') {
-            missingOnProcessRowUpdateErrorWarning();
+            warnOnce(
+              [
+                'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+                'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
+                'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
+              ],
+              'error',
+            );
           }
         };
 
@@ -705,7 +716,9 @@ export const useGridRowEditing = (
     const copyOfPrevRowModesModel = prevRowModesModel.current;
     prevRowModesModel.current = deepClone(rowModesModel); // Do a deep-clone because the attributes might be changed later
 
-    Object.entries(rowModesModel).forEach(([id, params]) => {
+    const ids = new Set([...Object.keys(rowModesModel), ...Object.keys(copyOfPrevRowModesModel)]);
+    Array.from(ids).forEach((id) => {
+      const params = rowModesModel[id] ?? { mode: GridRowModes.View };
       const prevMode = copyOfPrevRowModesModel[id]?.mode || GridRowModes.View;
       const originalId = idToIdLookup[id] ?? id;
       if (params.mode === GridRowModes.Edit && prevMode === GridRowModes.View) {

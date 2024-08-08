@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
-import { DEFAULT_X_AXIS_KEY } from '@mui/x-charts/constants';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { Chance } from 'chance';
 
@@ -41,7 +40,6 @@ export default function AxisCustomizationNoSnap() {
             ]}
             leftAxis={null}
             bottomAxis={{
-              axisId: DEFAULT_X_AXIS_KEY,
               ...defaultXAxis,
               ...props,
             }}

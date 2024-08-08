@@ -19,7 +19,7 @@ import {
   createEvent,
   act,
   userEvent,
-} from '@mui-internal/test-utils';
+} from '@mui/internal-test-utils';
 import {
   $,
   $$,
@@ -27,6 +27,7 @@ import {
   getCell,
   getColumnHeaderCell,
   getColumnHeadersTextContent,
+  grid,
 } from 'test/utils/helperFn';
 
 // TODO Move to utils
@@ -171,19 +172,23 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   it('should not allow to drop a column on top of a pinned column', () => {
-    render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
-    expect(
-      document.querySelector('.MuiDataGrid-pinnedColumnHeaders--right')?.textContent,
-    ).to.deep.equal('1M');
+    const onPinnedColumnsChange = spy();
+    render(
+      <TestCase
+        nbCols={3}
+        initialState={{ pinnedColumns: { right: ['price1M'] } }}
+        onPinnedColumnsChange={onPinnedColumnsChange}
+      />,
+    );
+
     const dragCol = getColumnHeaderCell(1).firstChild!;
     const targetCell = getCell(0, 2)!;
     fireEvent.dragStart(dragCol);
     fireEvent.dragEnter(targetCell);
     const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
-    expect(
-      document.querySelector('.MuiDataGrid-pinnedColumnHeaders--right')?.textContent,
-    ).to.deep.equal('1M');
+
+    expect(onPinnedColumnsChange.callCount).to.equal(0);
   });
 
   it('should filter out invalid columns when blocking a column from being dropped', () => {
@@ -224,7 +229,41 @@ describe('<DataGridPro /> - Column pinning', () => {
     const borderLeftWidth = computedStyle.getPropertyValue('border-left-width');
     expect(borderLeftWidth).to.equal('1px');
     // should not be transparent
-    expect(borderLeftColor).to.not.equal('rgba(0, 0, 0, 0)');
+    expect(borderLeftColor).not.to.equal('rgba(0, 0, 0, 0)');
+  });
+
+  // https://github.com/mui/mui-x/issues/12431
+  it('should not render unnecessary filler after the last row', function test() {
+    if (isJSDOM) {
+      // Needs layouting
+      this.skip();
+    }
+
+    const rowHeight = 50;
+    const columns: GridColDef[] = [
+      { field: 'id', headerName: 'ID', width: 120 },
+      { field: 'name', headerName: 'Name', width: 120 },
+    ];
+    const rows = [
+      { id: 1, name: 'Robert Cooper' },
+      { id: 2, name: 'Dora Wallace' },
+      { id: 3, name: 'Howard Dixon' },
+      { id: 4, name: 'Essie Reynolds' },
+    ];
+
+    render(
+      <div style={{ height: 300, width: 300 }}>
+        <DataGridPro
+          rows={rows}
+          columns={columns}
+          initialState={{ pinnedColumns: { left: ['name'] } }}
+          rowHeight={rowHeight}
+          columnHeaderHeight={rowHeight}
+        />
+      </div>,
+    );
+
+    expect(grid('virtualScroller')?.scrollHeight).to.equal((rows.length + 1) * rowHeight);
   });
 
   describe('props: onPinnedColumnsChange', () => {

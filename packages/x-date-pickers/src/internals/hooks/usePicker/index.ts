@@ -11,3 +11,5 @@ export type {
   PickerSelectionState,
   UsePickerValueFieldResponse,
 } from './usePickerValue.types';
+
+export type { PickerViewsRendererProps } from './usePickerViews';

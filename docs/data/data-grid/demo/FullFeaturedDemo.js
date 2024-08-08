@@ -301,7 +301,6 @@ export default function FullFeaturedDemo() {
         loading={loading}
         checkboxSelection
         disableRowSelectionOnClick
-        rowThreshold={0}
         initialState={{
           ...data.initialState,
           pinnedColumns: { left: [GRID_CHECKBOX_SELECTION_FIELD, 'desk'] },

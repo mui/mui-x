@@ -295,7 +295,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 ### Docs
 
-- [docs] Fix the nested import on the api pages (#7134) @flaviendelangle
+- [docs] Fix the nested import on the API pages (#7134) @flaviendelangle
 - [docs] Keep track of the localization completion (#7099) @alexfauquette
 - [docs] Update localization doc to use existing locale (#7104) @LukasTy
 
@@ -495,7 +495,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 
 - [CalendarPicker] Don't move to closest enabled date when `props.date` contains a disabled date (#6537) @flaviendelangle
 - [DateRangePicker] Fix calendar day outside of month layout shifting on hover (pick #6448) (#6538) @alexfauquette
-- [pickers] Fix Typescript issues (#6510) @flaviendelangle
+- [pickers] Fix TypeScript issues (#6510) @flaviendelangle
 
 ### Docs
 
@@ -599,7 +599,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 
 - [pickers] Add Finnish (fi-FI) locale to pickers (#6219) (#6230) @PetroSilenius
 - [pickers] Add Persian (fa-IR) locale to the pickers (#6181) @fakhamatia
-- [pickers] Fix usage with Typescript 4.8 (#6229) @flaviendelangle
+- [pickers] Fix usage with TypeScript 4.8 (#6229) @flaviendelangle
 - [YearPicker] Scroll to the current year even with `autoFocus=false` (#6224) @alexfauquette
 
 ### Docs
@@ -641,7 +641,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 ### Core
 
-- [core] Update to Typescript 4.8.3 (#6136) @flaviendelangle
+- [core] Update to TypeScript 4.8.3 (#6136) @flaviendelangle
 - [core] Update RFC template (#6100) @bytasv
 
 ## 5.17.2
@@ -832,7 +832,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 ### Core
 
 - [core] Clarify the scope of the license key used for tests and documentation (#5824) @oliviertassinari
-- [core] Fix Typescript error on field hooks (#5892) @flaviendelangle
+- [core] Fix TypeScript error on field hooks (#5892) @flaviendelangle
 - [core] Memoize `columns` in `useDemoData` hook (#5848) @cherniavskii
 - [core] Remove Firefox from the BrowserStack list (#5874) @DanailH
 - [core] Small changes to the release script (#5840) @m4theushw
@@ -874,7 +874,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 ### Core
 
 - [core] Upgrade monorepo (#5771, #5797) @cherniavskii
-- [core] Various TS improvements (#5556) @flaviendelangle
+- [core] Various TypeScript improvements (#5556) @flaviendelangle
 - [license] Give more context in the missing license (#5731) @oliviertassinari
 - [license] Only log an error type once (#5730) @oliviertassinari
 - [test] Increase timeout to take print screenshot (#5799) @m4theushw
@@ -1140,7 +1140,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGrid] Add Romanian (ro-RO) locale (#5345) @rolule
 - [DataGrid] Export Norwegian (nb-NO) locale (#5407) @cherniavskii
 - [DataGrid] Fix broken "start editing" integration with Japanese (#5414) @mnajdova
-- [DataGrid] Fix "stop editing" integration with IME e.g. Japanese (#5257) @Gumichocopengin8
+- [DataGrid] Fix "stop editing" integration with IME, for example Japanese (#5257) @Gumichocopengin8
 - [DataGrid] Fix dimensions computation with `autoHeight` and scroll x (#5401) @flaviendelangle
 - [DataGrid] Improve Slovak (sk-SK) locale (#5332) @msidlo
 - [DataGrid] Mention Premium plan in error messages and docs warnings (#5328) @cherniavskii
@@ -1390,7 +1390,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [core] Avoid Order ID to refer to GitHub issues/PRs (#5005) @oliviertassinari
 - [core] Improve the workflow for incomplete issues (#5012) @mnajdova
 - [core] Remove dead code on row grouping tree creation (#4945) @flaviendelangle
-- [core] Use new cache api for the row grouping last model tracking (#4980) @flaviendelangle
+- [core] Use new cache API for the row grouping last model tracking (#4980) @flaviendelangle
 - [core] Ensure that PRs have atleast 1 label (#5011) @DanailH
 - [core] Fix trailing-space @oliviertassinari
 - [core] Stop Renovate PR updates when PR is on hold (#5020) @cherniavskii
@@ -1624,7 +1624,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [core] Fix naming collision (#4853) @alexfauquette
 - [core] Prevent out-of-memory when type-checking in CI (#4697) @flaviendelangle
 - [core] Remove `rowsCache` from state (#4480) @m4theushw
-- [core] Rework `DayPicker` api (#4783) @flaviendelangle
+- [core] Rework `DayPicker` API (#4783) @flaviendelangle
 - [core] Update `x-license-pro` license to handle premium package (#4315) @DanailH
 - [core] Update monorepo & version (#4789) @oliviertassinari
 - [core] Update monorepo (#4772) @flaviendelangle
@@ -1743,7 +1743,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [core] Fix npm page description mistake (#4364) @oliviertassinari
 - [core] Fix typos and JSDoc (#4406) @flaviendelangle
 - [core] Move away for the event system to trigger pipe processings (#4378) @flaviendelangle
-- [core] Small fixes TS on pickers (#4461) @flaviendelangle
+- [core] Small fixes TypeScript on pickers (#4461) @flaviendelangle
 - [core] Unify tests (#4368) @flaviendelangle
 - [core] Enforce `noImplicitAny` in `docs` folder (#4412) @cherniavskii
 
@@ -1994,7 +1994,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [DataGrid] Allow to navigate between cells with keyboard once inside an `actions` column (#3375) @m4theushw
 - [DataGrid] Fix desynchronization between rows and header when sorting (#4058) @alexfauquette
 - [DataGrid] Clean and document the columns selector (#4010) @flaviendelangle
-- [DataGrid] Deprecate and stop typing the api params of `GridCellParams`/`GridValueGetterParams` and affiliated (#4089) @ flaviendelangle
+- [DataGrid] Deprecate and stop typing the API params of `GridCellParams`/`GridValueGetterParams` and affiliated (#4089) @ flaviendelangle
 - [DataGrid] Differentiate the Pro and Community versions of `GridState`, `GridApi` and `GridApiRef` (#3648) @flaviendelangle
 - [DataGrid] Fix column selection for print export (#3917) @alexfauquette
 - [DataGrid] Fix horizontal scroll not working on empty grid (#3821) @cherniavskii
@@ -3001,7 +3001,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [DataGrid] Remove the `state` prop and use the `initialState` prop (#2848) @flaviendelangle
 
   Note that `initialState` only allows the `preferencePanel`, `filter.filterModel` and `sort.sortModel` keys.
-  To fully control the state, use the feature's model prop and change callback (e.g. `filterModel` and `onFilterModelChange`).
+  To fully control the state, use the feature's model prop and change callback (for example `filterModel` and `onFilterModelChange`).
 
   ```diff
    <DataGrid
@@ -3417,7 +3417,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
   See the documentation for [more details](https://mui.com/x/react-data-grid/column-definition/#column-types).
 
 - 👁 Allow to disable virtualization with the `disableVirtualization` prop (#2326) @m4theushw
-- 🚀 Introduce the new `isRowSelected` api method (#2523) @flaviendelangle
+- 🚀 Introduce the new `isRowSelected` API method (#2523) @flaviendelangle
 - 🕹️ Show page size controls on smaller resolutions (#2461) @michaldudak
 - 🌎 Add Simplified Chinese (zhCN) localization (#2431) @wlf100220
 - 🌎 Add Korean (koKR) localization (#2446) @zzossig

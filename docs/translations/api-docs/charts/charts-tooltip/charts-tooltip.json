@@ -2,11 +2,11 @@
   "componentDescription": "",
   "propDescriptions": {
     "axisContent": {
-      "description": "Component to override the tooltip content when triger is set to &#39;axis&#39;."
+      "description": "Component to override the tooltip content when trigger is set to &#39;axis&#39;."
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "itemContent": {
-      "description": "Component to override the tooltip content when triger is set to &#39;item&#39;."
+      "description": "Component to override the tooltip content when trigger is set to &#39;item&#39;."
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
@@ -33,5 +33,9 @@
       "nodeName": "the valueCell element"
     }
   },
-  "slotDescriptions": { "axisContent": "", "itemContent": "", "popper": "" }
+  "slotDescriptions": {
+    "axisContent": "Custom component for displaying tooltip content when triggered by axis event.",
+    "itemContent": "Custom component for displaying tooltip content when triggered by item event.",
+    "popper": "Custom component for the tooltip popper."
+  }
 }

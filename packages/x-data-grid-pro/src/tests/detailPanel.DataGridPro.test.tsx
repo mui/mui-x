@@ -18,7 +18,7 @@ import {
   waitFor,
   act,
   userEvent,
-} from '@mui-internal/test-utils';
+} from '@mui/internal-test-utils';
 import { $, $$, grid, getRow, getCell, getColumnValues, microtasks } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -59,8 +59,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         getDetailPanelHeight={({ id }) => (Number(id) % 2 === 0 ? 1 : 2) * rowHeight} // 50px for even rows, otherwise 100px
         getDetailPanelContent={() => <div />}
         rowHeight={rowHeight}
-        rowBuffer={0}
-        rowThreshold={0}
+        rowBufferPx={0}
         initialState={{
           detailPanel: {
             expandedRowIds: [0, 1],
@@ -500,6 +499,29 @@ describe('<DataGridPro /> - Detail panel', () => {
       setProps({ detailPanelExpandedRowIds: [1] });
     });
     expect(screen.getByTestId(`detail-panel-content`).textContent).to.equal(`${counter}`);
+  });
+
+  it("should not render detail panel for the focused row if it's outside of the viewport", function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+    render(
+      <TestCase
+        getDetailPanelHeight={() => 50}
+        getDetailPanelContent={() => <div />}
+        rowBufferPx={0}
+        nbRows={20}
+      />,
+    );
+
+    userEvent.mousePress(screen.getAllByRole('button', { name: 'Expand' })[0]);
+
+    const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+    virtualScroller.scrollTop = 500;
+    act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+
+    const detailPanels = document.querySelectorAll(`.${gridClasses.detailPanel}`);
+    expect(detailPanels.length).to.equal(0);
   });
 
   describe('prop: onDetailPanelsExpandedRowIds', () => {

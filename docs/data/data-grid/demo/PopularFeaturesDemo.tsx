@@ -542,7 +542,8 @@ export default function PopularFeaturesDemo() {
         }}
         sx={{
           fontFamily: 'IBM Plex Sans',
-          [`& .${gridClasses.cell}`]: {
+          // Do not target cells in nested grids
+          [`& > div > div > div > div > div > .${gridClasses.cell}`]: {
             py: 1.5,
           },
           [`& .${gridClasses.columnHeaderTitle}`]: {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import Grow from '@mui/material/Grow';
 import Fade from '@mui/material/Fade';
 import MuiPaper, { PaperProps as MuiPaperProps } from '@mui/material/Paper';
@@ -11,6 +11,7 @@ import BaseFocusTrap, {
   TrapFocusProps as MuiTrapFocusProps,
 } from '@mui/material/Unstable_TrapFocus';
 import {
+  SlotComponentProps,
   unstable_useForkRef as useForkRef,
   unstable_useEventCallback as useEventCallback,
   unstable_ownerDocument as ownerDocument,
@@ -40,7 +41,7 @@ export interface PickersPopperSlots {
   desktopTransition?: React.JSXElementConstructor<MuiTransitionProps>;
   /**
    * Custom component for trapping the focus inside the views on desktop.
-   * @default FocusTrap from '@mui/base'.
+   * @default TrapFocus from '@mui/material'.
    */
   desktopTrapFocus?: React.JSXElementConstructor<MuiTrapFocusProps>;
   /**
@@ -112,13 +113,19 @@ const PickersPopperPaper = styled(MuiPaper, {
   overridesResolver: (_, styles) => styles.paper,
 })<{
   ownerState: PickersPopperOwnerState;
-}>(({ ownerState }) => ({
+}>({
   outline: 0,
   transformOrigin: 'top center',
-  ...(ownerState.placement.includes('top') && {
-    transformOrigin: 'bottom center',
-  }),
-}));
+  variants: [
+    {
+      props: ({ placement }: PickersPopperOwnerState) =>
+        ['top', 'top-start', 'top-end'].includes(placement),
+      style: {
+        transformOrigin: 'bottom center',
+      },
+    },
+  ],
+});
 
 function clickedRootScrollbar(event: MouseEvent, doc: Document) {
   return (
@@ -246,7 +253,7 @@ function useClickAwayListener(
     // TODO This behavior is not tested automatically
     // It's unclear whether this is due to different update semantics in test (batched in act() vs discrete on click).
     // Or if this is a timing related issues due to different Transition components
-    // Once we get rid of all the manual scheduling (e.g. setTimeout(update, 0)) we can revisit this code+test.
+    // Once we get rid of all the manual scheduling (for example setTimeout(update, 0)) we can revisit this code+test.
     if (active) {
       const doc = ownerDocument(nodeRef.current);
 
@@ -396,7 +403,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
     }
   };
 
-  const Transition = slots?.desktopTransition ?? reduceAnimations ? Fade : Grow;
+  const Transition = (slots?.desktopTransition ?? reduceAnimations) ? Fade : Grow;
   const FocusTrap = slots?.desktopTrapFocus ?? BaseFocusTrap;
 
   const Paper = slots?.desktopPaper ?? PickersPopperPaper;

@@ -203,6 +203,13 @@
     "componentProp": "onResize"
   },
   {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "densityChange",
+    "description": "Fired when the density changes.",
+    "params": "GridDensity",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "projects": ["x-data-grid-premium"],
     "name": "excelExportStateChange",
     "description": "Fired when the state of the Excel export task changes",
@@ -246,6 +253,13 @@
     "params": "GridMenuParams",
     "event": "MuiEvent<{}>",
     "componentProp": "onMenuOpen"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "paginationMetaChange",
+    "description": "Fired when the pagination meta change.",
+    "params": "GridPaginationMeta",
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],

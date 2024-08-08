@@ -1,5 +1,3 @@
-import './typeOverloads';
-
 import { LicenseInfo as LicenseInfoExport } from '@mui/x-license';
 /**
  * @deprecated Use `@mui/x-license` package instead:
@@ -25,6 +23,7 @@ export * from './models';
 export * from './components';
 
 export { GridColumnHeaders } from '@mui/x-data-grid-pro';
+export type { GridColumnHeadersProps } from '@mui/x-data-grid-pro';
 
 export type {
   DataGridPremiumProps,

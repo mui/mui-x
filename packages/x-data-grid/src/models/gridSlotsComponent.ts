@@ -36,11 +36,6 @@ export interface GridBaseSlots {
    */
   baseSelect: React.JSXElementConstructor<GridSlotProps['baseSelect']>;
   /**
-   * The custom Switch component used in the grid.
-   * @default Switch
-   */
-  baseSwitch: React.JSXElementConstructor<GridSlotProps['baseSwitch']>;
-  /**
    * The custom Button component used in the grid.
    * @default Button
    */
@@ -94,13 +89,18 @@ export interface GridLocalSlots {
     GridSlotProps['columnHeaderFilterIconButton']
   >;
   /**
+   * Sort icon component rendered in each column header.
+   * @default GridColumnHeaderSortIcon
+   */
+  columnHeaderSortIcon: React.JSXElementConstructor<GridSlotProps['columnHeaderSortIcon']>;
+  /**
    * Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers.
    * @default GridColumnMenu
    */
   columnMenu: React.JSXElementConstructor<GridSlotProps['columnMenu']>;
   /**
    * Component responsible for rendering the column headers.
-   * @default DataGridColumnHeaders
+   * @default GridColumnHeaders
    */
   columnHeaders: React.JSXElementConstructor<GridSlotProps['columnHeaders']>;
   /**

@@ -119,9 +119,9 @@ Otherwise, the Tree View will re-generate its entire structure.
 This can be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
 :::
 
-### The disabledItemsFocusable prop
+### Focus disabled items
 
-Use the `disabledItemsFocusable` prop to control whether or not a disabled Tree Item can be focused.
+Use the `disabledItemsFocusable` prop to control if disabled Tree Items can be focused.
 
 When this prop is set to false:
 
@@ -140,3 +140,67 @@ When it's set to true:
 - Mouse or keyboard interaction will not select disabled items.
 - <kbd class="key">Shift</kbd> + arrow keys will not skip disabled items, but the disabled item will not be selected.
 - Programmatic focus will focus disabled items.
+
+{{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}
+
+## Track item clicks
+
+Use the `onItemClick` prop to track the clicked item:
+
+{{"demo": "OnItemClick.js"}}
+
+## Imperative API
+
+### Get an item by ID
+
+Use the `getItem` API method to get an item by its ID.
+
+```ts
+const item = apiRef.current.getItem(
+  // The id of the item to retrieve
+  itemId,
+);
+```
+
+{{"demo": "ApiMethodGetItem.js", "defaultCodeOpen": false}}
+
+### Get an item's DOM element by ID
+
+Use the `getItemDOMElement` API method to get an item's DOM element by its ID.
+
+```ts
+const itemElement = apiRef.current.getItemDOMElement(
+  // The id of the item to get the DOM element of
+  itemId,
+);
+```
+
+{{"demo": "ApiMethodGetItemDOMElement.js", "defaultCodeOpen": false}}
+
+### Get the current item tree
+
+Use the `getItemTree` API method to get the current item tree.
+
+```ts
+const itemTree = apiRef.current.getItemTree();
+```
+
+{{"demo": "ApiMethodGetItemTree.js", "defaultCodeOpen": false}}
+
+:::info
+This method is mostly useful when the Tree View has some internal updates on the items.
+For now, the only features causing updates on the items is the [re-ordering](/x/react-tree-view/rich-tree-view/ordering/).
+:::
+
+### Get an item's children by ID
+
+Use the `getItemOrderedChildrenIds` API method to get an item's children by its ID.
+
+```ts
+const childrenIds = apiRef.current.getItemOrderedChildrenIds(
+  // The id of the item to retrieve the children from
+  itemId,
+);
+```
+
+{{"demo": "ApiMethodGetItemOrderedChildrenIds.js", "defaultCodeOpen": false}}

@@ -14,7 +14,7 @@
       "description": "The id of the element containing a label for the Data Grid."
     },
     "autoHeight": {
-      "description": "If <code>true</code>, the Data Grid height is dynamic and follow the number of rows in the Data Grid."
+      "description": "If <code>true</code>, the Data Grid height is dynamic and follows the number of rows in the Data Grid."
     },
     "autoPageSize": {
       "description": "If <code>true</code>, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar."
@@ -36,17 +36,14 @@
     "clipboardCopyCellDelimiter": {
       "description": "The character used to separate cell values when copying to the clipboard."
     },
-    "columnBuffer": {
-      "description": "Number of extra columns to be rendered before/after the visible slice."
+    "columnBufferPx": {
+      "description": "Column region in pixels to render before/after the viewport"
     },
     "columnHeaderHeight": {
       "description": "Sets the height in pixel of the column headers in the Data Grid."
     },
     "columns": {
       "description": "Set of columns of type <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>[]."
-    },
-    "columnThreshold": {
-      "description": "Number of rows from the <code>columnBuffer</code> that can be visible before a new slice is rendered."
     },
     "columnVisibilityModel": {
       "description": "Set the column visibility model of the Data Grid. If defined, the Data Grid will ignore the <code>hide</code> property in <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>."
@@ -107,6 +104,9 @@
       "description": "If <code>true</code>, the virtualization is disabled."
     },
     "editMode": { "description": "Controls whether to use the cell or row editing." },
+    "estimatedRowCount": {
+      "description": "Use if the actual rowCount is not known upfront, but an estimation is available. If some rows have children (for instance in the tree data), this number represents the amount of top level rows. Applicable only with <code>paginationMode=&quot;server&quot;</code> and when <code>rowCount=&quot;-1&quot;</code>"
+    },
     "experimentalFeatures": {
       "description": "Unstable features, breaking changes might be introduced. For each feature, if the flag is not explicitly set to <code>true</code>, then the feature is fully disabled, and neither property nor method calls will have any effect."
     },
@@ -182,6 +182,7 @@
       }
     },
     "groupingColDef": { "description": "The grouping column used by the tree data." },
+    "headerFilterHeight": { "description": "Override the height of the header filters." },
     "headerFilters": {
       "description": "If <code>true</code>, enables the data grid filtering on header feature."
     },
@@ -231,7 +232,7 @@
     "keepNonExistentRowsSelected": {
       "description": "If <code>true</code>, the selection model will retain selected rows that do not exist. Useful when using server side pagination and row selections need to be retained when changing pages."
     },
-    "loading": { "description": "If <code>true</code>, a  loading overlay is displayed." },
+    "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": {
       "description": "Set the locale text of the Data Grid. You can find all the translation keys supported in <a href=\"https://github.com/mui/mui-x/blob/HEAD/packages/x-data-grid/src/constants/localeTextConstants.ts\">the source</a> in the GitHub repository."
     },
@@ -248,6 +249,10 @@
         "model": "The aggregated columns.",
         "details": "Additional details for this callback."
       }
+    },
+    "onBeforeClipboardPasteStart": {
+      "description": "Callback fired before the clipboard paste operation starts. Use it to confirm or cancel the paste operation.",
+      "typeDescriptions": { "params": "Params passed to the callback." }
     },
     "onCellClick": {
       "description": "Callback fired when any cell is clicked.",
@@ -390,6 +395,10 @@
         "details": "Additional details for this callback."
       }
     },
+    "onDensityChange": {
+      "description": "Callback fired when the density changes.",
+      "typeDescriptions": { "density": "New density value." }
+    },
     "onDetailPanelExpandedRowIdsChange": {
       "description": "Callback fired when the detail panel of a row is opened or closed.",
       "typeDescriptions": {
@@ -431,6 +440,10 @@
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
+    },
+    "onPaginationMetaChange": {
+      "description": "Callback fired when the pagination meta has changed.",
+      "typeDescriptions": { "paginationMeta": "Updated pagination meta." }
     },
     "onPaginationModelChange": {
       "description": "Callback fired when the pagination model has changed.",
@@ -554,6 +567,9 @@
     },
     "pageSizeOptions": { "description": "Select the pageSize dynamically using the component UI." },
     "pagination": { "description": "If <code>true</code>, pagination is enabled." },
+    "paginationMeta": {
+      "description": "The extra information about the pagination state of the Data Grid. Only applicable with <code>paginationMode=&quot;server&quot;</code>."
+    },
     "paginationMode": {
       "description": "Pagination can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle the pagination on the client-side. Set it to &#39;server&#39; if you would like to handle the pagination on the server-side."
     },
@@ -570,11 +586,10 @@
         "Promise<R> | R": "The final values to update the row."
       }
     },
-    "rowBuffer": {
-      "description": "Number of extra rows to be rendered before/after the visible slice."
-    },
+    "resizeThrottleMs": { "description": "The milliseconds throttle delay for resizing the grid." },
+    "rowBufferPx": { "description": "Row region in pixels to render before/after the viewport" },
     "rowCount": {
-      "description": "Set the total number of rows, if it is different from the length of the value <code>rows</code> prop. If some rows have children (for instance in the tree data), this number represents the amount of top level rows."
+      "description": "Set the total number of rows, if it is different from the length of the value <code>rows</code> prop. If some rows have children (for instance in the tree data), this number represents the amount of top level rows. Only works with <code>paginationMode=&quot;server&quot;</code>, ignored when <code>paginationMode=&quot;client&quot;</code>."
     },
     "rowGroupingColumnMode": {
       "description": "If <code>single</code>, all the columns that are grouped are represented in the same grid column. If <code>multiple</code>, each column that is grouped is represented in its own grid column."
@@ -594,9 +609,6 @@
     },
     "rowSpacingType": {
       "description": "Sets the type of space between rows added by <code>getRowSpacing</code>."
-    },
-    "rowThreshold": {
-      "description": "Number of rows from the <code>rowBuffer</code> that can be visible before a new slice is rendered."
     },
     "scrollbarSize": {
       "description": "Override the height/width of the Data Grid inner scrollbar."
@@ -762,10 +774,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the selection checkbox element"
     },
-    "columnGroupHeader": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the column group header element"
-    },
     "columnHeader": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header element"
@@ -804,6 +812,10 @@
       "nodeName": "the column header",
       "conditions": "the column has a filter applied to it"
     },
+    "columnHeader--last": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the last column header element"
+    },
     "columnHeader--moving": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the column header",
@@ -814,11 +826,8 @@
       "nodeName": "the column header",
       "conditions": "the type of the column is <code>number</code>"
     },
-    "columnHeader--showColumnBorder": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the column group header cell",
-      "conditions": "show column border"
-    },
+    "columnHeader--pinnedLeft": { "description": "" },
+    "columnHeader--pinnedRight": { "description": "" },
     "columnHeader--sortable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the column header",
@@ -829,6 +838,7 @@
       "nodeName": "the column header",
       "conditions": "the column is sorted"
     },
+    "columnHeader--withLeftBorder": { "description": "" },
     "columnHeader--withRightBorder": {
       "description": "Styles applied the column header if <code>showColumnVerticalBorder={true}</code>."
     },
@@ -839,20 +849,6 @@
     "columnHeaderDraggableContainer": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header&#39;s draggable container element"
-    },
-    "columnHeaderDropZone": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the column headers wrapper",
-      "conditions": "a column is being dragged"
-    },
-    "columnHeadersInner": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the column headers&#39;s inner element"
-    },
-    "columnHeadersInner--scrollable": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the column headers&#39;s inner element",
-      "conditions": "there is a horizontal scrollbar"
     },
     "columnHeaderTitle": {
       "description": "Styles applied to the column header&#39;s title element;"
@@ -929,15 +925,6 @@
     "editInputCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the input component"
-    },
-    "filler": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the filler row" },
-    "filler--pinnedLeft": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the filler row pinned left section"
-    },
-    "filler--pinnedRight": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the filler row pinned right section"
     },
     "filterForm": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1049,18 +1036,6 @@
       "nodeName": "the panel wrapper element"
     },
     "paper": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the paper element" },
-    "pinnedColumnHeaders": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the pinned column headers"
-    },
-    "pinnedColumnHeaders--left": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the left pinned column headers"
-    },
-    "pinnedColumnHeaders--right": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the right pinned column headers"
-    },
     "pinnedColumns": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the pinned columns"
@@ -1153,6 +1128,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the row&#39;s draggable placeholder element inside the special row reorder cell"
     },
+    "rowSkeleton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the skeleton row element"
+    },
     "scrollArea": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "both scroll area elements"
@@ -1235,7 +1214,6 @@
     "basePopper": "The custom Popper component used in the grid.",
     "baseSelect": "The custom Select component used in the grid.",
     "baseSelectOption": "The custom SelectOption component used in the grid.",
-    "baseSwitch": "The custom Switch component used in the grid.",
     "baseTextField": "The custom TextField component used in the grid.",
     "baseTooltip": "The custom Tooltip component used in the grid.",
     "booleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",
@@ -1244,6 +1222,7 @@
     "columnFilteredIcon": "Icon displayed on the column header menu to show that a filter has been applied to the column.",
     "columnHeaderFilterIconButton": "Filter icon component rendered in each column header.",
     "columnHeaders": "Component responsible for rendering the column headers.",
+    "columnHeaderSortIcon": "Sort icon component rendered in each column header.",
     "columnMenu": "Column menu component rendered by clicking on the 3 dots &quot;kebab&quot; icon in column headers.",
     "columnMenuAggregationIcon": "Icon displayed in column menu for aggregation",
     "columnMenuClearIcon": "Icon displayed in column menu for clearing values",

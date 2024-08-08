@@ -1,12 +1,15 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { styled, alpha, useThemeProps } from '@mui/material/styles';
+import useSlotProps from '@mui/utils/useSlotProps';
+import composeClasses from '@mui/utils/composeClasses';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   getPickersYearUtilityClass,
   pickersYearClasses,
   PickersYearClasses,
 } from './pickersYearClasses';
+import { YearCalendarSlotProps, YearCalendarSlots } from './YearCalendar.types';
 
 export interface ExportedPickersYearProps {
   classes?: Partial<PickersYearClasses>;
@@ -26,6 +29,8 @@ export interface PickersYearProps extends ExportedPickersYearProps {
   value: number;
   tabIndex: number;
   yearsPerRow: 3 | 4;
+  slots?: YearCalendarSlots;
+  slotProps?: YearCalendarSlotProps;
 }
 
 const useUtilityClasses = (ownerState: PickersYearProps) => {
@@ -43,14 +48,15 @@ const PickersYearRoot = styled('div', {
   name: 'MuiPickersYear',
   slot: 'Root',
   overridesResolver: (_, styles) => [styles.root],
-})<{ ownerState: PickersYearProps }>(({ ownerState }) => ({
-  flexBasis: ownerState.yearsPerRow === 3 ? '33.3%' : '25%',
+})<{ ownerState: PickersYearProps }>({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-}));
+  flexBasis: '33.3%',
+  variants: [{ props: { yearsPerRow: 4 }, style: { flexBasis: '25%' } }],
+});
 
-const PickersYearButton = styled('button', {
+const YearCalendarButton = styled('button', {
   name: 'MuiPickersYear',
   slot: 'YearButton',
   overridesResolver: (_, styles) => [
@@ -118,6 +124,8 @@ export const PickersYear = React.memo(function PickersYear(inProps: PickersYearP
     'aria-current': ariaCurrent,
     // We don't want to forward this prop to the root element
     yearsPerRow,
+    slots,
+    slotProps,
     ...other
   } = props;
 
@@ -125,12 +133,34 @@ export const PickersYear = React.memo(function PickersYear(inProps: PickersYearP
   const classes = useUtilityClasses(props);
 
   // We can't forward the `autoFocus` to the button because it is a native button, not a MUI Button
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (autoFocus) {
       // `ref.current` being `null` would be a bug in MUI.
-      ref.current!.focus();
+      ref.current?.focus();
     }
   }, [autoFocus]);
+
+  const YearButton = slots?.yearButton ?? YearCalendarButton;
+  const yearButtonProps = useSlotProps({
+    elementType: YearButton,
+    externalSlotProps: slotProps?.yearButton,
+    additionalProps: {
+      children,
+      disabled,
+      tabIndex,
+      ref,
+      type: 'button' as const,
+      role: 'radio',
+      'aria-current': ariaCurrent,
+      'aria-checked': selected,
+      onClick: (event: React.MouseEvent) => onClick(event, value),
+      onKeyDown: (event: React.KeyboardEvent) => onKeyDown(event, value),
+      onFocus: (event: React.FocusEvent) => onFocus(event, value),
+      onBlur: (event: React.FocusEvent) => onBlur(event, value),
+    },
+    ownerState: props,
+    className: classes.yearButton,
+  });
 
   return (
     <PickersYearRoot
@@ -139,23 +169,7 @@ export const PickersYear = React.memo(function PickersYear(inProps: PickersYearP
       ownerState={props}
       {...other}
     >
-      <PickersYearButton
-        ref={ref}
-        disabled={disabled}
-        type="button"
-        role="radio"
-        tabIndex={disabled ? -1 : tabIndex}
-        aria-current={ariaCurrent}
-        aria-checked={selected}
-        onClick={(event) => onClick(event, value)}
-        onKeyDown={(event) => onKeyDown(event, value)}
-        onFocus={(event) => onFocus(event, value)}
-        onBlur={(event) => onBlur(event, value)}
-        className={classes.yearButton}
-        ownerState={props}
-      >
-        {children}
-      </PickersYearButton>
+      <YearButton {...yearButtonProps} />
     </PickersYearRoot>
   );
 });

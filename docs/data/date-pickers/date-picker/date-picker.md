@@ -88,7 +88,7 @@ Use the `openTo` prop to change this behavior:
 :::success
 The views will appear in the order defined by the `views` array.
 If the view defined in `openTo` is not the first view, then the views before will not be included in the default flow
-(e.g. view the default behaviors, the `year` is only accessible when clicking on the toolbar).
+(for example view the default behaviors, the `year` is only accessible when clicking on the toolbar).
 :::
 
 ## Landscape orientation
@@ -113,6 +113,16 @@ You can show a helper text with the date format accepted:
 You can enable the clearable behavior:
 
 {{"demo": "ClearableProp.js"}}
+
+:::info
+See [Field components—Clearable behavior](/x/react-date-pickers/fields/#clearable-behavior) for more details.
+:::
+
+:::warning
+The clearable prop is not supported yet by the mobile Picker variants.
+
+See discussion [in this GitHub issue](https://github.com/mui/mui-x/issues/10842#issuecomment-1951887408) for more information.
+:::
 
 ## Localization
 

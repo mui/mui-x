@@ -1,10 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SeriesContext } from '../context/SeriesContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
 import { PieArcPlot, PieArcPlotProps, PieArcPlotSlotProps, PieArcPlotSlots } from './PieArcPlot';
 import { PieArcLabelPlotSlots, PieArcLabelPlotSlotProps, PieArcLabelPlot } from './PieArcLabelPlot';
-import { getPercentageValue } from '../internals/utils';
+import { getPercentageValue } from '../internals/getPercentageValue';
+import { getPieCoordinates } from './getPieCoordinates';
+import { usePieSeries } from '../hooks/useSeries';
 
 export interface PiePlotSlots extends PieArcPlotSlots, PieArcLabelPlotSlots {}
 
@@ -35,13 +36,12 @@ export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'o
  */
 function PiePlot(props: PiePlotProps) {
   const { skipAnimation, slots, slotProps, onItemClick } = props;
-  const seriesData = React.useContext(SeriesContext).pie;
+  const seriesData = usePieSeries();
   const { left, top, width, height } = React.useContext(DrawingContext);
 
   if (seriesData === undefined) {
     return null;
   }
-  const availableRadius = Math.min(width, height) / 2;
 
   const { series, seriesOrder } = seriesData;
 
@@ -58,16 +58,18 @@ function PiePlot(props: PiePlotProps) {
           cy: cyParam,
           highlighted,
           faded,
-          highlightScope,
         } = series[seriesId];
+
+        const { cx, cy, availableRadius } = getPieCoordinates(
+          { cx: cxParam, cy: cyParam },
+          { width, height },
+        );
 
         const outerRadius = getPercentageValue(
           outerRadiusParam ?? availableRadius,
           availableRadius,
         );
         const innerRadius = getPercentageValue(innerRadiusParam ?? 0, availableRadius);
-        const cx = getPercentageValue(cxParam ?? '50%', width);
-        const cy = getPercentageValue(cyParam ?? '50%', height);
         return (
           <g key={seriesId} transform={`translate(${left + cx}, ${top + cy})`}>
             <PieArcPlot
@@ -78,7 +80,6 @@ function PiePlot(props: PiePlotProps) {
               id={seriesId}
               data={data}
               skipAnimation={skipAnimation}
-              highlightScope={highlightScope}
               highlighted={highlighted}
               faded={faded}
               onItemClick={onItemClick}
@@ -100,8 +101,13 @@ function PiePlot(props: PiePlotProps) {
           data,
           cx: cxParam,
           cy: cyParam,
-          highlightScope,
         } = series[seriesId];
+
+        const { cx, cy, availableRadius } = getPieCoordinates(
+          { cx: cxParam, cy: cyParam },
+          { width, height },
+        );
+
         const outerRadius = getPercentageValue(
           outerRadiusParam ?? availableRadius,
           availableRadius,
@@ -113,8 +119,6 @@ function PiePlot(props: PiePlotProps) {
             ? (outerRadius + innerRadius) / 2
             : getPercentageValue(arcLabelRadiusParam, availableRadius);
 
-        const cx = getPercentageValue(cxParam ?? '50%', width);
-        const cy = getPercentageValue(cyParam ?? '50%', height);
         return (
           <g key={seriesId} transform={`translate(${left + cx}, ${top + cy})`}>
             <PieArcLabelPlot
@@ -128,7 +132,8 @@ function PiePlot(props: PiePlotProps) {
               skipAnimation={skipAnimation}
               arcLabel={arcLabel}
               arcLabelMinAngle={arcLabelMinAngle}
-              highlightScope={highlightScope}
+              slots={slots}
+              slotProps={slotProps}
             />
           </g>
         );
@@ -140,7 +145,7 @@ function PiePlot(props: PiePlotProps) {
 PiePlot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Callback fired when a pie item is clicked.

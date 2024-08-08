@@ -15,14 +15,14 @@ const defaultAlias = {
   '@mui/x-date-pickers': resolveAliasPath('./packages/x-date-pickers/src'),
   '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
   '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),
+  '@mui/x-charts-pro': resolveAliasPath('./packages/x-charts-pro/src'),
+  '@mui/x-charts-vendor': resolveAliasPath('./packages/x-charts-vendor'),
   '@mui/x-tree-view': resolveAliasPath('./packages/x-tree-view/src'),
-  '@mui/markdown': '@mui/monorepo/packages/markdown',
+  '@mui/x-tree-view-pro': resolveAliasPath('./packages/x-tree-view-pro/src'),
+  '@mui/x-internals': resolveAliasPath('./packages/x-internals/src'),
   '@mui/material-nextjs': '@mui/monorepo/packages/mui-material-nextjs/src',
   '@mui-internal/api-docs-builder': resolveAliasPath(
     './node_modules/@mui/monorepo/packages/api-docs-builder',
-  ),
-  '@mui-internal/test-utils': resolveAliasPath(
-    './node_modules/@mui/monorepo/packages/test-utils/src',
   ),
   docs: resolveAliasPath('./node_modules/@mui/monorepo/docs'),
   test: resolveAliasPath('./test'),
@@ -58,12 +58,12 @@ module.exports = function getBabelConfig(api) {
 
   const plugins = [
     'babel-plugin-optimize-clsx',
-    // Need the following 3 proposals for all targets in .browserslistrc.
+    // Need the following 3 transforms for all targets in .browserslistrc.
     // With our usage the transpiled loose mode is equivalent to spec mode.
-    ['@babel/plugin-proposal-class-properties', { loose: true }],
-    ['@babel/plugin-proposal-private-methods', { loose: true }],
-    ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
-    ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
+    ['@babel/plugin-transform-class-properties', { loose: true }],
+    ['@babel/plugin-transform-private-methods', { loose: true }],
+    ['@babel/plugin-transform-private-property-in-object', { loose: true }],
+    ['@babel/plugin-transform-object-rest-spread', { loose: true }],
     [
       '@babel/plugin-transform-runtime',
       {
@@ -91,8 +91,19 @@ module.exports = function getBabelConfig(api) {
       {
         test: /date-fns/i,
         replacer: 'date-fns-v3',
-        ignoreFilenames: 'AdapterDateFns.ts',
+        // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
+        filenameIncludes: 'src/AdapterDateFnsV3/',
       },
+    ]);
+    plugins.push([
+      'babel-plugin-replace-imports',
+      {
+        test: /date-fns-jalali/i,
+        replacer: 'date-fns-jalali-v3',
+        // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
+        filenameIncludes: 'src/AdapterDateFnsJalaliV3/',
+      },
+      'replace-date-fns-jalali-imports',
     ]);
   }
 

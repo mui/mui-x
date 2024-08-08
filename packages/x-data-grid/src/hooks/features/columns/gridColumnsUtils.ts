@@ -12,6 +12,7 @@ import {
   GRID_STRING_COL_DEF,
   getGridDefaultColumnTypes,
 } from '../../../colDef';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsStateSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
@@ -19,7 +20,9 @@ import { clamp } from '../../../utils/utils';
 import { GridApiCommon } from '../../../models/api/gridApiCommon';
 import { GridRowEntry } from '../../../models/gridRows';
 import { gridDensityFactorSelector } from '../density/densitySelector';
+import { gridHeaderFilteringEnabledSelector } from '../headerFiltering/gridHeaderFilteringSelectors';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
+import type { GridDimensions } from '../dimensions/gridDimensionsApi';
 
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
@@ -159,7 +162,7 @@ export function computeFlexColumnsWidth({
  */
 export const hydrateColumnsWidth = (
   rawState: GridColumnsRawState,
-  viewportInnerWidth: number,
+  dimensions: GridDimensions | undefined,
 ): GridColumnsState => {
   const columnsLookup: GridColumnLookup = {};
   let totalFlexUnits = 0;
@@ -168,36 +171,46 @@ export const hydrateColumnsWidth = (
   const flexColumns: GridStateColDef[] = [];
 
   // For the non-flex columns, compute their width
-  // For the flex columns, compute there minimum width and how much width must be allocated during the flex allocation
+  // For the flex columns, compute their minimum width and how much width must be allocated during the flex allocation
   rawState.orderedFields.forEach((columnField) => {
-    const newColumn = { ...rawState.lookup[columnField] } as GridStateColDef;
-    if (rawState.columnVisibilityModel[columnField] === false) {
-      newColumn.computedWidth = 0;
-    } else {
-      let computedWidth: number;
-      if (newColumn.flex && newColumn.flex > 0) {
-        totalFlexUnits += newColumn.flex;
-        computedWidth = 0;
-        flexColumns.push(newColumn);
+    let column = rawState.lookup[columnField] as GridStateColDef;
+    let computedWidth = 0;
+    let isFlex = false;
+
+    if (rawState.columnVisibilityModel[columnField] !== false) {
+      if (column.flex && column.flex > 0) {
+        totalFlexUnits += column.flex;
+        isFlex = true;
       } else {
         computedWidth = clamp(
-          newColumn.width || GRID_STRING_COL_DEF.width!,
-          newColumn.minWidth || GRID_STRING_COL_DEF.minWidth!,
-          newColumn.maxWidth || GRID_STRING_COL_DEF.maxWidth!,
+          column.width || GRID_STRING_COL_DEF.width!,
+          column.minWidth || GRID_STRING_COL_DEF.minWidth!,
+          column.maxWidth || GRID_STRING_COL_DEF.maxWidth!,
         );
       }
 
       widthAllocatedBeforeFlex += computedWidth;
-      newColumn.computedWidth = computedWidth;
     }
 
-    columnsLookup[columnField] = newColumn;
+    if (column.computedWidth !== computedWidth) {
+      column = { ...column, computedWidth };
+    }
+
+    if (isFlex) {
+      flexColumns.push(column);
+    }
+
+    columnsLookup[columnField] = column;
   });
 
-  const initialFreeSpace = Math.max(viewportInnerWidth - widthAllocatedBeforeFlex, 0);
+  const availableWidth =
+    dimensions === undefined
+      ? 0
+      : dimensions.viewportOuterSize.width - (dimensions.hasScrollY ? dimensions.scrollbarSize : 0);
+  const initialFreeSpace = Math.max(availableWidth - widthAllocatedBeforeFlex, 0);
 
   // Allocate the remaining space to the flex columns
-  if (totalFlexUnits > 0 && viewportInnerWidth > 0) {
+  if (totalFlexUnits > 0 && availableWidth > 0) {
     const computedColumnWidths = computeFlexColumnsWidth({
       initialFreeSpace,
       totalFlexUnits,
@@ -375,7 +388,7 @@ export const createColumnsState = ({
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
     Object.keys(columnsState.lookup).forEach((field) => {
-      if (!columnsToKeep![field]) {
+      if (!columnsToKeep[field]) {
         delete columnsState.lookup[field];
       }
     });
@@ -393,7 +406,7 @@ export const createColumnsState = ({
 
   return hydrateColumnsWidth(
     columnsStateWithPortableColumns,
-    apiRef.current.getRootDimensions?.().viewportInnerSize.width ?? 0,
+    apiRef.current.getRootDimensions?.() ?? undefined,
   );
 };
 
@@ -428,41 +441,18 @@ export function getFirstNonSpannedColumnToRender({
   return firstNonSpannedColumnToRender;
 }
 
-export function getFirstColumnIndexToRender({
-  firstColumnIndex,
-  minColumnIndex,
-  columnBuffer,
-  firstRowToRender,
-  lastRowToRender,
-  apiRef,
-  visibleRows,
-}: {
-  firstColumnIndex: number;
-  minColumnIndex: number;
-  columnBuffer: number;
-  apiRef: React.MutableRefObject<GridApiCommon>;
-  firstRowToRender: number;
-  lastRowToRender: number;
-  visibleRows: GridRowEntry[];
-}) {
-  const initialFirstColumnToRender = Math.max(firstColumnIndex - columnBuffer, minColumnIndex);
-
-  const firstColumnToRender = getFirstNonSpannedColumnToRender({
-    firstColumnToRender: initialFirstColumnToRender,
-    apiRef,
-    firstRowToRender,
-    lastRowToRender,
-    visibleRows,
-  });
-
-  return firstColumnToRender;
-}
-
 export function getTotalHeaderHeight(
   apiRef: React.MutableRefObject<GridApiCommunity>,
-  headerHeight: number,
+  props: Pick<DataGridProcessedProps, 'columnHeaderHeight' | 'headerFilterHeight'>,
 ) {
   const densityFactor = gridDensityFactorSelector(apiRef);
   const maxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
-  return Math.floor(headerHeight * densityFactor) * ((maxDepth ?? 0) + 1);
+  const isHeaderFilteringEnabled = gridHeaderFilteringEnabledSelector(apiRef);
+
+  const columnHeadersHeight = Math.floor(props.columnHeaderHeight * densityFactor);
+  const filterHeadersHeight = isHeaderFilteringEnabled
+    ? Math.floor((props.headerFilterHeight ?? props.columnHeaderHeight) * densityFactor)
+    : 0;
+
+  return columnHeadersHeight * (1 + (maxDepth ?? 0)) + filterHeadersHeight;
 }

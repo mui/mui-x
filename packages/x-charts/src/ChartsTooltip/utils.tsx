@@ -1,13 +1,16 @@
 import * as React from 'react';
 import { AxisInteractionData, ItemInteractionData } from '../context/InteractionProvider';
-import { SvgContext } from '../context/DrawingProvider';
-import {
-  CartesianChartSeriesType,
-  ChartSeriesDefaultized,
-  ChartSeriesType,
-} from '../models/seriesType/config';
+import { ChartSeriesType } from '../models/seriesType/config';
+import { useSvgRef } from '../hooks';
 
-export function generateVirtualElement(mousePosition: { x: number; y: number } | null) {
+type MousePosition = {
+  x: number;
+  y: number;
+  pointerType: 'mouse' | 'touch' | 'pen';
+  height: number;
+};
+
+export function generateVirtualElement(mousePosition: MousePosition | null) {
   if (mousePosition === null) {
     return {
       getBoundingClientRect: () => ({
@@ -24,27 +27,29 @@ export function generateVirtualElement(mousePosition: { x: number; y: number } |
     };
   }
   const { x, y } = mousePosition;
+  const boundingBox = {
+    width: 0,
+    height: 0,
+    x,
+    y,
+    top: y,
+    right: x,
+    bottom: y,
+    left: x,
+  };
   return {
     getBoundingClientRect: () => ({
-      width: 0,
-      height: 0,
-      x,
-      y,
-      top: y,
-      right: x,
-      bottom: y,
-      left: x,
-      toJSON: () =>
-        JSON.stringify({ width: 0, height: 0, x, y, top: y, right: x, bottom: y, left: x }),
+      ...boundingBox,
+      toJSON: () => JSON.stringify(boundingBox),
     }),
   };
 }
 
 export function useMouseTracker() {
-  const svgRef = React.useContext(SvgContext);
+  const svgRef = useSvgRef();
 
   // Use a ref to avoid rerendering on every mousemove event.
-  const [mousePosition, setMousePosition] = React.useState<null | { x: number; y: number }>(null);
+  const [mousePosition, setMousePosition] = React.useState<MousePosition | null>(null);
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -52,22 +57,27 @@ export function useMouseTracker() {
       return () => {};
     }
 
-    const handleMouseOut = () => {
+    const handleOut = () => {
       setMousePosition(null);
     };
 
-    const handleMouseMove = (event: MouseEvent) => {
+    const handleMove = (event: PointerEvent) => {
       setMousePosition({
         x: event.clientX,
         y: event.clientY,
+        height: event.height,
+        pointerType: event.pointerType as MousePosition['pointerType'],
       });
     };
 
-    element.addEventListener('mouseout', handleMouseOut);
-    element.addEventListener('mousemove', handleMouseMove);
+    element.addEventListener('pointerdown', handleMove);
+    element.addEventListener('pointermove', handleMove);
+    element.addEventListener('pointerup', handleOut);
+
     return () => {
-      element.removeEventListener('mouseout', handleMouseOut);
-      element.removeEventListener('mousemove', handleMouseMove);
+      element.removeEventListener('pointerdown', handleMove);
+      element.removeEventListener('pointermove', handleMove);
+      element.removeEventListener('pointerup', handleOut);
     };
   }, [svgRef]);
 
@@ -88,16 +98,6 @@ export function getTooltipHasData(
   const hasAxisYData = (displayedData as AxisInteractionData).y !== null;
 
   return hasAxisXData || hasAxisYData;
-}
-
-export function isCartesianSeriesType(seriesType: string): seriesType is CartesianChartSeriesType {
-  return ['bar', 'line', 'scatter'].includes(seriesType);
-}
-
-export function isCartesianSeries(
-  series: ChartSeriesDefaultized<ChartSeriesType>,
-): series is ChartSeriesDefaultized<CartesianChartSeriesType> {
-  return isCartesianSeriesType(series.type);
 }
 
 export function utcFormatter(v: string | number | Date): string {

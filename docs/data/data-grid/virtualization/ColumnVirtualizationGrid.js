@@ -39,7 +39,7 @@ export default function ColumnVirtualizationGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} columnBuffer={2} columnThreshold={2} />
+      <DataGrid {...data} columnBufferPx={100} />
     </div>
   );
 }

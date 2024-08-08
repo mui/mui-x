@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
 import {
@@ -282,7 +282,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
               disabled={isResetDisabled}
               {...rootProps.slotProps?.baseButton}
             >
-              Reset
+              {apiRef.current.getLocaleText('columnsManagementReset')}
             </rootProps.slots.baseButton>
           ) : null}
         </GridColumnsManagementFooter>
@@ -294,7 +294,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
 GridColumnsManagement.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * If `true`, the column search field will be focused automatically.

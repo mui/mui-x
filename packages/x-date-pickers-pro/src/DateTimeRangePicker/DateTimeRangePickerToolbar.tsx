@@ -2,15 +2,15 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import {
   BaseToolbarProps,
-  useLocaleText,
   ExportedBaseToolbarProps,
   useUtils,
   DateOrTimeViewWithMeridiem,
   WrapperVariant,
 } from '@mui/x-date-pickers/internals';
+import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DateTimePickerToolbarProps,
@@ -76,24 +76,40 @@ const DateTimeRangePickerToolbarStart = styled(DateTimePickerToolbar, {
   name: 'MuiDateTimeRangePickerToolbar',
   slot: 'StartToolbar',
   overridesResolver: (_, styles) => styles.startToolbar,
-})<DateTimeRangePickerStartOrEndToolbarProps<any>>(({ ownerState }) => ({
+})<DateTimeRangePickerStartOrEndToolbarProps<any>>({
   borderBottom: 'none',
-  ...(ownerState?.toolbarVariant !== 'desktop'
-    ? {
+  variants: [
+    {
+      props: ({ toolbarVariant }: DateTimeRangePickerStartOrEndToolbarProps<any>) =>
+        toolbarVariant !== 'desktop',
+      style: {
         padding: '12px 8px 0 12px',
-      }
-    : {
+      },
+    },
+    {
+      props: { toolbarVariant: 'desktop' },
+      style: {
         paddingBottom: 0,
-      }),
-})) as DateTimeRangePickerStartOrEndToolbarComponent;
+      },
+    },
+  ],
+}) as DateTimeRangePickerStartOrEndToolbarComponent;
 
 const DateTimeRangePickerToolbarEnd = styled(DateTimePickerToolbar, {
   name: 'MuiDateTimeRangePickerToolbar',
   slot: 'EndToolbar',
   overridesResolver: (_, styles) => styles.endToolbar,
-})<DateTimeRangePickerStartOrEndToolbarProps<any>>(({ ownerState }) => ({
-  padding: ownerState?.toolbarVariant !== 'desktop' ? '12px 8px 12px 12px' : undefined,
-})) as DateTimeRangePickerStartOrEndToolbarComponent;
+})<DateTimeRangePickerStartOrEndToolbarProps<any>>({
+  variants: [
+    {
+      props: ({ toolbarVariant }: DateTimeRangePickerStartOrEndToolbarProps<any>) =>
+        toolbarVariant !== 'desktop',
+      style: {
+        padding: '12px 8px 12px 12px',
+      },
+    },
+  ],
+}) as DateTimeRangePickerStartOrEndToolbarComponent;
 
 const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePickerToolbar<
   TDate extends PickerValidDate,
@@ -135,7 +151,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     toolbarPlaceholder,
   };
 
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
@@ -196,7 +212,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
       <DateTimeRangePickerToolbarStart<TDate>
         value={start}
         onViewChange={handleStartRangeViewChange}
-        toolbarTitle={localeText.start}
+        toolbarTitle={translations.start}
         ownerState={ownerState}
         toolbarVariant="desktop"
         view={rangePosition === 'start' ? view : undefined}
@@ -208,7 +224,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
       <DateTimeRangePickerToolbarEnd<TDate>
         value={end}
         onViewChange={handleEndRangeViewChange}
-        toolbarTitle={localeText.end}
+        toolbarTitle={translations.end}
         ownerState={ownerState}
         toolbarVariant="desktop"
         view={rangePosition === 'end' ? view : undefined}
@@ -224,7 +240,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
 DateTimeRangePickerToolbar.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   ampm: PropTypes.bool,
   /**

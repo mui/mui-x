@@ -171,7 +171,7 @@ function GridActionsCell(props: GridActionsCellProps) {
 
     if (newIndex !== focusedButtonIndex) {
       event.preventDefault(); // Prevent scrolling
-      event.stopPropagation(); // Don't stop propagation for other keys, e.g. ArrowUp
+      event.stopPropagation(); // Don't stop propagation for other keys, for example ArrowUp
       setFocusedButtonIndex(newIndex);
     }
   };
@@ -245,7 +245,7 @@ function GridActionsCell(props: GridActionsCellProps) {
 GridActionsCell.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   api: PropTypes.object,
   /**

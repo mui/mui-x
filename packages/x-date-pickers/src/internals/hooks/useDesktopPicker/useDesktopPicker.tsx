@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import MuiInputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import useForkRef from '@mui/utils/useForkRef';
@@ -159,13 +159,15 @@ export const useDesktopPicker = <
     fieldProps.InputProps = {
       ...fieldProps.InputProps,
       ref: containerRef,
-      [`${inputAdornmentProps.position}Adornment`]: (
-        <InputAdornment {...inputAdornmentProps}>
-          <OpenPickerButton {...openPickerButtonProps}>
-            <OpenPickerIcon {...innerSlotProps?.openPickerIcon} />
-          </OpenPickerButton>
-        </InputAdornment>
-      ),
+      ...(!props.disableOpenPicker && {
+        [`${inputAdornmentProps.position}Adornment`]: (
+          <InputAdornment {...inputAdornmentProps}>
+            <OpenPickerButton {...openPickerButtonProps}>
+              <OpenPickerIcon {...innerSlotProps?.openPickerIcon} />
+            </OpenPickerButton>
+          </InputAdornment>
+        ),
+      }),
     } as typeof fieldProps.InputProps;
   }
 

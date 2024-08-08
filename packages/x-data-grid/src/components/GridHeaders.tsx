@@ -54,18 +54,11 @@ function GridHeaders() {
     cellTabIndexState === null
   );
 
-  const columnHeadersRef = React.useRef<HTMLDivElement>(null);
-  const columnsContainerRef = React.useRef<HTMLDivElement>(null);
-
-  apiRef.current.register('private', {
-    columnHeadersContainerElementRef: columnsContainerRef,
-    columnHeadersElementRef: columnHeadersRef,
-  });
+  const columnsContainerRef = apiRef.current.columnHeadersContainerRef;
 
   return (
     <rootProps.slots.columnHeaders
       ref={columnsContainerRef}
-      innerRef={columnHeadersRef}
       visibleColumns={visibleColumns}
       filterColumnLookup={filterColumnLookup}
       sortColumnLookup={sortColumnLookup}
@@ -78,6 +71,7 @@ function GridHeaders() {
       columnVisibility={columnVisibility}
       columnGroupsHeaderStructure={columnGroupsHeaderStructure}
       hasOtherElementInTabSequence={hasOtherElementInTabSequence}
+      {...rootProps.slotProps?.columnHeaders}
     />
   );
 }

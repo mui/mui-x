@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { clsx } from 'clsx';
 import Stack, { StackProps } from '@mui/material/Stack';
 import MuiTextField from '@mui/material/TextField';
-import Typography, { TypographyProps } from '@mui/material/Typography';
+import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import {
   unstable_composeClasses as composeClasses,
   unstable_generateUtilityClass as generateUtilityClass,
@@ -45,7 +45,7 @@ const useUtilityClasses = (ownerState: MultiInputTimeRangeFieldProps<any, any>) 
 
 const MultiInputTimeRangeFieldRoot = styled(
   React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
-    <Stack ref={ref} spacing={2} direction="row" alignItems="baseline" {...props} />
+    <Stack ref={ref} spacing={2} direction="row" alignItems="center" {...props} />
   )),
   {
     name: 'MuiMultiInputTimeRangeField',
@@ -54,14 +54,13 @@ const MultiInputTimeRangeFieldRoot = styled(
   },
 )({});
 
-const MultiInputTimeRangeFieldSeparator = styled(
-  (props: TypographyProps) => <Typography {...props}>{props.children ?? ' – '}</Typography>,
-  {
-    name: 'MuiMultiInputTimeRangeField',
-    slot: 'Separator',
-    overridesResolver: (props, styles) => styles.separator,
-  },
-)({});
+const MultiInputTimeRangeFieldSeparator = styled(Typography, {
+  name: 'MuiMultiInputTimeRangeField',
+  slot: 'Separator',
+  overridesResolver: (props, styles) => styles.separator,
+})({
+  lineHeight: '1.4375em', // 23px
+});
 
 type MultiInputTimeRangeFieldComponent = (<
   TDate extends PickerValidDate,
@@ -155,6 +154,9 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
   const separatorProps = useSlotProps({
     elementType: Separator,
     externalSlotProps: slotProps?.separator,
+    additionalProps: {
+      children: ` ${internalProps.dateSeparator ?? '–'} `,
+    },
     ownerState,
     className: classes.separator,
   });
@@ -186,11 +188,11 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
 MultiInputTimeRangeField.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * @default utils.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**
@@ -203,6 +205,11 @@ MultiInputTimeRangeField.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   component: PropTypes.elementType,
+  /**
+   * String displayed between the start and the end dates.
+   * @default "–"
+   */
+  dateSeparator: PropTypes.string,
   /**
    * The default value. Use when the component is not controlled.
    */
@@ -347,7 +354,7 @@ MultiInputTimeRangeField.propTypes = {
    * Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros.
    * This mean that when using `shouldRespectLeadingZeros={false}`, if you retrieve the value directly from the input (not listening to `onChange`) and your format contains tokens without leading zeros, the value will not be parsed by your library.
    *
-   * @default `false`
+   * @default false
    */
   shouldRespectLeadingZeros: PropTypes.bool,
   /**

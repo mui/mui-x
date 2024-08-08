@@ -2,7 +2,8 @@ import * as React from 'react';
 import Stack, { StackProps } from '@mui/material/Stack';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import { resolveComponentProps, SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import {
@@ -11,19 +12,21 @@ import {
   FieldRef,
   PickerValidDate,
 } from '@mui/x-date-pickers/models';
-import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '@mui/x-date-pickers/hooks';
+import {
+  UseClearableFieldSlots,
+  UseClearableFieldSlotProps,
+  usePickersTranslations,
+} from '@mui/x-date-pickers/hooks';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
   BaseFieldProps,
   onSpaceOrEnter,
-  useLocaleText,
   UsePickerResponse,
   WrapperVariant,
   UsePickerProps,
   SlotComponentPropsFromProps,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
-import { UseDateRangeFieldProps } from '../models';
 import {
   BaseMultiInputFieldProps,
   MultiInputFieldSlotRootProps,
@@ -32,6 +35,7 @@ import {
   DateRange,
   RangePosition,
   FieldType,
+  UseDateRangeFieldProps,
 } from '../../models';
 import { UseRangePositionResponse } from './useRangePosition';
 
@@ -167,7 +171,7 @@ const useMultiInputFieldSlotProps = <
     TError
   >;
 
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const handleStartFieldRef = useForkRef(fieldProps.unstableStartFieldRef, startFieldRef);
   const handleEndFieldRef = useForkRef(fieldProps.unstableEndFieldRef, endFieldRef);
 
@@ -198,7 +202,7 @@ const useMultiInputFieldSlotProps = <
     event.stopPropagation();
     onRangePositionChange('start');
     if (!readOnly && !disableOpenPicker) {
-      actions.onOpen();
+      actions.onOpen(event);
     }
   };
 
@@ -206,7 +210,7 @@ const useMultiInputFieldSlotProps = <
     event.stopPropagation();
     onRangePositionChange('end');
     if (!readOnly && !disableOpenPicker) {
-      actions.onOpen();
+      actions.onOpen(event);
     }
   };
 
@@ -245,7 +249,7 @@ const useMultiInputFieldSlotProps = <
       let InputProps: MultiInputFieldSlotTextFieldProps['InputProps'];
       if (ownerState.position === 'start') {
         textFieldProps = {
-          label: inLocaleText?.start ?? localeText.start,
+          label: inLocaleText?.start ?? translations.start,
           onKeyDown: onSpaceOrEnter(openRangeStartSelection),
           onFocus: handleFocusStart,
           focused: open ? rangePosition === 'start' : undefined,
@@ -262,7 +266,7 @@ const useMultiInputFieldSlotProps = <
         }
       } else {
         textFieldProps = {
-          label: inLocaleText?.end ?? localeText.end,
+          label: inLocaleText?.end ?? translations.end,
           onKeyDown: onSpaceOrEnter(openRangeEndSelection),
           onFocus: handleFocusEnd,
           focused: open ? rangePosition === 'end' : undefined,
@@ -400,7 +404,7 @@ const useSingleInputFieldSlotProps = <
     event.stopPropagation();
 
     if (!readOnly && !disableOpenPicker) {
-      actions.onOpen();
+      actions.onOpen(event);
     }
   };
 
@@ -431,7 +435,7 @@ const useSingleInputFieldSlotProps = <
       ref: anchorRef,
       ...fieldProps?.InputProps,
     },
-    focused: open,
+    focused: open ? true : undefined,
     ...(labelId != null && { id: labelId }),
     ...(wrapperVariant === 'mobile' && { readOnly: true }),
     // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`

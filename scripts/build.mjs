@@ -4,6 +4,7 @@ import glob from 'fast-glob';
 import path from 'path';
 import { promisify } from 'util';
 import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import { getWorkspaceRoot } from './utils.mjs';
 
 const exec = promisify(childProcess.exec);
@@ -84,7 +85,7 @@ async function run(argv) {
     babelArgs.push('--compact false');
   }
 
-  const command = ['yarn babel', ...babelArgs].join(' ');
+  const command = ['pnpm babel', ...babelArgs].join(' ');
 
   if (verbose) {
     // eslint-disable-next-line no-console
@@ -102,7 +103,7 @@ async function run(argv) {
   }
 }
 
-yargs(process.argv.slice(2))
+yargs(hideBin(process.argv))
   .command({
     command: '$0 <bundle>',
     description: 'build package',

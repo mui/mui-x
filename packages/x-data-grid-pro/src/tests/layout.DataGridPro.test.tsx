@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, act } from '@mui-internal/test-utils';
+import { createRenderer, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
@@ -141,6 +141,22 @@ describe('<DataGridPro /> - Layout', () => {
         width: '148px', // because of the 2px border
       });
     });
+  });
+
+  it('should work with `headerFilterHeight` prop', () => {
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGridPro
+          {...baselineProps}
+          autoHeight
+          headerFilters
+          columnHeaderHeight={20}
+          headerFilterHeight={32}
+          rowHeight={20}
+        />
+      </div>,
+    );
+    expect(grid('main')!.clientHeight).to.equal(baselineProps.rows.length * 20 + 20 + 32);
   });
 
   it('should support translations in the theme', () => {

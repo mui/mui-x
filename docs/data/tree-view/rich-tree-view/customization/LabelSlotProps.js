@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
 
@@ -20,6 +21,16 @@ const MUI_X_PRODUCTS = [
       { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
     ],
   },
+  {
+    id: 'charts',
+    label: 'Charts',
+    children: [{ id: 'charts-community', label: '@mui/x-charts' }],
+  },
+  {
+    id: 'tree-view',
+    label: 'Tree View',
+    children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }],
+  },
 ];
 
 const CustomTreeItem = React.forwardRef((props, ref) => (
@@ -28,7 +39,7 @@ const CustomTreeItem = React.forwardRef((props, ref) => (
     {...props}
     slotProps={{
       label: {
-        id: `${props.nodeId}-label`,
+        id: `${props.itemId}-label`,
       },
     }}
   />
@@ -36,12 +47,12 @@ const CustomTreeItem = React.forwardRef((props, ref) => (
 
 export default function LabelSlotProps() {
   return (
-    <RichTreeView
-      items={MUI_X_PRODUCTS}
-      aria-label="customized"
-      defaultExpandedNodes={['pickers']}
-      sx={{ overflowX: 'hidden', minHeight: 224, flexGrow: 1, maxWidth: 300 }}
-      slots={{ item: CustomTreeItem }}
-    />
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
+      <RichTreeView
+        items={MUI_X_PRODUCTS}
+        defaultExpandedItems={['grid']}
+        slots={{ item: CustomTreeItem }}
+      />
+    </Box>
   );
 }

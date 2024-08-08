@@ -11,7 +11,7 @@ export type GridFilterInputBooleanProps = GridFilterInputValueProps &
     clearButton?: React.ReactNode | null;
     /**
      * It is `true` if the filter either has a value or an operator with no value
-     * required is selected (e.g. `isEmpty`)
+     * required is selected (for example `isEmpty`)
      */
     isFilterActive?: boolean;
   };
@@ -123,7 +123,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
 GridFilterInputBoolean.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
     current: PropTypes.object.isRequired,
@@ -133,7 +133,7 @@ GridFilterInputBoolean.propTypes = {
   focusElementRef: refType,
   /**
    * It is `true` if the filter either has a value or an operator with no value
-   * required is selected (e.g. `isEmpty`)
+   * required is selected (for example `isEmpty`)
    */
   isFilterActive: PropTypes.bool,
   item: PropTypes.shape({

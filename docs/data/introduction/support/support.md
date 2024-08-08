@@ -8,7 +8,7 @@ We use GitHub issues as a bug and feature request tracker.
 
 If you think you've found a bug, or you have a new feature idea:
 
-1. Please start by [making sure it hasn't already been reported or fixed](https://github.com/mui/mui-x/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aclosed).
+1. Please start by [making sure it hasn't already been reported or fixed](https://github.com/mui/mui-x/issues?q=is%3Aissue).
    You can search through existing issues and pull requests to see if someone has reported one similar to yours.
 2. Then, if no duplicates exist, [open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X repository.
 
@@ -40,7 +40,7 @@ You can browse the documentation, find an example close to your use case, and th
 </span>
 </a>
 
-- [Data Grid](/x/react-data-grid/#mit-version-free-forever)
+- [Data Grid](/x/react-data-grid/#mit-license-free-forever)
 - [Date Pickers](/x/react-date-pickers/getting-started/#render-your-first-component)
 - [Charts](/x/react-charts/getting-started/#single-charts)
 - [Tree View](/x/react-tree-view/#simple-tree-view)
@@ -48,8 +48,10 @@ You can browse the documentation, find an example close to your use case, and th
 #### Use starter templates
 
 You can use a starter template to build a reproduction case with:
+
 <!-- #default-branch-switch -->
-- A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/next/bug-reproductions/x-data-grid?file=src/index.tsx)
+
+- A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/master/bug-reproductions/x-data-grid?file=src/index.tsx)
 - A plain React [JavaScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react-ts) template
 
 ## Stack Overflow
@@ -92,9 +94,9 @@ This includes issues introduced by external sources, like browser upgrades or ch
 
 ### Supported versions
 
-- MUI X v7: ✅ Pre-release (Continuous support - Stable release: March 2024)
-- MUI X v6: ✅ Stable major (Continuous support)
-- MUI X v5: ⚠️ Long-term support (Guaranteed Support for security issues and regressions).
+- MUI X v7: ✅ Stable major (Continuous support).
+- MUI X v6: ⚠️ Long-term support (Guaranteed Support for security issues and regressions).
+- MUI X v5: 🅧 No longer supported.
 - MUI X v4: 🅧 No longer supported.
 - MUI X v3: 🅧 Never existed.
 - MUI X v2: 🅧 Never existed.
@@ -104,7 +106,7 @@ This includes issues introduced by external sources, like browser upgrades or ch
 
 ### Social media
 
-The MUI X community is active on both [X/Twitter](https://twitter.com/MUI_hq) and [LinkedIn](https://www.linkedin.com/company/mui/).
+The MUI X community is active on both [X/Twitter](https://x.com/MUI_hq) and [LinkedIn](https://www.linkedin.com/company/mui/).
 These are great platforms to share what you're working on and connect with other developers.
 
 ### Discord

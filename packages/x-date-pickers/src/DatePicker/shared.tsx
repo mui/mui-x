@@ -35,6 +35,17 @@ export interface BaseDatePickerSlotProps<TDate extends PickerValidDate>
   toolbar?: ExportedDatePickerToolbarProps;
 }
 
+export type DatePickerViewRenderers<
+  TDate extends PickerValidDate,
+  TView extends DateView,
+  TAdditionalProps extends {} = {},
+> = PickerViewRendererLookup<
+  TDate | null,
+  TView,
+  DateViewRendererProps<TDate, TView>,
+  TAdditionalProps
+>;
+
 export interface BaseDatePickerProps<TDate extends PickerValidDate>
   extends BasePickerInputProps<TDate | null, TDate, DateView, DateValidationError>,
     ExportedDateCalendarProps<TDate> {
@@ -51,11 +62,9 @@ export interface BaseDatePickerProps<TDate extends PickerValidDate>
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
-   * If `undefined`, internally defined view will be the used.
+   * If `undefined`, internally defined view will be used.
    */
-  viewRenderers?: Partial<
-    PickerViewRendererLookup<TDate | null, DateView, DateViewRendererProps<TDate, DateView>, {}>
-  >;
+  viewRenderers?: Partial<DatePickerViewRenderers<TDate, DateView>>;
 }
 
 type UseDatePickerDefaultizedProps<

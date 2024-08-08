@@ -2,8 +2,7 @@
   <RichTreeView
     items={products}
     aria-label="customized"
-    defaultExpandedNodes={DEFAULT_EXPANDED_NODES}
-    sx={{ overflowX: 'hidden', minHeight: 224, flexGrow: 1, maxWidth: 300 }}
+    defaultExpandedItems={DEFAULT_EXPANDED_ITEMS}
     slots={{ item: CustomTreeItem }}
   />
 </TreeItemContext.Provider>

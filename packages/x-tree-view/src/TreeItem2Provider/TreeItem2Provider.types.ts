@@ -3,5 +3,5 @@ import { TreeViewItemId } from '../models';
 
 export interface TreeItem2ProviderProps {
   children: React.ReactNode;
-  nodeId: TreeViewItemId;
+  itemId: TreeViewItemId;
 }

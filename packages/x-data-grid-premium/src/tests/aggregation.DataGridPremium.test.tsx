@@ -6,7 +6,7 @@ import {
   within,
   act,
   fireEvent,
-} from '@mui-internal/test-utils';
+} from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { getCell, getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 import { SinonSpy, spy } from 'sinon';
@@ -641,7 +641,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
     it('should use the aggregation function valueFormatter if defined', () => {
       const customAggregationFunction: GridAggregationFunction = {
         apply: () => 'Agg value',
-        valueFormatter: (params) => `+ ${params.value}`,
+        valueFormatter: (value) => `+ ${value}`,
       };
 
       render(

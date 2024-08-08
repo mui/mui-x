@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import {
   TreeItem2,
   TreeItem2Label,
@@ -6,10 +7,8 @@ import {
 } from '@mui/x-tree-view/TreeItem2';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import {
-  UseTreeItem2ContentSlotOwnProps,
-  useTreeItem2Utils,
-} from '@mui/x-tree-view';
+import { UseTreeItem2ContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem2';
+import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
 
 interface CustomLabelProps {
   children: string;
@@ -69,20 +68,20 @@ function CustomLabel(props: CustomLabelProps) {
 }
 
 const TreeItemContext = React.createContext<{
-  onLabelValueChange: (nodeId: string, label: string) => void;
+  onLabelValueChange: (itemId: string, label: string) => void;
 }>({ onLabelValueChange: () => {} });
 
 const CustomTreeItem = React.forwardRef(
   (props: TreeItem2Props, ref: React.Ref<HTMLLIElement>) => {
     const { interactions } = useTreeItem2Utils({
-      nodeId: props.nodeId,
+      itemId: props.itemId,
       children: props.children,
     });
 
     const { onLabelValueChange } = React.useContext(TreeItemContext);
 
     const handleLabelValueChange = (newLabel: string) => {
-      onLabelValueChange(props.nodeId, newLabel);
+      onLabelValueChange(props.itemId, newLabel);
     };
 
     const handleContentClick: UseTreeItem2ContentSlotOwnProps['onClick'] = (
@@ -133,19 +132,29 @@ const DEFAULT_MUI_X_PRODUCTS: TreeViewBaseItem[] = [
       { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
     ],
   },
+  {
+    id: 'charts',
+    label: 'Charts',
+    children: [{ id: 'charts-community', label: '@mui/x-charts' }],
+  },
+  {
+    id: 'tree-view',
+    label: 'Tree View',
+    children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }],
+  },
 ];
 
-const DEFAULT_EXPANDED_NODES = ['pickers'];
+const DEFAULT_EXPANDED_ITEMS = ['pickers'];
 
 export default function LabelSlots() {
   const [products, setProducts] = React.useState(DEFAULT_MUI_X_PRODUCTS);
 
   const context = React.useMemo(
     () => ({
-      onLabelValueChange: (nodeId: string, label: string) =>
+      onLabelValueChange: (itemId: string, label: string) =>
         setProducts((prev) => {
           const walkTree = (item: TreeViewBaseItem): TreeViewBaseItem => {
-            if (item.id === nodeId) {
+            if (item.id === itemId) {
               return { ...item, label };
             }
             if (item.children) {
@@ -162,14 +171,15 @@ export default function LabelSlots() {
   );
 
   return (
-    <TreeItemContext.Provider value={context}>
-      <RichTreeView
-        items={products}
-        aria-label="customized"
-        defaultExpandedNodes={DEFAULT_EXPANDED_NODES}
-        sx={{ overflowX: 'hidden', minHeight: 224, flexGrow: 1, maxWidth: 300 }}
-        slots={{ item: CustomTreeItem }}
-      />
-    </TreeItemContext.Provider>
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
+      <TreeItemContext.Provider value={context}>
+        <RichTreeView
+          items={products}
+          aria-label="customized"
+          defaultExpandedItems={DEFAULT_EXPANDED_ITEMS}
+          slots={{ item: CustomTreeItem }}
+        />
+      </TreeItemContext.Provider>
+    </Box>
   );
 }

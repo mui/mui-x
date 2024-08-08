@@ -1,14 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useSlotProps } from '@mui/base/utils';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
+import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
-import { DrawingContext } from '../context/DrawingProvider';
-import { AnchorPosition, Direction, getSeriesToDisplay } from './utils';
-import { SeriesContext } from '../context/SeriesContextProvider';
+import { getSeriesToDisplay } from './utils';
 import { ChartsLegendClasses, getLegendUtilityClass } from './chartsLegendClasses';
 import { DefaultizedProps } from '../models/helpers';
 import { DefaultChartsLegend, LegendRendererProps } from './DefaultChartsLegend';
+import { useDrawingArea } from '../hooks';
+import { useSeries } from '../hooks/useSeries';
+import { LegendPlacement } from './legend.types';
 
 export interface ChartsLegendSlots {
   /**
@@ -22,8 +23,7 @@ export interface ChartsLegendSlotProps {
   legend?: Partial<LegendRendererProps>;
 }
 
-export type ChartsLegendProps = {
-  position?: AnchorPosition;
+export interface ChartsLegendProps extends LegendPlacement {
   /**
    * Override or extend the styles applied to the component.
    */
@@ -34,11 +34,6 @@ export type ChartsLegendProps = {
    */
   hidden?: boolean;
   /**
-   * The direction of the legend layout.
-   * The default depends on the chart.
-   */
-  direction?: Direction;
-  /**
    * Overridable component slots.
    * @default {}
    */
@@ -48,7 +43,7 @@ export type ChartsLegendProps = {
    * @default {}
    */
   slotProps?: ChartsLegendSlotProps;
-};
+}
 
 type DefaultizedChartsLegendProps = DefaultizedProps<ChartsLegendProps, 'direction' | 'position'>;
 
@@ -79,8 +74,8 @@ function ChartsLegend(inProps: ChartsLegendProps) {
   const theme = useTheme();
   const classes = useUtilityClasses({ ...props, theme });
 
-  const drawingArea = React.useContext(DrawingContext);
-  const series = React.useContext(SeriesContext);
+  const drawingArea = useDrawingArea();
+  const series = useSeries();
 
   const seriesToDisplay = getSeriesToDisplay(series);
 
@@ -106,7 +101,7 @@ function ChartsLegend(inProps: ChartsLegendProps) {
 ChartsLegend.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Override or extend the styles applied to the component.
@@ -122,6 +117,9 @@ ChartsLegend.propTypes = {
    * @default false
    */
   hidden: PropTypes.bool,
+  /**
+   * The position of the legend.
+   */
   position: PropTypes.shape({
     horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
     vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,

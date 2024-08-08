@@ -8,8 +8,12 @@ import {
   recomposeColor,
   Theme,
 } from '@mui/material/styles';
+import type {} from '../../themeAugmentation/overrides';
 import { gridClasses as c } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
+import { gridDimensionsSelector } from '../../hooks/features/dimensions/gridDimensionsSelectors';
 
 export type OwnerState = DataGridProcessedProps;
 
@@ -40,6 +44,11 @@ const columnHeaderStyles = {
     visibility: 'visible',
   },
 };
+
+// Emotion thinks it knows better than us which selector we should use.
+// https://github.com/emotion-js/emotion/issues/1105#issuecomment-1722524968
+const ignoreSsrWarning =
+  '/* emotion-disable-server-rendering-unsafe-selector-warning-please-do-not-use-this-the-warning-exists-for-a-reason */';
 
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
@@ -114,6 +123,9 @@ export const GridRootStyles = styled('div', {
     { [`& .${c.withBorderColor}`]: styles.withBorderColor },
     { [`& .${c.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
     { [`& .${c.treeDataGroupingCellToggle}`]: styles.treeDataGroupingCellToggle },
+    {
+      [`& .${c.treeDataGroupingCellLoadingContainer}`]: styles.treeDataGroupingCellLoadingContainer,
+    },
     { [`& .${c.detailPanelToggleCell}`]: styles.detailPanelToggleCell },
     {
       [`& .${c['detailPanelToggleCell--expanded']}`]: styles['detailPanelToggleCell--expanded'],
@@ -121,14 +133,17 @@ export const GridRootStyles = styled('div', {
     styles.root,
   ],
 })<{ ownerState: OwnerState }>(({ theme: t }) => {
+  const apiRef = useGridPrivateApiContext();
+  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
+
   const borderColor = getBorderColor(t);
   const radius = t.shape.borderRadius;
 
   const containerBackground = t.vars
     ? t.vars.palette.background.default
-    : t.palette.background.default;
+    : (t.mixins.MuiDataGrid?.containerBackground ?? t.palette.background.default);
 
-  const pinnedBackground = containerBackground;
+  const pinnedBackground = t.mixins.MuiDataGrid?.pinnedBackground ?? containerBackground;
 
   const overlayBackground = t.vars
     ? `rgba(${t.vars.palette.background.defaultChannel} / ${t.vars.palette.action.disabledOpacity})`
@@ -144,7 +159,7 @@ export const GridRootStyles = styled('div', {
 
   const selectedHoverBackground = t.vars
     ? `rgba(${t.vars.palette.primary.mainChannel} / calc(
-                ${t.vars.palette.action.selectedOpacity} + 
+                ${t.vars.palette.action.selectedOpacity} +
                 ${t.vars.palette.action.hoverOpacity}
               ))`
     : alpha(
@@ -211,13 +226,9 @@ export const GridRootStyles = styled('div', {
     minWidth: 0, // See https://github.com/mui/mui-x/issues/8547
     minHeight: 0,
     flexDirection: 'column',
+    overflow: 'hidden',
     overflowAnchor: 'none', // Keep the same scrolling position
-    // The selector we really want here is `:first-child`, but emotion thinks it knows better than use what we
-    // want and prints a warning to the console if we use it, about :first-child being "unsafe" in an SSR context.
-    // https://github.com/emotion-js/emotion/issues/1105
-    // Using `:first-of-type instead` is ironically less "safe" because if all our elements aren't `div`, this style
-    // will fail to apply.
-    [`.${c.main} > *:first-of-type`]: {
+    [`.${c.main} > *:first-child${ignoreSsrWarning}`]: {
       borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
       borderTopRightRadius: 'var(--unstable_DataGrid-radius)',
     },
@@ -269,6 +280,15 @@ export const GridRootStyles = styled('div', {
     [`& .${c.columnHeader}:focus, & .${c.cell}:focus`]: {
       outline: `solid ${t.palette.primary.main} 1px`,
     },
+    [`&.${c['root--noToolbar']} [aria-rowindex="1"] [aria-colindex="1"]`]: {
+      borderTopLeftRadius: 'calc(var(--unstable_DataGrid-radius) - 1px)',
+    },
+    [`&.${c['root--noToolbar']} [aria-rowindex="1"] .${c['columnHeader--last']}`]: {
+      borderTopRightRadius:
+        !dimensions.hasScrollY || dimensions.scrollbarSize === 0
+          ? 'calc(var(--unstable_DataGrid-radius) - 1px)'
+          : undefined,
+    },
     [`& .${c.columnHeaderCheckbox}, & .${c.cellCheckbox}`]: {
       padding: 0,
       justifyContent: 'center',
@@ -278,6 +298,8 @@ export const GridRootStyles = styled('div', {
       position: 'relative',
       display: 'flex',
       alignItems: 'center',
+    },
+    [`& .${c['columnHeader--last']}`]: {
       overflow: 'hidden',
     },
     [`& .${c['columnHeader--sorted']} .${c.iconButtonContainer}, & .${c['columnHeader--filtered']} .${c.iconButtonContainer}`]:
@@ -311,15 +333,6 @@ export const GridRootStyles = styled('div', {
       borderBottomStyle: 'solid',
       boxSizing: 'border-box',
     },
-    [`& .${c['columnHeader--filledGroup']}.${c['columnHeader--showColumnBorder']} .${c.columnHeaderTitleContainer}`]:
-      {
-        borderBottom: `none`,
-      },
-    [`& .${c['columnHeader--filledGroup']}.${c['columnHeader--showColumnBorder']}`]: {
-      borderBottomWidth: '1px',
-      borderBottomStyle: 'solid',
-      boxSizing: 'border-box',
-    },
     [`& .${c.sortIcon}, & .${c.filterIcon}`]: {
       fontSize: 'inherit',
     },
@@ -345,6 +358,11 @@ export const GridRootStyles = styled('div', {
       },
     [`& .${c['columnHeader--moving']}`]: {
       backgroundColor: (t.vars || t).palette.action.hover,
+    },
+    [`& .${c['columnHeader--pinnedLeft']}, & .${c['columnHeader--pinnedRight']}`]: {
+      position: 'sticky',
+      zIndex: 4, // Should be above the column separator
+      background: 'var(--DataGrid-pinnedBackground)',
     },
     [`& .${c.columnSeparator}`]: {
       visibility: 'hidden',
@@ -415,6 +433,16 @@ export const GridRootStyles = styled('div', {
       },
     },
 
+    /* Bottom border of the top-container */
+    [`& .${c['row--borderBottom']} .${c.columnHeader},
+      & .${c['row--borderBottom']} .${c.filler},
+      & .${c['row--borderBottom']} .${c.scrollbarFiller}`]: {
+      borderBottom: `1px solid var(--DataGrid-rowBorderColor)`,
+    },
+    [`& .${c['row--borderBottom']} .${c.cell}`]: {
+      borderBottom: `1px solid var(--rowBorderColor)`,
+    },
+
     /* Row styles */
     [`.${c.row}`]: {
       display: 'flex',
@@ -434,14 +462,14 @@ export const GridRootStyles = styled('div', {
           backgroundColor: 'transparent',
         },
       },
+      [`&.${c.rowSkeleton}:hover`]: {
+        backgroundColor: 'transparent',
+      },
       '&.Mui-selected': selectedStyles,
     },
     [`& .${c['container--top']}, & .${c['container--bottom']}`]: {
       '[role=row]': {
         background: 'var(--DataGrid-containerBackground)',
-      },
-      [`.${c.pinnedColumnHeaders} [role=row]`]: {
-        background: 'var(--DataGrid-pinnedBackground)',
       },
     },
 
@@ -467,7 +495,6 @@ export const GridRootStyles = styled('div', {
       userSelect: 'none',
     },
     [`& .${c['row--dynamicHeight']} > .${c.cell}`]: {
-      overflow: 'initial',
       whiteSpace: 'initial',
       lineHeight: 'inherit',
     },
@@ -532,17 +559,13 @@ export const GridRootStyles = styled('div', {
     [`.${c.withBorderColor}`]: {
       borderColor,
     },
-    [`& .${c['cell--withLeftBorder']}`]: {
+    [`& .${c['cell--withLeftBorder']}, & .${c['columnHeader--withLeftBorder']}`]: {
       borderLeftColor: 'var(--DataGrid-rowBorderColor)',
       borderLeftWidth: '1px',
       borderLeftStyle: 'solid',
     },
-    [`& .${c['cell--withRightBorder']}`]: {
+    [`& .${c['cell--withRightBorder']}, & .${c['columnHeader--withRightBorder']}`]: {
       borderRightColor: 'var(--DataGrid-rowBorderColor)',
-      borderRightWidth: '1px',
-      borderRightStyle: 'solid',
-    },
-    [`& .${c['columnHeader--withRightBorder']}`]: {
       borderRightWidth: '1px',
       borderRightStyle: 'solid',
     },
@@ -629,6 +652,12 @@ export const GridRootStyles = styled('div', {
       alignSelf: 'stretch',
       marginRight: t.spacing(2),
     },
+    [`& .${c.treeDataGroupingCellLoadingContainer}`]: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100%',
+    },
     [`& .${c.groupingCriteriaCell}`]: {
       display: 'flex',
       alignItems: 'center',
@@ -645,14 +674,26 @@ export const GridRootStyles = styled('div', {
       minWidth: 'calc(var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
       alignSelf: 'stretch',
       [`&.${c['scrollbarFiller--borderTop']}`]: {
-        borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+        borderTop: '1px solid var(--rowBorderColor)',
       },
       [`&.${c['scrollbarFiller--pinnedRight']}`]: {
         backgroundColor: 'var(--DataGrid-pinnedBackground)',
-      },
-      [`&.${c['scrollbarFiller--pinnedRight']}:not(.${c['scrollbarFiller--header']})`]: {
         position: 'sticky',
         right: 0,
+      },
+    },
+
+    [`& .${c.filler}`]: {
+      flex: 1,
+    },
+    [`& .${c['filler--borderTop']}`]: {
+      borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+    },
+
+    /* Hide grid rows and vertical scrollbar when skeleton overlay is visible */
+    [`& .${c['main--hasSkeletonLoadingOverlay']}`]: {
+      [`& .${c.virtualScrollerContent}, & .${c['scrollbar--vertical']}, & .${c.pinnedRows}`]: {
+        display: 'none',
       },
     },
   };

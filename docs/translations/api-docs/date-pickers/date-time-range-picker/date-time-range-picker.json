@@ -92,7 +92,10 @@
     },
     "onAccept": {
       "description": "Callback fired when the value is accepted.",
-      "typeDescriptions": { "value": "The value that was just accepted." }
+      "typeDescriptions": {
+        "value": "The value that was just accepted.",
+        "context": "The context containing the validation result of the current value."
+      }
     },
     "onChange": {
       "description": "Callback fired when the value changes.",
@@ -149,7 +152,7 @@
       "description": "The currently selected sections. This prop accepts four formats: 1. If a number is provided, the section at this index will be selected. 2. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 3. If <code>&quot;all&quot;</code> is provided, all the sections will be selected. 4. If <code>null</code> is provided, no section will be selected. If not provided, the selected sections will be handled internally."
     },
     "shouldDisableDate": {
-      "description": "Disable specific date.<br>Warning: This function can be called multiple times (e.g. when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
+      "description": "Disable specific date.<br>Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
       "typeDescriptions": {
         "day": "The date to test.",
         "position": "The date to test, &#39;start&#39; or &#39;end&#39;.",
@@ -190,7 +193,7 @@
       "description": "The visible view. Used when the component view is controlled. Must be a valid option from <code>views</code> list."
     },
     "viewRenderers": {
-      "description": "Define custom view renderers for each section. If <code>null</code>, the section will only have field editing. If <code>undefined</code>, internally defined view will be the used."
+      "description": "Define custom view renderers for each section. If <code>null</code>, the section will only have field editing. If <code>undefined</code>, internally defined view will be used."
     },
     "views": { "description": "Available views." }
   },
@@ -220,7 +223,7 @@
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "shortcuts": "Custom component for the shortcuts.",
     "switchViewButton": "Button displayed to switch between different calendar views.",
-    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
+    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &quot;year&quot;.",
     "tabs": "Tabs enabling toggling between date and time pickers.",
     "textField": "Form control with an input to render a date or time inside the default field. It is rendered twice: once for the start element and once for the end element.",
     "toolbar": "Custom component for the toolbar rendered above the views."

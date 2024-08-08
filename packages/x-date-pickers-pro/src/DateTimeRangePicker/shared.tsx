@@ -16,6 +16,7 @@ import {
   resolveTimeViewsResponse,
   UseViewsOptions,
   DateTimeValidationProps,
+  DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
@@ -73,6 +74,21 @@ export interface BaseDateTimeRangePickerSlotProps<TDate extends PickerValidDate>
   toolbar?: ExportedDateTimeRangePickerToolbarProps;
 }
 
+export type DateTimeRangePickerRenderers<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TAdditionalProps extends {} = {},
+> = PickerViewRendererLookup<
+  DateRange<TDate>,
+  TView,
+  Omit<DateRangeViewRendererProps<TDate, 'day'>, 'view' | 'slots' | 'slotProps'> &
+    Omit<
+      TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TDate, TimeViewWithMeridiem>>,
+      'view' | 'slots' | 'slotProps'
+    > & { view: TView },
+  TAdditionalProps
+>;
+
 export interface BaseDateTimeRangePickerProps<TDate extends PickerValidDate>
   extends Omit<
       BasePickerInputProps<
@@ -103,20 +119,9 @@ export interface BaseDateTimeRangePickerProps<TDate extends PickerValidDate>
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
-   * If `undefined`, internally defined view will be the used.
+   * If `undefined`, internally defined view will be used.
    */
-  viewRenderers?: Partial<
-    PickerViewRendererLookup<
-      DateRange<TDate>,
-      DateTimeRangePickerView,
-      Omit<DateRangeViewRendererProps<TDate, 'day'>, 'view' | 'slots' | 'slotProps'> &
-        Omit<
-          TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TDate, TimeViewWithMeridiem>>,
-          'view' | 'slots' | 'slotProps'
-        > & { view: DateTimeRangePickerView },
-      {}
-    >
-  >;
+  viewRenderers?: Partial<DateTimeRangePickerRenderers<TDate, DateTimeRangePickerView>>;
 }
 
 type UseDateTimeRangePickerDefaultizedProps<

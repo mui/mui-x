@@ -2,20 +2,32 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Collapse from '@mui/material/Collapse';
-import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import useForkRef from '@mui/utils/useForkRef';
-import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { shouldForwardProp } from '@mui/system/createStyled';
+import { alpha } from '@mui/material/styles';
 import { TransitionProps } from '@mui/material/transitions';
+import composeClasses from '@mui/utils/composeClasses';
+import extractEventHandlers from '@mui/utils/extractEventHandlers';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
+import useSlotProps from '@mui/utils/useSlotProps';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
-import { unstable_composeClasses as composeClasses } from '@mui/base';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeItemContent } from './TreeItemContent';
 import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
-import { TreeItemOwnerState, TreeItemProps } from './TreeItem.types';
-import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
-import { DefaultTreeViewPlugins } from '../internals/plugins';
+import {
+  TreeItemMinimalPlugins,
+  TreeItemOptionalPlugins,
+  TreeItemOwnerState,
+  TreeItemProps,
+} from './TreeItem.types';
+import { useTreeViewContext } from '../internals/TreeViewProvider';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 import { TreeItem2Provider } from '../TreeItem2Provider';
+import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
+import { useTreeItemState } from './useTreeItemState';
+
+const useThemeProps = createUseThemeProps('MuiTreeItem');
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
@@ -28,6 +40,7 @@ const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
     focused: ['focused'],
     disabled: ['disabled'],
     iconContainer: ['iconContainer'],
+    checkbox: ['checkbox'],
     label: ['label'],
     groupTransition: ['groupTransition'],
   };
@@ -60,11 +73,13 @@ const StyledTreeItemContent = styled(TreeItemContent, {
       },
     ];
   },
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'indentationAtItemLevel',
 })<{ ownerState: TreeItemOwnerState }>(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
   borderRadius: theme.shape.borderRadius,
   width: '100%',
   boxSizing: 'border-box', // prevent width + padding to overflow
+  position: 'relative',
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
@@ -128,16 +143,34 @@ const StyledTreeItemContent = styled(TreeItemContent, {
     position: 'relative',
     ...theme.typography.body1,
   },
+  [`& .${treeItemClasses.checkbox}`]: {
+    padding: 0,
+  },
+  variants: [
+    {
+      props: { indentationAtItemLevel: true },
+      style: {
+        paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
+      },
+    },
+  ],
 }));
 
 const TreeItemGroup = styled(Collapse, {
   name: 'MuiTreeItem',
   slot: 'GroupTransition',
   overridesResolver: (props, styles) => styles.groupTransition,
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'indentationAtItemLevel',
 })({
   margin: 0,
   padding: 0,
-  paddingLeft: 12,
+  paddingLeft: 'var(--TreeView-itemChildrenIndentation)',
+  variants: [
+    {
+      props: { indentationAtItemLevel: true },
+      style: { paddingLeft: 0 },
+    },
+  ],
 });
 
 /**
@@ -157,10 +190,12 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const {
     icons: contextIcons,
     runItemPlugins,
+    items: { disabledItemsFocusable, indentationAtItemLevel },
     selection: { multiSelect },
-    disabledItemsFocusable,
+    expansion: { expansionTrigger },
     instance,
-  } = useTreeViewContext<DefaultTreeViewPlugins>();
+  } = useTreeViewContext<TreeItemMinimalPlugins, TreeItemOptionalPlugins>();
+  const depthContext = React.useContext(TreeViewItemDepthContext);
 
   const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
 
@@ -171,17 +206,24 @@ export const TreeItem = React.forwardRef(function TreeItem(
     slotProps: inSlotProps,
     ContentComponent = TreeItemContent,
     ContentProps,
-    nodeId,
+    itemId,
     id,
     label,
     onClick,
     onMouseDown,
+    onFocus,
+    onBlur,
+    onKeyDown,
     ...other
   } = props;
 
-  const { contentRef, rootRef } = runItemPlugins<TreeItemProps>(props);
-  const handleRootRef = useForkRef(inRef, rootRef);
-  const handleContentRef = useForkRef(ContentProps?.ref, contentRef);
+  const { expanded, focused, selected, disabled, handleExpansion } = useTreeItemState(itemId);
+
+  const { contentRef, rootRef, propsEnhancers } = runItemPlugins<TreeItemProps>(props);
+  const rootRefObject = React.useRef<HTMLLIElement>(null);
+  const contentRefObject = React.useRef<HTMLDivElement>(null);
+  const handleRootRef = useForkRef(inRef, rootRef, rootRefObject);
+  const handleContentRef = useForkRef(ContentProps?.ref, contentRef, contentRefObject);
 
   const slots = {
     expandIcon: inSlots?.expandIcon ?? contextIcons.slots.expandIcon ?? TreeViewExpandIcon,
@@ -198,10 +240,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
     return Boolean(reactChildren);
   };
   const expandable = isExpandable(children);
-  const expanded = instance.isNodeExpanded(nodeId);
-  const focused = instance.isNodeFocused(nodeId);
-  const selected = instance.isNodeSelected(nodeId);
-  const disabled = instance.isNodeDisabled(nodeId);
 
   const ownerState: TreeItemOwnerState = {
     ...props,
@@ -209,6 +247,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     focused,
     selected,
     disabled,
+    indentationAtItemLevel,
   };
 
   const classes = useUtilityClasses(ownerState);
@@ -223,10 +262,16 @@ export const TreeItem = React.forwardRef(function TreeItem(
       in: expanded,
       component: 'ul',
       role: 'group',
+      ...(indentationAtItemLevel ? { indentationAtItemLevel: true } : {}),
     },
     className: classes.groupTransition,
   });
 
+  const handleIconContainerClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (expansionTrigger === 'iconContainer') {
+      handleExpansion(event);
+    }
+  };
   const ExpansionIcon = expanded ? slots.collapseIcon : slots.expandIcon;
   const { ownerState: expansionIconOwnerState, ...expansionIconProps } = useSlotProps({
     elementType: ExpansionIcon,
@@ -243,6 +288,9 @@ export const TreeItem = React.forwardRef(function TreeItem(
         ...resolveComponentProps(contextIcons.slotProps.expandIcon, tempOwnerState),
         ...resolveComponentProps(inSlotProps?.expandIcon, tempOwnerState),
       };
+    },
+    additionalProps: {
+      onClick: handleIconContainerClick,
     },
   });
   const expansionIcon =
@@ -280,28 +328,53 @@ export const TreeItem = React.forwardRef(function TreeItem(
     /* single-selection trees unset aria-selected on un-selected items.
      *
      * If the tree does not support multiple selection, aria-selected
-     * is set to true for the selected node and it is not present on any other node in the tree.
+     * is set to true for the selected item and it is not present on any other item in the tree.
      * Source: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
      */
     ariaSelected = true;
   }
 
   function handleFocus(event: React.FocusEvent<HTMLLIElement>) {
-    // DOM focus stays on the tree which manages focus with aria-activedescendant
-    if (event.target === event.currentTarget) {
-      instance.focusRoot();
-    }
-
     const canBeFocused = !disabled || disabledItemsFocusable;
     if (!focused && canBeFocused && event.currentTarget === event.target) {
-      instance.focusNode(event, nodeId);
+      instance.focusItem(event, itemId);
     }
   }
 
-  const idAttribute = instance.getTreeItemId(nodeId, id);
+  function handleBlur(event: React.FocusEvent<HTMLLIElement>) {
+    onBlur?.(event);
+    instance.removeFocusedItem();
+  }
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
+    onKeyDown?.(event);
+    instance.handleItemKeyDown(event, itemId);
+  };
+
+  const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
+  const tabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
+
+  const enhancedRootProps =
+    propsEnhancers.root?.({
+      rootRefObject,
+      contentRefObject,
+      externalEventHandlers: extractEventHandlers(other),
+    }) ?? {};
+  const enhancedContentProps =
+    propsEnhancers.content?.({
+      rootRefObject,
+      contentRefObject,
+      externalEventHandlers: extractEventHandlers(ContentProps),
+    }) ?? {};
+  const enhancedDragAndDropOverlayProps =
+    propsEnhancers.dragAndDropOverlay?.({
+      rootRefObject,
+      contentRefObject,
+      externalEventHandlers: {},
+    }) ?? {};
 
   return (
-    <TreeItem2Provider nodeId={nodeId}>
+    <TreeItem2Provider itemId={itemId}>
       <TreeItemRoot
         className={clsx(classes.root, className)}
         role="treeitem"
@@ -309,11 +382,23 @@ export const TreeItem = React.forwardRef(function TreeItem(
         aria-selected={ariaSelected}
         aria-disabled={disabled || undefined}
         id={idAttribute}
-        tabIndex={-1}
+        tabIndex={tabIndex}
         {...other}
         ownerState={ownerState}
         onFocus={handleFocus}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
         ref={handleRootRef}
+        style={
+          indentationAtItemLevel
+            ? ({
+                ...other.style,
+                '--TreeView-itemDepth':
+                  typeof depthContext === 'function' ? depthContext(itemId) : depthContext,
+              } as React.CSSProperties)
+            : other.style
+        }
+        {...enhancedRootProps}
       >
         <StyledTreeItemContent
           as={ContentComponent}
@@ -325,9 +410,10 @@ export const TreeItem = React.forwardRef(function TreeItem(
             disabled: classes.disabled,
             iconContainer: classes.iconContainer,
             label: classes.label,
+            checkbox: classes.checkbox,
           }}
           label={label}
-          nodeId={nodeId}
+          itemId={itemId}
           onClick={onClick}
           onMouseDown={onMouseDown}
           icon={icon}
@@ -335,6 +421,10 @@ export const TreeItem = React.forwardRef(function TreeItem(
           displayIcon={displayIcon}
           ownerState={ownerState}
           {...ContentProps}
+          {...enhancedContentProps}
+          {...((enhancedDragAndDropOverlayProps as any).action == null
+            ? {}
+            : { dragAndDropOverlayProps: enhancedDragAndDropOverlayProps })}
           ref={handleContentRef}
         />
         {children && (
@@ -350,7 +440,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
 TreeItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The content of the component.
@@ -362,7 +452,7 @@ TreeItem.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * The component used for the content node.
+   * The component used to render the content of the item.
    * @default TreeItemContent
    */
   ContentComponent: elementTypeAcceptingRef,
@@ -371,23 +461,27 @@ TreeItem.propTypes = {
    */
   ContentProps: PropTypes.object,
   /**
-   * If `true`, the node is disabled.
+   * If `true`, the item is disabled.
    * @default false
    */
   disabled: PropTypes.bool,
   /**
-   * The tree node label.
+   * The id of the item.
+   */
+  itemId: PropTypes.string.isRequired,
+  /**
+   * The tree item label.
    */
   label: PropTypes.node,
   /**
-   * The id of the node.
-   */
-  nodeId: PropTypes.string.isRequired,
-  /**
    * This prop isn't supported.
-   * Use the `onNodeFocus` callback on the tree if you need to monitor a node's focus.
+   * Use the `onItemFocus` callback on the tree if you need to monitor a item's focus.
    */
   onFocus: unsupportedProp,
+  /**
+   * Callback fired when a key of the keyboard is pressed on the item.
+   */
+  onKeyDown: PropTypes.func,
   /**
    * The props used for each component slot.
    * @default {}

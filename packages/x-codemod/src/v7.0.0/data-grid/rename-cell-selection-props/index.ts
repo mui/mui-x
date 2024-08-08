@@ -6,6 +6,8 @@ const props = {
   unstable_cellSelection: 'cellSelection',
   unstable_cellSelectionModel: 'cellSelectionModel',
   unstable_onCellSelectionModelChange: 'onCellSelectionModelChange',
+  unstable_ignoreValueFormatterDuringExport: 'ignoreValueFormatterDuringExport',
+  unstable_splitClipboardPastedText: 'splitClipboardPastedText',
 };
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {

@@ -1,22 +1,25 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, fireEvent, userEvent, act, getByRole } from '@mui-internal/test-utils';
+import { screen, fireEvent, userEvent, act, getByRole } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
-import { DateRange, LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
+import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import {
   createPickerRenderer,
   adapterToUse,
   AdapterClassToUse,
   openPicker,
   getFieldSectionsContainer,
+  getTextbox,
 } from 'test/utils/pickers';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-const getPickerDay = (name: string, picker = 'January 2018'): HTMLButtonElement =>
-  getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
+const getPickerDay = (name: string, picker = 'January 2018') =>
+  getByRole(screen.getByRole('grid', { name: picker }), 'gridcell', { name });
 
 describe('<DesktopDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({
@@ -85,6 +88,51 @@ describe('<DesktopDateRangePicker />', () => {
 
     expect(screen.queryByText('Início')).not.to.equal(null);
     expect(screen.queryByText('Fim')).not.to.equal(null);
+  });
+
+  describe('Field slot: SingleInputDateRangeField', () => {
+    it('should add focused class to the field when it is focused', () => {
+      // test v7 behavior
+      const response = render(
+        <DesktopDateRangePicker
+          enableAccessibleFieldDOMStructure
+          slots={{ field: SingleInputDateRangeField }}
+        />,
+      );
+
+      const sectionsContainer = getFieldSectionsContainer();
+      act(() => sectionsContainer.focus());
+
+      expect(sectionsContainer.parentElement).to.have.class('Mui-focused');
+
+      response.unmount();
+
+      // test v6 behavior
+      render(<DesktopDateRangePicker slots={{ field: SingleInputDateRangeField }} />);
+
+      const input = getTextbox();
+      act(() => input.focus());
+
+      expect(input.parentElement).to.have.class('Mui-focused');
+    });
+
+    it('should render the input with a given `name` when `SingleInputDateRangeField` is used', () => {
+      // Test with v7 input
+      const v7Response = render(
+        <DesktopDateRangePicker
+          name="test"
+          enableAccessibleFieldDOMStructure
+          slots={{ field: SingleInputDateRangeField }}
+        />,
+      );
+      expect(screen.getByRole<HTMLInputElement>('textbox', { hidden: true }).name).to.equal('test');
+
+      v7Response.unmount();
+
+      // Test with v6 input
+      render(<DesktopDateRangePicker name="test" slots={{ field: SingleInputDateRangeField }} />);
+      expect(screen.getByRole<HTMLInputElement>('textbox').name).to.equal('test');
+    });
   });
 
   describe('Component slot: Popper', () => {

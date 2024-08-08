@@ -30,6 +30,17 @@ export interface BaseTimePickerSlotProps extends TimeClockSlotProps {
   toolbar?: ExportedTimePickerToolbarProps;
 }
 
+export type TimePickerViewRenderers<
+  TDate extends PickerValidDate,
+  TView extends TimeViewWithMeridiem,
+  TAdditionalProps extends {} = {},
+> = PickerViewRendererLookup<
+  TDate | null,
+  TView,
+  TimeViewRendererProps<TView, BaseClockProps<TDate, TView>>,
+  TAdditionalProps
+>;
+
 export interface BaseTimePickerProps<
   TDate extends PickerValidDate,
   TView extends TimeViewWithMeridiem,
@@ -53,16 +64,9 @@ export interface BaseTimePickerProps<
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
-   * If `undefined`, internally defined view will be the used.
+   * If `undefined`, internally defined view will be used.
    */
-  viewRenderers?: Partial<
-    PickerViewRendererLookup<
-      TDate | null,
-      TView,
-      TimeViewRendererProps<TView, BaseClockProps<TDate, TView>>,
-      {}
-    >
-  >;
+  viewRenderers?: Partial<TimePickerViewRenderers<TDate, TView>>;
 }
 
 type UseTimePickerDefaultizedProps<

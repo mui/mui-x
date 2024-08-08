@@ -13,6 +13,7 @@ __diff_output__
 /docs/.next
 /docs/pages/playground/*
 !/docs/pages/playground/tsconfig.json
+/docs/.env.local
 /docs/export
 /test/regressions/screenshots
 build
@@ -20,5 +21,8 @@ dist
 node_modules
 size-snapshot.json
 performance-snapshot.json
+# vale downloaded config
 .github/styles/Google
-.github/styles/write-good
+.github/styles/MUI
+.github/styles/.vale-config
+test-results

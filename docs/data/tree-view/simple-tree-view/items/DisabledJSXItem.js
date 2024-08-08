@@ -5,26 +5,22 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 export default function DisabledJSXItem() {
   return (
-    <Box sx={{ height: 264, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ minHeight: 320, minWidth: 250 }}>
       <SimpleTreeView>
-        <TreeItem nodeId="grid" label="Data Grid">
-          <TreeItem nodeId="grid-community" label="@mui/x-data-grid" />
-          <TreeItem nodeId="grid-pro" label="@mui/x-data-grid-pro" />
-          <TreeItem nodeId="grid-premium" label="@mui/x-data-grid-premium" />
+        <TreeItem itemId="grid" label="Data Grid">
+          <TreeItem itemId="grid-community" label="@mui/x-data-grid" />
+          <TreeItem itemId="grid-pro" label="@mui/x-data-grid-pro" />
+          <TreeItem itemId="grid-premium" label="@mui/x-data-grid-premium" />
         </TreeItem>
-        <TreeItem nodeId="pickers" label="Date and Time Pickers">
-          <TreeItem nodeId="pickers-community" label="@mui/x-date-pickers" />
-          <TreeItem nodeId="pickers-pro" label="@mui/x-date-pickers-pro" />
+        <TreeItem itemId="pickers" label="Date and Time Pickers">
+          <TreeItem itemId="pickers-community" label="@mui/x-date-pickers" />
+          <TreeItem itemId="pickers-pro" label="@mui/x-date-pickers-pro" />
         </TreeItem>
-        <TreeItem nodeId="charts" label="Charts">
-          <TreeItem nodeId="charts-community" label="@mui/x-charts" />
+        <TreeItem itemId="charts" label="Charts">
+          <TreeItem itemId="charts-community" label="@mui/x-charts" disabled />
         </TreeItem>
-        <TreeItem nodeId="tree-view" label="Tree View">
-          <TreeItem nodeId="tree-view-community" label="@mui/x-tree-view" />
-          <TreeItem nodeId="tree-view-pro" label="@mui/x-tree-view-pro" disabled />
-        </TreeItem>
-        <TreeItem nodeId="scheduler" label="Scheduler" disabled>
-          <TreeItem nodeId="scheduler-community" label="@mui/x-scheduler" />
+        <TreeItem itemId="tree-view" label="Tree View" disabled>
+          <TreeItem itemId="tree-view-community" label="@mui/x-tree-view" />
         </TreeItem>
       </SimpleTreeView>
     </Box>

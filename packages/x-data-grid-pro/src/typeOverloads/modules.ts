@@ -4,7 +4,7 @@ import type {
   GridRowOrderChangeParams,
   GridFetchRowsParams,
 } from '../models';
-import type { GridHeaderFilterCellProps } from '../components/headerFiltering/GridHeaderFilterCell';
+import type { GridRenderHeaderFilterProps } from '../components/headerFiltering/GridHeaderFilterCell';
 import type { GridColumnPinningInternalCache } from '../hooks/features/columnPinning/gridColumnPinningInterface';
 import type { GridCanBeReorderedPreProcessingContext } from '../hooks/features/columnReorder/columnReorderInterfaces';
 import { GridRowPinningInternalCache } from '../hooks/features/rowPinning/gridRowPinningInterface';
@@ -12,10 +12,10 @@ import { GridRowPinningInternalCache } from '../hooks/features/rowPinning/gridRo
 export interface GridColDefPro {
   /**
    * Allows to render a component in the column header filter cell.
-   * @param {GridHeaderFilterCellProps} params Object containing parameters for the renderer.
+   * @param {GridRenderHeaderFilterProps} params Object containing parameters for the renderer and `inputRef`.
    * @returns {React.ReactNode} The element to be rendered.
    */
-  renderHeaderFilter?: (params: GridHeaderFilterCellProps) => React.ReactNode;
+  renderHeaderFilter?: (params: GridRenderHeaderFilterProps) => React.ReactNode;
 }
 
 export interface GridControlledStateEventLookupPro {

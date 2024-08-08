@@ -42,6 +42,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   // columnsManagementSearchTitle: 'Search',
   // columnsManagementNoColumns: 'No columns',
   // columnsManagementShowHideAllText: 'Show/Hide All',
+  // columnsManagementReset: 'Reset',
 
   // Filter panel text
   filterPanelAddFilter: 'Thêm bộ lọc',

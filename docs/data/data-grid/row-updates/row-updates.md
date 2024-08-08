@@ -12,6 +12,11 @@ It replaces the previous values. This approach has some drawbacks:
 
 {{"demo": "UpdateRowsProp.js", "bg": "inline"}}
 
+:::warning
+Updating the `rows` prop causes the Data Grid to recompute the row tree, resulting in losing the current tree information like the expanded rows state.
+Unless the recomputation is explicitly required, the API method `updateRows` should be used.
+:::
+
 ## The `updateRows` method
 
 If you want to only update part of the rows, you can use the `apiRef.current.updateRows` method.
@@ -41,20 +46,11 @@ In addition, the area in which `onRowsScrollEnd` is called can be changed using 
 {{"demo": "InfiniteLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
 :::info
-For sorting and filtering to work properly with the infinite loading, they should be applied on the server side.
+For sorting and filtering to work properly with the infinite loading, they should be applied on the server-side.
 Otherwise, the sorting and filtering will only be applied to the subset of rows that have been loaded.
 :::
 
 ## Lazy loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
-
-:::warning
-This feature is experimental and must be explicitly activated using the `lazyLoading` experimental feature flag:
-
-```tsx
-<DataGridPro experimentalFeatures={{ lazyLoading: true }} {...otherProps} />
-```
-
-:::
 
 Lazy Loading works like a pagination system, but instead of loading new rows based on pages, it loads them based on the viewport.
 It loads new rows in chunks, as the user scrolls through the data grid and reveals empty rows.

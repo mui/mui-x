@@ -16,7 +16,7 @@ export default function DateTimeValidationMaxDateTime() {
         <DemoItem label="DateTimePicker">
           <DateTimePicker defaultValue={todayAtNoon} maxDateTime={todayAt9AM} />
         </DemoItem>
-        <DemoItem label="DateTimeRangePicker">
+        <DemoItem label="DateTimeRangePicker" component="DateTimeRangePicker">
           <DateTimeRangePicker
             defaultValue={[todayAt9AM, todayAtNoon]}
             maxDateTime={todayAt9AM}

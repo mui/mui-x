@@ -79,6 +79,14 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 
 {{"demo": "LocalizationLuxon.js"}}
 
+:::warning
+`AdapterLuxon` does not support `Settings.throwOnInvalid = true` [setting](https://moment.github.io/luxon/api-docs/index.html#settingsthrowoninvalid).
+
+👍 Upvote [issue #11853](https://github.com/mui/mui-x/issues/11853) if you need support for it.
+
+Don't hesitate to leave feedback on how you would like the data entry to behave.
+:::
+
 ### With `moment`
 
 For `moment`, import the locale and then pass its name to `LocalizationProvider`:
@@ -96,7 +104,7 @@ import 'moment/locale/de';
 
 ## Meridiem — 12h/24h format
 
-All the time and datetime components will automatically adjust to the locale's time setting, i.e. the 12-hour or 24-hour format.
+All the time and datetime components will automatically adjust to the locale's time setting, that is the 12-hour or 24-hour format.
 You can override the default setting with the `ampm` prop:
 
 {{"demo": "AmPMCustomization.js"}}
@@ -141,7 +149,7 @@ Here is the list of the currently supported formats:
 - The month
 
   - ✅ 1-based digit (e.g: `08`)
-  - ✅ Multi-letter values (e.g. `Aug`, `August`)
+  - ✅ Multi-letter values (for example `Aug`, `August`)
   - ❌ 1-letter values (e.g: `A`) because several months are represented with the same letter
 
 - The day of the month
@@ -291,18 +299,25 @@ dayjs.updateLocale('en', {
 
 ### With `date-fns`
 
-For `date-fns`, use the `setDefaultOptions` utility:
+For `date-fns`, override the `options.weekStartsOn` of the used locale:
 
 ```ts
+import { Locale } from 'date-fns';
 // with date-fns v2.x
-import setDefaultOptions from 'date-fns/setDefaultOptions';
+import enUS from 'date-fns/locale/en-US';
 // with date-fns v3.x
-import { setDefaultOptions } from 'date-fns/setDefaultOptions';
+import { enUS } from 'date-fns/locale/en-US';
 
-setDefaultOptions({
-  // Sunday = 0, Monday = 1.
-  weekStartsOn: 1,
-});
+const customEnLocale: Locale = {
+  ...enUS,
+  options: {
+    ...enUS.options,
+    // Sunday = 0, Monday = 1.
+    weekStartsOn: 1,
+  },
+};
+
+<LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={customEnLocale}>
 ```
 
 ### With `luxon`
@@ -310,7 +325,7 @@ setDefaultOptions({
 For `luxon`, use the `Settings.defaultWeekSettings` object:
 
 ```ts
-import { Settings } from 'luxon';
+import { Settings, Info } from 'luxon';
 
 Settings.defaultWeekSettings = {
   // Sunday = 7, Monday = 1.

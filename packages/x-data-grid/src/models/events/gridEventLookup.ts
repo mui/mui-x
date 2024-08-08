@@ -24,7 +24,8 @@ import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
 import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
 import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
-import { GridPaginationModel } from '../gridPaginationProps';
+import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
+import { GridDensity } from '../gridDensity';
 
 export interface GridRowEventLookup {
   /**
@@ -362,6 +363,14 @@ export interface GridControlledStateEventLookup {
    * Fired when the row count change.
    */
   rowCountChange: { params: number };
+  /**
+   * Fired when the density changes.
+   */
+  densityChange: { params: GridDensity };
+  /**
+   * Fired when the pagination meta change.
+   */
+  paginationMetaChange: { params: GridPaginationMeta };
 }
 
 export interface GridControlledStateReasonLookup {

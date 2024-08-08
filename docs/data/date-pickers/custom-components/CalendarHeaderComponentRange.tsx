@@ -50,7 +50,7 @@ function CustomCalendarHeader(props: PickersRangeCalendarHeaderProps<Dayjs>) {
 export default function CalendarHeaderComponentRange() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DatePicker']}>
+      <DemoContainer components={['DateRangeCalendar']}>
         <DateRangeCalendar slots={{ calendarHeader: CustomCalendarHeader }} />
       </DemoContainer>
     </LocalizationProvider>

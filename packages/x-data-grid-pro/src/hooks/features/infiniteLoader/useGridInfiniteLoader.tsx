@@ -6,10 +6,9 @@ import {
   useGridApiMethod,
   gridDimensionsSelector,
 } from '@mui/x-data-grid';
-import { useGridVisibleRows } from '@mui/x-data-grid/internals';
+import { useGridVisibleRows, GridInfiniteLoaderPrivateApi } from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { styled } from '@mui/system';
-import type { GridInfiniteLoaderPrivateApi } from '@mui/x-data-grid/models/api/gridInfiniteLoaderApi';
 import { GridRowScrollEndParams } from '../../../models';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
