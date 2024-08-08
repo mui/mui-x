@@ -127,6 +127,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelInterval,
     tickPlacement,
     tickLabelPlacement,
+    data,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -196,7 +197,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   // Skip axis rendering if
   // - the domain is Infinite (for band and point axis)
   // - No data is associated to the axis (other scale types)
-  if (domain.length === 0 || !domain.every(Number.isFinite)) {
+  if (domain.length === 0 || (data?.length === 0 && !domain.every(Number.isFinite))) {
     return null;
   }
   return (
