@@ -43,6 +43,7 @@
     "@mui/system": "^5.16.5",
     "@mui/utils": "^5.16.5",
     "@mui/x-charts": "workspace:*",
+    "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
     "@mui/x-charts-vendor": "workspace:*",
     "@react-spring/rafz": "^9.7.4",

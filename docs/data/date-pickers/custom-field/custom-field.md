@@ -10,6 +10,10 @@ components: PickersSectionList, PickersTextField
 
 <p class="description">The Date and Time Pickers let you customize the field by passing props or custom components</p>
 
+:::success
+See [Common concepts—Custom slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
+:::
+
 ## Customize the default field
 
 ### Customize the `TextField`

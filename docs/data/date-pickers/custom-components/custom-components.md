@@ -6,93 +6,16 @@ components: DateTimePickerTabs, PickersActionBar, DatePickerToolbar, TimePickerT
 
 # Custom slots and subcomponents
 
-<p class="description">Learn how to override the default DOM structure of the Date and Time Pickers.</p>
+<p class="description">Learn how to override parts of the Date and Time Pickers.</p>
 
 :::info
 The components that can be customized are listed under `slots` section in Date and Time Pickers [API Reference](/x/api/date-pickers/).
 For example, available Date Picker slots can be found [here](/x/api/date-pickers/date-picker/#slots).
 :::
 
-## Overriding slot components
-
-You can override the internal elements of the component (known as "slots") using the `slots` prop.
-
-Use the `slotProps` prop if you need to pass additional props to a component slot.
-
-As an example, you could override the `ActionBar` and pass additional props to the custom component as shown below:
-
-```jsx
-<DatePicker
-  {...otherProps}
-  slots={{
-    // Override default <ActionBar /> with a custom one
-    actionBar: CustomActionBar,
-  }}
-  slotProps={{
-    // pass props `actions={['clear']}` to the actionBar slot
-    actionBar: { actions: ['clear'] },
-  }}
-/>
-```
-
-To modify components position, have a look at the [custom layout](/x/react-date-pickers/custom-layout/) docs page.
-
-### Recommended usage
-
 :::success
-Remember to pass a reference to the component instead of an inline render function and define it outside the main component.
-This ensures that the component is not remounted on every update.
+See [Common concepts—Custom slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
 :::
-
-The first two examples below are buggy because the toolbar will remount after each keystroke, leading to a loss of focus.
-
-```jsx
-// ❌ The `toolbar` slot is re-defined each time the parent component renders,
-// causing the component to remount.
-function MyApp() {
-  return (
-    <DatePicker
-      slots={{
-        toolbar: () => (
-          <input value={name} onChange={(event) => setName(event.target.value)} />
-        ),
-      }}
-    />
-  );
-}
-```
-
-```jsx
-// ❌ The `toolbar` slot is re-defined each time `name` is updated,
-// causing the component to remount.
-function MyApp() {
-  const [name, setName] = React.useState('');
-
-  const CustomToolbar = React.useCallback(
-    () => <input value={name} onChange={(event) => setName(event.target.value)} />,
-    [name],
-  );
-
-  return <DatePicker slots={{ toolbar: CustomToolbar }} />;
-}
-```
-
-```jsx
-// ✅ The `toolbar` slot is defined only once, it will never remount.
-const CustomToolbar = ({ name, setName }) => (
-  <input value={name} onChange={(event) => setName(event.target.value)} />
-);
-
-function MyApp() {
-  const [name, setName] = React.useState('');
-  return (
-    <DatePicker
-      slots={{ toolbar: CustomToolbar }}
-      slotProps={{ toolbar: { name, setName } }}
-    />
-  );
-}
-```
 
 ## Action bar
 

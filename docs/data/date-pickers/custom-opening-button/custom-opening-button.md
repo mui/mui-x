@@ -7,6 +7,10 @@ title: Date and Time Pickers - Custom opening button
 
 <p class="description">The date picker lets you customize the button to open the views.</p>
 
+:::success
+See [Common concepts—Custom slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
+:::
+
 ## Set a custom opening icon
 
 If you want to change the icon opening the picker without changing its behavior, you can use the `openPickerIcon` slot:
