@@ -37,14 +37,14 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
           return null;
         }
 
-        const [min, max] = getAxisExtremum(
-          axis,
-          xExtremumGetters,
-          axisIndex === 0,
-          formattedSeries,
-        );
-        if (min === null || max === null) {
-          return null;
+        let min: number;
+        let max: number;
+
+        if (axis.scaleType === 'point' || axis.scaleType === 'band') {
+          min = 0;
+          max = (axis.data?.length ?? 0) - 1;
+        } else {
+          [min, max] = getAxisExtremum(axis, xExtremumGetters, axisIndex === 0, formattedSeries);
         }
 
         const minVal = min + (zoom.start * (max - min)) / 100;
@@ -73,14 +73,14 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
           return null;
         }
 
-        const [min, max] = getAxisExtremum(
-          axis,
-          yExtremumGetters,
-          axisIndex === 0,
-          formattedSeries,
-        );
-        if (min === null || max === null) {
-          return null;
+        let min: number;
+        let max: number;
+
+        if (axis.scaleType === 'point' || axis.scaleType === 'band') {
+          min = 0;
+          max = (axis.data?.length ?? 0) - 1;
+        } else {
+          [min, max] = getAxisExtremum(axis, yExtremumGetters, axisIndex === 0, formattedSeries);
         }
 
         const minVal = min + (zoom.start * (max - min)) / 100;
@@ -91,8 +91,7 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
             // If the value does not exist because of missing data point, or out of range index, we just ignore.
             return true;
           }
-          // This a is a MVP, because it only works for line/bar charts when filter mode is done on the base axis (most of the usecases)
-          // Will not work if for example you zoom along y-axis on a line chart because the y-axis has no `data`.
+          // Will not work if zooming along y-axis on a line chart because the y-axis has no `data`.
           return val >= minVal && val <= maxVal;
         };
       })
@@ -101,7 +100,12 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
     if (xFilters.length === 0 && yFilters.length === 0) {
       return undefined;
     }
-    return (index: number) => xFilters.every((f) => f(index)) && yFilters.every((f) => f(index));
+
+    // Filters are applied on the reverse axis, so the naming below is correct.
+    return {
+      xFilters: (index: number) => yFilters.every((f) => f(index)),
+      yFilters: (index: number) => xFilters.every((f) => f(index)),
+    };
   }, [formattedSeries, xAxis, xExtremumGetters, yAxis, yExtremumGetters, zoomData]);
 
   const xValues = React.useMemo(
@@ -115,7 +119,7 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
         axisDirection: 'x',
         zoomData,
         zoomOptions: options,
-        zoomFilter,
+        zoomFilter: zoomFilter?.xFilters,
       }),
     [drawingArea, formattedSeries, xAxis, xExtremumGetters, dataset, zoomData, options, zoomFilter],
   );
@@ -131,7 +135,7 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
         axisDirection: 'y',
         zoomData,
         zoomOptions: options,
-        zoomFilter,
+        zoomFilter: zoomFilter?.yFilters,
       }),
     [drawingArea, formattedSeries, yAxis, yExtremumGetters, dataset, zoomData, options, zoomFilter],
   );
