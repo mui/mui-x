@@ -8,4 +8,4 @@ export type {
   TimePickerToolbarClassKey,
   TimePickerToolbarClasses,
 } from './timePickerToolbarClasses';
-export { TimePickerViewRenderers } from './shared';
+export type { TimePickerViewRenderers } from './shared';

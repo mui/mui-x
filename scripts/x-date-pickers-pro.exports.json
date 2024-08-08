@@ -377,6 +377,7 @@
   { "name": "TimePickerToolbarClasses", "kind": "Interface" },
   { "name": "TimePickerToolbarClassKey", "kind": "TypeAlias" },
   { "name": "TimePickerToolbarProps", "kind": "Interface" },
+  { "name": "TimePickerViewRenderers", "kind": "TypeAlias" },
   { "name": "TimeRangeValidationError", "kind": "TypeAlias" },
   { "name": "TimeStepOptions", "kind": "Interface" },
   { "name": "TimeValidationError", "kind": "TypeAlias" },
