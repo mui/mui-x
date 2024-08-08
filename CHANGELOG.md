@@ -51,7 +51,7 @@ Same changes as in `@mui/x-date-pickers@7.12.1`.
 - [charts] Fix charts vendor publish config (#14073) @JCQuintas
 - [charts] Move `plugins` to `PluginProvider` (#14056) @JCQuintas
 
-#### `@mui/x-date-charts-pro@__VERSION-ALPHA__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-charts-pro@7.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-charts@7.12.1`, plus:
 
