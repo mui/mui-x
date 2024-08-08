@@ -45,10 +45,17 @@ export interface GridEventLookupPro {
    * Fired when a new batch of rows is requested to be loaded. Called with a [[GridFetchRowsParams]] object.
    */
   fetchRows: { params: GridFetchRowsParams };
+  // Data source
   /**
-   * Fired when the grid needs to fetch a new batch of rows from the data source. Called with a [[GridGetRowsParams]] object.
+   * Fired when the grid needs to fetch a new batch of rows from the data source.
+   * @ignore - do not document.
    */
   getRows: { params: GridGetRowsParams };
+  /**
+   * Fired when the new data is successfully added to the grid either directly from the data source or from the cache
+   * @ignore - do not document.
+   */
+  rowsFetched: {};
 }
 
 export interface GridPipeProcessingLookupPro {
