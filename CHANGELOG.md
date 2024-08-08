@@ -13,6 +13,8 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - 🚀 The `@mui/x-charts-pro` is released in alpha version 🧪. This new package introduces two main features:
   - The Heatmap component
   - The zoom interaction on the bar, line, and scatter charts
+- 🌍 Improve Dutch (nl-NL) locale on the Date and Time Pickers
+- 🐞 Bugfixes
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
