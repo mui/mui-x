@@ -306,7 +306,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   }, [isNotVisible, rowHeight, styleProp, minHeight, sizes, rootProps.rowSpacingType]);
 
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
-  const ariaAttributes = rowNode ? getRowAriaAttributes(rowNode, index) : {};
+  const ariaAttributes = rowNode ? getRowAriaAttributes(rowNode, index) : undefined;
 
   if (typeof rootProps.getRowClassName === 'function') {
     const indexRelativeToCurrentPage = index - (currentPage.range?.firstRowIndex || 0);
