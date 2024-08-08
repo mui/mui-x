@@ -119,11 +119,6 @@ export interface DateRangeCalendarProps<TDate extends PickerValidDate>
    */
   defaultValue?: DateRange<TDate>;
   /**
-   * If `true`, doesn't allow the selection of ranges containing disabled dates.
-   * @default false
-   */
-  disableNonContiguousRanges?: boolean;
-  /**
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
    */
