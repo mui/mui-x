@@ -1,3 +1,22 @@
 export type { GridFilterState, GridFilterInitialState } from './gridFilterState';
 export { getDefaultGridFilterModel } from './gridFilterState';
-export * from './gridFilterSelector';
+export {
+  gridFilterModelSelector,
+  gridQuickFilterValuesSelector,
+  gridVisibleRowsLookupSelector,
+  gridFilteredRowsLookupSelector,
+  gridFilteredChildrenCountLookupSelector,
+  gridFilteredDescendantCountLookupSelector,
+  gridExpandedSortedRowEntriesSelector,
+  gridExpandedSortedRowIdsSelector,
+  gridFilteredSortedRowEntriesSelector,
+  gridFilteredSortedRowIdsSelector,
+  gridFilteredSortedTopLevelRowEntriesSelector,
+  gridExpandedRowCountSelector,
+  gridFilteredTopLevelRowCountSelector,
+  gridFilteredRowCountSelector,
+  gridFilteredDescendantRowCountSelector,
+  gridFilterActiveItemsSelector,
+  gridFilterActiveItemsLookupSelector,
+} from './gridFilterSelector';
+export type { GridFilterActiveItemsLookup } from './gridFilterSelector';

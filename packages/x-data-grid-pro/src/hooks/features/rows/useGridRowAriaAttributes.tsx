@@ -4,10 +4,12 @@ import {
   useGridSelector,
   gridFilteredTopLevelRowCountSelector,
   gridFilteredChildrenCountLookupSelector,
-  gridExpandedSortedRowTreeLevelPositionLookupSelector,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid';
-import { useGridRowAriaAttributes as useGridRowAriaAttributesCommunity } from '@mui/x-data-grid/internals';
+import {
+  useGridRowAriaAttributes as useGridRowAriaAttributesCommunity,
+  gridExpandedSortedRowTreeLevelPositionLookupSelector,
+} from '@mui/x-data-grid/internals';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 
