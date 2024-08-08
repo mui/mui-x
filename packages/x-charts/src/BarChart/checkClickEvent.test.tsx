@@ -68,7 +68,7 @@ describe('BarChart - click event', () => {
   const { render } = createRenderer();
 
   describe('onAxisClick', () => {
-    it('should provide the accurate context as second argument', function test() {
+    it('should provide the right context as second argument', function test() {
       if (isJSDOM) {
         // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
         this.skip();
@@ -141,7 +141,7 @@ describe('BarChart - click event', () => {
       ).to.deep.equal(['pointer', 'pointer', 'pointer', 'pointer']);
     });
 
-    it('should provide the accurate context as second argument', function test() {
+    it('should provide the right context as second argument', function test() {
       if (isJSDOM) {
         // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
         this.skip();
