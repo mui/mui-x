@@ -14,8 +14,7 @@ import {
 } from '@mui/x-date-pickers/PickersLayout';
 import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
 import { TimeView } from '@mui/x-date-pickers/models';
-// eslint-disable-next-line no-restricted-imports
-import { TimePickerViewRenderers } from '@mui/x-date-pickers/TimePicker/shared';
+import { TimePickerViewRenderers } from '@mui/x-date-pickers/TimePicker';
 
 const StyledLayout = styled(PickersLayoutRoot)({
   overflow: 'auto',
