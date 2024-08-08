@@ -97,10 +97,11 @@ export type ZoomOptions = {
    */
   panning?: boolean;
   /**
-   * Defines how to filter the axis data when it is outside of the zoomed range.
+   * Defines how to filter the axis data when it is outside of the zoomed range of this axis.
    *
-   * - `keep`: The data outside of the zoomed range is kept. Though it will not be displayed.
-   * - `discard`: The data outside of the zoomed range is discarded.
+   * - `keep`: The data outside of the zoomed range is kept. And the opposite axis will stay the same.
+   * - `discard`: The data outside of the zoomed range is discarded for the opposite axis.
+   *    The opposite axis will be adjusted to fit the zoomed range.
    *
    * @default 'keep'
    */
