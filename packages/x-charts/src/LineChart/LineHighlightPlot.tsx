@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { SlotComponentPropsFromProps } from '../internals/SlotComponentPropsFromProps';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { LineHighlightElement, LineHighlightElementProps } from './LineHighlightElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
@@ -14,7 +15,7 @@ export interface LineHighlightPlotSlots {
 }
 
 export interface LineHighlightPlotSlotProps {
-  lineHighlight?: Partial<LineHighlightElementProps>;
+  lineHighlight?: SlotComponentPropsFromProps<LineHighlightElementProps, {}, {}>;
 }
 
 export interface LineHighlightPlotProps extends React.SVGAttributes<SVGSVGElement> {
@@ -68,6 +69,8 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.flatMap((seriesId) => {
           const {
+            xAxisId: xAxisIdProp,
+            yAxisId: yAxisIdProp,
             xAxisKey = defaultXAxisId,
             yAxisKey = defaultYAxisId,
             stackedData,
@@ -75,19 +78,22 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
             disableHighlight,
           } = series[seriesId];
 
+          const xAxisId = xAxisIdProp ?? xAxisKey;
+          const yAxisId = yAxisIdProp ?? yAxisKey;
+
           if (disableHighlight || data[highlightedIndex] == null) {
             return null;
           }
-          const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
-          const yScale = yAxis[yAxisKey].scale;
-          const xData = xAxis[xAxisKey].data;
+          const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
+          const yScale = yAxis[yAxisId].scale;
+          const xData = xAxis[xAxisId].data;
 
           if (xData === undefined) {
             throw new Error(
-              `MUI X Charts: ${
-                xAxisKey === DEFAULT_X_AXIS_KEY
+              `MUI X: ${
+                xAxisId === DEFAULT_X_AXIS_KEY
                   ? 'The first `xAxis`'
-                  : `The x-axis with id "${xAxisKey}"`
+                  : `The x-axis with id "${xAxisId}"`
               } should have data property to be able to display a line plot.`,
             );
           }
@@ -99,7 +105,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
             return null;
           }
 
-          const colorGetter = getColor(series[seriesId], xAxis[xAxisKey], yAxis[yAxisKey]);
+          const colorGetter = getColor(series[seriesId], xAxis[xAxisId], yAxis[yAxisId]);
           return (
             <Element
               key={`${seriesId}`}

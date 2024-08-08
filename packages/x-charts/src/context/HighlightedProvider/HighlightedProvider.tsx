@@ -65,7 +65,7 @@ function HighlightedProvider({
 
   const highlightScope =
     highlightedItem && highlightedItem.seriesId
-      ? seriesById.get(highlightedItem.seriesId) ?? undefined
+      ? (seriesById.get(highlightedItem.seriesId) ?? undefined)
       : undefined;
 
   const providerValue = React.useMemo<Initializable<HighlightedState>>(() => {
