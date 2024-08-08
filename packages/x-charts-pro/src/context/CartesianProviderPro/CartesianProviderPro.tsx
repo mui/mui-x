@@ -7,9 +7,9 @@ import {
   cartesianProviderUtils,
   useXExtremumGetter,
   useYExtremumGetter,
-  getAxisExtremum,
 } from '@mui/x-charts/internals';
 import { useZoom } from '../ZoomProvider/useZoom';
+import { createAxisFilterMapper } from './createAxisFilterMapper';
 
 const { computeValue } = cartesianProviderUtils;
 
@@ -25,87 +25,21 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
   const yExtremumGetters = useYExtremumGetter();
 
   const zoomFilter = React.useMemo(() => {
-    const xFilters = xAxis
-      .map((axis, axisIndex) => {
-        if (typeof axis.zoom !== 'object' || axis.zoom.filterMode !== 'discard') {
-          return null;
-        }
+    const xMapper = createAxisFilterMapper({
+      zoomData,
+      extremumGetter: xExtremumGetters,
+      formattedSeries,
+    });
 
-        const zoom = zoomData?.find(({ axisId }) => axisId === axis.id);
-        if (zoom === undefined || (zoom.start <= 0 && zoom.end >= 100)) {
-          // No zoom, or zoom with all data visible
-          return null;
-        }
+    const yMapper = createAxisFilterMapper({
+      zoomData,
+      extremumGetter: yExtremumGetters,
+      formattedSeries,
+    });
 
-        let min: number;
-        let max: number;
+    const xFilters = xAxis.map(xMapper).filter((f) => f !== null);
 
-        if (axis.scaleType === 'point' || axis.scaleType === 'band') {
-          min = 0;
-          max = (axis.data?.length ?? 0) - 1;
-        } else {
-          [min, max] = getAxisExtremum(axis, xExtremumGetters, axisIndex === 0, formattedSeries);
-        }
-
-        const minVal = min + (zoom.start * (max - min)) / 100;
-        const maxVal = min + (zoom.end * (max - min)) / 100;
-
-        return (dataIndex: number) => {
-          const val = axis.data?.[dataIndex];
-          if (val == null) {
-            // If the value does not exist because of missing data point, or out of range index, we just ignore.
-            return true;
-          }
-
-          if (axis.scaleType === 'point' || axis.scaleType === 'band') {
-            return dataIndex >= minVal && dataIndex <= maxVal;
-          }
-
-          return val >= minVal && val <= maxVal;
-        };
-      })
-      .filter((f) => f !== null);
-
-    const yFilters = yAxis
-      .map((axis, axisIndex) => {
-        if (typeof axis.zoom !== 'object' || axis.zoom.filterMode !== 'discard') {
-          return null;
-        }
-
-        const zoom = zoomData?.find(({ axisId }) => axisId === axis.id);
-        if (zoom === undefined || (zoom.start <= 0 && zoom.end >= 100)) {
-          // No zoom, or zoom with all data visible
-          return null;
-        }
-
-        let min: number;
-        let max: number;
-
-        if (axis.scaleType === 'point' || axis.scaleType === 'band') {
-          min = 0;
-          max = (axis.data?.length ?? 0) - 1;
-        } else {
-          [min, max] = getAxisExtremum(axis, yExtremumGetters, axisIndex === 0, formattedSeries);
-        }
-
-        const minVal = min + (zoom.start * (max - min)) / 100;
-        const maxVal = min + (zoom.end * (max - min)) / 100;
-        return (dataIndex: number) => {
-          const val = axis.data?.[dataIndex];
-          if (val == null) {
-            // If the value does not exist because of missing data point, or out of range index, we just ignore.
-            return true;
-          }
-
-          if (axis.scaleType === 'point' || axis.scaleType === 'band') {
-            return dataIndex >= minVal && dataIndex <= maxVal;
-          }
-
-          // Will not work if zooming along y-axis on a line chart because the y-axis has no `data`.
-          return val >= minVal && val <= maxVal;
-        };
-      })
-      .filter((f) => f !== null);
+    const yFilters = yAxis.map(yMapper).filter((f) => f !== null);
 
     if (xFilters.length === 0 && yFilters.length === 0) {
       return undefined;
