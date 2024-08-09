@@ -1,7 +1,10 @@
+import * as React from 'react'
+import { useThemeProps } from '@mui/material';
 import MUICheckbox from '@mui/material/Checkbox';
 import MUITextField from '@mui/material/TextField';
 import MUIFormControl from '@mui/material/FormControl';
 import MUISelect from '@mui/material/Select';
+import MUISwitch from '@mui/material/Switch';
 import MUIButton from '@mui/material/Button';
 import MUIIconButton from '@mui/material/IconButton';
 import MUIInputAdornment from '@mui/material/InputAdornment';
@@ -40,6 +43,8 @@ import {
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import MUISelectOption from './components/MUISelectOption';
+import { DataGridRaw } from '../DataGrid';
+import { DataGridProps } from '../models/props/DataGridProps';
 
 const iconSlots: GridIconSlotsComponent = {
   booleanCellTrueIcon: GridCheckIcon,
@@ -79,12 +84,14 @@ const iconSlots: GridIconSlotsComponent = {
   columnReorderIcon: GridDragIcon,
 };
 
-const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
+export const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
   ...iconSlots,
   baseCheckbox: MUICheckbox,
   baseTextField: MUITextField,
   baseFormControl: MUIFormControl,
+  // XXX: baseSelect needs to carry `.onClose` to `.MenuProps`
   baseSelect: MUISelect,
+  baseSwitch: MUISwitch,
   baseButton: MUIButton,
   baseIconButton: MUIIconButton,
   baseInputAdornment: MUIInputAdornment,
@@ -95,4 +102,21 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
   baseChip: MUIChip,
 };
 
-export default materialSlots;
+export const materialProps: Partial<DataGridProps> = {
+  useThemeProps: useThemeProps as any,
+}
+
+export function DataGridMaterial(props: DataGridProps) {
+  const themedProps = useThemeProps({
+    props,
+    name: 'MuiDataGrid',
+  })
+
+  return (
+    <DataGridRaw
+      {...materialProps}
+      {...themedProps}
+      slots={React.useMemo(() => ({ ...materialSlots, ...props.slots }), [props.slots])}
+    />
+  )
+}

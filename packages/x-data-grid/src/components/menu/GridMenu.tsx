@@ -16,6 +16,12 @@ import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
+// XXX: requires re-implementation to support the mantine style:
+// <Popover>
+//   <Popover.Target>...</Popover.Target>
+//   <Popover.Dropdown>...</Popover.Dropdown>
+// </Popover>
+
 type MenuPosition =
   | 'bottom-end'
   | 'bottom-start'

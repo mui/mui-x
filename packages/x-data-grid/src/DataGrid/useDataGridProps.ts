@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useThemeProps } from '@mui/material/styles';
 import {
   DataGridProcessedProps,
   DataGridProps,
@@ -83,13 +82,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
 const defaultSlots = DATA_GRID_DEFAULT_SLOTS_COMPONENTS;
 
 export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridProps<R>) => {
-  const themedProps = useProps(
-    // eslint-disable-next-line material-ui/mui-name-matches-component-name
-    useThemeProps({
-      props: inProps,
-      name: 'MuiDataGrid',
-    }),
-  );
+  const themedProps = useProps(inProps);
 
   const localeText = React.useMemo(
     () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...themedProps.localeText }),
@@ -105,17 +98,13 @@ export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridP
     [themedProps.slots],
   );
 
-  const injectDefaultProps = React.useMemo(() => {
-    return (
-      Object.keys(DATA_GRID_PROPS_DEFAULT_VALUES) as Array<
-        keyof DataGridPropsWithDefaultValues<any>
-      >
-    ).reduce((acc, key) => {
+  const injectDefaultProps = React.useMemo(() =>
+    Object.keys(DATA_GRID_PROPS_DEFAULT_VALUES).reduce((acc, key) => {
       // @ts-ignore
       acc[key] = themedProps[key] ?? DATA_GRID_PROPS_DEFAULT_VALUES[key];
       return acc;
-    }, {} as DataGridPropsWithDefaultValues<any>);
-  }, [themedProps]);
+    }, {} as DataGridPropsWithDefaultValues<any>)
+  , [themedProps]);
 
   return React.useMemo<DataGridProcessedProps<R>>(
     () => ({

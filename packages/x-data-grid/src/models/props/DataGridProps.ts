@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
-import { CommonProps } from '@mui/material/OverridableComponent';
+import { Theme, SxProps } from '@mui/system';
 import { GridDensity } from '../gridDensity';
 import { GridEditMode } from '../gridEditRowModel';
 import { GridFeatureMode } from '../gridFeatureMode';
@@ -380,8 +378,7 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
 /**
  * The `DataGrid` props with no default value.
  */
-export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = any>
-  extends CommonProps {
+export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = any> {
   /**
    * The ref object that allows Data Grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
@@ -397,6 +394,14 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @ignore - do not document.
    */
   signature?: string;
+  /**
+   * Root component classes
+   */
+  className?: string;
+  /*
+   * Root component CSS styles
+   */
+  style?: React.CSSProperties;
   /**
    * Override or extend the styles applied to the component.
    */

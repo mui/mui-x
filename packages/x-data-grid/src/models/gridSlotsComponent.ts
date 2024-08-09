@@ -68,14 +68,9 @@ export interface GridBaseSlots {
 }
 
 /**
- * Grid components React prop interface containing all the overridable components.
+ * Grid components React prop interface containing grid specific components.
  */
-export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponent {
-  /**
-   * The custom Chip component used in the grid.
-   * @default Chip
-   */
-  baseChip: React.JSXElementConstructor<GridSlotProps['baseChip']>;
+export interface GridLocalSlots {
   /**
    * Component rendered for each cell.
    * @default GridCell
@@ -179,3 +174,5 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    */
   row: React.JSXElementConstructor<GridSlotProps['row']>;
 }
+
+export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponent, GridLocalSlots {};

@@ -79,5 +79,8 @@
   },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "optionalDependencies": {
+    "@mantine/core": "^7.6.2"
   }
 }

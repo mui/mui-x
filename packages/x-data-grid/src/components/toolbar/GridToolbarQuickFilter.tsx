@@ -1,8 +1,8 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { unstable_debounce as debounce } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
 import { getDataGridUtilityClass } from '../../constants';
@@ -157,7 +157,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
           <rootProps.slots.baseIconButton
             aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
             size="small"
-            sx={{ visibility: searchValue ? 'visible' : 'hidden' }}
+            style={{ visibility: searchValue ? 'visible' : 'hidden' }}
             onClick={handleSearchReset}
             {...rootProps.slotProps?.baseIconButton}
           >

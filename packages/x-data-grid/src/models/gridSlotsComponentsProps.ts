@@ -65,24 +65,169 @@ export interface PinnedRowsPropsOverrides {}
 export interface SkeletonCellPropsOverrides {}
 export interface RowPropsOverrides {}
 
-export interface GridSlotProps {
-  baseCheckbox: CheckboxProps & BaseCheckboxPropsOverrides;
-  baseTextField: TextFieldProps & BaseTextFieldPropsOverrides;
-  baseFormControl: FormControlProps & BaseFormControlPropsOverrides;
-  baseSelect: SelectProps & BaseSelectPropsOverrides;
-  baseSwitch: SwitchProps & BaseSwitchPropsOverrides;
-  baseButton: ButtonProps & BaseButtonPropsOverrides;
-  baseIconButton: IconButtonProps & BaseIconButtonPropsOverrides;
+// XXX: Do these have special props?
+type Size = 'small' | 'medium' | 'large';
+type AnyRef<T> = React.RefObject<T> | React.RefCallback<T> | null;
+type Prop<T, E extends keyof React.HTMLProps<T>> = React.HTMLProps<T>[E];
+
+type Sx = any; // XXX: do we want more precise typings?
+type Variant = 'standard' | 'outlined' | 'filled';
+type Color = any; // XXX: need to figure this one out
+type Icon = React.ReactElement<{
+  fontSize?: Size | 'inherit'; // should inherit be in Size?
+}>;
+
+export type BaseButtonProps = {
+  id?: string;
+  disabled?: Prop<HTMLInputElement, 'disabled'>,
+  onClick?: Prop<HTMLInputElement, 'onClick'>,
+  children?: React.ReactNode;
+  // MUI:
+  size?: Size,
+  startIcon?: Icon,
+}
+
+export type BaseCheckboxProps = {
+  id?: string;
+  checked?: boolean;
+  name?: Prop<HTMLInputElement, 'name'>,
+  className?: Prop<HTMLInputElement, 'className'>,
+  style?: Prop<HTMLInputElement, 'style'>,
+  disabled?: Prop<HTMLInputElement, 'disabled'>,
+  tabIndex?: Prop<HTMLInputElement, 'tabIndex'>,
+  onClick?: React.MouseEventHandler<HTMLButtonElement>,
+  onChange?: Prop<HTMLInputElement, 'onChange'>,
+  onKeyDown?: Prop<HTMLInputElement, 'onKeyDown'>,
+  // MUI:
+  size?: Size;
+  indeterminate?: boolean,
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
+  inputRef?: AnyRef<HTMLInputElement>;
+  touchRippleRef?: AnyRef<any>; // FIXME: points to TouchRippleActions but we dont want that
+}
+
+export type BaseChipProps = {
+  label?: React.ReactNode;
+  className?: Prop<HTMLButtonElement, 'className'>,
+  disabled?: Prop<HTMLButtonElement, 'disabled'>,
+  tabIndex?: Prop<HTMLButtonElement, 'tabIndex'>,
+  // MUI:
+  size?: Size;
+  variant?: Variant;
+  onDelete?: (event: any) => void;
+}
+
+export type BaseFormControlProps = {
+  className?: Prop<HTMLDivElement, 'className'>,
+  children?: React.ReactNode;
+  // MUI:
+  fullWidth?: boolean;
+  variant?: Variant;
+  sx?: Sx;
+}
+
+export type BaseIconButtonProps = {
+  ref?: Prop<HTMLButtonElement, 'ref'>,
+  id?: string;
+  role?: Prop<HTMLButtonElement, 'role'>,
+  className?: Prop<HTMLInputElement, 'className'>,
+  style?: Prop<HTMLInputElement, 'style'>,
+  disabled?: Prop<HTMLInputElement, 'disabled'>,
+  tabIndex?: Prop<HTMLInputElement, 'tabIndex'>,
+  title?: Prop<HTMLInputElement, 'title'>,
+  onClick?: React.MouseEventHandler<HTMLButtonElement>,
+  onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>,
+  children: Icon;
+  // MUI:
+  size?: Size,
+  color?: Color;
+  touchRippleRef?: AnyRef<any>; // FIXME: points to TouchRippleActions but we dont want that
+}
+
+export type BaseInputAdornmentProps = {
+  // MUI:
+  position: 'start'; // XXX: do we need more positions?
+  children: Icon;
+}
+
+export type BaseInputLabelProps = React.LabelHTMLAttributes<HTMLLabelElement> & {
+  // MUI:
+  shrink?: boolean
+  variant?: Variant;
+}
+
+export type BasePopperProps = any // XXX: requires refactor
+
+export type BaseSelectProps = {
+  id?: string;
+  value?: any;
+  open?: boolean;
+  native?: boolean;
+  error?: boolean;
+  fullWidth?: boolean;
+  children?: React.ReactNode;
+  label?: React.ReactNode;
+  labelId?: string;
+  disabled?: Prop<HTMLInputElement, 'disabled'>,
+  onOpen?: React.KeyboardEventHandler<HTMLInputElement> | React.EventHandler<any>,
+  onClose?: (event: React.KeyboardEvent, reason: 'escapeKeyDown' | 'backdropClick' | 'tabKeyDown') => void,
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void,
+  inputRef?: AnyRef<HTMLInputElement>;
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
+};
+
+export type BaseSelectOptionProps = {
+  value?: any;
+  children?: React.ReactNode;
+  // MUI:
+  native?: boolean;
+};
+
+// XXX(breaking-change): This is not used anywhere. We could remove it.
+export type BaseSwitchProps = {}
+
+export type BaseTextFieldProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value'> & {
+  value?: any;
+  defaultValue?: any;
+  size?: Size;
+  color?: Color;
+  variant?: Variant;
+  error?: boolean;
+  helperText?: React.ReactNode;
+  fullWidth?: boolean;
+  label?: React.ReactNode;
+  inputRef?: AnyRef<HTMLInputElement>;
+  InputProps?: {
+    startAdornment?: React.ReactNode,
+    endAdornment?: React.ReactNode,
+    style?: React.CSSProperties;
+    disabled?: boolean;
+    inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
+  },
+  InputLabelProps?: {
+    shrink?: boolean,
+  }
+  // XXX: ./packages/x-data-grid/src/components/panel/filterPanel/GridFilterInputMultipleSingleSelect.tsx
+  // type="singleSelect"
+};
+
+interface GridBaseSlotProps {
+  baseButton: BaseButtonProps & BaseButtonPropsOverrides;
+  baseCheckbox: BaseCheckboxProps & BaseCheckboxPropsOverrides;
+  baseChip: BaseChipProps & BaseChipPropsOverrides;
+  baseFormControl: BaseFormControlProps & BaseFormControlPropsOverrides;
+  baseIconButton: BaseIconButtonProps & BaseIconButtonPropsOverrides;
+  baseInputAdornment: BaseInputAdornmentProps & BaseInputAdornmentPropsOverrides;
+  baseInputLabel: BaseInputLabelProps & BaseInputLabelPropsOverrides;
   basePopper: PopperProps & BasePopperPropsOverrides;
+  baseSelect: BaseSelectProps & BaseSelectPropsOverrides;
+  baseSelectOption: BaseSelectOptionProps & BaseSelectOptionPropsOverrides;
+  baseSwitch: BaseSwitchProps & BaseSwitchPropsOverrides;
+  baseTextField: BaseTextFieldProps & BaseTextFieldPropsOverrides;
   baseTooltip: TooltipProps & BaseTooltipPropsOverrides;
-  baseInputLabel: InputLabelProps & BaseInputLabelPropsOverrides;
-  baseInputAdornment: InputAdornmentProps & BaseInputAdornmentPropsOverrides;
-  baseSelectOption: {
-    native: boolean;
-    value: any;
-    children?: React.ReactNode;
-  } & BaseSelectOptionPropsOverrides;
-  baseChip: ChipProps & BaseChipPropsOverrides;
+}
+
+export interface GridSlotProps extends GridBaseSlotProps {
   cell: GridCellProps & CellPropsOverrides;
   columnHeaders: GridColumnHeadersProps;
   columnHeaderFilterIconButton: ColumnHeaderFilterIconButtonProps &
