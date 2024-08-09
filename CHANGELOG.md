@@ -3,6 +3,74 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.12.1
+
+_Aug 8, 2024_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎨 Charts get a new component to display color mapping in the legend
+- 🚀 The `@mui/x-charts-pro` is released in alpha version 🧪. This new package introduces two main features:
+  - The Heatmap component
+  - The zoom interaction on the bar, line, and scatter charts
+- 🌍 Improve Dutch (nl-NL) locale on the Date and Time Pickers
+- 🐞 Bugfixes
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.12.1`
+
+- [DataGrid] Fix `checkboxSelectionVisibleOnly` behavior with server-side pagination (#14083) @MBilalShafi
+- [DataGrid] Fix `columnHeadersContainerRef` being `undefined` before mount (#14051) @samwato
+- [DataGrid] Support Yarn PnP (#14126) @cherniavskii
+
+#### `@mui/x-data-grid-pro@7.12.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.12.1`.
+
+#### `@mui/x-data-grid-premium@7.12.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.12.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.12.1`
+
+- [l10n] Improve Dutch (nlNL) locale (pickers) (#14036) @Robin1896
+
+#### `@mui/x-date-pickers-pro@7.12.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.12.1`.
+
+### Charts
+
+#### `@mui/x-charts@7.12.1`
+
+- [charts] Fix charts vendor publish config (#14073) @JCQuintas
+- [charts] Move `plugins` to `PluginProvider` (#14056) @JCQuintas
+
+#### `@mui/x-date-charts-pro@7.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.12.1`, plus:
+
+- [charts-pro] Release the pro package in alpha (#13859) @alexfauquette
+
+### Tree View
+
+#### `@mui/x-tree-view@7.12.1`
+
+### Docs
+
+- [docs] Add a warning to promote the usage of `updateRows` (#14027) @MBilalShafi
+- [docs] Disable ad in `Rich Tree View-Ordering` page (#14123) @oliviertassinari
+- [docs] Redesign Date and Time Pickers overview page (#13241) @noraleonte
+
+- [CHANGELOG] Polish details @oliviertassinari
+- [code-infra] Use concurrency 1 in CircleCI (#14110) @JCQuintas
+- [infra] Re-added the removal of `Latest Version` section (#14132) @michelengelen
+
 ## 7.12.0
 
 _Aug 1, 2024_
