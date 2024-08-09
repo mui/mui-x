@@ -18,3 +18,10 @@ export const getActiveElement = (root: Document | ShadowRoot = document): Elemen
 export function escapeOperandAttributeSelector(operand: string): string {
   return operand.replace(/["\\]/g, '\\$&');
 }
+
+/**
+ * Follows the CSS specification behavior for min and max
+ * If min > max, then the min have priority
+ */
+export const clamp = (value: number, min: number, max: number) =>
+  Math.max(min, Math.min(max, value));

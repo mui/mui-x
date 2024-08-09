@@ -1,7 +1,7 @@
 ---
 productId: x-tree-view
 title: Rich Tree View - Items
-components: RichTreeView, TreeItem
+components: RichTreeView, TreeItem, TreeItem2
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
@@ -148,6 +148,14 @@ When it's set to true:
 Use the `onItemClick` prop to track the clicked item:
 
 {{"demo": "OnItemClick.js"}}
+
+## Virtualization [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+:::warning
+This is only a POC, a lot of the behaviors are potentially broken.
+:::
+
+{{"demo": "Virtualization.js"}}
 
 ## Imperative API
 

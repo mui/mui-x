@@ -31,7 +31,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ indentationAtItemLevel?: bool, itemsReordering?: bool }"
+        "description": "{ indentationAtItemLevel?: bool, itemsReordering?: bool, virtualization?: bool }"
       }
     },
     "getItemId": {
@@ -74,6 +74,7 @@
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "12px"
     },
+    "itemsHeight": { "type": { "name": "number" }, "default": "32" },
     "itemsReordering": { "type": { "name": "bool" }, "default": "false" },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedItemsChange": {
@@ -125,6 +126,8 @@
         "describedArgs": ["event", "itemIds"]
       }
     },
+    "resizeThrottleMs": { "type": { "name": "number" }, "default": "60" },
+    "scrollBufferPx": { "type": { "name": "number" }, "default": "150" },
     "selectedItems": { "type": { "name": "any" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
@@ -147,18 +150,6 @@
   ],
   "slots": [
     {
-      "name": "root",
-      "description": "Element rendered at the root.",
-      "default": "RichTreeViewProRoot",
-      "class": "MuiRichTreeViewPro-root"
-    },
-    {
-      "name": "item",
-      "description": "Custom component for the item.",
-      "default": "TreeItem.",
-      "class": null
-    },
-    {
       "name": "collapseIcon",
       "description": "The default icon used to collapse the item.",
       "class": null
@@ -172,6 +163,18 @@
       "name": "endIcon",
       "description": "The default icon displayed next to an end item.\nThis is applied to all tree items and can be overridden by the TreeItem `icon` slot prop.",
       "class": null
+    },
+    {
+      "name": "item",
+      "description": "Custom component for the item.",
+      "default": "TreeItem.",
+      "class": null
+    },
+    {
+      "name": "root",
+      "description": "Element rendered at the root.",
+      "default": "RichTreeViewProRoot",
+      "class": "MuiRichTreeViewPro-root"
     }
   ],
   "classes": [],

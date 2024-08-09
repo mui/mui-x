@@ -1,10 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { useLicenseVerifier, Watermark } from '@mui/x-license';
+import { Watermark } from '@mui/x-license';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import { useTreeView, TreeViewProvider, warnOnce } from '@mui/x-tree-view/internals';
+import {
+  useTreeView,
+  TreeViewProvider,
+  warnOnce,
+  RichTreeViewItems,
+} from '@mui/x-tree-view/internals';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
 import { RichTreeViewProProps } from './RichTreeViewPro.types';
@@ -13,6 +17,7 @@ import {
   RichTreeViewProPluginSignatures,
 } from './RichTreeViewPro.plugins';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
+import { TreeViewVirtualScroller } from '../TreeViewVirtualScroller';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeViewPro');
 
@@ -44,52 +49,6 @@ type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undef
   props: RichTreeViewProProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-function WrappedTreeItem<R extends {}>({
-  slots,
-  slotProps,
-  label,
-  id,
-  itemId,
-  children,
-}: Pick<RichTreeViewProProps<R, any>, 'slots' | 'slotProps'> &
-  Pick<TreeItemProps, 'id' | 'itemId' | 'children'> & { label: string }) {
-  const Item = slots?.item ?? TreeItem;
-  const itemProps = useSlotProps({
-    elementType: Item,
-    externalSlotProps: slotProps?.item,
-    additionalProps: { itemId, id, label },
-    ownerState: { itemId, label },
-  });
-
-  return <Item {...itemProps}>{children}</Item>;
-}
-
-WrappedTreeItem.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  /**
-   * The content of the component.
-   */
-  children: PropTypes.node,
-  /**
-   * The id of the item.
-   */
-  itemId: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps: PropTypes.object,
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.object,
-} as any;
-
 const releaseInfo = getReleaseInfo();
 
 /**
@@ -107,8 +66,6 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   Multiple extends boolean | undefined = undefined,
 >(inProps: RichTreeViewProProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeViewPro' });
-
-  useLicenseVerifier('x-tree-view-pro', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
@@ -141,34 +98,24 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     ownerState: props as RichTreeViewProProps<any, any>,
   });
 
-  const itemsToRender = instance.getItemsToRender();
-
-  const renderItem = ({
-    label,
-    itemId,
-    id,
-    children,
-  }: ReturnType<typeof instance.getItemsToRender>[number]) => {
-    return (
-      <WrappedTreeItem
-        slots={slots}
-        slotProps={slotProps}
-        key={itemId}
-        label={label}
-        id={id}
-        itemId={itemId}
-      >
-        {children?.map(renderItem)}
-      </WrappedTreeItem>
-    );
-  };
-
   return (
     <TreeViewProvider value={contextValue}>
-      <Root {...rootProps}>
-        {itemsToRender.map(renderItem)}
-        <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
-      </Root>
+      {contextValue.virtualization.enabled ? (
+        <TreeViewVirtualScroller
+          {...rootProps}
+          slots={{ ...slots, root: Root }}
+          slotProps={slotProps}
+        />
+      ) : (
+        <Root {...rootProps} ref={ref}>
+          <RichTreeViewItems
+            slots={slots}
+            slotProps={slotProps}
+            itemsToRender={instance.getItemsToRender()}
+          />
+          <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
+        </Root>
+      )}
     </TreeViewProvider>
   );
 }) as RichTreeViewProComponent;
@@ -251,6 +198,7 @@ RichTreeViewPro.propTypes = {
   experimentalFeatures: PropTypes.shape({
     indentationAtItemLevel: PropTypes.bool,
     itemsReordering: PropTypes.bool,
+    virtualization: PropTypes.bool,
   }),
   /**
    * Used to determine the id of a given item.
@@ -296,6 +244,11 @@ RichTreeViewPro.propTypes = {
    */
   itemChildrenIndentation: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   items: PropTypes.array.isRequired,
+  /**
+   * Sets the height in pixel of an item.
+   * @default 32
+   */
+  itemsHeight: PropTypes.number,
   /**
    * If `true`, the reordering of items is enabled.
    * Make sure to also enable the `itemsReordering` experimental feature:
@@ -355,6 +308,16 @@ RichTreeViewPro.propTypes = {
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */
   onSelectedItemsChange: PropTypes.func,
+  /**
+   * The millisecond throttle delay for resizing the Tree View when virtualization is enabled.
+   * @default 60
+   */
+  resizeThrottleMs: PropTypes.number,
+  /**
+   * Region in pixels to render before/after the viewport
+   * @default 150
+   */
+  scrollBufferPx: PropTypes.number,
   /**
    * Selected item ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.

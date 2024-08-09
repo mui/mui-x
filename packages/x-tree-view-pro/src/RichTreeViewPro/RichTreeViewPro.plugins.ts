@@ -18,6 +18,10 @@ import {
   useTreeViewItemsReordering,
   UseTreeViewItemsReorderingParameters,
 } from '../internals/plugins/useTreeViewItemsReordering';
+import {
+  useTreeViewVirtualization,
+  UseTreeViewVirtualizationParameters,
+} from '../internals/plugins/useTreeViewVirtualization';
 
 export const RICH_TREE_VIEW_PRO_PLUGINS = [
   useTreeViewItems,
@@ -27,6 +31,7 @@ export const RICH_TREE_VIEW_PRO_PLUGINS = [
   useTreeViewKeyboardNavigation,
   useTreeViewIcons,
   useTreeViewItemsReordering,
+  useTreeViewVirtualization,
 ] as const;
 
 export type RichTreeViewProPluginSignatures = ConvertPluginsIntoSignatures<
@@ -51,4 +56,5 @@ export interface RichTreeViewProPluginParameters<R extends {}, Multiple extends 
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,
     UseTreeViewIconsParameters,
-    UseTreeViewItemsReorderingParameters {}
+    UseTreeViewItemsReorderingParameters,
+    UseTreeViewVirtualizationParameters {}

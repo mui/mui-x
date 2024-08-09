@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
 import { SlotComponentProps } from '@mui/utils';
-import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import { TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
-import { TreeViewItemId } from '@mui/x-tree-view/models';
-import { TreeViewPublicAPI, TreeViewExperimentalFeatures } from '@mui/x-tree-view/internals';
+import { SxProps } from '@mui/system';
+import {
+  TreeViewPublicAPI,
+  TreeViewExperimentalFeatures,
+  MakeOptional,
+} from '@mui/x-tree-view/internals';
 import { RichTreeViewProClasses } from './richTreeViewProClasses';
 import {
   RichTreeViewProPluginParameters,
@@ -13,29 +14,24 @@ import {
   RichTreeViewProPluginSlots,
   RichTreeViewProPluginSignatures,
 } from './RichTreeViewPro.plugins';
+import {
+  TreeViewVirtualScrollerSlots,
+  TreeViewVirtualScrollerSlotProps,
+  TreeViewVirtualScrollerProps,
+} from '../TreeViewVirtualScroller';
 
-interface RichTreeViewItemProSlotOwnerState {
-  itemId: TreeViewItemId;
-  label: string;
-}
+export interface RichTreeViewProSlots
+  extends RichTreeViewProPluginSlots,
+    MakeOptional<TreeViewVirtualScrollerSlots, 'root'> {}
 
-export interface RichTreeViewProSlots extends RichTreeViewProPluginSlots {
-  /**
-   * Element rendered at the root.
-   * @default RichTreeViewProRoot
-   */
-  root?: React.ElementType;
-  /**
-   * Custom component for the item.
-   * @default TreeItem.
-   */
-  item?: React.JSXElementConstructor<TreeItemProps> | React.JSXElementConstructor<TreeItem2Props>;
-}
-
-export interface RichTreeViewProSlotProps<R extends {}, Multiple extends boolean | undefined>
-  extends RichTreeViewProPluginSlotProps {
-  root?: SlotComponentProps<'ul', {}, RichTreeViewProProps<R, Multiple>>;
-  item?: SlotComponentProps<typeof TreeItem, {}, RichTreeViewItemProSlotOwnerState>;
+export interface RichTreeViewProSlotProps
+  extends RichTreeViewProPluginSlotProps,
+    Omit<TreeViewVirtualScrollerSlotProps, 'root'> {
+  root?: SlotComponentProps<
+    'ul',
+    {},
+    TreeViewVirtualScrollerProps | RichTreeViewProProps<any, any>
+  >;
 }
 
 export type RichTreeViewProApiRef = React.MutableRefObject<
@@ -66,7 +62,7 @@ export interface RichTreeViewProProps<R extends {}, Multiple extends boolean | u
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: RichTreeViewProSlotProps<R, Multiple>;
+  slotProps?: RichTreeViewProSlotProps;
   /**
    * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
    */

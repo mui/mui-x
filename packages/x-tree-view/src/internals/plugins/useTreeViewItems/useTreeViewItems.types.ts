@@ -2,11 +2,12 @@ import * as React from 'react';
 import { TreeViewItemMeta, DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 
-interface TreeViewItemProps {
+export interface TreeViewItemToRenderProps {
   label: string;
   itemId: string;
   id: string | undefined;
-  children?: TreeViewItemProps[];
+  children?: TreeViewItemToRenderProps[];
+  isContentHidden?: boolean;
 }
 
 export interface UseTreeViewItemsPublicAPI<R extends {}> {
@@ -49,10 +50,10 @@ export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItems
   /**
    * Get the item that should be rendered.
    * This method is only used on Rich Tree View components.
-   * Check the `TreeViewItemProps` type for more information.
-   * @returns {TreeViewItemProps[]} The items to render.
+   * Check the `TreeViewItemToRenderProps` type for more information.
+   * @returns {TreeViewItemToRenderProps[]} The items to render.
    */
-  getItemsToRender: () => TreeViewItemProps[];
+  getItemsToRender: () => TreeViewItemToRenderProps[];
   /**
    * Check if a given item is disabled.
    * An item is disabled if it was marked as disabled or if one of its ancestors is disabled.
