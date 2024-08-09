@@ -54,14 +54,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
 const defaultSlots = DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS;
 
 export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGridProProps<R>) => {
-  const useThemeProps = inProps.useThemeProps ?? DATA_GRID_PRO_PROPS_DEFAULT_VALUES.useThemeProps;
-  const themedProps = useProps(
-    // eslint-disable-next-line material-ui/mui-name-matches-component-name
-    useThemeProps({
-      props: inProps,
-      name: 'MuiDataGrid',
-    }),
-  );
+  const themedProps = useProps(inProps);
 
   const localeText = React.useMemo(
     () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...themedProps.localeText }),

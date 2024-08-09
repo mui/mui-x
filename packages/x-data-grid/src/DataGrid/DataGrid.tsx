@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useThemeProps } from '@mui/system';
 import { fastMemo } from '../utils/fastMemo';
 import { GridBody, GridFooterPlaceholder, GridHeader, GridRoot } from '../components';
 import { DataGridProcessedProps, DataGridProps } from '../models/props/DataGridProps';
@@ -16,8 +15,6 @@ import {
 } from '../internals/utils/propValidation';
 
 export type { GridSlotsComponent as GridSlots } from '../models';
-
-export type GridUseThemeProps = typeof useThemeProps;
 
 let propValidators: PropValidator<DataGridProcessedProps>[];
 

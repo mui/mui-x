@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useThemeProps, Theme, SxProps } from '@mui/system';
+import { Theme, SxProps } from '@mui/system';
 import { GridDensity } from '../gridDensity';
 import { GridEditMode } from '../gridEditRowModel';
 import { GridFeatureMode } from '../gridFeatureMode';
@@ -97,11 +97,6 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
  * TODO: add multiSortKey
  */
 export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = any> {
-  /*
-   * Internal: used to pass the material `useThemeProps` later on.
-   * @ignore - do not document
-   */
-  useThemeProps: typeof useThemeProps;
   /**
    * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
    * @default false

@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { DataGridPremiumRaw, DataGridPremiumProps } from '../core';
+import { useThemeProps } from '@mui/material';
 import { materialProProps, materialProSlots } from '@mui/x-data-grid-pro/material';
+import { DataGridPremiumRaw, DataGridPremiumProps } from '../core';
 import type { GridPremiumIconSlotsComponent } from '../models';
 import { GridWorkspacesIcon, GridGroupWorkIcon, GridFunctionsIcon } from './icons';
 
@@ -26,10 +27,15 @@ export const materialPremiumProps = materialProProps as Partial<DataGridPremiumP
  * - [DataGridPremium API](https://mui.com/x/api/data-grid/data-grid-premium/)
  */
 export const DataGridPremiumMaterial = function DataGridPremiumMaterial(props: DataGridPremiumProps) {
+  const themedProps = useThemeProps({
+    props,
+    name: 'MuiDataGrid',
+  });
+
   return (
     <DataGridPremiumRaw
       {...materialPremiumProps}
-      {...props}
+      {...themedProps}
       slots={React.useMemo(() => ({ ...materialPremiumSlots, ...props.slots }), [props.slots])}
     />
   )

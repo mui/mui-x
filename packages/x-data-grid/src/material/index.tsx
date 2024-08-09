@@ -107,10 +107,15 @@ export const materialProps: Partial<DataGridProps> = {
 }
 
 export function DataGridMaterial(props: DataGridProps) {
+  const themedProps = useThemeProps({
+    props,
+    name: 'MuiDataGrid',
+  })
+
   return (
     <DataGridRaw
       {...materialProps}
-      {...props}
+      {...themedProps}
       slots={React.useMemo(() => ({ ...materialSlots, ...props.slots }), [props.slots])}
     />
   )

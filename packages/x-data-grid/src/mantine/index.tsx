@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { useThemeProps } from '@mui/material';
 import MUICheckbox from '@mui/material/Checkbox';
 import MUITextField from '@mui/material/TextField';
 import MUIFormControl from '@mui/material/FormControl';
@@ -100,14 +99,9 @@ export const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
   baseTooltip: MUITooltip,
 };
 
-export const materialProps: Partial<DataGridProps> = {
-  useThemeProps: useThemeProps as any,
-}
-
 export function DataGrid(props: DataGridProps) {
   return (
     <DataGridRaw
-      {...materialProps}
       {...props}
       slots={React.useMemo(() => ({ ...materialSlots, ...props.slots }), [props.slots])}
     />

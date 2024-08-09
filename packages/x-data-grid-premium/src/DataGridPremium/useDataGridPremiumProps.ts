@@ -59,14 +59,7 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
 const defaultSlots = DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS;
 
 export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
-  const useThemeProps = inProps.useThemeProps ?? DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES.useThemeProps;
-  const themedProps = useProps(
-    // eslint-disable-next-line material-ui/mui-name-matches-component-name
-    useThemeProps({
-      props: inProps,
-      name: 'MuiDataGrid',
-    }),
-  );
+  const themedProps = useProps(inProps);
 
   const localeText = React.useMemo(
     () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...themedProps.localeText }),

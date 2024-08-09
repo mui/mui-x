@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useThemeProps } from '@mui/material';
 import { materialSlots, materialProps } from '@mui/x-data-grid/material';
 import { DataGridProRaw } from '../DataGridPro';
 import { DataGridProProps } from '../models/dataGridProProps';
@@ -25,10 +26,15 @@ export const materialProProps = materialProps as Partial<DataGridProProps>;
  * - [DataGridPro API](https://mui.com/x/api/data-grid/data-grid-pro/)
  */
 export const DataGridProMaterial = function DataGridProMaterial(props: DataGridProProps) {
+  const themedProps = useThemeProps({
+    props,
+    name: 'MuiDataGrid',
+  });
+
   return (
     <DataGridProRaw
       {...materialProProps}
-      {...props}
+      {...themedProps}
       slots={React.useMemo(() => ({ ...materialProSlots, ...props.slots }), [props.slots])}
     />
   )
