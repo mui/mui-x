@@ -482,6 +482,10 @@ DesktopDateTimePicker.propTypes = {
    */
   renderLoading: PropTypes.func,
   /**
+   * Display years in descending order starting from the maximum value.
+   */
+  reverseYears: PropTypes.bool,
+  /**
    * The currently selected sections.
    * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.

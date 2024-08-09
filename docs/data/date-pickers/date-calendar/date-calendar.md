@@ -63,6 +63,12 @@ If you only need the `year` view or the `month` view, you can use the `YearCalen
 
 {{"demo": "YearMonthCalendar.js", "defaultCodeOpen": false}}
 
+### Reverse years
+
+The `reverseYears` prop can be set to show the years in descending order starting from the maximum value.
+
+{{"demo": "ReverseYearCalendar.js",  "defaultCodeOpen": false}}
+
 ## Day view customization
 
 ### Show additional days
