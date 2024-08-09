@@ -13,50 +13,50 @@ const getBackgroundColor = (color: string, theme: Theme, coefficient: number) =>
 
 const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   '& .super-app-theme--Open': {
-    backgroundColor: getBackgroundColor(theme.palette.info.main, theme, 0.7),
+    ...getBackgroundColor(theme.palette.info.main, theme, 0.7),
     '&:hover': {
-      backgroundColor: getBackgroundColor(theme.palette.info.main, theme, 0.6),
+      ...getBackgroundColor(theme.palette.info.main, theme, 0.6),
     },
     '&.Mui-selected': {
-      backgroundColor: getBackgroundColor(theme.palette.info.main, theme, 0.5),
+      ...getBackgroundColor(theme.palette.info.main, theme, 0.5),
       '&:hover': {
-        backgroundColor: getBackgroundColor(theme.palette.info.main, theme, 0.4),
+        ...getBackgroundColor(theme.palette.info.main, theme, 0.4),
       },
     },
   },
   '& .super-app-theme--Filled': {
-    backgroundColor: getBackgroundColor(theme.palette.success.main, theme, 0.7),
+    ...getBackgroundColor(theme.palette.success.main, theme, 0.7),
     '&:hover': {
-      backgroundColor: getBackgroundColor(theme.palette.success.main, theme, 0.6),
+      ...getBackgroundColor(theme.palette.success.main, theme, 0.6),
     },
     '&.Mui-selected': {
-      backgroundColor: getBackgroundColor(theme.palette.success.main, theme, 0.5),
+      ...getBackgroundColor(theme.palette.success.main, theme, 0.5),
       '&:hover': {
-        backgroundColor: getBackgroundColor(theme.palette.success.main, theme, 0.4),
+        ...getBackgroundColor(theme.palette.success.main, theme, 0.4),
       },
     },
   },
   '& .super-app-theme--PartiallyFilled': {
-    backgroundColor: getBackgroundColor(theme.palette.warning.main, theme, 0.7),
+    ...getBackgroundColor(theme.palette.warning.main, theme, 0.7),
     '&:hover': {
-      backgroundColor: getBackgroundColor(theme.palette.warning.main, theme, 0.6),
+      ...getBackgroundColor(theme.palette.warning.main, theme, 0.6),
     },
     '&.Mui-selected': {
-      backgroundColor: getBackgroundColor(theme.palette.warning.main, theme, 0.5),
+      ...getBackgroundColor(theme.palette.warning.main, theme, 0.5),
       '&:hover': {
-        backgroundColor: getBackgroundColor(theme.palette.warning.main, theme, 0.4),
+        ...getBackgroundColor(theme.palette.warning.main, theme, 0.4),
       },
     },
   },
   '& .super-app-theme--Rejected': {
-    backgroundColor: getBackgroundColor(theme.palette.error.main, theme, 0.7),
+    ...getBackgroundColor(theme.palette.error.main, theme, 0.7),
     '&:hover': {
-      backgroundColor: getBackgroundColor(theme.palette.error.main, theme, 0.6),
+      ...getBackgroundColor(theme.palette.error.main, theme, 0.6),
     },
     '&.Mui-selected': {
-      backgroundColor: getBackgroundColor(theme.palette.error.main, theme, 0.5),
+      ...getBackgroundColor(theme.palette.error.main, theme, 0.5),
       '&:hover': {
-        backgroundColor: getBackgroundColor(theme.palette.error.main, theme, 0.4),
+        ...getBackgroundColor(theme.palette.error.main, theme, 0.4),
       },
     },
   },
