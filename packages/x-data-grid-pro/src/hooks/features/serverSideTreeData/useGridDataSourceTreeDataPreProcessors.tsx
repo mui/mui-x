@@ -151,7 +151,7 @@ export const useGridDataSourceTreeDataPreProcessors = (
           path: [...parentPath, getGroupKey(params.dataRowIdToModelLookup[rowId])].map(
             (key): RowTreeBuilderGroupingCriterion => ({ key, field: null }),
           ),
-          hasServerChildren: !!count && count !== 0,
+          serverChildrenCount: count,
         };
       };
 

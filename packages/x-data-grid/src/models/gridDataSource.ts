@@ -72,7 +72,8 @@ export interface GridDataSource {
   /**
    * Used to determine the number of children a row has on server.
    * @param {GridRowModel} row The row to check the number of children
-   * @returns {number} The number of children the row has
+   * @returns {number} The number of children the row has.
+   * If the children count is not available for some reason, but there are some children, `getChildrenCount` should return `-1`.
    */
   getChildrenCount?: (row: GridRowModel) => number;
 }

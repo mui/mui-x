@@ -59,7 +59,7 @@ interface InsertDataRowInTreeParams {
   onDuplicatePath?: GridTreePathDuplicateHandler;
   isGroupExpandedByDefault?: DataGridProProps['isGroupExpandedByDefault'];
   defaultGroupingExpansionDepth: number;
-  hasServerChildren?: boolean;
+  serverChildrenCount?: number;
   groupsToFetch?: Set<GridRowId>;
 }
 
@@ -79,7 +79,7 @@ export const insertDataRowInTree = ({
   onDuplicatePath,
   isGroupExpandedByDefault,
   defaultGroupingExpansionDepth,
-  hasServerChildren,
+  serverChildrenCount,
   groupsToFetch,
 }: InsertDataRowInTreeParams) => {
   let parentNodeId = GRID_ROOT_GROUP_ID;
@@ -99,7 +99,7 @@ export const insertDataRowInTree = ({
       // We create a leaf node for the data row.
       if (existingNodeIdWithPartialPath == null) {
         let node: GridLeafNode | GridDataSourceGroupNode;
-        if (hasServerChildren) {
+        if (serverChildrenCount !== undefined && serverChildrenCount !== 0) {
           node = {
             type: 'group',
             id,
@@ -112,7 +112,7 @@ export const insertDataRowInTree = ({
             children: [],
             childrenFromPath: {},
             childrenExpanded: false,
-            hasServerChildren: true,
+            serverChildrenCount,
           };
           const shouldFetchChildren = checkGroupChildrenExpansion(
             node,

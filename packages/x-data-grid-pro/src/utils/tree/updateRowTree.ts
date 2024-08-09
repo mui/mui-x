@@ -36,7 +36,7 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
     : new Set([]);
 
   for (let i = 0; i < params.nodes.inserted.length; i += 1) {
-    const { id, path, hasServerChildren } = params.nodes.inserted[i];
+    const { id, path, serverChildrenCount } = params.nodes.inserted[i];
 
     insertDataRowInTree({
       previousTree: params.previousTree,
@@ -45,7 +45,7 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
       updatedGroupsManager,
       id,
       path,
-      hasServerChildren,
+      serverChildrenCount,
       onDuplicatePath: params.onDuplicatePath,
       isGroupExpandedByDefault: params.isGroupExpandedByDefault,
       defaultGroupingExpansionDepth: params.defaultGroupingExpansionDepth,
@@ -65,7 +65,7 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
   }
 
   for (let i = 0; i < params.nodes.modified.length; i += 1) {
-    const { id, path, hasServerChildren } = params.nodes.modified[i];
+    const { id, path, serverChildrenCount } = params.nodes.modified[i];
     const pathInPreviousTree = getNodePathInTree({ tree, id });
     const isInSameGroup = isDeepEqual(pathInPreviousTree, path);
 
@@ -84,7 +84,7 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
         updatedGroupsManager,
         id,
         path,
-        hasServerChildren,
+        serverChildrenCount,
         onDuplicatePath: params.onDuplicatePath,
         isGroupExpandedByDefault: params.isGroupExpandedByDefault,
         defaultGroupingExpansionDepth: params.defaultGroupingExpansionDepth,
