@@ -46,10 +46,10 @@ const csCZGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Stáhnout jako Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: 'Hledat sloupce',
+  columnsManagementNoColumns: 'Žádné sloupce',
+  columnsManagementShowHideAllText: 'Zobrazit/skrýt vše',
+  columnsManagementReset: 'Resetovat',
 
   // Filter panel text
   filterPanelAddFilter: 'Přidat filtr',
