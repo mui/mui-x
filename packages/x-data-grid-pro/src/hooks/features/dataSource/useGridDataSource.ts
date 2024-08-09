@@ -11,7 +11,11 @@ import {
 import { gridRowGroupsToFetchSelector, GridStateInitializer } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { gridGetRowsParamsSelector, gridDataSourceErrorsSelector } from './gridDataSourceSelector';
+import {
+  gridGetRowsParamsSelector,
+  gridDataSourceErrorsSelector,
+  gridRowGroupingSanitizedModelSelector,
+} from './gridDataSourceSelector';
 import { GridDataSourceApi, GridDataSourceApiBase, GridDataSourcePrivateApi } from './interfaces';
 import { runIfServerMode, NestedDataManager, RequestStatus } from './utils';
 import { GridDataSourceCache } from '../../../models';
@@ -59,6 +63,7 @@ export const useGridDataSource = (
     () => new NestedDataManager(apiRef),
   ).current;
   const groupsToAutoFetch = useGridSelector(apiRef, gridRowGroupsToFetchSelector);
+  const sanitizedRowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
   const scheduledGroups = React.useRef<number>(0);
   const onError = props.unstable_onDataSourceError;
 
@@ -122,7 +127,7 @@ export const useGridDataSource = (
 
   const fetchRowChildren = React.useCallback<GridDataSourcePrivateApi['fetchRowChildren']>(
     async (id) => {
-      if (!props.treeData) {
+      if (!props.treeData && sanitizedRowGroupingModel.length === 0) {
         nestedDataManager.clearPendingRequest(id);
         return;
       }
@@ -186,7 +191,14 @@ export const useGridDataSource = (
         nestedDataManager.setRequestSettled(id);
       }
     },
-    [nestedDataManager, onError, apiRef, props.treeData, props.unstable_dataSource?.getRows],
+    [
+      nestedDataManager,
+      onError,
+      apiRef,
+      props.treeData,
+      props.unstable_dataSource?.getRows,
+      sanitizedRowGroupingModel,
+    ],
   );
 
   const setChildrenLoading = React.useCallback<GridDataSourceApiBase['setChildrenLoading']>(
@@ -267,6 +279,7 @@ export const useGridDataSource = (
     'paginationModelChange',
     runIfServerMode(props.paginationMode, fetchRows),
   );
+  useGridApiEventHandler(apiRef, 'rowGroupingModelChange', () => fetchRows());
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
