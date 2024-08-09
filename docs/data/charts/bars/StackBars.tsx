@@ -1,16 +1,22 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { addLabels, balanceSheet } from './netflixsBalanceSheet';
 
 export default function StackBars() {
   return (
     <BarChart
-      series={[
-        { data: [3, 4, 1, 6, 5], stack: 'A', label: 'Series A1' },
-        { data: [4, 3, 1, 5, 8], stack: 'A', label: 'Series A2' },
-        { data: [4, 2, 5, 4, 1], stack: 'B', label: 'Series B1' },
-        { data: [2, 8, 1, 3, 1], stack: 'B', label: 'Series B2' },
-        { data: [10, 6, 5, 8, 9], label: 'Series C1' },
-      ]}
+      dataset={balanceSheet}
+      series={addLabels([
+        { dataKey: 'currAss', stack: 'assets' },
+        { dataKey: 'nCurrAss', stack: 'assets' },
+        { dataKey: 'curLia', stack: 'liability' },
+        { dataKey: 'nCurLia', stack: 'liability' },
+        { dataKey: 'capStock', stack: 'equity' },
+        { dataKey: 'retEarn', stack: 'equity' },
+        { dataKey: 'treas', stack: 'equity' },
+      ])}
+      xAxis={[{ scaleType: 'band', dataKey: 'year' }]}
+      slotProps={{ legend: { hidden: true } }}
       width={600}
       height={350}
     />
