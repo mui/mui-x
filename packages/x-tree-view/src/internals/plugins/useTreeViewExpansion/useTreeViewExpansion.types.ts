@@ -2,6 +2,7 @@ import * as React from 'react';
 import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { TreeViewItemId } from '../../../models';
+import { UseTreeViewLabelSignature } from '../useTreeViewLabel';
 
 export interface UseTreeViewExpansionPublicAPI {
   /**
@@ -96,4 +97,5 @@ export type UseTreeViewExpansionSignature = TreeViewPluginSignature<{
   modelNames: 'expandedItems';
   contextValue: UseTreeViewExpansionContextValue;
   dependencies: [UseTreeViewItemsSignature];
+  optionalDependencies: [UseTreeViewLabelSignature];
 }>;

@@ -60,6 +60,12 @@
       "class": "MuiTreeItem2-label"
     },
     {
+      "name": "labelInput",
+      "description": "The component that renders the input to edit the label when the item is editable and is currently being edited.",
+      "default": "TreeItem2LabelInput",
+      "class": "MuiTreeItem2-labelInput"
+    },
+    {
       "name": "dragAndDropOverlay",
       "description": "The component that renders the overlay when an item reordering is ongoing.\nWarning: This slot is only useful when using the `RichTreeViewPro` component.",
       "default": "TreeItem2DragAndDropOverlay",
@@ -80,6 +86,18 @@
       "className": "Mui-disabled",
       "description": "State class applied to the element when disabled.",
       "isGlobal": true
+    },
+    {
+      "key": "editable",
+      "className": "MuiTreeItem2-editable",
+      "description": "Styles applied to the content of the items that are editable.",
+      "isGlobal": false
+    },
+    {
+      "key": "editing",
+      "className": "MuiTreeItem2-editing",
+      "description": "Styles applied to the content element when editing is enabled.",
+      "isGlobal": false
     },
     {
       "key": "expanded",

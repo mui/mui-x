@@ -7,6 +7,8 @@ import {
   TreeItem2DragAndDropOverlay,
   TreeItem2DragAndDropOverlayProps,
 } from '../TreeItem2DragAndDropOverlay';
+import { TreeItem2LabelInput, TreeItem2LabelInputProps } from '../TreeItem2LabelInput';
+import { MuiCancellableEvent } from '../internals/models';
 
 export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
@@ -30,6 +32,12 @@ export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> 
     label: string;
     /** Styles applied to the checkbox element. */
     checkbox: string;
+    /** Styles applied to the input element that is visible when editing is enabled. */
+    labelInput: string;
+    /** Styles applied to the content element when editing is enabled. */
+    editing: string;
+    /** Styles applied to the content of the items that are editable. */
+    editable: string;
   };
   /**
    * The tree item label.
@@ -52,6 +60,7 @@ export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> 
    */
   displayIcon?: React.ReactNode;
   dragAndDropOverlayProps?: TreeItem2DragAndDropOverlayProps;
+  labelInputProps?: TreeItem2LabelInputProps;
 }
 
 export type TreeItemContentClassKey = keyof NonNullable<TreeItemContentProps['classes']>;
@@ -74,6 +83,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     onClick,
     onMouseDown,
     dragAndDropOverlayProps,
+    labelInputProps,
     ...other
   } = props;
 
@@ -82,6 +92,8 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     expanded,
     selected,
     focused,
+    editing,
+    editable,
     disableSelection,
     checkboxSelection,
     handleExpansion,
@@ -90,6 +102,9 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     handleContentClick,
     preventSelection,
     expansionTrigger,
+    toggleItemEditing,
+    handleSaveItemLabel,
+    handleCancelItemLabelEditing,
   } = useTreeItemState(itemId);
 
   const icon = iconProp || expansionIcon || displayIcon;
@@ -123,6 +138,39 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     }
   };
 
+  const handleLabelDoubleClick = (event: React.MouseEvent & MuiCancellableEvent) => {
+    if (event.defaultMuiPrevented) {
+      return;
+    }
+    toggleItemEditing();
+  };
+  const handleLabelInputBlur = (
+    event: React.FocusEvent<HTMLInputElement> & MuiCancellableEvent,
+  ) => {
+    if (event.defaultMuiPrevented) {
+      return;
+    }
+
+    if (event.target.value) {
+      handleSaveItemLabel(event, event.target.value);
+    }
+  };
+
+  const handleLabelInputKeydown = (
+    event: React.KeyboardEvent<HTMLInputElement> & MuiCancellableEvent,
+  ) => {
+    if (event.defaultMuiPrevented) {
+      return;
+    }
+
+    const target = event.target as HTMLInputElement;
+    if (event.key === 'Enter' && target.value) {
+      handleSaveItemLabel(event, target.value);
+    } else if (event.key === 'Escape') {
+      handleCancelItemLabelEditing(event);
+    }
+  };
+
   return (
     /* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions -- Key event is handled by the TreeView */
     <div
@@ -132,6 +180,8 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
         [classes.selected]: selected,
         [classes.focused]: focused,
         [classes.disabled]: disabled,
+        [classes.editing]: editing,
+        [classes.editable]: editable,
       })}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
@@ -149,7 +199,19 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
         />
       )}
 
-      <div className={classes.label}>{label}</div>
+      {editing ? (
+        <TreeItem2LabelInput
+          {...labelInputProps}
+          className={classes.labelInput}
+          onBlur={handleLabelInputBlur}
+          onKeyDown={handleLabelInputKeydown}
+        />
+      ) : (
+        <div className={classes.label} {...(editable && { onDoubleClick: handleLabelDoubleClick })}>
+          {label}
+        </div>
+      )}
+
       {dragAndDropOverlayProps && <TreeItem2DragAndDropOverlay {...dragAndDropOverlayProps} />}
     </div>
   );
@@ -189,6 +251,7 @@ TreeItemContent.propTypes = {
    * The tree item label.
    */
   label: PropTypes.node,
+  labelInputProps: PropTypes.object,
 } as any;
 
 export { TreeItemContent };
