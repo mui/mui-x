@@ -49,10 +49,34 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
     },
   },
   {
+    label: "Valentine's Day",
+    getValue: () => {
+      const today = dayjs();
+      // (February 14)
+      return today.month(1).date(14);
+    },
+  },
+  {
+    label: 'Earth Day',
+    getValue: () => {
+      const today = dayjs();
+      // (April 22)
+      return today.month(3).date(22);
+    },
+  },
+  {
+    label: "International Workers' Day",
+    getValue: () => {
+      const today = dayjs();
+      // (May 1)
+      return today.month(4).date(1);
+    },
+  },
+  {
     label: 'Independence Day',
     getValue: () => {
-      // (July 4)
       const today = dayjs();
+      // (July 4)
       return today.month(6).date(4);
     },
   },
@@ -61,6 +85,14 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
     getValue: () => {
       // (first Monday in September)
       return getMonthWeekday(8, 1, 1);
+    },
+  },
+  {
+    label: 'Halloween',
+    getValue: () => {
+      const today = dayjs();
+      // (October 31)
+      return today.month(9).date(31);
     },
   },
   {
@@ -73,8 +105,8 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
   {
     label: 'Christmas Day',
     getValue: () => {
-      // (December 25)
       const today = dayjs();
+      // (December 25)
       return today.month(11).date(25);
     },
   },
