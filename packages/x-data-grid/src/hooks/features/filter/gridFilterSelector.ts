@@ -4,6 +4,7 @@ import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
+import { GridRowId } from '../../../models/gridRows';
 
 /**
  * @category Filtering
@@ -94,6 +95,21 @@ export const gridFilteredSortedRowEntriesSelector = createSelectorMemoized(
 export const gridFilteredSortedRowIdsSelector = createSelectorMemoized(
   gridFilteredSortedRowEntriesSelector,
   (filteredSortedRowEntries) => filteredSortedRowEntries.map((row) => row.id),
+);
+
+/**
+ * Get a `Set` containing the ids of the rows accessible after the filtering process.
+ * Contains the collapsed children.
+ * @category Filtering
+ * @ignore - Do not document.
+ */
+export const gridFilteredSortedRowIdsSetSelector = createSelectorMemoized(
+  gridFilteredSortedRowEntriesSelector,
+  (filteredSortedRowEntries) => {
+    const filteredSortedRowIdsSetSelector = new Set<GridRowId>();
+    filteredSortedRowEntries.map((row) => filteredSortedRowIdsSetSelector.add(row.id));
+    return filteredSortedRowIdsSetSelector;
+  },
 );
 
 /**

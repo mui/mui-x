@@ -804,10 +804,20 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
 
 export interface DataGridProSharedPropsWithDefaultValue {
   /**
-   * If `true`, enables the data grid filtering on header feature.
+   * If `true`, the header filters feature is enabled.
    * @default false
    */
   headerFilters: boolean;
+  /**
+   * If `true`, following behavior happens with nested data:
+   * 1. Selecting/deselecting a parent row would select/deselect all the children rows.
+   * 2. When all the child rows are selected, the parent row will be auto selected.
+   * 3. When a child row is deselected, if one or more parent rows are already selected, they will be moved to an indeterminate state.
+   * 4. Select All checkbox in the header row would select/deselect all the rows including child rows.
+   * Works with tree data and row grouping on the client-side only.
+   * @default false
+   */
+  propagateRowSelection: boolean;
 }
 
 export interface DataGridProSharedPropsWithoutDefaultValue {

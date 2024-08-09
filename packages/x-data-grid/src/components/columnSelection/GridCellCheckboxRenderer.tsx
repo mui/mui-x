@@ -10,6 +10,8 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
+import { useGridSelectorV8 } from '../../hooks/utils/useGridSelectorV8';
+import { gridSomeChildrenSelectedSelector } from '../../hooks/features/rowSelection/utils';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -49,6 +51,10 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     const ownerState = { classes: rootProps.classes };
     const classes = useUtilityClasses(ownerState);
     const checkboxElement = React.useRef<HTMLElement>(null);
+
+    const someChildrenSelected = useGridSelectorV8(apiRef, gridSomeChildrenSelectedSelector, {
+      groupId: id,
+    });
 
     const rippleRef = React.useRef<TouchRippleActions>(null);
     const handleRef = useForkRef(checkboxElement, ref);
@@ -104,6 +110,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
         className={classes.root}
         inputProps={{ 'aria-label': label }}
         onKeyDown={handleKeyDown}
+        indeterminate={!isChecked && someChildrenSelected}
         disabled={!isSelectable}
         touchRippleRef={rippleRef as any /* FIXME: typing error */}
         {...rootProps.slotProps?.baseCheckbox}

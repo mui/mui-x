@@ -46,6 +46,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   getDetailPanelHeight: () => 500,
   headerFilters: false,
   keepColumnPositionIfDraggedOutside: false,
+  propagateRowSelection: false,
   rowReordering: false,
   rowsLoadingMode: 'client',
   scrollEndThreshold: 80,

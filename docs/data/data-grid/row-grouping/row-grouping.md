@@ -305,6 +305,28 @@ In the example below:
 If you are dynamically switching the `leafField` or `mainGroupingCriteria`, the sorting and filtering models will not be cleaned up automatically, and the sorting/filtering will not be re-applied.
 :::
 
+## Automatic parents and children selection
+
+By default, selecting a parent row will not select its children.
+Set the `propagateRowSelection` prop to `true` to achieve the following behavior.
+
+1. Selecting/deselecting a parent row would select/deselect all the children rows.
+2. When all the child rows are selected, the parent row will be auto selected.
+3. When a child row is deselected, if one or more parent rows are already selected, they will be moved to an indeterminate state.
+4. "Select All" checkbox in the header row would select/deselect all the rows including child rows.
+5. After applying the filtering, the previously selected rows which are not in the newly filtered rows will be auto deselected.
+
+{{"demo": "RowGroupingPropagateSelection.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::info
+When the row selection propagation feature is enabled, only the filtered rows will be kept selected.
+If some rows were selected before filtering, they will be auto deselected if they are not among the newly filtered rows.
+:::
+
+:::warning
+The row selection propagation is a client-side feature and not recommended to be used with the [server-side data source](/x/react-data-grid/server-side-data/), since it will only work on the partially loaded data.
+:::
+
 ## Get the rows in a group
 
 You can use the `apiRef.current.getRowGroupChildren` method to get the id of all rows contained in a group.
