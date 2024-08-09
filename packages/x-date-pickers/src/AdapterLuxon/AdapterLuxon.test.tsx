@@ -10,7 +10,7 @@ import {
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,
   buildFieldInteractions,
-} from 'test/utils/pickers';
+} from '@unit/date-pickers/helpers';
 
 describe('<AdapterLuxon />', () => {
   describeGregorianAdapter(AdapterLuxon, {

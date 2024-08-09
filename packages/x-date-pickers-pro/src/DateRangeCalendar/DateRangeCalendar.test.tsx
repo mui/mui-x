@@ -13,7 +13,7 @@ import {
   buildPickerDragInteractions,
   rangeCalendarDayTouches,
   createPickerRenderer,
-} from 'test/utils/pickers';
+} from '@unit/date-pickers/helpers';
 import { MockedDataTransfer } from 'test/utils/dragAndDrop';
 import {
   DateRangeCalendar,

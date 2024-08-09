@@ -8,7 +8,7 @@ import {
   getCleanedSelectedContent,
   describeAdapters,
   getTextbox,
-} from 'test/utils/pickers';
+} from '@unit/date-pickers/helpers';
 
 describe('<TimeField /> - Editing', () => {
   describeAdapters('key: ArrowDown', TimeField, ({ adapter, testFieldKeyPress }) => {
