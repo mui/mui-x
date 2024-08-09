@@ -145,7 +145,7 @@ export function useTicks(
       }));
     }
 
-    if (scale.domain().length === 0 || scale.domain()[0] === scale.domain()[1]) {
+    if (scale.domain().length === 0) {
       // The axis should not be visible, so ticks should also be hidden.
       return [];
     }
