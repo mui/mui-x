@@ -24,4 +24,27 @@ describe('v7.0.0/data-grid', () => {
       expect(actual).to.equal(expected, 'The transformed version should be correct');
     });
   });
+
+  describe('remove-stabilized-experimentalFeatures - with typescript', () => {
+    it('transforms props as needed', () => {
+      const actual = transform(
+        { source: read('./ts-actual.spec.tsx') },
+        { jscodeshift: jscodeshift.withParser('tsx') },
+        {},
+      );
+      const expected = read('./ts-expected.spec.tsx');
+      expect(actual).to.equal(expected, 'The transformed version should be correct');
+    });
+
+    it('should be idempotent', () => {
+      const actual = transform(
+        { source: read('./ts-expected.spec.tsx') },
+        { jscodeshift: jscodeshift.withParser('tsx') },
+        {},
+      );
+
+      const expected = read('./ts-expected.spec.tsx');
+      expect(actual).to.equal(expected, 'The transformed version should be correct');
+    });
+  });
 });
