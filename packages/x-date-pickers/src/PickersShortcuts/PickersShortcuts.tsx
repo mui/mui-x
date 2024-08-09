@@ -86,11 +86,12 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
         {
           maxHeight: VIEW_HEIGHT,
           maxWidth: 200,
-          scrollbarGutter: 'stable',
-          width: '100%',
-          overflow: 'hidden',
-          '&:hover, &:focus-within': {
-            overflow: 'auto',
+          '@media (pointer: fine)': {
+            scrollbarGutter: 'stable',
+            overflow: 'hidden',
+            '&:hover, &:focus-within': {
+              overflow: 'auto',
+            },
           },
         },
         ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
