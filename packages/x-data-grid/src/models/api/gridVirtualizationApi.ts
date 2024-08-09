@@ -17,4 +17,9 @@ export interface GridVirtualizationPrivateApi {
    * @returns {GridRenderContext} The `GridRenderContext`.
    */
   updateRenderContext?: () => void;
+  /**
+   * Lock/unlock the virtual scroller events.
+   * @param {boolean} locked The value for the lock
+   */
+  setVirtualScrollerLock: (locked: boolean) => void;
 }

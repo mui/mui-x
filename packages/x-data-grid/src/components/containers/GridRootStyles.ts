@@ -687,7 +687,7 @@ export const GridRootStyles = styled('div', {
       flex: 1,
     },
     [`& .${c['filler--borderTop']}`]: {
-      borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+      borderTop: '1px solid var(--rowBorderColor)',
     },
 
     /* Hide grid rows and vertical scrollbar when skeleton overlay is visible */
