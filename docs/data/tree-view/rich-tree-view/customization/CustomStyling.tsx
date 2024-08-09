@@ -49,10 +49,12 @@ const CustomTreeItem = styled(TreeItem)(({ theme }) => ({
   [`& .${treeItemClasses.iconContainer}`]: {
     borderRadius: '50%',
     backgroundColor: theme.palette.primary.dark,
-    color: theme.palette.mode === 'dark' && theme.palette.primary.contrastText,
     padding: theme.spacing(0, 1.2),
     ...theme.applyStyles('light', {
       backgroundColor: alpha(theme.palette.primary.main, 0.25),
+    }),
+    ...theme.applyStyles('dark', {
+      color: theme.palette.primary.contrastText,
     }),
   },
   [`& .${treeItemClasses.groupTransition}`]: {

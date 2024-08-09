@@ -17,10 +17,11 @@ function customCheckbox(theme: Theme) {
       width: 16,
       height: 16,
       backgroundColor: 'transparent',
-      border: `1px solid ${
-        theme.palette.mode === 'light' ? '#d9d9d9' : 'rgb(67, 67, 67)'
-      }`,
+      border: '1px solid #d9d9d9',
       borderRadius: 2,
+      ...theme.applyStyles('dark', {
+        borderColor: 'rgb(67, 67, 67)',
+      }),
     },
     '& .MuiCheckbox-root svg path': {
       display: 'none',
