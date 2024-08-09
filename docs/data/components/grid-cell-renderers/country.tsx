@@ -1,10 +1,55 @@
 import * as React from 'react';
-import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
-import Autocomplete, { autocompleteClasses, AutocompleteProps } from '@mui/material/Autocomplete';
-import InputBase from '@mui/material/InputBase';
-import Box from '@mui/material/Box';
-import { styled } from '@mui/material/styles';
-import { COUNTRY_ISO_OPTIONS, CountryIsoOption } from '../services/static-data';
+import {
+  GridRenderCellParams,
+  GridRenderEditCellParams,
+  useGridApiContext,
+} from '@mui/x-data-grid';
+import {
+  COUNTRY_ISO_OPTIONS,
+  CountryIsoOption,
+} from '@mui/x-data-grid-generator/services/static-data';
+import {
+  Autocomplete,
+  autocompleteClasses,
+  AutocompleteProps,
+  Box,
+  InputBase,
+  styled,
+} from '@mui/material';
+
+interface CountryProps {
+  value: CountryIsoOption;
+}
+
+const Country = React.memo(function Country(props: CountryProps) {
+  const { value } = props;
+
+  return (
+    <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        '&  > img': {
+          mr: 0.5,
+          flexShrink: 0,
+          width: '20px',
+        },
+      }}
+    >
+      <img
+        loading="lazy"
+        width="20"
+        src={`https://flagcdn.com/w20/${value.code.toLowerCase()}.png`}
+        srcSet={`https://flagcdn.com/w40/${value.code.toLowerCase()}.png 2x`}
+        alt=""
+      />
+      <Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        {value.label}
+      </Box>
+    </Box>
+  );
+});
 
 const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   height: '100%',
@@ -82,6 +127,18 @@ function EditCountry(props: GridRenderEditCellParams<CountryIsoOption>) {
   );
 }
 
-export function renderEditCountry(params: GridRenderEditCellParams<CountryIsoOption>) {
+export function renderCountry(
+  params: GridRenderCellParams<CountryIsoOption, any, any>,
+) {
+  if (params.value == null) {
+    return '';
+  }
+
+  return <Country value={params.value} />;
+}
+
+export function renderEditCountry(
+  params: GridRenderEditCellParams<CountryIsoOption>,
+) {
   return <EditCountry {...params} />;
 }
