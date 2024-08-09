@@ -195,7 +195,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   const domain = xScale.domain();
   // Skip axis rendering if
-  // - the domain is Infinite (for band and point axis)
+  // - the domain is Infinite
   // - No data is associated to the axis (other scale types)
   if (domain.length === 0 || (data?.length === 0 && !domain.every(Number.isFinite))) {
     return null;
