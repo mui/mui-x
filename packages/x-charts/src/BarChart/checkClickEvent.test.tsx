@@ -3,46 +3,7 @@ import { expect } from 'chai';
 import { createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { BarChart } from '@mui/x-charts/BarChart';
-
-function firePointerEvent(
-  target: Element,
-  type: 'pointerstart' | 'pointermove' | 'pointerend',
-  options: Pick<PointerEventInit, 'clientX' | 'clientY'>,
-): void {
-  const originalGetBoundingClientRect = target.getBoundingClientRect;
-  target.getBoundingClientRect = () => ({
-    x: 0,
-    y: 0,
-    bottom: 0,
-    height: 0,
-    left: 0,
-    right: 0,
-    top: 0,
-    width: 0,
-    toJSON() {
-      return {
-        x: 0,
-        y: 0,
-        bottom: 0,
-        height: 0,
-        left: 0,
-        right: 0,
-        top: 0,
-        width: 0,
-      };
-    },
-  });
-  const event = new window.PointerEvent(type, {
-    bubbles: true,
-    cancelable: true,
-    composed: true,
-    isPrimary: true,
-    ...options,
-  });
-
-  fireEvent(target, event);
-  target.getBoundingClientRect = originalGetBoundingClientRect;
-}
+import { firePointerEvent } from '../tests/firePointerEvent';
 
 const config = {
   dataset: [
@@ -77,7 +38,7 @@ describe('BarChart - click event', () => {
       render(
         <div
           style={{
-            margin: -8, // No idea why, but that make the SVG coordinates match the HTML coordinates
+            margin: -8, // Removes the body default margins
             width: 400,
             height: 400,
           }}
