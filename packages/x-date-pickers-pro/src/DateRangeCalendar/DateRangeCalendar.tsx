@@ -38,6 +38,7 @@ import {
   DateRangeCalendarOwnerState,
 } from './DateRangeCalendar.types';
 import {
+  findRangeBoundaries,
   isEndOfRange,
   isRangeValid,
   isStartOfRange,
@@ -171,6 +172,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     className,
     disableFuture,
     disablePast,
+    disableNonContiguousRanges,
     minDate,
     maxDate,
     shouldDisableDate,
@@ -242,6 +244,11 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     }
   });
 
+  const [contiguousRangeBoundaries, setContiguousRangeBoundaries] = React.useState<{
+    maxDate: TDate | null;
+    minDate: TDate | null;
+  } | null>(null);
+
   const handleSelectedDayChange = useEventCallback(
     (
       newDate: TDate | null,
@@ -255,6 +262,10 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
         rangePosition,
         allowRangeFlip,
         shouldMergeDateAndTime: true,
+        disableNonContiguousRanges,
+        maxDate,
+        minDate,
+        contiguousRangeBoundaries,
       });
 
       const isNextSectionAvailable = availableRangePositions.includes(nextSelection);
@@ -330,6 +341,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     changeMonth,
     handleChangeMonth,
     onMonthSwitchingAnimationEnd,
+    isDateDisabled,
   } = useCalendarState<TDate>({
     value: value[0] || value[1],
     referenceDate,
@@ -343,6 +355,23 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     shouldDisableDate: wrappedShouldDisableDate,
     timezone,
   });
+
+  const shouldComputeRangeBoundaries =
+    disableNonContiguousRanges && shouldDisableDate && value.some((date) => date !== null);
+
+  React.useEffect(() => {
+    if (shouldComputeRangeBoundaries) {
+      setContiguousRangeBoundaries(
+        findRangeBoundaries({
+          range: value,
+          maxDate,
+          minDate,
+          isDateDisabled,
+          utils,
+        }),
+      );
+    }
+  }, [maxDate, minDate, isDateDisabled, shouldComputeRangeBoundaries, utils, value]);
 
   const CalendarHeader = slots?.calendarHeader ?? PickersRangeCalendarHeader;
   const calendarHeaderProps: Omit<
@@ -405,11 +434,22 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     }
   }, [rangePosition, value]); // eslint-disable-line
 
+  const applyBoundaries = (contiguousRangeBoundary, defaultBoundary) => {
+    const [start, end] = value;
+
+    if (disableNonContiguousRanges && contiguousRangeBoundary) {
+      if ((start && !end) || (!start && end)) {
+        return contiguousRangeBoundary;
+      }
+    }
+    return defaultBoundary;
+  };
+
   const baseDateValidationProps: Required<BaseDateValidationProps<TDate>> = {
     disablePast,
     disableFuture,
-    maxDate,
-    minDate,
+    maxDate: applyBoundaries(contiguousRangeBoundaries?.maxDate, maxDate),
+    minDate: applyBoundaries(contiguousRangeBoundaries?.minDate, minDate),
   };
 
   const commonViewProps = {
@@ -432,6 +472,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     range: valueDayRange,
     newDate: rangePreviewDay,
     rangePosition,
+    disableNonContiguousRanges,
+    contiguousRangeBoundaries,
   });
 
   const handleDayMouseEnter = useEventCallback(

@@ -1,0 +1,9 @@
+const shouldDisableDate = (value) => value.date() === 6;
+const start = dayjs().date(4);
+const end = dayjs().date(7);
+
+  <DateRangePicker 
+    defaultValue={[start, end]}
+    disableNonContiguousRanges={true}
+    shouldDisableDate={shouldDisableDate} 
+  />        

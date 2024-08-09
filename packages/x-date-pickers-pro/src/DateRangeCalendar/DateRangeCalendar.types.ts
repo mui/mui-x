@@ -106,6 +106,7 @@ export interface ExportedDateRangeCalendarProps<TDate extends PickerValidDate>
 export interface DateRangeCalendarProps<TDate extends PickerValidDate>
   extends ExportedDateRangeCalendarProps<TDate>,
     UseRangePositionProps,
+    DayRangeValidationProps<TDate>,
     ExportedUseViewsOptions<'day'> {
   /**
    * The selected value.

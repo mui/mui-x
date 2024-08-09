@@ -31,3 +31,50 @@ export const isEndOfRange = <TDate extends PickerValidDate>(
 ) => {
   return isRangeValid(utils, range) && utils.isSameDay(day, range[1]!);
 };
+
+interface FindRangeBoundariesParams<TDate extends PickerValidDate> {
+  range: DateRange<TDate>;
+  maxDate: TDate;
+  minDate: TDate;
+  isDateDisabled: (day: TDate | null) => boolean;
+  utils: MuiPickersAdapter<TDate>;
+}
+
+export const findRangeBoundaries = <TDate extends PickerValidDate>({
+  range,
+  maxDate,
+  minDate,
+  isDateDisabled,
+  utils,
+}: FindRangeBoundariesParams<TDate>) => {
+  const [start, end] = range;
+  const rangeBoundaries: { maxDate: TDate | null; minDate: TDate | null } = {
+    maxDate: null,
+    minDate: null,
+  };
+
+  if (start) {
+    let current = start;
+
+    while (utils.isBefore(current, maxDate)) {
+      if (isDateDisabled(current)) {
+        rangeBoundaries.maxDate = utils.addDays(current, -1);
+        break;
+      }
+      current = utils.addDays(current, 1);
+    }
+  }
+  if (end) {
+    let current = end;
+
+    while (utils.isAfterDay(current, minDate)) {
+      if (isDateDisabled(current)) {
+        rangeBoundaries.minDate = utils.addDays(current, 1);
+        break;
+      }
+      current = utils.addDays(current, -1);
+    }
+  }
+
+  return rangeBoundaries;
+};
