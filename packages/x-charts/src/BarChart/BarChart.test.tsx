@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { createRenderer, describeConformance } from '@mui/internal-test-utils';
 import { BarChart } from '@mui/x-charts/BarChart';
+import packageJson from '@mui/material/package.json';
+
+// eslint-disable-next-line no-console
+console.log(`@mui/x-charts: @mui/material version`, packageJson.version);
 
 describe('<BarChart />', () => {
   const { render } = createRenderer();

@@ -545,7 +545,7 @@ describe('<DataGrid /> - Row selection', () => {
         fireEvent.keyDown(cell, { key: 'ArrowLeft' });
         fireEvent.keyDown(getCell(1, 0).querySelector('input')!, { key: 'ArrowUp' });
         clock.runToLast(); // Wait for transition
-        expect(document.querySelectorAll('.MuiTouchRipple-rippleVisible')).to.have.length(1);
+        expect(document.querySelectorAll('.MuiTouchRipple-rippleVisible')).to.have.length(0);
       });
     });
   });

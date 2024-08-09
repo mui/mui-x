@@ -6,8 +6,8 @@ import { OpenPickerParams } from './openPicker';
 export const stubMatchMedia = (matches = true) =>
   sinon.stub().returns({
     matches,
-    addListener: () => {},
-    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
   });
 
 const getChangeCountForComponentFamily = (componentFamily: PickerComponentFamily) => {
