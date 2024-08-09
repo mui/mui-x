@@ -172,6 +172,10 @@ export interface GridClasses {
    */
   columnHeaderDraggableContainer: string;
   /**
+   * Styles applied to the column header's draggable container element to avoid separator bounding box overlapping the clickable area of the checkbox.
+   */
+  'columnHeaderDraggableContainer--checkbox': string;
+  /**
    * Styles applied to the row's draggable placeholder element inside the special row reorder cell.
    */
   rowReorderCellPlaceholder: string;
@@ -678,6 +682,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--last',
   'columnHeaderCheckbox',
   'columnHeaderDraggableContainer',
+  'columnHeaderDraggableContainer--checkbox',
   'columnHeaderTitle',
   'columnHeaderTitleContainer',
   'columnHeaderTitleContainerContent',

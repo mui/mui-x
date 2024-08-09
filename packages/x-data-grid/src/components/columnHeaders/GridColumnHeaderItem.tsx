@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
+import { GRID_CHECKBOX_SELECTION_FIELD } from '../../colDef';
 import { fastMemo } from '../../utils/fastMemo';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
@@ -80,7 +81,10 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
       pinnedPosition === 'right' && 'columnHeader--pinnedRight',
     ],
-    draggableContainer: ['columnHeaderDraggableContainer'],
+    draggableContainer: [
+      'columnHeaderDraggableContainer',
+      colDef.field === GRID_CHECKBOX_SELECTION_FIELD && 'columnHeaderDraggableContainer--checkbox',
+    ],
     titleContainer: ['columnHeaderTitleContainer'],
     titleContainerContent: ['columnHeaderTitleContainerContent'],
   };
