@@ -1,18 +1,17 @@
-# Data Grid - Row spanning 🚧
+# Data Grid - Row spanning
 
 <p class="description">Span cells across several columns.</p>
-
-:::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #207](https://github.com/mui/mui-x/issues/207) if you want to see it land faster.
-
-Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
-:::
 
 Each cell takes up the width of one row.
 Row spanning lets you change this default behavior, so cells can span multiple rows.
 This is very close to the "row spanning" in an HTML `<table>`.
+
+To enable, pass the `unstable_rowSpanning` prop to the Data Grid.
+
+The Data Grid will automatically merge cells with the same value in a specified column.
+Additionally, you could customize the value used in row spanning computation using `colDef.rowSpanValueGetter` prop and both the value used in row spanning computation and the value used in cell using `colDef.valueGetter` prop.
+
+{{"demo": "RowSpanning.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## API
 
