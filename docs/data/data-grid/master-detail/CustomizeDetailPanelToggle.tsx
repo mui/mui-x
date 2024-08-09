@@ -63,13 +63,12 @@ function CustomDetailPanelToggle(props: Pick<GridRenderCellParams, 'id' | 'value
       aria-label={isExpanded ? 'Close' : 'Open'}
     >
       <ExpandMoreIcon
-        sx={{
+        sx={(theme) => ({
           transform: `rotateZ(${isExpanded ? 180 : 0}deg)`,
-          transition: (theme) =>
-            theme.transitions.create('transform', {
-              duration: theme.transitions.duration.shortest,
-            }),
-        }}
+          transition: theme.transitions.create('transform', {
+            duration: theme.transitions.duration.shortest,
+          }),
+        })}
         fontSize="inherit"
       />
     </IconButton>

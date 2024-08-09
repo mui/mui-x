@@ -32,8 +32,8 @@ const TreeItem2DragAndDropOverlayRoot = styled('div', {
       style: {
         marginLeft: 'calc(var(--TreeView-indentMultiplier) * var(--TreeView-itemDepth))',
         borderTop: `1px solid ${alpha((theme.vars || theme).palette.grey[900], 0.6)}`,
-        ...(theme.palette.mode === 'dark' && {
-          borderTop: `1px solid ${alpha((theme.vars || theme).palette.grey[100], 0.6)}`,
+        ...theme.applyStyles('dark', {
+          borderTopColor: alpha((theme.vars || theme).palette.grey[100], 0.6),
         }),
       },
     },
@@ -42,8 +42,8 @@ const TreeItem2DragAndDropOverlayRoot = styled('div', {
       style: {
         marginLeft: 'calc(var(--TreeView-indentMultiplier) * var(--TreeView-itemDepth))',
         borderBottom: `1px solid ${alpha((theme.vars || theme).palette.grey[900], 0.6)}`,
-        ...(theme.palette.mode === 'dark' && {
-          borderBottom: `1px solid ${alpha((theme.vars || theme).palette.grey[100], 0.6)}`,
+        ...theme.applyStyles('dark', {
+          borderBottomColor: alpha((theme.vars || theme).palette.grey[100], 0.6),
         }),
       },
     },
@@ -53,8 +53,8 @@ const TreeItem2DragAndDropOverlayRoot = styled('div', {
         marginLeft:
           'calc(var(--TreeView-indentMultiplier) * calc(var(--TreeView-itemDepth) - 1))' as any,
         borderBottom: `1px solid ${alpha((theme.vars || theme).palette.grey[900], 0.6)}`,
-        ...(theme.palette.mode === 'dark' && {
-          borderBottom: `1px solid ${alpha((theme.vars || theme).palette.grey[900], 0.6)}`,
+        ...theme.applyStyles('dark', {
+          borderBottomColor: alpha((theme.vars || theme).palette.grey[900], 0.6),
         }),
       },
     },

@@ -129,15 +129,15 @@ function ControlledColorRadio(props: any) {
           <Check
             fontSize="medium"
             color="inherit"
-            sx={{
+            sx={(theme) => ({
               zIndex: 1,
               position: 'absolute',
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
               pointerEvents: 'none',
-              color: (theme) => theme.palette.background.default,
-            }}
+              color: theme.palette.background.default,
+            })}
           />
         }
         sx={{ width: '100%', height: '100%', margin: 0 }}
@@ -488,19 +488,21 @@ export default function ChartDemoPropsForm<T extends string>({
                         key={placement}
                         // variant="soft"
                         color="primary"
-                        sx={{
-                          position: 'relative',
-                          height: '14px',
-                          width: 32,
-                          borderRadius: 'xs',
-                          mx: 0.5,
-                          ...(placement.match(/^(top|bottom)$/) && {
+                        sx={[
+                          {
+                            position: 'relative',
+                            height: '14px',
+                            width: 32,
+                            borderRadius: 'xs',
+                            mx: 0.5,
+                          },
+                          placement.match(/^(top|bottom)$/) && {
                             justifySelf: 'center',
-                          }),
-                          ...(placement.match(/^(top-end|bottom-end)$/) && {
+                          },
+                          placement.match(/^(top-end|bottom-end)$/) && {
                             justifySelf: 'flex-end',
-                          }),
-                        }}
+                          },
+                        ]}
                       >
                         <Radio
                           value={placement}

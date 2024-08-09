@@ -13,10 +13,10 @@ const StyledButton = styled(IconButton)(({ theme }) => ({
 }));
 const StyledDay = styled(PickersDay)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
-  color:
-    theme.palette.mode === 'light'
-      ? theme.palette.secondary.dark
-      : theme.palette.secondary.light,
+  color: theme.palette.secondary.light,
+  ...theme.applyStyles('light', {
+    color: theme.palette.secondary.dark,
+  }),
 }));
 
 export default function CustomSlots() {
