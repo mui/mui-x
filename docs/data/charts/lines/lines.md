@@ -175,6 +175,16 @@ Different series could even have different interpolations.
 
 {{"demo": "InterpolationDemoNoSnap.js", "hideToolbar": true}}
 
+### Baseline
+
+The area chart draws a `baseline` on the Y axis `0`.
+This is useful as a base value, but customized visualizations may require a different baseline.
+
+To change it, simply provide the wanted `baseline` number of a series.
+Different series can have different `baselines`.
+
+{{"demo": "AreaBaseline.js"}}
+
 ### Optimization
 
 To show mark elements, use `showMark` series property.
