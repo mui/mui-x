@@ -4,15 +4,16 @@ import {
 } from '../context/PluginProvider/ExtremumGetter.types';
 
 const getBaseExtremum: ExtremumGetter<'bar'> = (params) => {
-  const { axis } = params;
+  const { axis, filter } = params;
 
-  const minX = Math.min(...(axis.data ?? []));
-  const maxX = Math.max(...(axis.data ?? []));
+  const data = filter !== undefined ? axis.data?.filter(filter) : axis.data;
+  const minX = Math.min(...(data ?? []));
+  const maxX = Math.max(...(data ?? []));
   return [minX, maxX];
 };
 
 const getValueExtremum: ExtremumGetter<'bar'> = (params) => {
-  const { series, axis, isDefaultAxis } = params;
+  const { series, axis, isDefaultAxis, filter } = params;
 
   return Object.keys(series)
     .filter((seriesId) => {
@@ -21,7 +22,11 @@ const getValueExtremum: ExtremumGetter<'bar'> = (params) => {
     })
     .reduce(
       (acc: ExtremumGetterResult, seriesId) => {
-        const [seriesMin, seriesMax] = series[seriesId].stackedData?.reduce(
+        const data =
+          filter !== undefined
+            ? series[seriesId].stackedData.filter((v, i) => filter(v[0], i) && filter(v[1], i))
+            : series[seriesId].stackedData;
+        const [seriesMin, seriesMax] = data?.reduce(
           (seriesAcc, values) => [
             Math.min(...values, ...(seriesAcc[0] === null ? [] : [seriesAcc[0]])),
             Math.max(...values, ...(seriesAcc[1] === null ? [] : [seriesAcc[1]])),
