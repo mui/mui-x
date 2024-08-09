@@ -8,7 +8,7 @@ import { computeValue } from './computeValue';
 import { useXExtremumGetter } from '../PluginProvider/useXExtremumGetter';
 import { useYExtremumGetter } from '../PluginProvider';
 
-export type CartesianContextProviderProps = {
+export type CartesianProviderProps = {
   /**
    * The configuration of the x-axes.
    * If not provided, a default axis config is used.
@@ -28,7 +28,7 @@ export type CartesianContextProviderProps = {
   children: React.ReactNode;
 };
 
-function CartesianContextProvider(props: CartesianContextProviderProps) {
+function CartesianProvider(props: CartesianProviderProps) {
   const { xAxis, yAxis, dataset, children } = props;
 
   const formattedSeries = useSeries();
@@ -78,4 +78,4 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
   return <CartesianContext.Provider value={value}>{children}</CartesianContext.Provider>;
 }
 
-export { CartesianContextProvider };
+export { CartesianProvider };

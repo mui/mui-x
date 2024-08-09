@@ -3,7 +3,7 @@ import {
   useDrawingArea,
   useSeries,
   CartesianContext,
-  CartesianContextProviderProps,
+  CartesianProviderProps,
   cartesianProviderUtils,
   useXExtremumGetter,
   useYExtremumGetter,
@@ -12,9 +12,9 @@ import { useZoom } from '../ZoomProvider/useZoom';
 
 const { computeValue } = cartesianProviderUtils;
 
-export interface CartesianContextProviderProProps extends CartesianContextProviderProps {}
+export interface CartesianProviderProProps extends CartesianProviderProps {}
 
-function CartesianContextProviderPro(props: CartesianContextProviderProProps) {
+function CartesianProviderPro(props: CartesianProviderProProps) {
   const { xAxis, yAxis, dataset, children } = props;
 
   const formattedSeries = useSeries();
@@ -67,4 +67,4 @@ function CartesianContextProviderPro(props: CartesianContextProviderProProps) {
   return <CartesianContext.Provider value={value}>{children}</CartesianContext.Provider>;
 }
 
-export { CartesianContextProviderPro };
+export { CartesianProviderPro };
