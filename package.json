@@ -186,7 +186,7 @@
     "terser-webpack-plugin": "^5.3.10",
     "tsx": "^4.16.2",
     "typescript": "^5.5.4",
-    "unist-util-visit": "^2.0.3",
+    "unist-util-visit": "^5.0.0",
     "util": "^0.12.5",
     "webpack": "^5.92.1",
     "webpack-bundle-analyzer": "^4.10.2",
