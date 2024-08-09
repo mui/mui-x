@@ -82,6 +82,11 @@ export interface LineSeriesType
    * @default 'none'
    */
   stackOffset?: StackOffsetType;
+  /**
+   * The value of the line at the base of the series area.
+   * @default 0
+   */
+  baseline?: number;
 }
 
 /**

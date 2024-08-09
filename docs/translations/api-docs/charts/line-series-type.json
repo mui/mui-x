@@ -3,6 +3,7 @@
   "propertiesDescriptions": {
     "type": { "description": "" },
     "area": { "description": "" },
+    "baseline": { "description": "The value of the line at the base of the series area." },
     "color": { "description": "" },
     "connectNulls": {
       "description": "If <code>true</code>, line and area connect points separated by <code>null</code> values."
