@@ -38,6 +38,22 @@ const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
     },
   },
   {
+    label: 'Next weekend',
+    getValue: () => {
+      const saturday = dayjs().endOf('week');
+      const sunday = saturday.add(1, 'day');
+      return [saturday, sunday];
+    },
+  },
+  {
+    label: 'Last weekend',
+    getValue: () => {
+      const saturday = dayjs().endOf('week').subtract(7, 'day');
+      const sunday = saturday.add(1, 'day');
+      return [saturday, sunday];
+    },
+  },
+  {
     label: 'Current Month',
     getValue: () => {
       const today = dayjs();
@@ -85,11 +101,19 @@ function CustomRangeShortcuts(props: PickersShortcutsProps<DateRange<Dayjs>>) {
         dense
         sx={(theme) => ({
           display: 'flex',
+          maxWidth: '625px',
           px: theme.spacing(4),
           '& .MuiListItem-root': {
             pt: 0,
             pl: 0,
             pr: theme.spacing(1),
+          },
+          '@media (pointer: fine)': {
+            scrollbarGutter: 'stable',
+            overflow: 'hidden',
+            '&:hover, &:focus-within': {
+              overflow: 'auto',
+            },
           },
         })}
       >
