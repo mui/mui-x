@@ -203,6 +203,7 @@ export const getWeekdays = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
   date: TDate,
 ) => {
-  const start = utils.startOfWeek(date);
+  const cleanDate = utils.setLocaleToValue(date);
+  const start = utils.startOfWeek(cleanDate);
   return [0, 1, 2, 3, 4, 5, 6].map((diff) => utils.addDays(start, diff));
 };

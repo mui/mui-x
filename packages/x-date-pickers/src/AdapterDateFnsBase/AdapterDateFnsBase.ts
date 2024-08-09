@@ -226,6 +226,11 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
     return /a/.test(this.locale.formatLong!.time({ width: 'short' }));
   };
 
+  // There is no notion of locale on the date in Date Fns.
+  public setLocaleToValue = (value: Date) => {
+    return value;
+  };
+
   public expandFormat = (format: string) => {
     const longFormatRegexp = /P+p+|P+|p+|''|'(''|[^'])+('|$)|./g;
 

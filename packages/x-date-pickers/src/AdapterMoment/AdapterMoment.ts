@@ -143,15 +143,6 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     this.formats = { ...defaultFormats, ...formats };
   }
 
-  private setLocaleToValue = (value: Moment) => {
-    const expectedLocale = this.getCurrentLocaleCode();
-    if (expectedLocale === value.locale()) {
-      return value;
-    }
-
-    return value.locale(expectedLocale);
-  };
-
   private hasTimezonePlugin = () => typeof this.moment.tz !== 'undefined';
 
   private createSystemDate = (value: string | undefined): Moment => {
@@ -282,6 +273,15 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
 
   public is12HourCycleInCurrentLocale = () => {
     return /A|a/.test(defaultMoment.localeData(this.getCurrentLocaleCode()).longDateFormat('LT'));
+  };
+
+  public setLocaleToValue = (value: Moment) => {
+    const expectedLocale = this.getCurrentLocaleCode();
+    if (expectedLocale === value.locale()) {
+      return value;
+    }
+
+    return value.locale(expectedLocale);
   };
 
   public expandFormat = (format: string) => {

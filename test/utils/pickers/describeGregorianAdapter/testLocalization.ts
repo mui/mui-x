@@ -4,11 +4,23 @@ import { cleanText } from 'test/utils/pickers';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 import { TEST_DATE_ISO_STRING } from './describeGregorianAdapter.utils';
 
-export const testLocalization: DescribeGregorianAdapterTestSuite = ({ adapter }) => {
+export const testLocalization: DescribeGregorianAdapterTestSuite = ({
+  adapter,
+  adapterFr,
+  getLocaleFromDate,
+}) => {
   const testDateIso = adapter.date(TEST_DATE_ISO_STRING)!;
 
   it('Method: formatNumber', () => {
     expect(adapter.formatNumber('1')).to.equal('1');
+  });
+
+  it('Method: setLocaleToValue', () => {
+    if (getLocaleFromDate) {
+      const dateEn = adapter.date();
+      const dateFr = adapterFr.setLocaleToValue(dateEn);
+      expect(getLocaleFromDate(dateFr)).to.equal('fr');
+    }
   });
 
   it('Method: expandFormat', () => {

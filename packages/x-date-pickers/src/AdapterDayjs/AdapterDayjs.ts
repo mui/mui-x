@@ -165,15 +165,6 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     defaultDayjs.extend(customParseFormatPlugin);
   }
 
-  private setLocaleToValue = (value: Dayjs) => {
-    const expectedLocale = this.getCurrentLocaleCode();
-    if (expectedLocale === value.locale()) {
-      return value;
-    }
-
-    return value.locale(expectedLocale);
-  };
-
   private hasUTCPlugin = () => typeof defaultDayjs.utc !== 'undefined';
 
   private hasTimezonePlugin = () => typeof defaultDayjs.tz !== 'undefined';
@@ -387,6 +378,15 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   public is12HourCycleInCurrentLocale = () => {
     /* istanbul ignore next */
     return /A|a/.test(this.getLocaleFormats().LT || '');
+  };
+
+  public setLocaleToValue = (value: Dayjs) => {
+    const expectedLocale = this.getCurrentLocaleCode();
+    if (expectedLocale === value.locale()) {
+      return value;
+    }
+
+    return value.locale(expectedLocale);
   };
 
   public expandFormat = (format: string) => {
