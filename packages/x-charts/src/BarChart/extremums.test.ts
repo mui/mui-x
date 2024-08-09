@@ -55,8 +55,8 @@ describe('BarChart - extremums', () => {
 
       it('should correctly get Infinity when empty data', () => {
         const [x, y] = getExtremumX(buildData([], 'horizontal'));
-        expect(x).to.equal(null);
-        expect(y).to.equal(null);
+        expect(x).to.equal(Infinity);
+        expect(y).to.equal(-Infinity);
       });
     });
   });
