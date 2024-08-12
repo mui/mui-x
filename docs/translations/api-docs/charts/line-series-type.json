@@ -4,7 +4,7 @@
     "type": { "description": "" },
     "area": { "description": "" },
     "baseline": {
-      "description": "The value of the line at the base of the series area.<br /><br />If <code>baseline</code> is a number, it will be used as the value.<br /><br />- <code>&#39;min&#39;</code> the minimum value of the series will be used.<br />- <code>&#39;max&#39;</code> the maximum value of the series will be used."
+      "description": "<p>The value of the line at the base of the series area.<br /><br />- <code>&#39;min&#39;</code> the area will fill the space <strong>under</strong> the line.<br />- <code>&#39;max&#39;</code> the area will fill the space <strong>above</strong> the line.<br />- <code>number</code> the area will fill the space between this value and the line</p>\n"
     },
     "color": { "description": "" },
     "connectNulls": {

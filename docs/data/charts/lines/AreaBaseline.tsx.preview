@@ -4,7 +4,7 @@
     {
       data: [2, -5.5, 2, -7.5, 1.5, 6],
       area: true,
-      baseline: -10,
+      baseline:  'min',
     },
   ]}
   width={500}
