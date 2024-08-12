@@ -9,7 +9,7 @@ export default function AreaBaseline() {
         {
           data: [2, -5.5, 2, -7.5, 1.5, 6],
           area: true,
-          baseline:  'min',
+          baseline: 'min',
         },
       ]}
       width={500}
