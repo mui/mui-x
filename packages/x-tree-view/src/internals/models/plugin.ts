@@ -10,7 +10,7 @@ import { TreeViewItemId } from '../../models';
 export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSignature> {
   instance: TreeViewUsedInstance<TSignature>;
   params: TreeViewUsedDefaultizedParams<TSignature>;
-  readonly state: TreeViewUsedState<TSignature>;
+  state: TreeViewUsedState<TSignature>;
   slots: TSignature['slots'];
   slotProps: TSignature['slotProps'];
   experimentalFeatures: TreeViewUsedExperimentalFeatures<TSignature>;
