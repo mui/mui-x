@@ -17,6 +17,7 @@ export const mergeDateAndTime = <TDate extends PickerValidDate>(
   mergedDate = utils.setHours(mergedDate, utils.getHours(timeParam));
   mergedDate = utils.setMinutes(mergedDate, utils.getMinutes(timeParam));
   mergedDate = utils.setSeconds(mergedDate, utils.getSeconds(timeParam));
+  mergedDate = utils.setMilliseconds(mergedDate, utils.getMilliseconds(timeParam));
 
   return mergedDate;
 };
