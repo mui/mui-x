@@ -7,7 +7,6 @@ import { TreeViewContext } from '@mui/x-tree-view/internals/TreeViewProvider/Tre
 import { describeConformance } from 'test/utils/describeConformance';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { getFakeContextValue } from 'test/utils/tree-view/fakeContextValue';
-// eslint-disable-next-line import/order
 import packageJson from '@mui/material/package.json';
 
 // eslint-disable-next-line no-console
