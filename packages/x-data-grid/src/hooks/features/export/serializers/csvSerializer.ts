@@ -79,9 +79,7 @@ class CSVRow {
     if (!this.isEmpty) {
       this.rowString += this.options.csvOptions.delimiter;
     }
-    if (value === null || value === undefined) {
-      this.rowString += '';
-    } else if (typeof this.options.sanitizeCellValue === 'function') {
+    if (typeof this.options.sanitizeCellValue === 'function') {
       this.rowString += this.options.sanitizeCellValue(value, this.options.csvOptions);
     } else {
       this.rowString += value;
