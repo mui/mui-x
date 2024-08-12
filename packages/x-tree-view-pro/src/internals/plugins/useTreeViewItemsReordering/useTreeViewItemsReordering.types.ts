@@ -109,7 +109,7 @@ export type UseTreeViewItemsReorderingDefaultizedParameters = DefaultizedProps<
 >;
 
 export interface UseTreeViewItemsReorderingState {
-  itemsReordering: {
+  readonly itemsReordering: {
     draggedItemId: string;
     targetItemId: string;
     newPosition: TreeViewItemReorderPosition | null;

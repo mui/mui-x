@@ -180,7 +180,7 @@ describeTreeView<
   });
 
   describe('canMoveItemToNewPosition prop', () => {
-    it.only('should call canMoveItemToNewPosition with the correct parameters', () => {
+    it('should call canMoveItemToNewPosition with the correct parameters', () => {
       const canMoveItemToNewPosition = spy();
       const response = render({
         experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },

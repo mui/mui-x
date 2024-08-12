@@ -84,7 +84,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
           isValid = false;
         } else if (canMoveItemToNewPosition) {
           isValid = canMoveItemToNewPosition({
-            itemId: state.itemsReordering!.draggedItemId,
+            itemId: state.itemsReordering.draggedItemId,
             oldPosition,
             newPosition: positionAfterAction,
           });
