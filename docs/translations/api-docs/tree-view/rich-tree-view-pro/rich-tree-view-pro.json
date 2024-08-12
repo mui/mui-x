@@ -8,7 +8,7 @@
       "description": "Used to determine if a given item can move to some new position.",
       "typeDescriptions": {
         "params": "The params describing the item re-ordering.",
-        "params.itemId": "The id of the item to check.",
+        "params.itemId": "The id of the item that is being moved to a new position.",
         "params.oldPosition": "The old position of the item.",
         "params.newPosition": "The new position of the item.",
         "boolean": "<code>true</code> if the item can move to the new position."

@@ -79,7 +79,7 @@ export interface UseTreeViewItemsReorderingParameters {
   /**
    * Used to determine if a given item can move to some new position.
    * @param {object} params The params describing the item re-ordering.
-   * @param {string} params.itemId The id of the item to check.
+   * @param {string} params.itemId The id of the item that is being moved to a new position.
    * @param {TreeViewItemReorderPosition} params.oldPosition The old position of the item.
    * @param {TreeViewItemReorderPosition} params.newPosition The new position of the item.
    * @returns {boolean} `true` if the item can move to the new position.
