@@ -35,6 +35,7 @@ export const useGridInfiniteLoader = (
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
   const observer = React.useRef<IntersectionObserver>();
+  const observerUpdateTimeout = React.useRef<ReturnType<typeof setTimeout>>();
   const triggerElement = React.useRef<HTMLElement | null>(null);
 
   const isEnabled = props.rowsLoadingMode === 'client' && !!props.onRowsScrollEnd;
@@ -82,6 +83,17 @@ export const useGridInfiniteLoader = (
     }
   }, [virtualScroller, handleLoadMoreRows, isEnabled, marginBottom]);
 
+  const observerUpdate = (node: HTMLElement | null) => {
+    if (triggerElement.current !== node) {
+      observer.current?.disconnect();
+
+      triggerElement.current = node;
+      if (triggerElement.current) {
+        observer.current?.observe(triggerElement.current);
+      }
+    }
+  };
+
   const triggerRef = React.useCallback(
     (node: HTMLElement | null) => {
       // Prevent the infite loading working in combination with lazy loading
@@ -89,14 +101,14 @@ export const useGridInfiniteLoader = (
         return;
       }
 
-      if (triggerElement.current !== node) {
-        observer.current?.disconnect();
-
-        triggerElement.current = node;
-        if (triggerElement.current) {
-          observer.current?.observe(triggerElement.current);
-        }
-      }
+      // If the user scrolls through the grid too fast it might happen that the observer is connected to the trigger element
+      // in the render cycle where the intersection is not happening, thus missing the intersection event if it happens before the next cycle.
+      // https://www.w3.org/TR/intersection-observer/#event-loop
+      // Delaying the connection to the next cycle helps since the observer will always call the callback the first time it is connected.
+      // https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/observe
+      // Related to
+      // https://github.com/mui/mui-x/issues/14116
+      observerUpdateTimeout.current = setTimeout(observerUpdate, 0, node);
     },
     [isEnabled],
   );
@@ -126,4 +138,13 @@ export const useGridInfiniteLoader = (
 
   useGridApiMethod(apiRef, infiniteLoaderPrivateApi, 'private');
   useGridApiOptionHandler(apiRef, 'rowsScrollEnd', props.onRowsScrollEnd);
+
+  /**
+   * EFFECTS
+   */
+  React.useEffect(() => {
+    return () => {
+      clearTimeout(observerUpdateTimeout.current);
+    };
+  }, []);
 };
