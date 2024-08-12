@@ -24,7 +24,18 @@ export const validateDateTimeRange: Validator<
 > = ({ props, value, adapter }) => {
   const [start, end] = value;
 
-  const { shouldDisableDate, ...otherProps } = props;
+  const { shouldDisableDate, disableNonContiguousRanges, ...otherProps } = props;
+
+  if (!!start && !!end && disableNonContiguousRanges && shouldDisableDate) {
+    let current = start;
+
+    while (adapter.utils.isBefore(current, adapter.utils.addDays(end, 1))) {
+      if (shouldDisableDate(current, 'start')) {
+        return ['nonContiguousRanges', 'nonContiguousRanges'];
+      }
+      current = adapter.utils.addDays(current, 1);
+    }
+  }
 
   const dateTimeValidations: DateTimeRangeValidationError = [
     validateDateTime({
