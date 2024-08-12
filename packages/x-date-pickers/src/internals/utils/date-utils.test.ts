@@ -32,7 +32,7 @@ describe('findClosestEnabledDate', () => {
       disableFuture: false,
       disablePast: false,
       timezone: 'default',
-    })!;
+    });
 
     expect(result).toEqualDateTime(adapterToUse.date('2000-01-01'));
   });
@@ -47,7 +47,7 @@ describe('findClosestEnabledDate', () => {
       disableFuture: false,
       disablePast: false,
       timezone: 'default',
-    })!;
+    });
 
     expect(result).toEqualDateTime(adapterToUse.date('2018-08-18'));
   });
@@ -62,7 +62,7 @@ describe('findClosestEnabledDate', () => {
       disableFuture: false,
       disablePast: false,
       timezone: 'default',
-    })!;
+    });
 
     expect(result).toEqualDateTime(adapterToUse.date('2018-07-18'));
   });
@@ -78,7 +78,7 @@ describe('findClosestEnabledDate', () => {
       disableFuture: false,
       disablePast: true,
       timezone: 'default',
-    })!;
+    });
 
     expect(adapterToUse.isBefore(result, today)).to.equal(false);
     expect(adapterToUse.isBefore(result, adapterToUse.addDays(today, 31))).to.equal(true);
@@ -95,7 +95,7 @@ describe('findClosestEnabledDate', () => {
       disableFuture: true,
       disablePast: true,
       timezone: 'default',
-    })!;
+    });
 
     expect(result).toEqualDateTime(today);
   });
@@ -113,7 +113,7 @@ describe('findClosestEnabledDate', () => {
       disableFuture: false,
       disablePast: true,
       timezone: 'default',
-    })!;
+    });
 
     expect(result).toEqualDateTime(adapterToUse.addDays(tryDate, 1));
     clock.reset();
@@ -145,7 +145,7 @@ describe('findClosestEnabledDate', () => {
       disableFuture: false,
       disablePast: false,
       timezone: 'default',
-    })!;
+    });
 
     expect(result).toEqualDateTime(adapterToUse.date('2018-08-18'));
   });
@@ -160,7 +160,7 @@ describe('findClosestEnabledDate', () => {
       disableFuture: false,
       disablePast: false,
       timezone: 'default',
-    })!;
+    });
 
     expect(result).toEqualDateTime(adapterToUse.date('2018-08-18'));
   });
@@ -175,7 +175,7 @@ describe('findClosestEnabledDate', () => {
       disableFuture: false,
       disablePast: false,
       timezone: 'default',
-    })!;
+    });
 
     expect(result).toEqualDateTime(adapterToUse.date('2018-07-18'));
   });
@@ -190,7 +190,7 @@ describe('findClosestEnabledDate', () => {
       disableFuture: false,
       disablePast: false,
       timezone: 'default',
-    })!;
+    });
 
     expect(result).toEqualDateTime(adapterToUse.date('2018-07-18'));
   });
@@ -205,7 +205,7 @@ describe('findClosestEnabledDate', () => {
       disableFuture: false,
       disablePast: false,
       timezone: 'default',
-    })!;
+    });
 
     expect(result).to.equal(null);
   });
