@@ -14,7 +14,6 @@ import {
 } from '@mui/x-date-pickers/PickersLayout';
 import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
 import { TimeView } from '@mui/x-date-pickers/models';
-import { TimePickerViewRenderers } from '@mui/x-date-pickers/TimePicker';
 
 const StyledLayout = styled(PickersLayoutRoot)({
   overflow: 'auto',
@@ -58,7 +57,7 @@ export default function DigitalClock() {
               hours: renderMultiSectionDigitalClockTimeView,
               minutes: renderMultiSectionDigitalClockTimeView,
               meridiem: renderMultiSectionDigitalClockTimeView,
-            } as TimePickerViewRenderers<Dayjs, 'meridiem' | TimeView, any>
+            } as any
           }
         />
       </Paper>
