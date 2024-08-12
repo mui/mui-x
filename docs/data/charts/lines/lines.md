@@ -183,6 +183,10 @@ This is useful as a base value, but customized visualizations may require a diff
 To change it, simply provide the wanted `baseline` number of a series.
 It is also possible to provide `min` or `max` for the baseline to automatically follow the minimum or maximum value of the series.
 
+:::info
+Keep in mind the baseline only affects the area visuals. If you want to change the axis minimum or maximum values, you should use the `min/max` property of the axis.
+:::
+
 {{"demo": "AreaBaseline.js"}}
 
 ### Optimization
