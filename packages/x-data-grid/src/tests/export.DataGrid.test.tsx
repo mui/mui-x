@@ -185,6 +185,4 @@ describe('<DataGrid /> - Export', () => {
       expect(screen.queryByRole('menuitem', { name: 'Download as CSV' })).to.equal(null);
     });
   });
-
-  describe('serializeCellValue', () => {});
 });
