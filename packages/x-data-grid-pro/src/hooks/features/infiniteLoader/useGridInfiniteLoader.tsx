@@ -102,7 +102,8 @@ export const useGridInfiniteLoader = (
       }
 
       // If the user scrolls through the grid too fast it might happen that the observer is connected to the trigger element
-      // in the render cycle where the intersection is not happening, thus missing the intersection event if it happens before the next cycle.
+      // that will be intersecting the root inside the same render cycle (but not intersecting at the time of the connection).
+      // This will cause the observer to not call the callback with `isIntersecting` set to `true`.
       // https://www.w3.org/TR/intersection-observer/#event-loop
       // Delaying the connection to the next cycle helps since the observer will always call the callback the first time it is connected.
       // https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/observe
