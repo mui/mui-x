@@ -165,6 +165,24 @@ describe('findClosestEnabledDate', () => {
     expect(result).toEqualDateTime(adapterToUse.date('2018-08-18'));
   });
 
+  it('should keep the time of the `date` when `disablePast`', () => {
+    const clock = useFakeTimers({ now: new Date('2000-01-02T11:12:13.123Z') });
+
+    const result = findClosestEnabledDate({
+      date: adapterToUse.date('2000-01-01T11:12:13.550Z'),
+      minDate: adapterToUse.date('1900-01-01'),
+      maxDate: adapterToUse.date('2100-01-01'),
+      utils: adapterToUse,
+      isDateDisabled: () => false,
+      disableFuture: false,
+      disablePast: true,
+      timezone: 'default',
+    });
+
+    expect(result).toEqualDateTime(adapterToUse.date('2000-01-02T11:12:13.550Z'));
+    clock.reset();
+  });
+
   it('should return maxDate if it is before the date and valid', () => {
     const result = findClosestEnabledDate({
       date: adapterToUse.date('2050-01-01'),
