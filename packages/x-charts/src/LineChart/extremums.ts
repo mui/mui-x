@@ -45,7 +45,7 @@ export const getExtremumY: ExtremumGetter<'line'> = (params) => {
 
         // Since this series is not used to display an area, we do not consider the base (the d[0]).
         const getValues: GetValuesTypes =
-          isArea && axis.scaleType !== 'log' ? (d) => d : (d) => [d[1], d[1]];
+          isArea && axis.scaleType !== 'log' && typeof series[seriesId].baseline !== 'string' ? (d) => d : (d) => [d[1], d[1]];
 
         const seriesExtremums = getSeriesExtremums(getValues, stackedData);
 

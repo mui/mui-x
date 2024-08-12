@@ -85,10 +85,9 @@ export interface LineSeriesType
   /**
    * The value of the line at the base of the series area.
    *
-   * If `baseline` is a number, it will be used as the value.
-   *
-   * - `'min'` the minimum value of the series will be used.
-   * - `'max'` the maximum value of the series will be used.
+   * - `'min'` the area will fill the space **under** the line.
+   * - `'max'` the area will fill the space **above** the line.
+   * - `number` the area will fill the space between this value and the line
    *
    * @default 0
    */
