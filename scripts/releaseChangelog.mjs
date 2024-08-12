@@ -157,6 +157,7 @@ async function main(argv) {
   const pickersCommits = [];
   const pickersProCommits = [];
   const chartsCommits = [];
+  const chartsProCommits = [];
   const treeViewCommits = [];
   const coreCommits = [];
   const docsCommits = [];
@@ -188,6 +189,9 @@ async function main(argv) {
       case 'DateRangePicker':
       case 'DateTimeRangePicker':
         pickersProCommits.push(commitItem);
+        break;
+      case 'charts-pro':
+        chartsProCommits.push(commitItem);
         break;
       case 'charts':
         chartsCommits.push(commitItem);
@@ -311,6 +315,11 @@ ${logChangelogSection(pickersProCommits)}
 #### \`@mui/x-charts@__VERSION__\`
 
 ${logChangelogSection(chartsCommits)}
+
+#### \`@mui/x-date-charts-pro@__VERSION-ALPHA__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in \`@mui/x-charts@__VERSION__\`${chartsProCommits.length > 0 ? ', plus:\n' : '.'}
+${logChangelogSection(chartsProCommits)}
 
 ### Tree View
 

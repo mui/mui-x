@@ -25,10 +25,10 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Start',
   end: 'Einde',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Start datum',
+  startTime: 'Start tijd',
+  endDate: 'Eind datum',
+  endTime: 'Eind tijd',
 
   // Action bar
   cancelButtonLabel: 'Annuleren',
@@ -67,7 +67,7 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Kies tijd, geselecteerde tijd is ${utils.format(value, 'fullTime')}`
       : 'Kies tijd',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: 'Wissen',
 
   // Table labels
   timeTableLabel: 'kies tijd',
@@ -84,17 +84,17 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'Jaar',
+  month: 'Maand',
+  day: 'Dag',
+  weekDay: 'Weekdag',
+  hours: 'Uren',
+  minutes: 'Minuten',
+  seconds: 'Seconden',
+  meridiem: 'Middag',
 
   // Common
-  // empty: 'Empty',
+  empty: 'Legen',
 };
 
 export const nlNL = getPickersLocalization(nlNLPickers);

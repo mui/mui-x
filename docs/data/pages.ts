@@ -434,7 +434,7 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts/heatmap',
             title: 'Heatmap',
             plan: 'pro',
-            planned: true,
+            unstable: true,
           },
           {
             pathname: '/x/react-charts/common-features',
@@ -452,7 +452,7 @@ const pages: MuiPage[] = [
                 pathname: '/x/react-charts/zoom-and-pan',
                 title: 'Zoom & Pan',
                 plan: 'pro',
-                planned: true,
+                unstable: true,
               },
             ],
           },

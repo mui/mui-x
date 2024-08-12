@@ -5,14 +5,14 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { HighlightedProvider, ZAxisContextProvider } from '@mui/x-charts/context';
 import {
   ChartsAxesGradients,
-  ColorProvider,
   DrawingProvider,
   InteractionProvider,
+  PluginProvider,
   SeriesProvider,
 } from '@mui/x-charts/internals';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
-import { CartesianContextProviderPro } from '../context/CartesianProviderPro';
+import { CartesianProviderPro } from '../context/CartesianProviderPro';
 import { ZoomProps, ZoomProvider } from '../context/ZoomProvider';
 import { useChartContainerProProps } from './useChartContainerProProps';
 
@@ -27,12 +27,12 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
   const {
     zoomProviderProps,
     drawingProviderProps,
-    colorProviderProps,
     seriesProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
-    cartesianContextProps,
+    cartesianProviderProps,
     chartsSurfaceProps,
+    pluginProviderProps,
     children,
   } = useChartContainerProProps(props, ref);
 
@@ -40,10 +40,10 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
 
   return (
     <DrawingProvider {...drawingProviderProps}>
-      <ColorProvider {...colorProviderProps}>
-        <SeriesProvider {...seriesProviderProps}>
-          <ZoomProvider {...zoomProviderProps}>
-            <CartesianContextProviderPro {...cartesianContextProps}>
+      <PluginProvider {...pluginProviderProps}>
+        <ZoomProvider {...zoomProviderProps}>
+          <SeriesProvider {...seriesProviderProps}>
+            <CartesianProviderPro {...cartesianProviderProps}>
               <ZAxisContextProvider {...zAxisContextProps}>
                 <InteractionProvider>
                   <HighlightedProvider {...highlightedProviderProps}>
@@ -54,10 +54,10 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
                   </HighlightedProvider>
                 </InteractionProvider>
               </ZAxisContextProvider>
-            </CartesianContextProviderPro>
-          </ZoomProvider>
-        </SeriesProvider>
-      </ColorProvider>
+            </CartesianProviderPro>
+          </SeriesProvider>
+        </ZoomProvider>
+      </PluginProvider>
     </DrawingProvider>
   );
 });
