@@ -12,9 +12,7 @@ import { DateRangeValidationError, DateRange } from '../../../models';
 export interface DateRangeComponentValidationProps<TDate extends PickerValidDate>
   extends DayRangeValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>>,
-    DefaultizedProps<TimezoneProps, 'timezone'> {
-  disableNonContiguousRanges?: boolean;
-}
+    DefaultizedProps<TimezoneProps, 'timezone'> {}
 
 export const validateDateRange: Validator<
   DateRange<any>,
