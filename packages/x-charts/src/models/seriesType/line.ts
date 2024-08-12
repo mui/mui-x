@@ -82,6 +82,16 @@ export interface LineSeriesType
    * @default 'none'
    */
   stackOffset?: StackOffsetType;
+  /**
+   * The value of the line at the base of the series area.
+   *
+   * - `'min'` the area will fill the space **under** the line.
+   * - `'max'` the area will fill the space **above** the line.
+   * - `number` the area will fill the space between this value and the line
+   *
+   * @default 0
+   */
+  baseline?: number | 'min' | 'max';
 }
 
 /**
