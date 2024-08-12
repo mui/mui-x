@@ -153,7 +153,7 @@ The `shouldDisableYear` prop prevents the selection of all dates in years for wh
 
 The `disableNonContiguousRanges` prop, when defined as `true`, prevents the selection of a range containing a disabled date among it.
 
-{{"demo": "DateValidationDisableNonContiguousRange.js", "defaultCodeOpen": true}}
+{{"demo": "DateValidationDisableNonContiguousRange.js", "defaultCodeOpen": false}}
 
 ## Time validation
 
