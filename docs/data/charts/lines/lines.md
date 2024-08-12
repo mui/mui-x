@@ -183,6 +183,10 @@ This is useful as a base value, but customized visualizations may require a diff
 To get the area filling the space above or below the line, set `baseline` to `"min"` or `"max"`.
 It is also possible to provide a `number` value to fix the baseline at the desired position.
 
+:::warning
+The `baseline` should not be used with stacked areas, as it will not work as expected.
+:::
+
 {{"demo": "AreaBaseline.js"}}
 
 ### Optimization
