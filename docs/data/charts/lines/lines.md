@@ -181,6 +181,7 @@ The area chart draws a `baseline` on the Y axis `0`.
 This is useful as a base value, but customized visualizations may require a different baseline.
 
 To change it, simply provide the wanted `baseline` number of a series.
+It is also possible to provide `min` or `max` for the baseline to automatically follow the minimum or maximum value of the series.
 
 {{"demo": "AreaBaseline.js"}}
 

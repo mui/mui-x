@@ -84,9 +84,15 @@ export interface LineSeriesType
   stackOffset?: StackOffsetType;
   /**
    * The value of the line at the base of the series area.
+   *
+   * If `baseline` is a number, it will be used as the value.
+   *
+   * - `'min'` the minimum value of the series will be used.
+   * - `'max'` the maximum value of the series will be used.
+   *
    * @default 0
    */
-  baseline?: number;
+  baseline?: number | 'min' | 'max';
 }
 
 /**
