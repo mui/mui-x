@@ -34,7 +34,7 @@ describe('findClosestEnabledDate', () => {
       timezone: 'default',
     })!;
 
-    expect(adapterToUse.isSameDay(result, adapterToUse.date('2000-01-01'))).to.equal(true);
+    expect(result).toEqualDateTime(adapterToUse.date('2000-01-01'));
   });
 
   it('should return next 18th going from 10th', () => {
@@ -49,7 +49,7 @@ describe('findClosestEnabledDate', () => {
       timezone: 'default',
     })!;
 
-    expect(adapterToUse.isSameDay(result, adapterToUse.date('2018-08-18'))).to.equal(true);
+    expect(result).toEqualDateTime(adapterToUse.date('2018-08-18'));
   });
 
   it('should return previous 18th going from 1st', () => {
@@ -64,7 +64,7 @@ describe('findClosestEnabledDate', () => {
       timezone: 'default',
     })!;
 
-    expect(adapterToUse.isSameDay(result, adapterToUse.date('2018-07-18'))).to.equal(true);
+    expect(result).toEqualDateTime(adapterToUse.date('2018-07-18'));
   });
 
   it('should return future 18th if disablePast', () => {
@@ -97,7 +97,7 @@ describe('findClosestEnabledDate', () => {
       timezone: 'default',
     })!;
 
-    expect(adapterToUse.isSameDay(result, today)).to.equal(true);
+    expect(result).toEqualDateTime(today);
   });
 
   it('should return now with given time part if disablePast and now is valid', () => {
@@ -147,7 +147,7 @@ describe('findClosestEnabledDate', () => {
       timezone: 'default',
     })!;
 
-    expect(adapterToUse.isSameDay(result, adapterToUse.date('2018-08-18'))).to.equal(true);
+    expect(result).toEqualDateTime(adapterToUse.date('2018-08-18'));
   });
 
   it('should return next 18th after minDate', () => {
@@ -162,7 +162,7 @@ describe('findClosestEnabledDate', () => {
       timezone: 'default',
     })!;
 
-    expect(adapterToUse.isSameDay(result, adapterToUse.date('2018-08-18'))).to.equal(true);
+    expect(result).toEqualDateTime(adapterToUse.date('2018-08-18'));
   });
 
   it('should return maxDate if it is before the date and valid', () => {
@@ -177,7 +177,7 @@ describe('findClosestEnabledDate', () => {
       timezone: 'default',
     })!;
 
-    expect(adapterToUse.isSameDay(result, adapterToUse.date('2018-07-18'))).to.equal(true);
+    expect(result).toEqualDateTime(adapterToUse.date('2018-07-18'));
   });
 
   it('should return previous 18th before maxDate', () => {
@@ -192,7 +192,7 @@ describe('findClosestEnabledDate', () => {
       timezone: 'default',
     })!;
 
-    expect(adapterToUse.isSameDay(result, adapterToUse.date('2018-07-18'))).to.equal(true);
+    expect(result).toEqualDateTime(adapterToUse.date('2018-07-18'));
   });
 
   it('should return null if minDate is after maxDate', () => {
