@@ -59,6 +59,7 @@ const useAggregatedData = () => {
           stackedData,
           data,
           connectNulls,
+          baseline,
         } = series[seriesId];
 
         const xAxisId = xAxisIdProp ?? xAxisKey;
@@ -97,6 +98,16 @@ const useAggregatedData = () => {
           .x((d) => xScale(d.x))
           .defined((_, i) => connectNulls || data[i] != null)
           .y0((d) => {
+            if (typeof baseline === 'number') {
+              return yScale(baseline)!;
+            }
+            if (baseline === 'max') {
+              return yScale.range()[1];
+            }
+            if (baseline === 'min') {
+              return yScale.range()[0];
+            }
+
             const value = d.y && yScale(d.y[0])!;
             if (Number.isNaN(value)) {
               return yScale.range()[0];

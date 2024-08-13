@@ -3,6 +3,9 @@
   "propertiesDescriptions": {
     "type": { "description": "" },
     "area": { "description": "" },
+    "baseline": {
+      "description": "<p>The value of the line at the base of the series area.<br /><br />- <code>&#39;min&#39;</code> the area will fill the space <strong>under</strong> the line.<br />- <code>&#39;max&#39;</code> the area will fill the space <strong>above</strong> the line.<br />- <code>number</code> the area will fill the space between this value and the line</p>\n"
+    },
     "color": { "description": "" },
     "connectNulls": {
       "description": "If <code>true</code>, line and area connect points separated by <code>null</code> values."

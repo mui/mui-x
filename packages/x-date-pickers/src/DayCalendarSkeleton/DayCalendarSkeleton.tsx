@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import Skeleton from '@mui/material/Skeleton';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 import {
   DayCalendarSkeletonClasses,

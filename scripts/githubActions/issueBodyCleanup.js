@@ -26,13 +26,19 @@ module.exports = async ({ core, context, github }) => {
 
     const lines = issue.data.body.split('\n');
 
+    // this is here to remove this section from the issue body
+    extractInputSection(lines, 'Latest version');
+
     const searchKeywords = extractInputSection(lines, 'Search keywords');
+    const products = extractInputSection(lines, 'Affected products');
 
     // get the order id and set it as an output for the support label step
-    const orderID = extractInputSection(lines, 'Order ID or Support key');
-    core.setOutput('ORDER_ID', orderID);
+    let orderID = extractInputSection(lines, 'Order ID or Support key');
+    if (orderID === '_No response_') {
+      orderID = '';
+    }
 
-    const products = extractInputSection(lines, 'Affected products');
+    core.setOutput('ORDER_ID', orderID);
 
     // debug log all values
     core.debug(`>>> Search Keywords: ${searchKeywords}`);
@@ -41,7 +47,7 @@ module.exports = async ({ core, context, github }) => {
 
     lines.push('');
     lines.push(`**Search keywords**: ${searchKeywords}`);
-    if (orderID !== '' && orderID !== '_No response_') {
+    if (orderID !== '') {
       lines.push(`**Order ID**: ${orderID}`);
     }
 
