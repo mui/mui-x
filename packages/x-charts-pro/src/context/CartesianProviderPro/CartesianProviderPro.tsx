@@ -7,6 +7,7 @@ import {
   cartesianProviderUtils,
   useXExtremumGetter,
   useYExtremumGetter,
+  ZoomAxisFilters,
 } from '@mui/x-charts/internals';
 import { useZoom } from '../ZoomProvider/useZoom';
 import { createAxisFilterMapper } from './createAxisFilterMapper';
@@ -24,7 +25,7 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
   const xExtremumGetters = useXExtremumGetter();
   const yExtremumGetters = useYExtremumGetter();
 
-  const zoomFilter = React.useMemo(() => {
+  const zoomFilters = React.useMemo(() => {
     const xMapper = createAxisFilterMapper({
       zoomData,
       extremumGetter: xExtremumGetters,
@@ -37,18 +38,29 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
       formattedSeries,
     });
 
-    const xFilters = xAxis.map(xMapper).filter((f) => f !== null);
+    const xFilters = xAxis.reduce((acc, axis, index) => {
+      const filter = xMapper(axis, index);
+      if (filter !== null) {
+        acc[axis.id] = filter;
+      }
+      return acc;
+    }, {} as ZoomAxisFilters);
 
-    const yFilters = yAxis.map(yMapper).filter((f) => f !== null);
+    const yFilters = yAxis.reduce((acc, axis, index) => {
+      const filter = yMapper(axis, index);
+      if (filter !== null) {
+        acc[axis.id] = filter;
+      }
+      return acc;
+    }, {} as ZoomAxisFilters);
 
-    if (xFilters.length === 0 && yFilters.length === 0) {
+    if (Object.keys(xFilters).length === 0 && Object.keys(yFilters).length === 0) {
       return undefined;
     }
 
-    // Filters are applied on the reverse axis, so the naming below is correct.
     return {
-      xFilters: (index: number) => yFilters.every((f) => f(index)),
-      yFilters: (index: number) => xFilters.every((f) => f(index)),
+      xAxisFilters: yFilters,
+      yAxisFilters: xFilters,
     };
   }, [formattedSeries, xAxis, xExtremumGetters, yAxis, yExtremumGetters, zoomData]);
 
@@ -63,9 +75,18 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
         axisDirection: 'x',
         zoomData,
         zoomOptions: options,
-        zoomFilter: zoomFilter?.xFilters,
+        zoomFilters: zoomFilters?.xAxisFilters,
       }),
-    [drawingArea, formattedSeries, xAxis, xExtremumGetters, dataset, zoomData, options, zoomFilter],
+    [
+      drawingArea,
+      formattedSeries,
+      xAxis,
+      xExtremumGetters,
+      dataset,
+      zoomData,
+      options,
+      zoomFilters,
+    ],
   );
 
   const yValues = React.useMemo(
@@ -79,9 +100,18 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
         axisDirection: 'y',
         zoomData,
         zoomOptions: options,
-        zoomFilter: zoomFilter?.yFilters,
+        zoomFilters: zoomFilters?.yAxisFilters,
       }),
-    [drawingArea, formattedSeries, yAxis, yExtremumGetters, dataset, zoomData, options, zoomFilter],
+    [
+      drawingArea,
+      formattedSeries,
+      yAxis,
+      yExtremumGetters,
+      dataset,
+      zoomData,
+      options,
+      zoomFilters,
+    ],
   );
 
   const value = React.useMemo(

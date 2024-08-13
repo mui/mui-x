@@ -13,7 +13,7 @@ type GetValues = (d: [number, number]) => [number, number];
 function getSeriesExtremums(
   getValues: GetValues,
   stackedData: [number, number][],
-  filter: Parameters<ExtremumGetter<'line'>>[0]['filter'],
+  filter?: (v: number | Date | string | null, i: number) => boolean,
 ): [number, number] {
   return stackedData.reduce<[number, number]>(
     (seriesAcc, stackedValue, index) => {
@@ -29,7 +29,7 @@ function getSeriesExtremums(
 }
 
 export const getExtremumY: ExtremumGetter<'line'> = (params) => {
-  const { series, axis, isDefaultAxis, filter } = params;
+  const { series, axis, isDefaultAxis, filters } = params;
 
   return Object.keys(series)
     .filter((seriesId) => {
@@ -40,6 +40,7 @@ export const getExtremumY: ExtremumGetter<'line'> = (params) => {
       (acc, seriesId) => {
         const { area, stackedData } = series[seriesId];
         const isArea = area !== undefined;
+        const axisId = axis.id;
 
         // Since this series is not used to display an area, we do not consider the base (the d[0]).
         const getValues: GetValues =
@@ -47,7 +48,7 @@ export const getExtremumY: ExtremumGetter<'line'> = (params) => {
             ? (d) => d
             : (d) => [d[1], d[1]];
 
-        const seriesExtremums = getSeriesExtremums(getValues, stackedData, filter);
+        const seriesExtremums = getSeriesExtremums(getValues, stackedData, filters?.[axisId]);
 
         const [seriesMin, seriesMax] = seriesExtremums;
         return [Math.min(seriesMin, acc[0]), Math.max(seriesMax, acc[1])];

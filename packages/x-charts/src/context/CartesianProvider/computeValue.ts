@@ -16,7 +16,7 @@ import { FormattedSeries } from '../SeriesProvider';
 import { normalizeAxis } from './normalizeAxis';
 import { zoomScaleRange } from './zoom';
 import { ExtremumGetter } from '../PluginProvider';
-import { DefaultizedAxisConfig, ZoomData, ZoomOptions } from './Cartesian.types';
+import { ZoomAxisFilters, DefaultizedAxisConfig, ZoomData, ZoomOptions } from './Cartesian.types';
 import { getAxisExtremum } from './getAxisExtremum';
 
 const getRange = (drawingArea: DrawingArea, axisDirection: 'x' | 'y', isReverse?: boolean) => {
@@ -55,7 +55,7 @@ type ComputeCommonParams = {
   dataset: DatasetType | undefined;
   zoomData?: ZoomData[];
   zoomOptions?: ZoomOptions;
-  zoomFilter?: (index: number) => boolean;
+  zoomFilters?: ZoomAxisFilters;
 };
 
 export function computeValue(
@@ -79,7 +79,7 @@ export function computeValue({
   axisDirection,
   zoomData,
   zoomOptions,
-  zoomFilter,
+  zoomFilters,
 }: ComputeCommonParams & {
   axis: AxisConfig<ScaleName, any, ChartsAxisProps>[] | undefined;
   axisDirection: 'x' | 'y';
@@ -87,7 +87,8 @@ export function computeValue({
   const allAxis = normalizeAxis(inAxis, dataset, axisDirection);
 
   const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
-  allAxis.forEach((axis, axisIndex) => {
+  allAxis.forEach((eachAxis, axisIndex) => {
+    const axis = eachAxis as Readonly<AxisConfig<ScaleName, any, Readonly<ChartsAxisProps>>>;
     const isDefaultAxis = axisIndex === 0;
     const zoomOption = zoomOptions?.[axis.id];
     const zoom = zoomData?.find(({ axisId }) => axisId === axis.id);
@@ -99,7 +100,7 @@ export function computeValue({
       extremumGetters,
       isDefaultAxis,
       formattedSeries,
-      zoom === undefined && !zoomOption ? zoomFilter : undefined, // Do not apply filtering if zoom is already defined.
+      zoom === undefined && !zoomOption ? zoomFilters : undefined, // Do not apply filtering if zoom is already defined.
     );
     const data = axis.data ?? [];
 

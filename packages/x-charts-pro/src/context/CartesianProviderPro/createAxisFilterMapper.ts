@@ -1,4 +1,9 @@
-import { getAxisExtremum, FormattedSeries, ExtremumGettersConfig } from '@mui/x-charts/internals';
+import {
+  getAxisExtremum,
+  FormattedSeries,
+  ExtremumGettersConfig,
+  ZoomAxisFilter,
+} from '@mui/x-charts/internals';
 import { ChartsAxisProps, ScaleName, AxisConfig } from '@mui/x-charts';
 import { ZoomData } from '../ZoomProvider';
 
@@ -10,7 +15,7 @@ type CreateAxisFilterMapperParams = {
 
 export const createAxisFilterMapper =
   ({ zoomData, extremumGetter, formattedSeries }: CreateAxisFilterMapperParams) =>
-  (axis: AxisConfig<ScaleName, any, ChartsAxisProps>, axisIndex: number) => {
+  (axis: AxisConfig<ScaleName, any, ChartsAxisProps>, axisIndex: number): ZoomAxisFilter | null => {
     if (typeof axis.zoom !== 'object' || axis.zoom.filterMode !== 'discard') {
       return null;
     }
@@ -34,14 +39,14 @@ export const createAxisFilterMapper =
     const minVal = min + (zoom.start * (max - min)) / 100;
     const maxVal = min + (zoom.end * (max - min)) / 100;
 
-    return (dataIndex: number) => {
-      const val = axis.data?.[dataIndex];
+    return (value, dataIndex) => {
+      const val = value ?? axis.data?.[dataIndex];
       if (val == null) {
         // If the value does not exist because of missing data point, or out of range index, we just ignore.
         return true;
       }
 
-      if (axis.scaleType === 'point' || axis.scaleType === 'band') {
+      if (axis.scaleType === 'point' || axis.scaleType === 'band' || typeof val === 'string') {
         return dataIndex >= minVal && dataIndex <= maxVal;
       }
 

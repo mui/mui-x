@@ -3,7 +3,7 @@ import type {
   ChartSeries,
   ChartSeriesType,
 } from '../../models/seriesType/config';
-import type { AxisConfig } from '../../models/axis';
+import type { AxisConfig, AxisId } from '../../models/axis';
 import type { SeriesId } from '../../models/seriesType/common';
 
 export type ExtremumGettersConfig<T extends ChartSeriesType = CartesianChartSeriesType> = {
@@ -14,7 +14,7 @@ type ExtremumGetterParams<T extends ChartSeriesType> = {
   series: Record<SeriesId, ChartSeries<T>>;
   axis: AxisConfig;
   isDefaultAxis: boolean;
-  filter?: (v: number | Date | string, i: number) => boolean;
+  filters?: Record<AxisId, (v: number | Date | string | null, i: number) => boolean>;
 };
 
 export type ExtremumGetterResult = [number, number];
