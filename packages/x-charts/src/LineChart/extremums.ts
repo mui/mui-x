@@ -29,7 +29,7 @@ function getSeriesExtremums(
 }
 
 export const getExtremumY: ExtremumGetter<'line'> = (params) => {
-  const { series, axis, isDefaultAxis, filters } = params;
+  const { series, axis, isDefaultAxis, getZoomFilters } = params;
 
   return Object.keys(series)
     .filter((seriesId) => {
@@ -40,7 +40,13 @@ export const getExtremumY: ExtremumGetter<'line'> = (params) => {
       (acc, seriesId) => {
         const { area, stackedData } = series[seriesId];
         const isArea = area !== undefined;
-        const axisId = axis.id;
+
+        const filter = getZoomFilters?.({
+          currentAxisId: axis.id,
+          isDefaultAxis,
+          seriesXAxisId: series[seriesId].xAxisId ?? series[seriesId].xAxisKey,
+          seriesYAxisId: series[seriesId].yAxisId ?? series[seriesId].yAxisKey,
+        });
 
         // Since this series is not used to display an area, we do not consider the base (the d[0]).
         const getValues: GetValues =
@@ -48,7 +54,7 @@ export const getExtremumY: ExtremumGetter<'line'> = (params) => {
             ? (d) => d
             : (d) => [d[1], d[1]];
 
-        const seriesExtremums = getSeriesExtremums(getValues, stackedData, filters?.[axisId]);
+        const seriesExtremums = getSeriesExtremums(getValues, stackedData, filter);
 
         const [seriesMin, seriesMax] = seriesExtremums;
         return [Math.min(seriesMin, acc[0]), Math.max(seriesMax, acc[1])];

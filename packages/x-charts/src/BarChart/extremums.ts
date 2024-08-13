@@ -1,9 +1,12 @@
 import { ExtremumGetter } from '../context/PluginProvider/ExtremumGetter.types';
 
 const getBaseExtremum: ExtremumGetter<'bar'> = (params) => {
-  const { axis, filters } = params;
+  const { axis, getZoomFilters, isDefaultAxis } = params;
 
-  const filter = filters?.[axis.id];
+  const filter = getZoomFilters?.({
+    currentAxisId: axis.id,
+    isDefaultAxis,
+  });
 
   const data = filter ? axis.data?.filter(filter) : axis.data;
   const minX = Math.min(...(data ?? []));
@@ -12,7 +15,7 @@ const getBaseExtremum: ExtremumGetter<'bar'> = (params) => {
 };
 
 const getValueExtremum: ExtremumGetter<'bar'> = (params) => {
-  const { series, axis, filters, isDefaultAxis } = params;
+  const { series, axis, getZoomFilters, isDefaultAxis } = params;
 
   return Object.keys(series)
     .filter((seriesId) => {
@@ -21,12 +24,14 @@ const getValueExtremum: ExtremumGetter<'bar'> = (params) => {
     })
     .reduce(
       (acc, seriesId) => {
-        const { stackedData, xAxisId, xAxisKey, yAxisId, yAxisKey } = series[seriesId];
-        const xId = xAxisId ?? xAxisKey;
-        const yId = yAxisId ?? yAxisKey;
+        const { stackedData } = series[seriesId];
 
-        const axisId = axis.id === yId ? xId : yId;
-        const filter = isDefaultAxis ? Object.values(filters ?? {})[0] : filters?.[axisId ?? ''];
+        const filter = getZoomFilters?.({
+          currentAxisId: axis.id,
+          isDefaultAxis,
+          seriesXAxisId: series[seriesId].xAxisId ?? series[seriesId].xAxisKey,
+          seriesYAxisId: series[seriesId].yAxisId ?? series[seriesId].yAxisKey,
+        });
 
         const [seriesMin, seriesMax] = stackedData?.reduce(
           (seriesAcc, values, index) => {
