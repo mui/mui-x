@@ -10,7 +10,7 @@ import {
   ZoomAxisFilters,
 } from '@mui/x-charts/internals';
 import { useZoom } from '../ZoomProvider/useZoom';
-import { createAxisFilterMapper } from './createAxisFilterMapper';
+import { createAxisFilterMapper, createGetAxisFilters } from './createAxisFilterMapper';
 
 const { computeValue } = cartesianProviderUtils;
 
@@ -25,7 +25,7 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
   const xExtremumGetters = useXExtremumGetter();
   const yExtremumGetters = useYExtremumGetter();
 
-  const zoomFilters = React.useMemo(() => {
+  const getZoomFilters = React.useMemo(() => {
     const xMapper = createAxisFilterMapper({
       zoomData,
       extremumGetter: xExtremumGetters,
@@ -58,10 +58,7 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
       return undefined;
     }
 
-    return {
-      xAxisFilters: yFilters,
-      yAxisFilters: xFilters,
-    };
+    return createGetAxisFilters({ ...xFilters, ...yFilters });
   }, [formattedSeries, xAxis, xExtremumGetters, yAxis, yExtremumGetters, zoomData]);
 
   const xValues = React.useMemo(
@@ -75,7 +72,7 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
         axisDirection: 'x',
         zoomData,
         zoomOptions: options,
-        zoomFilters: zoomFilters?.xAxisFilters,
+        getZoomFilters,
       }),
     [
       drawingArea,
@@ -85,7 +82,7 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
       dataset,
       zoomData,
       options,
-      zoomFilters,
+      getZoomFilters,
     ],
   );
 
@@ -100,7 +97,7 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
         axisDirection: 'y',
         zoomData,
         zoomOptions: options,
-        zoomFilters: zoomFilters?.yAxisFilters,
+        getZoomFilters,
       }),
     [
       drawingArea,
@@ -110,7 +107,7 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
       dataset,
       zoomData,
       options,
-      zoomFilters,
+      getZoomFilters,
     ],
   );
 

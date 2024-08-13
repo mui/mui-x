@@ -3,6 +3,9 @@ import {
   FormattedSeries,
   ExtremumGettersConfig,
   ZoomAxisFilter,
+  ZoomAxisFilters,
+  GetZoomAxisFilters,
+  isDefined,
 } from '@mui/x-charts/internals';
 import { ChartsAxisProps, ScaleName, AxisConfig } from '@mui/x-charts';
 import { ZoomData } from '../ZoomProvider';
@@ -21,6 +24,7 @@ export const createAxisFilterMapper =
     }
 
     const zoom = zoomData?.find(({ axisId }) => axisId === axis.id);
+
     if (zoom === undefined || (zoom.start <= 0 && zoom.end >= 100)) {
       // No zoom, or zoom with all data visible
       return null;
@@ -51,5 +55,23 @@ export const createAxisFilterMapper =
       }
 
       return val >= minVal && val <= maxVal;
+    };
+  };
+
+export const createGetAxisFilters =
+  (filters: ZoomAxisFilters): GetZoomAxisFilters =>
+  ({ currentAxisId, seriesXAxisId, seriesYAxisId, isDefaultAxis }) => {
+    return (value, dataIndex) => {
+      const axisId = currentAxisId === seriesXAxisId ? seriesYAxisId : seriesXAxisId;
+
+      if (!axisId || isDefaultAxis) {
+        return Object.values(filters ?? {})[0]?.(value, dataIndex) ?? true;
+      }
+
+      const data = [seriesYAxisId, seriesXAxisId]
+        .filter((id) => id !== currentAxisId)
+        .map((id) => filters[id ?? ''])
+        .filter(isDefined);
+      return data.every((f) => f(value, dataIndex));
     };
   };

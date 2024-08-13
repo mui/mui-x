@@ -58,3 +58,10 @@ export type ZoomOptions = Record<AxisId, { filterMode: ZoomFilterMode }>;
 
 export type ZoomAxisFilter = (value: number | Date | string | null, dataIndex: number) => boolean;
 export type ZoomAxisFilters = Record<AxisId, ZoomAxisFilter>;
+
+export type GetZoomAxisFilters = (params: {
+  currentAxisId: AxisId | undefined;
+  seriesXAxisId?: AxisId;
+  seriesYAxisId?: AxisId;
+  isDefaultAxis: boolean;
+}) => ZoomAxisFilter;
