@@ -127,6 +127,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelInterval,
     tickPlacement,
     tickLabelPlacement,
+    data,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -193,10 +194,10 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   });
 
   const domain = xScale.domain();
-  if (domain.length === 0 || domain[0] === domain[1]) {
-    // Skip axis rendering if
-    // - the data is empty (for band and point axis)
-    // - No data is associated to the axis (other scale types)
+  // Skip axis rendering if
+  // - the domain is Infinite (condition for continuous scale)
+  // - No data is associated to the axis (condition ordinal scale)
+  if (domain.length === 0 || (data?.length === 0 && !domain.every(Number.isFinite))) {
     return null;
   }
   return (
