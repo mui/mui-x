@@ -24,11 +24,11 @@ import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelTogg
 import type { GridDimensions } from '../hooks/features/dimensions';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
-import { gridColumnGroupsHeaderMaxDepthSelector } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
 import { PinnedPosition, gridPinnedColumnPositionLookup } from './cell/GridCell';
 import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
+import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
 
 export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   row: GridRowModel;
@@ -112,12 +112,12 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     ...other
   } = props;
   const apiRef = useGridApiContext();
+  const configuration = useGridConfiguration();
   const ref = React.useRef<HTMLDivElement>(null);
   const rootProps = useGridRootProps();
   const currentPage = useGridVisibleRows(apiRef, rootProps);
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
-  const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
   const handleRef = useForkRef(ref, refProp);
@@ -137,8 +137,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     focusedColumnIndex < visibleColumns.length - pinnedColumns.right.length &&
     focusedColumnIndex >= renderContext.lastColumnIndex;
 
-  const ariaRowIndex = index + headerGroupingMaxDepth + 2; // 1 for the header row and 1 as it's 1-based
-
   const classes = composeGridClasses(rootProps.classes, {
     root: [
       'row',
@@ -151,6 +149,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       rowHeight === 'auto' && 'row--dynamicHeight',
     ],
   });
+  const getRowAriaAttributes = configuration.hooks.useGridRowAriaAttributes();
 
   React.useLayoutEffect(() => {
     if (currentPage.range) {
@@ -307,6 +306,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   }, [isNotVisible, rowHeight, styleProp, minHeight, sizes, rootProps.rowSpacingType]);
 
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
+  const ariaAttributes = rowNode ? getRowAriaAttributes(rowNode, index) : undefined;
 
   if (typeof rootProps.getRowClassName === 'function') {
     const indexRelativeToCurrentPage = index - (currentPage.range?.firstRowIndex || 0);
@@ -479,9 +479,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       data-rowindex={index}
       role="row"
       className={clsx(...rowClassNames, classes.root, className)}
-      aria-rowindex={ariaRowIndex}
-      aria-selected={selected}
       style={style}
+      {...ariaAttributes}
       {...eventHandlers}
       {...other}
     >

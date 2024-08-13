@@ -5,6 +5,7 @@ import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewFocusSignature } from '../useTreeViewFocus';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 import { TreeViewItemId } from '../../../models';
+import { UseTreeViewLabelSignature } from '../useTreeViewLabel';
 
 export interface UseTreeViewKeyboardNavigationInstance {
   /**
@@ -34,6 +35,7 @@ export type UseTreeViewKeyboardNavigationSignature = TreeViewPluginSignature<{
     UseTreeViewFocusSignature,
     UseTreeViewExpansionSignature,
   ];
+  optionalDependencies: [UseTreeViewLabelSignature];
 }>;
 
 export type TreeViewFirstCharMap = { [itemId: string]: string };

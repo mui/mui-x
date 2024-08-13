@@ -14,6 +14,7 @@ import {
   getColumnValues,
   getCell,
   getSelectByName,
+  getRow,
 } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import {
@@ -2381,6 +2382,45 @@ describe('<DataGridPremium /> - Row grouping', () => {
         // Corresponds to rows id 0, 1, 2 because of Cat A, ann id 4 because of Cat 1
         expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '4']);
       });
+
+      it('should keep the correct count of the children and descendants in the filter state', () => {
+        const extendedColumns = [
+          ...baselineProps.columns,
+          {
+            field: 'value1',
+          },
+        ];
+
+        const extendedRows = rows.map((row, index) => ({ ...row, value1: `Value${index}` }));
+        const additionalRows = [
+          { id: 5, category1: 'Cat A', category2: 'Cat 2', value1: 'Value5' },
+          { id: 6, category1: 'Cat A', category2: 'Cat 2', value1: 'Value6' },
+          { id: 7, category1: 'Cat B', category2: 'Cat 1', value1: 'Value7' },
+        ];
+
+        render(
+          <Test
+            columns={extendedColumns}
+            rows={[...extendedRows, ...additionalRows]}
+            initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
+            defaultGroupingExpansionDepth={3}
+            rowGroupingColumnMode="multiple"
+          />,
+        );
+
+        const { filteredChildrenCountLookup, filteredDescendantCountLookup } =
+          apiRef.current.state.filter;
+
+        expect(filteredChildrenCountLookup['auto-generated-row-category1/Cat A']).to.equal(2);
+        expect(filteredDescendantCountLookup['auto-generated-row-category1/Cat A']).to.equal(5);
+
+        expect(
+          filteredChildrenCountLookup['auto-generated-row-category1/Cat A-category2/Cat 2'],
+        ).to.equal(4);
+        expect(
+          filteredDescendantCountLookup['auto-generated-row-category1/Cat A-category2/Cat 2'],
+        ).to.equal(4);
+      });
     });
 
     describe('prop: rowGroupingColumnMode = "multiple"', () => {
@@ -2720,6 +2760,27 @@ describe('<DataGridPremium /> - Row grouping', () => {
       expect(apiRef.current.getRowGroupChildren({ groupId, applyFiltering: true })).to.deep.equal([
         2,
       ]);
+    });
+  });
+
+  describe('accessibility', () => {
+    it('should add necessary treegrid aria attributes to the rows', () => {
+      render(
+        <Test
+          initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
+          defaultGroupingExpansionDepth={-1}
+          rowGroupingColumnMode="multiple"
+        />,
+      );
+
+      expect(getRow(0).getAttribute('aria-level')).to.equal('1'); // Cat A
+      expect(getRow(1).getAttribute('aria-level')).to.equal('2'); // Cat 1
+      expect(getRow(1).getAttribute('aria-posinset')).to.equal('1');
+      expect(getRow(1).getAttribute('aria-setsize')).to.equal('2'); // Cat A has Cat 1 & Cat 2
+      expect(getRow(2).getAttribute('aria-level')).to.equal('3'); // Cat 1 row
+      expect(getRow(3).getAttribute('aria-posinset')).to.equal('2'); // Cat 2
+      expect(getRow(4).getAttribute('aria-posinset')).to.equal('1'); // Cat 2 row
+      expect(getRow(4).getAttribute('aria-setsize')).to.equal('2'); // Cat 2 has 2 rows
     });
   });
 
