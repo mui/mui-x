@@ -55,6 +55,9 @@
         "boolean": "<code>true</code> if the item should be disabled."
       }
     },
+    "isItemEditable": {
+      "description": "Determines if a given item is editable or not. Make sure to also enable the <code>labelEditing</code> experimental feature: <code>&lt;RichTreeViewPro experimentalFeatures={{ labelEditing: true }}  /&gt;</code>. By default, the items are not editable."
+    },
     "isItemReorderable": {
       "description": "Used to determine if a given item can be reordered.",
       "typeDescriptions": {
@@ -98,6 +101,13 @@
       "typeDescriptions": {
         "event": "The DOM event that triggered the change. <strong>Warning</strong>: This is a generic event not a focus event.",
         "itemId": "The id of the focused item."
+      }
+    },
+    "onItemLabelChange": {
+      "description": "Callback fired when the label of an item changes.",
+      "typeDescriptions": {
+        "itemId": "The id of the item that was edited.",
+        "newLabel": "The new label of the items."
       }
     },
     "onItemPositionChange": {

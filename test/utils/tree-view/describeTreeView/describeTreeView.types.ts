@@ -48,6 +48,12 @@ export interface DescribeTreeViewRendererUtils {
    */
   getItemContent: (id: string) => HTMLElement;
   /**
+   * Returns the `labelInput` slot of the item with the given id.
+   * @param {string} id The id of the item to retrieve.
+   * @returns {HTMLElement} `labelInput` slot of the item with the given id.
+   */
+  getItemLabelInput: (id: string) => HTMLInputElement;
+  /**
    * Returns the `checkbox` slot of the item with the given id.
    * @param {string} id The id of the item to retrieve.
    * @returns {HTMLElement} `checkbox` slot of the item with the given id.

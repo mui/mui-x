@@ -154,6 +154,7 @@ RichTreeView.propTypes = {
       getItemTree: PropTypes.func.isRequired,
       selectItem: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
+      updateItemLabel: PropTypes.func.isRequired,
     }),
   }),
   /**
@@ -205,6 +206,7 @@ RichTreeView.propTypes = {
    */
   experimentalFeatures: PropTypes.shape({
     indentationAtItemLevel: PropTypes.bool,
+    labelEditing: PropTypes.bool,
   }),
   /**
    * Used to determine the id of a given item.
@@ -236,6 +238,16 @@ RichTreeView.propTypes = {
    * @returns {boolean} `true` if the item should be disabled.
    */
   isItemDisabled: PropTypes.func,
+  /**
+   * Determines if a given item is editable or not.
+   * Make sure to also enable the `labelEditing` experimental feature:
+   * `<RichTreeViewPro experimentalFeatures={{ labelEditing: true }}  />`.
+   * By default, the items are not editable.
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {boolean} `true` if the item is editable.
+   */
+  isItemEditable: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   /**
    * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".
@@ -273,6 +285,12 @@ RichTreeView.propTypes = {
    * @param {string} itemId The id of the focused item.
    */
   onItemFocus: PropTypes.func,
+  /**
+   * Callback fired when the label of an item changes.
+   * @param {TreeViewItemId} itemId The id of the item that was edited.
+   * @param {string} newLabel The new label of the items.
+   */
+  onItemLabelChange: PropTypes.func,
   /**
    * Callback fired when a tree item is selected or deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.

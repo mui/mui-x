@@ -88,8 +88,12 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
       return params.expansionTrigger;
     }
 
+    if (instance.isTreeViewEditable) {
+      return 'iconContainer';
+    }
+
     return 'content';
-  }, [params.expansionTrigger]);
+  }, [params.expansionTrigger, instance.isTreeViewEditable]);
 
   return {
     publicAPI: {

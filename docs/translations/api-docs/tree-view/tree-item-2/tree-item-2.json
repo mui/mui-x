@@ -23,6 +23,15 @@
       "nodeName": "the element",
       "conditions": "disabled"
     },
+    "editable": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the content of the items that are editable"
+    },
+    "editing": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the content element",
+      "conditions": "editing is enabled"
+    },
     "expanded": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the content element",
@@ -50,6 +59,7 @@
     "icon": "The icon to display next to the tree item&#39;s label.",
     "iconContainer": "The component that renders the icon.",
     "label": "The component that renders the item label.",
+    "labelInput": "The component that renders the input to edit the label when the item is editable and is currently being edited.",
     "root": "The component that renders the root."
   }
 }

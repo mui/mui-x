@@ -41,6 +41,15 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the drag and drop overlay"
     },
+    "editable": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the content of the items that are editable"
+    },
+    "editing": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the content element",
+      "conditions": "editing is enabled"
+    },
     "expanded": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the content element",
@@ -56,6 +65,11 @@
       "nodeName": "the tree item icon"
     },
     "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the label element" },
+    "labelInput": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the input element that is visible",
+      "conditions": "editing is enabled"
+    },
     "root": { "description": "Styles applied to the root element." },
     "selected": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",
