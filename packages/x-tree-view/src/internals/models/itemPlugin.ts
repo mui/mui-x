@@ -3,6 +3,7 @@ import { EventHandlers } from '@mui/utils';
 import type {
   UseTreeItem2ContentSlotOwnProps,
   UseTreeItem2DragAndDropOverlaySlotOwnProps,
+  UseTreeItem2LabelInputSlotOwnProps,
   UseTreeItem2RootSlotOwnProps,
 } from '../../useTreeItem2';
 
@@ -20,6 +21,7 @@ export interface TreeViewItemPluginSlotPropsEnhancers {
   root?: TreeViewItemPluginSlotPropsEnhancer<UseTreeItem2RootSlotOwnProps>;
   content?: TreeViewItemPluginSlotPropsEnhancer<UseTreeItem2ContentSlotOwnProps>;
   dragAndDropOverlay?: TreeViewItemPluginSlotPropsEnhancer<UseTreeItem2DragAndDropOverlaySlotOwnProps>;
+  labelInput?: TreeViewItemPluginSlotPropsEnhancer<UseTreeItem2LabelInputSlotOwnProps>;
 }
 
 export interface TreeViewItemPluginResponse {
