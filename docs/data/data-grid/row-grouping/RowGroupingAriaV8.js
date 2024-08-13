@@ -6,7 +6,7 @@ import {
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
-export default function RowGroupingAriaV8Example() {
+export default function RowGroupingAriaV8() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
 
