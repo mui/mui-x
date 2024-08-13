@@ -689,13 +689,6 @@ export const GridRootStyles = styled('div', {
     [`& .${c['filler--borderTop']}`]: {
       borderTop: '1px solid var(--DataGrid-rowBorderColor)',
     },
-
-    /* Hide grid rows and vertical scrollbar when skeleton overlay is visible */
-    [`& .${c['main--hasSkeletonLoadingOverlay']}`]: {
-      [`& .${c.virtualScrollerContent}, & .${c['scrollbar--vertical']}, & .${c.pinnedRows}`]: {
-        display: 'none',
-      },
-    },
   };
 
   return gridStyle;
