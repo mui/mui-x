@@ -435,16 +435,17 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
   }, [rangePosition, value]); // eslint-disable-line
 
   const applyBoundaries = (contiguousRangeBoundary, defaultBoundary) => {
-    if (availableRangePositions.length === 1 && availableRangePositions[0] === 'start') {
-      return defaultBoundary;
-    }
-
+    const isSelectingDateTimeStart =
+      availableRangePositions.length === 1 && availableRangePositions[0] === 'start';
     const [start, end] = value;
 
-    if (disableNonContiguousRanges && contiguousRangeBoundary) {
-      if ((start && !end) || (!start && end)) {
-        return contiguousRangeBoundary;
-      }
+    if (
+      disableNonContiguousRanges &&
+      contiguousRangeBoundary &&
+      !isSelectingDateTimeStart &&
+      ((start && !end) || (!start && end) || isDragging)
+    ) {
+      return contiguousRangeBoundary;
     }
     return defaultBoundary;
   };
