@@ -10,6 +10,7 @@ import { ChartsYAxisProps } from '../models/axis';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
+import { isInfinity } from '../internals/isInfinity';
 
 const useUtilityClasses = (ownerState: ChartsYAxisProps & { theme: Theme }) => {
   const { classes, position } = ownerState;
@@ -71,7 +72,6 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     tickLabelPlacement,
     tickInterval,
     tickLabelInterval,
-    data,
     sx,
   } = defaultizedProps;
 
@@ -148,8 +148,8 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   const domain = yScale.domain();
   // Skip axis rendering if
   // - the domain is Infinite (condition for continuous scale)
-  // - No data is associated to the axis (condition ordinal scale)
-  if (domain.length === 0 || (data?.length === 0 && !domain.every(Number.isFinite))) {
+  // - the domain is empty (condition ordinal scale)
+  if (domain.length === 0 || domain.some(isInfinity)) {
     return null;
   }
 

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { AxisConfig, D3Scale } from '../models/axis';
 import { isBandScale } from '../internals/isBandScale';
+import { isInfinity } from '../internals/isInfinity';
 
 export interface TickParams {
   /**
@@ -145,7 +146,7 @@ export function useTicks(
       }));
     }
 
-    if (scale.domain().length === 0 || !scale.domain().every(Number.isFinite)) {
+    if (scale.domain().length === 0 || scale.domain().some(isInfinity)) {
       // The axis should not be visible, so ticks should also be hidden.
       return [];
     }

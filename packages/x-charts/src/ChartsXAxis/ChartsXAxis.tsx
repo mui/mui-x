@@ -13,6 +13,7 @@ import { getMinXTranslation } from '../internals/geometry';
 import { useMounted } from '../hooks/useMounted';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { getWordsByLines } from '../internals/getWordsByLines';
+import { isInfinity } from '../internals/isInfinity';
 
 const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
   const { classes, position } = ownerState;
@@ -127,7 +128,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelInterval,
     tickPlacement,
     tickLabelPlacement,
-    data,
     sx,
   } = defaultizedProps;
 
@@ -197,8 +197,8 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const domain = xScale.domain();
   // Skip axis rendering if
   // - the domain is Infinite (condition for continuous scale)
-  // - No data is associated to the axis (condition ordinal scale)
-  if (domain.length === 0 || (data?.length === 0 && !domain.every(Number.isFinite))) {
+  // - the domain is empty (condition ordinal scale)
+  if (domain.length === 0 || domain.some(isInfinity)) {
     return null;
   }
   return (
