@@ -266,6 +266,11 @@ ChartsYAxis.propTypes = {
    * @default 'currentColor'
    */
   stroke: PropTypes.string,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * The font size of the axis ticks text.
    * @default 12
