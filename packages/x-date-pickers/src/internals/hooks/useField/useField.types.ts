@@ -95,11 +95,6 @@ export interface UseFieldInternalProps<
    */
   formatDensity?: 'dense' | 'spacious';
   /**
-   * If `true`, doesn't allow the selection of ranges containing disabled dates.
-   * @default false
-   */
-  disableNonContiguousRanges?: boolean;
-  /**
    * If `true`, the format will respect the leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `8/16/2018`)
    * If `false`, the format will always add leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `08/16/2018`)
    *

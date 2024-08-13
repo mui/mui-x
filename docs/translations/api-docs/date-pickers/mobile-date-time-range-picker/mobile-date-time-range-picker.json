@@ -38,6 +38,9 @@
     "disableIgnoringDatePartForTimeValidation": {
       "description": "Do not ignore date part when validating min/max time."
     },
+    "disableNonContiguousRanges": {
+      "description": "If <code>true</code>, prevents the selection of ranges containing disabled dates."
+    },
     "disableOpenPicker": {
       "description": "If <code>true</code>, the open picker button will not be rendered (renders only the field)."
     },

@@ -1,6 +1,7 @@
 import {
   BaseDateValidationProps,
   BaseTimeValidationProps,
+  DateRangeValidationProps,
   DateTimeValidationProps,
   DayValidationProps,
   MonthValidationProps,
@@ -43,10 +44,15 @@ export const DATE_TIME_VALIDATION_PROP_NAMES: (keyof DateTimeValidationProps<any
   'maxDateTime',
 ];
 
+export const DATE_RANGE_VALIDATION_PROP_NAMES: (keyof DateRangeValidationProps)[] = [
+  'disableNonContiguousRanges',
+];
+
 const VALIDATION_PROP_NAMES = [
   ...DATE_VALIDATION_PROP_NAMES,
   ...TIME_VALIDATION_PROP_NAMES,
   ...DATE_TIME_VALIDATION_PROP_NAMES,
+  ...DATE_RANGE_VALIDATION_PROP_NAMES,
 ];
 
 type ValidationPropNames = (typeof VALIDATION_PROP_NAMES)[number];

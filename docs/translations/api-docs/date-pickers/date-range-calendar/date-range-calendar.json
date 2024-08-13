@@ -36,6 +36,9 @@
     "disableHighlightToday": {
       "description": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle."
     },
+    "disableNonContiguousRanges": {
+      "description": "If <code>true</code>, prevents the selection of ranges containing disabled dates."
+    },
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
     },

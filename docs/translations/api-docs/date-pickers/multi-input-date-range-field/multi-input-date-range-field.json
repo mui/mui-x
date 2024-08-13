@@ -16,6 +16,9 @@
     "disableFuture": {
       "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components."
     },
+    "disableNonContiguousRanges": {
+      "description": "If <code>true</code>, prevents the selection of ranges containing disabled dates."
+    },
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
     },

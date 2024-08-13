@@ -134,7 +134,7 @@ StaticDateRangePicker.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true`, doesn't allow the selection of ranges containing disabled dates.
+   * If `true`, prevents the selection of ranges containing disabled dates.
    * @default false
    */
   disableNonContiguousRanges: PropTypes.bool,
