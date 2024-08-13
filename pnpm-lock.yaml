@@ -480,7 +480,7 @@ importers:
         specifier: ^9.7.4
         version: 9.7.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/query-core':
-        specifier: ^5.51.21
+        specifier: ^5.51.15
         version: 5.51.21
       ast-types:
         specifier: ^0.14.2
