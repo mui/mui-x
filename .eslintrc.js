@@ -274,6 +274,8 @@ module.exports = {
                   // Exceptions (QUESTION: Keep or remove?)
                   '!@mui/x-date-pickers/internals/demo',
                   '!@mui/x-tree-view/hooks/useTreeViewApiRef',
+                  // TODO: export this from /ButtonBase in core. This will break after we move to package exports
+                  '!@mui/material/ButtonBase/TouchRipple',
                 ],
                 message: 'Use less deep import instead',
               },

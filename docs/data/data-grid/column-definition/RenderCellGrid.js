@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
-// TODO: export TouchRipple from ButtonBase in core. This import will break after ESM exports are defined
-// eslint-disable-next-line no-restricted-imports
 
 function RenderDate(props) {
   const { hasFocus, value } = props;
