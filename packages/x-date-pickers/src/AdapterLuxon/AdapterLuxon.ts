@@ -137,6 +137,15 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     this.formats = { ...defaultFormats, ...formats };
   }
 
+  private setLocaleToValue = (value: DateTime) => {
+    const expectedLocale = this.getCurrentLocaleCode();
+    if (expectedLocale === value.locale) {
+      return value;
+    }
+
+    return value.setLocale(expectedLocale);
+  };
+
   public date = <T extends string | null | undefined>(
     value?: T,
     timezone: PickersTimezone = 'default',
@@ -199,15 +208,6 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return Boolean(
       new Intl.DateTimeFormat(this.locale, { hour: 'numeric' })?.resolvedOptions()?.hour12,
     );
-  };
-
-  public setLocaleToValue = (value: DateTime) => {
-    const expectedLocale = this.getCurrentLocaleCode();
-    if (expectedLocale === value.locale) {
-      return value;
-    }
-
-    return value.setLocale(expectedLocale);
   };
 
   public expandFormat = (format: string) => {
@@ -348,7 +348,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public startOfWeek = (value: DateTime) => {
-    return value.startOf('week', { useLocaleWeeks: true });
+    return this.setLocaleToValue(value).startOf('week', { useLocaleWeeks: true });
   };
 
   public startOfDay = (value: DateTime) => {
@@ -364,7 +364,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public endOfWeek = (value: DateTime) => {
-    return value.endOf('week', { useLocaleWeeks: true });
+    return this.setLocaleToValue(value).endOf('week', { useLocaleWeeks: true });
   };
 
   public endOfDay = (value: DateTime) => {
@@ -461,9 +461,8 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public getWeekArray = (value: DateTime) => {
-    const cleanValue = this.setLocaleToValue(value);
-    const firstDay = this.startOfWeek(this.startOfMonth(cleanValue));
-    const lastDay = this.endOfWeek(this.endOfMonth(cleanValue));
+    const firstDay = this.startOfWeek(this.startOfMonth(value));
+    const lastDay = this.endOfWeek(this.endOfMonth(value));
 
     const { days } = lastDay.diff(firstDay, 'days').toObject();
 

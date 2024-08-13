@@ -143,6 +143,15 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     this.formats = { ...defaultFormats, ...formats };
   }
 
+  private setLocaleToValue = (value: Moment) => {
+    const expectedLocale = this.getCurrentLocaleCode();
+    if (expectedLocale === value.locale()) {
+      return value;
+    }
+
+    return value.locale(expectedLocale);
+  };
+
   private hasTimezonePlugin = () => typeof this.moment.tz !== 'undefined';
 
   private createSystemDate = (value: string | undefined): Moment => {
@@ -275,15 +284,6 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return /A|a/.test(defaultMoment.localeData(this.getCurrentLocaleCode()).longDateFormat('LT'));
   };
 
-  public setLocaleToValue = (value: Moment) => {
-    const expectedLocale = this.getCurrentLocaleCode();
-    if (expectedLocale === value.locale()) {
-      return value;
-    }
-
-    return value.locale(expectedLocale);
-  };
-
   public expandFormat = (format: string) => {
     // @see https://github.com/moment/moment/blob/develop/src/lib/format/format.js#L6
     const localFormattingTokens = /(\[[^[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})|./g;
@@ -390,7 +390,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public startOfWeek = (value: Moment) => {
-    return value.clone().startOf('week');
+    return this.setLocaleToValue(value.clone()).startOf('week');
   };
 
   public startOfDay = (value: Moment) => {
@@ -406,7 +406,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public endOfWeek = (value: Moment) => {
-    return value.clone().endOf('week');
+    return this.setLocaleToValue(value.clone()).endOf('week');
   };
 
   public endOfDay = (value: Moment) => {
@@ -516,9 +516,8 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public getWeekArray = (value: Moment) => {
-    const cleanValue = this.setLocaleToValue(value);
-    const start = this.startOfWeek(this.startOfMonth(cleanValue));
-    const end = this.endOfWeek(this.endOfMonth(cleanValue));
+    const start = this.startOfWeek(this.startOfMonth(value));
+    const end = this.endOfWeek(this.endOfMonth(value));
 
     let count = 0;
     let current = start;

@@ -237,12 +237,6 @@ export interface MuiPickersAdapter<TDate extends PickerValidDate, TLocale = any>
    */
   is12HourCycleInCurrentLocale(): boolean;
   /**
-   * Set the locale of the adapter to the given value.
-   * @param {TDate} value The value to set the locale to.
-   * @returns {TDate} The value with the locale set.
-   */
-  setLocaleToValue(value: TDate): TDate;
-  /**
    * Create a format with no meta-token (e.g: `LLL` or `PP`).
    * @param {string} format The format to expand.
    * @returns {string} The expanded format.
