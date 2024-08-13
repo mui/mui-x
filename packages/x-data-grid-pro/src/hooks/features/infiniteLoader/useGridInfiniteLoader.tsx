@@ -140,9 +140,6 @@ export const useGridInfiniteLoader = (
   useGridApiMethod(apiRef, infiniteLoaderPrivateApi, 'private');
   useGridApiOptionHandler(apiRef, 'rowsScrollEnd', props.onRowsScrollEnd);
 
-  /**
-   * EFFECTS
-   */
   React.useEffect(() => {
     return () => {
       clearTimeout(updateTargetTimeout.current);
