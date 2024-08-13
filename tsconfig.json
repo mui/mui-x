@@ -42,7 +42,7 @@
         "./node_modules/@mui/monorepo/packages/api-docs-builder/*"
       ],
       "test/*": ["./test/*"],
-      "docs/*": ["./node_modules/@mui/monorepo/docs"],
+      "docs/*": ["./node_modules/@mui/monorepo/docs/*"],
       "docsx/*": ["./docs/*"]
     }
   },

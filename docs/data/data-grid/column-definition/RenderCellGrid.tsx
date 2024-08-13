@@ -1,6 +1,8 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+// TODO: export TouchRipple from ButtonBase in core. This import will break after ESM exports are defined
+// eslint-disable-next-line no-restricted-imports
 import { TouchRippleActions } from '@mui/material/ButtonBase/TouchRipple';
 
 function RenderDate(props: GridRenderCellParams<any, Date>) {
