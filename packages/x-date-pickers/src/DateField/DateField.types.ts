@@ -16,7 +16,6 @@ import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { MakeOptional } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,
-  DateRangeValidationProps,
   DayValidationProps,
   MonthValidationProps,
   YearValidationProps,
@@ -39,7 +38,6 @@ export interface UseDateFieldProps<
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
     BaseDateValidationProps<TDate>,
-    DateRangeValidationProps,
     ExportedUseClearableFieldProps {}
 
 export type UseDateFieldComponentProps<
