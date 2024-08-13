@@ -1,7 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
-// @ts-ignore
 import SectionHeadline from 'docs/src/components/typography/SectionHeadline';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';

@@ -5,7 +5,6 @@ import 'dayjs/locale/zh-cn';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import { styled, createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
-// @ts-ignore
 import SectionHeadline from 'docs/src/components/typography/SectionHeadline';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
