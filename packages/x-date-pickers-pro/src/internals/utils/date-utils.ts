@@ -1,5 +1,5 @@
 import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
-import { DateRange, NonEmptyDateRange } from '../../models';
+import { DateRange, NonEmptyDateRange, RangePosition } from '../../models';
 
 export const isRangeValid = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
@@ -77,4 +77,27 @@ export const findRangeBoundaries = <TDate extends PickerValidDate>({
   }
 
   return rangeBoundaries;
+};
+
+export const applyDateBoundaries = <TDate extends PickerValidDate>(
+  availableRangePositions: RangePosition[],
+  contiguousRangeBoundary: TDate | null | undefined,
+  defaultBoundary: TDate,
+  disableNonContiguousRanges: boolean | undefined,
+  isDragging: boolean,
+  value: DateRange<TDate>,
+) => {
+  const isSelectingDateTimeStart =
+    availableRangePositions.length === 1 && availableRangePositions[0] === 'start';
+  const [start, end] = value;
+
+  if (
+    disableNonContiguousRanges &&
+    contiguousRangeBoundary &&
+    !isSelectingDateTimeStart &&
+    ((start && !end) || (!start && end) || isDragging)
+  ) {
+    return contiguousRangeBoundary;
+  }
+  return defaultBoundary;
 };

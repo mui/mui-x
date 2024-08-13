@@ -38,6 +38,7 @@ import {
   DateRangeCalendarOwnerState,
 } from './DateRangeCalendar.types';
 import {
+  applyDateBoundaries,
   findRangeBoundaries,
   isEndOfRange,
   isRangeValid,
@@ -434,27 +435,25 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     }
   }, [rangePosition, value]); // eslint-disable-line
 
-  const applyBoundaries = (contiguousRangeBoundary, defaultBoundary) => {
-    const isSelectingDateTimeStart =
-      availableRangePositions.length === 1 && availableRangePositions[0] === 'start';
-    const [start, end] = value;
-
-    if (
-      disableNonContiguousRanges &&
-      contiguousRangeBoundary &&
-      !isSelectingDateTimeStart &&
-      ((start && !end) || (!start && end) || isDragging)
-    ) {
-      return contiguousRangeBoundary;
-    }
-    return defaultBoundary;
-  };
-
   const baseDateValidationProps: Required<BaseDateValidationProps<TDate>> = {
     disablePast,
     disableFuture,
-    maxDate: applyBoundaries(contiguousRangeBoundaries?.maxDate, maxDate),
-    minDate: applyBoundaries(contiguousRangeBoundaries?.minDate, minDate),
+    maxDate: applyDateBoundaries(
+      availableRangePositions,
+      contiguousRangeBoundaries?.maxDate,
+      maxDate,
+      disableNonContiguousRanges,
+      isDragging,
+      value,
+    ),
+    minDate: applyDateBoundaries(
+      availableRangePositions,
+      contiguousRangeBoundaries?.minDate,
+      minDate,
+      disableNonContiguousRanges,
+      isDragging,
+      value,
+    ),
   };
 
   const commonViewProps = {
