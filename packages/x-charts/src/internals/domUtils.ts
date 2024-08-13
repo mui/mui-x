@@ -45,7 +45,7 @@ const STYLE_LIST = [
   'marginTop',
   'marginBottom',
 ];
-const MEASUREMENT_SPAN_ID = 'mui_measurement_span';
+export const MEASUREMENT_SPAN_ID = 'mui_measurement_span';
 
 /**
  *
@@ -152,3 +152,9 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
     return { width: 0, height: 0 };
   }
 };
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export function unstable_cleanupDOM() {
+  const measurementSpan = document.getElementById(MEASUREMENT_SPAN_ID);
+  measurementSpan?.remove();
+}
