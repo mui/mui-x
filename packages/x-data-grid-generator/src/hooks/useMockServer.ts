@@ -50,7 +50,7 @@ function decodeParams(url: string): GridGetRowsParams {
 
   for (const [key, value] of array) {
     try {
-      decodedParams[key] = JSON.parse(decodeURIComponent(value));
+      decodedParams[key] = JSON.parse(value);
     } catch (e) {
       decodedParams[key] = value;
     }
