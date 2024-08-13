@@ -204,7 +204,7 @@
       "description": "Determines if a row can be selected.",
       "typeDescriptions": {
         "params": "With all properties from <a href='/x/api/data-grid/grid-row-params/'>GridRowParams</a>.",
-        "boolean": "A boolean indicating if the cell is selectable."
+        "boolean": "A boolean indicating if the row is selectable."
       }
     },
     "keepColumnPositionIfDraggedOutside": {

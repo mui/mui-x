@@ -1,11 +1,6 @@
 <DataGridPremium
   {...data}
   apiRef={apiRef}
-  loading={loading}
-  disableRowSelectionOnClick
   initialState={initialState}
-  groupingColDef={{
-    leafField: 'traderEmail',
-  }}
   experimentalFeatures={{ ariaV8: true }}
 />

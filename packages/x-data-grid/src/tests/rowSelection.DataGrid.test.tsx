@@ -837,6 +837,27 @@ describe('<DataGrid /> - Row selection', () => {
     });
   });
 
+  describe('accessibility', () => {
+    it('should add aria-selected attributes to the selectable rows', () => {
+      render(<TestDataGridSelection />);
+
+      // Select the first row
+      userEvent.mousePress(getCell(0, 0));
+      expect(getRow(0).getAttribute('aria-selected')).to.equal('true');
+      expect(getRow(1).getAttribute('aria-selected')).to.equal('false');
+    });
+
+    it('should not add aria-selected attributes if the row selection is disabled', () => {
+      render(<TestDataGridSelection rowSelection={false} />);
+      expect(getRow(0).getAttribute('aria-selected')).to.equal(null);
+
+      // Try to select the first row
+      userEvent.mousePress(getCell(0, 0));
+      // nothing should change
+      expect(getRow(0).getAttribute('aria-selected')).to.equal(null);
+    });
+  });
+
   describe('performance', () => {
     it('should not rerender unrelated nodes', () => {
       // Couldn't use <RenderCounter> because we need to track multiple components

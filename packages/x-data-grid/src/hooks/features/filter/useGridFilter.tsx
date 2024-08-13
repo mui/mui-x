@@ -46,6 +46,7 @@ export const filterStateInitializer: GridStateInitializer<
     filter: {
       filterModel: sanitizeFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
       filteredRowsLookup: {},
+      filteredChildrenCountLookup: {},
       filteredDescendantCountLookup: {},
     },
     visibleRowsLookup: {},
@@ -424,6 +425,7 @@ export const useGridFilter = (
       if (props.filterMode !== 'client' || !params.isRowMatchingFilters) {
         return {
           filteredRowsLookup: {},
+          filteredChildrenCountLookup: {},
           filteredDescendantCountLookup: {},
         };
       }
@@ -464,6 +466,7 @@ export const useGridFilter = (
 
       return {
         filteredRowsLookup,
+        filteredChildrenCountLookup: {},
         filteredDescendantCountLookup: {},
       };
     },
