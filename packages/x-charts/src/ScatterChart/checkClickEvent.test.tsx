@@ -25,11 +25,17 @@ const config = {
 // .....
 // 4...3
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('ScatterChart - click event', () => {
   const { render } = createRenderer();
 
   describe('onItemClick - using vornoid', () => {
     it('should provide the right context as second argument when clicking svg', function test() {
+      if (isJSDOM) {
+        // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
+        this.skip();
+      }
       const onItemClick = spy();
       render(
         <div
@@ -72,6 +78,9 @@ describe('ScatterChart - click event', () => {
     });
 
     it('should provide the right context as second argument when clicking mark', function test() {
+      if (isJSDOM) {
+        this.skip();
+      }
       const onItemClick = spy();
       render(
         <div
@@ -106,6 +115,9 @@ describe('ScatterChart - click event', () => {
 
   describe('onItemClick - disabling vornoid', () => {
     it('should not call onItemClick when clicking the SVG', function test() {
+      if (isJSDOM) {
+        this.skip();
+      }
       const onItemClick = spy();
       render(
         <div
@@ -133,6 +145,9 @@ describe('ScatterChart - click event', () => {
     });
 
     it('should provide the right context as second argument when clicking mark', function test() {
+      if (isJSDOM) {
+        this.skip();
+      }
       const onItemClick = spy();
       render(
         <div
