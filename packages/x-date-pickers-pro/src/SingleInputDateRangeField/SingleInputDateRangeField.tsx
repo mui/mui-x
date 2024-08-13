@@ -125,15 +125,15 @@ SingleInputDateRangeField.propTypes = {
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
-   * @default false
-   */
-  disablePast: PropTypes.bool,
-  /**
    * If `true`, doesn't allow the selection of ranges containing disabled dates.
    * @default false
    */
   disableNonContiguousRanges: PropTypes.bool,
+  /**
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
+   * @default false
+   */
+  disablePast: PropTypes.bool,
   /**
    * @default false
    */

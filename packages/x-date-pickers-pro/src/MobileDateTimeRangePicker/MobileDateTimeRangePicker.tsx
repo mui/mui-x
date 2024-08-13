@@ -293,6 +293,11 @@ MobileDateTimeRangePicker.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
+   * If `true`, doesn't allow the selection of ranges containing disabled dates.
+   * @default false
+   */
+  disableNonContiguousRanges: PropTypes.bool,
+  /**
    * If `true`, the open picker button will not be rendered (renders only the field).
    * @default false
    */
