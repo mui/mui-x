@@ -443,17 +443,15 @@ export const useGridRowSelection = (
     GridEventListener<'headerSelectionCheckboxChange'>
   >(
     (params) => {
-      const shouldLimitSelectionToCurrentPage =
-        props.checkboxSelectionVisibleOnly && props.pagination;
-
-      const rowsToBeSelected = shouldLimitSelectionToCurrentPage
-        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
-        : gridExpandedSortedRowIdsSelector(apiRef);
+      const rowsToBeSelected =
+        props.pagination && props.checkboxSelectionVisibleOnly && props.paginationMode === 'client'
+          ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
+          : gridExpandedSortedRowIdsSelector(apiRef);
 
       const filterModel = gridFilterModelSelector(apiRef);
       apiRef.current.selectRows(rowsToBeSelected, params.value, filterModel?.items.length > 0);
     },
-    [apiRef, props.checkboxSelectionVisibleOnly, props.pagination],
+    [apiRef, props.checkboxSelectionVisibleOnly, props.pagination, props.paginationMode],
   );
 
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(

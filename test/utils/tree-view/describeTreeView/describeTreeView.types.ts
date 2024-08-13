@@ -2,14 +2,21 @@ import * as React from 'react';
 import {
   MergeSignaturesProperty,
   TreeViewAnyPluginSignature,
+  TreeViewExperimentalFeatures,
   TreeViewPublicAPI,
 } from '@mui/x-tree-view/internals/models';
+import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import { TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 
 export type DescribeTreeViewTestRunner<TSignatures extends TreeViewAnyPluginSignature[]> = (
   params: DescribeTreeViewTestRunnerParams<TSignatures>,
 ) => void;
+
+export interface TreeViewItemIdTreeElement {
+  id: TreeViewItemId;
+  children?: TreeViewItemIdTreeElement[];
+}
 
 export interface DescribeTreeViewRendererUtils {
   /**
@@ -83,6 +90,7 @@ export interface DescribeTreeViewRendererUtils {
    * @returns {HTMLElement[]} List of the item id of all the items currently selected.
    */
   getSelectedTreeItems: () => string[];
+  getItemIdTree: () => TreeViewItemIdTreeElement[];
 }
 
 export interface DescribeTreeViewRendererReturnValue<
@@ -120,6 +128,7 @@ export type DescribeTreeViewRenderer<TSignatures extends TreeViewAnyPluginSignat
       slotProps?: MergeSignaturesProperty<TSignatures, 'slotProps'> & {
         item?: Partial<TreeItemProps> | Partial<TreeItem2Props>;
       };
+      experimentalFeatures?: TreeViewExperimentalFeatures<TSignatures>;
     },
 ) => DescribeTreeViewRendererReturnValue<TSignatures>;
 
