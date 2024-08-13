@@ -21,6 +21,10 @@ import {
   UseTreeViewIconsParameters,
 } from '../internals/plugins/useTreeViewIcons';
 import { ConvertPluginsIntoSignatures, MergeSignaturesProperty } from '../internals/models';
+import {
+  useTreeViewLabel,
+  UseTreeViewLabelParameters,
+} from '../internals/plugins/useTreeViewLabel';
 
 export const RICH_TREE_VIEW_PLUGINS = [
   useTreeViewItems,
@@ -29,6 +33,7 @@ export const RICH_TREE_VIEW_PLUGINS = [
   useTreeViewFocus,
   useTreeViewKeyboardNavigation,
   useTreeViewIcons,
+  useTreeViewLabel,
 ] as const;
 
 export type RichTreeViewPluginSignatures = ConvertPluginsIntoSignatures<
@@ -52,4 +57,5 @@ export interface RichTreeViewPluginParameters<R extends {}, Multiple extends boo
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,
-    UseTreeViewIconsParameters {}
+    UseTreeViewIconsParameters,
+    UseTreeViewLabelParameters<R> {}
