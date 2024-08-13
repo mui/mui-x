@@ -15,8 +15,8 @@ const StyledDataGridPremium = styled(DataGridPremium)(({ theme }) => {
       borderRight: `1px solid ${lightBorderColor}`,
       borderBottom: `1px solid ${lightBorderColor}`,
       ...theme.applyStyles('dark', {
-        borderRightColor: darkBorderColor,
-        borderBottomColor: darkBorderColor,
+        borderRightColor: `${darkBorderColor}`,
+        borderBottomColor: `${darkBorderColor}`,
       }),
     },
     [`& .${gridClasses.cell}.Mui-selected`]: {
