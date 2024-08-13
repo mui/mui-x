@@ -140,7 +140,7 @@ describe('<DataGrid /> - Export', () => {
       expect(spyCreateObjectURL.callCount).to.equal(1);
       const csv = await spyCreateObjectURL.lastCall.firstArg.text();
 
-      expect(csv).to.equal(['Name', '', '', '1234'].join('\r\n'));
+      expect(csv).to.equal(['name', 'Name', '', '', '1234'].join('\r\n'));
     });
   });
 
