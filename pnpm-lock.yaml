@@ -84,8 +84,8 @@ importers:
         specifier: ^11.13.0
         version: 11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/icons-material':
-        specifier: ^5.16.5
-        version: 5.16.5(@mui/material@5.16.5(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
+        specifier: next
+        version: 6.0.0-beta.5(@mui/material@6.0.0-beta.5(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/internal-markdown':
         specifier: ^1.0.9
         version: 1.0.9
@@ -93,14 +93,14 @@ importers:
         specifier: https://pkg.csb.dev/mui/material-ui/commit/225876f7/@mui/internal-test-utils
         version: https://pkg.csb.dev/mui/material-ui/commit/225876f7/@mui/internal-test-utils(@babel/core@7.25.2)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
-        specifier: ^5.16.5
-        version: 5.16.5(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: next
+        version: 6.0.0-beta.5(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/monorepo':
         specifier: github:mui/material-ui#4a82b6b0e0395db8fa0a0d49b6b76de4516b1579
         version: https://codeload.github.com/mui/material-ui/tar.gz/4a82b6b0e0395db8fa0a0d49b6b76de4516b1579(encoding@0.1.13)
       '@mui/utils':
-        specifier: ^5.16.5
-        version: 5.16.5(@types/react@18.3.3)(react@18.3.1)
+        specifier: next
+        version: 6.0.0-beta.5(@types/react@18.3.3)(react@18.3.1)
       '@next/eslint-plugin-next':
         specifier: 14.2.5
         version: 14.2.5
@@ -11869,14 +11869,6 @@ snapshots:
       next: 14.2.5(@babel/core@7.25.2)(@opentelemetry/api@1.8.0)(@playwright/test@1.44.1)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nprogress: 0.2.0
       prop-types: 15.8.1
-      react: 18.3.1
-    optionalDependencies:
-      '@types/react': 18.3.3
-
-  '@mui/icons-material@5.16.5(@mui/material@5.16.5(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)':
-    dependencies:
-      '@babel/runtime': 7.25.0
-      '@mui/material': 5.16.5(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
     optionalDependencies:
       '@types/react': 18.3.3
