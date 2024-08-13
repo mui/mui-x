@@ -421,6 +421,11 @@ SparkLineChart.propTypes = {
     slotProps: PropTypes.object,
     slots: PropTypes.object,
     stroke: PropTypes.string,
+    sx: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+      PropTypes.func,
+      PropTypes.object,
+    ]),
     tickFontSize: PropTypes.number,
     tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
     tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
@@ -482,6 +487,11 @@ SparkLineChart.propTypes = {
     slotProps: PropTypes.object,
     slots: PropTypes.object,
     stroke: PropTypes.string,
+    sx: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+      PropTypes.func,
+      PropTypes.object,
+    ]),
     tickFontSize: PropTypes.number,
     tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
     tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
