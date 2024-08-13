@@ -1,3 +1,5 @@
+// Data from https://finance.yahoo.com/quote/NFLX/financials/
+
 const translations = {
   totAss: 'Total Assets',
   currAss: 'Current Assets',
