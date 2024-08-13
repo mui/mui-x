@@ -96,8 +96,8 @@ importers:
         specifier: ^5.16.5
         version: 5.16.5(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/monorepo':
-        specifier: github:Janpot/material-ui#ts-fixes
-        version: https://codeload.github.com/Janpot/material-ui/tar.gz/ca293420f03b378920c7c1f3aaf455b7a58060ff(encoding@0.1.13)
+        specifier: github:Janpot/material-ui#5602fb4eda7701c233d59805e89a3c44f209178c
+        version: https://codeload.github.com/Janpot/material-ui/tar.gz/5602fb4eda7701c233d59805e89a3c44f209178c(encoding@0.1.13)
       '@mui/utils':
         specifier: ^5.16.5
         version: 5.16.5(@types/react@18.3.3)(react@18.3.1)
@@ -3066,8 +3066,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/Janpot/material-ui/tar.gz/ca293420f03b378920c7c1f3aaf455b7a58060ff':
-    resolution: {tarball: https://codeload.github.com/Janpot/material-ui/tar.gz/ca293420f03b378920c7c1f3aaf455b7a58060ff}
+  '@mui/monorepo@https://codeload.github.com/Janpot/material-ui/tar.gz/5602fb4eda7701c233d59805e89a3c44f209178c':
+    resolution: {tarball: https://codeload.github.com/Janpot/material-ui/tar.gz/5602fb4eda7701c233d59805e89a3c44f209178c}
     version: 6.0.0-beta.5
     engines: {pnpm: 9.6.0}
 
@@ -11915,7 +11915,7 @@ snapshots:
       '@emotion/styled': 11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@types/react': 18.3.3
 
-  '@mui/monorepo@https://codeload.github.com/Janpot/material-ui/tar.gz/ca293420f03b378920c7c1f3aaf455b7a58060ff(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/Janpot/material-ui/tar.gz/5602fb4eda7701c233d59805e89a3c44f209178c(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 8.0.0(encoding@0.1.13)
       '@netlify/functions': 2.8.1
