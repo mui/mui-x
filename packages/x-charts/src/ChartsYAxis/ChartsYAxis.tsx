@@ -72,6 +72,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     tickInterval,
     tickLabelInterval,
     data,
+    sx,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -156,6 +157,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     <AxisRoot
       transform={`translate(${position === 'right' ? left + width : left}, 0)`}
       className={classes.root}
+      sx={sx}
     >
       {!disableLine && (
         <Line y1={top} y2={top + height} className={classes.line} {...lineSlotProps} />
@@ -265,6 +267,11 @@ ChartsYAxis.propTypes = {
    * @default 'currentColor'
    */
   stroke: PropTypes.string,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * The font size of the axis ticks text.
    * @default 12

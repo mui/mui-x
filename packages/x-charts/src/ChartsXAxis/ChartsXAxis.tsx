@@ -128,6 +128,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickPlacement,
     tickLabelPlacement,
     data,
+    sx,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -204,6 +205,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     <AxisRoot
       transform={`translate(0, ${position === 'bottom' ? top + height : top})`}
       className={classes.root}
+      sx={sx}
     >
       {!disableLine && (
         <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
@@ -309,6 +311,11 @@ ChartsXAxis.propTypes = {
    * @default 'currentColor'
    */
   stroke: PropTypes.string,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * The font size of the axis ticks text.
    * @default 12
