@@ -35,7 +35,7 @@ export const useGridInfiniteLoader = (
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
   const observer = React.useRef<IntersectionObserver>();
-  const observerUpdateTimeout = React.useRef<ReturnType<typeof setTimeout>>();
+  const updateTargetTimeout = React.useRef<ReturnType<typeof setTimeout>>();
   const triggerElement = React.useRef<HTMLElement | null>(null);
 
   const isEnabled = props.rowsLoadingMode === 'client' && !!props.onRowsScrollEnd;
@@ -83,7 +83,7 @@ export const useGridInfiniteLoader = (
     }
   }, [virtualScroller, handleLoadMoreRows, isEnabled, marginBottom]);
 
-  const observerUpdate = (node: HTMLElement | null) => {
+  const updateTarget = (node: HTMLElement | null) => {
     if (triggerElement.current !== node) {
       observer.current?.disconnect();
 
@@ -109,7 +109,7 @@ export const useGridInfiniteLoader = (
       // https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/observe
       // Related to
       // https://github.com/mui/mui-x/issues/14116
-      observerUpdateTimeout.current = setTimeout(observerUpdate, 0, node);
+      updateTargetTimeout.current = setTimeout(updateTarget, 0, node);
     },
     [isEnabled],
   );
@@ -145,7 +145,7 @@ export const useGridInfiniteLoader = (
    */
   React.useEffect(() => {
     return () => {
-      clearTimeout(observerUpdateTimeout.current);
+      clearTimeout(updateTargetTimeout.current);
     };
   }, []);
 };
