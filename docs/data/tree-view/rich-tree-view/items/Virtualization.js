@@ -20,9 +20,9 @@ const ITEMS = Array.from({ length: 10 }).map((_1, index) => ({
   })),
 }));
 
-const addChildrenToItem = (item) => {
+function addChildrenToItem(item) {
   return [item.id, ...(item.children ?? []).flatMap(addChildrenToItem)];
-};
+}
 
 const flatItemIds = ITEMS.flatMap(addChildrenToItem);
 
