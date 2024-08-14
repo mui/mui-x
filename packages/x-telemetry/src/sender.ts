@@ -54,7 +54,7 @@ function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
   }
 
   // TODO: batch events and send them in a single request when there will be more
-  fetch('http://localhost:8000/api/v1/telemetry/record', {
+  fetch('https://telemetry.x.mui.com/api/v1/telemetry/record', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify([eventPayload]),
