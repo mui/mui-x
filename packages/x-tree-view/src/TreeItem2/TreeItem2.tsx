@@ -8,6 +8,7 @@ import MuiCheckbox, { CheckboxProps } from '@mui/material/Checkbox';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeItem2Props, TreeItem2OwnerState } from './TreeItem2.types';
 import {
@@ -21,7 +22,6 @@ import { TreeItem2Icon } from '../TreeItem2Icon';
 import { TreeItem2DragAndDropOverlay } from '../TreeItem2DragAndDropOverlay';
 import { TreeItem2Provider } from '../TreeItem2Provider';
 import { TreeItem2LabelInput } from '../TreeItem2LabelInput';
-import { fastMemo } from '../internals/utils/fastMemo';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem2');
 

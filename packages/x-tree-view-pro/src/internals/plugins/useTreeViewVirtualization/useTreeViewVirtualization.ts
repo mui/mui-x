@@ -1,6 +1,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerWindow from '@mui/utils/ownerWindow';
+import { throttle } from '@mui/x-internals/throttle';
 import {
   warnOnce,
   clamp,
@@ -19,7 +20,6 @@ import {
   areElementSizesEqual,
   getBufferFromScrollDirection,
 } from './useTreeViewVirtualization.utils';
-import { throttle } from './throttle';
 
 export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualizationSignature> = ({
   params,
