@@ -81,7 +81,7 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
       if (process.env.NODE_ENV !== 'production') {
         if (newSize.height === 0 && !isJSDOM) {
           warnOnce([
-            'The parent DOM element of the tree view has an empty height.',
+            'MUI X: The parent DOM element of the tree view has an empty height.',
             'Please make sure that this element has an intrinsic height.',
             'The tree view displays with a height of 0px.',
             '',

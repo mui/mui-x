@@ -46,7 +46,7 @@ export const TreeViewVirtualScrollbar = React.forwardRef<
   } = useTreeViewContext<[UseTreeViewVirtualizationSignature]>();
   const isLocked = React.useRef(false);
   const lastPosition = React.useRef(0);
-  const scrollbarRef = React.useRef<HTMLDivElement>(null);
+  const scrollbarRef = React.useRef<HTMLDivElement | null>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
 
   const dimensions = instance.getDimensions();

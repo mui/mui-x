@@ -332,7 +332,7 @@ RichTreeViewPro.propTypes = {
    */
   resizeThrottleMs: PropTypes.number,
   /**
-   * Region in pixels to render before/after the viewport
+   * Region in pixels to render before/after the viewport.
    * @default 150
    */
   scrollBufferPx: PropTypes.number,

@@ -16,7 +16,6 @@ const TreeViewVirtualScrollerRoot = styled('div', {
   '--TreeView-scrollbarSize': '10px',
   '--TreeView-hasScrollX': '0',
   '--TreeView-hasScrollY': '0',
-
   flexGrow: 1,
   position: 'relative',
   overflow: 'hidden',
