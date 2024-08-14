@@ -76,7 +76,7 @@
     "@mui/material": "next",
     "@mui/types": "^7.2.15",
     "@types/prop-types": "^15.7.12",
-    "rimraf": "^5.0.9"
+    "rimraf": "^5.0.10"
   },
   "engines": {
     "node": ">=14.0.0"

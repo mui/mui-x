@@ -71,7 +71,7 @@
     "@mui/internal-test-utils": "https://pkg.csb.dev/mui/material-ui/commit/225876f7/@mui/internal-test-utils",
     "@mui/material": "next",
     "@types/prop-types": "^15.7.12",
-    "rimraf": "^5.0.9"
+    "rimraf": "^5.0.10"
   },
   "engines": {
     "node": ">=14.0.0"
