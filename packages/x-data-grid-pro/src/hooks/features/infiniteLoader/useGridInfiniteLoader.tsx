@@ -6,7 +6,11 @@ import {
   useGridApiMethod,
   gridDimensionsSelector,
 } from '@mui/x-data-grid';
-import { useGridVisibleRows, GridInfiniteLoaderPrivateApi } from '@mui/x-data-grid/internals';
+import {
+  useGridVisibleRows,
+  GridInfiniteLoaderPrivateApi,
+  useTimeout,
+} from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { styled } from '@mui/system';
 import { GridRowScrollEndParams } from '../../../models';
@@ -35,7 +39,7 @@ export const useGridInfiniteLoader = (
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
   const observer = React.useRef<IntersectionObserver>();
-  const updateTargetTimeout = React.useRef<ReturnType<typeof setTimeout>>();
+  const updateTargetTimeout = useTimeout();
   const triggerElement = React.useRef<HTMLElement | null>(null);
 
   const isEnabled = props.rowsLoadingMode === 'client' && !!props.onRowsScrollEnd;
@@ -109,9 +113,9 @@ export const useGridInfiniteLoader = (
       // https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/observe
       // Related to
       // https://github.com/mui/mui-x/issues/14116
-      updateTargetTimeout.current = setTimeout(updateTarget, 0, node);
+      updateTargetTimeout.start(0, () => updateTarget(node));
     },
-    [isEnabled],
+    [isEnabled, updateTargetTimeout],
   );
 
   const getInfiniteLoadingTriggerElement = React.useCallback<
@@ -139,10 +143,4 @@ export const useGridInfiniteLoader = (
 
   useGridApiMethod(apiRef, infiniteLoaderPrivateApi, 'private');
   useGridApiOptionHandler(apiRef, 'rowsScrollEnd', props.onRowsScrollEnd);
-
-  React.useEffect(() => {
-    return () => {
-      clearTimeout(updateTargetTimeout.current);
-    };
-  }, []);
 };
