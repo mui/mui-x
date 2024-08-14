@@ -180,6 +180,23 @@ describeTreeView<
   });
 
   describe('canMoveItemToNewPosition prop', () => {
+    it('should call canMoveItemToNewPosition with the correct parameters', () => {
+      const canMoveItemToNewPosition = spy();
+      const response = render({
+        experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
+        items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+        itemsReordering: true,
+        canMoveItemToNewPosition,
+      });
+
+      dragEvents.fullDragSequence(response.getItemRoot('1'), response.getItemContent('2'));
+      expect(canMoveItemToNewPosition.lastCall.firstArg).to.deep.equal({
+        itemId: '1',
+        oldPosition: { parentId: null, index: 0 },
+        newPosition: { parentId: null, index: 1 },
+      });
+    });
+
     it('should not allow to drop an item when canMoveItemToNewPosition returns false', () => {
       const response = render({
         experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },

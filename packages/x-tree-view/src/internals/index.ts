@@ -64,6 +64,11 @@ export type {
   TreeViewItemToRenderProps,
   TreeViewItemMetaMap,
 } from './plugins/useTreeViewItems';
+export { useTreeViewLabel } from './plugins/useTreeViewLabel';
+export type {
+  UseTreeViewLabelSignature,
+  UseTreeViewLabelParameters,
+} from './plugins/useTreeViewLabel';
 export { useTreeViewJSXItems } from './plugins/useTreeViewJSXItems';
 export type {
   UseTreeViewJSXItemsSignature,

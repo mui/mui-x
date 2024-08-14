@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view-pro",
-  "version": "7.12.0",
+  "version": "7.12.1",
   "description": "The Pro plan edition of the Tree View components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -15,7 +15,8 @@
   },
   "sideEffects": false,
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "build"
   },
   "keywords": [
     "react",
@@ -60,8 +61,16 @@
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },
+  "peerDependenciesMeta": {
+    "@emotion/react": {
+      "optional": true
+    },
+    "@emotion/styled": {
+      "optional": true
+    }
+  },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.5",
+    "@mui/internal-test-utils": "^1.0.7",
     "@types/prop-types": "^15.7.12",
     "rimraf": "^5.0.9"
   },

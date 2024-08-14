@@ -13,12 +13,14 @@ import { TreeItem2Props, TreeItem2OwnerState } from './TreeItem2.types';
 import {
   unstable_useTreeItem2 as useTreeItem2,
   UseTreeItem2ContentSlotOwnProps,
+  UseTreeItem2LabelSlotOwnProps,
   UseTreeItem2Status,
 } from '../useTreeItem2';
 import { getTreeItemUtilityClass } from '../TreeItem';
 import { TreeItem2Icon } from '../TreeItem2Icon';
 import { TreeItem2DragAndDropOverlay } from '../TreeItem2DragAndDropOverlay';
 import { TreeItem2Provider } from '../TreeItem2Provider';
+import { TreeItem2LabelInput } from '../TreeItem2LabelInput';
 import { fastMemo } from '../internals/utils/fastMemo';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem2');
@@ -125,13 +127,23 @@ export const TreeItem2Label = styled('div', {
   name: 'MuiTreeItem2',
   slot: 'Label',
   overridesResolver: (props, styles) => styles.label,
-})(({ theme }) => ({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'editable',
+})<{ editable?: boolean }>(({ theme }) => ({
   width: '100%',
   boxSizing: 'border-box', // prevent width + padding to overflow
   // fixes overflow - see https://github.com/mui/material-ui/issues/27372
   minWidth: 0,
   position: 'relative',
+  overflow: 'hidden',
   ...theme.typography.body1,
+  variants: [
+    {
+      props: ({ editable }: UseTreeItem2LabelSlotOwnProps) => editable,
+      style: {
+        paddingLeft: '2px',
+      },
+    },
+  ],
 }));
 
 export const TreeItem2IconContainer = styled('div', {
@@ -192,6 +204,8 @@ const useUtilityClasses = (ownerState: TreeItem2OwnerState) => {
     root: ['root'],
     content: ['content'],
     expanded: ['expanded'],
+    editing: ['editing'],
+    editable: ['editable'],
     selected: ['selected'],
     focused: ['focused'],
     disabled: ['disabled'],
@@ -199,6 +213,7 @@ const useUtilityClasses = (ownerState: TreeItem2OwnerState) => {
     checkbox: ['checkbox'],
     label: ['label'],
     groupTransition: ['groupTransition'],
+    labelInput: ['labelInput'],
     dragAndDropOverlay: ['dragAndDropOverlay'],
   };
 
@@ -244,6 +259,7 @@ const TreeItem2 = React.forwardRef(function TreeItem2(
     getCheckboxProps,
     getLabelProps,
     getGroupTransitionProps,
+    getLabelInputProps,
     getDragAndDropOverlayProps,
     status,
   } = useTreeItem2({
@@ -286,8 +302,11 @@ const TreeItem2 = React.forwardRef(function TreeItem2(
       [classes.selected]: status.selected,
       [classes.focused]: status.focused,
       [classes.disabled]: status.disabled,
+      [classes.editing]: status.editing,
+      [classes.editable]: status.editable,
     }),
   });
+
   const IconContainer: React.ElementType = slots.iconContainer ?? TreeItem2IconContainer;
   const iconContainerProps = useSlotProps({
     elementType: IconContainer,
@@ -324,6 +343,15 @@ const TreeItem2 = React.forwardRef(function TreeItem2(
     className: classes.groupTransition,
   });
 
+  const LabelInput: React.ElementType = slots.labelInput ?? TreeItem2LabelInput;
+  const labelInputProps = useSlotProps({
+    elementType: LabelInput,
+    getSlotProps: getLabelInputProps,
+    externalSlotProps: slotProps.labelInput,
+    ownerState: {},
+    className: classes.labelInput,
+  });
+
   const DragAndDropOverlay: React.ElementType | undefined =
     slots.dragAndDropOverlay ?? TreeItem2DragAndDropOverlay;
   const dragAndDropOverlayProps = useSlotProps({
@@ -342,7 +370,7 @@ const TreeItem2 = React.forwardRef(function TreeItem2(
             <TreeItem2Icon status={status} slots={slots} slotProps={slotProps} />
           </IconContainer>
           <Checkbox {...checkboxProps} />
-          <Label {...labelProps} />
+          {status.editing ? <LabelInput {...labelInputProps} /> : <Label {...labelProps} />}
           <DragAndDropOverlay {...dragAndDropOverlayProps} />
         </Content>
         {children && <TreeItem2GroupTransition as={GroupTransition} {...groupTransitionProps} />}

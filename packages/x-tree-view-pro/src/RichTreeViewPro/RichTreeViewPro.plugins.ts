@@ -13,6 +13,8 @@ import {
   ConvertPluginsIntoSignatures,
   MergeSignaturesProperty,
   TreeViewCorePluginParameters,
+  useTreeViewLabel,
+  UseTreeViewLabelParameters,
 } from '@mui/x-tree-view/internals';
 import {
   useTreeViewItemsReordering,
@@ -30,6 +32,7 @@ export const RICH_TREE_VIEW_PRO_PLUGINS = [
   useTreeViewFocus,
   useTreeViewKeyboardNavigation,
   useTreeViewIcons,
+  useTreeViewLabel,
   useTreeViewItemsReordering,
   useTreeViewVirtualization,
 ] as const;
@@ -56,5 +59,6 @@ export interface RichTreeViewProPluginParameters<R extends {}, Multiple extends 
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,
     UseTreeViewIconsParameters,
+    UseTreeViewLabelParameters<R>,
     UseTreeViewItemsReorderingParameters,
     UseTreeViewVirtualizationParameters {}
