@@ -5,10 +5,16 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import Typography, { typographyClasses } from '@mui/material/Typography';
-import { PivotModel } from '../../../hooks/features/pivoting/useGridPivoting';
+import { svgIconClasses } from '@mui/material/SvgIcon';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { PivotModel } from '../../../hooks/features/pivoting/useGridPivoting';
 import { useGridRootProps } from '../../../typeOverloads/reexports';
 import { getAvailableAggregationFunctions } from '../../../hooks/features/aggregation/gridAggregationUtils';
+
+function AutoAnimateContainer(props: React.HTMLAttributes<HTMLDivElement>) {
+  const [parent] = useAutoAnimate({ duration: 150 });
+  return <div ref={parent} {...props} />;
+}
 
 const PivotSectionContainer = styled('div')({
   flex: 1,
@@ -17,11 +23,12 @@ const PivotSectionContainer = styled('div')({
   overflow: 'hidden',
 });
 
-const PivotSection = styled('div')(({ theme }) => ({
+const PivotSection = styled(AutoAnimateContainer)(({ theme }) => ({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
-  overflow: 'auto',
+  overflow: 'hidden',
+  transition: 'background-color 0.15s ease-in-out',
   '& + &': {
     borderTop: `1px solid ${theme.palette.divider}`,
   },
@@ -31,11 +38,24 @@ const PivotSection = styled('div')(({ theme }) => ({
 }));
 
 const PivotSectionTitle = styled('div')(({ theme }) => ({
-  fontSize: theme.typography.pxToRem(12),
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(0.75),
+  fontSize: theme.typography.pxToRem(14),
   fontWeight: theme.typography.fontWeightMedium,
   color: theme.palette.text.secondary,
-  padding: theme.spacing(1, 2.5, 0),
+  padding: theme.spacing(1.25, 2.5),
+  [`.${svgIconClasses.root}`]: {
+    fontSize: theme.typography.pxToRem(18),
+  },
 }));
+
+const PivotSectionList = styled(AutoAnimateContainer)({
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'column',
+  overflow: 'auto',
+});
 
 const PivotSectionPlaceholder = styled('div')(({ theme }) => ({
   flex: 1,
@@ -43,7 +63,7 @@ const PivotSectionPlaceholder = styled('div')(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   height: 60,
-  margin: theme.spacing(2.5),
+  margin: theme.spacing(0, 2.5, 2),
   border: `1px dashed ${theme.palette.grey[400]}`,
   borderRadius: 4,
   color: theme.palette.text.secondary,
@@ -60,16 +80,11 @@ const PivotSectionPlaceholder = styled('div')(({ theme }) => ({
   },
 }));
 
-const PivotSectionList = styled('div')(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  padding: theme.spacing(1, 0),
-}));
-
 const PivotField = styled('div')<{
   dropPosition: DropPosition;
   section: FieldTransferObject['modelKey'];
 }>(({ theme }) => ({
+  flexShrink: 0,
   paddingRight: theme.spacing(1.5),
   height: '35px',
   display: 'flex',
@@ -102,6 +117,7 @@ const PivotFieldLabel = styled('div')(({ theme }) => ({
   minWidth: 0,
   [`.${formControlLabelClasses.root}`]: {
     width: '100%',
+    cursor: 'grab',
   },
   [`.${typographyClasses.root}`]: {
     fontSize: theme.typography.pxToRem(14),
@@ -563,7 +579,6 @@ export function GridSidebarColumnPanelBody({
         onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
         data-section={null}
-        ref={useAutoAnimate()[0]}
         data-drag-over={drag.active && drag.dropZone === null}
       >
         {availableFields.length === 0 && (
@@ -597,10 +612,13 @@ export function GridSidebarColumnPanelBody({
         onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
         data-section="rows"
-        ref={useAutoAnimate()[0]}
         data-drag-over={drag.dropZone === 'rows'}
       >
-        <PivotSectionTitle>Rows</PivotSectionTitle>
+        <PivotSectionTitle>
+          {/* TODO: Replace with pivotRowsIcon or a more generic rowsIcon */}
+          <rootProps.slots.densityStandardIcon />
+          Rows
+        </PivotSectionTitle>
         {pivotModel.rows.length === 0 && (
           <PivotSectionPlaceholder>Drag here to create rows</PivotSectionPlaceholder>
         )}
@@ -633,10 +651,13 @@ export function GridSidebarColumnPanelBody({
         onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
         data-section="columns"
-        ref={useAutoAnimate()[0]}
         data-drag-over={drag.dropZone === 'columns'}
       >
-        <PivotSectionTitle>Columns</PivotSectionTitle>
+        <PivotSectionTitle>
+          {/* TODO: Replace with pivotColumnsIcon or a more generic columnsIcon */}
+          <rootProps.slots.columnSelectorIcon />
+          Columns
+        </PivotSectionTitle>
         {pivotModel.columns.length === 0 && (
           <PivotSectionPlaceholder>Drag here to create columns</PivotSectionPlaceholder>
         )}
@@ -670,10 +691,13 @@ export function GridSidebarColumnPanelBody({
         onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
         data-section="values"
-        ref={useAutoAnimate()[0]}
         data-drag-over={drag.dropZone === 'values'}
       >
-        <PivotSectionTitle>Values</PivotSectionTitle>
+        <PivotSectionTitle>
+          {/* TODO: Replace with pivotValuesIcon or a more generic valuesIcon */}
+          <rootProps.slots.columnMenuAggregationIcon />
+          Values
+        </PivotSectionTitle>
         {pivotModel.values.length === 0 && (
           <PivotSectionPlaceholder>Drag here to create values</PivotSectionPlaceholder>
         )}
