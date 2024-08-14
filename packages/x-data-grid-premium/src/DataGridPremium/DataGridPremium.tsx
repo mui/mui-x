@@ -25,8 +25,8 @@ import {
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
-import { GridSidebar } from '../components/GridSidebar';
-import { GridSidebarColumnPanel } from '../components/GridSidebarColumnPanel';
+import { GridSidebar } from '../components/sidebar/GridSidebar';
+import { GridSidebarColumnPanel } from '../components/sidebar/columnPanel/GridSidebarColumnPanel';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
