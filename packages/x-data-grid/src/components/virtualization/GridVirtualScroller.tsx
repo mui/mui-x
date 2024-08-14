@@ -19,14 +19,23 @@ import { GridVirtualScrollerContent as Content } from './GridVirtualScrollerCont
 import { GridVirtualScrollerFiller as SpaceFiller } from './GridVirtualScrollerFiller';
 import { GridVirtualScrollerRenderZone as RenderZone } from './GridVirtualScrollerRenderZone';
 import { GridVirtualScrollbar as Scrollbar } from './GridVirtualScrollbar';
+import { GridLoadingOverlayVariant } from '../GridLoadingOverlay';
 
 type OwnerState = DataGridProcessedProps;
 
-const useUtilityClasses = (ownerState: OwnerState, dimensions: GridDimensions) => {
+const useUtilityClasses = (
+  ownerState: OwnerState,
+  dimensions: GridDimensions,
+  loadingOverlayVariant: GridLoadingOverlayVariant | null,
+) => {
   const { classes } = ownerState;
 
   const slots = {
-    root: ['main', dimensions.rightPinnedWidth > 0 && 'main--hasPinnedRight'],
+    root: [
+      'main',
+      dimensions.rightPinnedWidth > 0 && 'main--hasPinnedRight',
+      loadingOverlayVariant === 'skeleton' && 'main--hasSkeletonLoadingOverlay',
+    ],
     scroller: ['virtualScroller'],
   };
 
@@ -63,8 +72,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const rootProps = useGridRootProps();
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const overlaysProps = useGridOverlays();
-  const classes = useUtilityClasses(rootProps, dimensions);
-  const hasSkeletonLoader = overlaysProps.loadingOverlayVariant === 'skeleton';
+  const classes = useUtilityClasses(rootProps, dimensions, overlaysProps.loadingOverlayVariant);
 
   const virtualScroller = useGridVirtualScroller();
   const {
@@ -91,26 +99,20 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
 
         <Overlays {...overlaysProps} />
 
-        {!hasSkeletonLoader && (
-          <React.Fragment>
-            <Content {...getContentProps()}>
-              <RenderZone {...getRenderZoneProps()}>
-                {rows}
-                {<rootProps.slots.detailPanels virtualScroller={virtualScroller} />}
-              </RenderZone>
-            </Content>
+        <Content {...getContentProps()}>
+          <RenderZone {...getRenderZoneProps()}>
+            {rows}
+            {<rootProps.slots.detailPanels virtualScroller={virtualScroller} />}
+          </RenderZone>
+        </Content>
 
-            <SpaceFiller rowsLength={rows.length} />
-          </React.Fragment>
-        )}
+        <SpaceFiller rowsLength={rows.length} />
 
         <BottomContainer>
           <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
         </BottomContainer>
       </Scroller>
-      {dimensions.hasScrollY && !hasSkeletonLoader && (
-        <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />
-      )}
+      {dimensions.hasScrollY && <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />}
       {dimensions.hasScrollX && (
         <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />
       )}
