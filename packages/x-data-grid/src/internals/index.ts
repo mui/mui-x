@@ -148,7 +148,6 @@ export {
 } from '../utils/domUtils';
 export { isNavigationKey, isPasteShortcut } from '../utils/keyboardUtils';
 export * from '../utils/utils';
-export * from '../utils/fastMemo';
 export { exportAs } from '../utils/exportAs';
 export * from '../utils/getPublicApiRef';
 export * from '../utils/cellBorderUtils';
