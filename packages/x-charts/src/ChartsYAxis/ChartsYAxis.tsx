@@ -10,6 +10,8 @@ import { ChartsYAxisProps } from '../models/axis';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
+import { isInfinity } from '../internals/isInfinity';
+import { isBandScale } from '../internals/isBandScale';
 
 const useUtilityClasses = (ownerState: ChartsYAxisProps & { theme: Theme }) => {
   const { classes, position } = ownerState;
@@ -71,7 +73,6 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     tickLabelPlacement,
     tickInterval,
     tickLabelInterval,
-    data,
     sx,
   } = defaultizedProps;
 
@@ -146,10 +147,11 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   });
 
   const domain = yScale.domain();
-  // Skip axis rendering if
-  // - the domain is Infinite (for band and point axis)
-  // - No data is associated to the axis (other scale types)
-  if (domain.length === 0 || (data?.length === 0 && !domain.every(Number.isFinite))) {
+  const ordinalAxis = isBandScale(yScale);
+  // Skip axis rendering if no data is available
+  // - The domain is an empty array for band/point scales.
+  // - The domains contains Infinity for continuous scales.
+  if ((ordinalAxis && domain.length === 0) || (!ordinalAxis && domain.some(isInfinity))) {
     return null;
   }
 
