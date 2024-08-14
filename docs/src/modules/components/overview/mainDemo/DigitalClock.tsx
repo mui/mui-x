@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
+import { StaticTimePicker, StaticTimePickerProps } from '@mui/x-date-pickers/StaticTimePicker';
 import {
   PickersLayoutProps,
   usePickerLayout,
@@ -57,7 +57,7 @@ export default function DigitalClock() {
               hours: renderMultiSectionDigitalClockTimeView,
               minutes: renderMultiSectionDigitalClockTimeView,
               meridiem: renderMultiSectionDigitalClockTimeView,
-            } as any
+            } as StaticTimePickerProps<Dayjs>['viewRenderers']
           }
         />
       </Paper>
