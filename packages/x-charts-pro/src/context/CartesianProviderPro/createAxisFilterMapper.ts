@@ -46,7 +46,7 @@ export const createAxisFilterMapper =
 
     return (value, dataIndex) => {
       const val =
-        axis.data?.[dataIndex] ?? (value && typeof value === 'object' ? value[direction] : value);
+        value && typeof value === 'object' ? value[direction] : (axis.data?.[dataIndex] ?? value);
 
       if (val == null) {
         // If the value does not exist because of missing data point, or out of range index, we just ignore.
