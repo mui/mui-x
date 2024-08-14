@@ -6,6 +6,9 @@ import type { GridApiCommunity } from '../../../../models/api/gridApiCommunity';
 import { warnOnce } from '../../../../internals/utils/warning';
 
 function sanitizeCellValue(value: unknown, csvOptions: CSVOptions): string {
+  if (value === null || value === undefined) {
+    return '';
+  }
   const valueStr = typeof value === 'string' ? value : `${value}`;
 
   if (csvOptions.shouldAppendQuotes || csvOptions.escapeFormulas) {
@@ -58,7 +61,7 @@ type CSVOptions = Required<
 >;
 
 type CSVRowOptions = {
-  sanitizeCellValue?: (value: any, csvOptions: CSVOptions) => any;
+  sanitizeCellValue?: (value: unknown, csvOptions: CSVOptions) => string;
   csvOptions: CSVOptions;
 };
 class CSVRow {
@@ -76,9 +79,7 @@ class CSVRow {
     if (!this.isEmpty) {
       this.rowString += this.options.csvOptions.delimiter;
     }
-    if (value === null || value === undefined) {
-      this.rowString += '';
-    } else if (typeof this.options.sanitizeCellValue === 'function') {
+    if (typeof this.options.sanitizeCellValue === 'function') {
       this.rowString += this.options.sanitizeCellValue(value, this.options.csvOptions);
     } else {
       this.rowString += value;

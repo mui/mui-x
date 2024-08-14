@@ -117,6 +117,31 @@ describe('<DataGrid /> - Export', () => {
         ].join('\r\n'),
       );
     });
+
+    it('should export `undefined` and `null` values as blank', async () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            columns={[{ field: 'name' }]}
+            rows={[
+              { id: 0, name: 'Name' },
+              { id: 1, name: undefined },
+              { id: 2, name: null },
+              { id: 3, name: 1234 },
+            ]}
+            slots={{ toolbar: GridToolbar }}
+          />
+        </div>,
+      );
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).not.to.equal(null);
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
+      expect(spyCreateObjectURL.callCount).to.equal(1);
+      const csv = await spyCreateObjectURL.lastCall.firstArg.text();
+
+      expect(csv).to.equal(['name', 'Name', '', '', '1234'].join('\r\n'));
+    });
   });
 
   describe('component: GridToolbarExport', () => {
