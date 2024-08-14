@@ -30,12 +30,14 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
       zoomData,
       extremumGetter: xExtremumGetters,
       formattedSeries,
+      direction: 'x',
     });
 
     const yMapper = createAxisFilterMapper({
       zoomData,
       extremumGetter: yExtremumGetters,
       formattedSeries,
+      direction: 'y',
     });
 
     const xFilters = xAxis.reduce((acc, axis, index) => {

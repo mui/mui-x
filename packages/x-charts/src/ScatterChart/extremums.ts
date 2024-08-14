@@ -28,11 +28,11 @@ export const getExtremumX: ExtremumGetter<'scatter'> = (params) => {
         });
 
         const seriesMinMax = series[seriesId].data.reduce<ExtremumGetterResult>(
-          (accSeries, { x }, dataIndex) => {
-            if (filter && !filter(x, dataIndex)) {
+          (accSeries, d, dataIndex) => {
+            if (filter && !filter(d, dataIndex)) {
               return accSeries;
             }
-            return mergeMinMax(accSeries, [x, x]);
+            return mergeMinMax(accSeries, [d.x, d.x]);
           },
           [Infinity, -Infinity],
         );
@@ -60,11 +60,11 @@ export const getExtremumY: ExtremumGetter<'scatter'> = (params) => {
         });
 
         const seriesMinMax = series[seriesId].data.reduce<ExtremumGetterResult>(
-          (accSeries, { y }, dataIndex) => {
-            if (filter && !filter(y, dataIndex)) {
+          (accSeries, d, dataIndex) => {
+            if (filter && !filter(d, dataIndex)) {
               return accSeries;
             }
-            return mergeMinMax(accSeries, [y, y]);
+            return mergeMinMax(accSeries, [d.y, d.y]);
           },
           [Infinity, -Infinity],
         );

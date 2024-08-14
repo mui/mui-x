@@ -14,10 +14,11 @@ type CreateAxisFilterMapperParams = {
   zoomData: ZoomData[];
   extremumGetter: ExtremumGettersConfig;
   formattedSeries: FormattedSeries;
+  direction: 'x' | 'y';
 };
 
 export const createAxisFilterMapper =
-  ({ zoomData, extremumGetter, formattedSeries }: CreateAxisFilterMapperParams) =>
+  ({ zoomData, extremumGetter, formattedSeries, direction }: CreateAxisFilterMapperParams) =>
   (axis: AxisConfig<ScaleName, any, ChartsAxisProps>, axisIndex: number): ZoomAxisFilter | null => {
     if (typeof axis.zoom !== 'object' || axis.zoom.filterMode !== 'discard') {
       return null;
@@ -44,7 +45,9 @@ export const createAxisFilterMapper =
     const maxVal = min + (zoom.end * (max - min)) / 100;
 
     return (value, dataIndex) => {
-      const val = value ?? axis.data?.[dataIndex];
+      const val =
+        axis.data?.[dataIndex] ?? (value && typeof value === 'object' ? value[direction] : value);
+
       if (val == null) {
         // If the value does not exist because of missing data point, or out of range index, we just ignore.
         return true;

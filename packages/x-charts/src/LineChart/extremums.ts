@@ -13,7 +13,7 @@ type GetValues = (d: [number, number]) => [number, number];
 function getSeriesExtremums(
   getValues: GetValues,
   stackedData: [number, number][],
-  filter?: (v: number | Date | string | null, i: number) => boolean,
+  filter?: (v: number | Date | string | null | { x: number; y: number }, i: number) => boolean,
 ): [number, number] {
   return stackedData.reduce<[number, number]>(
     (seriesAcc, stackedValue, index) => {

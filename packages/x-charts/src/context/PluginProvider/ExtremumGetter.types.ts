@@ -19,7 +19,7 @@ type ExtremumGetterParams<T extends ChartSeriesType> = {
     seriesXAxisId?: AxisId;
     seriesYAxisId?: AxisId;
     isDefaultAxis: boolean;
-  }) => (v: number | Date | string | null, i: number) => boolean;
+  }) => (v: number | Date | string | null | { x: number; y: number }, i: number) => boolean;
 };
 
 export type ExtremumGetterResult = [number, number];
