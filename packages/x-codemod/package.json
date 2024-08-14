@@ -42,7 +42,7 @@
     "@types/jscodeshift": "^0.11.11",
     "dayjs": "^1.11.11",
     "moment-timezone": "^0.5.45",
-    "rimraf": "^5.0.9"
+    "rimraf": "^5.0.10"
   },
   "sideEffects": false,
   "publishConfig": {

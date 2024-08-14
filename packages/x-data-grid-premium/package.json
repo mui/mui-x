@@ -75,7 +75,7 @@
     "@mui/internal-test-utils": "^1.0.7",
     "@types/prop-types": "^15.7.12",
     "date-fns": "^2.30.0",
-    "rimraf": "^5.0.9"
+    "rimraf": "^5.0.10"
   },
   "engines": {
     "node": ">=14.0.0"
