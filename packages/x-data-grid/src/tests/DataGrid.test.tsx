@@ -27,12 +27,10 @@ describe('<DataGrid />', () => {
   };
 
   it('should accept aria & data attributes props', () => {
-    const gridRef = React.createRef<HTMLDivElement>();
     render(
       <div style={{ width: 300, height: 500 }}>
         <DataGrid
           {...baselineProps}
-          ref={gridRef}
           columns={[{ field: 'brand' }]}
           data-custom-id="grid-1"
           aria-label="Grid one"
@@ -40,8 +38,9 @@ describe('<DataGrid />', () => {
       </div>,
     );
 
-    expect(document.querySelector('[data-custom-id="grid-1"]')).to.equal(gridRef.current);
-    expect(document.querySelector('[aria-label="Grid one"]')).to.equal(gridRef.current);
+    const gridElement = document.querySelector<HTMLElement>(`[role="grid"]`);
+    expect(gridElement!.getAttribute('data-custom-id')).to.equal('grid-1');
+    expect(gridElement!.getAttribute('aria-label')).to.equal('Grid one');
   });
 
   it('should not fail when row have IDs match Object prototype keys (constructor, hasOwnProperty, etc)', () => {
