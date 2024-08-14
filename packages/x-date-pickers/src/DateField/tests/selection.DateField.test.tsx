@@ -9,7 +9,7 @@ import {
   getTextbox,
   buildFieldInteractions,
   adapterToUse,
-} from 'test/utils/pickers';
+} from '@mui/x-date-pickers/test/helpers';
 
 describe('<DateField /> - Selection', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

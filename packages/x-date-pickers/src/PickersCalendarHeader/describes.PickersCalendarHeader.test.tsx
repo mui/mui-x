@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
+import { adapterToUse, createPickerRenderer } from '@mui/x-date-pickers/test/helpers';
 import { describeConformance } from 'test/utils/describeConformance';
 import { PickersCalendarHeader } from './PickersCalendarHeader';
 import { pickersCalendarHeaderClasses } from './pickersCalendarHeaderClasses';

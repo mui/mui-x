@@ -7,7 +7,7 @@ import {
   createPickerRenderer,
   getFieldInputRoot,
   stubMatchMedia,
-} from 'test/utils/pickers';
+} from '@mui/x-date-pickers/test/helpers';
 
 describe('<DateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({

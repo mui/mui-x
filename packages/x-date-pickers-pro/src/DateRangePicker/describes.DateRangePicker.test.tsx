@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { createPickerRenderer } from 'test/utils/pickers';
+import { createPickerRenderer } from '@mui/x-date-pickers/test/helpers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DateRangePicker /> - Describes', () => {

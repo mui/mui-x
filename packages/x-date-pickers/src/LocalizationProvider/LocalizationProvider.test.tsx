@@ -6,7 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useLocalizationContext } from '@mui/x-date-pickers/internals';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { PickersLocaleText } from '@mui/x-date-pickers/locales';
-import { AdapterClassToUse } from 'test/utils/pickers';
+import { AdapterClassToUse } from '@mui/x-date-pickers/test/helpers';
 
 function ContextListener({
   onContextChange,

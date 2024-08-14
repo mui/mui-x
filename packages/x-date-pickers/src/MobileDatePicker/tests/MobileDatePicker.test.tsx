@@ -12,7 +12,7 @@ import {
   buildFieldInteractions,
   openPicker,
   getFieldSectionsContainer,
-} from 'test/utils/pickers';
+} from '@mui/x-date-pickers/test/helpers';
 
 describe('<MobileDatePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

@@ -13,7 +13,7 @@ import {
   buildPickerDragInteractions,
   rangeCalendarDayTouches,
   createPickerRenderer,
-} from 'test/utils/pickers';
+} from '@mui/x-date-pickers/test/helpers';
 import { MockedDataTransfer } from 'test/utils/dragAndDrop';
 import {
   DateRangeCalendar,

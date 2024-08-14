@@ -6,7 +6,7 @@ import {
   expectFieldValueV7,
   describeJalaliAdapter,
   buildFieldInteractions,
-} from 'test/utils/pickers';
+} from '@mui/x-date-pickers/test/helpers';
 import { enUS, faIR } from 'date-fns-jalali/locale';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 

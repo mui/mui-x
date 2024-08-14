@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { screen } from '@mui/internal-test-utils/createRenderer';
 import { expect } from 'chai';
-import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
+import { createPickerRenderer, stubMatchMedia } from '@mui/x-date-pickers/test/helpers';
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 
 describe('<TimePicker />', () => {

@@ -4,7 +4,7 @@ import {
   expectFieldPlaceholderV6,
   expectFieldValueV7,
   buildFieldInteractions,
-} from 'test/utils/pickers';
+} from '@mui/x-date-pickers/test/helpers';
 import {
   DesktopDateTimePicker,
   DesktopDateTimePickerProps,

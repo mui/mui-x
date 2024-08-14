@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SingleInputTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputTimeRangeField';
-import { createPickerRenderer, describeRangeValidation } from 'test/utils/pickers';
+import { createPickerRenderer, describeRangeValidation } from '@mui/x-date-pickers/test/helpers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<SingleInputTimeRangeField /> - Describes', () => {

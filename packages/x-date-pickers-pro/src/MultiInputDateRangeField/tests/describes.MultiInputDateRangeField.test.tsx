@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
-import { createPickerRenderer } from 'test/utils/pickers';
+import { createPickerRenderer } from '@mui/x-date-pickers/test/helpers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MultiInputDateRangeField />', () => {

@@ -9,7 +9,7 @@ import {
   describeRangeValidation,
   getFieldInputRoot,
   getFieldSectionsContainer,
-} from 'test/utils/pickers';
+} from '@mui/x-date-pickers/test/helpers';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { describeConformance } from 'test/utils/describeConformance';
