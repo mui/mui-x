@@ -15,7 +15,7 @@ import {
   UseTreeItem2LabelSlotOwnProps,
   unstable_useTreeItem2 as useTreeItem2,
 } from '@mui/x-tree-view/useTreeItem2';
-import { useTreeItem2Utils } from '@mui/x-tree-view/hooks/useTreeItem2Utils';
+import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
 const StyledLabelInput = styled('input')(({ theme }) => ({
