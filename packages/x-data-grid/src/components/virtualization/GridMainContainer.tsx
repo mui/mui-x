@@ -39,6 +39,7 @@ export const GridMainContainer = React.forwardRef<
       className={props.className}
       tabIndex={-1}
       {...ariaAttributes}
+      {...rootProps.forwardedProps}
     >
       <GridPanelAnchor role="presentation" data-id="gridPanelAnchor" />
       {props.children}
