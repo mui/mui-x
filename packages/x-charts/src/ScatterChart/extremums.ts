@@ -28,8 +28,8 @@ export const getExtremumX: ExtremumGetter<'scatter'> = (params) => {
         });
 
         const seriesMinMax = series[seriesId].data.reduce<ExtremumGetterResult>(
-          (accSeries, d, dataIndex) => {
-            if (filter && !filter(d, dataIndex)) {
+          (accSeries, d) => {
+            if (filter && !filter(d, -1)) {
               return accSeries;
             }
             return mergeMinMax(accSeries, [d.x, d.x]);

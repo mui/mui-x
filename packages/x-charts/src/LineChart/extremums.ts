@@ -18,7 +18,10 @@ function getSeriesExtremums(
   return stackedData.reduce<[number, number]>(
     (seriesAcc, stackedValue, index) => {
       const [base, value] = getValues(stackedValue);
-      if (filter && (!filter(base, index) || !filter(value, index))) {
+      if (
+        filter &&
+        (!filter({ y: base, x: null }, index) || !filter({ y: value, x: null }, index))
+      ) {
         return seriesAcc;
       }
 

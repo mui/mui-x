@@ -45,8 +45,7 @@ export const createAxisFilterMapper =
     const maxVal = min + (zoom.end * (max - min)) / 100;
 
     return (value, dataIndex) => {
-      const val =
-        value && typeof value === 'object' ? value[direction] : (axis.data?.[dataIndex] ?? value);
+      const val = value[direction] ?? axis.data?.[dataIndex];
 
       if (val == null) {
         // If the value does not exist because of missing data point, or out of range index, we just ignore.
