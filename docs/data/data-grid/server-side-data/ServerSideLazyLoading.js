@@ -12,10 +12,10 @@ function ServerSideLazyLoading() {
     () => ({
       getRows: async (params) => {
         const urlParams = new URLSearchParams({
-          filterModel: encodeURIComponent(JSON.stringify(params.filterModel)),
-          sortModel: encodeURIComponent(JSON.stringify(params.sortModel)),
-          firstRowToRender: encodeURIComponent(JSON.stringify(params.start)),
-          lastRowToRender: encodeURIComponent(JSON.stringify(params.end)),
+          filterModel: JSON.stringify(params.filterModel),
+          sortModel: JSON.stringify(params.sortModel),
+          firstRowToRender: `${params.start}`,
+          lastRowToRender: `${params.end}`,
         });
         const getRowsResponse = await fetchRows(
           `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
