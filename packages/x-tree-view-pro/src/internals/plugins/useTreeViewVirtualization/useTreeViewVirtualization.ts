@@ -159,7 +159,7 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
 
     const itemsToRenderWithVisibleContent = new Set(itemsToRender);
 
-    const addItem = (itemId: TreeViewItemId | null) => {
+    const addItem = (itemId: TreeViewItemId | null | undefined) => {
       if (itemId == null || itemsToRenderWithVisibleContent.has(itemId)) {
         return;
       }
@@ -168,6 +168,8 @@ export const useTreeViewVirtualization: TreeViewPlugin<UseTreeViewVirtualization
     };
 
     addItem(state.focusedItemId);
+    addItem(state.itemsReordering?.draggedItemId);
+    addItem(state.editedItemId);
 
     const getPropsFromItemId = (
       id: TreeViewItemId,

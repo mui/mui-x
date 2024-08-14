@@ -6,7 +6,9 @@ import {
   TreeViewItemToRenderProps,
   UseTreeViewExpansionSignature,
   UseTreeViewFocusSignature,
+  UseTreeViewLabelSignature,
 } from '@mui/x-tree-view/internals';
+import { UseTreeViewItemsReorderingSignature } from '../useTreeViewItemsReordering';
 
 export interface UseTreeViewVirtualizationInstance {
   getDimensions: () => UseTreeViewVirtualizationState['virtualization'];
@@ -96,4 +98,5 @@ export type UseTreeViewVirtualizationSignature = TreeViewPluginSignature<{
     UseTreeViewExpansionSignature,
     UseTreeViewFocusSignature,
   ];
+  optionalDependencies: [UseTreeViewItemsReorderingSignature, UseTreeViewLabelSignature];
 }>;
