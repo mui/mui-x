@@ -13,6 +13,8 @@ import { getMinXTranslation } from '../internals/geometry';
 import { useMounted } from '../hooks/useMounted';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { getWordsByLines } from '../internals/getWordsByLines';
+import { isInfinity } from '../internals/isInfinity';
+import { isBandScale } from '../internals/isBandScale';
 
 const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
   const { classes, position } = ownerState;
@@ -194,10 +196,11 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   });
 
   const domain = xScale.domain();
-  if (domain.length === 0 || domain[0] === domain[1]) {
-    // Skip axis rendering if
-    // - the data is empty (for band and point axis)
-    // - No data is associated to the axis (other scale types)
+  const ordinalAxis = isBandScale(xScale);
+  // Skip axis rendering if no data is available
+  // - The domain is an empty array for band/point scales.
+  // - The domains contains Infinity for continuous scales.
+  if ((ordinalAxis && domain.length === 0) || (!ordinalAxis && domain.some(isInfinity))) {
     return null;
   }
   return (
