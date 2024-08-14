@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import useForkRef from '@mui/utils/useForkRef';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';

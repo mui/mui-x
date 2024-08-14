@@ -1,4 +1,4 @@
-<UnstableHeatmap
+<Heatmap
   slots={{ cell: CustomCell }}
   xAxis={[{ data: [1, 2, 3, 4] }]}
   yAxis={[{ data: ['A', 'B', 'C', 'D', 'E'] }]}

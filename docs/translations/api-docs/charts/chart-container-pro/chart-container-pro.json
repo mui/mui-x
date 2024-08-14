@@ -1,0 +1,43 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "colors": { "description": "Color palette used to colorize multiple series." },
+    "dataset": {
+      "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
+    },
+    "disableAxisListener": {
+      "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
+    },
+    "height": { "description": "The height of the chart in px." },
+    "highlightedItem": {
+      "description": "The item currently highlighted. Turns highlighting into a controlled prop."
+    },
+    "margin": {
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+    },
+    "onHighlightChange": {
+      "description": "The callback fired when the highlighted item changes.",
+      "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
+    },
+    "onZoomChange": {
+      "description": "Callback fired when the zoom has changed.",
+      "typeDescriptions": { "zoomData": "Updated zoom data." }
+    },
+    "plugins": {
+      "description": "An array of plugins defining how to preprocess data. If not provided, the container supports line, bar, scatter and pie charts."
+    },
+    "series": {
+      "description": "The array of series to display. Each type of series has its own specificity. Please refer to the appropriate docs page to learn more about it."
+    },
+    "width": { "description": "The width of the chart in px." },
+    "xAxis": {
+      "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
+    },
+    "yAxis": {
+      "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
+    },
+    "zAxis": { "description": "The configuration of the z-axes." },
+    "zoom": { "description": "The list of zoom data related to each axis." }
+  },
+  "classDescriptions": {}
+}

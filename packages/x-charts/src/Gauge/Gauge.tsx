@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
+import clsx from 'clsx';
 import { GaugeContainer, GaugeContainerProps } from './GaugeContainer';
 import { GaugeValueArc } from './GaugeValueArc';
 import { GaugeReferenceArc } from './GaugeReferenceArc';
@@ -25,18 +26,18 @@ const useUtilityClasses = (props: GaugeProps) => {
   return composeClasses(slots, getGaugeUtilityClass, classes);
 };
 
-function Gauge(props: GaugeProps) {
-  const { text, children, classes: propsClasses, ...other } = props;
+const Gauge = React.forwardRef(function Gauge(props: GaugeProps, ref) {
+  const { text, children, classes: propsClasses, className, ...other } = props;
   const classes = useUtilityClasses(props);
   return (
-    <GaugeContainer {...other} className={classes.root}>
+    <GaugeContainer {...other} className={clsx(classes.root, className)} ref={ref}>
       <GaugeReferenceArc className={classes.referenceArc} />
       <GaugeValueArc className={classes.valueArc} />
       <GaugeValueText className={classes.valueText} text={text} />
       {children}
     </GaugeContainer>
   );
-}
+});
 
 Gauge.propTypes = {
   // ----------------------------- Warning --------------------------------

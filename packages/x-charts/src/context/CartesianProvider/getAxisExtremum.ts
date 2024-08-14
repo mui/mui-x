@@ -1,6 +1,7 @@
-import { AxisConfig, ExtremumGettersConfig } from '../../models';
-import { CartesianChartSeriesType, ExtremumGetterResult } from '../../models/seriesType/config';
-import { FormattedSeries } from '../SeriesContextProvider';
+import { AxisConfig } from '../../models';
+import { CartesianChartSeriesType } from '../../models/seriesType/config';
+import { FormattedSeries } from '../SeriesProvider';
+import { ExtremumGettersConfig, ExtremumGetterResult } from '../PluginProvider';
 
 const axisExtremumCallback = <T extends CartesianChartSeriesType>(
   acc: ExtremumGetterResult,
@@ -17,19 +18,9 @@ const axisExtremumCallback = <T extends CartesianChartSeriesType>(
     series,
     axis,
     isDefaultAxis,
-  }) ?? [null, null];
+  }) ?? [Infinity, -Infinity];
 
-  const [minData, maxData] = acc;
-
-  if (minData === null || maxData === null) {
-    return [minChartTypeData!, maxChartTypeData!];
-  }
-
-  if (minChartTypeData === null || maxChartTypeData === null) {
-    return [minData, maxData];
-  }
-
-  return [Math.min(minChartTypeData, minData), Math.max(maxChartTypeData, maxData)];
+  return [Math.min(minChartTypeData, acc[0]), Math.max(maxChartTypeData, acc[1])];
 };
 
 export const getAxisExtremum = (
@@ -43,6 +34,6 @@ export const getAxisExtremum = (
   return charTypes.reduce<ExtremumGetterResult>(
     (acc, charType) =>
       axisExtremumCallback(acc, charType, axis, getters, isDefaultAxis, formattedSeries),
-    [null, null],
+    [Infinity, -Infinity],
   );
 };

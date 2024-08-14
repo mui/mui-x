@@ -1,4 +1,4 @@
-import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
+import type { MuiPage } from 'docs/src/MuiPage';
 
 const apiPages: MuiPage[] = [
   {
@@ -22,6 +22,11 @@ const apiPages: MuiPage[] = [
     title: 'BarChart',
   },
   {
+    pathname: '/x/api/charts/bar-chart-pro',
+    title: 'BarChartPro',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/bar-element',
     title: 'BarElement',
   },
@@ -36,6 +41,11 @@ const apiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/chart-container',
     title: 'ChartContainer',
+  },
+  {
+    pathname: '/x/api/charts/chart-container-pro',
+    title: 'ChartContainerPro',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/charts-axis',
@@ -90,6 +100,10 @@ const apiPages: MuiPage[] = [
     title: 'ChartsYAxis',
   },
   {
+    pathname: '/x/api/charts/continuous-color-legend',
+    title: 'ContinuousColorLegend',
+  },
+  {
     pathname: '/x/api/charts/default-charts-axis-tooltip-content',
     title: 'DefaultChartsAxisTooltipContent',
   },
@@ -102,6 +116,11 @@ const apiPages: MuiPage[] = [
     title: 'DefaultChartsLegend',
   },
   {
+    pathname: '/x/api/charts/default-heatmap-tooltip',
+    title: 'DefaultHeatmapTooltip',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/gauge',
     title: 'Gauge',
   },
@@ -110,8 +129,23 @@ const apiPages: MuiPage[] = [
     title: 'GaugeContainer',
   },
   {
+    pathname: '/x/api/charts/heatmap',
+    title: 'Heatmap',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/heatmap-plot',
+    title: 'HeatmapPlot',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/line-chart',
     title: 'LineChart',
+  },
+  {
+    pathname: '/x/api/charts/line-chart-pro',
+    title: 'LineChartPro',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/line-element',
@@ -154,6 +188,10 @@ const apiPages: MuiPage[] = [
     title: 'PieArcPlot',
   },
   {
+    pathname: '/x/api/charts/piecewise-color-legend',
+    title: 'PiecewiseColorLegend',
+  },
+  {
     pathname: '/x/api/charts/pie-chart',
     title: 'PieChart',
   },
@@ -166,12 +204,22 @@ const apiPages: MuiPage[] = [
     title: 'ResponsiveChartContainer',
   },
   {
+    pathname: '/x/api/charts/responsive-chart-container-pro',
+    title: 'ResponsiveChartContainerPro',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/scatter',
     title: 'Scatter',
   },
   {
     pathname: '/x/api/charts/scatter-chart',
     title: 'ScatterChart',
+  },
+  {
+    pathname: '/x/api/charts/scatter-chart-pro',
+    title: 'ScatterChartPro',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/scatter-plot',

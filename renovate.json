@@ -81,14 +81,20 @@
     {
       "groupName": "MUI Core",
       "matchPackageNames": [
-        "@mui/base",
         "@mui/icons-material",
+        "@mui/joy",
         "@mui/lab",
         "@mui/material",
+        "@mui/material-nextjs",
         "@mui/styles",
         "@mui/system",
+        "@mui/types",
         "@mui/utils"
       ]
+    },
+    {
+      "groupName": "MUI Internal",
+      "matchPackagePatterns": ["@mui/internal-*", "@mui/docs"]
     },
     {
       "groupName": "Playwright",
@@ -101,6 +107,11 @@
     {
       "groupName": "GitHub Actions",
       "matchManagers": ["github-actions"]
+    },
+    {
+      "groupName": "@mui/docs",
+      "matchPackageNames": ["@mui/docs"],
+      "followTag": "next"
     }
   ],
   "postUpdateOptions": ["pnpmDedupe"],

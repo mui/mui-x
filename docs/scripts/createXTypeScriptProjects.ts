@@ -51,7 +51,7 @@ interface CreateXTypeScriptProjectOptions
     > {}
 
 const createXTypeScriptProject = (options: CreateXTypeScriptProjectOptions): XTypeScriptProject => {
-  const { name, rootPath, tsConfigPath, entryPointPath, files, ...rest } = options;
+  const { name, rootPath, tsConfigPath, entryPointPath, files, ...other } = options;
 
   const baseProject = createTypeScriptProject({
     name,
@@ -63,7 +63,7 @@ const createXTypeScriptProject = (options: CreateXTypeScriptProjectOptions): XTy
 
   return {
     ...baseProject,
-    ...rest,
+    ...other,
     name,
     workspaceRoot,
     prettierConfigPath: path.join(workspaceRoot, 'prettier.config.js'),
@@ -318,24 +318,23 @@ export const createXTypeScriptProjects = () => {
     }),
   );
 
-  // TODO x-charts-pro uncomment when making the package public
-  // projects.set(
-  //   'x-charts-pro',
-  //   createXTypeScriptProject({
-  //     name: 'x-charts-pro',
-  //     rootPath: path.join(workspaceRoot, 'packages/x-charts-pro'),
-  //     entryPointPath: 'src/index.ts',
-  //     documentationFolderName: 'charts',
-  //     getComponentsWithPropTypes: getComponentPaths({
-  //       folders: ['src'],
-  //       includeUnstableComponents: true,
-  //     }),
-  //     getComponentsWithApiDoc: getComponentPaths({
-  //       folders: ['src'],
-  //       includeUnstableComponents: true,
-  //     }),
-  //   }),
-  // );
+  projects.set(
+    'x-charts-pro',
+    createXTypeScriptProject({
+      name: 'x-charts-pro',
+      rootPath: path.join(workspaceRoot, 'packages/x-charts-pro'),
+      entryPointPath: 'src/index.ts',
+      documentationFolderName: 'charts',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+    }),
+  );
 
   projects.set(
     'x-tree-view',
@@ -355,24 +354,23 @@ export const createXTypeScriptProjects = () => {
     }),
   );
 
-  // TODO x-tree-view-pro uncomment when making the package public
-  // projects.set(
-  //   'x-tree-view-pro',
-  //   createXTypeScriptProject({
-  //     name: 'x-tree-view-pro',
-  //     rootPath: path.join(workspaceRoot, 'packages/x-tree-view-pro'),
-  //     entryPointPath: 'src/index.ts',
-  //     documentationFolderName: 'tree-view',
-  //     getComponentsWithPropTypes: getComponentPaths({
-  //       folders: ['src'],
-  //       includeUnstableComponents: true,
-  //     }),
-  //     getComponentsWithApiDoc: getComponentPaths({
-  //       folders: ['src'],
-  //       includeUnstableComponents: true,
-  //     }),
-  //   }),
-  // );
+  projects.set(
+    'x-tree-view-pro',
+    createXTypeScriptProject({
+      name: 'x-tree-view-pro',
+      rootPath: path.join(workspaceRoot, 'packages/x-tree-view-pro'),
+      entryPointPath: 'src/index.ts',
+      documentationFolderName: 'tree-view',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+    }),
+  );
 
   return projects;
 };

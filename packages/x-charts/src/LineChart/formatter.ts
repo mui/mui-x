@@ -1,19 +1,15 @@
-import { stack as d3Stack } from 'd3-shape';
+import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { getStackingGroups } from '../internals/stackSeries';
-import {
-  ChartSeries,
-  DatasetElementType,
-  DatasetType,
-  Formatter,
-} from '../models/seriesType/config';
+import { ChartSeries, DatasetElementType, DatasetType } from '../models/seriesType/config';
 import { defaultizeValueFormatter } from '../internals/defaultizeValueFormatter';
 import { DefaultizedProps } from '../models/helpers';
 import { SeriesId } from '../models/seriesType/common';
+import { SeriesFormatter } from '../context/PluginProvider/SeriesFormatter.types';
 
 let warnedOnce = false;
 
 // For now it's a copy past of bar charts formatter, but maybe will diverge later
-const formatter: Formatter<'line'> = (params, dataset) => {
+const formatter: SeriesFormatter<'line'> = (params, dataset) => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
 
@@ -32,7 +28,7 @@ const formatter: Formatter<'line'> = (params, dataset) => {
     } else if (dataset === undefined && process.env.NODE_ENV !== 'production') {
       throw new Error(
         [
-          `MUI X Charts: line series with id='${id}' has no data.`,
+          `MUI X: line series with id='${id}' has no data.`,
           'Either provide a data property to the series or use the dataset prop.',
         ].join('\n'),
       );
@@ -67,7 +63,7 @@ const formatter: Formatter<'line'> = (params, dataset) => {
                 if (process.env.NODE_ENV !== 'production' && !warnedOnce && value !== null) {
                   warnedOnce = true;
                   console.error([
-                    `MUI-X charts: your dataset key "${dataKey}" is used for plotting line, but contains nonnumerical elements.`,
+                    `MUI X: Your dataset key "${dataKey}" is used for plotting line, but contains nonnumerical elements.`,
                     'Line plots only support numbers and null values.',
                   ]);
                 }
