@@ -3,7 +3,7 @@ import { Dayjs } from 'dayjs';
 import {
   useTheme as useMaterialTheme,
   useColorScheme as useMaterialColorScheme,
-  Experimental_CssVarsProvider as MaterialCssVarsProvider,
+  CssVarsProvider as MaterialCssVarsProvider,
 } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import {
