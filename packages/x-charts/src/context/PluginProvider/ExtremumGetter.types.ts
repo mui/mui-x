@@ -16,7 +16,7 @@ type ExtremumGetterParams<T extends ChartSeriesType> = {
   isDefaultAxis: boolean;
 };
 
-export type ExtremumGetterResult = [number, number] | [null, null];
+export type ExtremumGetterResult = [number, number];
 
 export type ExtremumGetter<T extends ChartSeriesType> = (
   params: ExtremumGetterParams<T>,
