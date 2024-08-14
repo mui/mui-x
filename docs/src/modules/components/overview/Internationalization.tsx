@@ -5,7 +5,6 @@ import 'dayjs/locale/zh-cn';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import { styled, createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
-// @ts-ignore
 import SectionHeadline from 'docs/src/components/typography/SectionHeadline';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -16,13 +15,11 @@ import MuiToggleButtonGroup, { toggleButtonGroupClasses } from '@mui/material/To
 import MuiToggleButton from '@mui/material/ToggleButton';
 import Typography from '@mui/material/Typography';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import {
-  DateTimeRangePicker,
-  DateTimeField,
-  DatePicker,
-  DateTimeValidationError,
-  DateCalendar,
-} from '@mui/x-date-pickers-pro';
+import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
+import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTimeValidationError } from '@mui/x-date-pickers/models';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvider';
 import { roRO, enUS, zhCN } from '@mui/x-date-pickers-pro/locales';
