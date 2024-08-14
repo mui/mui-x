@@ -35,7 +35,7 @@ export const createAxisFilterMapper =
 
     if (axis.scaleType === 'point' || axis.scaleType === 'band') {
       min = 0;
-      max = (axis.data?.length ?? 0) - 1;
+      max = (axis.data?.length ?? 1) - 1;
     } else {
       [min, max] = getAxisExtremum(axis, extremumGetter, axisIndex === 0, formattedSeries);
     }
