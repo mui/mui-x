@@ -690,11 +690,19 @@ export const GridRootStyles = styled('div', {
       borderTop: '1px solid var(--DataGrid-rowBorderColor)',
     },
 
-    /* Hide grid rows and vertical scrollbar when skeleton overlay is visible */
+    /* Hide grid rows, row filler, and vertical scrollbar when skeleton overlay is visible */
     [`& .${c['main--hasSkeletonLoadingOverlay']}`]: {
-      [`& .${c.virtualScrollerContent}, & .${c['scrollbar--vertical']}, & .${c.pinnedRows}`]: {
-        display: 'none',
+      [`& .${c.virtualScrollerContent}`]: {
+        // We use visibility hidden so that the virtual scroller content retains its height.
+        // Position fixed is used to remove the virtual scroller content from the flow.
+        // https://github.com/mui/mui-x/issues/14061
+        position: 'fixed',
+        visibility: 'hidden',
       },
+      [`& .${c['scrollbar--vertical']}, & .${c.pinnedRows}, & .${c.virtualScroller} > .${c.filler}`]:
+        {
+          display: 'none',
+        },
     },
   };
 
