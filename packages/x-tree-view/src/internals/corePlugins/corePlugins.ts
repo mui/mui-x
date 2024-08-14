@@ -1,4 +1,5 @@
 import { useTreeViewInstanceEvents } from './useTreeViewInstanceEvents';
+import { useTreeViewSelectors } from './useTreeViewSelectors';
 import { useTreeViewOptionalPlugins } from './useTreeViewOptionalPlugins';
 import { useTreeViewId, UseTreeViewIdParameters } from './useTreeViewId';
 import { ConvertPluginsIntoSignatures } from '../models';
@@ -9,6 +10,7 @@ import { ConvertPluginsIntoSignatures } from '../models';
  */
 export const TREE_VIEW_CORE_PLUGINS = [
   useTreeViewInstanceEvents,
+  useTreeViewSelectors,
   useTreeViewOptionalPlugins,
   useTreeViewId,
 ] as const;

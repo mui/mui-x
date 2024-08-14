@@ -23,6 +23,7 @@ import { MuiCancellableEvent } from '../internals/models';
 import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
+import { useSelector } from '../internals/hooks/useSelector';
 
 export const useTreeItem2 = <
   TSignatures extends UseTreeItem2MinimalPlugins = UseTreeItem2MinimalPlugins,
@@ -39,6 +40,8 @@ export const useTreeItem2 = <
     publicAPI,
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
+
+  useSelector(instance, (state) => state.focusedItemId);
 
   const { id, itemId, label, children, rootRef } = parameters;
 

@@ -1412,6 +1412,9 @@ importers:
       react-transition-group:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      reselect:
+        specifier: ^4.1.8
+        version: 4.1.8
     devDependencies:
       '@mui/internal-test-utils':
         specifier: ^1.0.7
@@ -1471,6 +1474,9 @@ importers:
       react-transition-group:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      reselect:
+        specifier: ^4.1.8
+        version: 4.1.8
     devDependencies:
       '@mui/internal-test-utils':
         specifier: ^1.0.7

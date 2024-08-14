@@ -52,7 +52,8 @@
     "@types/react-transition-group": "^4.4.10",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
-    "react-transition-group": "^4.4.5"
+    "react-transition-group": "^4.4.5",
+    "reselect": "^4.1.8"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",

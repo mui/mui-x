@@ -40,3 +40,9 @@ export type TreeViewExperimentalFeatures<
   TSignatures extends readonly TreeViewAnyPluginSignature[],
   TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
 > = MergeSignaturesProperty<[...TSignatures, ...TOptionalSignatures], 'experimentalFeatures'>;
+
+export type TreeViewState<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
+> = MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'state'> &
+  Partial<MergeSignaturesProperty<TOptionalSignatures, 'state'>>;
