@@ -4,7 +4,7 @@ import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui
 import MenuList from '@mui/material/MenuList';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
-import { isHideMenuKey} from '../../utils/keyboardUtils';
+import { isHideMenuKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridMenu } from '../menu/GridMenu';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';

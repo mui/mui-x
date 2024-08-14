@@ -114,9 +114,10 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       const params = apiRef.current.getCellParams(id, field);
       apiRef.current.publishEvent('cellEditStop', {
         ...params,
-        reason: event.key === 'Escape'
-          ? GridCellEditStopReasons.escapeKeyDown
-          : GridCellEditStopReasons.cellFocusOut,
+        reason:
+          event.key === 'Escape'
+            ? GridCellEditStopReasons.escapeKeyDown
+            : GridCellEditStopReasons.cellFocusOut,
       });
     }
   };
