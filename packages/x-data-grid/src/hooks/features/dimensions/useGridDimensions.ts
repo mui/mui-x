@@ -5,6 +5,7 @@ import {
   unstable_useEventCallback as useEventCallback,
   unstable_ownerWindow as ownerWindow,
 } from '@mui/utils';
+import { throttle } from '@mui/x-internals/throttle';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -13,7 +14,6 @@ import {
   useGridApiOptionHandler,
 } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { throttle } from '../../../utils/throttle';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi, GridDimensionsPrivateApi } from './gridDimensionsApi';

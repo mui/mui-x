@@ -7,8 +7,8 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import type { GridApiCommunity } from '../../internals';
-import { fastMemo } from '../../utils/fastMemo';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import {
