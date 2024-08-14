@@ -1,4 +1,4 @@
-import { ExtremumGetter } from '../context/PluginProvider/ExtremumGetter.types';
+import { ExtremumGetter, ZoomAxisFilter } from '../context/PluginProvider/ExtremumGetter.types';
 
 export const getExtremumX: ExtremumGetter<'line'> = (params) => {
   const { axis } = params;
@@ -13,7 +13,7 @@ type GetValues = (d: [number, number]) => [number, number];
 function getSeriesExtremums(
   getValues: GetValues,
   stackedData: [number, number][],
-  filter?: (v: number | Date | string | null | { x: number; y: number }, i: number) => boolean,
+  filter?: ZoomAxisFilter,
 ): [number, number] {
   return stackedData.reduce<[number, number]>(
     (seriesAcc, stackedValue, index) => {

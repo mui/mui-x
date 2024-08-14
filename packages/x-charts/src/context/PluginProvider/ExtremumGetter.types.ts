@@ -19,7 +19,7 @@ type ExtremumGetterParams<T extends ChartSeriesType> = {
     seriesXAxisId?: AxisId;
     seriesYAxisId?: AxisId;
     isDefaultAxis: boolean;
-  }) => (v: number | Date | string | null | { x: number; y: number }, i: number) => boolean;
+  }) => ZoomAxisFilter;
 };
 
 export type ExtremumGetterResult = [number, number];
@@ -27,3 +27,8 @@ export type ExtremumGetterResult = [number, number];
 export type ExtremumGetter<T extends ChartSeriesType> = (
   params: ExtremumGetterParams<T>,
 ) => ExtremumGetterResult;
+
+export type ZoomAxisFilter = (
+  value: { x: number | Date | string | null; y: number | Date | string | null },
+  dataIndex: number,
+) => boolean;
