@@ -284,6 +284,12 @@ module.exports = {
         ],
       },
     },
+    {
+      files: ['packages/x-telemetry/**/*{.tsx,.ts,.js}'],
+      rules: {
+        'no-console': 'off',
+      },
+    },
     ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts', false),
     ...buildPackageRestrictedImports('@mui/x-charts-pro', 'x-charts-pro', false),
     ...buildPackageRestrictedImports('@mui/x-codemod', 'x-codemod', false),

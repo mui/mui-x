@@ -32,6 +32,7 @@ const muiXTelemetryEvents = {
     context: TelemetryEventContext,
     payload: {
       licenseStatus?: string;
+      licensePlanVersion?: string;
       licenseLicensingModel?: string;
       licenseScope?: string;
     },

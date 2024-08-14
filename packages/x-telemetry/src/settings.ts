@@ -1,7 +1,7 @@
 import { setMuiXTelemetryEnv } from './config';
 
 const muiXTelemetrySettings = {
-  setDebugging: () => {
+  enableDebug: () => {
     setMuiXTelemetryEnv('DEBUG', true);
   },
   enableTelemetry: () => {

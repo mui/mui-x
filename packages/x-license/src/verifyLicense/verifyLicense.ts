@@ -156,9 +156,10 @@ export function verifyLicense({
   }
 
   const meta = {
+    planVersion: license.planVersion,
     licensingModel: license.licensingModel,
     scope: license.scope,
-  }
+  };
 
   if (license.licensingModel == null || !LICENSING_MODELS.includes(license.licensingModel)) {
     console.error('MUI X: Error checking license. Licensing model not found or invalid!');

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import getTelemetryContext, { TelemetryContextType } from './get-context';
 import { getMuiXTelemetryEnv } from './config';
 import { TelemetryEvent } from './types';
@@ -49,7 +48,7 @@ function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
     return;
   }
 
-  // Ignore if fetch is not available (e.g. Node.js < v18, IE, etc.)
+  // Ignore if fetch is not available (e.g. IE, etc.)
   if (typeof fetch !== 'function') {
     return;
   }

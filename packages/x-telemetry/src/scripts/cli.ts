@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-/* eslint-disable no-console */
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import { TelemetryStorage } from '../internal/storage';

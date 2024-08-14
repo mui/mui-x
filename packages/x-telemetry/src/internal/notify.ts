@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 export default function notifyAboutMuiXTelemetry() {
   console.log(`[Attention]: MUI X now collects completely anonymous telemetry regarding usage.`);
   console.log(`This information is used to shape MUI' roadmap and prioritize features.`);

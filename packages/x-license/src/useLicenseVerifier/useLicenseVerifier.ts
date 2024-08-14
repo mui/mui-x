@@ -58,6 +58,7 @@ export function useLicenseVerifier(
         },
         {
           licenseStatus: licenseStatus?.status,
+          licensePlanVersion: licenseStatus?.meta?.planVersion,
           licenseLicensingModel: licenseStatus?.meta?.licensingModel,
           licenseScope: licenseStatus?.meta?.scope,
         },
