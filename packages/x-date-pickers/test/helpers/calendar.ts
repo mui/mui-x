@@ -1,5 +1,5 @@
 import { fireEvent, createEvent } from '@mui/internal-test-utils';
-import { DragEventTypes } from '../dragAndDrop';
+import { DragEventTypes } from 'test/utils/dragAndDrop';
 
 export const rangeCalendarDayTouches = {
   '2018-01-01': {
