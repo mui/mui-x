@@ -16,10 +16,12 @@ npx mui-x-telemetry enable
 
 ```js
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
-
-muiXTelemetrySettings.enableTelemetry();
 // or
-muiXTelemetrySettings.disableTelemetry();
+import { muiXTelemetrySettings } from '@mui/x-license';
+
+muiXTelemetrySettings.enableTelemetry(); // to enable telemetry collection and sending
+// or
+muiXTelemetrySettings.disableTelemetry(); // to disable telemetry collection and sending
 ```
 
 3. By setting the environment variable.
