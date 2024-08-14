@@ -3,7 +3,7 @@
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, selectItem: func, setItemExpansion: func } }"
+        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, selectItem: func, setItemExpansion: func, updateItemLabel: func } }"
       }
     },
     "canMoveItemToNewPosition": {
@@ -31,7 +31,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ indentationAtItemLevel?: bool, itemsReordering?: bool }"
+        "description": "{ indentationAtItemLevel?: bool, itemsReordering?: bool, labelEditing?: bool }"
       }
     },
     "getItemId": {
@@ -61,6 +61,7 @@
         "returned": "boolean"
       }
     },
+    "isItemEditable": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;bool" } },
     "isItemReorderable": {
       "type": { "name": "func" },
       "default": "() => true",
@@ -102,6 +103,13 @@
       "signature": {
         "type": "function(event: React.SyntheticEvent | null, itemId: string) => void",
         "describedArgs": ["event", "itemId"]
+      }
+    },
+    "onItemLabelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(itemId: TreeViewItemId, newLabel: string) => void",
+        "describedArgs": ["itemId", "newLabel"]
       }
     },
     "onItemPositionChange": {

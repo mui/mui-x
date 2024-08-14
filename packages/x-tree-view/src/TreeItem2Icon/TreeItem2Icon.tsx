@@ -71,6 +71,8 @@ TreeItem2Icon.propTypes = {
   slots: PropTypes.object,
   status: PropTypes.shape({
     disabled: PropTypes.bool.isRequired,
+    editable: PropTypes.bool.isRequired,
+    editing: PropTypes.bool.isRequired,
     expandable: PropTypes.bool.isRequired,
     expanded: PropTypes.bool.isRequired,
     focused: PropTypes.bool.isRequired,

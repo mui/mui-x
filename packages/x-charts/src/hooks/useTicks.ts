@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { AxisConfig, D3Scale } from '../models/axis';
 import { isBandScale } from '../internals/isBandScale';
+import { isInfinity } from '../internals/isInfinity';
 
 export interface TickParams {
   /**
@@ -145,8 +146,10 @@ export function useTicks(
       }));
     }
 
-    if (scale.domain().length === 0 || scale.domain()[0] === scale.domain()[1]) {
-      // The axis should not be visible, so ticks should also be hidden.
+    const domain = scale.domain();
+    // Skip axis rendering if no data is available
+    // - The domains contains Infinity for continuous scales.
+    if (domain.some(isInfinity)) {
       return [];
     }
 

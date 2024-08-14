@@ -31,12 +31,10 @@ export default function ServerSideTreeDataErrorHandling() {
     () => ({
       getRows: async (params) => {
         const urlParams = new URLSearchParams({
-          paginationModel: encodeURIComponent(
-            JSON.stringify(params.paginationModel),
-          ),
-          filterModel: encodeURIComponent(JSON.stringify(params.filterModel)),
-          sortModel: encodeURIComponent(JSON.stringify(params.sortModel)),
-          groupKeys: encodeURIComponent(JSON.stringify(params.groupKeys)),
+          paginationModel: JSON.stringify(params.paginationModel),
+          filterModel: JSON.stringify(params.filterModel),
+          sortModel: JSON.stringify(params.sortModel),
+          groupKeys: JSON.stringify(params.groupKeys),
         });
         const getRowsResponse = await fetchRows(
           `https://mui.com/x/api/data-grid?${urlParams.toString()}`,

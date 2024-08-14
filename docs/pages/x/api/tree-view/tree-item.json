@@ -74,6 +74,18 @@
       "isGlobal": false
     },
     {
+      "key": "editable",
+      "className": "MuiTreeItem-editable",
+      "description": "Styles applied to the content of the items that are editable.",
+      "isGlobal": false
+    },
+    {
+      "key": "editing",
+      "className": "MuiTreeItem-editing",
+      "description": "Styles applied to the content element when editing is enabled.",
+      "isGlobal": false
+    },
+    {
       "key": "expanded",
       "className": "Mui-expanded",
       "description": "State class applied to the content element when expanded.",
@@ -95,6 +107,12 @@
       "key": "label",
       "className": "MuiTreeItem-label",
       "description": "Styles applied to the label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "labelInput",
+      "className": "MuiTreeItem-labelInput",
+      "description": "Styles applied to the input element that is visible when editing is enabled.",
       "isGlobal": false
     },
     {
