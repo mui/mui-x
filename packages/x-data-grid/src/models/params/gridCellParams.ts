@@ -66,7 +66,7 @@ export interface GridCellParams<
    */
   tabIndex: 0 | -1;
   /**
-   * The api of `DataGrid`.
+   * GridApi that let you manipulate the grid.
    */
   api: GridApiCommunity;
 }
