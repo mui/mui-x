@@ -7,7 +7,6 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
-import type { GridApiCommunity } from '../../internals';
 import { fastMemo } from '../../utils/fastMemo';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
@@ -75,9 +74,7 @@ export type GridCellProps = {
   [x: string]: any; // TODO v7: remove this - it breaks type safety
 };
 
-type CellParamsWithAPI = GridCellParams<any, any, any, GridTreeNodeWithRender> & {
-  api: GridApiCommunity;
-};
+type CellParamsWithAPI = GridCellParams<any, any, any, GridTreeNodeWithRender>;
 
 const EMPTY_CELL_PARAMS: CellParamsWithAPI = {
   id: -1,

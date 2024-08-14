@@ -65,6 +65,10 @@ export interface GridCellParams<
    * the tabIndex value.
    */
   tabIndex: 0 | -1;
+  /**
+   * The api of `DataGrid`.
+   */
+  api: GridApiCommunity;
 }
 
 export interface FocusElement {
