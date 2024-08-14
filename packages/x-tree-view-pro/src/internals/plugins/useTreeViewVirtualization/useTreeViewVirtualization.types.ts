@@ -6,7 +6,6 @@ import {
   TreeViewItemToRenderProps,
   UseTreeViewExpansionSignature,
   UseTreeViewFocusSignature,
-  UseTreeViewLabelSignature,
 } from '@mui/x-tree-view/internals';
 import { UseTreeViewItemsReorderingSignature } from '../useTreeViewItemsReordering';
 
@@ -98,5 +97,5 @@ export type UseTreeViewVirtualizationSignature = TreeViewPluginSignature<{
     UseTreeViewExpansionSignature,
     UseTreeViewFocusSignature,
   ];
-  optionalDependencies: [UseTreeViewItemsReorderingSignature, UseTreeViewLabelSignature];
+  optionalDependencies: [UseTreeViewItemsReorderingSignature];
 }>;
