@@ -32,7 +32,7 @@
     "@mui/joy": "^5.0.0-beta.48",
     "@mui/lab": "^5.0.0-alpha.173",
     "@mui/material": "next",
-    "@mui/material-nextjs": "^5.16.4",
+    "@mui/material-nextjs": "next",
     "@mui/styles": "next",
     "@mui/system": "next",
     "@mui/utils": "next",
