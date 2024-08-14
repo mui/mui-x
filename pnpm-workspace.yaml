@@ -3,3 +3,4 @@ packages:
   - 'docs'
   - 'test'
   - 'test/performance-charts'
+  - 'test/shared'
