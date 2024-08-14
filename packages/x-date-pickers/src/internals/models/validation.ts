@@ -130,7 +130,7 @@ export interface DateTimeValidationProps<TDate extends PickerValidDate> {
 /**
  * Props used for range validation.
  */
-export interface DateRangeValidationProps<> {
+export interface DateRangeValidationProps {
   /**
    * If `true`, throws an error when the selected range that contains disabled dates.
    * @default false
