@@ -3,6 +3,83 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.13.0
+
+_Aug 15, 2024_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 💫 Allow label editing capabilities on the Tree View (#13388) @noraleonte
+- 🔧 Improve rows accessibility on the Data Grid Tree Data and Row Grouping features (#13623) @arminmeh
+- 🌍 Improve Vietnamese (vi-VN) locale on the Data Grid
+- 🐞 Bugfixes
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.13.0`
+
+- [DataGrid] Fix CSV export for `null` and `undefined` values (#14166) @k-rajat19
+- [DataGrid] Fix error logged during skeleton loading with nested data grid (#14186) @KenanYusuf
+- [DataGrid] Remove needless check in `useGridStateInitialization` (#14181) @k-rajat19
+- [l10n] Improve Vietnamese (vi-VN) locale (#14216) @hungnd-casso
+
+#### `@mui/x-data-grid-pro@7.13.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.13.0`, plus:
+
+- [DataGridPro] Fix Tree Data and Row Grouping rows accessibility (#13623) @arminmeh
+
+#### `@mui/x-data-grid-premium@7.13.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.13.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.13.0`
+
+- [pickers] Fix date and time merging to retain milliseconds (#14173) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.13.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.13.0`.
+
+### Charts
+
+#### `@mui/x-charts@7.13.0`
+
+- [charts] Add `baseline` property to the `LineChart` `series` (#14153) @JCQuintas
+- [charts] Add real-world dataset (#13958) @alexfauquette
+- [charts] Do not remove mouse position for mouseUp event (#14187) @alexfauquette
+- [charts] Rename `CartesianContextProvider` to `CartesianProvider` (#14102) @JCQuintas
+- [charts] Support axis with single value (#14191) @alexfauquette
+
+#### `@mui/x-date-charts-pro@__VERSION-ALPHA__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.13.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.13.0`
+
+- [TreeView] Add label editing feature (#13388) @noraleonte
+- [TreeView] Fix the parameters passed for the `canMoveItemToNewPosition` prop (#14176) @flaviendelangle
+
+### Docs
+
+- [docs] Extract dataset in the Line chart docs (#14034) @alexfauquette
+- [docs] Remove redundant encoding in the mock data source server (#14185) @MBilalShafi
+- [docs] Use Netflix financial results to document bar charts (#13991) @alexfauquette
+
+### Core
+
+- [core] Bump monorepo (#14141) @Janpot
+- [core] Fix ESLint issue (#14207) @LukasTy
+- [core] Fix Netlify build cache issue (#14182) @cherniavskii
+- [code-infra] Refactor Netlify `cache-docs` plugin setup (#14105) @LukasTy
+- [internals] Move utils needed for tree view virtualization to shared package (#14202) @flaviendelangle
+
 ## 7.12.1
 
 _Aug 8, 2024_
