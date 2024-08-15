@@ -11,7 +11,7 @@ const axisExtremumCallback = <T extends CartesianChartSeriesType>(
   getters: ExtremumGettersConfig<T>,
   isDefaultAxis: boolean,
   formattedSeries: FormattedSeries,
-  getZoomFilters?: GetZoomAxisFilters,
+  getFilters?: GetZoomAxisFilters,
 ): ExtremumGetterResult => {
   const getter = getters[chartType];
   const series = formattedSeries[chartType]?.series ?? {};
@@ -20,7 +20,7 @@ const axisExtremumCallback = <T extends CartesianChartSeriesType>(
     series,
     axis,
     isDefaultAxis,
-    getZoomFilters,
+    getFilters,
   }) ?? [Infinity, -Infinity];
 
   const [minData, maxData] = acc;
@@ -33,7 +33,7 @@ export const getAxisExtremum = (
   getters: ExtremumGettersConfig,
   isDefaultAxis: boolean,
   formattedSeries: FormattedSeries,
-  getZoomFilters?: GetZoomAxisFilters,
+  getFilters?: GetZoomAxisFilters,
 ) => {
   const charTypes = Object.keys(getters) as CartesianChartSeriesType[];
 
@@ -46,7 +46,7 @@ export const getAxisExtremum = (
         getters,
         isDefaultAxis,
         formattedSeries,
-        getZoomFilters,
+        getFilters,
       ),
     [Infinity, -Infinity],
   );

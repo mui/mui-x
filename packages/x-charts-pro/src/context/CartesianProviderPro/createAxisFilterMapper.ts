@@ -2,7 +2,7 @@ import {
   getAxisExtremum,
   FormattedSeries,
   ExtremumGettersConfig,
-  ZoomAxisFilter,
+  ExtremumFilter,
   ZoomAxisFilters,
   GetZoomAxisFilters,
   isDefined,
@@ -19,7 +19,7 @@ type CreateAxisFilterMapperParams = {
 
 export const createAxisFilterMapper =
   ({ zoomData, extremumGetter, formattedSeries, direction }: CreateAxisFilterMapperParams) =>
-  (axis: AxisConfig<ScaleName, any, ChartsAxisProps>, axisIndex: number): ZoomAxisFilter | null => {
+  (axis: AxisConfig<ScaleName, any, ChartsAxisProps>, axisIndex: number): ExtremumFilter | null => {
     if (typeof axis.zoom !== 'object' || axis.zoom.filterMode !== 'discard') {
       return null;
     }

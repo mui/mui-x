@@ -8,9 +8,9 @@ const createResult = (data: any, direction: 'x' | 'y') => {
 };
 
 const getBaseExtremum: ExtremumGetter<'bar'> = (params) => {
-  const { axis, getZoomFilters, isDefaultAxis } = params;
+  const { axis, getFilters, isDefaultAxis } = params;
 
-  const filter = getZoomFilters?.({
+  const filter = getFilters?.({
     currentAxisId: axis.id,
     isDefaultAxis,
   });
@@ -24,7 +24,7 @@ const getBaseExtremum: ExtremumGetter<'bar'> = (params) => {
 const getValueExtremum =
   (direction: 'x' | 'y'): ExtremumGetter<'bar'> =>
   (params) => {
-    const { series, axis, getZoomFilters, isDefaultAxis } = params;
+    const { series, axis, getFilters, isDefaultAxis } = params;
 
     return Object.keys(series)
       .filter((seriesId) => {
@@ -35,7 +35,7 @@ const getValueExtremum =
         (acc, seriesId) => {
           const { stackedData } = series[seriesId];
 
-          const filter = getZoomFilters?.({
+          const filter = getFilters?.({
             currentAxisId: axis.id,
             isDefaultAxis,
             seriesXAxisId: series[seriesId].xAxisId ?? series[seriesId].xAxisKey,

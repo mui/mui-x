@@ -7,7 +7,7 @@ import {
   AxisId,
   AxisConfig,
 } from '../../models/axis';
-import { ZoomAxisFilter } from '../PluginProvider';
+import { ExtremumFilter } from '../PluginProvider';
 
 export type CartesianProviderProps = {
   /**
@@ -57,11 +57,11 @@ export type ZoomData = { axisId: AxisId; start: number; end: number };
 export type ZoomFilterMode = 'keep' | 'discard' | 'empty';
 export type ZoomOptions = Record<AxisId, { filterMode: ZoomFilterMode }>;
 
-export type ZoomAxisFilters = Record<AxisId, ZoomAxisFilter>;
+export type ZoomAxisFilters = Record<AxisId, ExtremumFilter>;
 
 export type GetZoomAxisFilters = (params: {
   currentAxisId: AxisId | undefined;
   seriesXAxisId?: AxisId;
   seriesYAxisId?: AxisId;
   isDefaultAxis: boolean;
-}) => ZoomAxisFilter;
+}) => ExtremumFilter;

@@ -25,7 +25,7 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
   const xExtremumGetters = useXExtremumGetter();
   const yExtremumGetters = useYExtremumGetter();
 
-  const getZoomFilters = React.useMemo(() => {
+  const getFilters = React.useMemo(() => {
     const xMapper = createAxisFilterMapper({
       zoomData,
       extremumGetter: xExtremumGetters,
@@ -74,18 +74,9 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
         axisDirection: 'x',
         zoomData,
         zoomOptions: options,
-        getZoomFilters,
+        getFilters,
       }),
-    [
-      drawingArea,
-      formattedSeries,
-      xAxis,
-      xExtremumGetters,
-      dataset,
-      zoomData,
-      options,
-      getZoomFilters,
-    ],
+    [drawingArea, formattedSeries, xAxis, xExtremumGetters, dataset, zoomData, options, getFilters],
   );
 
   const yValues = React.useMemo(
@@ -99,18 +90,9 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
         axisDirection: 'y',
         zoomData,
         zoomOptions: options,
-        getZoomFilters,
+        getFilters,
       }),
-    [
-      drawingArea,
-      formattedSeries,
-      yAxis,
-      yExtremumGetters,
-      dataset,
-      zoomData,
-      options,
-      getZoomFilters,
-    ],
+    [drawingArea, formattedSeries, yAxis, yExtremumGetters, dataset, zoomData, options, getFilters],
   );
 
   const value = React.useMemo(

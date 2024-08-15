@@ -11,7 +11,7 @@ const mergeMinMax = (
 };
 
 export const getExtremumX: ExtremumGetter<'scatter'> = (params) => {
-  const { series, axis, isDefaultAxis, getZoomFilters } = params;
+  const { series, axis, isDefaultAxis, getFilters } = params;
 
   return Object.keys(series)
     .filter((seriesId) => {
@@ -20,7 +20,7 @@ export const getExtremumX: ExtremumGetter<'scatter'> = (params) => {
     })
     .reduce(
       (acc, seriesId) => {
-        const filter = getZoomFilters?.({
+        const filter = getFilters?.({
           currentAxisId: axis.id,
           isDefaultAxis,
           seriesXAxisId: series[seriesId].xAxisId ?? series[seriesId].xAxisKey,
@@ -43,7 +43,7 @@ export const getExtremumX: ExtremumGetter<'scatter'> = (params) => {
 };
 
 export const getExtremumY: ExtremumGetter<'scatter'> = (params) => {
-  const { series, axis, isDefaultAxis, getZoomFilters } = params;
+  const { series, axis, isDefaultAxis, getFilters } = params;
 
   return Object.keys(series)
     .filter((seriesId) => {
@@ -52,7 +52,7 @@ export const getExtremumY: ExtremumGetter<'scatter'> = (params) => {
     })
     .reduce(
       (acc, seriesId) => {
-        const filter = getZoomFilters?.({
+        const filter = getFilters?.({
           currentAxisId: axis.id,
           isDefaultAxis,
           seriesXAxisId: series[seriesId].xAxisId ?? series[seriesId].xAxisKey,

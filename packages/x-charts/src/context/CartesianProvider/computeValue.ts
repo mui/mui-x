@@ -60,7 +60,7 @@ type ComputeCommonParams = {
   dataset: DatasetType | undefined;
   zoomData?: ZoomData[];
   zoomOptions?: ZoomOptions;
-  getZoomFilters?: GetZoomAxisFilters;
+  getFilters?: GetZoomAxisFilters;
 };
 
 export function computeValue(
@@ -84,7 +84,7 @@ export function computeValue({
   axisDirection,
   zoomData,
   zoomOptions,
-  getZoomFilters,
+  getFilters,
 }: ComputeCommonParams & {
   axis: AxisConfig<ScaleName, any, ChartsAxisProps>[] | undefined;
   axisDirection: 'x' | 'y';
@@ -105,7 +105,7 @@ export function computeValue({
       extremumGetters,
       isDefaultAxis,
       formattedSeries,
-      zoom === undefined && !zoomOption ? getZoomFilters : undefined, // Do not apply filtering if zoom is already defined.
+      zoom === undefined && !zoomOption ? getFilters : undefined, // Do not apply filtering if zoom is already defined.
     );
     const data = axis.data ?? [];
 
