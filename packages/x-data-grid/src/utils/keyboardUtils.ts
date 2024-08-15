@@ -47,11 +47,23 @@ export const isHideMenuKey = (key: React.KeyboardEvent['key']) => key === 'Tab' 
 export function isPasteShortcut(event: React.KeyboardEvent) {
   if (
     (event.ctrlKey || event.metaKey) &&
-    event.key.toLowerCase() === 'v' &&
+    event.code === 'KeyV' &&
     !event.shiftKey &&
     !event.altKey
   ) {
     return true;
   }
   return false;
+}
+
+/**
+ * Checks if the keyboard event corresponds to the copy shortcut (CTRL+C or CMD+C) across different localization keyboards.
+ *
+ * @param {KeyboardEvent} event - The keyboard event to check.
+ * @returns {boolean} - Returns true if the event is a copy shortcut, otherwise false.
+ */
+export function isCopyShortcut(event: KeyboardEvent): boolean {
+  return (
+    (event.ctrlKey || event.metaKey) && event.code === 'KeyC' && !event.shiftKey && !event.altKey
+  );
 }
