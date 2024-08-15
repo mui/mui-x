@@ -23,7 +23,7 @@ export default function GridPivotingMovies() {
     };
   }, [movieData]);
   const [pivotModel, setPivotModel] = React.useState<PivotModel>({
-    rows: ['company'],
+    rows: [{ field: 'company' }],
     columns: [
       { field: 'year', sort: 'desc' },
       { field: 'cinematicUniverse', sort: 'asc' },

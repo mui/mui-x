@@ -910,7 +910,11 @@ DataGridPremiumRaw.propTypes = {
     pivotMode: PropTypes.bool.isRequired,
     pivotModel: PropTypes.shape({
       columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-      rows: PropTypes.arrayOf(PropTypes.string).isRequired,
+      rows: PropTypes.arrayOf(
+        PropTypes.shape({
+          field: PropTypes.string.isRequired,
+        }),
+      ).isRequired,
       values: PropTypes.arrayOf(
         PropTypes.shape({
           aggFunc: PropTypes.string.isRequired,

@@ -17,7 +17,7 @@ export default function GridPivotingCommodities() {
   });
 
   const [pivotModel, setPivotModel] = React.useState({
-    rows: ['brokerName'],
+    rows: [{ field: 'brokerName' }],
     columns: [{ field: 'commodity', sort: 'asc' }],
     values: [{ field: 'quantity', aggFunc: 'sum' }],
   });

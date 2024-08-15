@@ -6,10 +6,12 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import Typography, { typographyClasses } from '@mui/material/Typography';
 import { svgIconClasses } from '@mui/material/SvgIcon';
+
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { PivotModel } from '../../../hooks/features/pivoting/useGridPivoting';
 import { useGridRootProps } from '../../../typeOverloads/reexports';
 import { getAvailableAggregationFunctions } from '../../../hooks/features/aggregation/gridAggregationUtils';
+import { GridSidebarColumnPanelPivotMenu as PivotMenu } from './GridSidebarColumnPanelPivotMenu';
 
 function AutoAnimateContainer(props: React.HTMLAttributes<HTMLDivElement>) {
   const [parent] = useAutoAnimate({ duration: 150 });
@@ -47,15 +49,20 @@ const PivotSectionTitle = styled('div')(({ theme }) => ({
   padding: theme.spacing(1.25, 2.5),
   [`.${svgIconClasses.root}`]: {
     fontSize: theme.typography.pxToRem(18),
+    marginLeft: -1,
   },
 }));
 
-const PivotSectionList = styled(AutoAnimateContainer)({
+const PivotSectionList = styled(AutoAnimateContainer)(({ theme }) => ({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
   overflow: 'auto',
-});
+  padding: theme.spacing(1, 0),
+  '* + &': {
+    paddingTop: 0,
+  },
+}));
 
 const PivotSectionPlaceholder = styled('div')(({ theme }) => ({
   flex: 1,
@@ -63,7 +70,7 @@ const PivotSectionPlaceholder = styled('div')(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   height: 60,
-  margin: theme.spacing(0, 2.5, 2),
+  margin: theme.spacing(1.5),
   border: `1px dashed ${theme.palette.grey[400]}`,
   borderRadius: 4,
   color: theme.palette.text.secondary,
@@ -77,6 +84,9 @@ const PivotSectionPlaceholder = styled('div')(({ theme }) => ({
   '[data-drag-over="true"] &': {
     borderWidth: 2,
     borderStyle: 'solid',
+  },
+  '* + &': {
+    marginTop: 0,
   },
 }));
 
@@ -137,14 +147,14 @@ const PivotFieldDragHandle = styled('div')(({ theme }) => ({
   },
 }));
 
-interface FieldTransferObject {
+export interface FieldTransferObject {
   field: string;
   modelKey: 'columns' | 'rows' | 'values' | null;
 }
 
-type DropPosition = 'top' | 'bottom' | null;
+export type DropPosition = 'top' | 'bottom' | null;
 
-type UpdatePivotModel = (params: {
+export type UpdatePivotModel = (params: {
   field: string;
   targetSection: FieldTransferObject['modelKey'];
   originSection: FieldTransferObject['modelKey'];
@@ -268,6 +278,7 @@ function AggregationSelect({
 function PivotSectionListItem({
   children,
   field,
+  pivotModel,
   updatePivotModel,
   onPivotModelChange,
   slots,
@@ -278,6 +289,7 @@ function PivotSectionListItem({
 }: {
   children: React.ReactNode;
   field: FieldTransferObject['field'];
+  pivotModel: PivotModel;
   updatePivotModel: UpdatePivotModel;
   onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
   slots: DataGridPremiumProcessedProps['slots'];
@@ -398,9 +410,12 @@ function PivotSectionListItem({
           onPivotModelChange={onPivotModelChange}
         />
       )}
-      <rootProps.slots.baseIconButton size="small" {...rootProps.slotProps?.baseIconButton}>
-        <rootProps.slots.columnMenuIcon fontSize="small" />
-      </rootProps.slots.baseIconButton>
+      <PivotMenu
+        field={field}
+        modelKey={props.modelKey}
+        pivotModel={pivotModel}
+        updatePivotModel={updatePivotModel}
+      />
     </PivotField>
   );
 }
@@ -444,13 +459,13 @@ export function GridSidebarColumnPanelBody({
 
   const availableFields = React.useMemo(() => {
     return fields.filter((field) => {
-      if (pivotModel.rows.includes(field)) {
+      if (pivotModel.rows.find((item) => item.field === field)) {
         return false;
       }
-      if (pivotModel.columns.find((col) => col.field === field)) {
+      if (pivotModel.columns.find((item) => item.field === field)) {
         return false;
       }
-      if (pivotModel.values.find((obj) => obj.field === field)) {
+      if (pivotModel.values.find((item) => item.field === field)) {
         return false;
       }
       return true;
@@ -469,21 +484,11 @@ export function GridSidebarColumnPanelBody({
           const newSectionArray = [...prev[targetSection]];
           let toIndex = newSectionArray.length;
           if (targetField) {
-            const fromIndex = newSectionArray.findIndex((item) => {
-              if (typeof item === 'string') {
-                return item === field;
-              }
-              return item.field === field;
-            });
+            const fromIndex = newSectionArray.findIndex((item) => item.field === field);
             if (fromIndex > -1) {
               newSectionArray.splice(fromIndex, 1);
             }
-            toIndex = newSectionArray.findIndex((item) => {
-              if (typeof item === 'string') {
-                return item === targetField;
-              }
-              return item.field === targetField;
-            });
+            toIndex = newSectionArray.findIndex((item) => item.field === targetField);
             if (targetFieldPosition === 'bottom') {
               toIndex += 1;
             }
@@ -503,7 +508,7 @@ export function GridSidebarColumnPanelBody({
             newSectionArray.splice(toIndex, 0, { field, sort: 'asc' });
             newModel.columns = newSectionArray as PivotModel['columns'];
           } else if (targetSection === 'rows') {
-            newSectionArray.splice(toIndex, 0, field);
+            newSectionArray.splice(toIndex, 0, { field });
             newModel.rows = newSectionArray as PivotModel['rows'];
           }
         }
@@ -593,6 +598,7 @@ export function GridSidebarColumnPanelBody({
                   field={field}
                   modelKey={null}
                   updatePivotModel={updatePivotModel}
+                  pivotModel={pivotModel}
                   onPivotModelChange={onPivotModelChange}
                   slots={rootProps.slots}
                   slotProps={rootProps.slotProps}
@@ -624,13 +630,14 @@ export function GridSidebarColumnPanelBody({
         )}
         {pivotModel.rows.length > 0 && (
           <PivotSectionList>
-            {pivotModel.rows.map((field) => {
+            {pivotModel.rows.map(({ field }) => {
               return (
                 <PivotSectionListItem
                   key={field}
                   field={field}
                   modelKey="rows"
                   data-field={field}
+                  pivotModel={pivotModel}
                   updatePivotModel={updatePivotModel}
                   onPivotModelChange={onPivotModelChange}
                   slots={rootProps.slots}
@@ -663,14 +670,14 @@ export function GridSidebarColumnPanelBody({
         )}
         {pivotModel.columns.length > 0 && (
           <PivotSectionList>
-            {pivotModel.columns.map((item) => {
-              const { field, sort } = item;
+            {pivotModel.columns.map(({ field, sort }) => {
               return (
                 <PivotSectionListItem
                   key={field}
                   field={field}
                   modelKey="columns"
                   updatePivotModel={updatePivotModel}
+                  pivotModel={pivotModel}
                   onPivotModelChange={onPivotModelChange}
                   slots={rootProps.slots}
                   slotProps={rootProps.slotProps}
@@ -710,6 +717,7 @@ export function GridSidebarColumnPanelBody({
                   field={field}
                   modelKey="values"
                   updatePivotModel={updatePivotModel}
+                  pivotModel={pivotModel}
                   onPivotModelChange={onPivotModelChange}
                   slots={rootProps.slots}
                   slotProps={rootProps.slotProps}

@@ -36,6 +36,10 @@ import {
   GridClearIcon,
   GridLoadIcon,
   GridDeleteForeverIcon,
+  GridMoveToTopIcon,
+  GridMoveToBottomIcon,
+  GridDeleteIcon,
+  GridExpandLessIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
@@ -77,6 +81,13 @@ const iconSlots: GridIconSlotsComponent = {
   filterPanelAddIcon: GridAddIcon,
   filterPanelRemoveAllIcon: GridDeleteForeverIcon,
   columnReorderIcon: GridDragIcon,
+  pivotMenuAddIcon: GridAddIcon,
+  pivotMenuMoveUpIcon: GridExpandLessIcon,
+  pivotMenuMoveDownIcon: GridExpandMoreIcon,
+  pivotMenuMoveToTopIcon: GridMoveToTopIcon,
+  pivotMenuMoveToBottomIcon: GridMoveToBottomIcon,
+  pivotMenuCheckIcon: GridCheckIcon,
+  pivotMenuRemoveIcon: GridDeleteIcon,
 };
 
 const materialSlots: GridBaseSlots & GridIconSlotsComponent = {

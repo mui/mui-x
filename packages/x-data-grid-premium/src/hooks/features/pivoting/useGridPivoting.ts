@@ -21,7 +21,9 @@ import { GridApiPremium } from '../../../models/gridApiPremium';
 
 export interface PivotModel {
   columns: { field: GridColDef['field']; sort?: 'asc' | 'desc' }[];
-  rows: GridColDef['field'][];
+  rows: {
+    field: GridColDef['field'];
+  }[];
   values: {
     field: GridColDef['field'];
     aggFunc: string;
@@ -119,12 +121,12 @@ const getPivotedData = ({
     return attributes;
   };
 
-  pivotModel.rows.forEach((field) => {
+  pivotModel.rows.forEach((pivotRow) => {
     pivotColumns.push({
-      field,
+      field: pivotRow.field,
       groupable: true,
     });
-    columnVisibilityModel[field] = false;
+    columnVisibilityModel[pivotRow.field] = false;
   });
 
   const aggregationModel: GridAggregationModel = {};
@@ -237,7 +239,7 @@ const getPivotedData = ({
   return {
     rows: newRows,
     columns: pivotColumns,
-    rowGroupingModel: pivotModel.rows,
+    rowGroupingModel: pivotModel.rows.map((row) => row.field),
     aggregationModel,
     getAggregationPosition: (groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline'),
     columnVisibilityModel,

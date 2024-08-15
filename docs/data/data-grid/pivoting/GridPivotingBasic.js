@@ -38,7 +38,7 @@ export default function GridPivotingBasic() {
   const apiRef = useGridApiRef();
 
   const [pivotModel, setPivotModel] = React.useState({
-    rows: ['type'],
+    rows: [{ field: 'type' }],
     columns: [],
     values: [{ field: 'price', aggFunc: 'sum' }],
   });
