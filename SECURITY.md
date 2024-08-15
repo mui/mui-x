@@ -10,9 +10,6 @@ The versions of the project that are currently supported with security updates.
 |        ^6.0.0 | 2023-03-03 | :white_check_mark: Long-term support |
 |        ^5.0.0 | 2021-11-23 | :x:                                  |
 |        ^4.0.0 | 2021-09-28 | :x:                                  |
-|        ^3.0.0 | /          | :x:                                  |
-|        ^2.0.0 | /          | :x:                                  |
-|        ^1.0.0 | /          | :x:                                  |
 
 ## Reporting a vulnerability
 
