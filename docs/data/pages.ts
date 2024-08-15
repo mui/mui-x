@@ -1,4 +1,4 @@
-import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
+import type { MuiPage } from 'docs/src/MuiPage';
 import dataGridComponentApi from './data-grid-component-api-pages';
 import pickersComponentApi from './date-pickers-component-api-pages';
 import chartsComponentApi from './charts-component-api-pages';
@@ -425,6 +425,12 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/react-charts/gauge' },
           {
+            pathname: '/x/react-charts/heatmap',
+            title: 'Heatmap',
+            plan: 'pro',
+            unstable: true,
+          },
+          {
             pathname: '/x/react-charts/common-features',
             subheader: 'Common features',
             children: [
@@ -436,6 +442,12 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/stacking' },
               { pathname: '/x/react-charts/styling' },
               { pathname: '/x/react-charts/tooltip', title: 'Tooltip & Highlights' },
+              {
+                pathname: '/x/react-charts/zoom-and-pan',
+                title: 'Zoom & Pan',
+                plan: 'pro',
+                unstable: true,
+              },
             ],
           },
           {
@@ -462,12 +474,6 @@ const pages: MuiPage[] = [
             children: [
               { pathname: '/x/react-charts/radar', planned: true },
               { pathname: '/x/react-charts/treemap', title: 'Treemap', planned: true },
-              {
-                pathname: '/x/react-charts/heatmap',
-                title: 'Heatmap',
-                plan: 'pro',
-                planned: true,
-              },
               { pathname: '/x/react-charts/funnel', plan: 'pro', planned: true },
               { pathname: '/x/react-charts/sankey', plan: 'pro', planned: true },
               { pathname: '/x/react-charts/gantt', plan: 'pro', planned: true },
@@ -504,6 +510,8 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/rich-tree-view/expansion' },
           { pathname: '/x/react-tree-view/rich-tree-view/customization' },
           { pathname: '/x/react-tree-view/rich-tree-view/focus' },
+          { pathname: '/x/react-tree-view/rich-tree-view/editing' },
+          { pathname: '/x/react-tree-view/rich-tree-view/ordering', plan: 'pro' },
         ],
       },
       {

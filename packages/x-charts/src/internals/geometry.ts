@@ -16,7 +16,7 @@ export function getMinXTranslation(width: number, height: number, angle: number 
       warnedOnce = true;
       console.warn(
         [
-          `MUI X Charts: It seems you applied an angle larger than 90° or smaller than -90° to an axis text.`,
+          `MUI X: It seems you applied an angle larger than 90° or smaller than -90° to an axis text.`,
           `This could cause some text overlapping.`,
           `If you encounter a use case where it's needed, please open an issue.`,
         ].join('\n'),

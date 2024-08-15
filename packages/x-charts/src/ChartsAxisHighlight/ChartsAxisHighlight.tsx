@@ -94,7 +94,7 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
     if (isXError || isYError) {
       console.error(
         [
-          `MUI X Charts: The position value provided for the axis is not valid for the current scale.`,
+          `MUI X: The position value provided for the axis is not valid for the current scale.`,
           `This probably means something is wrong with the data passed to the chart.`,
           `The ChartsAxisHighlight component will not be displayed.`,
         ].join('\n'),
@@ -117,7 +117,7 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
         />
       )}
 
-      {isBandScaleY && yScale(axisY.value) === undefined && (
+      {isBandScaleY && yScale(axisY.value) !== undefined && (
         <ChartsAxisHighlightPath
           d={`M ${xScale.range()[0]} ${
             // @ts-expect-error, yScale value is checked in the statement above

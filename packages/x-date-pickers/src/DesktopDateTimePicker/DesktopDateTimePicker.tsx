@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { resolveComponentProps } from '@mui/base/utils';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
 import Divider from '@mui/material/Divider';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
@@ -11,7 +11,8 @@ import {
   DateTimePickerViewRenderers,
 } from '../DateTimePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils } from '../internals/hooks/useUtils';
 import { validateDateTime } from '../internals/utils/validation/validateDateTime';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { CalendarIcon } from '../icons';
@@ -133,7 +134,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   inProps: DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const utils = useUtils<TDate>();
 
   // Props with the default values common to all date time pickers
@@ -226,7 +227,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
     valueManager: singleItemValueManager,
     valueType: 'date-time',
     getOpenDialogAriaText:
-      props.localeText?.openDatePickerDialogue ?? localeText.openDatePickerDialogue,
+      props.localeText?.openDatePickerDialogue ?? translations.openDatePickerDialogue,
     validator: validateDateTime,
     rendererInterceptor,
   });
@@ -349,6 +350,7 @@ DesktopDateTimePicker.propTypes = {
   localeText: PropTypes.object,
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
@@ -362,6 +364,7 @@ DesktopDateTimePicker.propTypes = {
   maxTime: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**

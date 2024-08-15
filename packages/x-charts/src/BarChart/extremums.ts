@@ -1,4 +1,7 @@
-import { ExtremumGetter, ExtremumGetterResult } from '../models/seriesType/config';
+import {
+  ExtremumGetter,
+  ExtremumGetterResult,
+} from '../context/PluginProvider/ExtremumGetter.types';
 
 const getBaseExtremum: ExtremumGetter<'bar'> = (params) => {
   const { axis } = params;
@@ -12,27 +15,22 @@ const getValueExtremum: ExtremumGetter<'bar'> = (params) => {
   const { series, axis, isDefaultAxis } = params;
 
   return Object.keys(series)
-    .filter(
-      (seriesId) =>
-        series[seriesId].yAxisKey === axis.id ||
-        (isDefaultAxis && series[seriesId].yAxisKey === undefined),
-    )
+    .filter((seriesId) => {
+      const yAxisId = series[seriesId].yAxisId ?? series[seriesId].yAxisKey;
+      return yAxisId === axis.id || (isDefaultAxis && yAxisId === undefined);
+    })
     .reduce(
       (acc: ExtremumGetterResult, seriesId) => {
         const [seriesMin, seriesMax] = series[seriesId].stackedData?.reduce(
-          (seriesAcc, values) => [
-            Math.min(...values, ...(seriesAcc[0] === null ? [] : [seriesAcc[0]])),
-            Math.max(...values, ...(seriesAcc[1] === null ? [] : [seriesAcc[1]])),
-          ],
-          series[seriesId].stackedData[0],
-        ) ?? [null, null];
+          (seriesAcc, values) => {
+            return [Math.min(...values, seriesAcc[0]), Math.max(...values, seriesAcc[1])];
+          },
+          [Infinity, -Infinity],
+        ) ?? [Infinity, -Infinity];
 
-        return [
-          acc[0] === null ? seriesMin : Math.min(seriesMin, acc[0]),
-          acc[1] === null ? seriesMax : Math.max(seriesMax, acc[1]),
-        ];
+        return [Math.min(seriesMin, acc[0]), Math.max(seriesMax, acc[1])];
       },
-      [null, null],
+      [Infinity, -Infinity],
     );
 };
 

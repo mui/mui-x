@@ -17,6 +17,7 @@ export const mergeDateAndTime = <TDate extends PickerValidDate>(
   mergedDate = utils.setHours(mergedDate, utils.getHours(timeParam));
   mergedDate = utils.setMinutes(mergedDate, utils.getMinutes(timeParam));
   mergedDate = utils.setSeconds(mergedDate, utils.getSeconds(timeParam));
+  mergedDate = utils.setMilliseconds(mergedDate, utils.getMilliseconds(timeParam));
 
   return mergedDate;
 };
@@ -149,7 +150,7 @@ export const formatMeridiem = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
   meridiem: 'am' | 'pm',
 ) => {
-  const date = utils.setHours(utils.date()!, meridiem === 'am' ? 2 : 14);
+  const date = utils.setHours(utils.date(), meridiem === 'am' ? 2 : 14);
   return utils.format(date, 'meridiem');
 };
 

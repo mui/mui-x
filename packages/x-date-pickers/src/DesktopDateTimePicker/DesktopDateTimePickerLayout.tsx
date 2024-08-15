@@ -13,17 +13,25 @@ import {
 import { PickerValidDate } from '../models';
 import { DateOrTimeViewWithMeridiem } from '../internals/models/common';
 
-/**
- * @ignore - internal component.
- */
-function DesktopDateTimePickerLayout<
+type DesktopDateTimePickerLayoutComponent = (<
   TValue,
   TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
->(props: PickersLayoutProps<TValue, TDate, TView>) {
+>(
+  props: PickersLayoutProps<TValue, TDate, TView> & React.RefAttributes<HTMLDivElement>,
+) => React.JSX.Element) & { propTypes?: any };
+
+/**
+ * @ignore - internal component.
+ */
+const DesktopDateTimePickerLayout = React.forwardRef(function DesktopDateTimePickerLayout<
+  TValue,
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+>(props: PickersLayoutProps<TValue, TDate, TView>, ref: React.Ref<HTMLDivElement>) {
   const isRtl = useRtl();
   const { toolbar, tabs, content, actionBar, shortcuts } = usePickerLayout(props);
-  const { sx, className, isLandscape, ref, classes } = props;
+  const { sx, className, isLandscape, classes } = props;
   const isActionBarVisible = actionBar && (actionBar.props.actions?.length ?? 0) > 0;
   const ownerState = { ...props, isRtl };
 
@@ -53,7 +61,7 @@ function DesktopDateTimePickerLayout<
       {actionBar}
     </PickersLayoutRoot>
   );
-}
+}) as DesktopDateTimePickerLayoutComponent;
 
 DesktopDateTimePickerLayout.propTypes = {
   // ----------------------------- Warning --------------------------------

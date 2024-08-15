@@ -12,7 +12,7 @@ function getAsANumber(value: number | Date) {
 }
 export const useAxisEvents = (disableAxisListener: boolean) => {
   const svgRef = useSvgRef();
-  const { left, top, width, height } = useDrawingArea();
+  const drawingArea = useDrawingArea();
   const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
   const { dispatch } = React.useContext(InteractionContext);
 
@@ -21,6 +21,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
 
   // Use a ref to avoid rerendering on every mousemove event.
   const mousePosition = React.useRef({
+    isInChart: false,
     x: -1,
     y: -1,
   });
@@ -94,6 +95,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
 
     const handleOut = () => {
       mousePosition.current = {
+        isInChart: false,
         x: -1,
         y: -1,
       };
@@ -102,46 +104,47 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
 
     const handleMove = (event: MouseEvent | TouchEvent) => {
       const target = 'targetTouches' in event ? event.targetTouches[0] : event;
-      const svgPoint = getSVGPoint(svgRef.current!, target);
+      const svgPoint = getSVGPoint(element, target);
 
-      mousePosition.current = {
-        x: svgPoint.x,
-        y: svgPoint.y,
-      };
+      mousePosition.current.x = svgPoint.x;
+      mousePosition.current.y = svgPoint.y;
 
-      const outsideX = svgPoint.x < left || svgPoint.x > left + width;
-      const outsideY = svgPoint.y < top || svgPoint.y > top + height;
-      if (outsideX || outsideY) {
-        dispatch({ type: 'exitChart' });
+      if (!drawingArea.isPointInside(svgPoint, event.target as SVGElement)) {
+        if (mousePosition.current.isInChart) {
+          dispatch({ type: 'exitChart' });
+          mousePosition.current.isInChart = false;
+        }
         return;
       }
+      mousePosition.current.isInChart = true;
       const newStateX = getNewAxisState(xAxis[usedXAxis], svgPoint.x);
       const newStateY = getNewAxisState(yAxis[usedYAxis], svgPoint.y);
 
       dispatch({ type: 'updateAxis', data: { x: newStateX, y: newStateY } });
     };
 
-    element.addEventListener('mouseout', handleOut);
-    element.addEventListener('mousemove', handleMove);
-    element.addEventListener('touchend', handleOut);
-    element.addEventListener('touchmove', handleMove);
-    return () => {
-      element.removeEventListener('mouseout', handleOut);
-      element.removeEventListener('mousemove', handleMove);
-      element.removeEventListener('touchend', handleOut);
-      element.removeEventListener('touchmove', handleMove);
+    const handleDown = (event: PointerEvent) => {
+      const target = event.currentTarget;
+      if (!target) {
+        return;
+      }
+
+      if ((target as HTMLElement).hasPointerCapture(event.pointerId)) {
+        (target as HTMLElement).releasePointerCapture(event.pointerId);
+      }
     };
-  }, [
-    svgRef,
-    dispatch,
-    left,
-    width,
-    top,
-    height,
-    usedYAxis,
-    yAxis,
-    usedXAxis,
-    xAxis,
-    disableAxisListener,
-  ]);
+
+    element.addEventListener('pointerdown', handleDown);
+    element.addEventListener('pointermove', handleMove);
+    element.addEventListener('pointerout', handleOut);
+    element.addEventListener('pointercancel', handleOut);
+    element.addEventListener('pointerleave', handleOut);
+    return () => {
+      element.removeEventListener('pointerdown', handleDown);
+      element.removeEventListener('pointermove', handleMove);
+      element.removeEventListener('pointerout', handleOut);
+      element.removeEventListener('pointercancel', handleOut);
+      element.removeEventListener('pointerleave', handleOut);
+    };
+  }, [svgRef, dispatch, usedYAxis, yAxis, usedXAxis, xAxis, disableAxisListener, drawingArea]);
 };

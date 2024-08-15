@@ -42,7 +42,7 @@ const esESGrid: Partial<GridLocaleText> = {
   columnsManagementSearchTitle: 'Buscar',
   columnsManagementNoColumns: 'Sin columnas',
   columnsManagementShowHideAllText: 'Mostrar/Ocultar todas',
-  // columnsManagementReset: 'Reset',
+  columnsManagementReset: 'Restablecer',
 
   // Filter panel text
   filterPanelAddFilter: 'Agregar filtro',

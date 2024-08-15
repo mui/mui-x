@@ -20,19 +20,20 @@ export const useReducedMotion = () => {
     }
     const mql = window.matchMedia('(prefers-reduced-motion)');
 
-    const handleMediaChange = (e: MediaQueryListEvent | MediaQueryList) => {
+    const handleMediaChange = (event: MediaQueryListEvent | MediaQueryList) => {
       Globals.assign({
         // Modification such the react-spring implementation such that this hook can remove animation but never activate animation.
-        skipAnimation: e.matches || undefined,
+        skipAnimation: event.matches || undefined,
       });
     };
 
     handleMediaChange(mql);
 
-    mql.addEventListener('change', handleMediaChange);
+    // MatchMedia is not fully supported in all environments, so we need to check if it exists before calling addEventListener
+    mql.addEventListener?.('change', handleMediaChange);
 
     return () => {
-      mql.removeEventListener('change', handleMediaChange);
+      mql.removeEventListener?.('change', handleMediaChange);
     };
   }, []);
 };

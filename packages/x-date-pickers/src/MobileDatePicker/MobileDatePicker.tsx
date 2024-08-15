@@ -1,11 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { resolveComponentProps } from '@mui/base/utils';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { MobileDatePickerProps } from './MobileDatePicker.types';
 import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
-import { useUtils, useLocaleText } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils } from '../internals/hooks/useUtils';
 import { validateDate } from '../internals/utils/validation/validateDate';
 import { DateView, PickerValidDate } from '../models';
 import { DateField } from '../DateField';
@@ -39,7 +40,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
   inProps: MobileDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const utils = useUtils<TDate>();
 
   // Props with the default values common to all date pickers
@@ -88,7 +89,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
     valueManager: singleItemValueManager,
     valueType: 'date',
     getOpenDialogAriaText:
-      props.localeText?.openDatePickerDialogue ?? localeText.openDatePickerDialogue,
+      props.localeText?.openDatePickerDialogue ?? translations.openDatePickerDialogue,
     validator: validateDate,
   });
 
@@ -195,10 +196,12 @@ MobileDatePicker.propTypes = {
   localeText: PropTypes.object,
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Portal } from '@mui/base/Portal';
+import Portal from '@mui/material/Portal';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { DataGrid, GridToolbarQuickFilter, GridToolbar } from '@mui/x-data-grid';

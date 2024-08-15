@@ -40,13 +40,13 @@ export interface BarChartSlots
   extends ChartsAxisSlots,
     BarPlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots,
+    ChartsTooltipSlots<'bar'>,
     ChartsOverlaySlots {}
 export interface BarChartSlotProps
   extends ChartsAxisSlotProps,
     BarPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps,
+    ChartsTooltipSlotProps<'bar'>,
     ChartsOverlaySlotProps {}
 
 export interface BarChartProps
@@ -64,7 +64,7 @@ export interface BarChartProps
    * The configuration of the tooltip.
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    */
-  tooltip?: ChartsTooltipProps;
+  tooltip?: ChartsTooltipProps<'bar'>;
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -132,10 +132,10 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
       <g {...clipPathGroupProps}>
         <BarPlot {...barPlotProps} />
         <ChartsOverlay {...overlayProps} />
+        <ChartsAxisHighlight {...axisHighlightProps} />
       </g>
       <ChartsAxis {...chartsAxisProps} />
       <ChartsLegend {...legendProps} />
-      <ChartsAxisHighlight {...axisHighlightProps} />
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       <ChartsClipPath {...clipPathProps} />
       {children}
@@ -340,7 +340,6 @@ BarChart.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -387,6 +386,11 @@ BarChart.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -411,7 +415,6 @@ BarChart.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -458,6 +461,11 @@ BarChart.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),

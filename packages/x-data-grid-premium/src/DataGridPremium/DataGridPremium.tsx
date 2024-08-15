@@ -27,9 +27,17 @@ import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
 import { GridSidebar } from '../components/sidebar/GridSidebar';
 import { GridSidebarColumnPanel } from '../components/sidebar/columnPanel/GridSidebarColumnPanel';
+import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
+import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
+const configuration = {
+  hooks: {
+    useGridAriaAttributes,
+    useGridRowAriaAttributes,
+  },
+};
 const releaseInfo = getReleaseInfo();
 
 let dataGridPremiumPropValidators: PropValidator<DataGridPremiumProcessedProps>[];
@@ -44,7 +52,6 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 ) {
   const props = useDataGridPremiumProps(inProps);
   const privateApiRef = useDataGridPremiumComponent(props.apiRef, props);
-
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
   const { pivotParams } = props;
@@ -55,7 +62,7 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
     validateProps(props, dataGridPremiumPropValidators);
   }
   return (
-    <GridContextProvider privateApiRef={privateApiRef} props={props}>
+    <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
       <GridRoot
         className={clsx(props.className, hasPivotModel && gridClasses.sidePanel)}
         style={props.style}
@@ -330,6 +337,7 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    ariaV8: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -504,7 +512,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {boolean} A boolean indicating if the cell is selectable.
+   * @returns {boolean} A boolean indicating if the row is selectable.
    */
   isRowSelectable: PropTypes.func,
   /**
@@ -522,6 +530,7 @@ DataGridPremiumRaw.propTypes = {
   keepNonExistentRowsSelected: PropTypes.bool,
   /**
    * If `true`, a loading overlay is displayed.
+   * @default false
    */
   loading: PropTypes.bool,
   /**

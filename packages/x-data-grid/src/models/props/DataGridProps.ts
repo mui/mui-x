@@ -262,6 +262,11 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   logLevel: keyof Logger | false;
   /**
+   * If `true`, a loading overlay is displayed.
+   * @default false
+   */
+  loading: boolean;
+  /**
    * If `true`, pagination is enabled.
    * @default false
    */
@@ -464,7 +469,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {boolean} A boolean indicating if the cell is selectable.
+   * @returns {boolean} A boolean indicating if the row is selectable.
    */
   isRowSelectable?: (params: GridRowParams<R>) => boolean;
   /**
@@ -735,10 +740,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * Return the id of a given [[GridRowModel]].
    */
   getRowId?: GridRowIdGetter<R>;
-  /**
-   * If `true`, a loading overlay is displayed.
-   */
-  loading?: boolean;
   /**
    * Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute).
    */

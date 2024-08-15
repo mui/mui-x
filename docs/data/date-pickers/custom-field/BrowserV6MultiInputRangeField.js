@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';

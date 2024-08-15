@@ -50,7 +50,7 @@ export interface LineChartSlots
     MarkPlotSlots,
     LineHighlightPlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots,
+    ChartsTooltipSlots<'line'>,
     ChartsOverlaySlots {}
 export interface LineChartSlotProps
   extends ChartsAxisSlotProps,
@@ -59,7 +59,7 @@ export interface LineChartSlotProps
     MarkPlotSlotProps,
     LineHighlightPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps,
+    ChartsTooltipSlotProps<'line'>,
     ChartsOverlaySlotProps {}
 
 export interface LineChartProps
@@ -77,7 +77,7 @@ export interface LineChartProps
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    * @default { trigger: 'item' }
    */
-  tooltip?: ChartsTooltipProps;
+  tooltip?: ChartsTooltipProps<'line'>;
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -162,10 +162,13 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
         <AreaPlot {...areaPlotProps} />
         <LinePlot {...linePlotProps} />
         <ChartsOverlay {...overlayProps} />
+        <ChartsAxisHighlight {...axisHighlightProps} />
       </g>
       <ChartsAxis {...chartsAxisProps} />
-      <ChartsAxisHighlight {...axisHighlightProps} />
-      <MarkPlot {...markPlotProps} />
+      <g data-drawing-container>
+        {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
+        <MarkPlot {...markPlotProps} />
+      </g>
       <LineHighlightPlot {...lineHighlightPlotProps} />
       <ChartsLegend {...legendProps} />
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
@@ -365,7 +368,6 @@ LineChart.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -412,6 +414,11 @@ LineChart.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -436,7 +443,6 @@ LineChart.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -483,6 +489,11 @@ LineChart.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),

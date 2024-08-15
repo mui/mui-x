@@ -204,7 +204,7 @@
       "description": "Determines if a row can be selected.",
       "typeDescriptions": {
         "params": "With all properties from <a href='/x/api/data-grid/grid-row-params/'>GridRowParams</a>.",
-        "boolean": "A boolean indicating if the cell is selectable."
+        "boolean": "A boolean indicating if the row is selectable."
       }
     },
     "keepColumnPositionIfDraggedOutside": {
@@ -1065,6 +1065,10 @@
     "rowReorderCellPlaceholder": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the row&#39;s draggable placeholder element inside the special row reorder cell"
+    },
+    "rowSkeleton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the skeleton row element"
     },
     "scrollArea": {
       "description": "Styles applied to {{nodeName}}.",

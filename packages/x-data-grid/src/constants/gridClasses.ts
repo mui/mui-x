@@ -369,6 +369,11 @@ export interface GridClasses {
    */
   'main--hasPinnedRight': string;
   /**
+   * Styles applied to the main container element when it has an active skeleton loading overlay.
+   * @ignore - do not document.
+   */
+  'main--hasSkeletonLoadingOverlay': string;
+  /**
    * Styles applied to the menu element.
    */
   menu: string;
@@ -441,6 +446,11 @@ export interface GridClasses {
    */
   'root--disableUserSelection': string;
   /**
+   * Used to fix header outline border radius.
+   * @ignore - do not document.
+   */
+  'root--noToolbar': string;
+  /**
    * Styles applied to the row element if the row is editable.
    */
   'row--editable': string;
@@ -469,6 +479,11 @@ export interface GridClasses {
    */
   'row--detailPanelExpanded': string;
   /**
+   * Styles applied to the row cells if the row needs a bottom border.
+   * @ignore - do not document.
+   */
+  'row--borderBottom': string;
+  /**
    * Styles applied to the row element.
    */
   row: string;
@@ -489,6 +504,10 @@ export interface GridClasses {
    * Styles applied to the root element of the row reorder cell when dragging is allowed
    */
   'rowReorderCell--draggable': string;
+  /**
+   * Styles applied to the skeleton row element.
+   */
+  rowSkeleton: string;
   /**
    * Styles applied to both scroll area elements.
    */
@@ -708,6 +727,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'iconSeparator',
   'main',
   'main--hasPinnedRight',
+  'main--hasSkeletonLoadingOverlay',
   'menu',
   'menuIcon',
   'menuIconButton',
@@ -721,6 +741,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'root--densityComfortable',
   'root--densityCompact',
   'root--disableUserSelection',
+  'root--noToolbar',
   'row',
   'row--editable',
   'row--editing',
@@ -729,11 +750,13 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'row--dragging',
   'row--dynamicHeight',
   'row--detailPanelExpanded',
+  'row--borderBottom',
   'rowReorderCellPlaceholder',
   'rowCount',
   'rowReorderCellContainer',
   'rowReorderCell',
   'rowReorderCell--draggable',
+  'rowSkeleton',
   'scrollArea--left',
   'scrollArea--right',
   'scrollArea',

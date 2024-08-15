@@ -1,6 +1,6 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { EventHandlers } from '@mui/base/utils';
+import { EventHandlers } from '@mui/utils';
 import ownerDocument from '@mui/utils/ownerDocument';
 import { TreeViewPlugin, TreeViewUsedInstance } from '../../models';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
@@ -65,15 +65,13 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   };
 
   const innerFocusItem = (event: React.SyntheticEvent | null, itemId: string) => {
-    const itemMeta = instance.getItemMeta(itemId);
-    const itemElement = document.getElementById(
-      instance.getTreeItemIdAttribute(itemId, itemMeta.idAttribute),
-    );
+    const itemElement = instance.getItemDOMElement(itemId);
     if (itemElement) {
       itemElement.focus();
     }
 
     setFocusedItemId(itemId);
+
     if (params.onItemFocus) {
       params.onItemFocus(event, itemId);
     }
@@ -96,6 +94,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       const itemElement = document.getElementById(
         instance.getTreeItemIdAttribute(state.focusedItemId, itemMeta.idAttribute),
       );
+
       if (itemElement) {
         itemElement.blur();
       }
