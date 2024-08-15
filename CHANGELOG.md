@@ -10,7 +10,7 @@ _Aug 15, 2024_
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 💫 Allow label editing capabilities on the Tree View (#13388) @noraleonte
-- 🔧 Improve rows accessibility on the Data Grid Tree Data and Row Grouping features (#13623) @arminmeh
+- 🔧 Improve rows accessibility on the Data Grid features "Tree Data" and "Row Grouping". See the [documentation](https://mui.com/x/react-data-grid/row-grouping/#accessibility-changes-in-v8) for more information. (#13623) @arminmeh
 - 🌍 Improve Vietnamese (vi-VN) locale on the Data Grid
 - 🐞 Bugfixes
 
