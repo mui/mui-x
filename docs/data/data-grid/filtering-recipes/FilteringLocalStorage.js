@@ -51,10 +51,7 @@ const usePersistedFilterModel = () => {
   }, [filterModelString]);
 
   return React.useMemo(
-    () => ({
-      filterModel,
-      setFilterModel: filterModelStore.update,
-    }),
+    () => [filterModel, filterModelStore.update],
     [filterModel, filterModelStore.update],
   );
 };
@@ -66,7 +63,7 @@ export default function FilteringLocalStorage() {
     rowLength: 100,
   });
 
-  const { filterModel, setFilterModel } = usePersistedFilterModel();
+  const [filterModel, setFilterModel] = usePersistedFilterModel();
 
   const onFilterModelChange = React.useCallback(
     (newFilterModel) => {

@@ -58,10 +58,7 @@ const usePersistedFilterModel = () => {
   }, [filterModelString]);
 
   return React.useMemo(
-    () => ({
-      filterModel,
-      setFilterModel: filterModelStore.update,
-    }),
+    () => [filterModel, filterModelStore.update] as const,
     [filterModel, filterModelStore.update],
   );
 };
@@ -73,7 +70,7 @@ export default function FilteringLocalStorage() {
     rowLength: 100,
   });
 
-  const { filterModel, setFilterModel } = usePersistedFilterModel();
+  const [filterModel, setFilterModel] = usePersistedFilterModel();
 
   const onFilterModelChange = React.useCallback<
     NonNullable<DataGridProps['onFilterModelChange']>
