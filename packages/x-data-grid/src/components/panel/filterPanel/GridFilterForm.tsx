@@ -467,8 +467,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
               : {
                   visibility: 'hidden',
                 },
-            baseFormControlProps.sx || {},
-            logicOperatorInputProps.sx || {},
+            baseFormControlProps.sx,
+            logicOperatorInputProps.sx,
           ]}
           className={clsx(
             classes.logicOperatorInput,
