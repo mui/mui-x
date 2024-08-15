@@ -39,10 +39,10 @@ const viVNGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Xuất Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: 'Tìm kiếm',
+  columnsManagementNoColumns: 'Không có cột',
+  columnsManagementShowHideAllText: 'Hiện/Ẩn Tất cả',
+  columnsManagementReset: 'Đặt lại',
 
   // Filter panel text
   filterPanelAddFilter: 'Thêm bộ lọc',
