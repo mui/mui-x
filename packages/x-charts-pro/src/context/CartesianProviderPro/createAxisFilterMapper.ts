@@ -32,25 +32,26 @@ export const createAxisFilterMapper =
       return null;
     }
 
-    let min: number | Date;
-    let max: number | Date;
+    let extremums: number[] = [];
     const scaleType = axis.scaleType;
 
     if (scaleType === 'point' || scaleType === 'band') {
-      min = 0;
-      max = (axis.data?.length ?? 1) - 1;
+      extremums = [0, (axis.data?.length ?? 1) - 1];
     } else {
-      [min, max] = getAxisExtremum(axis, extremumGetter, axisIndex === 0, formattedSeries);
+      extremums = getAxisExtremum(axis, extremumGetter, axisIndex === 0, formattedSeries);
     }
 
-    let minVal: number | Date = min + (zoom.start * (max - min)) / 100;
-    let maxVal: number | Date = min + (zoom.end * (max - min)) / 100;
+    let min: number | Date;
+    let max: number | Date;
 
     // @ts-expect-error The function defaults to linear scale if the scaleType is not recognized.
-    [minVal, maxVal] = getScale(scaleType, [minVal, maxVal], [0, 100]).nice().domain();
+    [min, max] = getScale(scaleType, extremums, [0, 100]).nice().domain();
 
-    minVal = minVal instanceof Date ? minVal.getTime() : minVal;
-    maxVal = maxVal instanceof Date ? maxVal.getTime() : maxVal;
+    min = min instanceof Date ? min.getTime() : min;
+    max = max instanceof Date ? max.getTime() : max;
+
+    const minVal = min + (zoom.start * (max - min)) / 100;
+    const maxVal = min + (zoom.end * (max - min)) / 100;
 
     return (value, dataIndex) => {
       const val = value[direction] ?? axis.data?.[dataIndex];
