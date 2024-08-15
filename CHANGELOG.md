@@ -23,6 +23,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [DataGrid] Fix CSV export for `null` and `undefined` values (#14166) @k-rajat19
 - [DataGrid] Fix error logged during skeleton loading with nested data grid (#14186) @KenanYusuf
 - [DataGrid] Remove needless check in `useGridStateInitialization` (#14181) @k-rajat19
+- [DataGrid] Add recipe for persisting filters in local storage (#14208) @cherniavskii
 - [l10n] Improve Vietnamese (vi-VN) locale (#14216) @hungnd-casso
 
 #### `@mui/x-data-grid-pro@7.13.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
