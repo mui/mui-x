@@ -50,10 +50,9 @@ Same changes as in `@mui/x-date-pickers@7.13.0`.
 #### `@mui/x-charts@7.13.0`
 
 - [charts] Add `baseline` property to the `LineChart` `series` (#14153) @JCQuintas
-- [charts] Add real-world dataset (#13958) @alexfauquette
-- [charts] Do not remove mouse position for mouseUp event (#14187) @alexfauquette
+- [charts] Fix issue where tooltip would disappear on mouse click (#14187) @alexfauquette
 - [charts] Rename `CartesianContextProvider` to `CartesianProvider` (#14102) @JCQuintas
-- [charts] Support axis with single value (#14191) @alexfauquette
+- [charts] Support axis with the same value for all data points (#14191) @alexfauquette
 
 #### `@mui/x-date-charts-pro@__VERSION-ALPHA__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
