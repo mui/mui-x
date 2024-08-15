@@ -54,7 +54,7 @@ Same changes as in `@mui/x-date-pickers@7.13.0`.
 - [charts] Rename `CartesianContextProvider` to `CartesianProvider` (#14102) @JCQuintas
 - [charts] Support axis with the same value for all data points (#14191) @alexfauquette
 
-#### `@mui/x-date-charts-pro@__VERSION-ALPHA__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-charts-pro@7.0.0-alpha.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-charts@7.13.0`.
 
