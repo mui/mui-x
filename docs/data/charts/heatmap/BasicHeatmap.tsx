@@ -7,8 +7,8 @@ export default function BasicHeatmap() {
   return (
     <Box sx={{ width: '100%', maxWidth: 400 }}>
       <Heatmap
-        xAxis={[{ data: [1, 2, 3, 4] }]}
-        yAxis={[{ data: ['A', 'B', 'C', 'D', 'E'] }]}
+        xAxis={[{ data: [1, 2, 3, 4, 5, 6, 7, 8, 9] }]}
+        yAxis={[{ data: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'] }]}
         series={[{ data }]}
         margin={{ top: 5, right: 5, left: 20 }}
         height={300}

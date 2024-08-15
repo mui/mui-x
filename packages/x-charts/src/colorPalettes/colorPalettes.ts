@@ -2,47 +2,79 @@ export type ChartsColorPaletteCallback = (mode: 'light' | 'dark') => string[];
 export type ChartsColorPalette = string[] | ChartsColorPaletteCallback;
 
 export const blueberryTwilightPaletteLight = [
-  '#02B2AF',
-  '#2E96FF',
-  '#B800D8',
-  '#60009B',
-  '#2731C8',
-  '#03008D',
-];
-export const blueberryTwilightPaletteDark = [
-  '#02B2AF',
-  '#72CCFF',
-  '#DA00FF',
-  '#9001CB',
-  '#2E96FF',
-  '#3B48E0',
+  '#6061fc',
+  '#2DA2FF',
+  '#e778f9',
+  '#ebd28c',
+  '#84c3ff',
+  '#6d5cd4',
+  '#E7A3F2',
+  '#44BDBA',
+  '#aaabf7',
+  '#AFAFAF',
+  '#179EA7',
+  '#414FCF',
 ];
 
+export const blueberryTwilightPaletteDark = blueberryTwilightPaletteLight;
+
+export const bananaMilkshakePaletteLight = [
+  '#577EE3',
+  '#F66170',
+  '#FFC13B',
+  '#44BDBA',
+  '#414FCF',
+  '#F3CD80',
+  '#F287B3',
+  '#FE9C41',
+  '#F1BF91',
+  '#A89787',
+];
+
+export const bananaMilkshakePaletteDark = bananaMilkshakePaletteLight;
+
+export const bananaMilkshakePalette: ChartsColorPaletteCallback = (mode) =>
+  mode === 'dark' ? bananaMilkshakePaletteDark : bananaMilkshakePaletteLight;
+
+export const rainbowSurgePaletteLight = [
+  '#4254FB',
+  '#2E96FF',
+  '#54C690',
+  '#FFB219',
+  '#FF7A19',
+  '#F73B4B',
+  '#F287B3',
+];
 export const blueberryTwilightPalette: ChartsColorPaletteCallback = (mode) =>
-  mode === 'dark' ? blueberryTwilightPaletteDark : blueberryTwilightPaletteLight;
+  mode === 'dark' ? rainbowSurgePaletteLight : rainbowSurgePaletteLight;
+
+export const rainbowSurgePaletteDark = rainbowSurgePaletteLight;
+
+export const rainbowSurgePalette: ChartsColorPaletteCallback = (mode) =>
+  mode === 'dark' ? rainbowSurgePaletteDark : rainbowSurgePaletteLight;
 
 export const mangoFusionPaletteLight = [
-  '#173A5E',
-  '#00A3A0',
-  '#C91B63',
-  '#EF5350',
-  '#FFA726',
-  '#B800D8',
-  '#60009B',
-  '#2E96FF',
-  '#2731C8',
-  '#03008D',
+  '#FF7E35',
+  '#DB2671',
+  '#577EE3',
+  '#FFB03C',
+  '#9C2A59',
+  '#4254FB',
+  '#F6619F',
+  '#2EC4C2',
+  '#F3CD80',
+  '#202B93',
 ];
 export const mangoFusionPaletteDark = [
-  '#41698F',
-  '#19D0CD',
-  '#DE196B',
-  '#FC5F5C',
   '#FFD771',
-  '#DA00FF',
-  '#9001CB',
-  '#72CCFF',
+  '#DE196B',
   '#2E96FF',
+  '#41698F',
+  '#DA00FF',
+  '#72CCFF',
+  '#9001CB',
+  '#19D0CD',
+  '#FC5F5C',
   '#3B48E0',
 ];
 
