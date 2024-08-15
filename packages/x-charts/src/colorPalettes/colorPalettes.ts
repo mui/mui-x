@@ -6,17 +6,20 @@ export const blueberryTwilightPaletteLight = [
   '#2DA2FF',
   '#e778f9',
   '#ebd28c',
-  '#84c3ff',
+  '#A1D1FF',
   '#6d5cd4',
   '#E7A3F2',
   '#44BDBA',
   '#aaabf7',
   '#AFAFAF',
   '#179EA7',
-  '#414FCF',
+  '#3442C3',
 ];
 
 export const blueberryTwilightPaletteDark = blueberryTwilightPaletteLight;
+
+export const blueberryTwilightPalette: ChartsColorPaletteCallback = (mode) =>
+  mode === 'dark' ? blueberryTwilightPaletteLight : blueberryTwilightPaletteDark;
 
 export const bananaMilkshakePaletteLight = [
   '#577EE3',
@@ -45,8 +48,6 @@ export const rainbowSurgePaletteLight = [
   '#F73B4B',
   '#F287B3',
 ];
-export const blueberryTwilightPalette: ChartsColorPaletteCallback = (mode) =>
-  mode === 'dark' ? rainbowSurgePaletteLight : rainbowSurgePaletteLight;
 
 export const rainbowSurgePaletteDark = rainbowSurgePaletteLight;
 
