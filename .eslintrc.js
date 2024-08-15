@@ -187,6 +187,16 @@ module.exports = {
         '*.test.js',
         '*.test.ts',
         '*.test.tsx',
+      ],
+      excludedFiles: ['test/e2e/**/*', 'test/regressions/**/*'],
+      extends: ['plugin:testing-library/react'],
+    },
+    {
+      files: [
+        // matching the pattern of the test runner
+        '*.test.js',
+        '*.test.ts',
+        '*.test.tsx',
         'test/**',
       ],
       rules: {
