@@ -380,8 +380,8 @@ describe('<DataGrid /> - Row selection', () => {
       fireEvent.click(selectAllCheckbox);
       await waitFor(() => {
         expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
-        expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
       });
+      expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
 
       fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
         target: { value: 1 },
@@ -389,20 +389,20 @@ describe('<DataGrid /> - Row selection', () => {
       await waitFor(() => {
         // Previous selection remains, but only one row is visible
         expect(getSelectedRowIds()).to.deep.equal([1]);
-        expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
       });
+      expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
 
       fireEvent.click(selectAllCheckbox); // Unselect all
       await waitFor(() => {
         expect(getSelectedRowIds()).to.deep.equal([]);
-        expect(grid('selectedRowCount')).to.equal(null);
       });
+      expect(grid('selectedRowCount')).to.equal(null);
 
       fireEvent.click(selectAllCheckbox); // Select all filtered rows
       await waitFor(() => {
         expect(getSelectedRowIds()).to.deep.equal([1]);
-        expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
       });
+      expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
     });
   });
 

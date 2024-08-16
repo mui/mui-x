@@ -210,9 +210,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 1);
         cell.focus();
 
-        await act(() => {
-          fireEvent.keyDown(cell, { key: 'Enter' });
-        });
+        fireEvent.keyDown(cell, { key: 'Enter' });
 
         expect(handleEditCellStop.callCount).to.equal(0);
       });

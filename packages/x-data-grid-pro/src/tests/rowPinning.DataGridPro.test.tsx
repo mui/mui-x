@@ -887,7 +887,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     await waitFor(() => {
       expect(getCell(0, 1).textContent).to.equal('Marcus');
-      expect(getCell(4, 1).textContent).to.equal('Tom');
     });
+    expect(getCell(4, 1).textContent).to.equal('Tom');
   });
 });

@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import {
   screen,
   fireEvent,
-  getByRole,
+  getByRole as rtlGetByRole,
   fireTouchChangedEvent,
   userEvent,
 } from '@mui/internal-test-utils';
@@ -24,7 +24,7 @@ import { describeConformance } from 'test/utils/describeConformance';
 import { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
-  getByRole(screen.getByRole('grid', { name: picker }), 'gridcell', { name });
+  rtlGetByRole(screen.getByRole('grid', { name: picker }), 'gridcell', { name });
 
 const dynamicShouldDisableDate = (date, position: RangePosition) => {
   if (position === 'end') {
@@ -528,7 +528,7 @@ describe('<DateRangeCalendar />', () => {
   });
 
   describe('Performance', () => {
-    it('should only render the new start day when selecting a start day without a previously selected start day', () => {
+    it('should only render the new start day when selecting a start day without a previously selected start day', async () => {
       const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
 
       render(
@@ -540,11 +540,11 @@ describe('<DateRangeCalendar />', () => {
       );
 
       const renderCountBeforeChange = RenderCount.callCount;
-      userEvent.mousePress(getPickerDay('2'));
+      await userEvent.mousePress(getPickerDay('2'));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
     });
 
-    it('should only render the day inside range when selecting the end day', () => {
+    it('should only render the day inside range when selecting the end day', async () => {
       const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
 
       render(
@@ -555,10 +555,10 @@ describe('<DateRangeCalendar />', () => {
         />,
       );
 
-      userEvent.mousePress(getPickerDay('2'));
+      await userEvent.mousePress(getPickerDay('2'));
 
       const renderCountBeforeChange = RenderCount.callCount;
-      userEvent.mousePress(getPickerDay('4'));
+      await userEvent.mousePress(getPickerDay('4'));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
     });
   });

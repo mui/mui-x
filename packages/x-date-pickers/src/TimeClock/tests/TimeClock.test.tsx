@@ -6,7 +6,7 @@ import {
   fireTouchChangedEvent,
   screen,
   within,
-  getAllByRole,
+  getAllByRole as rtlGetAllByRole,
 } from '@mui/internal-test-utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import { createPickerRenderer, adapterToUse, timeClockHandler } from 'test/utils/pickers';
@@ -166,7 +166,7 @@ describe('<TimeClock />', () => {
 
     // hours are not disabled
     const hoursContainer = screen.getByRole('listbox');
-    const hours = getAllByRole(hoursContainer, 'option');
+    const hours = rtlGetAllByRole(hoursContainer, 'option');
     const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
 
     expect(hours.length).to.equal(12);
@@ -194,7 +194,7 @@ describe('<TimeClock />', () => {
 
     // hours are disabled
     const hoursContainer = screen.getByRole('listbox');
-    const hours = getAllByRole(hoursContainer, 'option');
+    const hours = rtlGetAllByRole(hoursContainer, 'option');
     const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
 
     expect(hours.length).to.equal(12);

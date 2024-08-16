@@ -188,17 +188,17 @@ describe('<MobileDatePicker />', () => {
     });
 
     it('should update internal state when controlled value is updated', () => {
-      const v7Response = renderWithProps({
+      const view = renderWithProps({
         enableAccessibleFieldDOMStructure: true as const,
         value: adapterToUse.date('2019-01-01'),
       });
 
       // Set a date
-      expectFieldValueV7(v7Response.getSectionsContainer(), '01/01/2019');
+      expectFieldValueV7(view.getSectionsContainer(), '01/01/2019');
 
       // Clean value using external control
-      v7Response.setProps({ value: null });
-      expectFieldValueV7(v7Response.getSectionsContainer(), 'MM/DD/YYYY');
+      view.setProps({ value: null });
+      expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
 
       // Open and Dismiss the picker
       openPicker({ type: 'date', variant: 'mobile' });
@@ -207,7 +207,7 @@ describe('<MobileDatePicker />', () => {
       clock.runToLast();
 
       // Verify it's still a clean value
-      expectFieldValueV7(v7Response.getSectionsContainer(), 'MM/DD/YYYY');
+      expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
     });
   });
 });
