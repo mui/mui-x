@@ -1,11 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled } from '@mui/material/styles';
 import { unstable_generateUtilityClasses as generateUtilityClasses } from '@mui/utils';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
+import { styled } from '../../utils/styled';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -39,6 +39,7 @@ const GridPanelRoot = styled(Popper, {
   slot: 'Panel',
   overridesResolver: (props, styles) => styles.panel,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
+  // @ts-ignore `@mui/material` theme.zIndex does not exist
   zIndex: theme.zIndex.modal,
 }));
 
@@ -47,6 +48,7 @@ const GridPaperRoot = styled(Paper, {
   slot: 'Paper',
   overridesResolver: (props, styles) => styles.paper,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
+  // @ts-ignore `@mui/material` theme.vars does not exist
   backgroundColor: (theme.vars || theme).palette.background.paper,
   minWidth: 300,
   maxHeight: 450,

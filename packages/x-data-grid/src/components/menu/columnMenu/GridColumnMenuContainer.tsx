@@ -2,8 +2,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import MenuList from '@mui/material/MenuList';
-import { styled } from '@mui/material/styles';
-
+import { styled } from '../../../utils/styled';
 import { isHideMenuKey, isTabKey } from '../../../utils/keyboardUtils';
 import { GridColumnMenuContainerProps } from './GridColumnMenuProps';
 import { gridClasses } from '../../../constants/gridClasses';

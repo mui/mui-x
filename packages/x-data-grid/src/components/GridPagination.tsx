@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import TablePagination, {
   tablePaginationClasses,
   TablePaginationProps,
   LabelDisplayedRowsArgs,
 } from '@mui/material/TablePagination';
+import { styled } from '../utils/styled';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';

@@ -10,7 +10,7 @@ import {
 import Grow, { GrowProps } from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
-import { styled } from '@mui/material/styles';
+import { styled } from '../../utils/styled';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -48,6 +48,7 @@ const GridMenuRoot = styled(Popper, {
   slot: 'Menu',
   overridesResolver: (_, styles) => styles.menu,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
+  // @ts-ignore `@mui/material` theme.zIndex does not exist
   zIndex: theme.zIndex.modal,
   [`& .${gridClasses.menuList}`]: {
     outline: 0,

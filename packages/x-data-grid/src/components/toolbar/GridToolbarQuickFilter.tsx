@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/x-data-grid/internals';
 import { unstable_debounce as debounce } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
 import { getDataGridUtilityClass } from '../../constants';
@@ -37,6 +37,7 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
     marginLeft: theme.spacing(0.5),
   },
   '& .MuiInput-underline:before': {
+    // @ts-ignore theme.vars
     borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
   [`& input[type="search"]::-webkit-search-decoration,

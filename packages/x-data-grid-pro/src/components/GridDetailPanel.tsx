@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/x-data-grid/internals';
 import { GridRowId } from '@mui/x-data-grid';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -15,6 +15,7 @@ const DetailPanel = styled('div', {
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   width:
     'calc(var(--DataGrid-rowWidth) - var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
+  // @ts-ignore theme.vars
   backgroundColor: (theme.vars || theme).palette.background.default,
   overflow: 'auto',
 }));

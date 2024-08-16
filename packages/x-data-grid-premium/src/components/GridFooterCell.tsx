@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { getDataGridUtilityClass, GridRenderCellParams } from '@mui/x-data-grid';
-import { styled, Theme } from '@mui/material/styles';
+import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
+import { getDataGridUtilityClass, GridRenderCellParams } from '@mui/x-data-grid';
+import { styled } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 
@@ -11,11 +12,15 @@ const GridFooterCellRoot = styled('div', {
   slot: 'FooterCell',
   overridesResolver: (_, styles) => styles.footerCell,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
+  // @ts-ignore `@mui/material` theme.typography does not exist
   fontWeight: theme.typography.fontWeightMedium,
+  // @ts-ignore `@mui/material` theme.vars does not exist
   color: (theme.vars || theme).palette.primary.dark,
 }));
 
 interface GridFooterCellProps extends GridRenderCellParams {
+  // XXX: This is a problem, type is incompatible. Not sure if ignoring the type issue is OK,
+  // or if it highlights a real issue with using the system styled() function.
   sx?: SxProps<Theme>;
 }
 

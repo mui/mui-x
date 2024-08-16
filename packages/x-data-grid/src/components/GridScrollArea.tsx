@@ -4,8 +4,8 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
-import { styled } from '../utils/styled';
 import { fastMemo } from '@mui/x-internals/fastMemo';
+import { styled } from '../utils/styled';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass, gridClasses } from '../constants';

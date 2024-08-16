@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { styled } from '@mui/material/styles';
+import { styled } from '../../utils/styled';
 import {
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,

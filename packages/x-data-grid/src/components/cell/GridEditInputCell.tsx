@@ -4,7 +4,7 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/utils';
-import { styled } from '@mui/material/styles';
+import { styled } from '../../utils/styled';
 import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -29,7 +29,8 @@ const GridEditInputCellRoot = styled(InputBase, {
   slot: 'EditInputCell',
   overridesResolver: (props, styles) => styles.editInputCell,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
-  ...theme.typography.body2,
+  // @ts-ignore `@mui/material` theme.typography does not exist
+  ...theme.typography?.body2,
   padding: '1px 0',
   '& input': {
     padding: '0 16px',

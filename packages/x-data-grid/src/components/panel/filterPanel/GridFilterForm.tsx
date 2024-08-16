@@ -6,8 +6,8 @@ import {
   unstable_capitalize as capitalize,
 } from '@mui/utils';
 import { SelectChangeEvent } from '@mui/material/Select';
-import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
+import { styled } from '../../../utils/styled';
 import {
   gridFilterableColumnDefinitionsSelector,
   gridColumnLookupSelector,

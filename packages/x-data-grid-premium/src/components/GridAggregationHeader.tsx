@@ -1,6 +1,5 @@
 import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled } from '@mui/material/styles';
 import {
   getDataGridUtilityClass,
   gridClasses,
@@ -8,7 +7,7 @@ import {
   GridColumnHeaderParams,
   GridColumnHeaderTitle,
 } from '@mui/x-data-grid';
-import type { GridBaseColDef } from '@mui/x-data-grid/internals';
+import { styled, GridBaseColDef } from '@mui/x-data-grid/internals';
 import { getAggregationFunctionLabel } from '../hooks/features/aggregation/gridAggregationUtils';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -40,11 +39,15 @@ const GridAggregationFunctionLabel = styled('div', {
   overridesResolver: (_, styles) => styles.aggregationColumnHeaderLabel,
 })<{ ownerState: OwnerState }>(({ theme }) => {
   return {
+    // @ts-ignore `@mui/material` theme.typography does not exist
     fontSize: theme.typography.caption.fontSize,
+    // @ts-ignore `@mui/material` theme.typography does not exist
     lineHeight: theme.typography.caption.fontSize,
     position: 'absolute',
     bottom: 4,
+    // @ts-ignore `@mui/material` theme.typography does not exist
     fontWeight: theme.typography.fontWeightMedium,
+    // @ts-ignore `@mui/material` theme.vars does not exist
     color: (theme.vars || theme).palette.primary.dark,
     textTransform: 'uppercase',
   };
