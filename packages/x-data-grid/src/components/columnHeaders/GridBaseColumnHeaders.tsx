@@ -2,10 +2,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { SxProps, Theme } from '@mui/system';
+import { styled } from '../../utils/styled';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { styled } from '../../utils/styled';
 
 type OwnerState = DataGridProcessedProps;
 
