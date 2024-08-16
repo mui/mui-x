@@ -177,8 +177,6 @@ export const useGridDataSourceLazyLoader = (
       }
 
       privateApiRef.current.setRows([]);
-      renderedRowsIntervalCache.current = INTERVAL_CACHE_INITIAL_STATE;
-
       const getRowsParams: GridGetRowsParams = {
         start: 0,
         end: paginationModel.pageSize,
