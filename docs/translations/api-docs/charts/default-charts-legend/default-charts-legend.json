@@ -11,14 +11,26 @@
     "itemMarkWidth": { "description": "Width of the item mark (in px)." },
     "labelStyle": { "description": "Style applied to legend labels." },
     "markGap": { "description": "Space between the mark and the label (in px)." },
+    "onClick": {
+      "description": "Callback fired when a legend item is clicked.",
+      "typeDescriptions": {
+        "legend": "The legend item data.",
+        "dataIndex": "The index of the clicked legend item."
+      }
+    },
     "padding": {
       "description": "Legend padding (in px). Can either be a single number, or an object with top, left, bottom, right properties."
     },
     "position": { "description": "The position of the legend." }
   },
   "classDescriptions": {
-    "mark": { "description": "" },
-    "root": { "description": "" },
-    "series": { "description": "" }
+    "itemBackground": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item background"
+    },
+    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" },
+    "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "series mark element" },
+    "root": { "description": "Styles applied to the root element." },
+    "series": { "description": "Styles applied to {{nodeName}}.", "nodeName": "a series element" }
   }
 }

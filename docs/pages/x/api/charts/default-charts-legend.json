@@ -18,6 +18,14 @@
     "itemMarkWidth": { "type": { "name": "number" }, "default": "20" },
     "labelStyle": { "type": { "name": "object" }, "default": "theme.typography.subtitle1" },
     "markGap": { "type": { "name": "number" }, "default": "5" },
+    "onClick": {
+      "type": { "name": "func" },
+      "default": "undefined",
+      "signature": {
+        "type": "function(legend: LegendItemParams, dataIndex: number) => void",
+        "describedArgs": ["legend", "dataIndex"]
+      }
+    },
     "padding": {
       "type": {
         "name": "union",
@@ -34,21 +42,33 @@
   ],
   "classes": [
     {
+      "key": "itemBackground",
+      "className": "MuiDefaultChartsLegend-itemBackground",
+      "description": "Styles applied to the item background.",
+      "isGlobal": false
+    },
+    {
+      "key": "label",
+      "className": "MuiDefaultChartsLegend-label",
+      "description": "Styles applied to the series label.",
+      "isGlobal": false
+    },
+    {
       "key": "mark",
       "className": "MuiDefaultChartsLegend-mark",
-      "description": "",
+      "description": "Styles applied to series mark element.",
       "isGlobal": false
     },
     {
       "key": "root",
       "className": "MuiDefaultChartsLegend-root",
-      "description": "",
+      "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
       "key": "series",
       "className": "MuiDefaultChartsLegend-series",
-      "description": "",
+      "description": "Styles applied to a series element.",
       "isGlobal": false
     }
   ],
