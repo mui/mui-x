@@ -136,7 +136,6 @@ export {
 export { ROW_SELECTION_PROPAGATION_DEFAULT } from '../hooks/features/rowSelection/utils';
 
 export { useTimeout } from '../hooks/utils/useTimeout';
-export { throttle } from '../utils/throttle';
 export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
