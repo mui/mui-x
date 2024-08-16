@@ -1377,8 +1377,11 @@ describe('<DateField /> - Editing', () => {
       clipboardEvent.clipboardData = {
         getData: () => pastedValue,
       };
-      // canContinue is `false` if default have been prevented
-      const canContinue = element.dispatchEvent(clipboardEvent);
+      let canContinue = true;
+      act(() => {
+        // canContinue is `false` if default have been prevented
+        canContinue = element.dispatchEvent(clipboardEvent);
+      });
       if (!canContinue) {
         return;
       }
@@ -1397,8 +1400,11 @@ describe('<DateField /> - Editing', () => {
       clipboardEvent.clipboardData = {
         getData: () => pastedValue ?? rawValue ?? '',
       };
-      // canContinue is `false` if default have been prevented
-      const canContinue = input.dispatchEvent(clipboardEvent);
+      let canContinue = true;
+      act(() => {
+        // canContinue is `false` if default have been prevented
+        canContinue = input.dispatchEvent(clipboardEvent);
+      });
       if (!canContinue) {
         return;
       }
