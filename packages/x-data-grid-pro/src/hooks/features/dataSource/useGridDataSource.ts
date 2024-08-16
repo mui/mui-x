@@ -7,6 +7,7 @@ import {
   GridDataSourceGroupNode,
   useGridSelector,
   GridRowId,
+  gridPaginationModelSelector,
 } from '@mui/x-data-grid';
 import {
   GridGetRowsParams,
@@ -19,7 +20,7 @@ import { gridGetRowsParamsSelector, gridDataSourceErrorsSelector } from './gridD
 import { GridDataSourceApi, GridDataSourceApiBase, GridDataSourcePrivateApi } from './interfaces';
 import { NestedDataManager, RequestStatus, runIf } from './utils';
 import { GridDataSourceCache } from '../../../models';
-import { GridDataSourceCacheDefault } from './cache';
+import { GridDataSourceCacheDefault, GridDataSourceCacheDefaultConfig } from './cache';
 
 const INITIAL_STATE = {
   loading: {},
@@ -32,11 +33,14 @@ const noopCache: GridDataSourceCache = {
   set: () => {},
 };
 
-function getCache(cacheProp?: GridDataSourceCache | null) {
+function getCache(
+  cacheProp?: GridDataSourceCache | null,
+  options: GridDataSourceCacheDefaultConfig = {},
+) {
   if (cacheProp === null) {
     return noopCache;
   }
-  return cacheProp ?? new GridDataSourceCacheDefault({});
+  return cacheProp ?? new GridDataSourceCacheDefault(options);
 }
 
 export const dataSourceStateInitializer: GridStateInitializer = (state) => {
@@ -56,6 +60,7 @@ export const useGridDataSource = (
     | 'sortingMode'
     | 'filterMode'
     | 'paginationMode'
+    | 'pageSizeOptions'
     | 'treeData'
     | 'lazyLoading'
   >,
@@ -63,6 +68,7 @@ export const useGridDataSource = (
   const nestedDataManager = useLazyRef<NestedDataManager, void>(
     () => new NestedDataManager(apiRef),
   ).current;
+  const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const groupsToAutoFetch = useGridSelector(apiRef, gridRowGroupsToFetchSelector);
   const scheduledGroups = React.useRef<number>(0);
 
@@ -71,8 +77,38 @@ export const useGridDataSource = (
 
   const onError = props.unstable_onDataSourceError;
 
+  const cacheChunkSize = React.useMemo(() => {
+    const sortedPageSizeOptions = props.pageSizeOptions
+      .map((option) => (typeof option === 'number' ? option : option.value))
+      .sort((a, b) => a - b);
+
+    return Math.min(paginationModel.pageSize, sortedPageSizeOptions[0]);
+  }, [paginationModel.pageSize, props.pageSizeOptions]);
+
   const [cache, setCache] = React.useState<GridDataSourceCache>(() =>
-    getCache(props.unstable_dataSourceCache),
+    getCache(props.unstable_dataSourceCache, {
+      chunkSize: cacheChunkSize,
+    }),
+  );
+
+  // Adjust the render context range to fit the pagination model's page size
+  // First row index should be decreased to the start of the page, end row index should be increased to the end of the page or the last row
+  const adjustRowParams = React.useCallback(
+    (params: Pick<GridGetRowsParams, 'start' | 'end'>) => {
+      if (typeof params.start !== 'number') {
+        return params;
+      }
+
+      const rowCount = apiRef.current.state.pagination.rowCount;
+      return {
+        start: params.start - (params.start % paginationModel.pageSize),
+        end: Math.min(
+          params.end + paginationModel.pageSize - (params.end % paginationModel.pageSize) - 1,
+          rowCount - 1,
+        ),
+      };
+    },
+    [apiRef, paginationModel],
   );
 
   const fetchRows = React.useCallback(
@@ -154,10 +190,10 @@ export const useGridDataSource = (
 
   const fetchRowBatch = React.useCallback(
     (fetchParams: GridGetRowsParams) => {
-      rowFetchSlice.current = { start: Number(fetchParams.start), end: fetchParams.end };
+      rowFetchSlice.current = adjustRowParams(fetchParams);
       return fetchRows();
     },
-    [fetchRows],
+    [adjustRowParams, fetchRows],
   );
 
   const fetchRowChildren = React.useCallback<GridDataSourcePrivateApi['fetchRowChildren']>(
@@ -328,9 +364,11 @@ export const useGridDataSource = (
       isFirstRender.current = false;
       return;
     }
-    const newCache = getCache(props.unstable_dataSourceCache);
+    const newCache = getCache(props.unstable_dataSourceCache, {
+      chunkSize: cacheChunkSize,
+    });
     setCache((prevCache) => (prevCache !== newCache ? newCache : prevCache));
-  }, [props.unstable_dataSourceCache]);
+  }, [props.unstable_dataSourceCache, cacheChunkSize]);
 
   React.useEffect(() => {
     if (props.unstable_dataSource) {
