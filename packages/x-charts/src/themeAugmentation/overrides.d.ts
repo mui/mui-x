@@ -8,7 +8,7 @@ import { ChartsTooltipClassKey } from '../ChartsTooltip';
 import { AreaElementClassKey, LineElementClassKey, MarkElementClassKey } from '../LineChart';
 
 // prettier-ignore
-export interface PickersComponentNameToClassKey {
+export interface ChartsComponentNameToClassKey {
   MuiChartsAxis: ChartsAxisClassKey;
   MuiChartsAxisHighlight: ChartsAxisHighlightClassKey;
   MuiChartsGrid: ChartsGridClassKey;
@@ -29,7 +29,7 @@ export interface PickersComponentNameToClassKey {
 }
 
 declare module '@mui/material/styles' {
-  interface ComponentNameToClassKey extends PickersComponentNameToClassKey {}
+  interface ComponentNameToClassKey extends ChartsComponentNameToClassKey {}
 }
 
 // disable automatic export
