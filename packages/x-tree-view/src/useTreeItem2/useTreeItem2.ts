@@ -41,7 +41,10 @@ export const useTreeItem2 = <
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
-  useSelector(instance, (state) => state.focusedItemId);
+  const canItemBeTabbed = useSelector(
+    instance,
+    (state) => state.defaultFocusableItemId === parameters.itemId,
+  );
 
   const { id, itemId, label, children, rootRef } = parameters;
 
@@ -53,7 +56,7 @@ export const useTreeItem2 = <
   const handleRootRef = useForkRef(rootRef, pluginRootRef, rootRefObject)!;
   const handleContentRef = useForkRef(contentRef, contentRefObject)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
-  const rootTabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
+  const rootTabIndex = canItemBeTabbed ? 0 : -1;
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>

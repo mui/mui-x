@@ -51,6 +51,7 @@ export type UseTreeViewFocusDefaultizedParameters = UseTreeViewFocusParameters;
 
 export interface UseTreeViewFocusState {
   focusedItemId: string | null;
+  defaultFocusableItemId: string | null;
 }
 
 export type UseTreeViewFocusSignature = TreeViewPluginSignature<{

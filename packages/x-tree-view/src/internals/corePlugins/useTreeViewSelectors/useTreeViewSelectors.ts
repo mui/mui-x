@@ -12,9 +12,10 @@ let globalId = 0;
 export const useTreeViewSelectors: TreeViewPlugin<UseTreeViewSelectorsSignature> = ({ state }) => {
   const cacheRef = React.useRef<UseTreeViewSelectorsCache<any> | null>(null);
   if (cacheRef.current == null) {
+    const store = Store.create(state);
     cacheRef.current = {
       state,
-      store: Store.create(state),
+      store,
       instanceId: globalId,
     };
     globalId += 1;
