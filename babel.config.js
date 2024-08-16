@@ -150,14 +150,12 @@ module.exports = function getBabelConfig(api) {
 
   if (useESModules) {
     plugins.push([
-      [
-        importResolverPlugin,
-        {
-          // Don't replace the extension when we're using aliases.
-          // Essentially only replace in production builds.
-          outExtension: usesAliases ? null : outFileExtension,
-        },
-      ],
+      importResolverPlugin,
+      {
+        // Don't replace the extension when we're using aliases.
+        // Essentially only replace in production builds.
+        outExtension: usesAliases ? null : outFileExtension,
+      },
     ]);
   }
 
