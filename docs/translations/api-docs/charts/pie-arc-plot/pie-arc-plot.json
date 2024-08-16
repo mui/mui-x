@@ -1,0 +1,31 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "arcLabelRadius": {
+      "description": "The radius between circle center and the arc label in px."
+    },
+    "cornerRadius": {
+      "description": "The radius applied to arc corners (similar to border radius)."
+    },
+    "faded": { "description": "Override the arc attributes when it is faded." },
+    "highlighted": { "description": "Override the arc attributes when it is highlighted." },
+    "innerRadius": {
+      "description": "The radius between circle center and the beginning of the arc."
+    },
+    "onItemClick": {
+      "description": "Callback fired when a pie item is clicked.",
+      "typeDescriptions": {
+        "event": "The event source of the callback.",
+        "pieItemIdentifier": "The pie item identifier.",
+        "item": "The pie item."
+      }
+    },
+    "outerRadius": { "description": "The radius between circle center and the end of the arc." },
+    "paddingAngle": { "description": "The padding angle (deg) between two arcs." },
+    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": { "pieArc": "" }
+}

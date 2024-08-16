@@ -1,46 +1,44 @@
 import * as React from 'react';
-import { EventHandlers } from '@mui/base/utils';
+import { EventHandlers } from '@mui/utils';
 import type { TreeViewContextValue } from '../TreeViewProvider';
 import {
   TreeViewAnyPluginSignature,
-  TreeViewPlugin,
-  ConvertPluginsIntoSignatures,
-  MergePluginsProperty,
+  ConvertSignaturesIntoPlugins,
+  MergeSignaturesProperty,
+  TreeViewInstance,
+  TreeViewPublicAPI,
+  TreeViewExperimentalFeatures,
 } from '../models';
 
-export type UseTreeViewParameters<
-  TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
-> = {
+export interface UseTreeViewParameters<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+  TProps extends Partial<UseTreeViewBaseProps<TSignatures>>,
+> {
+  plugins: ConvertSignaturesIntoPlugins<TSignatures>;
   rootRef?: React.Ref<HTMLUListElement> | undefined;
-  plugins: TPlugins;
-} & MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'params'>;
+  props: TProps; // Omit<MergeSignaturesProperty<TSignatures, 'params'>, keyof UseTreeViewBaseParameters<any>>
+}
 
-export type UseTreeViewDefaultizedParameters<
-  TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
-> = {
-  rootRef?: React.Ref<HTMLUListElement> | undefined;
-  plugins: TPlugins;
-} & MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'defaultizedParams'>;
+export interface UseTreeViewBaseProps<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
+  apiRef: React.MutableRefObject<TreeViewPublicAPI<TSignatures> | undefined> | undefined;
+  slots: MergeSignaturesProperty<TSignatures, 'slots'>;
+  slotProps: MergeSignaturesProperty<TSignatures, 'slotProps'>;
+  experimentalFeatures: TreeViewExperimentalFeatures<TSignatures>;
+}
 
 export interface UseTreeViewRootSlotProps
   extends Pick<
     React.HTMLAttributes<HTMLUListElement>,
-    | 'onFocus'
-    | 'onBlur'
-    | 'onKeyDown'
-    | 'id'
-    | 'aria-activedescendant'
-    | 'aria-multiselectable'
-    | 'role'
-    | 'tabIndex'
+    'onFocus' | 'onBlur' | 'onKeyDown' | 'id' | 'aria-multiselectable' | 'role' | 'tabIndex'
   > {
   ref: React.Ref<HTMLUListElement>;
 }
 
-export interface UseTreeViewReturnValue<TPlugins extends readonly TreeViewAnyPluginSignature[]> {
+export interface UseTreeViewReturnValue<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
   getRootProps: <TOther extends EventHandlers = {}>(
     otherHandlers?: TOther,
   ) => UseTreeViewRootSlotProps;
   rootRef: React.RefCallback<HTMLUListElement> | null;
-  contextValue: TreeViewContextValue<TPlugins>;
+  contextValue: TreeViewContextValue<TSignatures>;
+  instance: TreeViewInstance<TSignatures>;
 }

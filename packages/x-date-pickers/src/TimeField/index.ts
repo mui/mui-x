@@ -4,5 +4,4 @@ export type {
   UseTimeFieldProps,
   UseTimeFieldComponentProps,
   TimeFieldProps,
-  UseTimeFieldDefaultizedProps,
 } from './TimeField.types';

@@ -1,10 +1,10 @@
 import { createIsAfterIgnoreDatePart } from '../time-utils';
 import { Validator } from '../../hooks/useValidation';
 import { BaseTimeValidationProps, TimeValidationProps } from '../../models/validation';
-import { TimeValidationError, TimezoneProps } from '../../../models';
+import { PickerValidDate, TimeValidationError, TimezoneProps } from '../../../models';
 import { DefaultizedProps } from '../../models/helpers';
 
-export interface TimeComponentValidationProps<TDate>
+export interface TimeComponentValidationProps<TDate extends PickerValidDate>
   extends Required<BaseTimeValidationProps>,
     TimeValidationProps<TDate>,
     DefaultizedProps<TimezoneProps, 'timezone'> {}
@@ -23,7 +23,6 @@ export const validateTime: Validator<
     minTime,
     maxTime,
     minutesStep,
-    shouldDisableClock,
     shouldDisableTime,
     disableIgnoringDatePartForTimeValidation = false,
     disablePast,
@@ -31,7 +30,7 @@ export const validateTime: Validator<
     timezone,
   } = props;
 
-  const now = adapter.utils.dateWithTimezone(undefined, timezone);
+  const now = adapter.utils.date(undefined, timezone);
   const isAfter = createIsAfterIgnoreDatePart(
     disableIgnoringDatePartForTimeValidation,
     adapter.utils,
@@ -61,19 +60,6 @@ export const validateTime: Validator<
 
     case Boolean(shouldDisableTime && shouldDisableTime(value, 'seconds')):
       return 'shouldDisableTime-seconds';
-
-    case Boolean(shouldDisableClock && shouldDisableClock(adapter.utils.getHours(value), 'hours')):
-      return 'shouldDisableClock-hours';
-
-    case Boolean(
-      shouldDisableClock && shouldDisableClock(adapter.utils.getMinutes(value), 'minutes'),
-    ):
-      return 'shouldDisableClock-minutes';
-
-    case Boolean(
-      shouldDisableClock && shouldDisableClock(adapter.utils.getSeconds(value), 'seconds'),
-    ):
-      return 'shouldDisableClock-seconds';
 
     case Boolean(minutesStep && adapter.utils.getMinutes(value) % minutesStep !== 0):
       return 'minutesStep';

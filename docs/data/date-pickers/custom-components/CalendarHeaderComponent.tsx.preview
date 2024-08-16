@@ -1,0 +1,1 @@
+<DateCalendar slots={{ calendarHeader: CustomCalendarHeader }} />

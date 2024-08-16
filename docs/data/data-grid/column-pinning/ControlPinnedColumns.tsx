@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   DataGridPro,
   GridColDef,
-  GridPinnedColumns,
+  GridPinnedColumnFields,
   GridRowsProp,
 } from '@mui/x-data-grid-pro';
 import {
@@ -15,12 +15,12 @@ import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 
 export default function ControlPinnedColumns() {
-  const [pinnedColumns, setPinnedColumns] = React.useState<GridPinnedColumns>({
+  const [pinnedColumns, setPinnedColumns] = React.useState<GridPinnedColumnFields>({
     left: ['name'],
   });
 
   const handlePinnedColumnsChange = React.useCallback(
-    (updatedPinnedColumns: GridPinnedColumns) => {
+    (updatedPinnedColumns: GridPinnedColumnFields) => {
       setPinnedColumns(updatedPinnedColumns);
     },
     [],

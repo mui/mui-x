@@ -4,15 +4,6 @@
 
 Grouping columns allows you to have a multi-level hierarchy of columns in your header.
 
-:::warning
-This feature is experimental, it needs to be explicitly activated using the `columnGrouping` experimental feature flag.
-
-```tsx
-<DataGrid experimentalFeatures={{ columnGrouping: true }} {...otherProps} />
-```
-
-:::
-
 ## Define column groups
 
 You can define column groups with the `columnGroupingModel` prop.

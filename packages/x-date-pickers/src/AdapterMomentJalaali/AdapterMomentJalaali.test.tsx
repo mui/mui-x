@@ -1,13 +1,15 @@
-import * as React from 'react';
 import { expect } from 'chai';
 import moment from 'moment';
 import jMoment from 'moment-jalaali';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
-import { screen } from '@mui/monorepo/test/utils/createRenderer';
-import { createPickerRenderer, expectInputPlaceholder, expectInputValue } from 'test/utils/pickers';
+import {
+  createPickerRenderer,
+  expectFieldValueV7,
+  describeJalaliAdapter,
+  buildFieldInteractions,
+} from 'test/utils/pickers';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { describeJalaliAdapter } from '@mui/x-date-pickers/tests/describeJalaliAdapter';
 import 'moment/locale/fa';
 
 describe('<AdapterMomentJalaali />', () => {
@@ -39,10 +41,6 @@ describe('<AdapterMomentJalaali />', () => {
       };
 
       expectDate('fullDate', '۱۳۹۸، بهمن ۱م');
-      expectDate('fullDateWithWeekday', 'شنبه ۱م بهمن ۱۳۹۸');
-      expectDate('fullDateTime', '۱۳۹۸، بهمن ۱م، ۱۱:۴۴ ب.ظ');
-      expectDate('fullDateTime12h', '۱۲ بهمن ۱۱:۴۴ ب.ظ');
-      expectDate('fullDateTime24h', '۱۲ بهمن ۲۳:۴۴');
       expectDate('keyboardDate', '۱۳۹۸/۱۱/۱۲');
       expectDate('keyboardDateTime', '۱۳۹۸/۱۱/۱۲ ۲۳:۴۴');
       expectDate('keyboardDateTime12h', '۱۳۹۸/۱۱/۱۲ ۱۱:۴۴ ب.ظ');
@@ -59,7 +57,7 @@ describe('<AdapterMomentJalaali />', () => {
       moment.locale('en');
     });
 
-    const testDate = new Date(2018, 4, 15, 9, 35);
+    const testDate = '2018-05-15T09:35:00';
     const localizedTexts = {
       fa: {
         placeholder: 'YYYY/MM/DD hh:mm',
@@ -71,25 +69,34 @@ describe('<AdapterMomentJalaali />', () => {
       const localeObject = { code: localeKey };
 
       describe(`test with the locale "${localeKey}"`, () => {
-        const { render, adapter } = createPickerRenderer({
+        const { render, clock, adapter } = createPickerRenderer({
           clock: 'fake',
           adapterName: 'moment-jalaali',
           locale: localeObject,
         });
 
-        it('should have correct placeholder', () => {
-          render(<DateTimePicker />);
+        const { renderWithProps } = buildFieldInteractions({
+          render,
+          clock,
+          Component: DateTimeField,
+        });
 
-          expectInputPlaceholder(
-            screen.getByRole('textbox'),
+        it('should have correct placeholder', () => {
+          const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+
+          expectFieldValueV7(
+            v7Response.getSectionsContainer(),
             localizedTexts[localeKey].placeholder,
           );
         });
 
         it('should have well formatted value', () => {
-          render(<DateTimePicker value={adapter.date(testDate)} />);
+          const v7Response = renderWithProps({
+            enableAccessibleFieldDOMStructure: true,
+            value: adapter.date(testDate),
+          });
 
-          expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
+          expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });

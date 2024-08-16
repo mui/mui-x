@@ -4,40 +4,122 @@
       "type": { "name": "arrayOf", "description": "Array&lt;number&gt;" },
       "required": true
     },
-    "area": { "type": { "name": "bool" } },
+    "area": { "type": { "name": "bool" }, "default": "false" },
     "colors": {
-      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" }
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
+      "default": "blueberryTwilightPalette"
+    },
+    "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "height": { "type": { "name": "number" } },
+    "highlightedItem": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string }"
+      }
+    },
+    "margin": {
+      "type": {
+        "name": "shape",
+        "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
+      },
+      "default": "{\n  top: 5,\n  bottom: 5,\n  left: 5,\n  right: 5,\n}"
+    },
+    "onHighlightChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(highlightedItem: HighlightItemData | null) => void",
+        "describedArgs": ["highlightedItem"]
+      }
     },
     "plotType": {
       "type": { "name": "enum", "description": "'bar'<br>&#124;&nbsp;'line'" },
       "default": "'line'"
     },
-    "showHighlight": { "type": { "name": "bool" } },
-    "showTooltip": { "type": { "name": "bool" } },
+    "showHighlight": { "type": { "name": "bool" }, "default": "false" },
+    "showTooltip": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "valueFormatter": {
       "type": { "name": "func" },
+      "default": "(value: number | null) => (value === null ? '' : value.toString())",
       "signature": {
         "type": "function(value: number) => string",
         "describedArgs": ["value"],
         "returned": "string"
       }
     },
+    "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {
         "name": "shape",
-        "description": "{ axisId?: string, classes?: object, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, fill?: string, hideTooltip?: bool, id?: string, label?: string, labelFontSize?: number, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'band'<br>&#124;&nbsp;'linear'<br>&#124;&nbsp;'log'<br>&#124;&nbsp;'point'<br>&#124;&nbsp;'pow'<br>&#124;&nbsp;'sqrt'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'utc', slotProps?: object, slots?: object, stroke?: string, tickFontSize?: number, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickSize?: number, valueFormatter?: func }"
+        "description": "{ classes?: object, colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, fill?: string, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, label?: string, labelFontSize?: number, labelStyle?: object, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, position?: 'bottom'<br>&#124;&nbsp;'top', reverse?: bool, scaleType?: 'band'<br>&#124;&nbsp;'linear'<br>&#124;&nbsp;'log'<br>&#124;&nbsp;'point'<br>&#124;&nbsp;'pow'<br>&#124;&nbsp;'sqrt'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'utc', slotProps?: object, slots?: object, stroke?: string, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickFontSize?: number, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, valueFormatter?: func }"
+      }
+    },
+    "yAxis": {
+      "type": {
+        "name": "shape",
+        "description": "{ classes?: object, colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, fill?: string, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, label?: string, labelFontSize?: number, labelStyle?: object, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, position?: 'left'<br>&#124;&nbsp;'right', reverse?: bool, scaleType?: 'band'<br>&#124;&nbsp;'linear'<br>&#124;&nbsp;'log'<br>&#124;&nbsp;'point'<br>&#124;&nbsp;'pow'<br>&#124;&nbsp;'sqrt'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'utc', slotProps?: object, slots?: object, stroke?: string, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickFontSize?: number, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, valueFormatter?: func }"
       }
     }
   },
-  "slots": [],
   "name": "SparkLineChart",
   "imports": [
     "import { SparkLineChart } from '@mui/x-charts/SparkLineChart';",
-    "import { SparkLineChart } from '@mui/x-charts';"
+    "import { SparkLineChart } from '@mui/x-charts';",
+    "import { SparkLineChart } from '@mui/x-charts-pro';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiSparkLineChart" },
+  "slots": [
+    {
+      "name": "area",
+      "description": "The component that renders the area.",
+      "default": "AnimatedArea",
+      "class": null
+    },
+    {
+      "name": "axisContent",
+      "description": "Custom component for displaying tooltip content when triggered by axis event.",
+      "default": "DefaultChartsAxisTooltipContent",
+      "class": null
+    },
+    {
+      "name": "bar",
+      "description": "The component that renders the bar.",
+      "default": "BarElementPath",
+      "class": null
+    },
+    {
+      "name": "itemContent",
+      "description": "Custom component for displaying tooltip content when triggered by item event.",
+      "default": "DefaultChartsItemTooltipContent",
+      "class": null
+    },
+    {
+      "name": "line",
+      "description": "The component that renders the line.",
+      "default": "LineElementPath",
+      "class": null
+    },
+    { "name": "lineHighlight", "description": "", "class": null },
+    { "name": "mark", "description": "", "class": null },
+    {
+      "name": "popper",
+      "description": "Custom component for the tooltip popper.",
+      "default": "ChartsTooltipRoot",
+      "class": null
+    }
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": false,
+  "muiName": "MuiSparkLineChart",
+  "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/SparkLineChart/SparkLineChart.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/sparkline/\">Charts - Sparkline</a></li></ul>",
+  "cssComponent": false
 }

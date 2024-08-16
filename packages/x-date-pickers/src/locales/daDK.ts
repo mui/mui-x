@@ -16,16 +16,20 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Næste måned',
 
   // View navigation
-  openPreviousView: 'åben forrige visning',
-  openNextView: 'åben næste visning',
+  openPreviousView: 'Åben forrige visning',
+  openNextView: 'Åben næste visning',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'årsvisning er åben, skift til kalendervisning'
       : 'kalendervisning er åben, skift til årsvisning',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Start',
   end: 'Slut',
+  startDate: 'Start dato',
+  startTime: 'Start tid',
+  endDate: 'Slut date',
+  endTime: 'Slut tid',
 
   // Action bar
   cancelButtonLabel: 'Annuller',
@@ -41,11 +45,7 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Vælg ${timeViews[view] ?? view}. ${
-      time === null
-        ? 'Intet tidspunkt valgt'
-        : `Valgte tidspunkt er ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Vælg ${timeViews[view] ?? view}. ${time === null ? 'Intet tidspunkt valgt' : `Valgte tidspunkt er ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} timer`,
   minutesClockNumberText: (minutes) => `${minutes} minutter`,
   secondsClockNumberText: (seconds) => `${seconds} sekunder`,
@@ -68,6 +68,7 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Vælg tidspunkt, valgte tidspunkt er ${utils.format(value, 'fullTime')}`
       : 'Vælg tidspunkt',
+  fieldClearLabel: 'ryd felt',
 
   // Table labels
   timeTableLabel: 'vælg tidspunkt',
@@ -82,6 +83,19 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'år',
+  month: 'måned',
+  day: 'dag',
+  weekDay: 'ugedag',
+  hours: 'timer',
+  minutes: 'minutter',
+  seconds: 'sekunder',
+  meridiem: 'middag',
+
+  // Common
+  empty: 'tom',
 };
 
 export const daDK = getPickersLocalization(daDKPickers);

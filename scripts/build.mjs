@@ -4,13 +4,12 @@ import glob from 'fast-glob';
 import path from 'path';
 import { promisify } from 'util';
 import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import { getWorkspaceRoot } from './utils.mjs';
 
 const exec = promisify(childProcess.exec);
 
 const validBundles = [
-  // legacy build using ES6 modules
-  'legacy',
   // modern build with a rolling target using ES6 modules
   'modern',
   // build for node using commonJS modules
@@ -67,7 +66,6 @@ async function run(argv) {
       node: topLevelPathImportsCanBePackages ? './node' : './',
       modern: './modern',
       stable: topLevelPathImportsCanBePackages ? './' : './esm',
-      legacy: './legacy',
     }[bundle],
   );
 
@@ -87,7 +85,7 @@ async function run(argv) {
     babelArgs.push('--compact false');
   }
 
-  const command = ['yarn babel', ...babelArgs].join(' ');
+  const command = ['pnpm babel', ...babelArgs].join(' ');
 
   if (verbose) {
     // eslint-disable-next-line no-console
@@ -105,7 +103,7 @@ async function run(argv) {
   }
 }
 
-yargs(process.argv.slice(2))
+yargs(hideBin(process.argv))
   .command({
     command: '$0 <bundle>',
     description: 'build package',

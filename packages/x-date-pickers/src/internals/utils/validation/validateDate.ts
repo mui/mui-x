@@ -5,11 +5,11 @@ import {
   MonthValidationProps,
   YearValidationProps,
 } from '../../models/validation';
-import { DateValidationError, TimezoneProps } from '../../../models';
+import { DateValidationError, PickerValidDate, TimezoneProps } from '../../../models';
 import { applyDefaultDate } from '../date-utils';
 import { DefaultizedProps } from '../../models/helpers';
 
-export interface DateComponentValidationProps<TDate>
+export interface DateComponentValidationProps<TDate extends PickerValidDate>
   extends DayValidationProps<TDate>,
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
@@ -35,7 +35,7 @@ export const validateDate: Validator<
     timezone,
   } = props;
 
-  const now = adapter.utils.dateWithTimezone(undefined, timezone);
+  const now = adapter.utils.date(undefined, timezone);
   const minDate = applyDefaultDate(adapter.utils, props.minDate, adapter.defaultDates.minDate);
   const maxDate = applyDefaultDate(adapter.utils, props.maxDate, adapter.defaultDates.maxDate);
 

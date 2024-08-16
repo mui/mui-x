@@ -1,0 +1,16 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "onItemClick": {
+      "description": "Callback fired when clicking on a scatter item.",
+      "typeDescriptions": {
+        "event": "Mouse event caught at the svg level",
+        "scatterItemIdentifier": "Identify which item got clicked"
+      }
+    },
+    "voronoiMaxRadius": {
+      "description": "Defines the maximal distance between a scatter point and the pointer that triggers the interaction. If <code>undefined</code>, the radius is assumed to be infinite."
+    }
+  },
+  "classDescriptions": {}
+}

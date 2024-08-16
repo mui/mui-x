@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { TreeViewProviderProps } from './TreeViewProvider.types';
 import { TreeViewContext } from './TreeViewContext';
-import { DescendantProvider } from './DescendantProvider';
 import { TreeViewAnyPluginSignature } from '../models';
 
 /**
@@ -9,14 +8,14 @@ import { TreeViewAnyPluginSignature } from '../models';
  *
  * @ignore - do not document.
  */
-export function TreeViewProvider<TPlugins extends readonly TreeViewAnyPluginSignature[]>(
-  props: TreeViewProviderProps<TPlugins>,
+export function TreeViewProvider<TSignatures extends readonly TreeViewAnyPluginSignature[]>(
+  props: TreeViewProviderProps<TSignatures>,
 ) {
   const { value, children } = props;
 
   return (
     <TreeViewContext.Provider value={value}>
-      <DescendantProvider>{children}</DescendantProvider>
+      {value.wrapRoot({ children })}
     </TreeViewContext.Provider>
   );
 }

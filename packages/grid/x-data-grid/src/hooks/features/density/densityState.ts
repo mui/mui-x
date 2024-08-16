@@ -1,6 +1,0 @@
-import { GridDensity } from '../../../models/gridDensity';
-
-export interface GridDensityState {
-  value: GridDensity;
-  factor: number;
-}

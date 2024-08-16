@@ -1,0 +1,17 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "onItemClick": {
+      "description": "Callback fired when a line mark item is clicked.",
+      "typeDescriptions": {
+        "event": "The event source of the callback.",
+        "lineItemIdentifier": "The line mark item identifier."
+      }
+    },
+    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": { "mark": "" }
+}

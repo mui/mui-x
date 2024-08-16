@@ -95,28 +95,28 @@ const rows: GridRowsProp<File> = [
   },
 ];
 
-const columns: GridColDef[] = [
+const columns: GridColDef<File>[] = [
   {
     field: 'size',
     headerName: 'Size',
     type: 'number',
-    valueFormatter: (params) => {
-      if (params.value == null) {
+    valueFormatter: (value) => {
+      if (value == null) {
         return '';
       }
-      if (params.value < 100) {
-        return `${params.value} b`;
+      if (value < 100) {
+        return `${value} b`;
       }
 
-      if (params.value < 1_000_000) {
-        return `${Math.floor(params.value / 100) / 10} Kb`;
+      if (value < 1_000_000) {
+        return `${Math.floor(value / 100) / 10} Kb`;
       }
 
-      if (params.value < 1_000_000_000) {
-        return `${Math.floor(params.value / 100_000) / 10} Mb`;
+      if (value < 1_000_000_000) {
+        return `${Math.floor(value / 100_000) / 10} Mb`;
       }
 
-      return `${Math.floor(params.value / 100_000_000) / 10} Gb`;
+      return `${Math.floor(value / 100_000_000) / 10} Gb`;
     },
   },
   {
@@ -124,12 +124,12 @@ const columns: GridColDef[] = [
     headerName: 'Last modification',
     type: 'dateTime',
     width: 200,
-    valueGetter: (params) => {
-      if (params.value == null) {
+    valueGetter: (value) => {
+      if (value == null) {
         return null;
       }
 
-      return new Date(params.value);
+      return new Date(value);
     },
   },
 ];

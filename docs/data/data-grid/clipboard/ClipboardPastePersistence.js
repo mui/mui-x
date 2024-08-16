@@ -186,19 +186,21 @@ const initialRows = [
   },
 ];
 
+const visibleFields = [
+  'commodity',
+  'traderName',
+  'traderEmail',
+  'quantity',
+  'filledQuantity',
+];
+
 const useSessionStorageData = () => {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 0,
     maxColumns: 7,
     editable: true,
-    visibleFields: [
-      'commodity',
-      'traderName',
-      'traderEmail',
-      'quantity',
-      'filledQuantity',
-    ],
+    visibleFields,
   });
 
   const [rows] = React.useState(() => {
@@ -250,10 +252,9 @@ export default function ClipboardPastePersistence() {
           {...data}
           disableRowSelectionOnClick
           checkboxSelection
-          unstable_cellSelection
+          cellSelection
           processRowUpdate={processRowUpdate}
-          experimentalFeatures={{ clipboardPaste: true }}
-          unstable_ignoreValueFormatterDuringExport
+          ignoreValueFormatterDuringExport
         />
       </div>
     </div>

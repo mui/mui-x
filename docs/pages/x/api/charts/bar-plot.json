@@ -1,15 +1,46 @@
 {
   "props": {
+    "barLabel": { "type": { "name": "union", "description": "'value'<br>&#124;&nbsp;func" } },
+    "borderRadius": { "type": { "name": "number" } },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGElement, MouseEvent>, barItemIdentifier: BarItemIdentifier) => void",
+        "describedArgs": ["event", "barItemIdentifier"]
+      }
+    },
+    "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" }
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
   },
-  "slots": [],
   "name": "BarPlot",
   "imports": [
     "import { BarPlot } from '@mui/x-charts/BarChart';",
-    "import { BarPlot } from '@mui/x-charts';"
+    "import { BarPlot } from '@mui/x-charts';",
+    "import { BarPlot } from '@mui/x-charts-pro';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiBarPlot" },
+  "slots": [
+    {
+      "name": "bar",
+      "description": "The component that renders the bar.",
+      "default": "BarElementPath",
+      "class": null
+    },
+    {
+      "name": "barLabel",
+      "description": "The component that renders the bar label.",
+      "default": "BarLabel",
+      "class": null
+    }
+  ],
+  "classes": [],
+  "muiName": "MuiBarPlot",
   "filename": "/packages/x-charts/src/BarChart/BarPlot.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/bar-demo/\">Charts - Bar demonstration</a></li>\n<li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>",
+  "cssComponent": false
 }

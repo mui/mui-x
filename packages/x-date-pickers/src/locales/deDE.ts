@@ -23,9 +23,13 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
       ? 'Jahresansicht ist geöffnet, zur Kalenderansicht wechseln'
       : 'Kalenderansicht ist geöffnet, zur Jahresansicht wechseln',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Beginn',
   end: 'Ende',
+  startDate: 'Startdatum',
+  startTime: 'Startzeit',
+  endDate: 'Enddatum',
+  endTime: 'Endzeit',
 
   // Action bar
   cancelButtonLabel: 'Abbrechen',
@@ -41,11 +45,7 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${timeViews[view] ?? view} auswählen. ${
-      time === null
-        ? 'Keine Uhrzeit ausgewählt'
-        : `Gewählte Uhrzeit ist ${adapter.format(time, 'fullTime')}`
-    }`,
+    `${timeViews[view] ?? view} auswählen. ${time === null ? 'Keine Uhrzeit ausgewählt' : `Gewählte Uhrzeit ist ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds}`,
@@ -68,6 +68,7 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Uhrzeit auswählen, gewählte Uhrzeit ist ${utils.format(value, 'fullTime')}`
       : 'Uhrzeit auswählen',
+  fieldClearLabel: 'Wert leeren',
 
   // Table labels
   timeTableLabel: 'Uhrzeit auswählen',
@@ -77,11 +78,24 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'J'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'TT',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Jahr',
+  month: 'Monat',
+  day: 'Tag',
+  weekDay: 'Wochentag',
+  hours: 'Stunden',
+  minutes: 'Minuten',
+  seconds: 'Sekunden',
+  meridiem: 'Tageszeit',
+
+  // Common
+  empty: 'Leer',
 };
 
 export const deDE = getPickersLocalization(deDEPickers);

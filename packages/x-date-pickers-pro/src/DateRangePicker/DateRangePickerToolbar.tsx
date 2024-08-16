@@ -3,16 +3,17 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import {
   PickersToolbar,
   PickersToolbarButton,
   useUtils,
   BaseToolbarProps,
-  useLocaleText,
   ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange } from '../internals/models';
+import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { DateRange } from '../models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateRangePickerToolbarClasses,
@@ -29,16 +30,17 @@ const useUtilityClasses = (ownerState: DateRangePickerToolbarProps<any>) => {
   return composeClasses(slots, getDateRangePickerToolbarUtilityClass, classes);
 };
 
-export interface DateRangePickerToolbarProps<TDate>
-  extends Omit<
-      BaseToolbarProps<DateRange<TDate>, 'day'>,
-      'views' | 'view' | 'onViewChange' | 'onChange' | 'isLandscape'
-    >,
-    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {
+export interface DateRangePickerToolbarProps<TDate extends PickerValidDate>
+  extends ExportedDateRangePickerToolbarProps,
+    Omit<BaseToolbarProps<DateRange<TDate>, 'day'>, 'onChange' | 'isLandscape'>,
+    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
+
+export interface ExportedDateRangePickerToolbarProps extends ExportedBaseToolbarProps {
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<DateRangePickerToolbarClasses>;
 }
-
-export interface ExportedDateRangePickerToolbarProps extends ExportedBaseToolbarProps {}
 
 const DateRangePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDateRangePickerToolbar',
@@ -56,8 +58,18 @@ const DateRangePickerToolbarContainer = styled('div', {
   display: 'flex',
 });
 
+/**
+ * Demos:
+ *
+ * - [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/)
+ * - [Custom components](https://mui.com/x/react-date-pickers/custom-components/)
+ *
+ * API:
+ *
+ * - [DateRangePickerToolbar API](https://mui.com/x/api/date-pickers/date-range-picker-toolbar/)
+ */
 const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
-  TDate extends unknown,
+  TDate extends PickerValidDate,
 >(inProps: DateRangePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const utils = useUtils<TDate>();
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerToolbar' });
@@ -68,18 +80,21 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
     onRangePositionChange,
     toolbarFormat,
     className,
+    onViewChange,
+    view,
+    views,
     ...other
   } = props;
 
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
 
   const startDateValue = start
     ? utils.formatByString(start, toolbarFormat || utils.formats.shortDate)
-    : localeText.start;
+    : translations.start;
 
   const endDateValue = end
     ? utils.formatByString(end, toolbarFormat || utils.formats.shortDate)
-    : localeText.end;
+    : translations.end;
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
@@ -87,7 +102,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
   return (
     <DateRangePickerToolbarRoot
       {...other}
-      toolbarTitle={localeText.dateRangePickerToolbarTitle}
+      toolbarTitle={translations.dateRangePickerToolbarTitle}
       isLandscape={false}
       className={clsx(className, classes.root)}
       ownerState={ownerState}
@@ -115,12 +130,12 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
 DateRangePickerToolbar.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  classes: PropTypes.object,
   /**
-   * className applied to the root component.
+   * Override or extend the styles applied to the component.
    */
+  classes: PropTypes.object,
   className: PropTypes.string,
   disabled: PropTypes.bool,
   /**
@@ -129,8 +144,17 @@ DateRangePickerToolbar.propTypes = {
    */
   hidden: PropTypes.bool,
   onRangePositionChange: PropTypes.func.isRequired,
+  /**
+   * Callback called when a toolbar is clicked
+   * @template TView
+   * @param {TView} view The view to open
+   */
+  onViewChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   readOnly: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
@@ -146,7 +170,15 @@ DateRangePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
-  value: PropTypes.arrayOf(PropTypes.any).isRequired,
+  value: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * Currently visible picker view.
+   */
+  view: PropTypes.oneOf(['day']).isRequired,
+  /**
+   * Available views.
+   */
+  views: PropTypes.arrayOf(PropTypes.oneOf(['day'])).isRequired,
 } as any;
 
 export { DateRangePickerToolbar };

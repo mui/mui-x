@@ -4,12 +4,12 @@ import { UseFieldValidationProps } from '../useField/useField.types';
 import { WrapperVariant } from '../../models/common';
 import {
   FieldSection,
-  FieldSelectedSections,
   FieldValueType,
   TimezoneProps,
   MuiPickersAdapter,
   PickersTimezone,
   PickerChangeHandlerContext,
+  PickerValidDate,
 } from '../../../models';
 import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
 import {
@@ -17,7 +17,7 @@ import {
   PickersShortcutsItemContext,
 } from '../../../PickersShortcuts';
 
-export interface PickerValueManager<TValue, TDate, TError> {
+export interface PickerValueManager<TValue, TDate extends PickerValidDate, TError> {
   /**
    * Determines if two values are equal.
    * @template TDate, TValue
@@ -162,7 +162,7 @@ export interface UsePickerValueState<TValue> {
    * Then we might want to apply some custom logic.
    *
    * For example, when the component is not controlled and `defaultValue` is defined.
-   * Then clicking on "Accept", "Today" or "Clear" should fire `onAccept` with `defaultValue`, but clicking on "Cancel" or dimissing the picker should not.
+   * Then clicking on "Accept", "Today" or "Clear" should fire `onAccept` with `defaultValue`, but clicking on "Cancel" or dismissing the picker should not.
    */
   hasBeenModifiedSinceMount: boolean;
 }
@@ -201,8 +201,7 @@ export type PickerValueUpdateAction<TValue, TError> =
       name: 'setValueFromShortcut';
       value: TValue;
       changeImportance: PickerShortcutChangeImportance;
-      // TODO v7: Make shortcut mandatory.
-      shortcut?: PickersShortcutsItemContext;
+      shortcut: PickersShortcutsItemContext;
     };
 
 /**
@@ -230,9 +229,11 @@ export interface UsePickerValueBaseProps<TValue, TError> {
   /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
-  onAccept?: (value: TValue) => void;
+  onAccept?: (value: TValue, context: PickerChangeHandlerContext<TError>) => void;
   /**
    * Callback fired when the error associated to the current value changes.
    * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
@@ -248,11 +249,7 @@ export interface UsePickerValueBaseProps<TValue, TError> {
 /**
  * Props used to handle the value of non-static pickers.
  */
-export interface UsePickerValueNonStaticProps<TValue, TSection extends FieldSection>
-  extends Pick<
-    UseFieldInternalProps<TValue, unknown, TSection, unknown>,
-    'selectedSections' | 'onSelectedSectionsChange'
-  > {
+export interface UsePickerValueNonStaticProps {
   /**
    * If `true`, the popover or modal will close after submitting the full date.
    * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
@@ -278,16 +275,15 @@ export interface UsePickerValueNonStaticProps<TValue, TSection extends FieldSect
 /**
  * Props used to handle the value of the pickers.
  */
-export interface UsePickerValueProps<TValue, TSection extends FieldSection, TError>
+export interface UsePickerValueProps<TValue, TError>
   extends UsePickerValueBaseProps<TValue, TError>,
-    UsePickerValueNonStaticProps<TValue, TSection>,
+    UsePickerValueNonStaticProps,
     TimezoneProps {}
 
 export interface UsePickerValueParams<
   TValue,
-  TDate,
-  TSection extends FieldSection,
-  TExternalProps extends UsePickerValueProps<TValue, TSection, any>,
+  TDate extends PickerValidDate,
+  TExternalProps extends UsePickerValueProps<TValue, any>,
 > {
   props: TExternalProps;
   valueManager: PickerValueManager<TValue, TDate, InferError<TExternalProps>>;
@@ -307,15 +303,12 @@ export interface UsePickerValueActions {
   onDismiss: () => void;
   onCancel: () => void;
   onSetToday: () => void;
-  onOpen: () => void;
-  onClose: () => void;
+  onOpen: (event: React.UIEvent) => void;
+  onClose: (event?: React.UIEvent) => void;
 }
 
 export type UsePickerValueFieldResponse<TValue, TSection extends FieldSection, TError> = Required<
-  Pick<
-    UseFieldInternalProps<TValue, unknown, TSection, TError>,
-    'value' | 'onChange' | 'selectedSections' | 'onSelectedSectionsChange'
-  >
+  Pick<UseFieldInternalProps<TValue, PickerValidDate, TSection, any, TError>, 'value' | 'onChange'>
 >;
 
 /**
@@ -325,8 +318,7 @@ export interface UsePickerValueViewsResponse<TValue> {
   value: TValue;
   onChange: (value: TValue, selectionState?: PickerSelectionState) => void;
   open: boolean;
-  onClose: () => void;
-  onSelectedSectionsChange: (newValue: FieldSelectedSections) => void;
+  onClose: (event?: React.MouseEvent) => void;
 }
 
 /**
@@ -335,7 +327,11 @@ export interface UsePickerValueViewsResponse<TValue> {
 export interface UsePickerValueLayoutResponse<TValue> extends UsePickerValueActions {
   value: TValue;
   onChange: (newValue: TValue) => void;
-  onSelectShortcut: (newValue: TValue, changeImportance?: PickerShortcutChangeImportance) => void;
+  onSelectShortcut: (
+    newValue: TValue,
+    changeImportance: PickerShortcutChangeImportance,
+    shortcut: PickersShortcutsItemContext,
+  ) => void;
   isValid: (value: TValue) => boolean;
 }
 

@@ -1,0 +1,100 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "apiRef": {
+      "description": "The ref object that allows Tree View manipulation. Can be instantiated with <code>useTreeViewApiRef()</code>."
+    },
+    "checkboxSelection": {
+      "description": "If <code>true</code>, the tree view renders a checkbox at the left of its label that allows selecting it."
+    },
+    "children": { "description": "The content of the component." },
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "defaultExpandedItems": {
+      "description": "Expanded item ids. Used when the item&#39;s expansion is not controlled."
+    },
+    "defaultSelectedItems": {
+      "description": "Selected item ids. (Uncontrolled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
+    },
+    "disabledItemsFocusable": {
+      "description": "If <code>true</code>, will allow focus on disabled items."
+    },
+    "disableSelection": { "description": "If <code>true</code> selection is disabled." },
+    "expandedItems": {
+      "description": "Expanded item ids. Used when the item&#39;s expansion is controlled."
+    },
+    "expansionTrigger": {
+      "description": "The slot that triggers the item&#39;s expansion when clicked."
+    },
+    "experimentalFeatures": {
+      "description": "Unstable features, breaking changes might be introduced. For each feature, if the flag is not explicitly set to <code>true</code>, the feature will be fully disabled and any property / method call will not have any effect."
+    },
+    "id": {
+      "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
+    },
+    "itemChildrenIndentation": {
+      "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
+    },
+    "multiSelect": {
+      "description": "If <code>true</code>, <code>ctrl</code> and <code>shift</code> will trigger multiselect."
+    },
+    "onExpandedItemsChange": {
+      "description": "Callback fired when tree items are expanded/collapsed.",
+      "typeDescriptions": {
+        "event": "The DOM event that triggered the change.",
+        "itemIds": "The ids of the expanded items."
+      }
+    },
+    "onItemClick": {
+      "description": "Callback fired when the <code>content</code> slot of a given tree item is clicked.",
+      "typeDescriptions": {
+        "event": "The DOM event that triggered the change.",
+        "itemId": "The id of the focused item."
+      }
+    },
+    "onItemExpansionToggle": {
+      "description": "Callback fired when a tree item is expanded or collapsed.",
+      "typeDescriptions": {
+        "event": "The DOM event that triggered the change.",
+        "itemId": "The itemId of the modified item.",
+        "isExpanded": "<code>true</code> if the item has just been expanded, <code>false</code> if it has just been collapsed."
+      }
+    },
+    "onItemFocus": {
+      "description": "Callback fired when a given tree item is focused.",
+      "typeDescriptions": {
+        "event": "The DOM event that triggered the change. <strong>Warning</strong>: This is a generic event not a focus event.",
+        "itemId": "The id of the focused item."
+      }
+    },
+    "onItemSelectionToggle": {
+      "description": "Callback fired when a tree item is selected or deselected.",
+      "typeDescriptions": {
+        "event": "The DOM event that triggered the change.",
+        "itemId": "The itemId of the modified item.",
+        "isSelected": "<code>true</code> if the item has just been selected, <code>false</code> if it has just been deselected."
+      }
+    },
+    "onSelectedItemsChange": {
+      "description": "Callback fired when tree items are selected/deselected.",
+      "typeDescriptions": {
+        "event": "The DOM event that triggered the change.",
+        "itemIds": "The ids of the selected items. When <code>multiSelect</code> is <code>true</code>, this is an array of strings; when false (default) a string."
+      }
+    },
+    "selectedItems": {
+      "description": "Selected item ids. (Controlled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "collapseIcon": "The default icon used to collapse the item.",
+    "endIcon": "The default icon displayed next to an end item. This is applied to all tree items and can be overridden by the TreeItem <code>icon</code> slot prop.",
+    "expandIcon": "The default icon used to expand the item.",
+    "root": "Element rendered at the root."
+  }
+}

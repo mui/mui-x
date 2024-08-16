@@ -3,31 +3,33 @@
   "installCommand": "install:codesandbox",
   "node": "18",
   "packages": [
-    "packages/x-license-pro",
-    "packages/grid/x-data-grid",
-    "packages/grid/x-data-grid-pro",
-    "packages/grid/x-data-grid-premium",
-    "packages/grid/x-data-grid-generator",
+    "packages/x-license",
+    "packages/x-data-grid",
+    "packages/x-data-grid-pro",
+    "packages/x-data-grid-premium",
+    "packages/x-data-grid-generator",
     "packages/x-date-pickers",
     "packages/x-date-pickers-pro",
     "packages/x-charts",
-    "packages/x-tree-view"
+    "packages/x-charts-vendor",
+    "packages/x-tree-view",
+    "packages/x-internals"
   ],
   "publishDirectory": {
-    "@mui/x-license-pro": "packages/x-license-pro/build",
-    "@mui/x-data-grid": "packages/grid/x-data-grid/build",
-    "@mui/x-data-grid-pro": "packages/grid/x-data-grid-pro/build",
-    "@mui/x-data-grid-premium": "packages/grid/x-data-grid-premium/build",
-    "@mui/x-data-grid-generator": "packages/grid/x-data-grid-generator/build",
+    "@mui/x-license": "packages/x-license/build",
+    "@mui/x-data-grid": "packages/x-data-grid/build",
+    "@mui/x-data-grid-pro": "packages/x-data-grid-pro/build",
+    "@mui/x-data-grid-premium": "packages/x-data-grid-premium/build",
+    "@mui/x-data-grid-generator": "packages/x-data-grid-generator/build",
     "@mui/x-date-pickers": "packages/x-date-pickers/build",
     "@mui/x-date-pickers-pro": "packages/x-date-pickers-pro/build",
     "@mui/x-charts": "packages/x-charts/build",
-    "@mui/x-tree-view": "packages/x-tree-view/build"
+    "@mui/x-charts-vendor": "packages/x-charts-vendor",
+    "@mui/x-charts-pro": "packages/x-charts-pro/build",
+    "@mui/x-tree-view": "packages/x-tree-view/build",
+    "@mui/x-tree-view-pro": "packages/x-tree-view-pro/build",
+    "@mui/x-internals": "packages/x-internals/build"
   },
-  "sandboxes": [
-    "new",
-    "github/mui/material-ui/tree/master/examples/create-react-app",
-    "github/mui/material-ui/tree/master/examples/create-react-app-with-typescript"
-  ],
+  "sandboxes": ["/bug-reproductions/x-data-grid"],
   "silent": true
 }

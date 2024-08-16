@@ -30,7 +30,7 @@ The first column will be 200px wide, leaving 300px remaining. The column with `f
 
 To set a minimum and maximum width for a `flex` column set the `minWidth` and the `maxWidth` property in `GridColDef`.
 
-:::info
+:::warning
 Before using fluid width, note that:
 
 - `flex` doesn't work together with `width`. If you set both `flex` and `width` in `GridColDef`, `flex` will override `width`.
@@ -40,9 +40,9 @@ Before using fluid width, note that:
 
 {{"demo": "ColumnFluidWidthGrid.js", "bg": "inline"}}
 
-## Resizing [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+## Resizing
 
-By default, `DataGridPro` allows all columns to be resized by dragging the right portion of the column separator.
+By default, Data Grid allows all columns to be resized by dragging the right portion of the column separator.
 
 To prevent the resizing of a column, set `resizable: false` in the `GridColDef`.
 Alternatively, to disable all columns resize, set the prop `disableColumnResize={true}`.
@@ -58,9 +58,9 @@ To capture changes in the width of a column there are two callbacks that are cal
 - `onColumnResize`: Called while a column is being resized.
 - `onColumnWidthChange`: Called after the width of a column is changed, but not during resizing.
 
-## Autosizing [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+## Autosizing
 
-`DataGridPro` allows to autosize the columns' dimensions based on their content. Autosizing is enabled by default. To turn it off, pass the `disableAutosize` prop to the datagrid.
+Data Grid allows to autosize the columns' dimensions based on their content. Autosizing is enabled by default. To turn it off, pass the `disableAutosize` prop to the Data Grid.
 
 Autosizing can be used by one of the following methods:
 
@@ -75,7 +75,7 @@ Note that for the separator double-click method, the `autosizeOptions.columns` w
 In all the cases, the `colDef.minWidth` and `colDef.maxWidth` options will be respected.
 
 ```tsx
-<DataGridPro
+<DataGrid
   {...otherProps}
   autosizeOptions={{
     columns: ['name', 'status', 'createdBy'],
@@ -88,14 +88,37 @@ In all the cases, the `colDef.minWidth` and `colDef.maxWidth` options will be re
 {{"demo": "ColumnAutosizing.js", "disableAd": true, "bg": "inline"}}
 
 :::warning
-Autosizing has no effect if dynamic row height is enabled.
-:::
-
-:::warning
-The data grid can only autosize based on the currently rendered cells.
+The Data Grid can only autosize based on the currently rendered cells.
 
 DOM access is required to accurately calculate dimensions, so unmounted cells (when [virtualization](/x/react-data-grid/virtualization/) is on) cannot be sized. If you need a bigger row sample, [open an issue](https://github.com/mui/mui-x/issues) to discuss it further.
 :::
+
+### Autosizing asynchronously
+
+The `autosizeColumns` method from the `apiRef` can be used as well to adjust the column size on specified events, for example when receiving row data from the server.
+
+{{"demo": "ColumnAutosizingAsync.js", "disableAd": true, "bg": "inline"}}
+
+:::warning
+This example uses `ReactDOM.flushSync`. If used incorrectly it can hurt the performance of your application. Please refer to the official [React docs](https://react.dev/reference/react-dom/flushSync) for further information.
+:::
+
+### Autosizing with dynamic row height
+
+Column autosizing is compatible with the [Dynamic row height](/x/react-data-grid/row-height/#dynamic-row-height) feature.
+
+{{"demo": "ColumnAutosizingDynamicRowHeight.js", "disableAd": true, "bg": "inline"}}
+
+:::warning
+When autosizing columns with long content, consider setting the `maxWidth` for the column to avoid it becoming too wide.
+:::
+
+### Autosizing with grouped rows [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+When using [row grouping](/x/react-data-grid/row-grouping/) you can utilize the `autosizeColumns` method to adjust the column width of the expanded rows dynamically.
+The demo below shows how you can subscribe to the `rowExpansionChange` event. The provided handler function then calls the `autosizeColumns` method from the gridApi.
+
+{{"demo": "ColumnAutosizingGroupedRows.js", "disableAd": true, "bg": "inline"}}
 
 ## API
 

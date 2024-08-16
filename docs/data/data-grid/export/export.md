@@ -88,15 +88,6 @@ There are a few ways to include or hide other columns.
 
 ## Exported rows
 
-### Print export
-
-The print export always prints all rows regardless of whether or not some rows are selected.
-To export only selected rows via print you can use the `getRowsToExport` function.
-
-{{"demo": "PrintExportSelectedRows.js", "bg": "inline", "defaultCodeOpen": false}}
-
-### CSV and Excel export
-
 By default, the data grid exports the selected rows if there are any.
 If not, it exports all rows except the footers (filtered and sorted rows, according to active rules), including the collapsed ones.
 
@@ -131,7 +122,7 @@ You can provide a [`valueFormatter`](/x/react-data-grid/column-definition/#value
   columns={[
     {
       field: 'progress',
-      valueFormatter: ({ value }) => `${value * 100}%`,
+      valueFormatter: (value) => `${value * 100}%`,
       renderCell: ({ value }) => <ProgressBar value={value} />,
     },
   ]}
@@ -151,6 +142,21 @@ For more details on these options, please visit the [`csvOptions` API page](/x/a
     utf8WithBom: true,
   }}
 />
+```
+
+### Escape formulas
+
+By default, the formulas in the cells are escaped.
+This is to prevent the formulas from being executed when [the CSV file is opened in Excel](https://owasp.org/www-community/attacks/CSV_Injection).
+
+If you want to keep the formulas working, you can set the `escapeFormulas` option to `false`.
+
+```jsx
+<DataGrid slotProps={{ toolbar: { csvOptions: { escapeFormulas: false } } }} />
+
+// or
+
+<GridToolbarExport csvOptions={{ escapeFormulas: false }} />
 ```
 
 ## Print export
@@ -320,7 +326,7 @@ In the following demo, both methods are used to set a custom header and a custom
 
 :::warning
 This feature only works with `@mui/styled-engine` v5.11.8 or newer.
-Make sure that the MUI Core version you are using is also installing the correct version for this dependency.
+Make sure that the MUI Core version you are using is also installing the correct version for this dependency.
 :::
 
 Instead of generating the Excel file in the main thread, you can delegate the task to a web worker.
@@ -404,6 +410,21 @@ setupExcelExportWebWorker({
 
 :::
 
+### Escape formulas
+
+By default, the formulas in the cells are escaped.
+This is to prevent the formulas from being executed when [the file is opened in Excel](https://owasp.org/www-community/attacks/CSV_Injection).
+
+If you want to keep the formulas working, you can set the `escapeFormulas` option to `false`.
+
+```jsx
+<DataGridPremium slotProps={{ toolbar: { excelOptions: { escapeFormulas: false } } }} />
+
+// or
+
+<GridToolbarExport excelOptions={{ escapeFormulas: false }} />
+```
+
 ## Clipboard
 
 The clipboard export allows you to copy the content of the data grid to the clipboard.
@@ -414,7 +435,7 @@ For more information, check the [Clipboard copy](/x/react-data-grid/clipboard/#c
 The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the data grid.
+Only use this API as the last option. Give preference to the props to control the Data Grid.
 :::
 
 ### CSV

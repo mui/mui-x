@@ -5,8 +5,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { useGridApiRef } from '@mui/x-data-grid';
-import { DataGridPro, DEFAULT_GRID_AUTOSIZE_OPTIONS } from '@mui/x-data-grid-pro';
+import {
+  DataGrid,
+  useGridApiRef,
+  DEFAULT_GRID_AUTOSIZE_OPTIONS,
+} from '@mui/x-data-grid';
 import { randomRating, randomTraderName } from '@mui/x-data-grid-generator';
 
 function renderRating(params) {
@@ -36,7 +39,12 @@ function useData(length) {
       { field: 'id', headerName: 'Brand ID' },
       { field: 'brand', headerName: 'Brand name' },
       { field: 'rep', headerName: 'Representative' },
-      { field: 'rating', headerName: 'Rating', renderCell: renderRating },
+      {
+        field: 'rating',
+        headerName: 'Rating',
+        renderCell: renderRating,
+        display: 'flex',
+      },
     ];
 
     return { rows, columns };
@@ -122,7 +130,7 @@ export default function ColumnAutosizing() {
         />
       </Stack>
       <div style={{ height: 400, width: '100%' }}>
-        <DataGridPro
+        <DataGrid
           apiRef={apiRef}
           density="compact"
           {...data}

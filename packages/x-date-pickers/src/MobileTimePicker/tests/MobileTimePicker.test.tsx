@@ -1,25 +1,26 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { fireTouchChangedEvent, screen, userEvent, act } from '@mui/monorepo/test/utils';
+import { fireTouchChangedEvent, screen, userEvent, act } from '@mui/internal-test-utils';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import {
   createPickerRenderer,
   adapterToUse,
   openPicker,
   getClockTouchEvent,
+  getFieldSectionsContainer,
 } from 'test/utils/pickers';
 
 describe('<MobileTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
 
   describe('picker state', () => {
-    it('should open when clicking the textbox', () => {
+    it('should open when clicking the input', () => {
       const onOpen = spy();
 
-      render(<MobileTimePicker onOpen={onOpen} />);
+      render(<MobileTimePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
 
-      userEvent.mousePress(screen.getByRole('textbox'));
+      userEvent.mousePress(getFieldSectionsContainer());
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
@@ -29,11 +30,12 @@ describe('<MobileTimePicker />', () => {
       const handleChange = spy();
       render(
         <MobileTimePicker
+          enableAccessibleFieldDOMStructure
           ampm
           onChange={handleChange}
           open
-          componentsProps={{ toolbar: { hidden: false } }}
-          value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
+          slotProps={{ toolbar: { hidden: false } }}
+          value={adapterToUse.date('2019-01-01T04:20:00')}
         />,
       );
       const buttonPM = screen.getByRole('button', { name: 'PM' });
@@ -54,10 +56,11 @@ describe('<MobileTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue = adapterToUse.date(new Date(2018, 0, 1));
+      const defaultValue = adapterToUse.date('2018-01-01');
 
       render(
         <MobileTimePicker
+          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -72,18 +75,14 @@ describe('<MobileTimePicker />', () => {
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date(new Date(2018, 0, 1, 11)),
-      );
+      expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-01T11:00:00'));
 
       // Change the minutes
       const minuteClockEvent = getClockTouchEvent(53, 'minutes');
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minuteClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minuteClockEvent);
       expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date(new Date(2018, 0, 1, 11, 53)),
-      );
+      expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-01T11:53:00'));
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });

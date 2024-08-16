@@ -1,0 +1,15 @@
+{
+  "props": { "skipAnimation": { "type": { "name": "bool" }, "default": "false" } },
+  "name": "AnimatedArea",
+  "imports": [
+    "import { AnimatedArea } from '@mui/x-charts/LineChart';",
+    "import { AnimatedArea } from '@mui/x-charts';",
+    "import { AnimatedArea } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiAnimatedArea",
+  "filename": "/packages/x-charts/src/LineChart/AnimatedArea.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
+  "cssComponent": false
+}

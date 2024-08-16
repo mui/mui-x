@@ -1,15 +1,38 @@
 {
   "props": {
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, lineItemIdentifier: LineItemIdentifier) => void",
+        "describedArgs": ["event", "lineItemIdentifier"]
+      }
+    },
+    "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" }
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
   },
-  "slots": [],
   "name": "AreaPlot",
   "imports": [
     "import { AreaPlot } from '@mui/x-charts/LineChart';",
-    "import { AreaPlot } from '@mui/x-charts';"
+    "import { AreaPlot } from '@mui/x-charts';",
+    "import { AreaPlot } from '@mui/x-charts-pro';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiAreaPlot" },
+  "slots": [
+    {
+      "name": "area",
+      "description": "The component that renders the area.",
+      "default": "AnimatedArea",
+      "class": null
+    }
+  ],
+  "classes": [],
+  "muiName": "MuiAreaPlot",
   "filename": "/packages/x-charts/src/LineChart/AreaPlot.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demonstration</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
+  "cssComponent": false
 }

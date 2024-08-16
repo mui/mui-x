@@ -1,17 +1,21 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SeriesContext } from '../context/SeriesContextProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { SlotComponentPropsFromProps } from '../internals/SlotComponentPropsFromProps';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { LineHighlightElement, LineHighlightElementProps } from './LineHighlightElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { InteractionContext } from '../context/InteractionProvider';
+import { DEFAULT_X_AXIS_KEY } from '../constants';
+import getColor from './getColor';
+import { useLineSeries } from '../hooks/useSeries';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 
-export interface LineHighlightPlotSlotsComponent {
+export interface LineHighlightPlotSlots {
   lineHighlight?: React.JSXElementConstructor<LineHighlightElementProps>;
 }
 
-export interface LineHighlightPlotSlotComponentProps {
-  lineHighlight?: Partial<LineHighlightElementProps>;
+export interface LineHighlightPlotSlotProps {
+  lineHighlight?: SlotComponentPropsFromProps<LineHighlightElementProps, {}, {}>;
 }
 
 export interface LineHighlightPlotProps extends React.SVGAttributes<SVGSVGElement> {
@@ -19,19 +23,30 @@ export interface LineHighlightPlotProps extends React.SVGAttributes<SVGSVGElemen
    * Overridable component slots.
    * @default {}
    */
-  slots?: LineHighlightPlotSlotsComponent;
+  slots?: LineHighlightPlotSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: LineHighlightPlotSlotComponentProps;
+  slotProps?: LineHighlightPlotSlotProps;
 }
 
+/**
+ * Demos:
+ *
+ * - [Lines](https://mui.com/x/react-charts/lines/)
+ * - [Line demonstration](https://mui.com/x/react-charts/line-demo/)
+ *
+ * API:
+ *
+ * - [LineHighlightPlot API](https://mui.com/x/api/charts/line-highlight-plot/)
+ */
 function LineHighlightPlot(props: LineHighlightPlotProps) {
   const { slots, slotProps, ...other } = props;
 
-  const seriesData = React.useContext(SeriesContext).line;
-  const axisData = React.useContext(CartesianContext);
+  const seriesData = useLineSeries();
+  const axisData = useCartesianContext();
+  const drawingArea = useDrawingArea();
   const { axis } = React.useContext(InteractionContext);
 
   const highlightedIndex = axis.x?.index;
@@ -54,31 +69,48 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.flatMap((seriesId) => {
           const {
+            xAxisId: xAxisIdProp,
+            yAxisId: yAxisIdProp,
             xAxisKey = defaultXAxisId,
             yAxisKey = defaultYAxisId,
             stackedData,
+            data,
             disableHighlight,
           } = series[seriesId];
 
-          if (disableHighlight) {
+          const xAxisId = xAxisIdProp ?? xAxisKey;
+          const yAxisId = yAxisIdProp ?? yAxisKey;
+
+          if (disableHighlight || data[highlightedIndex] == null) {
             return null;
           }
-          const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
-          const yScale = yAxis[yAxisKey].scale;
-          const xData = xAxis[xAxisKey].data;
+          const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
+          const yScale = yAxis[yAxisId].scale;
+          const xData = xAxis[xAxisId].data;
 
           if (xData === undefined) {
             throw new Error(
-              `Axis of id "${xAxisKey}" should have data property to be able to display a line plot.`,
+              `MUI X: ${
+                xAxisId === DEFAULT_X_AXIS_KEY
+                  ? 'The first `xAxis`'
+                  : `The x-axis with id "${xAxisId}"`
+              } should have data property to be able to display a line plot.`,
             );
           }
+
           const x = xScale(xData[highlightedIndex]);
-          const y = yScale(stackedData[highlightedIndex][1]);
+          const y = yScale(stackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
+
+          if (!drawingArea.isPointInside({ x, y })) {
+            return null;
+          }
+
+          const colorGetter = getColor(series[seriesId], xAxis[xAxisId], yAxis[yAxisId]);
           return (
             <Element
               key={`${seriesId}`}
               id={seriesId}
-              color={series[seriesId].color}
+              color={colorGetter(highlightedIndex)}
               x={x}
               y={y}
               {...slotProps?.lineHighlight}
@@ -93,7 +125,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
 LineHighlightPlot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The props used for each component slot.

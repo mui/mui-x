@@ -9,16 +9,23 @@ export type CustomizationLabelType = {
 };
 
 type CustomizationItemType = {
-  type: 'warning' | 'success';
+  type: 'warning' | 'success' | 'info';
   comments?: string;
-  componentProps?: Object;
+  componentProps?: any;
+  parentSlot?: string;
+  parentComponent?: string;
+  current?: boolean;
 };
 export type CustomizationItemsType = Partial<{
   [k in keyof CustomizationLabelType]: CustomizationItemType;
 }>;
 
 export type PickersSubcomponentType = {
-  [k: string]: { examples: CustomizationItemsType; slots: string[] };
+  [k: string]: {
+    examples: CustomizationItemsType;
+    slots: string[];
+    moreInformation?: React.ReactElement | string;
+  };
 };
 
 export interface UseCustomizationPlaygroundProps {
@@ -65,6 +72,7 @@ export type UseCustomizationPlaygroundReturnType = {
   handleTokenChange: HandleTokenChangeType;
   selectedTokens: StyleTokensType;
   selectedExample?: CustomizationItemType | null;
+  moreInformation?: React.ReactElement | string | null;
 };
 
 export function withStyles(
@@ -78,12 +86,12 @@ export function withStyles(
     const defaultTheme = useTheme();
 
     const tokens = {
-      borderRadius: selectedTokens.borderRadius,
+      borderRadius: `${selectedTokens.borderRadius}px`,
       borderColor: DEFAULT_COLORS[selectedTokens.color][500],
       border: `${selectedTokens.borderWidth}px solid`,
       backgroundColor:
         defaultTheme.palette.mode === 'light'
-          ? DEFAULT_COLORS[selectedTokens.color][100]
+          ? DEFAULT_COLORS[selectedTokens.color][200]
           : DEFAULT_COLORS[selectedTokens.color][900],
       color:
         defaultTheme.palette.mode === 'light'
@@ -93,8 +101,9 @@ export function withStyles(
 
     if (selectedCustomizationOption === 'sxProp') {
       const sxProp = {
-        [`& .Mui${selectedDemo}-${selectedSlot}`]: { ...tokens },
+        [`.Mui${selectedDemo}-${selectedSlot}`]: { ...tokens },
       };
+
       return <Component {...props} sx={{ ...sxProp, ...props?.sx }} />;
     }
 
@@ -115,7 +124,7 @@ export function withStyles(
 
     if (selectedCustomizationOption === 'styledComponents') {
       const StyledComponent = styled(Component as React.JSXElementConstructor<any>)(() => ({
-        [`& .Mui${selectedDemo}-${selectedSlot}`]: { ...tokens },
+        [`.Mui${selectedDemo}-${selectedSlot}`]: { ...tokens },
       }));
       return <StyledComponent {...props} />;
     }
@@ -131,6 +140,7 @@ interface Props
     Pick<UseCustomizationPlaygroundProps, 'componentName'> {
   theme: Theme;
   examples: CustomizationItemType;
+  selectedExample: CustomizationItemType | null;
 }
 
 /* I use this method to parse whatever component props are passed in and format them for the code example, 
@@ -142,7 +152,7 @@ function formatComponentProps(componentProps?: Object, spacing: number = 1) {
     return (Object.keys(obj) as Array<keyof typeof obj>)
       .map((key) => {
         const getValue = (val: any) => {
-          if (typeof val === 'string') {
+          if (typeof val === 'string' && !val.includes('Styled')) {
             return `'${val}'`;
           }
           if (separator === '=' && typeof val !== 'object') {
@@ -166,7 +176,7 @@ function formatComponentProps(componentProps?: Object, spacing: number = 1) {
           )}]${separator === '=' ? '}' : ''}`;
         }
 
-        return `${indent}${key}${separator}${getValue(value)}`;
+        return `${indent}${key}${separator}${getValue(value)},`;
       })
       .join('\n');
   }
@@ -185,15 +195,18 @@ const getCodeExample = ({
   selectedTokens,
   componentName,
   examples,
+  selectedExample,
   theme,
 }: Props) => {
   const tokens = {
     ...selectedTokens,
+    borderRadius: `${selectedTokens.borderRadius}px`,
+    borderWidth: `${selectedTokens.borderWidth}px`,
     borderColor: DEFAULT_COLORS[selectedTokens.color][500],
     border: `${selectedTokens.borderWidth}px solid`,
     backgroundColor:
       theme.palette.mode === 'light'
-        ? DEFAULT_COLORS[selectedTokens.color][100]
+        ? DEFAULT_COLORS[selectedTokens.color][200]
         : DEFAULT_COLORS[selectedTokens.color][900],
     color:
       theme.palette.mode === 'light'
@@ -244,34 +257,77 @@ const getCodeExample = ({
   }
 
   if (selectedCustomizationOption === 'sxProp') {
-    code = `${code}\n<${componentName}${formatComponentProps(examples.componentProps, 1)}
+    if (selectedExample?.parentSlot) {
+      const componentProps = {
+        ...examples.componentProps,
+        slotProps: {
+          ...examples.componentProps?.slotProps,
+          [selectedExample?.parentSlot]: {
+            sx: selectedExample?.parentSlot
+              ? tokens
+              : { [`'.Mui${selectedDemo}-${selectedSlot}'`]: tokens },
+          },
+        },
+      };
+      code = `${code}\n<${componentName}${formatComponentProps(componentProps, 1)}
+/>`;
+    } else {
+      code = `${code}\n<${componentName}${formatComponentProps(examples.componentProps, 1)}
   sx={{
-    '& .Mui${selectedDemo}-${selectedSlot}': {${getTokensString(2)}
+    '.Mui${selectedDemo}-${selectedSlot}': {${getTokensString(3)}
     },
   }}
 />`;
+    }
   } else if (selectedCustomizationOption === 'customTheme') {
     code = `import { createTheme } from '@mui/material/styles'\n${code}
-<ThemeProvider
-  theme={
-    createTheme({
-      components: {
-        Mui${selectedDemo}: {
-          styleOverrides: {
-            ${selectedSlot}: {${getTokensString(7)}
-            }
-          }
+const newTheme = (theme) => createTheme({
+  ...theme,
+  components: {
+    Mui${selectedDemo}: {
+      styleOverrides: {
+        ${selectedSlot}: {${getTokensString(5)}
         }
-    })
+      }
+    }
   }
->
+})
+<ThemeProvider theme={newTheme}>
   <${componentName}${formatComponentProps(examples.componentProps, 2)} />
 </ThemeProvider>`;
   } else if (selectedCustomizationOption === 'styledComponents') {
+    if (selectedExample?.parentSlot && selectedExample?.parentComponent) {
+      const componentProps = {
+        ...examples.componentProps,
+        slots: {
+          ...examples.componentProps?.slots,
+          [selectedExample?.parentSlot]: `Styled${selectedExample?.parentComponent}`,
+        },
+      };
+      const example = selectedExample?.current
+        ? getTokensString(1)
+        : `
+  '.Mui${selectedDemo}-${selectedSlot}': {${getTokensString(2)}
+  }`;
+
+      return `import { styled } from '@mui/material/styles'\n${code}
+const Styled${selectedExample?.parentComponent} = styled(${
+        selectedExample?.parentComponent
+      })({${example}
+})
+
+export default function StyledPickerContainer() {
+  return (
+    <${componentName} ${formatComponentProps(componentProps, 3)}
+    />
+  );
+}`;
+    }
     return `import { styled } from '@mui/material/styles'\n${code}
 const Styled${componentName} = styled(${componentName})({
-  '& .Mui${selectedDemo}-${selectedSlot}': {${getTokensString(3)}
-}))
+  '.Mui${selectedDemo}-${selectedSlot}': {${getTokensString(2)}
+  }
+})
 
 export default function StyledPickerContainer() {
   return (
@@ -314,10 +370,15 @@ export function useCustomizationPlayground({
       // set the array of customization options to the available options for the selected subcomponent
       setCustomizationOptions(pick(customizationLabels, customizationExamples));
       // set the selected customization option to the first available option for the selected subcomponent
-      setSelectedCustomizationOption(customizationExamples[0]);
+      if (
+        !selectedCustomizationOption ||
+        !customizationExamples.includes(selectedCustomizationOption)
+      ) {
+        setSelectedCustomizationOption(customizationExamples[0]);
+      }
       setSelectedSlot(slot);
     },
-    [examples, setSelectedCustomizationOption, setSelectedSlot],
+    [examples, setSelectedCustomizationOption, setSelectedSlot, selectedCustomizationOption],
   );
 
   React.useEffect(() => {
@@ -337,6 +398,12 @@ export function useCustomizationPlayground({
         examples: examples[selectedDemo].examples[
           selectedCustomizationOption
         ] as CustomizationItemType,
+        selectedExample:
+          selectedDemo && selectedCustomizationOption
+            ? (examples[selectedDemo]?.examples[
+                selectedCustomizationOption
+              ] as CustomizationItemType)
+            : null,
         theme,
       });
       if (code) {
@@ -381,5 +448,6 @@ export function useCustomizationPlayground({
       selectedDemo && selectedCustomizationOption
         ? examples[selectedDemo]?.examples[selectedCustomizationOption]
         : null,
+    moreInformation: selectedDemo && examples[selectedDemo]?.moreInformation,
   };
 }

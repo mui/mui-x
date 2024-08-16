@@ -21,9 +21,7 @@ async function getFiles(root) {
 
   try {
     await Promise.all(
-      (
-        await fse.readdir(root)
-      ).map(async (name) => {
+      (await fse.readdir(root)).map(async (name) => {
         const filePath = path.join(root, name);
         const stat = await fse.stat(filePath);
 

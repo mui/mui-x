@@ -1,5 +1,5 @@
 import * as React from 'react';
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import Stack from '@mui/material/Stack';
 import ToggleOptions from './ToggleOptions';
 
@@ -21,7 +21,16 @@ export default function PickersRenderingInstructions() {
 
   const commandLines = [
     `import { LocalizationProvider } from '${componentPackage}';`,
+    ...(libraryUsed === 'date-fns'
+      ? ['// If you are using date-fns v2.x, please import `AdapterDateFns`']
+      : []),
     `import { ${adapterName} } from '${componentPackage}/${adapterName}'`,
+    ...(libraryUsed === 'date-fns'
+      ? [
+          '// If you are using date-fns v3.x, please import the v3 adapter',
+          `import { ${adapterName} } from '${componentPackage}/AdapterDateFnsV3'`,
+        ]
+      : []),
     '',
     'function App({ children }) {',
     '  return (',

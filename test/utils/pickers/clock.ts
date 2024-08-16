@@ -1,6 +1,6 @@
 import { CLOCK_WIDTH } from '@mui/x-date-pickers/TimeClock/shared';
 import { clockPointerClasses } from '@mui/x-date-pickers/TimeClock';
-import { screen } from '@mui/monorepo/test/utils';
+import { screen } from '@mui/internal-test-utils';
 
 export const getClockTouchEvent = (
   value: number | string,

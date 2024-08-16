@@ -1,19 +1,16 @@
 name: Feature request 💄
 description: Suggest a new idea for MUI X.
-labels: ['status: needs triage']
+labels: ['status: waiting for maintainer', 'new feature']
 body:
   - type: markdown
     attributes:
-      value: |
-        Please provide a searchable summary of the issue in the title above ⬆️.
-
-        Thanks for contributing by creating an issue! ❤️
-
+      value: Thanks for contributing by creating an issue! ❤️ Please provide a searchable summary of the issue in the title above ⬆️.
   - type: input
     attributes:
       label: Search keywords
-      description: Your issue may have already been reported! List the keywords you've used to search the [existing issues](https://github.com/mui/mui-x/issues). This will also make your issue searchable for others.
-      placeholder: e.g. datagrid column resizing
+      description: |
+        Your issue may have already been reported! First search for duplicates among the [existing issues](https://github.com/mui/mui-x/issues?q=is%3Aissue).
+        If your issue isn't a duplicate, great! Please list the keywords you used so people in the future can find this one more easily:
     validations:
       required: true
   - type: checkboxes
@@ -23,19 +20,18 @@ body:
       options:
         - label: I have tested the latest version
           required: true
-
   - type: textarea
     attributes:
-      label: Summary 💡
+      label: Summary
       description: Describe how it should work.
   - type: textarea
     attributes:
-      label: Examples 🌈
+      label: Examples
       description: Provide a link to the Material Design specification, other implementations, or screenshots of the expected behavior.
   - type: textarea
     attributes:
-      label: Motivation 🔦
-      description: What are you trying to accomplish? How has the lack of this feature affected you? Providing context helps us come up with a solution that is more useful in the real world.
+      label: Motivation
+      description: What are you trying to accomplish? Providing context helps us come up with a solution that is more useful in the real world.
   - type: input
     id: contact
     attributes:

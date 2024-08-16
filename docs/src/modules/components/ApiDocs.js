@@ -7,7 +7,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PropTypes from 'prop-types';
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+import { HighlightedCode } from '@mui/docs/HighlightedCode';
 
 const PrimaryHeading = styled(Typography)(({ theme }) => ({
   fontSize: theme.typography.pxToRem(15),
@@ -49,8 +49,8 @@ function PlanIcon({ plan }) {
     }
   }
   return (
-    <a href={href}>
-      <span className={`plan-${plan}`} title={title} />
+    <a href={href} title={title} aria-label={title}>
+      <span className={`plan-${plan}`} />
     </a>
   );
 }

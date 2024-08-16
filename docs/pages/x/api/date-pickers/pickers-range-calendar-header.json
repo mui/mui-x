@@ -1,0 +1,74 @@
+{
+  "props": {
+    "calendars": {
+      "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
+      "required": true
+    },
+    "month": { "type": { "name": "object" }, "required": true },
+    "monthIndex": { "type": { "name": "number" }, "required": true },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "format": {
+      "type": { "name": "string" },
+      "default": "`${adapter.formats.month} ${adapter.formats.year}`"
+    },
+    "labelId": { "type": { "name": "string" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    }
+  },
+  "name": "PickersRangeCalendarHeader",
+  "imports": [
+    "import { PickersRangeCalendarHeader } from '@mui/x-date-pickers-pro/PickersRangeCalendarHeader';",
+    "import { PickersRangeCalendarHeader } from '@mui/x-date-pickers-pro';"
+  ],
+  "classes": [
+    {
+      "key": "label",
+      "className": "MuiPickersRangeCalendarHeader-label",
+      "description": "Styles applied to the label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "labelContainer",
+      "className": "MuiPickersRangeCalendarHeader-labelContainer",
+      "description": "Styles applied to the label container element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiPickersRangeCalendarHeader-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "switchViewButton",
+      "className": "MuiPickersRangeCalendarHeader-switchViewButton",
+      "description": "Styles applied to the switch view button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "switchViewIcon",
+      "className": "MuiPickersRangeCalendarHeader-switchViewIcon",
+      "description": "Styles applied to the switch view icon element.",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": false,
+  "muiName": "MuiPickersRangeCalendarHeader",
+  "forwardsRefTo": "HTMLDivElement",
+  "filename": "/packages/x-date-pickers-pro/src/PickersRangeCalendarHeader/PickersRangeCalendarHeader.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>",
+  "cssComponent": false
+}

@@ -12,7 +12,7 @@ export default function LifeCycleDateFieldEmpty() {
   return (
     <Stack spacing={2}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DateField value={value} onChange={(newValue) => setValue(newValue)} />
+        <DateField value={value} onChange={setValue} />
       </LocalizationProvider>
       <Typography>Value: {value == null ? 'null' : value.format('L')}</Typography>
     </Stack>

@@ -1,46 +1,140 @@
 {
   "props": {
-    "axisId": { "type": { "name": "string" }, "required": true },
+    "axisId": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "disableLine": { "type": { "name": "bool" } },
-    "disableTicks": { "type": { "name": "bool" } },
+    "disableLine": { "type": { "name": "bool" }, "default": "false" },
+    "disableTicks": { "type": { "name": "bool" }, "default": "false" },
     "fill": { "type": { "name": "string" }, "default": "'currentColor'" },
     "label": { "type": { "name": "string" } },
-    "labelFontSize": { "type": { "name": "number" }, "default": "14" },
+    "labelFontSize": {
+      "type": { "name": "number" },
+      "default": "14",
+      "deprecated": true,
+      "deprecationInfo": "Consider using <code>labelStyle.fontSize</code> instead."
+    },
+    "labelStyle": { "type": { "name": "object" } },
     "position": { "type": { "name": "enum", "description": "'bottom'<br>&#124;&nbsp;'top'" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "stroke": { "type": { "name": "string" }, "default": "'currentColor'" },
-    "tickFontSize": { "type": { "name": "number" }, "default": "12" },
+    "tickFontSize": {
+      "type": { "name": "number" },
+      "default": "12",
+      "deprecated": true,
+      "deprecationInfo": "Consider using <code>tickLabelStyle.fontSize</code> instead."
+    },
+    "tickInterval": {
+      "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func" },
+      "default": "'auto'"
+    },
+    "tickLabelInterval": {
+      "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;func" },
+      "default": "'auto'"
+    },
+    "tickLabelPlacement": {
+      "type": { "name": "enum", "description": "'middle'<br>&#124;&nbsp;'tick'" },
+      "default": "'middle'"
+    },
+    "tickLabelStyle": { "type": { "name": "object" } },
     "tickMaxStep": { "type": { "name": "number" } },
     "tickMinStep": { "type": { "name": "number" } },
     "tickNumber": { "type": { "name": "number" } },
+    "tickPlacement": {
+      "type": {
+        "name": "enum",
+        "description": "'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start'"
+      },
+      "default": "'extremities'"
+    },
     "tickSize": { "type": { "name": "number" }, "default": "6" }
   },
-  "slots": [],
   "name": "ChartsXAxis",
   "imports": [
     "import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';",
-    "import { ChartsXAxis } from '@mui/x-charts';"
+    "import { ChartsXAxis } from '@mui/x-charts';",
+    "import { ChartsXAxis } from '@mui/x-charts-pro';"
   ],
-  "styles": {
-    "classes": [
-      "root",
-      "line",
-      "tickContainer",
-      "tick",
-      "tickLabel",
-      "label",
-      "directionX",
-      "directionY",
-      "top",
-      "bottom",
-      "left",
-      "right"
-    ],
-    "globalClasses": {},
-    "name": "MuiChartsXAxis"
-  },
+  "classes": [
+    {
+      "key": "bottom",
+      "className": "MuiChartsXAxis-bottom",
+      "description": "Styles applied to the bottom axis.",
+      "isGlobal": false
+    },
+    {
+      "key": "directionX",
+      "className": "MuiChartsXAxis-directionX",
+      "description": "Styles applied to x-axes.",
+      "isGlobal": false
+    },
+    {
+      "key": "directionY",
+      "className": "MuiChartsXAxis-directionY",
+      "description": "Styles applied to y-axes.",
+      "isGlobal": false
+    },
+    {
+      "key": "label",
+      "className": "MuiChartsXAxis-label",
+      "description": "Styles applied to the group containing the axis label.",
+      "isGlobal": false
+    },
+    {
+      "key": "left",
+      "className": "MuiChartsXAxis-left",
+      "description": "Styles applied to the left axis.",
+      "isGlobal": false
+    },
+    {
+      "key": "line",
+      "className": "MuiChartsXAxis-line",
+      "description": "Styles applied to the main line element.",
+      "isGlobal": false
+    },
+    {
+      "key": "right",
+      "className": "MuiChartsXAxis-right",
+      "description": "Styles applied to the right axis.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChartsXAxis-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "tick",
+      "className": "MuiChartsXAxis-tick",
+      "description": "Styles applied to ticks.",
+      "isGlobal": false
+    },
+    {
+      "key": "tickContainer",
+      "className": "MuiChartsXAxis-tickContainer",
+      "description": "Styles applied to group including the tick and its label.",
+      "isGlobal": false
+    },
+    {
+      "key": "tickLabel",
+      "className": "MuiChartsXAxis-tickLabel",
+      "description": "Styles applied to ticks label.",
+      "isGlobal": false
+    },
+    {
+      "key": "top",
+      "className": "MuiChartsXAxis-top",
+      "description": "Styles applied to the top axis.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiChartsXAxis",
   "filename": "/packages/x-charts/src/ChartsXAxis/ChartsXAxis.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/axis/\">Charts - Axis</a></li></ul>",
+  "cssComponent": false
 }

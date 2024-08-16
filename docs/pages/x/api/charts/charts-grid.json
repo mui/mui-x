@@ -1,0 +1,44 @@
+{
+  "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "horizontal": { "type": { "name": "bool" } },
+    "vertical": { "type": { "name": "bool" } }
+  },
+  "name": "ChartsGrid",
+  "imports": [
+    "import { ChartsGrid } from '@mui/x-charts/ChartsGrid';",
+    "import { ChartsGrid } from '@mui/x-charts';",
+    "import { ChartsGrid } from '@mui/x-charts-pro';"
+  ],
+  "classes": [
+    {
+      "key": "horizontalLine",
+      "className": "MuiChartsGrid-horizontalLine",
+      "description": "Styles applied to x-axes.",
+      "isGlobal": false
+    },
+    {
+      "key": "line",
+      "className": "MuiChartsGrid-line",
+      "description": "Styles applied to every line element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChartsGrid-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "verticalLine",
+      "className": "MuiChartsGrid-verticalLine",
+      "description": "Styles applied to y-axes.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiChartsGrid",
+  "filename": "/packages/x-charts/src/ChartsGrid/ChartsGrid.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li>\n<li><a href=\"/x/react-charts/composition/\">Chart composition</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li>\n<li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li></ul>",
+  "cssComponent": false
+}

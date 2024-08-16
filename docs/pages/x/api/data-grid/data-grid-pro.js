@@ -1,18 +1,19 @@
 import * as React from 'react';
 import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
+import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
 import jsonPageContent from './data-grid-pro.json';
 
 export default function Page(props) {
   const { descriptions, pageContent } = props;
-  return <ApiPage descriptions={descriptions} pageContent={pageContent} />;
+  return <ApiPage {...layoutConfig} descriptions={descriptions} pageContent={pageContent} />;
 }
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/data-grid',
+    'docsx/translations/api-docs/data-grid/data-grid-pro',
     false,
-    /\.\/data-grid-pro(-[a-z]{2})?\.json$/,
+    /\.\/data-grid-pro.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

@@ -1,12 +1,10 @@
 <DateField
   label="Dash separator"
-  value={value}
-  onChange={(newValue) => setValue(newValue)}
+  defaultValue={dayjs('2022-04-17')}
   format="MM-DD-YYYY"
 />
 <DateField
   label="Full letter month"
-  value={value}
-  onChange={(newValue) => setValue(newValue)}
+  defaultValue={dayjs('2022-04-17')}
   format="LL"
 />

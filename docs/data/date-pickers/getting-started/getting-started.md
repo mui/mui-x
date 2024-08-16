@@ -18,26 +18,32 @@ Using your favorite package manager, install:
 - `@mui/x-date-pickers` for the free community version or `@mui/x-date-pickers-pro` for the commercial version.
 - The date library to manipulate the date.
 
+<!-- #default-branch-switch -->
+
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
 
 :::info
 If you need more information about the date library supported by the Date and Time Pickers,
-take a look at the [dedicated section](/x/react-date-pickers/#date-library)
+take a look at the [dedicated section](/x/react-date-pickers/base-concepts/#date-library)
 :::
 
 The Date and Time Pickers package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:
 
 <codeblock storageKey="package-manager">
+
 ```bash npm
 npm install @mui/material @emotion/react @emotion/styled
 ```
-```bash yarn
-yarn add @mui/material @emotion/react @emotion/styled
-```
+
 ```bash pnpm
 pnpm add @mui/material @emotion/react @emotion/styled
 ```
+
+```bash yarn
+yarn add @mui/material @emotion/react @emotion/styled
+```
+
 </codeblock>
 
 <!-- #react-peer-version -->
@@ -53,24 +59,25 @@ Please note that [react](https://www.npmjs.com/package/react) and [react-dom](ht
 
 ### Style engine
 
-Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
+Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
 
 <codeblock storageKey="package-manager">
+
 ```bash npm
 npm install @mui/styled-engine-sc styled-components
-```
-
-```bash yarn
-yarn add @mui/styled-engine-sc styled-components
 ```
 
 ```bash pnpm
 pnpm add @mui/styled-engine-sc styled-components
 ```
 
+```bash yarn
+yarn add @mui/styled-engine-sc styled-components
+```
+
 </codeblock>
 
-Take a look at the [Styled engine guide](/material-ui/guides/styled-components/) for more information about how to configure `styled-components` as the style engine.
+Take a look at the [Styled engine guide](/material-ui/integrations/styled-components/) for more information about how to configure `styled-components` as the style engine.
 
 ## Setup your date library adapter
 

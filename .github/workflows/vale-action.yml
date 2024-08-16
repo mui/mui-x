@@ -12,8 +12,8 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
-      - uses: errata-ai/vale-action@c4213d4de3d5f718b8497bd86161531c78992084 # v2.0.1
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: errata-ai/vale-action@38bf078c328061f59879b347ca344a718a736018 # v2.1.0
         with:
           reporter: github-pr-review
           files: docs/data

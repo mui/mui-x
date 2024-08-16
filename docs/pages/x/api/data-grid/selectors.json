@@ -97,6 +97,13 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridColumnsStateSelector",
+    "returnType": "GridColumnsState",
+    "category": "Columns",
+    "description": "Get the columns state",
+    "supportsApiRef": false
+  },
+  {
     "name": "gridColumnsTotalWidthSelector",
     "returnType": "number",
     "category": "Visible Columns",
@@ -117,15 +124,9 @@
   },
   {
     "name": "gridDensitySelector",
-    "returnType": "GridDensityState",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
-    "name": "gridDensityValueSelector",
     "returnType": "GridDensity",
     "description": "",
-    "supportsApiRef": true
+    "supportsApiRef": false
   },
   {
     "name": "gridDetailPanelExpandedRowIdsSelector",
@@ -146,6 +147,18 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridDimensionsSelector",
+    "returnType": "GridDimensions",
+    "description": "",
+    "supportsApiRef": false
+  },
+  {
+    "name": "gridEditRowsStateSelector",
+    "returnType": "GridEditingState",
+    "description": "Select the row editing state.",
+    "supportsApiRef": false
+  },
+  {
     "name": "gridExpandedRowCountSelector",
     "returnType": "number",
     "category": "Filtering",
@@ -154,7 +167,7 @@
   },
   {
     "name": "gridExpandedSortedRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
+    "returnType": "GridRowEntry<GridValidRowModel>[]",
     "category": "Filtering",
     "description": "Get the id and the model of the rows accessible after the filtering process.\nDoes not contain the collapsed children.",
     "supportsApiRef": true
@@ -188,8 +201,22 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridFilteredDescendantRowCountSelector",
+    "returnType": "number",
+    "category": "Filtering",
+    "description": "Get the amount of descendant rows accessible after the filtering process.",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridFilteredRowCountSelector",
+    "returnType": "number",
+    "category": "Filtering",
+    "description": "Get the amount of rows accessible after the filtering process.\nIncludes top level and descendant rows.",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridFilteredSortedRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
+    "returnType": "GridRowEntry<GridValidRowModel>[]",
     "category": "Filtering",
     "description": "Get the id and the model of the rows accessible after the filtering process.\nContains the collapsed children.",
     "supportsApiRef": true
@@ -203,7 +230,7 @@
   },
   {
     "name": "gridFilteredSortedTopLevelRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
+    "returnType": "GridRowEntry<GridValidRowModel>[]",
     "category": "Filtering",
     "description": "Get the id and the model of the top level rows accessible after the filtering process.",
     "supportsApiRef": true
@@ -222,6 +249,18 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridFocusColumnGroupHeaderSelector",
+    "returnType": "GridColumnGroupIdentifier | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridFocusColumnHeaderFilterSelector",
+    "returnType": "GridColumnIdentifier | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridFocusColumnHeaderSelector",
     "returnType": "GridColumnIdentifier | null",
     "description": "",
@@ -230,6 +269,30 @@
   {
     "name": "gridFocusStateSelector",
     "returnType": "GridFocusState",
+    "description": "",
+    "supportsApiRef": false
+  },
+  {
+    "name": "gridHeaderFilteringEditFieldSelector",
+    "returnType": "string | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridHeaderFilteringEnabledSelector",
+    "returnType": "boolean",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridHeaderFilteringMenuSelector",
+    "returnType": "string | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridHeaderFilteringStateSelector",
+    "returnType": "GridHeaderFilteringState",
     "description": "",
     "supportsApiRef": false
   },
@@ -256,7 +319,7 @@
   },
   {
     "name": "gridPaginatedVisibleSortedGridRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
+    "returnType": "GridRowEntry<GridValidRowModel>[]",
     "category": "Pagination",
     "description": "Get the id and the model of each row to include in the current page if the pagination is enabled.",
     "supportsApiRef": true
@@ -269,10 +332,24 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridPaginationMetaSelector",
+    "returnType": "GridPaginationMeta",
+    "category": "Pagination",
+    "description": "Get the pagination meta",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridPaginationModelSelector",
     "returnType": "GridPaginationModel",
     "category": "Pagination",
     "description": "Get the pagination model",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridPaginationRowCountSelector",
+    "returnType": "number",
+    "category": "Pagination",
+    "description": "Get the row count",
     "supportsApiRef": true
   },
   {
@@ -284,8 +361,9 @@
   },
   {
     "name": "gridPinnedColumnsSelector",
-    "returnType": "GridPinnedColumns",
-    "description": "",
+    "returnType": "GridPinnedColumnFields",
+    "category": "Visible Columns",
+    "description": "Get the visible pinned columns model.",
     "supportsApiRef": false
   },
   {
@@ -388,7 +466,7 @@
   },
   {
     "name": "gridSortedRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
+    "returnType": "GridRowEntry<GridValidRowModel>[]",
     "category": "Sorting",
     "description": "Get the id and the model of the rows after the sorting process.",
     "supportsApiRef": true
@@ -403,6 +481,18 @@
   {
     "name": "gridTabIndexCellSelector",
     "returnType": "GridCellCoordinates | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridTabIndexColumnGroupHeaderSelector",
+    "returnType": "GridColumnGroupIdentifier | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridTabIndexColumnHeaderFilterSelector",
+    "returnType": "GridColumnIdentifier | null",
     "description": "",
     "supportsApiRef": true
   },
@@ -460,6 +550,13 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridVisiblePinnedColumnDefinitionsSelector",
+    "returnType": "{ left: GridStateColDef[]; right: GridStateColDef[] }",
+    "category": "Visible Columns",
+    "description": "Get the visible pinned columns.",
+    "supportsApiRef": true
+  },
+  {
     "name": "selectedGridRowsCountSelector",
     "returnType": "number",
     "description": "",
@@ -474,48 +571,6 @@
   {
     "name": "selectedIdsLookupSelector",
     "returnType": "Record<GridRowId, GridRowId>",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "unstable_gridFocusColumnGroupHeaderSelector",
-    "returnType": "GridColumnGroupIdentifier | null",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "unstable_gridFocusColumnHeaderFilterSelector",
-    "returnType": "GridColumnIdentifier | null",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "unstable_gridHeaderFilteringEditFieldSelector",
-    "returnType": "string | null",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "unstable_gridHeaderFilteringMenuSelector",
-    "returnType": "string | null",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "unstable_gridHeaderFilteringStateSelector",
-    "returnType": "GridHeaderFilteringState",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
-    "name": "unstable_gridTabIndexColumnGroupHeaderSelector",
-    "returnType": "GridColumnGroupIdentifier | null",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "unstable_gridTabIndexColumnHeaderFilterSelector",
-    "returnType": "GridColumnIdentifier | null",
     "description": "",
     "supportsApiRef": true
   }

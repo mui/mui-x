@@ -6,7 +6,6 @@
   "commitMessageTopic": "{{depName}}",
   "dependencyDashboard": true,
   "rebaseWhen": "conflicted",
-  "ignoreDeps": [],
   "labels": ["dependencies"],
   "stopUpdatingLabel": "on hold",
   "packageRules": [
@@ -23,6 +22,10 @@
       "matchPackagePatterns": ["d3-*", "@types/d3-*"]
     },
     {
+      "groupName": "react-spring",
+      "matchPackagePatterns": "@react-spring/*"
+    },
+    {
       "groupName": "Emotion",
       "matchPackagePatterns": "@emotion/*"
     },
@@ -32,13 +35,15 @@
       "allowedVersions": "< 2.0.0"
     },
     {
-      "groupName": "raw-loader",
-      "matchPackageNames": ["raw-loader"],
-      "allowedVersions": "< 2.0.0"
-    },
-    {
       "groupName": "React",
-      "matchPackageNames": ["react", "react-dom", "react-is", "react-test-renderer"]
+      "matchPackageNames": [
+        "react",
+        "react-dom",
+        "react-is",
+        "react-test-renderer",
+        "@types/react",
+        "@types/react-dom"
+      ]
     },
     {
       "groupName": "React router",
@@ -76,14 +81,20 @@
     {
       "groupName": "MUI Core",
       "matchPackageNames": [
-        "@mui/material",
-        "@mui/joy",
         "@mui/icons-material",
-        "@mui/base",
+        "@mui/joy",
+        "@mui/lab",
+        "@mui/material",
+        "@mui/material-nextjs",
         "@mui/styles",
         "@mui/system",
+        "@mui/types",
         "@mui/utils"
       ]
+    },
+    {
+      "groupName": "MUI Internal",
+      "matchPackagePatterns": ["@mui/internal-*", "@mui/docs"]
     },
     {
       "groupName": "Playwright",
@@ -96,12 +107,21 @@
     {
       "groupName": "GitHub Actions",
       "matchManagers": ["github-actions"]
+    },
+    {
+      "groupName": "@mui/docs",
+      "matchPackageNames": ["@mui/docs"],
+      "followTag": "next"
     }
   ],
-  "postUpdateOptions": ["yarnDedupeHighest"],
+  "postUpdateOptions": ["pnpmDedupe"],
   "prConcurrentLimit": 30,
   "prHourlyLimit": 0,
   "rangeStrategy": "bump",
   "schedule": "on sunday before 6:00am",
-  "timezone": "UTC"
+  "timezone": "UTC",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": "before 6:00am on the first day of the month"
+  }
 }

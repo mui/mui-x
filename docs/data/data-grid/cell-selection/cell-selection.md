@@ -7,16 +7,11 @@ title: Data Grid - Cell selection
 <p class="description">Cell selection allows the user to select individual cells or a range of cells.</p>
 
 The Data Grid has, by default, the ability to select rows.
-On the `DataGridPremium`, you can also enable the ability to select cells with the `unstable_cellSelection` prop.
+On the `DataGridPremium`, you can also enable the ability to select cells with the `cellSelection` prop.
 
 ```tsx
-<DataGridPremium unstable_cellSelection />
+<DataGridPremium cellSelection />
 ```
-
-:::warning
-This feature is not stable yet, meaning that its APIs may suffer breaking changes.
-While in development, all props and methods related to cell selection must be prefixed with `unstable_`.
-:::
 
 To select a single cell, click on it or, with the cell focused, press <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd>.
 Multiple cells can be selected by holding <kbd class="key">Ctrl</kbd> while clicking the cells.
@@ -35,20 +30,20 @@ It has [row selection](/x/react-data-grid/row-selection/) disabled, but it's pos
 
 ## Controlled cell selection
 
-You can control which cells are selected with the `unstable_cellSelectionModel` prop.
+You can control which cells are selected with the `cellSelectionModel` prop.
 This props accepts an object whose keys are the row IDs that contain selected cells.
 The value of each key is another object, which in turn has column fields as keys, each with a boolean value to represent their selection state. You can set `true` to select the cell or `false` to deselect a cell.
 Removing the field from the object also deselects the cell.
 
 ```tsx
 // Selects the cell with field=name from row with id=1
-<DataGridPremium unstable_cellSelectionModel={{ 1: { name: true } }} />
+<DataGridPremium cellSelectionModel={{ 1: { name: true } }} />
 
 // Unselects the cell with field=name from row with id=1
-<DataGridPremium unstable_cellSelectionModel={{ 1: { name: false } }} />
+<DataGridPremium cellSelectionModel={{ 1: { name: false } }} />
 ```
 
-When a new selection is made, the callback passed to the `unstable_onCellSelectionModelChange` prop is called with the updated model.
+When a new selection is made, the callback passed to the `onCellSelectionModelChange` prop is called with the updated model.
 Use this value to update the current model.
 
 The following demo shows how these props can be combined to create an Excel-like formula field.
@@ -79,7 +74,7 @@ If a single cell is selected, all classes above are applied to the same element.
 The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the grid.
+Only use this API as the last option. Give preference to the props to control the Data Grid.
 :::
 
 {{"demo": "CellSelectionApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

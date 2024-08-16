@@ -1,46 +1,40 @@
-import { MakeOptional, UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
+import { MakeOptional } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   StaticRangeOnlyPickerProps,
-  UseStaticRangePickerSlotsComponent,
-  UseStaticRangePickerSlotsComponentsProps,
+  UseStaticRangePickerSlots,
+  UseStaticRangePickerSlotProps,
 } from '../internals/hooks/useStaticRangePicker';
 import {
   BaseDateRangePickerProps,
-  BaseDateRangePickerSlotsComponent,
-  BaseDateRangePickerSlotsComponentsProps,
+  BaseDateRangePickerSlots,
+  BaseDateRangePickerSlotProps,
 } from '../DateRangePicker/shared';
 
-export interface StaticDateRangePickerSlotsComponent<TDate>
-  extends BaseDateRangePickerSlotsComponent<TDate>,
-    UseStaticRangePickerSlotsComponent<TDate, 'day'> {}
+export interface StaticDateRangePickerSlots<TDate extends PickerValidDate>
+  extends BaseDateRangePickerSlots<TDate>,
+    UseStaticRangePickerSlots<TDate, 'day'> {}
 
-export interface StaticDateRangePickerSlotsComponentsProps<TDate>
-  extends BaseDateRangePickerSlotsComponentsProps<TDate>,
-    UseStaticRangePickerSlotsComponentsProps<TDate, 'day'> {}
+export interface StaticDateRangePickerSlotProps<TDate extends PickerValidDate>
+  extends BaseDateRangePickerSlotProps<TDate>,
+    Omit<UseStaticRangePickerSlotProps<TDate, 'day'>, 'toolbar'> {}
 
-export interface StaticDateRangePickerProps<TDate>
+export interface StaticDateRangePickerProps<TDate extends PickerValidDate>
   extends BaseDateRangePickerProps<TDate>,
     MakeOptional<StaticRangeOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
+   * The number of calendars to render.
+   * @default 1 if `displayStaticWrapperAs === 'mobile'`, 2 otherwise.
    */
-  components?: StaticDateRangePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: StaticDateRangePickerSlotsComponentsProps<TDate>;
+  calendars?: 1 | 2 | 3;
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<StaticDateRangePickerSlotsComponent<TDate>>;
+  slots?: StaticDateRangePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: StaticDateRangePickerSlotsComponentsProps<TDate>;
+  slotProps?: StaticDateRangePickerSlotProps<TDate>;
 }

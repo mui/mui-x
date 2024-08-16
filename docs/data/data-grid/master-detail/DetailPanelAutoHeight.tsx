@@ -55,7 +55,7 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
     [apiRef, rowProp],
   );
 
-  const columns = React.useMemo<GridColDef[]>(
+  const columns = React.useMemo<GridColDef<Customer['products'][number]>[]>(
     () => [
       { field: 'name', headerName: 'Product', flex: 1, editable: true },
       {
@@ -71,7 +71,7 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
         field: 'total',
         headerName: 'Total',
         type: 'number',
-        valueGetter: ({ row }) => row.quantity * row.unitPrice,
+        valueGetter: (value, row) => row.quantity * row.unitPrice,
       },
       {
         field: 'actions',
@@ -144,7 +144,7 @@ const columns: GridColDef[] = [
     field: 'total',
     type: 'number',
     headerName: 'Total',
-    valueGetter: ({ row }) => {
+    valueGetter: (value, row) => {
       const subtotal = row.products.reduce(
         (acc: number, product: any) => product.unitPrice * product.quantity,
         0,
@@ -234,7 +234,6 @@ export default function DetailPanelAutoHeight() {
       <DataGridPro
         columns={columns}
         rows={rows}
-        rowThreshold={0}
         getDetailPanelHeight={getDetailPanelHeight}
         getDetailPanelContent={getDetailPanelContent}
       />

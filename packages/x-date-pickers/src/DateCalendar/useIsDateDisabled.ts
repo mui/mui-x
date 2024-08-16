@@ -4,8 +4,9 @@ import {
   validateDate,
 } from '../internals/utils/validation/validateDate';
 import { useLocalizationContext } from '../internals/hooks/useUtils';
+import { PickerValidDate } from '../models';
 
-export const useIsDateDisabled = <TDate>({
+export const useIsDateDisabled = <TDate extends PickerValidDate>({
   shouldDisableDate,
   shouldDisableMonth,
   shouldDisableYear,

@@ -1,8 +1,8 @@
 export { MultiSectionDigitalClock } from './MultiSectionDigitalClock';
 export type {
   MultiSectionDigitalClockProps,
-  MultiSectionDigitalClockSlotsComponent,
-  MultiSectionDigitalClockSlotsComponentsProps,
+  MultiSectionDigitalClockSlots,
+  MultiSectionDigitalClockSlotProps,
 } from './MultiSectionDigitalClock.types';
 
 export { multiSectionDigitalClockSectionClasses } from './multiSectionDigitalClockSectionClasses';

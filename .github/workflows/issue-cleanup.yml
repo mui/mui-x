@@ -1,4 +1,4 @@
-name: Cleanup issue comment
+name: Issue cleanup
 
 on:
   issues:
@@ -10,43 +10,26 @@ permissions: {}
 jobs:
   issue_cleanup:
     runs-on: ubuntu-latest
+    name: Clean issue body and add support label
     permissions:
       issues: write
     steps:
-      - uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6
+      - name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - name: Clean issue body
+        id: cleanup
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
-            const issue = await github.rest.issues.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            })
-
-            const lines = issue.data.body.split('\n')
-
-            const _ = extractInputSection(lines, 'Latest version')
-            const searchKeywords = extractInputSection(lines, 'Search keywords')
-            const orderID = extractInputSection(lines, 'Order ID or Support key')
-
-            lines.push('')
-            lines.push('**Search keywords**: ' + searchKeywords)
-            if (orderID !== '' && orderID !== '_No response_') {
-              lines.push('**Order ID**: ' + orderID)
-            }
-
-            const body = lines.join('\n')
-
-            await github.rest.issues.update({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body,
-            })
-
-            function extractInputSection(lines, title) {
-              const index = lines.findIndex(line => line.startsWith('###') && line.includes(title))
-              if (index === -1) {
-                return ''
-              }
-              return lines.splice(index, 4)[2].trim()
-            }
+            const script = require('./scripts/githubActions/issueBodyCleanup.js')
+            await script({core, github, context})
+      - name: Add support label
+        if: steps.cleanup.outputs.ORDER_ID != ''
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const script = require('./scripts/githubActions/orderIdValidation.js')
+            await script({core, github, context})
+        env:
+          ORDER_API_TOKEN: ${{ secrets.SHOP_AUTH_TOKEN }}
+          ORDER_ID: ${{ steps.cleanup.outputs.ORDER_ID }}

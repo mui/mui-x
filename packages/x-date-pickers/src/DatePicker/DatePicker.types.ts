@@ -1,26 +1,30 @@
 import {
   DesktopDatePickerProps,
-  DesktopDatePickerSlotsComponent,
-  DesktopDatePickerSlotsComponentsProps,
+  DesktopDatePickerSlots,
+  DesktopDatePickerSlotProps,
 } from '../DesktopDatePicker';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import {
   MobileDatePickerProps,
-  MobileDatePickerSlotsComponent,
-  MobileDatePickerSlotsComponentsProps,
+  MobileDatePickerSlots,
+  MobileDatePickerSlotProps,
 } from '../MobileDatePicker';
+import { PickerValidDate } from '../models';
 
-export interface DatePickerSlotsComponents<TDate>
-  extends DesktopDatePickerSlotsComponent<TDate>,
-    MobileDatePickerSlotsComponent<TDate> {}
+export interface DatePickerSlots<TDate extends PickerValidDate>
+  extends DesktopDatePickerSlots<TDate>,
+    MobileDatePickerSlots<TDate> {}
 
-export interface DatePickerSlotsComponentsProps<TDate>
-  extends DesktopDatePickerSlotsComponentsProps<TDate>,
-    MobileDatePickerSlotsComponentsProps<TDate> {}
+export interface DatePickerSlotProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends DesktopDatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    MobileDatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure> {}
 
-export interface DatePickerProps<TDate>
-  extends DesktopDatePickerProps<TDate>,
-    MobileDatePickerProps<TDate> {
+export interface DatePickerProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+> extends DesktopDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    MobileDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -33,25 +37,13 @@ export interface DatePickerProps<TDate>
    */
   yearsPerRow?: 3 | 4;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: DatePickerSlotsComponents<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: DatePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<DatePickerSlotsComponents<TDate>>;
+  slots?: DatePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DatePickerSlotsComponentsProps<TDate>;
+  slotProps?: DatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
 }

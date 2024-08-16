@@ -1,17 +1,14 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { DateTimeValidationError } from '../models';
+import { DateTimeValidationError, PickerValidDate } from '../models';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import {
-  DateCalendarSlotsComponent,
-  DateCalendarSlotsComponentsProps,
+  DateCalendarSlots,
+  DateCalendarSlotProps,
   ExportedDateCalendarProps,
 } from '../DateCalendar/DateCalendar.types';
-import {
-  TimeClockSlotsComponent,
-  TimeClockSlotsComponentsProps,
-} from '../TimeClock/TimeClock.types';
+import { TimeClockSlots, TimeClockSlotProps } from '../TimeClock/TimeClock.types';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import {
@@ -34,28 +31,27 @@ import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePicker
 import { DateViewRendererProps } from '../dateViewRenderers';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
-import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
 import { DateOrTimeViewWithMeridiem, TimeViewWithMeridiem } from '../internals/models';
 
-export interface BaseDateTimePickerSlotsComponent<TDate>
-  extends DateCalendarSlotsComponent<TDate>,
-    TimeClockSlotsComponent {
+export interface BaseDateTimePickerSlots<TDate extends PickerValidDate>
+  extends DateCalendarSlots<TDate>,
+    TimeClockSlots {
   /**
    * Tabs enabling toggling between date and time pickers.
    * @default DateTimePickerTabs
    */
-  Tabs?: React.ElementType<DateTimePickerTabsProps>;
+  tabs?: React.ElementType<DateTimePickerTabsProps>;
   /**
    * Custom component for the toolbar rendered above the views.
    * @default DateTimePickerToolbar
    */
-  Toolbar?: React.JSXElementConstructor<DateTimePickerToolbarProps<TDate>>;
+  toolbar?: React.JSXElementConstructor<DateTimePickerToolbarProps<TDate>>;
 }
 
-export interface BaseDateTimePickerSlotsComponentsProps<TDate>
-  extends DateCalendarSlotsComponentsProps<TDate>,
-    TimeClockSlotsComponentsProps {
+export interface BaseDateTimePickerSlotProps<TDate extends PickerValidDate>
+  extends DateCalendarSlotProps<TDate>,
+    TimeClockSlotProps {
   /**
    * Props passed down to the tabs component.
    */
@@ -66,8 +62,25 @@ export interface BaseDateTimePickerSlotsComponentsProps<TDate>
   toolbar?: ExportedDateTimePickerToolbarProps;
 }
 
-export interface BaseDateTimePickerProps<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends BasePickerInputProps<TDate | null, TDate, TView, DateTimeValidationError>,
+export type DateTimePickerViewRenderers<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TAdditionalProps extends {} = {},
+> = PickerViewRendererLookup<
+  TDate | null,
+  TView,
+  Omit<DateViewRendererProps<TDate, TView>, 'slots' | 'slotProps'> &
+    Omit<
+      TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TDate, TimeViewWithMeridiem>>,
+      'slots' | 'slotProps'
+    >,
+  TAdditionalProps
+>;
+
+export interface BaseDateTimePickerProps<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends BasePickerInputProps<TDate | null, TDate, TView, DateTimeValidationError>,
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
     ExportedBaseClockProps<TDate>,
     DateTimeValidationProps<TDate> {
@@ -77,45 +90,25 @@ export interface BaseDateTimePickerProps<TDate, TView extends DateOrTimeViewWith
    */
   ampmInClock?: boolean;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: BaseDateTimePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: BaseDateTimePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<BaseDateTimePickerSlotsComponent<TDate>>;
+  slots?: BaseDateTimePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: BaseDateTimePickerSlotsComponentsProps<TDate>;
+  slotProps?: BaseDateTimePickerSlotProps<TDate>;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
-   * If `undefined`, internally defined view will be the used.
+   * If `undefined`, internally defined view will be used.
    */
-  viewRenderers?: Partial<
-    PickerViewRendererLookup<
-      TDate | null,
-      TView,
-      DateViewRendererProps<TDate, TView> &
-        TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TDate, TimeViewWithMeridiem>>,
-      {}
-    >
-  >;
+  viewRenderers?: Partial<DateTimePickerViewRenderers<TDate, TView>>;
 }
 
 type UseDateTimePickerDefaultizedProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   Props extends BaseDateTimePickerProps<TDate, TView>,
 > = LocalizedComponent<
@@ -132,13 +125,10 @@ type UseDateTimePickerDefaultizedProps<
 >;
 
 export function useDateTimePickerDefaultizedProps<
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   Props extends BaseDateTimePickerProps<TDate, TView>,
->(
-  props: Props,
-  name: string,
-): Omit<UseDateTimePickerDefaultizedProps<TDate, TView, Props>, 'components' | 'componentsProps'> {
+>(props: Props, name: string): UseDateTimePickerDefaultizedProps<TDate, TView, Props> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const themeProps = useThemeProps({
@@ -159,8 +149,6 @@ export function useDateTimePickerDefaultizedProps<
     };
   }, [themeProps.localeText]);
 
-  const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
-  const slotProps = themeProps.slotProps ?? themeProps.componentsProps;
   return {
     ...themeProps,
     ...applyDefaultViewProps({
@@ -199,13 +187,13 @@ export function useDateTimePickerDefaultizedProps<
     slots: {
       toolbar: DateTimePickerToolbar,
       tabs: DateTimePickerTabs,
-      ...slots,
+      ...themeProps.slots,
     },
     slotProps: {
-      ...slotProps,
+      ...themeProps.slotProps,
       toolbar: {
         ampm,
-        ...slotProps?.toolbar,
+        ...themeProps.slotProps?.toolbar,
       },
     },
   };

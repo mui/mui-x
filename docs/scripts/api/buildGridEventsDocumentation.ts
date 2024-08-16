@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
 import path from 'path';
-import { renderMarkdown } from '@mui/monorepo/packages/markdown';
+import { renderMarkdown } from '@mui/internal-markdown';
 import {
   DocumentedInterfaces,
   getSymbolDescription,
@@ -13,13 +13,15 @@ import { XProjectNames, XTypeScriptProjects } from '../createXTypeScriptProjects
 
 interface BuildEventsDocumentationOptions {
   projects: XTypeScriptProjects;
-  documentedInterfaces: DocumentedInterfaces;
+  interfacesWithDedicatedPage: DocumentedInterfaces;
 }
 
 const GRID_PROJECTS: XProjectNames[] = ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium'];
 
-export default function buildGridEventsDocumentation(options: BuildEventsDocumentationOptions) {
-  const { projects, documentedInterfaces } = options;
+export default async function buildGridEventsDocumentation(
+  options: BuildEventsDocumentationOptions,
+) {
+  const { projects, interfacesWithDedicatedPage } = options;
 
   const events: {
     [eventName: string]: {
@@ -32,50 +34,59 @@ export default function buildGridEventsDocumentation(options: BuildEventsDocumen
     };
   } = {};
 
-  GRID_PROJECTS.forEach((projectName) => {
+  for (const projectName of GRID_PROJECTS) {
     const project = projects.get(projectName)!;
     const gridEventLookupSymbol = project.exports.GridEventLookup;
     const gridEventLookupType = project.checker.getTypeAtLocation(
       (gridEventLookupSymbol.declarations![0] as ts.InterfaceDeclaration).name,
     ) as ts.EnumType;
 
-    gridEventLookupType.getProperties().forEach((event) => {
-      const tags = getSymbolJSDocTags(event);
+    // eslint-disable-next-line no-await-in-loop
+    await Promise.all(
+      gridEventLookupType.getProperties().map(async (event) => {
+        const tags = getSymbolJSDocTags(event);
 
-      if (tags.ignore) {
-        return;
-      }
-
-      if (events[event.name]) {
-        events[event.name].projects.push(project.name);
-      } else {
-        const declaration = event.declarations?.find(ts.isPropertySignature);
-        if (!declaration) {
+        if (tags.ignore) {
           return;
         }
 
-        const description = linkify(
-          getSymbolDescription(event, project),
-          documentedInterfaces,
-          'html',
-        );
+        if (events[event.name]) {
+          events[event.name].projects.push(project.name);
+        } else {
+          const declaration = event.declarations?.find(ts.isPropertySignature);
+          if (!declaration) {
+            return;
+          }
 
-        const eventParams: { [key: string]: any } = {};
-        const symbol = project.checker.getTypeAtLocation(declaration.name).symbol;
-        symbol.members?.forEach((member, memberName) => {
-          eventParams[memberName.toString()] = stringifySymbol(member, project);
-        });
+          const description = linkify(
+            getSymbolDescription(event, project),
+            interfacesWithDedicatedPage,
+            'html',
+            'data-grid',
+          );
 
-        events[event.name] = {
-          projects: [project.name],
-          name: event.name,
-          description: renderMarkdown(description),
-          params: linkify(eventParams.params, documentedInterfaces, 'html'),
-          event: `MuiEvent<${eventParams.event ?? '{}'}>`,
-        };
-      }
-    });
-  });
+          const eventParams: { [key: string]: string } = {};
+          const symbol = project.checker.getTypeAtLocation(declaration.name).symbol;
+
+          if (symbol.members) {
+            await Promise.all(
+              Array.from(symbol.members.entries(), async ([memberName, member]) => {
+                eventParams[memberName.toString()] = await stringifySymbol(member, project);
+              }),
+            );
+          }
+
+          events[event.name] = {
+            projects: [project.name],
+            name: event.name,
+            description: renderMarkdown(description),
+            params: linkify(eventParams.params, interfacesWithDedicatedPage, 'html', 'data-grid'),
+            event: `MuiEvent<${eventParams.event ?? '{}'}>`,
+          };
+        }
+      }),
+    );
+  }
 
   const defaultProject = projects.get('x-data-grid-premium')!;
 
@@ -114,7 +125,7 @@ export default function buildGridEventsDocumentation(options: BuildEventsDocumen
 
   const sortedEvents = Object.values(events).sort((a, b) => a.name.localeCompare(b.name));
 
-  writePrettifiedFile(
+  await writePrettifiedFile(
     path.resolve(defaultProject.workspaceRoot, 'docs/data/data-grid/events/events.json'),
     JSON.stringify(sortedEvents),
     defaultProject,

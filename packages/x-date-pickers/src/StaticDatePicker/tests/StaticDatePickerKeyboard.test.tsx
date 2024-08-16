@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { act, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { DateView } from '@mui/x-date-pickers/models';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
@@ -14,7 +14,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
         <StaticDatePicker
           autoFocus
           displayStaticWrapperAs="desktop"
-          defaultValue={adapterToUse.date(new Date(2020, 7, 13))}
+          defaultValue={adapterToUse.date('2022-08-13')}
         />,
       );
 
@@ -34,7 +34,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
           <StaticDatePicker
             autoFocus
             displayStaticWrapperAs="desktop"
-            defaultValue={adapterToUse.date(new Date(2020, 7, 13))}
+            defaultValue={adapterToUse.date('2020-08-13')}
           />,
         );
 
@@ -50,20 +50,20 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
 
     [
       // Switch between months
-      { initialDay: 1, key: 'ArrowLeft', expectFocusedDay: '31' },
-      { initialDay: 5, key: 'ArrowUp', expectFocusedDay: '29' },
-      { initialDay: 31, key: 'ArrowRight', expectFocusedDay: '1' },
-      { initialDay: 30, key: 'ArrowDown', expectFocusedDay: '6' },
+      { initialDay: '01', key: 'ArrowLeft', expectFocusedDay: '31' },
+      { initialDay: '05', key: 'ArrowUp', expectFocusedDay: '29' },
+      { initialDay: '31', key: 'ArrowRight', expectFocusedDay: '1' },
+      { initialDay: '30', key: 'ArrowDown', expectFocusedDay: '6' },
       // Switch between weeks
-      { initialDay: 10, key: 'ArrowLeft', expectFocusedDay: '9' },
-      { initialDay: 9, key: 'ArrowRight', expectFocusedDay: '10' },
+      { initialDay: '10', key: 'ArrowLeft', expectFocusedDay: '9' },
+      { initialDay: '09', key: 'ArrowRight', expectFocusedDay: '10' },
     ].forEach(({ initialDay, key, expectFocusedDay }) => {
       it(key, () => {
         render(
           <StaticDatePicker
             autoFocus
             displayStaticWrapperAs="desktop"
-            defaultValue={adapterToUse.date(new Date(2020, 7, initialDay))}
+            defaultValue={adapterToUse.date(`2020-08-${initialDay}`)}
           />,
         );
 
@@ -84,8 +84,8 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       <StaticDatePicker
         autoFocus
         displayStaticWrapperAs="desktop"
-        defaultValue={adapterToUse.date(new Date(2020, 7, 13))}
-        minDate={adapterToUse.date(new Date(2020, 7, 13))}
+        defaultValue={adapterToUse.date('2022-08-13')}
+        minDate={adapterToUse.date('2022-08-13')}
       />,
     );
 
@@ -114,7 +114,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
             openTo="year"
             reduceAnimations
             displayStaticWrapperAs="desktop"
-            defaultValue={adapterToUse.date(new Date(2020, 7, 13))}
+            defaultValue={adapterToUse.date('2022-08-13')}
           />,
         );
 
@@ -126,6 +126,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       });
     });
   });
+
   describe('MonthCalendar keyboard navigation', () => {
     [
       { key: 'ArrowLeft', expectFocusedMonth: 'Jul' },
@@ -140,7 +141,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
             views={['month']}
             reduceAnimations
             displayStaticWrapperAs="desktop"
-            defaultValue={adapterToUse.date(new Date(2020, 7, 13))}
+            defaultValue={adapterToUse.date('2022-08-13')}
           />,
         );
 
@@ -166,7 +167,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
             openTo="day"
             reduceAnimations
             displayStaticWrapperAs="desktop"
-            defaultValue={adapterToUse.date(new Date(2020, 7, 13))}
+            defaultValue={adapterToUse.date('2022-08-13')}
           />,
         );
 
@@ -192,7 +193,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
           views={[view]}
           reduceAnimations
           displayStaticWrapperAs="desktop"
-          defaultValue={adapterToUse.date(new Date(2020, 7, 13))}
+          defaultValue={adapterToUse.date('2020-08-13')}
         />,
       );
 
@@ -207,7 +208,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
         openTo="day"
         reduceAnimations
         displayStaticWrapperAs="desktop"
-        defaultValue={adapterToUse.date(new Date(2020, 7, 13))}
+        defaultValue={adapterToUse.date('2022-08-13')}
       />,
     );
 

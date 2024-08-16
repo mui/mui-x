@@ -1,0 +1,19 @@
+{
+  "props": {
+    "height": { "type": { "name": "number" }, "required": true },
+    "width": { "type": { "name": "number" }, "required": true },
+    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" }
+  },
+  "name": "ChartsSurface",
+  "imports": [
+    "import { ChartsSurface } from '/packages/x-charts/src/ChartsSurface.tsx';",
+    "import { ChartsSurface } from '@mui/x-charts';",
+    "import { ChartsSurface } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiChartsSurface",
+  "filename": "/packages/x-charts/src/ChartsSurface.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/components/\">Charts - Custom components</a></li></ul>",
+  "cssComponent": false
+}

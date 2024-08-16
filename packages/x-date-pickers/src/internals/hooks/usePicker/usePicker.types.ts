@@ -11,7 +11,7 @@ import {
   UsePickerViewsBaseProps,
 } from './usePickerViews';
 import { UsePickerLayoutProps, UsePickerLayoutPropsResponse } from './usePickerLayoutProps';
-import { FieldSection } from '../../../models';
+import { FieldSection, PickerValidDate } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
 /**
@@ -19,7 +19,7 @@ import { DateOrTimeViewWithMeridiem } from '../../models';
  */
 export interface UsePickerBaseProps<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
@@ -30,30 +30,29 @@ export interface UsePickerBaseProps<
 
 export interface UsePickerProps<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TSection extends FieldSection,
   TError,
   TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
   TAdditionalProps extends {},
-> extends UsePickerValueProps<TValue, TSection, TError>,
+> extends UsePickerValueProps<TValue, TError>,
     UsePickerViewsProps<TValue, TDate, TView, TExternalProps, TAdditionalProps>,
     UsePickerLayoutProps {}
 
 export interface UsePickerParams<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TSection extends FieldSection,
-  TExternalProps extends UsePickerProps<TValue, TDate, TView, TSection, any, any, any>,
+  TExternalProps extends UsePickerProps<TValue, TDate, TView, any, any, any>,
   TAdditionalProps extends {},
 > extends Pick<
-      UsePickerValueParams<TValue, TDate, TSection, TExternalProps>,
+      UsePickerValueParams<TValue, TDate, TExternalProps>,
       'valueManager' | 'valueType' | 'wrapperVariant' | 'validator'
     >,
     Pick<
-      UsePickerViewParams<TValue, TDate, TView, TExternalProps, TAdditionalProps>,
-      'additionalViewProps' | 'inputRef' | 'autoFocusView'
+      UsePickerViewParams<TValue, TDate, TView, TSection, TExternalProps, TAdditionalProps>,
+      'additionalViewProps' | 'autoFocusView' | 'rendererInterceptor' | 'fieldRef'
     > {
   props: TExternalProps;
 }

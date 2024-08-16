@@ -12,6 +12,7 @@ function addDeployPreviewUrls() {
       .replace('data-grid/', 'react-data-grid/')
       .replace('date-pickers/', 'react-date-pickers/')
       .replace('charts/', 'react-charts/')
+      .replace('tree-view/', 'react-tree-view/')
       .replace(/\/[^/]+\.md$/, '/');
   }
 
@@ -58,14 +59,14 @@ function addL10nHelpMessage() {
       '- [ ] Verify if the PR title respects the release format. Here are two examples (depending if you update or add a locale file)',
       '  > [l10n] Improve Swedish (sv-SE) locale',
       '  > [l10n] Add Danish (da-DK) locale',
-      '- [ ] Update the documentation of supported locales by running `yarn l10n`',
+      '- [ ] Update the documentation of supported locales by running `pnpm l10n`',
       ...(isAddingLocale
         ? [
             '- [ ] Verify that you have added an export line in `src/locales/index.ts` for the new locale.',
-            '- [ ] Run `yarn docs:api` which should add your new translation to the list of exported interfaces.',
+            '- [ ] Run `pnpm docs:api` which should add your new translation to the list of exported interfaces.',
           ]
         : []),
-      '- [ ] Clean files with `yarn prettier`.',
+      '- [ ] Clean files with `pnpm prettier`.',
       '',
     ].join('\n'),
   );

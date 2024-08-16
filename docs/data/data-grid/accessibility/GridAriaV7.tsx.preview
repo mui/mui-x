@@ -1,6 +1,0 @@
-<DataGrid
-  {...data}
-  slots={{ toolbar: GridToolbar }}
-  initialState={initialState}
-  experimentalFeatures={{ ariaV7: true }}
-/>

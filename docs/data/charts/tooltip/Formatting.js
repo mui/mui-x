@@ -72,14 +72,11 @@ const lineChartsParams = {
       showMark: false,
     },
   ],
-  sx: {
-    '--ChartsLegend-itemWidth': '200px',
-  },
   width: 600,
   height: 400,
 };
 
-const yearFormater = (date) => date.getFullYear().toString();
+const yearFormatter = (date) => date.getFullYear().toString();
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
@@ -89,10 +86,10 @@ export default function Formatting() {
   return (
     <LineChart
       {...lineChartsParams}
-      xAxis={[{ data: years, scaleType: 'time', valueFormatter: yearFormater }]}
-      series={lineChartsParams.series.map((s) => ({
-        ...s,
-        valueFormatter: currencyFormatter,
+      xAxis={[{ data: years, scaleType: 'time', valueFormatter: yearFormatter }]}
+      series={lineChartsParams.series.map((series) => ({
+        ...series,
+        valueFormatter: (v) => (v === null ? '' : currencyFormatter(v)),
       }))}
     />
   );

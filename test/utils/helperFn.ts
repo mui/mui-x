@@ -1,7 +1,42 @@
 import { spy } from 'sinon';
-import { act } from '@mui/monorepo/test/utils';
+import { act, screen } from '@mui/internal-test-utils';
+import { gridClasses } from '@mui/x-data-grid';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import type { GridApiCommon } from '@mui/x-data-grid/models/api/gridApiCommon';
+
+export function $(selector: string): HTMLElement | null;
+export function $(target: HTMLElement, selector: string): HTMLElement | null;
+export function $(a: unknown, b?: unknown): HTMLElement | null {
+  const target = (b === undefined ? document : a) as HTMLElement;
+  const selector = (b === undefined ? a : b) as string;
+  return target.querySelector(selector);
+}
+
+export function $$(selector: string): HTMLElement[];
+export function $$(target: HTMLElement, selector: string): HTMLElement[];
+export function $$(a: unknown, b?: unknown): HTMLElement[] {
+  const target = (b === undefined ? document : a) as HTMLElement;
+  const selector = (b === undefined ? a : b) as string;
+  return Array.from(target.querySelectorAll(selector));
+}
+
+export function grid(klass: keyof typeof gridClasses) {
+  return $(`.${gridClasses[klass]}`);
+}
+
+export function gridVar(name: string) {
+  return $(`.${gridClasses.root}`)!.style.getPropertyValue(name);
+}
+
+export function gridOffsetTop() {
+  const transform = getComputedStyle(grid('virtualScrollerRenderZone')!).transform;
+  return parseInt(
+    transform.startsWith('translate3d')
+      ? transform.split('(')[1].split(',')[1]
+      : transform.split('(')[1].split(',')[5],
+    10,
+  );
+}
 
 export function sleep(duration: number): Promise<void> {
   return new Promise<void>((resolve) => {
@@ -50,10 +85,10 @@ export async function raf() {
  */
 export function getActiveCell(): string | null {
   let activeElement: Element | null;
-  if (document.activeElement && document.activeElement.getAttribute('role') === 'cell') {
+  if (document.activeElement && document.activeElement.getAttribute('role') === 'gridcell') {
     activeElement = document.activeElement;
   } else {
-    activeElement = document.activeElement && document.activeElement.closest('[role="cell"]');
+    activeElement = document.activeElement && document.activeElement.closest('[role="gridcell"]');
   }
 
   if (!activeElement) {
@@ -85,9 +120,9 @@ export function getActiveColumnHeader() {
 }
 
 export function getColumnValues(colIndex: number) {
-  return Array.from(document.querySelectorAll(`[role="cell"][data-colindex="${colIndex}"]`)).map(
-    (node) => node!.textContent,
-  );
+  return Array.from(
+    document.querySelectorAll(`[role="gridcell"][data-colindex="${colIndex}"]`),
+  ).map((node) => node!.textContent);
 }
 
 export function getColumnHeaderCell(colIndex: number, rowIndex?: number): HTMLElement {
@@ -112,13 +147,13 @@ export function getColumnHeadersTextContent() {
 
 export function getRowsFieldContent(field: string) {
   return Array.from(document.querySelectorAll('[role="row"][data-rowindex]')).map(
-    (node) => node.querySelector(`[role="cell"][data-field="${field}"]`)?.textContent,
+    (node) => node.querySelector(`[role="gridcell"][data-field="${field}"]`)?.textContent,
   );
 }
 
 export function getCell(rowIndex: number, colIndex: number): HTMLElement {
   const cell = document.querySelector<HTMLElement>(
-    `[role="row"][data-rowindex="${rowIndex}"] [role="cell"][data-colindex="${colIndex}"]`,
+    `[role="row"][data-rowindex="${rowIndex}"] [role="gridcell"][data-colindex="${colIndex}"]`,
   );
   if (cell == null) {
     throw new Error(`Cell ${rowIndex} ${colIndex} not found`);
@@ -136,4 +171,23 @@ export function getRow(rowIndex: number): HTMLElement {
     throw new Error(`Row ${rowIndex} not found`);
   }
   return row;
+}
+
+/**
+ * Returns the hidden `input` element of the Material UI Select component
+ */
+export const getSelectInput = (combobox: Element) => {
+  if (!combobox) {
+    return null;
+  }
+  const comboboxParent = combobox.parentElement;
+  if (!comboboxParent) {
+    return null;
+  }
+  const input = comboboxParent.querySelector('input');
+  return input;
+};
+
+export function getSelectByName(name: string) {
+  return getSelectInput(screen.getByRole('combobox', { name }))!;
 }

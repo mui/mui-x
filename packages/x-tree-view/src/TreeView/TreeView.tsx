@@ -1,13 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import { useSlotProps } from '@mui/base/utils';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getTreeViewUtilityClass } from './treeViewClasses';
 import { TreeViewProps } from './TreeView.types';
-import { useTreeView } from '../internals/useTreeView';
-import { TreeViewProvider } from '../internals/TreeViewProvider';
-import { DEFAULT_TREE_VIEW_PLUGINS } from '../internals/plugins';
+import { SimpleTreeView, SimpleTreeViewRoot } from '../SimpleTreeView';
+
+const useThemeProps = createUseThemeProps('MuiTreeView');
 
 const useUtilityClasses = <Multiple extends boolean | undefined>(
   ownerState: TreeViewProps<Multiple>,
@@ -21,22 +20,37 @@ const useUtilityClasses = <Multiple extends boolean | undefined>(
   return composeClasses(slots, getTreeViewUtilityClass, classes);
 };
 
-const TreeViewRoot = styled('ul', {
-  name: 'MuiTreeView',
-  slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: TreeViewProps<any> }>({
-  padding: 0,
-  margin: 0,
-  listStyle: 'none',
-  outline: 0,
-});
-
 type TreeViewComponent = (<Multiple extends boolean | undefined = undefined>(
   props: TreeViewProps<Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+const TreeViewRoot = styled(SimpleTreeViewRoot, {
+  name: 'MuiTreeView',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})({});
+
+let warnedOnce = false;
+
+const warn = () => {
+  if (!warnedOnce) {
+    console.warn(
+      [
+        'MUI X: The TreeView component was renamed SimpleTreeView.',
+        'The component with the old naming will be removed in the version v8.0.0.',
+        '',
+        "You should use `import { SimpleTreeView } from '@mui/x-tree-view'`",
+        "or `import { SimpleTreeView } from '@mui/x-tree-view/TreeView'`",
+      ].join('\n'),
+    );
+
+    warnedOnce = true;
+  }
+};
+
 /**
+ * This component has been deprecated in favor of the new `SimpleTreeView` component.
+ * You can have a look at how to migrate to the new component in the v7 [migration guide](https://mui.com/x/migration/migration-tree-view-v6/#use-simpletreeview-instead-of-treeview)
  *
  * Demos:
  *
@@ -45,78 +59,54 @@ type TreeViewComponent = (<Multiple extends boolean | undefined = undefined>(
  * API:
  *
  * - [TreeView API](https://mui.com/x/api/tree-view/tree-view/)
+ *
+ * @deprecated
  */
 const TreeView = React.forwardRef(function TreeView<
   Multiple extends boolean | undefined = undefined,
 >(inProps: TreeViewProps<Multiple>, ref: React.Ref<HTMLUListElement>) {
-  const themeProps = useThemeProps({ props: inProps, name: 'MuiTreeView' });
-  const ownerState = themeProps as TreeViewProps<any>;
+  if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
+    warn();
+  }
 
-  const {
-    // Headless implementation
-    disabledItemsFocusable,
-    expanded,
-    defaultExpanded,
-    onNodeToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelected,
-    selected,
-    multiSelect,
-    onNodeSelect,
-    id,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    // Component implementation
-    children,
-    ...other
-  } = themeProps as TreeViewProps<any>;
+  const props = useThemeProps({ props: inProps, name: 'MuiTreeView' });
 
-  const { getRootProps, contextValue } = useTreeView({
-    disabledItemsFocusable,
-    expanded,
-    defaultExpanded,
-    onNodeToggle,
-    onNodeFocus,
-    disableSelection,
-    defaultSelected,
-    selected,
-    multiSelect,
-    onNodeSelect,
-    id,
-    defaultCollapseIcon,
-    defaultEndIcon,
-    defaultExpandIcon,
-    defaultParentIcon,
-    plugins: DEFAULT_TREE_VIEW_PLUGINS,
-    rootRef: ref,
-  });
-
-  const classes = useUtilityClasses(themeProps);
-
-  const rootProps = useSlotProps({
-    elementType: TreeViewRoot,
-    externalSlotProps: {},
-    externalForwardedProps: other,
-    className: classes.root,
-    getSlotProps: getRootProps,
-    ownerState,
-  });
+  const classes = useUtilityClasses(props);
 
   return (
-    <TreeViewProvider value={contextValue}>
-      <TreeViewRoot {...rootProps}>{children}</TreeViewRoot>
-    </TreeViewProvider>
+    <SimpleTreeView
+      {...props}
+      ref={ref}
+      classes={classes}
+      slots={{ root: TreeViewRoot, ...props.slots }}
+    />
   );
 }) as TreeViewComponent;
 
 TreeView.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
+   */
+  apiRef: PropTypes.shape({
+    current: PropTypes.shape({
+      focusItem: PropTypes.func.isRequired,
+      getItem: PropTypes.func.isRequired,
+      getItemDOMElement: PropTypes.func.isRequired,
+      getItemOrderedChildrenIds: PropTypes.func.isRequired,
+      getItemTree: PropTypes.func.isRequired,
+      selectItem: PropTypes.func.isRequired,
+      setItemExpansion: PropTypes.func.isRequired,
+    }),
+  }),
+  /**
+   * If `true`, the tree view renders a checkbox at the left of its label that allows selecting it.
+   * @default false
+   */
+  checkboxSelection: PropTypes.bool,
   /**
    * The content of the component.
    */
@@ -125,43 +115,19 @@ TreeView.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * className applied to the root element.
-   */
   className: PropTypes.string,
   /**
-   * The default icon used to collapse the node.
-   */
-  defaultCollapseIcon: PropTypes.node,
-  /**
-   * The default icon displayed next to a end node. This is applied to all
-   * tree nodes and can be overridden by the TreeItem `icon` prop.
-   */
-  defaultEndIcon: PropTypes.node,
-  /**
-   * Expanded node ids.
+   * Expanded item ids.
    * Used when the item's expansion is not controlled.
    * @default []
    */
-  defaultExpanded: PropTypes.arrayOf(PropTypes.string),
+  defaultExpandedItems: PropTypes.arrayOf(PropTypes.string),
   /**
-   * The default icon used to expand the node.
-   */
-  defaultExpandIcon: PropTypes.node,
-  /**
-   * The default icon displayed next to a parent node. This is applied to all
-   * parent nodes and can be overridden by the TreeItem `icon` prop.
-   */
-  defaultParentIcon: PropTypes.node,
-  /**
-   * Selected node ids. (Uncontrolled)
+   * Selected item ids. (Uncontrolled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    * @default []
    */
-  defaultSelected: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
-    PropTypes.arrayOf(PropTypes.string),
-    PropTypes.string,
-  ]),
+  defaultSelectedItems: PropTypes.any,
   /**
    * If `true`, will allow focus on disabled items.
    * @default false
@@ -173,45 +139,91 @@ TreeView.propTypes = {
    */
   disableSelection: PropTypes.bool,
   /**
-   * Expanded node ids.
+   * Expanded item ids.
    * Used when the item's expansion is controlled.
    */
-  expanded: PropTypes.arrayOf(PropTypes.string),
+  expandedItems: PropTypes.arrayOf(PropTypes.string),
+  /**
+   * The slot that triggers the item's expansion when clicked.
+   * @default 'content'
+   */
+  expansionTrigger: PropTypes.oneOf(['content', 'iconContainer']),
+  /**
+   * Unstable features, breaking changes might be introduced.
+   * For each feature, if the flag is not explicitly set to `true`,
+   * the feature will be fully disabled and any property / method call will not have any effect.
+   */
+  experimentalFeatures: PropTypes.shape({
+    indentationAtItemLevel: PropTypes.bool,
+  }),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
   /**
-   * If true `ctrl` and `shift` will trigger multiselect.
+   * Horizontal indentation between an item and its children.
+   * Examples: 24, "24px", "2rem", "2em".
+   * @default 12px
+   */
+  itemChildrenIndentation: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * If `true`, `ctrl` and `shift` will trigger multiselect.
    * @default false
    */
   multiSelect: PropTypes.bool,
   /**
-   * Callback fired when tree items are focused.
-   * @param {React.SyntheticEvent} event The event source of the callback **Warning**: This is a generic event not a focus event.
-   * @param {string} nodeId The id of the node focused.
-   * @param {string} value of the focused node.
-   */
-  onNodeFocus: PropTypes.func,
-  /**
-   * Callback fired when tree items are selected/unselected.
-   * @param {React.SyntheticEvent} event The event source of the callback
-   * @param {string[] | string} nodeIds Ids of the selected nodes. When `multiSelect` is true
-   * this is an array of strings; when false (default) a string.
-   */
-  onNodeSelect: PropTypes.func,
-  /**
    * Callback fired when tree items are expanded/collapsed.
-   * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeIds The ids of the expanded nodes.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {array} itemIds The ids of the expanded items.
    */
-  onNodeToggle: PropTypes.func,
+  onExpandedItemsChange: PropTypes.func,
   /**
-   * Selected node ids. (Controlled)
+   * Callback fired when the `content` slot of a given tree item is clicked.
+   * @param {React.MouseEvent} event The DOM event that triggered the change.
+   * @param {string} itemId The id of the focused item.
+   */
+  onItemClick: PropTypes.func,
+  /**
+   * Callback fired when a tree item is expanded or collapsed.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {array} itemId The itemId of the modified item.
+   * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
+   */
+  onItemExpansionToggle: PropTypes.func,
+  /**
+   * Callback fired when a given tree item is focused.
+   * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. **Warning**: This is a generic event not a focus event.
+   * @param {string} itemId The id of the focused item.
+   */
+  onItemFocus: PropTypes.func,
+  /**
+   * Callback fired when a tree item is selected or deselected.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {array} itemId The itemId of the modified item.
+   * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
+   */
+  onItemSelectionToggle: PropTypes.func,
+  /**
+   * Callback fired when tree items are selected/deselected.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {string[] | string} itemIds The ids of the selected items.
+   * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
+   */
+  onSelectedItemsChange: PropTypes.func,
+  /**
+   * Selected item ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
-  selected: PropTypes.any,
+  selectedItems: PropTypes.any,
+  /**
+   * The props used for each component slot.
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

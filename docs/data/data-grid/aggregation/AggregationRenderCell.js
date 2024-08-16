@@ -11,6 +11,7 @@ const COLUMNS = [
     type: 'number',
     width: 180,
     availableAggregationFunctions: ['min', 'max', 'avg', 'size'],
+    display: 'flex',
     // Imdb rating is on a scale from 0 to 10, the MUI rating component is on a scale from 0 to 5
     renderCell: (params) => {
       if (params.aggregation && !params.aggregation.hasCellUnit) {

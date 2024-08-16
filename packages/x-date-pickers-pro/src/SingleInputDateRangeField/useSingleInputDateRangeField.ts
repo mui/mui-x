@@ -1,51 +1,50 @@
+import * as React from 'react';
 import {
-  useUtils,
-  useDefaultDates,
-  applyDefaultDate,
   useField,
   splitFieldInternalAndForwardedProps,
+  useDefaultizedDateField,
 } from '@mui/x-date-pickers/internals';
-import {
-  UseSingleInputDateRangeFieldDefaultizedProps,
-  UseSingleInputDateRangeFieldParams,
-  UseSingleInputDateRangeFieldProps,
-} from './SingleInputDateRangeField.types';
-import { rangeValueManager, rangeFieldValueManager } from '../internals/utils/valueManagers';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { UseSingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
+import { rangeValueManager, getRangeFieldValueManager } from '../internals/utils/valueManagers';
 import { validateDateRange } from '../internals/utils/validation/validateDateRange';
+import { RangeFieldSection, DateRange } from '../models';
 
-export const useDefaultizedDateRangeFieldProps = <TDate, AdditionalProps extends {}>(
-  props: UseSingleInputDateRangeFieldProps<TDate>,
-): UseSingleInputDateRangeFieldDefaultizedProps<TDate, AdditionalProps> => {
-  const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
-
-  return {
-    ...props,
-    disablePast: props.disablePast ?? false,
-    disableFuture: props.disableFuture ?? false,
-    format: props.format ?? utils.formats.keyboardDate,
-    minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
-  } as any;
-};
-
-export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
-  props: inProps,
-  inputRef,
-}: UseSingleInputDateRangeFieldParams<TDate, TChildProps>) => {
-  const props = useDefaultizedDateRangeFieldProps<TDate, TChildProps>(inProps);
+export const useSingleInputDateRangeField = <
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TAllProps extends UseSingleInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+>(
+  inProps: TAllProps,
+) => {
+  const props = useDefaultizedDateField<
+    TDate,
+    UseSingleInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    TAllProps
+  >(inProps);
 
   const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
     typeof props,
-    keyof UseSingleInputDateRangeFieldProps<any>
+    keyof UseSingleInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
   >(props, 'date');
 
-  return useField({
-    inputRef,
+  const fieldValueManager = React.useMemo(
+    () => getRangeFieldValueManager<TDate>({ dateSeparator: internalProps.dateSeparator }),
+    [internalProps.dateSeparator],
+  );
+
+  return useField<
+    DateRange<TDate>,
+    TDate,
+    RangeFieldSection,
+    TEnableAccessibleFieldDOMStructure,
+    typeof forwardedProps,
+    typeof internalProps
+  >({
     forwardedProps,
     internalProps,
     valueManager: rangeValueManager,
-    fieldValueManager: rangeFieldValueManager,
+    fieldValueManager,
     validator: validateDateRange,
     valueType: 'date',
   });

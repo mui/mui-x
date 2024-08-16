@@ -16,7 +16,7 @@ function NoRowsOverlay() {
 export default function NoRowsOverlayWithButton() {
   return (
     <div style={{ width: 300, height: 300 }}>
-      <DataGrid columns={columns} rows={[]} components={{ NoRowsOverlay }} />
+      <DataGrid columns={columns} rows={[]} slots={{ noRowsOverlay: NoRowsOverlay }} />
     </div>
   );
 }

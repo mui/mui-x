@@ -1,7 +1,7 @@
 <DataGrid
   {...data}
   slots={{
-    toolbar: CustomToolbar,
+    toolbar: CustomToolbar as GridSlots['toolbar'],
   }}
   slotProps={{
     panel: {

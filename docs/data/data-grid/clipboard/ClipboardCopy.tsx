@@ -31,9 +31,9 @@ export default function ClipboardCopy() {
           initialState={initialState}
           checkboxSelection
           disableRowSelectionOnClick
-          unstable_cellSelection
+          cellSelection
           onClipboardCopy={(copiedString) => setCopiedData(copiedString)}
-          unstable_ignoreValueFormatterDuringExport
+          ignoreValueFormatterDuringExport
         />
       </div>
       <Alert severity="info" sx={{ width: '100%', mt: 1 }}>

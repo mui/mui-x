@@ -6,7 +6,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 
 const TraceUpdates = React.forwardRef((props, ref) => {
   const { Component, ...other } = props;
-  const rootRef = React.useRef();
+  const rootRef = React.useRef(null);
   const handleRef = useForkRef(rootRef, ref);
 
   React.useEffect(() => {

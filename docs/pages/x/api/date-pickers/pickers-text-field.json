@@ -1,0 +1,87 @@
+{
+  "props": {
+    "areAllSectionsEmpty": { "type": { "name": "bool" }, "required": true },
+    "contentEditable": { "type": { "name": "bool" }, "required": true },
+    "elements": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ after: object, before: object, container: object, content: object }&gt;"
+      },
+      "required": true
+    },
+    "color": {
+      "type": {
+        "name": "enum",
+        "description": "'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'<br>&#124;&nbsp;'success'<br>&#124;&nbsp;'warning'"
+      },
+      "default": "'primary'"
+    },
+    "focused": { "type": { "name": "bool" } },
+    "helperText": { "type": { "name": "node" } },
+    "hiddenLabel": { "type": { "name": "bool" }, "default": "false" },
+    "InputProps": { "type": { "name": "object" } },
+    "margin": {
+      "type": {
+        "name": "enum",
+        "description": "'dense'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'normal'"
+      },
+      "default": "'none'"
+    },
+    "required": { "type": { "name": "bool" }, "default": "false" },
+    "size": {
+      "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" },
+      "default": "'medium'"
+    },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "variant": {
+      "type": {
+        "name": "enum",
+        "description": "'filled'<br>&#124;&nbsp;'outlined'<br>&#124;&nbsp;'standard'"
+      },
+      "default": "'outlined'"
+    }
+  },
+  "name": "PickersTextField",
+  "imports": [
+    "import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';",
+    "import { PickersTextField } from '@mui/x-date-pickers';",
+    "import { PickersTextField } from '@mui/x-date-pickers-pro';"
+  ],
+  "classes": [
+    {
+      "key": "fullWidth",
+      "className": "MuiPickersTextField-fullWidth",
+      "description": "Styles applied to the root element if `fullWidth={true}`.",
+      "isGlobal": false
+    },
+    {
+      "key": "marginDense",
+      "className": "MuiPickersTextField-marginDense",
+      "description": "Styles applied to the root element if `margin=\"dense\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "marginNormal",
+      "className": "MuiPickersTextField-marginNormal",
+      "description": "Styles applied to the root element if `margin=\"normal\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiPickersTextField-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiPickersTextField",
+  "filename": "/packages/x-date-pickers/src/PickersTextField/PickersTextField.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-field/\">Custom field</a></li></ul>",
+  "cssComponent": false
+}

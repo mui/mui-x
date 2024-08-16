@@ -1,0 +1,10 @@
+<ThemeProvider theme={theme}>
+  <div dir="rtl">
+    <LocalizationProvider dateAdapter={AdapterMomentJalaali}>
+      <DateTimePicker
+        label="AdapterMomentJalaali"
+        defaultValue={moment('2022-02-01T12:00:00')}
+      />
+    </LocalizationProvider>
+  </div>
+</ThemeProvider>

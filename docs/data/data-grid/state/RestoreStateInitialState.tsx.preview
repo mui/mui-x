@@ -2,7 +2,7 @@
   <DataGridPro
     {...data}
     loading={loading}
-    slots={{ toolbar: GridCustomToolbar }}
+    slots={{ toolbar: GridCustomToolbar as GridSlots['toolbar'] }}
     slotProps={{ toolbar: { syncState } }}
   />
 </Box>

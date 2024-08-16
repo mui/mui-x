@@ -69,8 +69,8 @@ If you only need the `year` view or the `month` view, you can use the `YearCalen
 
 To show all days of displayed weeks, including those outside of the current month, use `showDaysOutsideCurrentMonth`.
 
-By default, only weeks of the current month are displayed, but you can provide a total number of week to display with `fixedWeekNumber` prop.
-This value is usually set to `6` for Gregorian calendars, because months display can vary between 4 and 6 weeks.
+By default, only weeks of the current month are displayed, but you can provide a total number of weeks to display with `fixedWeekNumber` prop.
+This value is usually set to `6` for Gregorian calendars, because month display can vary between 4 and 6 weeks.
 
 {{"demo": "CustomMonthLayout.js"}}
 
@@ -91,14 +91,14 @@ You can select the whole week using the `day` component slot:
 ## Dynamic data
 
 Sometimes it may be necessary to display additional info right in the calendar.
-The following demo shows how to add a badge on some day based on server side data:
+The following demo shows how to add a badge on some day based on server-side data:
 
 {{"demo": "DateCalendarServerRequest.js"}}
 
-## Validation
-
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
-
 ## Localization
 
-You can find the documentation about localization in the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/).
+See the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) documentation pages for more details.
+
+## Validation
+
+See the [Validation](/x/react-date-pickers/validation/) documentation page for more details.

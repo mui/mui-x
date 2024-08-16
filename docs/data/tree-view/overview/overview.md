@@ -1,140 +1,115 @@
 ---
 productId: x-tree-view
 title: Tree View React component
-components: TreeView, TreeItem
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 packageName: '@mui/x-tree-view'
 ---
 
-# Tree View
+# MUI X Tree View
 
-<p class="description">A tree view widget presents a hierarchical list.</p>
+<p class="description">The Tree View component lets users navigate hierarchical lists of data with nested levels that can be expanded and collapsed.</p>
 
-Tree views can be used to represent a file system navigator displaying folders and files, an item representing a folder can be expanded to reveal the contents of the folder, which may be files, folders, or both.
+{{"component": "@mui/docs/ComponentLinkHeader"}}
 
-{{"component": "modules/components/ComponentLinkHeader.js"}}
+## Available components
 
-## Basic tree view
+The MUI X Tree View package exposes two different versions of the component:
 
-{{"demo": "FileSystemNavigator.js"}}
+### Simple Tree View
 
-## Multi-selection
-
-Tree views also support multi-selection.
-
-{{"demo": "MultiSelectTreeView.js"}}
-
-## Controlled tree view
-
-The tree view also offers a controlled API.
-
-:::info
-
-- A component is **controlled** when it's managed by its parent using props.
-- A component is **uncontrolled** when it's managed by its own local state.
-
-Learn more about controlled and uncontrolled components in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
-:::
-
-{{"demo": "ControlledTreeView.js"}}
-
-## Rich object
-
-While the `TreeView`/`TreeItem` component API maximizes flexibility, an extra step is needed to handle a rich object.
-
-Let's consider a data variable with the following shape, recursion can be used to handle it.
-
-```js
-const data = {
-  id: 'root',
-  name: 'Parent',
-  children: [
-    {
-      id: '1',
-      name: 'Child - 1',
-    },
-    // …
-  ],
-};
+```jsx
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 ```
 
-{{"demo": "RichObjectTreeView.js"}}
+The simple version of the Tree View component receives its items as JSX children.
+This is the recommended version for hardcoded items.
 
-## ContentComponent prop
+{{"demo": "BasicSimpleTreeView.js"}}
 
-You can use the `ContentComponent` prop and the `useTreeItem` hook to further customize the behavior of the TreeItem.
+### Rich Tree View
 
-Such as limiting expansion to clicking the expand icon:
+```jsx
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+```
 
-{{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
+The rich version of the Tree View component receives its items dynamically from an external data source.
+This is the recommended version for larger trees, as well as those that require more advanced features like editing and virtualization.
 
-Or increasing the width of the item state indicator to be full-width:
+{{"demo": "BasicRichTreeView.js"}}
 
-{{"demo": "BarTreeView.js", "defaultCodeOpen": false}}
+:::info
+At the moment, the Simple and Rich Tree Views are similar in terms of feature support. But as the component grows, you can expect to see the more advanced ones appear primarily on the Rich Tree View.
+:::
 
-## Customization
+### Tree Item components
 
-### Custom icons, border and animation
+The `@mui/x-tree-view` package exposes two different components to define your tree items:
 
-{{"demo": "CustomizedTreeView.js"}}
+- `TreeItem`
+- `TreeItem2`
 
-### Gmail clone
+#### `TreeItem`
 
-{{"demo": "GmailTreeView.js"}}
+This is the long-standing component that is very similar to the one used in previous versions (`@mui/x-tree-view@6` and `@mui/lab`).
 
-## Disabled tree items
-
-{{"demo": "DisabledTreeItems.js"}}
-
-The behavior of disabled tree items depends on the `disabledItemsFocusable` prop.
-
-If it is false:
-
-- Arrow keys will not focus disabled items and, the next non-disabled item will be focused.
-- Typing the first character of a disabled item's label will not focus the item.
-- Mouse or keyboard interaction will not expand/collapse disabled items.
-- Mouse or keyboard interaction will not select disabled items.
-- Shift + arrow keys will skip disabled items and, the next non-disabled item will be selected.
-- Programmatic focus will not focus disabled items.
-
-If it is true:
-
-- Arrow keys will focus disabled items.
-- Typing the first character of a disabled item's label will focus the item.
-- Mouse or keyboard interaction will not expand/collapse disabled items.
-- Mouse or keyboard interaction will not select disabled items.
-- Shift + arrow keys will not skip disabled items but, the disabled item will not be selected.
-- Programmatic focus will focus disabled items.
-
-## Accessibility
-
-(WAI-ARIA: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/)
-
-The component follows the WAI-ARIA authoring practices.
-
-To have an accessible tree view you must use `aria-labelledby` or `aria-label` to reference or provide a label on the TreeView, otherwise screen readers will announce it as "tree", making it hard to understand the context of a specific tree item.
-
-## TypeScript
-
-In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users need to import the following types.
-Internally, it uses module augmentation to extend the default theme structure.
+When using `SimpleTreeView`,
+you can import it from `@mui/x-tree-view/TreeItem` and use it as a child of the `SimpleTreeView` component:
 
 ```tsx
-// When using TypeScript 4.x and above
-import type {} from '@mui/x-tree-view/themeAugmentation';
-// When using TypeScript 3.x and below
-import '@mui/x-tree-view/themeAugmentation';
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
-const theme = createTheme({
-  components: {
-    MuiTreeView: {
-      styleOverrides: {
-        root: {
-          backgroundColor: 'red',
-        },
-      },
-    },
-  },
-});
+export default function App() {
+  return (
+    <SimpleTreeView>
+      <TreeItem itemId="1" label="Item 1" />
+      <TreeItem itemId="2" label="Item 2" />
+    </SimpleTreeView>
+  );
+}
+```
+
+When using `RichTreeView`,
+you don't have to import anything; it's the default component used to render the items:
+
+```tsx
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+
+export default function App() {
+  return <RichTreeView items={ITEMS} />;
+}
+```
+
+#### `TreeItem2`
+
+This is a new component that provides a more powerful customization API, and will eventually replace `TreeItem`.
+
+When using `SimpleTreeView`,
+you can import it from `@mui/x-tree-view/TreeItem2` and use it as a child of the `SimpleTreeView` component:
+
+```tsx
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
+
+export default function App() {
+  return (
+    <SimpleTreeView>
+      <TreeItem2 itemId="1" label="Item 1" />
+      <TreeItem2 itemId="2" label="Item 2" />
+    </SimpleTreeView>
+  );
+}
+```
+
+When using `RichTreeView`,
+you can import it from `@mui/x-tree-view/TreeItem2` and pass it as a slot of the `RichTreeView` component:
+
+```tsx
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
+
+export default function App() {
+  return <RichTreeView items={ITEMS} slots={{ item: TreeItem2 }} />;
+}
 ```

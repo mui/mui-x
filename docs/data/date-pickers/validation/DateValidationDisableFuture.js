@@ -7,6 +7,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
 
 const today = dayjs();
 const tomorrow = dayjs().add(1, 'day');
@@ -21,6 +22,7 @@ export default function DateValidationDisableFuture() {
           'DateTimePicker',
           'TimePicker',
           'DateRangePicker',
+          'DateTimeRangePicker',
         ]}
       >
         <DemoItem label="DatePicker">
@@ -42,6 +44,9 @@ export default function DateValidationDisableFuture() {
         </DemoItem>
         <DemoItem label="DateRangePicker" component="DateRangePicker">
           <DateRangePicker defaultValue={[today, tomorrow]} disableFuture />
+        </DemoItem>
+        <DemoItem label="DateTimeRangePicker" component="DateTimeRangePicker">
+          <DateTimeRangePicker defaultValue={[today, tomorrow]} disableFuture />
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>

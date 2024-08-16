@@ -3,13 +3,14 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
-import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { useViews } from '../internals/hooks/useViews';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
-import { TimeView } from '../models';
+import { PickerValidDate, TimeView } from '../models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { getTimeClockUtilityClass } from './timeClockClasses';
 import { Clock, ClockProps } from './Clock';
@@ -17,7 +18,6 @@ import { TimeClockProps } from './TimeClock.types';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 
 const useUtilityClasses = (ownerState: TimeClockProps<any>) => {
@@ -50,19 +50,23 @@ const TimeClockArrowSwitcher = styled(PickersArrowSwitcher, {
   top: 15,
 });
 
-type TimeClockComponent = (<TDate>(
+type TimeClockComponent = (<TDate extends PickerValidDate>(
   props: TimeClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 const TIME_CLOCK_DEFAULT_VIEWS: TimeView[] = ['hours', 'minutes'];
 
 /**
+ * Demos:
+ *
+ * - [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)
+ * - [TimeClock](https://mui.com/x/react-date-pickers/time-clock/)
  *
  * API:
  *
  * - [TimeClock API](https://mui.com/x/api/date-pickers/time-clock/)
  */
-export const TimeClock = React.forwardRef(function TimeClock<TDate extends unknown>(
+export const TimeClock = React.forwardRef(function TimeClock<TDate extends PickerValidDate>(
   inProps: TimeClockProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -77,10 +81,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     ampm = utils.is12HourCycleInCurrentLocale(),
     ampmInClock = false,
     autoFocus,
-    components,
-    componentsProps,
-    slots: innerSlots,
-    slotProps: innerSlotProps,
+    slots,
+    slotProps,
     value: valueProp,
     defaultValue,
     referenceDate: referenceDateProp,
@@ -90,7 +92,6 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     disableFuture,
     disablePast,
     minutesStep = 1,
-    shouldDisableClock,
     shouldDisableTime,
     showViewSwitcher,
     onChange,
@@ -106,9 +107,6 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     timezone: timezoneProp,
     ...other
   } = props;
-
-  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotProps = innerSlotProps ?? componentsProps;
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'TimeClock',
@@ -127,7 +125,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     timezone,
   });
 
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const now = useNow<TDate>(timezone);
 
   const { view, setView, previousView, nextView, setValueAndGoToNextView } = useViews({
@@ -174,10 +172,6 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
 
       const isValidValue = (timeValue: number, step = 1) => {
         if (timeValue % step !== 0) {
-          return false;
-        }
-
-        if (shouldDisableClock?.(timeValue, viewType)) {
           return false;
         }
 
@@ -243,7 +237,6 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       meridiemMode,
       minTime,
       minutesStep,
-      shouldDisableClock,
       shouldDisableTime,
       utils,
       disableFuture,
@@ -265,6 +258,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
           setValueAndGoToNextView(
             utils.setHours(valueOrReferenceDate, valueWithMeridiem),
             isFinish,
+            'hours',
           );
         };
 
@@ -276,7 +270,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
             utils,
             ampm,
             onChange: handleHoursChange,
-            getClockNumberText: localeText.hoursClockNumberText,
+            getClockNumberText: translations.hoursClockNumberText,
             isDisabled: (hourValue) => disabled || isTimeDisabled(hourValue, 'hours'),
             selectedId,
           }),
@@ -286,7 +280,11 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       case 'minutes': {
         const minutesValue = utils.getMinutes(valueOrReferenceDate);
         const handleMinutesChange = (minuteValue: number, isFinish?: PickerSelectionState) => {
-          setValueAndGoToNextView(utils.setMinutes(valueOrReferenceDate, minuteValue), isFinish);
+          setValueAndGoToNextView(
+            utils.setMinutes(valueOrReferenceDate, minuteValue),
+            isFinish,
+            'minutes',
+          );
         };
 
         return {
@@ -296,7 +294,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
             utils,
             value: minutesValue,
             onChange: handleMinutesChange,
-            getClockNumberText: localeText.minutesClockNumberText,
+            getClockNumberText: translations.minutesClockNumberText,
             isDisabled: (minuteValue) => disabled || isTimeDisabled(minuteValue, 'minutes'),
             selectedId,
           }),
@@ -306,7 +304,11 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       case 'seconds': {
         const secondsValue = utils.getSeconds(valueOrReferenceDate);
         const handleSecondsChange = (secondValue: number, isFinish?: PickerSelectionState) => {
-          setValueAndGoToNextView(utils.setSeconds(valueOrReferenceDate, secondValue), isFinish);
+          setValueAndGoToNextView(
+            utils.setSeconds(valueOrReferenceDate, secondValue),
+            isFinish,
+            'seconds',
+          );
         };
 
         return {
@@ -316,7 +318,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
             utils,
             value: secondsValue,
             onChange: handleSecondsChange,
-            getClockNumberText: localeText.secondsClockNumberText,
+            getClockNumberText: translations.secondsClockNumberText,
             isDisabled: (secondValue) => disabled || isTimeDisabled(secondValue, 'seconds'),
             selectedId,
           }),
@@ -331,9 +333,9 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     utils,
     value,
     ampm,
-    localeText.hoursClockNumberText,
-    localeText.minutesClockNumberText,
-    localeText.secondsClockNumberText,
+    translations.hoursClockNumberText,
+    translations.minutesClockNumberText,
+    translations.secondsClockNumberText,
     meridiemMode,
     setValueAndGoToNextView,
     valueOrReferenceDate,
@@ -374,10 +376,10 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
           slotProps={slotProps}
           onGoToPrevious={() => setView(previousView!)}
           isPreviousDisabled={!previousView}
-          previousLabel={localeText.openPreviousView}
+          previousLabel={translations.openPreviousView}
           onGoToNext={() => setView(nextView!)}
           isNextDisabled={!nextView}
-          nextLabel={localeText.openNextView}
+          nextLabel={translations.openNextView}
           ownerState={ownerState}
         />
       )}
@@ -388,11 +390,11 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
 TimeClock.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * @default utils.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**
@@ -413,22 +415,10 @@ TimeClock.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
-  /**
    * The default selected value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.any,
+  defaultValue: PropTypes.object,
   /**
    * If `true`, the picker views and text field are disabled.
    * @default false
@@ -457,12 +447,12 @@ TimeClock.propTypes = {
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime: PropTypes.any,
+  maxTime: PropTypes.object,
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime: PropTypes.any,
+  minTime: PropTypes.object,
   /**
    * Step over minutes.
    * @default 1
@@ -470,8 +460,9 @@ TimeClock.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when the value changes.
-   * @template TDate, TView
-   * @param {TDate | null} value The new value.
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TView The view type. Will be one of date or time views.
+   * @param {TValue} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
    */
@@ -504,15 +495,7 @@ TimeClock.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid time using the validation props, except callbacks such as `shouldDisableTime`.
    */
-  referenceDate: PropTypes.any,
-  /**
-   * Disable specific clock time.
-   * @param {number} clockValue The value to check.
-   * @param {TimeView} view The clock type of the timeValue.
-   * @returns {boolean} If `true` the time will be disabled.
-   * @deprecated Consider using `shouldDisableTime`.
-   */
-  shouldDisableClock: PropTypes.func,
+  referenceDate: PropTypes.object,
   /**
    * Disable specific time.
    * @template TDate
@@ -544,7 +527,7 @@ TimeClock.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,
@@ -552,7 +535,7 @@ TimeClock.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.any,
+  value: PropTypes.object,
   /**
    * The visible view.
    * Used when the component view is controlled.
@@ -561,6 +544,7 @@ TimeClock.propTypes = {
   view: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
    * Available views.
+   * @default ['hours', 'minutes']
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
 } as any;

@@ -2,85 +2,67 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import {
   unstable_useDateTimeField as useDateTimeField,
   UseDateTimeFieldComponentProps,
-  UseDateTimeFieldProps,
-  UseDateTimeFieldDefaultizedProps,
 } from '@mui/x-date-pickers/DateTimeField';
 import {
-  applyDefaultDate,
-  useDefaultDates,
   useLocalizationContext,
-  useUtils,
   useValidation,
   FieldChangeHandler,
   FieldChangeHandlerContext,
   UseFieldResponse,
   useControlledValueWithTimezone,
+  useDefaultizedDateTimeField,
 } from '@mui/x-date-pickers/internals';
-import { DateTimeValidationError } from '@mui/x-date-pickers/models';
-import { DateRange } from '../../models/range';
+import { DateTimeValidationError, PickerValidDate } from '@mui/x-date-pickers/models';
 import type {
-  UseMultiInputDateTimeRangeFieldDefaultizedProps,
   UseMultiInputDateTimeRangeFieldParams,
   UseMultiInputDateTimeRangeFieldProps,
 } from '../../../MultiInputDateTimeRangeField/MultiInputDateTimeRangeField.types';
-import { DateTimeRangeValidationError } from '../../../models';
+import { DateTimeRangeValidationError, DateRange } from '../../../models';
 import {
   DateTimeRangeComponentValidationProps,
   validateDateTimeRange,
 } from '../../utils/validation/validateDateTimeRange';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
+import { excludeProps } from './shared';
+import { useMultiInputFieldSelectedSections } from '../useMultiInputFieldSelectedSections';
 
-export const useDefaultizedDateTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
-  props: UseMultiInputDateTimeRangeFieldProps<TDate>,
-): UseMultiInputDateTimeRangeFieldDefaultizedProps<TDate, AdditionalProps> => {
-  const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
-
-  const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
-  const defaultFormat = ampm
-    ? utils.formats.keyboardDateTime12h
-    : utils.formats.keyboardDateTime24h;
-
-  return {
-    ...props,
-    disablePast: props.disablePast ?? false,
-    disableFuture: props.disableFuture ?? false,
-    format: props.format ?? defaultFormat,
-    minDate: applyDefaultDate(utils, props.minDateTime ?? props.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, props.maxDateTime ?? props.maxDate, defaultDates.maxDate),
-    minTime: props.minDateTime ?? props.minTime,
-    maxTime: props.maxDateTime ?? props.maxTime,
-    disableIgnoringDatePartForTimeValidation: Boolean(props.minDateTime || props.maxDateTime),
-  } as any;
-};
-
-export const useMultiInputDateTimeRangeField = <TDate, TTextFieldSlotProps extends {}>({
+export const useMultiInputDateTimeRangeField = <
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TTextFieldSlotProps extends {},
+>({
   sharedProps: inSharedProps,
   startTextFieldProps,
-  startInputRef,
   unstableStartFieldRef,
   endTextFieldProps,
-  endInputRef,
   unstableEndFieldRef,
 }: UseMultiInputDateTimeRangeFieldParams<
   TDate,
+  TEnableAccessibleFieldDOMStructure,
   TTextFieldSlotProps
->): UseMultiInputRangeFieldResponse<TTextFieldSlotProps> => {
-  const sharedProps = useDefaultizedDateTimeRangeFieldProps<TDate, UseDateTimeFieldProps<TDate>>(
-    inSharedProps,
-  );
+>): UseMultiInputRangeFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps> => {
+  const sharedProps = useDefaultizedDateTimeField<
+    TDate,
+    UseMultiInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    typeof inSharedProps
+  >(inSharedProps);
   const adapter = useLocalizationContext<TDate>();
 
   const {
     value: valueProp,
     defaultValue,
     format,
+    formatDensity,
     shouldRespectLeadingZeros,
-    timezone: timezoneProp,
     onChange,
     disabled,
     readOnly,
+    selectedSections,
+    onSelectedSectionsChange,
+    timezone: timezoneProp,
+    enableAccessibleFieldDOMStructure,
+    autoFocus,
   } = sharedProps;
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
@@ -128,49 +110,69 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldSlotProps exten
     rangeValueManager.defaultErrorState,
   );
 
+  const selectedSectionsResponse = useMultiInputFieldSelectedSections({
+    selectedSections,
+    onSelectedSectionsChange,
+    unstableStartFieldRef,
+    unstableEndFieldRef,
+  });
+
   const startFieldProps: UseDateTimeFieldComponentProps<
     TDate,
-    UseDateTimeFieldDefaultizedProps<TTextFieldSlotProps>
+    TEnableAccessibleFieldDOMStructure,
+    typeof sharedProps
   > = {
     error: !!validationError[0],
     ...startTextFieldProps,
-    format,
-    shouldRespectLeadingZeros,
+    ...selectedSectionsResponse.start,
     disabled,
     readOnly,
+    format,
+    formatDensity,
+    shouldRespectLeadingZeros,
     timezone,
-    unstableFieldRef: unstableStartFieldRef,
     value: valueProp === undefined ? undefined : valueProp[0],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
     onChange: handleStartDateChange,
+    enableAccessibleFieldDOMStructure,
+    autoFocus, // Do not add on end field.
   };
 
   const endFieldProps: UseDateTimeFieldComponentProps<
     TDate,
-    UseDateTimeFieldDefaultizedProps<TTextFieldSlotProps>
+    TEnableAccessibleFieldDOMStructure,
+    typeof sharedProps
   > = {
     error: !!validationError[1],
     ...endTextFieldProps,
+    ...selectedSectionsResponse.end,
     format,
+    formatDensity,
     shouldRespectLeadingZeros,
     disabled,
     readOnly,
     timezone,
-    unstableFieldRef: unstableEndFieldRef,
     value: valueProp === undefined ? undefined : valueProp[1],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
     onChange: handleEndDateChange,
+    enableAccessibleFieldDOMStructure,
   };
 
-  const startDateResponse = useDateTimeField({
-    props: startFieldProps,
-    inputRef: startInputRef,
-  }) as UseFieldResponse<TTextFieldSlotProps>;
+  const startDateResponse = useDateTimeField<
+    TDate,
+    TEnableAccessibleFieldDOMStructure,
+    typeof startFieldProps
+  >(startFieldProps) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;
 
-  const endDateResponse = useDateTimeField({
-    props: endFieldProps,
-    inputRef: endInputRef,
-  }) as UseFieldResponse<TTextFieldSlotProps>;
+  const endDateResponse = useDateTimeField<
+    TDate,
+    TEnableAccessibleFieldDOMStructure,
+    typeof endFieldProps
+  >(endFieldProps) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;
 
-  return { startDate: startDateResponse, endDate: endDateResponse };
+  /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
+  return {
+    startDate: excludeProps(startDateResponse, ['clearable', 'onClear']),
+    endDate: excludeProps(endDateResponse, ['clearable', 'onClear']),
+  };
 };

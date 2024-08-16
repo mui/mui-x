@@ -17,15 +17,15 @@ export default function RowGroupingGroupingValueGetter() {
       {
         field: 'composer',
         headerName: 'Composer',
-        valueGetter: (params) => params.value?.name,
-        groupingValueGetter: (params) => params.value.name,
+        valueGetter: (value: { name: string }) => value.name,
+        groupingValueGetter: (value: { name: string }) => value.name,
         width: 200,
-      } as GridColDef<Movie, { name: string }>,
+      } as GridColDef<Movie, string>,
       {
         field: 'decade',
         headerName: 'Decade',
-        valueGetter: (params) => Math.floor(params.row.year / 10) * 10,
-        groupingValueGetter: (params) => Math.floor(params.row.year / 10) * 10,
+        valueGetter: (value, row) => Math.floor(row.year / 10) * 10,
+        groupingValueGetter: (value, row) => Math.floor(row.year / 10) * 10,
         renderCell: (params) => {
           if (params.value == null) {
             return '';

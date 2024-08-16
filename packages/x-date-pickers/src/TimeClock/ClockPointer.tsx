@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH } from './shared';
 import { TimeView } from '../models';
 import { ClockPointerClasses, getClockPointerUtilityClass } from './clockPointerClasses';
@@ -34,16 +34,21 @@ const ClockPointerRoot = styled('div', {
   overridesResolver: (_, styles) => styles.root,
 })<{
   ownerState: ClockPointerProps & ClockPointerState;
-}>(({ theme, ownerState }) => ({
+}>(({ theme }) => ({
   width: 2,
   backgroundColor: (theme.vars || theme).palette.primary.main,
   position: 'absolute',
   left: 'calc(50% - 1px)',
   bottom: '50%',
   transformOrigin: 'center bottom 0px',
-  ...(ownerState.shouldAnimate && {
-    transition: theme.transitions.create(['transform', 'height']),
-  }),
+  variants: [
+    {
+      props: { shouldAnimate: true },
+      style: {
+        transition: theme.transitions.create(['transform', 'height']),
+      },
+    },
+  ],
 }));
 
 const ClockPointerThumb = styled('div', {
@@ -52,7 +57,7 @@ const ClockPointerThumb = styled('div', {
   overridesResolver: (_, styles) => styles.thumb,
 })<{
   ownerState: ClockPointerProps & ClockPointerState;
-}>(({ theme, ownerState }) => ({
+}>(({ theme }) => ({
   width: 4,
   height: 4,
   backgroundColor: (theme.vars || theme).palette.primary.contrastText,
@@ -62,9 +67,14 @@ const ClockPointerThumb = styled('div', {
   left: `calc(50% - ${CLOCK_HOUR_WIDTH / 2}px)`,
   border: `${(CLOCK_HOUR_WIDTH - 4) / 2}px solid ${(theme.vars || theme).palette.primary.main}`,
   boxSizing: 'content-box',
-  ...(ownerState.hasSelected && {
-    backgroundColor: (theme.vars || theme).palette.primary.main,
-  }),
+  variants: [
+    {
+      props: { hasSelected: true },
+      style: {
+        backgroundColor: (theme.vars || theme).palette.primary.main,
+      },
+    },
+  ],
 }));
 
 /**

@@ -11,23 +11,30 @@ import {
   stackOffsetSilhouette as d3StackOffsetSilhouette,
   stackOffsetWiggle as d3StackOffsetWiggle,
   Series,
-} from 'd3-shape';
-import { BarSeriesType, LineSeriesType } from '../models/seriesType';
+} from '@mui/x-charts-vendor/d3-shape';
+import type { BarSeriesType, LineSeriesType } from '../models/seriesType';
+import type { StackOffsetType, StackOrderType } from '../models/stacking';
+import { SeriesId } from '../models/seriesType/common';
 
-type StackableSeries = { [id: string]: BarSeriesType } | { [id: string]: LineSeriesType };
+type StackableSeries = Record<SeriesId, BarSeriesType> | Record<SeriesId, LineSeriesType>;
 
-type FormatterParams = { series: StackableSeries; seriesOrder: string[] };
+type FormatterParams = {
+  series: StackableSeries;
+  seriesOrder: SeriesId[];
+  defaultStrategy?: {
+    stackOrder?: StackOrderType;
+    stackOffset?: StackOffsetType;
+  };
+};
 
 export type StackingGroupsType = {
-  ids: string[];
+  ids: SeriesId[];
   stackingOrder: (series: Series<any, any>) => number[];
   stackingOffset: (series: Series<any, any>, order: Iterable<number>) => void;
 }[];
 
 export const StackOrder: {
-  [key in 'appearance' | 'ascending' | 'descending' | 'insideOut' | 'none' | 'reverse']: (
-    series: Series<any, any>,
-  ) => number[];
+  [key in StackOrderType]: (series: Series<any, any>) => number[];
 } = {
   /**
    * Series order such that the earliest series (according to the maximum value) is at the bottom.
@@ -56,10 +63,7 @@ export const StackOrder: {
 };
 
 export const StackOffset: {
-  [key in 'expand' | 'diverging' | 'none' | 'silhouette' | 'wiggle']: (
-    series: Series<any, any>,
-    order: Iterable<number>,
-  ) => void;
+  [key in StackOffsetType]: (series: Series<any, any>, order: Iterable<number>) => void;
 } = {
   /**
    * Applies a zero baseline and normalizes the values for each point such that the topline is always one.
@@ -89,10 +93,10 @@ export const StackOffset: {
  * @returns an array of groups, including the ids, the stacking order, and the stacking offset.
  */
 export const getStackingGroups = (params: FormatterParams) => {
-  const { series, seriesOrder } = params;
+  const { series, seriesOrder, defaultStrategy } = params;
 
   const stackingGroups: StackingGroupsType = [];
-  const stackIndex: { [id: string]: number } = {};
+  const stackIndex: Record<SeriesId, number> = {};
 
   seriesOrder.forEach((id) => {
     const { stack, stackOrder, stackOffset } = series[id];
@@ -107,8 +111,8 @@ export const getStackingGroups = (params: FormatterParams) => {
       stackIndex[stack] = stackingGroups.length;
       stackingGroups.push({
         ids: [id],
-        stackingOrder: StackOrder[stackOrder ?? 'none'],
-        stackingOffset: StackOffset[stackOffset ?? 'diverging'],
+        stackingOrder: StackOrder[stackOrder ?? defaultStrategy?.stackOrder ?? 'none'],
+        stackingOffset: StackOffset[stackOffset ?? defaultStrategy?.stackOffset ?? 'diverging'],
       });
     } else {
       stackingGroups[stackIndex[stack]].ids.push(id);

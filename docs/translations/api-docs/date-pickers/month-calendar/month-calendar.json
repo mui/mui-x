@@ -1,0 +1,51 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "defaultValue": {
+      "description": "The default selected value. Used when the component is not controlled."
+    },
+    "disabled": { "description": "If <code>true</code> picker is disabled" },
+    "disableFuture": {
+      "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components."
+    },
+    "disableHighlightToday": {
+      "description": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle."
+    },
+    "disablePast": {
+      "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
+    },
+    "maxDate": { "description": "Maximal selectable date." },
+    "minDate": { "description": "Minimal selectable date." },
+    "monthsPerRow": { "description": "Months rendered per row." },
+    "onChange": {
+      "description": "Callback fired when the value changes.",
+      "typeDescriptions": { "value": "The new value." }
+    },
+    "readOnly": { "description": "If <code>true</code> picker is readonly" },
+    "referenceDate": {
+      "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty."
+    },
+    "shouldDisableMonth": {
+      "description": "Disable specific month.",
+      "typeDescriptions": {
+        "month": "The month to test.",
+        "boolean": "If <code>true</code>, the month will be disabled."
+      }
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "timezone": {
+      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.",
+      "seeMoreText": "See the {{link}} for more details."
+    },
+    "value": { "description": "The selected value. Used when the component is controlled." }
+  },
+  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
+  "slotDescriptions": {
+    "monthButton": "Button displayed to render a single month in the &quot;month&quot; view."
+  }
+}

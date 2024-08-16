@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-imports */
+// @ts-nocheck
 import {
   CalendarPicker,
   CalendarPickerProps,

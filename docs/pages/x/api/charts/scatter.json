@@ -1,12 +1,23 @@
 {
-  "props": {},
-  "slots": [],
+  "props": {
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
+        "describedArgs": ["event", "scatterItemIdentifier"]
+      }
+    }
+  },
   "name": "Scatter",
   "imports": [
     "import { Scatter } from '@mui/x-charts/ScatterChart';",
-    "import { Scatter } from '@mui/x-charts';"
+    "import { Scatter } from '@mui/x-charts';",
+    "import { Scatter } from '@mui/x-charts-pro';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiScatter" },
+  "classes": [],
+  "muiName": "MuiScatter",
   "filename": "/packages/x-charts/src/ScatterChart/Scatter.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demonstration</a></li></ul>",
+  "cssComponent": false
 }

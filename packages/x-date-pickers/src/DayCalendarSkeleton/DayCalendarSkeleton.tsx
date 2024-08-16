@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import Skeleton from '@mui/material/Skeleton';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 import {
   DayCalendarSkeletonClasses,
@@ -58,22 +58,15 @@ const DayCalendarSkeletonDay = styled(Skeleton, {
   name: 'MuiDayCalendarSkeleton',
   slot: 'DaySkeleton',
   overridesResolver: (props, styles) => styles.daySkeleton,
-})<{ ownerState: { day: number } }>(({ ownerState }) => ({
+})<{ ownerState: { day: number } }>({
   margin: `0 ${DAY_MARGIN}px`,
-  ...(ownerState.day === 0 && {
-    visibility: 'hidden',
-  }),
-}));
-
-DayCalendarSkeletonDay.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  ownerState: PropTypes.shape({
-    day: PropTypes.number.isRequired,
-  }).isRequired,
-} as any;
+  variants: [
+    {
+      props: { day: 0 },
+      style: { visibility: 'hidden' },
+    },
+  ],
+});
 
 const monthMap = [
   [0, 1, 1, 1, 1, 1, 1],
@@ -84,10 +77,9 @@ const monthMap = [
 ];
 
 /**
- *
  * Demos:
  *
- * - [Date Picker](https://mui.com/x/react-date-pickers/date-picker/)
+ * - [DateCalendar](https://mui.com/x/react-date-pickers/date-calendar/)
  *
  * API:
  *
@@ -126,7 +118,7 @@ function DayCalendarSkeleton(inProps: DayCalendarSkeletonProps) {
 DayCalendarSkeleton.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Override or extend the styles applied to the component.

@@ -4,7 +4,7 @@ productId: x-date-pickers
 
 # Migration from the lab
 
-<p class="description">MUI Date and Time Pickers are now available on MUI X!</p>
+<p class="description">Material UI Date and Time Pickers are now available on MUI X!</p>
 
 ## Introduction
 
@@ -17,7 +17,7 @@ You can find why we are moving in this direction in the [announcement blog post]
 Most of our components remains MIT and are accessible for free in `@mui/x-date-pickers`.
 
 The range-picker components: `DateRangePicker`, `DateRangePickerDay`, `DesktopDateRangePicker`, `MobileDateRangePicker` and `StaticDateRangePicker`
-were marked as "intended for MUI X Pro" in our documentation and are now part of MUI X Pro.
+were marked as "intended for MUI X Pro" in our documentation and are now part of MUI X Pro.
 
 If you are using one of these components, you will have to take a Pro license in order to migrate to `@mui/x-date-pickers-pro` (see the [Pricing](https://mui.com/pricing/) page for more information).
 
@@ -27,21 +27,22 @@ If you already have a license for `@mui/x-data-grid-pro`, you can use the same o
 
 ## Migration steps
 
-### 1. Install MUI X packages
+### 1. Install MUI X packages
 
 #### Community plan
 
 <codeblock storageKey="package-manager">
+
 ```bash npm
 npm install @mui/x-date-pickers
 ```
 
-```bash yarn
-yarn add @mui/x-date-pickers
-```
-
 ```bash pnpm
 pnpm add @mui/x-date-pickers
+```
+
+```bash yarn
+yarn add @mui/x-date-pickers
 ```
 
 </codeblock>
@@ -54,12 +55,12 @@ pnpm add @mui/x-date-pickers
 npm install @mui/x-date-pickers-pro @mui/x-license-pro
 ```
 
-```bash yarn
-yarn add @mui/x-date-pickers-pro @mui/x-license-pro
-```
-
 ```bash pnpm
 pnpm add @mui/x-date-pickers-pro @mui/x-license-pro
+```
+
+```bash yarn
+yarn add @mui/x-date-pickers-pro @mui/x-license-pro
 ```
 
 </codeblock>
@@ -73,7 +74,7 @@ import { LicenseInfo } from '@mui/x-license-pro';
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 ```
 
-Learn more on [the Licensing page](/x/introduction/licensing/#license-key-installation).
+Learn more on [the Licensing page](/x/introduction/licensing/#license-key).
 
 ### 2. Run the code mod
 
@@ -104,7 +105,7 @@ Components of the Community plan such as `<DatePicker />` can be imported from b
 
 ### 3. Handle breaking changes introduced in alpha
 
-During the migration from `@mui/lab` to MUI X, we've focused on enhancing stability and developer experience.
+During the migration from `@mui/lab` to MUI X, we've focused on enhancing stability and developer experience.
 Some APIs were improved to be more coherent and customizable.
 
 Please check the complete list of the API changes before migrating from `@mui/x-date-pickers` 5.0.0-alpha.0 to the last v5.0.0.

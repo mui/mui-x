@@ -1,0 +1,93 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "ampm": { "description": "12h/24h view for hour selection clock." },
+    "autoFocus": {
+      "description": "If <code>true</code>, the main element is focused during the first mount. This main element is: - the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view). - the <code>input</code> element if there is a field rendered."
+    },
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "defaultValue": {
+      "description": "The default selected value. Used when the component is not controlled."
+    },
+    "disabled": {
+      "description": "If <code>true</code>, the picker views and text field are disabled."
+    },
+    "disableFuture": {
+      "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components."
+    },
+    "disableIgnoringDatePartForTimeValidation": {
+      "description": "Do not ignore date part when validating min/max time."
+    },
+    "disablePast": {
+      "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
+    },
+    "focusedView": { "description": "Controlled focused view." },
+    "maxTime": {
+      "description": "Maximal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>."
+    },
+    "minTime": {
+      "description": "Minimal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>."
+    },
+    "minutesStep": { "description": "Step over minutes." },
+    "onChange": {
+      "description": "Callback fired when the value changes.",
+      "typeDescriptions": {
+        "value": "The new value.",
+        "selectionState": "Indicates if the date selection is complete.",
+        "selectedView": "Indicates the view in which the selection has been made."
+      }
+    },
+    "onFocusedViewChange": {
+      "description": "Callback fired on focused view change.",
+      "typeDescriptions": {
+        "view": "The new view to focus or not.",
+        "hasFocus": "<code>true</code> if the view should be focused."
+      }
+    },
+    "onViewChange": {
+      "description": "Callback fired on view change.",
+      "typeDescriptions": { "view": "The new view." }
+    },
+    "openTo": {
+      "description": "The default visible view. Used when the component view is not controlled. Must be a valid option from <code>views</code> list."
+    },
+    "readOnly": {
+      "description": "If <code>true</code>, the picker views and text field are read-only."
+    },
+    "referenceDate": {
+      "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty."
+    },
+    "shouldDisableTime": {
+      "description": "Disable specific time.",
+      "typeDescriptions": {
+        "value": "The value to check.",
+        "view": "The clock type of the timeValue.",
+        "boolean": "If <code>true</code> the time will be disabled."
+      }
+    },
+    "skipDisabled": {
+      "description": "If <code>true</code>, disabled digital clock items will not be rendered."
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overrideable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "timeSteps": {
+      "description": "The time steps between two time unit options. For example, if <code>timeStep.minutes = 8</code>, then the available minute options will be <code>[0, 8, 16, 24, 32, 40, 48, 56]</code>."
+    },
+    "timezone": {
+      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.",
+      "seeMoreText": "See the {{link}} for more details."
+    },
+    "value": { "description": "The selected value. Used when the component is controlled." },
+    "view": {
+      "description": "The visible view. Used when the component view is controlled. Must be a valid option from <code>views</code> list."
+    },
+    "views": { "description": "Available views." }
+  },
+  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
+  "slotDescriptions": {
+    "digitalClockSectionItem": "Component responsible for rendering a single multi section digital clock section item."
+  }
+}

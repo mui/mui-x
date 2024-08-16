@@ -5,12 +5,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { useGridApiRef } from '@mui/x-data-grid';
 import {
-  DataGridPro,
-  GridApiPro,
+  DataGrid,
+  useGridApiRef,
   DEFAULT_GRID_AUTOSIZE_OPTIONS,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import { randomRating, randomTraderName } from '@mui/x-data-grid-generator';
 
 function renderRating(params: any) {
@@ -39,7 +38,12 @@ function useData(length: number) {
       { field: 'id', headerName: 'Brand ID' },
       { field: 'brand', headerName: 'Brand name' },
       { field: 'rep', headerName: 'Representative' },
-      { field: 'rating', headerName: 'Rating', renderCell: renderRating },
+      {
+        field: 'rating',
+        headerName: 'Rating',
+        renderCell: renderRating,
+        display: 'flex' as const,
+      },
     ];
 
     return { rows, columns };
@@ -47,7 +51,7 @@ function useData(length: number) {
 }
 
 export default function ColumnAutosizing() {
-  const apiRef = useGridApiRef<GridApiPro>();
+  const apiRef = useGridApiRef();
   const data = useData(100);
 
   const [includeHeaders, setIncludeHeaders] = React.useState(
@@ -125,7 +129,7 @@ export default function ColumnAutosizing() {
         />
       </Stack>
       <div style={{ height: 400, width: '100%' }}>
-        <DataGridPro
+        <DataGrid
           apiRef={apiRef}
           density="compact"
           {...data}

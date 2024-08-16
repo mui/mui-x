@@ -1,7 +1,7 @@
 <DataGrid
   rows={rows}
   {...data}
-  rowCount={rowCountState}
+  rowCount={rowCount}
   loading={isLoading}
   pageSizeOptions={[5]}
   paginationModel={paginationModel}

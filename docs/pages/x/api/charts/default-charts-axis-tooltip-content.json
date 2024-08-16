@@ -1,0 +1,86 @@
+{
+  "props": {
+    "axis": { "type": { "name": "object" }, "required": true },
+    "axisData": {
+      "type": {
+        "name": "shape",
+        "description": "{ x?: { index?: number, value: Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string }, y?: { index?: number, value: Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string } }"
+      },
+      "required": true
+    },
+    "classes": {
+      "type": { "name": "object" },
+      "required": true,
+      "additionalInfo": { "cssApi": true }
+    },
+    "series": {
+      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "required": true
+    },
+    "axisValue": {
+      "type": { "name": "union", "description": "Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string" }
+    },
+    "dataIndex": { "type": { "name": "number" } }
+  },
+  "name": "DefaultChartsAxisTooltipContent",
+  "imports": [
+    "import { DefaultChartsAxisTooltipContent } from '@mui/x-charts/ChartsTooltip';",
+    "import { DefaultChartsAxisTooltipContent } from '@mui/x-charts';",
+    "import { DefaultChartsAxisTooltipContent } from '@mui/x-charts-pro';"
+  ],
+  "classes": [
+    {
+      "key": "cell",
+      "className": "MuiDefaultChartsAxisTooltipContent-cell",
+      "description": "Styles applied to the cell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "labelCell",
+      "className": "MuiDefaultChartsAxisTooltipContent-labelCell",
+      "description": "Styles applied to the labelCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "mark",
+      "className": "MuiDefaultChartsAxisTooltipContent-mark",
+      "description": "Styles applied to the mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "markCell",
+      "className": "MuiDefaultChartsAxisTooltipContent-markCell",
+      "description": "Styles applied to the markCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiDefaultChartsAxisTooltipContent-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "row",
+      "className": "MuiDefaultChartsAxisTooltipContent-row",
+      "description": "Styles applied to the row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "table",
+      "className": "MuiDefaultChartsAxisTooltipContent-table",
+      "description": "Styles applied to the table element.",
+      "isGlobal": false
+    },
+    {
+      "key": "valueCell",
+      "className": "MuiDefaultChartsAxisTooltipContent-valueCell",
+      "description": "Styles applied to the valueCell element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiDefaultChartsAxisTooltipContent",
+  "filename": "/packages/x-charts/src/ChartsTooltip/DefaultChartsAxisTooltipContent.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/tooltip/\">Charts - Tooltip</a></li></ul>",
+  "cssComponent": false
+}

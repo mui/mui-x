@@ -5,7 +5,7 @@ export interface TreeItemClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the transition component. */
-  group: string;
+  groupTransition: string;
   /** Styles applied to the content element. */
   content: string;
   /** State class applied to the content element when expanded. */
@@ -16,10 +16,20 @@ export interface TreeItemClasses {
   focused: string;
   /** State class applied to the element when disabled. */
   disabled: string;
-  /** Styles applied to the tree node icon. */
+  /** Styles applied to the tree item icon. */
   iconContainer: string;
   /** Styles applied to the label element. */
   label: string;
+  /** Styles applied to the checkbox element. */
+  checkbox: string;
+  /** Styles applied to the input element that is visible when editing is enabled. */
+  labelInput: string;
+  /** Styles applied to the content element when editing is enabled. */
+  editing: string;
+  /** Styles applied to the content of the items that are editable. */
+  editable: string;
+  /** Styles applied to the drag and drop overlay. */
+  dragAndDropOverlay: string;
 }
 
 export type TreeItemClassKey = keyof TreeItemClasses;
@@ -30,7 +40,7 @@ export function getTreeItemUtilityClass(slot: string): string {
 
 export const treeItemClasses: TreeItemClasses = generateUtilityClasses('MuiTreeItem', [
   'root',
-  'group',
+  'groupTransition',
   'content',
   'expanded',
   'selected',
@@ -38,4 +48,9 @@ export const treeItemClasses: TreeItemClasses = generateUtilityClasses('MuiTreeI
   'disabled',
   'iconContainer',
   'label',
+  'checkbox',
+  'labelInput',
+  'editable',
+  'editing',
+  'dragAndDropOverlay',
 ]);

@@ -1,0 +1,15 @@
+<DateTimeField
+  label="Format with meridiem"
+  defaultValue={dayjs('2022-04-17T15:30')}
+  format="L hh:mm a"
+/>
+<DateTimeField
+  label="Format without meridiem"
+  defaultValue={dayjs('2022-04-17T15:30')}
+  format="L HH:mm"
+/>
+<DateTimeField
+  label="Localized format with full letter month"
+  defaultValue={dayjs('2022-04-17T15:30')}
+  format="LLL"
+/>

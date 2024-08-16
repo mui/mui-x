@@ -1,26 +1,28 @@
 import * as React from 'react';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { TreeView } from '@mui/x-tree-view/TreeView';
+import Box from '@mui/material/Box';
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 export default function FirstComponent() {
   return (
-    <TreeView
-      aria-label="file system navigator"
-      defaultCollapseIcon={<ExpandMoreIcon />}
-      defaultExpandIcon={<ChevronRightIcon />}
-      sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
-    >
-      <TreeItem nodeId="1" label="Applications">
-        <TreeItem nodeId="2" label="Calendar" />
-      </TreeItem>
-      <TreeItem nodeId="5" label="Documents">
-        <TreeItem nodeId="10" label="OSS" />
-        <TreeItem nodeId="6" label="MUI">
-          <TreeItem nodeId="8" label="index.js" />
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
+      <SimpleTreeView>
+        <TreeItem itemId="grid" label="Data Grid">
+          <TreeItem itemId="grid-community" label="@mui/x-data-grid" />
+          <TreeItem itemId="grid-pro" label="@mui/x-data-grid-pro" />
+          <TreeItem itemId="grid-premium" label="@mui/x-data-grid-premium" />
         </TreeItem>
-      </TreeItem>
-    </TreeView>
+        <TreeItem itemId="pickers" label="Date and Time Pickers">
+          <TreeItem itemId="pickers-community" label="@mui/x-date-pickers" />
+          <TreeItem itemId="pickers-pro" label="@mui/x-date-pickers-pro" />
+        </TreeItem>
+        <TreeItem itemId="charts" label="Charts">
+          <TreeItem itemId="charts-community" label="@mui/x-charts" />
+        </TreeItem>
+        <TreeItem itemId="tree-view" label="Tree View">
+          <TreeItem itemId="tree-view-community" label="@mui/x-tree-view" />
+        </TreeItem>
+      </SimpleTreeView>
+    </Box>
   );
 }

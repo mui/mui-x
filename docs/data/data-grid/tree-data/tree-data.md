@@ -26,9 +26,11 @@ const rows: GridRowsProp = [
   { path: ['Sarah', 'Thomas', 'Karen'], jobTitle: 'Sales Person', id: 3 },
 ];
 
+const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.path;
+
 <DataGridPro
   treeData
-  getTreeDataPath={(row) => row.path}
+  getTreeDataPath={getTreeDataPath}
   rows={rows}
   columns={columns}
 />;
@@ -41,13 +43,21 @@ const rows: GridRowsProp = [
   { path: 'Sarah/Thomas/Karen', jobTitle: 'Sales Person', id: 3 },
 ];
 
+const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) =>
+  row.path.split('/');
+
 <DataGridPro
   treeData
-  getTreeDataPath={(row) => row.path.split('/')}
+  getTreeDataPath={getTreeDataPath}
   rows={rows}
   columns={columns}
 />;
 ```
+
+:::warning
+The `getTreeDataPath` prop should keep the same reference between two renders.
+If it changes, the data grid will consider that the data has changed and will recompute the tree resulting in collapsing all the rows.
+:::
 
 {{"demo": "TreeDataSimple.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -102,34 +112,23 @@ You can limit the sorting to the top-level rows with the `disableChildrenSorting
 
 {{"demo": "TreeDataDisableChildrenSorting.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> If you are using `sortingMode="server"`, you need to always put the children of a row after its parent.
-> For instance:
->
-> ```ts
-> // ✅ The row A.A is immediately after its parent
-> const validRows = [{ path: ['A'] }, { path: ['A', 'A'] }, { path: ['B'] }];
->
-> // ❌ The row A.A is not immediately after its parent
-> const invalidRows = [{ path: ['A'] }, { path: ['B'] }, { path: ['A', 'A'] }];
-> ```
-
-## Children lazy-loading 🚧
-
 :::warning
-This feature isn't implemented yet. It's coming.
+If you are using `sortingMode="server"`, the children of a row must always immediately follow their parent.
+For instance:
 
-👍 Upvote [issue #3377](https://github.com/mui/mui-x/issues/3377) if you want to see it land faster.
+```ts
+// ✅ The row A.A is immediately after its parent
+const validRows = [{ path: ['A'] }, { path: ['A', 'A'] }, { path: ['B'] }];
 
-Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
+// ❌ The row A.A is not immediately after its parent
+const invalidRows = [{ path: ['A'] }, { path: ['B'] }, { path: ['A', 'A'] }];
+```
+
 :::
 
-Alternatively, you can achieve a similar behavior by implementing this feature outside the component as shown below.
-This implementation does not support every feature of the data grid but can be a good starting point for large datasets.
+## Children lazy-loading
 
-The idea is to add a property `descendantCount` on the row and to use it instead of the internal grid state.
-To do so, you need to override both the `renderCell` of the grouping column and to manually open the rows by listening to `rowExpansionChange` event.
-
-{{"demo": "TreeDataLazyLoading.js", "bg": "inline", "defaultCodeOpen": false}}
+Check the [Server-side tree data](/x/react-data-grid/server-side-data/tree-data/) section for more information about lazy-loading tree data children.
 
 ## Full example
 

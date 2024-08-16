@@ -6,7 +6,7 @@ import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
-import { FieldSection } from '../../../models';
+import { FieldSection, PickerValidDate } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
@@ -22,7 +22,7 @@ const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
  * - StaticTimePicker
  */
 export const useStaticPicker = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseStaticPickerProps<TDate, TView, any, TExternalProps>,
 >({
@@ -43,6 +43,7 @@ export const useStaticPicker = <
     ...pickerParams,
     props,
     autoFocusView: autoFocus ?? false,
+    fieldRef: undefined,
     additionalViewProps: {},
     wrapperVariant: displayStaticWrapperAs,
   });

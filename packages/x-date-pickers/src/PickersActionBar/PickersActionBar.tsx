@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import DialogActions, { DialogActionsProps } from '@mui/material/DialogActions';
-import { useLocaleText } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
 
 export type PickersActionBarAction = 'clear' | 'cancel' | 'accept' | 'today';
 
@@ -19,10 +19,20 @@ export interface PickersActionBarProps extends DialogActionsProps {
   onSetToday: () => void;
 }
 
+/**
+ * Demos:
+ *
+ * - [Custom slots and subcomponents](https://mui.com/x/react-date-pickers/custom-components/)
+ * - [Custom layout](https://mui.com/x/react-date-pickers/custom-layout/)
+ *
+ * API:
+ *
+ * - [PickersActionBar API](https://mui.com/x/api/date-pickers/pickers-action-bar/)
+ */
 function PickersActionBar(props: PickersActionBarProps) {
   const { onAccept, onClear, onCancel, onSetToday, actions, ...other } = props;
 
-  const localeText = useLocaleText();
+  const translations = usePickersTranslations();
 
   if (actions == null || actions.length === 0) {
     return null;
@@ -33,28 +43,28 @@ function PickersActionBar(props: PickersActionBarProps) {
       case 'clear':
         return (
           <Button data-mui-test="clear-action-button" onClick={onClear} key={actionType}>
-            {localeText.clearButtonLabel}
+            {translations.clearButtonLabel}
           </Button>
         );
 
       case 'cancel':
         return (
           <Button onClick={onCancel} key={actionType}>
-            {localeText.cancelButtonLabel}
+            {translations.cancelButtonLabel}
           </Button>
         );
 
       case 'accept':
         return (
           <Button onClick={onAccept} key={actionType}>
-            {localeText.okButtonLabel}
+            {translations.okButtonLabel}
           </Button>
         );
 
       case 'today':
         return (
           <Button data-mui-test="today-action-button" onClick={onSetToday} key={actionType}>
-            {localeText.todayButtonLabel}
+            {translations.todayButtonLabel}
           </Button>
         );
 
@@ -69,7 +79,7 @@ function PickersActionBar(props: PickersActionBarProps) {
 PickersActionBar.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Ordered array of actions to display.

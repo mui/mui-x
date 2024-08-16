@@ -1,0 +1,8 @@
+<TreeItemContext.Provider value={context}>
+  <RichTreeView
+    items={products}
+    aria-label="customized"
+    defaultExpandedItems={DEFAULT_EXPANDED_ITEMS}
+    slots={{ item: CustomTreeItem }}
+  />
+</TreeItemContext.Provider>

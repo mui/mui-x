@@ -1,0 +1,15 @@
+{
+  "props": { "skipAnimation": { "type": { "name": "bool" }, "default": "false" } },
+  "name": "AnimatedLine",
+  "imports": [
+    "import { AnimatedLine } from '@mui/x-charts/LineChart';",
+    "import { AnimatedLine } from '@mui/x-charts';",
+    "import { AnimatedLine } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiAnimatedLine",
+  "filename": "/packages/x-charts/src/LineChart/AnimatedLine.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
+  "cssComponent": false
+}

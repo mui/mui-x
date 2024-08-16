@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Dayjs } from 'dayjs';
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
@@ -13,11 +12,12 @@ import {
 } from '@mui/x-date-pickers/models';
 
 interface ButtonFieldProps
-  extends UseDateFieldProps<Dayjs>,
+  extends UseDateFieldProps<Dayjs, false>,
     BaseSingleInputFieldProps<
       Dayjs | null,
       Dayjs,
       FieldSection,
+      false,
       DateValidationError
     > {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -42,7 +42,7 @@ function ButtonField(props: ButtonFieldProps) {
       aria-label={ariaLabel}
       onClick={() => setOpen?.((prev) => !prev)}
     >
-      {label ?? 'Pick a date'}
+      {label ? `Current date: ${label}` : 'Pick a date'}
     </Button>
   );
 }
@@ -54,8 +54,8 @@ function ButtonDatePicker(
 
   return (
     <DatePicker
-      slots={{ field: ButtonField, ...props.slots }}
-      slotProps={{ field: { setOpen } as any }}
+      slots={{ ...props.slots, field: ButtonField }}
+      slotProps={{ ...props.slotProps, field: { setOpen } as any }}
       {...props}
       open={open}
       onClose={() => setOpen(false)}
@@ -69,15 +69,11 @@ export default function PickerWithButtonField() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={1}>
-        <ButtonDatePicker
-          label={`Current date: ${
-            value == null ? 'null' : value.format('MM/DD/YYYY')
-          }`}
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-        />
-      </Stack>
+      <ButtonDatePicker
+        label={value == null ? null : value.format('MM/DD/YYYY')}
+        value={value}
+        onChange={(newValue) => setValue(newValue)}
+      />
     </LocalizationProvider>
   );
 }

@@ -1,0 +1,12 @@
+{
+  "name": "GridExportStateParams",
+  "imports": [
+    "import { GridExportStateParams } from '@mui/x-data-grid-premium'",
+    "import { GridExportStateParams } from '@mui/x-data-grid-pro'",
+    "import { GridExportStateParams } from '@mui/x-data-grid'"
+  ],
+  "demos": "<ul><li><a href=\"/x/react-data-grid/state/#restore-the-state-with-apiref\">Restore state with `apiRef`</a></li></ul>",
+  "properties": {
+    "exportOnlyDirtyModels": { "type": { "description": "boolean" }, "default": "false" }
+  }
+}

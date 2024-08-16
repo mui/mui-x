@@ -106,17 +106,18 @@ The following demo implements this behavior.
 
 {{"demo": "SingleClickEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Usage with `@mui/x-date-pickers`
+## Bulk editing
 
-By default, the data grid uses native browser inputs for editing `date` and `dateTime` columns.
+The data grid [Editing](/x/react-data-grid/editing/) API exposes [the `processRowUpdate` callback](/x/react-data-grid/editing/#the-processrowupdate-callback) which is commonly used to persist edits on per-row basis.
+You can utilize this callback to batch edits locally and then choose to either persist or discard them in bulk.
 
-While [MUI X Date / Time Pickers](/x/react-date-pickers/getting-started/) are not supported by the data grid out of the box yet, it is easy to integrate them by creating [custom edit components](/x/react-data-grid/editing/#create-your-own-edit-component) and [custom filter operators](/x/react-data-grid/filtering/customization/#create-a-custom-operator).
+The demo below stores edited and deleted rows in the `unsavedChangesRef`.
+These changes are saved or discarded when the user clicks the **Save** or **Discard** buttons respectively.
 
-The example below uses `@mui/x-date-pickers` for both `date` and `dateTime` column types:
+{{"demo": "BulkEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
-{{"demo": "EditingWithDatePickers.js", "bg": "inline", "defaultCodeOpen": false }}
+### With commercial features [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-:::warning
-You can change date format by importing different locale (`en-US` locale is used in the example above).
-See [Localization](/x/react-date-pickers/localization/) for more information.
-:::
+When using [`DataGridPremium`](/x/react-data-grid/#premium-plan), bulk editing applies to row updates from [Clipboard paste](/x/react-data-grid/clipboard/#clipboard-paste) automatically, since [Clipboard paste uses Editing API for persistence](/x/react-data-grid/clipboard/#persisting-pasted-data):
+
+{{"demo": "BulkEditingPremiumNoSnap.js", "bg": "inline", "defaultCodeOpen": false}}

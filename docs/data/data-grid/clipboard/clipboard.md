@@ -28,18 +28,13 @@ The priority of the data copied to the clipboard is the following, from highest 
 :::
 
 :::warning
-This feature is experimental, it needs to be explicitly activated using the `clipboardPaste` experimental feature flag.
-
-Additionally, to make sure the copied cells are formatted correctly and can be parsed,
-it's recommended to set the `unstable_ignoreValueFormatterDuringExport` prop to `true`.
+To make sure the copied cells are formatted correctly and can be parsed,
+it is recommended to set the `ignoreValueFormatterDuringExport` prop to `true`.
 During clipboard copy operation, the raw cell values will be copied instead of the formatted values,
 so that the values can be parsed correctly during the paste operation.
 
 ```tsx
-<DataGridPremium
-  experimentalFeatures={{ clipboardPaste: true }}
-  unstable_ignoreValueFormatterDuringExport
-/>
+<DataGridPremium ignoreValueFormatterDuringExport />
 ```
 
 :::
@@ -92,7 +87,22 @@ For convenience, you can also listen to these events using their respective prop
 - `onClipboardPasteStart`
 - `onClipboardPasteEnd`
 
-The demo below shows how to use these events to display a loading indicator while the clipboard paste operation is in progress:
+Additionally, there is the `onBeforeClipboardPasteStart` prop, which is called before the clipboard paste operation starts
+and can be used to cancel or confirm the paste operation:
+
+```tsx
+const onBeforeClipboardPasteStart = async () => {
+  const confirmed = window.confirm('Are you sure you want to paste?');
+  if (!confirmed) {
+    throw new Error('Paste operation cancelled');
+  }
+};
+
+<DataGridPremium onBeforeClipboardPasteStart={onBeforeClipboardPasteStart} />;
+```
+
+The demo below uses the [`Dialog`](/material-ui/react-dialog/) component for paste confirmation.
+If confirmed, the Data Grid displays a loading indicator during the paste operation.
 
 {{"demo": "ClipboardPasteEvents.js", "bg": "inline"}}
 
@@ -103,16 +113,14 @@ By default, the clipboard copy and paste operations use the following format:
 - The cell values are separated by a tab (`\t`) character.
 - The rows are separated by a new line (`\n`) character.
 
-You can use `clipboardCopyCellDelimiter` and `unstable_splitClipboardPastedText` props to change the format:
+You can use `clipboardCopyCellDelimiter` and `splitClipboardPastedText` props to change the format:
 
 ```tsx
 <DataGridPremium
   {...otherProps}
   // support comma separated values
   clipboardCopyCellDelimiter={','}
-  unstable_splitClipboardPastedText={(text) =>
-    text.split('\n').map((row) => row.split(','))
-  }
+  splitClipboardPastedText={(text) => text.split('\n').map((row) => row.split(','))}
 />
 ```
 

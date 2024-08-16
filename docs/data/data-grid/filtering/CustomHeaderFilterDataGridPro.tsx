@@ -27,9 +27,9 @@ function CustomHeaderFilter(props: GridHeaderFilterCellProps) {
 
   const publish = React.useCallback(
     (
-        eventName: keyof GridHeaderFilterEventLookup,
-        propHandler?: React.EventHandler<any>,
-      ) =>
+      eventName: keyof GridHeaderFilterEventLookup,
+      propHandler?: React.EventHandler<any>,
+    ) =>
       (event: React.SyntheticEvent) => {
         apiRef.current.publishEvent(
           eventName,
@@ -69,7 +69,11 @@ function CustomHeaderFilter(props: GridHeaderFilterCellProps) {
 
   return (
     <Stack
-      sx={{ outline: hasFocus ? 'solid #1976d2 1px' : '' }}
+      sx={{
+        outline: hasFocus ? 'solid #1976d2 1px' : '',
+        outlineOffset: hasFocus ? -2 : 0,
+        borderTop: `1px solid var(--DataGrid-rowBorderColor)`,
+      }}
       tabIndex={tabIndex}
       ref={cellRef}
       data-field={colDef.field}
@@ -114,7 +118,7 @@ export default function CustomHeaderFilterDataGridPro() {
         slots={{
           headerFilterCell: CustomHeaderFilter,
         }}
-        unstable_headerFilters
+        headerFilters
       />
     </div>
   );

@@ -1,0 +1,65 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "children": { "description": "The content of the component." },
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "disabled": { "description": "If <code>true</code>, the item is disabled." },
+    "id": { "description": "The id attribute of the item. If not provided, it will be generated." },
+    "itemId": { "description": "The id of the item. Must be unique." },
+    "label": { "description": "The label of the item." },
+    "onBlur": { "description": "Callback fired when the item root is blurred." },
+    "onFocus": {
+      "description": "This prop isn&#39;t supported. Use the <code>onItemFocus</code> callback on the tree if you need to monitor an item&#39;s focus."
+    },
+    "onKeyDown": {
+      "description": "Callback fired when a key is pressed on the keyboard and the tree is in focus."
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
+  },
+  "classDescriptions": {
+    "disabled": {
+      "description": "State class applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the element",
+      "conditions": "disabled"
+    },
+    "editable": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the content of the items that are editable"
+    },
+    "editing": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the content element",
+      "conditions": "editing is enabled"
+    },
+    "expanded": {
+      "description": "State class applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the content element",
+      "conditions": "expanded"
+    },
+    "focused": {
+      "description": "State class applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the content element",
+      "conditions": "focused"
+    },
+    "selected": {
+      "description": "State class applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the content element",
+      "conditions": "selected"
+    }
+  },
+  "slotDescriptions": {
+    "checkbox": "The component that renders the item checkbox for selection.",
+    "collapseIcon": "The icon used to collapse the item.",
+    "content": "The component that renders the content of the item. (e.g.: everything related to this item, not to its children).",
+    "dragAndDropOverlay": "The component that renders the overlay when an item reordering is ongoing. Warning: This slot is only useful when using the <code>RichTreeViewPro</code> component.",
+    "endIcon": "The icon displayed next to an end item.",
+    "expandIcon": "The icon used to expand the item.",
+    "groupTransition": "The component that renders the children of the item.",
+    "icon": "The icon to display next to the tree item&#39;s label.",
+    "iconContainer": "The component that renders the icon.",
+    "label": "The component that renders the item label.",
+    "labelInput": "The component that renders the input to edit the label when the item is editable and is currently being edited.",
+    "root": "The component that renders the root."
+  }
+}

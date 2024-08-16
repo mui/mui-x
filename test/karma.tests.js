@@ -1,5 +1,5 @@
 /* eslint-env mocha */
-import '@mui/monorepo/test/utils/setupKarma';
+import '@mui/internal-test-utils/setupKarma';
 
 import './utils/init';
 import { createXMochaHooks } from './utils/mochaHooks';

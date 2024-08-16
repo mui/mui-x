@@ -1,0 +1,24 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "columnsSort": {
+      "description": "Changes how the options in the columns selector should be ordered. If not specified, the order is derived from the <code>columns</code> prop."
+    },
+    "disableAddFilterButton": {
+      "description": "If <code>true</code>, the <code>Add filter</code> button will not be displayed."
+    },
+    "disableRemoveAllButton": {
+      "description": "If <code>true</code>, the <code>Remove all</code> button will be disabled"
+    },
+    "filterFormProps": { "description": "Props passed to each filter form." },
+    "getColumnForNewFilter": {
+      "description": "Function that returns the next filter item to be picked as default filter.",
+      "typeDescriptions": { "args": "Currently configured filters and columns." }
+    },
+    "logicOperators": { "description": "Sets the available logic operators." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    }
+  },
+  "classDescriptions": {}
+}

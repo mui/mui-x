@@ -1,277 +1,280 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
-import { EventHandlers } from '@mui/base/utils';
+import { useRtl } from '@mui/system/RtlProvider';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { TreeViewPlugin } from '../../models';
+import { TreeViewItemMeta, TreeViewPlugin, MuiCancellableEvent } from '../../models';
 import {
-  getFirstNode,
-  getLastNode,
-  getNextNode,
-  getPreviousNode,
-  populateInstance,
-} from '../../useTreeView/useTreeView.utils';
-import { UseTreeViewKeyboardNavigationSignature } from './useTreeViewKeyboardNavigation.types';
+  getFirstNavigableItem,
+  getLastNavigableItem,
+  getNextNavigableItem,
+  getPreviousNavigableItem,
+  isTargetInDescendants,
+} from '../../utils/tree';
+import {
+  TreeViewFirstCharMap,
+  UseTreeViewKeyboardNavigationSignature,
+} from './useTreeViewKeyboardNavigation.types';
+import { hasPlugin } from '../../utils/plugins';
+import { useTreeViewLabel } from '../useTreeViewLabel';
 
 function isPrintableCharacter(string: string) {
-  return string && string.length === 1 && string.match(/\S/);
-}
-
-function findNextFirstChar(firstChars: string[], startIndex: number, char: string) {
-  for (let i = startIndex; i < firstChars.length; i += 1) {
-    if (char === firstChars[i]) {
-      return i;
-    }
-  }
-  return -1;
+  return !!string && string.length === 1 && !!string.match(/\S/);
 }
 
 export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   UseTreeViewKeyboardNavigationSignature
 > = ({ instance, params, state }) => {
-  const theme = useTheme();
-  const isRtl = theme.direction === 'rtl';
-  const firstCharMap = React.useRef<{ [nodeId: string]: string }>({});
+  const isRtl = useRtl();
+  const firstCharMap = React.useRef<TreeViewFirstCharMap>({});
 
-  const mapFirstChar = useEventCallback((nodeId: string, firstChar: string) => {
-    firstCharMap.current[nodeId] = firstChar;
+  const updateFirstCharMap = useEventCallback(
+    (callback: (firstCharMap: TreeViewFirstCharMap) => TreeViewFirstCharMap) => {
+      firstCharMap.current = callback(firstCharMap.current);
+    },
+  );
 
-    return () => {
-      const newMap = { ...firstCharMap.current };
-      delete newMap[nodeId];
-      firstCharMap.current = newMap;
+  React.useEffect(() => {
+    if (instance.areItemUpdatesPrevented()) {
+      return;
+    }
+
+    const newFirstCharMap: { [itemId: string]: string } = {};
+
+    const processItem = (item: TreeViewItemMeta) => {
+      newFirstCharMap[item.id] = item.label!.substring(0, 1).toLowerCase();
     };
-  });
 
-  populateInstance<UseTreeViewKeyboardNavigationSignature>(instance, {
-    mapFirstChar,
-  });
+    Object.values(state.items.itemMetaMap).forEach(processItem);
+    firstCharMap.current = newFirstCharMap;
+  }, [state.items.itemMetaMap, params.getItemId, instance]);
 
-  const handleNextArrow = (event: React.KeyboardEvent<HTMLUListElement>) => {
-    if (state.focusedNodeId != null && instance.isNodeExpandable(state.focusedNodeId)) {
-      if (instance.isNodeExpanded(state.focusedNodeId)) {
-        instance.focusNode(event, getNextNode(instance, state.focusedNodeId));
-      } else if (!instance.isNodeDisabled(state.focusedNodeId)) {
-        instance.toggleNodeExpansion(event, state.focusedNodeId);
+  const getFirstMatchingItem = (itemId: string, query: string) => {
+    const cleanQuery = query.toLowerCase();
+
+    const getNextItem = (itemIdToCheck: string) => {
+      const nextItemId = getNextNavigableItem(instance, itemIdToCheck);
+      // We reached the end of the tree, check from the beginning
+      if (nextItemId === null) {
+        return getFirstNavigableItem(instance);
+      }
+
+      return nextItemId;
+    };
+
+    let matchingItemId: string | null = null;
+    let currentItemId: string = getNextItem(itemId);
+    const checkedItems: Record<string, true> = {};
+    // The "!checkedItems[currentItemId]" condition avoids an infinite loop when there is no matching item.
+    while (matchingItemId == null && !checkedItems[currentItemId]) {
+      if (firstCharMap.current[currentItemId] === cleanQuery) {
+        matchingItemId = currentItemId;
+      } else {
+        checkedItems[currentItemId] = true;
+        currentItemId = getNextItem(currentItemId);
       }
     }
-    return true;
+
+    return matchingItemId;
   };
 
-  const handlePreviousArrow = (event: React.KeyboardEvent<HTMLUListElement>) => {
-    if (state.focusedNodeId == null) {
-      return false;
+  const canToggleItemSelection = (itemId: string) =>
+    !params.disableSelection && !instance.isItemDisabled(itemId);
+
+  const canToggleItemExpansion = (itemId: string) => {
+    return !instance.isItemDisabled(itemId) && instance.isItemExpandable(itemId);
+  };
+
+  // ARIA specification: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/#keyboardinteraction
+  const handleItemKeyDown = (
+    event: React.KeyboardEvent<HTMLElement> & MuiCancellableEvent,
+    itemId: string,
+  ) => {
+    if (event.defaultMuiPrevented) {
+      return;
     }
 
     if (
-      instance.isNodeExpanded(state.focusedNodeId) &&
-      !instance.isNodeDisabled(state.focusedNodeId)
+      event.altKey ||
+      isTargetInDescendants(event.target as HTMLElement, event.currentTarget as HTMLElement)
     ) {
-      instance.toggleNodeExpansion(event, state.focusedNodeId!);
-      return true;
+      return;
     }
 
-    const parent = instance.getNode(state.focusedNodeId).parentId;
-    if (parent) {
-      instance.focusNode(event, parent);
-      return true;
-    }
-    return false;
-  };
+    const ctrlPressed = event.ctrlKey || event.metaKey;
+    const key = event.key;
 
-  const focusByFirstCharacter = (
-    event: React.KeyboardEvent<HTMLUListElement>,
-    nodeId: string,
-    firstChar: string,
-  ) => {
-    let start: number;
-    let index: number;
-    const lowercaseChar = firstChar.toLowerCase();
-
-    const firstCharIds: string[] = [];
-    const firstChars: string[] = [];
-    // This really only works since the ids are strings
-    Object.keys(firstCharMap.current).forEach((mapNodeId) => {
-      const map = instance.getNode(mapNodeId);
-      const visible = map.parentId ? instance.isNodeExpanded(map.parentId) : true;
-      const shouldBeSkipped = params.disabledItemsFocusable
-        ? false
-        : instance.isNodeDisabled(mapNodeId);
-
-      if (visible && !shouldBeSkipped) {
-        firstCharIds.push(mapNodeId);
-        firstChars.push(firstCharMap.current[mapNodeId]);
-      }
-    });
-
-    // Get start index for search based on position of currentItem
-    start = firstCharIds.indexOf(nodeId) + 1;
-    if (start >= firstCharIds.length) {
-      start = 0;
-    }
-
-    // Check remaining slots in the menu
-    index = findNextFirstChar(firstChars, start, lowercaseChar);
-
-    // If not found in remaining slots, check from beginning
-    if (index === -1) {
-      index = findNextFirstChar(firstChars, 0, lowercaseChar);
-    }
-
-    // If match was found...
-    if (index > -1) {
-      instance.focusNode(event, firstCharIds[index]);
-    }
-  };
-
-  const selectNextNode = (event: React.KeyboardEvent<HTMLUListElement>, id: string) => {
-    if (!instance.isNodeDisabled(getNextNode(instance, id))) {
-      instance.selectRange(
-        event,
-        {
-          end: getNextNode(instance, id),
-          current: id,
-        },
-        true,
-      );
-    }
-  };
-
-  const selectPreviousNode = (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => {
-    if (!instance.isNodeDisabled(getPreviousNode(instance, nodeId))) {
-      instance.selectRange(
-        event,
-        {
-          end: getPreviousNode(instance, nodeId)!,
-          current: nodeId,
-        },
-        true,
-      );
-    }
-  };
-
-  const createHandleKeyDown =
-    (otherHandlers: EventHandlers) => (event: React.KeyboardEvent<HTMLUListElement>) => {
-      otherHandlers.onKeyDown?.(event);
-
-      let flag = false;
-      const key = event.key;
-
-      // If the tree is empty there will be no focused node
-      if (event.altKey || event.currentTarget !== event.target || state.focusedNodeId == null) {
-        return;
-      }
-
-      const ctrlPressed = event.ctrlKey || event.metaKey;
-      switch (key) {
-        case ' ':
-          if (!params.disableSelection && !instance.isNodeDisabled(state.focusedNodeId)) {
-            flag = true;
-            if (params.multiSelect && event.shiftKey) {
-              instance.selectRange(event, { end: state.focusedNodeId });
-            } else if (params.multiSelect) {
-              instance.selectNode(event, state.focusedNodeId, true);
-            } else {
-              instance.selectNode(event, state.focusedNodeId);
-            }
-          }
-          event.stopPropagation();
-          break;
-        case 'Enter':
-          if (!instance.isNodeDisabled(state.focusedNodeId)) {
-            if (instance.isNodeExpandable(state.focusedNodeId)) {
-              instance.toggleNodeExpansion(event, state.focusedNodeId);
-              flag = true;
-            } else if (!params.disableSelection) {
-              flag = true;
-              if (params.multiSelect) {
-                instance.selectNode(event, state.focusedNodeId, true);
-              } else {
-                instance.selectNode(event, state.focusedNodeId);
-              }
-            }
-          }
-          event.stopPropagation();
-          break;
-        case 'ArrowDown':
-          if (params.multiSelect && event.shiftKey && !params.disableSelection) {
-            selectNextNode(event, state.focusedNodeId);
-          }
-          instance.focusNode(event, getNextNode(instance, state.focusedNodeId));
-          flag = true;
-          break;
-        case 'ArrowUp':
-          if (params.multiSelect && event.shiftKey && !params.disableSelection) {
-            selectPreviousNode(event, state.focusedNodeId);
-          }
-          instance.focusNode(event, getPreviousNode(instance, state.focusedNodeId));
-          flag = true;
-          break;
-        case 'ArrowRight':
-          if (isRtl) {
-            flag = handlePreviousArrow(event);
-          } else {
-            flag = handleNextArrow(event);
-          }
-          break;
-        case 'ArrowLeft':
-          if (isRtl) {
-            flag = handleNextArrow(event);
-          } else {
-            flag = handlePreviousArrow(event);
-          }
-          break;
-        case 'Home':
-          if (
-            params.multiSelect &&
-            ctrlPressed &&
-            event.shiftKey &&
-            !params.disableSelection &&
-            !instance.isNodeDisabled(state.focusedNodeId)
-          ) {
-            instance.rangeSelectToFirst(event, state.focusedNodeId);
-          }
-          instance.focusNode(event, getFirstNode(instance));
-          flag = true;
-          break;
-        case 'End':
-          if (
-            params.multiSelect &&
-            ctrlPressed &&
-            event.shiftKey &&
-            !params.disableSelection &&
-            !instance.isNodeDisabled(state.focusedNodeId)
-          ) {
-            instance.rangeSelectToLast(event, state.focusedNodeId);
-          }
-          instance.focusNode(event, getLastNode(instance));
-          flag = true;
-          break;
-        default:
-          if (key === '*') {
-            instance.expandAllSiblings(event, state.focusedNodeId);
-            flag = true;
-          } else if (
-            params.multiSelect &&
-            ctrlPressed &&
-            key.toLowerCase() === 'a' &&
-            !params.disableSelection
-          ) {
-            instance.selectRange(event, {
-              start: getFirstNode(instance),
-              end: getLastNode(instance),
-            });
-            flag = true;
-          } else if (!ctrlPressed && !event.shiftKey && isPrintableCharacter(key)) {
-            focusByFirstCharacter(event, state.focusedNodeId, key);
-            flag = true;
-          }
-      }
-
-      if (flag) {
+    // eslint-disable-next-line default-case
+    switch (true) {
+      // Select the item when pressing "Space"
+      case key === ' ' && canToggleItemSelection(itemId): {
         event.preventDefault();
-        event.stopPropagation();
+        if (params.multiSelect && event.shiftKey) {
+          instance.expandSelectionRange(event, itemId);
+        } else {
+          instance.selectItem({
+            event,
+            itemId,
+            keepExistingSelection: params.multiSelect,
+            shouldBeSelected: params.multiSelect ? undefined : true,
+          });
+        }
+        break;
       }
-    };
 
-  return { getRootProps: (otherHandlers) => ({ onKeyDown: createHandleKeyDown(otherHandlers) }) };
+      // If the focused item has children, we expand it.
+      // If the focused item has no children, we select it.
+      case key === 'Enter': {
+        if (
+          hasPlugin(instance, useTreeViewLabel) &&
+          instance.isItemEditable(itemId) &&
+          !instance.isItemBeingEdited(itemId)
+        ) {
+          instance.setEditedItemId(itemId);
+        } else if (canToggleItemExpansion(itemId)) {
+          instance.toggleItemExpansion(event, itemId);
+          event.preventDefault();
+        } else if (canToggleItemSelection(itemId)) {
+          if (params.multiSelect) {
+            event.preventDefault();
+            instance.selectItem({ event, itemId, keepExistingSelection: true });
+          } else if (!instance.isItemSelected(itemId)) {
+            instance.selectItem({ event, itemId });
+            event.preventDefault();
+          }
+        }
+
+        break;
+      }
+
+      // Focus the next focusable item
+      case key === 'ArrowDown': {
+        const nextItem = getNextNavigableItem(instance, itemId);
+        if (nextItem) {
+          event.preventDefault();
+          instance.focusItem(event, nextItem);
+
+          // Multi select behavior when pressing Shift + ArrowDown
+          // Toggles the selection state of the next item
+          if (params.multiSelect && event.shiftKey && canToggleItemSelection(nextItem)) {
+            instance.selectItemFromArrowNavigation(event, itemId, nextItem);
+          }
+        }
+
+        break;
+      }
+
+      // Focuses the previous focusable item
+      case key === 'ArrowUp': {
+        const previousItem = getPreviousNavigableItem(instance, itemId);
+        if (previousItem) {
+          event.preventDefault();
+          instance.focusItem(event, previousItem);
+
+          // Multi select behavior when pressing Shift + ArrowUp
+          // Toggles the selection state of the previous item
+          if (params.multiSelect && event.shiftKey && canToggleItemSelection(previousItem)) {
+            instance.selectItemFromArrowNavigation(event, itemId, previousItem);
+          }
+        }
+
+        break;
+      }
+
+      // If the focused item is expanded, we move the focus to its first child
+      // If the focused item is collapsed and has children, we expand it
+      case (key === 'ArrowRight' && !isRtl) || (key === 'ArrowLeft' && isRtl): {
+        if (instance.isItemExpanded(itemId)) {
+          const nextItemId = getNextNavigableItem(instance, itemId);
+          if (nextItemId) {
+            instance.focusItem(event, nextItemId);
+            event.preventDefault();
+          }
+        } else if (canToggleItemExpansion(itemId)) {
+          instance.toggleItemExpansion(event, itemId);
+          event.preventDefault();
+        }
+
+        break;
+      }
+
+      // If the focused item is expanded, we collapse it
+      // If the focused item is collapsed and has a parent, we move the focus to this parent
+      case (key === 'ArrowLeft' && !isRtl) || (key === 'ArrowRight' && isRtl): {
+        if (canToggleItemExpansion(itemId) && instance.isItemExpanded(itemId)) {
+          instance.toggleItemExpansion(event, itemId);
+          event.preventDefault();
+        } else {
+          const parent = instance.getItemMeta(itemId).parentId;
+          if (parent) {
+            instance.focusItem(event, parent);
+            event.preventDefault();
+          }
+        }
+
+        break;
+      }
+
+      // Focuses the first item in the tree
+      case key === 'Home': {
+        // Multi select behavior when pressing Ctrl + Shift + Home
+        // Selects the focused item and all items up to the first item.
+        if (canToggleItemSelection(itemId) && params.multiSelect && ctrlPressed && event.shiftKey) {
+          instance.selectRangeFromStartToItem(event, itemId);
+        } else {
+          instance.focusItem(event, getFirstNavigableItem(instance));
+        }
+
+        event.preventDefault();
+        break;
+      }
+
+      // Focuses the last item in the tree
+      case key === 'End': {
+        // Multi select behavior when pressing Ctrl + Shirt + End
+        // Selects the focused item and all the items down to the last item.
+        if (canToggleItemSelection(itemId) && params.multiSelect && ctrlPressed && event.shiftKey) {
+          instance.selectRangeFromItemToEnd(event, itemId);
+        } else {
+          instance.focusItem(event, getLastNavigableItem(instance));
+        }
+
+        event.preventDefault();
+        break;
+      }
+
+      // Expand all siblings that are at the same level as the focused item
+      case key === '*': {
+        instance.expandAllSiblings(event, itemId);
+        event.preventDefault();
+        break;
+      }
+
+      // Multi select behavior when pressing Ctrl + a
+      // Selects all the items
+      case key === 'a' && ctrlPressed && params.multiSelect && !params.disableSelection: {
+        instance.selectAllNavigableItems(event);
+        event.preventDefault();
+        break;
+      }
+
+      // Type-ahead
+      // TODO: Support typing multiple characters
+      case !ctrlPressed && !event.shiftKey && isPrintableCharacter(key): {
+        const matchingItem = getFirstMatchingItem(itemId, key);
+        if (matchingItem != null) {
+          instance.focusItem(event, matchingItem);
+          event.preventDefault();
+        }
+        break;
+      }
+    }
+  };
+
+  return {
+    instance: {
+      updateFirstCharMap,
+      handleItemKeyDown,
+    },
+  };
 };
+
+useTreeViewKeyboardNavigation.params = {};

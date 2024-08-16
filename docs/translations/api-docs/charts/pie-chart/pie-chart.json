@@ -1,0 +1,78 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "axisHighlight": {
+      "description": "The configuration of axes highlight.",
+      "seeMoreText": "See {{link}} for more details."
+    },
+    "bottomAxis": {
+      "description": "Indicate which axis to display the bottom of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
+    },
+    "colors": { "description": "Color palette used to colorize multiple series." },
+    "dataset": {
+      "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
+    },
+    "disableAxisListener": {
+      "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
+    },
+    "height": {
+      "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
+    },
+    "highlightedItem": {
+      "description": "The item currently highlighted. Turns highlighting into a controlled prop."
+    },
+    "leftAxis": {
+      "description": "Indicate which axis to display the left of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
+    },
+    "legend": { "description": "The props of the legend." },
+    "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
+    "margin": {
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+    },
+    "onHighlightChange": {
+      "description": "The callback fired when the highlighted item changes.",
+      "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
+    },
+    "onItemClick": { "description": "Callback fired when a pie arc is clicked." },
+    "rightAxis": {
+      "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
+    },
+    "series": {
+      "description": "The series to display in the pie chart. An array of <a href='/x/api/charts/pie-series-type/'>PieSeriesType</a> objects."
+    },
+    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "tooltip": {
+      "description": "The configuration of the tooltip.",
+      "seeMoreText": "See {{link}} for more details."
+    },
+    "topAxis": {
+      "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
+    },
+    "width": {
+      "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
+    },
+    "xAxis": {
+      "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
+    },
+    "yAxis": {
+      "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
+    }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "axisContent": "Custom component for displaying tooltip content when triggered by axis event.",
+    "axisLabel": "Custom component for axis label.",
+    "axisLine": "Custom component for the axis main line.",
+    "axisTick": "Custom component for the axis tick.",
+    "axisTickLabel": "Custom component for tick label.",
+    "itemContent": "Custom component for displaying tooltip content when triggered by item event.",
+    "legend": "Custom rendering of the legend.",
+    "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
+    "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
+    "pieArc": "",
+    "pieArcLabel": "",
+    "popper": "Custom component for the tooltip popper."
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "props": {
+    "contentEditable": { "type": { "name": "bool" }, "required": true },
+    "elements": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ after: object, before: object, container: object, content: object }&gt;"
+      },
+      "required": true
+    },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "slotProps": { "type": { "name": "object" } },
+    "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } }
+  },
+  "name": "PickersSectionList",
+  "imports": [
+    "import { PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';",
+    "import { PickersSectionList } from '@mui/x-date-pickers';",
+    "import { PickersSectionList } from '@mui/x-date-pickers-pro';"
+  ],
+  "slots": [
+    { "name": "root", "description": "", "class": "MuiPickersSectionList-root" },
+    { "name": "section", "description": "", "class": "MuiPickersSectionList-section" },
+    {
+      "name": "sectionContent",
+      "description": "",
+      "class": "MuiPickersSectionList-sectionContent"
+    },
+    { "name": "sectionSeparator", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiPickersSectionList",
+  "filename": "/packages/x-date-pickers/src/PickersSectionList/PickersSectionList.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-field/\">Custom field</a></li></ul>",
+  "cssComponent": false
+}

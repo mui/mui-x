@@ -1,13 +1,38 @@
 import { DefaultizedProps } from '../helpers';
-import { CartesianSeriesType, CommonDefaultizedProps, CommonSeriesType } from './common';
+import { CartesianSeriesType, CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
 
-export type ScatterValueType = { x: number; y: number; id: string | number };
+export type ScatterValueType = {
+  x: number;
+  y: number;
+  z?: any;
+  /**
+   * A unique identifier for the scatter point
+   */
+  id: string | number;
+};
 
 export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, CartesianSeriesType {
   type: 'scatter';
   data: ScatterValueType[];
   markerSize?: number;
-  label?: string;
+  /**
+   * The label to display on the tooltip or the legend. It can be a string or a function.
+   */
+  label?: string | ((location: 'tooltip' | 'legend') => string);
+  /**
+   * If true, the interaction will not use element hover for this series.
+   * @default false
+   */
+  disableHover?: boolean;
+  /**
+   * The id of the z-axis used to render the series.
+   * @deprecated Use `zAxisId` instead.
+   */
+  zAxisKey?: string;
+  /**
+   * The id of the z-axis used to render the series.
+   */
+  zAxisId?: string;
 }
 
 /**
@@ -16,9 +41,9 @@ export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, C
  */
 export type ScatterItemIdentifier = {
   type: 'scatter';
-  seriesId: DefaultizedScatterSeriesType['id'];
+  seriesId: SeriesId;
   dataIndex: number;
 };
 
 export interface DefaultizedScatterSeriesType
-  extends DefaultizedProps<ScatterSeriesType, CommonDefaultizedProps> {}
+  extends DefaultizedProps<ScatterSeriesType, CommonDefaultizedProps | 'color'> {}

@@ -1,0 +1,129 @@
+{
+  "props": {
+    "itemId": { "type": { "name": "string" }, "required": true },
+    "children": { "type": { "name": "node" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "id": { "type": { "name": "string" } },
+    "label": { "type": { "name": "node" } },
+    "onBlur": { "type": { "name": "func" } },
+    "onFocus": { "type": { "name": "custom", "description": "unsupportedProp" } },
+    "onKeyDown": { "type": { "name": "func" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "TreeItem2",
+  "imports": [
+    "import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';",
+    "import { TreeItem2 } from '@mui/x-tree-view';",
+    "import { TreeItem2 } from '@mui/x-tree-view-pro';"
+  ],
+  "slots": [
+    {
+      "name": "root",
+      "description": "The component that renders the root.",
+      "default": "TreeItem2Root",
+      "class": "MuiTreeItem2-root"
+    },
+    {
+      "name": "content",
+      "description": "The component that renders the content of the item.\n(e.g.: everything related to this item, not to its children).",
+      "default": "TreeItem2Content",
+      "class": "MuiTreeItem2-content"
+    },
+    {
+      "name": "groupTransition",
+      "description": "The component that renders the children of the item.",
+      "default": "TreeItem2GroupTransition",
+      "class": "MuiTreeItem2-groupTransition"
+    },
+    {
+      "name": "iconContainer",
+      "description": "The component that renders the icon.",
+      "default": "TreeItem2IconContainer",
+      "class": "MuiTreeItem2-iconContainer"
+    },
+    {
+      "name": "checkbox",
+      "description": "The component that renders the item checkbox for selection.",
+      "default": "TreeItem2Checkbox",
+      "class": "MuiTreeItem2-checkbox"
+    },
+    {
+      "name": "label",
+      "description": "The component that renders the item label.",
+      "default": "TreeItem2Label",
+      "class": "MuiTreeItem2-label"
+    },
+    {
+      "name": "labelInput",
+      "description": "The component that renders the input to edit the label when the item is editable and is currently being edited.",
+      "default": "TreeItem2LabelInput",
+      "class": "MuiTreeItem2-labelInput"
+    },
+    {
+      "name": "dragAndDropOverlay",
+      "description": "The component that renders the overlay when an item reordering is ongoing.\nWarning: This slot is only useful when using the `RichTreeViewPro` component.",
+      "default": "TreeItem2DragAndDropOverlay",
+      "class": "MuiTreeItem2-dragAndDropOverlay"
+    },
+    { "name": "collapseIcon", "description": "The icon used to collapse the item.", "class": null },
+    { "name": "expandIcon", "description": "The icon used to expand the item.", "class": null },
+    { "name": "endIcon", "description": "The icon displayed next to an end item.", "class": null },
+    {
+      "name": "icon",
+      "description": "The icon to display next to the tree item's label.",
+      "class": null
+    }
+  ],
+  "classes": [
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "State class applied to the element when disabled.",
+      "isGlobal": true
+    },
+    {
+      "key": "editable",
+      "className": "MuiTreeItem2-editable",
+      "description": "Styles applied to the content of the items that are editable.",
+      "isGlobal": false
+    },
+    {
+      "key": "editing",
+      "className": "MuiTreeItem2-editing",
+      "description": "Styles applied to the content element when editing is enabled.",
+      "isGlobal": false
+    },
+    {
+      "key": "expanded",
+      "className": "Mui-expanded",
+      "description": "State class applied to the content element when expanded.",
+      "isGlobal": true
+    },
+    {
+      "key": "focused",
+      "className": "Mui-focused",
+      "description": "State class applied to the content element when focused.",
+      "isGlobal": true
+    },
+    {
+      "key": "selected",
+      "className": "Mui-selected",
+      "description": "State class applied to the content element when selected.",
+      "isGlobal": true
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiTreeItem2",
+  "forwardsRefTo": "HTMLLIElement",
+  "filename": "/packages/x-tree-view/src/TreeItem2/TreeItem2.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-tree-view/rich-tree-view/customization/\">Rich Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/ordering/\">Rich Tree View - Ordering <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/customization/\">Simple Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/tree-item-customization/\">Tree Item Customization</a></li></ul>",
+  "cssComponent": false
+}

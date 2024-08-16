@@ -1,11 +1,14 @@
 /.git
+pnpm-lock.yaml
+netlify/functions
 /docs/.next
 /docs/export
 /docs/pages/playground/
 /lerna.json
-/packages/grid/x-data-grid/src/lib
 /packages/x-codemod/src/**/*.spec.js
+/packages/x-charts-vendor
 build
+/coverage
 CHANGELOG.md
 dist
 node_modules

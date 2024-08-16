@@ -12,5 +12,5 @@
   slots={{
     headerFilterCell: CustomHeaderFilter,
   }}
-  unstable_headerFilters
+  headerFilters
 />

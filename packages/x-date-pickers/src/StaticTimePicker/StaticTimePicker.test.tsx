@@ -1,16 +1,10 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import {
-  describeConformance,
-  fireTouchChangedEvent,
-  screen,
-  getAllByRole,
-  fireEvent,
-} from '@mui/monorepo/test/utils';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers';
+import { fireTouchChangedEvent, screen, getAllByRole, fireEvent } from '@mui/internal-test-utils';
+import { adapterToUse, createPickerRenderer, describeValidation } from 'test/utils/pickers';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<StaticTimePicker />', () => {
   const { render, clock } = createPickerRenderer({
@@ -29,8 +23,7 @@ describe('<StaticTimePicker />', () => {
     classes: {} as any,
     render,
     muiName: 'MuiStaticTimePicker',
-    wrapMount: wrapPickerMount,
-    refInstanceof: undefined,
+    refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',
       'componentsProp',
@@ -39,14 +32,10 @@ describe('<StaticTimePicker />', () => {
       'themeVariants',
       'mergeClassName',
       'propsSpread',
-      // TODO: `ref` is typed but has no effect
-      'refForwarding',
-      'rootClass',
-      'reactTestRenderer',
     ],
   }));
 
-  it('should allows view modification, but not update value when `readOnly` prop is passed', function test() {
+  it('should allow view modification, but not update value when `readOnly` prop is passed', function test() {
     // Only run in supported browsers
     if (typeof Touch === 'undefined') {
       this.skip();
@@ -63,7 +52,7 @@ describe('<StaticTimePicker />', () => {
     const onViewChange = spy();
     render(
       <StaticTimePicker
-        value={adapterToUse.date(new Date(2019, 0, 1))}
+        value={adapterToUse.date('2019-01-01')}
         onChange={onChange}
         onViewChange={onViewChange}
         readOnly
@@ -113,7 +102,7 @@ describe('<StaticTimePicker />', () => {
     const onViewChange = spy();
     render(
       <StaticTimePicker
-        value={adapterToUse.date(new Date(2019, 0, 1))}
+        value={adapterToUse.date('2019-01-01')}
         onChange={onChange}
         onViewChange={onViewChange}
         disabled

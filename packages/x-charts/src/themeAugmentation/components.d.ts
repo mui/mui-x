@@ -1,9 +1,9 @@
 import { ComponentsProps, ComponentsOverrides } from '@mui/material/styles';
 
-export interface ChartsComponents {
+export interface ChartsComponents<Theme = unknown> {
   MuiChartsAxis?: {
     defaultProps?: ComponentsProps['MuiChartsAxis'];
-    styleOverrides?: ComponentsOverrides['MuiChartsAxis'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChartsAxis'];
   };
   MuiChartsXAxis?: {
     defaultProps?: ComponentsProps['MuiChartsXAxis'];
@@ -13,16 +13,22 @@ export interface ChartsComponents {
   };
   MuiChartsAxisHighlight?: {
     defaultProps?: ComponentsProps['MuiChartsAxisHighlight'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChartsAxisHighlight'];
   };
   MuiChartsClipPath?: {
     defaultProps?: ComponentsProps['MuiChartsClipPath'];
   };
+  MuiChartsGrid?: {
+    defaultProps?: ComponentsProps['MuiChartsGrid'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChartsGrid'];
+  };
   MuiChartsLegend?: {
     defaultProps?: ComponentsProps['MuiChartsLegend'];
-    styleOverrides?: ComponentsOverrides['MuiChartsLegend'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChartsLegend'];
   };
   MuiChartsTooltip?: {
     defaultProps?: ComponentsProps['MuiChartsTooltip'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChartsTooltip'];
   };
   MuiChartsSurface?: {
     defaultProps?: ComponentsProps['MuiChartsSurface'];
@@ -32,22 +38,26 @@ export interface ChartsComponents {
   };
   MuiBarElement?: {
     defaultProps?: ComponentsProps['MuiBarElement'];
-    styleOverrides?: ComponentsOverrides['MuiBarElement'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiBarElement'];
+  };
+  MuiBarLabel?: {
+    defaultProps?: ComponentsProps['MuiBarLabel'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiBarLabel'];
   };
   MuiLineChart?: {
     defaultProps?: ComponentsProps['MuiLineChart'];
   };
   MuiAreaElement?: {
     defaultProps?: ComponentsProps['MuiAreaElement'];
-    styleOverrides?: ComponentsOverrides['MuiAreaElement'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiAreaElement'];
   };
   MuiLineElement?: {
     defaultProps?: ComponentsProps['MuiLineElement'];
-    styleOverrides?: ComponentsOverrides['MuiLineElement'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiLineElement'];
   };
   MuiMarkElement?: {
     defaultProps?: ComponentsProps['MuiMarkElement'];
-    styleOverrides?: ComponentsOverrides['MuiMarkElement'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiMarkElement'];
   };
   MuiScatterChart?: {
     defaultProps?: ComponentsProps['MuiScatterChart'];
@@ -58,5 +68,5 @@ export interface ChartsComponents {
 }
 
 declare module '@mui/material/styles' {
-  interface Components extends ChartsComponents {}
+  interface Components<Theme = unknown> extends ChartsComponents<Theme> {}
 }

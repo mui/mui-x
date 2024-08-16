@@ -3,6 +3,8 @@ import {
   DataGridPremium,
   GridToolbar,
   GridExceljsProcessInput,
+  GridColDef,
+  DataGridPremiumProps,
 } from '@mui/x-data-grid-premium';
 
 const rows = [
@@ -225,7 +227,7 @@ const rows = [
   },
 ];
 
-const columns = [
+const columns: GridColDef[] = [
   {
     field: 'plan',
     type: 'singleSelect',
@@ -278,12 +280,14 @@ const exceljsPostProcess = ({ worksheet }: GridExceljsProcessInput) => {
 
 const excelOptions = { exceljsPreProcess, exceljsPostProcess };
 
+const getTreeDataPath: DataGridPremiumProps['getTreeDataPath'] = (row) => row.path;
+
 export default function ExcelCustomExport() {
   return (
     <div style={{ height: 500, width: '100%' }}>
       <DataGridPremium
         treeData
-        getTreeDataPath={(row) => row.path}
+        getTreeDataPath={getTreeDataPath}
         rows={rows}
         columns={columns}
         groupingColDef={groupingColDef}

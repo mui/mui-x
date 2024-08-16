@@ -1,7 +1,5 @@
 import * as React from 'react';
-import de from 'date-fns/locale/de';
-import enGB from 'date-fns/locale/en-GB';
-import zhCN from 'date-fns/locale/zh-CN';
+import { de, enGB, zhCN } from 'date-fns/locale';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TimeClock, TimeClockProps } from '../TimeClock';
-import { TimeView } from '../models';
+import { PickerValidDate, TimeView } from '../models';
 import { DigitalClock, DigitalClockProps } from '../DigitalClock';
 import { BaseClockProps } from '../internals/models/props/clock';
 import {
@@ -13,14 +13,14 @@ import type { TimePickerProps } from '../TimePicker/TimePicker.types';
 
 export type TimeViewRendererProps<
   TView extends TimeViewWithMeridiem,
-  TComponentProps extends BaseClockProps<any, any>,
+  TComponentProps extends BaseClockProps<any, TView>,
 > = Omit<TComponentProps, 'views' | 'openTo' | 'view' | 'onViewChange'> & {
   view: TView;
   onViewChange?: (view: TView) => void;
   views: readonly TView[];
 };
 
-export const renderTimeViewClock = <TDate extends unknown>({
+export const renderTimeViewClock = <TDate extends PickerValidDate>({
   view,
   onViewChange,
   focusedView,
@@ -37,12 +37,9 @@ export const renderTimeViewClock = <TDate extends unknown>({
   minTime,
   maxTime,
   shouldDisableTime,
-  shouldDisableClock,
   minutesStep,
   ampm,
   ampmInClock,
-  components,
-  componentsProps,
   slots,
   slotProps,
   readOnly,
@@ -70,12 +67,9 @@ export const renderTimeViewClock = <TDate extends unknown>({
     minTime={minTime}
     maxTime={maxTime}
     shouldDisableTime={shouldDisableTime}
-    shouldDisableClock={shouldDisableClock}
     minutesStep={minutesStep}
     ampm={ampm}
     ampmInClock={ampmInClock}
-    components={components}
-    componentsProps={componentsProps}
     slots={slots}
     slotProps={slotProps}
     readOnly={readOnly}
@@ -88,7 +82,7 @@ export const renderTimeViewClock = <TDate extends unknown>({
   />
 );
 
-export const renderDigitalClockTimeView = <TDate extends unknown>({
+export const renderDigitalClockTimeView = <TDate extends PickerValidDate>({
   view,
   onViewChange,
   focusedView,
@@ -105,11 +99,8 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
   minTime,
   maxTime,
   shouldDisableTime,
-  shouldDisableClock,
   minutesStep,
   ampm,
-  components,
-  componentsProps,
   slots,
   slotProps,
   readOnly,
@@ -141,11 +132,8 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
     minTime={minTime}
     maxTime={maxTime}
     shouldDisableTime={shouldDisableTime}
-    shouldDisableClock={shouldDisableClock}
     minutesStep={minutesStep}
     ampm={ampm}
-    components={components}
-    componentsProps={componentsProps}
     slots={slots}
     slotProps={slotProps}
     readOnly={readOnly}
@@ -159,7 +147,7 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
   />
 );
 
-export const renderMultiSectionDigitalClockTimeView = <TDate extends unknown>({
+export const renderMultiSectionDigitalClockTimeView = <TDate extends PickerValidDate>({
   view,
   onViewChange,
   focusedView,
@@ -176,11 +164,8 @@ export const renderMultiSectionDigitalClockTimeView = <TDate extends unknown>({
   minTime,
   maxTime,
   shouldDisableTime,
-  shouldDisableClock,
   minutesStep,
   ampm,
-  components,
-  componentsProps,
   slots,
   slotProps,
   readOnly,
@@ -209,11 +194,8 @@ export const renderMultiSectionDigitalClockTimeView = <TDate extends unknown>({
     minTime={minTime}
     maxTime={maxTime}
     shouldDisableTime={shouldDisableTime}
-    shouldDisableClock={shouldDisableClock}
     minutesStep={minutesStep}
     ampm={ampm}
-    components={components}
-    componentsProps={componentsProps}
     slots={slots}
     slotProps={slotProps}
     readOnly={readOnly}

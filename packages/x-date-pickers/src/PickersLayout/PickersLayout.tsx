@@ -2,11 +2,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { PickersLayoutProps } from './PickersLayout.types';
 import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
+import { PickerValidDate } from '../models';
 
 const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
   const { isLandscape, classes } = ownerState;
@@ -18,46 +19,54 @@ const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
   return composeClasses(slots, getPickersLayoutUtilityClass, classes);
 };
 
-const PickersLayoutRoot = styled('div', {
+export const PickersLayoutRoot = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: { isLandscape: boolean } }>(({ theme, ownerState }) => ({
+})<{ ownerState: PickersLayoutProps<any, any, any> }>({
   display: 'grid',
   gridAutoColumns: 'max-content auto max-content',
   gridAutoRows: 'max-content auto max-content',
-  [`& .${pickersLayoutClasses.toolbar}`]: ownerState.isLandscape
-    ? {
-        gridColumn: theme.direction === 'rtl' ? 3 : 1,
-        gridRow: '2 / 3',
-      }
-    : { gridColumn: '2 / 4', gridRow: 1 },
-  [`.${pickersLayoutClasses.shortcuts}`]: ownerState.isLandscape
-    ? { gridColumn: '2 / 4', gridRow: 1 }
-    : {
-        gridColumn: theme.direction === 'rtl' ? 3 : 1,
-        gridRow: '2 / 3',
-      },
   [`& .${pickersLayoutClasses.actionBar}`]: { gridColumn: '1 / 4', gridRow: 3 },
-}));
-
-PickersLayoutRoot.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  as: PropTypes.elementType,
-  ownerState: PropTypes.shape({
-    isLandscape: PropTypes.bool.isRequired,
-  }).isRequired,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-} as any;
-
-export { PickersLayoutRoot };
+  variants: [
+    {
+      props: { isLandscape: true },
+      style: {
+        [`& .${pickersLayoutClasses.toolbar}`]: {
+          gridColumn: 1,
+          gridRow: '2 / 3',
+        },
+        [`.${pickersLayoutClasses.shortcuts}`]: { gridColumn: '2 / 4', gridRow: 1 },
+      },
+    },
+    {
+      props: { isLandscape: true, isRtl: true },
+      style: {
+        [`& .${pickersLayoutClasses.toolbar}`]: {
+          gridColumn: 3,
+        },
+      },
+    },
+    {
+      props: { isLandscape: false },
+      style: {
+        [`& .${pickersLayoutClasses.toolbar}`]: { gridColumn: '2 / 4', gridRow: 1 },
+        [`& .${pickersLayoutClasses.shortcuts}`]: {
+          gridColumn: 1,
+          gridRow: '2 / 3',
+        },
+      },
+    },
+    {
+      props: { isLandscape: false, isRtl: true },
+      style: {
+        [`& .${pickersLayoutClasses.shortcuts}`]: {
+          gridColumn: 3,
+        },
+      },
+    },
+  ],
+});
 
 export const PickersLayoutContentWrapper = styled('div', {
   name: 'MuiPickersLayout',
@@ -70,25 +79,41 @@ export const PickersLayoutContentWrapper = styled('div', {
   flexDirection: 'column',
 });
 
-const PickersLayout = function PickersLayout<
+type PickersLayoutComponent = (<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
->(inProps: PickersLayoutProps<TValue, TDate, TView>) {
+>(
+  props: PickersLayoutProps<TValue, TDate, TView> & React.RefAttributes<HTMLDivElement>,
+) => React.JSX.Element) & { propTypes?: any };
+
+/**
+ * Demos:
+ *
+ * - [Custom layout](https://mui.com/x/react-date-pickers/custom-layout/)
+ *
+ * API:
+ *
+ * - [PickersLayout API](https://mui.com/x/api/date-pickers/pickers-layout/)
+ */
+const PickersLayout = React.forwardRef(function PickersLayout<
+  TValue,
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+>(inProps: PickersLayoutProps<TValue, TDate, TView>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
   const { toolbar, content, tabs, actionBar, shortcuts } = usePickerLayout(props);
-  const { sx, className, isLandscape, ref, wrapperVariant } = props;
+  const { sx, className, isLandscape, wrapperVariant } = props;
 
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(props);
 
   return (
     <PickersLayoutRoot
       ref={ref}
       sx={sx}
       className={clsx(className, classes.root)}
-      ownerState={ownerState}
+      ownerState={props}
     >
       {isLandscape ? shortcuts : toolbar}
       {isLandscape ? toolbar : shortcuts}
@@ -108,30 +133,25 @@ const PickersLayout = function PickersLayout<
       {actionBar}
     </PickersLayoutRoot>
   );
-};
+}) as PickersLayoutComponent;
 
 PickersLayout.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
   disabled: PropTypes.bool,
   isLandscape: PropTypes.bool.isRequired,
+  /**
+   * `true` if the application is in right-to-left direction.
+   */
+  isRtl: PropTypes.bool.isRequired,
   isValid: PropTypes.func.isRequired,
   onAccept: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
@@ -158,6 +178,9 @@ PickersLayout.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

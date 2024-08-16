@@ -78,7 +78,7 @@ export default function AskConfirmationBeforeSave() {
       resolve(response);
       setPromiseArguments(null);
     } catch (error) {
-      setSnackbar({ children: "Name can't be empty", severity: 'error' });
+      setSnackbar({ children: 'Name cannot be empty', severity: 'error' });
       reject(oldRow);
       setPromiseArguments(null);
     }

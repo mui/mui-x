@@ -7,7 +7,17 @@
       "description": "Deletes a <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>.",
       "type": "(item: GridFilterItem) => void"
     },
+    {
+      "name": "getFilterState",
+      "description": "Returns the filter state for the given filter model without applying it to the data grid.",
+      "type": "(filterModel: GridFilterModel) => GridStateCommunity['filter']"
+    },
     { "name": "hideFilterPanel", "description": "Hides the filter panel.", "type": "() => void" },
+    {
+      "name": "ignoreDiacritics",
+      "description": "Returns the value of the <code>ignoreDiacritics</code> prop.",
+      "type": "DataGridProcessedProps['ignoreDiacritics']"
+    },
     {
       "name": "setFilterLogicOperator",
       "description": "Changes the GridLogicOperator used to connect the filters.",
@@ -20,7 +30,7 @@
     },
     {
       "name": "setQuickFilterValues",
-      "description": "Set the quick filter values ot the one given by <code>values</code>",
+      "description": "Set the quick filter values to the one given by <code>values</code>",
       "type": "(values: any[]) => void"
     },
     {

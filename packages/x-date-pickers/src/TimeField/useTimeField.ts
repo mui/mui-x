@@ -3,44 +3,38 @@ import {
   singleItemValueManager,
 } from '../internals/utils/valueManagers';
 import { useField } from '../internals/hooks/useField';
-import {
-  UseTimeFieldProps,
-  UseTimeFieldDefaultizedProps,
-  UseTimeFieldParams,
-} from './TimeField.types';
+import { UseTimeFieldProps } from './TimeField.types';
 import { validateTime } from '../internals/utils/validation/validateTime';
-import { useUtils } from '../internals/hooks/useUtils';
 import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
+import { PickerValidDate, FieldSection } from '../models';
+import { useDefaultizedTimeField } from '../internals/hooks/defaultizedFieldProps';
 
-const useDefaultizedTimeField = <TDate, AdditionalProps extends {}>(
-  props: UseTimeFieldProps<TDate>,
-): AdditionalProps & UseTimeFieldDefaultizedProps<TDate> => {
-  const utils = useUtils<TDate>();
-
-  const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
-  const defaultFormat = ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h;
-
-  return {
-    ...props,
-    disablePast: props.disablePast ?? false,
-    disableFuture: props.disableFuture ?? false,
-    format: props.format ?? defaultFormat,
-  } as any;
-};
-
-export const useTimeField = <TDate, TChildProps extends {}>({
-  props: inProps,
-  inputRef,
-}: UseTimeFieldParams<TDate, TChildProps>) => {
-  const props = useDefaultizedTimeField<TDate, TChildProps>(inProps);
+export const useTimeField = <
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TAllProps extends UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+>(
+  inProps: TAllProps,
+) => {
+  const props = useDefaultizedTimeField<
+    TDate,
+    UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    TAllProps
+  >(inProps);
 
   const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
     typeof props,
-    keyof UseTimeFieldProps<any>
+    keyof UseTimeFieldProps<any, TEnableAccessibleFieldDOMStructure>
   >(props, 'time');
 
-  return useField({
-    inputRef,
+  return useField<
+    TDate | null,
+    TDate,
+    FieldSection,
+    TEnableAccessibleFieldDOMStructure,
+    typeof forwardedProps,
+    typeof internalProps
+  >({
     forwardedProps,
     internalProps,
     valueManager: singleItemValueManager,

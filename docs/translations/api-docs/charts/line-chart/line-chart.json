@@ -1,0 +1,92 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "axisHighlight": {
+      "description": "The configuration of axes highlight.",
+      "seeMoreText": "See {{link}} for more details."
+    },
+    "bottomAxis": {
+      "description": "Indicate which axis to display the bottom of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
+    },
+    "colors": { "description": "Color palette used to colorize multiple series." },
+    "dataset": {
+      "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
+    },
+    "disableAxisListener": {
+      "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
+    },
+    "disableLineItemHighlight": {
+      "description": "If <code>true</code>, render the line highlight item."
+    },
+    "grid": { "description": "Option to display a cartesian grid in the background." },
+    "height": {
+      "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
+    },
+    "highlightedItem": {
+      "description": "The item currently highlighted. Turns highlighting into a controlled prop."
+    },
+    "leftAxis": {
+      "description": "Indicate which axis to display the left of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
+    },
+    "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
+    "margin": {
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+    },
+    "onAreaClick": { "description": "Callback fired when an area element is clicked." },
+    "onAxisClick": {
+      "description": "The function called for onClick events. The second argument contains information about all line/bar elements at the current mouse position.",
+      "typeDescriptions": {
+        "event": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element.",
+        "data": "The data about the clicked axis and items associated with it."
+      }
+    },
+    "onHighlightChange": {
+      "description": "The callback fired when the highlighted item changes.",
+      "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
+    },
+    "onLineClick": { "description": "Callback fired when a line element is clicked." },
+    "onMarkClick": { "description": "Callback fired when a mark element is clicked." },
+    "rightAxis": {
+      "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
+    },
+    "series": {
+      "description": "The series to display in the line chart. An array of <a href='/x/api/charts/line-series-type/'>LineSeriesType</a> objects."
+    },
+    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "tooltip": {
+      "description": "The configuration of the tooltip.",
+      "seeMoreText": "See {{link}} for more details."
+    },
+    "topAxis": {
+      "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
+    },
+    "width": {
+      "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
+    },
+    "xAxis": {
+      "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
+    },
+    "yAxis": {
+      "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
+    }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "area": "The component that renders the area.",
+    "axisContent": "Custom component for displaying tooltip content when triggered by axis event.",
+    "axisLabel": "Custom component for axis label.",
+    "axisLine": "Custom component for the axis main line.",
+    "axisTick": "Custom component for the axis tick.",
+    "axisTickLabel": "Custom component for tick label.",
+    "itemContent": "Custom component for displaying tooltip content when triggered by item event.",
+    "legend": "Custom rendering of the legend.",
+    "line": "The component that renders the line.",
+    "lineHighlight": "",
+    "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
+    "mark": "",
+    "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
+    "popper": "Custom component for the tooltip popper."
+  }
+}

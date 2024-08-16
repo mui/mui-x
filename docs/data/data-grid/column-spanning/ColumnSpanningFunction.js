@@ -27,7 +27,7 @@ const columns = [
     headerName: 'Item/Description',
     ...baseColumnOptions,
     flex: 3,
-    colSpan: ({ row }) => {
+    colSpan: (value, row) => {
       if (row.id === 'SUBTOTAL' || row.id === 'TOTAL') {
         return 3;
       }
@@ -36,7 +36,7 @@ const columns = [
       }
       return undefined;
     },
-    valueGetter: ({ value, row }) => {
+    valueGetter: (value, row) => {
       if (row.id === 'SUBTOTAL' || row.id === 'TAX' || row.id === 'TOTAL') {
         return row.label;
       }
@@ -55,7 +55,7 @@ const columns = [
     headerName: 'Price',
     flex: 1,
     ...baseColumnOptions,
-    valueGetter: ({ row, value }) => {
+    valueGetter: (value, row) => {
       if (row.id === 'TAX') {
         return `${row.taxRate}%`;
       }
@@ -67,7 +67,7 @@ const columns = [
     headerName: 'Total',
     flex: 1,
     ...baseColumnOptions,
-    valueGetter: ({ row }) => {
+    valueGetter: (value, row) => {
       if (row.id === 'SUBTOTAL') {
         return row.subtotal;
       }

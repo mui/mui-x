@@ -16,16 +16,20 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Следующий месяц',
 
   // View navigation
-  openPreviousView: 'открыть предыдущий вид',
-  openNextView: 'открыть следующий вид',
+  openPreviousView: 'Открыть предыдущий вид',
+  openNextView: 'Открыть следующий вид',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'открыт годовой вид, переключить на календарный вид'
       : 'открыт календарный вид, переключить на годовой вид',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Начало',
   end: 'Конец',
+  startDate: 'Начальная дата',
+  startTime: 'Начальное время',
+  endDate: 'Конечная дата',
+  endTime: 'Конечное время',
 
   // Action bar
   cancelButtonLabel: 'Отмена',
@@ -41,9 +45,7 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Выбрать ${timeViews[view]}. ${
-      time === null ? 'Время не выбрано' : `Выбрано время ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Выбрать ${timeViews[view]}. ${time === null ? 'Время не выбрано' : `Выбрано время ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} часов`,
   minutesClockNumberText: (minutes) => `${minutes} минут`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,
@@ -66,6 +68,7 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Выберите время, выбрано время ${utils.format(value, 'fullTime')}`
       : 'Выберите время',
+  fieldClearLabel: 'Очистить значение',
 
   // Table labels
   timeTableLabel: 'выбрать время',
@@ -75,11 +78,24 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'Г'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'ММММ' : 'ММ'),
   fieldDayPlaceholder: () => 'ДД',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'ДДДД' : 'ДД'),
   fieldHoursPlaceholder: () => 'чч',
   fieldMinutesPlaceholder: () => 'мм',
   fieldSecondsPlaceholder: () => 'сс',
   fieldMeridiemPlaceholder: () => '(д|п)п',
+
+  // View names
+  year: 'Год',
+  month: 'Месяц',
+  day: 'День',
+  weekDay: 'День недели',
+  hours: 'Часы',
+  minutes: 'Минуты',
+  seconds: 'Секунды',
+  meridiem: 'Меридием',
+
+  // Common
+  empty: 'Пустой',
 };
 
 export const ruRU = getPickersLocalization(ruRUPickers);

@@ -1,17 +1,18 @@
-import { screen, userEvent, fireTouchChangedEvent } from '@mui/monorepo/test/utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+import * as React from 'react';
+import { screen, userEvent, fireEvent, fireTouchChangedEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
-  expectInputValue,
-  expectInputPlaceholder,
+  expectFieldValueV7,
   openPicker,
   getClockTouchEvent,
-  getTextbox,
+  describeValidation,
+  describeValue,
+  describePicker,
+  getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
-import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MobileDateTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -29,31 +30,45 @@ describe('<MobileDateTimePicker /> - Describes', () => {
     variant: 'mobile',
   }));
 
+  describeConformance(<MobileDateTimePicker />, () => ({
+    classes: {} as any,
+    render,
+    muiName: 'MuiMobileDateTimePicker',
+    refInstanceof: window.HTMLDivElement,
+    skip: [
+      'componentProp',
+      'componentsProp',
+      'themeDefaultProps',
+      'themeStyleOverrides',
+      'themeVariants',
+      'mergeClassName',
+      'propsSpread',
+    ],
+  }));
+
   describeValue(MobileDateTimePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'date-time',
     variant: 'mobile',
     clock,
-    values: [
-      adapterToUse.date(new Date(2018, 0, 1, 11, 30)),
-      adapterToUse.date(new Date(2018, 0, 2, 12, 35)),
-    ],
+    values: [adapterToUse.date('2018-01-01T11:30:00'), adapterToUse.date('2018-01-02T12:35:00')],
     emptyValue: null,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const input = getTextbox();
-      if (!expectedValue) {
-        expectInputPlaceholder(input, hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm');
-      }
-      const expectedValueStr = expectedValue
-        ? adapterToUse.format(
-            expectedValue,
-            hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
-          )
-        : '';
+      const fieldRoot = getFieldInputRoot();
 
-      expectInputValue(input, expectedValueStr);
+      let expectedValueStr: string;
+      if (expectedValue) {
+        expectedValueStr = adapterToUse.format(
+          expectedValue,
+          hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
+        );
+      } else {
+        expectedValueStr = hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm';
+      }
+
+      expectFieldValueV7(fieldRoot, expectedValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
@@ -87,7 +102,8 @@ describe('<MobileDateTimePicker /> - Describes', () => {
 
       // Close the picker
       if (!isOpened) {
-        userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
         clock.runToLast();
       } else {
         // return to the date view in case we'd like to repeat the selection process

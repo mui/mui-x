@@ -1,14 +1,15 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled, alpha, useThemeProps } from '@mui/material/styles';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useEnhancedEffect as useEnhancedEffect,
-} from '@mui/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
+import composeClasses from '@mui/utils/composeClasses';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   getPickersMonthUtilityClass,
   pickersMonthClasses,
   PickersMonthClasses,
 } from './pickersMonthClasses';
+import { MonthCalendarSlotProps, MonthCalendarSlots } from './MonthCalendar.types';
 
 export interface ExportedPickersMonthProps {
   classes?: Partial<PickersMonthClasses>;
@@ -19,6 +20,7 @@ export interface PickersMonthProps extends ExportedPickersMonthProps {
   'aria-label'?: React.AriaAttributes['aria-label'];
   autoFocus: boolean;
   children: React.ReactNode;
+  className?: string;
   disabled?: boolean;
   onClick: (event: React.MouseEvent, month: number) => void;
   onKeyDown: (event: React.KeyboardEvent, month: number) => void;
@@ -28,6 +30,8 @@ export interface PickersMonthProps extends ExportedPickersMonthProps {
   value: number;
   tabIndex: number;
   monthsPerRow: 3 | 4;
+  slots?: MonthCalendarSlots;
+  slotProps?: MonthCalendarSlotProps;
 }
 
 const useUtilityClasses = (ownerState: PickersMonthProps) => {
@@ -47,14 +51,15 @@ const PickersMonthRoot = styled('div', {
   overridesResolver: (_, styles) => [styles.root],
 })<{
   ownerState: PickersMonthProps;
-}>(({ ownerState }) => ({
-  flexBasis: ownerState.monthsPerRow === 3 ? '33.3%' : '25%',
+}>({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-}));
+  flexBasis: '33.3%',
+  variants: [{ props: { monthsPerRow: 4 }, style: { flexBasis: '25%' } }],
+});
 
-const PickersMonthButton = styled('button', {
+const MonthCalendarButton = styled('button', {
   name: 'MuiPickersMonth',
   slot: 'MonthButton',
   overridesResolver: (_, styles) => [
@@ -63,7 +68,7 @@ const PickersMonthButton = styled('button', {
     { [`&.${pickersMonthClasses.selected}`]: styles.selected },
   ],
 })<{
-  ownerState: PickersMonthProps;
+  ownerState?: PickersMonthProps;
 }>(({ theme }) => ({
   color: 'unset',
   backgroundColor: 'transparent',
@@ -111,6 +116,7 @@ export const PickersMonth = React.memo(function PickersMonth(inProps: PickersMon
   });
   const {
     autoFocus,
+    className,
     children,
     disabled,
     selected,
@@ -124,38 +130,53 @@ export const PickersMonth = React.memo(function PickersMonth(inProps: PickersMon
     'aria-label': ariaLabel,
     // We don't want to forward this prop to the root element
     monthsPerRow,
+    slots,
+    slotProps,
     ...other
   } = props;
 
   const ref = React.useRef<HTMLButtonElement>(null);
   const classes = useUtilityClasses(props);
 
+  // We can't forward the `autoFocus` to the button because it is a native button, not a MUI Button
   useEnhancedEffect(() => {
     if (autoFocus) {
+      // `ref.current` being `null` would be a bug in MUI.
       ref.current?.focus();
     }
   }, [autoFocus]);
 
+  const MonthButton = slots?.monthButton ?? MonthCalendarButton;
+  const monthButtonProps = useSlotProps({
+    elementType: MonthButton,
+    externalSlotProps: slotProps?.monthButton,
+    additionalProps: {
+      children,
+      disabled,
+      tabIndex,
+      ref,
+      type: 'button' as const,
+      role: 'radio',
+      'aria-current': ariaCurrent,
+      'aria-checked': selected,
+      'aria-label': ariaLabel,
+      onClick: (event: React.MouseEvent) => onClick(event, value),
+      onKeyDown: (event: React.KeyboardEvent) => onKeyDown(event, value),
+      onFocus: (event: React.FocusEvent) => onFocus(event, value),
+      onBlur: (event: React.FocusEvent) => onBlur(event, value),
+    },
+    ownerState: props,
+    className: classes.monthButton,
+  });
+
   return (
-    <PickersMonthRoot data-mui-test="month" className={classes.root} ownerState={props} {...other}>
-      <PickersMonthButton
-        ref={ref}
-        disabled={disabled}
-        type="button"
-        role="radio"
-        tabIndex={disabled ? -1 : tabIndex}
-        aria-current={ariaCurrent}
-        aria-checked={selected}
-        aria-label={ariaLabel}
-        onClick={(event) => onClick(event, value)}
-        onKeyDown={(event) => onKeyDown(event, value)}
-        onFocus={(event) => onFocus(event, value)}
-        onBlur={(event) => onBlur(event, value)}
-        className={classes.monthButton}
-        ownerState={props}
-      >
-        {children}
-      </PickersMonthButton>
+    <PickersMonthRoot
+      data-mui-test="month"
+      className={clsx(classes.root, className)}
+      ownerState={props}
+      {...other}
+    >
+      <MonthButton {...monthButtonProps} />
     </PickersMonthRoot>
   );
 });

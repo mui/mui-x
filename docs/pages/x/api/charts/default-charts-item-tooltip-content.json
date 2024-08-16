@@ -1,0 +1,87 @@
+{
+  "props": {
+    "classes": {
+      "type": { "name": "object" },
+      "required": true,
+      "additionalInfo": { "cssApi": true }
+    },
+    "getColor": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(dataIndex: number) => string",
+        "describedArgs": ["dataIndex"],
+        "returned": "string"
+      }
+    },
+    "itemData": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string, type: 'bar'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'pie'<br>&#124;&nbsp;'scatter' }"
+      },
+      "required": true
+    },
+    "series": { "type": { "name": "object" }, "required": true }
+  },
+  "name": "DefaultChartsItemTooltipContent",
+  "imports": [
+    "import { DefaultChartsItemTooltipContent } from '@mui/x-charts/ChartsTooltip';",
+    "import { DefaultChartsItemTooltipContent } from '@mui/x-charts';",
+    "import { DefaultChartsItemTooltipContent } from '@mui/x-charts-pro';"
+  ],
+  "classes": [
+    {
+      "key": "cell",
+      "className": "MuiDefaultChartsItemTooltipContent-cell",
+      "description": "Styles applied to the cell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "labelCell",
+      "className": "MuiDefaultChartsItemTooltipContent-labelCell",
+      "description": "Styles applied to the labelCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "mark",
+      "className": "MuiDefaultChartsItemTooltipContent-mark",
+      "description": "Styles applied to the mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "markCell",
+      "className": "MuiDefaultChartsItemTooltipContent-markCell",
+      "description": "Styles applied to the markCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiDefaultChartsItemTooltipContent-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "row",
+      "className": "MuiDefaultChartsItemTooltipContent-row",
+      "description": "Styles applied to the row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "table",
+      "className": "MuiDefaultChartsItemTooltipContent-table",
+      "description": "Styles applied to the table element.",
+      "isGlobal": false
+    },
+    {
+      "key": "valueCell",
+      "className": "MuiDefaultChartsItemTooltipContent-valueCell",
+      "description": "Styles applied to the valueCell element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiDefaultChartsItemTooltipContent",
+  "filename": "/packages/x-charts/src/ChartsTooltip/DefaultChartsItemTooltipContent.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/tooltip/\">Charts - Tooltip</a></li></ul>",
+  "cssComponent": false
+}

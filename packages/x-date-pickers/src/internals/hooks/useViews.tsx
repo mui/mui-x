@@ -4,8 +4,9 @@ import { unstable_useControlled as useControlled } from '@mui/utils';
 import type { PickerSelectionState } from './usePicker';
 import { MakeOptional } from '../models/helpers';
 import { DateOrTimeViewWithMeridiem } from '../models';
+import { PickerValidDate } from '../../models';
 
-export type PickerOnChangeFn<TDate> = (
+export type PickerOnChangeFn<TDate extends PickerValidDate> = (
   date: TDate | null,
   selectionState?: PickerSelectionState,
 ) => void;
@@ -13,7 +14,8 @@ export type PickerOnChangeFn<TDate> = (
 export interface UseViewsOptions<TValue, TView extends DateOrTimeViewWithMeridiem> {
   /**
    * Callback fired when the value changes.
-   * @template TValue
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TView The view type. Will be one of date or time views.
    * @param {TValue} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
@@ -62,7 +64,7 @@ export interface UseViewsOptions<TValue, TView extends DateOrTimeViewWithMeridie
 }
 
 export interface ExportedUseViewsOptions<TView extends DateOrTimeViewWithMeridiem>
-  extends MakeOptional<Omit<UseViewsOptions<any, TView>, 'onChange'>, 'openTo' | 'views'> {}
+  extends MakeOptional<UseViewsOptions<any, TView>, 'onChange' | 'openTo' | 'views'> {}
 
 let warnedOnceNotValidView = false;
 
@@ -78,8 +80,8 @@ interface UseViewsResponse<TValue, TView extends DateOrTimeViewWithMeridiem> {
   setValueAndGoToNextView: (
     value: TValue,
     currentViewSelectionState?: PickerSelectionState,
+    selectedView?: TView,
   ) => void;
-  setValueAndGoToView: (value: TValue, newView: TView | null, selectedView: TView) => void;
 }
 
 export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
@@ -96,7 +98,7 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
     if (!warnedOnceNotValidView) {
       if (inView != null && !views.includes(inView)) {
         console.warn(
-          `MUI: \`view="${inView}"\` is not a valid prop.`,
+          `MUI X: \`view="${inView}"\` is not a valid prop.`,
           `It must be an element of \`views=["${views.join('", "')}"]\`.`,
         );
         warnedOnceNotValidView = true;
@@ -104,7 +106,7 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
 
       if (inView == null && openTo != null && !views.includes(openTo)) {
         console.warn(
-          `MUI: \`openTo="${openTo}"\` is not a valid prop.`,
+          `MUI X: \`openTo="${openTo}"\` is not a valid prop.`,
           `It must be an element of \`views=["${views.join('", "')}"]\`.`,
         );
         warnedOnceNotValidView = true;
@@ -162,21 +164,21 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
   });
 
   const handleChangeView = useEventCallback((newView: TView) => {
+    // always keep the focused view in sync
+    handleFocusedViewChange(newView, true);
     if (newView === view) {
       return;
     }
     setView(newView);
-    handleFocusedViewChange(newView, true);
-
     if (onViewChange) {
       onViewChange(newView);
     }
   });
+
   const goToNextView = useEventCallback(() => {
     if (nextView) {
       handleChangeView(nextView);
     }
-    handleFocusedViewChange(nextView, true);
   });
 
   const setValueAndGoToNextView = useEventCallback(
@@ -184,25 +186,23 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
       const isSelectionFinishedOnCurrentView = currentViewSelectionState === 'finish';
       const hasMoreViews = selectedView
         ? // handles case like `DateTimePicker`, where a view might return a `finish` selection state
-          // but we it's not the final view given all `views` -> overall selection state should be `partial`.
+          // but when it's not the final view given all `views` -> overall selection state should be `partial`.
           views.indexOf(selectedView) < views.length - 1
         : Boolean(nextView);
       const globalSelectionState =
         isSelectionFinishedOnCurrentView && hasMoreViews ? 'partial' : currentViewSelectionState;
 
-      onChange(value, globalSelectionState);
-      if (isSelectionFinishedOnCurrentView) {
+      onChange(value, globalSelectionState, selectedView);
+      // Detects if the selected view is not the active one.
+      // Can happen if multiple views are displayed, like in `DesktopDateTimePicker` or `MultiSectionDigitalClock`.
+      if (selectedView && selectedView !== view) {
+        const nextViewAfterSelected = views[views.indexOf(selectedView) + 1];
+        if (nextViewAfterSelected) {
+          // move to next view after the selected one
+          handleChangeView(nextViewAfterSelected);
+        }
+      } else if (isSelectionFinishedOnCurrentView) {
         goToNextView();
-      }
-    },
-  );
-
-  const setValueAndGoToView = useEventCallback(
-    (value: TValue, newView: TView | null, selectedView: TView) => {
-      onChange(value, newView ? 'partial' : 'finish', selectedView);
-      if (newView) {
-        handleChangeView(newView);
-        handleFocusedViewChange(newView, true);
       }
     },
   );
@@ -214,9 +214,9 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
     setFocusedView: handleFocusedViewChange,
     nextView,
     previousView,
-    defaultView: defaultView.current,
+    // Always return up-to-date default view instead of the initial one (i.e. defaultView.current)
+    defaultView: views.includes(openTo!) ? openTo! : views[0],
     goToNextView,
     setValueAndGoToNextView,
-    setValueAndGoToView,
   };
 }

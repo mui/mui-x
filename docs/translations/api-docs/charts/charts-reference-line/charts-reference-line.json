@@ -1,0 +1,38 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "axisId": { "description": "The id of the axis used for the reference value." },
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "label": { "description": "The label to display along the reference line." },
+    "labelAlign": { "description": "The alignment if the label is in the chart drawing area." },
+    "labelStyle": { "description": "The style applied to the label." },
+    "lineStyle": { "description": "The style applied to the line." },
+    "spacing": {
+      "description": "Additional space around the label in px. Can be a number or an object <code>{ x, y }</code> to distinguish space with the reference line and space with axes."
+    },
+    "x": {
+      "description": "The x value associated with the reference line. If defined the reference line will be vertical."
+    },
+    "y": {
+      "description": "The y value associated with the reference line. If defined the reference line will be horizontal."
+    }
+  },
+  "classDescriptions": {
+    "horizontal": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "the reference line is horizontal"
+    },
+    "label": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the reference label"
+    },
+    "line": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the reference line" },
+    "root": { "description": "Styles applied to the root element." },
+    "vertical": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "the reference line is vertical"
+    }
+  }
+}

@@ -5,7 +5,7 @@
 :::error
 By default, the Data Grid has **no intrinsic dimensions**.
 Instead, it takes up the space given by its parent.
-The grid will raise an error in the console if its container has no intrinsic dimensions.
+The Data Grid will raise an error in the console if its container has no intrinsic dimensions.
 :::
 
 ## Percentage dimensions
@@ -33,9 +33,9 @@ This is not recommended for large datasets as row virtualization will not be abl
 
 ### Overlay height
 
-When `autoHeight` is enabled but there are no rows, grid overlays (such as
-["Loading"](/x/react-data-grid/components/#loading-overlay) or
-["No rows"](/x/react-data-grid/components/#no-rows-overlay))
+When `autoHeight` is enabled, grid overlays (such as
+["Loading"](/x/react-data-grid/overlays/#loading-overlay) or
+["No rows"](/x/react-data-grid/overlays/#no-rows-overlay))
 take the height of two rows by default.
 
 To customize the overlay height, use the `--DataGrid-overlayHeight` CSS variable.

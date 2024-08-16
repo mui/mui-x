@@ -1,8 +1,8 @@
 import { createIsAfterIgnoreDatePart } from './time-utils';
 import { mergeDateAndTime, getTodayDate } from './date-utils';
-import { DateOrTimeView, FieldSection, MuiPickersAdapter, PickersTimezone } from '../../models';
+import { FieldSection, MuiPickersAdapter, PickersTimezone, PickerValidDate } from '../../models';
 
-export interface GetDefaultReferenceDateProps<TDate> {
+export interface GetDefaultReferenceDateProps<TDate extends PickerValidDate> {
   maxDate?: TDate;
   minDate?: TDate;
   minTime?: TDate;
@@ -28,10 +28,11 @@ export const getSectionTypeGranularity = (sections: FieldSection[]) =>
     ),
   );
 
-export const getViewsGranularity = (views: readonly DateOrTimeView[]) =>
-  Math.max(...views.map((view) => SECTION_TYPE_GRANULARITY[view] ?? 1));
-
-const roundDate = <TDate>(utils: MuiPickersAdapter<TDate>, granularity: number, date: TDate) => {
+const roundDate = <TDate extends PickerValidDate>(
+  utils: MuiPickersAdapter<TDate>,
+  granularity: number,
+  date: TDate,
+) => {
   if (granularity === SECTION_TYPE_GRANULARITY.year) {
     return utils.startOfYear(date);
   }
@@ -57,7 +58,7 @@ const roundDate = <TDate>(utils: MuiPickersAdapter<TDate>, granularity: number, 
   return roundedDate;
 };
 
-export const getDefaultReferenceDate = <TDate>({
+export const getDefaultReferenceDate = <TDate extends PickerValidDate>({
   props,
   utils,
   granularity,

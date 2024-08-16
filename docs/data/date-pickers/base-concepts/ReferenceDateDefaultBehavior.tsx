@@ -8,7 +8,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 export default function ReferenceDateDefaultBehavior() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DateTimePicker', 'DateTimePicker']}>
+      <DemoContainer components={['DatePicker', 'DatePicker']}>
         <DemoItem label="No validation: uses today">
           <DatePicker />
         </DemoItem>

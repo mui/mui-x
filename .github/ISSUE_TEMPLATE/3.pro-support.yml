@@ -1,7 +1,7 @@
 name: 'Pro plan: question ❔'
 description: I'm a Pro plan user, I can't find a solution to my problem with MUI X.
 title: '[question] '
-labels: ['status: needs triage', 'pro plan', 'support: commercial']
+labels: ['status: waiting for maintainer', 'support: commercial']
 body:
   - type: markdown
     attributes:
@@ -9,7 +9,6 @@ body:
         Please provide a searchable summary of the issue in the title above ⬆️.
 
         ⚠️ **Don't use this form if the problem is [a bug](https://github.com/mui/mui-x/issues/new?assignees=&labels=status%3A+needs+triage&template=1.bug.yml) or a [feature request](https://github.com/mui/mui-x/issues/new?assignees=&labels=status%3A+needs+triage&template=2.feature.yml), use the dedicated form instead.**
-
   - type: input
     id: contact
     attributes:
@@ -18,12 +17,12 @@ body:
       placeholder: 'e.g. 11111'
     validations:
       required: true
-
   - type: input
     attributes:
       label: Search keywords
-      description: Your issue may have already been reported! List the keywords you've used to search the [existing issues](https://github.com/mui/mui-x/issues). This will also make your issue searchable for others.
-      placeholder: e.g. datagrid column resizing
+      description: |
+        Your issue may have already been reported! First search for duplicates among the [existing issues](https://github.com/mui/mui-x/issues?q=is%3Aissue).
+        If your issue isn't a duplicate, great! Please list the keywords you used so people in the future can find this one more easily:
     validations:
       required: true
   - type: checkboxes
@@ -33,18 +32,24 @@ body:
       options:
         - label: I have tested the latest version
           required: true
-
+  - type: dropdown
+    attributes:
+      label: Affected products
+      description: Which products are affected by this issue? If you're not sure, leave this blank.
+      multiple: true
+      options:
+        - Data Grid
+        - Date and Time Pickers
+        - Charts
+        - Tree View
   - type: textarea
     attributes:
-      label: The problem in depth 🔍
+      label: The problem in depth
       description: |
-        **If applicable, please provide a live example to explain your problem.**
-        If you don't have one, you can use one of these options:
-          - [DataGrid codesandbox template](https://codesandbox.io/s/github/mui/mui-x/tree/master/templates/x-data-grid?file=/src/demo.tsx)
-          - Fork any of the examples in our [documentation](https://mui.com/x/introduction/) by [clicking on the codesandbox or stackblitz icon](https://mui.com/static/docs/forking-an-example.png)
+        Please provide a link to a live example and an unambiguous set of steps to reproduce this bug. See our [documentation](https://mui.com/x/introduction/support/#bug-reproductions) on how to build a reproduction case.
   - type: textarea
     attributes:
-      label: Your environment 🌎
+      label: Your environment
       description: Run `npx @mui/envinfo` and post the results. If you encounter issues with TypeScript please include the used tsconfig.
       value: |
         <details>

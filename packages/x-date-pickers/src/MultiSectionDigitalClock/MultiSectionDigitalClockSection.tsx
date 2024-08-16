@@ -11,10 +11,9 @@ import {
 } from './multiSectionDigitalClockSectionClasses';
 import type {
   MultiSectionDigitalClockOption,
-  MultiSectionDigitalClockSlotsComponent,
-  MultiSectionDigitalClockSlotsComponentsProps,
+  MultiSectionDigitalClockSlots,
+  MultiSectionDigitalClockSlotProps,
 } from './MultiSectionDigitalClock.types';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import {
   DIGITAL_CLOCK_VIEW_HEIGHT,
   MULTI_SECTION_CLOCK_SECTION_WIDTH,
@@ -23,8 +22,8 @@ import {
 export interface ExportedMultiSectionDigitalClockSectionProps {
   className?: string;
   classes?: Partial<MultiSectionDigitalClockSectionClasses>;
-  slots?: UncapitalizeObjectKeys<MultiSectionDigitalClockSlotsComponent>;
-  slotProps?: MultiSectionDigitalClockSlotsComponentsProps;
+  slots?: MultiSectionDigitalClockSlots;
+  slotProps?: MultiSectionDigitalClockSlotProps;
 }
 
 export interface MultiSectionDigitalClockSectionProps<TValue>
@@ -54,26 +53,41 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: MultiSectionDigitalClockSectionProps<any> & { alreadyRendered: boolean } }>(
-  ({ theme, ownerState }) => ({
+  ({ theme }) => ({
     maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
     width: 56,
     padding: 0,
     overflow: 'hidden',
     '@media (prefers-reduced-motion: no-preference)': {
-      scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
+      scrollBehavior: 'auto',
     },
-    '&:hover': {
+    '@media (pointer: fine)': {
+      '&:hover': {
+        overflowY: 'auto',
+      },
+    },
+    '@media (pointer: none), (pointer: coarse)': {
       overflowY: 'auto',
     },
     '&:not(:first-of-type)': {
       borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
     },
-    '&:after': {
+    '&::after': {
       display: 'block',
       content: '""',
       // subtracting the height of one item, extra margin and borders to make sure the max height is correct
       height: 'calc(100% - 40px - 6px)',
     },
+    variants: [
+      {
+        props: { alreadyRendered: true },
+        style: {
+          '@media (prefers-reduced-motion: no-preference)': {
+            scrollBehavior: 'smooth',
+          },
+        },
+      },
+    ],
   }),
 );
 
@@ -122,7 +136,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
   ) {
     const containerRef = React.useRef<HTMLUListElement>(null);
     const handleRef = useForkRef(ref, containerRef);
-    const previousSelected = React.useRef<HTMLElement | null>(null);
+    const previousActive = React.useRef<HTMLElement | null>(null);
 
     const props = useThemeProps({
       props: inProps,
@@ -155,25 +169,23 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       if (containerRef.current === null) {
         return;
       }
-      const selectedItem = containerRef.current.querySelector<HTMLElement>(
-        '[role="option"][aria-selected="true"]',
+      const activeItem = containerRef.current.querySelector<HTMLElement>(
+        '[role="option"][tabindex="0"], [role="option"][aria-selected="true"]',
       );
-      if (!selectedItem || previousSelected.current === selectedItem) {
-        // Handle setting the ref to null if the selected item is ever reset via UI
-        if (previousSelected.current !== selectedItem) {
-          previousSelected.current = selectedItem;
-        }
+      if (active && autoFocus && activeItem) {
+        activeItem.focus();
+      }
+      if (!activeItem || previousActive.current === activeItem) {
         return;
       }
-      previousSelected.current = selectedItem;
-      if (active && autoFocus) {
-        selectedItem.focus();
-      }
-      const offsetTop = selectedItem.offsetTop;
+      previousActive.current = activeItem;
+      const offsetTop = activeItem.offsetTop;
 
       // Subtracting the 4px of extra margin intended for the first visible section item
       containerRef.current.scrollTop = offsetTop - 4;
     });
+
+    const focusedOptionIndex = items.findIndex((item) => item.isFocused(item.value));
 
     return (
       <MultiSectionDigitalClockSectionRoot
@@ -184,23 +196,29 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
         role="listbox"
         {...other}
       >
-        {items.map((option) => {
-          if (skipDisabled && option.isDisabled?.(option.value)) {
+        {items.map((option, index) => {
+          const isItemDisabled = option.isDisabled?.(option.value);
+          const isDisabled = disabled || isItemDisabled;
+          if (skipDisabled && isDisabled) {
             return null;
           }
           const isSelected = option.isSelected(option.value);
+          const tabIndex =
+            focusedOptionIndex === index || (focusedOptionIndex === -1 && index === 0) ? 0 : -1;
           return (
             <DigitalClockSectionItem
               key={option.label}
               onClick={() => !readOnly && onChange(option.value)}
               selected={isSelected}
-              disabled={disabled || option.isDisabled?.(option.value)}
+              disabled={isDisabled}
               disableRipple={readOnly}
               role="option"
               // aria-readonly is not supported here and does not have any effect
-              aria-disabled={readOnly}
+              aria-disabled={readOnly || isDisabled || undefined}
               aria-label={option.ariaLabel}
               aria-selected={isSelected}
+              tabIndex={tabIndex}
+              className={classes.item}
               {...slotProps?.digitalClockSectionItem}
             >
               {option.label}

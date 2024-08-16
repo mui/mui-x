@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { EventManager } from '../../utils/EventManager';
+import { EventManager } from '@mui/x-internals/EventManager';
 import type { TreeViewPlugin } from '../../models';
-import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewInstanceEventsSignature } from './useTreeViewInstanceEvents.types';
 import type { TreeViewEventListener } from '../../models/events';
 
@@ -9,14 +8,7 @@ const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;
 };
 
-/**
- * Plugin responsible for the registration of the nodes defined as JSX children of the TreeView.
- * When we will have both a SimpleTreeView using JSX children and a TreeView using a data prop,
- * this plugin will only be used by SimpleTreeView.
- */
-export const useTreeViewInstanceEvents: TreeViewPlugin<UseTreeViewInstanceEventsSignature> = ({
-  instance,
-}) => {
+export const useTreeViewInstanceEvents: TreeViewPlugin<UseTreeViewInstanceEventsSignature> = () => {
   const [eventManager] = React.useState(() => new EventManager());
 
   const publishEvent = React.useCallback(
@@ -43,8 +35,12 @@ export const useTreeViewInstanceEvents: TreeViewPlugin<UseTreeViewInstanceEvents
     [eventManager],
   );
 
-  populateInstance<UseTreeViewInstanceEventsSignature>(instance, {
-    $$publishEvent: publishEvent,
-    $$subscribeEvent: subscribeEvent,
-  });
+  return {
+    instance: {
+      $$publishEvent: publishEvent,
+      $$subscribeEvent: subscribeEvent,
+    },
+  };
 };
+
+useTreeViewInstanceEvents.params = {};

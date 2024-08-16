@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { act, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
 
@@ -9,7 +9,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
 
   describe('Calendar keyboard navigation', () => {
     it('can autofocus selected day on mount', () => {
-      render(<DateCalendar defaultValue={adapterToUse.date(new Date(2020, 7, 13))} autoFocus />);
+      render(<DateCalendar defaultValue={adapterToUse.date('2022-08-13')} autoFocus />);
 
       expect(screen.getByRole('gridcell', { name: '13' })).toHaveFocus();
     });
@@ -23,7 +23,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
       { key: 'ArrowDown', expectFocusedDay: '20' },
     ].forEach(({ key, expectFocusedDay }) => {
       it(key, () => {
-        render(<DateCalendar defaultValue={adapterToUse.date(new Date(2020, 7, 13))} />);
+        render(<DateCalendar defaultValue={adapterToUse.date('2020-08-13')} />);
 
         act(() => screen.getByText('13').focus());
         // Don't care about what's focused.
@@ -37,7 +37,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
     });
 
     it('should manage a sequence of keyboard interactions', () => {
-      render(<DateCalendar defaultValue={adapterToUse.date(new Date(2020, 7, 13))} />);
+      render(<DateCalendar defaultValue={adapterToUse.date('2020-08-13')} />);
 
       act(() => screen.getByText('13').focus());
       const interactions = [
@@ -60,18 +60,18 @@ describe('<DateCalendar /> keyboard interactions', () => {
 
     [
       // Switch between months
-      { initialDay: 1, key: 'ArrowLeft', expectFocusedDay: '31' },
-      { initialDay: 5, key: 'ArrowUp', expectFocusedDay: '29' },
-      { initialDay: 31, key: 'ArrowRight', expectFocusedDay: '1' },
-      { initialDay: 30, key: 'ArrowDown', expectFocusedDay: '6' },
+      { initialDay: '01', key: 'ArrowLeft', expectFocusedDay: '31' },
+      { initialDay: '05', key: 'ArrowUp', expectFocusedDay: '29' },
+      { initialDay: '31', key: 'ArrowRight', expectFocusedDay: '1' },
+      { initialDay: '30', key: 'ArrowDown', expectFocusedDay: '6' },
       // Switch between weeks
-      { initialDay: 10, key: 'ArrowLeft', expectFocusedDay: '9' },
-      { initialDay: 9, key: 'ArrowRight', expectFocusedDay: '10' },
+      { initialDay: '10', key: 'ArrowLeft', expectFocusedDay: '9' },
+      { initialDay: '09', key: 'ArrowRight', expectFocusedDay: '10' },
     ].forEach(({ initialDay, key, expectFocusedDay }) => {
       it(key, () => {
-        render(<DateCalendar defaultValue={adapterToUse.date(new Date(2020, 7, initialDay))} />);
+        render(<DateCalendar defaultValue={adapterToUse.date(`2020-08-${initialDay}`)} />);
 
-        act(() => screen.getByText(`${initialDay}`).focus());
+        act(() => screen.getByText(`${Number(initialDay)}`).focus());
         // Don't care about what's focused.
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key });
@@ -85,32 +85,32 @@ describe('<DateCalendar /> keyboard interactions', () => {
 
     describe('navigation with disabled dates', () => {
       const disabledDates = [
-        adapterToUse.date(new Date(2020, 0, 10)),
+        adapterToUse.date('2020-01-10'),
         // month extremities
-        adapterToUse.date(new Date(2019, 11, 31)),
-        adapterToUse.date(new Date(2020, 0, 1)),
-        adapterToUse.date(new Date(2020, 0, 2)),
-        adapterToUse.date(new Date(2020, 0, 31)),
-        adapterToUse.date(new Date(2020, 1, 1)),
+        adapterToUse.date('2019-12-31'),
+        adapterToUse.date('2020-01-01'),
+        adapterToUse.date('2020-01-02'),
+        adapterToUse.date('2020-01-31'),
+        adapterToUse.date('2020-02-01'),
       ];
       [
-        { initialDay: 11, key: 'ArrowLeft', expectFocusedDay: '9' },
-        { initialDay: 9, key: 'ArrowRight', expectFocusedDay: '11' },
+        { initialDay: '11', key: 'ArrowLeft', expectFocusedDay: '9' },
+        { initialDay: '09', key: 'ArrowRight', expectFocusedDay: '11' },
         // Switch between months
-        { initialDay: 3, key: 'ArrowLeft', expectFocusedDay: '30' },
-        { initialDay: 30, key: 'ArrowRight', expectFocusedDay: '2' },
+        { initialDay: '03', key: 'ArrowLeft', expectFocusedDay: '30' },
+        { initialDay: '30', key: 'ArrowRight', expectFocusedDay: '2' },
       ].forEach(({ initialDay, key, expectFocusedDay }) => {
         it(key, () => {
           render(
             <DateCalendar
-              defaultValue={adapterToUse.date(new Date(2020, 0, initialDay))}
+              defaultValue={adapterToUse.date(`2020-01-${initialDay}`)}
               shouldDisableDate={(date) =>
                 disabledDates.some((disabled) => adapterToUse.isSameDay(date, disabled))
               }
             />,
           );
 
-          act(() => screen.getByText(`${initialDay}`).focus());
+          act(() => screen.getByText(`${Number(initialDay)}`).focus());
           // Don't care about what's focused.
           // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
           fireEvent.keyDown(document.activeElement!, { key });

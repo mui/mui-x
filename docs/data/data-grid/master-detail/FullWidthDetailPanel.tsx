@@ -26,12 +26,12 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
   const apiRef = useGridApiContext();
   const [width, setWidth] = React.useState(() => {
     const dimensions = apiRef.current.getRootDimensions();
-    return dimensions!.viewportInnerSize.width;
+    return dimensions.viewportInnerSize.width;
   });
 
   const handleViewportInnerSizeChange = React.useCallback(() => {
     const dimensions = apiRef.current.getRootDimensions();
-    setWidth(dimensions!.viewportInnerSize.width);
+    setWidth(dimensions.viewportInnerSize.width);
   }, [apiRef]);
 
   React.useEffect(() => {
@@ -71,7 +71,7 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
                 field: 'total',
                 headerName: 'Total',
                 type: 'number',
-                valueGetter: ({ row }) => row.quantity * row.unitPrice,
+                valueGetter: (value, row) => row.quantity * row.unitPrice,
               },
             ]}
             rows={rowProp.products}
@@ -94,13 +94,13 @@ const columns: GridColDef[] = [
   {
     field: 'city',
     headerName: 'City',
-    valueGetter: ({ row }) => `${row.city}, ${row.country.label}`,
+    valueGetter: (value, row) => `${row.city}, ${row.country.label}`,
   },
   {
     field: 'total',
     type: 'number',
     headerName: 'Total',
-    valueGetter: ({ row }) => {
+    valueGetter: (value, row) => {
       const subtotal = row.products.reduce(
         (acc: number, product: any) => product.unitPrice * product.quantity,
         0,
@@ -205,7 +205,6 @@ export default function FullWidthDetailPanel() {
       <DataGridPro
         columns={columns}
         rows={rows}
-        rowThreshold={0}
         pinnedColumns={{ left: [GRID_DETAIL_PANEL_TOGGLE_FIELD] }}
         getDetailPanelHeight={getDetailPanelHeight}
         getDetailPanelContent={getDetailPanelContent}

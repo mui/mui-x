@@ -14,7 +14,7 @@ For each pattern, you will find a list of where such pattern is used, why it is 
 
 - Pipe-processing
   - Plugin state enrichment
-  - Add custom behavior to an api method
+  - Add custom behavior to an API method
   - Feature limitation
   - Component children processing
 - Family-processing
@@ -39,8 +39,8 @@ We can classify the pipe-processing into several categories:
 
 A few possible reasons could be to:
 
-- Add some columns (eg: processor of the Selection plugin)
-- Re-order the columns (eg: processor of the Column Pinning plugin).
+- Add some columns (for example processor of the Selection plugin)
+- Re-order the columns (for example processor of the Column Pinning plugin).
 
 **Example**:
 
@@ -78,7 +78,7 @@ useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', addCustomFeatureColumn);
 
 **Why register to this processing**
 
-- Modify the base height of a row or add the height of some custom elements (eg: processor of the Detail Panel plugin increases the row height when the detail panel is open).
+- Modify the base height of a row or add the height of some custom elements (for example processor of the Detail Panel plugin increases the row height when the detail panel is open).
 
 **Example**:
 
@@ -107,7 +107,7 @@ useGridRegisterPipeProcessor(apiRef, 'rowHeight', addCustomFeatureHeight);
 
 **Publisher**: `useGridRows` plugin before updating `state.rows`.
 
-**Why register to this processing**: Add some rows (eg: processor of the Aggregation plugin).
+**Why register to this processing**: Add some rows (for example processor of the Aggregation plugin).
 
 **Example**:
 
@@ -142,9 +142,9 @@ const addGroupFooterRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>((
 useGridRegisterPipeProcessor(apiRef, 'hydrateRows', addGroupFooterRows);
 ```
 
-### Add custom behavior to an api method
+### Add custom behavior to an API method
 
-**Goal**: To add some data on the value returned by an api method (eg: `exportState`) or to apply some custom behavior based on the input value of an api method (eg: `restoreState`)
+**Goal**: To add some data on the value returned by an API method (for example `exportState`) or to apply some custom behavior based on the input value of an API method (for example `restoreState`)
 
 #### List
 
@@ -238,11 +238,11 @@ useGridRegisterPipeProcessor(apiRef, 'scrollToIndexes', calculateScrollLeft);
 
 ### Feature limitation
 
-**Goal**: To block the application of another plugin (eg: `canBeReorder`)
+**Goal**: To block the application of another plugin (for example `canBeReorder`)
 
 #### List
 
-##### `'canBeReordered'` (pro only)
+##### `'canBeReordered'` (Pro only)
 
 **Publisher**: `useGridColumnReorder` when dragging a column over another.
 
@@ -352,7 +352,9 @@ const preferencePanelPreProcessing = React.useCallback<GridPipeProcessor<'prefer
 useGridRegisterPipeProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
 ```
 
-> ⚠ This behavior should probably be improved to be a strategy processing to avoid having each processor check the value
+:::warning
+This behavior should probably be improved to be a strategy for processing to avoid having each processor check the value.
+:::
 
 ## Strategy-processing
 

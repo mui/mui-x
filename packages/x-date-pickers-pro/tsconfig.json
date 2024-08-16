@@ -1,16 +1,16 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["react", "mocha", "node"],
+    "types": [
+      "@mui/internal-test-utils/initMatchers",
+      "@mui/material/themeCssVarsAugmentation",
+      "chai-dom",
+      "dayjs/plugin/timezone.d.ts",
+      "dayjs/plugin/utc.d.ts",
+      "mocha",
+      "node"
+    ],
     "noImplicitAny": false
   },
-  "include": [
-    "src/**/*",
-    "../../test/utils/addChaiAssertions.ts",
-    "../../node_modules/@mui/monorepo/test/utils/initMatchers.ts",
-    "../../node_modules/@mui/material/themeCssVarsAugmentation",
-    "../../node_modules/dayjs/plugin/utc.d.ts",
-    "../../node_modules/dayjs/plugin/timezone.d.ts",
-    "../../node_modules/moment-timezone/index.d.ts"
-  ]
+  "include": ["src/**/*", "../../test/utils/addChaiAssertions.ts"]
 }

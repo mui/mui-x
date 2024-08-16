@@ -1,9 +1,16 @@
 import * as React from 'react';
 import { AxisInteractionData, ItemInteractionData } from '../context/InteractionProvider';
-import { SVGContext } from '../context/DrawingProvider';
 import { ChartSeriesType } from '../models/seriesType/config';
+import { useSvgRef } from '../hooks';
 
-export function generateVirtualElement(mousePosition: { x: number; y: number } | null) {
+type MousePosition = {
+  x: number;
+  y: number;
+  pointerType: 'mouse' | 'touch' | 'pen';
+  height: number;
+};
+
+export function generateVirtualElement(mousePosition: MousePosition | null) {
   if (mousePosition === null) {
     return {
       getBoundingClientRect: () => ({
@@ -20,27 +27,29 @@ export function generateVirtualElement(mousePosition: { x: number; y: number } |
     };
   }
   const { x, y } = mousePosition;
+  const boundingBox = {
+    width: 0,
+    height: 0,
+    x,
+    y,
+    top: y,
+    right: x,
+    bottom: y,
+    left: x,
+  };
   return {
     getBoundingClientRect: () => ({
-      width: 0,
-      height: 0,
-      x,
-      y,
-      top: y,
-      right: x,
-      bottom: y,
-      left: x,
-      toJSON: () =>
-        JSON.stringify({ width: 0, height: 0, x, y, top: y, right: x, bottom: y, left: x }),
+      ...boundingBox,
+      toJSON: () => JSON.stringify(boundingBox),
     }),
   };
 }
 
 export function useMouseTracker() {
-  const svgRef = React.useContext(SVGContext);
+  const svgRef = useSvgRef();
 
   // Use a ref to avoid rerendering on every mousemove event.
-  const [mousePosition, setMousePosition] = React.useState<null | { x: number; y: number }>(null);
+  const [mousePosition, setMousePosition] = React.useState<MousePosition | null>(null);
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -48,22 +57,29 @@ export function useMouseTracker() {
       return () => {};
     }
 
-    const handleMouseOut = () => {
-      setMousePosition(null);
+    const handleOut = (event: PointerEvent) => {
+      if (event.pointerType !== 'mouse') {
+        setMousePosition(null);
+      }
     };
 
-    const handleMouseMove = (event: MouseEvent) => {
+    const handleMove = (event: PointerEvent) => {
       setMousePosition({
         x: event.clientX,
         y: event.clientY,
+        height: event.height,
+        pointerType: event.pointerType as MousePosition['pointerType'],
       });
     };
 
-    element.addEventListener('mouseout', handleMouseOut);
-    element.addEventListener('mousemove', handleMouseMove);
+    element.addEventListener('pointerdown', handleMove);
+    element.addEventListener('pointermove', handleMove);
+    element.addEventListener('pointerup', handleOut);
+
     return () => {
-      element.removeEventListener('mouseout', handleMouseOut);
-      element.removeEventListener('mousemove', handleMouseMove);
+      element.removeEventListener('pointerdown', handleMove);
+      element.removeEventListener('pointermove', handleMove);
+      element.removeEventListener('pointerup', handleOut);
     };
   }, [svgRef]);
 
@@ -72,7 +88,7 @@ export function useMouseTracker() {
 
 export type TriggerOptions = 'item' | 'axis' | 'none';
 
-export function getTootipHasData(
+export function getTooltipHasData(
   trigger: TriggerOptions,
   displayedData: null | AxisInteractionData | ItemInteractionData<ChartSeriesType>,
 ): boolean {
@@ -84,4 +100,11 @@ export function getTootipHasData(
   const hasAxisYData = (displayedData as AxisInteractionData).y !== null;
 
   return hasAxisXData || hasAxisYData;
+}
+
+export function utcFormatter(v: string | number | Date): string {
+  if (v instanceof Date) {
+    return v.toUTCString();
+  }
+  return v.toLocaleString();
 }

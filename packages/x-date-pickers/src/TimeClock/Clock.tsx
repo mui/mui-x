@@ -2,21 +2,24 @@ import * as React from 'react';
 import clsx from 'clsx';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps, Theme } from '@mui/material/styles';
 import {
   unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_composeClasses as composeClasses,
 } from '@mui/utils';
 import { ClockPointer } from './ClockPointer';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils } from '../internals/hooks/useUtils';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { CLOCK_HOUR_WIDTH, getHours, getMinutes } from './shared';
-import { TimeView } from '../models';
+import { PickerValidDate, TimeView } from '../models';
 import { ClockClasses, getClockUtilityClass } from './clockClasses';
 import { formatMeridiem } from '../internals/utils/date-utils';
+import { Meridiem } from '../internals/utils/time-utils';
 
-export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {
+export interface ClockProps<TDate extends PickerValidDate>
+  extends ReturnType<typeof useMeridiemMode> {
   ampm: boolean;
   ampmInClock: boolean;
   autoFocus?: boolean;
@@ -45,15 +48,15 @@ export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {
 }
 
 const useUtilityClasses = (ownerState: ClockProps<any>) => {
-  const { classes } = ownerState;
+  const { classes, meridiemMode } = ownerState;
   const slots = {
     root: ['root'],
     clock: ['clock'],
     wrapper: ['wrapper'],
     squareMask: ['squareMask'],
     pin: ['pin'],
-    amButton: ['amButton'],
-    pmButton: ['pmButton'],
+    amButton: ['amButton', meridiemMode === 'am' && 'selected'],
+    pmButton: ['pmButton', meridiemMode === 'pm' && 'selected'],
     meridiemText: ['meridiemText'],
   };
 
@@ -103,7 +106,7 @@ const ClockSquareMask = styled('div', {
   name: 'MuiClock',
   slot: 'SquareMask',
   overridesResolver: (_, styles) => styles.squareMask,
-})<{ ownerState: ClockSquareMaskOwnerState }>(({ ownerState }) => ({
+})<{ ownerState: ClockSquareMaskOwnerState }>({
   width: '100%',
   height: '100%',
   position: 'absolute',
@@ -112,9 +115,10 @@ const ClockSquareMask = styled('div', {
   // Disable scroll capabilities.
   touchAction: 'none',
   userSelect: 'none',
-  ...(ownerState.disabled
-    ? {}
-    : {
+  variants: [
+    {
+      props: { disabled: false },
+      style: {
         '@media (pointer: fine)': {
           cursor: 'pointer',
           borderRadius: '50%',
@@ -122,8 +126,10 @@ const ClockSquareMask = styled('div', {
         '&:active': {
           cursor: 'move',
         },
-      }),
-}));
+      },
+    },
+  ],
+});
 
 const ClockPin = styled('div', {
   name: 'MuiClock',
@@ -140,46 +146,46 @@ const ClockPin = styled('div', {
   transform: 'translate(-50%, -50%)',
 }));
 
+const meridiemButtonCommonStyles = (theme: Theme, meridiemMode: Meridiem) => ({
+  zIndex: 1,
+  bottom: 8,
+  paddingLeft: 4,
+  paddingRight: 4,
+  width: CLOCK_HOUR_WIDTH,
+  variants: [
+    {
+      props: { meridiemMode },
+      style: {
+        backgroundColor: (theme.vars || theme).palette.primary.main,
+        color: (theme.vars || theme).palette.primary.contrastText,
+        '&:hover': {
+          backgroundColor: (theme.vars || theme).palette.primary.light,
+        },
+      },
+    },
+  ],
+});
+
 const ClockAmButton = styled(IconButton, {
   name: 'MuiClock',
   slot: 'AmButton',
   overridesResolver: (_, styles) => styles.amButton,
-})<{ ownerState: ClockProps<any> }>(({ theme, ownerState }) => ({
-  zIndex: 1,
+})<{ ownerState: ClockProps<any> }>(({ theme }) => ({
+  ...meridiemButtonCommonStyles(theme, 'am'),
+  // keeping it here to make TS happy
   position: 'absolute',
-  bottom: 8,
   left: 8,
-  paddingLeft: 4,
-  paddingRight: 4,
-  width: CLOCK_HOUR_WIDTH,
-  ...(ownerState.meridiemMode === 'am' && {
-    backgroundColor: (theme.vars || theme).palette.primary.main,
-    color: (theme.vars || theme).palette.primary.contrastText,
-    '&:hover': {
-      backgroundColor: (theme.vars || theme).palette.primary.light,
-    },
-  }),
 }));
 
 const ClockPmButton = styled(IconButton, {
   name: 'MuiClock',
   slot: 'PmButton',
   overridesResolver: (_, styles) => styles.pmButton,
-})<{ ownerState: ClockProps<any> }>(({ theme, ownerState }) => ({
-  zIndex: 1,
+})<{ ownerState: ClockProps<any> }>(({ theme }) => ({
+  ...meridiemButtonCommonStyles(theme, 'pm'),
+  // keeping it here to make TS happy
   position: 'absolute',
-  bottom: 8,
   right: 8,
-  paddingLeft: 4,
-  paddingRight: 4,
-  width: CLOCK_HOUR_WIDTH,
-  ...(ownerState.meridiemMode === 'pm' && {
-    backgroundColor: (theme.vars || theme).palette.primary.main,
-    color: (theme.vars || theme).palette.primary.contrastText,
-    '&:hover': {
-      backgroundColor: (theme.vars || theme).palette.primary.light,
-    },
-  }),
 }));
 
 const ClockMeridiemText = styled(Typography, {
@@ -195,7 +201,7 @@ const ClockMeridiemText = styled(Typography, {
 /**
  * @ignore - internal component.
  */
-export function Clock<TDate>(inProps: ClockProps<TDate>) {
+export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiClock' });
   const {
     ampm,
@@ -211,7 +217,7 @@ export function Clock<TDate>(inProps: ClockProps<TDate>) {
     selectedId,
     type,
     viewValue,
-    disabled,
+    disabled = false,
     readOnly,
     className,
   } = props;
@@ -219,7 +225,7 @@ export function Clock<TDate>(inProps: ClockProps<TDate>) {
   const ownerState = props;
 
   const utils = useUtils<TDate>();
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const isMoving = React.useRef(false);
   const classes = useUtilityClasses(ownerState);
 
@@ -310,7 +316,7 @@ export function Clock<TDate>(inProps: ClockProps<TDate>) {
 
     switch (event.key) {
       case 'Home':
-        // annulate both hours and minutes
+        // reset both hours and minutes
         handleValueChange(0, 'partial');
         event.preventDefault();
         break;
@@ -358,7 +364,7 @@ export function Clock<TDate>(inProps: ClockProps<TDate>) {
         )}
         <ClockWrapper
           aria-activedescendant={selectedId}
-          aria-label={localeText.clockLabelText(type, value, utils)}
+          aria-label={translations.clockLabelText(type, value, utils)}
           ref={listboxRef}
           role="listbox"
           onKeyDown={handleKeyDown}

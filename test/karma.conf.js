@@ -3,7 +3,7 @@ const webpack = require('webpack');
 
 const CI = Boolean(process.env.CI);
 
-process.env.CHROME_BIN = chromium.executablePath();
+process.env.CHROME_BIN ||= chromium.executablePath();
 
 // Karma configuration
 module.exports = function setKarmaConfig(config) {
@@ -20,7 +20,7 @@ module.exports = function setKarmaConfig(config) {
         timeout: (process.env.CIRCLECI === 'true' ? 5 : 2) * 1000,
       },
     },
-    frameworks: ['mocha', 'webpack'],
+    frameworks: (process.env.PARALLEL === 'true' ? ['parallel'] : []).concat(['mocha', 'webpack']),
     files: [
       {
         pattern: 'test/karma.tests.js',
@@ -29,7 +29,12 @@ module.exports = function setKarmaConfig(config) {
         included: true,
       },
     ],
-    plugins: ['karma-mocha', 'karma-chrome-launcher', 'karma-sourcemap-loader', 'karma-webpack'],
+    plugins: (process.env.PARALLEL === 'true' ? ['karma-parallel'] : []).concat([
+      'karma-mocha',
+      'karma-chrome-launcher',
+      'karma-sourcemap-loader',
+      'karma-webpack',
+    ]),
     /**
      * possible values:
      * - config.LOG_DISABLE
@@ -49,7 +54,7 @@ module.exports = function setKarmaConfig(config) {
       devtool: CI ? 'inline-source-map' : 'eval-source-map',
       target: 'web',
       optimization: {
-        nodeEnv: false, // https://twitter.com/wsokra/status/1378643098893443072
+        nodeEnv: false, // https://x.com/wsokra/status/1378643098893443072
       },
       plugins: [
         new webpack.DefinePlugin({
@@ -65,7 +70,7 @@ module.exports = function setKarmaConfig(config) {
           {
             test: /\.(js|ts|tsx)$/,
             loader: 'babel-loader',
-            exclude: /node_modules\/(?!@mui\/monorepo)/,
+            exclude: /node_modules\/.*\/node_modules\/(?!@mui\/monorepo)/,
           },
         ],
       },

@@ -1,0 +1,64 @@
+{
+  "name": "@mui/x-data-grid-generator",
+  "version": "7.13.0",
+  "description": "Generate fake data for demo purposes only.",
+  "author": "MUI Team",
+  "main": "src/index.ts",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/mui/mui-x/issues"
+  },
+  "homepage": "https://github.com/mui/mui-x/tree/master/packages/x-data-grid-generator",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "directory": "build"
+  },
+  "keywords": [
+    "mui-x"
+  ],
+  "scripts": {
+    "typescript": "tsc -p tsconfig.json",
+    "build": "pnpm build:modern && pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files ",
+    "build:modern": "node ../../scripts/build.mjs modern",
+    "build:node": "node ../../scripts/build.mjs node",
+    "build:stable": "node ../../scripts/build.mjs stable",
+    "build:copy-files": "node ../../scripts/copyFiles.mjs",
+    "build:types": "node ../../scripts/buildTypes.mjs",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mui/mui-x.git",
+    "directory": "packages/x-data-grid-generator"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.25.0",
+    "@mui/x-data-grid-premium": "workspace:*",
+    "chance": "^1.1.12",
+    "clsx": "^2.1.1",
+    "lru-cache": "^10.4.3"
+  },
+  "devDependencies": {
+    "@types/chance": "^1.1.6",
+    "rimraf": "^5.0.10"
+  },
+  "peerDependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/icons-material": "^5.4.1",
+    "@mui/material": "^5.15.14",
+    "react": "^17.0.0 || ^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@emotion/react": {
+      "optional": true
+    },
+    "@emotion/styled": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

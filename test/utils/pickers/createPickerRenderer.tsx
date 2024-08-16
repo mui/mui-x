@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { createRenderer, CreateRendererOptions, RenderOptions } from '@mui/monorepo/test/utils';
+import { createRenderer, CreateRendererOptions, RenderOptions } from '@mui/internal-test-utils';
 import { AdapterClassToUse, AdapterName, adapterToUse, availableAdapters } from './adapters';
 
 interface CreatePickerRendererOptions extends CreateRendererOptions {
@@ -8,13 +8,6 @@ interface CreatePickerRendererOptions extends CreateRendererOptions {
   locale?: Locale;
   adapterName?: AdapterName;
   instance?: any;
-}
-
-export function wrapPickerMount(
-  mount: (node: React.ReactElement) => import('enzyme').ReactWrapper,
-) {
-  return (node: React.ReactElement) =>
-    mount(<LocalizationProvider dateAdapter={AdapterClassToUse}>{node}</LocalizationProvider>);
 }
 
 export function createPickerRenderer({

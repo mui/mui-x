@@ -18,6 +18,7 @@ import {
   GridRowId,
   GridRowModel,
   GridRowEditStopReasons,
+  GridSlots,
 } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
@@ -237,7 +238,7 @@ export default function FullFeaturedCrudGrid() {
         onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
         slots={{
-          toolbar: EditToolbar,
+          toolbar: EditToolbar as GridSlots['toolbar'],
         }}
         slotProps={{
           toolbar: { setRows, setRowModesModel },

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, screen } from '@mui/monorepo/test/utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { DateTimePickerTabs, DateTimePickerTabsProps } from '../../DateTimePicker';
@@ -12,10 +12,7 @@ describe('<StaticDateTimePicker />', () => {
   it('should allow to select the same day and move to the next view', () => {
     const onChange = spy();
     render(
-      <StaticDateTimePicker
-        onChange={onChange}
-        defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
-      />,
+      <StaticDateTimePicker onChange={onChange} defaultValue={adapterToUse.date('2018-01-01')} />,
     );
 
     fireEvent.click(screen.getByRole('gridcell', { name: '1' }));

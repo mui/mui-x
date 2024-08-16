@@ -1,48 +1,39 @@
 import {
-  UseMobilePickerSlotsComponent,
+  UseMobilePickerSlots,
   MobileOnlyPickerProps,
-  ExportedUseMobilePickerSlotsComponentsProps,
+  ExportedUseMobilePickerSlotProps,
 } from '../internals/hooks/useMobilePicker';
 import {
   BaseDatePickerProps,
-  BaseDatePickerSlotsComponent,
-  BaseDatePickerSlotsComponentsProps,
+  BaseDatePickerSlots,
+  BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { DateView } from '../models';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { DateView, PickerValidDate } from '../models';
 
-export interface MobileDatePickerSlotsComponent<TDate>
-  extends BaseDatePickerSlotsComponent<TDate>,
-    MakeOptional<UseMobilePickerSlotsComponent<TDate, DateView>, 'Field'> {}
+export interface MobileDatePickerSlots<TDate extends PickerValidDate>
+  extends BaseDatePickerSlots<TDate>,
+    MakeOptional<UseMobilePickerSlots<TDate, DateView>, 'field'> {}
 
-export interface MobileDatePickerSlotsComponentsProps<TDate>
-  extends BaseDatePickerSlotsComponentsProps<TDate>,
-    ExportedUseMobilePickerSlotsComponentsProps<TDate, DateView> {}
+export interface MobileDatePickerSlotProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends BaseDatePickerSlotProps<TDate>,
+    ExportedUseMobilePickerSlotProps<TDate, DateView, TEnableAccessibleFieldDOMStructure> {}
 
-export interface MobileDatePickerProps<TDate>
-  extends BaseDatePickerProps<TDate>,
-    MobileOnlyPickerProps<TDate> {
-  /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: MobileDatePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: MobileDatePickerSlotsComponentsProps<TDate>;
+export interface MobileDatePickerProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+> extends BaseDatePickerProps<TDate>,
+    MobileOnlyPickerProps {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<MobileDatePickerSlotsComponent<TDate>>;
+  slots?: MobileDatePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDatePickerSlotsComponentsProps<TDate>;
+  slotProps?: MobileDatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
 }

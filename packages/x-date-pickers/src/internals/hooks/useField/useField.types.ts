@@ -8,18 +8,31 @@ import {
   FieldSectionContentType,
   FieldValueType,
   PickersTimezone,
+  PickerValidDate,
+  FieldRef,
 } from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../useValidation';
+import type { UseFieldStateResponse } from './useFieldState';
+import type { UseFieldCharacterEditingResponse } from './useFieldCharacterEditing';
+import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
+import { ExportedUseClearableFieldProps } from '../../../hooks/useClearableField';
 
 export interface UseFieldParams<
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TSection extends FieldSection,
-  TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TForwardedProps extends UseFieldCommonForwardedProps &
+    UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
+  TInternalProps extends UseFieldInternalProps<
+    any,
+    any,
+    any,
+    TEnableAccessibleFieldDOMStructure,
+    any
+  >,
 > {
-  inputRef?: React.Ref<HTMLInputElement>;
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
   valueManager: PickerValueManager<TValue, TDate, InferError<TInternalProps>>;
@@ -33,8 +46,13 @@ export interface UseFieldParams<
   valueType: FieldValueType;
 }
 
-export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSection, TError>
-  extends TimezoneProps {
+export interface UseFieldInternalProps<
+  TValue,
+  TDate extends PickerValidDate,
+  TSection extends FieldSection,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TError,
+> extends TimezoneProps {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -88,7 +106,7 @@ export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSect
    * Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros.
    * This mean that when using `shouldRespectLeadingZeros={false}`, if you retrieve the value directly from the input (not listening to `onChange`) and your format contains tokens without leading zeros, the value will not be parsed by your library.
    *
-   * @default `false`
+   * @default false
    */
   shouldRespectLeadingZeros?: boolean;
   /**
@@ -99,11 +117,11 @@ export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSect
   readOnly?: boolean;
   /**
    * The currently selected sections.
-   * This prop accept four formats:
+   * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections?: FieldSelectedSections;
@@ -116,67 +134,107 @@ export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSect
    * The ref object used to imperatively interact with the field.
    */
   unstableFieldRef?: React.Ref<FieldRef<TSection>>;
+  /**
+   * @default false
+   */
+  enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
+  /**
+   * If `true`, the `input` element is focused during the first mount.
+   * @default false
+   */
+  autoFocus?: boolean;
+  /**
+   * If `true`, the component is disabled.
+   * @default false
+   */
+  disabled?: boolean;
 }
 
-export interface FieldRef<TSection extends FieldSection> {
-  /**
-   * Returns the sections of the current value.
-   * @returns {TSection[]} The sections of the current value.
-   */
-  getSections: () => TSection[];
-  /**
-   * Returns the index of the active section (the first focused section).
-   * If no section is active, returns `null`.
-   * @returns {number | null} The index of the active section.
-   */
-  getActiveSectionIndex: () => number | null;
-  /**
-   * Updates the selected sections.
-   * @param {FieldSelectedSections} selectedSections The sections to select.
-   */
-  setSelectedSections: (selectedSections: FieldSelectedSections) => void;
-}
+export interface UseFieldCommonAdditionalProps
+  extends Required<Pick<UseFieldInternalProps<any, any, any, any, any>, 'disabled' | 'readOnly'>> {}
 
-export interface UseFieldForwardedProps {
+export interface UseFieldCommonForwardedProps extends ExportedUseClearableFieldProps {
   onKeyDown?: React.KeyboardEventHandler;
-  onMouseUp?: React.MouseEventHandler;
-  onPaste?: React.ClipboardEventHandler<HTMLInputElement>;
-  onClick?: () => void;
-  onFocus?: () => void;
-  onBlur?: () => void;
   error?: boolean;
 }
 
-export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = Omit<
-  TForwardedProps,
-  keyof UseFieldForwardedProps
-> &
-  Required<UseFieldForwardedProps> &
-  Pick<React.HTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode' | 'placeholder'> & {
-    ref: React.Ref<HTMLInputElement>;
-    value: string;
-    onChange: React.ChangeEventHandler<HTMLInputElement>;
-    error: boolean;
-    readOnly: boolean;
-    autoComplete: 'off';
-  };
+export type UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure extends boolean> =
+  UseFieldCommonForwardedProps &
+    (TEnableAccessibleFieldDOMStructure extends false
+      ? UseFieldV6ForwardedProps
+      : UseFieldV7ForwardedProps);
 
-export type FieldSectionWithoutPosition<TSection extends FieldSection = FieldSection> = Omit<
-  TSection,
-  'start' | 'end' | 'startInInput' | 'endInInput'
->;
+export interface UseFieldV6ForwardedProps {
+  inputRef?: React.Ref<HTMLInputElement>;
+  onBlur?: () => void;
+  onClick?: React.MouseEventHandler;
+  onFocus?: () => void;
+  onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
+  placeholder?: string;
+}
 
-export type FieldSectionValueBoundaries<TDate, SectionType extends FieldSectionType> = {
+interface UseFieldV6AdditionalProps
+  extends Required<
+    Pick<
+      React.InputHTMLAttributes<HTMLInputElement>,
+      'inputMode' | 'placeholder' | 'value' | 'onChange' | 'autoComplete'
+    >
+  > {
+  enableAccessibleFieldDOMStructure: false;
+}
+
+export interface UseFieldV7ForwardedProps {
+  focused?: boolean;
+  autoFocus?: boolean;
+  sectionListRef?: React.Ref<PickersSectionListRef>;
+  onBlur?: () => void;
+  onClick?: React.MouseEventHandler;
+  onFocus?: () => void;
+  onInput?: React.FormEventHandler<HTMLDivElement>;
+  onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
+}
+
+interface UseFieldV7AdditionalProps {
+  enableAccessibleFieldDOMStructure: true;
+  elements: PickersSectionElement[];
+  tabIndex: number | undefined;
+  contentEditable: boolean;
+  value: string;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  areAllSectionsEmpty: boolean;
+}
+
+export type UseFieldResponse<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TForwardedProps extends UseFieldCommonForwardedProps & { [key: string]: any },
+> = Omit<TForwardedProps, keyof UseFieldCommonForwardedProps> &
+  Required<UseFieldCommonForwardedProps> &
+  UseFieldCommonAdditionalProps &
+  (TEnableAccessibleFieldDOMStructure extends false
+    ? UseFieldV6AdditionalProps & Required<UseFieldV6ForwardedProps>
+    : UseFieldV7AdditionalProps & Required<UseFieldV7ForwardedProps>);
+
+export type FieldSectionValueBoundaries<
+  TDate extends PickerValidDate,
+  SectionType extends FieldSectionType,
+> = {
   minimum: number;
   maximum: number;
 } & (SectionType extends 'day' ? { longestMonth: TDate } : {});
 
-export type FieldSectionsValueBoundaries<TDate> = {
+export type FieldSectionsValueBoundaries<TDate extends PickerValidDate> = {
   [SectionType in FieldSectionType]: (params: {
     currentDate: TDate | null;
     format: string;
     contentType: FieldSectionContentType;
   }) => FieldSectionValueBoundaries<TDate, SectionType>;
+};
+
+export type FieldSectionsBoundaries = {
+  [SectionType in FieldSectionType]: {
+    minimum: number;
+    maximum: number;
+  };
 };
 
 export type FieldChangeHandler<TValue, TError> = (
@@ -192,7 +250,11 @@ export interface FieldChangeHandlerContext<TError> {
  * Object used to access and update the active date (i.e: the date containing the active section).
  * Mainly useful in the range fields where we need to update the date containing the active section without impacting the other one.
  */
-interface FieldActiveDateManager<TValue, TDate, TSection extends FieldSection> {
+interface FieldActiveDateManager<
+  TValue,
+  TDate extends PickerValidDate,
+  TSection extends FieldSection,
+> {
   /**
    * Active date from `state.value`.
    */
@@ -219,17 +281,13 @@ interface FieldActiveDateManager<TValue, TDate, TSection extends FieldSection> {
   ) => Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>;
 }
 
-export type FieldSelectedSectionsIndexes = {
-  startIndex: number;
-  endIndex: number;
-  /**
-   * If `true`, the selectors at the very beginning and very end of the input will be selected.
-   * @default false
-   */
-  shouldSelectBoundarySelectors?: boolean;
-};
+export type FieldParsedSelectedSections = number | 'all' | null;
 
-export interface FieldValueManager<TValue, TDate, TSection extends FieldSection> {
+export interface FieldValueManager<
+  TValue,
+  TDate extends PickerValidDate,
+  TSection extends FieldSection,
+> {
   /**
    * Creates the section list from the current value.
    * The `prevSections` are used on the range fields to avoid losing the sections of a partially filled date when editing the other date.
@@ -237,25 +295,35 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection>
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @param {TValue} value The current value to generate sections from.
    * @param {TSection[] | null} fallbackSections The sections to use as a fallback if a date is null or invalid.
-   * @param {boolean} isRTL `true` if the direction is "right to left".
-   * @param {(date: TDate) => FieldSectionWithoutPosition[]} getSectionsFromDate Returns the sections of the given date.
+   * @param {(date: TDate) => FieldSection[]} getSectionsFromDate Returns the sections of the given date.
    * @returns {TSection[]}  The new section list.
    */
   getSectionsFromValue: (
     utils: MuiPickersAdapter<TDate>,
     value: TValue,
     fallbackSections: TSection[] | null,
-    isRTL: boolean,
-    getSectionsFromDate: (date: TDate) => FieldSectionWithoutPosition[],
+    getSectionsFromDate: (date: TDate) => FieldSection[],
   ) => TSection[];
   /**
    * Creates the string value to render in the input based on the current section list.
    * @template TSection
    * @param {TSection[]} sections The current section list.
-   * @param {boolean} isRTL `true` if the current orientation is "right to left"
+   * @param {string} localizedDigits The conversion table from localized to 0-9 digits.
+   * @param {boolean} isRtl `true` if the current orientation is "right to left"
    * @returns {string} The string value to render in the input.
    */
-  getValueStrFromSections: (sections: TSection[], isRTL: boolean) => string;
+  getV6InputValueFromSections: (
+    sections: TSection[],
+    localizedDigits: string[],
+    isRtl: boolean,
+  ) => string;
+  /**
+   * Creates the string value to render in the input based on the current section list.
+   * @template TSection
+   * @param {TSection[]} sections The current section list.
+   * @returns {string} The string value to render in the input.
+   */
+  getV7HiddenInputValueFromSections: (sections: TSection[]) => string;
   /**
    * Returns the manager of the active date.
    * @template TValue, TDate, TSection
@@ -371,3 +439,84 @@ export type SectionOrdering = {
    */
   endIndex: number;
 };
+
+export interface UseFieldTextFieldInteractions {
+  /**
+   * Select the correct sections in the DOM according to the sections currently selected in state.
+   */
+  syncSelectionToDOM: () => void;
+  /**
+   * Returns the index of the active section (the first focused section).
+   * If no section is active, returns `null`.
+   * @returns {number | null} The index of the active section.
+   */
+  getActiveSectionIndexFromDOM: () => number | null;
+  /**
+   * Focuses the field.
+   * @param {number | FieldSectionType} newSelectedSection The section to select once focused.
+   */
+  focusField: (newSelectedSection?: number | FieldSectionType) => void;
+  setSelectedSections: (newSelectedSections: FieldSelectedSections) => void;
+  isFieldFocused: () => boolean;
+}
+
+export type UseFieldTextField<TEnableAccessibleFieldDOMStructure extends boolean> = <
+  TValue,
+  TDate extends PickerValidDate,
+  TSection extends FieldSection,
+  TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
+    ? UseFieldV6ForwardedProps
+    : UseFieldV7ForwardedProps,
+  TInternalProps extends UseFieldInternalProps<
+    any,
+    any,
+    any,
+    TEnableAccessibleFieldDOMStructure,
+    any
+  > & {
+    minutesStep?: number;
+  },
+>(
+  params: UseFieldTextFieldParams<
+    TValue,
+    TDate,
+    TSection,
+    TEnableAccessibleFieldDOMStructure,
+    TForwardedProps,
+    TInternalProps
+  >,
+) => {
+  interactions: UseFieldTextFieldInteractions;
+  returnedValue: TEnableAccessibleFieldDOMStructure extends false
+    ? UseFieldV6AdditionalProps & Required<UseFieldV6ForwardedProps>
+    : UseFieldV7AdditionalProps & Required<UseFieldV7ForwardedProps>;
+};
+
+interface UseFieldTextFieldParams<
+  TValue,
+  TDate extends PickerValidDate,
+  TSection extends FieldSection,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
+    ? UseFieldV6ForwardedProps
+    : UseFieldV7ForwardedProps,
+  TInternalProps extends UseFieldInternalProps<
+    any,
+    any,
+    any,
+    TEnableAccessibleFieldDOMStructure,
+    any
+  >,
+> extends UseFieldParams<
+      TValue,
+      TDate,
+      TSection,
+      TEnableAccessibleFieldDOMStructure,
+      TForwardedProps,
+      TInternalProps
+    >,
+    UseFieldStateResponse<TValue, TDate, TSection>,
+    UseFieldCharacterEditingResponse {
+  areAllSectionsEmpty: boolean;
+  sectionOrder: SectionOrdering;
+}

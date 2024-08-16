@@ -34,16 +34,16 @@ When applying the filters, the data grid will call this function with the filter
 This function must return another function that takes the cell value as an input and return `true` if it satisfies the operator condition.
 
 ```ts
-const operator: GridFilterOperator = {
+const operator: GridFilterOperator<any, number> = {
   label: 'From',
   value: 'from',
-  getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
+  getApplyFilterFn: (filterItem, column) => {
     if (!filterItem.field || !filterItem.value || !filterItem.operator) {
       return null;
     }
 
-    return (params: GridCellParams): boolean => {
-      return Number(params.value) >= Number(filterItem.value);
+    return (value, row, column, apiRef) => {
+      return Number(value) >= Number(filterItem.value);
     };
   },
   InputComponent: RatingInputValue,
@@ -84,22 +84,24 @@ The filtering function `getApplyFilterFn` must be adapted to handle `filterItem.
 Below is an example for a "between" operator, applied on the "Quantity" column.
 
 ```ts
-{
+const operator: GridFilterOperator<any, number> = {
   label: 'Between',
   value: 'between',
-  getApplyFilterFn: (filterItem: GridFilterItem) => {
+  getApplyFilterFn: (filterItem) => {
     if (!Array.isArray(filterItem.value) || filterItem.value.length !== 2) {
       return null;
     }
     if (filterItem.value[0] == null || filterItem.value[1] == null) {
       return null;
     }
-    return ({ value }): boolean => {
-      return value != null && filterItem.value[0] <= value && value <= filterItem.value[1];
+    return (value) => {
+      return (
+        value != null && filterItem.value[0] <= value && value <= filterItem.value[1]
+      );
     };
   },
   InputComponent: InputNumberInterval,
-}
+};
 ```
 
 {{"demo": "CustomMultiValueOperator.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -178,38 +180,6 @@ To pass props directly to the `InputComponent` and not its wrapper, you can use 
 The demo below shows how to anchor the filter panel to the toolbar button instead of the column header.
 
 {{"demo": "CustomFilterPanelPosition.js", "bg": "inline", "defaultCodeOpen": false}}
-
-### Optimize performance
-
-There is a new set of APIs with a more efficient interface that are going to be used by default at the next major release, v7.
-
-You can use them right now to make your custom filters faster. Instead of receiving a `GridCellParams` argument, they receive the parameters listed below.
-
-```ts
-const noop = () => {};
-const operator: GridFilterOperator = {
-  /* ...other operator properties */
-  getApplyFilterFn: noop /* It is required to pass a noop function until v7 */,
-  getApplyFilterFnV7: (filterItem: GridFilterItem) => {
-    /* This example is our default string filter function for v7 */
-
-    if (!filterItem.value) {
-      return null;
-    }
-    const filterItemValue = disableTrim ? filterItem.value : filterItem.value.trim();
-    const filterRegex = new RegExp(escapeRegExp(filterItemValue), 'i');
-
-    return (
-      value: any,
-      row: GridValidRowModel,
-      column: GridColDef,
-      apiRef: React.MutableRefObject<GridApiCommunity>,
-    ): boolean => {
-      return value != null ? filterRegex.test(String(value)) : false;
-    };
-  },
-};
-```
 
 ## API
 

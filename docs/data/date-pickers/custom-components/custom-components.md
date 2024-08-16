@@ -1,19 +1,19 @@
 ---
 productId: x-date-pickers
-title: Date and Time Pickers - Custom subcomponents
-components: DateTimePickerTabs
+title: Date and Time Pickers - Custom slots and subcomponents
+components: DateTimePickerTabs, PickersActionBar, DatePickerToolbar, TimePickerToolbar, DateTimePickerToolbar, PickersCalendarHeader, PickersRangeCalendarHeader, PickersShortcuts, DateRangePickerToolbar, MonthCalendar, YearCalendar, DateCalendar
 ---
 
-# Custom subcomponents
+# Custom slots and subcomponents
 
-<p class="description">The date picker lets you customize subcomponents.</p>
+<p class="description">Learn how to override the default DOM structure of the Date and Time Pickers.</p>
 
 :::info
 The components that can be customized are listed under `slots` section in Date and Time Pickers [API Reference](/x/api/date-pickers/).
 For example, available Date Picker slots can be found [here](/x/api/date-pickers/date-picker/#slots).
 :::
 
-## Overriding components
+## Overriding slot components
 
 You can override the internal elements of the component (known as "slots") using the `slots` prop.
 
@@ -79,7 +79,7 @@ function MyApp() {
 
 ```jsx
 // ✅ The `toolbar` slot is defined only once, it will never remount.
-const CustomActionBar = ({ name, setName }) => (
+const CustomToolbar = ({ name, setName }) => (
   <input value={name} onChange={(event) => setName(event.target.value)} />
 );
 
@@ -145,7 +145,7 @@ In the example below, the actions are the same as in the section above, but they
 ## Tabs
 
 The tabs are available on all date time picker components.
-It allows to switch between date and time interfaces.
+It allows switching between date and time interfaces.
 
 ### Component props
 
@@ -192,7 +192,7 @@ It displays the current values and allows to switch between different views.
 ### Component props
 
 You can customize how the toolbar displays the current value with `toolbarFormat`.
-By default empty values are replaced by `__`.
+By default, empty values are replaced by `__`.
 This can be modified by using `toolbarPlaceholder` props.
 
 By default, the toolbar is `hidden` on desktop, and `visible` on mobile.
@@ -219,6 +219,70 @@ Each component comes with its own toolbar (`DatePickerToolbar`, `TimePickerToolb
 
 {{"demo": "ToolbarComponent.js"}}
 
+## Calendar header
+
+The calendar header is available on any component that renders a calendar to select a date or a range of dates.
+It allows the user to navigate through months and to switch to the month and year views when available.
+
+### Component props
+
+You can pass props to the calendar header as shown below:
+
+{{"demo": "CalendarHeaderComponentProps.js"}}
+
+### Component
+
+You can pass a custom component to replace the header, as shown below:
+
+{{"demo": "CalendarHeaderComponent.js"}}
+
+When used with a date range component,
+you receive three additional props to let you handle scenarios where multiple months are rendered:
+
+- `calendars`: The number of calendars rendered
+- `month`: The month used for the header being rendered
+- `monthIndex`: The index of the month used for the header being rendered
+
+The demo below shows how to navigate the months two by two:
+
+{{"demo": "CalendarHeaderComponentRange.js"}}
+
+## Year button
+
+This button allows users to change the selected year in the `year` view.
+
+### Component props
+
+You can pass props to the year button as shown below:
+
+{{"demo": "YearButtonComponentProps.js"}}
+
+### Component
+
+You can pass a custom component to replace the year button, as shown below:
+
+{{"demo": "YearButtonComponent.js"}}
+
+## Month button
+
+This button allows users to change the selected month in the `month` view.
+
+:::success
+You can learn more on how to enable the `month` view on the [`DateCalendar` doc page](/x/react-date-pickers/date-calendar/#views).
+:::
+
+### Component props
+
+You can pass props to the month button as shown below:
+
+{{"demo": "MonthButtonComponentProps.js"}}
+
+### Component
+
+You can pass a custom component to replace the month button, as shown below:
+
+{{"demo": "MonthButtonComponent.js"}}
+
 ## Arrow switcher
 
 The following slots let you customize how to render the buttons and icons for an arrow switcher component—the component
@@ -232,23 +296,11 @@ You can pass props to the icons and buttons as shown below:
 
 ### Component
 
-You can pass custom components—to replace the icons, for example—as shown below:
+You can pass custom components to replace the icons, as shown below:
 
 {{"demo": "ArrowSwitcherComponent.js", "defaultCodeOpen": false}}
 
-## Popper
-
-You can customize the popper that wraps the desktop picker views the same way you would customize the [Material UI Popper](/material-ui/react-popper/).
-
-:::info
-When the picker views have different heights, there might be a layout shift if there is not enough space in the viewport for one of the views **below** the input field. This is particularly noticeable if the selection of allowed years is very limited and there is a significant height difference between the views. You can refer to issues [#5490](https://github.com/mui/mui-x/issues/5490) and [#9288](https://github.com/mui/mui-x/issues/9288) for more examples.
-
-You can avoid this by customizing the popper height. This will not produce any visual changes, as the popper that wraps the pickers is transparent.
-:::
-
-{{"demo": "PopperComponent.js", "defaultCodeOpen": true}}
-
 ## Shortcuts
 
-You can add shortcuts to every pickers.
+You can add shortcuts to every Picker component.
 For more information, check the [dedicated page](/x/react-date-pickers/shortcuts/).

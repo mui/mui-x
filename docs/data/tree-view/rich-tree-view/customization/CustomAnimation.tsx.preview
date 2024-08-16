@@ -1,0 +1,5 @@
+<RichTreeView
+  defaultExpandedItems={['grid']}
+  slotProps={{ item: { slots: { groupTransition: TransitionComponent } } }}
+  items={MUI_X_PRODUCTS}
+/>

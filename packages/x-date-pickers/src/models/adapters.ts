@@ -1,5 +1,6 @@
 import { FieldSectionContentType, FieldSectionType } from './fields';
 import { PickersTimezone } from './timezone';
+import { PickerValidDate } from './pickers';
 
 export interface AdapterFormats {
   // Token formats
@@ -23,6 +24,11 @@ export interface AdapterFormats {
    * @example "1"
    */
   dayOfMonth: string;
+  /**
+   * The day of the month with letters.
+   * @example "2nd"
+   */
+  dayOfMonthFull: string;
   /**
    * The name of the day of the week.
    * @example "Wednesday"
@@ -66,12 +72,6 @@ export interface AdapterFormats {
    */
   fullDate: string;
   /**
-   * The partially localized full date with weekday, useful for text-to-speech accessibility.
-   * @example "Tuesday, January 1, 2019"
-   * @deprecated Never used internally.
-   */
-  fullDateWithWeekday: string;
-  /**
    * A keyboard input friendly date format.
    * Used in the date fields.
    * @example "02/13/2020
@@ -95,18 +95,6 @@ export interface AdapterFormats {
    * @example "Sun, Jan 1"
    */
   normalDateWithWeekday: string;
-  /**
-   * The month name and the 4-digit year.
-   * @example "January 2018"
-   * @deprecated Use `${adapter.formats.month} ${adapter.formats.year}`
-   */
-  monthAndYear: string;
-  /**
-   * The month name and the day of the month.
-   * @example "January 1"
-   * @deprecated Use `${adapter.formats.month} ${adapter.formats.dayOfMonth}`
-   */
-  monthAndDate: string;
 
   // Time formats
   /**
@@ -128,24 +116,6 @@ export interface AdapterFormats {
 
   // Date & Time formats
   /**
-   * The combination of `fullDate` and `fullTime` formats.
-   * @example "Jan 1, 2018 11:44 PM"
-   * @deprecated Use `${adapter.formats.fullDate} ${adapter.formats.fullTime}`
-   */
-  fullDateTime: string;
-  /**
-   * The combination of `fullDate` and `fullTime12h` formats.
-   * @example "Jan 1, 2018 11:44 PM"
-   * @deprecated Use `${adapter.formats.fullDate} ${adapter.formats.fullTime12h}`
-   */
-  fullDateTime12h: string;
-  /**
-   * The combination of `fullDate` and `fullTime24h` formats.
-   * @example "Jan 1, 2018 23:44"
-   * @deprecated Use `${adapter.formats.fullDate} ${adapter.formats.fullTime24h}`
-   */
-  fullDateTime24h: string;
-  /**
    * A keyboard input friendly time format.
    * Used in the date-time fields.
    * @example "02/13/2020 11:44 PM" for locales with meridiem, "02/13/2020 23:44" for locales without meridiem.
@@ -164,17 +134,6 @@ export interface AdapterFormats {
    */
   keyboardDateTime24h: string;
 }
-
-export type AdapterUnits =
-  | 'years'
-  | 'quarters'
-  | 'months'
-  | 'weeks'
-  | 'days'
-  | 'hours'
-  | 'minutes'
-  | 'seconds'
-  | 'milliseconds';
 
 export type FieldFormatTokenMap = {
   [formatToken: string]:
@@ -196,11 +155,11 @@ export type AdapterOptions<TLocale, TInstance> = {
   locale?: TLocale;
 } & PropertyIfNotNever<'instance', TInstance>;
 
-export type DateBuilderReturnType<T extends string | null | undefined, TDate> = T extends null
+export type DateBuilderReturnType<T extends string | null | undefined, TDate> = [T] extends [null]
   ? null
   : TDate;
 
-export interface MuiPickersAdapter<TDate, TLocale = any> {
+export interface MuiPickersAdapter<TDate extends PickerValidDate, TLocale = any> {
   /**
    * A boolean confirming that the adapter used is an MUI adapter.
    */
@@ -220,30 +179,24 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * A map containing all the format that the field components can understand.
    */
   formatTokenMap: FieldFormatTokenMap;
-
-  // TODO v7: Replace with dateWithTimezone
-  /**
-   * Create a date in the date library format.
-   * If no `value` parameter is provided, creates a date with the current timestamp.
-   * If a `value` parameter is provided, pass it to the date library to try to parse it.
-   * @template TDate
-   * @param {any} value The optional value to parse.
-   * @returns {TDate | null} The parsed date.
-   */
-  date(value?: any): TDate | null;
   /**
    * Create a date in the date library format.
    * If no `value` parameter is provided, creates a date with the current timestamp.
    * If a `value` parameter is provided, pass it to the date library to try to parse it.
    * @template TDate
    * @param {string | null | undefined} value The optional value to parse.
-   * @param {PickersTimezone} timezone The timezone of the date.
+   * @param {PickersTimezone} timezone The timezone of the date. Default: "default"
    * @returns {TDate | null} The parsed date.
    */
-  dateWithTimezone<T extends string | null | undefined>(
-    value: T,
-    timezone: PickersTimezone,
+  date<T extends string | null | undefined>(
+    value?: T,
+    timezone?: PickersTimezone,
   ): DateBuilderReturnType<T, TDate>;
+  /**
+   * Creates an invalid date in the date library format.
+   * @returns {TDate} The invalid date.
+   */
+  getInvalidDate(): TDate;
   /**
    * Extracts the timezone from a date.
    * @template TDate
@@ -265,22 +218,6 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @returns {Date} the JavaScript date.
    */
   toJsDate(value: TDate): Date;
-  /**
-   * Parse an iso string into a date in the date library format.
-   * @deprecate Will be removed in v7.
-   * @template TDate
-   * @param {string} isoString The iso string to parse.
-   * @returns {TDate} the parsed date.
-   */
-  parseISO(isoString: string): TDate;
-  /**
-   * Stringify a date in the date library format into an ISO string.
-   * @deprecate Will be removed in v7.
-   * @template TDate
-   * @param {TDate} value The date to stringify.
-   * @returns {string} the iso string representing the date.
-   */
-  toISO(value: TDate): string;
   /**
    * Parse a string date in a specific format.
    * @template TDate
@@ -306,27 +243,11 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    */
   expandFormat(format: string): string;
   /**
-   * Create a user readable format (taking into account localized format tokens), useful to render helper text for input (e.g. placeholder).
-   * @deprecated  Will be removed in v7.
-   * @param {string} format The format to analyze.
-   * @returns {string} The helper text of the given format.
-   */
-  getFormatHelperText(format: string): string;
-  /**
-   * Check if the date is null.
-   * @deprecated  Will be removed in v7.
-   * @template TDate
-   * @param {TDate | null} value The date to test.
-   * @returns {boolean} `true` if the date is null.
-   */
-  isNull(value: TDate | null): boolean;
-  // TODO v7: Type `value` to be `TDate | null` and make sure the `isValid(null)` returns `false`.
-  /**
    * Check if the date is valid.
-   * @param {any} value The value to test.
-   * @returns {boolean} `true` if the value is valid.
+   * @param {TDate | null} value The value to test.
+   * @returns {boolean} `true` if the value is a valid date according to the date library.
    */
-  isValid(value: any): boolean;
+  isValid(value: TDate | null): boolean;
   /**
    * Format a date using an adapter format string (see the `AdapterFormats` interface)
    * @template TDate
@@ -351,23 +272,12 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    */
   formatNumber(numberToFormat: string): string;
   /**
-   * Compute the difference between the two dates in the unit provided.
-   * @deprecated  Will be removed in v7.
-   * @template TDate
-   * @param {TDate} value The reference date.
-   * @param {TDate | string} comparing The date to compare with the reference date.
-   * @param {AdapterUnits} unit The unit in which we want to the result to be.
-   * @returns {number} The diff between the two dates.
-   */
-  getDiff(value: TDate, comparing: TDate | string, unit?: AdapterUnits): number;
-  // TODO v7: Type `value` and `comparing` to be `TDate | null`.
-  /**
    * Check if the two dates are equal (e.g: they represent the same timestamp).
-   * @param {any} value The reference date.
-   * @param {any} comparing The date to compare with the reference date.
+   * @param {TDate | null} value The reference date.
+   * @param {TDate | null} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the two dates are equal.
    */
-  isEqual(value: any, comparing: any): boolean;
+  isEqual(value: TDate | null, comparing: TDate | null): boolean;
   /**
    * Check if the two dates are in the same year (using the timezone of the reference date).
    * @template TDate
@@ -453,7 +363,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    */
   isBeforeDay(value: TDate, comparing: TDate): boolean;
   /**
-   * Check if the value is withing the provided range.
+   * Check if the value is within the provided range.
    * @template TDate
    * @param {TDate} value The value to test.
    * @param {[TDate, TDate]} range The range in which the value should be.
@@ -686,46 +596,6 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    */
   getDaysInMonth(value: TDate): number;
   /**
-   * Add one month to the given date.
-   * @deprecated Use `addMonths(value, 1)`
-   * @template TDate
-   * @param {TDate} value The given date.
-   * @returns {TDate} The new date with one month added.
-   */
-  getNextMonth(value: TDate): TDate;
-  /**
-   * Subtract one month from the given date.
-   * @deprecated Use `addMonths(value, -1)`
-   * @template TDate
-   * @param {TDate} value The given date.
-   * @returns {TDate} The new date with one month subtracted.
-   */
-  getPreviousMonth(value: TDate): TDate;
-  // TODO: Inline the logic in a utility function using `addMonths`, we don't need one method per adapter.
-  /**
-   * Get an array with all the months in the year of the given date.
-   * @deprecated Will be removed in v7.
-   * @template TDate
-   * @param {TDate} value The given date.
-   * @returns {TDate[]} All the months in the year of the given date.
-   */
-  getMonthArray(value: TDate): TDate[];
-  /**
-   * Create a date with the date of the first param and the time of the second param.
-   * @deprecated Use `adapter.setHours`, `adapter.setMinutes` and `adapter.setSeconds`.
-   * @template TDate
-   * @param {TDate} dateParam Param from which we want to get the date.
-   * @param {TDate} timeParam Param from which we want to get the time.
-   * @returns Date with the date of the first param and the time of the second param.
-   */
-  mergeDateAndTime(dateParam: TDate, timeParam: TDate): TDate;
-  /**
-   * Get the label of each day of a week.
-   * @deprecated Will be removed in v7. Use `getWeekdays` from date-utils and format the dates.
-   * @returns {string[]} The label of each day of a week.
-   */
-  getWeekdays(): string[];
-  /**
    * Create a nested list with all the days of the month of the given date grouped by week.
    * @template TDate
    * @param {TDate} value The given date.
@@ -739,20 +609,19 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @returns {number} The number of the week of the given date.
    */
   getWeekNumber(value: TDate): number;
-  // TODO v7: Replace with a single range param `[TDate, TDate]`, to be coherent with `isWithingRange`.
   /**
-   * Create a list with all the years between the start end the end date.
+   * Get the number of the day of the week of the given date.
+   * The value is 1-based, 1 - first day of the week, 7 - last day of the week.
    * @template TDate
-   * @param {TDate} start The start of the range.
-   * @param {TDate} end The end of the range.
+   * @param {TDate} value The given date.
+   * @returns {number} The number of the day of the week of the given date.
+   */
+  getDayOfWeek(value: TDate): number;
+  /**
+   * Create a list with all the years between the start and the end date.
+   * @template TDate
+   * @param {[TDate, TDate]} range The range of year to create.
    * @returns {TDate[]} List of all the years between the start end the end date.
    */
-  getYearRange(start: TDate, end: TDate): TDate[];
-  /**
-   * Allow to customize how the "am"` and "pm" strings are rendered.
-   * @deprecated Use `utils.format(utils.setHours(utils.date()!, meridiem === 'am' ? 2 : 14), 'meridiem')` instead.
-   * @param {"am" | "pm"} meridiem The string to render.
-   * @return {string} The formatted string.
-   */
-  getMeridiemText(meridiem: 'am' | 'pm'): string;
+  getYearRange(range: [TDate, TDate]): TDate[];
 }

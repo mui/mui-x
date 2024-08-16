@@ -1,0 +1,41 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "axisContent": {
+      "description": "Component to override the tooltip content when trigger is set to &#39;axis&#39;."
+    },
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "itemContent": {
+      "description": "Component to override the tooltip content when trigger is set to &#39;item&#39;."
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "trigger": {
+      "description": "Select the kind of tooltip to display - &#39;item&#39;: Shows data about the item below the mouse. - &#39;axis&#39;: Shows values associated with the hovered x value - &#39;none&#39;: Does not display tooltip"
+    }
+  },
+  "classDescriptions": {
+    "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },
+    "labelCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the labelCell element"
+    },
+    "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the mark element" },
+    "markCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the markCell element"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "row": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the row element" },
+    "table": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the table element" },
+    "valueCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the valueCell element"
+    }
+  },
+  "slotDescriptions": {
+    "axisContent": "Custom component for displaying tooltip content when triggered by axis event.",
+    "itemContent": "Custom component for displaying tooltip content when triggered by item event.",
+    "popper": "Custom component for the tooltip popper."
+  }
+}

@@ -1,4 +1,4 @@
-const { ESLintUtils, AST_NODE_TYPES } = require('@typescript-eslint/experimental-utils');
+const { ESLintUtils, AST_NODE_TYPES } = require('@typescript-eslint/utils');
 
 const createESLintRule = ESLintUtils.RuleCreator(() => ``);
 
@@ -22,7 +22,7 @@ function reportIfDirectlyAccessingState(node, context, nodeToReport = node) {
     return;
   }
 
-  const parserServices = ESLintUtils.getParserServices(context);
+  const { parserServices } = context.sourceCode;
   const checker = parserServices.program.getTypeChecker();
 
   const originalNode = parserServices.esTreeNodeToTSNodeMap.get(maybeApiRef);

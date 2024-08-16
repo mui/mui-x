@@ -9,6 +9,7 @@ import {
   GridCellModes,
   GridEventListener,
   GridCellModesModel,
+  GridSlots,
 } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
@@ -147,7 +148,7 @@ export default function StartEditButtonGrid() {
         onCellEditStop={handleCellEditStop}
         onCellModesModelChange={(model) => setCellModesModel(model)}
         slots={{
-          toolbar: EditToolbar,
+          toolbar: EditToolbar as GridSlots['toolbar'],
         }}
         slotProps={{
           toolbar: {

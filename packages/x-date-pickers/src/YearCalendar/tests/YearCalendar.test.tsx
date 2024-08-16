@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { act, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 
@@ -10,7 +10,7 @@ describe('<YearCalendar />', () => {
 
   it('allows to pick year standalone by click, `Enter` and `Space`', () => {
     const onChange = spy();
-    render(<YearCalendar value={adapterToUse.date(new Date(2019, 1, 2))} onChange={onChange} />);
+    render(<YearCalendar value={adapterToUse.date('2019-02-02')} onChange={onChange} />);
     const targetYear = screen.getByRole('radio', { name: '2025' });
 
     // A native button implies Enter and Space keydown behavior
@@ -39,11 +39,7 @@ describe('<YearCalendar />', () => {
   it('does not allow to pick year if readOnly prop is passed', () => {
     const onChangeMock = spy();
     render(
-      <YearCalendar
-        value={adapterToUse.date(new Date(2019, 1, 2))}
-        onChange={onChangeMock}
-        readOnly
-      />,
+      <YearCalendar value={adapterToUse.date('2019-02-02')} onChange={onChangeMock} readOnly />,
     );
     const targetYear = screen.getByRole('radio', { name: '2025' });
     expect(targetYear.tagName).to.equal('BUTTON');
@@ -56,13 +52,7 @@ describe('<YearCalendar />', () => {
   describe('Disabled', () => {
     it('should disable all years if props.disabled = true', () => {
       const onChange = spy();
-      render(
-        <YearCalendar
-          value={adapterToUse.date(new Date(2017, 1, 15))}
-          onChange={onChange}
-          disabled
-        />,
-      );
+      render(<YearCalendar value={adapterToUse.date('2017-02-15')} onChange={onChange} disabled />);
 
       screen.getAllByRole('radio').forEach((monthButton) => {
         expect(monthButton).to.have.attribute('disabled');
@@ -75,9 +65,9 @@ describe('<YearCalendar />', () => {
       const onChange = spy();
       render(
         <YearCalendar
-          value={adapterToUse.date(new Date(2017, 1, 15))}
+          value={adapterToUse.date('2017-02-15')}
           onChange={onChange}
-          minDate={adapterToUse.date(new Date(2018, 1, 12))}
+          minDate={adapterToUse.date('2018-02-12')}
         />,
       );
 
@@ -95,9 +85,9 @@ describe('<YearCalendar />', () => {
       const onChange = spy();
       render(
         <YearCalendar
-          value={adapterToUse.date(new Date(2019, 1, 15))}
+          value={adapterToUse.date('2019-02-15')}
           onChange={onChange}
-          maxDate={adapterToUse.date(new Date(2025, 3, 12))}
+          maxDate={adapterToUse.date('2025-04-12')}
         />,
       );
 
@@ -115,7 +105,7 @@ describe('<YearCalendar />', () => {
       const onChange = spy();
       render(
         <YearCalendar
-          value={adapterToUse.date(new Date(2019, 0, 2))}
+          value={adapterToUse.date('2019-01-02')}
           onChange={onChange}
           shouldDisableYear={(month) => adapterToUse.getYear(month) === 2024}
         />,
@@ -135,11 +125,11 @@ describe('<YearCalendar />', () => {
     });
   });
 
-  it('should allows to focus years when it contains valid date', () => {
+  it('should allow to focus years when it contains valid date', () => {
     render(
       <YearCalendar
         // date is chose such as replacing year by 2018 or 2020 makes it out of valid range
-        defaultValue={adapterToUse.date(new Date(2019, 7, 1))}
+        defaultValue={adapterToUse.date('2019-08-01')}
         autoFocus // needed to allow keyboard navigation
       />,
     );
@@ -168,5 +158,11 @@ describe('<YearCalendar />', () => {
 
     expect(year2019).not.to.have.attribute('disabled');
     expect(year2020).to.have.attribute('disabled');
+  });
+
+  it('should not mark the `referenceDate` year as selected', () => {
+    render(<YearCalendar referenceDate={adapterToUse.date('2018-02-02')} />);
+
+    expect(screen.getByRole('radio', { name: '2018', checked: false })).not.to.equal(null);
   });
 });

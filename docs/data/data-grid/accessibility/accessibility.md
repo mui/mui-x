@@ -1,10 +1,10 @@
 # Data Grid - Accessibility
 
-<p class="description">The Data Grid has complete accessibility support, including built-in keyboard navigation that follows international standards.</p>
+<p class="description">Learn how the Data Grid implements accessibility features and guidelines, including keyboard navigation that follows international standards.</p>
 
 ## Guidelines
 
-The most commonly encountered conformance guidelines for accessibility are:
+Common conformance guidelines for accessibility include:
 
 - Globally accepted standard: [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/)
 - US:
@@ -13,47 +13,64 @@ The most commonly encountered conformance guidelines for accessibility are:
 - Europe: [EAA](https://ec.europa.eu/social/main.jsp?catId=1202) (European Accessibility Act)
 
 WCAG 2.1 has three levels of conformance: A, AA, and AAA.
-Level AA meet the most commonly encountered conformance guidelines.
-This is the most common target for organizations so what MUI aims to support very well.
+Level AA exceeds the basic criteria for accessibility and is a common target for most organizations, so this is what we aim to support.
 
-The [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a data grid.
-
-## Accessibility changes in v7
-
-The Data Grid v7 will improve the accessibility and will be more aligned with the WAI-ARIA authoring practices.
-
-You can start using the new accessibility features by enabling `ariaV7` experimental feature flag:
-
-```tsx
-<DataGrid experimentalFeatures={{ ariaV7: true }} />
-```
-
-:::warning
-The value of `ariaV7` should be constant and not change during the lifetime of the Data Grid.
-:::
-
-{{"demo": "GridAriaV7.js", "bg": "inline", "defaultCodeOpen": false}}
+The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a data grid.
 
 ## Density
 
 You can change the density of the rows and the column header.
 
-### Density selector
+### Density selection from the toolbar
 
-To enable the density selector, create a toolbar containing the `GridToolbarDensitySelector` component and apply it using the `toolbar` property in the Data Grid's `slots` prop.
-The user can then change the density of the Data Grid by using the density selector from the toolbar, as the following demo illustrates:
+To enable the density selection from the toolbar, you can do one of the following:
+
+1. Enable the default toolbar component by passing the `slots.toolbar` prop to the Data Grid.
+2. Create a specific toolbar containing only the `GridToolbarDensitySelector` component and apply it using the `toolbar` property in the Data Grid's `slots` prop.
+
+The user can then change the density of the Data Grid by using the density selection menu from the toolbar, as the following demo illustrates:
 
 {{"demo": "DensitySelectorGrid.js", "bg": "inline"}}
 
-To hide the density selector, add the `disableDensitySelector` prop to the Data Grid.
+To disable the density selection menu, pass the `disableDensitySelector` prop to the Data Grid.
 
-### Density prop
+### Set the density programmatically
 
-Set the vertical density of the Data Grid using the `density` prop.
-This prop applies the values determined by the `rowHeight` and `columnHeaderHeight` props, if supplied.
+The Data Grid exposes the `density` prop which supports the following values:
+
+- `standard` (default)
+- `compact`
+- `comfortable`
+
+You can set the density programmatically in one of the following ways:
+
+1. Uncontrolled – initialize the density with the `initialState.density` prop.
+
+   ```tsx
+   <DataGrid
+     initialState={{
+       density: 'compact',
+     }}
+   />
+   ```
+
+2. Controlled – pass the `density` and `onDensityChange` props. For more advanced use cases, you can also subscribe to the `densityChange` grid event.
+
+   ```tsx
+   const [density, setDensity] = React.useState<GridDensity>('compact');
+
+   return (
+     <DataGrid
+       density={density}
+       onDensityChange={(newDensity) => setDensity(newDensity)}
+     />
+   );
+   ```
+
+The `density` prop applies the values determined by the `rowHeight` and `columnHeaderHeight` props, if supplied.
 The user can override this setting with the optional toolbar density selector.
 
-The following demo shows a Data Grid with the default density set to `compact`:
+The following demo shows a Data Grid with the controlled density set to `compact` and outputs the current density to the console when the user changes it using the density selector from the toolbar:
 
 {{"demo": "DensitySelectorSmallGrid.js", "bg": "inline"}}
 
@@ -63,7 +80,7 @@ The Data Grid listens for keyboard interactions from the user and emits events i
 
 ### Tab sequence
 
-According to [WAI-ARIA](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), only one of the focusable elements contained by a composite widget should be included in the page tab sequence.
+According to [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), only one of the focusable elements contained by a composite widget should be included in the page tab sequence.
 For an element to be included in the tab sequence, it needs to have a `tabIndex` value of zero or greater.
 
 When a user focuses on a Data Grid cell, the first inner element with `tabIndex={0}` receives the focus.
@@ -88,17 +105,27 @@ renderCell: (params) => (
 
 ### Navigation
 
-The following key assignments apply to Windows and Linux users.
+:::info
+The key assignments in the table below apply to Windows and Linux users.
 
-On macOS:
+On macOS replace:
 
-- replace <kbd class="key">Ctrl</kbd> with <kbd class="key">⌘ Command</kbd>
-- replace <kbd class="key">Alt</kbd> with <kbd class="key">⌥ Option</kbd>
+- <kbd class="key">Ctrl</kbd> with <kbd class="key">⌘ Command</kbd>
+- <kbd class="key">Alt</kbd> with <kbd class="key">⌥ Option</kbd>
+
+Some devices may lack certain keys, requiring the use of key combinations. In this case, replace:
+
+- <kbd class="key">Page Up</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Up</kbd>
+- <kbd class="key">Page Down</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Down</kbd>
+- <kbd class="key">Home</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Left</kbd>
+- <kbd class="key">End</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Right</kbd>
+
+:::
 
 |                                                               Keys | Description                                                 |
 | -----------------------------------------------------------------: | :---------------------------------------------------------- |
 |                                  <kbd class="key">Arrow Left</kbd> | Navigate between cell elements                              |
-|                                <kbd class="key">Arrow Bottom</kbd> | Navigate between cell elements                              |
+|                                  <kbd class="key">Arrow Down</kbd> | Navigate between cell elements                              |
 |                                 <kbd class="key">Arrow Right</kbd> | Navigate between cell elements                              |
 |                                    <kbd class="key">Arrow Up</kbd> | Navigate between cell elements                              |
 |                                        <kbd class="key">Home</kbd> | Navigate to the first cell of the current row               |

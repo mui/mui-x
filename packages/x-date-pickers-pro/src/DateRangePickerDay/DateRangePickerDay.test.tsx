@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { describeConformance } from '@mui/monorepo/test/utils';
 import {
   DateRangePickerDay,
   dateRangePickerDayClasses as classes,
 } from '@mui/x-date-pickers-pro/DateRangePickerDay';
-import { wrapPickerMount, createPickerRenderer, adapterToUse } from 'test/utils/pickers';
+import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DateRangePickerDay />', () => {
   const { render } = createPickerRenderer();
@@ -29,16 +29,13 @@ describe('<DateRangePickerDay />', () => {
       inheritComponent: 'button',
       muiName: 'MuiDateRangePickerDay',
       render,
-      wrapMount: wrapPickerMount,
       refInstanceof: window.HTMLButtonElement,
       // cannot test reactTestRenderer because of required context
       skip: [
         'componentProp',
         'rootClass', // forwards classes to DateRangePickerDayDay, but applies root class on DateRangePickerDayRoot
+        'mergeClassName', // forwards other props (i.e. data-test-id) to the DateRangePickerDayDay, but `className` is applied on the root
         'componentsProp',
-        'reactTestRenderer',
-        'propsSpread',
-        'refForwarding',
         // TODO: Fix DateRangePickerDays is not spreading props on root
         'themeDefaultProps',
         'themeVariants',

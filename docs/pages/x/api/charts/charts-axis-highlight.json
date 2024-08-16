@@ -1,12 +1,22 @@
 {
   "props": {},
-  "slots": [],
   "name": "ChartsAxisHighlight",
   "imports": [
     "import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';",
-    "import { ChartsAxisHighlight } from '@mui/x-charts';"
+    "import { ChartsAxisHighlight } from '@mui/x-charts';",
+    "import { ChartsAxisHighlight } from '@mui/x-charts-pro';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiChartsAxisHighlight" },
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiChartsAxisHighlight-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiChartsAxisHighlight",
   "filename": "/packages/x-charts/src/ChartsAxisHighlight/ChartsAxisHighlight.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/tooltip/\">Charts - Tooltip</a></li></ul>",
+  "cssComponent": false
 }

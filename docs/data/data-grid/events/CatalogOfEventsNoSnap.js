@@ -1,5 +1,5 @@
 import * as React from 'react';
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
@@ -82,7 +82,7 @@ const COLUMNS = [
     headerName: 'Available on',
     width: 100,
     align: 'center',
-    valueGetter: ({ row }) => {
+    valueGetter: (value, row) => {
       if (row.projects.includes('x-data-grid')) {
         return 'x-data-grid';
       }

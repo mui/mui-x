@@ -1,0 +1,32 @@
+{
+  "name": "AxisConfig",
+  "imports": ["import { AxisConfig } from '@mui/x-charts'"],
+  "properties": {
+    "id": { "type": { "description": "AxisId" }, "required": true },
+    "scaleType": { "type": { "description": "'band'" }, "required": true },
+    "colorMap": {
+      "type": { "description": "OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig" }
+    },
+    "data": { "type": { "description": "V[]" } },
+    "dataKey": { "type": { "description": "string" } },
+    "hideTooltip": { "type": { "description": "boolean" } },
+    "max": { "type": { "description": "number | Date" } },
+    "min": { "type": { "description": "number | Date" } },
+    "reverse": { "type": { "description": "boolean" } },
+    "tickInterval": {
+      "type": { "description": "'auto' | ((value: any, index: number) =&gt; boolean) | any[]" },
+      "default": "'auto'"
+    },
+    "tickLabelPlacement": { "type": { "description": "'middle' | 'tick'" }, "default": "'middle'" },
+    "tickMaxStep": { "type": { "description": "number" } },
+    "tickMinStep": { "type": { "description": "number" } },
+    "tickNumber": { "type": { "description": "number" } },
+    "tickPlacement": {
+      "type": { "description": "'start' | 'end' | 'middle' | 'extremities'" },
+      "default": "'extremities'"
+    },
+    "valueFormatter": {
+      "type": { "description": "(value: V, context: AxisValueFormatterContext) =&gt; string" }
+    }
+  }
+}

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as React from 'react';
 import {
   CalendarPicker,
@@ -42,6 +43,7 @@ import {
   getCalendarPickerSkeletonUtilityClass,
 } from '@mui/x-date-pickers/CalendarPickerSkeleton';
 
+// prettier-ignore
 function App() {
   type DateProps = CalendarPickerProps<any>;
   type MonthProps = MonthPickerProps<any>;

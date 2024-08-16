@@ -1,0 +1,60 @@
+{
+  "props": {
+    "direction": {
+      "type": { "name": "enum", "description": "'column'<br>&#124;&nbsp;'row'" },
+      "required": true
+    },
+    "position": {
+      "type": {
+        "name": "shape",
+        "description": "{ horizontal: 'left'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'right', vertical: 'bottom'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'top' }"
+      },
+      "required": true
+    },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "hidden": { "type": { "name": "bool" }, "default": "false" },
+    "itemGap": { "type": { "name": "number" }, "default": "10" },
+    "itemMarkHeight": { "type": { "name": "number" }, "default": "20" },
+    "itemMarkWidth": { "type": { "name": "number" }, "default": "20" },
+    "labelStyle": { "type": { "name": "object" }, "default": "theme.typography.subtitle1" },
+    "markGap": { "type": { "name": "number" }, "default": "5" },
+    "padding": {
+      "type": {
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+      },
+      "default": "10"
+    }
+  },
+  "name": "DefaultChartsLegend",
+  "imports": [
+    "import { DefaultChartsLegend } from '@mui/x-charts/ChartsLegend';",
+    "import { DefaultChartsLegend } from '@mui/x-charts';",
+    "import { DefaultChartsLegend } from '@mui/x-charts-pro';"
+  ],
+  "classes": [
+    {
+      "key": "mark",
+      "className": "MuiDefaultChartsLegend-mark",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiDefaultChartsLegend-root",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "series",
+      "className": "MuiDefaultChartsLegend-series",
+      "description": "",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiDefaultChartsLegend",
+  "filename": "/packages/x-charts/src/ChartsLegend/DefaultChartsLegend.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/legend/\">Charts - Legend</a></li></ul>",
+  "cssComponent": false
+}

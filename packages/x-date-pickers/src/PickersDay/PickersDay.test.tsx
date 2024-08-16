@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { describeConformance, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import ButtonBase from '@mui/material/ButtonBase';
 import { PickersDay, pickersDayClasses as classes } from '@mui/x-date-pickers/PickersDay';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers';
+import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<PickersDay />', () => {
   const { render } = createPickerRenderer();
@@ -22,12 +23,10 @@ describe('<PickersDay />', () => {
       classes,
       inheritComponent: ButtonBase,
       render,
-      wrapMount: wrapPickerMount,
       muiName: 'MuiPickersDay',
       refInstanceof: window.HTMLButtonElement,
       testVariantProps: { variant: 'disableMargin' },
-      // cannot test reactTestRenderer because of required context
-      skip: ['componentProp', 'componentsProp', 'reactTestRenderer'],
+      skip: ['componentProp', 'componentsProp'],
     }),
   );
 

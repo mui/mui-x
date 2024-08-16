@@ -1,18 +1,7 @@
-Broken links found by `yarn docs:link-check` that exist:
+Broken links found by `docs:link-check` that exist:
 
-- https://mui.com/base-ui/react-autocomplete/hooks-api/#use-autocomplete
-- https://mui.com/base-ui/react-portal/components-api/
-- https://mui.com/blog/material-ui-v4-is-out/#premium-themes-store-✨
-- https://mui.com/material-ui/api/button/#props
-- https://mui.com/material-ui/api/menu-item/#css
-- https://mui.com/material-ui/api/popper/#props
-- https://mui.com/material-ui/guides/api/#native-properties
-- https://mui.com/size-snapshot/
-- https://mui.com/system/styles/api/#creategenerateclassname-options-class-name-generator
-- https://mui.com/system/styles/api/#serverstylesheets
-- https://mui.com/system/styles/api/#stylesprovider
-- https://mui.com/system/styles/api/#themeprovider
-- https://mui.com/x/api/data-grid/data-grid/#props
-- https://mui.com/x/api/data-grid/data-grid/#slots
-- https://mui.com/x/api/date-pickers/date-picker/#slots
-- https://mui.com/x/react-data-grid/migration-v4/
+- https://mui.com/material-ui/customization/css-theme-variables/configuration/#advanced-configuration
+- https://mui.com/material-ui/customization/css-theme-variables/configuration/#changing-variable-prefixes
+- https://mui.com/material-ui/customization/theme-components/#creating-new-component-variants
+- https://mui.com/material-ui/customization/theme-components/#overrides-based-on-props
+- https://mui.com/material-ui/react-grid2/#whats-changed

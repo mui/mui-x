@@ -1,0 +1,9 @@
+<DataGridPremium
+  {...data}
+  apiRef={apiRef}
+  loading={loading}
+  initialState={{
+    ...data.initialState,
+    ...initialState,
+  }}
+/>

@@ -1,0 +1,38 @@
+name: Add comment
+
+on:
+  issues:
+    types:
+      - closed
+
+permissions: {}
+
+jobs:
+  add-comment:
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+      NUMBER: ${{ github.event.issue.number }}
+      BODY: |
+        :warning: **This issue has been closed.** If you have a similar problem but not exactly the same, please open a [new issue](https://github.com/mui/mui-x/issues/new/choose).
+        Now, if you have additional information related to this issue or things that could help future readers, feel free to leave a comment.
+      APPENDIX: |
+
+        @${{ github.event.issue.user.login }}: How did we do? Your experience with our support team matters to us. If you have a moment, please share your thoughts in this short [Support Satisfaction survey](https://tally.so/r/w4r5Mk?issue=${{ github.event.issue.number }}&productId=x).
+
+    if: github.event.issue.state_reason != 'inactivity'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions-cool/check-user-permission@956b2e73cdfe3bcb819bb7225e490cb3b18fd76e
+        id: checkUser
+        with:
+          require: 'write'
+          username: ${{ github.event.issue.user.login }}
+      - name: Add comment for outside contributors
+        if: steps.checkUser.outputs.check-result == false
+        run: gh issue comment "$NUMBER" --body "$BODY $APPENDIX"
+      - name: Add comment for maintainers
+        if: steps.checkUser.outputs.check-result == true
+        run: gh issue comment "$NUMBER" --body "$BODY"

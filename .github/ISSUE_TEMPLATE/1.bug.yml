@@ -1,19 +1,16 @@
 name: Bug report 🐛
 description: Create a bug report for MUI X.
-labels: ['status: needs triage']
+labels: ['status: waiting for maintainer', 'bug 🐛']
 body:
   - type: markdown
     attributes:
-      value: |
-        Please provide a searchable summary of the issue in the title above ⬆️.
-
-        Thanks for contributing by creating an issue! ❤️
-
+      value: Thanks for contributing by creating an issue! ❤️ Please provide a searchable summary of the issue in the title above ⬆️.
   - type: input
     attributes:
       label: Search keywords
-      description: Your issue may have already been reported! List the keywords you've used to search the [existing issues](https://github.com/mui/mui-x/issues). This will also make your issue searchable for others.
-      placeholder: e.g. datagrid column resizing
+      description: |
+        Your issue may have already been reported! First search for duplicates among the [existing issues](https://github.com/mui/mui-x/issues?q=is%3Aissue).
+        If your issue isn't a duplicate, great! Please list the keywords you used so people in the future can find this one more easily:
     validations:
       required: true
   - type: checkboxes
@@ -23,15 +20,23 @@ body:
       options:
         - label: I have tested the latest version
           required: true
-
+  - type: dropdown
+    attributes:
+      label: Affected products
+      description: Which products are affected by this issue? If you're not sure, leave this blank.
+      multiple: true
+      options:
+        - Data Grid
+        - Date and Time Pickers
+        - Charts
+        - Tree View
   - type: textarea
     attributes:
       label: Steps to reproduce
       description: |
-        **⚠️ Please provide a live example for your report⚠️**
-        If you don't have one, you can use one of these options:
-          - [DataGrid codesandbox template](https://codesandbox.io/s/github/mui/mui-x/tree/master/templates/x-data-grid?file=/src/demo.tsx)
-          - Fork any of the examples in our [documentation](https://mui.com/x/introduction/) by [clicking on the codesandbox or stackblitz icon](https://mui.com/static/docs/forking-an-example.png)
+        **⚠️ Issues that we can't reproduce can't be fixed.**
+
+        Please provide a link to a live example and an unambiguous set of steps to reproduce this bug. See our [documentation](https://mui.com/x/introduction/support/#bug-reproductions) on how to build a reproduction case.
       value: |
         Link to live example: (required)
 
@@ -50,7 +55,7 @@ body:
   - type: textarea
     attributes:
       label: Context
-      description: What are you trying to accomplish? How has this issue affected you? Providing context helps us come up with a solution that is more useful in the real world.
+      description: What are you trying to accomplish? Providing context helps us come up with a solution that is more useful in the real world.
   - type: textarea
     attributes:
       label: Your environment

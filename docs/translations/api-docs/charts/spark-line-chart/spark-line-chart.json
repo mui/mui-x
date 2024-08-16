@@ -1,0 +1,62 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "area": {
+      "description": "Set to <code>true</code> to fill spark line area. Has no effect if plotType=&#39;bar&#39;."
+    },
+    "colors": { "description": "Color palette used to colorize multiple series." },
+    "data": { "description": "Data to plot." },
+    "dataset": {
+      "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
+    },
+    "disableAxisListener": {
+      "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
+    },
+    "height": {
+      "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
+    },
+    "highlightedItem": {
+      "description": "The item currently highlighted. Turns highlighting into a controlled prop."
+    },
+    "margin": {
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+    },
+    "onHighlightChange": {
+      "description": "The callback fired when the highlighted item changes.",
+      "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
+    },
+    "plotType": { "description": "Type of plot used." },
+    "showHighlight": {
+      "description": "Set to <code>true</code> to highlight the value. With line, it shows a point. With bar, it shows a highlight band."
+    },
+    "showTooltip": {
+      "description": "Set to <code>true</code> to enable the tooltip in the sparkline."
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "valueFormatter": {
+      "description": "Formatter used by the tooltip.",
+      "typeDescriptions": { "value": "The value to format.", "string": "the formatted value." }
+    },
+    "width": {
+      "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
+    },
+    "xAxis": {
+      "description": "The xAxis configuration. Notice it is a single <a href='/x/api/charts/axis-config/'>AxisConfig</a> object, not an array of configuration."
+    },
+    "yAxis": {
+      "description": "The yAxis configuration. Notice it is a single <a href='/x/api/charts/axis-config/'>AxisConfig</a> object, not an array of configuration."
+    }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "area": "The component that renders the area.",
+    "axisContent": "Custom component for displaying tooltip content when triggered by axis event.",
+    "bar": "The component that renders the bar.",
+    "itemContent": "Custom component for displaying tooltip content when triggered by item event.",
+    "line": "The component that renders the line.",
+    "lineHighlight": "",
+    "mark": "",
+    "popper": "Custom component for the tooltip popper."
+  }
+}

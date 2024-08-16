@@ -89,7 +89,7 @@ export default function WeekPicker() {
               hoveredDay,
               onPointerEnter: () => setHoveredDay(ownerState.day),
               onPointerLeave: () => setHoveredDay(null),
-            } as any),
+            }) as any,
         }}
       />
     </LocalizationProvider>

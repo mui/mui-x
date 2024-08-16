@@ -31,8 +31,14 @@ function PlanIcon(props) {
     return null;
   }
   return (
-    <a href={planProps.href} target="_blank" rel="noreferrer">
-      <span className={planProps.className} title={planProps.title} />
+    <a
+      href={planProps.href}
+      target="_blank"
+      rel="noopener"
+      aria-label={planProps.title}
+      title={planProps.title}
+    >
+      <span className={planProps.className} />
     </a>
   );
 }

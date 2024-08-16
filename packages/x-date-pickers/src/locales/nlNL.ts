@@ -15,16 +15,20 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Volgende maand',
 
   // View navigation
-  openPreviousView: 'open vorige view',
-  openNextView: 'open volgende view',
+  openPreviousView: 'Open vorige view',
+  openNextView: 'Open volgende view',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'jaarweergave is geopend, schakel over naar kalenderweergave'
       : 'kalenderweergave is geopend, switch naar jaarweergave',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Start',
   end: 'Einde',
+  startDate: 'Start datum',
+  startTime: 'Start tijd',
+  endDate: 'Eind datum',
+  endTime: 'Eind tijd',
 
   // Action bar
   cancelButtonLabel: 'Annuleren',
@@ -40,11 +44,7 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Selecteer ${timeViews[view]}. ${
-      time === null
-        ? 'Geen tijd geselecteerd'
-        : `Geselecteerde tijd is ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Selecteer ${timeViews[view]}. ${time === null ? 'Geen tijd geselecteerd' : `Geselecteerde tijd is ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} uren`,
   minutesClockNumberText: (minutes) => `${minutes} minuten`,
   secondsClockNumberText: (seconds) => `${seconds} seconden`,
@@ -67,6 +67,7 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Kies tijd, geselecteerde tijd is ${utils.format(value, 'fullTime')}`
       : 'Kies tijd',
+  fieldClearLabel: 'Wissen',
 
   // Table labels
   timeTableLabel: 'kies tijd',
@@ -81,6 +82,19 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Jaar',
+  month: 'Maand',
+  day: 'Dag',
+  weekDay: 'Weekdag',
+  hours: 'Uren',
+  minutes: 'Minuten',
+  seconds: 'Seconden',
+  meridiem: 'Middag',
+
+  // Common
+  empty: 'Legen',
 };
 
 export const nlNL = getPickersLocalization(nlNLPickers);

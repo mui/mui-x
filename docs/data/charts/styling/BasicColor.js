@@ -35,7 +35,7 @@ export default function BasicColor() {
         series={[
           {
             data: [15, 23, 18, 19, 13],
-            label: 'example',
+            label: 'Example',
             color,
           },
         ]}

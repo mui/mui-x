@@ -4,10 +4,10 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import BrandingProvider from 'docs/src/BrandingProvider';
+import { BrandingProvider } from '@mui/docs/branding';
 import CustomizationPlayground from 'docsx/src/modules/components/CustomizationPlayground';
 import CircularProgress from '@mui/material/CircularProgress';
-import { pickerExamples } from './examplesConfig';
+import { pickerExamples } from './examplesConfig.styling';
 
 export default function CustomizationExamplesNoSnap() {
   const [selectedPicker, setSelectedPicker] = React.useState(0);
@@ -28,7 +28,7 @@ export default function CustomizationExamplesNoSnap() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={2} sx={{ mb: 2, width: '100%' }}>
+      <Stack spacing={2} sx={{ mb: 2, width: '100%', px: { xs: 2, sm: 0 } }}>
         <BrandingProvider>
           <ToggleButtonGroup
             value={selectedPicker}

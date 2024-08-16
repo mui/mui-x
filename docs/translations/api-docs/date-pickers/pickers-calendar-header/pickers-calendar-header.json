@@ -1,0 +1,31 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "format": { "description": "Format used to display the date." },
+    "labelId": {
+      "description": "Id of the calendar text element. It is used to establish an <code>aria-labelledby</code> relationship with the calendar <code>grid</code> element."
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    }
+  },
+  "classDescriptions": {
+    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the label element" },
+    "labelContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the label container element"
+    },
+    "root": { "description": "Styles applied to the root element." }
+  },
+  "slotDescriptions": {
+    "leftArrowIcon": "Icon displayed in the left view switch button.",
+    "nextIconButton": "Button allowing to switch to the right view.",
+    "previousIconButton": "Button allowing to switch to the left view.",
+    "rightArrowIcon": "Icon displayed in the right view switch button.",
+    "switchViewButton": "Button displayed to switch between different calendar views.",
+    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &quot;year&quot;."
+  }
+}
