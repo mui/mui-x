@@ -39,13 +39,19 @@ export function GridSidebarColumnPanelPivotMenu(props: {
     setAnchorEl(null);
   };
 
-  const handleMove = (direction: 'up' | 'down' | 'top' | 'bottom') => {
+  const handleMove = (to: 'up' | 'down' | 'top' | 'bottom' | FieldTransferObject['modelKey']) => {
     handleClose();
 
-    let targetField: string | undefined;
-    let targetFieldPosition: DropPosition;
+    // Do nothing if the field is already in the target section
+    if (to === modelKey) {
+      return;
+    }
 
-    switch (direction) {
+    let targetField: string | undefined;
+    let targetFieldPosition: DropPosition = null;
+    let targetSection: FieldTransferObject['modelKey'] = modelKey;
+
+    switch (to) {
       case 'up':
         targetField = props.pivotModel[modelKey!][fieldIndexInModel - 1].field;
         targetFieldPosition = 'top';
@@ -62,9 +68,13 @@ export function GridSidebarColumnPanelPivotMenu(props: {
         targetField = props.pivotModel[modelKey!][modelLength - 1].field;
         targetFieldPosition = 'bottom';
         break;
+      case 'rows':
+      case 'columns':
+      case 'values':
+      case null:
+        targetSection = to;
+        break;
       default:
-        targetField = undefined;
-        targetFieldPosition = null;
         break;
     }
 
@@ -72,22 +82,8 @@ export function GridSidebarColumnPanelPivotMenu(props: {
       field,
       targetField,
       targetFieldPosition,
-      targetSection: modelKey,
+      targetSection,
       originSection: modelKey,
-    });
-  };
-
-  const handleMoveSection = (section: FieldTransferObject['modelKey']) => {
-    handleClose();
-
-    if (section === modelKey) {
-      return;
-    }
-
-    updatePivotModel({
-      field,
-      targetSection: section,
-      originSection: modelKey!,
     });
   };
 
@@ -121,13 +117,13 @@ export function GridSidebarColumnPanelPivotMenu(props: {
 
       {isAvailableField ? (
         <Menu {...menuProps}>
-          <MenuItem dense onClick={() => handleMoveSection('rows')}>
+          <MenuItem dense onClick={() => handleMove('rows')}>
             Add to Rows
           </MenuItem>
-          <MenuItem dense onClick={() => handleMoveSection('columns')}>
+          <MenuItem dense onClick={() => handleMove('columns')}>
             Add to Columns
           </MenuItem>
-          <MenuItem dense onClick={() => handleMoveSection('values')}>
+          <MenuItem dense onClick={() => handleMove('values')}>
             Add to Values
           </MenuItem>
         </Menu>
@@ -159,26 +155,26 @@ export function GridSidebarColumnPanelPivotMenu(props: {
             <ListItemText>Move to bottom</ListItemText>
           </MenuItem>
           <Divider />
-          <MenuItem dense onClick={() => handleMoveSection('rows')}>
+          <MenuItem dense onClick={() => handleMove('rows')}>
             <ListItemIcon>
               {modelKey === 'rows' ? <rootProps.slots.pivotMenuCheckIcon /> : null}
             </ListItemIcon>
             <ListItemText>Rows</ListItemText>
           </MenuItem>
-          <MenuItem dense onClick={() => handleMoveSection('columns')}>
+          <MenuItem dense onClick={() => handleMove('columns')}>
             <ListItemIcon>
               {modelKey === 'columns' ? <rootProps.slots.pivotMenuCheckIcon /> : null}
             </ListItemIcon>
             <ListItemText>Columns</ListItemText>
           </MenuItem>
-          <MenuItem dense onClick={() => handleMoveSection('values')}>
+          <MenuItem dense onClick={() => handleMove('values')}>
             <ListItemIcon>
               {modelKey === 'values' ? <rootProps.slots.pivotMenuCheckIcon /> : null}
             </ListItemIcon>
             <ListItemText>Values</ListItemText>
           </MenuItem>
           <Divider />
-          <MenuItem dense onClick={() => handleMoveSection(null)}>
+          <MenuItem dense onClick={() => handleMove(null)}>
             <ListItemIcon>
               <rootProps.slots.pivotMenuRemoveIcon />
             </ListItemIcon>
