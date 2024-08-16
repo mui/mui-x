@@ -1383,9 +1383,7 @@ describe('<DateField /> - Editing', () => {
         return;
       }
 
-      act(() => {
-        fireEvent.input(element, { target: { textContent: pastedValue } });
-      });
+      fireEvent.input(element, { target: { textContent: pastedValue } });
     };
 
     const firePasteEventV6 = (input: HTMLInputElement, pastedValue?: string, rawValue?: string) => {
