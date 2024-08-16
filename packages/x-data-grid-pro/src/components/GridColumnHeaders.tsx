@@ -1,6 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, GridBaseColumnHeaders, UseGridColumnHeadersProps } from '@mui/x-data-grid/internals';
+import {
+  styled,
+  GridBaseColumnHeaders,
+  UseGridColumnHeadersProps,
+} from '@mui/x-data-grid/internals';
 import { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 
 const Filler = styled('div')({

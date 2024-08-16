@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useTheme } from '@mui/material/styles';
-import { styled } from '../../../utils/styled'
+import { styled } from '../../../utils/styled';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridSelector } from '../../utils';
 import { useGridRootProps } from '../../utils/useGridRootProps';
