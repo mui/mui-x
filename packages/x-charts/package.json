@@ -64,7 +64,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.7",
+    "@mui/internal-test-utils": "https://pkg.csb.dev/mui/material-ui/commit/1fc268ab/@mui/internal-test-utils",
     "@react-spring/core": "^9.7.4",
     "@react-spring/shared": "^9.7.4",
     "@types/prop-types": "^15.7.12",
