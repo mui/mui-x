@@ -54,6 +54,7 @@ const useUtilityClasses = (ownerState: DefaultizedChartsLegendProps & { theme: T
     mark: ['mark'],
     label: ['label'],
     series: ['series'],
+    itemBackground: ['itemBackground'],
   };
 
   return composeClasses(slots, getLegendUtilityClass, classes);
