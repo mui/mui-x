@@ -2,38 +2,46 @@ type Listener<T> = (value: T) => void;
 
 let globalId = 0;
 
-export class Store<T> {
-  value: T;
+export class Store<TState, TCache> {
+  private value: { state: TState; cache: TCache };
 
   public instanceId: number;
 
-  listeners: Set<Listener<T>>;
+  listeners: Set<Listener<typeof this.value>>;
 
-  static create<T>(value: T) {
-    return new Store(value);
-  }
-
-  constructor(value: T) {
+  constructor(value: typeof this.value) {
     this.value = value;
-    this.listeners = new Set<Listener<T>>();
+    this.listeners = new Set();
     this.instanceId = globalId;
 
     globalId += 1;
   }
 
-  public subscribe = (fn: Listener<T>) => {
+  public subscribe = (fn: Listener<typeof this.value>) => {
     this.listeners.add(fn);
     return () => {
       this.listeners.delete(fn);
     };
   };
 
-  getSnapshot = () => {
+  public getSnapshot = () => {
     return this.value;
   };
 
-  public update = (value: T) => {
+  private update = (value: typeof this.value) => {
     this.value = value;
     this.listeners.forEach((l) => l(value));
+  };
+
+  public getCache = () => {
+    return this.value.cache;
+  };
+
+  public updateState = (state: TState) => {
+    this.update({ ...this.value, state });
+  };
+
+  public updateCache = (cache: TCache) => {
+    this.update({ ...this.value, cache });
   };
 }

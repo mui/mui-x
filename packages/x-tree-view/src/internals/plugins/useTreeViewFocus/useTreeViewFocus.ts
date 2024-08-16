@@ -1,8 +1,9 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { EventHandlers } from '@mui/utils';
 import ownerDocument from '@mui/utils/ownerDocument';
-import { TreeViewPlugin, TreeViewPluginOptions } from '../../models';
+import { TreeViewPlugin, TreeViewUsedCacheValue, TreeViewUsedInstance } from '../../models';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
 import { getActiveElement } from '../../utils/utils';
@@ -10,33 +11,50 @@ import { getFirstNavigableItem } from '../../utils/tree';
 import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
 import { convertSelectedItemsToArray } from '../useTreeViewSelection/useTreeViewSelection.utils';
 
-const useDefaultFocusableItemId = ({
-  instance,
-  models,
-  state,
-  setState,
-}: Pick<
-  TreeViewPluginOptions<UseTreeViewFocusSignature>,
-  'instance' | 'models' | 'state' | 'setState'
->) => {
-  let defaultFocusableItemId = convertSelectedItemsToArray(models.selectedItems.value).find(
-    (itemId) => {
-      if (!instance.isItemNavigable(itemId)) {
-        return false;
-      }
+function useUpdateCache(
+  instance: TreeViewUsedInstance<UseTreeViewFocusSignature>,
+  callee: (
+    cacheValue: TreeViewUsedCacheValue<UseTreeViewFocusSignature>,
+  ) => TreeViewUsedCacheValue<UseTreeViewFocusSignature>,
+) {
+  const currentCache = instance.selectorsStore.getCache();
+  const newCache = callee(currentCache);
 
-      const itemMeta = instance.getItemMeta(itemId);
-      return itemMeta && (itemMeta.parentId == null || instance.isItemExpanded(itemMeta.parentId));
-    },
-  );
+  useEnhancedEffect(() => {
+    if (newCache !== currentCache) {
+      instance.selectorsStore.updateCache(newCache);
+    }
+  }, [newCache, currentCache, instance]);
+
+  return newCache;
+}
+
+const useDefaultFocusableItemId = (
+  instance: TreeViewUsedInstance<UseTreeViewFocusSignature>,
+  selectedItems: string | string[] | null,
+) => {
+  let defaultFocusableItemId = convertSelectedItemsToArray(selectedItems).find((itemId) => {
+    if (!instance.isItemNavigable(itemId)) {
+      return false;
+    }
+
+    const itemMeta = instance.getItemMeta(itemId);
+    return itemMeta && (itemMeta.parentId == null || instance.isItemExpanded(itemMeta.parentId));
+  });
 
   if (defaultFocusableItemId == null) {
     defaultFocusableItemId = getFirstNavigableItem(instance);
   }
 
-  if (defaultFocusableItemId !== state.defaultFocusableItemId) {
-    setState((prevState) => ({ ...prevState, defaultFocusableItemId }));
-  }
+  useUpdateCache(instance, (cacheValue) => {
+    if (defaultFocusableItemId !== cacheValue.defaultFocusableItemId) {
+      return { ...cacheValue, defaultFocusableItemId };
+    }
+
+    return cacheValue;
+  });
+
+  return defaultFocusableItemId;
 };
 
 export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
@@ -47,7 +65,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   models,
   rootRef,
 }) => {
-  useDefaultFocusableItemId({ instance, models, setState, state });
+  useDefaultFocusableItemId(instance, models.selectedItems.value);
 
   const setFocusedItemId = useEventCallback((itemId: React.SetStateAction<string | null>) => {
     const cleanItemId = typeof itemId === 'function' ? itemId(state.focusedItemId) : itemId;
@@ -112,11 +130,12 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     setFocusedItemId(null);
   });
 
-  const canItemBeTabbed = (itemId: string) => itemId === state.defaultFocusableItemId;
+  const canItemBeTabbed = (itemId: string) => itemId === instance.getCache().defaultFocusableItemId;
 
   useInstanceEventHandler(instance, 'removeItem', ({ id }) => {
-    if (state.focusedItemId === id && state.defaultFocusableItemId != null) {
-      innerFocusItem(null, state.defaultFocusableItemId);
+    const defaultFocusableItemId = instance.getCache().defaultFocusableItemId;
+    if (state.focusedItemId === id && defaultFocusableItemId != null) {
+      innerFocusItem(null, defaultFocusableItemId);
     }
   });
 
@@ -129,8 +148,9 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       }
 
       // if the event bubbled (which is React specific) we don't want to steal focus
-      if (event.target === event.currentTarget && state.defaultFocusableItemId != null) {
-        innerFocusItem(event, state.defaultFocusableItemId);
+      const defaultFocusableItemId = instance.getCache().defaultFocusableItemId;
+      if (event.target === event.currentTarget && defaultFocusableItemId != null) {
+        innerFocusItem(event, defaultFocusableItemId);
       }
     };
 
@@ -150,7 +170,9 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   };
 };
 
-useTreeViewFocus.getInitialState = () => ({ focusedItemId: null, defaultFocusableItemId: null });
+useTreeViewFocus.getInitialState = () => ({ focusedItemId: null });
+
+useTreeViewFocus.getInitialCache = () => ({ defaultFocusableItemId: null });
 
 useTreeViewFocus.params = {
   onItemFocus: true,

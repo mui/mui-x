@@ -5,9 +5,9 @@ import {
   TreeViewAnyPluginSignature,
   TreeViewInstance,
   TreeViewPlugin,
-  MergeSignaturesProperty,
   TreeViewPublicAPI,
   ConvertSignaturesIntoPlugins,
+  TreeViewState,
 } from '../models';
 import {
   UseTreeViewBaseProps,
@@ -73,7 +73,7 @@ export const useTreeView = <
   });
 
   const [state, setState] = React.useState(() => {
-    const temp = {} as MergeSignaturesProperty<TSignaturesWithCorePluginSignatures, 'state'>;
+    const temp = {} as TreeViewState<TSignaturesWithCorePluginSignatures>;
     plugins.forEach((plugin) => {
       if (plugin.getInitialState) {
         Object.assign(temp, plugin.getInitialState(pluginParams));

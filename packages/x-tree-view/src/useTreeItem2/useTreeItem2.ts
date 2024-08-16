@@ -43,7 +43,7 @@ export const useTreeItem2 = <
 
   const canItemBeTabbed = useSelector(
     instance,
-    (state) => state.defaultFocusableItemId === parameters.itemId,
+    (storeValue) => storeValue.cache.defaultFocusableItemId === parameters.itemId,
   );
 
   const { id, itemId, label, children, rootRef } = parameters;

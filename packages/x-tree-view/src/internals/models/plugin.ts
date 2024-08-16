@@ -44,6 +44,7 @@ export type TreeViewPluginSignature<
     publicAPI?: {};
     events?: { [key in keyof T['events']]: TreeViewEventLookupElement };
     state?: {};
+    cache?: {};
     contextValue?: {};
     slots?: { [key in keyof T['slots']]: React.ElementType };
     slotProps?: { [key in keyof T['slotProps']]: {} | (() => {}) };
@@ -59,6 +60,7 @@ export type TreeViewPluginSignature<
   publicAPI: T extends { publicAPI: {} } ? T['publicAPI'] : {};
   events: T extends { events: {} } ? T['events'] : {};
   state: T extends { state: {} } ? T['state'] : {};
+  cache: T extends { cache: {} } ? T['cache'] : {};
   contextValue: T extends { contextValue: {} } ? T['contextValue'] : {};
   slots: T extends { slots: {} } ? T['slots'] : {};
   slotProps: T extends { slotProps: {} } ? T['slotProps'] : {};
@@ -79,6 +81,7 @@ export type TreeViewPluginSignature<
 };
 
 export type TreeViewAnyPluginSignature = {
+  cache: any;
   state: any;
   instance: any;
   params: any;
@@ -123,6 +126,9 @@ export type TreeViewUsedInstance<TSignature extends TreeViewAnyPluginSignature> 
 type TreeViewUsedState<TSignature extends TreeViewAnyPluginSignature> =
   PluginPropertyWithDependencies<TSignature, 'state'>;
 
+export type TreeViewUsedCacheValue<TSignature extends TreeViewAnyPluginSignature> =
+  PluginPropertyWithDependencies<TSignature, 'cache'>;
+
 type TreeViewUsedExperimentalFeatures<TSignature extends TreeViewAnyPluginSignature> =
   TreeViewExperimentalFeatures<[TSignature, ...TSignature['dependencies']]>;
 
@@ -154,6 +160,7 @@ export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
     params: TreeViewUsedParams<TSignature>,
   ) => TSignature['defaultizedParams'];
   getInitialState?: (params: TreeViewUsedDefaultizedParams<TSignature>) => TSignature['state'];
+  getInitialCache?: () => TSignature['cache'];
   models?: TreeViewModelsInitializer<TSignature>;
   params: Record<keyof TSignature['params'], true>;
   itemPlugin?: TreeViewItemPlugin<any>;

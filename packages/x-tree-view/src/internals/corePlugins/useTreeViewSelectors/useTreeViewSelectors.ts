@@ -1,33 +1,33 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import type { TreeViewPlugin } from '../../models';
-import {
-  UseTreeViewSelectorsCache,
-  UseTreeViewSelectorsSignature,
-} from './useTreeViewSelectors.types';
+import { TreeViewAnyPluginSignature, TreeViewCacheValue, TreeViewPlugin } from '../../models';
+import { UseTreeViewSelectorsSignature } from './useTreeViewSelectors.types';
 import { Store } from '../../utils/Store';
 
-let globalId = 0;
+export const useTreeViewSelectors: TreeViewPlugin<UseTreeViewSelectorsSignature> = ({
+  state,
+  plugins,
+}) => {
+  const storeRef = React.useRef<Store<any, any> | null>(null);
+  if (storeRef.current == null) {
+    const initialCache = {} as TreeViewCacheValue<TreeViewAnyPluginSignature[]>;
+    plugins.forEach((plugin) => {
+      if (plugin.getInitialCache) {
+        Object.assign(initialCache, plugin.getInitialCache());
+      }
+    });
 
-export const useTreeViewSelectors: TreeViewPlugin<UseTreeViewSelectorsSignature> = ({ state }) => {
-  const cacheRef = React.useRef<UseTreeViewSelectorsCache<any> | null>(null);
-  if (cacheRef.current == null) {
-    const store = Store.create(state);
-    cacheRef.current = {
-      state,
-      store,
-      instanceId: globalId,
-    };
-    globalId += 1;
+    storeRef.current = new Store({ state, cache: initialCache });
   }
 
   useEnhancedEffect(() => {
-    cacheRef.current!.store.update(state);
+    storeRef.current!.updateState(state);
   }, [state]);
 
   return {
     instance: {
-      selectorsCache: cacheRef.current,
+      selectorsStore: storeRef.current,
+      getCache: storeRef.current!.getCache,
     },
   };
 };
