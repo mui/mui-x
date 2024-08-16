@@ -190,6 +190,9 @@ module.exports = {
       ],
       excludedFiles: ['test/e2e/**/*', 'test/regressions/**/*'],
       extends: ['plugin:testing-library/react'],
+      rules: {
+        'testing-library/no-container': 'off',
+      },
     },
     {
       files: [
