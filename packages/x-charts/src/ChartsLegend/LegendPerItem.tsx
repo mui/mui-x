@@ -3,7 +3,7 @@ import NoSsr from '@mui/material/NoSsr';
 import { useTheme, styled } from '@mui/material/styles';
 import { DrawingArea } from '../context/DrawingProvider';
 import { DefaultizedProps } from '../models/helpers';
-import { ChartsText, ChartsTextStyle } from '../ChartsText';
+import { ChartsTextStyle } from '../ChartsText';
 import { CardinalDirections } from '../models/layout';
 import { getWordsByLines } from '../internals/getWordsByLines';
 import type { ChartsLegendProps } from './ChartsLegend';
@@ -11,6 +11,8 @@ import { GetItemSpaceType, LegendItemParams } from './chartsLegend.types';
 import { legendItemPlacements } from './legendItemsPlacement';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { AnchorPosition, Direction } from './legend.types';
+import { ChartsLegendItem } from './ChartsLegendItem';
+import { ChartsLegendClasses } from './chartsLegendClasses';
 
 export type ChartsLegendRootOwnerState = {
   position: AnchorPosition;
@@ -36,7 +38,7 @@ export interface LegendPerItemProps
    * The ordered array of item to display in the legend.
    */
   itemsToDisplay: LegendItemParams[];
-  classes?: Record<'mark' | 'series' | 'root', string>;
+  classes?: Omit<Partial<ChartsLegendClasses>, 'column' | 'row'>;
   /**
    * Style applied to legend labels.
    * @default theme.typography.subtitle1
@@ -68,6 +70,13 @@ export interface LegendPerItemProps
    * @default 10
    */
   padding?: number | Partial<CardinalDirections<number>>;
+  /**
+   * Callback fired when a legend item is clicked.
+   * @param {LegendItemParams} legend The legend item data.
+   * @param {number} dataIndex The index of the clicked legend item.
+   * @default undefined
+   */
+  onClick?: (legend: LegendItemParams, dataIndex: number) => void;
 }
 
 /**
@@ -109,9 +118,9 @@ export function LegendPerItem(props: LegendPerItemProps) {
     itemGap = 10,
     padding: paddingProps = 10,
     labelStyle: inLabelStyle,
+    onClick,
   } = props;
   const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
   const drawingArea = useDrawingArea();
 
   const labelStyle = React.useMemo(
@@ -196,27 +205,21 @@ export function LegendPerItem(props: LegendPerItemProps) {
   return (
     <NoSsr>
       <ChartsLegendRoot className={classes?.root}>
-        {itemsWithPosition.map(({ id, label, color, positionX, positionY }) => (
-          <g
-            key={id}
-            className={classes?.series}
-            transform={`translate(${gapX + (isRTL ? legendWidth - positionX : positionX)} ${gapY + positionY})`}
-          >
-            <rect
-              className={classes?.mark}
-              x={isRTL ? -itemMarkWidth : 0}
-              y={-itemMarkHeight / 2}
-              width={itemMarkWidth}
-              height={itemMarkHeight}
-              fill={color}
-            />
-            <ChartsText
-              style={labelStyle}
-              text={label}
-              x={(isRTL ? -1 : 1) * (itemMarkWidth + markGap)}
-              y={0}
-            />
-          </g>
+        {itemsWithPosition.map((item, i) => (
+          <ChartsLegendItem
+            {...item}
+            key={item.id}
+            index={i}
+            gapX={gapX}
+            gapY={gapY}
+            legendWidth={legendWidth}
+            itemMarkHeight={itemMarkHeight}
+            itemMarkWidth={itemMarkWidth}
+            markGap={markGap}
+            labelStyle={labelStyle}
+            classes={classes}
+            onClick={onClick}
+          />
         ))}
       </ChartsLegendRoot>
     </NoSsr>
