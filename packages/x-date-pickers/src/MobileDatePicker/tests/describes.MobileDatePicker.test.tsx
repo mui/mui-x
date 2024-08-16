@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, userEvent, fireEvent } from '@mui/internal-test-utils';
+import { screen, fireUserEvent, fireEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -64,7 +64,7 @@ describe('<MobileDatePicker /> - Describes', () => {
       }
 
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
-      userEvent.mousePress(
+      fireUserEvent.mousePress(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
 

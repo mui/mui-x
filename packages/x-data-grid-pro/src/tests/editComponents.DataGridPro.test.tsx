@@ -10,7 +10,7 @@ import {
   renderEditInputCell,
   renderEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
-import { act, createRenderer, fireEvent, screen, userEvent } from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent, screen, fireUserEvent } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { getCell, spyApi } from 'test/utils/helperFn';
 import { spy, SinonSpy } from 'sinon';
@@ -571,7 +571,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
-      userEvent.mousePress(document.getElementById('outside-grid')!);
+      fireUserEvent.mousePress(document.getElementById('outside-grid')!);
       await act(() => Promise.resolve());
 
       expect(onCellEditStop.callCount).to.equal(1);
@@ -590,7 +590,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
-      userEvent.mousePress(screen.queryAllByRole('option')[1]);
+      fireUserEvent.mousePress(screen.queryAllByRole('option')[1]);
       clock.runToLast();
       expect(screen.queryByRole('listbox')).to.equal(null);
       fireEvent.keyDown(screen.getByRole('combobox'), { key: 'Enter' });

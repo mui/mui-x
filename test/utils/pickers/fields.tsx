@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { createRenderer, screen, userEvent, act, fireEvent } from '@mui/internal-test-utils';
+import { createRenderer, screen, fireUserEvent, act, fireEvent } from '@mui/internal-test-utils';
 import { FieldRef, FieldSection, FieldSectionType } from '@mui/x-date-pickers/models';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
@@ -210,7 +210,7 @@ export const buildFieldInteractions = <P extends {}>({
           'ArrowRight',
         ].includes(key)
       ) {
-        userEvent.keyPress(target, { key });
+        fireUserEvent.keyPress(target, { key });
       } else {
         fireEvent.input(target, { target: { textContent: key } });
       }
@@ -250,7 +250,7 @@ export const buildFieldInteractions = <P extends {}>({
     } as any);
     v6Response.selectSection(selectedSection);
     const input = getTextbox();
-    userEvent.keyPress(input, { key });
+    fireUserEvent.keyPress(input, { key });
     expectFieldValueV6(input, expectedValue);
     v6Response.unmount();
   };

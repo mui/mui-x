@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, userEvent } from '@mui/internal-test-utils';
+import { screen, fireUserEvent } from '@mui/internal-test-utils';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import {
   getAllFieldInputRoot,
@@ -168,7 +168,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         onChange: handleChange,
       });
       v7Response.selectSection(undefined);
-      userEvent.keyPress(v7Response.getActiveSection(0), { key: 'ArrowUp' });
+      fireUserEvent.keyPress(v7Response.getActiveSection(0), { key: 'ArrowUp' });
       expect(handleChange.callCount).to.equal(0);
     });
 

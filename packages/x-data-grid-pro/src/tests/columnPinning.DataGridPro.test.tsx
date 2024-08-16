@@ -18,7 +18,7 @@ import {
   screen,
   createEvent,
   act,
-  userEvent,
+  fireUserEvent,
 } from '@mui/internal-test-utils';
 import {
   $,
@@ -105,7 +105,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     virtualScroller.scrollLeft = 100;
     act(() => virtualScroller.dispatchEvent(new Event('scroll')));
     const cell = getCell(0, 2);
-    userEvent.mousePress(cell);
+    fireUserEvent.mousePress(cell);
     fireEvent.keyDown(cell, { key: 'ArrowLeft' });
     expect(virtualScroller.scrollLeft).to.equal(0);
   });
@@ -119,7 +119,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
     expect(virtualScroller.scrollLeft).to.equal(0);
     const cell = getCell(0, 1);
-    userEvent.mousePress(cell);
+    fireUserEvent.mousePress(cell);
     fireEvent.keyDown(cell, { key: 'ArrowRight' });
     expect(virtualScroller.scrollLeft).to.equal(100);
   });

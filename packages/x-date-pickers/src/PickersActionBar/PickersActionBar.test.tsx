@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, userEvent } from '@mui/internal-test-utils';
+import { screen, fireUserEvent } from '@mui/internal-test-utils';
 import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';
 import { createPickerRenderer } from 'test/utils/pickers';
 
@@ -44,7 +44,7 @@ describe('<PickersActionBar />', () => {
       />,
     );
 
-    userEvent.mousePress(screen.getByText(/clear/i));
+    fireUserEvent.mousePress(screen.getByText(/clear/i));
     expect(onClear.callCount).to.equal(1);
   });
 
@@ -64,7 +64,7 @@ describe('<PickersActionBar />', () => {
       />,
     );
 
-    userEvent.mousePress(screen.getByText(/cancel/i));
+    fireUserEvent.mousePress(screen.getByText(/cancel/i));
     expect(onCancel.callCount).to.equal(1);
   });
 
@@ -84,7 +84,7 @@ describe('<PickersActionBar />', () => {
       />,
     );
 
-    userEvent.mousePress(screen.getByText(/ok/i));
+    fireUserEvent.mousePress(screen.getByText(/ok/i));
     expect(onAccept.callCount).to.equal(1);
   });
 
@@ -104,7 +104,7 @@ describe('<PickersActionBar />', () => {
       />,
     );
 
-    userEvent.mousePress(screen.getByText(/today/i));
+    fireUserEvent.mousePress(screen.getByText(/today/i));
     expect(onSetToday.callCount).to.equal(1);
   });
 

@@ -4,7 +4,7 @@ import {
   fireEvent,
   screen,
   act,
-  userEvent,
+  fireUserEvent,
   waitFor,
 } from '@mui/internal-test-utils';
 import {
@@ -888,7 +888,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        userEvent.mousePress(getCell(1, 0));
+        fireUserEvent.mousePress(getCell(1, 0));
         expect(renderIdCell.lastCall.firstArg.field).to.equal('id');
         expect(getCell(1, 0)).to.have.text('Focused: true');
       });

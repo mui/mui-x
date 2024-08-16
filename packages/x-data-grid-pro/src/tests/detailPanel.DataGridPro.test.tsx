@@ -17,7 +17,7 @@ import {
   screen,
   waitFor,
   act,
-  userEvent,
+  fireUserEvent,
 } from '@mui/internal-test-utils';
 import { $, $$, grid, getRow, getCell, getColumnValues, microtasks } from 'test/utils/helperFn';
 
@@ -228,7 +228,7 @@ describe('<DataGridPro /> - Detail panel', () => {
       />,
     );
     const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-    userEvent.mousePress(getCell(2, 1));
+    fireUserEvent.mousePress(getCell(2, 1));
     fireEvent.keyDown(getCell(2, 1), { key: 'ArrowDown' });
     expect(virtualScroller.scrollTop).to.equal(0);
     fireEvent.keyDown(getCell(3, 1), { key: 'ArrowDown' });
@@ -259,7 +259,7 @@ describe('<DataGridPro /> - Detail panel', () => {
 
     const cell = getCell(0, 0);
 
-    userEvent.mousePress(cell);
+    fireUserEvent.mousePress(cell);
 
     fireEvent.keyDown(cell, { key: 'ArrowRight' });
     virtualScroller.dispatchEvent(new Event('scroll'));
@@ -278,7 +278,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
     expect(screen.queryByText('Detail')).to.equal(null);
     const cell = getCell(0, 0);
-    userEvent.mousePress(cell);
+    fireUserEvent.mousePress(cell);
     fireEvent.keyDown(cell, { key: ' ' });
     expect(screen.queryByText('Detail')).not.to.equal(null);
     fireEvent.keyDown(cell, { key: ' ' });
@@ -438,7 +438,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
     expect(screen.queryByText('Detail')).to.equal(null);
     const cell = getCell(1, 0);
-    userEvent.mousePress(cell);
+    fireUserEvent.mousePress(cell);
     expect(handleRowSelectionModelChange.callCount).to.equal(0);
   });
 
@@ -514,7 +514,7 @@ describe('<DataGridPro /> - Detail panel', () => {
       />,
     );
 
-    userEvent.mousePress(screen.getAllByRole('button', { name: 'Expand' })[0]);
+    fireUserEvent.mousePress(screen.getAllByRole('button', { name: 'Expand' })[0]);
 
     const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
     virtualScroller.scrollTop = 500;

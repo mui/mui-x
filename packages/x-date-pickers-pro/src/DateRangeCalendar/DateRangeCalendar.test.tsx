@@ -6,7 +6,7 @@ import {
   fireEvent,
   getByRole as rtlGetByRole,
   fireTouchChangedEvent,
-  userEvent,
+  fireUserEvent,
 } from '@mui/internal-test-utils';
 import {
   adapterToUse,
@@ -540,7 +540,7 @@ describe('<DateRangeCalendar />', () => {
       );
 
       const renderCountBeforeChange = RenderCount.callCount;
-      await userEvent.mousePress(getPickerDay('2'));
+      fireUserEvent.mousePress(getPickerDay('2'));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
     });
 
@@ -555,10 +555,10 @@ describe('<DateRangeCalendar />', () => {
         />,
       );
 
-      await userEvent.mousePress(getPickerDay('2'));
+      fireUserEvent.mousePress(getPickerDay('2'));
 
       const renderCountBeforeChange = RenderCount.callCount;
-      await userEvent.mousePress(getPickerDay('4'));
+      fireUserEvent.mousePress(getPickerDay('4'));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
     });
   });

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { act, userEvent, fireEvent } from '@mui/internal-test-utils';
+import { act, fireUserEvent, fireEvent } from '@mui/internal-test-utils';
 import {
   expectFieldValueV7,
   getTextbox,
@@ -224,7 +224,7 @@ describe('<DateField /> - Editing', () => {
       view.pressKey(0, 'j');
       expectFieldValueV7(view.getSectionsContainer(), 'January YYYY');
 
-      userEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
+      fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
       expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY');
 
       view.unmount();
@@ -244,7 +244,7 @@ describe('<DateField /> - Editing', () => {
       }); // press "j"
       expectFieldValueV6(input, 'January YYYY');
 
-      userEvent.keyPress(input, { key: 'Delete' });
+      fireUserEvent.keyPress(input, { key: 'Delete' });
       expectFieldValueV6(input, 'MMMM YYYY');
     });
 
@@ -270,7 +270,7 @@ describe('<DateField /> - Editing', () => {
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
 
-      userEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
+      fireUserEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
       expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY');
 
       view.unmount();
@@ -286,9 +286,9 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
 
-      userEvent.keyPress(input, { key: 'Delete' });
+      fireUserEvent.keyPress(input, { key: 'Delete' });
       expectFieldValueV6(input, 'MMMM YYYY');
     });
 
@@ -308,7 +308,7 @@ describe('<DateField /> - Editing', () => {
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
 
-      userEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
+      fireUserEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
       expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY');
 
       view.unmount();
@@ -329,9 +329,9 @@ describe('<DateField /> - Editing', () => {
       expectFieldValueV6(input, 'January YYYY');
 
       // Select all sections
-      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
 
-      userEvent.keyPress(input, { key: 'Delete' });
+      fireUserEvent.keyPress(input, { key: 'Delete' });
       expectFieldValueV6(input, 'MMMM YYYY');
     });
 
@@ -347,7 +347,7 @@ describe('<DateField /> - Editing', () => {
       view.pressKey(0, '2');
       expectFieldValueV7(view.getSectionsContainer(), '0002');
 
-      userEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
+      fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
       expectFieldValueV7(view.getSectionsContainer(), 'YYYY');
 
       view.pressKey(0, '2');
@@ -367,7 +367,7 @@ describe('<DateField /> - Editing', () => {
       fireEvent.change(input, { target: { value: '2' } }); // press "2"
       expectFieldValueV6(input, '0002');
 
-      userEvent.keyPress(input, { key: 'Delete' });
+      fireUserEvent.keyPress(input, { key: 'Delete' });
       expectFieldValueV6(input, 'YYYY');
 
       fireEvent.change(input, { target: { value: '2' } }); // press "2"
@@ -399,7 +399,7 @@ describe('<DateField /> - Editing', () => {
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
 
-      userEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
+      fireUserEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(0);
 
       view.unmount();
@@ -417,9 +417,9 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
 
-      userEvent.keyPress(input, { key: 'Delete' });
+      fireUserEvent.keyPress(input, { key: 'Delete' });
       expect(onChangeV6.callCount).to.equal(0);
     });
 
@@ -436,13 +436,13 @@ describe('<DateField /> - Editing', () => {
 
       view.selectSection('month');
 
-      userEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
+      fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(1);
       expect(onChangeV7.lastCall.args[1].validationError).to.equal('invalidDate');
 
       fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
 
-      userEvent.keyPress(view.getActiveSection(1), { key: 'Delete' });
+      fireUserEvent.keyPress(view.getActiveSection(1), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(2);
       expect(onChangeV7.lastCall.firstArg).to.equal(null);
       expect(onChangeV7.lastCall.args[1].validationError).to.equal(null);
@@ -462,13 +462,13 @@ describe('<DateField /> - Editing', () => {
       const input = getTextbox();
       view.selectSection('month');
 
-      userEvent.keyPress(input, { key: 'Delete' });
+      fireUserEvent.keyPress(input, { key: 'Delete' });
       expect(onChangeV6.callCount).to.equal(1);
       expect(onChangeV6.lastCall.args[1].validationError).to.equal('invalidDate');
 
-      userEvent.keyPress(input, { key: 'ArrowRight' });
+      fireUserEvent.keyPress(input, { key: 'ArrowRight' });
 
-      userEvent.keyPress(input, { key: 'Delete' });
+      fireUserEvent.keyPress(input, { key: 'Delete' });
       expect(onChangeV6.callCount).to.equal(2);
       expect(onChangeV6.lastCall.firstArg).to.equal(null);
       expect(onChangeV6.lastCall.args[1].validationError).to.equal(null);
@@ -487,10 +487,10 @@ describe('<DateField /> - Editing', () => {
 
       view.selectSection('month');
 
-      userEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
+      fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(1);
 
-      userEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
+      fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(1);
 
       view.unmount();
@@ -508,10 +508,10 @@ describe('<DateField /> - Editing', () => {
       const input = getTextbox();
       view.selectSection('month');
 
-      userEvent.keyPress(input, { key: 'Delete' });
+      fireUserEvent.keyPress(input, { key: 'Delete' });
       expect(onChangeV6.callCount).to.equal(1);
 
-      userEvent.keyPress(input, { key: 'Delete' });
+      fireUserEvent.keyPress(input, { key: 'Delete' });
       expect(onChangeV6.callCount).to.equal(1);
     });
   });
@@ -775,7 +775,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       // digit key press
-      userEvent.keyPress(view.getActiveSection(0), { key: '2' });
+      fireUserEvent.keyPress(view.getActiveSection(0), { key: '2' });
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
 
       view.unmount();
@@ -1338,7 +1338,7 @@ describe('<DateField /> - Editing', () => {
         expect(onChangeV6.callCount).to.equal(1);
         expect(onChangeV6.lastCall.args[1].validationError).to.equal('invalidDate');
 
-        userEvent.keyPress(input, { key: 'ArrowRight' });
+        fireUserEvent.keyPress(input, { key: 'ArrowRight' });
 
         fireEvent.change(input, { target: { value: 'MMMM ' } });
         expect(onChangeV6.callCount).to.equal(2);
@@ -1448,7 +1448,7 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
 
       firePasteEventV6(input, '09/16/2022');
 
@@ -1484,7 +1484,7 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
 
       firePasteEventV6(input, '09/16/2022');
 
@@ -1518,7 +1518,7 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
 
       firePasteEventV6(input, 'Some invalid content');
       expectFieldValueV6(input, 'MM/DD/YYYY');
@@ -1557,7 +1557,7 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('year');
 
       // Select all sections
-      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
 
       firePasteEventV6(input, `Escaped 2014`);
       expect(onChangeV6.callCount).to.equal(1);
@@ -1597,7 +1597,7 @@ describe('<DateField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
 
       firePasteEventV6(input, '09/16/2022');
       expect(onChangeV6.callCount).to.equal(0);
@@ -1864,7 +1864,7 @@ describe('<DateField /> - Editing', () => {
         });
         const input = getTextbox();
         view.selectSection('year');
-        userEvent.keyPress(input, { key: 'ArrowDown' });
+        fireUserEvent.keyPress(input, { key: 'ArrowDown' });
         expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
       });
 
@@ -1914,9 +1914,9 @@ describe('<DateField /> - Editing', () => {
 
         const input = getTextbox();
         view.selectSection('month');
-        userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+        fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
         fireEvent.change(input, { target: { value: '' } });
-        userEvent.keyPress(input, { key: 'ArrowLeft' });
+        fireUserEvent.keyPress(input, { key: 'ArrowLeft' });
 
         fireEvent.change(input, { target: { value: '1/DD/YYYY' } }); // Press "1"
         expectFieldValueV6(input, '01/DD/YYYY');
@@ -1966,7 +1966,7 @@ describe('<DateField /> - Editing', () => {
 
         const input = getTextbox();
         view.selectSection('year');
-        userEvent.keyPress(input, { key: 'ArrowDown' });
+        fireUserEvent.keyPress(input, { key: 'ArrowDown' });
 
         expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
       });
@@ -1983,7 +1983,7 @@ describe('<DateField /> - Editing', () => {
         });
 
         view.selectSection('month');
-        userEvent.keyPress(view.getActiveSection(0), { key: 'ArrowDown' });
+        fireUserEvent.keyPress(view.getActiveSection(0), { key: 'ArrowDown' });
         expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2010, 2, 3, 3, 3, 3));
 
         view.unmount();
@@ -2000,7 +2000,7 @@ describe('<DateField /> - Editing', () => {
 
         view.selectSection('month');
         const input = getTextbox();
-        userEvent.keyPress(input, { key: 'ArrowDown' });
+        fireUserEvent.keyPress(input, { key: 'ArrowDown' });
         expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2010, 2, 3, 3, 3, 3));
       });
     },
@@ -2280,7 +2280,7 @@ describe('<DateField /> - Editing', () => {
       const input = getTextbox();
 
       // Select all sections
-      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      fireUserEvent.keyPress(input, { key: 'a', ctrlKey: true });
 
       // When all sections are selected, the value only contains the key pressed
       fireEvent.change(input, { target: { value: '9' } });

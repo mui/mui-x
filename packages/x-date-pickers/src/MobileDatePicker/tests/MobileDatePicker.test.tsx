@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, screen, userEvent } from '@mui/internal-test-utils';
+import { fireEvent, screen, fireUserEvent } from '@mui/internal-test-utils';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
@@ -155,7 +155,7 @@ describe('<MobileDatePicker />', () => {
 
       render(<MobileDatePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
 
-      userEvent.mousePress(getFieldSectionsContainer());
+      fireUserEvent.mousePress(getFieldSectionsContainer());
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();

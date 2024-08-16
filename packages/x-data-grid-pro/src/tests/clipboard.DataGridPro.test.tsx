@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
-import { createRenderer, fireEvent, act, userEvent } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act, fireUserEvent } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { SinonSpy, spy } from 'sinon';
 import { getCell } from 'test/utils/helperFn';
@@ -53,7 +53,7 @@ describe('<DataGridPro /> - Clipboard', () => {
 
         act(() => apiRef.current.selectRows([0, 1]));
         const cell = getCell(0, 0);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'c', keyCode: 67, [key]: true });
         expect(writeText.firstCall.args[0]).to.equal(['0\tNike', '1\tAdidas'].join('\r\n'));
       });
@@ -72,7 +72,7 @@ describe('<DataGridPro /> - Clipboard', () => {
 
       const cell = getCell(0, 0);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
 
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
       expect(writeText.lastCall.firstArg).to.equal('1 " 1');
@@ -94,7 +94,7 @@ describe('<DataGridPro /> - Clipboard', () => {
 
       act(() => apiRef.current.selectRows([0, 1]));
       const cell = getCell(0, 0);
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
       expect(writeText.firstCall.args[0]).to.equal(['1 " 1', '2'].join('\r\n'));
     });

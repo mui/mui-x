@@ -16,7 +16,7 @@ import {
   fireEvent,
   screen,
   act,
-  userEvent,
+  fireUserEvent,
   waitFor,
 } from '@mui/internal-test-utils';
 import {
@@ -368,7 +368,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       expect(isRowPinned(getRowById(1), 'top')).to.equal(true, '#1 pinned top');
       expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
 
-      userEvent.mousePress(getCell(0, 0));
+      fireUserEvent.mousePress(getCell(0, 0));
       // first top pinned row
       expect(getActiveCellRowId()).to.equal('1');
 
@@ -410,7 +410,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       expect(isRowPinned(getRowById(0), 'bottom')).to.equal(true, '#0 pinned top');
       expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned top');
 
-      userEvent.mousePress(getCell(0, 0));
+      fireUserEvent.mousePress(getCell(0, 0));
       expect(getActiveCellRowId()).to.equal('2');
 
       fireEvent.keyDown(getCell(0, 0), { key: 'ArrowDown' });
@@ -462,7 +462,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       expect(isRowPinned(getRowById(0), 'bottom')).to.equal(true, '#0 pinned bottom');
 
       // top-pinned row
-      userEvent.mousePress(getCell(0, 3));
+      fireUserEvent.mousePress(getCell(0, 3));
       expect(getActiveCell()).to.equal('0-3');
       expect(getActiveCellRowId()).to.equal('1');
 

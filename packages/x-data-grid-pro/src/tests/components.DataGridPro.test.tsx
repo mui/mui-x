@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, EventType, fireEvent, userEvent } from '@mui/internal-test-utils';
+import { createRenderer, EventType, fireEvent, fireUserEvent } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -86,7 +86,7 @@ describe('<DataGridPro/> - Components', () => {
       expect(propHandler.callCount).to.equal(0);
       expect(eventHandler.callCount).to.equal(0);
 
-      userEvent.mousePress(getCell(0, 0));
+      fireUserEvent.mousePress(getCell(0, 0));
       fireEvent.keyDown(getCell(0, 0));
 
       expect(propHandler.callCount).to.equal(1);

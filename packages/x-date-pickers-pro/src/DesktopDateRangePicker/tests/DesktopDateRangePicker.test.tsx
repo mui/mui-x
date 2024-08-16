@@ -4,12 +4,12 @@ import { spy } from 'sinon';
 import {
   screen,
   fireEvent,
-  userEvent,
-  act, 
+  fireUserEvent,
+  act,
   getByRole as rtlGetByRole,
 } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Localization Provider } from '@mui/x-date-pickers/LocalizationProvider';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
@@ -250,13 +250,13 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the start date
-      userEvent.mousePress(getPickerDay('3'));
+      fireUserEvent.mousePress(getPickerDay('3'));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
 
       // Change the end date
-      userEvent.mousePress(getPickerDay('5'));
+      fireUserEvent.mousePress(getPickerDay('5'));
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
@@ -293,7 +293,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the end date
-      userEvent.mousePress(getPickerDay('3'));
+      fireUserEvent.mousePress(getPickerDay('3'));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
@@ -324,7 +324,7 @@ describe('<DesktopDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
 
       // Change the end date
-      userEvent.mousePress(getPickerDay('3'));
+      fireUserEvent.mousePress(getPickerDay('3'));
 
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -352,7 +352,7 @@ describe('<DesktopDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Change the start date (already tested)
-      userEvent.mousePress(getPickerDay('3'));
+      fireUserEvent.mousePress(getPickerDay('3'));
 
       // Dismiss the picker
       // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target -- don't care
@@ -423,7 +423,7 @@ describe('<DesktopDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Change the start date (already tested)
-      userEvent.mousePress(getPickerDay('3'));
+      fireUserEvent.mousePress(getPickerDay('3'));
       clock.runToLast();
 
       // Dismiss the picker
@@ -459,7 +459,7 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Dismiss the picker
-      userEvent.mousePress(document.body);
+      fireUserEvent.mousePress(document.body);
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -527,7 +527,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(screen.getByRole('tooltip')).toBeVisible();
 
       // Change the start date (already tested)
-      userEvent.mousePress(getPickerDay('3'));
+      fireUserEvent.mousePress(getPickerDay('3'));
       clock.runToLast();
 
       act(() => {
@@ -565,7 +565,7 @@ describe('<DesktopDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Clear the date
-      userEvent.mousePress(screen.getByText(/clear/i));
+      fireUserEvent.mousePress(screen.getByText(/clear/i));
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onChange.lastCall.args[0]).to.deep.equal([null, null]);
       expect(onAccept.callCount).to.equal(1);
@@ -592,7 +592,7 @@ describe('<DesktopDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Clear the date
-      userEvent.mousePress(screen.getByText(/clear/i));
+      fireUserEvent.mousePress(screen.getByText(/clear/i));
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
