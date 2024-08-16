@@ -3,8 +3,9 @@ import {
   gridFilterModelSelector,
   gridSortModelSelector,
   gridPaginationModelSelector,
+  GridRowId,
 } from '@mui/x-data-grid';
-import { createSelector } from '@mui/x-data-grid/internals';
+import { createSelector, createArgumentsSelector } from '@mui/x-data-grid/internals';
 import { GridStatePro } from '../../../models/gridStatePro';
 
 const computeStartEnd = (paginationModel: GridPaginationModel) => {
@@ -37,7 +38,17 @@ export const gridDataSourceLoadingSelector = createSelector(
   (dataSource) => dataSource.loading,
 );
 
+export const gridDataSourceLoadingIdSelector = createArgumentsSelector<GridRowId>()(
+  gridDataSourceStateSelector,
+  (dataSource, id) => dataSource.loading[id] ?? false,
+);
+
 export const gridDataSourceErrorsSelector = createSelector(
   gridDataSourceStateSelector,
   (dataSource) => dataSource.errors,
+);
+
+export const gridDataSourceErrorSelector = createArgumentsSelector<GridRowId>()(
+  gridDataSourceStateSelector,
+  (dataSource, id) => dataSource.errors[id],
 );
