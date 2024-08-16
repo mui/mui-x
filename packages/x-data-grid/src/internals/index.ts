@@ -141,7 +141,6 @@ export {
 } from '../hooks/features/listView/useGridListView';
 
 export { useTimeout } from '../hooks/utils/useTimeout';
-export { throttle } from '../utils/throttle';
 export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
