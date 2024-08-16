@@ -74,6 +74,7 @@ Same changes as in `@mui/x-charts@7.13.0`.
 - [docs] Extract dataset in the Line chart docs (#14034) @alexfauquette
 - [docs] Remove redundant encoding in the mock data source server (#14185) @MBilalShafi
 - [docs] Use Netflix financial results to document bar charts (#13991) @alexfauquette
+- [docs] Remove relience of abbreviations (#14226) @oliviertassinari
 
 ### Core
 
