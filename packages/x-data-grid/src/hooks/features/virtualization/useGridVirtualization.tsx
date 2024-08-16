@@ -5,7 +5,7 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 
-type RootProps = Pick<DataGridProcessedProps, 'disableVirtualization'>;
+type RootProps = Pick<DataGridProcessedProps, 'disableVirtualization' | 'autoHeight'>;
 
 export type GridVirtualizationState = {
   enabled: boolean;
@@ -22,7 +22,7 @@ export const EMPTY_RENDER_CONTEXT = {
 
 export const virtualizationStateInitializer: GridStateInitializer<RootProps> = (state, props) => {
   const virtualization = {
-    enabled: !props.disableVirtualization,
+    enabled: !props.disableVirtualization && !props.autoHeight,
     enabledForColumns: true,
     renderContext: EMPTY_RENDER_CONTEXT,
   };
@@ -74,7 +74,7 @@ export function useGridVirtualization(
 
   /* eslint-disable react-hooks/exhaustive-deps */
   React.useEffect(() => {
-    setVirtualization(!props.disableVirtualization);
-  }, [props.disableVirtualization]);
+    setVirtualization(!props.disableVirtualization && !props.autoHeight);
+  }, [props.disableVirtualization, props.autoHeight]);
   /* eslint-enable react-hooks/exhaustive-deps */
 }
