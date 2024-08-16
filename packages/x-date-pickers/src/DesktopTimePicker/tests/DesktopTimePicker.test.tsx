@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, fireUserEvent } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { createPickerRenderer, openPicker } from 'test/utils/pickers';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DesktopTimePicker />', () => {
   const { render } = createPickerRenderer({

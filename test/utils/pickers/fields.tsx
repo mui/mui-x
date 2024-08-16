@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { createRenderer, screen, fireUserEvent, act, fireEvent } from '@mui/internal-test-utils';
+import { createRenderer, screen, act, fireEvent } from '@mui/internal-test-utils';
 import { FieldRef, FieldSection, FieldSectionType } from '@mui/x-date-pickers/models';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
+import { fireUserEvent } from '../fireUserEvent';
 import { expectFieldValueV7, expectFieldValueV6 } from './assertions';
 
 export const getTextbox = (): HTMLInputElement => screen.getByRole('textbox');

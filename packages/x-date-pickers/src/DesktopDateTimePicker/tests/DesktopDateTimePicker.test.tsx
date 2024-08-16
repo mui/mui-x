@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, fireUserEvent } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DesktopDateTimePicker />', () => {
   const { render } = createPickerRenderer({

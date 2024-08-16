@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, fireUserEvent } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import {
   getAllFieldInputRoot,
@@ -9,6 +9,7 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
+import { fireUserEvent } from '../../fireUserEvent';
 
 export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
   ElementToTest,

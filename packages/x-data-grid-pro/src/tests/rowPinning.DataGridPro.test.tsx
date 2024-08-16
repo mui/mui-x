@@ -11,14 +11,7 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  act,
-  fireUserEvent,
-  waitFor,
-} from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import {
   $,
   grid,
@@ -30,6 +23,7 @@ import {
   getRows,
   microtasks,
 } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

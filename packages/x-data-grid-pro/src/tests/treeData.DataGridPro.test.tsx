@@ -1,4 +1,4 @@
-import { createRenderer, fireEvent, screen, act, fireUserEvent } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import {
   getCell,
   getColumnHeaderCell,
@@ -6,6 +6,7 @@ import {
   getColumnValues,
   getRow,
 } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';

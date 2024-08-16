@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, within, fireUserEvent } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGrid, gridClasses, GridColDef } from '@mui/x-data-grid';
 import { getCell, getActiveCell, getColumnHeaderCell } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

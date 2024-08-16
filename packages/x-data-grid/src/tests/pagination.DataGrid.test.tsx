@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { spy, stub, SinonStub, SinonSpy } from 'sinon';
 import { expect } from 'chai';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  fireUserEvent,
-  waitFor,
-} from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -19,6 +13,7 @@ import {
 } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

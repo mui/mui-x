@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import {
-  screen,
-  fireEvent,
-  fireUserEvent,
-  act,
-  getByRole as rtlGetByRole,
-} from '@mui/internal-test-utils';
+import { screen, fireEvent, act, getByRole as rtlGetByRole } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
@@ -21,6 +15,7 @@ import {
   getFieldSectionsContainer,
   getTextbox,
 } from 'test/utils/pickers';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

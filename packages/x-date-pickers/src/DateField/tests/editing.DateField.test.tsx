@@ -1,13 +1,14 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { act, fireUserEvent, fireEvent } from '@mui/internal-test-utils';
+import { act, fireEvent } from '@mui/internal-test-utils';
 import {
   expectFieldValueV7,
   getTextbox,
   describeAdapters,
   expectFieldValueV6,
 } from 'test/utils/pickers';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DateField /> - Editing', () => {
   describeAdapters('key: ArrowDown', DateField, ({ adapter, testFieldKeyPress }) => {

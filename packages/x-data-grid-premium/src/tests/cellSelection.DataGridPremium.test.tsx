@@ -2,7 +2,7 @@ import * as React from 'react';
 import { stub, SinonStub } from 'sinon';
 import { expect } from 'chai';
 import { spyApi, getCell, grid } from 'test/utils/helperFn';
-import { createRenderer, fireEvent, act, fireUserEvent, screen } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act, screen } from '@mui/internal-test-utils';
 import {
   DataGridPremium,
   DataGridPremiumProps,
@@ -11,6 +11,7 @@ import {
   gridClasses,
 } from '@mui/x-data-grid-premium';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DataGridPremium /> - Cell selection', () => {
   const { render } = createRenderer();

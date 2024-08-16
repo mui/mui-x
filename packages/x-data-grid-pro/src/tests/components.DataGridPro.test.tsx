@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, EventType, fireEvent, fireUserEvent } from '@mui/internal-test-utils';
+import { createRenderer, EventType, fireEvent } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -11,6 +11,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getRow } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DataGridPro/> - Components', () => {
   const { render } = createRenderer();

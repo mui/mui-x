@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, fireUserEvent, fireEvent, fireTouchChangedEvent } from '@mui/internal-test-utils';
+import { screen, fireEvent, fireTouchChangedEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -13,6 +13,7 @@ import {
 } from 'test/utils/pickers';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<MobileDateTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({

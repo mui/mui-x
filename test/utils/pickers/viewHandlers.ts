@@ -1,7 +1,8 @@
-import { fireTouchChangedEvent, fireUserEvent, screen } from '@mui/internal-test-utils';
+import { fireTouchChangedEvent, screen } from '@mui/internal-test-utils';
 import { getClockTouchEvent, formatFullTimeValue } from 'test/utils/pickers';
 import { MuiPickersAdapter, TimeView } from '@mui/x-date-pickers/models';
 import { formatMeridiem } from '@mui/x-date-pickers/internals';
+import { fireUserEvent } from '../fireUserEvent';
 
 type TDate = any;
 

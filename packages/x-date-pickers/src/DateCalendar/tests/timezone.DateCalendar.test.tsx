@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { fireUserEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { describeAdapters } from 'test/utils/pickers';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];

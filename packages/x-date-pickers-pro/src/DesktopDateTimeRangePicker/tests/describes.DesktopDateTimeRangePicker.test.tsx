@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describeConformance, screen, fireUserEvent } from '@mui/internal-test-utils';
+import { describeConformance, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -9,6 +9,7 @@ import {
   describeRangeValidation,
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
 
 describe('<DesktopDateTimeRangePicker /> - Describes', () => {

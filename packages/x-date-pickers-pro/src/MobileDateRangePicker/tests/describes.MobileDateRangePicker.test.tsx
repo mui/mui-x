@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, fireUserEvent, fireDiscreteEvent } from '@mui/internal-test-utils';
+import { screen, fireDiscreteEvent } from '@mui/internal-test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import {
   adapterToUse,
@@ -12,6 +12,7 @@ import {
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<MobileDateRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({

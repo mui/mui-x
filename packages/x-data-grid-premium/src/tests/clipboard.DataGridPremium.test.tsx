@@ -6,10 +6,11 @@ import {
   DataGridPremiumProps,
   GridColDef,
 } from '@mui/x-data-grid-premium';
-import { createRenderer, fireEvent, fireUserEvent, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { SinonSpy, spy, stub, SinonStub } from 'sinon';
 import { getCell, getColumnValues, sleep } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
 describe('<DataGridPremium /> - Clipboard', () => {

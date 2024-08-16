@@ -11,15 +11,9 @@ import {
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  waitFor,
-  act,
-  fireUserEvent,
-} from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/internal-test-utils';
 import { $, $$, grid, getRow, getCell, getColumnValues, microtasks } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

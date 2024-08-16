@@ -4,7 +4,6 @@ import {
   fireEvent,
   screen,
   act,
-  fireUserEvent,
   ErrorBoundary,
   waitFor,
 } from '@mui/internal-test-utils';
@@ -33,6 +32,7 @@ import {
   getCell,
   microtasks,
 } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import Dialog from '@mui/material/Dialog';
 
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';

@@ -6,7 +6,6 @@ import {
   fireEvent,
   getByRole as rtlGetByRole,
   fireTouchChangedEvent,
-  fireUserEvent,
 } from '@mui/internal-test-utils';
 import {
   adapterToUse,
@@ -21,6 +20,7 @@ import {
 } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>

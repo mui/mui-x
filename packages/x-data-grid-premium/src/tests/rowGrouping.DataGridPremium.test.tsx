@@ -1,12 +1,5 @@
 import * as React from 'react';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  act,
-  fireUserEvent,
-  waitFor,
-} from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import {
   microtasks,
   getColumnHeaderCell,
@@ -16,6 +9,7 @@ import {
   getSelectByName,
   getRow,
 } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { expect } from 'chai';
 import {
   DataGridPremium,
