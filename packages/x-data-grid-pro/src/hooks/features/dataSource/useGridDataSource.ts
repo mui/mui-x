@@ -92,23 +92,19 @@ export const useGridDataSource = (
   );
 
   // Adjust the render context range to fit the pagination model's page size
-  // First row index should be decreased to the start of the page, end row index should be increased to the end of the page or the last row
+  // First row index should be decreased to the start of the page, end row index should be increased to the end of the page
   const adjustRowParams = React.useCallback(
     (params: Pick<GridGetRowsParams, 'start' | 'end'>) => {
       if (typeof params.start !== 'number') {
         return params;
       }
 
-      const rowCount = apiRef.current.state.pagination.rowCount;
       return {
         start: params.start - (params.start % paginationModel.pageSize),
-        end: Math.min(
-          params.end + paginationModel.pageSize - (params.end % paginationModel.pageSize) - 1,
-          rowCount - 1,
-        ),
+        end: params.end + paginationModel.pageSize - (params.end % paginationModel.pageSize) - 1,
       };
     },
-    [apiRef, paginationModel],
+    [paginationModel],
   );
 
   const fetchRows = React.useCallback(
@@ -143,7 +139,7 @@ export const useGridDataSource = (
         if (cachedData.rowCount !== undefined) {
           apiRef.current.setRowCount(cachedData.rowCount);
         }
-        if (isLazyLoaded) {
+        if (isLazyLoaded && !!cachedData.rowCount) {
           apiRef.current.unstable_replaceRows(startingIndex, rows);
         } else {
           apiRef.current.setRows(rows);
@@ -165,7 +161,7 @@ export const useGridDataSource = (
         if (getRowsResponse.rowCount !== undefined) {
           apiRef.current.setRowCount(getRowsResponse.rowCount);
         }
-        if (isLazyLoaded) {
+        if (isLazyLoaded && !!getRowsResponse.rowCount) {
           apiRef.current.unstable_replaceRows(startingIndex, getRowsResponse.rows);
         } else {
           apiRef.current.setRows(getRowsResponse.rows);
