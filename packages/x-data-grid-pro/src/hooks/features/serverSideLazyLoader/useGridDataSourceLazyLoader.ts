@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { throttle } from '@mui/x-internals/throttle';
 import {
   useGridApiEventHandler,
   useGridSelector,
@@ -14,7 +15,6 @@ import {
   getVisibleRows,
   GridGetRowsParams,
   gridRenderContextSelector,
-  throttle,
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -143,7 +143,7 @@ export const useGridDataSourceLazyLoader = (
   );
 
   const throttledHandleRenderedRowsIntervalChange = React.useMemo(
-    () => throttle(handleRenderedRowsIntervalChange, 300), // TODO: make it configurable
+    () => throttle(handleRenderedRowsIntervalChange, 500), // TODO: make it configurable
     [handleRenderedRowsIntervalChange],
   );
 
@@ -157,8 +157,6 @@ export const useGridDataSourceLazyLoader = (
       // replace all rows with skeletons to maintain the same scroll position
       privateApiRef.current.setRows([]);
       addSkeletonRows();
-
-      renderedRowsIntervalCache.current = INTERVAL_CACHE_INITIAL_STATE;
 
       const getRowsParams: GridGetRowsParams = {
         start: renderContext.firstRowIndex,
