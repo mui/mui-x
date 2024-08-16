@@ -72,11 +72,16 @@ export interface LegendPerItemProps
   padding?: number | Partial<CardinalDirections<number>>;
   /**
    * Callback fired when a legend item is clicked.
-   * @param {LegendItemParams} legend The legend item data.
-   * @param {number} dataIndex The index of the clicked legend item.
+   * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
+   * @param {LegendItemParams} legendItem The legend item data.
+   * @param {number} index The index of the clicked legend item.
    * @default undefined
    */
-  onClick?: (legend: LegendItemParams, dataIndex: number) => void;
+  onItemClick?: (
+    event: React.MouseEvent<SVGRectElement, MouseEvent>,
+    legendItem: LegendItemParams,
+    index: number,
+  ) => void;
 }
 
 /**
@@ -118,7 +123,7 @@ export function LegendPerItem(props: LegendPerItemProps) {
     itemGap = 10,
     padding: paddingProps = 10,
     labelStyle: inLabelStyle,
-    onClick,
+    onItemClick,
   } = props;
   const theme = useTheme();
   const drawingArea = useDrawingArea();
@@ -218,7 +223,7 @@ export function LegendPerItem(props: LegendPerItemProps) {
             markGap={markGap}
             labelStyle={labelStyle}
             classes={classes}
-            onClick={onClick}
+            onItemClick={onItemClick}
           />
         ))}
       </ChartsLegendRoot>

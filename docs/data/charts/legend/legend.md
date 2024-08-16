@@ -111,3 +111,17 @@ labelFormatter = ({ min, max, formattedMin, formattedMax }) => string | null;
 ```
 
 {{"demo": "PiecewiseInteractiveDemoNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+
+## Click event
+
+You can pass an `onItemClick` function to the `ChartsLegend` or `PiecewiseColorLegend` components to handle click events.
+
+They both provide the following signature.
+
+```js
+const clickHandler = (
+  event, // The mouse event.
+  params, // An object that identifies the clicked item.
+  index, // The index of the clicked item.
+) => {};
+```
