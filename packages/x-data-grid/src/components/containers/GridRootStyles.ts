@@ -451,10 +451,6 @@ export const GridRootStyles = styled('div', {
 
       '--rowBorderColor': 'var(--DataGrid-rowBorderColor)',
 
-      [`&.${c['row--firstVisible']}`]: {
-        '--rowBorderColor': 'transparent',
-      },
-
       '&:hover': {
         backgroundColor: (t.vars || t).palette.action.hover,
         // Reset on touch devices, it doesn't add specificity

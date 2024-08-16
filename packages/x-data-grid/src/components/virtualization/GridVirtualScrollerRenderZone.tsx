@@ -52,6 +52,11 @@ const GridVirtualScrollerRenderZone = React.forwardRef<
       className={clsx(classes.root, className)}
       ownerState={rootProps}
       style={{
+        /**
+         * We need to set the margin to -1px to prevent a double border with the header section
+         * @see: https://github.com/mui/mui-x/issues/14195
+         */
+        marginTop: '-1px',
         transform: `translate3d(0, ${offsetTop}px, 0)`,
       }}
       {...other}
