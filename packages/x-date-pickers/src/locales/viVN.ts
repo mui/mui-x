@@ -25,10 +25,10 @@ const viVNPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Bắt đầu',
   end: 'Kết thúc',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Ngày bắt đầu',
+  startTime: 'Thời gian bắt đầu',
+  endDate: 'Ngày kết thúc',
+  endTime: 'Thời gian kết thúc',
 
   // Action bar
   cancelButtonLabel: 'Hủy',
@@ -67,7 +67,7 @@ const viVNPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `Chọn giờ, giờ đã chọn là ${utils.format(value, 'fullTime')}`
       : 'Chọn giờ',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: 'Xóa giá trị',
 
   // Table labels
   timeTableLabel: 'chọn giờ',
@@ -84,17 +84,17 @@ const viVNPickers: Partial<PickersLocaleText<any>> = {
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'Năm',
+  month: 'Tháng',
+  day: 'Ngày',
+  weekDay: 'Thứ',
+  hours: 'Giờ',
+  minutes: 'Phút',
+  seconds: 'Giây',
+  meridiem: 'Buổi',
 
   // Common
-  // empty: 'Empty',
+  empty: 'Trống',
 };
 
 export const viVN = getPickersLocalization(viVNPickers);
