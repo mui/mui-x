@@ -294,20 +294,20 @@ export const loadServerRows = (
     lastRowIndex = lastRowToRender;
   } else if (!pageSize) {
     firstRowIndex = 0;
-    lastRowIndex = filteredRows.length;
+    lastRowIndex = filteredRows.length - 1;
   } else if (useCursorPagination) {
     firstRowIndex = cursor ? filteredRows.findIndex(({ id }) => id === cursor) : 0;
     firstRowIndex = Math.max(firstRowIndex, 0); // if cursor not found return 0
-    lastRowIndex = firstRowIndex + pageSize;
+    lastRowIndex = firstRowIndex + pageSize - 1;
 
-    nextCursor = lastRowIndex >= filteredRows.length ? undefined : filteredRows[lastRowIndex].id;
+    nextCursor = filteredRows[lastRowIndex + 1]?.id;
   } else {
     firstRowIndex = page * pageSize;
-    lastRowIndex = (page + 1) * pageSize;
+    lastRowIndex = (page + 1) * pageSize - 1;
   }
   const hasNextPage = lastRowIndex < filteredRows.length - 1;
   const response: FakeServerResponse = {
-    returnedRows: filteredRows.slice(firstRowIndex, lastRowIndex),
+    returnedRows: filteredRows.slice(firstRowIndex, lastRowIndex + 1),
     hasNextPage,
     nextCursor,
     totalRowCount,
