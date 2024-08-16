@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 7.13.0
 
-_Aug 15, 2024_
+_Aug 16, 2024_
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
