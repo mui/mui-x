@@ -19,8 +19,6 @@ const GridFooterCellRoot = styled('div', {
 }));
 
 interface GridFooterCellProps extends GridRenderCellParams {
-  // XXX: This is a problem, type is incompatible. Not sure if ignoring the type issue is OK,
-  // or if it highlights a real issue with using the system styled() function.
   sx?: SxProps<Theme>;
 }
 
@@ -59,6 +57,7 @@ function GridFooterCell(props: GridFooterCellProps) {
   const classes = useUtilityClasses(ownerState);
 
   return (
+    // @ts-ignore `@mui/material` system styled() doesn't have a compatible sx prop
     <GridFooterCellRoot ownerState={ownerState} className={classes.root} {...other}>
       {formattedValue}
     </GridFooterCellRoot>
