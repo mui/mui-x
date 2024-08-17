@@ -58,6 +58,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   hideFooterSelectedRowCount: false,
   ignoreDiacritics: false,
   ignoreValueFormatterDuringExport: false,
+  indeterminateCheckboxBehavior: 'select',
   keepColumnPositionIfDraggedOutside: false,
   keepNonExistentRowsSelected: false,
   loading: false,

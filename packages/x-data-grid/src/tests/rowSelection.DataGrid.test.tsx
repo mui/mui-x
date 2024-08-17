@@ -404,6 +404,28 @@ describe('<DataGrid /> - Row selection', () => {
         expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
       });
     });
+
+    describe('prop: indeterminateCheckboxBehavior = "select"', () => {
+      it('should select all the rows when clicking on "Select All" checkbox in indeterminate state', () => {
+        render(<TestDataGridSelection checkboxSelection indeterminateCheckboxBehavior="select" />);
+        const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+        fireEvent.click(screen.getAllByRole('checkbox', { name: /select row/i })[0]);
+        fireEvent.click(selectAllCheckbox);
+        expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+      });
+    });
+
+    describe('prop: indeterminateCheckboxBehavior = "deselect"', () => {
+      it('should deselect all the rows when clicking on "Select All" checkbox in indeterminate state', () => {
+        render(
+          <TestDataGridSelection checkboxSelection indeterminateCheckboxBehavior="deselect" />,
+        );
+        const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+        fireEvent.click(screen.getAllByRole('checkbox', { name: /select row/i })[0]);
+        fireEvent.click(selectAllCheckbox);
+        expect(getSelectedRowIds()).to.deep.equal([]);
+      });
+    });
   });
 
   describe('prop: checkboxSelection = true (multi selection), with keyboard events', () => {
