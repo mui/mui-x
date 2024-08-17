@@ -1,4 +1,4 @@
-import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
+import type { MuiPage } from 'docs/src/MuiPage';
 
 const apiPages: MuiPage[] = [
   {
@@ -131,11 +131,6 @@ const apiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/heatmap',
     title: 'Heatmap',
-    plan: 'pro',
-  },
-  {
-    pathname: '/x/api/charts/heatmap-item',
-    title: 'HeatmapItem',
     plan: 'pro',
   },
   {

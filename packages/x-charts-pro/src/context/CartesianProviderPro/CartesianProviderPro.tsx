@@ -3,21 +3,25 @@ import {
   useDrawingArea,
   useSeries,
   CartesianContext,
-  CartesianContextProviderProps,
+  CartesianProviderProps,
   cartesianProviderUtils,
+  useXExtremumGetter,
+  useYExtremumGetter,
 } from '@mui/x-charts/internals';
 import { useZoom } from '../ZoomProvider/useZoom';
 
 const { computeValue } = cartesianProviderUtils;
 
-export interface CartesianContextProviderProProps extends CartesianContextProviderProps {}
+export interface CartesianProviderProProps extends CartesianProviderProps {}
 
-function CartesianContextProviderPro(props: CartesianContextProviderProProps) {
-  const { xAxis, yAxis, dataset, xExtremumGetters, yExtremumGetters, children } = props;
+function CartesianProviderPro(props: CartesianProviderProProps) {
+  const { xAxis, yAxis, dataset, children } = props;
 
   const formattedSeries = useSeries();
   const drawingArea = useDrawingArea();
   const { zoomData } = useZoom();
+  const xExtremumGetters = useXExtremumGetter();
+  const yExtremumGetters = useYExtremumGetter();
 
   const xValues = React.useMemo(
     () =>
@@ -63,4 +67,4 @@ function CartesianContextProviderPro(props: CartesianContextProviderProProps) {
   return <CartesianContext.Provider value={value}>{children}</CartesianContext.Provider>;
 }
 
-export { CartesianContextProviderPro };
+export { CartesianProviderPro };

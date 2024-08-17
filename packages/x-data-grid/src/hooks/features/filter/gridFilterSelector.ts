@@ -1,10 +1,10 @@
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
+import { GridRowId } from '../../../models/gridRows';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
-import { GridRowId } from '../../../models/gridRows';
 
 /**
  * @category Filtering
@@ -42,6 +42,15 @@ export const gridVisibleRowsLookupSelector = (state: GridStateCommunity) => stat
 export const gridFilteredRowsLookupSelector = createSelector(
   gridFilterStateSelector,
   (filterState) => filterState.filteredRowsLookup,
+);
+
+/**
+ * @category Filtering
+ * @ignore - do not document.
+ */
+export const gridFilteredChildrenCountLookupSelector = createSelector(
+  gridFilterStateSelector,
+  (filterState) => filterState.filteredChildrenCountLookup,
 );
 
 /**
@@ -97,6 +106,7 @@ export const gridFilteredSortedRowIdsSelector = createSelectorMemoized(
   (filteredSortedRowEntries) => filteredSortedRowEntries.map((row) => row.id),
 );
 
+
 /**
  * Get a `Set` containing the ids of the rows accessible after the filtering process.
  * Contains the collapsed children.
@@ -109,6 +119,41 @@ export const gridFilteredSortedRowIdsSetSelector = createSelectorMemoized(
     const filteredSortedRowIdsSetSelector = new Set<GridRowId>();
     filteredSortedRowEntries.map((row) => filteredSortedRowIdsSetSelector.add(row.id));
     return filteredSortedRowIdsSetSelector;
+  },
+);
+
+/**
+ * Get the ids to position in the current tree level lookup of the rows accessible after the filtering process.
+ * Does not contain the collapsed children.
+ * @category Filtering
+ * @ignore - do not document.
+ */
+export const gridExpandedSortedRowTreeLevelPositionLookupSelector = createSelectorMemoized(
+  gridExpandedSortedRowIdsSelector,
+  gridRowTreeSelector,
+  (visibleSortedRowIds, rowTree) => {
+    const depthPositionCounter: Record<number, number> = {};
+    let lastDepth = 0;
+
+    return visibleSortedRowIds.reduce((acc: Record<GridRowId, number>, rowId) => {
+      const rowNode = rowTree[rowId];
+
+      if (!depthPositionCounter[rowNode.depth]) {
+        depthPositionCounter[rowNode.depth] = 0;
+      }
+
+      // going deeper in the tree should reset the counter
+      // since it might have been used in some other branch at the same level, up in the tree
+      // going back up should keep the counter and continue where it left off
+      if (rowNode.depth > lastDepth) {
+        depthPositionCounter[rowNode.depth] = 0;
+      }
+
+      lastDepth = rowNode.depth;
+      depthPositionCounter[rowNode.depth] += 1;
+      acc[rowId] = depthPositionCounter[rowNode.depth];
+      return acc;
+    }, {});
   },
 );
 

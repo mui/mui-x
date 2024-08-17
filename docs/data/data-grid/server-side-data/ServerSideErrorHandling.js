@@ -54,11 +54,9 @@ export default function ServerSideErrorHandling() {
     () => ({
       getRows: async (params) => {
         const urlParams = new URLSearchParams({
-          paginationModel: encodeURIComponent(
-            JSON.stringify(params.paginationModel),
-          ),
-          filterModel: encodeURIComponent(JSON.stringify(params.filterModel)),
-          sortModel: encodeURIComponent(JSON.stringify(params.sortModel)),
+          paginationModel: JSON.stringify(params.paginationModel),
+          filterModel: JSON.stringify(params.filterModel),
+          sortModel: JSON.stringify(params.sortModel),
         });
         const getRowsResponse = await fetchRows(
           `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
@@ -100,7 +98,7 @@ export default function ServerSideErrorHandling() {
           control={
             <Checkbox
               checked={shouldRequestsFail}
-              onChange={(e) => setShouldRequestsFail(e.target.checked)}
+              onChange={(event) => setShouldRequestsFail(event.target.checked)}
             />
           }
           label="Make the requests fail"

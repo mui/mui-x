@@ -1,17 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
-import {
-  SeriesContextProvider,
-  SeriesContextProviderProps,
-} from '../context/SeriesContextProvider';
+import { SeriesProvider, SeriesProviderProps } from '../context/SeriesProvider';
 import { InteractionProvider } from '../context/InteractionProvider';
-import { ColorProvider } from '../context/ColorProvider';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import {
-  CartesianContextProvider,
-  CartesianContextProviderProps,
-} from '../context/CartesianProvider';
+import { CartesianProvider, CartesianProviderProps } from '../context/CartesianProvider';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import {
   HighlightedProvider,
@@ -19,19 +12,19 @@ import {
   ZAxisContextProvider,
   ZAxisContextProviderProps,
 } from '../context';
-import { ChartsPluginType } from '../models/plugin';
-import { ChartSeriesType } from '../models/seriesType/config';
+import { PluginProvider, PluginProviderProps } from '../context/PluginProvider';
 import { useChartContainerProps } from './useChartContainerProps';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
 import { MakeOptional } from '../models/helpers';
 
 export type ChartContainerProps = Omit<
   ChartsSurfaceProps &
-    Omit<SeriesContextProviderProps, 'seriesFormatters'> &
+    Omit<SeriesProviderProps, 'seriesFormatters'> &
     Omit<DrawingProviderProps, 'svgRef'> &
-    Pick<CartesianContextProviderProps, 'dataset'> &
+    Pick<CartesianProviderProps, 'dataset'> &
     ZAxisContextProviderProps &
-    HighlightedProviderProps,
+    HighlightedProviderProps &
+    PluginProviderProps,
   'children'
 > & {
   /**
@@ -47,30 +40,25 @@ export type ChartContainerProps = Omit<
    */
   yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[];
   children?: React.ReactNode;
-  /**
-   * An array of plugins defining how to preprocess data.
-   * If not provided, the container supports line, bar, scatter and pie charts.
-   */
-  plugins?: ChartsPluginType<ChartSeriesType>[];
 };
 
 const ChartContainer = React.forwardRef(function ChartContainer(props: ChartContainerProps, ref) {
   const {
     children,
     drawingProviderProps,
-    colorProviderProps,
-    seriesContextProps,
-    cartesianContextProps,
+    seriesProviderProps,
+    cartesianProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
     chartsSurfaceProps,
+    pluginProviderProps,
   } = useChartContainerProps(props, ref);
 
   return (
     <DrawingProvider {...drawingProviderProps}>
-      <ColorProvider {...colorProviderProps}>
-        <SeriesContextProvider {...seriesContextProps}>
-          <CartesianContextProvider {...cartesianContextProps}>
+      <PluginProvider {...pluginProviderProps}>
+        <SeriesProvider {...seriesProviderProps}>
+          <CartesianProvider {...cartesianProviderProps}>
             <ZAxisContextProvider {...zAxisContextProps}>
               <InteractionProvider>
                 <HighlightedProvider {...highlightedProviderProps}>
@@ -81,9 +69,9 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
                 </HighlightedProvider>
               </InteractionProvider>
             </ZAxisContextProvider>
-          </CartesianContextProvider>
-        </SeriesContextProvider>
-      </ColorProvider>
+          </CartesianProvider>
+        </SeriesProvider>
+      </PluginProvider>
     </DrawingProvider>
   );
 });
@@ -220,6 +208,11 @@ ChartContainer.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -290,6 +283,11 @@ ChartContainer.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),

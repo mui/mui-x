@@ -62,6 +62,7 @@
     "zAxis": { "description": "The configuration of the z-axes." }
   },
   "classDescriptions": {
+    "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the heatmap cells" },
     "faded": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
@@ -72,16 +73,5 @@
       "nodeName": "the cell element",
       "conditions": "highlighted"
     }
-  },
-  "slotDescriptions": {
-    "axisLabel": "Custom component for axis label.",
-    "axisLine": "Custom component for the axis main line.",
-    "axisTick": "Custom component for the axis tick.",
-    "axisTickLabel": "Custom component for tick label.",
-    "cell": "The component that renders the heatmap cell.",
-    "itemContent": "Custom component for displaying tooltip content when triggered by item event.",
-    "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
-    "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
-    "popper": "Custom component for the tooltip popper."
   }
 }
