@@ -133,7 +133,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
       <rootProps.slots.baseCheckbox
         ref={ref}
         indeterminate={isIndeterminate}
-        checked={isChecked && !isIndeterminate}
+        checked={isChecked}
         onChange={handleChange}
         className={classes.root}
         inputProps={{ 'aria-label': label }}
