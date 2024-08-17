@@ -69,6 +69,7 @@ describe('<DataGridPro /> - Row selection', () => {
           initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
           pageSizeOptions={[2]}
+          indeterminateCheckboxBehavior='deselect'
         />,
       );
       fireEvent.click(getCell(0, 0).querySelector('input')!);
@@ -176,6 +177,7 @@ describe('<DataGridPro /> - Row selection', () => {
           pagination
           checkboxSelectionVisibleOnly
           pageSizeOptions={[2]}
+          indeterminateCheckboxBehavior='deselect'
         />,
       );
 
