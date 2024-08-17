@@ -11,6 +11,7 @@ import FormLabel, { formLabelClasses } from '@mui/material/FormLabel';
 import IconButton from '@mui/material/IconButton';
 import Input, { inputClasses } from '@mui/material/Input';
 import MenuItem from '@mui/material/MenuItem';
+import Slider from '@mui/material/Slider';
 
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
@@ -30,11 +31,11 @@ const shallowEqual = (item1: { [k: string]: any }, item2: { [k: string]: any }) 
   return equal;
 };
 
-type DataType<ComponentProps> = {
+type DataType<PropName> = {
   /**
    * Name of the prop, for example 'children'
    */
-  propName: Extract<keyof ComponentProps, string>;
+  propName: PropName;
   /**
    * The controller to be used:
    * - `switch`: render the switch component for boolean
@@ -42,8 +43,18 @@ type DataType<ComponentProps> = {
    * - `select`: render <select> with the specified options
    * - `input`: render <input />
    * - `radio`: render group of radios
+   * - `slider`: render the slider component
    */
-  knob?: 'switch' | 'color' | 'select' | 'input' | 'radio' | 'controlled' | 'number' | 'placement';
+  knob:
+    | 'switch'
+    | 'color'
+    | 'select'
+    | 'input'
+    | 'radio'
+    | 'controlled'
+    | 'number'
+    | 'placement'
+    | 'slider';
   /**
    * The options for these knobs: `select` and `radio`
    */
@@ -78,9 +89,9 @@ type DataType<ComponentProps> = {
    * Option for knobs: `number`
    */
   max?: number;
-}[];
+};
 
-interface ChartDemoPropsFormProps<ComponentProps> {
+interface ChartDemoPropsFormProps<PropName extends string> {
   /**
    * Name of the component to show in the code block.
    */
@@ -88,8 +99,12 @@ interface ChartDemoPropsFormProps<ComponentProps> {
   /**
    * Configuration
    */
-  data: DataType<ComponentProps>;
-  onPropsChange: (data: any) => void;
+  data: DataType<PropName>[];
+  /**
+   * Props to be displayed in the form
+   */
+  props: Record<PropName, any>;
+  onPropsChange: (data: Record<PropName, any> | ((data: Record<PropName, any>) => void)) => void;
 }
 
 function ControlledColorRadio(props: any) {
@@ -131,26 +146,23 @@ function ControlledColorRadio(props: any) {
   );
 }
 
-export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>({
+export default function ChartDemoPropsForm<T extends string>({
   componentName,
   data,
+  props,
   onPropsChange,
 }: ChartDemoPropsFormProps<T>) {
-  const initialProps = {} as { [k in keyof T]: any };
-  let demoProps = {} as { [k in keyof T]: any };
-
-  data.forEach((p) => {
-    demoProps[p.propName] = p.defaultValue;
-
-    initialProps[p.propName] = p.defaultValue;
-  });
-  const [props, setProps] = React.useState<T>(initialProps as T);
-
-  React.useEffect(() => {
-    onPropsChange(props);
-  }, [props, onPropsChange]);
-
-  demoProps = { ...demoProps, ...props };
+  const initialProps = React.useMemo<Record<T, any>>(
+    () =>
+      data.reduce(
+        (acc, { propName, defaultValue }) => {
+          acc[propName] = defaultValue;
+          return acc;
+        },
+        {} as Record<T, any>,
+      ),
+    [data],
+  );
 
   return (
     <Box
@@ -187,7 +199,7 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
         <IconButton
           aria-label="Reset all"
           size="small"
-          onClick={() => setProps(initialProps as T)}
+          onClick={() => onPropsChange(initialProps)}
           sx={{
             visibility: !shallowEqual(props, initialProps) ? 'visible' : 'hidden',
             '--IconButton-size': '30px',
@@ -224,11 +236,30 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
                 <Switch
                   checked={Boolean(resolvedValue)}
                   onChange={(event) =>
-                    setProps((latestProps) => ({
+                    onPropsChange((latestProps) => ({
                       ...latestProps,
                       [propName]: event.target.checked,
                     }))
                   }
+                />
+              </FormControl>
+            );
+          }
+          if (knob === 'slider') {
+            return (
+              <FormControl key={propName}>
+                <FormLabel>{propName}</FormLabel>
+                <Slider
+                  value={Number.parseFloat(`${resolvedValue}`)}
+                  onChange={(_, value) =>
+                    onPropsChange((latestProps) => ({
+                      ...latestProps,
+                      [propName]: Number.parseFloat(`${value}`),
+                    }))
+                  }
+                  step={step}
+                  min={min}
+                  max={max}
                 />
               </FormControl>
             );
@@ -251,7 +282,7 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
                     } else if (value === 'undefined') {
                       value = undefined;
                     }
-                    setProps((latestProps) => ({
+                    onPropsChange((latestProps) => ({
                       ...latestProps,
                       [propName]: value,
                     }));
@@ -282,7 +313,7 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
                   name={`${componentName}-color`}
                   value={resolvedValue || ''}
                   onChange={(event) =>
-                    setProps((latestProps) => ({
+                    onPropsChange((latestProps) => ({
                       ...latestProps,
                       [propName]: event.target.value,
                     }))
@@ -317,7 +348,7 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
                   placeholder="Select a variant..."
                   value={(resolvedValue || 'none') as string}
                   onChange={(event) =>
-                    setProps((latestProps) => ({
+                    onPropsChange((latestProps) => ({
                       ...latestProps,
                       [propName]: event.target.value,
                     }))
@@ -340,7 +371,7 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
                   size="small"
                   value={props[propName] ?? ''}
                   onChange={(event) =>
-                    setProps((latestProps) => ({
+                    onPropsChange((latestProps) => ({
                       ...latestProps,
                       [propName]: event.target.value,
                     }))
@@ -371,7 +402,7 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
                     if (Number.isNaN(Number.parseFloat(event.target.value))) {
                       return;
                     }
-                    setProps((latestProps) => ({
+                    onPropsChange((latestProps) => ({
                       ...latestProps,
                       [propName]: Number.parseFloat(event.target.value),
                     }));
@@ -401,7 +432,7 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
                   name="placement"
                   value={resolvedValue}
                   onChange={(event) =>
-                    setProps((latestProps) => ({
+                    onPropsChange((latestProps) => ({
                       ...latestProps,
                       [propName]: event.target.value,
                     }))

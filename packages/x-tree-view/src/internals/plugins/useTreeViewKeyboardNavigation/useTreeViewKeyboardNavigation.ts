@@ -1,18 +1,20 @@
 import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { TreeViewItemMeta, TreeViewPlugin } from '../../models';
+import { TreeViewItemMeta, TreeViewPlugin, MuiCancellableEvent } from '../../models';
 import {
   getFirstNavigableItem,
   getLastNavigableItem,
   getNextNavigableItem,
   getPreviousNavigableItem,
+  isTargetInDescendants,
 } from '../../utils/tree';
 import {
   TreeViewFirstCharMap,
   UseTreeViewKeyboardNavigationSignature,
 } from './useTreeViewKeyboardNavigation.types';
-import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
+import { hasPlugin } from '../../utils/plugins';
+import { useTreeViewLabel } from '../useTreeViewLabel';
 
 function isPrintableCharacter(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
@@ -92,7 +94,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
     if (
       event.altKey ||
-      event.currentTarget !== (event.target as HTMLElement).closest('*[role="treeitem"]')
+      isTargetInDescendants(event.target as HTMLElement, event.currentTarget as HTMLElement)
     ) {
       return;
     }
@@ -121,7 +123,13 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // If the focused item has children, we expand it.
       // If the focused item has no children, we select it.
       case key === 'Enter': {
-        if (canToggleItemExpansion(itemId)) {
+        if (
+          hasPlugin(instance, useTreeViewLabel) &&
+          instance.isItemEditable(itemId) &&
+          !instance.isItemBeingEdited(itemId)
+        ) {
+          instance.setEditedItemId(itemId);
+        } else if (canToggleItemExpansion(itemId)) {
           instance.toggleItemExpansion(event, itemId);
           event.preventDefault();
         } else if (canToggleItemSelection(itemId)) {

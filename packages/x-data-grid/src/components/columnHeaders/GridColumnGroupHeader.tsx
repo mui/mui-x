@@ -39,6 +39,7 @@ type OwnerState = {
   showLeftBorder: boolean;
   showRightBorder: boolean;
   isDragging: boolean;
+  isLastColumn: boolean;
   headerAlign?: GridAlignment;
   classes?: DataGridProcessedProps['classes'];
   pinnedPosition?: GridPinnedColumnPosition;
@@ -49,6 +50,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     classes,
     headerAlign,
     isDragging,
+    isLastColumn,
     showLeftBorder,
     showRightBorder,
     groupId,
@@ -68,6 +70,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       groupId === null ? 'columnHeader--emptyGroup' : 'columnHeader--filledGroup',
       pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
       pinnedPosition === 'right' && 'columnHeader--pinnedRight',
+      isLastColumn && 'columnHeader--last',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
     titleContainer: ['columnHeaderTitleContainer', 'withBorderColor'],

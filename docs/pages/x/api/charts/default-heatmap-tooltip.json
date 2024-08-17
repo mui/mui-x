@@ -1,0 +1,86 @@
+{
+  "props": {
+    "classes": {
+      "type": { "name": "object" },
+      "required": true,
+      "additionalInfo": { "cssApi": true }
+    },
+    "getColor": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(dataIndex: number) => string",
+        "describedArgs": ["dataIndex"],
+        "returned": "string"
+      }
+    },
+    "itemData": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex: number, seriesId: number<br>&#124;&nbsp;string, type: 'heatmap' }"
+      },
+      "required": true
+    },
+    "series": { "type": { "name": "object" }, "required": true }
+  },
+  "name": "DefaultHeatmapTooltip",
+  "imports": [
+    "import { DefaultHeatmapTooltip } from '@mui/x-charts-pro/Heatmap';",
+    "import { DefaultHeatmapTooltip } from '@mui/x-charts-pro';"
+  ],
+  "classes": [
+    {
+      "key": "cell",
+      "className": "MuiDefaultHeatmapTooltip-cell",
+      "description": "Styles applied to the cell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "labelCell",
+      "className": "MuiDefaultHeatmapTooltip-labelCell",
+      "description": "Styles applied to the labelCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "mark",
+      "className": "MuiDefaultHeatmapTooltip-mark",
+      "description": "Styles applied to the mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "markCell",
+      "className": "MuiDefaultHeatmapTooltip-markCell",
+      "description": "Styles applied to the markCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiDefaultHeatmapTooltip-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "row",
+      "className": "MuiDefaultHeatmapTooltip-row",
+      "description": "Styles applied to the row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "table",
+      "className": "MuiDefaultHeatmapTooltip-table",
+      "description": "Styles applied to the table element.",
+      "isGlobal": false
+    },
+    {
+      "key": "valueCell",
+      "className": "MuiDefaultHeatmapTooltip-valueCell",
+      "description": "Styles applied to the valueCell element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiDefaultHeatmapTooltip",
+  "filename": "/packages/x-charts-pro/src/Heatmap/DefaultHeatmapTooltip.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/heatmap/\">Charts - Heatmap <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "cssComponent": false
+}

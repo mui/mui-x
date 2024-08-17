@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
 import { RichTreeViewProps } from './RichTreeView.types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
@@ -9,7 +9,7 @@ import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { TreeItem, TreeItemProps } from '../TreeItem';
-import { buildWarning } from '../internals/utils/warning';
+import { warnOnce } from '../internals/utils/warning';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -61,12 +61,6 @@ function WrappedTreeItem<R extends {}>({
   return <Item {...itemProps}>{children}</Item>;
 }
 
-const childrenWarning = buildWarning([
-  'MUI X: The `RichTreeView` component does not support JSX children.',
-  'If you want to add items, you need to use the `items` prop',
-  'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/',
-]);
-
 /**
  *
  * Demos:
@@ -85,7 +79,11 @@ const RichTreeView = React.forwardRef(function RichTreeView<
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
-      childrenWarning();
+      warnOnce([
+        'MUI X: The `RichTreeView` component does not support JSX children.',
+        'If you want to add items, you need to use the `items` prop.',
+        'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/.',
+      ]);
     }
   }
 
@@ -152,8 +150,11 @@ RichTreeView.propTypes = {
       focusItem: PropTypes.func.isRequired,
       getItem: PropTypes.func.isRequired,
       getItemDOMElement: PropTypes.func.isRequired,
+      getItemOrderedChildrenIds: PropTypes.func.isRequired,
+      getItemTree: PropTypes.func.isRequired,
       selectItem: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
+      updateItemLabel: PropTypes.func.isRequired,
     }),
   }),
   /**
@@ -205,6 +206,7 @@ RichTreeView.propTypes = {
    */
   experimentalFeatures: PropTypes.shape({
     indentationAtItemLevel: PropTypes.bool,
+    labelEditing: PropTypes.bool,
   }),
   /**
    * Used to determine the id of a given item.
@@ -237,6 +239,16 @@ RichTreeView.propTypes = {
    */
   isItemDisabled: PropTypes.func,
   /**
+   * Determines if a given item is editable or not.
+   * Make sure to also enable the `labelEditing` experimental feature:
+   * `<RichTreeViewPro experimentalFeatures={{ labelEditing: true }}  />`.
+   * By default, the items are not editable.
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {boolean} `true` if the item is editable.
+   */
+  isItemEditable: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+  /**
    * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".
    * @default 12px
@@ -255,6 +267,12 @@ RichTreeView.propTypes = {
    */
   onExpandedItemsChange: PropTypes.func,
   /**
+   * Callback fired when the `content` slot of a given tree item is clicked.
+   * @param {React.MouseEvent} event The DOM event that triggered the change.
+   * @param {string} itemId The id of the focused item.
+   */
+  onItemClick: PropTypes.func,
+  /**
    * Callback fired when a tree item is expanded or collapsed.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {array} itemId The itemId of the modified item.
@@ -262,12 +280,17 @@ RichTreeView.propTypes = {
    */
   onItemExpansionToggle: PropTypes.func,
   /**
-   * Callback fired when tree items are focused.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change. **Warning**: This is a generic event not a focus event.
+   * Callback fired when a given tree item is focused.
+   * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. **Warning**: This is a generic event not a focus event.
    * @param {string} itemId The id of the focused item.
-   * @param {string} value of the focused item.
    */
   onItemFocus: PropTypes.func,
+  /**
+   * Callback fired when the label of an item changes.
+   * @param {TreeViewItemId} itemId The id of the item that was edited.
+   * @param {string} newLabel The new label of the items.
+   */
+  onItemLabelChange: PropTypes.func,
   /**
    * Callback fired when a tree item is selected or deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.

@@ -6,6 +6,7 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import {
   GridFilterItem,
   GridFilterOperator,
@@ -19,7 +20,6 @@ import {
   GridPinnedColumnPosition,
 } from '@mui/x-data-grid';
 import {
-  fastMemo,
   GridStateColDef,
   useGridPrivateApiContext,
   gridHeaderFilteringEditFieldSelector,

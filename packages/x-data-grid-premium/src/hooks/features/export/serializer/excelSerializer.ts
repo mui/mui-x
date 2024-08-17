@@ -9,7 +9,7 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import {
-  buildWarning,
+  warnOnce,
   GridStateColDef,
   GridSingleSelectColDef,
   isObject,
@@ -26,11 +26,6 @@ const getExcelJs = async () => {
   const excelJsModule = await import('exceljs');
   return excelJsModule.default ?? excelJsModule;
 };
-
-const warnInvalidFormattedValue = buildWarning([
-  'MUI X: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',
-  'You can provide a `valueFormatter` with a string representation to be used.',
-]);
 
 const getFormattedValueOptions = (
   colDef: GridSingleSelectColDef,
@@ -153,7 +148,10 @@ export const serializeRowUnsafe = (
         const formattedValue = apiRef.current.getCellParams(id, castColumn.field).formattedValue;
         if (process.env.NODE_ENV !== 'production') {
           if (String(cellParams.formattedValue) === '[object Object]') {
-            warnInvalidFormattedValue();
+            warnOnce([
+              'MUI X: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',
+              'You can provide a `valueFormatter` with a string representation to be used.',
+            ]);
           }
         }
         if (isObject<{ label: any }>(formattedValue)) {
@@ -196,7 +194,10 @@ export const serializeRowUnsafe = (
         cellValue = apiRef.current.getCellParams(id, column.field).formattedValue as any;
         if (process.env.NODE_ENV !== 'production') {
           if (String(cellParams.formattedValue) === '[object Object]') {
-            warnInvalidFormattedValue();
+            warnOnce([
+              'MUI X: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',
+              'You can provide a `valueFormatter` with a string representation to be used.',
+            ]);
           }
         }
         break;

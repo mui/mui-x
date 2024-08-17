@@ -3,7 +3,8 @@
   "name": "BarLabel",
   "imports": [
     "import { BarLabel } from '@mui/x-charts/BarChart';",
-    "import { BarLabel } from '@mui/x-charts';"
+    "import { BarLabel } from '@mui/x-charts';",
+    "import { BarLabel } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {

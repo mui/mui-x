@@ -131,7 +131,7 @@ export {
   mergeDateAndTime,
   formatMeridiem,
 } from './utils/date-utils';
-export { resolveTimeViewsResponse } from './utils/date-time-utils';
+export { resolveTimeViewsResponse, resolveDateTimeFormat } from './utils/date-time-utils';
 export { splitFieldInternalAndForwardedProps } from './utils/fields';
 export { getDefaultReferenceDate } from './utils/getDefaultReferenceDate';
 export {
@@ -151,7 +151,7 @@ export { validateDate } from './utils/validation/validateDate';
 export { validateDateTime } from './utils/validation/validateDateTime';
 export { validateTime } from './utils/validation/validateTime';
 export { applyDefaultViewProps } from './utils/views';
-export { buildDeprecatedPropsWarning, buildWarning } from './utils/warning';
+export { warnOnce } from './utils/warning';
 
 export { DayCalendar } from '../DateCalendar/DayCalendar';
 export type {

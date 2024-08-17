@@ -115,6 +115,24 @@ describe('<DesktopDateRangePicker />', () => {
 
       expect(input.parentElement).to.have.class('Mui-focused');
     });
+
+    it('should render the input with a given `name` when `SingleInputDateRangeField` is used', () => {
+      // Test with v7 input
+      const v7Response = render(
+        <DesktopDateRangePicker
+          name="test"
+          enableAccessibleFieldDOMStructure
+          slots={{ field: SingleInputDateRangeField }}
+        />,
+      );
+      expect(screen.getByRole<HTMLInputElement>('textbox', { hidden: true }).name).to.equal('test');
+
+      v7Response.unmount();
+
+      // Test with v6 input
+      render(<DesktopDateRangePicker name="test" slots={{ field: SingleInputDateRangeField }} />);
+      expect(screen.getByRole<HTMLInputElement>('textbox').name).to.equal('test');
+    });
   });
 
   describe('Component slot: Popper', () => {

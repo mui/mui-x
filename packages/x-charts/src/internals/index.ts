@@ -9,25 +9,27 @@ export { useReducedMotion } from '../hooks/useReducedMotion';
 export { useSeries } from '../hooks/useSeries';
 export { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 export { useDrawingArea } from '../hooks/useDrawingArea';
-export { useChartContainerHooks } from '../ChartContainer/useChartContainerHooks';
 export { useScatterChartProps } from '../ScatterChart/useScatterChartProps';
 export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useBarChartProps } from '../BarChart/useBarChartProps';
+export { useResponsiveChartContainerProps } from '../ResponsiveChartContainer/useResponsiveChartContainerProps';
+export { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 
 // utils
 export * from './defaultizeValueFormatter';
 export * from './configInit';
 export * from './getLabel';
 export * from './getSVGPoint';
+export * from './isDefined';
 
 // contexts
 
 export * from '../context/CartesianProvider';
 export * from '../context/DrawingProvider';
-export * from '../context/ColorProvider';
 export * from '../context/InteractionProvider';
-export * from '../context/SeriesContextProvider';
+export * from '../context/SeriesProvider';
 export * from '../context/ZAxisContextProvider';
+export * from '../context/PluginProvider';
 export type * from '../context/context.types';
 
 // series configuration

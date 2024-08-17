@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import { Theme } from '@mui/material/styles';
 import { PickerValidDate, TimezoneProps } from '@mui/x-date-pickers/models';
 import {

@@ -66,6 +66,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       height={height}
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
       ref={ref}
+      className={className}
       {...other}
     >
       <title>{title}</title>
