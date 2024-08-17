@@ -188,7 +188,7 @@ describe('<DataGridPro /> - Row selection', () => {
         name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
-      expect(apiRef.current.getSelectedRows()).to.have.length(4);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2, 3]);
       expect(selectAllCheckbox.checked).to.equal(true);
     });
 
