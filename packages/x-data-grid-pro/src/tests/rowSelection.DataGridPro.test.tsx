@@ -62,14 +62,13 @@ describe('<DataGridPro /> - Row selection', () => {
       expect(selectAllCheckbox.checked).to.equal(true);
     });
 
-    it('should unselect all rows of all the pages if 1 row of another page is selected', () => {
+    it('should select all rows of all the pages if 1 row of another page is selected', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
           initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
           pageSizeOptions={[2]}
-          indeterminateCheckboxBehavior='deselect'
         />,
       );
       fireEvent.click(getCell(0, 0).querySelector('input')!);
@@ -79,8 +78,8 @@ describe('<DataGridPro /> - Row selection', () => {
         name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
-      expect(apiRef.current.getSelectedRows()).to.have.length(0);
-      expect(selectAllCheckbox.checked).to.equal(false);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([0, 1, 2, 3]);
+      expect(selectAllCheckbox.checked).to.equal(true);
     });
 
     it('should select all visible rows if pagination is not enabled', () => {
@@ -169,7 +168,7 @@ describe('<DataGridPro /> - Row selection', () => {
       expect(selectAllCheckbox.checked).to.equal(true);
     });
 
-    it('should unselect all the rows of the current page if 1 row of the current page is selected', () => {
+    it('should select all the rows of the current page if 1 row of the current page is selected', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
@@ -177,7 +176,6 @@ describe('<DataGridPro /> - Row selection', () => {
           pagination
           checkboxSelectionVisibleOnly
           pageSizeOptions={[2]}
-          indeterminateCheckboxBehavior='deselect'
         />,
       );
 
@@ -190,8 +188,8 @@ describe('<DataGridPro /> - Row selection', () => {
         name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
-      expect(selectAllCheckbox.checked).to.equal(false);
+      expect(apiRef.current.getSelectedRows()).to.have.length(4);
+      expect(selectAllCheckbox.checked).to.equal(true);
     });
 
     it('should not set the header checkbox in a indeterminate state when some rows of other pages are not selected', () => {
