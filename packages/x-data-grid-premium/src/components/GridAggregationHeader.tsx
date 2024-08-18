@@ -10,7 +10,7 @@ import {
 } from '@mui/x-data-grid';
 import {
   GridBaseColDef,
-  getColumnHeaderName,
+  resolveColumnHeaderName,
   isReactNodeHeaderName,
 } from '@mui/x-data-grid/internals';
 import { getAggregationFunctionLabel } from '../hooks/features/aggregation/gridAggregationUtils';
@@ -99,7 +99,7 @@ function GridAggregationHeader(
         renderHeader(params)
       ) : (
         <GridColumnHeaderTitle
-          label={getColumnHeaderName(colDef, isReactNodeHeaderName, true)}
+          label={resolveColumnHeaderName(colDef.headerName, isReactNodeHeaderName) || colDef.field}
           description={colDef.description}
           columnWidth={colDef.computedWidth}
         />

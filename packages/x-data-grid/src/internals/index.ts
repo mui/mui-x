@@ -150,10 +150,10 @@ export { isNavigationKey, isPasteShortcut } from '../utils/keyboardUtils';
 export * from '../utils/utils';
 export { exportAs } from '../utils/exportAs';
 export {
-  getColumnHeaderName,
+  resolveColumnHeaderName,
   isStringHeaderName,
   isReactNodeHeaderName,
-} from '../utils/getColumnHeaderName';
+} from '../utils/resolveColumnHeaderName';
 export * from '../utils/getPublicApiRef';
 export * from '../utils/cellBorderUtils';
 export type { GridPrivateOnlyApiCommon } from '../models/api/gridApiCommon';

@@ -7,7 +7,7 @@ import {
   useGridSelector,
   GridColumnMenuItemProps,
 } from '@mui/x-data-grid-pro';
-import { getColumnHeaderName, isStringHeaderName } from '@mui/x-data-grid/internals';
+import { resolveColumnHeaderName, isStringHeaderName } from '@mui/x-data-grid/internals';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { gridRowGroupingSanitizedModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -33,7 +33,8 @@ export function GridColumnMenuRowUngroupItem(props: GridColumnMenuItemProps) {
     onClick(event);
   };
 
-  const name = getColumnHeaderName(columnsLookup[colDef.field], isStringHeaderName);
+  const column = columnsLookup[colDef.field];
+  const name = resolveColumnHeaderName(column.headerName, isStringHeaderName) || column.field;
 
   if (rowGroupingModel.includes(colDef.field)) {
     return (

@@ -19,8 +19,12 @@ import { GridFilterItem } from '../../models/gridFilterItem';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { GridFilterOperator } from '../../models/gridFilterOperator';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { getColumnHeaderName, isReactNodeHeaderName } from '../../utils/getColumnHeaderName';
+import {
+  resolveColumnHeaderName,
+  isReactNodeHeaderName,
+} from '../../utils/resolveColumnHeaderName';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -78,14 +82,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
           (operator) => operator.value === item.operator,
         );
         return (
-          getColumnHeaderName(
-            {
-              headerName: foundOperator!.label,
-              field: '',
-            },
-            isReactNodeHeaderName,
-            false,
-          ) ??
+          resolveFilterOperatorLabel(foundOperator!.label) ??
           apiRef.current
             .getLocaleText(`filterOperator${capitalize(item.operator!)}` as GridTranslationKeys)!
             .toString()
@@ -107,7 +104,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
             {activeFilters.map((item, index) => ({
               ...(lookup[item.field!] && (
                 <li key={index}>
-                  {`${getColumnHeaderName(lookup[item.field!], isReactNodeHeaderName)}
+                  {`${resolveColumnHeaderName(lookup[item.field!].headerName, isReactNodeHeaderName)}
                   ${getOperatorLabel(item)}
                   ${
                     // implicit check for null and undefined
@@ -171,6 +168,10 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
     );
   },
 );
+
+function resolveFilterOperatorLabel(label: GridFilterOperator['label']) {
+  return typeof label === 'function' ? label() : label;
+}
 
 GridToolbarFilterButton.propTypes = {
   // ----------------------------- Warning --------------------------------

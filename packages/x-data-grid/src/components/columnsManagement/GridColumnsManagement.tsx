@@ -17,10 +17,10 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useLazyRef } from '../../hooks/utils/useLazyRef';
 import { checkColumnVisibilityModelsSame, defaultSearchPredicate } from './utils';
 import {
-  getColumnHeaderName,
+  resolveColumnHeaderName,
   isReactNodeHeaderName,
   isStringHeaderName,
-} from '../../utils/getColumnHeaderName';
+} from '../../utils/resolveColumnHeaderName';
 
 export interface GridColumnsManagementProps {
   /*
@@ -111,15 +111,15 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
     switch (sort) {
       case 'asc':
         return [...columns].sort((a, b) => {
-          const aHeaderName = getColumnHeaderName(a, isStringHeaderName);
-          const bHeaderName = getColumnHeaderName(b, isStringHeaderName);
+          const aHeaderName = resolveColumnHeaderName(a.headerName, isStringHeaderName) || a.field;
+          const bHeaderName = resolveColumnHeaderName(b.headerName, isStringHeaderName) || b.field;
           return collator.compare(aHeaderName, bHeaderName);
         });
 
       case 'desc':
         return [...columns].sort((a, b) => {
-          const aHeaderName = getColumnHeaderName(a, isStringHeaderName);
-          const bHeaderName = getColumnHeaderName(b, isStringHeaderName);
+          const aHeaderName = resolveColumnHeaderName(a.headerName, isStringHeaderName) || a.field;
+          const bHeaderName = resolveColumnHeaderName(b.headerName, isStringHeaderName) || b.field;
           return -collator.compare(aHeaderName, bHeaderName);
         });
 
@@ -255,7 +255,9 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
                 {...rootProps.slotProps?.baseCheckbox}
               />
             }
-            label={getColumnHeaderName(column, isReactNodeHeaderName)}
+            label={
+              resolveColumnHeaderName(column.headerName, isReactNodeHeaderName) || column.field
+            }
           />
         ))}
         {currentColumns.length === 0 && (

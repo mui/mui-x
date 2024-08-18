@@ -8,9 +8,9 @@ import {
   useGridApiContext,
   GridHeaderFilterCellProps,
   GridHeaderFilterEventLookup,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { getColumnHeaderName, isStringHeaderName } from '@mui/x-data-grid/internals';
 
 function CustomHeaderFilter(props: GridHeaderFilterCellProps) {
   const { colDef, width, height, hasFocus, colIndex, tabIndex } = props;
@@ -68,6 +68,10 @@ function CustomHeaderFilter(props: GridHeaderFilterCellProps) {
   const activeFiltersCount =
     filterModel.items?.filter(({ field }) => field === colDef.field).length ?? 0;
 
+  const resolvedHeaderName = resolveHeaderName(colDef.headerName);
+  const ariaLabel =
+    typeof resolvedHeaderName === 'string' ? resolvedHeaderName : colDef.field;
+
   return (
     <Stack
       sx={{
@@ -84,7 +88,7 @@ function CustomHeaderFilter(props: GridHeaderFilterCellProps) {
       alignItems="center"
       role="columnheader"
       aria-colindex={colIndex + 1}
-      aria-label={getColumnHeaderName(colDef, isStringHeaderName, true)}
+      aria-label={ariaLabel}
       {...mouseEventsHandlers}
     >
       <Button
@@ -123,4 +127,8 @@ export default function CustomHeaderFilterDataGridPro() {
       />
     </div>
   );
+}
+
+function resolveHeaderName(headerName: GridColDef['headerName']) {
+  return typeof headerName === 'function' ? headerName() : headerName;
 }

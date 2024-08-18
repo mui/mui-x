@@ -27,9 +27,8 @@ import {
   isNavigationKey,
   shouldCellShowLeftBorder,
   shouldCellShowRightBorder,
-  getColumnHeaderName,
+  resolveColumnHeaderName,
   isStringHeaderName,
-  isReactNodeHeaderName,
 } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
@@ -302,20 +301,14 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const isApplied = Boolean(item?.value) || isNoInputOperator;
 
     const label =
-      getColumnHeaderName(
-        {
-          headerName: currentOperator.headerLabel,
-          field: '',
-        },
-        isReactNodeHeaderName,
-        false,
-      ) ??
+      resolveFilterOperatorHeaderLabel(currentOperator.headerLabel) ??
       apiRef.current.getLocaleText(
         `headerFilterOperator${capitalize(item.operator)}` as 'headerFilterOperatorContains',
       );
 
     const isFilterActive = isApplied || hasFocus;
-    const ariaLabel = getColumnHeaderName(colDef, isStringHeaderName);
+    const ariaLabel =
+      resolveColumnHeaderName(colDef.headerName, isStringHeaderName) || colDef.field;
 
     return (
       <div
@@ -392,6 +385,10 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     );
   },
 );
+
+function resolveFilterOperatorHeaderLabel(headerLabel: GridFilterOperator['headerLabel']) {
+  return typeof headerLabel === 'function' ? headerLabel() : headerLabel;
+}
 
 GridHeaderFilterCell.propTypes = {
   // ----------------------------- Warning --------------------------------

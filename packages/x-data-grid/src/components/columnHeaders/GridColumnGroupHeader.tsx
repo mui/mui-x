@@ -14,7 +14,10 @@ import { GridColumnGroupHeaderParams } from '../../models/params';
 import { isEventTargetInPortal } from '../../utils/domUtils';
 import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
-import { getColumnHeaderName, isReactNodeHeaderName } from '../../utils/getColumnHeaderName';
+import {
+  resolveColumnHeaderName,
+  isReactNodeHeaderName,
+} from '../../utils/resolveColumnHeaderName';
 
 interface GridColumnGroupHeaderProps {
   groupId: string | null;
@@ -148,13 +151,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     isDragging: false,
   };
 
-  const label = getColumnHeaderName(
-    {
-      headerName,
-      field: groupId ?? '',
-    },
-    isReactNodeHeaderName,
-  );
+  const label = resolveColumnHeaderName(headerName, isReactNodeHeaderName) || groupId;
 
   const id = useId();
   const elementId = groupId === null ? `empty-group-cell-${id}` : groupId;

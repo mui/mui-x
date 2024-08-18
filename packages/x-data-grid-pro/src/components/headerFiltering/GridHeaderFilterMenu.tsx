@@ -10,7 +10,6 @@ import {
   GridFilterItem,
   GridColDef,
 } from '@mui/x-data-grid';
-import { getColumnHeaderName, isReactNodeHeaderName } from '@mui/x-data-grid/internals';
 
 interface GridHeaderFilterMenuProps {
   field: GridColDef['field'];
@@ -60,14 +59,7 @@ function GridHeaderFilterMenu({
       <MenuList aria-labelledby={labelledBy} id={id} onKeyDown={handleListKeyDown}>
         {operators.map((op, i) => {
           const label =
-            getColumnHeaderName(
-              {
-                headerName: op?.headerLabel,
-                field: '',
-              },
-              isReactNodeHeaderName,
-              false,
-            ) ??
+            resolveFilterOperatorHeaderLabel(op.headerLabel) ??
             apiRef.current.getLocaleText(
               `headerFilterOperator${capitalize(op.value)}` as 'headerFilterOperatorContains',
             );
@@ -89,6 +81,10 @@ function GridHeaderFilterMenu({
       </MenuList>
     </GridMenu>
   );
+}
+
+function resolveFilterOperatorHeaderLabel(label: GridFilterOperator['headerLabel']) {
+  return typeof label === 'function' ? label() : label;
 }
 
 GridHeaderFilterMenu.propTypes = {

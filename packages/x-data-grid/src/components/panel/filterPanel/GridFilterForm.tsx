@@ -24,12 +24,13 @@ import {
   GridSingleSelectColDef,
   GridStateColDef,
 } from '../../../models/colDef/gridColDef';
+import type { GridFilterOperator } from '../../../models/gridFilterOperator';
 import { getValueFromValueOptions, getValueOptions } from './filterPanelUtils';
 import {
-  getColumnHeaderName,
+  resolveColumnHeaderName,
   isReactNodeHeaderName,
   isStringHeaderName,
-} from '../../../utils/getColumnHeaderName';
+} from '../../../utils/resolveColumnHeaderName';
 
 export interface FilterColumnsArgs {
   field: GridColDef['field'];
@@ -296,8 +297,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
         case 'asc':
           return filteredColumns.sort((a, b) =>
             collator.compare(
-              getColumnHeaderName(a, isStringHeaderName),
-              getColumnHeaderName(b, isStringHeaderName),
+              resolveColumnHeaderName(a.headerName, isStringHeaderName) || a.field,
+              resolveColumnHeaderName(b.headerName, isStringHeaderName) || b.field,
             ),
           );
 
@@ -305,8 +306,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           return filteredColumns.sort(
             (a, b) =>
               -collator.compare(
-                getColumnHeaderName(a, isStringHeaderName),
-                getColumnHeaderName(b, isStringHeaderName),
+                resolveColumnHeaderName(a.headerName, isStringHeaderName) || a.field,
+                resolveColumnHeaderName(b.headerName, isStringHeaderName) || b.field,
               ),
           );
 
@@ -533,7 +534,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
                 key={col.field}
                 value={col.field}
               >
-                {getColumnHeaderName(col, isReactNodeHeaderName)}
+                {resolveColumnHeaderName(col.headerName, isReactNodeHeaderName) || col.field}
               </rootProps.slots.baseSelectOption>
             ))}
           </rootProps.slots.baseSelect>
@@ -575,14 +576,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
                 key={operator.value}
                 value={operator.value}
               >
-                {getColumnHeaderName(
-                  {
-                    headerName: operator.label,
-                    field: '',
-                  },
-                  isReactNodeHeaderName,
-                  false,
-                ) ??
+                {resolveFilterOperatorLabel(operator.label) ??
                   apiRef.current.getLocaleText(
                     `filterOperator${capitalize(operator.value)}` as 'filterOperatorContains',
                   )}
@@ -619,6 +613,10 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     );
   },
 );
+
+function resolveFilterOperatorLabel(label: GridFilterOperator['label']) {
+  return typeof label === 'function' ? label() : label;
+}
 
 GridFilterForm.propTypes = {
   // ----------------------------- Warning --------------------------------
