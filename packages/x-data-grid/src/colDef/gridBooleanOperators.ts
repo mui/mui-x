@@ -6,7 +6,7 @@ export const getGridBooleanOperators = (): GridFilterOperator<any, boolean | nul
   {
     value: 'is',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.value) {
+      if (!filterItem.value && filterItem.value !== false) {
         return null;
       }
 
