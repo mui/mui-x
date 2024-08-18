@@ -53,12 +53,7 @@ export function isPasteShortcut(event: React.KeyboardEvent) {
   );
 }
 
-/**
- * Checks if the keyboard event corresponds to the copy shortcut (CTRL+C or CMD+C) across different localization keyboards.
- *
- * @param {KeyboardEvent} event - The keyboard event to check.
- * @returns {boolean} - Returns true if the event is a copy shortcut, otherwise false.
- */
+// Checks if the keyboard event corresponds to the copy shortcut (CTRL+C or CMD+C) across different localization keyboards.
 export function isCopyShortcut(event: KeyboardEvent): boolean {
   return (
     (event.ctrlKey || event.metaKey) &&

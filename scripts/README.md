@@ -34,7 +34,8 @@ pnpm release:changelog
 You can also provide the GitHub token by setting `process.env.GITHUB_TOKEN` variable.
 =======
 You can also provide the github token by setting `process.env.GITHUB_TOKEN` variable.
->>>>>>> dd20afe2668c15eb9f350ab171137c4f64931273
+
+> > > > > > > dd20afe2668c15eb9f350ab171137c4f64931273
 
 In case of a problem, another method to generate the changelog is available at the end of this page.
 
