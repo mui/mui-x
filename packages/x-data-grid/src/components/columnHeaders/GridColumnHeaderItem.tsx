@@ -280,7 +280,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       ? colDef.headerClassName({ field: colDef.field, colDef })
       : colDef.headerClassName;
 
-  const label = resolveColumnHeaderName(colDef.headerName, isReactNodeHeaderName) || colDef.field;
+  const label = resolveColumnHeaderName(colDef.headerName, isReactNodeHeaderName) ?? colDef.field;
 
   return (
     <GridGenericColumnHeaderItem

@@ -151,7 +151,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     isDragging: false,
   };
 
-  const label = resolveColumnHeaderName(headerName, isReactNodeHeaderName) || groupId;
+  const label = resolveColumnHeaderName(headerName, isReactNodeHeaderName) ?? groupId;
 
   const id = useId();
   const elementId = groupId === null ? `empty-group-cell-${id}` : groupId;

@@ -99,7 +99,7 @@ function GridAggregationHeader(
         renderHeader(params)
       ) : (
         <GridColumnHeaderTitle
-          label={resolveColumnHeaderName(colDef.headerName, isReactNodeHeaderName) || colDef.field}
+          label={resolveColumnHeaderName(colDef.headerName, isReactNodeHeaderName) ?? colDef.field}
           description={colDef.description}
           columnWidth={colDef.computedWidth}
         />

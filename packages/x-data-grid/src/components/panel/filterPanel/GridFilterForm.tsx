@@ -297,8 +297,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
         case 'asc':
           return filteredColumns.sort((a, b) =>
             collator.compare(
-              resolveColumnHeaderName(a.headerName, isStringHeaderName) || a.field,
-              resolveColumnHeaderName(b.headerName, isStringHeaderName) || b.field,
+              resolveColumnHeaderName(a.headerName, isStringHeaderName) ?? a.field,
+              resolveColumnHeaderName(b.headerName, isStringHeaderName) ?? b.field,
             ),
           );
 
@@ -306,8 +306,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           return filteredColumns.sort(
             (a, b) =>
               -collator.compare(
-                resolveColumnHeaderName(a.headerName, isStringHeaderName) || a.field,
-                resolveColumnHeaderName(b.headerName, isStringHeaderName) || b.field,
+                resolveColumnHeaderName(a.headerName, isStringHeaderName) ?? a.field,
+                resolveColumnHeaderName(b.headerName, isStringHeaderName) ?? b.field,
               ),
           );
 
@@ -534,7 +534,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
                 key={col.field}
                 value={col.field}
               >
-                {resolveColumnHeaderName(col.headerName, isReactNodeHeaderName) || col.field}
+                {resolveColumnHeaderName(col.headerName, isReactNodeHeaderName) ?? col.field}
               </rootProps.slots.baseSelectOption>
             ))}
           </rootProps.slots.baseSelect>

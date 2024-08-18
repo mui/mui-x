@@ -111,15 +111,15 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
     switch (sort) {
       case 'asc':
         return [...columns].sort((a, b) => {
-          const aHeaderName = resolveColumnHeaderName(a.headerName, isStringHeaderName) || a.field;
-          const bHeaderName = resolveColumnHeaderName(b.headerName, isStringHeaderName) || b.field;
+          const aHeaderName = resolveColumnHeaderName(a.headerName, isStringHeaderName) ?? a.field;
+          const bHeaderName = resolveColumnHeaderName(b.headerName, isStringHeaderName) ?? b.field;
           return collator.compare(aHeaderName, bHeaderName);
         });
 
       case 'desc':
         return [...columns].sort((a, b) => {
-          const aHeaderName = resolveColumnHeaderName(a.headerName, isStringHeaderName) || a.field;
-          const bHeaderName = resolveColumnHeaderName(b.headerName, isStringHeaderName) || b.field;
+          const aHeaderName = resolveColumnHeaderName(a.headerName, isStringHeaderName) ?? a.field;
+          const bHeaderName = resolveColumnHeaderName(b.headerName, isStringHeaderName) ?? b.field;
           return -collator.compare(aHeaderName, bHeaderName);
         });
 
@@ -256,7 +256,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
               />
             }
             label={
-              resolveColumnHeaderName(column.headerName, isReactNodeHeaderName) || column.field
+              resolveColumnHeaderName(column.headerName, isReactNodeHeaderName) ?? column.field
             }
           />
         ))}

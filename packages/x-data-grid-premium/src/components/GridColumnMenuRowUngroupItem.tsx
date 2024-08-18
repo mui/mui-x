@@ -34,7 +34,7 @@ export function GridColumnMenuRowUngroupItem(props: GridColumnMenuItemProps) {
   };
 
   const column = columnsLookup[colDef.field];
-  const name = resolveColumnHeaderName(column.headerName, isStringHeaderName) || column.field;
+  const name = resolveColumnHeaderName(column.headerName, isStringHeaderName) ?? column.field;
 
   if (rowGroupingModel.includes(colDef.field)) {
     return (

@@ -203,7 +203,7 @@ export function buildCSV(options: BuildCSVOptions): string {
           return;
         }
         const headerName =
-          resolveColumnHeaderName(columnGroup.headerName, isStringHeaderName) ||
+          resolveColumnHeaderName(columnGroup.headerName, isStringHeaderName) ??
           columnGroup.groupId;
 
         headerGroupRow.addValue(headerName);
@@ -217,7 +217,7 @@ export function buildCSV(options: BuildCSVOptions): string {
   });
   filteredColumns.forEach((column) => {
     const headerName =
-      resolveColumnHeaderName(column.headerName, isStringHeaderName) || column.field;
+      resolveColumnHeaderName(column.headerName, isStringHeaderName) ?? column.field;
     mainHeaderRow.addValue(headerName);
   });
   headerRows.push(mainHeaderRow);

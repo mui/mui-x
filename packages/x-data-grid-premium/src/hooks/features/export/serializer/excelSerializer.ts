@@ -233,7 +233,7 @@ export const serializeColumn = (column: GridColDef, columnsStyles: ColumnsStyles
 
   return {
     key: field,
-    headerText: resolveColumnHeaderName(column.headerName, isStringHeaderName) || column.field,
+    headerText: resolveColumnHeaderName(column.headerName, isStringHeaderName) ?? column.field,
     // Excel width must stay between 0 and 255 (https://support.microsoft.com/en-us/office/change-the-column-width-and-row-height-72f5e3cc-994d-43e8-ae58-9774a0905f46)
     // From the example of column width behavior (https://docs.microsoft.com/en-US/office/troubleshoot/excel/determine-column-widths#example-of-column-width-behavior)
     // a value of 10 corresponds to 75px. This is an approximation, because column width depends on the font-size
@@ -270,7 +270,7 @@ const addColumnGroupingHeaders = (
         if (group.groupId === null) {
           return null;
         }
-        return resolveColumnHeaderName(group.headerName, isStringHeaderName) || group.groupId;
+        return resolveColumnHeaderName(group.headerName, isStringHeaderName) ?? group.groupId;
       }),
     );
 
@@ -343,7 +343,7 @@ export async function getDataForValueOptionsSheet(
         singleSelectColumn.valueOptions as Array<ValueOptions>,
         api,
       );
-      const header = resolveColumnHeaderName(column.headerName, isStringHeaderName) || column.field;
+      const header = resolveColumnHeaderName(column.headerName, isStringHeaderName) ?? column.field;
       const values = [header, ...formattedValueOptions];
 
       const letter = worksheet.getColumn(column.field).letter;
@@ -454,7 +454,7 @@ export async function buildExcel(
   if (includeHeaders) {
     worksheet.addRow(
       columns.map(
-        (column) => resolveColumnHeaderName(column.headerName, isStringHeaderName) || column.field,
+        (column) => resolveColumnHeaderName(column.headerName, isStringHeaderName) ?? column.field,
       ),
     );
   }

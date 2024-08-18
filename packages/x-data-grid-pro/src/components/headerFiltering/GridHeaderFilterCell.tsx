@@ -308,7 +308,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const isFilterActive = isApplied || hasFocus;
     const ariaLabel =
-      resolveColumnHeaderName(colDef.headerName, isStringHeaderName) || colDef.field;
+      resolveColumnHeaderName(colDef.headerName, isStringHeaderName) ?? colDef.field;
 
     return (
       <div

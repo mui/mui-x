@@ -131,7 +131,7 @@ describe('<DataGrid /> - Toolbar', () => {
         searchValue,
       ) => {
         return (
-          (resolveColumnHeaderName(column.headerName, isStringHeaderName) || column.field)
+          (resolveColumnHeaderName(column.headerName, isStringHeaderName) ?? column.field)
             .toLowerCase()
             .indexOf(searchValue) > -1 ||
           (column.description || '').toLowerCase().indexOf(searchValue) > -1

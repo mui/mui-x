@@ -27,7 +27,7 @@ export const defaultSearchPredicate: NonNullable<GridColumnsManagementProps['sea
   searchValue,
 ) => {
   return (
-    (resolveColumnHeaderName(column.headerName, isStringHeaderName) || column.field)
+    (resolveColumnHeaderName(column.headerName, isStringHeaderName) ?? column.field)
       .toLowerCase()
       .indexOf(searchValue) > -1
   );
