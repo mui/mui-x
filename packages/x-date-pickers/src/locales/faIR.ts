@@ -2,6 +2,12 @@ import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 import { TimeViewWithMeridiem } from '../internals/models';
 
+const latinToPersianDigits = (str)
+ => {
+   const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+   return str.replace(/\d/g, (digit) => persianDigits[parseInt(digit, 10)])
+ }
+
 const timeViews: Record<TimeViewWithMeridiem, string> = {
   hours: 'ساعت‌ها',
   minutes: 'دقیقه‌ها',
@@ -45,18 +51,18 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   // Clock labels
   clockLabelText: (view, time, adapter) =>
     ` را انتخاب کنید ${timeViews[view]}. ${time === null ? 'هیچ ساعتی انتخاب نشده است' : `ساعت انتخاب ${adapter.format(time, 'fullTime')} می باشد`}`,
-  hoursClockNumberText: (hours) => `${hours} ساعت‌ها`,
-  minutesClockNumberText: (minutes) => `${minutes} دقیقه‌ها`,
-  secondsClockNumberText: (seconds) => `${seconds} ثانیه‌ها`,
+  hoursClockNumberText: (hours) => `${latinToPersianDigits(hours)} ساعت‌ها`,
+  minutesClockNumberText: (minutes) => `${latinToPersianDigits(minutes)} دقیقه‌ها`,
+  secondsClockNumberText: (seconds) => `${latinToPersianDigits(seconds)} ثانیه‌ها`,
 
   // Digital clock labels
   selectViewText: (view) => ` را انتخاب کنید ${timeViews[view]}`,
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'عدد هفته',
-  calendarWeekNumberHeaderText: '#',
-  calendarWeekNumberAriaLabelText: (weekNumber) => `هفته ${weekNumber}`,
-  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
+  calendarWeekNumberHeaderText: latinToPersianDigits('#'),
+  calendarWeekNumberAriaLabelText: (weekNumber) => `هفته ${latinToPersianDigits(weekNumber)}`,
+  calendarWeekNumberText: (weekNumber) => `${latinToPersianDigits(weekNumber)}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
