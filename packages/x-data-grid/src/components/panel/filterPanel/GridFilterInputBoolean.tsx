@@ -25,6 +25,19 @@ const BooleanOperatorContainer = styled('div')({
   },
 });
 
+/**
+ * Helper to convert a Boolean filter value to a string
+ * representation that can be used with the select component.
+ */
+const booleanFilterValueToString = (value: boolean | null) =>
+  !value && value !== false ? '' : String(value);
+
+/**
+ * Helper to convert the string values from the select component
+ * to a boolean value that can be used in the filter model.
+ */
+const stringToBooleanFilterValue = (value: string) => (value === '' ? null : value === 'true');
+
 function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   const {
     item,
@@ -39,7 +52,10 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     InputLabelProps,
     ...others
   } = props;
-  const [filterValueState, setFilterValueState] = React.useState(item.value || '');
+
+  const [filterValueState, setFilterValueState] = React.useState(
+    booleanFilterValueToString(item.value),
+  );
   const rootProps = useGridRootProps();
 
   const labelId = useId();
@@ -54,13 +70,18 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
       setFilterValueState(value);
-      applyValue({ ...item, value });
+      applyValue({
+        ...item,
+        // Convert the string select value to a boolean or null
+        value: stringToBooleanFilterValue(value),
+      });
     },
     [applyValue, item],
   );
 
   React.useEffect(() => {
-    setFilterValueState(item.value || '');
+    // Convert the boolean or null value to a string for the select component
+    setFilterValueState(booleanFilterValueToString(item.value));
   }, [item.value]);
 
   const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
