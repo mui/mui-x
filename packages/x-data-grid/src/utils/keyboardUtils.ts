@@ -1,15 +1,5 @@
 import * as React from 'react';
 
-/**
- * @deprecated there is no meaninfuly logic abstracted, use event.key directly.
- */
-export const isEscapeKey = (key: string): boolean => key === 'Escape';
-
-/**
- * @deprecated there is no meaninfuly logic abstracted, use event.key directly.
- */
-export const isTabKey = (key: string): boolean => key === 'Tab';
-
 // Non printable keys have a name, for example "ArrowRight", see the whole list:
 // https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
 // So event.key.length === 1 is often enough.
@@ -50,7 +40,7 @@ export const isNavigationKey = (key: string) =>
 export const isKeyboardEvent = (event: any): event is React.KeyboardEvent<HTMLElement> =>
   !!event.key;
 
-export const isHideMenuKey = (key: React.KeyboardEvent['key']) => isTabKey(key) || isEscapeKey(key);
+export const isHideMenuKey = (key: React.KeyboardEvent['key']) => key === 'Tab' || key === 'Escape';
 
 // In theory, on macOS, ctrl + v doesn't trigger a paste, so the function should return false.
 // However, maybe it's overkill to fix, so let's be lazy.
