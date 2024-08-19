@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-// @ts-ignore
 import IconImage from 'docs/src/components/icon/IconImage';
 
 export default function XLogo() {
