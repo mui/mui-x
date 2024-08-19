@@ -339,7 +339,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, true], isSingleInput);
     });
 
-    it('should accept non contiguous ranges by default', () => {
+    it('should accept non contiguous date range by default', () => {
       if (!withDate || withTime) {
         return;
       }
@@ -369,7 +369,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       expect(onErrorMock.callCount).to.equal(0);
     });
 
-    it('should not accept non contiguous ranges when prop is set to true', () => {
+    it('should not accept non contiguous date range when prop is set to true', () => {
       if (!withDate || withTime) {
         return;
       }
@@ -385,7 +385,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
           enableAccessibleFieldDOMStructure
           onError={onErrorMock}
           shouldDisableDate={shouldDisableDate}
-          disableNonContiguousRanges
+          disableNonContiguousDateRange
         />,
       );
 

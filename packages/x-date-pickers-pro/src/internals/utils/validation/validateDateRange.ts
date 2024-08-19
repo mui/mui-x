@@ -22,8 +22,8 @@ export const validateDateRange: Validator<
 > = ({ props, value, adapter }) => {
   const [start, end] = value;
 
-  const { shouldDisableDate, disableNonContiguousRanges, ...otherProps } = props;
-  if (!!start && !!end && disableNonContiguousRanges && shouldDisableDate) {
+  const { shouldDisableDate, disableNonContiguousDateRange, ...otherProps } = props;
+  if (!!start && !!end && disableNonContiguousDateRange && shouldDisableDate) {
     let current = start;
 
     while (adapter.utils.isBefore(current, adapter.utils.addDays(end, 1))) {

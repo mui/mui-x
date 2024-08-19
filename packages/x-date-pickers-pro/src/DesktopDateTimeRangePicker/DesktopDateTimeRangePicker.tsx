@@ -306,7 +306,7 @@ DesktopDateTimeRangePicker.propTypes = {
    * If `true`, prevents the selection of ranges containing disabled dates.
    * @default false
    */
-  disableNonContiguousRanges: PropTypes.bool,
+  disableNonContiguousDateRange: PropTypes.bool,
   /**
    * If `true`, the open picker button will not be rendered (renders only the field).
    * @default false

@@ -231,7 +231,7 @@ MultiInputDateRangeField.propTypes = {
    * If `true`, prevents the selection of ranges containing disabled dates.
    * @default false
    */
-  disableNonContiguousRanges: PropTypes.bool,
+  disableNonContiguousDateRange: PropTypes.bool,
   /**
    * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false

@@ -1,7 +1,7 @@
 <DemoItem label="DateRangePicker">
   <DateRangePicker
     defaultValue={[start, end]}
-    disableNonContiguousRanges
+    disableNonContiguousDateRange
     shouldDisableDate={shouldDisableDate}
   />
 </DemoItem>

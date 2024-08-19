@@ -173,7 +173,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     className,
     disableFuture,
     disablePast,
-    disableNonContiguousRanges,
+    disableNonContiguousDateRange,
     minDate,
     maxDate,
     shouldDisableDate,
@@ -263,7 +263,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
         rangePosition,
         allowRangeFlip,
         shouldMergeDateAndTime: true,
-        disableNonContiguousRanges,
+        disableNonContiguousDateRange,
         maxDate,
         minDate,
         contiguousRangeBoundaries,
@@ -358,7 +358,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
   });
 
   const shouldComputeRangeBoundaries =
-    disableNonContiguousRanges && shouldDisableDate && value.some((date) => date !== null);
+    disableNonContiguousDateRange && shouldDisableDate && value.some((date) => date !== null);
 
   React.useEffect(() => {
     if (shouldComputeRangeBoundaries) {
@@ -442,7 +442,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
       availableRangePositions,
       contiguousRangeBoundaries?.maxDate,
       maxDate,
-      disableNonContiguousRanges,
+      disableNonContiguousDateRange,
       isDragging,
       value,
     ),
@@ -450,7 +450,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
       availableRangePositions,
       contiguousRangeBoundaries?.minDate,
       minDate,
-      disableNonContiguousRanges,
+      disableNonContiguousDateRange,
       isDragging,
       value,
     ),
@@ -476,7 +476,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     range: valueDayRange,
     newDate: rangePreviewDay,
     rangePosition,
-    disableNonContiguousRanges,
+    disableNonContiguousDateRange,
     contiguousRangeBoundaries,
   });
 
@@ -719,7 +719,7 @@ DateRangeCalendar.propTypes = {
    * If `true`, prevents the selection of ranges containing disabled dates.
    * @default false
    */
-  disableNonContiguousRanges: PropTypes.bool,
+  disableNonContiguousDateRange: PropTypes.bool,
   /**
    * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false

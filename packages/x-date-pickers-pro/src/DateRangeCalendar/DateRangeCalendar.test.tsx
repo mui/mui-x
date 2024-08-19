@@ -527,16 +527,16 @@ describe('<DateRangeCalendar />', () => {
     expect(screen.getAllByMuiTest('pickers-calendar')).to.have.length(3);
   });
 
-  describe('prop: disableNonContiguousRanges', () => {
+  describe('prop: disableNonContiguousDateRange', () => {
     const shouldDisableDate = (value) => adapterToUse.getDate(value) === 20;
     const maxDate = adapterToUse.date('25');
 
-    it('should allow non contiguous ranges when prop is false', () => {
+    it('should allow non contiguous date range when prop is false', () => {
       const onChange = spy();
 
       render(
         <DateRangeCalendar
-          disableNonContiguousRanges={false}
+          disableNonContiguousDateRange={false}
           shouldDisableDate={shouldDisableDate}
           maxDate={maxDate}
           onChange={onChange}
@@ -552,12 +552,12 @@ describe('<DateRangeCalendar />', () => {
       expect(onChange.callCount).to.equal(2);
     });
 
-    it('should disable dates dynamically after startDay selection to prevent non contiguous range when prop is true', () => {
+    it('should disable dates dynamically after startDay selection to prevent non contiguous date range when prop is true', () => {
       const onChange = spy();
 
       render(
         <DateRangeCalendar
-          disableNonContiguousRanges
+          disableNonContiguousDateRange
           shouldDisableDate={shouldDisableDate}
           maxDate={maxDate}
           onChange={onChange}

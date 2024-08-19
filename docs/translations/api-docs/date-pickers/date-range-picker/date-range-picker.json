@@ -40,7 +40,7 @@
     "disableHighlightToday": {
       "description": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle."
     },
-    "disableNonContiguousRanges": {
+    "disableNonContiguousDateRange": {
       "description": "If <code>true</code>, prevents the selection of ranges containing disabled dates."
     },
     "disableOpenPicker": {

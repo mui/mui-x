@@ -135,5 +135,5 @@ export interface DateRangeValidationProps {
    * If `true`, throws an error when the selected range that contains disabled dates.
    * @default false
    */
-  disableNonContiguousRanges?: boolean;
+  disableNonContiguousDateRange?: boolean;
 }

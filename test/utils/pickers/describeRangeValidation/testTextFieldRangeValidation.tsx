@@ -667,7 +667,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
     });
 
-    it('should accept non contiguous ranges by default', () => {
+    it('should accept non contiguous date range by default', () => {
       if (!withDate || withTime) {
         return;
       }
@@ -696,7 +696,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
     });
 
-    it('should not accept non contiguous ranges when prop is set to true', () => {
+    it('should not accept non contiguous date range when prop is set to true', () => {
       if (!withDate || withTime) {
         return;
       }
@@ -711,7 +711,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
           onError={onErrorMock}
           shouldDisableDate={shouldDisableDate}
           value={[adapterToUse.date('2018-03-01'), adapterToUse.date('2018-03-01')]}
-          disableNonContiguousRanges
+          disableNonContiguousDateRange
         />,
       );
 

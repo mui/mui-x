@@ -45,7 +45,7 @@ export const DATE_TIME_VALIDATION_PROP_NAMES: (keyof DateTimeValidationProps<any
 ];
 
 export const DATE_RANGE_VALIDATION_PROP_NAMES: (keyof DateRangeValidationProps)[] = [
-  'disableNonContiguousRanges',
+  'disableNonContiguousDateRange',
 ];
 
 const VALIDATION_PROP_NAMES = [

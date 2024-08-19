@@ -28,7 +28,7 @@
     "disableDragEditing": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
-    "disableNonContiguousRanges": { "type": { "name": "bool" }, "default": "false" },
+    "disableNonContiguousDateRange": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayStaticWrapperAs": {
       "type": { "name": "enum", "description": "'desktop'<br>&#124;&nbsp;'mobile'" },

@@ -13,7 +13,7 @@
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
-    "disableNonContiguousRanges": { "type": { "name": "bool" }, "default": "false" },
+    "disableNonContiguousDateRange": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "focused": { "type": { "name": "bool" } },
     "format": { "type": { "name": "string" } },

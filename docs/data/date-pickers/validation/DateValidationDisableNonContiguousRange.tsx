@@ -5,8 +5,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 
+const start = dayjs().date(5);
 const shouldDisableDate = (value: Dayjs) => value.date() === 6;
-const start = dayjs().date(4);
 const end = dayjs().date(7);
 
 export default function DateValidationDisableNonContiguousRange() {
@@ -16,7 +16,7 @@ export default function DateValidationDisableNonContiguousRange() {
         <DemoItem label="DateRangePicker">
           <DateRangePicker
             defaultValue={[start, end]}
-            disableNonContiguousRanges
+            disableNonContiguousDateRange
             shouldDisableDate={shouldDisableDate}
           />
         </DemoItem>

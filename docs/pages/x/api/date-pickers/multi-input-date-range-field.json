@@ -13,7 +13,7 @@
     },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
-    "disableNonContiguousRanges": { "type": { "name": "bool" }, "default": "false" },
+    "disableNonContiguousDateRange": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "divider": { "type": { "name": "node" } },
     "format": { "type": { "name": "string" } },

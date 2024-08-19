@@ -19,5 +19,5 @@ export interface DayRangeValidationProps<TDate extends PickerValidDate> {
    * If `true`, prevents the selection of ranges containing disabled dates.
    * @default false
    */
-  disableNonContiguousRanges?: boolean;
+  disableNonContiguousDateRange?: boolean;
 }

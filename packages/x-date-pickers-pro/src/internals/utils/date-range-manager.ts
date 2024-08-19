@@ -14,7 +14,7 @@ interface CalculateRangeChangeOptions<TDate extends PickerValidDate> {
    */
   allowRangeFlip?: boolean;
   shouldMergeDateAndTime?: boolean;
-  disableNonContiguousRanges?: boolean;
+  disableNonContiguousDateRange?: boolean;
   maxDate?: TDate;
   minDate?: TDate;
   contiguousRangeBoundaries?: {
@@ -35,12 +35,12 @@ export function calculateRangeChange<TDate extends PickerValidDate>({
   rangePosition,
   allowRangeFlip = false,
   shouldMergeDateAndTime = false,
-  disableNonContiguousRanges,
+  disableNonContiguousDateRange,
   contiguousRangeBoundaries,
 }: CalculateRangeChangeOptions<TDate>): CalculateRangeChangeResponse<TDate> {
   const [start, end] = range;
 
-  if (disableNonContiguousRanges && selectedDate && start && end) {
+  if (disableNonContiguousDateRange && selectedDate && start && end) {
     if (rangePosition === 'start') {
       if (
         contiguousRangeBoundaries?.minDate &&

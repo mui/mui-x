@@ -83,7 +83,7 @@ export const applyDateBoundaries = <TDate extends PickerValidDate>(
   availableRangePositions: RangePosition[],
   contiguousRangeBoundary: TDate | null | undefined,
   defaultBoundary: TDate,
-  disableNonContiguousRanges: boolean | undefined,
+  disableNonContiguousDateRange: boolean | undefined,
   isDragging: boolean,
   value: DateRange<TDate>,
 ) => {
@@ -92,7 +92,7 @@ export const applyDateBoundaries = <TDate extends PickerValidDate>(
   const [start, end] = value;
 
   if (
-    disableNonContiguousRanges &&
+    disableNonContiguousDateRange &&
     contiguousRangeBoundary &&
     !isSelectingDateTimeStart &&
     ((start && !end) || (!start && end) || isDragging)

@@ -38,7 +38,7 @@
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
-    "disableNonContiguousRanges": { "type": { "name": "bool" }, "default": "false" },
+    "disableNonContiguousDateRange": { "type": { "name": "bool" }, "default": "false" },
     "disableOpenPicker": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
