@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
-import { fastMemo } from '../utils/fastMemo';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridRowModes, GridCellModes } from '../models/gridEditRowModel';
