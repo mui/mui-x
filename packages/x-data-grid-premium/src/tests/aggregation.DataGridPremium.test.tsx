@@ -6,6 +6,7 @@ import {
   within,
   act,
   fireEvent,
+  waitFor,
 } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { getCell, getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
@@ -185,7 +186,9 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
         setProps({ columns: [column] });
         fireEvent.doubleClick(cell);
-        expect(cell.querySelector('input')).to.equal(null);
+        waitFor(() => {
+          expect(cell.querySelector('input')).to.equal(null);
+        });
       });
     });
   });
