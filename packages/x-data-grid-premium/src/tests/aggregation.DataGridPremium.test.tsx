@@ -6,7 +6,6 @@ import {
   within,
   act,
   fireEvent,
-  waitFor,
 } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { getCell, getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
@@ -422,10 +421,9 @@ describe('<DataGridPremium /> - Aggregation', () => {
           }),
         ).getByText('max'),
       );
+      clock.runToLast();
 
-      waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
-      });
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
     });
   });
 
