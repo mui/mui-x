@@ -186,9 +186,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
         setProps({ columns: [column] });
         fireEvent.doubleClick(cell);
-        waitFor(() => {
-          expect(cell.querySelector('input')).to.equal(null);
-        });
+        expect(cell.querySelector('input')).to.equal(null);
       });
     });
   });
@@ -425,7 +423,9 @@ describe('<DataGridPremium /> - Aggregation', () => {
         ).getByText('max'),
       );
 
-      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
+      waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
+      });
     });
   });
 
