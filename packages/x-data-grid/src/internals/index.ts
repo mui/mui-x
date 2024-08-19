@@ -56,6 +56,10 @@ export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
 export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
+export {
+  gridFilteredChildrenCountLookupSelector,
+  gridExpandedSortedRowTreeLevelPositionLookupSelector,
+} from '../hooks/features/filter/gridFilterSelector';
 export { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
 export type {
   GridAggregatedFilterItemApplier,
@@ -78,6 +82,8 @@ export {
   useGridRowSpanning,
   rowSpanningStateInitializer,
 } from '../hooks/features/rows/useGridRowSpanning';
+export { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
+export { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 export type {
   GridRowTreeCreationParams,
@@ -146,7 +152,6 @@ export {
 } from '../utils/domUtils';
 export { isNavigationKey, isPasteShortcut } from '../utils/keyboardUtils';
 export * from '../utils/utils';
-export * from '../utils/fastMemo';
 export { exportAs } from '../utils/exportAs';
 export * from '../utils/getPublicApiRef';
 export * from '../utils/cellBorderUtils';

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view",
-  "version": "7.12.0",
+  "version": "7.13.0",
   "description": "The community edition of the Tree View components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -47,7 +47,7 @@
     "@mui/system": "^5.16.5",
     "@mui/utils": "^5.16.5",
     "@mui/x-internals": "workspace:*",
-    "@types/react-transition-group": "^4.4.10",
+    "@types/react-transition-group": "^4.4.11",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
     "react-transition-group": "^4.4.5"
@@ -59,10 +59,18 @@
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },
+  "peerDependenciesMeta": {
+    "@emotion/react": {
+      "optional": true
+    },
+    "@emotion/styled": {
+      "optional": true
+    }
+  },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.5",
+    "@mui/internal-test-utils": "^1.0.7",
     "@types/prop-types": "^15.7.12",
-    "rimraf": "^5.0.9"
+    "rimraf": "^5.0.10"
   },
   "engines": {
     "node": ">=14.0.0"
