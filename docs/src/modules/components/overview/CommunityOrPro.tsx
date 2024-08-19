@@ -40,7 +40,7 @@ export default function CommunityOrPro() {
 
           <Button
             size="small"
-            href="/x/introduction/licensing"
+            href="/x/introduction/licensing/"
             endIcon={<ArrowForwardIcon />}
             sx={{ width: 'fit-content' }}
           >
@@ -60,7 +60,7 @@ export default function CommunityOrPro() {
                 'Free forever under an MIT license. Includes Date Pickers, Time Pickers, and Date Time Pickers.',
               ]}
               backgroundColor="subtle"
-              link="/pricing"
+              link="https://mui.com/pricing/"
             />
           </Box>
           <Box sx={{ flexBasis: '50%' }}>
@@ -71,7 +71,7 @@ export default function CommunityOrPro() {
                 'Requires a commercial license. Includes all Community components plus the Date and Time Range Pickers.',
               ]}
               backgroundColor="subtle"
-              link="/pricing"
+              link="https://mui.com/pricing/"
             />
           </Box>
         </Stack>

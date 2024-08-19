@@ -5,6 +5,7 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { styled } from '@mui/system';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass, gridClasses } from '../constants';
@@ -18,7 +19,6 @@ import { GridScrollParams } from '../models/params/gridScrollParams';
 import { GridEventListener } from '../models/events';
 import { useTimeout } from '../hooks/utils/useTimeout';
 import { getTotalHeaderHeight } from '../hooks/features/columns/gridColumnsUtils';
-import { fastMemo } from '../utils/fastMemo';
 
 const CLIFF = 1;
 const SLOP = 1.5;
