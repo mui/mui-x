@@ -27,7 +27,7 @@ import { TreeItem2Provider } from '../TreeItem2Provider';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { useTreeItemState } from './useTreeItemState';
 import { isTargetInDescendants } from '../internals/utils/tree';
-import { TreeViewItemPluginSlotPropsEnhancerParams } from '@mui/x-tree-view/internals/models';
+import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem');
 

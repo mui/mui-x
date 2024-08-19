@@ -103,8 +103,6 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     preventSelection,
     expansionTrigger,
     toggleItemEditing,
-    handleSaveItemLabel,
-    handleCancelItemLabelEditing,
   } = useTreeItemState(itemId);
 
   const icon = iconProp || expansionIcon || displayIcon;
@@ -220,7 +218,15 @@ TreeItemContent.propTypes = {
    * The tree item label.
    */
   label: PropTypes.node,
-  labelInputProps: PropTypes.object,
+  labelInputProps: PropTypes.shape({
+    autoFocus: PropTypes.oneOf([true]),
+    'data-element': PropTypes.oneOf(['labelInput']),
+    onBlur: PropTypes.func,
+    onChange: PropTypes.func,
+    onKeyDown: PropTypes.func,
+    type: PropTypes.oneOf(['text']),
+    value: PropTypes.string,
+  }),
 } as any;
 
 export { TreeItemContent };
