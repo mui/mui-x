@@ -108,8 +108,8 @@ importers:
         specifier: ^7.1.1
         version: 7.1.1(@octokit/core@4.2.4(encoding@0.1.13))
       '@octokit/rest':
-        specifier: ^21.0.1
-        version: 21.0.1
+        specifier: ^21.0.2
+        version: 21.0.2
       '@playwright/test':
         specifier: ^1.44.1
         version: 1.44.1
@@ -3531,8 +3531,8 @@ packages:
     resolution: {integrity: sha512-m2a9VhaP5/tUw8FwfnW2ICXlXpLPIqxtg3XcAiGMLj/Xhw3RSBfZ8le/466ktO1Gcjr8oXudGnHhxV1TXJgFxw==}
     engines: {node: '>= 14'}
 
-  '@octokit/rest@21.0.1':
-    resolution: {integrity: sha512-RWA6YU4CqK0h0J6tfYlUFnH3+YgBADlxaHXaKSG+BVr2y4PTfbU2tlKuaQoQZ83qaTbi4CUxLNAmbAqR93A6mQ==}
+  '@octokit/rest@21.0.2':
+    resolution: {integrity: sha512-+CiLisCoyWmYicH25y1cDfCrv41kRSvTq6pPWtRroRJzhsCZWZyCqGyI8foJT5LmScADSwRAnr/xo+eewL04wQ==}
     engines: {node: '>= 18'}
 
   '@octokit/tsconfig@1.0.2':
@@ -12501,7 +12501,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@octokit/rest@21.0.1':
+  '@octokit/rest@21.0.2':
     dependencies:
       '@octokit/core': 6.1.2
       '@octokit/plugin-paginate-rest': 11.3.1(@octokit/core@6.1.2)
