@@ -7,6 +7,7 @@ import {
   getByRole,
   fireTouchChangedEvent,
   userEvent,
+  act,
 } from '@mui/internal-test-utils';
 import {
   adapterToUse,
@@ -533,7 +534,7 @@ describe('<DateRangeCalendar />', () => {
   });
 
   describe('Performance', () => {
-    it('should only render the new start day when selecting a start day without a previously selected start day', () => {
+    it('should only render the new start day when selecting a start day without a previously selected start day', async () => {
       const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
 
       render(
@@ -545,11 +546,13 @@ describe('<DateRangeCalendar />', () => {
       );
 
       const renderCountBeforeChange = RenderCount.callCount;
-      userEvent.mousePress(getPickerDay('2'));
+      await act(async () => {
+        userEvent.mousePress(getPickerDay('2'));
+      });
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
     });
 
-    it('should only render the day inside range when selecting the end day', () => {
+    it('should only render the day inside range when selecting the end day', async () => {
       const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
 
       render(
@@ -560,10 +563,14 @@ describe('<DateRangeCalendar />', () => {
         />,
       );
 
-      userEvent.mousePress(getPickerDay('2'));
+      await act(async () => {
+        userEvent.mousePress(getPickerDay('2'));
+      });
 
       const renderCountBeforeChange = RenderCount.callCount;
-      userEvent.mousePress(getPickerDay('4'));
+      await act(async () => {
+        userEvent.mousePress(getPickerDay('4'));
+      });
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
     });
   });

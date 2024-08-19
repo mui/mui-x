@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { expectPickerChangeHandlerValue } from 'test/utils/pickers';
-import { userEvent, screen } from '@mui/internal-test-utils';
+import { userEvent, screen, act } from '@mui/internal-test-utils';
 import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTest, options) => {
@@ -21,7 +21,7 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
   }
 
   describe('Picker shortcuts', () => {
-    it('should call onClose, onChange and onAccept when picking a shortcut without explicit changeImportance', () => {
+    it('should call onClose, onChange and onAccept when picking a shortcut without explicit changeImportance', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -49,7 +49,9 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
       );
 
       const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
-      userEvent.mousePress(shortcut);
+      await act(async () => {
+        userEvent.mousePress(shortcut);
+      });
 
       expect(onChange.callCount).to.equal(1);
       expectPickerChangeHandlerValue(pickerParams.type, onChange, values[1]);
@@ -58,7 +60,7 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onChange when picking a shortcut with changeImportance="accept"', () => {
+    it('should call onClose and onChange when picking a shortcut with changeImportance="accept"', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -87,7 +89,9 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
       );
 
       const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
-      userEvent.mousePress(shortcut);
+      await act(async () => {
+        userEvent.mousePress(shortcut);
+      });
 
       expect(onChange.callCount).to.equal(1);
       expectPickerChangeHandlerValue(pickerParams.type, onChange, values[1]);
@@ -96,7 +100,7 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onChange when picking a shortcut with changeImportance="set"', () => {
+    it('should call onClose and onChange when picking a shortcut with changeImportance="set"', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -125,7 +129,9 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
       );
 
       const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
-      userEvent.mousePress(shortcut);
+      await act(async () => {
+        userEvent.mousePress(shortcut);
+      });
 
       expect(onChange.callCount).to.equal(1);
       expectPickerChangeHandlerValue(pickerParams.type, onChange, values[1]);

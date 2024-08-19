@@ -34,13 +34,13 @@ export type DescribeValueOptions<
             applySameValue?: boolean;
             setEndDate?: boolean;
           },
-        ) => TValue;
+        ) => Promise<TValue>;
       }
     : {
         setNewValue: (
           value: TValue,
           options: { selectSection: FieldSectionSelector; pressKey: FieldPressCharacter },
-        ) => TValue;
+        ) => Promise<TValue>;
       });
 
 export type DescribeValueTestSuite<TValue, C extends PickerComponentFamily> = (

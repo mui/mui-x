@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { screen, userEvent, fireEvent } from '@mui/internal-test-utils';
+import { screen, userEvent, fireEvent, act } from '@mui/internal-test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import {
   createPickerRenderer,
@@ -58,7 +58,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(screen.queryByRole('dialog')).toBeVisible();
     });
 
-    it('should call onChange with updated start date then call onChange with updated end date when opening from start input', () => {
+    it('should call onChange with updated start date then call onChange with updated end date when opening from start input', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -83,14 +83,18 @@ describe('<MobileDateRangePicker />', () => {
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      // Change the start date
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
+      await act(async () => {
+        // Change the start date
+        userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
+      });
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
 
-      // Change the end date
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '5' }));
+      await act(async () => {
+        // Change the end date
+        userEvent.mousePress(screen.getByRole('gridcell', { name: '5' }));
+      });
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
@@ -260,7 +264,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
+    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -278,8 +282,10 @@ describe('<MobileDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
-      // Clear the date
-      userEvent.mousePress(screen.getByText(/clear/i));
+      await act(async () => {
+        // Clear the date
+        userEvent.mousePress(screen.getByText(/clear/i));
+      });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);

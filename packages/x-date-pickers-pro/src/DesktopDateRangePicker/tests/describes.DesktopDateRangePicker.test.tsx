@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, userEvent } from '@mui/internal-test-utils';
+import { act, screen, userEvent } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   createPickerRenderer,
@@ -72,7 +72,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
         : 'MM/DD/YYYY';
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: (
+    setNewValue: async (
       value,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
@@ -86,11 +86,13 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
       }
 
       if (isOpened) {
-        userEvent.mousePress(
-          screen.getAllByRole('gridcell', {
-            name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
-          })[0],
-        );
+        await act(async () => {
+          userEvent.mousePress(
+            screen.getAllByRole('gridcell', {
+              name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
+            })[0],
+          );
+        });
       } else {
         selectSection('day');
         pressKey(undefined, 'ArrowUp');
@@ -134,7 +136,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (
+    setNewValue: async (
       value,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
@@ -148,11 +150,13 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
       }
 
       if (isOpened) {
-        userEvent.mousePress(
-          screen.getAllByRole('gridcell', {
-            name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
-          })[0],
-        );
+        await act(async () => {
+          userEvent.mousePress(
+            screen.getAllByRole('gridcell', {
+              name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
+            })[0],
+          );
+        });
       } else {
         selectSection('day');
         pressKey(undefined, 'ArrowUp');

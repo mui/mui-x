@@ -218,7 +218,7 @@ describe('<DesktopDateRangePicker />', () => {
       }),
     );
 
-    it('should call onChange with updated start date then call onChange with updated end date, onClose and onAccept with update date range when opening from start input', () => {
+    it('should call onChange with updated start date then call onChange with updated end date, onClose and onAccept with update date range when opening from start input', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -243,14 +243,18 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      // Change the start date
-      userEvent.mousePress(getPickerDay('3'));
+      await act(async () => {
+        // Change the start date
+        userEvent.mousePress(getPickerDay('3'));
+      });
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
 
-      // Change the end date
-      userEvent.mousePress(getPickerDay('5'));
+      await act(async () => {
+        // Change the end date
+        userEvent.mousePress(getPickerDay('5'));
+      });
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
@@ -261,7 +265,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onChange with updated end date, onClose and onAccept with update date range when opening from end input', () => {
+    it('should call onChange with updated end date, onClose and onAccept with update date range when opening from end input', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -286,8 +290,10 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      // Change the end date
-      userEvent.mousePress(getPickerDay('3'));
+      await act(async () => {
+        // Change the end date
+        userEvent.mousePress(getPickerDay('3'));
+      });
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
@@ -297,7 +303,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should not call onClose and onAccept when selecting the end date if props.closeOnSelect = false', () => {
+    it('should not call onClose and onAccept when selecting the end date if props.closeOnSelect = false', async () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
@@ -317,14 +323,16 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
 
-      // Change the end date
-      userEvent.mousePress(getPickerDay('3'));
+      await act(async () => {
+        // Change the end date
+        userEvent.mousePress(getPickerDay('3'));
+      });
 
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onClose and onAccept with the live value when pressing Escape', () => {
+    it('should call onClose and onAccept with the live value when pressing Escape', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -345,8 +353,10 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-      // Change the start date (already tested)
-      userEvent.mousePress(getPickerDay('3'));
+      await act(async () => {
+        // Change the start date (already tested)
+        userEvent.mousePress(getPickerDay('3'));
+      });
 
       // Dismiss the picker
       // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target -- don't care
@@ -392,7 +402,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
+    it('should call onClose and onAccept with the live value when clicking outside of the picker', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -416,8 +426,10 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-      // Change the start date (already tested)
-      userEvent.mousePress(getPickerDay('3'));
+      await act(async () => {
+        // Change the start date (already tested)
+        userEvent.mousePress(getPickerDay('3'));
+      });
       clock.runToLast();
 
       // Dismiss the picker
@@ -438,7 +450,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should not call onClose or onAccept when clicking outside of the picker if not opened', () => {
+    it('should not call onClose or onAccept when clicking outside of the picker if not opened', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -452,8 +464,10 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      // Dismiss the picker
-      userEvent.mousePress(document.body);
+      await act(async () => {
+        // Dismiss the picker
+        userEvent.mousePress(document.body);
+      });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -495,7 +509,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onAccept when blur the current field', () => {
+    it('should call onClose and onAccept when blur the current field', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -520,8 +534,10 @@ describe('<DesktopDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
       expect(screen.getByRole('tooltip')).toBeVisible();
 
-      // Change the start date (already tested)
-      userEvent.mousePress(getPickerDay('3'));
+      await act(async () => {
+        // Change the start date (already tested)
+        userEvent.mousePress(getPickerDay('3'));
+      });
       clock.runToLast();
 
       act(() => {
@@ -536,7 +552,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
+    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -558,8 +574,10 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-      // Clear the date
-      userEvent.mousePress(screen.getByText(/clear/i));
+      await act(async () => {
+        // Clear the date
+        userEvent.mousePress(screen.getByText(/clear/i));
+      });
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onChange.lastCall.args[0]).to.deep.equal([null, null]);
       expect(onAccept.callCount).to.equal(1);
@@ -567,7 +585,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
+    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -585,8 +603,10 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-      // Clear the date
-      userEvent.mousePress(screen.getByText(/clear/i));
+      await act(async () => {
+        // Clear the date
+        userEvent.mousePress(screen.getByText(/clear/i));
+      });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
