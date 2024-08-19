@@ -237,6 +237,49 @@ describe('<DataGridPremium /> - Clipboard', () => {
         expect(getCell(2, 2)).to.have.text(clipboardData);
       });
 
+      // Context: https://github.com/mui/mui-x/issues/14233
+      it('should paste into cells on the current page when `paginationMode="server"`', async () => {
+        const rowLength = 4;
+
+        const { setProps } = render(
+          <Test
+            rowLength={rowLength}
+            pagination
+            paginationModel={{ pageSize: 2, page: 0 }}
+            paginationMode="server"
+            pageSizeOptions={[2]}
+            rowCount={rowLength}
+            editMode="cell"
+          />,
+        );
+
+        const clipboardData = '12';
+        const cell = getCell(3, 1); // cell in the first row on the next page
+
+        expect(cell).not.to.have.text(clipboardData);
+
+        cell.focus();
+        userEvent.mousePress(cell);
+        paste(cell, clipboardData);
+
+        // no update
+        await waitFor(() => {
+          expect(getCell(3, 1)).not.to.have.text(clipboardData);
+        });
+
+        // go to the next page
+        setProps({ paginationModel: { pageSize: 2, page: 1 } });
+
+        cell.focus();
+        userEvent.mousePress(cell);
+        paste(cell, clipboardData);
+
+        // updated
+        await waitFor(() => {
+          expect(getCell(3, 1)).to.have.text(clipboardData);
+        });
+      });
+
       it('should not paste values outside of the selected cells range', async () => {
         render(<Test rowLength={5} colLength={5} />);
 
