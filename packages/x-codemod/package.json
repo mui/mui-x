@@ -34,7 +34,7 @@
   "dependencies": {
     "@babel/core": "^7.25.2",
     "@babel/runtime": "^7.25.0",
-    "@babel/traverse": "^7.25.2",
+    "@babel/traverse": "^7.25.3",
     "jscodeshift": "0.16.1",
     "yargs": "^17.7.2"
   },
