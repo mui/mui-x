@@ -100,7 +100,7 @@
     "@playwright/test": "^1.44.1",
     "@types/babel__core": "^7.20.5",
     "@types/babel__traverse": "^7.20.6",
-    "@types/chai": "^4.3.16",
+    "@types/chai": "^4.3.17",
     "@types/chai-dom": "^1.11.3",
     "@types/fs-extra": "^11.0.4",
     "@types/karma": "^6.3.8",
