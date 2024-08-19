@@ -144,32 +144,6 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     }
     toggleItemEditing();
   };
-  const handleLabelInputBlur = (
-    event: React.FocusEvent<HTMLInputElement> & MuiCancellableEvent,
-  ) => {
-    if (event.defaultMuiPrevented) {
-      return;
-    }
-
-    if (event.target.value) {
-      handleSaveItemLabel(event, event.target.value);
-    }
-  };
-
-  const handleLabelInputKeydown = (
-    event: React.KeyboardEvent<HTMLInputElement> & MuiCancellableEvent,
-  ) => {
-    if (event.defaultMuiPrevented) {
-      return;
-    }
-
-    const target = event.target as HTMLInputElement;
-    if (event.key === 'Enter' && target.value) {
-      handleSaveItemLabel(event, target.value);
-    } else if (event.key === 'Escape') {
-      handleCancelItemLabelEditing(event);
-    }
-  };
 
   return (
     /* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions -- Key event is handled by the TreeView */
@@ -200,12 +174,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
       )}
 
       {editing ? (
-        <TreeItem2LabelInput
-          {...labelInputProps}
-          className={classes.labelInput}
-          onBlur={handleLabelInputBlur}
-          onKeyDown={handleLabelInputKeydown}
-        />
+        <TreeItem2LabelInput {...labelInputProps} className={classes.labelInput} />
       ) : (
         <div className={classes.label} {...(editable && { onDoubleClick: handleLabelDoubleClick })}>
           {label}
