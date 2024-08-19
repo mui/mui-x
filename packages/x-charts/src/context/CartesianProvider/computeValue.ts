@@ -7,13 +7,12 @@ import {
   isBandScaleConfig,
   isPointScaleConfig,
 } from '../../models/axis';
-import { CartesianChartSeriesType, DatasetType } from '../../models/seriesType/config';
+import { CartesianChartSeriesType } from '../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../internals/colorScale';
 import { getTickNumber } from '../../hooks/useTicks';
 import { getScale } from '../../internals/getScale';
 import { DrawingArea } from '../DrawingProvider';
 import { FormattedSeries } from '../SeriesProvider';
-import { normalizeAxis } from './normalizeAxis';
 import { zoomScaleRange } from './zoom';
 import { ExtremumGetter } from '../PluginProvider';
 import {
@@ -57,7 +56,6 @@ type ComputeCommonParams = {
   drawingArea: DrawingArea;
   formattedSeries: FormattedSeries;
   extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> };
-  dataset: DatasetType | undefined;
   zoomData?: ZoomData[];
   zoomOptions?: ZoomOptions;
   getFilters?: GetZoomAxisFilters;
@@ -65,13 +63,13 @@ type ComputeCommonParams = {
 
 export function computeValue(
   options: ComputeCommonParams & {
-    axis: AxisConfig<ScaleName, any, ChartsYAxisProps>[] | undefined;
+    axis: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
     axisDirection: 'y';
   },
 ): ComputeResult<ChartsYAxisProps>;
 export function computeValue(
   options: ComputeCommonParams & {
-    axis: AxisConfig<ScaleName, any, ChartsXAxisProps>[] | undefined;
+    axis: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
     axisDirection: 'x';
   },
 ): ComputeResult<ChartsAxisProps>;
@@ -80,16 +78,15 @@ export function computeValue({
   formattedSeries,
   axis: inAxis,
   extremumGetters,
-  dataset,
   axisDirection,
   zoomData,
   zoomOptions,
   getFilters,
 }: ComputeCommonParams & {
-  axis: AxisConfig<ScaleName, any, ChartsAxisProps>[] | undefined;
+  axis: AxisConfig<ScaleName, any, ChartsAxisProps>[];
   axisDirection: 'x' | 'y';
 }) {
-  const allAxis = normalizeAxis(inAxis, dataset, axisDirection);
+  const allAxis = inAxis;
 
   const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {

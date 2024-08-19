@@ -9,8 +9,7 @@ export default function ZoomFilterMode() {
       xAxis={[
         {
           scaleType: 'band',
-          data: dataset.map((item) => item.letter),
-          // dataKey: 'letter',
+          dataKey: 'letter',
           zoom: { filterMode: 'discard' },
         },
       ]}

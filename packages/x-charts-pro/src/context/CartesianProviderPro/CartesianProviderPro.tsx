@@ -17,7 +17,7 @@ const { computeValue } = cartesianProviderUtils;
 export interface CartesianProviderProProps extends CartesianProviderProps {}
 
 function CartesianProviderPro(props: CartesianProviderProProps) {
-  const { xAxis, yAxis, dataset, children } = props;
+  const { xAxis, yAxis, children } = props;
 
   const formattedSeries = useSeries();
   const drawingArea = useDrawingArea();
@@ -70,13 +70,12 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
         formattedSeries,
         axis: xAxis,
         extremumGetters: xExtremumGetters,
-        dataset,
         axisDirection: 'x',
         zoomData,
         zoomOptions: options,
         getFilters,
       }),
-    [drawingArea, formattedSeries, xAxis, xExtremumGetters, dataset, zoomData, options, getFilters],
+    [drawingArea, formattedSeries, xAxis, xExtremumGetters, zoomData, options, getFilters],
   );
 
   const yValues = React.useMemo(
@@ -86,13 +85,12 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
         formattedSeries,
         axis: yAxis,
         extremumGetters: yExtremumGetters,
-        dataset,
         axisDirection: 'y',
         zoomData,
         zoomOptions: options,
         getFilters,
       }),
-    [drawingArea, formattedSeries, yAxis, yExtremumGetters, dataset, zoomData, options, getFilters],
+    [drawingArea, formattedSeries, yAxis, yExtremumGetters, zoomData, options, getFilters],
   );
 
   const value = React.useMemo(

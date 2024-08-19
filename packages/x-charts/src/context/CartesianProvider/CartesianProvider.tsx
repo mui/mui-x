@@ -8,7 +8,7 @@ import { useYExtremumGetter } from '../PluginProvider';
 import { CartesianProviderProps } from './Cartesian.types';
 
 function CartesianProvider(props: CartesianProviderProps) {
-  const { xAxis, yAxis, dataset, children } = props;
+  const { xAxis, yAxis, children } = props;
 
   const formattedSeries = useSeries();
   const drawingArea = useDrawingArea();
@@ -22,10 +22,9 @@ function CartesianProvider(props: CartesianProviderProps) {
         formattedSeries,
         axis: xAxis,
         extremumGetters: xExtremumGetters,
-        dataset,
         axisDirection: 'x',
       }),
-    [drawingArea, formattedSeries, xAxis, xExtremumGetters, dataset],
+    [drawingArea, formattedSeries, xAxis, xExtremumGetters],
   );
 
   const yValues = React.useMemo(
@@ -35,10 +34,9 @@ function CartesianProvider(props: CartesianProviderProps) {
         formattedSeries,
         axis: yAxis,
         extremumGetters: yExtremumGetters,
-        dataset,
         axisDirection: 'y',
       }),
-    [drawingArea, formattedSeries, yAxis, yExtremumGetters, dataset],
+    [drawingArea, formattedSeries, yAxis, yExtremumGetters],
   );
 
   const value = React.useMemo(
