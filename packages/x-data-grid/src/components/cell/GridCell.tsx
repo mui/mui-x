@@ -462,7 +462,12 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
 
   const isHidden = hiddenCells[rowId]?.[field] ?? false;
   if (isHidden) {
-    return <div style={{ ...style, width }} />;
+    return (
+      <div
+        data-colindex={colIndex}
+        style={{ ...style, minWidth: 'var(--width)', maxWidth: 'var(--width)' }}
+      />
+    );
   }
   const rowSpan = spannedCells[rowId]?.[field] ?? 1;
 
