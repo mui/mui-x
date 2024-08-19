@@ -237,7 +237,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         expect(getCell(2, 2)).to.have.text(clipboardData);
       });
 
-      it('should paste into cells on the current page when pagination is in "server" mode', async () => {
+      // Context: https://github.com/mui/mui-x/issues/14233
+      it('should paste into cells on the current page when `paginationMode="server"`', async () => {
         const rowLength = 4;
 
         const { setProps } = render(
