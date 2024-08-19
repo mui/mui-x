@@ -44,14 +44,14 @@ export type DrawingArea = {
    * @param {number} point.y The y coordinate of the point.
    * @param {Object} options The options of the check.
    * @param {Element} [options.targetElement] The element to check if it is allowed to overflow the drawing area.
-   * @param {'x' | 'y' | 'xy'} [options.direction] The direction to check.
+   * @param {'x' | 'y'} [options.direction] The direction to check.
    * @returns {boolean} `true` if the point is inside the drawing area, `false` otherwise.
    */
   isPointInside: (
-    point: { x?: number; y?: number },
+    point: { x: number; y: number },
     options?: {
       targetElement?: Element;
-      direction?: 'x' | 'y' | 'xy';
+      direction?: 'x' | 'y';
     },
   ) => boolean;
 };
@@ -95,20 +95,20 @@ export function DrawingProvider(props: DrawingProviderProps) {
   const chartId = useId();
 
   const isPointInside = React.useCallback<DrawingArea['isPointInside']>(
-    ({ x = 0, y = 0 }, { targetElement, direction } = {}) => {
+    ({ x, y }, options) => {
       // For element allowed to overflow, wrapping them in <g data-drawing-container /> make them fully part of the drawing area.
-      if (targetElement && targetElement.closest('[data-drawing-container]')) {
+      if (options?.targetElement && options?.targetElement.closest('[data-drawing-container]')) {
         return true;
       }
 
       const isInsideX = x >= drawingArea.left - 1 && x <= drawingArea.left + drawingArea.width;
       const isInsideY = y >= drawingArea.top - 1 && y <= drawingArea.top + drawingArea.height;
 
-      if (direction === 'x') {
+      if (options?.direction === 'x') {
         return isInsideX;
       }
 
-      if (direction === 'y') {
+      if (options?.direction === 'y') {
         return isInsideY;
       }
 

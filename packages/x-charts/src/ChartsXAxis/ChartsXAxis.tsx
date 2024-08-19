@@ -217,8 +217,8 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSign * (tickSize + 3);
 
-        const showTick = isPointInside({ x: offset }, { direction: 'x' });
-        const showTickLabel = isPointInside({ x: offset + xTickLabel }, { direction: 'x' });
+        const showTick = isPointInside({ x: offset, y: -1 }, { direction: 'x' });
+        const showTickLabel = isPointInside({ x: offset + xTickLabel, y: -1 }, { direction: 'x' });
         return (
           <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
             {!disableTicks && showTick && (
