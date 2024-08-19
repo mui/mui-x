@@ -109,7 +109,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       mousePosition.current.x = svgPoint.x;
       mousePosition.current.y = svgPoint.y;
 
-      if (!drawingArea.isPointInside(svgPoint, event.target as SVGElement)) {
+      if (!drawingArea.isPointInside(svgPoint, { targetElement: event.target as SVGElement })) {
         if (mousePosition.current.isInChart) {
           dispatch({ type: 'exitChart' });
           mousePosition.current.isInChart = false;

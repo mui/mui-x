@@ -6,23 +6,24 @@ import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 
 type InfoCardProps = {
-  title: string;
-  description?: string | string[];
-  icon?: React.ReactNode;
-  onClick?: () => void;
   active?: boolean;
   backgroundColor?: 'gradient' | 'subtle';
+  description?: string | string[];
+  icon?: React.ReactNode;
   link?: string;
+  onClick?: () => void;
+  title: string;
 };
-export default function InfoCard({
-  title,
-  description,
-  icon: Icon,
-  onClick,
-  active,
-  backgroundColor = 'gradient',
-  link,
-}: InfoCardProps) {
+export default function InfoCard(props: InfoCardProps) {
+  const {
+    active,
+    backgroundColor = 'gradient',
+    description,
+    icon: Icon,
+    link,
+    onClick,
+    title,
+  } = props;
   const clickable = Boolean(onClick);
 
   return (
@@ -78,7 +79,11 @@ export default function InfoCard({
         }),
       })}
     >
-      <Stack direction="row" spacing={2} sx={{ mb: description ? 2 : 0, width: '100%' }}>
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{ mb: description ? 2 : 0, width: '100%', alignItems: 'center' }}
+      >
         {Icon}
         <Typography
           gutterBottom
