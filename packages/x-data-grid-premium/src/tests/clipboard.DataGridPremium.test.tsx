@@ -260,7 +260,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         expect(cell).not.to.have.text(clipboardData);
 
         cell.focus();
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         paste(cell, clipboardData);
 
         // no update
@@ -272,7 +272,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         setProps({ paginationModel: { pageSize: 2, page: 1 } });
 
         cell.focus();
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         paste(cell, clipboardData);
 
         // updated
