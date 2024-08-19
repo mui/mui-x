@@ -1,10 +1,14 @@
 <BarChartPro
+  dataset={dataset}
   xAxis={[
     {
       scaleType: 'band',
-      data: axisData,
+      data: dataset.map((item) => item.letter),
+      // dataKey: 'letter',
       zoom: { filterMode: 'discard' },
     },
   ]}
+  yAxis={[{ valueFormatter }]}
+  series={[{ label: 'Letter Frequency', dataKey: 'frequency', valueFormatter }]}
   {...chartProps}
 />
