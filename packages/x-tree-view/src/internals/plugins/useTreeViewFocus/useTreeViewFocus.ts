@@ -29,12 +29,12 @@ const useDefaultFocusableItemId = (
     defaultFocusableItemId = getFirstNavigableItem(instance);
   }
 
-  useUpdateSelectorsCache(instance, (cacheValue) => {
-    if (defaultFocusableItemId !== cacheValue.defaultFocusableItemId) {
-      return { ...cacheValue, defaultFocusableItemId };
+  useUpdateSelectorsCache(instance, (cache) => {
+    if (defaultFocusableItemId !== cache.defaultFocusableItemId) {
+      return { ...cache, defaultFocusableItemId };
     }
 
-    return cacheValue;
+    return cache;
   });
 };
 

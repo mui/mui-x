@@ -1,22 +1,39 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { TreeViewPlugin } from '../../models';
+import { TreeViewPlugin, TreeViewUsedInstance } from '../../models';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 import { TreeViewItemId } from '../../../models';
+import { useUpdateSelectorsCache } from '../../hooks/useUpdateSelectorsCache';
+import { treeViewExpandedItemsMapSelector } from './useTreeViewExpansion.selectors';
+
+const useExpandedItemsMap = (
+  instance: TreeViewUsedInstance<UseTreeViewExpansionSignature>,
+  expandedItems: string[],
+) => {
+  const expandedItemsMap = React.useMemo(() => {
+    const temp = new Map<TreeViewItemId, boolean>();
+    expandedItems.forEach((id) => {
+      temp.set(id, true);
+    });
+
+    return temp;
+  }, [expandedItems]);
+
+  useUpdateSelectorsCache(instance, (cache) => {
+    if (expandedItemsMap !== cache.expandedItemsMap) {
+      return { ...cache, expandedItemsMap };
+    }
+
+    return cache;
+  });
+};
 
 export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature> = ({
   instance,
   params,
   models,
 }) => {
-  const expandedItemsMap = React.useMemo(() => {
-    const temp = new Map<TreeViewItemId, boolean>();
-    models.expandedItems.value.forEach((id) => {
-      temp.set(id, true);
-    });
-
-    return temp;
-  }, [models.expandedItems.value]);
+  useExpandedItemsMap(instance, models.expandedItems.value);
 
   const setExpandedItems = (event: React.SyntheticEvent, value: TreeViewItemId[]) => {
     params.onExpandedItemsChange?.(event, value);
@@ -24,8 +41,8 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   };
 
   const isItemExpanded = React.useCallback(
-    (itemId: string) => expandedItemsMap.has(itemId),
-    [expandedItemsMap],
+    (itemId: string) => treeViewExpandedItemsMapSelector(instance).has(itemId),
+    [instance],
   );
 
   const isItemExpandable = React.useCallback(
@@ -126,6 +143,8 @@ useTreeViewExpansion.getDefaultizedParams = (params) => ({
   ...params,
   defaultExpandedItems: params.defaultExpandedItems ?? DEFAULT_EXPANDED_ITEMS,
 });
+
+useTreeViewExpansion.getInitialCache = () => ({ expandedItemsMap: new Map() });
 
 useTreeViewExpansion.params = {
   expandedItems: true,

@@ -375,11 +375,10 @@ export const TreeItem = React.forwardRef(function TreeItem(
   };
 
   const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
-  const canItemBeTabbed = useSelector(
-    instance,
-    (storeValue) => treeViewDefaultFocusableItemIdSelector(storeValue) === itemId,
+
+  const tabIndex = useSelector(instance, (storeValue) =>
+    treeViewDefaultFocusableItemIdSelector(storeValue) === itemId ? 0 : -1,
   );
-  const tabIndex = canItemBeTabbed ? 0 : -1;
 
   const enhancedRootProps =
     propsEnhancers.root?.({
