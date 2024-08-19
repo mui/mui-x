@@ -354,7 +354,7 @@ const pages: MuiPage[] = [
           },
           {
             pathname: '/x/react-date-pickers/timezone',
-            title: 'UTC and timezone',
+            title: 'UTC and timezones',
           },
           { pathname: '/x/react-date-pickers/calendar-systems' },
         ],

@@ -2188,7 +2188,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
   It already contains [line](https://mui.com/x/react-charts/lines/), [bar](https://mui.com/x/react-charts/bars/), and [scatter](https://mui.com/x/react-charts/scatter/) charts, with basic customization features. Check out the [documentation](https://mui.com/x/react-charts/) to see what it can do, and open issues to get the feature you need implemented.
 
-- 🚀 Introducing UTC and timezone support for pickers.
+- 🚀 Introducing UTC and timezones support for pickers.
 
   <img width="774" src="https://github.com/mui/mui-x/assets/3165635/ad95a404-ee67-4aff-b996-ad6cbb322348" alt="Pickers time zone switching">
 
