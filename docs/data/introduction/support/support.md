@@ -94,13 +94,12 @@ This includes issues introduced by external sources, like browser upgrades or ch
 
 ### Supported versions
 
-- MUI X v7: ✅ Stable major (Continuous support).
-- MUI X v6: ⚠️ Long-term support (Guaranteed Support for security issues and regressions).
-- MUI X v5: 🅧 No longer supported.
-- MUI X v4: 🅧 No longer supported.
-- MUI X v3: 🅧 Never existed.
-- MUI X v2: 🅧 Never existed.
-- MUI X v1: 🅧 Never existed.
+| MUI X version | Release    | Supported                                                           |
+| ------------: | :--------- | :------------------------------------------------------------------ |
+|        ^7.0.0 | 2024-03-23 | ✅ Stable major (Continuous support)                                |
+|        ^6.0.0 | 2023-03-03 | ⚠️ Long-term support (Support for security issues and regressions). |
+|        ^5.0.0 | 2021-11-23 | ❌                                                                  |
+|        ^4.0.0 | 2021-09-28 | ❌                                                                  |
 
 ## Community
 
