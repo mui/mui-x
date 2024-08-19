@@ -1,33 +1,16 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { EventHandlers } from '@mui/utils';
 import ownerDocument from '@mui/utils/ownerDocument';
-import { TreeViewPlugin, TreeViewUsedCacheValue, TreeViewUsedInstance } from '../../models';
+import { TreeViewPlugin, TreeViewUsedInstance } from '../../models';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
+import { useUpdateSelectorsCache } from '../../hooks/useUpdateSelectorsCache';
 import { getActiveElement } from '../../utils/utils';
 import { getFirstNavigableItem } from '../../utils/tree';
 import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
 import { convertSelectedItemsToArray } from '../useTreeViewSelection/useTreeViewSelection.utils';
-
-function useUpdateCache(
-  instance: TreeViewUsedInstance<UseTreeViewFocusSignature>,
-  callee: (
-    cacheValue: TreeViewUsedCacheValue<UseTreeViewFocusSignature>,
-  ) => TreeViewUsedCacheValue<UseTreeViewFocusSignature>,
-) {
-  const currentCache = instance.selectorsStore.getCache();
-  const newCache = callee(currentCache);
-
-  useEnhancedEffect(() => {
-    if (newCache !== currentCache) {
-      instance.selectorsStore.updateCache(newCache);
-    }
-  }, [newCache, currentCache, instance]);
-
-  return newCache;
-}
+import { treeViewDefaultFocusableItemIdSelector } from './useTreeViewFocus.selectors';
 
 const useDefaultFocusableItemId = (
   instance: TreeViewUsedInstance<UseTreeViewFocusSignature>,
@@ -46,15 +29,13 @@ const useDefaultFocusableItemId = (
     defaultFocusableItemId = getFirstNavigableItem(instance);
   }
 
-  useUpdateCache(instance, (cacheValue) => {
+  useUpdateSelectorsCache(instance, (cacheValue) => {
     if (defaultFocusableItemId !== cacheValue.defaultFocusableItemId) {
       return { ...cacheValue, defaultFocusableItemId };
     }
 
     return cacheValue;
   });
-
-  return defaultFocusableItemId;
 };
 
 export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
@@ -130,10 +111,8 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     setFocusedItemId(null);
   });
 
-  const canItemBeTabbed = (itemId: string) => itemId === instance.getCache().defaultFocusableItemId;
-
   useInstanceEventHandler(instance, 'removeItem', ({ id }) => {
-    const defaultFocusableItemId = instance.getCache().defaultFocusableItemId;
+    const defaultFocusableItemId = treeViewDefaultFocusableItemIdSelector(instance);
     if (state.focusedItemId === id && defaultFocusableItemId != null) {
       innerFocusItem(null, defaultFocusableItemId);
     }
@@ -148,7 +127,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       }
 
       // if the event bubbled (which is React specific) we don't want to steal focus
-      const defaultFocusableItemId = instance.getCache().defaultFocusableItemId;
+      const defaultFocusableItemId = treeViewDefaultFocusableItemIdSelector(instance);
       if (event.target === event.currentTarget && defaultFocusableItemId != null) {
         innerFocusItem(event, defaultFocusableItemId);
       }
@@ -163,7 +142,6 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     },
     instance: {
       isItemFocused,
-      canItemBeTabbed,
       focusItem,
       removeFocusedItem,
     },

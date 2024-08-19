@@ -24,6 +24,7 @@ import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
 import { useSelector } from '../internals/hooks/useSelector';
+import { treeViewDefaultFocusableItemIdSelector } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 
 export const useTreeItem2 = <
   TSignatures extends UseTreeItem2MinimalPlugins = UseTreeItem2MinimalPlugins,
@@ -43,7 +44,7 @@ export const useTreeItem2 = <
 
   const canItemBeTabbed = useSelector(
     instance,
-    (storeValue) => storeValue.cache.defaultFocusableItemId === parameters.itemId,
+    (storeValue) => treeViewDefaultFocusableItemIdSelector(storeValue) === parameters.itemId,
   );
 
   const { id, itemId, label, children, rootRef } = parameters;

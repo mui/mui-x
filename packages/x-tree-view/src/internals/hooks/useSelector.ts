@@ -1,19 +1,11 @@
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
-import {
-  TreeViewAnyPluginSignature,
-  TreeViewCacheValue,
-  TreeViewInstance,
-  TreeViewState,
-} from '../models';
+import { TreeViewAnyPluginSignature, TreeViewInstance } from '../models';
 
 const defaultCompare = Object.is;
 
-export const useSelector = <TSignature extends readonly TreeViewAnyPluginSignature[], T>(
-  instance: TreeViewInstance<TSignature>,
-  selector: (storeValue: {
-    state: TreeViewState<TSignature>;
-    cache: TreeViewCacheValue<TSignature>;
-  }) => T,
+export const useSelector = <TSignatures extends readonly TreeViewAnyPluginSignature[], T>(
+  instance: TreeViewInstance<TSignatures>,
+  selector: (instance: TreeViewInstance<TSignatures>) => T,
   equals: (a: T, b: T) => boolean = defaultCompare,
 ) => {
   return useSyncExternalStoreWithSelector(

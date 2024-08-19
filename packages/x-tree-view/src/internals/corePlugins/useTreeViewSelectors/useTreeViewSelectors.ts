@@ -27,7 +27,6 @@ export const useTreeViewSelectors: TreeViewPlugin<UseTreeViewSelectorsSignature>
   return {
     instance: {
       selectorsStore: storeRef.current,
-      getCache: storeRef.current!.getCache,
     },
   };
 };

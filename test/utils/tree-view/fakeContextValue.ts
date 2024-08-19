@@ -12,7 +12,6 @@ export const getFakeContextValue = (
     isItemDisabled: (itemId: string | null): itemId is string => !!itemId,
     getTreeItemIdAttribute: () => '',
     mapFirstCharFromJSX: () => () => {},
-    canItemBeTabbed: () => false,
   } as any,
   publicAPI: {
     focusItem: () => {},

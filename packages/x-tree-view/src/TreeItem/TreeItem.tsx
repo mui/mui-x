@@ -27,6 +27,8 @@ import { TreeItem2Provider } from '../TreeItem2Provider';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { useTreeItemState } from './useTreeItemState';
 import { isTargetInDescendants } from '../internals/utils/tree';
+import { useSelector } from '@mui/x-tree-view/internals/hooks/useSelector';
+import { treeViewDefaultFocusableItemIdSelector } from '@mui/x-tree-view/internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem');
 
@@ -373,7 +375,11 @@ export const TreeItem = React.forwardRef(function TreeItem(
   };
 
   const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
-  const tabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
+  const canItemBeTabbed = useSelector(
+    instance,
+    (storeValue) => treeViewDefaultFocusableItemIdSelector(storeValue) === itemId,
+  );
+  const tabIndex = canItemBeTabbed ? 0 : -1;
 
   const enhancedRootProps =
     propsEnhancers.root?.({

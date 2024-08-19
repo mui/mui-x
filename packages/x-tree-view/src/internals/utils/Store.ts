@@ -3,7 +3,7 @@ type Listener<T> = (value: T) => void;
 let globalId = 0;
 
 export class Store<TState, TCache> {
-  private value: { state: TState; cache: TCache };
+  public value: { state: TState; cache: TCache };
 
   public instanceId: number;
 
@@ -31,10 +31,6 @@ export class Store<TState, TCache> {
   private update = (value: typeof this.value) => {
     this.value = value;
     this.listeners.forEach((l) => l(value));
-  };
-
-  public getCache = () => {
-    return this.value.cache;
   };
 
   public updateState = (state: TState) => {
