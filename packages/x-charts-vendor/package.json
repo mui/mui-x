@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts-vendor",
-  "version": "7.12.0",
+  "version": "7.13.0",
   "description": "Vendored dependencies for MUI X Charts",
   "author": "MUI Team",
   "main": "./index.js",
@@ -50,9 +50,9 @@
     "d3-format": "^3.1.0",
     "d3-path": "^3.1.0",
     "d3-time-format": "^4.1.0",
-    "execa": "^9.3.0",
+    "execa": "^9.3.1",
     "internmap": "^2.0.3",
-    "rimraf": "^5.0.8"
+    "rimraf": "^5.0.10"
   },
   "publishConfig": {
     "access": "public"
