@@ -650,7 +650,7 @@ _Sep 9, 2022_
 
 This release will the last regular release for our `v5` packages.
 From now on, we'll be focusing on developing MUI X v6.
-You can check the [roadmap](https://github.com/mui/mui-x/projects/1) for more details on what's coming next.
+You can check the [roadmap](https://github.com/orgs/mui/projects/35) for more details on what's coming next.
 
 And if you'd like to help, please consider volunteering to give us a [user interview](https://forms.gle/vsBv6CLPz9h57xg8A).
 We'd love to know more about your use cases, pain points and expectations for the future.
