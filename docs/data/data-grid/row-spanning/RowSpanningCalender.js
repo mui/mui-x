@@ -141,11 +141,7 @@ export default function RowSpanningCalender() {
         hideFooter
         showCellVerticalBorder
         showColumnVerticalBorder
-        disableColumnReorder
         sx={{
-          '& .MuiDataGrid-row.Mui-hovered': {
-            backgroundColor: 'transparent',
-          },
           '& .MuiDataGrid-row:hover': {
             backgroundColor: 'transparent',
           },

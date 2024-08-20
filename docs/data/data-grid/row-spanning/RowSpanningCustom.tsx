@@ -21,9 +21,6 @@ export default function RowSpanningCustom() {
         unstable_rowSpanning
         disableVirtualization
         sx={{
-          '& .MuiDataGrid-row.Mui-hovered': {
-            backgroundColor: 'transparent',
-          },
           '& .MuiDataGrid-row:hover': {
             backgroundColor: 'transparent',
           },
