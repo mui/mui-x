@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, userEvent } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -11,6 +11,7 @@ import {
 } from 'test/utils/pickers';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { describeConformance } from 'test/utils/describeConformance';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DesktopDatePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -62,7 +63,7 @@ describe('<DesktopDatePicker /> - Describes', () => {
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
 
       if (isOpened) {
-        userEvent.mousePress(
+        fireUserEvent.mousePress(
           screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
         );
       } else {

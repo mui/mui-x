@@ -81,7 +81,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
 
-  const { left, top, width, height } = useDrawingArea();
+  const { left, top, width, height, isPointInside } = useDrawingArea();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
@@ -171,7 +171,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         const skipLabel =
           typeof tickLabelInterval === 'function' && !tickLabelInterval?.(value, index);
 
-        const showLabel = offset >= top - 1 && offset <= height + top + 1;
+        const showLabel = isPointInside({ x: -1, y: offset }, { direction: 'y' });
 
         if (!showLabel) {
           return null;
