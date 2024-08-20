@@ -54,9 +54,9 @@ const MarkElementPath = styled(animated.path, {
   name: 'MuiMarkElement',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: MarkElementOwnerState }>(({ ownerState, theme }) => ({
+})<{ ownerState: MarkElementOwnerState }>(({ theme }) => ({
   fill: (theme.vars || theme).palette.background.paper,
-  stroke: ownerState.color,
+  stroke: 'var(--color)',
   strokeWidth: 2,
 }));
 
@@ -120,10 +120,13 @@ function MarkElement(props: MarkElementProps) {
   return (
     <MarkElementPath
       {...other}
-      style={{
-        transform: to([position.x, position.y], (pX, pY) => `translate(${pX}px, ${pY}px)`),
-        transformOrigin: to([position.x, position.y], (pX, pY) => `${pX}px ${pY}px`),
-      }}
+      style={
+        {
+          transform: to([position.x, position.y], (pX, pY) => `translate(${pX}px, ${pY}px)`),
+          transformOrigin: to([position.x, position.y], (pX, pY) => `${pX}px ${pY}px`),
+          '--color': color,
+        } as unknown as React.CSSProperties
+      }
       ownerState={ownerState}
       className={classes.root}
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}

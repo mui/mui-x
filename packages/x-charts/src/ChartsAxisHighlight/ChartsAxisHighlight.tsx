@@ -41,9 +41,7 @@ export const ChartsAxisHighlightPath = styled('path', {
   pointerEvents: 'none',
   variants: [
     {
-      props: {
-        axisHighlight: 'band',
-      },
+      props: ({ ownerState }) => ownerState.axisHighlight === 'band',
       style: {
         fill: 'white',
         fillOpacity: 0.1,
@@ -53,9 +51,7 @@ export const ChartsAxisHighlightPath = styled('path', {
       },
     },
     {
-      props: {
-        axisHighlight: 'line',
-      },
+      props: ({ ownerState }) => ownerState.axisHighlight === 'line',
       style: {
         strokeDasharray: '5 2',
         stroke: '#ffffff',

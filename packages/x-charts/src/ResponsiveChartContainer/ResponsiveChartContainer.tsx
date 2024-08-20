@@ -24,7 +24,15 @@ const ResponsiveChartContainer = React.forwardRef(function ResponsiveChartContai
     useResponsiveChartContainerProps(props, ref);
 
   return (
-    <ResizableContainer {...resizableChartContainerProps}>
+    <ResizableContainer
+      {...resizableChartContainerProps}
+      style={
+        {
+          '--width': resizableChartContainerProps.ownerState.width,
+          '--height': resizableChartContainerProps.ownerState.height,
+        } as React.CSSProperties
+      }
+    >
       {hasIntrinsicSize ? <ChartContainer {...chartContainerProps} /> : null}
     </ResizableContainer>
   );
