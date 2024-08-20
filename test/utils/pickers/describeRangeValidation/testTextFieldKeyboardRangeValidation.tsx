@@ -374,8 +374,6 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
         return;
       }
 
-      // console.log(ElementToTest);
-
       const onErrorMock = spy();
       const shouldDisableDate = (date) =>
         adapterToUse.isEqual(date, adapterToUse.date('2018-03-20'));
