@@ -1,4 +1,4 @@
-import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import {
   getCell,
   getColumnHeaderCell,
@@ -6,6 +6,7 @@ import {
   getColumnValues,
   getRow,
 } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
@@ -399,7 +400,7 @@ describe('<DataGridPro /> - Tree data', () => {
     it('should toggle expansion when pressing Space while focusing grouping column', () => {
       render(<Test />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
-      userEvent.mousePress(getCell(0, 0));
+      fireUserEvent.mousePress(getCell(0, 0));
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
       fireEvent.keyDown(getCell(0, 0), { key: ' ' });
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
