@@ -14,11 +14,11 @@ function GridGroupingColumnLeafCell(props: GridRenderCellParams) {
           ? {
               ml: 1,
             }
-          : {
-              ml: (theme) =>
-                `calc(var(--DataGrid-cellOffsetMultiplier) * ${theme.spacing(rowNode.depth)})`,
-            },
+          : (theme) => ({
+              ml: `calc(var(--DataGrid-cellOffsetMultiplier) * var(--depth) * ${theme.spacing(1)})`,
+            }),
       ]}
+      style={{ '--depth': rowNode.depth } as any}
     >
       {props.formattedValue ?? props.value}
     </Box>

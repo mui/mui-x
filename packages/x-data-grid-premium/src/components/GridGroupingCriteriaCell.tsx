@@ -80,11 +80,11 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
           ? {
               ml: 0,
             }
-          : {
-              ml: (theme) =>
-                `calc(var(--DataGrid-cellOffsetMultiplier) * ${theme.spacing(rowNode.depth)})`,
-            },
+          : (theme) => ({
+              ml: `calc(var(--DataGrid-cellOffsetMultiplier) * var(--depth) * ${theme.spacing(1)})`,
+            }),
       ]}
+      style={{ '--depth': rowNode.depth } as any}
     >
       <div className={classes.toggle}>
         {filteredDescendantCount > 0 && (
