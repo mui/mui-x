@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import {
   fireTouchChangedEvent,
   screen,
-  getAllByRole as rtlGetAllByRole,
+  getAllByRole as rootGetAllByRole,
   fireEvent,
 } from '@mui/internal-test-utils';
 import { adapterToUse, createPickerRenderer, describeValidation } from 'test/utils/pickers';
@@ -83,7 +83,7 @@ describe('<StaticTimePicker />', () => {
 
     // hours are not disabled
     const hoursContainer = screen.getByRole('listbox');
-    const hours = rtlGetAllByRole(hoursContainer, 'option');
+    const hours = rootGetAllByRole(hoursContainer, 'option');
     const disabledHours = hours.filter((day) => day.getAttribute('aria-disabled') === 'true');
 
     expect(hours.length).to.equal(12);
@@ -133,7 +133,7 @@ describe('<StaticTimePicker />', () => {
 
     // hours are disabled
     const hoursContainer = screen.getByRole('listbox');
-    const hours = rtlGetAllByRole(hoursContainer, 'option');
+    const hours = rootGetAllByRole(hoursContainer, 'option');
     const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
     expect(hours.length).to.equal(12);
     expect(disabledHours.length).to.equal(12);

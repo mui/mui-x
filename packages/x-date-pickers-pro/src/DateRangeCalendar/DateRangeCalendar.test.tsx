@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import {
   screen,
   fireEvent,
-  getByRole as rtlGetByRole,
+  getByRole as rootGetByRole,
   fireTouchChangedEvent,
 } from '@mui/internal-test-utils';
 import {
@@ -24,7 +24,7 @@ import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
-  rtlGetByRole(screen.getByRole('grid', { name: picker }), 'gridcell', { name });
+  rootGetByRole(screen.getByRole('grid', { name: picker }), 'gridcell', { name });
 
 const dynamicShouldDisableDate = (date, position: RangePosition) => {
   if (position === 'end') {
