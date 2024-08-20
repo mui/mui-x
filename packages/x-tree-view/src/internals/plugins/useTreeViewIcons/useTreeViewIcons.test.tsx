@@ -13,11 +13,11 @@ describeTreeView<[UseTreeViewIconsSignature, UseTreeViewExpansionSignature]>(
   'useTreeViewIcons plugin',
   ({ render }) => {
     describe('slots (expandIcon, collapseIcon, endIcon, icon)', () => {
-      const getIconTestId = (response: DescribeTreeViewRendererReturnValue<any>, itemId: string) =>
-        response.getItemIconContainer(itemId).querySelector(`div`)?.dataset.testid;
+      const getIconTestId = (view: DescribeTreeViewRendererReturnValue<any>, itemId: string) =>
+        view.getItemIconContainer(itemId).querySelector(`div`)?.dataset.testid;
 
       it('should render the expandIcon slot defined on the tree if no icon slot is defined on the item and the item is collapsed', () => {
-        const response = render({
+        const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
           slots: {
             expandIcon: () => <div data-testid="treeExpandIcon" />,
@@ -26,11 +26,11 @@ describeTreeView<[UseTreeViewIconsSignature, UseTreeViewExpansionSignature]>(
           },
         });
 
-        expect(getIconTestId(response, '1')).to.equal('treeExpandIcon');
+        expect(getIconTestId(view, '1')).to.equal('treeExpandIcon');
       });
 
       it('should render the collapseIcon slot defined on the tree if no icon is defined on the item and the item is expanded', () => {
-        const response = render({
+        const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
           slots: {
             expandIcon: () => <div data-testid="treeExpandIcon" />,
@@ -40,11 +40,11 @@ describeTreeView<[UseTreeViewIconsSignature, UseTreeViewExpansionSignature]>(
           defaultExpandedItems: ['1'],
         });
 
-        expect(getIconTestId(response, '1')).to.equal('treeCollapseIcon');
+        expect(getIconTestId(view, '1')).to.equal('treeCollapseIcon');
       });
 
       it('should render the endIcon slot defined on the tree if no icon is defined on the item and the item has no children', () => {
-        const response = render({
+        const view = render({
           items: [{ id: '1' }],
           slots: {
             expandIcon: () => <div data-testid="treeExpandIcon" />,
@@ -53,11 +53,11 @@ describeTreeView<[UseTreeViewIconsSignature, UseTreeViewExpansionSignature]>(
           },
         });
 
-        expect(getIconTestId(response, '1')).to.equal('treeEndIcon');
+        expect(getIconTestId(view, '1')).to.equal('treeEndIcon');
       });
 
       it('should render the expandIcon slot defined on the item if the item is collapsed', () => {
-        const response = render({
+        const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
           slots: {
             expandIcon: () => <div data-testid="treeExpandIcon" />,
@@ -75,11 +75,11 @@ describeTreeView<[UseTreeViewIconsSignature, UseTreeViewExpansionSignature]>(
           },
         });
 
-        expect(getIconTestId(response, '1')).to.equal('itemExpandIcon');
+        expect(getIconTestId(view, '1')).to.equal('itemExpandIcon');
       });
 
       it('should render the collapseIcon slot defined on the item if the item is expanded', () => {
-        const response = render({
+        const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
           slots: {
             expandIcon: () => <div data-testid="treeExpandIcon" />,
@@ -98,11 +98,11 @@ describeTreeView<[UseTreeViewIconsSignature, UseTreeViewExpansionSignature]>(
           defaultExpandedItems: ['1'],
         });
 
-        expect(getIconTestId(response, '1')).to.equal('itemCollapseIcon');
+        expect(getIconTestId(view, '1')).to.equal('itemCollapseIcon');
       });
 
       it('should render the endIcon slot defined on the tree if the item has no children', () => {
-        const response = render({
+        const view = render({
           items: [{ id: '1' }],
           slots: {
             expandIcon: () => <div data-testid="treeExpandIcon" />,
@@ -120,11 +120,11 @@ describeTreeView<[UseTreeViewIconsSignature, UseTreeViewExpansionSignature]>(
           },
         });
 
-        expect(getIconTestId(response, '1')).to.equal('itemEndIcon');
+        expect(getIconTestId(view, '1')).to.equal('itemEndIcon');
       });
 
       it('should render the icon slot defined on the item if the item is collapsed', () => {
-        const response = render({
+        const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
           slots: {
             expandIcon: () => <div data-testid="treeExpandIcon" />,
@@ -143,11 +143,11 @@ describeTreeView<[UseTreeViewIconsSignature, UseTreeViewExpansionSignature]>(
           },
         });
 
-        expect(getIconTestId(response, '1')).to.equal('itemIcon');
+        expect(getIconTestId(view, '1')).to.equal('itemIcon');
       });
 
       it('should render the icon slot defined on the item if the item is expanded', () => {
-        const response = render({
+        const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
           slots: {
             expandIcon: () => <div data-testid="treeExpandIcon" />,
@@ -167,11 +167,11 @@ describeTreeView<[UseTreeViewIconsSignature, UseTreeViewExpansionSignature]>(
           defaultExpandedItems: ['1'],
         });
 
-        expect(getIconTestId(response, '1')).to.equal('itemIcon');
+        expect(getIconTestId(view, '1')).to.equal('itemIcon');
       });
 
       it('should render the icon slot defined on the item if the item has no children', () => {
-        const response = render({
+        const view = render({
           items: [{ id: '1' }],
           slots: {
             expandIcon: () => <div data-testid="treeExpandIcon" />,
@@ -190,7 +190,7 @@ describeTreeView<[UseTreeViewIconsSignature, UseTreeViewExpansionSignature]>(
           },
         });
 
-        expect(getIconTestId(response, '1')).to.equal('itemIcon');
+        expect(getIconTestId(view, '1')).to.equal('itemIcon');
       });
     });
   },

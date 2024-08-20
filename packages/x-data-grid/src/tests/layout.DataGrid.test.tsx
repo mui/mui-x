@@ -277,13 +277,13 @@ describe('<DataGrid /> - Layout & warnings', () => {
           },
         ];
 
-        const { getAllByRole } = render(
+        render(
           <div style={{ width: 300, height: 300 }}>
             <DataGrid columns={columns} rows={rows} />
           </div>,
         );
 
-        getAllByRole('columnheader').forEach((col: HTMLElement) => {
+        screen.getAllByRole('columnheader').forEach((col: HTMLElement) => {
           expect(col).toHaveInlineStyle({ width: '100px' });
         });
       });
@@ -313,13 +313,13 @@ describe('<DataGrid /> - Layout & warnings', () => {
           },
         ];
 
-        const { getAllByRole } = render(
+        render(
           <div style={{ width: 300, height: 300 }}>
             <DataGrid columns={columns} rows={rows} />
           </div>,
         );
 
-        getAllByRole('columnheader').forEach((col: HTMLElement, index: number) => {
+        screen.getAllByRole('columnheader').forEach((col: HTMLElement, index: number) => {
           expect(col).toHaveInlineStyle({ width: `${colWidthValues[index]}px` });
         });
       });
@@ -887,7 +887,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
   describe('localeText', () => {
     it('should replace the density selector button label text to "Size"', () => {
-      const { getByText } = render(
+      render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
@@ -899,7 +899,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
         </div>,
       );
 
-      expect(getByText('Size')).not.to.equal(null);
+      expect(screen.getByText('Size')).not.to.equal(null);
     });
 
     it('should support translations in the theme', () => {
@@ -927,23 +927,21 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </div>
         );
       }
-      const { setProps, getByText } = render(
-        <TestCase localeText={{ toolbarDensity: 'Density' }} />,
-      );
-      expect(getByText('Density')).not.to.equal(null);
+      const { setProps } = render(<TestCase localeText={{ toolbarDensity: 'Density' }} />);
+      expect(screen.getByText('Density')).not.to.equal(null);
       setProps({ localeText: { toolbarDensity: 'Densidade' } });
-      expect(getByText('Densidade')).not.to.equal(null);
+      expect(screen.getByText('Densidade')).not.to.equal(null);
     });
   });
 
   describe('non-strict mode', () => {
-    const renderer = createRenderer({ strict: false });
+    const { render: innerRender } = createRenderer({ strict: false });
 
     it('should render in JSDOM', function test() {
       if (!/jsdom/.test(window.navigator.userAgent)) {
         this.skip(); // Only run in JSDOM
       }
-      renderer.render(
+      innerRender(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...baselineProps} />
         </div>,

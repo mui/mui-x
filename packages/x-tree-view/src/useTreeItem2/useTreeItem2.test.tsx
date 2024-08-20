@@ -24,19 +24,19 @@ describeTreeView<[UseTreeViewExpansionSignature, UseTreeViewIconsSignature]>(
   }) => {
     describe('role prop', () => {
       it('should have the role="treeitem" on the root slot', () => {
-        const response = render({ items: [{ id: '1' }] });
+        const view = render({ items: [{ id: '1' }] });
 
-        expect(response.getItemRoot('1')).to.have.attribute('role', 'treeitem');
+        expect(view.getItemRoot('1')).to.have.attribute('role', 'treeitem');
       });
 
       it('should have the role "group" on the groupTransition slot if the item is expandable', () => {
-        const response = render({
+        const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
           defaultExpandedItems: ['1'],
         });
 
         expect(
-          response.getItemRoot('1').querySelector(`.${treeItemClasses.groupTransition}`),
+          view.getItemRoot('1').querySelector(`.${treeItemClasses.groupTransition}`),
         ).to.have.attribute('role', 'group');
       });
     });
@@ -45,7 +45,7 @@ describeTreeView<[UseTreeViewExpansionSignature, UseTreeViewIconsSignature]>(
       it('should call onClick when clicked, but not when children are clicked for TreeItem', () => {
         const onClick = spy();
 
-        const response = render({
+        const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
           defaultExpandedItems: ['1'],
           slotProps: {
@@ -55,7 +55,7 @@ describeTreeView<[UseTreeViewExpansionSignature, UseTreeViewIconsSignature]>(
           },
         });
 
-        fireEvent.click(response.getItemContent('1.1'));
+        fireEvent.click(view.getItemContent('1.1'));
         expect(onClick.callCount).to.equal(treeItemComponentName === 'TreeItem' ? 1 : 2);
         expect(onClick.lastCall.firstArg.target.parentElement.dataset.testid).to.equal('1.1');
       });
@@ -63,7 +63,7 @@ describeTreeView<[UseTreeViewExpansionSignature, UseTreeViewIconsSignature]>(
       it('should call onClick even when the element is disabled', () => {
         const onClick = spy();
 
-        const response = render({
+        const view = render({
           items: [{ id: '1', disabled: true }],
           slotProps: {
             item: {
@@ -72,13 +72,13 @@ describeTreeView<[UseTreeViewExpansionSignature, UseTreeViewIconsSignature]>(
           },
         });
 
-        fireEvent.click(response.getItemContent('1'));
+        fireEvent.click(view.getItemContent('1'));
         expect(onClick.callCount).to.equal(1);
       });
     });
 
     it('should be able to type in a child input', () => {
-      const response = render({
+      const view = render({
         items: [{ id: '1', children: [{ id: '1.1' }] }],
         defaultExpandedItems: ['1'],
         slotProps:
@@ -97,7 +97,7 @@ describeTreeView<[UseTreeViewExpansionSignature, UseTreeViewIconsSignature]>(
               },
       });
 
-      const input = response.getItemRoot('1.1').querySelector('.icon-input')!;
+      const input = view.getItemRoot('1.1').querySelector('.icon-input')!;
       const keydownEvent = createEvent.keyDown(input, {
         key: 'a',
       });
@@ -123,9 +123,9 @@ describeTreeView<[UseTreeViewExpansionSignature, UseTreeViewIconsSignature]>(
         return <TreeItemComponent {...props} />;
       }
 
-      let response: DescribeTreeViewRendererUtils;
+      let view: DescribeTreeViewRendererUtils;
       if (treeViewComponentName === 'SimpleTreeView') {
-        response = renderFromJSX(
+        view = renderFromJSX(
           <React.Fragment>
             <button type="button">Some focusable element</button>
             <TreeViewComponent>
@@ -135,7 +135,7 @@ describeTreeView<[UseTreeViewExpansionSignature, UseTreeViewIconsSignature]>(
           </React.Fragment>,
         );
       } else {
-        response = renderFromJSX(
+        view = renderFromJSX(
           <React.Fragment>
             <button type="button">Some focusable element</button>
             <TreeViewComponent
@@ -153,10 +153,10 @@ describeTreeView<[UseTreeViewExpansionSignature, UseTreeViewIconsSignature]>(
       }
 
       act(() => {
-        response.getItemRoot('2').focus();
+        view.getItemRoot('2').focus();
       });
 
-      expect(response.getFocusedItemId()).to.equal('2');
+      expect(view.getFocusedItemId()).to.equal('2');
 
       act(() => {
         screen.getByRole('button').focus();

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { stub, SinonStub } from 'sinon';
 import { expect } from 'chai';
 import { spyApi, getCell, grid } from 'test/utils/helperFn';
-import { createRenderer, fireEvent, act, userEvent, screen } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act, screen } from '@mui/internal-test-utils';
 import {
   DataGridPremium,
   DataGridPremiumProps,
@@ -11,6 +11,7 @@ import {
   gridClasses,
 } from '@mui/x-data-grid-premium';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DataGridPremium /> - Cell selection', () => {
   const { render } = createRenderer();
@@ -116,9 +117,9 @@ describe('<DataGridPremium /> - Cell selection', () => {
       expect(document.querySelector('.Mui-selected')).to.equal(null);
       const cell = getCell(0, 0);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'Shift' });
-      userEvent.mousePress(getCell(2, 1), { shiftKey: true });
+      fireUserEvent.mousePress(getCell(2, 1), { shiftKey: true });
       expect(document.querySelectorAll('.Mui-selected')).to.have.length(3 * 2); // 3 rows with 2 cells each
     });
 
@@ -128,9 +129,9 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
       const cell = getCell(0, 0);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'Shift' });
-      userEvent.mousePress(getCell(2, 1), { shiftKey: true });
+      fireUserEvent.mousePress(getCell(2, 1), { shiftKey: true });
       expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 0, field: 'id' });
       expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({
         id: 2,
@@ -142,9 +143,9 @@ describe('<DataGridPremium /> - Cell selection', () => {
       render(<TestDataGridSelection />);
       const cell = getCell(0, 0);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'Shift' });
-      userEvent.mousePress(getCell(2, 2), { shiftKey: true });
+      fireUserEvent.mousePress(getCell(2, 2), { shiftKey: true });
 
       expect(getCell(0, 0)).to.have.class(gridClasses['cell--rangeTop']);
       expect(getCell(0, 0)).to.have.class(gridClasses['cell--rangeLeft']);
@@ -167,7 +168,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       const cell = getCell(0, 0);
       cell.focus();
       expect(cell).toHaveFocus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       fireEvent.click(getCell(2, 1), { shiftKey: true });
       expect(cell).toHaveFocus();
     });
@@ -179,7 +180,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       const spiedSelectCellsBetweenRange = spyApi(apiRef.current, 'selectCellRange');
       const cell = getCell(0, 0);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'Shift' });
       fireEvent.keyDown(cell, { key: 'ArrowDown', shiftKey: true });
       expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 0, field: 'id' });
@@ -191,7 +192,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       const spiedSelectCellsBetweenRange = spyApi(apiRef.current, 'selectCellRange');
       const cell = getCell(1, 0);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'Shift' });
       fireEvent.keyDown(cell, { key: 'ArrowUp', shiftKey: true });
       expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 1, field: 'id' });
@@ -203,7 +204,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       const spiedSelectCellsBetweenRange = spyApi(apiRef.current, 'selectCellRange');
       const cell = getCell(0, 1);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'Shift' });
       fireEvent.keyDown(cell, { key: 'ArrowLeft', shiftKey: true });
       expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({
@@ -218,7 +219,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       const spiedSelectCellsBetweenRange = spyApi(apiRef.current, 'selectCellRange');
       const cell = getCell(0, 0);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'Shift' });
       fireEvent.keyDown(cell, { key: 'ArrowRight', shiftKey: true });
       expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 0, field: 'id' });
@@ -232,7 +233,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       render(<TestDataGridSelection />);
       const cell = getCell(0, 0);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'Shift' });
       fireEvent.keyDown(cell, { key: 'ArrowDown', shiftKey: true });
       expect(cell).toHaveFocus();

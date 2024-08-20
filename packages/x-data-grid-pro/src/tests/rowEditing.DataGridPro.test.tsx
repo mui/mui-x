@@ -13,8 +13,9 @@ import {
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, act, userEvent, screen } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act, screen } from '@mui/internal-test-utils';
 import { getCell, getRow, spyApi } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DataGridPro /> - Row editing', () => {
   const { render, clock } = createRenderer();
@@ -780,7 +781,7 @@ describe('<DataGridPro /> - Row editing', () => {
         const listener = spy();
         apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Enter' });
         expect(listener.lastCall.args[0].reason).to.equal('enterKeyDown');
       });
@@ -790,7 +791,7 @@ describe('<DataGridPro /> - Row editing', () => {
         const listener = spy();
         apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 0);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Enter' });
         expect(listener.callCount).to.equal(0);
       });
@@ -799,7 +800,7 @@ describe('<DataGridPro /> - Row editing', () => {
         render(<TestCase />);
         const spiedStartRowEditMode = spyApi(apiRef.current, 'startRowEditMode');
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Enter' });
         expect(spiedStartRowEditMode.callCount).to.equal(1);
         expect(spiedStartRowEditMode.lastCall.args[0]).to.deep.equal({
@@ -815,7 +816,7 @@ describe('<DataGridPro /> - Row editing', () => {
         const listener = spy();
         apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Delete' });
         expect(listener.lastCall.args[0].reason).to.equal('deleteKeyDown');
       });
@@ -825,7 +826,7 @@ describe('<DataGridPro /> - Row editing', () => {
         const listener = spy();
         apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 0);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Delete' });
         expect(listener.callCount).to.equal(0);
       });
@@ -834,7 +835,7 @@ describe('<DataGridPro /> - Row editing', () => {
         render(<TestCase />);
         const spiedStartRowEditMode = spyApi(apiRef.current, 'startRowEditMode');
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Delete' });
         expect(spiedStartRowEditMode.callCount).to.equal(1);
         expect(spiedStartRowEditMode.lastCall.args[0]).to.deep.equal({
@@ -851,7 +852,7 @@ describe('<DataGridPro /> - Row editing', () => {
         const listener = spy();
         apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'a' });
         expect(listener.lastCall.args[0].reason).to.equal('printableKeyDown');
       });
@@ -861,7 +862,7 @@ describe('<DataGridPro /> - Row editing', () => {
         const listener = spy();
         apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 0);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'a' });
         expect(listener.callCount).to.equal(0);
       });
@@ -872,7 +873,7 @@ describe('<DataGridPro /> - Row editing', () => {
           const listener = spy();
           apiRef.current.subscribeEvent('rowEditStart', listener);
           const cell = getCell(0, 1);
-          userEvent.mousePress(cell);
+          fireUserEvent.mousePress(cell);
           fireEvent.keyDown(cell, { key: 'a', [key]: true });
           expect(listener.callCount).to.equal(0);
         });
@@ -883,7 +884,7 @@ describe('<DataGridPro /> - Row editing', () => {
         const listener = spy();
         apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'a', shiftKey: true });
         expect(listener.callCount).to.equal(1);
       });
@@ -893,7 +894,7 @@ describe('<DataGridPro /> - Row editing', () => {
         const listener = spy();
         apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: ' ' });
         expect(listener.callCount).to.equal(0);
       });
@@ -903,7 +904,7 @@ describe('<DataGridPro /> - Row editing', () => {
         const listener = spy();
         apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'v', ctrlKey: true });
         expect(listener.callCount).to.equal(1);
       });
@@ -912,7 +913,7 @@ describe('<DataGridPro /> - Row editing', () => {
         render(<TestCase />);
         const spiedStartRowEditMode = spyApi(apiRef.current, 'startRowEditMode');
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'a' });
         expect(spiedStartRowEditMode.callCount).to.equal(1);
         expect(spiedStartRowEditMode.lastCall.args[0]).to.deep.equal({
@@ -966,7 +967,7 @@ describe('<DataGridPro /> - Row editing', () => {
         apiRef.current.subscribeEvent('rowEditStop', listener);
         fireEvent.doubleClick(getCell(0, 1));
         expect(listener.callCount).to.equal(0);
-        userEvent.mousePress(getCell(1, 1));
+        fireUserEvent.mousePress(getCell(1, 1));
         clock.runToLast();
         expect(listener.lastCall.args[0].reason).to.equal('rowFocusOut');
       });
@@ -986,7 +987,7 @@ describe('<DataGridPro /> - Row editing', () => {
         );
         expect(listener.callCount).to.equal(0);
 
-        userEvent.mousePress(getCell(1, 1));
+        fireUserEvent.mousePress(getCell(1, 1));
         clock.runToLast();
         expect(listener.callCount).to.equal(0);
       });
@@ -995,7 +996,7 @@ describe('<DataGridPro /> - Row editing', () => {
         render(<TestCase />);
         const spiedStopRowEditMode = spyApi(apiRef.current, 'stopRowEditMode');
         fireEvent.doubleClick(getCell(0, 1));
-        userEvent.mousePress(getCell(1, 1));
+        fireUserEvent.mousePress(getCell(1, 1));
         clock.runToLast();
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0]).to.deep.equal({
@@ -1014,7 +1015,7 @@ describe('<DataGridPro /> - Row editing', () => {
         act(() => {
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
         });
-        userEvent.mousePress(getCell(1, 1));
+        fireUserEvent.mousePress(getCell(1, 1));
         clock.runToLast();
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
@@ -1027,7 +1028,7 @@ describe('<DataGridPro /> - Row editing', () => {
         const listener = spy();
         apiRef.current.subscribeEvent('rowEditStop', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         expect(listener.callCount).to.equal(0);
         fireEvent.keyDown(cell.querySelector('input')!, { key: 'Escape' });
@@ -1057,7 +1058,7 @@ describe('<DataGridPro /> - Row editing', () => {
         render(<TestCase />);
         const spiedStopRowEditMode = spyApi(apiRef.current, 'stopRowEditMode');
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         fireEvent.keyDown(cell.querySelector('input')!, { key: 'Escape' });
         expect(spiedStopRowEditMode.callCount).to.equal(1);
@@ -1076,7 +1077,7 @@ describe('<DataGridPro /> - Row editing', () => {
         const listener = spy();
         apiRef.current.subscribeEvent('rowEditStop', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         expect(listener.callCount).to.equal(0);
         fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
@@ -1106,7 +1107,7 @@ describe('<DataGridPro /> - Row editing', () => {
         render(<TestCase />);
         const spiedStopRowEditMode = spyApi(apiRef.current, 'stopRowEditMode');
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
         expect(spiedStopRowEditMode.callCount).to.equal(1);
@@ -1123,7 +1124,7 @@ describe('<DataGridPro /> - Row editing', () => {
         render(<TestCase />);
         const spiedStopRowEditMode = spyApi(apiRef.current, 'stopRowEditMode');
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         act(() => {
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
@@ -1140,7 +1141,7 @@ describe('<DataGridPro /> - Row editing', () => {
         const listener = spy();
         apiRef.current.subscribeEvent('rowEditStop', listener);
         const cell = getCell(0, 2);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         expect(listener.callCount).to.equal(0);
         fireEvent.keyDown(cell.querySelector('input')!, { key: 'Tab' });
@@ -1152,7 +1153,7 @@ describe('<DataGridPro /> - Row editing', () => {
         const listener = spy();
         apiRef.current.subscribeEvent('rowEditStop', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         expect(listener.callCount).to.equal(0);
         fireEvent.keyDown(cell.querySelector('input')!, { key: 'Tab', shiftKey: true });
@@ -1163,7 +1164,7 @@ describe('<DataGridPro /> - Row editing', () => {
         render(<TestCase />);
         const spiedStopRowEditMode = spyApi(apiRef.current, 'stopRowEditMode');
         const cell = getCell(0, 2);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         fireEvent.keyDown(cell.querySelector('input')!, { key: 'Tab' });
         expect(spiedStopRowEditMode.callCount).to.equal(1);
@@ -1179,7 +1180,7 @@ describe('<DataGridPro /> - Row editing', () => {
         render(<TestCase />);
         const spiedStopRowEditMode = spyApi(apiRef.current, 'stopRowEditMode');
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         fireEvent.keyDown(cell.querySelector('input')!, { key: 'Tab', shiftKey: true });
         expect(spiedStopRowEditMode.callCount).to.equal(1);
@@ -1196,7 +1197,7 @@ describe('<DataGridPro /> - Row editing', () => {
         render(<TestCase />);
         const spiedStopRowEditMode = spyApi(apiRef.current, 'stopRowEditMode');
         const cell = getCell(0, 2);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         await act(() => {
           apiRef.current.setEditCellValue({ id: 0, field: 'price1M', value: 'USD GBP' });

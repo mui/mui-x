@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, userEvent, screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -136,20 +137,20 @@ describe('<DateCalendar />', () => {
     const defaultDate = adapterToUse.date('2019-01-02T11:12:13.550Z');
     render(<DateCalendar onChange={onChange} disablePast defaultValue={defaultDate} />);
 
-    userEvent.mousePress(
+    fireUserEvent.mousePress(
       screen.getByRole('button', { name: 'calendar view is open, switch to year view' }),
     );
-    userEvent.mousePress(screen.getByRole('radio', { name: '2020' }));
+    fireUserEvent.mousePress(screen.getByRole('radio', { name: '2020' }));
 
     // Finish the transition to the day view
     clock.runToLast();
 
-    userEvent.mousePress(screen.getByRole('gridcell', { name: '1' }));
-    userEvent.mousePress(
+    fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '1' }));
+    fireUserEvent.mousePress(
       screen.getByRole('button', { name: 'calendar view is open, switch to year view' }),
     );
     // select the current year with a date in the past to trigger "findClosestEnabledDate"
-    userEvent.mousePress(screen.getByRole('radio', { name: '2019' }));
+    fireUserEvent.mousePress(screen.getByRole('radio', { name: '2019' }));
 
     expect(onChange.lastCall.firstArg).toEqualDateTime(defaultDate);
   });
@@ -195,7 +196,7 @@ describe('<DateCalendar />', () => {
       // should make the reference day firstly focusable
       expect(screen.getByRole('gridcell', { name: '17' })).to.have.attribute('tabindex', '0');
 
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 3, 2, 12, 30));
     });
@@ -212,7 +213,7 @@ describe('<DateCalendar />', () => {
         />,
       );
 
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
     });
@@ -229,7 +230,7 @@ describe('<DateCalendar />', () => {
         />,
       );
 
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
     });
@@ -245,7 +246,7 @@ describe('<DateCalendar />', () => {
         />,
       );
 
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(
         adapterToUse.date('2018-01-02T11:11:11.111'),
@@ -620,7 +621,7 @@ describe('<DateCalendar />', () => {
       );
 
       const renderCountBeforeChange = RenderCount.callCount;
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
     });
 
@@ -637,7 +638,7 @@ describe('<DateCalendar />', () => {
       );
 
       const renderCountBeforeChange = RenderCount.callCount;
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(4); // 2 render * 2 days
     });
   });

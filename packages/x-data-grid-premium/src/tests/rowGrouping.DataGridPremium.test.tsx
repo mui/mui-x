@@ -1,12 +1,5 @@
 import * as React from 'react';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  act,
-  userEvent,
-  waitFor,
-} from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import {
   microtasks,
   getColumnHeaderCell,
@@ -16,6 +9,7 @@ import {
   getSelectByName,
   getRow,
 } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { expect } from 'chai';
 import {
   DataGridPremium,
@@ -888,7 +882,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        userEvent.mousePress(getCell(1, 0));
+        fireUserEvent.mousePress(getCell(1, 0));
         expect(renderIdCell.lastCall.firstArg.field).to.equal('id');
         expect(getCell(1, 0)).to.have.text('Focused: true');
       });

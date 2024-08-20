@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import {
-  fireEvent,
-  fireTouchChangedEvent,
-  screen,
-  within,
-  getAllByRole,
-} from '@mui/internal-test-utils';
+import { fireEvent, fireTouchChangedEvent, screen, within } from '@mui/internal-test-utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import { createPickerRenderer, adapterToUse, timeClockHandler } from 'test/utils/pickers';
 
@@ -166,7 +160,7 @@ describe('<TimeClock />', () => {
 
     // hours are not disabled
     const hoursContainer = screen.getByRole('listbox');
-    const hours = getAllByRole(hoursContainer, 'option');
+    const hours = within(hoursContainer).getAllByRole('option');
     const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
 
     expect(hours.length).to.equal(12);
@@ -194,7 +188,7 @@ describe('<TimeClock />', () => {
 
     // hours are disabled
     const hoursContainer = screen.getByRole('listbox');
-    const hours = getAllByRole(hoursContainer, 'option');
+    const hours = within(hoursContainer).getAllByRole('option');
     const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
 
     expect(hours.length).to.equal(12);

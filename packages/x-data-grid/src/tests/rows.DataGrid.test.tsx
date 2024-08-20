@@ -4,7 +4,6 @@ import {
   fireEvent,
   screen,
   act,
-  userEvent,
   ErrorBoundary,
   waitFor,
 } from '@mui/internal-test-utils';
@@ -33,6 +32,7 @@ import {
   getCell,
   microtasks,
 } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import Dialog from '@mui/material/Dialog';
 
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';
@@ -374,7 +374,7 @@ describe('<DataGrid /> - Rows', () => {
         />,
       );
       const moreButton = screen.getByRole('menuitem', { name: 'more' });
-      userEvent.mousePress(moreButton);
+      fireUserEvent.mousePress(moreButton);
 
       await waitFor(() => {
         const printButton = screen.queryByRole('menuitem', { name: 'print' });
@@ -1146,7 +1146,7 @@ describe('<DataGrid /> - Rows', () => {
     );
 
     const cell = getCell(0, 0);
-    userEvent.mousePress(cell);
+    fireUserEvent.mousePress(cell);
 
     const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
     virtualScroller.scrollTop = 1000;

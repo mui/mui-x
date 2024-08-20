@@ -1161,11 +1161,9 @@ describe('<DataGridPro /> - Filter', () => {
           openedPanelValue: GridPreferencePanelsValue.filters,
         },
       };
-      const { getAllByRole } = render(
-        <TestCase initialState={initialState} filterModel={newModel} columns={columns} />,
-      );
+      render(<TestCase initialState={initialState} filterModel={newModel} columns={columns} />);
       // For JSDom, the first hidden combo is also found which we are not interested in
-      const select = getAllByRole('combobox', { name: 'Logic operator' })[isJSDOM ? 1 : 0];
+      const select = screen.getAllByRole('combobox', { name: 'Logic operator' })[isJSDOM ? 1 : 0];
       expect(select).not.to.have.class('Mui-disabled');
     });
 

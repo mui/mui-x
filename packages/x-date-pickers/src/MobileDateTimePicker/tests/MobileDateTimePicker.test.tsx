@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireTouchChangedEvent, screen, userEvent } from '@mui/internal-test-utils';
+import { fireTouchChangedEvent, screen } from '@mui/internal-test-utils';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import {
   adapterToUse,
@@ -10,6 +10,7 @@ import {
   getClockTouchEvent,
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<MobileDateTimePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -98,7 +99,7 @@ describe('<MobileDateTimePicker />', () => {
 
       render(<MobileDateTimePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
 
-      userEvent.mousePress(getFieldSectionsContainer());
+      fireUserEvent.mousePress(getFieldSectionsContainer());
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
@@ -131,8 +132,8 @@ describe('<MobileDateTimePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the year view
-      userEvent.mousePress(screen.getByLabelText(/switch to year view/));
-      userEvent.mousePress(screen.getByText('2010', { selector: 'button' }));
+      fireUserEvent.mousePress(screen.getByLabelText(/switch to year view/));
+      fireUserEvent.mousePress(screen.getByText('2010', { selector: 'button' }));
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 1));
@@ -140,7 +141,7 @@ describe('<MobileDateTimePicker />', () => {
       clock.runToLast();
 
       // Change the date
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
+      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 15));
 
