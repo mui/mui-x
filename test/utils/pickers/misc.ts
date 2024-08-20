@@ -6,7 +6,9 @@ import { OpenPickerParams } from './openPicker';
 export const stubMatchMedia = (matches = true) =>
   sinon.stub().returns({
     matches,
+    addListener: () => {},
     addEventListener: () => {},
+    removeListener: () => {},
     removeEventListener: () => {},
   });
 
