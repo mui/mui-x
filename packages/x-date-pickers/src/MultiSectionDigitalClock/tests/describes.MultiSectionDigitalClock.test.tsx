@@ -7,7 +7,7 @@ import {
   multiSectionDigitalClockHandler,
   describeValidation,
   describeValue,
-} from 'test/utils/pickers';
+} from '@unit/date-pickers/helpers';
 import {
   MultiSectionDigitalClock,
   multiSectionDigitalClockClasses as classes,

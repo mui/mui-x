@@ -8,7 +8,7 @@ import {
   expectFieldValueV7,
   describeJalaliAdapter,
   buildFieldInteractions,
-} from 'test/utils/pickers';
+} from '@unit/date-pickers/helpers';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import 'moment/locale/fa';
 
