@@ -32,6 +32,7 @@ export * from '../context/SeriesProvider';
 export * from '../context/ZAxisContextProvider';
 export * from '../context/PluginProvider';
 export type * from '../context/context.types';
+export { getAxisExtremum } from '../context/CartesianProvider/getAxisExtremum';
 
 // series configuration
 export * from '../models/seriesType/config';
