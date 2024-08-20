@@ -19,6 +19,7 @@ import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
 import { GridColDef, GridRowEntry, GridRowId } from '../../../models';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
+import { gridColumnFieldsSelector } from '../columns/gridColumnsSelector';
 import { gridFocusColumnGroupHeaderSelector } from '../focus';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import {
@@ -112,6 +113,7 @@ export const useGridKeyboardNavigation = (
 
   const rowSpanHiddenCells = useGridSelector(apiRef, gridRowSpanningHiddenCellsSelector);
   const filteredSortedRowIds = useGridSelector(apiRef, gridFilteredSortedRowIdsSelector);
+  const columnFields = useGridSelector(apiRef, gridColumnFieldsSelector);
 
   const currentPageRows = React.useMemo(
     () => enrichPageRowsWithPinnedRows(apiRef, initialCurrentPageRows),
@@ -127,7 +129,12 @@ export const useGridKeyboardNavigation = (
    * TODO replace with apiRef.current.moveFocusToRelativeCell()
    */
   const goToCell = React.useCallback(
-    (colIndex: number, rowId: GridRowId, closestColumnToUse: 'left' | 'right' = 'left') => {
+    (
+      colIndex: number,
+      rowId: GridRowId,
+      closestColumnToUse: 'left' | 'right' = 'left',
+      rowSpanScanDirection: 'up' | 'down' = 'up',
+    ) => {
       const visibleSortedRows = gridExpandedSortedRowEntriesSelector(apiRef);
       const nextCellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(rowId, colIndex);
       if (nextCellColSpanInfo && nextCellColSpanInfo.spannedByColSpan) {
@@ -137,16 +144,23 @@ export const useGridKeyboardNavigation = (
           colIndex = nextCellColSpanInfo.rightVisibleCellIndex;
         }
       }
+      const nonRowSpannedRowId = findNonRowSpannedCell(
+        rowId,
+        columnFields[colIndex],
+        rowSpanScanDirection,
+      );
       // `scrollToIndexes` requires a rowIndex relative to all visible rows.
       // Those rows do not include pinned rows, but pinned rows do not need scroll anyway.
-      const rowIndexRelativeToAllRows = visibleSortedRows.findIndex((row) => row.id === rowId);
+      const rowIndexRelativeToAllRows = visibleSortedRows.findIndex(
+        (row) => row.id === nonRowSpannedRowId,
+      );
       logger.debug(`Navigating to cell row ${rowIndexRelativeToAllRows}, col ${colIndex}`);
       apiRef.current.scrollToIndexes({
         colIndex,
         rowIndex: rowIndexRelativeToAllRows,
       });
       const field = apiRef.current.getVisibleColumns()[colIndex].field;
-      apiRef.current.setCellFocus(rowId, field);
+      apiRef.current.setCellFocus(nonRowSpannedRowId, field);
     },
     [apiRef, logger],
   );
@@ -517,18 +531,19 @@ export const useGridKeyboardNavigation = (
   );
 
   const findNonRowSpannedCell = React.useCallback(
-    (rowId: GridRowId, field: GridColDef['field'], direction: 'up' | 'down') => {
+    (rowId: GridRowId, field: GridColDef['field'], rowSpanScanDirection: 'up' | 'down') => {
       if (!rowSpanHiddenCells[rowId]?.[field]) {
         return rowId;
       }
-      // find closest non row spanned cell in the given `direction`
-      let nextRowIndex = filteredSortedRowIds.indexOf(rowId) + (direction === 'down' ? 1 : -1);
+      // find closest non row spanned cell in the given `rowSpanScanDirection`
+      let nextRowIndex =
+        filteredSortedRowIds.indexOf(rowId) + (rowSpanScanDirection === 'down' ? 1 : -1);
       while (nextRowIndex >= 0 && nextRowIndex < filteredSortedRowIds.length) {
         const nextRowId = filteredSortedRowIds[nextRowIndex];
         if (!rowSpanHiddenCells[nextRowId]?.[field]) {
           return nextRowId;
         }
-        nextRowIndex += direction === 'down' ? 1 : -1;
+        nextRowIndex += rowSpanScanDirection === 'down' ? 1 : -1;
       }
       return rowId;
     },
@@ -579,24 +594,14 @@ export const useGridKeyboardNavigation = (
         case 'ArrowDown': {
           // "Enter" is only triggered by the row / cell editing feature
           if (rowIndexBefore < lastRowIndexInPage) {
-            const rowId = findNonRowSpannedCell(
-              getRowIdFromIndex(rowIndexBefore + 1),
-              (params as GridCellParams).field,
-              'down',
-            );
-            goToCell(colIndexBefore, rowId);
+            goToCell(colIndexBefore, getRowIdFromIndex(rowIndexBefore + 1), 'left', 'down');
           }
           break;
         }
 
         case 'ArrowUp': {
           if (rowIndexBefore > firstRowIndexInPage) {
-            const rowId = findNonRowSpannedCell(
-              getRowIdFromIndex(rowIndexBefore - 1),
-              (params as GridCellParams).field,
-              'up',
-            );
-            goToCell(colIndexBefore, rowId);
+            goToCell(colIndexBefore, getRowIdFromIndex(rowIndexBefore - 1));
           } else if (headerFilteringEnabled) {
             goToHeaderFilter(colIndexBefore, event);
           } else {
@@ -613,13 +618,11 @@ export const useGridKeyboardNavigation = (
             direction,
           });
           if (rightColIndex !== null) {
-            const rightColField = apiRef.current.getVisibleColumns()[rightColIndex].field;
-            const rowId = findNonRowSpannedCell(
+            goToCell(
+              rightColIndex,
               getRowIdFromIndex(rowIndexBefore),
-              rightColField,
-              'up',
+              direction === 'rtl' ? 'left' : 'right',
             );
-            goToCell(rightColIndex, rowId, direction === 'rtl' ? 'left' : 'right');
           }
           break;
         }
@@ -632,13 +635,11 @@ export const useGridKeyboardNavigation = (
             direction,
           });
           if (leftColIndex !== null) {
-            const leftColField = apiRef.current.getVisibleColumns()[leftColIndex].field;
-            const rowId = findNonRowSpannedCell(
+            goToCell(
+              leftColIndex,
               getRowIdFromIndex(rowIndexBefore),
-              leftColField,
-              'up',
+              direction === 'rtl' ? 'right' : 'left',
             );
-            goToCell(leftColIndex, rowId, direction === 'rtl' ? 'right' : 'left');
           }
           break;
         }
