@@ -76,8 +76,6 @@ export const useClearableField = <TFieldProps extends UseClearableFieldProps>(
 
   return {
     ...other,
-    slots,
-    slotProps,
     InputProps: {
       ...InputProps,
       endAdornment: (
