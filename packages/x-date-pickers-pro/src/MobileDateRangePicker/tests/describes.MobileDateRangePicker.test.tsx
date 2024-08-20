@@ -73,7 +73,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
         : 'MM/DD/YYYY';
       expectFieldValueV7(endFieldRoot, expectedEndValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
+    setNewValue: async (value, { isOpened, applySameValue, setEndDate = false }) => {
       let newValue: any[];
       if (applySameValue) {
         newValue = value;
@@ -87,7 +87,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
         openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
       }
 
-      fireUserEvent.mousePress(
+      await fireUserEvent.mousePress(
         screen.getAllByRole('gridcell', {
           name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
         })[0],

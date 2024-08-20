@@ -84,7 +84,7 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
         : expectedPlaceholder;
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
+    setNewValue: async (value, { isOpened, applySameValue, setEndDate = false }) => {
       if (!isOpened) {
         openPicker({
           type: 'date-time-range',
@@ -109,12 +109,12 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
 
       // if we want to set the end date, we firstly need to switch to end date "range position"
       if (setEndDate) {
-        fireUserEvent.mousePress(
+        await fireUserEvent.mousePress(
           screen.getByRole('button', { name: adapterToUse.format(value[1], 'shortDate') }),
         );
       }
 
-      fireUserEvent.mousePress(
+      await fireUserEvent.mousePress(
         screen.getByRole('gridcell', {
           name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
         }),
@@ -125,10 +125,10 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
         hasMeridiem ? 'hours12h' : 'hours24h',
       );
       const hoursNumber = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
-      fireUserEvent.mousePress(
+      await fireUserEvent.mousePress(
         screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }),
       );
-      fireUserEvent.mousePress(
+      await fireUserEvent.mousePress(
         screen.getByRole('option', {
           name: `${adapterToUse.getMinutes(newValue[setEndDate ? 1 : 0])} minutes`,
         }),
@@ -136,7 +136,7 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
       if (hasMeridiem) {
         // meridiem is an extra view on `MobileDateTimeRangePicker`
         // we need to click it to finish selection
-        fireUserEvent.mousePress(
+        await fireUserEvent.mousePress(
           screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }),
         );
       }
@@ -147,7 +147,7 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
         clock.runToLast();
       } else {
         // return to the start date view in case we'd like to repeat the selection process
-        fireUserEvent.mousePress(
+        await fireUserEvent.mousePress(
           screen.getByRole('button', { name: adapterToUse.format(newValue[0], 'shortDate') }),
         );
       }

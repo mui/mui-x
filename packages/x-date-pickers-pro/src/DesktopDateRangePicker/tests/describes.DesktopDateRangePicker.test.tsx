@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { act, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   createPickerRenderer,
@@ -87,13 +87,11 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
       }
 
       if (isOpened) {
-        await act(async () => {
-          fireUserEvent.mousePress(
-            screen.getAllByRole('gridcell', {
-              name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
-            })[0],
-          );
-        });
+        await fireUserEvent.mousePress(
+          screen.getAllByRole('gridcell', {
+            name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
+          })[0],
+        );
       } else {
         selectSection('day');
         pressKey(undefined, 'ArrowUp');
@@ -151,13 +149,11 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
       }
 
       if (isOpened) {
-        await act(async () => {
-          fireUserEvent.mousePress(
-            screen.getAllByRole('gridcell', {
-              name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
-            })[0],
-          );
-        });
+        await fireUserEvent.mousePress(
+          screen.getAllByRole('gridcell', {
+            name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
+          })[0],
+        );
       } else {
         selectSection('day');
         pressKey(undefined, 'ArrowUp');

@@ -59,13 +59,13 @@ describe('<MobileDatePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue }) => {
+    setNewValue: async (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
         openPicker({ type: 'date', variant: 'mobile' });
       }
 
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
-      fireUserEvent.mousePress(
+      await fireUserEvent.mousePress(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
 

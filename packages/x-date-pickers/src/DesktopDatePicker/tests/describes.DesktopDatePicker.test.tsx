@@ -59,11 +59,11 @@ describe('<DesktopDatePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
+    setNewValue: async (value, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
 
       if (isOpened) {
-        fireUserEvent.mousePress(
+        await fireUserEvent.mousePress(
           screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
         );
       } else {

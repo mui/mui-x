@@ -46,9 +46,9 @@ describe('<DateCalendar /> - Describes', () => {
         expect(selectedCells[0]).to.have.text(adapterToUse.getDate(expectedValue).toString());
       }
     },
-    setNewValue: (value) => {
+    setNewValue: async (value) => {
       const newValue = adapterToUse.addDays(value, 1);
-      fireUserEvent.mousePress(
+      await fireUserEvent.mousePress(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
 

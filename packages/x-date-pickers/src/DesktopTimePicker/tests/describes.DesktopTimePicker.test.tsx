@@ -68,7 +68,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
+    setNewValue: async (value, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue
         ? value
         : adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 5);
@@ -77,16 +77,16 @@ describe('<DesktopTimePicker /> - Describes', () => {
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         const hours = adapterToUse.format(newValue, hasMeridiem ? 'hours12h' : 'hours24h');
         const hoursNumber = adapterToUse.getHours(newValue);
-        fireUserEvent.mousePress(
+        await fireUserEvent.mousePress(
           screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }),
         );
-        fireUserEvent.mousePress(
+        await fireUserEvent.mousePress(
           screen.getByRole('option', { name: `${adapterToUse.getMinutes(newValue)} minutes` }),
         );
         if (hasMeridiem) {
           // meridiem is an extra view on `DesktopTimePicker`
           // we need to click it to finish selection
-          fireUserEvent.mousePress(
+          await fireUserEvent.mousePress(
             screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }),
           );
         }

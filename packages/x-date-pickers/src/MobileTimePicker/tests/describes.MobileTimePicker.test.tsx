@@ -69,7 +69,7 @@ describe('<MobileTimePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue }) => {
+    setNewValue: async (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
         openPicker({ type: 'time', variant: 'mobile' });
       }
@@ -93,7 +93,7 @@ describe('<MobileTimePicker /> - Describes', () => {
       if (hasMeridiem) {
         const newHours = adapterToUse.getHours(newValue);
         // select appropriate meridiem
-        fireUserEvent.mousePress(
+        await fireUserEvent.mousePress(
           screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }),
         );
       }
@@ -105,7 +105,7 @@ describe('<MobileTimePicker /> - Describes', () => {
         clock.runToLast();
       } else {
         // return to the hours view in case we'd like to repeat the selection process
-        fireUserEvent.mousePress(screen.getByRole('button', { name: 'Open previous view' }));
+        await fireUserEvent.mousePress(screen.getByRole('button', { name: 'Open previous view' }));
       }
 
       return newValue;

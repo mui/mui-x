@@ -52,10 +52,10 @@ describe('<MonthCalendar /> - Describes', () => {
         expect(activeMonth).to.have.attribute('aria-checked', 'true');
       }
     },
-    setNewValue: (value) => {
+    setNewValue: async (value) => {
       const newValue = adapterToUse.addMonths(value, 1);
 
-      fireUserEvent.mousePress(
+      await fireUserEvent.mousePress(
         screen.getByRole('radio', { name: adapterToUse.format(newValue, 'month') }),
       );
 
