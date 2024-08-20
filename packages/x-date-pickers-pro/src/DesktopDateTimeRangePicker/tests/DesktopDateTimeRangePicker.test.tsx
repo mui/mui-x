@@ -7,7 +7,7 @@ import {
   openPicker,
   getFieldSectionsContainer,
   expectFieldValueV7,
-} from 'test/utils/pickers';
+} from '@mui/x-date-pickers/test/helpers';
 import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
 
 describe('<DesktopDateTimeRangePicker />', () => {

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { adapterToUse } from 'test/utils/pickers';
+import { adapterToUse } from '@mui/x-date-pickers/test/helpers';
 import { calculateRangeChange, calculateRangePreview } from './date-range-manager';
 import { DateRange } from '../../models';
 

@@ -7,7 +7,7 @@ import {
   expectFieldValueV7,
   describeAdapters,
   buildFieldInteractions,
-} from 'test/utils/pickers';
+} from '@mui/x-date-pickers/test/helpers';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 

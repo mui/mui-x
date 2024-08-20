@@ -12,5 +12,5 @@
     ],
     "noImplicitAny": false
   },
-  "include": ["src/**/*", "../../test/utils/addChaiAssertions.ts"]
+  "include": ["src/**/*", "../x-date-pickers/test/setup/chaiAssertions.d.ts"]
 }

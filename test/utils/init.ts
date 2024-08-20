@@ -1,4 +1,4 @@
 import '@mui/internal-test-utils/init';
 import './licenseRelease';
-import './addChaiAssertions';
-import './setupPickers';
+import '../../packages/x-date-pickers/test/setup/addChaiAssertions';
+import '../../packages/x-date-pickers/test/setup/setupPickers';

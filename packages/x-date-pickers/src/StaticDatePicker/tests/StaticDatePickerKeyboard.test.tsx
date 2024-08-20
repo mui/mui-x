@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { DateView } from '@mui/x-date-pickers/models';
-import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
+import { createPickerRenderer, adapterToUse } from '@mui/x-date-pickers/test/helpers';
 
 describe('<StaticDatePicker /> - Keyboard interactions', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

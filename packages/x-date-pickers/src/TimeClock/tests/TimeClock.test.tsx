@@ -9,7 +9,11 @@ import {
   getAllByRole,
 } from '@mui/internal-test-utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
-import { createPickerRenderer, adapterToUse, timeClockHandler } from 'test/utils/pickers';
+import {
+  createPickerRenderer,
+  adapterToUse,
+  timeClockHandler,
+} from '@mui/x-date-pickers/test/helpers';
 
 describe('<TimeClock />', () => {
   const { render } = createPickerRenderer();

@@ -34,7 +34,8 @@
     "build:stable": "node ../../scripts/build.mjs stable",
     "build:copy-files": "node ../../scripts/copyFiles.mjs",
     "build:types": "node ../../scripts/buildTypes.mjs",
-    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
+    "test:unit": "cross-env NODE_ENV=test TZ=UTC mocha -n expose_gc --config .mocharc.js"
   },
   "repository": {
     "type": "git",

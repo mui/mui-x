@@ -7,7 +7,7 @@ import {
   buildFieldInteractions,
   createPickerRenderer,
   expectFieldValueV7,
-} from 'test/utils/pickers';
+} from '@mui/x-date-pickers/test/helpers';
 
 describe('<DateTimeField /> - Editing', () => {
   const { render, clock } = createPickerRenderer({

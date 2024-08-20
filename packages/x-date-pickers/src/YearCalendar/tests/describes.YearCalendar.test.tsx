@@ -7,7 +7,7 @@ import {
   adapterToUse,
   describeValidation,
   describeValue,
-} from 'test/utils/pickers';
+} from '@mui/x-date-pickers/test/helpers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<YearCalendar /> - Describes', () => {

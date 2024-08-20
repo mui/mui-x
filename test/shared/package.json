@@ -1,0 +1,12 @@
+{
+  "name": "@mui-x-internal/shared",
+  "version": "7.11.0",
+  "private": true,
+  "scripts": {
+    "typescript": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@mui/internal-test-utils": "^1.0.4",
+    "@mui/x-license": "workspace:*"
+  }
+}

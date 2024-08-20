@@ -9,7 +9,7 @@ import {
   createPickerRenderer,
   expectFieldValueV7,
   expectFieldValueV6,
-} from 'test/utils/pickers';
+} from '@mui/x-date-pickers/test/helpers';
 
 describe('<SingleInputDateRangeField /> - Selection', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

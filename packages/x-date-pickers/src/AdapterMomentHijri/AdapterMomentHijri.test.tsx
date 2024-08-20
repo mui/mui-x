@@ -8,7 +8,7 @@ import {
   expectFieldValueV7,
   describeHijriAdapter,
   buildFieldInteractions,
-} from 'test/utils/pickers';
+} from '@mui/x-date-pickers/test/helpers';
 import 'moment/locale/ar';
 
 describe('<AdapterMomentHijri />', () => {

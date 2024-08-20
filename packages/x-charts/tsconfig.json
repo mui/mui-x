@@ -9,5 +9,5 @@
       "node"
     ]
   },
-  "include": ["src/**/*", "../../test/utils/addChaiAssertions.ts", "../../test/utils/init.ts"]
+  "include": ["src/**/*", "../../test/utils/init.ts"]
 }
