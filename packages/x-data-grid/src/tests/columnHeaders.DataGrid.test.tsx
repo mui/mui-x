@@ -1,15 +1,9 @@
 import * as React from 'react';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  within,
-  userEvent,
-  act,
-} from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, within, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
 import { getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -131,13 +125,13 @@ describe('<DataGrid /> - Column headers', () => {
       );
 
       await act(async () => {
-        userEvent.mousePress(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
+        fireUserEvent.mousePress(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
       });
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
 
       await act(async () => {
-        userEvent.mousePress(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
+        fireUserEvent.mousePress(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
       });
       clock.runToLast();
       expect(screen.queryByRole('menu')).to.equal(null);

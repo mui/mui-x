@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, fireEvent, userEvent, act, getByRole } from '@mui/internal-test-utils';
+import { screen, fireEvent, act, within } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
@@ -15,11 +15,12 @@ import {
   getFieldSectionsContainer,
   getTextbox,
 } from 'test/utils/pickers';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
-  getByRole(screen.getByRole('grid', { name: picker }), 'gridcell', { name });
+  within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
 
 describe('<DesktopDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({
@@ -93,7 +94,7 @@ describe('<DesktopDateRangePicker />', () => {
   describe('Field slot: SingleInputDateRangeField', () => {
     it('should add focused class to the field when it is focused', () => {
       // test v7 behavior
-      const response = render(
+      const { unmount } = render(
         <DesktopDateRangePicker
           enableAccessibleFieldDOMStructure
           slots={{ field: SingleInputDateRangeField }}
@@ -105,7 +106,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       expect(sectionsContainer.parentElement).to.have.class('Mui-focused');
 
-      response.unmount();
+      unmount();
 
       // test v6 behavior
       render(<DesktopDateRangePicker slots={{ field: SingleInputDateRangeField }} />);
@@ -118,7 +119,7 @@ describe('<DesktopDateRangePicker />', () => {
 
     it('should render the input with a given `name` when `SingleInputDateRangeField` is used', () => {
       // Test with v7 input
-      const v7Response = render(
+      const { unmount } = render(
         <DesktopDateRangePicker
           name="test"
           enableAccessibleFieldDOMStructure
@@ -127,7 +128,7 @@ describe('<DesktopDateRangePicker />', () => {
       );
       expect(screen.getByRole<HTMLInputElement>('textbox', { hidden: true }).name).to.equal('test');
 
-      v7Response.unmount();
+      unmount();
 
       // Test with v6 input
       render(<DesktopDateRangePicker name="test" slots={{ field: SingleInputDateRangeField }} />);
@@ -245,7 +246,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       await act(async () => {
         // Change the start date
-        userEvent.mousePress(getPickerDay('3'));
+        fireUserEvent.mousePress(getPickerDay('3'));
       });
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
@@ -253,7 +254,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       await act(async () => {
         // Change the end date
-        userEvent.mousePress(getPickerDay('5'));
+        fireUserEvent.mousePress(getPickerDay('5'));
       });
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
@@ -292,7 +293,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       await act(async () => {
         // Change the end date
-        userEvent.mousePress(getPickerDay('3'));
+        fireUserEvent.mousePress(getPickerDay('3'));
       });
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
@@ -325,7 +326,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       await act(async () => {
         // Change the end date
-        userEvent.mousePress(getPickerDay('3'));
+        fireUserEvent.mousePress(getPickerDay('3'));
       });
 
       expect(onAccept.callCount).to.equal(0);
@@ -355,7 +356,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       await act(async () => {
         // Change the start date (already tested)
-        userEvent.mousePress(getPickerDay('3'));
+        fireUserEvent.mousePress(getPickerDay('3'));
       });
 
       // Dismiss the picker
@@ -390,12 +391,12 @@ describe('<DesktopDateRangePicker />', () => {
       // Dismiss the picker
       const input = document.getElementById('test-id')!;
 
+      fireEvent.mouseDown(input);
       act(() => {
-        fireEvent.mouseDown(input);
         input.focus();
-        fireEvent.mouseUp(input);
-        clock.runToLast();
       });
+      fireEvent.mouseUp(input);
+      clock.runToLast();
 
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
@@ -428,18 +429,18 @@ describe('<DesktopDateRangePicker />', () => {
 
       await act(async () => {
         // Change the start date (already tested)
-        userEvent.mousePress(getPickerDay('3'));
+        fireUserEvent.mousePress(getPickerDay('3'));
       });
       clock.runToLast();
 
       // Dismiss the picker
       const input = document.getElementById('test-id')!;
 
+      fireEvent.mouseDown(input);
       act(() => {
-        fireEvent.mouseDown(input);
         input.focus();
-        fireEvent.mouseUp(input);
       });
+      fireEvent.mouseUp(input);
 
       clock.runToLast();
 
@@ -466,7 +467,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       await act(async () => {
         // Dismiss the picker
-        userEvent.mousePress(document.body);
+        fireUserEvent.mousePress(document.body);
       });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
@@ -536,7 +537,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       await act(async () => {
         // Change the start date (already tested)
-        userEvent.mousePress(getPickerDay('3'));
+        fireUserEvent.mousePress(getPickerDay('3'));
       });
       clock.runToLast();
 
@@ -576,7 +577,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       await act(async () => {
         // Clear the date
-        userEvent.mousePress(screen.getByText(/clear/i));
+        fireUserEvent.mousePress(screen.getByText(/clear/i));
       });
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onChange.lastCall.args[0]).to.deep.equal([null, null]);
@@ -605,7 +606,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       await act(async () => {
         // Clear the date
-        userEvent.mousePress(screen.getByText(/clear/i));
+        fireUserEvent.mousePress(screen.getByText(/clear/i));
       });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);

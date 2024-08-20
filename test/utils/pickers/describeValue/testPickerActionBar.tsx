@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { act, screen, userEvent } from '@mui/internal-test-utils';
+import { act, screen } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   getExpectedOnChangeCount,
   expectPickerChangeHandlerValue,
 } from 'test/utils/pickers';
 import { DescribeValueTestSuite } from './describeValue.types';
+import { fireUserEvent } from '../../fireUserEvent';
 
 export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
   ElementToTest,
@@ -50,7 +51,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         await act(async () => {
           // Clear the date
-          userEvent.mousePress(screen.getByText(/clear/i));
+          fireUserEvent.mousePress(screen.getByText(/clear/i));
         });
         expect(onChange.callCount).to.equal(1);
         expectPickerChangeHandlerValue(pickerParams.type, onChange, emptyValue);
@@ -78,7 +79,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         await act(async () => {
           // Clear the date
-          userEvent.mousePress(screen.getByText(/clear/i));
+          fireUserEvent.mousePress(screen.getByText(/clear/i));
         });
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
@@ -108,7 +109,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         await act(async () => {
           // Cancel the modifications
-          userEvent.mousePress(screen.getByText(/cancel/i));
+          fireUserEvent.mousePress(screen.getByText(/cancel/i));
         });
         expect(onChange.callCount).to.equal(
           getExpectedOnChangeCount(componentFamily, pickerParams) + 1,
@@ -144,7 +145,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         await act(async () => {
           // Cancel the modifications
-          userEvent.mousePress(screen.getByText(/cancel/i));
+          fireUserEvent.mousePress(screen.getByText(/cancel/i));
         });
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
@@ -174,7 +175,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         await act(async () => {
           // Accept the modifications
-          userEvent.mousePress(screen.getByText(/ok/i));
+          fireUserEvent.mousePress(screen.getByText(/ok/i));
         });
         expect(onChange.callCount).to.equal(
           getExpectedOnChangeCount(componentFamily, pickerParams),
@@ -203,7 +204,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         await act(async () => {
           // Accept the modifications
-          userEvent.mousePress(screen.getByText(/ok/i));
+          fireUserEvent.mousePress(screen.getByText(/ok/i));
         });
         expect(onChange.callCount).to.equal(1);
         expect(onAccept.callCount).to.equal(1);
@@ -230,7 +231,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         await act(async () => {
           // Accept the modifications
-          userEvent.mousePress(screen.getByText(/ok/i));
+          fireUserEvent.mousePress(screen.getByText(/ok/i));
         });
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
@@ -257,7 +258,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         );
 
         await act(async () => {
-          userEvent.mousePress(screen.getByText(/today/i));
+          fireUserEvent.mousePress(screen.getByText(/today/i));
         });
 
         let startOfToday: any;

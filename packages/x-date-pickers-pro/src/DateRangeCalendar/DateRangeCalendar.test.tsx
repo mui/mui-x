@@ -1,14 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import {
-  screen,
-  fireEvent,
-  getByRole,
-  fireTouchChangedEvent,
-  userEvent,
-  act,
-} from '@mui/internal-test-utils';
+import { screen, fireEvent, within, fireTouchChangedEvent, act } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   buildPickerDragInteractions,
@@ -22,6 +15,7 @@ import {
 } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { RangePosition } from '../models';
 // eslint-disable-next-line import/order
 import packageJson from '@mui/material/package.json';
@@ -30,7 +24,7 @@ import packageJson from '@mui/material/package.json';
 console.log(`@mui/x-date-pickers-pro: @mui/material version`, packageJson.version);
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
-  getByRole(screen.getByRole('grid', { name: picker }), 'gridcell', { name });
+  within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
 
 const dynamicShouldDisableDate = (date, position: RangePosition) => {
   if (position === 'end') {
@@ -547,7 +541,7 @@ describe('<DateRangeCalendar />', () => {
 
       const renderCountBeforeChange = RenderCount.callCount;
       await act(async () => {
-        userEvent.mousePress(getPickerDay('2'));
+        fireUserEvent.mousePress(getPickerDay('2'));
       });
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
     });
@@ -564,12 +558,12 @@ describe('<DateRangeCalendar />', () => {
       );
 
       await act(async () => {
-        userEvent.mousePress(getPickerDay('2'));
+        fireUserEvent.mousePress(getPickerDay('2'));
       });
 
       const renderCountBeforeChange = RenderCount.callCount;
       await act(async () => {
-        userEvent.mousePress(getPickerDay('4'));
+        fireUserEvent.mousePress(getPickerDay('4'));
       });
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
     });
