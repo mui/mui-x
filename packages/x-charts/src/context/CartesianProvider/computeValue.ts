@@ -76,7 +76,7 @@ export function computeValue(
 export function computeValue({
   drawingArea,
   formattedSeries,
-  axis: inAxis,
+  axis: allAxis,
   extremumGetters,
   axisDirection,
   zoomData,
@@ -86,7 +86,6 @@ export function computeValue({
   axis: AxisConfig<ScaleName, any, ChartsAxisProps>[];
   axisDirection: 'x' | 'y';
 }) {
-  const allAxis = inAxis;
 
   const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
