@@ -72,7 +72,7 @@ export function useGridVirtualization(
       ...state,
       virtualization: {
         ...state.virtualization,
-        enabledForRows: enabled,
+        enabledForRows: enabled && !props.autoHeight,
       },
     }));
   };
