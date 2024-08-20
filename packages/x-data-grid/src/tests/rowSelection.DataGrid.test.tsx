@@ -1,7 +1,14 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  waitFor,
+  flushMicrotasks,
+} from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -228,11 +235,10 @@ describe('<DataGrid /> - Row selection', () => {
       // simulate click
       const checkboxInput = getCell(0, 0).querySelector('input');
 
-      await act(async () => {
-        fireUserEvent.mousePress(checkboxInput!);
-      });
+      fireUserEvent.mousePress(checkboxInput!);
 
       expect(getActiveCell()).to.equal('0-0');
+      await flushMicrotasks();
     });
 
     it('should select all visible rows regardless of pagination', () => {
@@ -540,9 +546,8 @@ describe('<DataGrid /> - Row selection', () => {
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'ArrowLeft' });
         fireEvent.keyDown(getCell(1, 0).querySelector('input')!, { key: 'ArrowUp' });
-        await act(async () => {
-          clock.runToLast(); // Wait for transition
-        });
+        clock.runToLast(); // Wait for transition
+        await flushMicrotasks();
         expect(document.querySelectorAll('.MuiTouchRipple-rippleVisible')).to.have.length(1);
       });
     });

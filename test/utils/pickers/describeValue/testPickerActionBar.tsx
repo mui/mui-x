@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { act, screen } from '@mui/internal-test-utils';
+import { flushMicrotasks, screen } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   getExpectedOnChangeCount,
@@ -49,15 +49,14 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           />,
         );
 
-        await act(async () => {
-          // Clear the date
-          fireUserEvent.mousePress(screen.getByText(/clear/i));
-        });
+        // Clear the date
+        fireUserEvent.mousePress(screen.getByText(/clear/i));
         expect(onChange.callCount).to.equal(1);
         expectPickerChangeHandlerValue(pickerParams.type, onChange, emptyValue);
         expect(onAccept.callCount).to.equal(1);
         expectPickerChangeHandlerValue(pickerParams.type, onAccept, emptyValue);
         expect(onClose.callCount).to.equal(1);
+        await flushMicrotasks();
       });
 
       it('should not call onChange or onAccept if the value is already empty value', async () => {
@@ -77,13 +76,12 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           />,
         );
 
-        await act(async () => {
-          // Clear the date
-          fireUserEvent.mousePress(screen.getByText(/clear/i));
-        });
+        // Clear the date
+        fireUserEvent.mousePress(screen.getByText(/clear/i));
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
+        await flushMicrotasks();
       });
     });
 
@@ -107,10 +105,8 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         // Change the value (already tested)
         await setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
-        await act(async () => {
-          // Cancel the modifications
-          fireUserEvent.mousePress(screen.getByText(/cancel/i));
-        });
+        // Cancel the modifications
+        fireUserEvent.mousePress(screen.getByText(/cancel/i));
         expect(onChange.callCount).to.equal(
           getExpectedOnChangeCount(componentFamily, pickerParams) + 1,
         );
@@ -123,6 +119,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         }
         expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
+        await flushMicrotasks();
       });
 
       it('should not call onChange if no prior value modification', async () => {
@@ -143,13 +140,12 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           />,
         );
 
-        await act(async () => {
-          // Cancel the modifications
-          fireUserEvent.mousePress(screen.getByText(/cancel/i));
-        });
+        // Cancel the modifications
+        fireUserEvent.mousePress(screen.getByText(/cancel/i));
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
+        await flushMicrotasks();
       });
     });
 
@@ -173,15 +169,14 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         // Change the value (already tested)
         await setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
-        await act(async () => {
-          // Accept the modifications
-          fireUserEvent.mousePress(screen.getByText(/ok/i));
-        });
+        // Accept the modifications
+        fireUserEvent.mousePress(screen.getByText(/ok/i));
         expect(onChange.callCount).to.equal(
           getExpectedOnChangeCount(componentFamily, pickerParams),
         ); // The accepted value as already been committed, don't call onChange again
         expect(onAccept.callCount).to.equal(1);
         expect(onClose.callCount).to.equal(1);
+        await flushMicrotasks();
       });
 
       it('should call onChange, onClose and onAccept when validating the default value', async () => {
@@ -202,13 +197,12 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           />,
         );
 
-        await act(async () => {
-          // Accept the modifications
-          fireUserEvent.mousePress(screen.getByText(/ok/i));
-        });
+        // Accept the modifications
+        fireUserEvent.mousePress(screen.getByText(/ok/i));
         expect(onChange.callCount).to.equal(1);
         expect(onAccept.callCount).to.equal(1);
         expect(onClose.callCount).to.equal(1);
+        await flushMicrotasks();
       });
 
       it('should call onClose but not onAccept when validating an already validated value', async () => {
@@ -229,13 +223,12 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           />,
         );
 
-        await act(async () => {
-          // Accept the modifications
-          fireUserEvent.mousePress(screen.getByText(/ok/i));
-        });
+        // Accept the modifications
+        fireUserEvent.mousePress(screen.getByText(/ok/i));
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
+        await flushMicrotasks();
       });
     });
 
@@ -257,9 +250,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           />,
         );
 
-        await act(async () => {
-          fireUserEvent.mousePress(screen.getByText(/today/i));
-        });
+        fireUserEvent.mousePress(screen.getByText(/today/i));
 
         let startOfToday: any;
         if (pickerParams.type === 'date') {
@@ -275,6 +266,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         expect(onAccept.callCount).to.equal(1);
         expectPickerChangeHandlerValue(pickerParams.type, onAccept, startOfToday);
         expect(onClose.callCount).to.equal(1);
+        await flushMicrotasks();
       });
     });
   });

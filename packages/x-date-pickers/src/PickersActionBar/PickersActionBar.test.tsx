@@ -46,8 +46,8 @@ describe('<PickersActionBar />', () => {
     );
 
     fireUserEvent.mousePress(screen.getByText(/clear/i));
-    await flushMicrotasks();
     expect(onClear.callCount).to.equal(1);
+    await flushMicrotasks();
   });
 
   it('should render button for "cancel" action calling the associated callback', async () => {
@@ -67,8 +67,8 @@ describe('<PickersActionBar />', () => {
     );
 
     fireUserEvent.mousePress(screen.getByText(/cancel/i));
-    await flushMicrotasks();
     expect(onCancel.callCount).to.equal(1);
+    await flushMicrotasks();
   });
 
   it('should render button for "accept" action calling the associated callback', async () => {
@@ -88,8 +88,8 @@ describe('<PickersActionBar />', () => {
     );
 
     fireUserEvent.mousePress(screen.getByText(/ok/i));
-    await flushMicrotasks();
     expect(onAccept.callCount).to.equal(1);
+    await flushMicrotasks();
   });
 
   it('should render button for "today" action calling the associated callback', async () => {
@@ -109,8 +109,8 @@ describe('<PickersActionBar />', () => {
     );
 
     fireUserEvent.mousePress(screen.getByText(/today/i));
-    await flushMicrotasks();
     expect(onSetToday.callCount).to.equal(1);
+    await flushMicrotasks();
   });
 
   it('should respect actions order', () => {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, fireEvent, act, within } from '@mui/internal-test-utils';
+import { screen, fireEvent, act, within, flushMicrotasks } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
@@ -244,18 +244,14 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      await act(async () => {
-        // Change the start date
-        fireUserEvent.mousePress(getPickerDay('3'));
-      });
+      // Change the start date
+      fireUserEvent.mousePress(getPickerDay('3'));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
 
-      await act(async () => {
-        // Change the end date
-        fireUserEvent.mousePress(getPickerDay('5'));
-      });
+      // Change the end date
+      fireUserEvent.mousePress(getPickerDay('5'));
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
@@ -264,6 +260,8 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
       expect(onClose.callCount).to.equal(1);
+
+      await flushMicrotasks();
     });
 
     it('should call onChange with updated end date, onClose and onAccept with update date range when opening from end input', async () => {
@@ -291,10 +289,8 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      await act(async () => {
-        // Change the end date
-        fireUserEvent.mousePress(getPickerDay('3'));
-      });
+      // Change the end date
+      fireUserEvent.mousePress(getPickerDay('3'));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
@@ -302,6 +298,8 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onClose.callCount).to.equal(1);
+
+      await flushMicrotasks();
     });
 
     it('should not call onClose and onAccept when selecting the end date if props.closeOnSelect = false', async () => {
@@ -324,13 +322,12 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
 
-      await act(async () => {
-        // Change the end date
-        fireUserEvent.mousePress(getPickerDay('3'));
-      });
+      // Change the end date
+      fireUserEvent.mousePress(getPickerDay('3'));
 
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
+      await flushMicrotasks();
     });
 
     it('should call onClose and onAccept with the live value when pressing Escape', async () => {
@@ -354,10 +351,8 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-      await act(async () => {
-        // Change the start date (already tested)
-        fireUserEvent.mousePress(getPickerDay('3'));
-      });
+      // Change the start date (already tested)
+      fireUserEvent.mousePress(getPickerDay('3'));
 
       // Dismiss the picker
       // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target -- don't care
@@ -367,6 +362,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
       expect(onClose.callCount).to.equal(1);
+      await flushMicrotasks();
     });
 
     it('should call onClose when clicking outside of the picker without prior change', () => {
@@ -427,10 +423,8 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-      await act(async () => {
-        // Change the start date (already tested)
-        fireUserEvent.mousePress(getPickerDay('3'));
-      });
+      // Change the start date (already tested)
+      fireUserEvent.mousePress(getPickerDay('3'));
       clock.runToLast();
 
       // Dismiss the picker
@@ -449,6 +443,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
       expect(onClose.callCount).to.equal(1);
+      await flushMicrotasks();
     });
 
     it('should not call onClose or onAccept when clicking outside of the picker if not opened', async () => {
@@ -465,13 +460,12 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      await act(async () => {
-        // Dismiss the picker
-        fireUserEvent.mousePress(document.body);
-      });
+      // Dismiss the picker
+      fireUserEvent.mousePress(document.body);
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
+      await flushMicrotasks();
     });
 
     it('should call onClose when blur the current field without prior change', function test() {
@@ -535,10 +529,8 @@ describe('<DesktopDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
       expect(screen.getByRole('tooltip')).toBeVisible();
 
-      await act(async () => {
-        // Change the start date (already tested)
-        fireUserEvent.mousePress(getPickerDay('3'));
-      });
+      // Change the start date (already tested)
+      fireUserEvent.mousePress(getPickerDay('3'));
       clock.runToLast();
 
       act(() => {
@@ -551,6 +543,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
       expect(onClose.callCount).to.equal(1);
+      await flushMicrotasks();
     });
 
     it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', async () => {
@@ -575,15 +568,14 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-      await act(async () => {
-        // Clear the date
-        fireUserEvent.mousePress(screen.getByText(/clear/i));
-      });
+      // Clear the date
+      fireUserEvent.mousePress(screen.getByText(/clear/i));
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onChange.lastCall.args[0]).to.deep.equal([null, null]);
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).to.deep.equal([null, null]);
       expect(onClose.callCount).to.equal(1);
+      await flushMicrotasks();
     });
 
     it('should not call onChange or onAccept when pressing "Clear" button with an already null value', async () => {
@@ -604,13 +596,12 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-      await act(async () => {
-        // Clear the date
-        fireUserEvent.mousePress(screen.getByText(/clear/i));
-      });
+      // Clear the date
+      fireUserEvent.mousePress(screen.getByText(/clear/i));
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
+      await flushMicrotasks();
     });
 
     // TODO: Write test

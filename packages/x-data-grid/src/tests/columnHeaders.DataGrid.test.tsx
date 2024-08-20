@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, within, act } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  within,
+  flushMicrotasks,
+} from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
 import { getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
@@ -124,17 +130,14 @@ describe('<DataGrid /> - Column headers', () => {
         </div>,
       );
 
-      await act(async () => {
-        fireUserEvent.mousePress(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
-      });
+      fireUserEvent.mousePress(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
 
-      await act(async () => {
-        fireUserEvent.mousePress(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
-      });
+      fireUserEvent.mousePress(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).to.equal(null);
+      await flushMicrotasks();
     });
   });
 

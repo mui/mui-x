@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { expectPickerChangeHandlerValue } from 'test/utils/pickers';
-import { screen, act } from '@mui/internal-test-utils';
+import { screen, flushMicrotasks } from '@mui/internal-test-utils';
 import { DescribeValueTestSuite } from './describeValue.types';
 import { fireUserEvent } from '../../fireUserEvent';
 
@@ -50,15 +50,14 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
       );
 
       const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
-      await act(async () => {
-        fireUserEvent.mousePress(shortcut);
-      });
+      fireUserEvent.mousePress(shortcut);
 
       expect(onChange.callCount).to.equal(1);
       expectPickerChangeHandlerValue(pickerParams.type, onChange, values[1]);
       expect(onAccept.callCount).to.equal(1);
       expectPickerChangeHandlerValue(pickerParams.type, onAccept, values[1]);
       expect(onClose.callCount).to.equal(1);
+      await flushMicrotasks();
     });
 
     it('should call onClose and onChange when picking a shortcut with changeImportance="accept"', async () => {
@@ -90,15 +89,14 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
       );
 
       const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
-      await act(async () => {
-        fireUserEvent.mousePress(shortcut);
-      });
+      fireUserEvent.mousePress(shortcut);
 
       expect(onChange.callCount).to.equal(1);
       expectPickerChangeHandlerValue(pickerParams.type, onChange, values[1]);
       expect(onAccept.callCount).to.equal(1);
       expectPickerChangeHandlerValue(pickerParams.type, onAccept, values[1]);
       expect(onClose.callCount).to.equal(1);
+      await flushMicrotasks();
     });
 
     it('should call onClose and onChange when picking a shortcut with changeImportance="set"', async () => {
@@ -130,14 +128,13 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
       );
 
       const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
-      await act(async () => {
-        fireUserEvent.mousePress(shortcut);
-      });
+      fireUserEvent.mousePress(shortcut);
 
       expect(onChange.callCount).to.equal(1);
       expectPickerChangeHandlerValue(pickerParams.type, onChange, values[1]);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
+      await flushMicrotasks();
     });
   });
 };

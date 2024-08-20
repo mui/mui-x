@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { screen, fireEvent, within, fireTouchChangedEvent, act } from '@mui/internal-test-utils';
+import {
+  screen,
+  fireEvent,
+  within,
+  fireTouchChangedEvent,
+  flushMicrotasks,
+} from '@mui/internal-test-utils';
 import {
   adapterToUse,
   buildPickerDragInteractions,
@@ -540,10 +546,9 @@ describe('<DateRangeCalendar />', () => {
       );
 
       const renderCountBeforeChange = RenderCount.callCount;
-      await act(async () => {
-        fireUserEvent.mousePress(getPickerDay('2'));
-      });
+      fireUserEvent.mousePress(getPickerDay('2'));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
+      await flushMicrotasks();
     });
 
     it('should only render the day inside range when selecting the end day', async () => {
@@ -557,15 +562,12 @@ describe('<DateRangeCalendar />', () => {
         />,
       );
 
-      await act(async () => {
-        fireUserEvent.mousePress(getPickerDay('2'));
-      });
+      fireUserEvent.mousePress(getPickerDay('2'));
 
       const renderCountBeforeChange = RenderCount.callCount;
-      await act(async () => {
-        fireUserEvent.mousePress(getPickerDay('4'));
-      });
+      fireUserEvent.mousePress(getPickerDay('4'));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
+      await flushMicrotasks();
     });
   });
 });
