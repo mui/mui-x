@@ -86,7 +86,6 @@ export function computeValue({
   axis: AxisConfig<ScaleName, any, ChartsAxisProps>[];
   axisDirection: 'x' | 'y';
 }) {
-
   const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
     const axis = eachAxis as Readonly<AxisConfig<ScaleName, any, Readonly<ChartsAxisProps>>>;
