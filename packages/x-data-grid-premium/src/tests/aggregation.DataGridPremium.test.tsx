@@ -1,14 +1,8 @@
 import * as React from 'react';
-import {
-  createRenderer,
-  screen,
-  userEvent,
-  within,
-  act,
-  fireEvent,
-} from '@mui/internal-test-utils';
+import { createRenderer, screen, within, act, fireEvent } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { getCell, getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { SinonSpy, spy } from 'sinon';
 import {
   DataGridPremium,
@@ -177,7 +171,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         setProps({ columns: [{ ...column, editable: true }] });
         fireEvent.doubleClick(cell);
         expect(cell.querySelector('input')).not.to.equal(null);
-        userEvent.mousePress(getCell(1, 0));
+        fireUserEvent.mousePress(getCell(1, 0));
 
         setProps({ columns: [column] });
         fireEvent.doubleClick(cell);
@@ -409,8 +403,8 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       act(() => apiRef.current.showColumnMenu('id'));
       clock.runToLast();
-      userEvent.mousePress(screen.getByLabelText('Aggregation'));
-      userEvent.mousePress(
+      fireUserEvent.mousePress(screen.getByLabelText('Aggregation'));
+      fireUserEvent.mousePress(
         within(
           screen.getByRole('listbox', {
             name: 'Aggregation',

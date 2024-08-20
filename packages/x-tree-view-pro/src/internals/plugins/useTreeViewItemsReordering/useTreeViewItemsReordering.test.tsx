@@ -76,54 +76,54 @@ describeTreeView<
 
   describe('itemReordering prop', () => {
     it('should allow to drag and drop items when props.itemsReordering={true}', () => {
-      const response = render({
+      const view = render({
         experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: true,
       });
 
-      dragEvents.fullDragSequence(response.getItemRoot('1'), response.getItemContent('2'));
-      expect(response.getItemIdTree()).to.deep.equal([
+      dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
+      expect(view.getItemIdTree()).to.deep.equal([
         { id: '2', children: [{ id: '1' }] },
         { id: '3' },
       ]);
     });
 
     it('should not allow to drag and drop items when props.itemsReordering={false}', () => {
-      const response = render({
+      const view = render({
         experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: false,
       });
 
-      dragEvents.fullDragSequence(response.getItemRoot('1'), response.getItemContent('2'));
-      expect(response.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
+      dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
+      expect(view.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
     });
 
     it('should not allow to drag and drop items when props.itemsReordering is not defined', () => {
-      const response = render({
+      const view = render({
         experimentalFeatures: { indentationAtItemLevel: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
       });
 
-      dragEvents.fullDragSequence(response.getItemRoot('1'), response.getItemContent('2'));
-      expect(response.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
+      dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
+      expect(view.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
     });
 
     it('should allow to expand the new parent of the dragged item when it was not expandable before', () => {
-      const response = render({
+      const view = render({
         experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
         items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
         itemsReordering: true,
         defaultExpandedItems: ['1'],
       });
 
-      dragEvents.fullDragSequence(response.getItemRoot('1.1'), response.getItemContent('2'));
+      dragEvents.fullDragSequence(view.getItemRoot('1.1'), view.getItemContent('2'));
 
-      fireEvent.focus(response.getItemRoot('2'));
-      fireEvent.keyDown(response.getItemRoot('2'), { key: 'Enter' });
+      fireEvent.focus(view.getItemRoot('2'));
+      fireEvent.keyDown(view.getItemRoot('2'), { key: 'Enter' });
 
-      expect(response.getItemIdTree()).to.deep.equal([
+      expect(view.getItemIdTree()).to.deep.equal([
         { id: '1', children: [] },
         { id: '2', children: [{ id: '1.1' }] },
       ]);
@@ -133,14 +133,14 @@ describeTreeView<
   describe('onItemPositionChange prop', () => {
     it('should call onItemPositionChange when an item is moved', () => {
       const onItemPositionChange = spy();
-      const response = render({
+      const view = render({
         experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: true,
         onItemPositionChange,
       });
 
-      dragEvents.fullDragSequence(response.getItemRoot('1'), response.getItemContent('2'));
+      dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
       expect(onItemPositionChange.callCount).to.equal(1);
       expect(onItemPositionChange.lastCall.firstArg).to.deep.equal({
         itemId: '1',
@@ -152,27 +152,27 @@ describeTreeView<
 
   describe('isItemReorderable prop', () => {
     it('should not allow to drag an item when isItemReorderable returns false', () => {
-      const response = render({
+      const view = render({
         experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: true,
         canMoveItemToNewPosition: () => false,
       });
 
-      dragEvents.fullDragSequence(response.getItemRoot('1'), response.getItemContent('2'));
-      expect(response.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
+      dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
+      expect(view.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
     });
 
     it('should allow to drag an item when isItemReorderable returns true', () => {
-      const response = render({
+      const view = render({
         experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: true,
         canMoveItemToNewPosition: () => true,
       });
 
-      dragEvents.fullDragSequence(response.getItemRoot('1'), response.getItemContent('2'));
-      expect(response.getItemIdTree()).to.deep.equal([
+      dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
+      expect(view.getItemIdTree()).to.deep.equal([
         { id: '2', children: [{ id: '1' }] },
         { id: '3' },
       ]);
@@ -182,14 +182,14 @@ describeTreeView<
   describe('canMoveItemToNewPosition prop', () => {
     it('should call canMoveItemToNewPosition with the correct parameters', () => {
       const canMoveItemToNewPosition = spy();
-      const response = render({
+      const view = render({
         experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: true,
         canMoveItemToNewPosition,
       });
 
-      dragEvents.fullDragSequence(response.getItemRoot('1'), response.getItemContent('2'));
+      dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
       expect(canMoveItemToNewPosition.lastCall.firstArg).to.deep.equal({
         itemId: '1',
         oldPosition: { parentId: null, index: 0 },
@@ -198,27 +198,27 @@ describeTreeView<
     });
 
     it('should not allow to drop an item when canMoveItemToNewPosition returns false', () => {
-      const response = render({
+      const view = render({
         experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: true,
         canMoveItemToNewPosition: () => false,
       });
 
-      dragEvents.fullDragSequence(response.getItemRoot('1'), response.getItemContent('2'));
-      expect(response.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
+      dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
+      expect(view.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
     });
 
     it('should allow to drop an item when canMoveItemToNewPosition returns true', () => {
-      const response = render({
+      const view = render({
         experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: true,
         canMoveItemToNewPosition: () => true,
       });
 
-      dragEvents.fullDragSequence(response.getItemRoot('1'), response.getItemContent('2'));
-      expect(response.getItemIdTree()).to.deep.equal([
+      dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
+      expect(view.getItemIdTree()).to.deep.equal([
         { id: '2', children: [{ id: '1' }] },
         { id: '3' },
       ]);

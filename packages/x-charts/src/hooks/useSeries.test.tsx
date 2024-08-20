@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { ErrorBoundary, createRenderer } from '@mui/internal-test-utils';
+import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils';
 import { useSeries } from './useSeries';
 import { SeriesProvider } from '../context/SeriesProvider';
 import { PluginProvider } from '../internals';
@@ -41,7 +41,7 @@ describe('useSeries', () => {
   });
 
   it('should not throw an error when parent context is present', () => {
-    const { getByText } = render(
+    render(
       <PluginProvider>
         <SeriesProvider series={[{ type: 'bar', id: 'test-id', data: [1, 2] }]}>
           <UseSeries />
@@ -49,6 +49,6 @@ describe('useSeries', () => {
       </PluginProvider>,
     );
 
-    expect(getByText('test-id')).toBeVisible();
+    expect(screen.getByText('test-id')).toBeVisible();
   });
 });

@@ -714,9 +714,9 @@ describe('<DataGrid /> - Sorting', () => {
     setProps({ columns: [{ field: 'id' }] });
     await waitFor(() => {
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-      expect(onSortModelChange.callCount).to.equal(1);
-      expect(onSortModelChange.lastCall.firstArg).to.deep.equal([]);
     });
+    expect(onSortModelChange.callCount).to.equal(1);
+    expect(onSortModelChange.lastCall.firstArg).to.deep.equal([]);
   });
 
   // See https://github.com/mui/mui-x/issues/9204
@@ -749,8 +749,8 @@ describe('<DataGrid /> - Sorting', () => {
     setProps({ columns: [{ field: 'id' }], sortModel: [{ field: 'id', sort: 'desc' }] });
     await waitFor(() => {
       expect(getColumnValues(0)).to.deep.equal(['2', '1', '0']);
-      expect(onSortModelChange.callCount).to.equal(0);
     });
+    expect(onSortModelChange.callCount).to.equal(0);
   });
 
   describe('getSortComparator', () => {

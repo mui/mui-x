@@ -209,11 +209,13 @@ function defaultPasteResolver({
   apiRef,
   updateCell,
   pagination,
+  paginationMode,
 }: {
   pastedData: string[][];
   apiRef: React.MutableRefObject<GridApiPremium>;
   updateCell: CellValueUpdater['updateCell'];
   pagination: DataGridPremiumProcessedProps['pagination'];
+  paginationMode: DataGridPremiumProcessedProps['paginationMode'];
 }) {
   const isSingleValuePasted = pastedData.length === 1 && pastedData[0].length === 1;
 
@@ -297,9 +299,10 @@ function defaultPasteResolver({
 
   const selectedRowId = selectedCell.id;
   const selectedRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(selectedRowId);
-  const visibleRowIds = pagination
-    ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
-    : gridExpandedSortedRowIdsSelector(apiRef);
+  const visibleRowIds =
+    pagination && paginationMode === 'client'
+      ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
+      : gridExpandedSortedRowIdsSelector(apiRef);
 
   const selectedFieldIndex = visibleColumnFields.indexOf(selectedCell.field);
   pastedData.forEach((rowData, index) => {
@@ -342,7 +345,7 @@ export const useGridClipboardImport = (
 
   const splitClipboardPastedText = props.splitClipboardPastedText;
 
-  const { pagination, onBeforeClipboardPasteStart } = props;
+  const { pagination, paginationMode, onBeforeClipboardPasteStart } = props;
 
   const handlePaste = React.useCallback<GridEventListener<'cellKeyDown'>>(
     async (params, event) => {
@@ -403,6 +406,7 @@ export const useGridClipboardImport = (
           cellUpdater.updateCell(...args);
         },
         pagination,
+        paginationMode,
       });
 
       cellUpdater.applyUpdates();
@@ -416,6 +420,7 @@ export const useGridClipboardImport = (
       rootEl,
       splitClipboardPastedText,
       pagination,
+      paginationMode,
       onBeforeClipboardPasteStart,
       logger,
     ],

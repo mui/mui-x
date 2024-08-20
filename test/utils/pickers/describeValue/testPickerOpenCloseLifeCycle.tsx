@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, userEvent } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { getExpectedOnChangeCount, getFieldInputRoot, openPicker } from 'test/utils/pickers';
 import { DescribeValueTestSuite } from './describeValue.types';
+import { fireUserEvent } from '../../fireUserEvent';
 
 export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'> = (
   ElementToTest,
@@ -272,7 +273,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const newValue = setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
       // Dismiss the picker
-      userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+      fireUserEvent.keyPress(document.activeElement!, { key: 'Escape' });
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
       expect(onAccept.callCount).to.equal(1);
       if (isRangeType) {
@@ -308,7 +309,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       );
 
       // Dismiss the picker
-      userEvent.mousePress(document.body);
+      fireUserEvent.mousePress(document.body);
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
@@ -341,7 +342,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const newValue = setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
       // Dismiss the picker
-      userEvent.mousePress(document.body);
+      fireUserEvent.mousePress(document.body);
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).toEqualDateTime(newValue as any);
@@ -364,7 +365,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       );
 
       // Dismiss the picker
-      userEvent.mousePress(document.body);
+      fireUserEvent.mousePress(document.body);
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -385,7 +386,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       );
 
       // Dismiss the picker
-      userEvent.keyPress(document.body, { key: 'Escape' });
+      fireUserEvent.keyPress(document.body, { key: 'Escape' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
