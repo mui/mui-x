@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen, userEvent } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -8,6 +8,7 @@ import {
   getFieldSectionsContainer,
   expectFieldValueV7,
 } from 'test/utils/pickers';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
 
 describe('<DesktopDateTimeRangePicker />', () => {
@@ -23,16 +24,16 @@ describe('<DesktopDateTimeRangePicker />', () => {
       openPicker({ type: 'date-time-range', variant: 'desktop', initialFocus: 'start' });
 
       // select start date range
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '11' }));
-      userEvent.mousePress(screen.getByRole('option', { name: '4 hours' }));
-      userEvent.mousePress(screen.getByRole('option', { name: '5 minutes' }));
-      userEvent.mousePress(screen.getByRole('option', { name: 'PM' }));
+      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '11' }));
+      fireUserEvent.mousePress(screen.getByRole('option', { name: '4 hours' }));
+      fireUserEvent.mousePress(screen.getByRole('option', { name: '5 minutes' }));
+      fireUserEvent.mousePress(screen.getByRole('option', { name: 'PM' }));
 
       // select end date range on the same day
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '11' }));
-      userEvent.mousePress(screen.getByRole('option', { name: '5 hours' }));
-      userEvent.mousePress(screen.getByRole('option', { name: '10 minutes' }));
-      userEvent.mousePress(screen.getByRole('option', { name: 'PM' }));
+      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '11' }));
+      fireUserEvent.mousePress(screen.getByRole('option', { name: '5 hours' }));
+      fireUserEvent.mousePress(screen.getByRole('option', { name: '10 minutes' }));
+      fireUserEvent.mousePress(screen.getByRole('option', { name: 'PM' }));
 
       const startSectionsContainer = getFieldSectionsContainer(0);
       const endSectionsContainer = getFieldSectionsContainer(1);

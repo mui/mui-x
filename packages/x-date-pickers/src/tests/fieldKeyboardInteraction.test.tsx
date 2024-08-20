@@ -75,28 +75,22 @@ describe(`RTL - test arrows navigation`, () => {
     const expectedValues = ['hh', 'mm', 'YYYY', 'MM', 'DD', 'DD'];
 
     // Test with v7 input
-    const v7Response = renderWithProps(
-      { enableAccessibleFieldDOMStructure: true },
-      { direction: 'rtl' },
-    );
+    let view = renderWithProps({ enableAccessibleFieldDOMStructure: true }, { direction: 'rtl' });
 
-    v7Response.selectSection('hours');
+    view.selectSection('hours');
 
     expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      fireEvent.keyDown(v7Response.getActiveSection(undefined), { key: 'ArrowRight' });
+      fireEvent.keyDown(view.getActiveSection(undefined), { key: 'ArrowRight' });
     });
 
-    v7Response.unmount();
+    view.unmount();
 
     // Test with v6 input
-    const v6Response = renderWithProps(
-      { enableAccessibleFieldDOMStructure: false },
-      { direction: 'rtl' },
-    );
+    view = renderWithProps({ enableAccessibleFieldDOMStructure: false }, { direction: 'rtl' });
 
     const input = getTextbox();
-    v6Response.selectSection('hours');
+    view.selectSection('hours');
 
     expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
@@ -108,28 +102,22 @@ describe(`RTL - test arrows navigation`, () => {
     const expectedValues = ['DD', 'MM', 'YYYY', 'mm', 'hh', 'hh'];
 
     // Test with v7 input
-    const v7Response = renderWithProps(
-      { enableAccessibleFieldDOMStructure: true },
-      { direction: 'rtl' },
-    );
+    let view = renderWithProps({ enableAccessibleFieldDOMStructure: true }, { direction: 'rtl' });
 
-    v7Response.selectSection('day');
+    view.selectSection('day');
 
     expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      fireEvent.keyDown(v7Response.getActiveSection(undefined), { key: 'ArrowLeft' });
+      fireEvent.keyDown(view.getActiveSection(undefined), { key: 'ArrowLeft' });
     });
 
-    v7Response.unmount();
+    view.unmount();
 
     // Test with v6 input
-    const v6Response = renderWithProps(
-      { enableAccessibleFieldDOMStructure: false },
-      { direction: 'rtl' },
-    );
+    view = renderWithProps({ enableAccessibleFieldDOMStructure: false }, { direction: 'rtl' });
 
     const input = getTextbox();
-    v6Response.selectSection('day');
+    view.selectSection('day');
 
     expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
@@ -142,7 +130,7 @@ describe(`RTL - test arrows navigation`, () => {
     const expectedValues = ['11', '54', '1397', '02', '05', '05'];
 
     // Test with v7 input
-    const v7Response = renderWithProps(
+    let view = renderWithProps(
       {
         enableAccessibleFieldDOMStructure: true,
         defaultValue: adapter.date('2018-04-25T11:54:00'),
@@ -150,17 +138,17 @@ describe(`RTL - test arrows navigation`, () => {
       { direction: 'rtl' },
     );
 
-    v7Response.selectSection('hours');
+    view.selectSection('hours');
 
     expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      fireEvent.keyDown(v7Response.getActiveSection(undefined), { key: 'ArrowRight' });
+      fireEvent.keyDown(view.getActiveSection(undefined), { key: 'ArrowRight' });
     });
 
-    v7Response.unmount();
+    view.unmount();
 
     // Test with v6 input
-    const v6Response = renderWithProps(
+    view = renderWithProps(
       {
         defaultValue: adapter.date('2018-04-25T11:54:00'),
         enableAccessibleFieldDOMStructure: false,
@@ -169,7 +157,7 @@ describe(`RTL - test arrows navigation`, () => {
     );
 
     const input = getTextbox();
-    v6Response.selectSection('hours');
+    view.selectSection('hours');
 
     expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
@@ -182,7 +170,7 @@ describe(`RTL - test arrows navigation`, () => {
     const expectedValues = ['05', '02', '1397', '54', '11', '11'];
 
     // Test with v7 input
-    const v7Response = renderWithProps(
+    let view = renderWithProps(
       {
         enableAccessibleFieldDOMStructure: true,
         defaultValue: adapter.date('2018-04-25T11:54:00'),
@@ -190,17 +178,17 @@ describe(`RTL - test arrows navigation`, () => {
       { direction: 'rtl' },
     );
 
-    v7Response.selectSection('day');
+    view.selectSection('day');
 
     expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      fireEvent.keyDown(v7Response.getActiveSection(undefined), { key: 'ArrowLeft' });
+      fireEvent.keyDown(view.getActiveSection(undefined), { key: 'ArrowLeft' });
     });
 
-    v7Response.unmount();
+    view.unmount();
 
     // Test with v6 input
-    const v6Response = renderWithProps(
+    view = renderWithProps(
       {
         defaultValue: adapter.date('2018-04-25T11:54:00'),
         enableAccessibleFieldDOMStructure: false,
@@ -209,7 +197,7 @@ describe(`RTL - test arrows navigation`, () => {
     );
 
     const input = getTextbox();
-    v6Response.selectSection('day');
+    view.selectSection('day');
 
     expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
@@ -265,16 +253,16 @@ adapterToTest.forEach((adapterName) => {
       expectedValue: TDate;
       sectionConfig: ReturnType<typeof getDateSectionConfigFromFormatToken>;
     }) => {
-      const v7Response = renderWithProps({
+      const view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         defaultValue: initialValue,
         format,
       });
-      v7Response.selectSection(sectionConfig.type);
-      fireEvent.keyDown(v7Response.getActiveSection(0), { key });
+      view.selectSection(sectionConfig.type);
+      fireEvent.keyDown(view.getActiveSection(0), { key });
 
       expectFieldValueV7(
-        v7Response.getSectionsContainer(),
+        view.getSectionsContainer(),
         cleanValueStr(adapter.formatByString(expectedValue, format), sectionConfig),
       );
     };
