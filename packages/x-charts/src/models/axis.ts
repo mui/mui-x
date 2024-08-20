@@ -216,6 +216,10 @@ export interface AxisScaleConfig {
   };
 }
 
+/**
+ * Use this type instead of `AxisScaleConfig` when the values
+ * shouldn't be provided by the user.
+ */
 export interface AxisScaleComputedConfig {
   band: {
     colorScale?:
@@ -254,6 +258,7 @@ export interface AxisScaleComputedConfig {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
   };
 }
+
 export type AxisValueFormatterContext = {
   /**
    * Location indicates where the value will be displayed.

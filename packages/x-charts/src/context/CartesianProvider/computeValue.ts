@@ -6,18 +6,22 @@ import {
   ChartsYAxisProps,
   isBandScaleConfig,
   isPointScaleConfig,
-  AxisId,
 } from '../../models/axis';
-import { CartesianChartSeriesType, DatasetType } from '../../models/seriesType/config';
-import { DefaultizedAxisConfig } from './CartesianContext';
+import { CartesianChartSeriesType } from '../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../internals/colorScale';
 import { getTickNumber } from '../../hooks/useTicks';
 import { getScale } from '../../internals/getScale';
 import { DrawingArea } from '../DrawingProvider';
 import { FormattedSeries } from '../SeriesProvider';
-import { getAxisExtremum } from './getAxisExtremum';
-import { normalizeAxis } from './normalizeAxis';
+import { zoomScaleRange } from './zoom';
 import { ExtremumGetter } from '../PluginProvider';
+import {
+  DefaultizedAxisConfig,
+  ZoomData,
+  ZoomOptions,
+  GetZoomAxisFilters,
+} from './Cartesian.types';
+import { getAxisExtremum } from './getAxisExtremum';
 
 const getRange = (drawingArea: DrawingArea, axisDirection: 'x' | 'y', isReverse?: boolean) => {
   const range =
@@ -28,17 +32,6 @@ const getRange = (drawingArea: DrawingArea, axisDirection: 'x' | 'y', isReverse?
   return isReverse ? range.reverse() : range;
 };
 
-const zoomedScaleRange = (scaleRange: [number, number] | number[], zoomRange: [number, number]) => {
-  const rangeGap = scaleRange[1] - scaleRange[0];
-  const zoomGap = zoomRange[1] - zoomRange[0];
-
-  // If current zoom show the scale between p1 and p2 percents
-  // The range should be extended by adding [0, p1] and [p2, 100] segments
-  const min = scaleRange[0] - (zoomRange[0] * rangeGap) / zoomGap;
-  const max = scaleRange[1] + ((100 - zoomRange[1]) * rangeGap) / zoomGap;
-
-  return [min, max];
-};
 const isDateData = (data?: any[]): data is Date[] => data?.[0] instanceof Date;
 
 function createDateFormatter(
@@ -54,74 +47,75 @@ function createDateFormatter(
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 const DEFAULT_BAR_GAP_RATIO = 0.1;
 
-export function computeValue(options: {
-  drawingArea: DrawingArea;
-  formattedSeries: FormattedSeries;
-  axis: AxisConfig<ScaleName, any, ChartsYAxisProps>[] | undefined;
-  extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> };
-  axisDirection: 'y';
-  dataset: DatasetType | undefined;
-  zoomData?: { axisId: AxisId; start: number; end: number }[];
-}): {
-  axis: DefaultizedAxisConfig<ChartsYAxisProps>;
+type ComputeResult<T extends ChartsAxisProps> = {
+  axis: DefaultizedAxisConfig<T>;
   axisIds: string[];
 };
-export function computeValue(options: {
+
+type ComputeCommonParams = {
   drawingArea: DrawingArea;
   formattedSeries: FormattedSeries;
-  axis: AxisConfig<ScaleName, any, ChartsXAxisProps>[] | undefined;
   extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> };
-  axisDirection: 'x';
-  dataset: DatasetType | undefined;
-  zoomData?: { axisId: AxisId; start: number; end: number }[];
-}): {
-  axis: DefaultizedAxisConfig<ChartsAxisProps>;
-  axisIds: string[];
+  zoomData?: ZoomData[];
+  zoomOptions?: ZoomOptions;
+  getFilters?: GetZoomAxisFilters;
 };
+
+export function computeValue(
+  options: ComputeCommonParams & {
+    axis: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
+    axisDirection: 'y';
+  },
+): ComputeResult<ChartsYAxisProps>;
+export function computeValue(
+  options: ComputeCommonParams & {
+    axis: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
+    axisDirection: 'x';
+  },
+): ComputeResult<ChartsAxisProps>;
 export function computeValue({
   drawingArea,
   formattedSeries,
-  axis: inAxis,
+  axis: allAxis,
   extremumGetters,
-  dataset,
   axisDirection,
   zoomData,
-}: {
-  drawingArea: DrawingArea;
-  formattedSeries: FormattedSeries;
-  axis: AxisConfig<ScaleName, any, ChartsAxisProps>[] | undefined;
-  extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> };
+  zoomOptions,
+  getFilters,
+}: ComputeCommonParams & {
+  axis: AxisConfig<ScaleName, any, ChartsAxisProps>[];
   axisDirection: 'x' | 'y';
-  dataset: DatasetType | undefined;
-  zoomData?: { axisId: AxisId; start: number; end: number }[];
 }) {
-  const allAxis = normalizeAxis(inAxis, dataset, axisDirection);
-
   const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
-  allAxis.forEach((axis, axisIndex) => {
+  allAxis.forEach((eachAxis, axisIndex) => {
+    const axis = eachAxis as Readonly<AxisConfig<ScaleName, any, Readonly<ChartsAxisProps>>>;
     const isDefaultAxis = axisIndex === 0;
+    const zoomOption = zoomOptions?.[axis.id];
+    const zoom = zoomData?.find(({ axisId }) => axisId === axis.id);
+    const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
+    const range = getRange(drawingArea, axisDirection, axis.reverse);
+
     const [minData, maxData] = getAxisExtremum(
       axis,
       extremumGetters,
       isDefaultAxis,
       formattedSeries,
+      zoom === undefined && !zoomOption ? getFilters : undefined, // Do not apply filtering if zoom is already defined.
     );
-
-    const zoom = zoomData?.find(({ axisId }) => axisId === axis.id);
-    const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
-    const range = getRange(drawingArea, axisDirection, axis.reverse);
+    const data = axis.data ?? [];
 
     if (isBandScaleConfig(axis)) {
       const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
       const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
       // Reverse range because ordinal scales are presented from top to bottom on y-axis
       const scaleRange = axisDirection === 'x' ? range : [range[1], range[0]];
-      const zoomedRange = zoomedScaleRange(scaleRange, zoomRange);
+      const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
 
       completeAxis[axis.id] = {
         categoryGapRatio,
         barGapRatio,
         ...axis,
+        data,
         scale: scaleBand(axis.data!, zoomedRange)
           .paddingInner(categoryGapRatio)
           .paddingOuter(categoryGapRatio / 2),
@@ -140,10 +134,11 @@ export function computeValue({
     }
     if (isPointScaleConfig(axis)) {
       const scaleRange = axisDirection === 'x' ? range : [...range].reverse();
-      const zoomedRange = zoomedScaleRange(scaleRange, zoomRange);
+      const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
 
       completeAxis[axis.id] = {
         ...axis,
+        data,
         scale: scalePoint(axis.data!, zoomedRange),
         tickNumber: axis.data!.length,
         colorScale:
@@ -158,6 +153,7 @@ export function computeValue({
         completeAxis[axis.id].valueFormatter = axis.valueFormatter ?? dateFormatter;
       }
     }
+
     if (axis.scaleType === 'band' || axis.scaleType === 'point') {
       // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
       return;
@@ -165,26 +161,26 @@ export function computeValue({
 
     const scaleType = axis.scaleType ?? ('linear' as const);
 
-    const extremums = [axis.min ?? minData, axis.max ?? maxData];
-    const rawTickNumber = getTickNumber({ ...axis, range, domain: extremums });
+    const axisExtremums = [axis.min ?? minData, axis.max ?? maxData];
+    const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
     const tickNumber = rawTickNumber / ((zoomRange[1] - zoomRange[0]) / 100);
 
-    const zoomedRange = zoomedScaleRange(range, zoomRange);
+    const zoomedRange = zoomScaleRange(range, zoomRange);
 
     // TODO: move nice to prop? Disable when there is zoom?
-    const scale = getScale(scaleType, extremums, zoomedRange).nice(rawTickNumber);
+    const scale = getScale(scaleType, axisExtremums, zoomedRange).nice(rawTickNumber);
     const [minDomain, maxDomain] = scale.domain();
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 
     completeAxis[axis.id] = {
       ...axis,
+      data,
       scaleType: scaleType as any,
       scale: scale.domain(domain) as any,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
     };
   });
-
   return {
     axis: completeAxis,
     axisIds: allAxis.map(({ id }) => id),
