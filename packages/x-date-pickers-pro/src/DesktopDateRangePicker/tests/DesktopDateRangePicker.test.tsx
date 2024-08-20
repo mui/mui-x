@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, fireEvent, act, getByRole as rootGetByRole } from '@mui/internal-test-utils';
+import { screen, fireEvent, act, within } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
@@ -20,7 +20,7 @@ import { fireUserEvent } from 'test/utils/fireUserEvent';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
-  rootGetByRole(screen.getByRole('grid', { name: picker }), 'gridcell', { name });
+  within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
 
 describe('<DesktopDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({

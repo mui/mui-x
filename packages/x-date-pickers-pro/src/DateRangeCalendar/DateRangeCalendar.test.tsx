@@ -1,12 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import {
-  screen,
-  fireEvent,
-  getByRole as rootGetByRole,
-  fireTouchChangedEvent,
-} from '@mui/internal-test-utils';
+import { screen, fireEvent, within, fireTouchChangedEvent } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   buildPickerDragInteractions,
@@ -24,7 +19,7 @@ import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
-  rootGetByRole(screen.getByRole('grid', { name: picker }), 'gridcell', { name });
+  within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
 
 const dynamicShouldDisableDate = (date, position: RangePosition) => {
   if (position === 'end') {
