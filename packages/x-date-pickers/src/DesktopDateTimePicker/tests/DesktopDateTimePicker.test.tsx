@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen } from '@mui/internal-test-utils';
+import { flushMicrotasks, screen } from '@mui/internal-test-utils';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
@@ -13,7 +13,7 @@ describe('<DesktopDateTimePicker />', () => {
   });
 
   describe('picker state', () => {
-    it('should open when clicking "Choose date"', () => {
+    it('should open when clicking "Choose date"', async () => {
       const onOpen = spy();
 
       render(<DesktopDateTimePicker onOpen={onOpen} defaultValue={null} />);
@@ -22,9 +22,10 @@ describe('<DesktopDateTimePicker />', () => {
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
+      await flushMicrotasks();
     });
 
-    it('should call onAccept when selecting the same date and time after changing the year', () => {
+    it('should call onAccept when selecting the same date and time after changing the year', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -62,10 +63,11 @@ describe('<DesktopDateTimePicker />', () => {
       expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
       expect(onAccept.callCount).to.equal(1);
       expect(onClose.callCount).to.equal(1);
+      await flushMicrotasks();
     });
   });
 
-  it('should allow selecting same view multiple times', () => {
+  it('should allow selecting same view multiple times', async () => {
     const onChange = spy();
     const onAccept = spy();
     const onClose = spy();
@@ -105,10 +107,11 @@ describe('<DesktopDateTimePicker />', () => {
     expect(onChange.callCount).to.equal(8);
     expect(onAccept.callCount).to.equal(1);
     expect(onClose.callCount).to.equal(1);
+    await flushMicrotasks();
   });
 
   describe('prop: timeSteps', () => {
-    it('should use "DigitalClock" view renderer, when "timeSteps.minutes" = 60', () => {
+    it('should use "DigitalClock" view renderer, when "timeSteps.minutes" = 60', async () => {
       const onChange = spy();
       const onAccept = spy();
       render(
@@ -127,9 +130,10 @@ describe('<DesktopDateTimePicker />', () => {
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 2, 3, 0, 0));
       expect(onAccept.callCount).to.equal(1);
+      await flushMicrotasks();
     });
 
-    it('should accept value and close picker when selecting time on "DigitalClock" view renderer', () => {
+    it('should accept value and close picker when selecting time on "DigitalClock" view renderer', async () => {
       const onChange = spy();
       const onAccept = spy();
       render(
@@ -147,6 +151,7 @@ describe('<DesktopDateTimePicker />', () => {
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 3, 0, 0));
       expect(onAccept.callCount).to.equal(1);
+      await flushMicrotasks();
     });
   });
 });

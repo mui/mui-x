@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { screen } from '@mui/internal-test-utils';
+import { flushMicrotasks, screen } from '@mui/internal-test-utils';
 import { describeAdapters } from 'test/utils/pickers';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
@@ -14,7 +14,7 @@ describe('<DateCalendar /> - Timezone', () => {
       return;
     }
 
-    it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', () => {
+    it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', async () => {
       const onChange = spy();
       render(<DateCalendar onChange={onChange} />);
 
@@ -28,11 +28,12 @@ describe('<DateCalendar /> - Timezone', () => {
       // In a real world scenario, this should probably never occur.
       expect(adapter.getTimezone(actualDate)).to.equal(adapter.lib === 'dayjs' ? 'UTC' : 'system');
       expect(actualDate).toEqualDateTime(expectedDate);
+      await flushMicrotasks();
     });
 
     TIMEZONE_TO_TEST.forEach((timezone) => {
       describe(`Timezone: ${timezone}`, () => {
-        it('should use timezone prop for onChange when no value is provided', () => {
+        it('should use timezone prop for onChange when no value is provided', async () => {
           const onChange = spy();
           render(<DateCalendar onChange={onChange} timezone={timezone} />);
           fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '25' }));
@@ -45,9 +46,10 @@ describe('<DateCalendar /> - Timezone', () => {
           const actualDate = onChange.lastCall.firstArg;
           expect(adapter.getTimezone(actualDate)).to.equal(timezone);
           expect(actualDate).toEqualDateTime(expectedDate);
+          await flushMicrotasks();
         });
 
-        it('should use value timezone for onChange when a value is provided', () => {
+        it('should use value timezone for onChange when a value is provided', async () => {
           const onChange = spy();
           const value = adapter.date('2022-04-25T15:30', timezone);
 
@@ -60,6 +62,7 @@ describe('<DateCalendar /> - Timezone', () => {
           const actualDate = onChange.lastCall.firstArg;
           expect(adapter.getTimezone(actualDate)).to.equal(timezone);
           expect(actualDate).toEqualDateTime(expectedDate);
+          await flushMicrotasks();
         });
       });
     });
