@@ -2,10 +2,10 @@ import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 import { TimeViewWithMeridiem } from '../internals/models';
 
-const latinToPersianDigits = (str) => {
+const latinToPersianDigits = (str: string) => {
   const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-  return str.replace(/\d/g, (digit) => persianDigits[parseInt(digit, 10)])
-}
+  return str.replace(/\d/g, (digit: string) => persianDigits[parseInt(digit, 10)]);
+};
 
 const timeViews: Record<TimeViewWithMeridiem, string> = {
   hours: 'ساعت‌ها',
@@ -59,9 +59,10 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'عدد هفته',
-  calendarWeekNumberHeaderText: latinToPersianDigits('#'),
-  calendarWeekNumberAriaLabelText: (weekNumber) => `هفته ${latinToPersianDigits(weekNumber)}`,
-  calendarWeekNumberText: (weekNumber) => `${latinToPersianDigits(weekNumber)}`,
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) =>
+    `هفته ${latinToPersianDigits(weekNumber.toString())}`,
+  calendarWeekNumberText: (weekNumber) => `${latinToPersianDigits(weekNumber.toString())}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
