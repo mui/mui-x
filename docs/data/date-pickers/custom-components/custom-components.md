@@ -285,7 +285,7 @@ You can pass a custom component to replace the month button, as shown below:
 
 ## Arrow switcher
 
-The following slots let you customize how to render the buttons and icons for an arrow switcher component—the component
+The following slots let you customize how to render the buttons and icons for an arrow switcher: the component used
 to navigate to the "Previous" and "Next" steps of the picker: `PreviousIconButton`, `NextIconButton`, `LeftArrowIcon`, `RightArrowIcon`.
 
 ### Component props
