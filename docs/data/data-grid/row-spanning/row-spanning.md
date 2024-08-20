@@ -8,25 +8,37 @@ This is very close to the "row spanning" in an HTML `<table>`.
 
 To enable, pass the `unstable_rowSpanning` prop to the Data Grid.
 
-The Data Grid will automatically merge cells with the same value in a specified column.
+The Data Grid will automatically merge consecutive cells with the repeating values in the same column.
 
 In the following example, the row spanning causes the cells with the same values in a column to be merged.
 
 {{"demo": "RowSpanning.js", "bg": "inline", "defaultCodeOpen": false}}
 
+:::warning
+The row spanning generally works with features like [sorting](/x/react-data-grid/sorting/) and [filtering](/x/react-data-grid/filtering/), be sure to check if everything works as expected when using it in combination with features like [column spanning](/x/react-data-grid/column-spanning/).
+:::
+
 ## Customizing row spanned cells
 
 You could customize the value used in row spanning computation using `colDef.rowSpanValueGetter` prop and both the value used in row spanning computation and the value used in cell using `colDef.valueGetter` prop.
 
-This could be useful when there _are_ some repeating values but they belong to different groups.
+This could be useful when there _are_ some repeating values but should not be row spanned due to belonging to different entities.
 
 In the following example, `rowSpanValueGetter` is used to avoid merging `age` cells that do not belong to the same person.
 
 {{"demo": "RowSpanningCustom.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Usage with column spanning
+
+Row spanning could be used in conjunction with column spanning to achieve cells that span both rows and columns.
+
+The following weekly university class schedule uses cells that span both rows and columns.
+
+{{"demo": "RowSpanningClassSchedule.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Demo
 
-Here's the calender demo that you can see in the column spanning [documentation](/x/react-data-grid/column-spanning/#function-signature), but implemented with row spanning.
+Here's the familiar calender demo that you might have seen in the column spanning [documentation](/x/react-data-grid/column-spanning/#function-signature), implemented with the row spanning.
 
 {{"demo": "RowSpanningCalender.js", "bg": "inline", "defaultCodeOpen": false}}
 
