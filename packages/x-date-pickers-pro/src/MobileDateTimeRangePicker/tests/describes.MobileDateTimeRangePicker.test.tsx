@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describeConformance, fireEvent, screen } from '@mui/internal-test-utils';
+import { describeConformance, fireEvent, flushMicrotasks, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -109,12 +109,12 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
 
       // if we want to set the end date, we firstly need to switch to end date "range position"
       if (setEndDate) {
-        await fireUserEvent.mousePress(
+        fireUserEvent.mousePress(
           screen.getByRole('button', { name: adapterToUse.format(value[1], 'shortDate') }),
         );
       }
 
-      await fireUserEvent.mousePress(
+      fireUserEvent.mousePress(
         screen.getByRole('gridcell', {
           name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
         }),
@@ -125,10 +125,10 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
         hasMeridiem ? 'hours12h' : 'hours24h',
       );
       const hoursNumber = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
-      await fireUserEvent.mousePress(
+      fireUserEvent.mousePress(
         screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }),
       );
-      await fireUserEvent.mousePress(
+      fireUserEvent.mousePress(
         screen.getByRole('option', {
           name: `${adapterToUse.getMinutes(newValue[setEndDate ? 1 : 0])} minutes`,
         }),
@@ -136,7 +136,7 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
       if (hasMeridiem) {
         // meridiem is an extra view on `MobileDateTimeRangePicker`
         // we need to click it to finish selection
-        await fireUserEvent.mousePress(
+        fireUserEvent.mousePress(
           screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }),
         );
       }
@@ -147,10 +147,12 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
         clock.runToLast();
       } else {
         // return to the start date view in case we'd like to repeat the selection process
-        await fireUserEvent.mousePress(
+        fireUserEvent.mousePress(
           screen.getByRole('button', { name: adapterToUse.format(newValue[0], 'shortDate') }),
         );
       }
+
+      await flushMicrotasks();
 
       return newValue;
     },

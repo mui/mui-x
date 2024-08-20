@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen } from '@mui/internal-test-utils';
+import { flushMicrotasks, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -63,13 +63,15 @@ describe('<DesktopDatePicker /> - Describes', () => {
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
 
       if (isOpened) {
-        await fireUserEvent.mousePress(
+        fireUserEvent.mousePress(
           screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
         );
       } else {
         selectSection('day');
         pressKey(undefined, 'ArrowUp');
       }
+
+      await flushMicrotasks();
 
       return newValue;
     },

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen } from '@mui/internal-test-utils';
+import { flushMicrotasks, screen } from '@mui/internal-test-utils';
 import { DateCalendar, dateCalendarClasses as classes } from '@mui/x-date-pickers/DateCalendar';
 import { pickersDayClasses } from '@mui/x-date-pickers/PickersDay';
 import {
@@ -48,9 +48,11 @@ describe('<DateCalendar /> - Describes', () => {
     },
     setNewValue: async (value) => {
       const newValue = adapterToUse.addDays(value, 1);
-      await fireUserEvent.mousePress(
+      fireUserEvent.mousePress(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
+
+      await flushMicrotasks();
 
       return newValue;
     },

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, fireEvent } from '@mui/internal-test-utils';
+import { screen, fireEvent, flushMicrotasks } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -65,7 +65,7 @@ describe('<MobileDatePicker /> - Describes', () => {
       }
 
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
-      await fireUserEvent.mousePress(
+      fireUserEvent.mousePress(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
 
@@ -75,6 +75,8 @@ describe('<MobileDatePicker /> - Describes', () => {
         fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
         clock.runToLast();
       }
+
+      await flushMicrotasks();
 
       return newValue;
     },

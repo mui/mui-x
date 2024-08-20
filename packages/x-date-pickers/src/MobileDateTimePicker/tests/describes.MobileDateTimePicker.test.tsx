@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { screen, fireEvent, fireTouchChangedEvent } from '@mui/internal-test-utils';
+import {
+  screen,
+  fireEvent,
+  fireTouchChangedEvent,
+  flushMicrotasks,
+} from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -79,7 +84,7 @@ describe('<MobileDateTimePicker /> - Describes', () => {
       const newValue = applySameValue
         ? value
         : adapterToUse.addMinutes(adapterToUse.addHours(adapterToUse.addDays(value, 1), 1), 5);
-      await fireUserEvent.mousePress(
+      fireUserEvent.mousePress(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
@@ -98,7 +103,7 @@ describe('<MobileDateTimePicker /> - Describes', () => {
       if (hasMeridiem) {
         const newHours = adapterToUse.getHours(newValue);
         // select appropriate meridiem
-        await fireUserEvent.mousePress(
+        fireUserEvent.mousePress(
           screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }),
         );
       }
@@ -110,8 +115,10 @@ describe('<MobileDateTimePicker /> - Describes', () => {
         clock.runToLast();
       } else {
         // return to the date view in case we'd like to repeat the selection process
-        await fireUserEvent.mousePress(screen.getByRole('tab', { name: 'pick date' }));
+        fireUserEvent.mousePress(screen.getByRole('tab', { name: 'pick date' }));
       }
+
+      await flushMicrotasks();
 
       return newValue;
     },

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, fireDiscreteEvent } from '@mui/internal-test-utils';
+import { screen, fireDiscreteEvent, flushMicrotasks } from '@mui/internal-test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import {
   adapterToUse,
@@ -87,7 +87,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
         openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
       }
 
-      await fireUserEvent.mousePress(
+      fireUserEvent.mousePress(
         screen.getAllByRole('gridcell', {
           name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
         })[0],
@@ -98,6 +98,8 @@ describe('<MobileDateRangePicker /> - Describes', () => {
         fireDiscreteEvent.keyDown(document.activeElement!, { key: 'Escape' });
         clock.runToLast();
       }
+
+      await flushMicrotasks();
 
       return newValue;
     },

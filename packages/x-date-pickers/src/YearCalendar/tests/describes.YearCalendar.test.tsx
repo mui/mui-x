@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen } from '@mui/internal-test-utils';
+import { flushMicrotasks, screen } from '@mui/internal-test-utils';
 import { YearCalendar, yearCalendarClasses as classes } from '@mui/x-date-pickers/YearCalendar';
 import {
   createPickerRenderer,
@@ -52,9 +52,11 @@ describe('<YearCalendar /> - Describes', () => {
     },
     setNewValue: async (value) => {
       const newValue = adapterToUse.addYears(value, 1);
-      await fireUserEvent.mousePress(
+      fireUserEvent.mousePress(
         screen.getByRole('radio', { name: adapterToUse.getYear(newValue).toString() }),
       );
+
+      await flushMicrotasks();
 
       return newValue;
     },

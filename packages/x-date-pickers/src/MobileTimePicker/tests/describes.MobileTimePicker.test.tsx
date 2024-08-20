@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { screen, fireEvent, fireTouchChangedEvent } from '@mui/internal-test-utils';
+import {
+  screen,
+  fireEvent,
+  fireTouchChangedEvent,
+  flushMicrotasks,
+} from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -93,7 +98,7 @@ describe('<MobileTimePicker /> - Describes', () => {
       if (hasMeridiem) {
         const newHours = adapterToUse.getHours(newValue);
         // select appropriate meridiem
-        await fireUserEvent.mousePress(
+        fireUserEvent.mousePress(
           screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }),
         );
       }
@@ -105,8 +110,10 @@ describe('<MobileTimePicker /> - Describes', () => {
         clock.runToLast();
       } else {
         // return to the hours view in case we'd like to repeat the selection process
-        await fireUserEvent.mousePress(screen.getByRole('button', { name: 'Open previous view' }));
+        fireUserEvent.mousePress(screen.getByRole('button', { name: 'Open previous view' }));
       }
+
+      await flushMicrotasks();
 
       return newValue;
     },

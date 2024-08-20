@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen } from '@mui/internal-test-utils';
+import { flushMicrotasks, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -77,16 +77,16 @@ describe('<DesktopTimePicker /> - Describes', () => {
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         const hours = adapterToUse.format(newValue, hasMeridiem ? 'hours12h' : 'hours24h');
         const hoursNumber = adapterToUse.getHours(newValue);
-        await fireUserEvent.mousePress(
+        fireUserEvent.mousePress(
           screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }),
         );
-        await fireUserEvent.mousePress(
+        fireUserEvent.mousePress(
           screen.getByRole('option', { name: `${adapterToUse.getMinutes(newValue)} minutes` }),
         );
         if (hasMeridiem) {
           // meridiem is an extra view on `DesktopTimePicker`
           // we need to click it to finish selection
-          await fireUserEvent.mousePress(
+          fireUserEvent.mousePress(
             screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }),
           );
         }
@@ -108,6 +108,8 @@ describe('<DesktopTimePicker /> - Describes', () => {
           }
         }
       }
+
+      await flushMicrotasks();
 
       return newValue;
     },

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen } from '@mui/internal-test-utils';
+import { flushMicrotasks, screen } from '@mui/internal-test-utils';
 import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';
 import { createPickerRenderer } from 'test/utils/pickers';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
@@ -29,7 +29,7 @@ describe('<PickersActionBar />', () => {
     expect(screen.queryByRole('button')).to.equal(null);
   });
 
-  it('should render button for "clear" action calling the associated callback', () => {
+  it('should render button for "clear" action calling the associated callback', async () => {
     const onAccept = spy();
     const onClear = spy();
     const onCancel = spy();
@@ -46,10 +46,11 @@ describe('<PickersActionBar />', () => {
     );
 
     fireUserEvent.mousePress(screen.getByText(/clear/i));
+    await flushMicrotasks();
     expect(onClear.callCount).to.equal(1);
   });
 
-  it('should render button for "cancel" action calling the associated callback', () => {
+  it('should render button for "cancel" action calling the associated callback', async () => {
     const onAccept = spy();
     const onClear = spy();
     const onCancel = spy();
@@ -66,10 +67,11 @@ describe('<PickersActionBar />', () => {
     );
 
     fireUserEvent.mousePress(screen.getByText(/cancel/i));
+    await flushMicrotasks();
     expect(onCancel.callCount).to.equal(1);
   });
 
-  it('should render button for "accept" action calling the associated callback', () => {
+  it('should render button for "accept" action calling the associated callback', async () => {
     const onAccept = spy();
     const onClear = spy();
     const onCancel = spy();
@@ -86,10 +88,11 @@ describe('<PickersActionBar />', () => {
     );
 
     fireUserEvent.mousePress(screen.getByText(/ok/i));
+    await flushMicrotasks();
     expect(onAccept.callCount).to.equal(1);
   });
 
-  it('should render button for "today" action calling the associated callback', () => {
+  it('should render button for "today" action calling the associated callback', async () => {
     const onAccept = spy();
     const onClear = spy();
     const onCancel = spy();
@@ -106,6 +109,7 @@ describe('<PickersActionBar />', () => {
     );
 
     fireUserEvent.mousePress(screen.getByText(/today/i));
+    await flushMicrotasks();
     expect(onSetToday.callCount).to.equal(1);
   });
 
