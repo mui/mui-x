@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 import { InfoCard } from '@mui/docs/InfoCard';
 import AccountTreeRounded from '@mui/icons-material/AccountTreeRounded';
 import PivotTableChartRoundedIcon from '@mui/icons-material/PivotTableChartRounded';

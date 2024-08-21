@@ -3,7 +3,7 @@ import * as React from 'react';
 import {
   useTheme as useMaterialTheme,
   useColorScheme as useMaterialColorScheme,
-  CssVarsProvider as MaterialCssVarsProvider,
+  Experimental_CssVarsProvider as MaterialCssVarsProvider,
 } from '@mui/material/styles';
 import {
   extendTheme as extendJoyTheme,
