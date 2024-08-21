@@ -7,12 +7,18 @@ Row spanning lets you change this default behavior, so cells can span multiple r
 This is very close to the "row spanning" in an HTML `<table>`.
 
 To enable, pass the `unstable_rowSpanning` prop to the Data Grid.
-
 The Data Grid will automatically merge consecutive cells with the repeating values in the same column.
 
 In the following example, the row spanning causes the cells with the same values in a column to be merged.
+Switch off the toggle button to see actual rows.
 
 {{"demo": "RowSpanning.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::info
+In the above demo, the `quantity` column has been delibrately excluded from row spanning computation by using `colDef.rowSpanValueGetter` prop.
+
+See the [Customizing row spanned cells](#customizing-row-spanned-cells) section for more details.
+:::
 
 :::warning
 The row spanning generally works with features like [sorting](/x/react-data-grid/sorting/) and [filtering](/x/react-data-grid/filtering/), be sure to check if everything works as expected when using it in combination with features like [column spanning](/x/react-data-grid/column-spanning/).

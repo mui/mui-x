@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { GridEventListener } from '../../../models/events';
 import { GridColDef } from '../../../models/colDef';
 import { GridRowId } from '../../../models/gridRows';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -41,10 +40,11 @@ export const useGridRowSpanning = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'unstable_rowSpanning'>,
 ): void => {
-  const updateRowSpanningState = React.useCallback<
-    GridEventListener<'sortedRowsSet' | 'filteredRowsSet'>
-  >(() => {
+  const updateRowSpanningState = React.useCallback(() => {
     if (!props.unstable_rowSpanning) {
+      if (apiRef.current.state.rowSpanning !== EMPTY_STATE) {
+        apiRef.current.setState((state) => ({ ...state, rowSpanning: EMPTY_STATE }));
+      }
       return;
     }
     const spannedCells: Record<GridRowId, Record<GridColDef['field'], number>> = {};
@@ -96,4 +96,8 @@ export const useGridRowSpanning = (
 
   useGridApiEventHandler(apiRef, 'sortedRowsSet', updateRowSpanningState);
   useGridApiEventHandler(apiRef, 'filteredRowsSet', updateRowSpanningState);
+
+  React.useEffect(() => {
+    updateRowSpanningState();
+  }, [updateRowSpanningState]);
 };

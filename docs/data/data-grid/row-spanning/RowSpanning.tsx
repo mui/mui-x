@@ -1,31 +1,48 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 
 export default function RowSpanning() {
+  const [enabled, setEnabled] = React.useState(true);
+
   return (
-    <Box sx={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 10,
-            },
-          },
-        }}
-        showCellVerticalBorder
-        pageSizeOptions={[10]}
-        disableRowSelectionOnClick
-        unstable_rowSpanning
-        disableVirtualization
-        sx={{
-          '& .MuiDataGrid-row:hover': {
-            backgroundColor: 'transparent',
-          },
-        }}
+    <Box sx={{ width: '100%' }}>
+      <FormControlLabel
+        checked={enabled}
+        onChange={(event) => setEnabled((event.target as HTMLInputElement).checked)}
+        control={<Switch />}
+        label="Enable row spanning"
       />
+      <Box sx={{ height: 300 }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 10,
+              },
+            },
+          }}
+          density="compact"
+          showCellVerticalBorder
+          pageSizeOptions={[10]}
+          disableRowSelectionOnClick
+          unstable_rowSpanning={enabled}
+          disableVirtualization
+          hideFooter
+          sx={{
+            '& .MuiDataGrid-row:hover': {
+              backgroundColor: 'transparent',
+            },
+            '& .bold': {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+      </Box>
     </Box>
   );
 }
@@ -35,6 +52,7 @@ const columns: GridColDef<(typeof rows)[number]>[] = [
     field: 'code',
     headerName: 'Item Code',
     width: 85,
+    cellClassName: ({ row }) => (row.summaryRow ? 'bold' : ''),
   },
   {
     field: 'description',
@@ -52,7 +70,7 @@ const columns: GridColDef<(typeof rows)[number]>[] = [
     field: 'unitPrice',
     headerName: 'Unit Price',
     type: 'number',
-    valueFormatter: (value) => `$${value}.00`,
+    valueFormatter: (value) => (value ? `$${value}.00` : ''),
   },
   {
     field: 'totalPrice',
@@ -60,6 +78,7 @@ const columns: GridColDef<(typeof rows)[number]>[] = [
     type: 'number',
     valueGetter: (value, row) => value ?? row?.unitPrice,
     valueFormatter: (value) => `$${value}.00`,
+    cellClassName: ({ row }) => (row.summaryRow ? 'bold' : ''),
   },
 ];
 
@@ -109,5 +128,11 @@ const rows = [
     quantity: 1,
     unitPrice: 150,
     totalPrice: 2050,
+  },
+  {
+    id: 7,
+    code: 'TOTAL',
+    totalPrice: 2625,
+    summaryRow: true,
   },
 ];
