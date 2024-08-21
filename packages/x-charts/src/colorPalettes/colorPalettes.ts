@@ -2,57 +2,102 @@ export type ChartsColorPaletteCallback = (mode: 'light' | 'dark') => string[];
 export type ChartsColorPalette = string[] | ChartsColorPaletteCallback;
 
 export const blueberryTwilightPaletteLight = [
-  '#6061fc',
-  '#2DA2FF',
-  '#e778f9',
-  '#ebd28c',
-  '#A1D1FF',
-  '#6d5cd4',
-  '#E7A3F2',
-  '#44BDBA',
-  '#aaabf7',
-  '#AFAFAF',
-  '#179EA7',
-  '#3442C3',
+  '#4041E9',
+  '#2E96FF',
+  '#E778F9',
+  '#F5CB8C',
+  '#27B9C2',
+  '#2ACCFF',
+  '#F16EBC',
+  '#8789F9',
+  '#8538E7',
+  '#6F10BA',
 ];
 
 export const blueberryTwilightPaletteDark = blueberryTwilightPaletteLight;
 
 export const blueberryTwilightPalette: ChartsColorPaletteCallback = (mode) =>
-  mode === 'dark' ? blueberryTwilightPaletteLight : blueberryTwilightPaletteDark;
+  mode === 'dark' ? blueberryTwilightPaletteLight : blueberryTwilightPaletteLight;
 
 export const bananaMilkshakePaletteLight = [
-  '#577EE3',
-  '#F66170',
+  '#E2C796',
+  '#FE3C50',
+  '#8A8F52',
+  '#F97784',
   '#FFC13B',
-  '#44BDBA',
-  '#414FCF',
-  '#F3CD80',
-  '#F287B3',
+  '#C34164',
+  '#ADC972',
   '#FE9C41',
-  '#F1BF91',
-  '#A89787',
+  '#9E7754',
+  '#D77D46',
 ];
-
-export const bananaMilkshakePaletteDark = bananaMilkshakePaletteLight;
-
+export const bananaMilkshakePaletteDark = [
+  '#FFEA9F',
+  '#E8152A',
+  '#575D1D',
+  '#FF5566',
+  '#FFC13B',
+  '#921537',
+  '#A3C972',
+  '#FF8411',
+  '#9E7754',
+  '#973900',
+];
 export const bananaMilkshakePalette: ChartsColorPaletteCallback = (mode) =>
   mode === 'dark' ? bananaMilkshakePaletteDark : bananaMilkshakePaletteLight;
 
 export const rainbowSurgePaletteLight = [
-  '#4254FB',
   '#2E96FF',
   '#54C690',
   '#FFB219',
-  '#FF7A19',
   '#F73B4B',
+  '#FF7A19',
   '#F287B3',
+  '#8914FE',
 ];
 
 export const rainbowSurgePaletteDark = rainbowSurgePaletteLight;
 
 export const rainbowSurgePalette: ChartsColorPaletteCallback = (mode) =>
   mode === 'dark' ? rainbowSurgePaletteDark : rainbowSurgePaletteLight;
+
+export const crocodileTailPaletteLight = [
+  '#0064D6',
+  '#0FD0FB',
+  '#e1d300',
+  '#098087',
+  '#54C690',
+  '#077240',
+  '#004056',
+];
+
+export const crocodileTailPaletteDark = [
+  '#0064D6',
+  '#0FD0FB',
+  '#e1d300',
+  '#098087',
+  '#54C690',
+  '#077240',
+  '#b3b4b4',
+];
+
+export const crocodileTailPalette: ChartsColorPaletteCallback = (mode) =>
+  mode === 'dark' ? crocodileTailPaletteDark : crocodileTailPaletteLight;
+
+export const flamingoParadePaletteLight = [
+  '#F25C5C',
+  '#FAC14F',
+  '#DE264C',
+  '#FF8EA9',
+  '#FD0076',
+  '#C3A0A6',
+  '#FF7F0F',
+];
+
+export const flamingoParadePaletteDark = flamingoParadePaletteLight;
+
+export const flamingoParadePalettePalette: ChartsColorPaletteCallback = (mode) =>
+  mode === 'dark' ? flamingoParadePaletteDark : flamingoParadePaletteLight;
 
 export const mangoFusionPaletteLight = [
   '#FF7E35',
