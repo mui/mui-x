@@ -1,11 +1,15 @@
 import childProcess from 'child_process';
 
-childProcess.spawnSync('git', ['apply', 'scripts/material-ui-v6.patch'], {
+const gitApply = childProcess.spawnSync('git', ['apply', 'scripts/material-ui-v6.patch'], {
   shell: true,
   stdio: ['inherit', 'inherit', 'inherit'],
 });
+if (gitApply.status !== 0) {
+  process.exit(gitApply.status);
+}
 
-childProcess.spawnSync('pnpm', ['install'], {
+const pnpmInstall = childProcess.spawnSync('pnpm', ['install'], {
   shell: true,
   stdio: ['inherit', 'inherit', 'inherit'],
 });
+process.exit(pnpmInstall.status);
