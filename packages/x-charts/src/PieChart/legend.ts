@@ -13,11 +13,11 @@ const legendGetter: LegendGetter<'pie'> = (params) => {
       }
 
       acc.push({
-        color: item.color,
-        label: formattedLabel,
+        type: 'series',
         id: item.id,
         seriesId,
-        type: 'pie',
+        color: item.color,
+        label: formattedLabel,
       });
     });
     return acc;

@@ -14,8 +14,7 @@ interface LegendItemContextBase {
 }
 
 export interface LegendItemConfig
-  extends Partial<Omit<SeriesLegendItemContext, 'type' | 'label' | 'color'>>,
-    Partial<Omit<PieLegendItemContext, 'type' | 'label' | 'color' | 'itemId'>>,
+  extends Partial<Omit<SeriesLegendItemContext, 'type' | 'label' | 'color' | 'itemId'>>,
     Partial<Omit<PiecewiseColorLegendItemContext, 'type' | 'label' | 'color'>>,
     LegendItemContextBase {
   /**
@@ -23,7 +22,7 @@ export interface LegendItemConfig
    * Used for internal purpose such as `key` props
    */
   id: number | string;
-  type: 'series' | 'piecewiseColor' | 'pie';
+  type: 'series' | 'piecewiseColor';
 }
 
 interface SeriesLegendItemContext extends LegendItemContextBase {
@@ -34,20 +33,6 @@ interface SeriesLegendItemContext extends LegendItemContextBase {
    * - `pie` is used for pie legend item
    */
   type: 'series';
-  /**
-   * The identifier of the series
-   */
-  seriesId: SeriesId;
-}
-
-interface PieLegendItemContext extends LegendItemContextBase {
-  /**
-   * The type of the legend item
-   * - `series` is used for series legend item
-   * - `piecewiseColor` is used for piecewise color legend item
-   * - `pie` is used for pie legend item
-   */
-  type: 'pie';
   /**
    * The identifier of the series
    */
@@ -76,10 +61,7 @@ interface PiecewiseColorLegendItemContext extends LegendItemContextBase {
   maxValue: number | Date | null;
 }
 
-export type LegendItemContext =
-  | SeriesLegendItemContext
-  | PiecewiseColorLegendItemContext
-  | PieLegendItemContext;
+export type LegendItemContext = SeriesLegendItemContext | PiecewiseColorLegendItemContext;
 
 export interface LegendItemWithPosition extends LegendItemConfig {
   positionX: number;

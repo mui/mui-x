@@ -51,11 +51,7 @@ const createClickContext = (
     return { type, color, label, minValue: minValue ?? null, maxValue: maxValue ?? null };
   }
 
-  if (type === 'pie') {
-    return { type, seriesId: seriesId!, itemId: itemId!, color, label };
-  }
-
-  return { type, seriesId: seriesId!, color, label };
+  return { type, seriesId: seriesId!, itemId: itemId!, color, label };
 };
 
 /**
