@@ -45,7 +45,7 @@ const STYLE_LIST = [
   'marginTop',
   'marginBottom',
 ];
-const MEASUREMENT_SPAN_ID = 'mui_measurement_span';
+export const MEASUREMENT_SPAN_ID = 'mui_measurement_span';
 
 /**
  *
@@ -97,6 +97,7 @@ export const getStyleString = (style: React.CSSProperties) =>
       '',
     );
 
+let domCleanTimeout: NodeJS.Timeout | undefined;
 /**
  *
  * @param text The string to estimate
@@ -134,7 +135,6 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
       return styleKey;
     });
     measurementSpan.textContent = str;
-
     const rect = measurementSpan.getBoundingClientRect();
     const result = { width: rect.width, height: rect.height };
 
@@ -147,8 +147,22 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
       stringCache.cacheCount += 1;
     }
 
+    if (domCleanTimeout) {
+      clearTimeout(domCleanTimeout);
+    }
+    domCleanTimeout = setTimeout(() => {
+      // Limit node cleaning to once per render cycle
+      measurementSpan.textContent = '';
+    }, 0);
+
     return result;
   } catch (e) {
     return { width: 0, height: 0 };
   }
 };
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export function unstable_cleanupDOM() {
+  // const measurementSpan = document.getElementById(MEASUREMENT_SPAN_ID);
+  // measurementSpan?.remove();
+}

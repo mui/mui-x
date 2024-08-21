@@ -393,6 +393,11 @@ Heatmap.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -410,6 +415,7 @@ Heatmap.propTypes = {
       valueFormatter: PropTypes.func,
       zoom: PropTypes.oneOfType([
         PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
           maxEnd: PropTypes.number,
           maxSpan: PropTypes.number,
           minSpan: PropTypes.number,
@@ -476,6 +482,11 @@ Heatmap.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -493,6 +504,7 @@ Heatmap.propTypes = {
       valueFormatter: PropTypes.func,
       zoom: PropTypes.oneOfType([
         PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
           maxEnd: PropTypes.number,
           maxSpan: PropTypes.number,
           minSpan: PropTypes.number,

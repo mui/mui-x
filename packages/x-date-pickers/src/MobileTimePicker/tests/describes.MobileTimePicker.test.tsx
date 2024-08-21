@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, fireEvent, userEvent, fireTouchChangedEvent } from '@mui/internal-test-utils';
+import { screen, fireEvent, fireTouchChangedEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -14,6 +14,7 @@ import {
 } from 'test/utils/pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<MobileTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -92,7 +93,9 @@ describe('<MobileTimePicker /> - Describes', () => {
       if (hasMeridiem) {
         const newHours = adapterToUse.getHours(newValue);
         // select appropriate meridiem
-        userEvent.mousePress(screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }));
+        fireUserEvent.mousePress(
+          screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }),
+        );
       }
 
       // Close the picker
@@ -102,7 +105,7 @@ describe('<MobileTimePicker /> - Describes', () => {
         clock.runToLast();
       } else {
         // return to the hours view in case we'd like to repeat the selection process
-        userEvent.mousePress(screen.getByRole('button', { name: 'Open previous view' }));
+        fireUserEvent.mousePress(screen.getByRole('button', { name: 'Open previous view' }));
       }
 
       return newValue;
