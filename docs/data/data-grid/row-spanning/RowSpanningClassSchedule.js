@@ -143,7 +143,6 @@ export default function RowSpanningClassSchedule() {
         hideFooter
         showCellVerticalBorder
         showColumnVerticalBorder
-        disableColumnReorder
         sx={{
           '& .MuiDataGrid-row:hover': {
             backgroundColor: 'transparent',
