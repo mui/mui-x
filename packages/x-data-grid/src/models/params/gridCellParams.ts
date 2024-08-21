@@ -65,6 +65,10 @@ export interface GridCellParams<
    * the tabIndex value.
    */
   tabIndex: 0 | -1;
+  /**
+   * GridApi that let you manipulate the grid.
+   */
+  api: GridApiCommunity;
 }
 
 export interface FocusElement {

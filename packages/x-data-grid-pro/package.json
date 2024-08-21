@@ -44,8 +44,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.25.0",
-    "@mui/system": "^5.16.5",
-    "@mui/utils": "^5.16.5",
+    "@mui/system": "^5.16.7",
+    "@mui/utils": "^5.16.6",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
@@ -70,7 +70,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.7",
+    "@mui/internal-test-utils": "^1.0.8",
     "@types/prop-types": "^15.7.12",
     "rimraf": "^5.0.10"
   },

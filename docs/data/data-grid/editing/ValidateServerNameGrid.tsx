@@ -14,14 +14,21 @@ const StyledBox = styled('div')(({ theme }) => ({
   height: 400,
   width: '100%',
   '& .MuiDataGrid-cell--editable': {
-    backgroundColor: theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)',
+    backgroundColor: 'rgb(217 243 190)',
     '& .MuiInputBase-root': {
       height: '100%',
     },
+    ...theme.applyStyles('dark', {
+      backgroundColor: '#376331',
+    }),
   },
   '& .Mui-error': {
-    backgroundColor: `rgb(126,10,15, ${theme.palette.mode === 'dark' ? 0 : 0.1})`,
-    color: theme.palette.mode === 'dark' ? '#ff4343' : '#750f0f',
+    backgroundColor: 'rgb(126,10,15, 0.1)',
+    color: '#750f0f',
+    ...theme.applyStyles('dark', {
+      backgroundColor: 'rgb(126,10,15, 0)',
+      color: '#ff4343',
+    }),
   },
 }));
 

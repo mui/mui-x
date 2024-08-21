@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, userEvent } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   createPickerRenderer,
@@ -13,6 +13,7 @@ import {
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { describeConformance } from 'test/utils/describeConformance';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DesktopDateRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -86,7 +87,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
       }
 
       if (isOpened) {
-        userEvent.mousePress(
+        fireUserEvent.mousePress(
           screen.getAllByRole('gridcell', {
             name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
           })[0],
@@ -148,7 +149,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
       }
 
       if (isOpened) {
-        userEvent.mousePress(
+        fireUserEvent.mousePress(
           screen.getAllByRole('gridcell', {
             name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
           })[0],
