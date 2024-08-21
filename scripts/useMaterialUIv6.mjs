@@ -8,7 +8,7 @@ if (gitApply.status !== 0) {
   process.exit(gitApply.status);
 }
 
-const pnpmInstall = childProcess.spawnSync('pnpm', ['install'], {
+const pnpmInstall = childProcess.spawnSync('pnpm', ['install', '--no-frozen-lockfile'], {
   shell: true,
   stdio: ['inherit', 'inherit', 'inherit'],
 });
