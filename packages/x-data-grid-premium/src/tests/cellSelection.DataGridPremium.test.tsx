@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { stub, SinonStub } from 'sinon';
+import { stub, SinonStub, spy } from 'sinon';
 import { expect } from 'chai';
 import { spyApi, getCell, grid } from 'test/utils/helperFn';
 import { createRenderer, fireEvent, act, screen } from '@mui/internal-test-utils';
@@ -237,6 +237,43 @@ describe('<DataGridPremium /> - Cell selection', () => {
       fireEvent.keyDown(cell, { key: 'Shift' });
       fireEvent.keyDown(cell, { key: 'ArrowDown', shiftKey: true });
       expect(cell).toHaveFocus();
+    });
+  });
+
+  describe('onCellSelectionModelChange', () => {
+    it('should update the selection state when a cell is selected', () => {
+      const onCellSelectionModelChange = spy();
+      render(
+        <TestDataGridSelection
+          cellSelectionModel={{}}
+          onCellSelectionModelChange={onCellSelectionModelChange}
+        />,
+      );
+      fireEvent.click(getCell(0, 0));
+
+      expect(onCellSelectionModelChange.callCount).to.equal(1);
+      expect(onCellSelectionModelChange.lastCall.args[0]).to.deep.equal({ '0': { id: true } });
+    });
+
+    // Context: https://github.com/mui/mui-x/issues/14184
+    it('should add the new cell selection range to the existing state', () => {
+      const onCellSelectionModelChange = spy();
+      render(
+        <TestDataGridSelection
+          cellSelectionModel={{ '0': { id: true } }}
+          onCellSelectionModelChange={onCellSelectionModelChange}
+        />,
+      );
+
+      // Add a new cell range to the selection
+      fireEvent.mouseDown(getCell(2, 0), { ctrlKey: true });
+      fireEvent.mouseOver(getCell(3, 0), { ctrlKey: true });
+
+      expect(onCellSelectionModelChange.lastCall.args[0]).to.deep.equal({
+        '0': { id: true },
+        '2': { id: true },
+        '3': { id: true },
+      });
     });
   });
 
