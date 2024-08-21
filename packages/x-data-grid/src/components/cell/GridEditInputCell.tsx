@@ -4,8 +4,8 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/utils';
-import { styled } from '../../utils/styled';
 import InputBase, { InputBaseProps } from '@mui/material/InputBase';
+import { styled } from '../../utils/styled';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
