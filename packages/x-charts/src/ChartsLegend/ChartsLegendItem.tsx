@@ -40,7 +40,7 @@ const createClickContext = (
     label,
   }: {
     seriesId?: SeriesId;
-    itemId?: string | number;
+    itemId: string | number;
     minValue?: number | Date | null;
     maxValue?: number | Date | null;
     color: string;
@@ -51,7 +51,7 @@ const createClickContext = (
     return { type, color, label, minValue: minValue ?? null, maxValue: maxValue ?? null };
   }
 
-  return { type, seriesId: seriesId!, itemId: itemId!, color, label };
+  return { type, seriesId: seriesId!, itemId, color, label };
 };
 
 /**

@@ -40,7 +40,7 @@
       "type": { "name": "func" },
       "default": "undefined",
       "signature": {
-        "type": "function(event: React.MouseEvent<SVGRectElement, MouseEvent>, legendItem: LegendItem, index: number) => void",
+        "type": "function(event: React.MouseEvent<SVGRectElement, MouseEvent>, legendItem: PiecewiseColorLegendItemContext, index: number) => void",
         "describedArgs": ["event", "legendItem", "index"]
       }
     },

@@ -7,7 +7,7 @@ import { ChartsTextStyle } from '../ChartsText';
 import { CardinalDirections } from '../models/layout';
 import { getWordsByLines } from '../internals/getWordsByLines';
 import type { ChartsLegendProps } from './ChartsLegend';
-import { GetItemSpaceType, LegendItemConfig, LegendItemContext } from './chartsLegend.types';
+import { GetItemSpaceType, LegendItemConfig } from './chartsLegend.types';
 import { legendItemPlacements } from './legendItemsPlacement';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { AnchorPosition, Direction } from './legend.types';
@@ -70,16 +70,9 @@ export interface LegendPerItemProps
    * @default 10
    */
   padding?: number | Partial<CardinalDirections<number>>;
-  /**
-   * Callback fired when a legend item is clicked.
-   * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
-   * @param {LegendItemConfig} legendItem The legend item data.
-   * @param {number} index The index of the clicked legend item.
-   * @default undefined
-   */
   onItemClick?: (
     event: React.MouseEvent<SVGRectElement, MouseEvent>,
-    legendItem: LegendItemContext,
+    legendItem: any,
     index: number,
   ) => void;
 }

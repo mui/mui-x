@@ -3,14 +3,28 @@ import PropTypes from 'prop-types';
 import { FormattedSeries } from '../context/SeriesProvider';
 import { LegendPerItem, LegendPerItemProps } from './LegendPerItem';
 import { DrawingArea } from '../context/DrawingProvider';
+import { SeriesLegendItemContext } from './chartsLegend.types';
 
-export interface LegendRendererProps extends Omit<LegendPerItemProps, 'itemsToDisplay'> {
+export interface LegendRendererProps
+  extends Omit<LegendPerItemProps, 'itemsToDisplay' | 'onItemClick'> {
   series: FormattedSeries;
   seriesToDisplay: LegendPerItemProps['itemsToDisplay'];
   /**
    * @deprecated Use the `useDrawingArea` hook instead.
    */
   drawingArea: Omit<DrawingArea, 'isPointInside'>;
+  /**
+   * Callback fired when a legend item is clicked.
+   * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
+   * @param {SeriesLegendItemContext} legendItem The legend item data.
+   * @param {number} index The index of the clicked legend item.
+   * @default undefined
+   */
+  onItemClick?: (
+    event: React.MouseEvent<SVGRectElement, MouseEvent>,
+    legendItem: SeriesLegendItemContext,
+    index: number,
+  ) => void;
 }
 
 function DefaultChartsLegend(props: LegendRendererProps) {
@@ -77,7 +91,7 @@ DefaultChartsLegend.propTypes = {
   /**
    * Callback fired when a legend item is clicked.
    * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
-   * @param {LegendItem} legendItem The legend item data.
+   * @param {SeriesLegendItemContext} legendItem The legend item data.
    * @param {number} index The index of the clicked legend item.
    * @default undefined
    */
@@ -109,6 +123,10 @@ DefaultChartsLegend.propTypes = {
       color: PropTypes.string.isRequired,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       label: PropTypes.string.isRequired,
+      maxValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+      minValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      type: PropTypes.oneOf(['piecewiseColor', 'series']).isRequired,
     }),
   ).isRequired,
 } as any;
