@@ -51,15 +51,20 @@ const GridPanelWrapper = React.forwardRef<HTMLDivElement, GridPanelWrapperProps>
     const rootProps = useGridRootProps();
     const classes = useUtilityClasses(rootProps);
 
+    const content = (
+      // @ts-ignore `@mui/material` incompatible sx prop on GridPanelWrapperRoot
+      <GridPanelWrapperRoot
+        ref={ref}
+        tabIndex={-1}
+        className={clsx(className, classes.root)}
+        ownerState={rootProps}
+        {...other}
+      />
+    );
+
     return (
       <FocusTrap open disableEnforceFocus isEnabled={isEnabled} {...slotProps.TrapFocus}>
-        <GridPanelWrapperRoot
-          ref={ref}
-          tabIndex={-1}
-          className={clsx(className, classes.root)}
-          ownerState={rootProps}
-          {...other}
-        />
+        {content}
       </FocusTrap>
     );
   },
