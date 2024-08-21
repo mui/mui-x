@@ -44,14 +44,13 @@ export default function GridVisualization() {
 
   return (
     <Box
-      sx={{
+      sx={(theme) => ({
         height: 400,
         width: '100%',
         '&&& .updated': {
-          transition: (theme) =>
-            theme.transitions.create(['background-color', 'outline'], {
-              duration: theme.transitions.duration.standard,
-            }),
+          transition: theme.transitions.create(['background-color', 'outline'], {
+            duration: theme.transitions.duration.standard,
+          }),
         },
         '&&& .updating': {
           backgroundColor: 'rgb(92 199 68 / 20%)',
@@ -59,7 +58,7 @@ export default function GridVisualization() {
           outlineOffset: '-1px',
           transition: 'none',
         },
-      }}
+      })}
     >
       <DataGridPro
         {...data}

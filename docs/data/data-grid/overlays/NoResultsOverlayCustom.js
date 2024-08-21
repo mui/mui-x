@@ -11,10 +11,16 @@ const StyledGridOverlay = styled('div')(({ theme }) => ({
   justifyContent: 'center',
   height: '100%',
   '& .no-results-primary': {
-    fill: theme.palette.mode === 'light' ? '#AEB8C2' : '#3D4751',
+    fill: '#3D4751',
+    ...theme.applyStyles('light', {
+      fill: '#AEB8C2',
+    }),
   },
   '& .no-results-secondary': {
-    fill: theme.palette.mode === 'light' ? '#E8EAED' : '#1D2126',
+    fill: '#1D2126',
+    ...theme.applyStyles('light', {
+      fill: '#E8EAED',
+    }),
   },
 }));
 
