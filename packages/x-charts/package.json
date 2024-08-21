@@ -40,8 +40,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.25.0",
-    "@mui/system": "^5.16.5",
-    "@mui/utils": "^5.16.5",
+    "@mui/system": "^5.16.7",
+    "@mui/utils": "^5.16.6",
     "@mui/x-charts-vendor": "workspace:*",
     "@react-spring/rafz": "^9.7.4",
     "@react-spring/web": "^9.7.4",
