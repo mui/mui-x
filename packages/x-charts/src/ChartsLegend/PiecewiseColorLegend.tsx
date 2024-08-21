@@ -68,10 +68,10 @@ function PiecewiseColorLegend(props: PiecewiseColorLegendProps) {
       }
 
       const label = labelFormatter({
-        ...(index === 0
+        ...(isFirst
           ? { min: null, formattedMin: null }
           : { min: colorMap.thresholds[index - 1], formattedMin: formattedLabels[index - 1] }),
-        ...(index === colorMap.colors.length - 1
+        ...(isLast
           ? { max: null, formattedMax: null }
           : { max: colorMap.thresholds[index], formattedMax: formattedLabels[index] }),
       });
@@ -160,7 +160,7 @@ PiecewiseColorLegend.propTypes = {
   /**
    * Callback fired when a legend item is clicked.
    * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
-   * @param {LegendItemParams} legendItem The legend item data.
+   * @param {LegendItem} legendItem The legend item data.
    * @param {number} index The index of the clicked legend item.
    * @default undefined
    */

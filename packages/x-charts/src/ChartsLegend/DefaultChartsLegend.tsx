@@ -77,7 +77,7 @@ DefaultChartsLegend.propTypes = {
   /**
    * Callback fired when a legend item is clicked.
    * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
-   * @param {LegendItemParams} legendItem The legend item data.
+   * @param {LegendItem} legendItem The legend item data.
    * @param {number} index The index of the clicked legend item.
    * @default undefined
    */

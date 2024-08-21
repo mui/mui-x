@@ -1,4 +1,4 @@
-import { LegendItemParams } from '../ChartsLegend/chartsLegend.types';
+import { LegendItem } from '../ChartsLegend/chartsLegend.types';
 import { LegendGetter } from '../context/PluginProvider';
 import { getLabel } from '../internals/getLabel';
 
@@ -17,7 +17,7 @@ const legendGetter: LegendGetter<'bar'> = (params) => {
       id: seriesId,
     });
     return acc;
-  }, [] as LegendItemParams[]);
+  }, [] as LegendItem[]);
 };
 
 export default legendGetter;

@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useTheme } from '@mui/material/styles';
 import { ChartsText, ChartsTextStyle } from '../ChartsText';
 import { SeriesId } from '../models/seriesType/common';
-import { LegendItemParams } from './chartsLegend.types';
+import { LegendItem } from './chartsLegend.types';
 import { ChartsLegendClasses } from './chartsLegendClasses';
 
 export interface ChartsLegendItemProps {
@@ -25,7 +25,7 @@ export interface ChartsLegendItemProps {
   classes?: Omit<Partial<ChartsLegendClasses>, 'column' | 'row' | 'label'>;
   onItemClick?: (
     event: React.MouseEvent<SVGRectElement, MouseEvent>,
-    legendItem: LegendItemParams,
+    legendItem: LegendItem,
     index: number,
   ) => void;
 }

@@ -1,4 +1,4 @@
-import { LegendItemParams } from '../ChartsLegend/chartsLegend.types';
+import { LegendItem } from '../ChartsLegend/chartsLegend.types';
 import { getLabel } from '../internals/getLabel';
 import { LegendGetter } from '../context/PluginProvider';
 
@@ -19,7 +19,7 @@ const legendGetter: LegendGetter<'pie'> = (params) => {
       });
     });
     return acc;
-  }, [] as LegendItemParams[]);
+  }, [] as LegendItem[]);
 };
 
 export default legendGetter;

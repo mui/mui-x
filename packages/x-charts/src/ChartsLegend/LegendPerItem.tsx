@@ -7,7 +7,7 @@ import { ChartsTextStyle } from '../ChartsText';
 import { CardinalDirections } from '../models/layout';
 import { getWordsByLines } from '../internals/getWordsByLines';
 import type { ChartsLegendProps } from './ChartsLegend';
-import { GetItemSpaceType, LegendItemParams } from './chartsLegend.types';
+import { GetItemSpaceType, LegendItem } from './chartsLegend.types';
 import { legendItemPlacements } from './legendItemsPlacement';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { AnchorPosition, Direction } from './legend.types';
@@ -37,7 +37,7 @@ export interface LegendPerItemProps
   /**
    * The ordered array of item to display in the legend.
    */
-  itemsToDisplay: LegendItemParams[];
+  itemsToDisplay: LegendItem[];
   classes?: Omit<Partial<ChartsLegendClasses>, 'column' | 'row'>;
   /**
    * Style applied to legend labels.
@@ -73,13 +73,13 @@ export interface LegendPerItemProps
   /**
    * Callback fired when a legend item is clicked.
    * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
-   * @param {LegendItemParams} legendItem The legend item data.
+   * @param {LegendItem} legendItem The legend item data.
    * @param {number} index The index of the clicked legend item.
    * @default undefined
    */
   onItemClick?: (
     event: React.MouseEvent<SVGRectElement, MouseEvent>,
-    legendItem: LegendItemParams,
+    legendItem: LegendItem,
     index: number,
   ) => void;
 }
