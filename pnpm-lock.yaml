@@ -86,6 +86,9 @@ importers:
       '@mui/icons-material':
         specifier: ^5.16.5
         version: 5.16.5(@mui/material@5.16.5(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
+      '@mui/internal-babel-plugin-resolve-imports':
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/86fae260/@mui/internal-babel-plugin-resolve-imports
+        version: https://pkg.csb.dev/mui/material-ui/commit/86fae260/@mui/internal-babel-plugin-resolve-imports(@babel/core@7.25.2)
       '@mui/internal-markdown':
         specifier: ^1.0.9
         version: 1.0.9
@@ -96,8 +99,8 @@ importers:
         specifier: ^5.16.5
         version: 5.16.5(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/monorepo':
-        specifier: github:Janpot/material-ui#baa646dbdf9693135119a5de04d4b5b13f8e7496
-        version: https://codeload.github.com/Janpot/material-ui/tar.gz/baa646dbdf9693135119a5de04d4b5b13f8e7496(encoding@0.1.13)
+        specifier: github:mui/material-ui#0acfe665034fdf4578156ebaf4372713cf23bce4
+        version: https://codeload.github.com/mui/material-ui/tar.gz/0acfe665034fdf4578156ebaf4372713cf23bce4(encoding@0.1.13)
       '@mui/utils':
         specifier: ^5.16.5
         version: 5.16.5(@types/react@18.3.3)(react@18.3.1)
@@ -2982,6 +2985,12 @@ packages:
       '@types/react':
         optional: true
 
+  '@mui/internal-babel-plugin-resolve-imports@https://pkg.csb.dev/mui/material-ui/commit/86fae260/@mui/internal-babel-plugin-resolve-imports':
+    resolution: {tarball: https://pkg.csb.dev/mui/material-ui/commit/86fae260/@mui/internal-babel-plugin-resolve-imports}
+    version: 1.0.16
+    peerDependencies:
+      '@babel/core': '7'
+
   '@mui/internal-docs-utils@1.0.9':
     resolution: {integrity: sha512-ml62NikMdZEimDhJGMtyGVilhLjK8AkiruojJ8OCArj8qsw0pUCr1L/2Xo7GLEg4K5EI3/vdITUU0RBKBwDl/g==}
 
@@ -3067,8 +3076,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/Janpot/material-ui/tar.gz/baa646dbdf9693135119a5de04d4b5b13f8e7496':
-    resolution: {tarball: https://codeload.github.com/Janpot/material-ui/tar.gz/baa646dbdf9693135119a5de04d4b5b13f8e7496}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/0acfe665034fdf4578156ebaf4372713cf23bce4':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/0acfe665034fdf4578156ebaf4372713cf23bce4}
     version: 6.0.0-beta.5
     engines: {pnpm: 9.6.0}
 
@@ -11790,6 +11799,11 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.3
 
+  '@mui/internal-babel-plugin-resolve-imports@https://pkg.csb.dev/mui/material-ui/commit/86fae260/@mui/internal-babel-plugin-resolve-imports(@babel/core@7.25.2)':
+    dependencies:
+      '@babel/core': 7.25.2
+      resolve: 1.22.8
+
   '@mui/internal-docs-utils@1.0.9':
     dependencies:
       rimraf: 5.0.10
@@ -11916,7 +11930,7 @@ snapshots:
       '@emotion/styled': 11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@types/react': 18.3.3
 
-  '@mui/monorepo@https://codeload.github.com/Janpot/material-ui/tar.gz/baa646dbdf9693135119a5de04d4b5b13f8e7496(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/0acfe665034fdf4578156ebaf4372713cf23bce4(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 8.0.0(encoding@0.1.13)
       '@netlify/functions': 2.8.1

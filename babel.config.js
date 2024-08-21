@@ -43,8 +43,6 @@ const productionPlugins = [
   ['babel-plugin-react-remove-properties', { properties: ['data-mui-test'] }],
 ];
 
-const importResolverPlugin = '@mui/monorepo/scripts/babelPluginResolveRelativeImports';
-
 /** @type {babel.ConfigFunction} */
 module.exports = function getBabelConfig(api) {
   const useESModules = api.env(['modern', 'stable', 'rollup']);
@@ -150,7 +148,7 @@ module.exports = function getBabelConfig(api) {
 
   if (useESModules) {
     plugins.push([
-      importResolverPlugin,
+      '@mui/internal-babel-plugin-resolve-imports',
       {
         // Don't replace the extension when we're using aliases.
         // Essentially only replace in production builds.
