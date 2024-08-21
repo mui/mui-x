@@ -67,20 +67,29 @@ function PiecewiseColorLegend(props: PiecewiseColorLegendProps) {
         return null;
       }
 
-      const label = labelFormatter({
+      const data = {
         ...(isFirst
           ? { min: null, formattedMin: null }
           : { min: colorMap.thresholds[index - 1], formattedMin: formattedLabels[index - 1] }),
         ...(isLast
           ? { max: null, formattedMax: null }
           : { max: colorMap.thresholds[index], formattedMax: formattedLabels[index] }),
-      });
+      };
+
+      const label = labelFormatter(data);
 
       if (label === null) {
         return null;
       }
 
-      return { id: label, color, label };
+      return {
+        id: label,
+        color,
+        label,
+        minValue: data.min,
+        maxValue: data.max,
+        type: 'piecewiseColor' as const,
+      };
     })
     .filter(notNull);
 

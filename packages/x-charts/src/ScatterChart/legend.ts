@@ -1,4 +1,4 @@
-import { LegendItem } from '../ChartsLegend/chartsLegend.types';
+import { LegendItemConfig } from '../ChartsLegend/chartsLegend.types';
 import { getLabel } from '../internals/getLabel';
 import { LegendGetter } from '../context/PluginProvider';
 
@@ -15,9 +15,11 @@ const legendGetter: LegendGetter<'scatter'> = (params) => {
       color: series[seriesId].color,
       label: formattedLabel,
       id: seriesId,
+      type: 'series',
+      seriesId,
     });
     return acc;
-  }, [] as LegendItem[]);
+  }, [] as LegendItemConfig[]);
 };
 
 export default legendGetter;

@@ -6,7 +6,7 @@ import type {
 } from '../../models/seriesType/config';
 import type { SeriesId } from '../../models/seriesType/common';
 import type { StackingGroupsType } from '../../internals/stackSeries';
-import type { LegendItem } from '../../ChartsLegend/chartsLegend.types';
+import type { LegendItemConfig } from '../../ChartsLegend/chartsLegend.types';
 
 export type SeriesFormatterParams<T extends ChartSeriesType> = {
   series: Record<SeriesId, ChartsSeriesConfig[T]['seriesInput']>;
@@ -29,7 +29,7 @@ export type SeriesFormatter<T extends ChartSeriesType> = (
 
 export type LegendGetter<T extends ChartSeriesType> = (
   series: SeriesFormatterResult<T>,
-) => LegendItem[];
+) => LegendItemConfig[];
 
 export type SeriesFormatterConfig<T extends ChartSeriesType = ChartSeriesType> = {
   // TODO replace the function type by Formatter<K>

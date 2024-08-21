@@ -1,4 +1,4 @@
-import { LegendItem } from '../ChartsLegend/chartsLegend.types';
+import { LegendItemConfig } from '../ChartsLegend/chartsLegend.types';
 import { getLabel } from '../internals/getLabel';
 import { LegendGetter } from '../context/PluginProvider';
 
@@ -16,10 +16,12 @@ const legendGetter: LegendGetter<'pie'> = (params) => {
         color: item.color,
         label: formattedLabel,
         id: item.id,
+        seriesId,
+        type: 'pie',
       });
     });
     return acc;
-  }, [] as LegendItem[]);
+  }, [] as LegendItemConfig[]);
 };
 
 export default legendGetter;
