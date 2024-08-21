@@ -1,9 +1,12 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { GridEventListener } from '../../../models/events';
-import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
+import {
+  gridVisibleColumnDefinitionsSelector,
+  gridColumnFieldsSelector,
+} from '../columns/gridColumnsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -14,8 +17,7 @@ import { gridClasses } from '../../../constants/gridClasses';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
-import { GridRowEntry, GridRowId } from '../../../models';
-import { gridColumnFieldsSelector } from '../columns/gridColumnsSelector';
+import { GridRowId } from '../../../models';
 import { gridFocusColumnGroupHeaderSelector } from '../focus';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import {
@@ -650,7 +652,6 @@ export const useGridKeyboardNavigation = (
       apiRef,
       currentPageRows,
       theme.direction,
-      findNonRowSpannedCell,
       getRowIdFromIndex,
       goToCell,
       headerFilteringEnabled,
