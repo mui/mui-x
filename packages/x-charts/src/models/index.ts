@@ -7,4 +7,6 @@ export type {
   ChartsXAxisProps,
   ScaleName,
   ContinuousScaleName,
+  AxisValueFormatterContext,
 } from './axis';
+export type * from './colorMapping';

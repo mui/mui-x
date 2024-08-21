@@ -162,6 +162,13 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
       'PieSeriesType',
       'ScatterSeriesType',
       'AxisConfig',
+      'OrdinalColorConfig',
+      'ContinuousColorConfig',
+      'PiecewiseColorConfig',
+      'AxisValueFormatterContext',
+      'SeriesValueFormatterContext',
+      'HighlightScope',
+      'ScatterValueType',
     ],
   },
 ];

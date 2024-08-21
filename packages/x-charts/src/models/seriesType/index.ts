@@ -29,6 +29,7 @@ export * from './line';
 export * from './bar';
 export * from './scatter';
 export * from './pie';
+export { SeriesValueFormatterContext } from './common';
 export type {
   AllSeriesType,
   CartesianSeriesType,

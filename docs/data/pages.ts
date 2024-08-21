@@ -464,6 +464,25 @@ const pages: MuiPage[] = [
                   { pathname: '/x/api/charts/line-series-type', title: 'LineSeriesType' },
                   { pathname: '/x/api/charts/pie-series-type', title: 'PieSeriesType' },
                   { pathname: '/x/api/charts/scatter-series-type', title: 'ScatterSeriesType' },
+                  { pathname: '/x/api/charts/ordinal-color-config', title: 'OrdinalColorConfig' },
+                  {
+                    pathname: '/x/api/charts/continuous-color-config',
+                    title: 'ContinuousColorConfig',
+                  },
+                  {
+                    pathname: '/x/api/charts/piecewise-color-config',
+                    title: 'PiecewiseColorConfig',
+                  },
+                  {
+                    pathname: '/x/api/charts/axis-value-formatter-context',
+                    title: 'AxisValueFormatterContext',
+                  },
+                  { pathname: '/x/api/charts/highlight-scope', title: 'HighlightScope' },
+                  { pathname: '/x/api/charts/scatter-value-type', title: 'ScatterValueType' },
+                  {
+                    pathname: '/x/api/charts/series-value-formatter-context',
+                    title: 'SeriesValueFormatterContext',
+                  },
                 ],
               },
             ],
