@@ -1,0 +1,13 @@
+{
+  "name": "ContinuousColorConfig",
+  "imports": ["import { ContinuousColorConfig } from '@mui/x-charts'"],
+  "properties": {
+    "color": {
+      "type": { "description": "readonly [string, string] | ((t: number) =&gt; string)" },
+      "required": true
+    },
+    "type": { "type": { "description": "'continuous'" }, "required": true },
+    "max": { "type": { "description": "Value" }, "default": "100" },
+    "min": { "type": { "description": "Value" }, "default": "0" }
+  }
+}

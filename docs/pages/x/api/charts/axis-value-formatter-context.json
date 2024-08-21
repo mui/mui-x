@@ -1,0 +1,7 @@
+{
+  "name": "AxisValueFormatterContext",
+  "imports": ["import { AxisValueFormatterContext } from '@mui/x-charts'"],
+  "properties": {
+    "location": { "type": { "description": "'tick' | 'tooltip' | 'legend'" }, "required": true }
+  }
+}

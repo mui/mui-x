@@ -1,0 +1,10 @@
+{
+  "name": "OrdinalColorConfig",
+  "imports": ["import { OrdinalColorConfig } from '@mui/x-charts'"],
+  "properties": {
+    "colors": { "type": { "description": "string[]" }, "required": true },
+    "type": { "type": { "description": "'ordinal'" }, "required": true },
+    "unknownColor": { "type": { "description": "string" } },
+    "values": { "type": { "description": "Value[]" } }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "interfaceDescription": "",
+  "propertiesDescriptions": {
+    "id": { "description": "A unique identifier for the scatter point" },
+    "x": { "description": "" },
+    "y": { "description": "" },
+    "z": { "description": "" }
+  }
+}

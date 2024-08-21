@@ -1,0 +1,13 @@
+{
+  "interfaceDescription": "",
+  "propertiesDescriptions": {
+    "fade": {
+      "description": "The scope of faded elements.<br />- &#39;none&#39;: no fading.<br />- &#39;series&#39;: only fade element of the same series.<br />- &#39;global&#39;: fade all elements that are not highlighted."
+    },
+    "faded": { "description": "" },
+    "highlight": {
+      "description": "The scope of highlighted elements.<br />- &#39;none&#39;: no highlight.<br />- &#39;item&#39;: only highlight the item.<br />- &#39;series&#39;: highlight all elements of the same series."
+    },
+    "highlighted": { "description": "" }
+  }
+}

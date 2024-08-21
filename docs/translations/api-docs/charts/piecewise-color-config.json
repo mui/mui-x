@@ -1,0 +1,12 @@
+{
+  "interfaceDescription": "",
+  "propertiesDescriptions": {
+    "colors": {
+      "description": "The colors used for each band defined by <code>thresholds</code>.<br />Should contain N+1 colors, where N is the number of thresholds."
+    },
+    "thresholds": {
+      "description": "The thresholds where color should change from one category to another."
+    },
+    "type": { "description": "" }
+  }
+}

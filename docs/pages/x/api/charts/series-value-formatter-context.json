@@ -1,0 +1,5 @@
+{
+  "name": "SeriesValueFormatterContext",
+  "imports": ["import { SeriesValueFormatterContext } from '@mui/x-charts'"],
+  "properties": { "dataIndex": { "type": { "description": "number" }, "required": true } }
+}

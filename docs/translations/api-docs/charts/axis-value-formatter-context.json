@@ -1,0 +1,8 @@
+{
+  "interfaceDescription": "",
+  "propertiesDescriptions": {
+    "location": {
+      "description": "Location indicates where the value will be displayed.<br />- <code>&#39;tick&#39;</code> The value is displayed on the axis ticks.<br />- <code>&#39;tooltip&#39;</code> The value is displayed in the tooltip when hovering the chart.<br />- <code>&#39;legend&#39;</code> The value is displayed in the legend when using color legend."
+    }
+  }
+}

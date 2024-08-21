@@ -1,0 +1,15 @@
+{
+  "interfaceDescription": "",
+  "propertiesDescriptions": {
+    "colors": {
+      "description": "The color palette.<br />Items equal to <code>values[k]</code> will get the color of <code>colors[k]</code>."
+    },
+    "type": { "description": "" },
+    "unknownColor": {
+      "description": "The color to use when an element is not part of the values."
+    },
+    "values": {
+      "description": "The value to map.<br />If undefined, it will be integers from 0 to the number of colors."
+    }
+  }
+}

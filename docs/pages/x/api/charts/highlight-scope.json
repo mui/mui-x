@@ -1,0 +1,10 @@
+{
+  "name": "HighlightScope",
+  "imports": ["import { HighlightScope } from '@mui/x-charts'"],
+  "properties": {
+    "fade": { "type": { "description": "FadeOptions" }, "default": "'none'" },
+    "faded": { "type": { "description": "FadeOptions" } },
+    "highlight": { "type": { "description": "HighlightOptions" }, "default": "'none'" },
+    "highlighted": { "type": { "description": "HighlightOptions" } }
+  }
+}

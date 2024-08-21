@@ -1,0 +1,9 @@
+{
+  "name": "PiecewiseColorConfig",
+  "imports": ["import { PiecewiseColorConfig } from '@mui/x-charts'"],
+  "properties": {
+    "colors": { "type": { "description": "string[]" }, "required": true },
+    "thresholds": { "type": { "description": "Value[]" }, "required": true },
+    "type": { "type": { "description": "'piecewise'" }, "required": true }
+  }
+}

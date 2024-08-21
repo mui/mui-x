@@ -1,0 +1,11 @@
+{
+  "interfaceDescription": "",
+  "propertiesDescriptions": {
+    "color": {
+      "description": "The colors to render. It can be an array with the extremum colors, or an interpolation function."
+    },
+    "type": { "description": "" },
+    "max": { "description": "The maximal value of the color scale." },
+    "min": { "description": "The minimal value of the color scale." }
+  }
+}

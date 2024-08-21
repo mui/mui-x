@@ -1,0 +1,6 @@
+{
+  "interfaceDescription": "",
+  "propertiesDescriptions": {
+    "dataIndex": { "description": "The index of the value in the data array." }
+  }
+}

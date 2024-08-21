@@ -1,0 +1,10 @@
+{
+  "name": "ScatterValueType",
+  "imports": ["import { ScatterValueType } from '@mui/x-charts'"],
+  "properties": {
+    "id": { "type": { "description": "string | number" }, "required": true },
+    "x": { "type": { "description": "number" }, "required": true },
+    "y": { "type": { "description": "number" }, "required": true },
+    "z": { "type": { "description": "any" } }
+  }
+}
