@@ -121,7 +121,11 @@ They both provide the following signature.
 ```js
 const clickHandler = (
   event, // The mouse event.
-  params, // An object that identifies the clicked item.
+  context, // An object that identifies the clicked item.
   index, // The index of the clicked item.
 ) => {};
 ```
+
+The `context` object contains different properties depending on the legend type. Click the legend items to see their content.
+
+{{"demo": "LegendClickNoSnap.js"}}
