@@ -6,10 +6,6 @@ import { DataGrid, GridValueFormatter } from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import packageJson from '@mui/material/package.json';
-
-// eslint-disable-next-line no-console
-console.log(`@mui/x-data-grid: @mui/material version`, packageJson.version);
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

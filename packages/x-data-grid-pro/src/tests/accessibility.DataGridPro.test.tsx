@@ -4,10 +4,6 @@ import axe from 'axe-core';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer } from '@mui/internal-test-utils';
-import packageJson from '@mui/material/package.json';
-
-// eslint-disable-next-line no-console
-console.log(`@mui/x-data-grid-pro: @mui/material version`, packageJson.version);
 
 function logViolations(violations: any) {
   if (violations.length !== 0) {

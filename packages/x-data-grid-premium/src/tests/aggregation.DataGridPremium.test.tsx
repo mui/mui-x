@@ -15,10 +15,6 @@ import {
   useGridApiRef,
   GridColDef,
 } from '@mui/x-data-grid-premium';
-import packageJson from '@mui/material/package.json';
-
-// eslint-disable-next-line no-console
-console.log(`@mui/x-data-grid-premium: @mui/material version`, packageJson.version);
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

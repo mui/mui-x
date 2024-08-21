@@ -7,10 +7,6 @@ import { TreeViewContext } from '@mui/x-tree-view/internals/TreeViewProvider/Tre
 import { describeConformance } from 'test/utils/describeConformance';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { getFakeContextValue } from 'test/utils/tree-view/fakeContextValue';
-import packageJson from '@mui/material/package.json';
-
-// eslint-disable-next-line no-console
-console.log(`@mui/x-tree-view: @mui/material version`, packageJson.version);
 
 describeTreeView<[]>('TreeItem component', ({ render, treeItemComponentName }) => {
   describe('ContentComponent / ContentProps props (TreeItem only)', () => {

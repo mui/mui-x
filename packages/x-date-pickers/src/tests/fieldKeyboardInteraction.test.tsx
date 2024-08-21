@@ -15,11 +15,6 @@ import {
   getDateSectionConfigFromFormatToken,
   cleanLeadingZeros,
 } from '../internals/hooks/useField/useField.utils';
-// eslint-disable-next-line import/order
-import packageJson from '@mui/material/package.json';
-
-// eslint-disable-next-line no-console
-console.log(`@mui/x-date-pickers: @mui/material version`, packageJson.version);
 
 const testDate = '2018-05-15T09:35:10';
 

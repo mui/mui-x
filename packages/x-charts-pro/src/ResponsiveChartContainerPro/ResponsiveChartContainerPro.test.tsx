@@ -4,11 +4,6 @@ import { createRenderer, screen } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
 import { sharedLicenseStatuses } from '@mui/x-license/useLicenseVerifier/useLicenseVerifier';
 import { ResponsiveChartContainerPro } from './ResponsiveChartContainerPro';
-// eslint-disable-next-line import/order
-import packageJson from '@mui/material/package.json';
-
-// eslint-disable-next-line no-console
-console.log(`@mui/x-charts-pro: @mui/material version`, packageJson.version);
 
 describe('<ResponsiveChartContainerPro /> - License', () => {
   const { render } = createRenderer();

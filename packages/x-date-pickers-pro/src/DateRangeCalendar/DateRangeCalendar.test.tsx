@@ -23,11 +23,6 @@ import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { RangePosition } from '../models';
-// eslint-disable-next-line import/order
-import packageJson from '@mui/material/package.json';
-
-// eslint-disable-next-line no-console
-console.log(`@mui/x-date-pickers-pro: @mui/material version`, packageJson.version);
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
   within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
