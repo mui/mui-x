@@ -9,10 +9,6 @@ parameters:
     description: The version of react to be used
     type: string
     default: stable
-  material-ui-version:
-    description: The version of @mui/material to use
-    type: string
-    default: stable
   workflow:
     description: The name of the workflow to run
     type: string
@@ -28,6 +24,10 @@ default-job: &default-job
       description: The version of react to be used
       type: string
       default: << pipeline.parameters.react-version >>
+    material-ui-version:
+      description: The version of @mui/material to use
+      type: string
+      default: << pipeline.parameters.material-ui-version >>
     e2e-base-url:
       description: The base url for running end-to-end test
       type: string
@@ -61,6 +61,10 @@ commands:
         type: boolean
         default: false
         description: 'Set to true if you intend to any browser (for example with playwright).'
+      material-ui-version:
+        description: The version of @mui/material to use
+        type: string
+        default: stable
 
     steps:
       - when:
@@ -395,8 +399,10 @@ workflows:
           <<: *default-context
           react-version: next
           name: test_e2e-react@next
+
   material-ui-v6:
-    equal: [material-ui-v6, << pipeline.parameters.workflow >>]
+    when:
+      equal: [material-ui-v6, << pipeline.parameters.workflow >>]
     jobs:
       - test_unit:
           <<: *default-context
