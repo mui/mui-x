@@ -10,13 +10,6 @@ const pageSizeOptions = [5, 10, 50];
 const serverOptions = { useCursorPagination: false };
 const datasetOptions = {};
 
-function getBorderColor(theme) {
-  if (theme.palette.mode === 'light') {
-    return lighten(alpha(theme.palette.divider, 1), 0.88);
-  }
-  return darken(alpha(theme.palette.divider, 1), 0.68);
-}
-
 const StyledDiv = styled('div')(({ theme: t }) => ({
   position: 'absolute',
   zIndex: 10,
@@ -28,8 +21,11 @@ const StyledDiv = styled('div')(({ theme: t }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   borderRadius: '4px',
-  border: `1px solid ${getBorderColor(t)}`,
+  border: `1px solid ${lighten(alpha(t.palette.divider, 1), 0.88)}`,
   backgroundColor: t.palette.background.default,
+  ...t.applyStyles('dark', {
+    borderColor: darken(alpha(t.palette.divider, 1), 0.68),
+  }),
 }));
 
 function ErrorOverlay({ error }) {
