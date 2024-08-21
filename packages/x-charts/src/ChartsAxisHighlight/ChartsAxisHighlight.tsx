@@ -37,16 +37,34 @@ export const ChartsAxisHighlightPath = styled('path', {
   name: 'MuiChartsAxisHighlight',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: { axisHighlight: AxisHighlight } }>(({ ownerState, theme }) => ({
+})<{ ownerState: { axisHighlight: AxisHighlight } }>(({ theme }) => ({
   pointerEvents: 'none',
-  ...(ownerState.axisHighlight === 'band' && {
-    fill: theme.palette.mode === 'light' ? 'gray' : 'white',
-    fillOpacity: 0.1,
-  }),
-  ...(ownerState.axisHighlight === 'line' && {
-    strokeDasharray: '5 2',
-    stroke: theme.palette.mode === 'light' ? '#000000' : '#ffffff',
-  }),
+  variants: [
+    {
+      props: {
+        axisHighlight: 'band',
+      },
+      style: {
+        fill: 'white',
+        fillOpacity: 0.1,
+        ...theme.applyStyles('light', {
+          fill: 'gray',
+        }),
+      },
+    },
+    {
+      props: {
+        axisHighlight: 'line',
+      },
+      style: {
+        strokeDasharray: '5 2',
+        stroke: '#ffffff',
+        ...theme.applyStyles('light', {
+          stroke: '#000000',
+        }),
+      },
+    },
+  ],
 }));
 
 type AxisHighlight = 'none' | 'line' | 'band';
