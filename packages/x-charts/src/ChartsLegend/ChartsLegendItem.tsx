@@ -23,7 +23,7 @@ export interface ChartsLegendItemProps {
   markGap: number;
   labelStyle: ChartsTextStyle;
   classes?: Omit<Partial<ChartsLegendClasses>, 'column' | 'row' | 'label'>;
-  onItemClick?: (
+  onClick?: (
     event: React.MouseEvent<SVGRectElement, MouseEvent>,
     legendItem: LegendItem,
     index: number,
@@ -53,7 +53,7 @@ function ChartsLegendItem(props: ChartsLegendItemProps) {
     labelStyle,
     classes,
     index,
-    onItemClick,
+    onClick,
   } = props;
 
   return (
@@ -68,10 +68,10 @@ function ChartsLegendItem(props: ChartsLegendItemProps) {
         height={innerHeight + 4}
         fill="transparent"
         className={classes?.itemBackground}
-        onClick={onItemClick ? (e) => onItemClick(e, { id, label, color }, index) : undefined}
+        onClick={onClick ? (e) => onClick(e, { id, label, color }, index) : undefined}
         style={{
-          pointerEvents: onItemClick ? 'all' : 'none',
-          cursor: onItemClick ? 'pointer' : 'unset',
+          pointerEvents: onClick ? 'all' : 'none',
+          cursor: onClick ? 'pointer' : 'unset',
         }}
       />
       <rect
