@@ -212,6 +212,9 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     }),
   );
 
+  const hiddenCells = useGridSelector(apiRef, gridRowSpanningHiddenCellsSelector);
+  const spannedCells = useGridSelector(apiRef, gridRowSpanningSpannedCellsSelector);
+
   const { cellMode, hasFocus, isEditable = false, value } = cellParams;
 
   const canManageOwnFocus =
@@ -323,6 +326,9 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     [apiRef, field, rowId],
   );
 
+  const isCellRowSpanned = hiddenCells[rowId]?.[field] ?? false;
+  const rowSpan = spannedCells[rowId]?.[field] ?? 1;
+
   const style = React.useMemo(() => {
     if (isNotVisible) {
       return {
@@ -346,8 +352,13 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       cellStyle.right = pinnedOffset;
     }
 
+    if (rowSpan > 1) {
+      cellStyle.height = `calc(var(--height) * ${rowSpan})`;
+      cellStyle.zIndex = 5;
+    }
+
     return cellStyle;
-  }, [width, isNotVisible, styleProp, pinnedOffset, pinnedPosition]);
+  }, [width, isNotVisible, styleProp, pinnedOffset, pinnedPosition, rowSpan]);
 
   React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
@@ -370,8 +381,14 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     }
   }, [hasFocus, cellMode, apiRef]);
 
-  const hiddenCells = useGridSelector(apiRef, gridRowSpanningHiddenCellsSelector);
-  const spannedCells = useGridSelector(apiRef, gridRowSpanningSpannedCellsSelector);
+  if (isCellRowSpanned) {
+    return (
+      <div
+        data-colindex={colIndex}
+        style={{ ...style, minWidth: 'var(--width)', maxWidth: 'var(--width)' }}
+      />
+    );
+  }
 
   if (cellParams === EMPTY_CELL_PARAMS) {
     return null;
@@ -453,17 +470,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
         onDragOver: publish('cellDragOver', onDragOver),
       };
 
-  const isHidden = hiddenCells[rowId]?.[field] ?? false;
-  if (isHidden) {
-    return (
-      <div
-        data-colindex={colIndex}
-        style={{ ...style, minWidth: 'var(--width)', maxWidth: 'var(--width)' }}
-      />
-    );
-  }
-  const rowSpan = spannedCells[rowId]?.[field] ?? 1;
-
   return (
     <div
       ref={handleRef}
@@ -474,15 +480,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       aria-colindex={colIndex + 1}
       aria-colspan={colSpan}
       aria-rowspan={rowSpan}
-      style={
-        rowSpan === 1
-          ? style
-          : {
-              ...style,
-              height: `calc(var(--height) * ${rowSpan})`,
-              zIndex: 5,
-            }
-      }
+      style={style}
       title={title}
       tabIndex={tabIndex}
       onClick={publish('cellClick', onClick)}
