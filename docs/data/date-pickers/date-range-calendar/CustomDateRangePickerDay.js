@@ -37,7 +37,6 @@ const DateRangePickerDay = styled(MuiDateRangePickerDay)(({ theme }) => ({
     },
   ],
 }));
-
 export default function CustomDateRangePickerDay() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
