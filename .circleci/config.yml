@@ -9,6 +9,10 @@ parameters:
     description: The version of react to be used
     type: string
     default: stable
+  material-ui-version:
+    description: The version of @mui/material to use
+    type: string
+    default: stable
   workflow:
     description: The name of the workflow to run
     type: string
@@ -98,6 +102,14 @@ commands:
             pnpm use-react-version
             # log a patch for maintainers who want to check out this change
             git --no-pager diff HEAD
+
+      - when:
+          condition:
+            equal: [next, << parameters.material-ui-version >>]
+          steps:
+            - run:
+                name: Install @mui/material@next
+                command: pnpm use-material-ui-v6
 
       - when:
           condition: << parameters.browsers >>
@@ -383,3 +395,22 @@ workflows:
           <<: *default-context
           react-version: next
           name: test_e2e-react@next
+  material-ui-v6:
+    equal: [material-ui-v6, << pipeline.parameters.workflow >>]
+    jobs:
+      - test_unit:
+          <<: *default-context
+          material-ui-version: next
+          name: test_unit-@mui/material@next
+      - test_browser:
+          <<: *default-context
+          material-ui-version: next
+          name: test_browser-@mui/material@next
+      - test_regressions:
+          <<: *default-context
+          material-ui-version: next
+          name: test_regressions-@mui/material@next
+      - test_e2e:
+          <<: *default-context
+          material-ui-version: next
+          name: test_e2e-@mui/material@next
