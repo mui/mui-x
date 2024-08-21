@@ -9,9 +9,9 @@ import type { ResponsiveChartContainerProps } from './ResponsiveChartContainer';
 export const ResizableContainer = styled('div', {
   name: 'MuiResponsiveChart',
   slot: 'Container',
-})<{ ownerState: Pick<ResponsiveChartContainerProps, 'width' | 'height'> }>({
-  width: 'var(--width, 100%)',
-  height: 'var(--height, 100%)',
+})<{ ownerState: Pick<ResponsiveChartContainerProps, 'width' | 'height'> }>(({ ownerState }) => ({
+  width: ownerState.width ?? '100%',
+  height: ownerState.height ?? '100%',
   display: 'flex',
   position: 'relative',
   flexGrow: 1,
@@ -23,4 +23,4 @@ export const ResizableContainer = styled('div', {
     width: '100%',
     height: '100%',
   },
-});
+}));

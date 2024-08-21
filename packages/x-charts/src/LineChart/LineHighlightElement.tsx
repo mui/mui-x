@@ -43,11 +43,11 @@ const HighlightElement = styled('circle', {
   name: 'MuiHighlightElement',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: LineHighlightElementOwnerState }>({
-  transform: `translate(var(--x)px, var(--y)px)`,
-  transformOrigin: `var(--x)px var(--y)px`,
-  fill: 'var(--color)',
-});
+})<{ ownerState: LineHighlightElementOwnerState }>(({ ownerState }) => ({
+  transform: `translate(${ownerState.x}px, ${ownerState.y}px)`,
+  transformOrigin: `${ownerState.x}px ${ownerState.y}px`,
+  fill: ownerState.color,
+}));
 
 export type LineHighlightElementProps = LineHighlightElementOwnerState &
   Omit<React.SVGProps<SVGCircleElement>, 'ref' | 'id'>;
@@ -82,14 +82,6 @@ function LineHighlightElement(props: LineHighlightElementProps) {
       cx={0}
       cy={0}
       r={other.r === undefined ? 5 : other.r}
-      style={
-        {
-          ...other.style,
-          '--x': x,
-          '--y': y,
-          '--color': color,
-        } as React.CSSProperties
-      }
       {...other}
     />
   );

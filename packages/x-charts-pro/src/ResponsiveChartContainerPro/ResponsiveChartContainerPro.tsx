@@ -22,15 +22,7 @@ const ResponsiveChartContainerPro = React.forwardRef(function ResponsiveChartCon
     useResponsiveChartContainerProProps(props, ref);
 
   return (
-    <ResizableContainer
-      {...resizableChartContainerProps}
-      style={
-        {
-          '--width': resizableChartContainerProps.ownerState.width,
-          '--height': resizableChartContainerProps.ownerState.height,
-        } as React.CSSProperties
-      }
-    >
+    <ResizableContainer {...resizableChartContainerProps}>
       {hasIntrinsicSize ? <ChartContainerPro {...chartContainerProProps} /> : null}
       <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
     </ResizableContainer>

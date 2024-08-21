@@ -25,9 +25,9 @@ export interface GaugeContainerProps
 const ResizableContainer = styled('div', {
   name: 'MuiGauge',
   slot: 'Container',
-})<{ ownerState: Pick<GaugeContainerProps, 'width' | 'height'> }>(({ theme }) => ({
-  width: 'var(--width, 100%)',
-  height: 'var(--height, 100%)',
+})<{ ownerState: Pick<GaugeContainerProps, 'width' | 'height'> }>(({ ownerState, theme }) => ({
+  width: ownerState.width ?? '100%',
+  height: ownerState.height ?? '100%',
   display: 'flex',
   position: 'relative',
   flexGrow: 1,
@@ -77,12 +77,6 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(props: GaugeCont
       aria-valuenow={value === null ? undefined : value}
       aria-valuemin={valueMin}
       aria-valuemax={valueMax}
-      style={
-        {
-          '--width': inWidth,
-          '--height': inHeight,
-        } as React.CSSProperties
-      }
       {...other}
     >
       {width && height ? (
