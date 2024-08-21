@@ -398,13 +398,13 @@ workflows:
     jobs:
       - test_unit:
           <<: *default-context
-          name: test_unit-@mui/material@next
+          name: test_unit-material@next
       - test_browser:
           <<: *default-context
-          name: test_browser-@mui/material@next
+          name: test_browser-material@next
       - test_regressions:
           <<: *default-context
-          name: test_regressions-@mui/material@next
+          name: test_regressions-material@next
       - test_e2e:
           <<: *default-context
-          name: test_e2e-@mui/material@next
+          name: test_e2e-material@next
