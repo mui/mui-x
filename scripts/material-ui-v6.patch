@@ -2,14 +2,10 @@ diff --git a/docs/package.json b/docs/package.json
 index d779100d9a..1b7d072164 100644
 --- a/docs/package.json
 +++ b/docs/package.json
-@@ -28,14 +28,14 @@
-     "@emotion/server": "^11.11.0",
-     "@emotion/styled": "^11.13.0",
-     "@mui/docs": "6.0.0-beta.6",
+@@ -31 +31 @@
 -    "@mui/icons-material": "^5.16.7",
 +    "@mui/icons-material": "next",
-     "@mui/joy": "^5.0.0-beta.48",
-     "@mui/lab": "^5.0.0-alpha.173",
+@@ -34,5 +34,5 @@
 -    "@mui/material": "^5.16.7",
 -    "@mui/material-nextjs": "^5.16.6",
 -    "@mui/styles": "^5.16.7",
@@ -20,171 +16,95 @@ index d779100d9a..1b7d072164 100644
 +    "@mui/styles": "next",
 +    "@mui/system": "next",
 +    "@mui/utils": "next",
-     "@mui/x-charts": "workspace:*",
-     "@mui/x-charts-vendor": "workspace:*",
-     "@mui/x-data-grid": "workspace:*",
 diff --git a/package.json b/package.json
-index a6aacfe942..a9e920990e 100644
+index 2ec932c356..0d7a215de0 100644
 --- a/package.json
 +++ b/package.json
-@@ -88,12 +88,12 @@
-     "@emotion/cache": "^11.13.1",
-     "@emotion/react": "^11.13.0",
-     "@emotion/styled": "^11.13.0",
+@@ -92 +92 @@
 -    "@mui/icons-material": "^5.16.7",
 +    "@mui/icons-material": "next",
-     "@mui/internal-markdown": "^1.0.10",
-     "@mui/internal-test-utils": "^1.0.8",
+@@ -95 +95 @@
 -    "@mui/material": "^5.16.7",
 +    "@mui/material": "next",
-     "@mui/monorepo": "github:mui/material-ui#0acfe665034fdf4578156ebaf4372713cf23bce4",
+@@ -97 +97 @@
 -    "@mui/utils": "^5.16.6",
 +    "@mui/utils": "next",
-     "@next/eslint-plugin-next": "14.2.5",
-     "@octokit/plugin-retry": "^7.1.1",
-     "@octokit/rest": "^21.0.2",
 diff --git a/packages/x-charts-pro/package.json b/packages/x-charts-pro/package.json
-index f29fdfcbc5..ed204e689f 100644
+index 054fb306b4..c97ed9bd2a 100644
 --- a/packages/x-charts-pro/package.json
 +++ b/packages/x-charts-pro/package.json
-@@ -66,7 +66,7 @@
-     }
-   },
-   "devDependencies": {
+@@ -69 +69 @@
 -    "@mui/material": "^5.16.5",
 +    "@mui/material": "next",
-     "@react-spring/core": "^9.7.4",
-     "@react-spring/shared": "^9.7.4",
-     "@types/prop-types": "^15.7.12",
 diff --git a/packages/x-charts/package.json b/packages/x-charts/package.json
-index 22a2f3a990..a5df8948ac 100644
+index f882a137ad..a10202a811 100644
 --- a/packages/x-charts/package.json
 +++ b/packages/x-charts/package.json
-@@ -65,7 +65,7 @@
-   },
-   "devDependencies": {
-     "@mui/internal-test-utils": "^1.0.8",
+@@ -68 +68 @@
 -    "@mui/material": "^5.16.5",
 +    "@mui/material": "next",
-     "@react-spring/core": "^9.7.4",
-     "@react-spring/shared": "^9.7.4",
-     "@types/prop-types": "^15.7.12",
 diff --git a/packages/x-data-grid-generator/package.json b/packages/x-data-grid-generator/package.json
-index 1378a8801d..c7449032e2 100644
+index ec22d3a293..8ccc7a6228 100644
 --- a/packages/x-data-grid-generator/package.json
 +++ b/packages/x-data-grid-generator/package.json
-@@ -40,8 +40,8 @@
-     "lru-cache": "^10.4.3"
-   },
-   "devDependencies": {
+@@ -43,2 +43,2 @@
 -    "@mui/icons-material": "^5.16.5",
 -    "@mui/material": "^5.16.5",
 +    "@mui/icons-material": "next",
 +    "@mui/material": "next",
-     "@types/chance": "^1.1.6",
-     "rimraf": "^5.0.10"
-   },
 diff --git a/packages/x-data-grid-premium/package.json b/packages/x-data-grid-premium/package.json
-index 4dedc9748f..05306b7a17 100644
+index 99f81500bc..9fe5f8b778 100644
 --- a/packages/x-data-grid-premium/package.json
 +++ b/packages/x-data-grid-premium/package.json
-@@ -73,7 +73,7 @@
-   },
-   "devDependencies": {
-     "@mui/internal-test-utils": "^1.0.8",
+@@ -76 +76 @@
 -    "@mui/material": "^5.16.5",
 +    "@mui/material": "next",
-     "@types/prop-types": "^15.7.12",
-     "date-fns": "^2.30.0",
-     "rimraf": "^5.0.10"
 diff --git a/packages/x-data-grid-pro/package.json b/packages/x-data-grid-pro/package.json
-index 1f017f5c97..ab827949a1 100644
+index 45a678e97d..ac69bf70bd 100644
 --- a/packages/x-data-grid-pro/package.json
 +++ b/packages/x-data-grid-pro/package.json
-@@ -71,7 +71,7 @@
-   },
-   "devDependencies": {
-     "@mui/internal-test-utils": "^1.0.8",
+@@ -74 +74 @@
 -    "@mui/material": "^5.16.5",
 +    "@mui/material": "next",
-     "@types/prop-types": "^15.7.12",
-     "rimraf": "^5.0.10"
-   },
 diff --git a/packages/x-data-grid/package.json b/packages/x-data-grid/package.json
-index 268c5fe4ef..b1d4badeb8 100644
+index ee9f475a58..cd180bfb5f 100644
 --- a/packages/x-data-grid/package.json
 +++ b/packages/x-data-grid/package.json
-@@ -73,7 +73,7 @@
-   "devDependencies": {
-     "@mui/internal-test-utils": "^1.0.8",
-     "@mui/joy": "^5.0.0-beta.48",
+@@ -76 +76 @@
 -    "@mui/material": "^5.16.5",
 +    "@mui/material": "next",
-     "@mui/types": "^7.2.15",
-     "@types/prop-types": "^15.7.12",
-     "rimraf": "^5.0.10"
 diff --git a/packages/x-date-pickers-pro/package.json b/packages/x-date-pickers-pro/package.json
-index cb54d5bca9..8d20fb4fc3 100644
+index 2f2528b261..402b06f2c1 100644
 --- a/packages/x-date-pickers-pro/package.json
 +++ b/packages/x-date-pickers-pro/package.json
-@@ -96,7 +96,7 @@
-   },
-   "devDependencies": {
-     "@mui/internal-test-utils": "^1.0.8",
+@@ -99 +99 @@
 -    "@mui/material": "^5.16.5",
 +    "@mui/material": "next",
-     "@types/luxon": "^3.4.2",
-     "@types/prop-types": "^15.7.12",
-     "date-fns": "^2.30.0",
 diff --git a/packages/x-date-pickers/package.json b/packages/x-date-pickers/package.json
-index b815491594..127d4c20a8 100644
+index 771031872a..fa088344bd 100644
 --- a/packages/x-date-pickers/package.json
 +++ b/packages/x-date-pickers/package.json
-@@ -98,7 +98,7 @@
-   },
-   "devDependencies": {
-     "@mui/internal-test-utils": "^1.0.8",
+@@ -101 +101 @@
 -    "@mui/material": "^5.16.5",
 +    "@mui/material": "next",
-     "@types/luxon": "^3.4.2",
-     "@types/moment-hijri": "^2.1.4",
-     "@types/moment-jalaali": "^0.7.9",
 diff --git a/packages/x-tree-view-pro/package.json b/packages/x-tree-view-pro/package.json
-index fb34cba792..6267e1a8aa 100644
+index e8f6281d4c..6d3e152ce4 100644
 --- a/packages/x-tree-view-pro/package.json
 +++ b/packages/x-tree-view-pro/package.json
-@@ -71,7 +71,7 @@
-   },
-   "devDependencies": {
-     "@mui/internal-test-utils": "^1.0.8",
+@@ -74 +74 @@
 -    "@mui/material": "^5.16.5",
 +    "@mui/material": "next",
-     "@types/prop-types": "^15.7.12",
-     "rimraf": "^5.0.10"
-   },
 diff --git a/packages/x-tree-view/package.json b/packages/x-tree-view/package.json
-index d47163b8da..91760dc790 100644
+index e39a9e292a..a32fc8f656 100644
 --- a/packages/x-tree-view/package.json
 +++ b/packages/x-tree-view/package.json
-@@ -69,7 +69,7 @@
-   },
-   "devDependencies": {
-     "@mui/internal-test-utils": "^1.0.8",
+@@ -72 +72 @@
 -    "@mui/material": "^5.16.5",
 +    "@mui/material": "next",
-     "@types/prop-types": "^15.7.12",
-     "rimraf": "^5.0.10"
-   },
 diff --git a/test/package.json b/test/package.json
 index d0c46845ff..ab90a583a1 100644
 --- a/test/package.json
 +++ b/test/package.json
-@@ -9,7 +9,7 @@
-     "@babel/runtime": "^7.25.0",
-     "@emotion/cache": "^11.13.1",
-     "@emotion/react": "^11.13.0",
+@@ -12 +12 @@
 -    "@mui/material": "^5.16.7",
 +    "@mui/material": "next",
-     "@mui/x-data-grid": "workspace:*",
-     "@mui/x-data-grid-pro": "workspace:*",
-     "@mui/x-date-pickers": "workspace:*",
