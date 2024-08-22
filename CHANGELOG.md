@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 7.13.1
+## 7.14.0
 
 _Aug 22, 2024_
 
@@ -22,7 +22,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 
 ### Data Grid
 
-#### `@mui/x-data-grid@7.13.1`
+#### `@mui/x-data-grid@7.14.0`
 
 - [DataGrid] Use readonly array result for `getTreeDataPath` (#11743) @pcorpet
 - [DataGrid] Use `event.key` for `Tab` and `Escape` keys (#14170) @k-rajat19
@@ -30,32 +30,32 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [DataGrid] include `api` in `gridCellParams` interface (#14201) @k-rajat19
 - [l10n] Improve Czech (cs-CZ) locale (#14135) @chirimiri22
 
-#### `@mui/x-data-grid-pro@7.13.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@7.14.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@7.13.1`.
+Same changes as in `@mui/x-data-grid@7.14.0`.
 
-#### `@mui/x-data-grid-premium@7.13.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@7.14.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@7.13.1`, plus:
+Same changes as in `@mui/x-data-grid-pro@7.14.0`, plus:
 
 - [DataGridPremium] Clipboard paste not working for a single cell if the current page is not the first page (#14261) @arminmeh
 - [DataGridPremium] Fix `onCellSelectionModelChange` not triggered when additional cell range is selected (#14199) @arminmeh
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@7.13.1`
+#### `@mui/x-date-pickers@7.14.0`
 
 - [l10n] Improve Chinese (zh-HK) locale (#13289) @yeeharn
 - [l10n] Improve Vietnamese (vi-VN) locale (#14238) @locnbk2002
 - [TimePicker] Handle `Space` and `Enter` on the `TimeClock` component @arthurbalduini
 
-#### `@mui/x-date-pickers-pro@7.13.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@7.14.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@7.13.1`.
+Same changes as in `@mui/x-date-pickers@7.14.0`.
 
 ### Charts
 
-#### `@mui/x-charts@7.13.1`
+#### `@mui/x-charts@7.14.0`
 
 - [charts] Fix grid overflow with zooming (#14280) @alexfauquette
 - [charts] Improve bar chart performances (#14278) @alexfauquette
@@ -64,7 +64,7 @@ Same changes as in `@mui/x-date-pickers@7.13.1`.
 
 #### `@mui/x-charts-pro@7.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@7.13.1`, plus:
+Same changes as in `@mui/x-charts@7.14.0`, plus:
 
 - [charts-pro] Zoom axis filtering (#14121) @JCQuintas
 
