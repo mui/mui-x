@@ -97,7 +97,7 @@ export const useGridSelector = <Api extends GridApiCommon, T>(
 export const useGridSelectorV8 = <Api extends GridApiCommon, Args, T>(
   apiRef: React.MutableRefObject<Api>,
   selector: Selector<Api, Args, T>,
-  args: Args = {} as Args,
+  args: Args = undefined as Args,
   equals: (a: T, b: T) => boolean = defaultCompare,
 ) => {
   if (process.env.NODE_ENV !== 'production') {
