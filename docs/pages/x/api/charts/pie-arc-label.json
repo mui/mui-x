@@ -3,7 +3,8 @@
   "name": "PieArcLabel",
   "imports": [
     "import { PieArcLabel } from '@mui/x-charts/PieChart';",
-    "import { PieArcLabel } from '@mui/x-charts';"
+    "import { PieArcLabel } from '@mui/x-charts';",
+    "import { PieArcLabel } from '@mui/x-charts-pro';"
   ],
   "classes": [
     {
@@ -15,7 +16,7 @@
     {
       "key": "highlighted",
       "className": "MuiPieArcLabel-highlighted",
-      "description": "Styles applied to the root element when higlighted.",
+      "description": "Styles applied to the root element when highlighted.",
       "isGlobal": false
     },
     {

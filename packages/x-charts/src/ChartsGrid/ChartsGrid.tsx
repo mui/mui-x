@@ -1,26 +1,35 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { useTicks } from '../hooks/useTicks';
 import {
   ChartsGridClasses,
   getChartsGridUtilityClass,
   chartsGridClasses,
 } from './chartsGridClasses';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 
 const GridRoot = styled('g', {
   name: 'MuiChartsGrid',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
+  overridesResolver: (props, styles) => [
+    { [`&.${chartsGridClasses.verticalLine}`]: styles.verticalLine },
+    { [`&.${chartsGridClasses.horizontalLine}`]: styles.horizontalLine },
+    styles.root,
+  ],
+})({});
+
+const GridLine = styled('line', {
+  name: 'MuiChartsGrid',
+  slot: 'Line',
+  overridesResolver: (props, styles) => styles.line,
 })(({ theme }) => ({
-  [`& .${chartsGridClasses.line}`]: {
-    stroke: (theme.vars || theme).palette.divider,
-    shapeRendering: 'crispEdges',
-    strokeWidth: 1,
-  },
+  stroke: (theme.vars || theme).palette.divider,
+  shapeRendering: 'crispEdges',
+  strokeWidth: 1,
 }));
 
 const useUtilityClasses = ({ classes }: ChartsGridProps) => {
@@ -58,10 +67,13 @@ export interface ChartsGridProps {
  * - [ChartsGrid API](https://mui.com/x/api/charts/charts-axis/)
  */
 function ChartsGrid(props: ChartsGridProps) {
-  const { vertical, horizontal, ...other } = props;
-  const { xAxis, xAxisIds, yAxis, yAxisIds } = React.useContext(CartesianContext);
+  const themeProps = useThemeProps({ props, name: 'MuiChartsGrid' });
 
-  const classes = useUtilityClasses(props);
+  const drawingArea = useDrawingArea();
+  const { vertical, horizontal, ...other } = themeProps;
+  const { xAxis, xAxisIds, yAxis, yAxisIds } = useCartesianContext();
+
+  const classes = useUtilityClasses(themeProps);
 
   const horizontalAxisId = yAxisIds[0];
   const verticalAxisId = xAxisIds[0];
@@ -85,10 +97,10 @@ function ChartsGrid(props: ChartsGridProps) {
     <GridRoot {...other} className={classes.root}>
       {vertical &&
         xTicks.map(({ formattedValue, offset }) => (
-          <line
+          <GridLine
             key={`vertical-${formattedValue}`}
-            y1={yScale.range()[0]}
-            y2={yScale.range()[1]}
+            y1={drawingArea.top}
+            y2={drawingArea.top + drawingArea.height}
             x1={offset}
             x2={offset}
             className={classes.verticalLine}
@@ -96,12 +108,12 @@ function ChartsGrid(props: ChartsGridProps) {
         ))}
       {horizontal &&
         yTicks.map(({ formattedValue, offset }) => (
-          <line
+          <GridLine
             key={`horizontal-${formattedValue}`}
             y1={offset}
             y2={offset}
-            x1={xScale.range()[0]}
-            x2={xScale.range()[1]}
+            x1={drawingArea.left}
+            x2={drawingArea.left + drawingArea.width}
             className={classes.horizontalLine}
           />
         ))}
@@ -112,7 +124,7 @@ function ChartsGrid(props: ChartsGridProps) {
 ChartsGrid.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Override or extend the styles applied to the component.

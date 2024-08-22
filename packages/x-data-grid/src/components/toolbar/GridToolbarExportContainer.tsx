@@ -4,7 +4,7 @@ import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui
 import MenuList from '@mui/material/MenuList';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
-import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
+import { isHideMenuKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridMenu } from '../menu/GridMenu';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -43,7 +43,7 @@ const GridToolbarExportContainer = React.forwardRef<
   const handleMenuClose = () => setOpen(false);
 
   const handleListKeyDown = (event: React.KeyboardEvent) => {
-    if (isTabKey(event.key)) {
+    if (event.key === 'Tab') {
       event.preventDefault();
     }
     if (isHideMenuKey(event.key)) {
@@ -107,7 +107,7 @@ const GridToolbarExportContainer = React.forwardRef<
 GridToolbarExportContainer.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The props used for each slot inside.

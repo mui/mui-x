@@ -6,6 +6,7 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import {
   GridFilterItem,
   GridFilterOperator,
@@ -19,7 +20,6 @@ import {
   GridPinnedColumnPosition,
 } from '@mui/x-data-grid';
 import {
-  fastMemo,
   GridStateColDef,
   useGridPrivateApiContext,
   gridHeaderFilteringEditFieldSelector,
@@ -53,6 +53,7 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
   style?: React.CSSProperties;
   indexInSection: number;
   sectionLength: number;
+  gridHasFiller: boolean;
 }
 
 type OwnerState = DataGridProProcessedProps & {
@@ -103,6 +104,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       style: styleProp,
       indexInSection,
       sectionLength,
+      gridHasFiller,
       ...other
     } = props;
 
@@ -121,8 +123,12 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const isMenuOpen = menuOpenField === colDef.field;
 
     // TODO: Support for `isAnyOf` operator
-    const filterOperators =
-      colDef.filterOperators?.filter((operator) => operator.value !== 'isAnyOf') ?? [];
+    const filterOperators = React.useMemo(() => {
+      if (!colDef.filterOperators) {
+        return [];
+      }
+      return colDef.filterOperators.filter((operator) => operator.value !== 'isAnyOf');
+    }, [colDef.filterOperators]);
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const filterableColumnsLookup = useGridSelector(apiRef, gridFilterableColumnLookupSelector);
 
@@ -134,7 +140,11 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       return filterModelItem ? !filterableColumnsLookup[filterModelItem.field] : false;
     }, [colDef.field, filterModel, filterableColumnsLookup]);
 
-    const currentOperator = filterOperators![0];
+    const currentOperator = React.useMemo(
+      () =>
+        filterOperators.find((operator) => operator.value === item.operator) ?? filterOperators![0],
+      [item.operator, filterOperators],
+    );
 
     const InputComponent =
       colDef.filterable || isFilterReadOnly ? currentOperator!.InputComponent : null;
@@ -271,6 +281,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       indexInSection,
       sectionLength,
       rootProps.showCellVerticalBorder,
+      gridHasFiller,
     );
 
     const ownerState: OwnerState = {
@@ -283,10 +294,10 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const classes = useUtilityClasses(ownerState as OwnerState);
 
-    const isNoInputOperator =
-      filterOperators?.find(({ value }) => item.operator === value)?.requiresFilterValue === false;
+    const isNoInputOperator = currentOperator.requiresFilterValue === false;
 
     const isApplied = Boolean(item?.value) || isNoInputOperator;
+
     const label =
       currentOperator.headerLabel ??
       apiRef.current.getLocaleText(
@@ -308,7 +319,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
         }}
         role="columnheader"
         aria-colindex={colIndex + 1}
-        aria-label={headerFilterComponent == null ? colDef.headerName ?? colDef.field : undefined}
+        aria-label={headerFilterComponent == null ? (colDef.headerName ?? colDef.field) : undefined}
         {...other}
         {...mouseEventsHandlers}
       >
@@ -374,10 +385,11 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 GridHeaderFilterCell.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   colDef: PropTypes.object.isRequired,
   colIndex: PropTypes.number.isRequired,
+  gridHasFiller: PropTypes.bool.isRequired,
   hasFocus: PropTypes.bool,
   /**
    * Class name that will be added in the column header cell.

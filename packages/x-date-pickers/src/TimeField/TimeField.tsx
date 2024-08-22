@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { refType } from '@mui/utils';
 import { TimeFieldProps } from './TimeField.types';
 import { useTimeField } from './useTimeField';
@@ -81,11 +81,11 @@ const TimeField = React.forwardRef(function TimeField<
 TimeField.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * @default utils.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**
@@ -310,7 +310,7 @@ TimeField.propTypes = {
    * Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros.
    * This mean that when using `shouldRespectLeadingZeros={false}`, if you retrieve the value directly from the input (not listening to `onChange`) and your format contains tokens without leading zeros, the value will not be parsed by your library.
    *
-   * @default `false`
+   * @default false
    */
   shouldRespectLeadingZeros: PropTypes.bool,
   /**

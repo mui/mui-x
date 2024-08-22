@@ -118,6 +118,12 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
         ).to.be.lessThan(5);
       }
     });
+
+    it('should work without args', () => {
+      const date = adapter.date().valueOf();
+
+      expect(Math.abs(date - Date.now())).to.be.lessThan(5);
+    });
   });
 
   it('Method: getTimezone', () => {
@@ -808,6 +814,10 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     expect(adapter.getDaysInMonth(adapter.addMonths(testDateIso, 1))).to.equal(30);
   });
 
+  it('Method: getDayOfWeek', () => {
+    expect(adapter.getDayOfWeek(testDateIso)).to.equal(adapter.lib === 'luxon' ? 2 : 3);
+  });
+
   describe('Method: getWeekArray', () => {
     it('should work without timezones', () => {
       const weekArray = adapter.getWeekArray(testDateIso);
@@ -860,7 +870,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
   });
 
   it('Method: getWeekNumber', () => {
-    expect(adapter.getWeekNumber!(testDateIso)).to.equal(44);
+    expect(adapter.getWeekNumber(testDateIso)).to.equal(44);
   });
 
   it('Method: getYearRange', () => {

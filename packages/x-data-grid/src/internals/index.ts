@@ -56,6 +56,10 @@ export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
 export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
+export {
+  gridFilteredChildrenCountLookupSelector,
+  gridExpandedSortedRowTreeLevelPositionLookupSelector,
+} from '../hooks/features/filter/gridFilterSelector';
 export { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
 export type {
   GridAggregatedFilterItemApplier,
@@ -74,6 +78,8 @@ export {
 export { useGridEditing, editingStateInitializer } from '../hooks/features/editing/useGridEditing';
 export { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
 export { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
+export { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
+export { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 export type {
   GridRowTreeCreationParams,
@@ -129,17 +135,12 @@ export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibl
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 
-export type {
-  GridExperimentalFeatures,
-  DataGridPropsWithoutDefaultValue,
-  DataGridPropsWithDefaultValues,
-  DataGridPropsWithComplexDefaultValueAfterProcessing,
-  DataGridPropsWithComplexDefaultValueBeforeProcessing,
-} from '../models/props/DataGridProps';
-
+export type * from '../models/props/DataGridProps';
+export type * from '../models/gridDataSource';
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
 export { createSelector, createSelectorMemoized } from '../utils/createSelector';
+export { gridRowGroupsToFetchSelector } from '../hooks/features/rows/gridRowsSelector';
 export {
   findParentElementFromClassName,
   getActiveElement,
@@ -147,8 +148,6 @@ export {
 } from '../utils/domUtils';
 export { isNavigationKey, isPasteShortcut } from '../utils/keyboardUtils';
 export * from '../utils/utils';
-export * from '../utils/fastMemo';
-export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
 export * from '../utils/getPublicApiRef';
 export * from '../utils/cellBorderUtils';

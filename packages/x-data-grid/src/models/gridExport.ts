@@ -26,7 +26,7 @@ export interface GridFileExportOptions<Api extends GridApiCommon = GridApiCommun
   extends GridExportOptions {
   /**
    * The string used as the file name.
-   * @default `document.title`
+   * @default document.title
    */
   fileName?: string;
   /**
@@ -40,6 +40,13 @@ export interface GridFileExportOptions<Api extends GridApiCommon = GridApiCommun
    * @returns {GridRowId[]} The list of row ids to export.
    */
   getRowsToExport?: (params: GridGetRowsToExportParams<Api>) => GridRowId[];
+  /**
+   * If `false`, the formulas in the cells will not be escaped.
+   * It is not recommended to disable this option as it exposes the user to potential CSV injection attacks.
+   * See https://owasp.org/www-community/attacks/CSV_Injection for more information.
+   * @default true
+   */
+  escapeFormulas?: boolean;
 }
 
 export interface GridGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity> {
@@ -68,7 +75,7 @@ export interface GridCsvExportOptions extends GridFileExportOptions {
   delimiter?: string;
   /**
    * The string used as the file name.
-   * @default `document.title`
+   * @default document.title
    */
   fileName?: string;
   /**

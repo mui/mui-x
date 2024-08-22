@@ -1,7 +1,7 @@
 {
   "name": "@mui/x-data-grid",
-  "version": "7.0.0-beta.7",
-  "description": "The community edition of the data grid component (MUI X).",
+  "version": "7.13.0",
+  "description": "The Community plan edition of the Data Grid components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
   "license": "MIT",
@@ -15,7 +15,8 @@
     "url": "https://opencollective.com/mui-org"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "build"
   },
   "keywords": [
     "react",
@@ -32,7 +33,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "yarn build:modern && yarn build:node && yarn build:stable && yarn build:types && yarn build:copy-files ",
+    "build": "pnpm build:modern && pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files ",
     "build:modern": "node ../../scripts/build.mjs modern",
     "build:node": "node ../../scripts/build.mjs node",
     "build:stable": "node ../../scripts/build.mjs stable",
@@ -46,21 +47,36 @@
     "directory": "packages/x-data-grid"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.0",
-    "@mui/system": "^5.15.14",
-    "@mui/utils": "^5.15.14",
-    "clsx": "^2.1.0",
+    "@babel/runtime": "^7.25.0",
+    "@mui/system": "^5.16.7",
+    "@mui/utils": "^5.16.6",
+    "@mui/x-internals": "workspace:*",
+    "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
     "reselect": "^4.1.8"
   },
   "peerDependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
     "@mui/material": "^5.15.14",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },
-  "setupFiles": [
-    "<rootDir>/src/setupTests.js"
-  ],
+  "peerDependenciesMeta": {
+    "@emotion/react": {
+      "optional": true
+    },
+    "@emotion/styled": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@mui/internal-test-utils": "^1.0.8",
+    "@mui/joy": "^5.0.0-beta.48",
+    "@mui/types": "^7.2.15",
+    "@types/prop-types": "^15.7.12",
+    "rimraf": "^5.0.10"
+  },
   "engines": {
     "node": ">=14.0.0"
   }

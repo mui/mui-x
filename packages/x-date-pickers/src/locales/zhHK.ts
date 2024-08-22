@@ -23,10 +23,10 @@ const zhHKPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: '開始',
   end: '結束',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: '開始日期',
+  startTime: '開始時間',
+  endDate: '結束日期',
+  endTime: '結束時間',
 
   // Action bar
   cancelButtonLabel: '取消',
@@ -65,7 +65,7 @@ const zhHKPickers: Partial<PickersLocaleText<any>> = {
     value !== null && utils.isValid(value)
       ? `選擇時間，已選擇${utils.format(value, 'fullTime')}`
       : '選擇時間',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: '清除',
 
   // Table labels
   timeTableLabel: '選擇時間',
@@ -82,17 +82,17 @@ const zhHKPickers: Partial<PickersLocaleText<any>> = {
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: '年',
+  month: '月',
+  day: '日',
+  weekDay: '星期',
+  hours: '小時',
+  minutes: '分鐘',
+  seconds: '秒',
+  meridiem: '子午線',
 
   // Common
-  // empty: 'Empty',
+  empty: '空值',
 };
 
 export const zhHK = getPickersLocalization(zhHKPickers);

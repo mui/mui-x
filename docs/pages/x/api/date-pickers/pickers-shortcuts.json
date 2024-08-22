@@ -9,9 +9,9 @@
     "items": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ getValue: func, label: string }&gt;"
+        "description": "Array&lt;{ getValue: func, id?: string, label: string }&gt;"
       },
-      "default": "`[]`"
+      "default": "[]"
     },
     "subheader": { "type": { "name": "node" } },
     "sx": {

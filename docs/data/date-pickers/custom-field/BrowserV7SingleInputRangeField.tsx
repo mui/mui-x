@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Dayjs } from 'dayjs';
 import useForkRef from '@mui/utils/useForkRef';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -25,7 +25,7 @@ import {
   DateRange,
   FieldType,
 } from '@mui/x-date-pickers-pro/models';
-import { BaseSingleInputFieldProps } from '@mui/x-date-pickers';
+import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',

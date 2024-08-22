@@ -247,7 +247,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     const cleanZone =
       timezone === 'default'
         ? // @ts-ignore
-          this.moment.defaultZone?.name ?? 'system'
+          (this.moment.defaultZone?.name ?? 'system')
         : timezone;
 
     if (cleanZone === 'system') {

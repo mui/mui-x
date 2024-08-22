@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { refType } from '@mui/utils';
 import { DateFieldProps } from './DateField.types';
 import { useDateField } from './useDateField';
@@ -81,7 +81,7 @@ const DateField = React.forwardRef(function DateField<
 DateField.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * If `true`, the `input` element is focused during the first mount.
@@ -195,10 +195,12 @@ DateField.propTypes = {
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**
@@ -309,7 +311,7 @@ DateField.propTypes = {
    * Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros.
    * This mean that when using `shouldRespectLeadingZeros={false}`, if you retrieve the value directly from the input (not listening to `onChange`) and your format contains tokens without leading zeros, the value will not be parsed by your library.
    *
-   * @default `false`
+   * @default false
    */
   shouldRespectLeadingZeros: PropTypes.bool,
   /**

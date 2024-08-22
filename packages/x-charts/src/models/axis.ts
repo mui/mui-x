@@ -5,10 +5,15 @@ import type {
   ScaleTime,
   ScaleLinear,
   ScalePoint,
-} from 'd3-scale';
+  ScaleOrdinal,
+  ScaleSequential,
+  ScaleThreshold,
+} from '@mui/x-charts-vendor/d3-scale';
+import { SxProps } from '@mui/system';
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';
+import { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from './colorMapping';
 
 export type AxisId = string | number;
 
@@ -24,7 +29,7 @@ export type D3Scale<
   | ScaleTime<Range, Output>
   | ScaleLinear<Range, Output>;
 
-export type D3ContinuouseScale<Range = number, Output = number> =
+export type D3ContinuousScale<Range = number, Output = number> =
   | ScaleLogarithmic<Range, Output>
   | ScalePower<Range, Output>
   | ScaleTime<Range, Output>
@@ -136,6 +141,7 @@ export interface ChartsAxisProps extends TickParams {
    * @default {}
    */
   slotProps?: Partial<ChartsAxisSlotProps>;
+  sx?: SxProps;
 }
 
 export interface ChartsYAxisProps extends ChartsAxisProps {
@@ -152,10 +158,10 @@ export interface ChartsXAxisProps extends ChartsAxisProps {
   position?: 'top' | 'bottom';
 }
 
-export type ScaleName = 'linear' | 'band' | 'point' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
-export type ContinuouseScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
+export type ScaleName = keyof AxisScaleConfig;
+export type ContinuousScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
 
-interface AxisScaleConfig {
+export interface AxisScaleConfig {
   band: {
     scaleType: 'band';
     scale: ScaleBand<number | Date | string>;
@@ -171,42 +177,103 @@ interface AxisScaleConfig {
      * @default 0.1
      */
     barGapRatio: number;
+    colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
   } & Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
   point: {
     scaleType: 'point';
     scale: ScalePoint<number | Date | string>;
+    colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
   };
   log: {
     scaleType: 'log';
     scale: ScaleLogarithmic<number, number>;
+    colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   pow: {
     scaleType: 'pow';
     scale: ScalePower<number, number>;
+    colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   sqrt: {
     scaleType: 'sqrt';
     scale: ScalePower<number, number>;
+    colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   time: {
     scaleType: 'time';
     scale: ScaleTime<number, number>;
+    colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   utc: {
     scaleType: 'utc';
     scale: ScaleTime<number, number>;
+    colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   linear: {
     scaleType: 'linear';
     scale: ScaleLinear<number, number>;
+    colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
+  };
+}
+
+/**
+ * Use this type instead of `AxisScaleConfig` when the values
+ * shouldn't be provided by the user.
+ */
+export interface AxisScaleComputedConfig {
+  band: {
+    colorScale?:
+      | ScaleOrdinal<string | number | Date, string, string | null>
+      | ScaleOrdinal<number, string, string | null>
+      | ScaleSequential<string, string | null>
+      | ScaleThreshold<number | Date, string | null>;
+  };
+  point: {
+    colorScale?:
+      | ScaleOrdinal<string | number | Date, string, string | null>
+      | ScaleOrdinal<number, string, string | null>
+      | ScaleSequential<string, string | null>
+      | ScaleThreshold<number | Date, string | null>;
+  };
+  log: {
+    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
+  };
+  pow: {
+    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
+  };
+  sqrt: {
+    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
+  };
+  time: {
+    colorScale?:
+      | ScaleSequential<string, string | null>
+      | ScaleThreshold<number | Date, string | null>;
+  };
+  utc: {
+    colorScale?:
+      | ScaleSequential<string, string | null>
+      | ScaleThreshold<number | Date, string | null>;
+  };
+  linear: {
+    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
   };
 }
 
 export type AxisValueFormatterContext = {
-  location: 'tick' | 'tooltip';
+  /**
+   * Location indicates where the value will be displayed.
+   * - `'tick'` The value is displayed on the axis ticks.
+   * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
+   * - `'legend'` The value is displayed in the legend when using color legend.
+   */
+  location: 'tick' | 'tooltip' | 'legend';
 };
 
-export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
+export type AxisConfig<
+  S extends ScaleName = ScaleName,
+  V = any,
+  AxisProps = ChartsXAxisProps | ChartsYAxisProps,
+> = {
   /**
    * Id used to identify the axis.
    */
@@ -244,15 +311,20 @@ export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * If `true`, Reverse the axis scaleBand.
    */
   reverse?: boolean;
-} & Partial<ChartsXAxisProps | ChartsYAxisProps> &
+} & Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
-  TickParams;
+  TickParams &
+  AxisConfigExtension;
 
-export type AxisDefaultized<S extends ScaleName = ScaleName, V = any> = Omit<
-  AxisConfig<S, V>,
-  'scaleType'
-> &
-  AxisScaleConfig[S] & {
+export interface AxisConfigExtension {}
+
+export type AxisDefaultized<
+  S extends ScaleName = ScaleName,
+  V = any,
+  AxisProps = ChartsXAxisProps | ChartsYAxisProps,
+> = Omit<AxisConfig<S, V, AxisProps>, 'scaleType'> &
+  AxisScaleConfig[S] &
+  AxisScaleComputedConfig[S] & {
     /**
      * An indication of the expected number of ticks.
      */

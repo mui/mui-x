@@ -75,10 +75,9 @@ export function getComponentImports(name: string, filename: string) {
 
   const reExportPackage = [rootImportPath];
 
-  // TODO: uncomment when releasing the pro package
-  // if (rootImportPath === '@mui/x-tree-view') {
-  //   reExportPackage.push('@mui/x-tree-view-pro');
-  // }
+  if (rootImportPath === '@mui/x-tree-view' && name !== 'RichTreeView') {
+    reExportPackage.push('@mui/x-tree-view-pro');
+  }
 
   return [
     `import { ${name} } from '${subdirectoryImportPath}';`,

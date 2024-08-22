@@ -53,7 +53,7 @@ export function calculateRangeChange<TDate extends PickerValidDate>({
   const truthyResult: CalculateRangeChangeResponse<TDate> = allowRangeFlip
     ? { nextSelection: 'end', newRange: [selectedDate, start!] }
     : { nextSelection: 'end', newRange: [selectedDate, null] };
-  return Boolean(start) && utils.isBefore(selectedDate!, start!)
+  return Boolean(start) && utils.isBeforeDay(selectedDate!, start!)
     ? truthyResult
     : { nextSelection: 'start', newRange: [start, selectedDate] };
 }

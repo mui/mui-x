@@ -1,13 +1,15 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { useTheme, styled, Theme, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { useRtl } from '@mui/system/RtlProvider';
+import { styled, useThemeProps } from '@mui/material/styles';
+import composeClasses from '@mui/utils/composeClasses';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { arrayIncludes } from '../internals/utils/utils';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils } from '../internals/hooks/useUtils';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import {
@@ -26,6 +28,11 @@ export interface TimePickerToolbarProps<TDate extends PickerValidDate>
   ampmInClock?: boolean;
 }
 
+interface TimePickerToolbarOwnerState<TDate extends PickerValidDate>
+  extends TimePickerToolbarProps<TDate> {
+  isRtl: boolean;
+}
+
 export interface ExportedTimePickerToolbarProps extends ExportedBaseToolbarProps {
   /**
    * Override or extend the styles applied to the component.
@@ -33,8 +40,8 @@ export interface ExportedTimePickerToolbarProps extends ExportedBaseToolbarProps
   classes?: Partial<TimePickerToolbarClasses>;
 }
 
-const useUtilityClasses = (ownerState: TimePickerToolbarProps<any> & { theme: Theme }) => {
-  const { theme, isLandscape, classes } = ownerState;
+const useUtilityClasses = (ownerState: TimePickerToolbarOwnerState<any>) => {
+  const { isLandscape, classes, isRtl } = ownerState;
 
   const slots = {
     root: ['root'],
@@ -42,7 +49,7 @@ const useUtilityClasses = (ownerState: TimePickerToolbarProps<any> & { theme: Th
     hourMinuteLabel: [
       'hourMinuteLabel',
       isLandscape && 'hourMinuteLabelLandscape',
-      theme.direction === 'rtl' && 'hourMinuteLabelReverse',
+      isRtl && 'hourMinuteLabelReverse',
     ],
     ampmSelection: ['ampmSelection', isLandscape && 'ampmLandscape'],
     ampmLabel: ['ampmLabel'],
@@ -80,32 +87,26 @@ const TimePickerToolbarHourMinuteLabel = styled('div', {
     styles.hourMinuteLabel,
   ],
 })<{
-  ownerState: TimePickerToolbarProps<any>;
-}>(({ theme, ownerState }) => ({
+  ownerState: TimePickerToolbarOwnerState<any>;
+}>({
   display: 'flex',
   justifyContent: 'flex-end',
   alignItems: 'flex-end',
-  ...(ownerState.isLandscape && {
-    marginTop: 'auto',
-  }),
-  ...(theme.direction === 'rtl' && {
-    flexDirection: 'row-reverse',
-  }),
-}));
-
-TimePickerToolbarHourMinuteLabel.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  as: PropTypes.elementType,
-  ownerState: PropTypes.object.isRequired,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-} as any;
+  variants: [
+    {
+      props: { isRtl: true },
+      style: {
+        flexDirection: 'row-reverse',
+      },
+    },
+    {
+      props: { isLandscape: true },
+      style: {
+        marginTop: 'auto',
+      },
+    },
+  ],
+});
 
 const TimePickerToolbarAmPmSelection = styled('div', {
   name: 'MuiTimePickerToolbar',
@@ -117,35 +118,26 @@ const TimePickerToolbarAmPmSelection = styled('div', {
   ],
 })<{
   ownerState: TimePickerToolbarProps<any>;
-}>(({ ownerState }) => ({
+}>({
   display: 'flex',
   flexDirection: 'column',
   marginRight: 'auto',
   marginLeft: 12,
-  ...(ownerState.isLandscape && {
-    margin: '4px 0 auto',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    flexBasis: '100%',
-  }),
   [`& .${timePickerToolbarClasses.ampmLabel}`]: {
     fontSize: 17,
   },
-}));
-
-TimePickerToolbarAmPmSelection.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  as: PropTypes.elementType,
-  ownerState: PropTypes.object.isRequired,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-} as any;
+  variants: [
+    {
+      props: { isLandscape: true },
+      style: {
+        margin: '4px 0 auto',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        flexBasis: '100%',
+      },
+    },
+  ],
+});
 
 /**
  * Demos:
@@ -174,17 +166,17 @@ function TimePickerToolbar<TDate extends PickerValidDate>(inProps: TimePickerToo
     ...other
   } = props;
   const utils = useUtils<TDate>();
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
+  const isRtl = useRtl();
 
-  const theme = useTheme();
   const showAmPmControl = Boolean(ampm && !ampmInClock && views.includes('hours'));
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
 
   const formatHours = (time: TDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
 
-  const ownerState = props;
-  const classes = useUtilityClasses({ ...ownerState, theme });
+  const ownerState: TimePickerToolbarOwnerState<TDate> = { ...props, isRtl };
+  const classes = useUtilityClasses(ownerState);
 
   const separator = (
     <TimePickerToolbarSeparator
@@ -199,7 +191,7 @@ function TimePickerToolbar<TDate extends PickerValidDate>(inProps: TimePickerToo
   return (
     <TimePickerToolbarRoot
       landscapeDirection="row"
-      toolbarTitle={localeText.timePickerToolbarTitle}
+      toolbarTitle={translations.timePickerToolbarTitle}
       isLandscape={isLandscape}
       ownerState={ownerState}
       className={clsx(classes.root, className)}
@@ -271,7 +263,7 @@ function TimePickerToolbar<TDate extends PickerValidDate>(inProps: TimePickerToo
 TimePickerToolbar.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   ampm: PropTypes.bool,
   ampmInClock: PropTypes.bool,

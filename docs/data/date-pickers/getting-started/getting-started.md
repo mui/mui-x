@@ -24,22 +24,26 @@ Using your favorite package manager, install:
 
 :::info
 If you need more information about the date library supported by the Date and Time Pickers,
-take a look at the [dedicated section](/x/react-date-pickers/#date-library)
+take a look at the [dedicated section](/x/react-date-pickers/base-concepts/#date-library)
 :::
 
 The Date and Time Pickers package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:
 
 <codeblock storageKey="package-manager">
+
 ```bash npm
 npm install @mui/material @emotion/react @emotion/styled
 ```
-```bash yarn
-yarn add @mui/material @emotion/react @emotion/styled
-```
+
 ```bash pnpm
 pnpm add @mui/material @emotion/react @emotion/styled
 ```
+
+```bash yarn
+yarn add @mui/material @emotion/react @emotion/styled
+```
+
 </codeblock>
 
 <!-- #react-peer-version -->
@@ -58,16 +62,17 @@ Please note that [react](https://www.npmjs.com/package/react) and [react-dom](ht
 Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
 
 <codeblock storageKey="package-manager">
+
 ```bash npm
 npm install @mui/styled-engine-sc styled-components
 ```
 
-```bash yarn
-yarn add @mui/styled-engine-sc styled-components
-```
-
 ```bash pnpm
 pnpm add @mui/styled-engine-sc styled-components
+```
+
+```bash yarn
+yarn add @mui/styled-engine-sc styled-components
 ```
 
 </codeblock>
@@ -81,7 +86,7 @@ This component receives your chosen [date library's adapter](https://mui.com/x/r
 
 Each demonstration in the documentation has its own `LocalizationProvider` wrapper.
 This is **not** a pattern to reproduce.
-The reason is to keep examples atomic and functional—especially when running in a CodeSandbox.
+The reason is to keep examples atomic and functional, especially when running in a CodeSandbox.
 
 The general recommendation is to declare the `LocalizationProvider` once, wrapping your entire application.
 Then, you don't need to repeat the boilerplate code for every Date and Time Picker in your application.

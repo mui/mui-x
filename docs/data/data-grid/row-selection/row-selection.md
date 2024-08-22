@@ -64,6 +64,13 @@ Always set the `checkboxSelection` prop to `true` even when providing a custom c
 Otherwise, the data grid might remove your column.
 :::
 
+### Visible rows selection [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+By default, when you click the "Select All" checkbox, all rows in the data grid are selected.
+If you want to change this behavior and only select the rows that are currently visible on the page, you can use the `checkboxSelectionVisibleOnly` prop.
+
+{{"demo": "CheckboxSelectionVisibleOnlyGrid.js", "bg": "inline"}}
+
 ## Usage with server-side pagination
 
 Using the controlled selection with `paginationMode="server"` may result in selected rows being lost when the page is changed.

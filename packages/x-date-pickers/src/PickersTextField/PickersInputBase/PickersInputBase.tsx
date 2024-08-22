@@ -6,7 +6,9 @@ import useForkRef from '@mui/utils/useForkRef';
 import { refType } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
+import useSlotProps from '@mui/utils/useSlotProps';
 import visuallyHidden from '@mui/utils/visuallyHidden';
+import { useRtl } from '@mui/system/RtlProvider';
 import {
   pickersInputBaseClasses,
   getPickersInputBaseUtilityClass,
@@ -26,7 +28,7 @@ export const PickersInputBaseRoot = styled('div', {
   name: 'MuiPickersInputBase',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => ({
+})<{ ownerState: OwnerStateType }>(({ theme }) => ({
   ...theme.typography.body1,
   color: (theme.vars || theme).palette.text.primary,
   cursor: 'text',
@@ -37,16 +39,19 @@ export const PickersInputBaseRoot = styled('div', {
   position: 'relative',
   boxSizing: 'border-box', // Prevent padding issue with fullWidth.
   letterSpacing: `${round(0.15 / 16)}em`,
-  ...(ownerState.fullWidth && {
-    width: '100%',
-  }),
+  variants: [
+    {
+      props: { fullWidth: true },
+      style: { width: '100%' },
+    },
+  ],
 }));
 
 export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, {
   name: 'MuiPickersInputBase',
   slot: 'SectionsContainer',
   overridesResolver: (props, styles) => styles.sectionsContainer,
-})<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => ({
+})<{ ownerState: OwnerStateType }>(({ theme }) => ({
   padding: '4px 0 5px',
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
@@ -59,22 +64,39 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
   letterSpacing: 'inherit',
   // Baseline behavior
   width: '182px',
-  ...(ownerState.size === 'small' && {
-    paddingTop: 1,
-  }),
-  ...(theme.direction === 'rtl' && { textAlign: 'right /*! @noflip */' as any }),
-  ...(!(ownerState.adornedStart || ownerState.focused || ownerState.filled) && {
-    color: 'currentColor',
-    ...(ownerState.label == null &&
-      (theme.vars
+  variants: [
+    {
+      props: { isRtl: true },
+      style: {
+        textAlign: 'right /*! @noflip */' as any,
+      },
+    },
+    {
+      props: { size: 'small' },
+      style: {
+        paddingTop: 1,
+      },
+    },
+    {
+      props: { adornedStart: false, focused: false, filled: false },
+      style: {
+        color: 'currentColor',
+        opacity: 0,
+      },
+    },
+    {
+      // Can't use the object notation because label can be null or undefined
+      props: ({ adornedStart, focused, filled, label }: OwnerStateType) =>
+        !adornedStart && !focused && !filled && label == null,
+      style: theme.vars
         ? {
             opacity: theme.vars.opacity.inputPlaceholder,
           }
         : {
             opacity: theme.palette.mode === 'light' ? 0.42 : 0.5,
-          })),
-    ...(ownerState.label != null && { opacity: 0 }),
-  }),
+          },
+    },
+  ],
 }));
 
 const PickersInputBaseSection = styled(PickersSectionListSection, {
@@ -158,7 +180,9 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
 
 interface OwnerStateType
   extends FormControlState,
-    Omit<PickersInputBaseProps, keyof FormControlState> {}
+    Omit<PickersInputBaseProps, keyof FormControlState> {
+  isRtl: boolean;
+}
 
 /**
  * @ignore - internal component.
@@ -185,6 +209,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     startAdornment,
     renderSuffix,
     slots,
+    slotProps,
     contentEditable,
     tabIndex,
     onInput,
@@ -202,7 +227,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   const rootRef = React.useRef<HTMLDivElement>(null);
   const handleRootRef = useForkRef(ref, rootRef);
   const handleInputRef = useForkRef(inputProps?.ref, inputRef);
-
+  const isRtl = useRtl();
   const muiFormControl = useFormControl();
   if (!muiFormControl) {
     throw new Error(
@@ -242,21 +267,28 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   const ownerState: OwnerStateType = {
     ...(props as Omit<PickersInputBaseProps, keyof FormControlState>),
     ...muiFormControl,
+    isRtl,
   };
 
   const classes = useUtilityClasses(ownerState);
 
   const InputRoot = slots?.root || PickersInputBaseRoot;
+  const inputRootProps = useSlotProps({
+    elementType: InputRoot,
+    externalSlotProps: slotProps?.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      'aria-invalid': muiFormControl.error,
+      ref: handleRootRef,
+    },
+    className: classes.root,
+    ownerState,
+  });
+
   const InputSectionsContainer = slots?.input || PickersInputBaseSectionsContainer;
 
   return (
-    <InputRoot
-      {...other}
-      className={classes.root}
-      ownerState={ownerState}
-      aria-invalid={muiFormControl.error}
-      ref={handleRootRef}
-    >
+    <InputRoot {...inputRootProps}>
       {startAdornment}
       <PickersSectionList
         sectionListRef={sectionListRef}
@@ -315,7 +347,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
 PickersInputBase.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Is `true` if the current values equals the empty value.
@@ -373,6 +405,11 @@ PickersInputBase.propTypes = {
       }),
     }),
   ]),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
   /**
    * The components used for each slot inside.
    *

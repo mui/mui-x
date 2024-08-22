@@ -76,7 +76,6 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const headerCellRef = React.useRef<HTMLDivElement>(null);
-  const [showColumnMenuIcon, setShowColumnMenuIcon] = React.useState(columnMenuOpen);
 
   const handleRef = useForkRef(headerCellRef, ref);
 
@@ -85,19 +84,15 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
     ariaSort = sortDirection === 'asc' ? 'ascending' : 'descending';
   }
 
-  React.useEffect(() => {
-    if (!showColumnMenuIcon) {
-      setShowColumnMenuIcon(columnMenuOpen);
-    }
-  }, [showColumnMenuIcon, columnMenuOpen]);
-
   React.useLayoutEffect(() => {
     const columnMenuState = apiRef.current.state.columnMenu;
     if (hasFocus && !columnMenuState.open) {
       const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || headerCellRef.current;
       elementToFocus?.focus();
-      apiRef.current.columnHeadersContainerRef!.current!.scrollLeft = 0;
+      if (apiRef.current.columnHeadersContainerRef?.current) {
+        apiRef.current.columnHeadersContainerRef.current.scrollLeft = 0;
+      }
     }
   }, [apiRef, hasFocus]);
 

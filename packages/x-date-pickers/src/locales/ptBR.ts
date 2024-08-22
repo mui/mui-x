@@ -25,10 +25,10 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Início',
   end: 'Fim',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Data de início',
+  startTime: 'Hora de início',
+  endDate: 'Data de Término',
+  endTime: 'Hora de Término',
 
   // Action bar
   cancelButtonLabel: 'Cancelar',
@@ -84,17 +84,17 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'Ano',
+  month: 'Mês',
+  day: 'Dia',
+  weekDay: 'Dia da Semana',
+  hours: 'Horas',
+  minutes: 'Minutos',
+  seconds: 'Segundos',
+  meridiem: 'Meio dia',
 
   // Common
-  // empty: 'Empty',
+  empty: 'Vazio',
 };
 
 export const ptBR = getPickersLocalization(ptBRPickers);

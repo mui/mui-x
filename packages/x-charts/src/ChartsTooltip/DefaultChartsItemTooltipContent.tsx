@@ -11,43 +11,48 @@ import {
 } from './ChartsTooltipTable';
 import type { ChartsItemContentProps } from './ChartsItemTooltipContent';
 import { CommonSeriesType } from '../models/seriesType/common';
+import { getLabel } from '../internals/getLabel';
 
 function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeriesType>(
   props: ChartsItemContentProps<T>,
 ) {
-  const { series, itemData, sx, classes } = props;
+  const { series, itemData, sx, classes, getColor } = props;
 
-  if (itemData.dataIndex === undefined) {
+  if (itemData.dataIndex === undefined || !series.data[itemData.dataIndex]) {
     return null;
   }
   const { displayedLabel, color } =
     series.type === 'pie'
       ? {
-          color: series.data[itemData.dataIndex].color,
-          displayedLabel: series.data[itemData.dataIndex].label,
+          color: getColor(itemData.dataIndex),
+          displayedLabel: getLabel(series.data[itemData.dataIndex].label, 'tooltip'),
         }
       : {
-          color: series.color,
-          displayedLabel: series.label,
+          color: getColor(itemData.dataIndex),
+          displayedLabel: getLabel(series.label, 'tooltip'),
         };
 
-  const value = series.data[itemData.dataIndex];
+  const value =
+    series.type === 'pie'
+      ? {
+          ...series.data[itemData.dataIndex],
+          label: getLabel(series.data[itemData.dataIndex].label, 'tooltip'),
+        }
+      : series.data[itemData.dataIndex];
   const formattedValue = (
     series.valueFormatter as CommonSeriesType<typeof value>['valueFormatter']
-  )?.(value);
+  )?.(value, { dataIndex: itemData.dataIndex });
   return (
     <ChartsTooltipPaper sx={sx} className={classes.root}>
       <ChartsTooltipTable className={classes.table}>
         <tbody>
           <ChartsTooltipRow className={classes.row}>
             <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
-              <ChartsTooltipMark ownerState={{ color }} className={classes.mark} />
+              <ChartsTooltipMark color={color} className={classes.mark} />
             </ChartsTooltipCell>
-
             <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
               {displayedLabel}
             </ChartsTooltipCell>
-
             <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
               {formattedValue}
             </ChartsTooltipCell>
@@ -61,12 +66,18 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
 DefaultChartsItemTooltipContent.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object.isRequired,
+  /**
+   * Get the color of the item with index `dataIndex`.
+   * @param {number} dataIndex The data index of the item.
+   * @returns {string} The color to display.
+   */
+  getColor: PropTypes.func.isRequired,
   /**
    * The data used to identify the triggered item.
    */

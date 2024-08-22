@@ -1,6 +1,11 @@
 import * as React from 'react';
-import { ChartContainer } from '@mui/x-charts';
-import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import {
+  LinePlot,
+  MarkPlot,
+  lineElementClasses,
+  markElementClasses,
+} from '@mui/x-charts/LineChart';
 
 const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
 const xLabels = [
@@ -21,11 +26,11 @@ export default function TinyLineChart() {
       series={[{ type: 'line', data: pData }]}
       xAxis={[{ scaleType: 'point', data: xLabels }]}
       sx={{
-        '.MuiLineElement-root': {
+        [`& .${lineElementClasses.root}`]: {
           stroke: '#8884d8',
           strokeWidth: 2,
         },
-        '.MuiMarkElement-root': {
+        [`& .${markElementClasses.root}`]: {
           stroke: '#8884d8',
           scale: '0.6',
           fill: '#fff',

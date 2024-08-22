@@ -1,40 +1,67 @@
-import { ExtremumGetter, ExtremumGetterResult } from '../models/seriesType/config';
+import { ExtremumGetter } from '../context/PluginProvider/ExtremumGetter.types';
+
+const createResult = (data: any, direction: 'x' | 'y') => {
+  if (direction === 'x') {
+    return { x: data, y: null };
+  }
+  return { x: null, y: data };
+};
 
 const getBaseExtremum: ExtremumGetter<'bar'> = (params) => {
-  const { axis } = params;
+  const { axis, getFilters, isDefaultAxis } = params;
 
-  const minX = Math.min(...(axis.data ?? []));
-  const maxX = Math.max(...(axis.data ?? []));
+  const filter = getFilters?.({
+    currentAxisId: axis.id,
+    isDefaultAxis,
+  });
+
+  const data = filter ? axis.data?.filter((_, i) => filter({ x: null, y: null }, i)) : axis.data;
+  const minX = Math.min(...(data ?? []));
+  const maxX = Math.max(...(data ?? []));
   return [minX, maxX];
 };
 
-const getValueExtremum: ExtremumGetter<'bar'> = (params) => {
-  const { series, axis, isDefaultAxis } = params;
+const getValueExtremum =
+  (direction: 'x' | 'y'): ExtremumGetter<'bar'> =>
+  (params) => {
+    const { series, axis, getFilters, isDefaultAxis } = params;
 
-  return Object.keys(series)
-    .filter(
-      (seriesId) =>
-        series[seriesId].yAxisKey === axis.id ||
-        (isDefaultAxis && series[seriesId].yAxisKey === undefined),
-    )
-    .reduce(
-      (acc: ExtremumGetterResult, seriesId) => {
-        const [seriesMin, seriesMax] = series[seriesId].stackedData.reduce(
-          (seriesAcc, values) => [
-            Math.min(...values, ...(seriesAcc[0] === null ? [] : [seriesAcc[0]])),
-            Math.max(...values, ...(seriesAcc[1] === null ? [] : [seriesAcc[1]])),
-          ],
-          series[seriesId].stackedData[0],
-        );
+    return Object.keys(series)
+      .filter((seriesId) => {
+        const yAxisId = series[seriesId].yAxisId ?? series[seriesId].yAxisKey;
+        return yAxisId === axis.id || (isDefaultAxis && yAxisId === undefined);
+      })
+      .reduce(
+        (acc, seriesId) => {
+          const { stackedData } = series[seriesId];
 
-        return [
-          acc[0] === null ? seriesMin : Math.min(seriesMin, acc[0]),
-          acc[1] === null ? seriesMax : Math.max(seriesMax, acc[1]),
-        ];
-      },
-      [null, null],
-    );
-};
+          const filter = getFilters?.({
+            currentAxisId: axis.id,
+            isDefaultAxis,
+            seriesXAxisId: series[seriesId].xAxisId ?? series[seriesId].xAxisKey,
+            seriesYAxisId: series[seriesId].yAxisId ?? series[seriesId].yAxisKey,
+          });
+
+          const [seriesMin, seriesMax] = stackedData?.reduce(
+            (seriesAcc, values, index) => {
+              if (
+                filter &&
+                (!filter(createResult(values[0], direction), index) ||
+                  !filter(createResult(values[1], direction), index))
+              ) {
+                return seriesAcc;
+              }
+
+              return [Math.min(...values, seriesAcc[0]), Math.max(...values, seriesAcc[1])];
+            },
+            [Infinity, -Infinity],
+          ) ?? [Infinity, -Infinity];
+
+          return [Math.min(seriesMin, acc[0]), Math.max(seriesMax, acc[1])];
+        },
+        [Infinity, -Infinity],
+      );
+  };
 
 export const getExtremumX: ExtremumGetter<'bar'> = (params) => {
   // Notice that bar should be all horizontal or all vertical.
@@ -43,7 +70,7 @@ export const getExtremumX: ExtremumGetter<'bar'> = (params) => {
     (seriesId) => params.series[seriesId].layout === 'horizontal',
   );
   if (isHorizontal) {
-    return getValueExtremum(params);
+    return getValueExtremum('x')(params);
   }
   return getBaseExtremum(params);
 };
@@ -55,5 +82,5 @@ export const getExtremumY: ExtremumGetter<'bar'> = (params) => {
   if (isHorizontal) {
     return getBaseExtremum(params);
   }
-  return getValueExtremum(params);
+  return getValueExtremum('y')(params);
 };

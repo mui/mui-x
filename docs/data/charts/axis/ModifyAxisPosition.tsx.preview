@@ -2,7 +2,7 @@
   {...params}
   leftAxis={null}
   bottomAxis={null}
-  topAxis={DEFAULT_X_AXIS_KEY}
-  rightAxis={DEFAULT_Y_AXIS_KEY}
+  topAxis={{}}
+  rightAxis={{}}
   margin={{ top: 30, bottom: 10 }}
 />

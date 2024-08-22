@@ -18,8 +18,10 @@ In `package.json`, change the version of the data grid package to `^7.0.0`.
 ```diff
 -"@mui/x-data-grid": "6.x.x",
 +"@mui/x-data-grid": "^7.0.0",
+
 -"@mui/x-data-grid-pro": "6.x.x",
 +"@mui/x-data-grid-pro": "^7.0.0",
+
 -"@mui/x-data-grid-premium": "6.x.x",
 +"@mui/x-data-grid-premium": "^7.0.0",
 ```
@@ -57,12 +59,14 @@ You can run `v7.0.0/data-grid/preset-safe` targeting only Data Grid or `v7.0.0/p
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
+<!-- #default-branch-switch -->
+
 ```bash
 // Data Grid specific
-npx @mui/x-codemod v7.0.0/data-grid/preset-safe <path>
+npx @mui/x-codemod@latest v7.0.0/data-grid/preset-safe <path>
 
 // Target other MUI X components as well
-npx @mui/x-codemod v7.0.0/preset-safe <path>
+npx @mui/x-codemod@latest v7.0.0/preset-safe <path>
 ```
 
 :::info
@@ -97,19 +101,53 @@ Below are described the steps you need to make to migrate from v6 to v7.
 
 ### Drop the legacy bundle
 
-The support for IE11 has been removed from all MUI X packages.
-The `legacy` bundle that used to support old browsers like IE11 is no longer included.
+The support for IE 11 has been removed from all MUI X packages.
+The `legacy` bundle that used to support old browsers like IE 11 is no longer included.
 
 :::info
-If you need support for IE11, you will need to keep using the latest version of the `v6` release.
+If you need support for IE 11, you will need to keep using the latest version of the `v6` release.
 :::
+
+### Drop Webpack 4 support
+
+Dropping old browsers support also means that we no longer transpile some features that are natively supported by modern browsers – like [Nullish Coalescing](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing) and [Optional Chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining).
+
+These features are not supported by Webpack 4, so if you are using Webpack 4, you will need to transpile these features yourself or upgrade to Webpack 5.
+
+Here is an example of how you can transpile these features on Webpack 4 using the `@babel/preset-env` preset:
+
+```diff
+ // webpack.config.js
+
+ module.exports = (env) => ({
+   // ...
+   module: {
+     rules: [
+       {
+         test: /\.[jt]sx?$/,
+-        exclude: /node_modules/,
++        exclude: [
++          {
++            test: path.resolve(__dirname, 'node_modules'),
++            exclude: [
++              // Covers @mui/x-data-grid, @mui/x-data-grid-pro, and @mui/x-data-grid-premium
++              path.resolve(__dirname, 'node_modules/@mui/x-data-grid'),
++              path.resolve(__dirname, 'node_modules/@mui/x-license'),
++            ],
++          },
++        ],
+       },
+     ],
+   },
+ });
+```
 
 ### DOM changes
 
 The Data Grid's layout has been substantially altered to use CSS sticky positioned elements.
 As a result, the following changes have been made:
 
-- The main element now corresponds to the virtal scroller element.
+- The main element now corresponds to the virtual scroller element.
 - Headers are now contained in the virtual scroller.
 - Pinned row and column sections are now contained in the virtual scroller.
 - The cell inner wrapper `.MuiDataGrid-cellContent` has been removed.
@@ -164,8 +202,8 @@ Here's the list of affected features, column definition flags and props to disab
 Some selectors now require passing `instanceId` as a second argument:
 
 ```diff
-- gridColumnFieldsSelector(apiRef.current.state);
-+ gridColumnFieldsSelector(apiRef.current.state, apiRef.current.instanceId);
+-gridColumnFieldsSelector(apiRef.current.state);
++gridColumnFieldsSelector(apiRef.current.state, apiRef.current.instanceId);
 ```
 
 However, it's preferable to pass the `apiRef` as the first argument instead:
@@ -203,9 +241,9 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 
 - The type `GridPinnedPosition` has been renamed to `GridPinnedColumnPosition`.
 
-- The column grouping API methods `getColumnGroupPath` and `getAllGroupDetails` are not anymore prefixed with `unstable_`.
+- The column grouping API methods `getColumnGroupPath` and `getAllGroupDetails` are no longer prefixed with `unstable_`.
 
-- The column grouping selectors `gridFocusColumnGroupHeaderSelector` and `gridTabIndexColumnGroupHeaderSelector` are not anymore prefixed with `unstable_`.
+- The column grouping selectors `gridFocusColumnGroupHeaderSelector` and `gridTabIndexColumnGroupHeaderSelector` are no longer prefixed with `unstable_`.
 
 - The columns management component has been redesigned and the component is extracted from the `ColumnsPanel` which now only serves as a wrapper to display the component over the headers as a panel. As a result, a new slot `columnsManagement`, and corresponding prop `slotProps.columnsManagement` have been introduced. The props corresponding to the columns management component which were previously passed to the prop `slotProps.columnsPanel` should now be passed to `slotProps.columnsManagement`. `slotProps.columnsPanel` could still be used to override props corresponding to the `Panel` component used in `ColumnsPanel` which uses [`Popper`](/material-ui/react-popper/) component under the hood.
 
@@ -226,83 +264,83 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 - The signature of `GridColDef['valueGetter']` has been changed for performance reasons:
 
   ```diff
-  - valueGetter: ({ value, row }) => value,
-  + valueGetter: (value, row, column, apiRef) => value,
+  -valueGetter: ({ value, row }) => value,
+  +valueGetter: (value, row, column, apiRef) => value,
   ```
 
   The `GridValueGetterParams` interface has been removed:
 
   ```diff
-  - const customValueGetter = (params: GridValueGetterParams) => params.row.budget;
-  + const customValueGetter: GridValueGetterFn = (value, row) => row.budget;
+  -const customValueGetter = (params: GridValueGetterParams) => params.row.budget;
+  +const customValueGetter: GridValueGetterFn = (value, row) => row.budget;
   ```
 
 - The signature of `GridColDef['valueFormatter']` has been changed for performance reasons:
 
   ```diff
-  - valueFormatter: ({ value }) => value,
-  + valueFormatter: (value, row, column, apiRef) => value,
+  -valueFormatter: ({ value }) => value,
+  +valueFormatter: (value, row, column, apiRef) => value,
   ```
 
   The `GridValueFormatterParams` interface has been removed:
 
   ```diff
-  - const gridDateFormatter = ({ value, field, id }: GridValueFormatterParams<Date>) => value.toLocaleDateString();
-  + const gridDateFormatter: GridValueFormatter = (value: Date) => value.toLocaleDateString();
+  -const gridDateFormatter = ({ value, field, id }: GridValueFormatterParams<Date>) => value.toLocaleDateString();
+  +const gridDateFormatter: GridValueFormatter = (value: Date) => value.toLocaleDateString();
   ```
 
 - The signature of `GridColDef['valueSetter']` has been changed for performance reasons:
 
   ```diff
-  - valueSetter: (params) => {
-  -   const [firstName, lastName] = params.value!.toString().split(' ');
-  -   return { ...params.row, firstName, lastName };
-  - }
-  + valueSetter: (value, row) => {
-  +   const [firstName, lastName] = value!.toString().split(' ');
-  +   return { ...row, firstName, lastName };
+  -valueSetter: (params) => {
+  -  const [firstName, lastName] = params.value!.toString().split(' ');
+  -  return { ...params.row, firstName, lastName };
+  -}
+  +valueSetter: (value, row) => {
+  +  const [firstName, lastName] = value!.toString().split(' ');
+  +  return { ...row, firstName, lastName };
   +}
   ```
 
   The `GridValueSetterParams` interface has been removed:
 
   ```diff
-  - const setFullName = (params: GridValueSetterParams) => {
-  -   const [firstName, lastName] = params.value!.toString().split(' ');
-  -   return { ...params.row, firstName, lastName };
-  - };
-  + const setFullName: GridValueSetter<Row> = (value, row) => {
-  +   const [firstName, lastName] = value!.toString().split(' ');
-  +   return { ...row, firstName, lastName };
-  + }
+  -const setFullName = (params: GridValueSetterParams) => {
+  -  const [firstName, lastName] = params.value!.toString().split(' ');
+  -  return { ...params.row, firstName, lastName };
+  -};
+  +const setFullName: GridValueSetter<Row> = (value, row) => {
+  +  const [firstName, lastName] = value!.toString().split(' ');
+  +  return { ...row, firstName, lastName };
+  +}
   ```
 
 - The signature of `GridColDef['valueParser']` has been changed for performance reasons:
 
   ```diff
-  - valueParser: (value, params: GridCellParams) => value.toLowerCase(),
-  + valueParser: (value, row, column, apiRef) => value.toLowerCase(),
+  -valueParser: (value, params: GridCellParams) => value.toLowerCase(),
+  +valueParser: (value, row, column, apiRef) => value.toLowerCase(),
   ```
 
 - The signature of `GridColDef['colSpan']` has been changed for performance reasons:
 
   ```diff
-  - colSpan: ({ row, field, value }: GridCellParams) => (row.id === 'total' ? 2 : 1),
-  + colSpan: (value, row, column, apiRef) => (row.id === 'total' ? 2 : 1),
+  -colSpan: ({ row, field, value }: GridCellParams) => (row.id === 'total' ? 2 : 1),
+  +colSpan: (value, row, column, apiRef) => (row.id === 'total' ? 2 : 1),
   ```
 
 - The signature of `GridColDef['pastedValueParser']` has been changed for performance reasons:
 
   ```diff
-  - pastedValueParser: (value, params) => new Date(value),
-  + pastedValueParser: (value, row, column, apiRef) => new Date(value),
+  -pastedValueParser: (value, params) => new Date(value),
+  +pastedValueParser: (value, row, column, apiRef) => new Date(value),
   ```
 
 - The signature of `GridColDef['groupingValueGetter']` has been changed for performance reasons:
 
   ```diff
-  - groupingValueGetter: (params) => params.value.name,
-  + groupingValueGetter: (value: { name: string }) => value.name,
+  -groupingValueGetter: (params) => params.value.name,
+  +groupingValueGetter: (value: { name: string }, row, column, apiRef) => value.name,
   ```
 
 ### Density
@@ -371,7 +409,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 
 ### Filtering
 
-- The `getApplyFilterFnV7` in `GridFilterOperator` was renamed to `getApplyFilterFn`.
+- The `getApplyFilterFnV7` in `GridFilterOperator` has been renamed to `getApplyFilterFn`.
   If you use `getApplyFilterFnV7` directly - rename it to `getApplyFilterFn`.
 
 - The signature of the function returned by `getApplyFilterFn` has changed for performance reasons:
@@ -505,11 +543,27 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 - You can now style a row's hover state using just `:hover` instead of `.Mui-hovered`.
 - The `.MuiDataGrid--pinnedColumns-(left\|right)` class for pinned columns has been removed.
 - The `.MuiDataGrid-cell--withRenderer` class has been removed.
-- The cell element isn't `display: flex` by default. You can add `display: 'flex'` on the column definition to restore the behavior. This also means cells aren't vertically centered by default anymore, so if you have dynamic row height, you might want to set the `display: 'flex'` for all non-dynamic columns.
+- The cell element isn't `display: flex` by default. You can add `display: 'flex'` on the column definition to restore the behavior.
+
+  **NOTE**: If you're using **dynamic row height**, this also means cells aren't vertically centered by default anymore, you might want to set the `display: 'flex'` for all non-dynamic columns. This may also affect text-ellipsis, which you can restore by adding your own wrapper with `text-overflow: ellipsis`.
+
+  ```tsx
+  {
+    display: 'flex',
+    renderCell: ({ value }) => (
+      <div style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        {value}
+      </div>
+    ),
+  },
+  ```
+
 - The `columnHeader--showColumnBorder` class was replaced by `columnHeader--withLeftBorder` and `columnHeader--withRightBorder`.
 - The `columnHeadersInner`, `columnHeadersInner--scrollable`, and `columnHeaderDropZone` classes were removed since the inner wrapper was removed in our effort to simplify the DOM structure and improve accessibility.
-- The `pinnedColumnHeaders`, `pinnedColumnHeaders--left`, and `pinnedColumnHeaders--right` classes were removed along with the element they were applied to.
+- The `pinnedColumnHeaders`, `pinnedColumnHeaders--left`, and `pinnedColumnHeaders--right` classes have been removed along with the element they were applied to.
   The pinned column headers now use `position: 'sticky'` and are rendered in the same row element as the regular column headers.
+- The column headers and pinned section now require an explicit color. By default, the MUI `theme.palette.background.default` color will be used. To customize it, see https://mui.com/material-ui/customization/palette/#customization
+  We will be adding a new color name to the palette for additional customization, read [#12443](https://github.com/mui/mui-x/issues/12443) for more details.
 
 ### Changes to the public API
 

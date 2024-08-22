@@ -1,13 +1,45 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen } from '@mui-internal/test-utils';
-import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
+import { screen } from '@mui/internal-test-utils';
+import {
+  createPickerRenderer,
+  adapterToUse,
+  openPicker,
+  getFieldSectionsContainer,
+  expectFieldValueV7,
+} from 'test/utils/pickers';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
 
 describe('<DesktopDateTimeRangePicker />', () => {
   const { render } = createPickerRenderer({
     clock: 'fake',
     clockConfig: new Date(2018, 0, 10, 10, 16, 0),
+  });
+
+  describe('value selection', () => {
+    it('should allow to select range within the same day', () => {
+      render(<DesktopDateTimeRangePicker enableAccessibleFieldDOMStructure />);
+
+      openPicker({ type: 'date-time-range', variant: 'desktop', initialFocus: 'start' });
+
+      // select start date range
+      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '11' }));
+      fireUserEvent.mousePress(screen.getByRole('option', { name: '4 hours' }));
+      fireUserEvent.mousePress(screen.getByRole('option', { name: '5 minutes' }));
+      fireUserEvent.mousePress(screen.getByRole('option', { name: 'PM' }));
+
+      // select end date range on the same day
+      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '11' }));
+      fireUserEvent.mousePress(screen.getByRole('option', { name: '5 hours' }));
+      fireUserEvent.mousePress(screen.getByRole('option', { name: '10 minutes' }));
+      fireUserEvent.mousePress(screen.getByRole('option', { name: 'PM' }));
+
+      const startSectionsContainer = getFieldSectionsContainer(0);
+      const endSectionsContainer = getFieldSectionsContainer(1);
+      expect(expectFieldValueV7(startSectionsContainer, '01/11/2018 04:05 PM'));
+      expect(expectFieldValueV7(endSectionsContainer, '01/11/2018 05:10 PM'));
+    });
   });
 
   describe('disabled dates', () => {

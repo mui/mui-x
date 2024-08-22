@@ -12,7 +12,7 @@ packageName: '@mui/x-date-pickers'
 
 ## Getting started
 
-The default locale of MUI X is English (United States). If you want to use other locales—follow the instructions below.
+The default locale of MUI X is English (United States). If you want to use other locales, follow the instructions below.
 
 :::warning
 This page focuses on date format localization.
@@ -78,6 +78,14 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 ```
 
 {{"demo": "LocalizationLuxon.js"}}
+
+:::warning
+`AdapterLuxon` does not support `Settings.throwOnInvalid = true` [setting](https://moment.github.io/luxon/api-docs/index.html#settingsthrowoninvalid).
+
+👍 Upvote [issue #11853](https://github.com/mui/mui-x/issues/11853) if you need support for it.
+
+Don't hesitate to leave feedback on how you would like the data entry to behave.
+:::
 
 ### With `moment`
 

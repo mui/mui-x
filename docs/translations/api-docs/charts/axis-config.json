@@ -1,0 +1,41 @@
+{
+  "interfaceDescription": "",
+  "propertiesDescriptions": {
+    "id": { "description": "Id used to identify the axis." },
+    "scaleType": { "description": "" },
+    "colorMap": { "description": "" },
+    "data": {
+      "description": "The data used by <code>&#39;band&#39;</code> and <code>&#39;point&#39;</code> scales."
+    },
+    "dataKey": {
+      "description": "The key used to retrieve <code>data</code> from the <code>dataset</code> prop."
+    },
+    "hideTooltip": { "description": "If <code>true</code>, hide this value in the tooltip" },
+    "max": {
+      "description": "The maximal value of the domain.<br />If not provided, it gets computed to display the entire chart data."
+    },
+    "min": {
+      "description": "The minimal value of the domain.<br />If not provided, it gets computed to display the entire chart data."
+    },
+    "reverse": { "description": "If <code>true</code>, Reverse the axis scaleBand." },
+    "tickInterval": {
+      "description": "Defines which ticks are displayed.<br />Its value can be:<br />- &#39;auto&#39; In such case the ticks are computed based on axis scale and other parameters.<br />- a filtering function of the form <code>(value, index) =&amp;gt; boolean</code> which is available only if the axis has &quot;point&quot; scale.<br />- an array containing the values where ticks should be displayed."
+    },
+    "tickLabelPlacement": {
+      "description": "The placement of ticks label. Can be the middle of the band, or the tick position.<br />Only used if scale is &#39;band&#39;."
+    },
+    "tickMaxStep": {
+      "description": "Maximal step between two ticks.<br />When using time data, the value is assumed to be in ms.<br />Not supported by categorical axis (band, points)."
+    },
+    "tickMinStep": {
+      "description": "Minimal step between two ticks.<br />When using time data, the value is assumed to be in ms.<br />Not supported by categorical axis (band, points)."
+    },
+    "tickNumber": {
+      "description": "The number of ticks. This number is not guaranteed.<br />Not supported by categorical axis (band, points)."
+    },
+    "tickPlacement": {
+      "description": "The placement of ticks in regard to the band interval.<br />Only used if scale is &#39;band&#39;."
+    },
+    "valueFormatter": { "description": "Formats the axis value." }
+  }
+}

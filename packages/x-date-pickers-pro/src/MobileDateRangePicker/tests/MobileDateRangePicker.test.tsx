@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { screen, userEvent, fireEvent } from '@mui-internal/test-utils';
+import { screen, fireEvent } from '@mui/internal-test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import {
   createPickerRenderer,
@@ -9,10 +9,32 @@ import {
   openPicker,
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
+import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
 describe('<MobileDateRangePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
+
+  describe('Field slot: SingleInputDateRangeField', () => {
+    it('should render the input with a given `name` when `SingleInputDateRangeField` is used', () => {
+      // Test with v7 input
+      const { unmount } = render(
+        <MobileDateRangePicker
+          name="test"
+          enableAccessibleFieldDOMStructure
+          slots={{ field: SingleInputDateRangeField }}
+        />,
+      );
+      expect(screen.getByRole<HTMLInputElement>('textbox', { hidden: true }).name).to.equal('test');
+
+      unmount();
+
+      // Test with v6 input
+      render(<MobileDateRangePicker name="test" slots={{ field: SingleInputDateRangeField }} />);
+      expect(screen.getByRole<HTMLInputElement>('textbox').name).to.equal('test');
+    });
+  });
 
   describe('picker state', () => {
     it('should open when focusing the start input', () => {
@@ -63,13 +85,13 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the start date
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
+      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
 
       // Change the end date
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '5' }));
+      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '5' }));
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
@@ -104,7 +126,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the end date
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
+      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
@@ -133,7 +155,7 @@ describe('<MobileDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'end' });
 
       // Change the end date
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
+      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
 
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
@@ -164,10 +186,10 @@ describe('<MobileDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
       // Change the start date (already tested)
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
+      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
 
       // Cancel the modifications
-      userEvent.mousePress(screen.getByText(/cancel/i));
+      fireUserEvent.mousePress(screen.getByText(/cancel/i));
       expect(onChange.callCount).to.equal(2); // Start date change + reset
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
@@ -197,10 +219,10 @@ describe('<MobileDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
       // Change the start date (already tested)
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
+      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
 
       // Accept the modifications
-      userEvent.mousePress(screen.getByText(/ok/i));
+      fireUserEvent.mousePress(screen.getByText(/ok/i));
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
@@ -231,7 +253,7 @@ describe('<MobileDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
       // Clear the date
-      userEvent.mousePress(screen.getByText(/clear/i));
+      fireUserEvent.mousePress(screen.getByText(/clear/i));
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onChange.lastCall.args[0]).to.deep.equal([null, null]);
       expect(onAccept.callCount).to.equal(1);
@@ -258,7 +280,7 @@ describe('<MobileDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
       // Clear the date
-      userEvent.mousePress(screen.getByText(/clear/i));
+      fireUserEvent.mousePress(screen.getByText(/clear/i));
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);

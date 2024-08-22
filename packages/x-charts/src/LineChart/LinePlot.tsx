@@ -1,8 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { line as d3Line } from 'd3-shape';
-import { SeriesContext } from '../context/SeriesContextProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
+import { useCartesianContext } from '../context/CartesianProvider';
 import {
   LineElement,
   LineElementProps,
@@ -13,6 +12,9 @@ import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
+import { useChartGradient } from '../internals/components/ChartsAxesGradients';
+import { useLineSeries } from '../hooks/useSeries';
+import { AxisId } from '../models/axis';
 
 export interface LinePlotSlots extends LineElementSlots {}
 
@@ -33,8 +35,8 @@ export interface LinePlotProps
 }
 
 const useAggregatedData = () => {
-  const seriesData = React.useContext(SeriesContext).line;
-  const axisData = React.useContext(CartesianContext);
+  const seriesData = useLineSeries();
+  const axisData = useCartesianContext();
 
   if (seriesData === undefined) {
     return [];
@@ -48,6 +50,8 @@ const useAggregatedData = () => {
   return stackingGroups.flatMap(({ ids: groupIds }) => {
     return groupIds.flatMap((seriesId) => {
       const {
+        xAxisId: xAxisIdProp,
+        yAxisId: yAxisIdProp,
         xAxisKey = defaultXAxisId,
         yAxisKey = defaultYAxisId,
         stackedData,
@@ -55,23 +59,31 @@ const useAggregatedData = () => {
         connectNulls,
       } = series[seriesId];
 
-      const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
-      const yScale = yAxis[yAxisKey].scale;
-      const xData = xAxis[xAxisKey].data;
+      const xAxisId = xAxisIdProp ?? xAxisKey;
+      const yAxisId = yAxisIdProp ?? yAxisKey;
+
+      const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
+      const yScale = yAxis[yAxisId].scale;
+      const xData = xAxis[xAxisId].data;
+
+      const gradientUsed: [AxisId, 'x' | 'y'] | undefined =
+        (yAxis[yAxisId].colorScale && [yAxisId, 'y']) ||
+        (xAxis[xAxisId].colorScale && [xAxisId, 'x']) ||
+        undefined;
 
       if (process.env.NODE_ENV !== 'production') {
         if (xData === undefined) {
           throw new Error(
-            `MUI X Charts: ${
-              xAxisKey === DEFAULT_X_AXIS_KEY
+            `MUI X: ${
+              xAxisId === DEFAULT_X_AXIS_KEY
                 ? 'The first `xAxis`'
-                : `The x-axis with id "${xAxisKey}"`
+                : `The x-axis with id "${xAxisId}"`
             } should have data property to be able to display a line plot.`,
           );
         }
         if (xData.length < stackedData.length) {
           throw new Error(
-            `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
+            `MUI X: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
           );
         }
       }
@@ -90,6 +102,7 @@ const useAggregatedData = () => {
       const d = linePath.curve(getCurveFactory(series[seriesId].curve))(d3Data) || '';
       return {
         ...series[seriesId],
+        gradientUsed,
         d,
         seriesId,
       };
@@ -110,18 +123,18 @@ const useAggregatedData = () => {
 function LinePlot(props: LinePlotProps) {
   const { slots, slotProps, skipAnimation, onItemClick, ...other } = props;
 
+  const getGradientId = useChartGradient();
   const completedData = useAggregatedData();
-
   return (
     <g {...other}>
-      {completedData.map(({ d, seriesId, color, highlightScope }) => {
+      {completedData.map(({ d, seriesId, color, gradientUsed }) => {
         return (
           <LineElement
             key={seriesId}
             id={seriesId}
             d={d}
             color={color}
-            highlightScope={highlightScope}
+            gradientId={gradientUsed && getGradientId(...gradientUsed)}
             skipAnimation={skipAnimation}
             slots={slots}
             slotProps={slotProps}
@@ -136,7 +149,7 @@ function LinePlot(props: LinePlotProps) {
 LinePlot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Callback fired when a line item is clicked.

@@ -1,0 +1,13 @@
+<BarChart
+  xAxis={[
+    {
+      scaleType: 'band',
+      dataKey: 'code',
+      valueFormatter: (code, context) =>
+        context.location === 'tick'
+          ? code
+          : `Country: ${dataset.find((d) => d.code === code)?.name} (${code})`,
+    },
+  ]}
+  {...chartParams}
+/>

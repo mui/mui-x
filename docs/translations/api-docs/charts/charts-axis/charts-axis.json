@@ -34,7 +34,7 @@
     "tick": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks" },
     "tickContainer": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "group ingruding the tick and its label"
+      "nodeName": "group including the tick and its label"
     },
     "tickLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks label" },
     "top": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the top axis" }

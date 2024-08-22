@@ -1,11 +1,11 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { styled } from '@mui/system';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass, gridClasses } from '../constants';
@@ -19,7 +19,6 @@ import { GridScrollParams } from '../models/params/gridScrollParams';
 import { GridEventListener } from '../models/events';
 import { useTimeout } from '../hooks/utils/useTimeout';
 import { getTotalHeaderHeight } from '../hooks/features/columns/gridColumnsUtils';
-import { fastMemo } from '../utils/fastMemo';
 
 const CLIFF = 1;
 const SLOP = 1.5;
@@ -97,7 +96,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   const rootProps = useGridRootProps();
   const ownerState = { ...rootProps, scrollDirection };
   const classes = useUtilityClasses(ownerState);
-  const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight);
+  const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps);
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * densityFactor);
 
   const style: React.CSSProperties = {
@@ -170,14 +169,4 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   );
 }
 
-GridScrollAreaRaw.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  scrollDirection: PropTypes.oneOf(['left', 'right']).isRequired,
-} as any;
-
-const GridScrollArea = fastMemo(GridScrollAreaRaw);
-
-export { GridScrollArea };
+export const GridScrollArea = fastMemo(GridScrollAreaRaw);

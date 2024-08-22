@@ -1,8 +1,22 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import { useGridAriaAttributes } from '../../hooks/utils/useGridAriaAttributes';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
 
-const Element = styled('div')({
+const GridPanelAnchor = styled('div')({
+  position: 'absolute',
+  top: `var(--DataGrid-headersTotalHeight)`,
+  left: 0,
+});
+
+type OwnerState = DataGridProcessedProps;
+
+const Element = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'Main',
+  overridesResolver: (props, styles) => styles.main,
+})<{ ownerState: OwnerState }>({
   flexGrow: 1,
   position: 'relative',
   overflow: 'hidden',
@@ -14,10 +28,19 @@ export const GridMainContainer = React.forwardRef<
     className: string;
   }>
 >((props, ref) => {
-  const ariaAttributes = useGridAriaAttributes();
+  const rootProps = useGridRootProps();
+  const configuration = useGridConfiguration();
+  const ariaAttributes = configuration.hooks.useGridAriaAttributes();
 
   return (
-    <Element ref={ref} className={props.className} tabIndex={-1} {...ariaAttributes}>
+    <Element
+      ref={ref}
+      ownerState={rootProps}
+      className={props.className}
+      tabIndex={-1}
+      {...ariaAttributes}
+    >
+      <GridPanelAnchor role="presentation" data-id="gridPanelAnchor" />
       {props.children}
     </Element>
   );

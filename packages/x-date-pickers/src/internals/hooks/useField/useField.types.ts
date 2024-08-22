@@ -106,7 +106,7 @@ export interface UseFieldInternalProps<
    * Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros.
    * This mean that when using `shouldRespectLeadingZeros={false}`, if you retrieve the value directly from the input (not listening to `onChange`) and your format contains tokens without leading zeros, the value will not be parsed by your library.
    *
-   * @default `false`
+   * @default false
    */
   shouldRespectLeadingZeros?: boolean;
   /**
@@ -170,6 +170,7 @@ export interface UseFieldV6ForwardedProps {
   onClick?: React.MouseEventHandler;
   onFocus?: () => void;
   onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
+  placeholder?: string;
 }
 
 interface UseFieldV6AdditionalProps
@@ -308,13 +309,13 @@ export interface FieldValueManager<
    * @template TSection
    * @param {TSection[]} sections The current section list.
    * @param {string} localizedDigits The conversion table from localized to 0-9 digits.
-   * @param {boolean} isRTL `true` if the current orientation is "right to left"
+   * @param {boolean} isRtl `true` if the current orientation is "right to left"
    * @returns {string} The string value to render in the input.
    */
   getV6InputValueFromSections: (
     sections: TSection[],
     localizedDigits: string[],
-    isRTL: boolean,
+    isRtl: boolean,
   ) => string;
   /**
    * Creates the string value to render in the input based on the current section list.

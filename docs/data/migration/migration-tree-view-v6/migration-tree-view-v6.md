@@ -33,12 +33,42 @@ These changes were done for consistency, improved stability and to make room for
 
 ### Drop the legacy bundle
 
-The support for IE11 has been removed from all MUI X packages.
-The `legacy` bundle that used to support old browsers like IE11 is no longer included.
+The support for IE 11 has been removed from all MUI X packages.
+The `legacy` bundle that used to support old browsers like IE 11 is no longer included.
 
 :::info
-If you need support for IE11, you will need to keep using the latest version of the `v6` release.
+If you need support for IE 11, you will need to keep using the latest version of the `v6` release.
 :::
+
+### Drop Webpack 4 support
+
+Dropping old browsers support also means that we no longer transpile some features that are natively supported by modern browsers – like [Nullish Coalescing](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing) and [Optional Chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining).
+
+These features are not supported by Webpack 4, so if you are using Webpack 4, you will need to transpile these features yourself or upgrade to Webpack 5.
+
+Here is an example of how you can transpile these features on Webpack 4 using the `@babel/preset-env` preset:
+
+```diff
+ // webpack.config.js
+
+ module.exports = (env) => ({
+   // ...
+   module: {
+     rules: [
+       {
+         test: /\.[jt]sx?$/,
+-        exclude: /node_modules/,
++        exclude: [
++          {
++            test: path.resolve(__dirname, 'node_modules'),
++            exclude: [path.resolve(__dirname, 'node_modules/@mui/x-tree-view')],
++          },
++        ],
+       },
+     ],
+   },
+ });
+```
 
 ### ✅ Rename `nodeId` to `itemId`
 
@@ -46,28 +76,27 @@ The required `nodeId` prop used by the `TreeItem` has been renamed to `itemId` f
 
 ```diff
  <TreeView>
--    <TreeItem label='Item 1' nodeId='one'>
-+    <TreeItem label='Item 1' itemId='one'>
+-  <TreeItem label='Item 1' nodeId='one'>
++  <TreeItem label='Item 1' itemId='one'>
  </TreeView>
 ```
 
-The same change has been applied to the and `ContentComponent` prop:
+The same change has been applied to the `ContentComponent` prop:
 
 ```diff
-  const CustomContent = React.forwardRef((props, ref) => {
+ const CustomContent = React.forwardRef((props, ref) => {
 -  const id = props.nodeId;
 +  const id = props.itemId;
+   // Render some UI
+ });
 
-     // Render some UI
-   });
-
-   function App() {
-     return (
-       <SimpleTreeView>
-         <TreeItem ContentComponent={CustomContent} />
-       </SimpleTreeView>
-     )
-   }
+ function App() {
+   return (
+     <SimpleTreeView>
+       <TreeItem ContentComponent={CustomContent} />
+     </SimpleTreeView>
+   )
+ }
 ```
 
 ### ✅ Use `SimpleTreeView` instead of `TreeView`
@@ -305,8 +334,8 @@ you need to use the new `groupTransition` slot on this component:
      itemId="1"
      label="Item 1"
 -    TransitionComponent={Fade}
-+    slots={{ groupTransition: Fade }}
 -    TransitionProps={{ timeout: 600 }}
++    slots={{ groupTransition: Fade }}
 +    slotProps={{ groupTransition: { timeout: 600 } }}
    />
  </SimpleTreeView>
@@ -418,10 +447,12 @@ For example, if you were writing a test with `react-testing-library`, here is wh
  it('test example on first item', () => {
    const { getByRole } = render(
      <SimpleTreeView>
-       <TreeItem itemId="one">One</TreeItem>
-       <TreeItem itemId="two">Two</TreeItem>
+       <TreeItem itemId="one" id="one">One</TreeItem>
+       <TreeItem itemId="two" id="two">Two</TreeItem>
     </SimpleTreeView>
    );
+
+   // Set the focus to the item "One"
 -  const tree = getByRole('tree');
 +  const treeItem = getByRole('treeitem', { name: 'One' });
    act(() => {
@@ -430,6 +461,10 @@ For example, if you were writing a test with `react-testing-library`, here is wh
    });
 -  fireEvent.keyDown(tree, { key: 'ArrowDown' });
 +  fireEvent.keyDown(treeItem, { key: 'ArrowDown' });
+
+  // Check if the new focused item is "Two"
+- expect(tree)to.have.attribute('aria-activedescendant', 'two');
++ expect(document.activeElement).to.have.attribute('id', 'two');
  })
 ```
 

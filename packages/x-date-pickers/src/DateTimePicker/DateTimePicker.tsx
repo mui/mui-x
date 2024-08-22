@@ -51,11 +51,11 @@ const DateTimePicker = React.forwardRef(function DateTimePicker<
 DateTimePicker.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * @default utils.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**
@@ -80,7 +80,7 @@ DateTimePicker.propTypes = {
    * Formats the day of week displayed in the calendar header.
    * @param {TDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
+   * @default (date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
@@ -169,6 +169,7 @@ DateTimePicker.propTypes = {
   localeText: PropTypes.object,
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
@@ -182,6 +183,7 @@ DateTimePicker.propTypes = {
   maxTime: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**
@@ -210,7 +212,9 @@ DateTimePicker.propTypes = {
   /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onAccept: PropTypes.func,
   /**
@@ -424,7 +428,7 @@ DateTimePicker.propTypes = {
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
-   * If `undefined`, internally defined view will be the used.
+   * If `undefined`, internally defined view will be used.
    */
   viewRenderers: PropTypes.shape({
     day: PropTypes.func,

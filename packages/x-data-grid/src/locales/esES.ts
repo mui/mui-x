@@ -39,9 +39,10 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Descargar como Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
+  columnsManagementSearchTitle: 'Buscar',
+  columnsManagementNoColumns: 'Sin columnas',
+  columnsManagementShowHideAllText: 'Mostrar/Ocultar todas',
+  columnsManagementReset: 'Restablecer',
 
   // Filter panel text
   filterPanelAddFilter: 'Agregar filtro',
@@ -170,10 +171,10 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Agregación',
-  aggregationFunctionLabelSum: 'sum',
-  aggregationFunctionLabelAvg: 'avg',
-  aggregationFunctionLabelMin: 'min',
-  aggregationFunctionLabelMax: 'max',
+  aggregationFunctionLabelSum: 'suma',
+  aggregationFunctionLabelAvg: 'promedio',
+  aggregationFunctionLabelMin: 'mínimo',
+  aggregationFunctionLabelMax: 'máximo',
   aggregationFunctionLabelSize: 'tamaño',
 };
 

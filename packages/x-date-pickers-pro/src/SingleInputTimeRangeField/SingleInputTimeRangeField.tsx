@@ -6,7 +6,7 @@ import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/i
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { useThemeProps } from '@mui/material/styles';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { refType } from '@mui/utils';
 import { SingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
 import { useSingleInputTimeRangeField } from './useSingleInputTimeRangeField';
@@ -84,11 +84,11 @@ SingleInputTimeRangeField.fieldType = 'single-input';
 SingleInputTimeRangeField.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * @default utils.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**
@@ -318,7 +318,7 @@ SingleInputTimeRangeField.propTypes = {
    * Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros.
    * This mean that when using `shouldRespectLeadingZeros={false}`, if you retrieve the value directly from the input (not listening to `onChange`) and your format contains tokens without leading zeros, the value will not be parsed by your library.
    *
-   * @default `false`
+   * @default false
    */
   shouldRespectLeadingZeros: PropTypes.bool,
   /**

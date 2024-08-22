@@ -1,15 +1,12 @@
 import * as React from 'react';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import { GridStateApi, GridStatePrivateApi } from '../../models/api/gridStateApi';
 import { GridControlStateItem } from '../../models/controlStateItem';
-import { GridSignature } from '../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../utils';
 import { isFunction } from '../../utils/utils';
 
 export const useGridStateInitialization = <PrivateApi extends GridPrivateApiCommon>(
   apiRef: React.MutableRefObject<PrivateApi>,
-  props: Pick<DataGridProcessedProps, 'signature'>,
 ) => {
   const controlStateMapRef = React.useRef<
     Record<string, GridControlStateItem<PrivateApi['state'], any>>
@@ -78,11 +75,7 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
       if (!ignoreSetState) {
         // We always assign it as we mutate rows for perf reason.
         apiRef.current.state = newState;
-
-        if (apiRef.current.publishEvent) {
-          apiRef.current.publishEvent('stateChange', newState);
-        }
-
+        apiRef.current.publishEvent('stateChange', newState);
         apiRef.current.store.update(newState);
       }
 
@@ -92,11 +85,10 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
         const model = controlState.stateSelector(newState, apiRef.current.instanceId);
 
         if (controlState.propOnChange && hasPropChanged) {
-          const details =
-            props.signature === GridSignature.DataGridPro
-              ? { api: apiRef.current, reason }
-              : { reason };
-          controlState.propOnChange(model, details);
+          controlState.propOnChange(model, {
+            reason,
+            api: apiRef.current,
+          });
         }
 
         if (!ignoreSetState) {
@@ -106,7 +98,7 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
 
       return !ignoreSetState;
     },
-    [apiRef, props.signature],
+    [apiRef],
   );
 
   const updateControlState = React.useCallback<

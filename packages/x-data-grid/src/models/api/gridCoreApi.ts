@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { EventManager, EventListenerOptions } from '@mui/x-internals/EventManager';
 import { GridEventPublisher, GridEventListener, GridEvents } from '../events';
 import { Store } from '../../utils/Store';
-import { EventManager, EventListenerOptions } from '../../utils/EventManager';
 import { GridApiCaches } from '../gridApiCaches';
 import type { GridApiCommon, GridPrivateApiCommon } from './gridApiCommon';
 import type { DataGridProcessedProps } from '../props/DataGridProps';
@@ -64,7 +64,6 @@ export interface GridCorePrivateApi<
    * The generic event emitter manager.
    */
   eventManager: EventManager;
-
   /**
    * The React ref of the grid main container div element.
    */
@@ -76,12 +75,11 @@ export interface GridCorePrivateApi<
   /**
    * The React ref of the grid column container virtualized div element.
    */
-  columnHeadersContainerRef?: React.RefObject<HTMLDivElement>;
+  columnHeadersContainerRef: React.RefObject<HTMLDivElement>;
   /**
    * The React ref of the grid header filter row element.
    */
   headerFiltersElementRef?: React.RefObject<HTMLDivElement>;
-
   register: <
     V extends 'public' | 'private',
     T extends V extends 'public'
@@ -91,7 +89,6 @@ export interface GridCorePrivateApi<
     visibility: V,
     methods: T,
   ) => void;
-
   /**
    * Returns the public API.
    * Can be useful on a feature hook if we want to pass the `apiRef` to a callback.

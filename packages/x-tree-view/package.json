@@ -1,7 +1,7 @@
 {
   "name": "@mui/x-tree-view",
-  "version": "7.0.0-beta.7",
-  "description": "The community edition of the tree view components (MUI X).",
+  "version": "7.13.0",
+  "description": "The community edition of the Tree View components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
   "license": "MIT",
@@ -15,7 +15,8 @@
   },
   "sideEffects": false,
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "build"
   },
   "keywords": [
     "react",
@@ -28,7 +29,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "yarn build:modern && yarn build:node && yarn build:stable && yarn build:types && yarn build:copy-files ",
+    "build": "pnpm build:modern && pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files ",
     "build:modern": "node ../../scripts/build.mjs modern",
     "build:node": "node ../../scripts/build.mjs node",
     "build:stable": "node ../../scripts/build.mjs stable",
@@ -42,12 +43,12 @@
     "directory": "packages/x-tree-view"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.0",
-    "@mui/base": "^5.0.0-beta.40",
-    "@mui/system": "^5.15.14",
-    "@mui/utils": "^5.15.14",
-    "@types/react-transition-group": "^4.4.10",
-    "clsx": "^2.1.0",
+    "@babel/runtime": "^7.25.0",
+    "@mui/system": "^5.16.7",
+    "@mui/utils": "^5.16.6",
+    "@mui/x-internals": "workspace:*",
+    "@types/react-transition-group": "^4.4.11",
+    "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
     "react-transition-group": "^4.4.5"
   },
@@ -58,9 +59,19 @@
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },
-  "setupFiles": [
-    "<rootDir>/src/setupTests.js"
-  ],
+  "peerDependenciesMeta": {
+    "@emotion/react": {
+      "optional": true
+    },
+    "@emotion/styled": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@mui/internal-test-utils": "^1.0.8",
+    "@types/prop-types": "^15.7.12",
+    "rimraf": "^5.0.10"
+  },
   "engines": {
     "node": ">=14.0.0"
   }

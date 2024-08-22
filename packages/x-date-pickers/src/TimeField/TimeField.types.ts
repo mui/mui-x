@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import TextField from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { MakeOptional } from '../internals/models/helpers';
@@ -34,7 +34,7 @@ export interface UseTimeFieldProps<
     ExportedUseClearableFieldProps {
   /**
    * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * @default utils.is12HourCycleInCurrentLocale()
    */
   ampm?: boolean;
 }

@@ -3,9 +3,10 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import { DateView, PickerValidDate } from '../models';
 import {
@@ -45,11 +46,16 @@ const DatePickerToolbarTitle = styled(Typography, {
   name: 'MuiDatePickerToolbar',
   slot: 'Title',
   overridesResolver: (_, styles) => styles.title,
-})<{ ownerState: DatePickerToolbarProps<any> }>(({ ownerState }) => ({
-  ...(ownerState.isLandscape && {
-    margin: 'auto 16px auto auto',
-  }),
-}));
+})<{ ownerState: DatePickerToolbarProps<any> }>({
+  variants: [
+    {
+      props: { isLandscape: true },
+      style: {
+        margin: 'auto 16px auto auto',
+      },
+    },
+  ],
+});
 
 type DatePickerToolbarComponent = (<TDate extends PickerValidDate>(
   props: DatePickerToolbarProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -82,7 +88,7 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<
     ...other
   } = props;
   const utils = useUtils<TDate>();
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const classes = useUtilityClasses(props);
 
   const dateText = React.useMemo(() => {
@@ -100,7 +106,7 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<
   return (
     <DatePickerToolbarRoot
       ref={ref}
-      toolbarTitle={localeText.datePickerToolbarTitle}
+      toolbarTitle={translations.datePickerToolbarTitle}
       isLandscape={isLandscape}
       className={clsx(classes.root, className)}
       {...other}
@@ -121,7 +127,7 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<
 DatePickerToolbar.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Override or extend the styles applied to the component.

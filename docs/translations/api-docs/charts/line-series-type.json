@@ -1,0 +1,42 @@
+{
+  "interfaceDescription": "",
+  "propertiesDescriptions": {
+    "type": { "description": "" },
+    "area": { "description": "" },
+    "baseline": {
+      "description": "<p>The value of the line at the base of the series area.<br /><br />- <code>&#39;min&#39;</code> the area will fill the space <strong>under</strong> the line.<br />- <code>&#39;max&#39;</code> the area will fill the space <strong>above</strong> the line.<br />- <code>number</code> the area will fill the space between this value and the line</p>\n"
+    },
+    "color": { "description": "" },
+    "connectNulls": {
+      "description": "If <code>true</code>, line and area connect points separated by <code>null</code> values."
+    },
+    "curve": { "description": "" },
+    "data": { "description": "Data associated to the line." },
+    "dataKey": { "description": "The key used to retrieve data from the dataset." },
+    "disableHighlight": {
+      "description": "Do not render the line highlight item if set to <code>true</code>."
+    },
+    "highlightScope": { "description": "The scope to apply when the series is highlighted." },
+    "id": { "description": "" },
+    "label": {
+      "description": "The label to display on the tooltip or the legend. It can be a string or a function."
+    },
+    "showMark": {
+      "description": "Define which items of the series should display a mark.<br />If can be a boolean that applies to all items.<br />Or a callback that gets some item properties and returns true if the item should be displayed."
+    },
+    "stack": {
+      "description": "The key that identifies the stacking group.<br />Series with the same <code>stack</code> property will be stacked together."
+    },
+    "stackOffset": { "description": "Defines how stacked series handle negative values." },
+    "stackOrder": {
+      "description": "The order in which series&#39; of the same group are stacked together."
+    },
+    "valueFormatter": {
+      "description": "Formatter used to render values in tooltip or other data display."
+    },
+    "xAxisId": { "description": "The id of the x-axis used to render the series." },
+    "xAxisKey": { "description": "The id of the x-axis used to render the series." },
+    "yAxisId": { "description": "The id of the y-axis used to render the series." },
+    "yAxisKey": { "description": "The id of the y-axis used to render the series." }
+  }
+}

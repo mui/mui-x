@@ -48,6 +48,7 @@
       "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
       "default": "\"cell\""
     },
+    "estimatedRowCount": { "type": { "name": "number" } },
     "experimentalFeatures": {
       "type": { "name": "shape", "description": "{ warnIfFocusStateIsNotSynced?: bool }" }
     },
@@ -140,7 +141,7 @@
       }
     },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
-    "loading": { "type": { "name": "bool" } },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "logger": {
       "type": {
@@ -301,6 +302,13 @@
         "describedArgs": ["params", "event", "details"]
       }
     },
+    "onPaginationMetaChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(paginationMeta: GridPaginationMeta) => void",
+        "describedArgs": ["paginationMeta"]
+      }
+    },
     "onPaginationModelChange": {
       "type": { "name": "func" },
       "signature": {
@@ -393,6 +401,7 @@
       },
       "default": "[25, 50, 100]"
     },
+    "paginationMeta": { "type": { "name": "shape", "description": "{ hasNextPage?: bool }" } },
     "paginationMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
@@ -408,6 +417,7 @@
         "returned": "Promise<R> | R"
       }
     },
+    "resizeThrottleMs": { "type": { "name": "number" }, "default": "60" },
     "rowBufferPx": { "type": { "name": "number" }, "default": "150" },
     "rowCount": { "type": { "name": "number" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
@@ -488,6 +498,12 @@
       "class": null
     },
     {
+      "name": "columnHeaderSortIcon",
+      "description": "Sort icon component rendered in each column header.",
+      "default": "GridColumnHeaderSortIcon",
+      "class": null
+    },
+    {
       "name": "columnMenu",
       "description": "Column menu component rendered by clicking on the 3 dots \"kebab\" icon in column headers.",
       "default": "GridColumnMenu",
@@ -496,7 +512,7 @@
     {
       "name": "columnHeaders",
       "description": "Component responsible for rendering the column headers.",
-      "default": "DataGridColumnHeaders",
+      "default": "GridColumnHeaders",
       "class": "MuiDataGrid-columnHeaders"
     },
     {
@@ -1072,6 +1088,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnHeader--last",
+      "className": "MuiDataGrid-columnHeader--last",
+      "description": "Styles applied to the last column header element.",
+      "isGlobal": false
+    },
+    {
       "key": "columnHeader--moving",
       "className": "MuiDataGrid-columnHeader--moving",
       "description": "Styles applied to the column header if it is being dragged.",
@@ -1543,6 +1565,12 @@
       "key": "rowReorderCellPlaceholder",
       "className": "MuiDataGrid-rowReorderCellPlaceholder",
       "description": "Styles applied to the row's draggable placeholder element inside the special row reorder cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "rowSkeleton",
+      "className": "MuiDataGrid-rowSkeleton",
+      "description": "Styles applied to the skeleton row element.",
       "isGlobal": false
     },
     {

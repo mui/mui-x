@@ -1,7 +1,7 @@
 ---
 title: React Line chart
 productId: x-charts
-components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot, AnimatedLine, AnimatedArea, ChartsOnAxisClickHandler, ChartsGrid
+components: LineChart, LineChartPro, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot, AnimatedLine, AnimatedArea, ChartsOnAxisClickHandler, ChartsGrid
 ---
 
 # Charts - Lines
@@ -146,6 +146,25 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 
 {{"demo": "GridDemo.js"}}
 
+### Color scale
+
+As with other charts, you can modify the [series color](/x/react-charts/styling/#colors) either directly, or with the color palette.
+
+You can also modify the color by using axes `colorMap` which maps values to colors.
+The line charts use by priority:
+
+1. The y-axis color
+2. The x-axis color
+3. The series color
+
+Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
+
+{{"demo": "ColorScale.js"}}
+
+:::warning
+For now, ordinal config is not supported for line chart.
+:::
+
 ### Interpolation
 
 The interpolation between data points can be customized by the `curve` property.
@@ -155,6 +174,20 @@ This series property adds the option to control the interpolation of a series.
 Different series could even have different interpolations.
 
 {{"demo": "InterpolationDemoNoSnap.js", "hideToolbar": true}}
+
+### Baseline
+
+The area chart draws a `baseline` on the Y axis `0`.
+This is useful as a base value, but customized visualizations may require a different baseline.
+
+To get the area filling the space above or below the line, set `baseline` to `"min"` or `"max"`.
+It is also possible to provide a `number` value to fix the baseline at the desired position.
+
+:::warning
+The `baseline` should not be used with stacked areas, as it will not work as expected.
+:::
+
+{{"demo": "AreaBaseline.js"}}
 
 ### Optimization
 

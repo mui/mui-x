@@ -1,0 +1,19 @@
+{
+  "interfaceDescription": "Object passed as parameter in the column <a href=\"/x/api/data-grid/grid-col-def/\">GridColDef</a> cell renderer.",
+  "propertiesDescriptions": {
+    "api": { "description": "GridApi that let you manipulate the grid." },
+    "cellMode": { "description": "The mode of the cell." },
+    "colDef": { "description": "The column of the row that the current cell belongs to." },
+    "field": { "description": "The column field of the cell that triggered the event." },
+    "hasFocus": { "description": "If true, the cell is the active element." },
+    "id": { "description": "The grid row id." },
+    "row": { "description": "The row model of the row that the current cell belongs to." },
+    "rowNode": { "description": "The node of the row that the current cell belongs to." },
+    "tabIndex": { "description": "the tabIndex value." },
+    "formattedValue": { "description": "The cell value formatted with the column valueFormatter." },
+    "isEditable": { "description": "If true, the cell is editable." },
+    "value": {
+      "description": "The cell value.<br />If the column has <code>valueGetter</code>, use <code>params.row</code> to directly access the fields."
+    }
+  }
+}

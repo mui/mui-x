@@ -1,0 +1,52 @@
+{
+  "name": "GridExcelExportOptions",
+  "imports": ["import { GridExcelExportOptions } from '@mui/x-data-grid-premium'"],
+  "demos": "<ul><li><a href=\"/x/react-data-grid/export/#excel-export\">Excel export</a></li></ul>",
+  "properties": {
+    "allColumns": {
+      "type": { "description": "boolean" },
+      "default": "false",
+      "isPremiumPlan": true
+    },
+    "columnsStyles": { "type": { "description": "ColumnsStylesInterface" }, "isPremiumPlan": true },
+    "escapeFormulas": {
+      "type": { "description": "boolean" },
+      "default": "true",
+      "isPremiumPlan": true
+    },
+    "exceljsPostProcess": {
+      "type": {
+        "description": "(processInput: GridExceljsProcessInput) =&gt; Promise&lt;void&gt;"
+      },
+      "isPremiumPlan": true
+    },
+    "exceljsPreProcess": {
+      "type": {
+        "description": "(processInput: GridExceljsProcessInput) =&gt; Promise&lt;void&gt;"
+      },
+      "isPremiumPlan": true
+    },
+    "fields": { "type": { "description": "string[]" }, "isPremiumPlan": true },
+    "fileName": {
+      "type": { "description": "string" },
+      "default": "document.title",
+      "isPremiumPlan": true
+    },
+    "getRowsToExport": {
+      "type": { "description": "(params: GridGetRowsToExportParams&lt;Api&gt;) =&gt; GridRowId[]" },
+      "isPremiumPlan": true
+    },
+    "includeColumnGroupsHeaders": {
+      "type": { "description": "boolean" },
+      "default": "true",
+      "isPremiumPlan": true
+    },
+    "includeHeaders": {
+      "type": { "description": "boolean" },
+      "default": "true",
+      "isPremiumPlan": true
+    },
+    "valueOptionsSheetName": { "type": { "description": "string" }, "isPremiumPlan": true },
+    "worker": { "type": { "description": "() =&gt; Worker" }, "isPremiumPlan": true }
+  }
+}

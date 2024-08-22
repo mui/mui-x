@@ -30,6 +30,7 @@ interface GridColumnGroupHeaderProps {
   style?: React.CSSProperties;
   indexInSection: number;
   sectionLength: number;
+  gridHasFiller: boolean;
 }
 
 type OwnerState = {
@@ -37,6 +38,7 @@ type OwnerState = {
   showLeftBorder: boolean;
   showRightBorder: boolean;
   isDragging: boolean;
+  isLastColumn: boolean;
   headerAlign?: GridAlignment;
   classes?: DataGridProcessedProps['classes'];
   pinnedPosition?: GridPinnedColumnPosition;
@@ -47,6 +49,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     classes,
     headerAlign,
     isDragging,
+    isLastColumn,
     showLeftBorder,
     showRightBorder,
     groupId,
@@ -66,6 +69,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       groupId === null ? 'columnHeader--emptyGroup' : 'columnHeader--filledGroup',
       pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
       pinnedPosition === 'right' && 'columnHeader--pinnedRight',
+      isLastColumn && 'columnHeader--last',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
     titleContainer: ['columnHeaderTitleContainer', 'withBorderColor'],
@@ -91,6 +95,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     style,
     indexInSection,
     sectionLength,
+    gridHasFiller,
   } = props;
 
   const rootProps = useGridRootProps();
@@ -129,6 +134,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     indexInSection,
     sectionLength,
     rootProps.showCellVerticalBorder,
+    gridHasFiller,
   );
 
   const ownerState = {
@@ -202,7 +208,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       width={width}
       columnMenuIconButton={null}
       columnTitleIconButtons={null}
-      resizable
+      resizable={false}
       label={label}
       aria-colspan={fields.length}
       // The fields are wrapped between |-...-| to avoid confusion between fields "id" and "id2" when using selector data-fields~=

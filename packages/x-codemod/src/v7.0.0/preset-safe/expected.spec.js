@@ -9,7 +9,7 @@ const theme = createTheme({});
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
+    (<ThemeProvider theme={theme}>
       <DataGrid
         slotProps={{
           toolbar: {
@@ -22,7 +22,7 @@ function App() {
             textField: { variant: 'filled' }
           }} />
       </LocalizationProvider>
-    </ThemeProvider>
+    </ThemeProvider>)
   );
 }
 

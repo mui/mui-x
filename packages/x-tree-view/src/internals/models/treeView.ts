@@ -1,24 +1,21 @@
 import type { TreeViewAnyPluginSignature } from './plugin';
-import type { MergePluginsProperty } from './helpers';
+import type { MergeSignaturesProperty } from './helpers';
+import type { TreeViewCorePluginSignatures } from '../corePlugins';
 
-export interface TreeViewNode {
+export interface TreeViewItemMeta {
   id: string;
   idAttribute: string | undefined;
-  index: number;
   parentId: string | null;
   expandable: boolean;
   disabled: boolean;
   /**
-   * Only defined for `RichTreeView`.
+   * Only defined for `RichTreeView` and `RichTreeViewPro`.
+   */
+  depth?: number;
+  /**
+   * Only defined for `RichTreeView` and `RichTreeViewPro`.
    */
   label?: string;
-}
-
-export interface TreeViewItemRange {
-  start?: string | null;
-  end?: string | null;
-  next?: string | null;
-  current?: string;
 }
 
 export interface TreeViewModel<TValue> {
@@ -27,8 +24,19 @@ export interface TreeViewModel<TValue> {
   setControlledValue: (value: TValue | ((prevValue: TValue) => TValue)) => void;
 }
 
-export type TreeViewInstance<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
-  MergePluginsProperty<TSignatures, 'instance'>;
+export type TreeViewInstance<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
+> = MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'instance'> &
+  Partial<MergeSignaturesProperty<TOptionalSignatures, 'instance'>>;
 
-export type TreeViewPublicAPI<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
-  MergePluginsProperty<TSignatures, 'publicAPI'>;
+export type TreeViewPublicAPI<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
+> = MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'publicAPI'> &
+  Partial<MergeSignaturesProperty<TOptionalSignatures, 'instance'>>;
+
+export type TreeViewExperimentalFeatures<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
+> = MergeSignaturesProperty<[...TSignatures, ...TOptionalSignatures], 'experimentalFeatures'>;

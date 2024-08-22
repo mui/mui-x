@@ -4,8 +4,8 @@
     "onItemClick": {
       "description": "Callback fired when clicking on a scatter item.",
       "typeDescriptions": {
-        "event": "Mouse event catched at the svg level",
-        "scatterItemIdentifier": "Identify whihc item got clicked"
+        "event": "Mouse event caught at the svg level",
+        "scatterItemIdentifier": "Identify which item got clicked"
       }
     },
     "voronoiMaxRadius": {

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
@@ -30,30 +31,31 @@ function CloseSquare(props: SvgIconProps) {
 
 export default function CustomIcons() {
   return (
-    <SimpleTreeView
-      aria-label="customized"
-      defaultExpandedItems={['1']}
-      slots={{
-        expandIcon: AddBoxIcon,
-        collapseIcon: IndeterminateCheckBoxIcon,
-        endIcon: CloseSquare,
-      }}
-      sx={{ overflowX: 'hidden', minHeight: 270, flexGrow: 1, maxWidth: 300 }}
-    >
-      <CustomTreeItem itemId="1" label="Main">
-        <CustomTreeItem itemId="2" label="Hello" />
-        <CustomTreeItem itemId="3" label="Subtree with children">
-          <CustomTreeItem itemId="6" label="Hello" />
-          <CustomTreeItem itemId="7" label="Sub-subtree with children">
-            <CustomTreeItem itemId="9" label="Child 1" />
-            <CustomTreeItem itemId="10" label="Child 2" />
-            <CustomTreeItem itemId="11" label="Child 3" />
-          </CustomTreeItem>
-          <CustomTreeItem itemId="8" label="Hello" />
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
+      <SimpleTreeView
+        defaultExpandedItems={['grid']}
+        slots={{
+          expandIcon: AddBoxIcon,
+          collapseIcon: IndeterminateCheckBoxIcon,
+          endIcon: CloseSquare,
+        }}
+      >
+        <CustomTreeItem itemId="grid" label="Data Grid">
+          <CustomTreeItem itemId="grid-community" label="@mui/x-data-grid" />
+          <CustomTreeItem itemId="grid-pro" label="@mui/x-data-grid-pro" />
+          <CustomTreeItem itemId="grid-premium" label="@mui/x-data-grid-premium" />
         </CustomTreeItem>
-        <CustomTreeItem itemId="4" label="World" />
-        <CustomTreeItem itemId="5" label="Something something" />
-      </CustomTreeItem>
-    </SimpleTreeView>
+        <CustomTreeItem itemId="pickers" label="Date and Time Pickers">
+          <CustomTreeItem itemId="pickers-community" label="@mui/x-date-pickers" />
+          <CustomTreeItem itemId="pickers-pro" label="@mui/x-date-pickers-pro" />
+        </CustomTreeItem>
+        <CustomTreeItem itemId="charts" label="Charts">
+          <CustomTreeItem itemId="charts-community" label="@mui/x-charts" />
+        </CustomTreeItem>
+        <CustomTreeItem itemId="tree-view" label="Tree View">
+          <CustomTreeItem itemId="tree-view-community" label="@mui/x-tree-view" />
+        </CustomTreeItem>
+      </SimpleTreeView>
+    </Box>
   );
 }

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import Typography from '@mui/material/Typography';
 
 export default function TrackItemSelectionToggle() {
   const [lastSelectedItem, setLastSelectedItem] = React.useState<string | null>(
@@ -27,7 +27,7 @@ export default function TrackItemSelectionToggle() {
           ? 'No item selection recorded'
           : `Last selected item: ${lastSelectedItem}`}
       </Typography>
-      <Box sx={{ minHeight: 200, minWidth: 250, flexGrow: 1 }}>
+      <Box sx={{ minHeight: 352, minWidth: 300 }}>
         <SimpleTreeView onItemSelectionToggle={handleItemSelectionToggle}>
           <TreeItem itemId="grid" label="Data Grid">
             <TreeItem itemId="grid-community" label="@mui/x-data-grid" />

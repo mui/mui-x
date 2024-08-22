@@ -64,7 +64,7 @@ export interface UsePickerViewsBaseProps<
   disabled?: boolean;
   /**
    * If `null`, the section will only have field editing.
-   * If `undefined`, internally defined view will be the used.
+   * If `undefined`, internally defined view will be used.
    */
   viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>;
   /**
@@ -99,8 +99,7 @@ export interface UsePickerViewsProps<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
   TAdditionalProps extends {},
-> extends UsePickerViewsBaseProps<TValue, TDate, TView, TExternalProps, TAdditionalProps>,
-    UsePickerViewsNonStaticProps {
+> extends UsePickerViewsBaseProps<TValue, TDate, TView, TExternalProps, TAdditionalProps> {
   className?: string;
   sx?: SxProps<Theme>;
 }
@@ -141,8 +140,7 @@ export interface UsePickerViewParams<
 
 export interface UsePickerViewsResponse<TView extends DateOrTimeViewWithMeridiem> {
   /**
-   * Does the picker have at least one view that should be rendered in UI mode ?
-   * If not, we can hide the icon to open the picker.
+   * Indicates if the the picker has at least one view that should be rendered in UI.
    */
   hasUIView: boolean;
   renderCurrentView: () => React.ReactNode;
@@ -185,12 +183,12 @@ export const usePickerViews = <
   TAdditionalProps
 >): UsePickerViewsResponse<TView> => {
   const { onChange, open, onClose } = propsFromPickerValue;
-  const { views, openTo, onViewChange, disableOpenPicker, viewRenderers, timezone } = props;
+  const { view: inView, views, openTo, onViewChange, viewRenderers, timezone } = props;
   const { className, sx, ...propsToForwardToView } = props;
 
   const { view, setView, defaultView, focusedView, setFocusedView, setValueAndGoToNextView } =
     useViews({
-      view: undefined,
+      view: inView,
       views,
       openTo,
       onChange,
@@ -203,9 +201,7 @@ export const usePickerViews = <
       views.reduce(
         (acc, viewForReduce) => {
           let viewMode: 'field' | 'UI';
-          if (disableOpenPicker) {
-            viewMode = 'field';
-          } else if (viewRenderers[viewForReduce] != null) {
+          if (viewRenderers[viewForReduce] != null) {
             viewMode = 'UI';
           } else {
             viewMode = 'field';
@@ -220,7 +216,7 @@ export const usePickerViews = <
         },
         { hasUIView: false, viewModeLookup: {} as Record<TView, 'field' | 'UI'> },
       ),
-    [disableOpenPicker, viewRenderers, views],
+    [viewRenderers, views],
   );
 
   const timeViewsCount = React.useMemo(
@@ -249,6 +245,7 @@ export const usePickerViews = <
     if (currentViewMode === 'field' && open) {
       onClose();
       setTimeout(() => {
+        fieldRef?.current?.setSelectedSections(view);
         // focusing the input before the range selection is done
         // calling it outside of timeout results in an inconsistent behavior between Safari And Chrome
         fieldRef?.current?.focusField(view);

@@ -1,23 +1,19 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import {
-  getIsFaded,
-  getIsHighlighted,
-  useInteractionItemProps,
-} from '../hooks/useInteractionItemProps';
-import { InteractionContext } from '../context/InteractionProvider';
-import { HighlightScope } from '../context/HighlightProvider';
+import { SlotComponentPropsFromProps } from '../internals/SlotComponentPropsFromProps';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { AnimatedArea, AnimatedAreaProps } from './AnimatedArea';
 import { SeriesId } from '../models/seriesType/common';
+import { useItemHighlighted } from '../context';
 
 export interface AreaElementClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when higlighted. */
+  /** Styles applied to the root element when highlighted. */
   highlighted: string;
   /** Styles applied to the root element when faded. */
   faded: string;
@@ -28,6 +24,7 @@ export type AreaElementClassKey = keyof AreaElementClasses;
 export interface AreaElementOwnerState {
   id: SeriesId;
   color: string;
+  gradientId?: string;
   isFaded: boolean;
   isHighlighted: boolean;
   classes?: Partial<AreaElementClasses>;
@@ -61,15 +58,14 @@ export interface AreaElementSlots {
 }
 
 export interface AreaElementSlotProps {
-  area?: AnimatedAreaProps;
+  area?: SlotComponentPropsFromProps<AnimatedAreaProps, {}, AreaElementOwnerState>;
 }
 
 export interface AreaElementProps
   extends Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'>,
     Pick<AnimatedAreaProps, 'skipAnimation'>,
-    Omit<React.ComponentPropsWithoutRef<'path'>, 'color' | 'id'> {
+    Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
   d: string;
-  highlightScope?: Partial<HighlightScope>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -97,25 +93,23 @@ function AreaElement(props: AreaElementProps) {
     id,
     classes: innerClasses,
     color,
-    highlightScope,
+    gradientId,
     slots,
     slotProps,
     onClick,
     ...other
   } = props;
 
-  const getInteractionItemProps = useInteractionItemProps(highlightScope);
-
-  const { item } = React.useContext(InteractionContext);
-
-  const isHighlighted = getIsHighlighted(item, { type: 'line', seriesId: id }, highlightScope);
-  const isFaded =
-    !isHighlighted && getIsFaded(item, { type: 'line', seriesId: id }, highlightScope);
+  const getInteractionItemProps = useInteractionItemProps();
+  const { isFaded, isHighlighted } = useItemHighlighted({
+    seriesId: id,
+  });
 
   const ownerState = {
     id,
     classes: innerClasses,
     color,
+    gradientId,
     isFaded,
     isHighlighted,
   };
@@ -126,30 +120,26 @@ function AreaElement(props: AreaElementProps) {
     elementType: Area,
     externalSlotProps: slotProps?.area,
     additionalProps: {
-      ...other,
       ...getInteractionItemProps({ type: 'line', seriesId: id }),
-      className: classes.root,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
     },
+    className: classes.root,
     ownerState,
   });
 
-  return <Area {...areaProps} />;
+  return <Area {...other} {...areaProps} />;
 }
 
 AreaElement.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   color: PropTypes.string.isRequired,
   d: PropTypes.string.isRequired,
-  highlightScope: PropTypes.shape({
-    faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-  }),
+  gradientId: PropTypes.string,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * If `true`, animations are skipped.

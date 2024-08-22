@@ -5,6 +5,15 @@
       "required": true,
       "additionalInfo": { "cssApi": true }
     },
+    "getColor": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(dataIndex: number) => string",
+        "describedArgs": ["dataIndex"],
+        "returned": "string"
+      }
+    },
     "itemData": {
       "type": {
         "name": "shape",
@@ -17,7 +26,8 @@
   "name": "DefaultChartsItemTooltipContent",
   "imports": [
     "import { DefaultChartsItemTooltipContent } from '@mui/x-charts/ChartsTooltip';",
-    "import { DefaultChartsItemTooltipContent } from '@mui/x-charts';"
+    "import { DefaultChartsItemTooltipContent } from '@mui/x-charts';",
+    "import { DefaultChartsItemTooltipContent } from '@mui/x-charts-pro';"
   ],
   "classes": [
     {

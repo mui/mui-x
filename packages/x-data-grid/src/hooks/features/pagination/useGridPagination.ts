@@ -9,11 +9,17 @@ import {
 } from './gridPaginationUtils';
 import { useGridPaginationModel } from './useGridPaginationModel';
 import { useGridRowCount } from './useGridRowCount';
+import { useGridPaginationMeta } from './useGridPaginationMeta';
 
 export const paginationStateInitializer: GridStateInitializer<
   Pick<
     DataGridProcessedProps,
-    'paginationModel' | 'rowCount' | 'initialState' | 'autoPageSize' | 'signature'
+    | 'paginationModel'
+    | 'rowCount'
+    | 'initialState'
+    | 'autoPageSize'
+    | 'signature'
+    | 'paginationMeta'
   >
 > = (state, props) => {
   const paginationModel = {
@@ -24,11 +30,13 @@ export const paginationStateInitializer: GridStateInitializer<
   throwIfPageSizeExceedsTheLimit(paginationModel.pageSize, props.signature);
 
   const rowCount = props.rowCount ?? props.initialState?.pagination?.rowCount;
+  const meta = props.paginationMeta ?? props.initialState?.pagination?.meta ?? {};
   return {
     ...state,
     pagination: {
       paginationModel,
       rowCount,
+      meta,
     },
   };
 };
@@ -41,6 +49,7 @@ export const useGridPagination = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: DataGridProcessedProps,
 ) => {
+  useGridPaginationMeta(apiRef, props);
   useGridPaginationModel(apiRef, props);
   useGridRowCount(apiRef, props);
 };

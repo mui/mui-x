@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { useLicenseVerifier } from '@mui/x-license';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
@@ -8,10 +8,10 @@ import {
   PickersModalDialog,
   InferError,
   ExportedBaseToolbarProps,
-  useLocaleText,
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
 } from '@mui/x-date-pickers/internals';
+import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate, FieldRef, BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
 import useId from '@mui/utils/useId';
 import {
@@ -78,7 +78,7 @@ export const useMobileRangePicker = <
     fieldType === 'single-input' ? startFieldRef : undefined,
   );
   const labelId = useId();
-  const contextLocaleText = useLocaleText();
+  const contextTranslations = usePickersTranslations();
 
   const {
     open,
@@ -144,7 +144,7 @@ export const useMobileRangePicker = <
       selectedSections,
       onSelectedSectionsChange,
       timezone,
-      ...(inputRef ? { inputRef, name } : {}),
+      ...(fieldType === 'single-input' ? { inputRef, name } : {}),
     },
     ownerState: props,
   });
@@ -193,7 +193,7 @@ export const useMobileRangePicker = <
   const Layout = slots?.layout ?? PickersLayout;
 
   const finalLocaleText = {
-    ...contextLocaleText,
+    ...contextTranslations,
     ...localeText,
   };
   let labelledById =

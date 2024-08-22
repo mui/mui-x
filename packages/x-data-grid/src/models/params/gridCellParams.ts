@@ -65,6 +65,10 @@ export interface GridCellParams<
    * the tabIndex value.
    */
   tabIndex: 0 | -1;
+  /**
+   * GridApi that let you manipulate the grid.
+   */
+  api: GridApiCommunity;
 }
 
 export interface FocusElement {
@@ -102,29 +106,6 @@ export interface GridRenderEditCellParams<
   N extends GridTreeNodeWithRender = GridTreeNodeWithRender,
 > extends GridCellParams<R, V, F, N>,
     GridEditCellProps<V> {
-  /**
-   * GridApi that let you manipulate the grid.
-   */
-  api: GridApiCommunity;
-}
-
-/**
- * Object passed as parameter in the column [[GridColDef]] value formatter callback.
- */
-export interface GridValueFormatterParams<V = any> {
-  /**
-   * The grid row id.
-   * It is not available when the value formatter is called by the filter panel.
-   */
-  id?: GridRowId;
-  /**
-   * The column field of the cell that triggered the event.
-   */
-  field: string;
-  /**
-   * The cell value, if the column has valueGetter it is the value returned by it.
-   */
-  value: V;
   /**
    * GridApi that let you manipulate the grid.
    */

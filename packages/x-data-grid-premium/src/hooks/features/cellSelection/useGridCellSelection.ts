@@ -4,6 +4,7 @@ import {
   GridPipeProcessor,
   GridStateInitializer,
   getTotalHeaderHeight,
+  getVisibleRows,
   isNavigationKey,
   serializeCellValue,
   useGridRegisterPipeProcessor,
@@ -68,7 +69,7 @@ export const useGridCellSelection = (
   const autoScrollRAF = React.useRef<number | null>();
   const sortedRowIds = useGridSelector(apiRef, gridSortedRowIdsSelector);
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-  const totalHeaderHeight = getTotalHeaderHeight(apiRef, props.columnHeaderHeight);
+  const totalHeaderHeight = getTotalHeaderHeight(apiRef, props);
 
   const ignoreValueFormatterProp = props.ignoreValueFormatterDuringExport;
   const ignoreValueFormatter =
@@ -145,7 +146,7 @@ export const useGridCellSelection = (
       const rowsInRange = visibleRows.rows.slice(finalStartRowIndex, finalEndRowIndex + 1);
       const columnsInRange = visibleColumns.slice(finalStartColumnIndex, finalEndColumnIndex + 1);
 
-      const newModel = keepOtherSelected ? apiRef.current.getCellSelectionModel() : {};
+      const newModel = keepOtherSelected ? { ...apiRef.current.getCellSelectionModel() } : {};
 
       rowsInRange.forEach((row) => {
         if (!newModel[row.id]) {
@@ -164,22 +165,37 @@ export const useGridCellSelection = (
   const getSelectedCellsAsArray = React.useCallback<
     GridCellSelectionApi['getSelectedCellsAsArray']
   >(() => {
-    const model = apiRef.current.getCellSelectionModel();
+    const selectionModel = apiRef.current.getCellSelectionModel();
     const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
+    const currentVisibleRows = getVisibleRows(apiRef, props);
+    const sortedEntries = currentVisibleRows.rows.reduce(
+      (result, row) => {
+        if (row.id in selectionModel) {
+          result.push([row.id, selectionModel[row.id]]);
+        }
+        return result;
+      },
+      [] as [GridRowId, Record<string, boolean>][],
+    );
 
-    return Object.entries(model).reduce<{ id: GridRowId; field: string }[]>(
-      (acc, [id, fields]) => [
-        ...acc,
-        ...Object.entries(fields).reduce<{ id: GridRowId; field: string }[]>(
-          (acc2, [field, isSelected]) => {
-            return isSelected ? [...acc2, { id: idToIdLookup[id], field }] : acc2;
-          },
-          [],
-        ),
-      ],
+    return sortedEntries.reduce<{ id: GridRowId; field: string }[]>(
+      (selectedCells, [id, fields]) => {
+        selectedCells.push(
+          ...Object.entries(fields).reduce<{ id: GridRowId; field: string }[]>(
+            (selectedFields, [field, isSelected]) => {
+              if (isSelected) {
+                selectedFields.push({ id: idToIdLookup[id], field });
+              }
+              return selectedFields;
+            },
+            [],
+          ),
+        );
+        return selectedCells;
+      },
       [],
     );
-  }, [apiRef]);
+  }, [apiRef, props]);
 
   const cellSelectionApi: GridCellSelectionApi = {
     isCellSelected,
@@ -559,9 +575,12 @@ export const useGridCellSelection = (
           if (fieldsMap[field]) {
             const cellParams = apiRef.current.getCellParams(rowId, field);
             cellData = serializeCellValue(cellParams, {
-              delimiterCharacter: clipboardCopyCellDelimiter,
+              csvOptions: {
+                delimiter: clipboardCopyCellDelimiter,
+                shouldAppendQuotes: false,
+                escapeFormulas: false,
+              },
               ignoreValueFormatter,
-              shouldAppendQuotes: true,
             });
           } else {
             cellData = '';

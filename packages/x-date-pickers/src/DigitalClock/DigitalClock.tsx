@@ -1,14 +1,15 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import useForkRef from '@mui/utils/useForkRef';
-import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { getDigitalClockUtilityClass } from './digitalClockClasses';
@@ -35,14 +36,24 @@ const DigitalClockRoot = styled(PickerViewRoot, {
   name: 'MuiDigitalClock',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DigitalClockProps<any> & { alreadyRendered: boolean } }>(({ ownerState }) => ({
+})<{ ownerState: DigitalClockProps<any> & { alreadyRendered: boolean } }>({
   overflowY: 'auto',
   width: '100%',
   '@media (prefers-reduced-motion: no-preference)': {
-    scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
+    scrollBehavior: 'auto',
   },
   maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
-}));
+  variants: [
+    {
+      props: { alreadyRendered: true },
+      style: {
+        '@media (prefers-reduced-motion: no-preference)': {
+          scrollBehavior: 'smooth',
+        },
+      },
+    },
+  ],
+});
 
 const DigitalClockList = styled(MenuList, {
   name: 'MuiDigitalClock',
@@ -153,7 +164,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     valueManager: singleItemValueManager,
   });
 
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
   const now = useNow<TDate>(timezone);
 
   const ownerState = React.useMemo(
@@ -291,7 +302,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     >
       <DigitalClockList
         role="listbox"
-        aria-label={localeText.timePickerToolbarTitle}
+        aria-label={translations.timePickerToolbarTitle}
         className={classes.list}
       >
         {timeOptions.map((option, index) => {
@@ -329,11 +340,11 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
 DigitalClock.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * @default utils.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**
