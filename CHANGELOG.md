@@ -78,7 +78,6 @@ Same changes as in `@mui/x-charts@7.13.1`, plus:
 
 - [core] Follow JSDocs convention @oliviertassinari
 - [core] Prepare for material v6 (#14143) @LukasTy
-- Use `isPointInside` function for both graphs and axis (#14222) @JCQuintas
 - [code-infra] Set up `eslint-plugin-testing-library` (#14232) @LukasTy
 - [infra] Updated mui-x roadmap links with new project URL (#14271) @michelengelen
 
