@@ -141,9 +141,9 @@ export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/ex
 export * from '../utils/createControllablePromise';
 export {
   createSelector,
-  createArgumentsSelector,
+  createSelectorV8,
   createSelectorMemoized,
-  createArgumentsSelectorMemoized,
+  createSelectorMemoizedV8,
 } from '../utils/createSelector';
 export { useGridSelectorV8 } from '../hooks/utils/useGridSelector';
 export { gridRowGroupsToFetchSelector } from '../hooks/features/rows/gridRowsSelector';
