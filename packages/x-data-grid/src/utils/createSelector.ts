@@ -5,13 +5,15 @@ import { warnOnce } from '../internals/utils/warning';
 
 type CacheKey = { id: number };
 
+// TODO v8: Remove this type
 export interface OutputSelector<State, Result> {
   (apiRef: React.MutableRefObject<{ state: State; instanceId: GridCoreApi['instanceId'] }>): Result;
   (state: State, instanceId: GridCoreApi['instanceId']): Result;
   acceptsApiRef: boolean;
 }
 
-export interface OutputArgumentsSelector<State, Args, Result> {
+// TODO v8: Rename this type to `OutputSelector`
+export interface OutputSelectorV8<State, Args, Result> {
   (
     apiRef: React.MutableRefObject<{ state: State; instanceId: GridCoreApi['instanceId'] }>,
     args: Args,
@@ -35,6 +37,7 @@ type StateFromSelectorList<Selectors extends readonly any[]> = Selectors extends
     : StateFromSelectorList<R>
   : {};
 
+// TODO v8: Remove this type
 type SelectorArgs<Selectors extends ReadonlyArray<Selector<any>>, Result> =
   // Input selectors as a separate array
   | [selectors: [...Selectors], combiner: (...args: SelectorResultArray<Selectors>) => Result]
@@ -46,7 +49,8 @@ type SelectorResultArrayWithArgs<Selectors extends ReadonlyArray<Selector<any>>,
   Args,
 ];
 
-type ArgumentsSelectorArgs<Selectors extends ReadonlyArray<Selector<any>>, Args, Result> =
+// TODO v8: Rename this type to `SelectorArgs`
+type SelectorArgsV8<Selectors extends ReadonlyArray<Selector<any>>, Args, Result> =
   // Input selectors as a separate array
   | [
       selectors: [...Selectors],
@@ -55,17 +59,19 @@ type ArgumentsSelectorArgs<Selectors extends ReadonlyArray<Selector<any>>, Args,
   // Input selectors as separate inline arguments
   | [...Selectors, (...args: SelectorResultArrayWithArgs<Selectors, Args>) => Result];
 
+// TODO v8: Remove this type
 type CreateSelectorFunction = <Selectors extends ReadonlyArray<Selector<any>>, Result>(
   ...items: SelectorArgs<Selectors, Result>
 ) => OutputSelector<StateFromSelectorList<Selectors>, Result>;
 
-type CreateArgumentsSelectorFunction = <
+// TODO v8: Rename this type to `CreateSelectorFunction`
+type CreateSelectorFunctionV8 = <
   Selectors extends ReadonlyArray<Selector<any>>,
   Args,
   Result,
 >(
-  ...items: ArgumentsSelectorArgs<Selectors, Args, Result>
-) => OutputArgumentsSelector<StateFromSelectorList<Selectors>, Args, Result>;
+  ...items: SelectorArgsV8<Selectors, Args, Result>
+) => OutputSelectorV8<StateFromSelectorList<Selectors>, Args, Result>;
 
 const cache = new WeakMap<CacheKey, Map<any[], any>>();
 
@@ -75,6 +81,7 @@ function checkIsAPIRef(value: any) {
 
 const DEFAULT_INSTANCE_ID = { id: 'default' };
 
+// TODO v8: Remove this function
 export const createSelector = ((
   a: Function,
   b: Function,
@@ -156,6 +163,7 @@ export const createSelector = ((
   return selector;
 }) as unknown as CreateSelectorFunction;
 
+// TODO v8: Rename this function to `createSelector`
 export const createSelectorV8 = ((
   a: Function,
   b: Function,
@@ -235,8 +243,9 @@ export const createSelectorV8 = ((
   selector.acceptsApiRef = true;
 
   return selector;
-}) as unknown as CreateArgumentsSelectorFunction;
+}) as unknown as CreateSelectorFunctionV8;
 
+// TODO v8: Remove this function
 export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => {
   const selector = (stateOrApiRef: any, instanceId?: any) => {
     const isAPIRef = checkIsAPIRef(stateOrApiRef);
@@ -281,7 +290,8 @@ export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => 
   return selector;
 };
 
-export const createSelectorMemoizedV8: CreateArgumentsSelectorFunction = (...args: any) => {
+// TODO v8: Rename this function to `createSelectorMemoized`
+export const createSelectorMemoizedV8: CreateSelectorFunctionV8 = (...args: any) => {
   const selector = (stateOrApiRef: any, selectorArgs: any, instanceId?: any) => {
     const isAPIRef = checkIsAPIRef(stateOrApiRef);
     const cacheKey = isAPIRef
