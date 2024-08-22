@@ -139,7 +139,13 @@ export type * from '../models/props/DataGridProps';
 export type * from '../models/gridDataSource';
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
-export { createSelector, createSelectorMemoized } from '../utils/createSelector';
+export {
+  createSelector,
+  createSelectorV8,
+  createSelectorMemoized,
+  createSelectorMemoizedV8,
+} from '../utils/createSelector';
+export { useGridSelectorV8 } from '../hooks/utils/useGridSelector';
 export { gridRowGroupsToFetchSelector } from '../hooks/features/rows/gridRowsSelector';
 export {
   findParentElementFromClassName,
