@@ -314,7 +314,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c.columnHeaderTitleContainer}`]: {
       display: 'flex',
       alignItems: 'center',
-      gap: 4,
+      gap: t.spacing(0.25),
       minWidth: 0,
       flex: 1,
       whiteSpace: 'nowrap',
@@ -348,7 +348,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['columnHeader--alignRight']} .${c.menuIcon}`]: {
       marginRight: 'auto',
-      marginLeft: -6,
+      marginLeft: -5,
     },
     [`& .${c['columnHeader--moving']}`]: {
       opacity: 0.5,
@@ -420,7 +420,7 @@ export const GridRootStyles = styled('div', {
       width: 0,
       visibility: 'hidden',
       fontSize: 20,
-      marginRight: -4,
+      marginRight: -5,
       display: 'flex',
       alignItems: 'center',
     },
