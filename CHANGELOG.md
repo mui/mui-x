@@ -62,7 +62,7 @@ Same changes as in `@mui/x-date-pickers@7.13.1`.
 - [charts] Test pointer events (#14042) @alexfauquette
 - [charts] Use `isPointInside` function for both graphs and axis (#14222) @JCQuintas
 
-#### `@mui/x-date-charts-pro@7.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@7.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-charts@7.13.1`, plus:
 
@@ -78,7 +78,6 @@ Same changes as in `@mui/x-charts@7.13.1`, plus:
 
 - [core] Follow JSDocs convention @oliviertassinari
 - [core] Prepare for material v6 (#14143) @LukasTy
-- Use `isPointInside` function for both graphs and axis (#14222) @JCQuintas
 - [code-infra] Set up `eslint-plugin-testing-library` (#14232) @LukasTy
 - [infra] Updated mui-x roadmap links with new project URL (#14271) @michelengelen
 
@@ -137,7 +136,7 @@ Same changes as in `@mui/x-date-pickers@7.13.0`.
 - [charts] Rename `CartesianContextProvider` to `CartesianProvider` (#14102) @JCQuintas
 - [charts] Support axis with the same value for all data points (#14191) @alexfauquette
 
-#### `@mui/x-date-charts-pro@7.0.0-alpha.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@7.0.0-alpha.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-charts@7.13.0`.
 
@@ -211,7 +210,7 @@ Same changes as in `@mui/x-date-pickers@7.12.1`.
 - [charts] Fix charts vendor publish config (#14073) @JCQuintas
 - [charts] Move `plugins` to `PluginProvider` (#14056) @JCQuintas
 
-#### `@mui/x-date-charts-pro@7.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@7.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-charts@7.12.1`, plus:
 
