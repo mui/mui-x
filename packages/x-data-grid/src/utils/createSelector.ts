@@ -18,7 +18,6 @@ export interface OutputArgumentsSelector<State, Args, Result> {
   ): Result;
   (state: State, instanceId: GridCoreApi['instanceId']): Result;
   acceptsApiRef: boolean;
-  acceptsArguments: boolean;
 }
 
 type StateFromSelector<T> = T extends (first: infer F, ...args: any[]) => any
@@ -234,7 +233,6 @@ export const createArgumentsSelector = (() =>
     // We use this property to detect if the selector was created with createSelector
     // or it's only a simple function the receives the state and returns part of it.
     selector.acceptsApiRef = true;
-    selector.acceptsArguments = true;
 
     return selector;
   }) as unknown as CreateArgumentsSelectorFunction;
@@ -325,7 +323,6 @@ export const createArgumentsSelectorMemoized: CreateArgumentsSelectorFunction =
     // We use this property to detect if the selector was created with createSelector
     // or it's only a simple function the receives the state and returns part of it.
     selector.acceptsApiRef = true;
-    selector.acceptsArguments = true;
 
     return selector;
   };

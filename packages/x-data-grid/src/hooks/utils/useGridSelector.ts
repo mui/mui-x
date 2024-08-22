@@ -15,15 +15,9 @@ function isOutputSelector<Api extends GridApiCommon, T>(
 
 type Selector<Api extends GridApiCommon, Args, T> =
   | ((state: Api['state']) => T)
-  | OutputSelector<Api['state'], T>
   | OutputArgumentsSelector<Api['state'], Args, T>;
 
-function isArgumentsSelector<Api extends GridApiCommon, Args, T>(
-  selector: any,
-): selector is OutputArgumentsSelector<Api['state'], Args, T> {
-  return selector.acceptsArguments;
-}
-
+// TODO v8: Remove this function
 function applySelector<Api extends GridApiCommon, T>(
   apiRef: React.MutableRefObject<Api>,
   selector: ((state: Api['state']) => T) | OutputSelector<Api['state'], T>,
@@ -34,6 +28,7 @@ function applySelector<Api extends GridApiCommon, T>(
   return selector(apiRef.current.state);
 }
 
+// TODO v8: Rename this function to `applySelector`
 function applySelectorV8<Api extends GridApiCommon, Args, T>(
   apiRef: React.MutableRefObject<Api>,
   selector: Selector<Api, Args, T>,
@@ -41,10 +36,7 @@ function applySelectorV8<Api extends GridApiCommon, Args, T>(
   instanceId: GridCoreApi['instanceId'],
 ) {
   if (isOutputSelector(selector)) {
-    if (isArgumentsSelector(selector)) {
-      return selector(apiRef, args);
-    }
-    return selector(apiRef);
+    return selector(apiRef, args);
   }
   return selector(apiRef.current.state, instanceId);
 }
@@ -54,6 +46,7 @@ export const objectShallowCompare = fastObjectShallowCompare;
 
 const createRefs = () => ({ state: null, equals: null, selector: null }) as any;
 
+// TODO v8: Remove this function
 export const useGridSelector = <Api extends GridApiCommon, T>(
   apiRef: React.MutableRefObject<Api>,
   selector: ((state: Api['state']) => T) | OutputSelector<Api['state'], T>,
@@ -100,6 +93,7 @@ export const useGridSelector = <Api extends GridApiCommon, T>(
   return state;
 };
 
+// TODO v8: Rename this function to `useGridSelector`
 export const useGridSelectorV8 = <Api extends GridApiCommon, Args, T>(
   apiRef: React.MutableRefObject<Api>,
   selector: Selector<Api, Args, T>,
