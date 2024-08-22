@@ -408,3 +408,6 @@ workflows:
       - test_e2e:
           <<: *default-context
           name: test_e2e-material@next
+      - test_types:
+          <<: *default-context
+          name: test_types-material@next
