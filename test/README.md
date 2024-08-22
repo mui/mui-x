@@ -73,5 +73,6 @@ The script is based on the `git apply` command and applies the `scripts/material
 When the patch fails to apply, you need to update the patch file:
 
 1. Run `git apply --3way scripts/material-ui-v6.patch` and resolve the conflicts.
-2. Run `git --no-pager diff --unified=0 | pbcopy`. The diff is copied to your clipboard.
-3. Update the `scripts/material-ui-v6.patch` file with the copied diff.
+2. Unstage the changes with `git reset`.
+3. Run `git --no-pager diff --unified=0 | pbcopy`. The diff is copied to your clipboard.
+4. Update the `scripts/material-ui-v6.patch` file with the copied diff.
