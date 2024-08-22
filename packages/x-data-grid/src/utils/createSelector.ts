@@ -65,11 +65,7 @@ type CreateSelectorFunction = <Selectors extends ReadonlyArray<Selector<any>>, R
 ) => OutputSelector<StateFromSelectorList<Selectors>, Result>;
 
 // TODO v8: Rename this type to `CreateSelectorFunction`
-type CreateSelectorFunctionV8 = <
-  Selectors extends ReadonlyArray<Selector<any>>,
-  Args,
-  Result,
->(
+type CreateSelectorFunctionV8 = <Selectors extends ReadonlyArray<Selector<any>>, Args, Result>(
   ...items: SelectorArgsV8<Selectors, Args, Result>
 ) => OutputSelectorV8<StateFromSelectorList<Selectors>, Args, Result>;
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import type { GridApiCommon } from '../../models/api/gridApiCommon';
-import { OutputSelector, OutputArgumentsSelector } from '../../utils/createSelector';
+import { OutputSelector, OutputSelectorV8 } from '../../utils/createSelector';
 import { useLazyRef } from './useLazyRef';
 import { useOnMount } from './useOnMount';
 import { warnOnce } from '../../internals/utils/warning';
@@ -15,7 +15,7 @@ function isOutputSelector<Api extends GridApiCommon, T>(
 
 type Selector<Api extends GridApiCommon, Args, T> =
   | ((state: Api['state']) => T)
-  | OutputArgumentsSelector<Api['state'], Args, T>;
+  | OutputSelectorV8<Api['state'], Args, T>;
 
 // TODO v8: Remove this function
 function applySelector<Api extends GridApiCommon, T>(
