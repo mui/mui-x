@@ -66,3 +66,12 @@ There's a `material-ui-v6` workflow in our CircleCI pipeline that you can trigge
 4. Click `Trigger Pipeline` button.
 
 ![CircleCI workflow](./circleci-workflow.png)
+
+### Maintaining the `use-material-ui-v6` script
+
+The script is based on the `git apply` command and applies the `scripts/material-ui-v6.patch` file.
+When the patch fails to apply, you need to update the patch file:
+
+1. Run `git apply --3way scripts/material-ui-v6.patch` and resolve the conflicts.
+2. Run `git --no-pager diff --unified=0 | pbcopy`. The diff is copied to your clipboard.
+3. Update the `scripts/material-ui-v6.patch` file with the copied diff.
