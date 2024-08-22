@@ -29,7 +29,6 @@ function getBorderColor(theme: Theme) {
 
 const columnHeadersStyles = {
   [`.${c.columnSeparator}, .${c['columnSeparator--resizing']}`]: {
-    visibility: 'visible',
     width: 'auto',
   },
 };
@@ -188,6 +187,10 @@ export const GridRootStyles = styled('div', {
     },
   };
 
+  const focusOutlineWidth = 1;
+  const columnSeparatorTargetSize = 10;
+  const columnSeparatorOffset = -5;
+
   const gridStyle: CSSInterpolation = {
     '--unstable_DataGrid-radius': typeof radius === 'number' ? `${radius}px` : radius,
     '--unstable_DataGrid-headWeight': t.typography.fontWeightMedium,
@@ -264,7 +267,6 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c.columnHeader}, & .${c.cell}`]: {
       WebkitTapHighlightColor: 'transparent',
-      lineHeight: null,
       padding: '0 10px',
       boxSizing: 'border-box',
     },
@@ -273,12 +275,11 @@ export const GridRootStyles = styled('div', {
         t.vars
           ? `rgba(${t.vars.palette.primary.mainChannel} / 0.5)`
           : alpha(t.palette.primary.main, 0.5)
-      } 1px`,
-      outlineWidth: 1,
-      outlineOffset: -1,
+      } ${focusOutlineWidth}px`,
+      outlineOffset: focusOutlineWidth * -1,
     },
     [`& .${c.columnHeader}:focus, & .${c.cell}:focus`]: {
-      outline: `solid ${t.palette.primary.main} 1px`,
+      outline: `solid ${t.palette.primary.main} ${focusOutlineWidth}px`,
     },
     [`&.${c['root--noToolbar']} [aria-rowindex="1"] [aria-colindex="1"]`]: {
       borderTopLeftRadius: 'calc(var(--unstable_DataGrid-radius) - 1px)',
@@ -299,9 +300,6 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       alignItems: 'center',
     },
-    [`& .${c['columnHeader--last']}`]: {
-      overflow: 'hidden',
-    },
     [`& .${c['columnHeader--sorted']} .${c.iconButtonContainer}, & .${c['columnHeader--filtered']} .${c.iconButtonContainer}`]:
       {
         visibility: 'visible',
@@ -316,12 +314,11 @@ export const GridRootStyles = styled('div', {
     [`& .${c.columnHeaderTitleContainer}`]: {
       display: 'flex',
       alignItems: 'center',
+      gap: 4,
       minWidth: 0,
       flex: 1,
       whiteSpace: 'nowrap',
       overflow: 'hidden',
-      // to anchor the aggregation label
-      position: 'relative',
     },
     [`& .${c.columnHeaderTitleContainerContent}`]: {
       overflow: 'hidden',
@@ -346,18 +343,15 @@ export const GridRootStyles = styled('div', {
       {
         flexDirection: 'row-reverse',
       },
-    [`& .${c['columnHeader--alignCenter']} .${c.menuIcon}, & .${c['columnHeader--alignRight']} .${c.menuIcon}`]:
-      {
-        marginRight: 'auto',
-        marginLeft: -6,
-      },
-    [`& .${c['columnHeader--alignRight']} .${c.menuIcon}, & .${c['columnHeader--alignRight']} .${c.menuIcon}`]:
-      {
-        marginRight: 'auto',
-        marginLeft: -10,
-      },
+    [`& .${c['columnHeader--alignCenter']} .${c.menuIcon}`]: {
+      marginLeft: 'auto',
+    },
+    [`& .${c['columnHeader--alignRight']} .${c.menuIcon}`]: {
+      marginRight: 'auto',
+      marginLeft: -6,
+    },
     [`& .${c['columnHeader--moving']}`]: {
-      backgroundColor: (t.vars || t).palette.action.hover,
+      opacity: 0.5,
     },
     [`& .${c['columnHeader--pinnedLeft']}, & .${c['columnHeader--pinnedRight']}`]: {
       position: 'sticky',
@@ -367,10 +361,13 @@ export const GridRootStyles = styled('div', {
     [`& .${c.columnSeparator}`]: {
       visibility: 'hidden',
       position: 'absolute',
+      overflow: 'hidden',
       zIndex: 3,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
+      alignItems: 'center',
+      maxWidth: columnSeparatorTargetSize,
       color: borderColor,
     },
     [`& .${c.columnHeaders}`]: {
@@ -388,23 +385,24 @@ export const GridRootStyles = styled('div', {
       [`& .${c.columnHeader}`]: columnHeaderStyles,
     },
     [`& .${c['columnSeparator--sideLeft']}`]: {
-      left: -12,
+      left: columnSeparatorOffset,
     },
     [`& .${c['columnSeparator--sideRight']}`]: {
-      right: -12,
+      right: columnSeparatorOffset,
     },
     [`& .${c['columnSeparator--resizable']}`]: {
+      visibility: 'visible',
       cursor: 'col-resize',
       touchAction: 'none',
       '&:hover': {
-        color: (t.vars || t).palette.text.primary,
+        color: (t.vars || t).palette.primary.main,
         // Reset on touch devices, it doesn't add specificity
         '@media (hover: none)': {
           color: borderColor,
         },
       },
       [`&.${c['columnSeparator--resizing']}`]: {
-        color: (t.vars || t).palette.text.primary,
+        color: (t.vars || t).palette.primary.main,
       },
       '& svg': {
         pointerEvents: 'none',
@@ -412,12 +410,16 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c.iconSeparator}`]: {
       color: 'inherit',
+      // background and padding ensures sufficient whitespace around
+      // the separator when a column header has a border or outline
+      background: 'var(--DataGrid-containerBackground)',
+      padding: '4px 0',
     },
     [`& .${c.menuIcon}`]: {
       width: 0,
       visibility: 'hidden',
       fontSize: 20,
-      marginRight: -10,
+      marginRight: -4,
       display: 'flex',
       alignItems: 'center',
     },
@@ -511,8 +513,8 @@ export const GridRootStyles = styled('div', {
       boxShadow: t.shadows[2],
       backgroundColor: (t.vars || t).palette.background.paper,
       '&:focus-within': {
-        outline: `solid ${(t.vars || t).palette.primary.main} 1px`,
-        outlineOffset: '-1px',
+        outline: `${focusOutlineWidth}px solid ${(t.vars || t).palette.primary.main}`,
+        outlineOffset: focusOutlineWidth * -1,
       },
     },
     [`& .${c['row--editing']}`]: {
