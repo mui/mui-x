@@ -412,6 +412,7 @@ export const GridRootStyles = styled('div', {
       color: 'inherit',
       // background and padding ensures sufficient whitespace around
       // the separator when a column header has a border or outline
+      height: 'auto',
       background: 'var(--DataGrid-containerBackground)',
       padding: '4px 0',
     },
