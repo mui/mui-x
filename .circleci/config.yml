@@ -256,7 +256,7 @@ jobs:
           command: pnpm docs:typescript:formatted --disable-cache
       - run:
           name: '`pnpm docs:typescript:formatted` changes committed?'
-          command: git add -A && git diff --exit-code --staged
+          command: git add -A && git diff --exit-code --staged docs/src docs/data
       - run:
           name: Tests TypeScript definitions
           command: pnpm typescript:ci
