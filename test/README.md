@@ -2,17 +2,15 @@
 
 ## Testing multiple versions of React
 
-You can check integration of different versions of React (for example different [release channels](https://react.dev/community/versioning-policy) or PRs to React) by running the following commands:
+You can check integration of different versions of React (for example different [release channels](https://react.dev/community/versioning-policy) or PRs to React) by running the following command:
 
-1. `pnpm use-react-version <version>`.
+`pnpm use-react-version <version>`.
 
-   Possible values for `version`:
+Possible values for `version`:
 
-   - default: `stable` (minimum supported React version)
-   - a tag on npm, for example `next`, `experimental` or `latest`
-   - an older version, for example `^17.0.0`
-
-2. `pnpm install`
+- default: `stable` (minimum supported React version)
+- a tag on npm, for example `next`, `experimental` or `latest`
+- an older version, for example `^17.0.0`
 
 ### CI
 
