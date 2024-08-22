@@ -55,14 +55,14 @@ You can run the tests against `@mui/material` v6 by running the following comman
 
 There's a `material-ui-v6` workflow in our CircleCI pipeline that you can trigger in CircleCI on the PR you want to test:
 
-1.  Go to https://app.circleci.com/pipelines/github/mui/mui-x?branch=pull/PR_NUMBER and replace `PR_NUMBER` with the PR number you want to test.
-2.  Click `Trigger Pipeline` button.
-3.  Expand `Add parameters (optional)` and add the following parameter:
+1. Go to https://app.circleci.com/pipelines/github/mui/mui-x?branch=pull/PR_NUMBER and replace `PR_NUMBER` with the PR number you want to test.
+2. Click `Trigger Pipeline` button.
+3. Expand `Add parameters (optional)` and add the following parameter:
 
-    | Parameter type | Name       | Value            |
-    | :------------- | :--------- | :--------------- |
-    | `string`       | `workflow` | `material-ui-v6` |
+   | Parameter type | Name       | Value            |
+   | :------------- | :--------- | :--------------- |
+   | `string`       | `workflow` | `material-ui-v6` |
 
-4.  Click `Trigger Pipeline` button.
+4. Click `Trigger Pipeline` button.
 
 ![CircleCI workflow](./circleci-workflow.png)
