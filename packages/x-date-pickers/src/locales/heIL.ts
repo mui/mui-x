@@ -91,7 +91,7 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
   hours: 'שעות',
   minutes: 'דקות',
   seconds: 'שניות',
-  meridiem: 'צהריים',
+  meridiem: 'יחידת זמן',
 
   // Common
   empty: 'ריק',
