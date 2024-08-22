@@ -7,16 +7,15 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Aug 22, 2024_
 
-We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 💫 Allow [filtering the axis on zoom](https://mui.com/x/react-charts/zoom-and-pan/#zoom-filtering), making the axis adapt by removing values outside the view.
 
   <img width="600" src="https://github.com/user-attachments/assets/e65bbd00-d2a8-4136-81cd-3598f1373c16" alt="filtering the axis on zoom" />
 
 - 📊 Improve bar chart performances
-- 🌍 Improve Czech (cs-CZ) locale Data Grid
-- 🌍 Improve Chinese (zh-HK) locale on the Date and Time Pickers
-- 🌍 Improve Vietnamese (vi-VN) locale on the Date and Time Pickers
+- 🌍 Improve Czech (cs-CZ) locale on the Data Grid
+- 🌍 Improve Chinese (zh-HK) and Vietnamese (vi-VN) locales on the Date and Time Pickers
 - 🐞 Bugfixes
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
@@ -25,8 +24,9 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 #### `@mui/x-data-grid@7.13.1`
 
-- [data grid] Use readonly array result for getTreeDataPath (#11743) @pcorpet
-- [data grid] use `event.key` for `Tab` and `Escape` keys (#14170) @k-rajat19
+- [DataGrid] Use readonly array result for `getTreeDataPath` (#11743) @pcorpet
+- [DataGrid] Use `event.key` for `Tab` and `Escape` keys (#14170) @k-rajat19
+- [DataGrid] Introduce selectors with arguments (#14236) @MBilalShafi
 - [DataGrid] include `api` in `gridCellParams` interface (#14201) @k-rajat19
 - [l10n] Improve Czech (cs-CZ) locale (#14135) @chirimiri22
 
@@ -47,6 +47,7 @@ Same changes as in `@mui/x-data-grid-pro@7.13.1`, plus:
 
 - [l10n] Improve Chinese (zh-HK) locale (#13289) @yeeharn
 - [l10n] Improve Vietnamese (vi-VN) locale (#14238) @locnbk2002
+- [TimePicker] Handle `Space` and `Enter` on the `TimeClock` component @arthurbalduini
 
 #### `@mui/x-date-pickers-pro@7.13.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -59,6 +60,7 @@ Same changes as in `@mui/x-date-pickers@7.13.1`.
 - [charts] Fix grid overflow with zooming (#14280) @alexfauquette
 - [charts] Improve bar chart performances (#14278) @alexfauquette
 - [charts] Test pointer events (#14042) @alexfauquette
+- [charts] Use `isPointInside` function for both graphs and axis (#14222) @JCQuintas
 
 #### `@mui/x-date-charts-pro@7.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
