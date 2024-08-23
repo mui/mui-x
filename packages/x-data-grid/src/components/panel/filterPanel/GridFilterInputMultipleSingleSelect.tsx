@@ -108,14 +108,18 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
       onChange={handleChange}
       getOptionLabel={getOptionLabel}
       renderTags={(value, getTagProps) =>
-        value.map((option, index) => (
-          <rootProps.slots.baseChip
-            variant="outlined"
-            size="small"
-            label={getOptionLabel(option)}
-            {...getTagProps({ index })}
-          />
-        ))
+        value.map((option, index) => {
+          const tagProps = getTagProps({ index });
+          return (
+            <rootProps.slots.baseChip
+              variant="outlined"
+              size="small"
+              label={getOptionLabel(option)}
+              {...tagProps}
+              key={tagProps.key}
+            />
+          );
+        })
       }
       renderInput={(params) => (
         <rootProps.slots.baseTextField
