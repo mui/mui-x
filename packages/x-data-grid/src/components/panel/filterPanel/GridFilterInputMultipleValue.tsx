@@ -66,14 +66,14 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
       onChange={handleChange}
       renderTags={(value, getTagProps) =>
         value.map((option, index) => {
-          const tagProps = getTagProps({ index });
+          const { key, ...tagProps } = getTagProps({ index });
           return (
             <rootProps.slots.baseChip
+              key={key}
               variant="outlined"
               size="small"
               label={option}
               {...tagProps}
-              key={tagProps.key}
             />
           );
         })
