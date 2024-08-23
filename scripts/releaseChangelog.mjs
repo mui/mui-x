@@ -316,7 +316,7 @@ ${logChangelogSection(pickersProCommits)}
 
 ${logChangelogSection(chartsCommits)}
 
-#### \`@mui/x-date-charts-pro@__VERSION-ALPHA__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### \`@mui/x-charts-pro@__VERSION-ALPHA__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in \`@mui/x-charts@__VERSION__\`${chartsProCommits.length > 0 ? ', plus:\n' : '.'}
 ${logChangelogSection(chartsProCommits)}
