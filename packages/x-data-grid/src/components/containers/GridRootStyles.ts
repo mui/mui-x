@@ -369,7 +369,7 @@ export const GridRootStyles = styled('div', {
       marginLeft: -5,
     },
     [`& .${c['columnHeader--moving']}`]: {
-      opacity: 0.5,
+      backgroundColor: (t.vars || t).palette.action.hover,
     },
     [`& .${c['columnHeader--pinnedLeft']}, & .${c['columnHeader--pinnedRight']}`]: {
       position: 'sticky',
@@ -416,7 +416,6 @@ export const GridRootStyles = styled('div', {
       touchAction: 'none',
       '&:hover': {
         color: (t.vars || t).palette.primary.main,
-        // Grow the separator into a resize handle
         [`& .${c.iconSeparator} rect`]: {
           width: 3,
           rx: 1.5,
