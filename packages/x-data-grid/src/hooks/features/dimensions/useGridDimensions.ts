@@ -5,6 +5,7 @@ import {
   unstable_useEventCallback as useEventCallback,
   unstable_ownerWindow as ownerWindow,
 } from '@mui/utils';
+import { throttle } from '@mui/x-internals/throttle';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -13,7 +14,6 @@ import {
   useGridApiOptionHandler,
 } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { throttle } from '../../../utils/throttle';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi, GridDimensionsPrivateApi } from './gridDimensionsApi';
@@ -86,6 +86,7 @@ export function useGridDimensions(
   const logger = useGridLogger(apiRef, 'useResizeContainer');
   const errorShown = React.useRef(false);
   const rootDimensionsRef = React.useRef(EMPTY_SIZE);
+  const dimensionsState = useGridSelector(apiRef, gridDimensionsSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
@@ -302,26 +303,25 @@ export function useGridDimensions(
   }, [apiRef, savedSize, updateDimensions]);
 
   const root = apiRef.current.rootElementRef.current;
-  const dimensions = apiRef.current.state.dimensions;
   useEnhancedEffect(() => {
     if (!root) {
       return;
     }
     const set = (k: string, v: string) => root.style.setProperty(k, v);
-    set('--DataGrid-width', `${dimensions.viewportOuterSize.width}px`);
-    set('--DataGrid-hasScrollX', `${Number(dimensions.hasScrollX)}`);
-    set('--DataGrid-hasScrollY', `${Number(dimensions.hasScrollY)}`);
-    set('--DataGrid-scrollbarSize', `${dimensions.scrollbarSize}px`);
-    set('--DataGrid-rowWidth', `${dimensions.rowWidth}px`);
-    set('--DataGrid-columnsTotalWidth', `${dimensions.columnsTotalWidth}px`);
-    set('--DataGrid-leftPinnedWidth', `${dimensions.leftPinnedWidth}px`);
-    set('--DataGrid-rightPinnedWidth', `${dimensions.rightPinnedWidth}px`);
-    set('--DataGrid-headerHeight', `${dimensions.headerHeight}px`);
-    set('--DataGrid-headersTotalHeight', `${dimensions.headersTotalHeight}px`);
-    set('--DataGrid-topContainerHeight', `${dimensions.topContainerHeight}px`);
-    set('--DataGrid-bottomContainerHeight', `${dimensions.bottomContainerHeight}px`);
-    set('--height', `${dimensions.rowHeight}px`);
-  }, [root, dimensions]);
+    set('--DataGrid-width', `${dimensionsState.viewportOuterSize.width}px`);
+    set('--DataGrid-hasScrollX', `${Number(dimensionsState.hasScrollX)}`);
+    set('--DataGrid-hasScrollY', `${Number(dimensionsState.hasScrollY)}`);
+    set('--DataGrid-scrollbarSize', `${dimensionsState.scrollbarSize}px`);
+    set('--DataGrid-rowWidth', `${dimensionsState.rowWidth}px`);
+    set('--DataGrid-columnsTotalWidth', `${dimensionsState.columnsTotalWidth}px`);
+    set('--DataGrid-leftPinnedWidth', `${dimensionsState.leftPinnedWidth}px`);
+    set('--DataGrid-rightPinnedWidth', `${dimensionsState.rightPinnedWidth}px`);
+    set('--DataGrid-headerHeight', `${dimensionsState.headerHeight}px`);
+    set('--DataGrid-headersTotalHeight', `${dimensionsState.headersTotalHeight}px`);
+    set('--DataGrid-topContainerHeight', `${dimensionsState.topContainerHeight}px`);
+    set('--DataGrid-bottomContainerHeight', `${dimensionsState.bottomContainerHeight}px`);
+    set('--height', `${dimensionsState.rowHeight}px`);
+  }, [root, dimensionsState]);
 
   const isFirstSizing = React.useRef(true);
   const handleResize = React.useCallback<GridEventListener<'resize'>>(

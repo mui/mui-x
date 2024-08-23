@@ -14,6 +14,9 @@
     "onFocus": {
       "description": "This prop isn&#39;t supported. Use the <code>onItemFocus</code> callback on the tree if you need to monitor a item&#39;s focus."
     },
+    "onKeyDown": {
+      "description": "Callback fired when a key of the keyboard is pressed on the item."
+    },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "sx": {
@@ -34,6 +37,19 @@
       "nodeName": "the element",
       "conditions": "disabled"
     },
+    "dragAndDropOverlay": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the drag and drop overlay"
+    },
+    "editable": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the content of the items that are editable"
+    },
+    "editing": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the content element",
+      "conditions": "editing is enabled"
+    },
     "expanded": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the content element",
@@ -49,6 +65,11 @@
       "nodeName": "the tree item icon"
     },
     "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the label element" },
+    "labelInput": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the input element that is visible",
+      "conditions": "editing is enabled"
+    },
     "root": { "description": "Styles applied to the root element." },
     "selected": {
       "description": "State class applied to {{nodeName}} when {{conditions}}.",
@@ -60,7 +81,7 @@
     "collapseIcon": "The icon used to collapse the item.",
     "endIcon": "The icon displayed next to an end item.",
     "expandIcon": "The icon used to expand the item.",
-    "groupTransition": "The component that animates to appearance / disappearance of the item&#39;s children.",
+    "groupTransition": "The component that animates the appearance / disappearance of the item&#39;s children.",
     "icon": "The icon to display next to the tree item&#39;s label."
   }
 }

@@ -39,6 +39,17 @@ describe('<AdapterDayjs />', () => {
     },
   });
 
+  describe('Adapter timezone', () => {
+    it('setTimezone: should throw warning if no plugin is available', () => {
+      const modifiedAdapter = new AdapterDayjs();
+      // @ts-ignore
+      modifiedAdapter.hasTimezonePlugin = () => false;
+
+      const date = modifiedAdapter.date(TEST_DATE_ISO_STRING)!;
+      expect(() => modifiedAdapter.setTimezone(date, 'Europe/London')).to.throw();
+    });
+  });
+
   describe('Adapter localization', () => {
     describe('English', () => {
       const adapter = new AdapterDayjs({ locale: 'en' });
@@ -137,21 +148,18 @@ describe('<AdapterDayjs />', () => {
         });
 
         it('should have correct placeholder', () => {
-          const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+          const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-          expectFieldValueV7(
-            v7Response.getSectionsContainer(),
-            localizedTexts[localeKey].placeholder,
-          );
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
         it('should have well formatted value', () => {
-          const v7Response = renderWithProps({
+          const view = renderWithProps({
             enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
           });
 
-          expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });

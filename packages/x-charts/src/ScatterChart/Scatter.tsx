@@ -10,6 +10,7 @@ import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { InteractionContext } from '../context/InteractionProvider';
 import { D3Scale } from '../models/axis';
 import { useHighlighted } from '../context';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -42,6 +43,8 @@ export interface ScatterProps {
 function Scatter(props: ScatterProps) {
   const { series, xScale, yScale, color, colorGetter, markerSize, onItemClick } = props;
 
+  const drawingArea = useDrawingArea();
+
   const { useVoronoiInteraction } = React.useContext(InteractionContext);
 
   const skipInteractionHandlers = useVoronoiInteraction || series.disableHover;
@@ -51,13 +54,6 @@ function Scatter(props: ScatterProps) {
   const cleanData = React.useMemo(() => {
     const getXPosition = getValueToPositionMapper(xScale);
     const getYPosition = getValueToPositionMapper(yScale);
-    const xRange = xScale.range();
-    const yRange = yScale.range();
-
-    const minXRange = Math.min(...xRange);
-    const maxXRange = Math.max(...xRange);
-    const minYRange = Math.min(...yRange);
-    const maxYRange = Math.max(...yRange);
 
     const temp: (ScatterValueType & {
       dataIndex: number;
@@ -73,7 +69,7 @@ function Scatter(props: ScatterProps) {
       const x = getXPosition(scatterPoint.x);
       const y = getYPosition(scatterPoint.y);
 
-      const isInRange = x >= minXRange && x <= maxXRange && y >= minYRange && y <= maxYRange;
+      const isInRange = drawingArea.isPointInside({ x, y });
 
       const pointCtx = { type: 'scatter' as const, seriesId: series.id, dataIndex: i };
 
@@ -100,13 +96,14 @@ function Scatter(props: ScatterProps) {
   }, [
     xScale,
     yScale,
+    drawingArea,
     series.data,
     series.id,
-    getInteractionItemProps,
-    color,
-    colorGetter,
-    isFaded,
     isHighlighted,
+    isFaded,
+    getInteractionItemProps,
+    colorGetter,
+    color,
   ]);
 
   return (

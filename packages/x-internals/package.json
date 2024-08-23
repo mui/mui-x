@@ -1,0 +1,57 @@
+{
+  "name": "@mui/x-internals",
+  "version": "7.13.0",
+  "description": "Utility functions for the MUI X packages (internal use only).",
+  "author": "MUI Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mui/mui-x/issues"
+  },
+  "homepage": "https://mui.com/x/",
+  "sideEffects": false,
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/mui-org"
+  },
+  "publishConfig": {
+    "access": "public",
+    "directory": "build"
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "material-ui",
+    "mui",
+    "mui-x",
+    "utils"
+  ],
+  "scripts": {
+    "typescript": "tsc -p tsconfig.json",
+    "build": "pnpm build:modern && pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files ",
+    "build:modern": "node ../../scripts/build.mjs modern",
+    "build:node": "node ../../scripts/build.mjs node",
+    "build:stable": "node ../../scripts/build.mjs stable",
+    "build:copy-files": "node ../../scripts/copyFiles.mjs",
+    "build:types": "node ../../scripts/buildTypes.mjs",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mui/mui-x.git",
+    "directory": "packages/x-internals"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.25.0",
+    "@mui/utils": "^5.16.6"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0"
+  },
+  "devDependencies": {
+    "@mui/internal-test-utils": "^1.0.8",
+    "rimraf": "^5.0.10"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

@@ -10,34 +10,36 @@ import {
   DateRangePickerDayProps,
 } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 
-const DateRangePickerDay = styled(MuiDateRangePickerDay)(
-  ({
-    theme,
-    isHighlighting,
-    isStartOfHighlighting,
-    isEndOfHighlighting,
-    outsideCurrentMonth,
-  }) => ({
-    ...(!outsideCurrentMonth &&
-      isHighlighting && {
+const DateRangePickerDay = styled(MuiDateRangePickerDay)(({ theme }) => ({
+  variants: [
+    {
+      props: ({ isHighlighting, outsideCurrentMonth }) =>
+        !outsideCurrentMonth && isHighlighting,
+      style: {
         borderRadius: 0,
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.common.white,
         '&:hover, &:focus': {
           backgroundColor: theme.palette.primary.dark,
         },
-      }),
-    ...(isStartOfHighlighting && {
-      borderTopLeftRadius: '50%',
-      borderBottomLeftRadius: '50%',
-    }),
-    ...(isEndOfHighlighting && {
-      borderTopRightRadius: '50%',
-      borderBottomRightRadius: '50%',
-    }),
-  }),
-) as React.ComponentType<DateRangePickerDayProps<Dayjs>>;
-
+      },
+    },
+    {
+      props: ({ isStartOfHighlighting }) => isStartOfHighlighting,
+      style: {
+        borderTopLeftRadius: '50%',
+        borderBottomLeftRadius: '50%',
+      },
+    },
+    {
+      props: ({ isEndOfHighlighting }) => isEndOfHighlighting,
+      style: {
+        borderTopRightRadius: '50%',
+        borderBottomRightRadius: '50%',
+      },
+    },
+  ],
+})) as React.ComponentType<DateRangePickerDayProps<Dayjs>>;
 export default function CustomDateRangePickerDay() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

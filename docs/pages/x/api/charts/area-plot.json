@@ -18,7 +18,8 @@
   "name": "AreaPlot",
   "imports": [
     "import { AreaPlot } from '@mui/x-charts/LineChart';",
-    "import { AreaPlot } from '@mui/x-charts';"
+    "import { AreaPlot } from '@mui/x-charts';",
+    "import { AreaPlot } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {

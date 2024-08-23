@@ -6,8 +6,9 @@ import useForkRef from '@mui/utils/useForkRef';
 import { refType } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import visuallyHidden from '@mui/utils/visuallyHidden';
+import { useRtl } from '@mui/system/RtlProvider';
 import {
   pickersInputBaseClasses,
   getPickersInputBaseUtilityClass,
@@ -63,8 +64,13 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
   letterSpacing: 'inherit',
   // Baseline behavior
   width: '182px',
-  ...(theme.direction === 'rtl' && { textAlign: 'right /*! @noflip */' as any }),
   variants: [
+    {
+      props: { isRtl: true },
+      style: {
+        textAlign: 'right /*! @noflip */' as any,
+      },
+    },
     {
       props: { size: 'small' },
       style: {
@@ -174,7 +180,9 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
 
 interface OwnerStateType
   extends FormControlState,
-    Omit<PickersInputBaseProps, keyof FormControlState> {}
+    Omit<PickersInputBaseProps, keyof FormControlState> {
+  isRtl: boolean;
+}
 
 /**
  * @ignore - internal component.
@@ -219,7 +227,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   const rootRef = React.useRef<HTMLDivElement>(null);
   const handleRootRef = useForkRef(ref, rootRef);
   const handleInputRef = useForkRef(inputProps?.ref, inputRef);
-
+  const isRtl = useRtl();
   const muiFormControl = useFormControl();
   if (!muiFormControl) {
     throw new Error(
@@ -259,6 +267,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   const ownerState: OwnerStateType = {
     ...(props as Omit<PickersInputBaseProps, keyof FormControlState>),
     ...muiFormControl,
+    isRtl,
   };
 
   const classes = useUtilityClasses(ownerState);

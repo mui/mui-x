@@ -11,7 +11,7 @@ packageName: '@mui/x-date-pickers'
 <p class="description">Date and Time Pickers support UTC and timezones.</p>
 
 :::warning
-UTC and timezone support is an ongoing topic.
+UTC and timezones support is an ongoing effort.
 
 Only `AdapterDayjs`, `AdapterLuxon` and `AdapterMoment` are currently compatible with UTC dates and timezones.
 :::
@@ -184,13 +184,13 @@ const date2 = DateTime.fromISO('2022-04-17T15:30', { zone: 'UTC' });
 const date3 = DateTime.fromSQL('2022-04-17 15:30:00', { zone: 'UTC' });
 ```
 
-Please check out the documentation of the [UTC and timezone on Luxon](https://moment.github.io/luxon/#/zones) for more details.
+Please check out the documentation of the [UTC and timezones on Luxon](https://moment.github.io/luxon/#/zones) for more details.
 :::
 
 You can then pass your UTC date to your picker:
 
 ```tsx
-import { DateTime, Settings } from 'luxon';
+import { DateTime } from 'luxon';
 
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -234,13 +234,13 @@ const date1 = DateTime.fromISO('2022-04-17T15:30', { zone: 'America/New_York' })
 const date2 = DateTime.fromSQL('2022-04-17 15:30:00', { zone: 'America/New_York' });
 ```
 
-Please check out the documentation of the [UTC and timezone on Luxon](https://moment.github.io/luxon/#/zones) for more details.
+Please check out the documentation of the [UTC and timezones on Luxon](https://moment.github.io/luxon/#/zones) for more details.
 :::
 
 You can then pass your date in the wanted timezone to your picker:
 
 ```tsx
-import { DateTime, Settings } from 'luxon';
+import { DateTime } from 'luxon';
 
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -262,7 +262,7 @@ function App() {
 {{"demo": "LuxonTimezone.js", "defaultCodeOpen": false}}
 
 :::info
-Please check out the documentation of the [UTC and timezone on Luxon](https://moment.github.io/luxon/#/zones) for more details on how to manipulate the timezones.
+Please check out the documentation of the [UTC and timezones on Luxon](https://moment.github.io/luxon/#/zones) for more details on how to manipulate the timezones.
 :::
 
 ## Usage with Moment

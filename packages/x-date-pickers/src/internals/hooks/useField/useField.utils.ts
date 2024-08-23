@@ -169,7 +169,8 @@ export const applyLocalizedDigits = (valueStr: string, localizedDigits: string[]
 
 export const isStringNumber = (valueStr: string, localizedDigits: string[]) => {
   const nonLocalizedValueStr = removeLocalizedDigits(valueStr, localizedDigits);
-  return !Number.isNaN(Number(nonLocalizedValueStr));
+  // `Number(' ')` returns `0` even if ' ' is not a valid number.
+  return nonLocalizedValueStr !== ' ' && !Number.isNaN(Number(nonLocalizedValueStr));
 };
 
 /**
@@ -322,9 +323,10 @@ export const adjustSectionValue = <TDate extends PickerValidDate, TSection exten
     }
 
     const currentOptionIndex = options.indexOf(section.value);
-    const newOptionIndex = (currentOptionIndex + options.length + delta) % options.length;
+    const newOptionIndex = (currentOptionIndex + delta) % options.length;
+    const clampedIndex = (newOptionIndex + options.length) % options.length;
 
-    return options[newOptionIndex];
+    return options[clampedIndex];
   };
 
   if (section.contentType === 'digit' || section.contentType === 'digit-with-letter') {
@@ -494,12 +496,12 @@ export const createDateStrForV7HiddenInputFromSections = (sections: FieldSection
 export const createDateStrForV6InputFromSections = (
   sections: FieldSection[],
   localizedDigits: string[],
-  isRTL: boolean,
+  isRtl: boolean,
 ) => {
   const formattedSections = sections.map((section) => {
     const dateValue = getSectionVisibleValue(
       section,
-      isRTL ? 'input-rtl' : 'input-ltr',
+      isRtl ? 'input-rtl' : 'input-ltr',
       localizedDigits,
     );
 
@@ -508,7 +510,7 @@ export const createDateStrForV6InputFromSections = (
 
   const dateStr = formattedSections.join('');
 
-  if (!isRTL) {
+  if (!isRtl) {
     return dateStr;
   }
 
@@ -745,7 +747,7 @@ export const mergeDateIntoReferenceDate = <TDate extends PickerValidDate>(
       return mergedDate;
     }, referenceDate);
 
-export const isAndroid = () => navigator.userAgent.toLowerCase().indexOf('android') > -1;
+export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
 // TODO v8: Remove if we drop the v6 TextField approach.
 export const getSectionOrder = (
@@ -831,7 +833,7 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
   switch (section.type) {
     case 'month': {
       if (section.contentType === 'digit') {
-        return utils.format(utils.setMonth(utils.date()!, Number(section.value) - 1), 'month');
+        return utils.format(utils.setMonth(utils.date(), Number(section.value) - 1), 'month');
       }
       const parsedDate = utils.parse(section.value, section.format);
       return parsedDate ? utils.format(parsedDate, 'month') : undefined;
@@ -839,7 +841,7 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
     case 'day':
       return section.contentType === 'digit'
         ? utils.format(
-            utils.setDate(utils.startOfYear(utils.date()!), Number(section.value)),
+            utils.setDate(utils.startOfYear(utils.date()), Number(section.value)),
             'dayOfMonthFull',
           )
         : section.value;

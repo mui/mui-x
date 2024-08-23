@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import {
-  fireEvent,
-  fireTouchChangedEvent,
-  screen,
-  within,
-  getAllByRole,
-} from '@mui/internal-test-utils';
+import { fireEvent, fireTouchChangedEvent, screen, within } from '@mui/internal-test-utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import { createPickerRenderer, adapterToUse, timeClockHandler } from 'test/utils/pickers';
 
@@ -145,6 +139,47 @@ describe('<TimeClock />', () => {
     expect(reason).to.equal('partial');
   });
 
+  [
+    {
+      keyName: 'Enter',
+      keyValue: 'Enter',
+    },
+    {
+      keyName: 'Space',
+      keyValue: ' ',
+    },
+  ].forEach(({ keyName, keyValue }) => {
+    it(`sets value on ${keyName} press`, () => {
+      const handleChange = spy();
+      render(
+        <TimeClock
+          autoFocus
+          defaultValue={adapterToUse.date('2019-01-01T04:20:00')}
+          onChange={handleChange}
+        />,
+      );
+      const listbox = screen.getByRole('listbox');
+
+      fireEvent.keyDown(listbox, { key: 'ArrowDown' });
+      fireEvent.keyDown(listbox, { key: keyValue });
+
+      expect(handleChange.callCount).to.equal(2);
+      let [newDate, reason] = handleChange.lastCall.args;
+
+      expect(adapterToUse.getHours(newDate)).to.equal(3);
+      expect(reason).to.equal('partial');
+
+      fireEvent.keyDown(listbox, { key: 'ArrowUp' });
+      fireEvent.keyDown(listbox, { key: keyValue });
+
+      expect(handleChange.callCount).to.equal(4);
+      [newDate, reason] = handleChange.lastCall.args;
+
+      expect(adapterToUse.getMinutes(newDate)).to.equal(21);
+      expect(reason).to.equal('finish');
+    });
+  });
+
   it('should display options, but not update value when readOnly prop is passed', function test() {
     // Only run in supported browsers
     if (typeof Touch === 'undefined') {
@@ -166,7 +201,7 @@ describe('<TimeClock />', () => {
 
     // hours are not disabled
     const hoursContainer = screen.getByRole('listbox');
-    const hours = getAllByRole(hoursContainer, 'option');
+    const hours = within(hoursContainer).getAllByRole('option');
     const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
 
     expect(hours.length).to.equal(12);
@@ -194,7 +229,7 @@ describe('<TimeClock />', () => {
 
     // hours are disabled
     const hoursContainer = screen.getByRole('listbox');
-    const hours = getAllByRole(hoursContainer, 'option');
+    const hours = within(hoursContainer).getAllByRole('option');
     const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
 
     expect(hours.length).to.equal(12);

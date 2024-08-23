@@ -10,9 +10,9 @@ import { MakeRequired } from '../internals/models/helpers';
 
 type DateFnsLocaleBase = {
   formatLong?: {
-    date?: any;
-    time?: any;
-    dateTime?: any;
+    date: (...args: Array<any>) => any;
+    time: (...args: Array<any>) => any;
+    dateTime: (...args: Array<any>) => any;
   };
   code?: string;
 };
@@ -115,7 +115,10 @@ type DateFnsAdapterBaseOptions<DateFnsLocale extends DateFnsLocaleBase> = MakeRe
   AdapterOptions<DateFnsLocale, never>,
   'locale'
 > & {
-  longFormatters: Record<'p' | 'P', (token: string, formatLong: any) => string>;
+  longFormatters: Record<
+    'p' | 'P',
+    (token: string, formatLong: DateFnsLocaleBase['formatLong']) => string
+  >;
   lib?: string;
 };
 
@@ -212,19 +215,15 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
     return value;
   };
 
-  public getCurrentLocaleCode = () => {
-    return this.locale?.code || 'en-US';
+  public getCurrentLocaleCode = (): string => {
+    // `code` is undefined only in `date-fns` types, but all locales have it
+    return this.locale.code!;
   };
 
   // Note: date-fns input types are more lenient than this adapter, so we need to expose our more
   // strict signature and delegate to the more lenient signature. Otherwise, we have downstream type errors upon usage.
   public is12HourCycleInCurrentLocale = () => {
-    if (this.locale) {
-      return /a/.test(this.locale.formatLong!.time({ width: 'short' }));
-    }
-
-    // By default, date-fns is using en-US locale with am/pm enabled
-    return true;
+    return /a/.test(this.locale.formatLong!.time({ width: 'short' }));
   };
 
   public expandFormat = (format: string) => {

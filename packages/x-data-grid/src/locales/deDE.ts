@@ -42,7 +42,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   columnsManagementSearchTitle: 'Suche',
   columnsManagementNoColumns: 'Keine Spalten',
   columnsManagementShowHideAllText: 'Alle anzeigen/verbergen',
-  // columnsManagementReset: 'Reset',
+  columnsManagementReset: 'Zurücksetzen',
 
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',

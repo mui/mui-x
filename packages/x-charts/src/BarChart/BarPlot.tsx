@@ -1,11 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
-import { SeriesContext } from '../context/SeriesContextProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { AxisDefaultized } from '../models/axis';
-import { FormatterResult } from '../models/seriesType/config';
 import { BarItemIdentifier } from '../models';
 import getColor from './getColor';
 import { useChartId } from '../hooks';
@@ -14,6 +12,8 @@ import { BarClipPath } from './BarClipPath';
 import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { checkScaleErrors } from './checkScaleErrors';
+import { useBarSeries } from '../hooks/useSeries';
+import { SeriesFormatterResult } from '../context/PluginProvider';
 
 /**
  * Solution of the equations
@@ -87,9 +87,9 @@ const useAggregatedData = (): {
   masksData: MaskData[];
 } => {
   const seriesData =
-    React.useContext(SeriesContext).bar ??
-    ({ series: {}, stackingGroups: [], seriesOrder: [] } as FormatterResult<'bar'>);
-  const axisData = React.useContext(CartesianContext);
+    useBarSeries() ??
+    ({ series: {}, stackingGroups: [], seriesOrder: [] } as SeriesFormatterResult<'bar'>);
+  const axisData = useCartesianContext();
   const chartId = useChartId();
 
   const { series, stackingGroups } = seriesData;
@@ -101,15 +101,15 @@ const useAggregatedData = (): {
 
   const data = stackingGroups.flatMap(({ ids: groupIds }, groupIndex) => {
     return groupIds.flatMap((seriesId) => {
-      const xAxisKey = series[seriesId].xAxisKey ?? defaultXAxisId;
-      const yAxisKey = series[seriesId].yAxisKey ?? defaultYAxisId;
+      const xAxisId = series[seriesId].xAxisId ?? series[seriesId].xAxisKey ?? defaultXAxisId;
+      const yAxisId = series[seriesId].yAxisId ?? series[seriesId].yAxisKey ?? defaultYAxisId;
 
-      const xAxisConfig = xAxis[xAxisKey];
-      const yAxisConfig = yAxis[yAxisKey];
+      const xAxisConfig = xAxis[xAxisId];
+      const yAxisConfig = yAxis[yAxisId];
 
       const verticalLayout = series[seriesId].layout === 'vertical';
 
-      checkScaleErrors(verticalLayout, seriesId, xAxisKey, xAxis, yAxisKey, yAxis);
+      checkScaleErrors(verticalLayout, seriesId, xAxisId, xAxis, yAxisId, yAxis);
 
       const baseScaleConfig = (
         verticalLayout ? xAxisConfig : yAxisConfig
@@ -118,7 +118,7 @@ const useAggregatedData = (): {
       const xScale = xAxisConfig.scale;
       const yScale = yAxisConfig.scale;
 
-      const colorGetter = getColor(series[seriesId], xAxis[xAxisKey], yAxis[yAxisKey]);
+      const colorGetter = getColor(series[seriesId], xAxis[xAxisId], yAxis[yAxisId]);
       const bandWidth = baseScaleConfig.scale.bandwidth();
 
       const { barWidth, offset } = getBandSize({
@@ -142,12 +142,8 @@ const useAggregatedData = (): {
           seriesId,
           dataIndex,
           layout: series[seriesId].layout,
-          x: verticalLayout
-            ? xScale(xAxis[xAxisKey].data?.[dataIndex])! + barOffset
-            : minValueCoord,
-          y: verticalLayout
-            ? minValueCoord
-            : yScale(yAxis[yAxisKey].data?.[dataIndex])! + barOffset,
+          x: verticalLayout ? xScale(xAxis[xAxisId].data?.[dataIndex])! + barOffset : minValueCoord,
+          y: verticalLayout ? minValueCoord : yScale(yAxis[yAxisId].data?.[dataIndex])! + barOffset,
           xOrigin: xScale(0)!,
           yOrigin: yScale(0)!,
           height: verticalLayout ? maxValueCoord - minValueCoord : barWidth,
@@ -228,6 +224,9 @@ const enterStyle = ({ x, width, y, height }: AnimationData) => ({
 function BarPlot(props: BarPlotProps) {
   const { completedData, masksData } = useAggregatedData();
   const { skipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
+
+  const withoutBorderRadius = !borderRadius || borderRadius <= 0;
+
   const transition = useTransition(completedData, {
     keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
     from: leaveStyle,
@@ -237,7 +236,7 @@ function BarPlot(props: BarPlotProps) {
     immediate: skipAnimation,
   });
 
-  const maskTransition = useTransition(masksData, {
+  const maskTransition = useTransition(withoutBorderRadius ? [] : masksData, {
     keys: (v) => v.id,
     from: leaveStyle,
     leave: leaveStyle,
@@ -248,18 +247,19 @@ function BarPlot(props: BarPlotProps) {
 
   return (
     <React.Fragment>
-      {maskTransition((style, { id, hasPositive, hasNegative, layout }) => {
-        return (
-          <BarClipPath
-            maskId={id}
-            borderRadius={borderRadius}
-            hasNegative={hasNegative}
-            hasPositive={hasPositive}
-            layout={layout}
-            style={style}
-          />
-        );
-      })}
+      {!withoutBorderRadius &&
+        maskTransition((style, { id, hasPositive, hasNegative, layout }) => {
+          return (
+            <BarClipPath
+              maskId={id}
+              borderRadius={borderRadius}
+              hasNegative={hasNegative}
+              hasPositive={hasPositive}
+              layout={layout}
+              style={style}
+            />
+          );
+        })}
       {transition((style, { seriesId, dataIndex, color, maskId }) => {
         const barElement = (
           <BarElement
@@ -277,7 +277,7 @@ function BarPlot(props: BarPlotProps) {
           />
         );
 
-        if (!borderRadius || borderRadius <= 0) {
+        if (withoutBorderRadius) {
           return barElement;
         }
 

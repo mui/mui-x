@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import {
   PickersCalendarHeader,
   PickersCalendarHeaderProps,
@@ -19,12 +19,22 @@ import {
 import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
 import { DateView, PickerValidDate, TimezoneProps } from '../models';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
-import { ExportedMonthCalendarProps } from '../MonthCalendar/MonthCalendar.types';
+import {
+  ExportedYearCalendarProps,
+  YearCalendarSlots,
+  YearCalendarSlotProps,
+} from '../YearCalendar/YearCalendar.types';
+import {
+  ExportedMonthCalendarProps,
+  MonthCalendarSlots,
+  MonthCalendarSlotProps,
+} from '../MonthCalendar/MonthCalendar.types';
 
 export interface DateCalendarSlots<TDate extends PickerValidDate>
   extends PickersCalendarHeaderSlots,
-    DayCalendarSlots<TDate> {
+    DayCalendarSlots<TDate>,
+    MonthCalendarSlots,
+    YearCalendarSlots {
   /**
    * Custom component for calendar header.
    * Check the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.
@@ -35,7 +45,9 @@ export interface DateCalendarSlots<TDate extends PickerValidDate>
 
 export interface DateCalendarSlotProps<TDate extends PickerValidDate>
   extends PickersCalendarHeaderSlotProps<TDate>,
-    DayCalendarSlotProps<TDate> {
+    DayCalendarSlotProps<TDate>,
+    MonthCalendarSlotProps,
+    YearCalendarSlotProps {
   calendarHeader?: SlotComponentProps<typeof PickersCalendarHeader, {}, DateCalendarProps<TDate>>;
 }
 

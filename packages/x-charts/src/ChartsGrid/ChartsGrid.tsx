@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, useThemeProps } from '@mui/material/styles';
 
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { useTicks } from '../hooks/useTicks';
 import {
   ChartsGridClasses,
   getChartsGridUtilityClass,
   chartsGridClasses,
 } from './chartsGridClasses';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 
 const GridRoot = styled('g', {
   name: 'MuiChartsGrid',
@@ -68,8 +69,9 @@ export interface ChartsGridProps {
 function ChartsGrid(props: ChartsGridProps) {
   const themeProps = useThemeProps({ props, name: 'MuiChartsGrid' });
 
+  const drawingArea = useDrawingArea();
   const { vertical, horizontal, ...other } = themeProps;
-  const { xAxis, xAxisIds, yAxis, yAxisIds } = React.useContext(CartesianContext);
+  const { xAxis, xAxisIds, yAxis, yAxisIds } = useCartesianContext();
 
   const classes = useUtilityClasses(themeProps);
 
@@ -97,8 +99,8 @@ function ChartsGrid(props: ChartsGridProps) {
         xTicks.map(({ formattedValue, offset }) => (
           <GridLine
             key={`vertical-${formattedValue}`}
-            y1={yScale.range()[0]}
-            y2={yScale.range()[1]}
+            y1={drawingArea.top}
+            y2={drawingArea.top + drawingArea.height}
             x1={offset}
             x2={offset}
             className={classes.verticalLine}
@@ -110,8 +112,8 @@ function ChartsGrid(props: ChartsGridProps) {
             key={`horizontal-${formattedValue}`}
             y1={offset}
             y2={offset}
-            x1={xScale.range()[0]}
-            x2={xScale.range()[1]}
+            x1={drawingArea.left}
+            x2={drawingArea.left + drawingArea.width}
             className={classes.horizontalLine}
           />
         ))}

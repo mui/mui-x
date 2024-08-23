@@ -10,38 +10,29 @@ packageName: '@mui/x-charts'
 
 ## Installation
 
-Run one of the following commands to add the MUI X Charts to your project:
+Using your favorite package manager, install `@mui/x-charts-pro` for the commercial version, or `@mui/x-charts` for the free community version.
 
 <!-- #default-branch-switch -->
 
-<codeblock storageKey="package-manager">
-```bash npm
-npm install @mui/x-charts
-```
-
-```bash yarn
-yarn add @mui/x-charts
-```
-
-```bash pnpm
-pnpm add @mui/x-charts
-```
-
-</codeblock>
+{{"component": "modules/components/ChartsInstallationInstructions.js"}}
 
 The Charts package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:
 
 <codeblock storageKey="package-manager">
+
 ```bash npm
 npm install @mui/material @emotion/react @emotion/styled
 ```
-```bash yarn
-yarn add @mui/material @emotion/react @emotion/styled
-```
+
 ```bash pnpm
 pnpm add @mui/material @emotion/react @emotion/styled
 ```
+
+```bash yarn
+yarn add @mui/material @emotion/react @emotion/styled
+```
+
 </codeblock>
 
 <!-- #react-peer-version -->
@@ -64,28 +55,23 @@ Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styli
 npm install @mui/styled-engine-sc styled-components
 ```
 
-```bash yarn
-yarn add @mui/styled-engine-sc styled-components
-```
-
 ```bash pnpm
 pnpm add @mui/styled-engine-sc styled-components
+```
+
+```bash yarn
+yarn add @mui/styled-engine-sc styled-components
 ```
 
 </codeblock>
 
 Take a look at the [Styled engine guide](/material-ui/integrations/styled-components/) for more information about how to configure `styled-components` as the style engine.
 
-### Usage with Next.js
+### Usage with D3
 
-If you're using MUI X Charts with Next.js, you might face the following error:
+To help folks using CommonJS, the `@mui/x-charts` package uses a vendored package named `@mui/x-charts-vendor` to access D3 libraries.
 
-```bash
-[ESM][charts] Doesn't build due to require() of ES Module (ERR_REQUIRE_ESM)
-```
-
-To solve it, transpile the package by adding `transpilePackages: ['@mui/x-charts']` to your `next.config.js` file.
-Visit [this GitHub issue and comment](https://github.com/mui/mui-x/issues/9826#issuecomment-1658333978) for details.
+If you need some D3 functions, you can import them with `@mui/x-charts-vendor/d3-color`.
 
 ## Displaying Charts
 
