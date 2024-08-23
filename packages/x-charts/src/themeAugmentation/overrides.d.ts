@@ -7,7 +7,6 @@ import { ChartsLegendClassKey } from '../ChartsLegend';
 import { ChartsTooltipClassKey } from '../ChartsTooltip';
 import { AreaElementClassKey, LineElementClassKey, MarkElementClassKey } from '../LineChart';
 
-// prettier-ignore
 export interface PickersComponentNameToClassKey {
   MuiChartsAxis: ChartsAxisClassKey;
   MuiChartsAxisHighlight: ChartsAxisHighlightClassKey;
@@ -20,12 +19,11 @@ export interface PickersComponentNameToClassKey {
   MuiBarLabel: BarLabelClassKey;
 
   // LineChart components
-  
   MuiAreaElement: AreaElementClassKey;
   MuiLineElement: LineElementClassKey;
   MuiMarkElement: MarkElementClassKey;
+
   // ScatterChart components
-  
 }
 
 declare module '@mui/material/styles' {
