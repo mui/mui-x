@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts-vendor",
-  "version": "7.13.0",
+  "version": "7.14.0",
   "description": "Vendored dependencies for MUI X Charts",
   "author": "MUI Team",
   "main": "./index.js",
