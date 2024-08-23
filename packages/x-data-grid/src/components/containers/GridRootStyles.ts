@@ -185,6 +185,12 @@ export const GridRootStyles = styled('div', {
   const columnSeparatorTargetSize = 10;
   const columnSeparatorOffset = -5;
 
+  const separatorIconDragStyles = {
+    width: 3,
+    rx: 1.5,
+    x: 10.5,
+  };
+
   const gridStyle: CSSInterpolation = {
     '--unstable_DataGrid-radius': typeof radius === 'number' ? `${radius}px` : radius,
     '--unstable_DataGrid-headWeight': t.typography.fontWeightMedium,
@@ -288,6 +294,10 @@ export const GridRootStyles = styled('div', {
       & .${c['columnHeader--withRightBorder']} .${c.columnSeparator},
       & .${c.columnHeader}:has(+ .${c['columnHeader--withRightBorder']}) .${c.columnSeparator}`]: {
       opacity: 0,
+      '@media (hover: none)': {
+        opacity: 1,
+        color: (t.vars || t).palette.primary.main,
+      },
     },
     // Show resizable separators again when the column is hovered
     [`& .${c.columnHeader}:focus .${c['columnSeparator--resizable']}:hover,
@@ -414,20 +424,17 @@ export const GridRootStyles = styled('div', {
     [`& .${c['columnSeparator--resizable']}`]: {
       cursor: 'col-resize',
       touchAction: 'none',
-      '&:hover': {
+      // Always appear as draggable on touch devices
+      '@media (hover: none)': {
+        [`& .${c.iconSeparator} rect`]: separatorIconDragStyles,
+        color: borderColor,
+      },
+      [`&:hover, &.${c['columnSeparator--resizing']}`]: {
         color: (t.vars || t).palette.primary.main,
-        [`& .${c.iconSeparator} rect`]: {
-          width: 3,
-          rx: 1.5,
-          x: 10.5,
-        },
-        // Reset on touch devices, it doesn't add specificity
+        [`& .${c.iconSeparator} rect`]: separatorIconDragStyles,
         '@media (hover: none)': {
           color: borderColor,
         },
-      },
-      [`&.${c['columnSeparator--resizing']}`]: {
-        color: (t.vars || t).palette.primary.main,
       },
       '& svg': {
         pointerEvents: 'none',
