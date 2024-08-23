@@ -74,7 +74,7 @@ Same changes as in `@mui/x-charts@7.14.0`, plus:
 
 - [docs] Consistent use of UTC and timezones (#14250) @oliviertassinari
 - [docs] Fix missing leading slashes in URLs (#14249) @oliviertassinari
-- [docs][pickers] Dash usage revision (#14260) @arthurbalduini
+- [docs] Dash usage revision on pickers pages (#14260) @arthurbalduini
 
 ### Core
 
