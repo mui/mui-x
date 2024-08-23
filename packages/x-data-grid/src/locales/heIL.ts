@@ -39,10 +39,10 @@ const heILGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'ייצוא ל- Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: 'חיפוש',
+  columnsManagementNoColumns: 'אין עמודות',
+  columnsManagementShowHideAllText: 'הצג/הסתר הכל',
+  columnsManagementReset: 'אתחול',
 
   // Filter panel text
   filterPanelAddFilter: 'הוסף מסנן',
