@@ -19,7 +19,11 @@ const ignoredMaterialUIv6Warnings = [
 ];
 
 const isConsoleWarningIgnored = (msg) => {
-  if (isMaterialUIv6 && ignoredMaterialUIv6Warnings.some((warning) => msg.startsWith(warning))) {
+  if (
+    msg &&
+    isMaterialUIv6 &&
+    ignoredMaterialUIv6Warnings.some((warning) => msg.startsWith(warning))
+  ) {
     return true;
   }
   return false;
