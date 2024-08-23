@@ -27,12 +27,6 @@ function getBorderColor(theme: Theme) {
   return darken(alpha(theme.palette.divider, 1), 0.68);
 }
 
-const columnHeadersStyles = {
-  [`.${c.columnSeparator}, .${c['columnSeparator--resizing']}`]: {
-    width: 'auto',
-  },
-};
-
 const columnHeaderStyles = {
   [`& .${c.iconButtonContainer}`]: {
     visibility: 'visible',
@@ -280,7 +274,31 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c.columnHeader}:focus, & .${c.cell}:focus`]: {
       outline: `solid ${t.palette.primary.main} ${focusOutlineWidth}px`,
+      outlineOffset: focusOutlineWidth * -1,
     },
+    // Hide the column separator when:
+    // - the column is focused and has an outline
+    // - the next column is focused and has an outline
+    // - the column has a right border
+    // - the next column has a right border
+    [`& .${c.columnHeader}:focus .${c.columnSeparator},
+      & .${c.columnHeader}:focus-within .${c.columnSeparator},
+      & .${c.columnHeader}:has(+ .${c.columnHeader}:focus) .${c.columnSeparator},
+      & .${c.columnHeader}:has(+ .${c.columnHeader}:focus-within) .${c.columnSeparator},
+      & .${c['columnHeader--withRightBorder']} .${c.columnSeparator},
+      & .${c.columnHeader}:has(+ .${c['columnHeader--withRightBorder']}) .${c.columnSeparator}`]: {
+      opacity: 0,
+    },
+    // Show resizable separators again when the column is hovered
+    [`& .${c.columnHeader}:focus .${c['columnSeparator--resizable']}:hover,
+      & .${c.columnHeader}:focus-within .${c['columnSeparator--resizable']}:hover,
+      & .${c.columnHeader}:has(+ .${c.columnHeader}:focus) .${c['columnSeparator--resizable']}:hover,
+      & .${c.columnHeader}:has(+ .${c.columnHeader}:focus-within) .${c['columnSeparator--resizable']}:hover,
+      & .${c['columnHeader--withRightBorder']} .${c['columnSeparator--resizable']}:hover,
+      & .${c.columnHeader}:has(+ .${c['columnHeader--withRightBorder']}) .${c['columnSeparator--resizable']}:hover`]:
+      {
+        opacity: 1,
+      },
     [`&.${c['root--noToolbar']} [aria-rowindex="1"] [aria-colindex="1"]`]: {
       borderTopLeftRadius: 'calc(var(--unstable_DataGrid-radius) - 1px)',
     },
@@ -359,7 +377,6 @@ export const GridRootStyles = styled('div', {
       background: 'var(--DataGrid-pinnedBackground)',
     },
     [`& .${c.columnSeparator}`]: {
-      visibility: 'hidden',
       position: 'absolute',
       overflow: 'hidden',
       zIndex: 3,
@@ -374,14 +391,12 @@ export const GridRootStyles = styled('div', {
       width: 'var(--DataGrid-rowWidth)',
     },
     '@media (hover: hover)': {
-      [`& .${c.columnHeaders}:hover`]: columnHeadersStyles,
       [`& .${c.columnHeader}:hover`]: columnHeaderStyles,
       [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortIcon}`]: {
         opacity: 0.5,
       },
     },
     '@media (hover: none)': {
-      [`& .${c.columnHeaders}`]: columnHeadersStyles,
       [`& .${c.columnHeader}`]: columnHeaderStyles,
     },
     [`& .${c['columnSeparator--sideLeft']}`]: {
@@ -390,12 +405,23 @@ export const GridRootStyles = styled('div', {
     [`& .${c['columnSeparator--sideRight']}`]: {
       right: columnSeparatorOffset,
     },
+    [`& .${c['columnHeader--withRightBorder']} .${c['columnSeparator--sideLeft']}`]: {
+      left: columnSeparatorOffset - 0.5,
+    },
+    [`& .${c['columnHeader--withRightBorder']} .${c['columnSeparator--sideRight']}`]: {
+      right: columnSeparatorOffset - 0.5,
+    },
     [`& .${c['columnSeparator--resizable']}`]: {
-      visibility: 'visible',
       cursor: 'col-resize',
       touchAction: 'none',
       '&:hover': {
         color: (t.vars || t).palette.primary.main,
+        // Grow the separator into a resize handle
+        [`& .${c.iconSeparator} rect`]: {
+          width: 3,
+          rx: 1.5,
+          x: 10.5,
+        },
         // Reset on touch devices, it doesn't add specificity
         '@media (hover: none)': {
           color: borderColor,
@@ -410,11 +436,6 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c.iconSeparator}`]: {
       color: 'inherit',
-      // background and padding ensures sufficient whitespace around
-      // the separator when a column header has a border or outline
-      height: 'auto',
-      background: 'var(--DataGrid-containerBackground)',
-      padding: '4px 0',
     },
     [`& .${c.menuIcon}`]: {
       width: 0,

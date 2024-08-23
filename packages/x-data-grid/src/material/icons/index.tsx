@@ -51,7 +51,7 @@ export const GridColumnIcon = createSvgIcon(
 );
 
 export const GridSeparatorIcon = createSvgIcon(
-  <path d="M11 1.2c0-.663.448-1.2 1-1.2s1 .537 1 1.2v21.6c0 .663-.448 1.2-1 1.2s-1-.537-1-1.2V1.2Z" />,
+  <rect width="1" height="24" x="11.5" rx="0.5" />,
   'Separator',
 );
 
