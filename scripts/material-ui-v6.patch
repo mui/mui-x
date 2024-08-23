@@ -30,19 +30,23 @@ index 2ec932c356..0d7a215de0 100644
 -    "@mui/utils": "^5.16.6",
 +    "@mui/utils": "next",
 diff --git a/packages/x-charts-pro/package.json b/packages/x-charts-pro/package.json
-index 054fb306b4..c97ed9bd2a 100644
+index e402fb83ec..981fc6dcfe 100644
 --- a/packages/x-charts-pro/package.json
 +++ b/packages/x-charts-pro/package.json
-@@ -69 +69 @@
+@@ -69,2 +69,2 @@
 -    "@mui/material": "^5.16.5",
+-    "@mui/system": "^5.16.7",
 +    "@mui/material": "next",
++    "@mui/system": "next",
 diff --git a/packages/x-charts/package.json b/packages/x-charts/package.json
-index f882a137ad..a10202a811 100644
+index d46def007f..dfcd81483a 100644
 --- a/packages/x-charts/package.json
 +++ b/packages/x-charts/package.json
-@@ -68 +68 @@
+@@ -68,2 +68,2 @@
 -    "@mui/material": "^5.16.5",
+-    "@mui/system": "^5.16.7",
 +    "@mui/material": "next",
++    "@mui/system": "next",
 diff --git a/packages/x-data-grid-generator/package.json b/packages/x-data-grid-generator/package.json
 index ec22d3a293..8ccc7a6228 100644
 --- a/packages/x-data-grid-generator/package.json
@@ -53,54 +57,68 @@ index ec22d3a293..8ccc7a6228 100644
 +    "@mui/icons-material": "next",
 +    "@mui/material": "next",
 diff --git a/packages/x-data-grid-premium/package.json b/packages/x-data-grid-premium/package.json
-index 99f81500bc..9fe5f8b778 100644
+index d733b732ec..666e93c2f3 100644
 --- a/packages/x-data-grid-premium/package.json
 +++ b/packages/x-data-grid-premium/package.json
-@@ -76 +76 @@
+@@ -76,2 +76,2 @@
 -    "@mui/material": "^5.16.5",
+-    "@mui/system": "^5.16.7",
 +    "@mui/material": "next",
++    "@mui/system": "next",
 diff --git a/packages/x-data-grid-pro/package.json b/packages/x-data-grid-pro/package.json
-index 45a678e97d..ac69bf70bd 100644
+index 5deaef8729..8dcb555174 100644
 --- a/packages/x-data-grid-pro/package.json
 +++ b/packages/x-data-grid-pro/package.json
-@@ -74 +74 @@
+@@ -74,2 +74,2 @@
 -    "@mui/material": "^5.16.5",
+-    "@mui/system": "^5.16.7",
 +    "@mui/material": "next",
++    "@mui/system": "next",
 diff --git a/packages/x-data-grid/package.json b/packages/x-data-grid/package.json
-index ee9f475a58..cd180bfb5f 100644
+index a45da397c9..b4d05c223f 100644
 --- a/packages/x-data-grid/package.json
 +++ b/packages/x-data-grid/package.json
-@@ -76 +76 @@
+@@ -76,2 +76,2 @@
 -    "@mui/material": "^5.16.5",
+-    "@mui/system": "^5.16.7",
 +    "@mui/material": "next",
++    "@mui/system": "next",
 diff --git a/packages/x-date-pickers-pro/package.json b/packages/x-date-pickers-pro/package.json
-index 2f2528b261..402b06f2c1 100644
+index 6d44ac949c..8f4b611d88 100644
 --- a/packages/x-date-pickers-pro/package.json
 +++ b/packages/x-date-pickers-pro/package.json
-@@ -99 +99 @@
+@@ -99,2 +99,2 @@
 -    "@mui/material": "^5.16.5",
+-    "@mui/system": "^5.16.7",
 +    "@mui/material": "next",
++    "@mui/system": "next",
 diff --git a/packages/x-date-pickers/package.json b/packages/x-date-pickers/package.json
-index 771031872a..fa088344bd 100644
+index e128565c54..a0bbd27cf6 100644
 --- a/packages/x-date-pickers/package.json
 +++ b/packages/x-date-pickers/package.json
-@@ -101 +101 @@
+@@ -101,2 +101,2 @@
 -    "@mui/material": "^5.16.5",
+-    "@mui/system": "^5.16.7",
 +    "@mui/material": "next",
++    "@mui/system": "next",
 diff --git a/packages/x-tree-view-pro/package.json b/packages/x-tree-view-pro/package.json
-index e8f6281d4c..6d3e152ce4 100644
+index 9d1fac67a7..58b9005236 100644
 --- a/packages/x-tree-view-pro/package.json
 +++ b/packages/x-tree-view-pro/package.json
-@@ -74 +74 @@
+@@ -74,2 +74,2 @@
 -    "@mui/material": "^5.16.5",
+-    "@mui/system": "^5.16.7",
 +    "@mui/material": "next",
++    "@mui/system": "next",
 diff --git a/packages/x-tree-view/package.json b/packages/x-tree-view/package.json
-index e39a9e292a..a32fc8f656 100644
+index 228ac23d0c..fcedd1b3dd 100644
 --- a/packages/x-tree-view/package.json
 +++ b/packages/x-tree-view/package.json
-@@ -72 +72 @@
+@@ -72,2 +72,2 @@
 -    "@mui/material": "^5.16.5",
+-    "@mui/system": "^5.16.7",
 +    "@mui/material": "next",
++    "@mui/system": "next",
 diff --git a/test/package.json b/test/package.json
 index d0c46845ff..ab90a583a1 100644
 --- a/test/package.json
