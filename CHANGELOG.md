@@ -5,17 +5,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 7.14.0
 
-_Aug 22, 2024_
+_Aug 23, 2024_
 
-We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 💫 Allow [filtering the axis on zoom](https://mui.com/x/react-charts/zoom-and-pan/#zoom-filtering), making the axis adapt by removing values outside the view.
 
   <img width="600" src="https://github.com/user-attachments/assets/e65bbd00-d2a8-4136-81cd-3598f1373c16" alt="filtering the axis on zoom" />
 
 - 📊 Improve bar chart performances
-- 🌍 Improve Czech (cs-CZ) locale on the Data Grid
-- 🌍 Improve Chinese (zh-HK) and Vietnamese (vi-VN) locales on the Date and Time Pickers
+- 🌍 Improve Czech (cs-CZ) and Hebrew (he-IL) locales on the Data Grid
+- 🌍 Improve Chinese (zh-HK), Hebrew (he-IL), and Vietnamese (vi-VN) locales on the Date and Time Pickers
 - 🐞 Bugfixes
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
@@ -29,6 +29,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [DataGrid] Introduce selectors with arguments (#14236) @MBilalShafi
 - [DataGrid] include `api` in `gridCellParams` interface (#14201) @k-rajat19
 - [l10n] Improve Czech (cs-CZ) locale (#14135) @chirimiri22
+- [l10n] Improve Hebrew (he-IL) locale (#14287) @rotembarsela
 
 #### `@mui/x-data-grid-pro@7.14.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -38,7 +39,7 @@ Same changes as in `@mui/x-data-grid@7.14.0`.
 
 Same changes as in `@mui/x-data-grid-pro@7.14.0`, plus:
 
-- [DataGridPremium] Clipboard paste not working for a single cell if the current page is not the first page (#14261) @arminmeh
+- [DataGridPremium] Fix clipboard paste not working for a single cell on non-first page (#14261) @arminmeh
 - [DataGridPremium] Fix `onCellSelectionModelChange` not triggered when additional cell range is selected (#14199) @arminmeh
 
 ### Date and Time Pickers
@@ -46,6 +47,7 @@ Same changes as in `@mui/x-data-grid-pro@7.14.0`, plus:
 #### `@mui/x-date-pickers@7.14.0`
 
 - [l10n] Improve Chinese (zh-HK) locale (#13289) @yeeharn
+- [l10n] Improve Hebrew (he-IL) locale (#14287) @rotembarsela
 - [l10n] Improve Vietnamese (vi-VN) locale (#14238) @locnbk2002
 - [TimePicker] Handle `Space` and `Enter` on the `TimeClock` component @arthurbalduini
 
