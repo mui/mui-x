@@ -130,7 +130,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
     );
 
     const checked =
-      rootProps.indeterminateCheckboxBehavior === 'select'
+      rootProps.indeterminateCheckboxAction === 'select'
         ? isChecked && !isIndeterminate
         : isChecked;
 

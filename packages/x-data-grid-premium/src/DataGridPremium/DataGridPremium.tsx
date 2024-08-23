@@ -474,12 +474,12 @@ DataGridPremiumRaw.propTypes = {
   ]),
   /**
    * If `select`, a group header checkbox in indeterminate state (like "Select All" checkbox)
-   * will select all the rows under it
-   * If `deselect`, it will deselect all the rows under it
+   * will select all the rows under it.
+   * If `deselect`, it will deselect all the rows under it.
    * Works only if `checkboxSelection` is enabled.
-   * @default "select"
+   * @default "deselect"
    */
-  indeterminateCheckboxBehavior: PropTypes.oneOf(['deselect', 'select']),
+  indeterminateCheckboxAction: PropTypes.oneOf(['deselect', 'select']),
   /**
    * The initial state of the DataGridPremium.
    * The data in it is set in the state on initialization but isn't controlled.

@@ -123,9 +123,9 @@
       },
       "default": "false"
     },
-    "indeterminateCheckboxBehavior": {
+    "indeterminateCheckboxAction": {
       "type": { "name": "enum", "description": "'deselect'<br>&#124;&nbsp;'select'" },
-      "default": "\"select\""
+      "default": "\"deselect\""
     },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": {

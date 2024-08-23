@@ -405,9 +405,9 @@ describe('<DataGrid /> - Row selection', () => {
       });
     });
 
-    describe('prop: indeterminateCheckboxBehavior = "select"', () => {
+    describe('prop: indeterminateCheckboxAction = "select"', () => {
       it('should select all the rows when clicking on "Select All" checkbox in indeterminate state', () => {
-        render(<TestDataGridSelection checkboxSelection indeterminateCheckboxBehavior="select" />);
+        render(<TestDataGridSelection checkboxSelection indeterminateCheckboxAction="select" />);
         const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
         fireEvent.click(screen.getAllByRole('checkbox', { name: /select row/i })[0]);
         fireEvent.click(selectAllCheckbox);
@@ -415,11 +415,9 @@ describe('<DataGrid /> - Row selection', () => {
       });
     });
 
-    describe('prop: indeterminateCheckboxBehavior = "deselect"', () => {
+    describe('prop: indeterminateCheckboxAction = "deselect"', () => {
       it('should deselect all the rows when clicking on "Select All" checkbox in indeterminate state', () => {
-        render(
-          <TestDataGridSelection checkboxSelection indeterminateCheckboxBehavior="deselect" />,
-        );
+        render(<TestDataGridSelection checkboxSelection indeterminateCheckboxAction="deselect" />);
         const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
         fireEvent.click(screen.getAllByRole('checkbox', { name: /select row/i })[0]);
         fireEvent.click(selectAllCheckbox);
