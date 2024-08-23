@@ -17,15 +17,37 @@ export default function PieColor() {
     <Stack direction="row" width="100%" textAlign="center" spacing={2}>
       <Box flexGrow={1}>
         <Typography>Default</Typography>
-        <PieChart series={[{ data: platforms }]} {...pieParams} />
+        <PieChart
+          series={[
+            {
+              data: platforms,
+            },
+          ]}
+          {...pieParams}
+        />
       </Box>
       <Box flexGrow={1}>
         <Typography>Palette</Typography>
-        <PieChart colors={palette} series={[{ data: platforms }]} {...pieParams} />
+        <PieChart
+          colors={palette}
+          series={[
+            {
+              data: platforms,
+            },
+          ]}
+          {...pieParams}
+        />
       </Box>
       <Box flexGrow={1}>
         <Typography>Item</Typography>
-        <PieChart series={[{ data: colorPerItem }]} {...pieParams} />
+        <PieChart
+          series={[
+            {
+              data: colorPerItem,
+            },
+          ]}
+          {...pieParams}
+        />
       </Box>
     </Stack>
   );
