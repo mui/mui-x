@@ -8,8 +8,8 @@ _Aug 27, 2021_
 
 We have been iterating on the component for [18 months](https://github.com/mui/mui-x/commit/705cb0f387b5f3aa056bf40c4183a2342b317447). With the introduction of the [row edit](https://mui.com/x/react-data-grid/editing/#row-editing) feature, many bug fixes, and polishing of the documentation, we believe the component is ready for a stable release.
 
-The MUI X v4.0.0 release supports [MUI Core](https://github.com/mui/material-ui) v4 and has partial support for v5-beta. With the soon-to-be-released v5 version of the core components, we are moving ongoing work to the v5 release line (Core and X).
-The support for existing projects on Material UI v4 won't be a priority going forward. We encourage you to migrate to MUI Core v5-beta and soon MUI X v5-beta. We don't patch, fix, or alter older versions. Using MUI Core v4 with MUI X v5 might lead to extra bundle size and configuration.
+The MUI X v4.0.0 release supports [Material UI](https://github.com/mui/material-ui) v4 and has partial support for v5-beta. With the soon-to-be-released v5 version of the core components, we are moving ongoing work to the v5 release line (Core and X).
+The support for existing projects on Material UI v4 won't be a priority going forward. We encourage you to migrate to MUI Core v5-beta and soon MUI X v5-beta. We don't patch, fix, or alter older versions. Using Material UI v4 with MUI X v5 might lead to extra bundle size and configuration.
 
 A big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
@@ -600,7 +600,7 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
 - ⚡️ Components that use portals, like `Select` and `Autocomplete`, can now be used in the cell editing (#1772) @m4theushw
 - 📃 Apply the `valueFormatter` to the CSV exporting (#1922) @DanailH
 - 💅 Rename CSS classes to match the convention of the core components (#1872) @DanailH
-- 🌎 Isolate translations from MUI Core and MUI X (#1913) @DanailH
+- 🌎 Isolate translations from Material UI and MUI X (#1913) @DanailH
 - 🚀 Improve performance when finding column indexes and updating rows (#1903, #1923) @Janpot @N2D4
 - 🐞 Bugfixes
 
@@ -609,7 +609,7 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
 #### Breaking changes
 
 - [DataGrid] The `onEditCellChangeCommitted` prop won't be called with an event when committing changes by clicking outside the cell (#1910) @m4theushw
-- [DataGrid] Translation for MUI Core components are no longer included in the MUI X translation (#1913) @DanailH
+- [DataGrid] Translation for Material UI components are no longer included in the MUI X translation (#1913) @DanailH
 
   ```diff
    import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
@@ -684,7 +684,7 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
 - [DataGrid] Improve Brazilian Portuguese (pt-BR) locale (#1861) @aline-matos
 - [DataGrid] Improve type of the blur event (#1918) @oliviertassinari
 - [DataGrid] Improve updateRows performance (#1923) @N2D4
-- [DataGrid] Include MUI Core component localizations in `localeText` (#1913) @DanailH
+- [DataGrid] Include Material UI component localizations in `localeText` (#1913) @DanailH
 - [DataGrid] Make the CSV export respect the `valueFormatter` (#1922) @DanailH
 - [DataGrid] Remove `disableClickEventBubbling` (#1910) @m4theushw
 - [DataGrid] Rename CSS classes according to new convention (#1872) @DanailH
