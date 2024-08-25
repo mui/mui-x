@@ -73,18 +73,18 @@ To help folks using CommonJS, the `@mui/x-charts` package uses a vendored packag
 
 If you need some D3 functions, you can import them with `@mui/x-charts-vendor/d3-color`.
 
-## Displaying Charts
+## Displaying charts
 
 A Chart can be rendered in one of two ways: as a single component, or by composing subcomponents.
 
-### Single Charts
+### Single charts
 
 For common use cases, the single component is the recommended way.
 Those components' names end with "Chart", as opposed to "Plot", and only require the series prop describing the data to render.
 
 {{"demo": "SimpleCharts.js"}}
 
-### Composed Charts
+### Composed charts
 
 To combine different Charts, like Lines with Bars, you can use composition with the `ChartContainer` wrapper.
 
