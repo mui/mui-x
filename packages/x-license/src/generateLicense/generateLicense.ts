@@ -8,25 +8,36 @@ const licenseVersion = '2';
 export interface LicenseDetails {
   orderNumber: string;
   expiryDate: Date;
-  scope: LicenseScope;
-  licensingModel: LicensingModel;
+  scope?: LicenseScope;
+  planScope?: LicenseScope; // TODO deprecate
+  licenseModel?: LicensingModel;
+  licensingModel?: LicensingModel; // TODO deprecate
   planVersion: PlanVersion;
 }
 
 function getClearLicenseString(details: LicenseDetails) {
-  if (details.scope && !LICENSE_SCOPES.includes(details.scope)) {
+  // TODO remove
+  if (details.licensingModel) {
+    details.licenseModel = details.licensingModel;
+  }
+  // TODO remove
+  if (details.scope) {
+    details.planScope = details.scope;
+  }
+
+  if (details.planScope && !LICENSE_SCOPES.includes(details.planScope)) {
     throw new Error('MUI X: Invalid scope');
   }
 
-  if (details.licensingModel && !LICENSING_MODELS.includes(details.licensingModel)) {
+  if (details.licenseModel && !LICENSING_MODELS.includes(details.licenseModel)) {
     throw new Error('MUI X: Invalid licensing model');
   }
 
   const keyParts = [
     `O=${details.orderNumber}`,
     `E=${details.expiryDate.getTime()}`,
-    `S=${details.scope}`,
-    `LM=${details.licensingModel}`,
+    `S=${details.planScope}`,
+    `LM=${details.licenseModel}`,
     `PV=${details.planVersion}`,
     `KV=${licenseVersion}`,
   ];
