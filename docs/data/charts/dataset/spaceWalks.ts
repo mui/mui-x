@@ -1,3 +1,5 @@
+// Dataset from https://www.kaggle.com/datasets/nasa/space-walking-russian-and-us-evas/data
+
 export const spaceWalks = [
   {
     number: 1,

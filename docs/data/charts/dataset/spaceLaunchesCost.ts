@@ -1,3 +1,5 @@
+// Dataset from https://ourworldindata.org/grapher/cost-space-launches-low-earth-orbit
+
 export const spaceLaunchesCost = [
   { name: 'Angara', launchYear: 2014, costPerKG: 4500, launchClass: 'Heavy' },
   { name: 'Antares', launchYear: 2013, costPerKG: 13600, launchClass: 'Medium' },

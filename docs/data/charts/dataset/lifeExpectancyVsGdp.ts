@@ -1,3 +1,5 @@
+// Dataset from https://ourworldindata.org/grapher/life-expectancy-vs-gdp-per-capita
+
 export const lifeExpectancyVsGdpPerCapita = [
   {
     name: 'Afghanistan',
@@ -1340,5 +1342,3 @@ export const lifeExpectancyScatterSeries = Object.values(
       return acc;
     }, {} as any),
 ) as any;
-
-console.log(lifeExpectancyScatterSeries);
