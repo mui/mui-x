@@ -2,26 +2,26 @@ import { ComponentsProps, ComponentsOverrides } from '@mui/material/styles';
 
 export interface ChartsProComponents<Theme = unknown> {
   // BarChartPro components
-  MuiBarChartPro: {
+  MuiBarChartPro?: {
     defaultProps?: ComponentsProps['MuiBarChartPro'];
   };
   // LineChartPro components
-  MuiLineChartPro: {
+  MuiLineChartPro?: {
     defaultProps?: ComponentsProps['MuiLineChartPro'];
   };
   // Heatmap components
-  MuiHeatmap: {
+  MuiHeatmap?: {
     defaultProps?: ComponentsProps['MuiHeatmap'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiHeatmap'];
   };
-  MuiHeatmapItem: {
+  MuiHeatmapItem?: {
     defaultProps?: ComponentsProps['MuiHeatmapItem'];
   };
-  MuiHeatmapPlot: {
+  MuiHeatmapPlot?: {
     defaultProps?: ComponentsProps['MuiHeatmapPlot'];
   };
   // ScatterChartPro components
-  MuiScatterChartPro: {
+  MuiScatterChartPro?: {
     defaultProps?: ComponentsProps['MuiScatterChartPro'];
   };
 }
