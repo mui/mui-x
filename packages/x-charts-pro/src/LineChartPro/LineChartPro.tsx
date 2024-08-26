@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useThemeProps } from '@mui/material/styles';
 import {
   AreaPlot,
   AreaPlotProps,
@@ -37,7 +38,8 @@ export interface LineChartProProps extends LineChartProps, ZoomProps {}
  * - [LineChart API](https://mui.com/x/api/charts/line-chart/)
  */
 const LineChartPro = React.forwardRef(function LineChartPro(props: LineChartProProps, ref) {
-  const { zoom, onZoomChange, ...other } = props;
+  const themeProps = useThemeProps({ props, name: 'MuiLineChartPro' });
+  const { zoom, onZoomChange, ...other } = themeProps;
   const {
     chartContainerProps,
     axisClickHandlerProps,

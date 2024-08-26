@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useThemeProps } from '@mui/material/styles';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ScatterChartProps, ScatterPlot } from '@mui/x-charts/ScatterChart';
 import { ZAxisContextProvider } from '@mui/x-charts/context';
@@ -30,7 +31,8 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   props: ScatterChartProProps,
   ref,
 ) {
-  const { zoom, onZoomChange, ...other } = props;
+  const themeProps = useThemeProps({ props, name: 'MuiScatterChartPro' });
+  const { zoom, onZoomChange, ...other } = themeProps;
   const {
     chartContainerProps,
     zAxisProps,

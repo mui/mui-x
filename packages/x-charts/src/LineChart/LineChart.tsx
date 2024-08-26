@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useThemeProps } from '@mui/material/styles';
 import { AreaPlot, AreaPlotProps, AreaPlotSlotProps, AreaPlotSlots } from './AreaPlot';
 import { LinePlot, LinePlotProps, LinePlotSlotProps, LinePlotSlots } from './LinePlot';
 import {
@@ -136,6 +137,7 @@ export interface LineChartProps
  * - [LineChart API](https://mui.com/x/api/charts/line-chart/)
  */
 const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref) {
+  const themeProps = useThemeProps({ props, name: 'MuiLineChart' });
   const {
     chartContainerProps,
     axisClickHandlerProps,
@@ -152,7 +154,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     legendProps,
     tooltipProps,
     children,
-  } = useLineChartProps(props);
+  } = useLineChartProps(themeProps);
 
   return (
     <ResponsiveChartContainer ref={ref} {...chartContainerProps}>

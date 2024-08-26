@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useThemeProps } from '@mui/material/styles';
 import { BarPlot, BarPlotProps, BarPlotSlotProps, BarPlotSlots } from './BarPlot';
 import {
   ResponsiveChartContainer,
@@ -110,6 +111,7 @@ export interface BarChartProps
  * - [BarChart API](https://mui.com/x/api/charts/bar-chart/)
  */
 const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
+  const themeProps = useThemeProps({ props, name: 'MuiBarChart' });
   const {
     chartContainerProps,
     barPlotProps,
@@ -123,7 +125,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     legendProps,
     tooltipProps,
     children,
-  } = useBarChartProps(props);
+  } = useBarChartProps(themeProps);
 
   return (
     <ResponsiveChartContainer ref={ref} {...chartContainerProps}>

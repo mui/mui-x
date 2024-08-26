@@ -1,9 +1,7 @@
-import { ScatterChartProps } from '@mui/x-charts';
+import { ScatterChartProProps } from '../ScatterChartPro';
 import { BarChartProProps } from '../BarChartPro';
 import { HeatmapProps } from '../Heatmap/Heatmap';
 import { LineChartProProps } from '../LineChartPro';
-import { HeatmapItemProps } from '../Heatmap/HeatmapItem';
-import { HeatmapPlotProps } from '../Heatmap/HeatmapPlot';
 
 export interface ChartsProComponentsPropsList {
   // BarChartPro components
@@ -12,10 +10,8 @@ export interface ChartsProComponentsPropsList {
   MuiLineChartPro: LineChartProProps;
   // Heatmap components
   MuiHeatmap: HeatmapProps;
-  MuiHeatmapItem: HeatmapItemProps;
-  MuiHeatmapPlot: HeatmapPlotProps;
   // ScatterChartPro components
-  MuiScatterChartPro: ScatterChartProps;
+  MuiScatterChartPro: ScatterChartProProps;
 }
 
 declare module '@mui/material/styles' {

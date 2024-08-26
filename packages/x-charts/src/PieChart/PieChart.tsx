@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useThemeProps } from '@mui/material/styles';
 import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
@@ -124,6 +125,7 @@ const defaultRTLMargin = { top: 5, bottom: 5, left: 100, right: 5 };
  * - [PieChart API](https://mui.com/x/api/charts/pie-chart/)
  */
 const PieChart = React.forwardRef(function PieChart(props: PieChartProps, ref) {
+  const themeProps = useThemeProps({ props, name: 'MuiPieChart' });
   const {
     xAxis,
     yAxis,
@@ -150,7 +152,7 @@ const PieChart = React.forwardRef(function PieChart(props: PieChartProps, ref) {
     onHighlightChange,
     className,
     ...other
-  } = props;
+  } = themeProps;
   const isRTL = useIsRTL();
 
   const margin = { ...(isRTL ? defaultRTLMargin : defaultMargin), ...marginProps };

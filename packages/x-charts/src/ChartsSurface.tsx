@@ -1,4 +1,4 @@
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { useAxisEvents } from './hooks/useAxisEvents';
@@ -45,6 +45,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   props: ChartsSurfaceProps,
   ref,
 ) {
+  const themeProps = useThemeProps({ props, name: 'MuiChartsSurface' });
   const {
     children,
     width,
@@ -55,7 +56,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
     title,
     desc,
     ...other
-  } = props;
+  } = themeProps;
   const svgView = { width, height, x: 0, y: 0, ...viewBox };
 
   useAxisEvents(disableAxisListener);
