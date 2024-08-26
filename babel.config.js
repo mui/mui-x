@@ -122,6 +122,9 @@ module.exports = function getBabelConfig(api) {
   return {
     assumptions: {
       noDocumentAll: true,
+      setPublicClassFields: true,
+      privateFieldsAsProperties: true,
+      objectRestNoSymbols: true,
       setSpreadProperties: true,
     },
     presets,
