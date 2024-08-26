@@ -64,7 +64,7 @@ const series = [
   {
     innerRadius: 0,
     outerRadius: 80,
-    id: 'series-1',
+    id: 'platform-series',
     data: platforms,
     valueFormatter,
   },
