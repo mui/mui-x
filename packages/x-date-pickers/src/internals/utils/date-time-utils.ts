@@ -22,7 +22,7 @@ export const resolveDateTimeFormat = <TDate extends PickerValidDate>(
     format?: string;
     views: readonly DateOrTimeViewWithMeridiem[];
     ampm: boolean;
-    value: TDate | TDate[];
+    value?: TDate | [TDate | null, TDate | null] | null;
   },
 ) => {
   if (format) {
