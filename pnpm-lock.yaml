@@ -718,7 +718,7 @@ importers:
         specifier: ^11.8.1
         version: 11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/system':
-        specifier: '>=5.16.6'
+        specifier: ^5.16.6 || ^6.0.0-rc.0
         version: 5.16.7(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/utils':
         specifier: ^5.16.6
@@ -780,7 +780,7 @@ importers:
         specifier: ^11.8.1
         version: 11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/system':
-        specifier: '>=5.16.6'
+        specifier: ^5.16.6 || ^6.0.0-rc.0
         version: 5.16.7(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/utils':
         specifier: ^5.16.6
@@ -962,7 +962,7 @@ importers:
         specifier: ^11.8.1
         version: 11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/system':
-        specifier: '>=5.16.6'
+        specifier: ^5.16.6 || ^6.0.0-rc.0
         version: 5.16.7(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/utils':
         specifier: ^5.16.6
@@ -1059,7 +1059,7 @@ importers:
         specifier: ^11.8.1
         version: 11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/system':
-        specifier: '>=5.16.6'
+        specifier: ^5.16.6 || ^6.0.0-rc.0
         version: 5.16.7(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/utils':
         specifier: ^5.16.6
@@ -1127,7 +1127,7 @@ importers:
         specifier: ^11.8.1
         version: 11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/system':
-        specifier: '>=5.16.6'
+        specifier: ^5.16.6 || ^6.0.0-rc.0
         version: 5.16.7(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/utils':
         specifier: ^5.16.6
@@ -1186,7 +1186,7 @@ importers:
         specifier: ^11.8.1
         version: 11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/system':
-        specifier: '>=5.16.6'
+        specifier: ^5.16.6 || ^6.0.0-rc.0
         version: 5.16.7(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/utils':
         specifier: ^5.16.6
@@ -1269,7 +1269,7 @@ importers:
         specifier: ^11.8.1
         version: 11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/system':
-        specifier: '>=5.16.6'
+        specifier: ^5.16.6 || ^6.0.0-rc.0
         version: 5.16.7(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/utils':
         specifier: ^5.16.6
@@ -1386,7 +1386,7 @@ importers:
         specifier: ^11.8.1
         version: 11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/system':
-        specifier: '>=5.16.6'
+        specifier: ^5.16.6 || ^6.0.0-rc.0
         version: 5.16.7(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/utils':
         specifier: ^5.16.6
@@ -1439,7 +1439,7 @@ importers:
         specifier: ^11.8.1
         version: 11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/system':
-        specifier: '>=5.16.6'
+        specifier: ^5.16.6 || ^6.0.0-rc.0
         version: 5.16.7(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@mui/utils':
         specifier: ^5.16.6

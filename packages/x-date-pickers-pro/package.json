@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.25.0",
-    "@mui/system": ">=5.16.6",
+    "@mui/system": "^5.16.6 || ^6.0.0-rc.0",
     "@mui/utils": "^5.16.6",
     "@mui/x-date-pickers": "workspace:*",
     "@mui/x-license": "workspace:*",
