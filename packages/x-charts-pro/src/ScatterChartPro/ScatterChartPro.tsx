@@ -28,11 +28,11 @@ export interface ScatterChartProProps extends ScatterChartProps, ZoomProps {}
  * - [ScatterChart API](https://mui.com/x/api/charts/scatter-chart/)
  */
 const ScatterChartPro = React.forwardRef(function ScatterChartPro(
-  props: ScatterChartProProps,
+  inProps: ScatterChartProProps,
   ref,
 ) {
-  const themeProps = useThemeProps({ props, name: 'MuiScatterChartPro' });
-  const { zoom, onZoomChange, ...other } = themeProps;
+  const props = useThemeProps({ props: inProps, name: 'MuiScatterChartPro' });
+  const { zoom, onZoomChange, ...other } = props;
   const {
     chartContainerProps,
     zAxisProps,

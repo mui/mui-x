@@ -119,8 +119,8 @@ export interface ScatterChartProps
  *
  * - [ScatterChart API](https://mui.com/x/api/charts/scatter-chart/)
  */
-const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartProps, ref) {
-  const themeProps = useThemeProps({ props, name: 'MuiScatterChart' });
+const ScatterChart = React.forwardRef(function ScatterChart(inProps: ScatterChartProps, ref) {
+  const props = useThemeProps({ props: inProps, name: 'MuiScatterChart' });
   const {
     chartContainerProps,
     zAxisProps,
@@ -133,7 +133,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
     axisHighlightProps,
     tooltipProps,
     children,
-  } = useScatterChartProps(themeProps);
+  } = useScatterChartProps(props);
   return (
     <ResponsiveChartContainer ref={ref} {...chartContainerProps}>
       <ZAxisContextProvider {...zAxisProps}>

@@ -136,8 +136,8 @@ export interface LineChartProps
  *
  * - [LineChart API](https://mui.com/x/api/charts/line-chart/)
  */
-const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref) {
-  const themeProps = useThemeProps({ props, name: 'MuiLineChart' });
+const LineChart = React.forwardRef(function LineChart(inProps: LineChartProps, ref) {
+  const props = useThemeProps({ props: inProps, name: 'MuiLineChart' });
   const {
     chartContainerProps,
     axisClickHandlerProps,
@@ -154,7 +154,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     legendProps,
     tooltipProps,
     children,
-  } = useLineChartProps(themeProps);
+  } = useLineChartProps(props);
 
   return (
     <ResponsiveChartContainer ref={ref} {...chartContainerProps}>

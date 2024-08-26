@@ -105,8 +105,8 @@ const defaultColorMap = interpolateRgbBasis([
   '#084081',
 ]);
 
-const Heatmap = React.forwardRef(function Heatmap(props: HeatmapProps, ref) {
-  const themeProps = useThemeProps({ props, name: 'MuiHeatmap' });
+const Heatmap = React.forwardRef(function Heatmap(inProps: HeatmapProps, ref) {
+  const props = useThemeProps({ props: inProps, name: 'MuiHeatmap' });
   const {
     xAxis,
     yAxis,
@@ -130,7 +130,7 @@ const Heatmap = React.forwardRef(function Heatmap(props: HeatmapProps, ref) {
     loading,
     highlightedItem,
     onHighlightChange,
-  } = themeProps;
+  } = props;
 
   const id = useId();
   const clipPathId = `${id}-clip-path`;

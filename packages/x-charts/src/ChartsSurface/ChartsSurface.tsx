@@ -42,10 +42,10 @@ const ChartChartsSurfaceStyles = styled('svg', {
 }));
 
 const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(function ChartsSurface(
-  props: ChartsSurfaceProps,
+  inProps: ChartsSurfaceProps,
   ref,
 ) {
-  const themeProps = useThemeProps({ props, name: 'MuiChartsSurface' });
+  const props = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
   const {
     children,
     width,
@@ -56,7 +56,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
     title,
     desc,
     ...other
-  } = themeProps;
+  } = props;
   const svgView = { width, height, x: 0, y: 0, ...viewBox };
 
   useAxisEvents(disableAxisListener);
