@@ -11,8 +11,10 @@
     "packages/x-date-pickers",
     "packages/x-date-pickers-pro",
     "packages/x-charts",
+    "packages/x-charts-pro",
     "packages/x-charts-vendor",
     "packages/x-tree-view",
+    "packages/x-tree-view-pro",
     "packages/x-internals"
   ],
   "publishDirectory": {
