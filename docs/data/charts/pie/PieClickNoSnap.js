@@ -71,7 +71,7 @@ const series = [
   {
     innerRadius: 100,
     outerRadius: 120,
-    id: 'series-2',
+    id: 'OS-series',
     data: mobileAndDesktopOS,
     valueFormatter,
   },
