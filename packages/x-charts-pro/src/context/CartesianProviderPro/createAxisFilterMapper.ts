@@ -6,10 +6,10 @@ import {
   ZoomAxisFilters,
   GetZoomAxisFilters,
   isDefined,
+  getScale,
 } from '@mui/x-charts/internals';
 import { ChartsAxisProps, ScaleName, AxisConfig } from '@mui/x-charts';
 import { ZoomData } from '../ZoomProvider';
-import { getScale } from '../../../../x-charts/src/internals/getScale';
 
 type CreateAxisFilterMapperParams = {
   zoomData: ZoomData[];
