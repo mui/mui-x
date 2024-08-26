@@ -16,7 +16,7 @@ describe('<MultiSectionDigitalClock />', () => {
   const { render } = createPickerRenderer();
 
   describe('Reference date', () => {
-    it('should use `referenceDate` when no value defined', () => {
+    it('should use `referenceDate` when no value defined', async () => {
       const onChange = spy();
       const referenceDate = '2018-01-01T13:30:00';
 
@@ -36,7 +36,7 @@ describe('<MultiSectionDigitalClock />', () => {
       expect(screen.getByRole('option', { name: '30 minutes' })).to.have.attribute('tabindex', '0');
       expect(screen.getByRole('option', { name: 'PM' })).to.have.attribute('tabindex', '0');
 
-      multiSectionDigitalClockHandler.setViewValue(
+      await multiSectionDigitalClockHandler.setViewValue(
         adapterToUse,
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );

@@ -7,11 +7,11 @@ import { fireUserEvent } from '../fireUserEvent';
 type TDate = any;
 
 interface ViewHandler<TView> {
-  setViewValue: (utils: MuiPickersAdapter<any>, viewValue: TDate, view?: TView) => void;
+  setViewValue: (utils: MuiPickersAdapter<any>, viewValue: TDate, view?: TView) => Promise<void>;
 }
 
 export const timeClockHandler: ViewHandler<TimeView> = {
-  setViewValue: (adapter, value, view) => {
+  setViewValue: async (adapter, value, view) => {
     const hasMeridiem = adapter.is12HourCycleInCurrentLocale();
 
     let valueInt;
