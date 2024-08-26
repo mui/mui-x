@@ -177,7 +177,7 @@ export const resolveDateFormat = <TDate extends PickerValidDate>(
   }
 
   if (areViewsEqual(views, ['day'])) {
-    return formats.dayOfMonth;
+    return formats.keyboardDate;
   }
 
   if (areViewsEqual(views, ['month', 'year'])) {
