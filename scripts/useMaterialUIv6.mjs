@@ -6,9 +6,8 @@ const pnpmUpdate = childProcess.spawnSync(
     'update',
     '-r',
     '@mui/material@next',
+    '@mui/system@next',
     '@mui/icons-material@next',
-    '@mui/material-nextjs@next',
-    '@mui/styles@next',
   ],
   {
     shell: true,
