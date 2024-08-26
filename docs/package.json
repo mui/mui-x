@@ -69,7 +69,7 @@
     "fg-loadcss": "^3.1.0",
     "jscodeshift": "0.16.1",
     "lodash": "^4.17.21",
-    "luxon": "^3.4.4",
+    "luxon": "^3.5.0",
     "lz-string": "^1.5.0",
     "markdown-to-jsx": "^7.4.7",
     "moment": "^2.30.1",
