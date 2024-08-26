@@ -35,19 +35,5 @@ createTheme({
         constent: { color: 'red' },
       },
     },
-    MuiHeatmapItem: {
-      defaultProps: {
-        seriesId: 'toto',
-        // @ts-expect-error invalid MuiChartsAxis prop
-        someRandomProp: true,
-      },
-    },
-    MuiHeatmapPlot: {
-      defaultProps: {
-        slotProps: { cell: { id: 'toto' } },
-        // @ts-expect-error invalid MuiChartsAxis prop
-        someRandomProp: true,
-      },
-    },
   },
 });

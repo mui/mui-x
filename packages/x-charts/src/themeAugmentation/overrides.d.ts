@@ -1,19 +1,20 @@
 import { BarLabelClassKey } from '../BarChart';
 import { BarElementClassKey } from '../BarChart/BarElement';
-import { ChartsAxisClassKey } from '../ChartsAxis';
 import { ChartsAxisHighlightClassKey } from '../ChartsAxisHighlight';
 import { ChartsGridClassKey } from '../ChartsGrid';
 import { ChartsLegendClassKey } from '../ChartsLegend';
+
 import { ChartsTooltipClassKey } from '../ChartsTooltip';
 import { AreaElementClassKey, LineElementClassKey, MarkElementClassKey } from '../LineChart';
 
-export interface PickersComponentNameToClassKey {
-  MuiChartsAxis: ChartsAxisClassKey;
+export interface ChartsComponentNameToClassKey {
+  MuiChartsAxis: 'root'; //  Only the root component of axes is styled
   MuiChartsAxisHighlight: ChartsAxisHighlightClassKey;
   MuiChartsGrid: ChartsGridClassKey;
   MuiChartsLegend: ChartsLegendClassKey;
   MuiChartsTooltip: ChartsTooltipClassKey;
 
+  MuiChartsSurface: 'root';
   // BarChart components
   MuiBarElement: BarElementClassKey;
   MuiBarLabel: BarLabelClassKey;
@@ -27,7 +28,7 @@ export interface PickersComponentNameToClassKey {
 }
 
 declare module '@mui/material/styles' {
-  interface ComponentNameToClassKey extends PickersComponentNameToClassKey {}
+  interface ComponentNameToClassKey extends ChartsComponentNameToClassKey {}
 }
 
 // disable automatic export
