@@ -141,7 +141,7 @@
     "eslint-import-resolver-webpack": "^0.13.8",
     "eslint-plugin-filenames": "^1.3.2",
     "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-jsdoc": "^48.8.3",
+    "eslint-plugin-jsdoc": "^48.11.0",
     "eslint-plugin-jsx-a11y": "^6.9.0",
     "eslint-plugin-material-ui": "workspace:^",
     "eslint-plugin-mocha": "^10.5.0",
