@@ -410,6 +410,7 @@ export interface GridClasses {
   virtualScroller: string;
   /**
    * Styles applied to the virtualization container when it is scrollable in the horizontal direction.
+   * @ignore - do not document.
    */
   'virtualScroller--hasScrollX': string;
   /**
