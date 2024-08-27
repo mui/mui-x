@@ -15,7 +15,7 @@ import {
   CountryIsoOption,
   INCOTERM_OPTIONS,
   STATUS_OPTIONS,
-} from '@mui/x-data-grid-generator/services/static-data';
+} from '@mui/x-data-grid-generator/services';
 import {
   DataGrid,
   GridColDef,

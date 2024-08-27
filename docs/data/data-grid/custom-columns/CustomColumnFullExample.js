@@ -14,7 +14,7 @@ import {
   COUNTRY_ISO_OPTIONS_SORTED,
   INCOTERM_OPTIONS,
   STATUS_OPTIONS,
-} from '@mui/x-data-grid-generator/services/static-data';
+} from '@mui/x-data-grid-generator/services';
 import { DataGrid, gridStringOrNumberComparator } from '@mui/x-data-grid';
 import { renderAvatar } from '../../components/grid-cell-renderers/avatar';
 import { renderEmail } from '../../components/grid-cell-renderers/email';
