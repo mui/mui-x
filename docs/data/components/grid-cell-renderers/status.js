@@ -5,7 +5,7 @@ import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 
 import Select from '@mui/material/Select';
-import styled from '@mui/system/styled';
+import { styled } from '@mui/material/styles';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import InfoIcon from '@mui/icons-material/Info';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
@@ -15,7 +15,7 @@ import {
   useGridApiContext,
   useGridRootProps,
 } from '@mui/x-data-grid';
-import { STATUS_OPTIONS } from '@mui/x-data-grid-generator/services/static-data';
+import { STATUS_OPTIONS } from '@mui/x-data-grid-generator/services';
 
 const StyledChip = styled(Chip)(({ theme }) => ({
   justifyContent: 'left',

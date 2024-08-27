@@ -12,7 +12,7 @@ import {
   GridRenderEditCellParams,
   useGridApiContext,
 } from '@mui/x-data-grid';
-import { INCOTERM_OPTIONS } from '@mui/x-data-grid-generator/services/static-data';
+import { INCOTERM_OPTIONS } from '@mui/x-data-grid-generator/services';
 
 interface IncotermProps {
   value: string | null | undefined;
