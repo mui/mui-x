@@ -18,7 +18,7 @@ const lineChartsParams = {
       area: true,
       stack: 'total',
       highlightScope: {
-        highlighted: 'item',
+        highlight: 'item',
       },
     },
     {
@@ -28,7 +28,7 @@ const lineChartsParams = {
       area: true,
       stack: 'total',
       highlightScope: {
-        highlighted: 'item',
+        highlight: 'item',
       },
     },
     {
@@ -38,7 +38,7 @@ const lineChartsParams = {
       area: true,
       stack: 'total',
       highlightScope: {
-        highlighted: 'item',
+        highlight: 'item',
       },
     },
   ],

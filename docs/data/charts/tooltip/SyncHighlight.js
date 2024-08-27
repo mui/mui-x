@@ -32,7 +32,7 @@ const barChartsProps = {
     {
       data: [3, 4, 1, 6, 5],
       id: 'sync',
-      highlightScope: { highlighted: 'item', faded: 'global' },
+      highlightScope: { highlight: 'item', fade: 'global' },
     },
   ],
   xAxis: [{ scaleType: 'band', data: ['A', 'B', 'C', 'D', 'E'] }],
@@ -55,7 +55,7 @@ const pieChartProps = {
         { value: 6, label: 'D', id: 'D' },
         { value: 5, label: 'E', id: 'E' },
       ],
-      highlightScope: { highlighted: 'item', faded: 'global' },
+      highlightScope: { highlight: 'item', fade: 'global' },
     },
   ],
   height: 400,

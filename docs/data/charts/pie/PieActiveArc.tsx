@@ -13,7 +13,7 @@ export default function PieActiveArc() {
       series={[
         {
           data,
-          highlightScope: { faded: 'global', highlighted: 'item' },
+          highlightScope: { fade: 'global', highlight: 'item' },
           faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
         },
       ]}
