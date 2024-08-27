@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view-pro",
-  "version": "7.12.0",
+  "version": "7.14.0",
   "description": "The Pro plan edition of the Tree View components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -15,7 +15,8 @@
   },
   "sideEffects": false,
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "build"
   },
   "keywords": [
     "react",
@@ -42,13 +43,13 @@
     "directory": "packages/x-tree-view-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.25.0",
-    "@mui/system": "^5.16.5",
-    "@mui/utils": "^5.16.5",
+    "@babel/runtime": "^7.25.4",
+    "@mui/system": "^5.16.7",
+    "@mui/utils": "^5.16.6",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
     "@mui/x-tree-view": "workspace:*",
-    "@types/react-transition-group": "^4.4.10",
+    "@types/react-transition-group": "^4.4.11",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
     "react-transition-group": "^4.4.5"
@@ -69,9 +70,9 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.7",
+    "@mui/internal-test-utils": "^1.0.10",
     "@types/prop-types": "^15.7.12",
-    "rimraf": "^5.0.9"
+    "rimraf": "^5.0.10"
   },
   "engines": {
     "node": ">=14.0.0"

@@ -171,7 +171,12 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
         }
 
         if (hasScrollbarFiller) {
-          rowCells.push(<GridScrollbarFillerCell pinnedRight={pinnedColumns.right.length > 0} />);
+          rowCells.push(
+            <GridScrollbarFillerCell
+              key={`skeleton-scrollbar-filler-${i}`}
+              pinnedRight={pinnedColumns.right.length > 0}
+            />,
+          );
         }
       }
 
