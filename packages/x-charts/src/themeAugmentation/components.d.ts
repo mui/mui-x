@@ -2,7 +2,6 @@ import { ComponentsProps, ComponentsOverrides } from '@mui/material/styles';
 
 export interface ChartsComponents<Theme = unknown> {
   MuiChartsAxis?: {
-    defaultProps?: ComponentsProps['MuiChartsAxis'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChartsAxis'];
   };
   MuiChartsXAxis?: {
@@ -12,11 +11,7 @@ export interface ChartsComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiChartsYAxis'];
   };
   MuiChartsAxisHighlight?: {
-    defaultProps?: ComponentsProps['MuiChartsAxisHighlight'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChartsAxisHighlight'];
-  };
-  MuiChartsClipPath?: {
-    defaultProps?: ComponentsProps['MuiChartsClipPath'];
   };
   MuiChartsGrid?: {
     defaultProps?: ComponentsProps['MuiChartsGrid'];
@@ -32,12 +27,12 @@ export interface ChartsComponents<Theme = unknown> {
   };
   MuiChartsSurface?: {
     defaultProps?: ComponentsProps['MuiChartsSurface'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChartsSurface'];
   };
   MuiBarChart?: {
     defaultProps?: ComponentsProps['MuiBarChart'];
   };
   MuiBarElement?: {
-    defaultProps?: ComponentsProps['MuiBarElement'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiBarElement'];
   };
   MuiBarLabel?: {
@@ -48,23 +43,18 @@ export interface ChartsComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiLineChart'];
   };
   MuiAreaElement?: {
-    defaultProps?: ComponentsProps['MuiAreaElement'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiAreaElement'];
   };
   MuiLineElement?: {
-    defaultProps?: ComponentsProps['MuiLineElement'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiLineElement'];
   };
   MuiMarkElement?: {
-    defaultProps?: ComponentsProps['MuiMarkElement'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiMarkElement'];
   };
   MuiScatterChart?: {
     defaultProps?: ComponentsProps['MuiScatterChart'];
   };
-  MuiScatter?: {
-    defaultProps?: ComponentsProps['MuiScatter'];
-  };
+  MuiScatter?: {};
 }
 
 declare module '@mui/material/styles' {
