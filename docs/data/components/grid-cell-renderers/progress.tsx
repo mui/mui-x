@@ -5,15 +5,10 @@ import {
   GridRenderEditCellParams,
   useGridApiContext,
 } from '@mui/x-data-grid';
-import {
-  alpha,
-  debounce,
-  Slider,
-  sliderClasses,
-  SliderProps,
-  styled,
-  Tooltip,
-} from '@mui/material';
+import { alpha, styled } from '@mui/material/styles';
+import Slider, { sliderClasses, SliderProps } from '@mui/material/Slider';
+import Tooltip from '@mui/material/Tooltip';
+import { debounce } from '@mui/material/utils';
 
 interface ProgressBarProps {
   value: number;

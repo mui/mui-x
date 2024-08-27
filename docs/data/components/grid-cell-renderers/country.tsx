@@ -8,14 +8,11 @@ import {
   COUNTRY_ISO_OPTIONS,
   CountryIsoOption,
 } from '@mui/x-data-grid-generator/services/static-data';
-import {
-  Autocomplete,
-  autocompleteClasses,
-  AutocompleteProps,
-  Box,
-  InputBase,
-  styled,
-} from '@mui/material';
+import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
+import type { AutocompleteProps } from '@mui/material/Autocomplete';
+import Box from '@mui/material/Box';
+import InputBase from '@mui/material/InputBase';
+import styled from '@mui/material/styles';
 
 interface CountryProps {
   value: CountryIsoOption;

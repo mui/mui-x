@@ -1,14 +1,11 @@
 import * as React from 'react';
-import {
-  Box,
-  ListItemIcon,
-  ListItemText,
-  MenuItem,
-  MenuProps,
-  Select,
-  SelectProps,
-  Tooltip,
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import MenuItem from '@mui/material/MenuItem';
+import type { MenuProps } from '@mui/material/Menu';
+import Select, { SelectProps } from '@mui/material/Select';
+import Tooltip from '@mui/material/Tooltip';
 import InfoIcon from '@mui/icons-material/Info';
 import {
   GridRenderCellParams,

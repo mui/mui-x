@@ -1,12 +1,11 @@
 import * as React from 'react';
-import {
-  Box,
-  ListItemIcon,
-  ListItemText,
-  MenuItem,
-  Select,
-  Tooltip,
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import MenuItem from '@mui/material/MenuItem';
+
+import Select from '@mui/material/Select';
+import Tooltip from '@mui/material/Tooltip';
 import InfoIcon from '@mui/icons-material/Info';
 import { useGridApiContext } from '@mui/x-data-grid';
 import { INCOTERM_OPTIONS } from '@mui/x-data-grid-generator/services/static-data';
