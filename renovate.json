@@ -107,11 +107,6 @@
     {
       "groupName": "GitHub Actions",
       "matchManagers": ["github-actions"]
-    },
-    {
-      "groupName": "@mui/docs",
-      "matchPackageNames": ["@mui/docs"],
-      "followTag": "next"
     }
   ],
   "postUpdateOptions": ["pnpmDedupe"],
