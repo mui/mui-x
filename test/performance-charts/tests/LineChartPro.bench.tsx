@@ -36,7 +36,7 @@ describe('LineChartPro', () => {
         />,
       );
 
-      await findByText(dataLength.toLocaleString(), { ignore: 'span' });
+      await findByText('80', { ignore: 'span' });
     },
     options,
   );
