@@ -1,4 +1,4 @@
-import { fireTouchChangedEvent, flushMicrotasks, screen } from '@mui/internal-test-utils';
+import { fireTouchChangedEvent, screen } from '@mui/internal-test-utils';
 import { getClockTouchEvent, formatFullTimeValue } from 'test/utils/pickers';
 import { MuiPickersAdapter, TimeView } from '@mui/x-date-pickers/models';
 import { formatMeridiem } from '@mui/x-date-pickers/internals';
@@ -7,7 +7,7 @@ import { fireUserEvent } from '../fireUserEvent';
 type TDate = any;
 
 interface ViewHandler<TView> {
-  setViewValue: (utils: MuiPickersAdapter<any>, viewValue: TDate, view?: TView) => Promise<void>;
+  setViewValue: (utils: MuiPickersAdapter<any>, viewValue: TDate, view?: TView) => void;
 }
 
 export const timeClockHandler: ViewHandler<TimeView> = {
@@ -35,16 +35,15 @@ export const timeClockHandler: ViewHandler<TimeView> = {
 };
 
 export const digitalClockHandler: ViewHandler<TimeView> = {
-  setViewValue: async (adapter, value) => {
+  setViewValue: (adapter, value) => {
     fireUserEvent.mousePress(
       screen.getByRole('option', { name: formatFullTimeValue(adapter, value) }),
     );
-    await flushMicrotasks();
   },
 };
 
 export const multiSectionDigitalClockHandler: ViewHandler<TimeView> = {
-  setViewValue: async (adapter, value) => {
+  setViewValue: (adapter, value) => {
     const hasMeridiem = adapter.is12HourCycleInCurrentLocale();
     const hoursLabel = parseInt(adapter.format(value, hasMeridiem ? 'hours12h' : 'hours24h'), 10);
     const minutesLabel = adapter.getMinutes(value).toString();
@@ -57,6 +56,5 @@ export const multiSectionDigitalClockHandler: ViewHandler<TimeView> = {
         }),
       );
     }
-    await flushMicrotasks();
   },
 };
