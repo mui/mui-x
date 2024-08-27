@@ -29,10 +29,10 @@ export const BarLabelComponent = styled(animated.text, {
 
 export type BarLabelProps = Omit<React.SVGProps<SVGTextElement>, 'ref' | 'id'> & BarLabelOwnerState;
 
-function BarLabel(props: BarLabelProps) {
-  const themeProps = useThemeProps({ props, name: 'MuiBarLabel' });
+function BarLabel(inProps: BarLabelProps) {
+  const props = useThemeProps({ props: inProps, name: 'MuiBarLabel' });
 
-  const { seriesId, dataIndex, color, isFaded, isHighlighted, classes, ...otherProps } = themeProps;
+  const { seriesId, dataIndex, color, isFaded, isHighlighted, classes, ...otherProps } = props;
 
   return <BarLabelComponent {...otherProps} />;
 }

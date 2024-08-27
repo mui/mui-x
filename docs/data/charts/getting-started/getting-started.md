@@ -118,3 +118,30 @@ Visit the [Axis page](/x/react-charts/axis/) for more details.
 MUI X Charts follows the Material UI styling and features all of the customization tools you'd find there, making tweaking charts as straightforward as designing buttons.
 
 Visit the [Styling page](/x/react-charts/styling/) for more details.
+
+## TypeScript
+
+In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users need to import the following types.
+Internally, it uses module augmentation to extend the default theme structure.
+
+```tsx
+import type {} from '@mui/x-charts/themeAugmentation';
+import type {} from '@mui/x-charts-pro/themeAugmentation';
+
+const theme = createTheme({
+  components: {
+    MuiChartsAxis: {
+      styleOverrides: {
+        tick: {
+          stroke: '#006BD6',
+        },
+      },
+    },
+  },
+});
+```
+
+:::info
+You don't have to import the theme augmentation from both `@mui/x-charts` and `@mui/x-charts-pro` when using `@mui/x-charts-pro`.
+Importing it from `@mui/x-charts-pro` is enough.
+:::

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
+import { useThemeProps } from '@mui/material/styles';
 import useId from '@mui/utils/useId';
+import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
 import { ChartsAxis, ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import {
   ChartsTooltip,
@@ -104,7 +105,8 @@ const defaultColorMap = interpolateRgbBasis([
   '#084081',
 ]);
 
-const Heatmap = React.forwardRef(function Heatmap(props: HeatmapProps, ref) {
+const Heatmap = React.forwardRef(function Heatmap(inProps: HeatmapProps, ref) {
+  const props = useThemeProps({ props: inProps, name: 'MuiHeatmap' });
   const {
     xAxis,
     yAxis,

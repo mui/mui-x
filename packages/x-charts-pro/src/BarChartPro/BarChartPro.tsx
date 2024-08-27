@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useThemeProps } from '@mui/material/styles';
 import { BarChartProps, BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsOnAxisClickHandler } from '@mui/x-charts/ChartsOnAxisClickHandler';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
@@ -29,7 +30,8 @@ export interface BarChartProProps extends BarChartProps, ZoomProps {}
  *
  * - [BarChart API](https://mui.com/x/api/charts/bar-chart/)
  */
-const BarChartPro = React.forwardRef(function BarChartPro(props: BarChartProProps, ref) {
+const BarChartPro = React.forwardRef(function BarChartPro(inProps: BarChartProProps, ref) {
+  const props = useThemeProps({ props: inProps, name: 'MuiBarChartPro' });
   const { zoom, onZoomChange, ...other } = props;
   const {
     chartContainerProps,
