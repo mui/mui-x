@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { expectPickerChangeHandlerValue } from 'test/utils/pickers';
-import { screen, flushMicrotasks } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { DescribeValueTestSuite } from './describeValue.types';
 import { fireUserEvent } from '../../fireUserEvent';
 
@@ -22,7 +22,7 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
   }
 
   describe('Picker shortcuts', () => {
-    it('should call onClose, onChange and onAccept when picking a shortcut without explicit changeImportance', async () => {
+    it('should call onClose, onChange and onAccept when picking a shortcut without explicit changeImportance', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -57,10 +57,9 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
       expect(onAccept.callCount).to.equal(1);
       expectPickerChangeHandlerValue(pickerParams.type, onAccept, values[1]);
       expect(onClose.callCount).to.equal(1);
-      await flushMicrotasks();
     });
 
-    it('should call onClose and onChange when picking a shortcut with changeImportance="accept"', async () => {
+    it('should call onClose and onChange when picking a shortcut with changeImportance="accept"', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -96,10 +95,9 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
       expect(onAccept.callCount).to.equal(1);
       expectPickerChangeHandlerValue(pickerParams.type, onAccept, values[1]);
       expect(onClose.callCount).to.equal(1);
-      await flushMicrotasks();
     });
 
-    it('should call onClose and onChange when picking a shortcut with changeImportance="set"', async () => {
+    it('should call onClose and onChange when picking a shortcut with changeImportance="set"', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -134,7 +132,6 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
       expectPickerChangeHandlerValue(pickerParams.type, onChange, values[1]);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
-      await flushMicrotasks();
     });
   });
 };

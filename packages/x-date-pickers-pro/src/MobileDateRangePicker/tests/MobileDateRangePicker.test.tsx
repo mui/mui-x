@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { screen, fireEvent, flushMicrotasks } from '@mui/internal-test-utils';
+import { screen, fireEvent } from '@mui/internal-test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import {
   createPickerRenderer,
@@ -37,7 +37,7 @@ describe('<MobileDateRangePicker />', () => {
   });
 
   describe('picker state', () => {
-    it('should open when focusing the start input', async () => {
+    it('should open when focusing the start input', () => {
       const onOpen = spy();
 
       render(<MobileDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
@@ -46,10 +46,9 @@ describe('<MobileDateRangePicker />', () => {
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
-      await flushMicrotasks();
     });
 
-    it('should open when focusing the end input', async () => {
+    it('should open when focusing the end input', () => {
       const onOpen = spy();
 
       render(<MobileDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
@@ -58,10 +57,9 @@ describe('<MobileDateRangePicker />', () => {
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
-      await flushMicrotasks();
     });
 
-    it('should call onChange with updated start date then call onChange with updated end date when opening from start input', async () => {
+    it('should call onChange with updated start date then call onChange with updated end date when opening from start input', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -100,10 +98,9 @@ describe('<MobileDateRangePicker />', () => {
 
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
-      await flushMicrotasks();
     });
 
-    it('should call onChange with updated end date when opening from end input', async () => {
+    it('should call onChange with updated end date when opening from end input', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -135,10 +132,9 @@ describe('<MobileDateRangePicker />', () => {
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
-      await flushMicrotasks();
     });
 
-    it('should call onClose and onAccept when selecting the end date if props.closeOnSelect = true', async () => {
+    it('should call onClose and onAccept when selecting the end date if props.closeOnSelect = true', () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
@@ -165,10 +161,9 @@ describe('<MobileDateRangePicker />', () => {
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onClose.callCount).to.equal(1);
-      await flushMicrotasks();
     });
 
-    it('should call onClose and onChange with the initial value when clicking "Cancel" button', async () => {
+    it('should call onClose and onChange with the initial value when clicking "Cancel" button', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -200,10 +195,9 @@ describe('<MobileDateRangePicker />', () => {
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
-      await flushMicrotasks();
     });
 
-    it('should call onClose and onAccept with the live value and onAccept with the live value when clicking the "OK"', async () => {
+    it('should call onClose and onAccept with the live value and onAccept with the live value when clicking the "OK"', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -234,10 +228,9 @@ describe('<MobileDateRangePicker />', () => {
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
       expect(onClose.callCount).to.equal(1);
-      await flushMicrotasks();
     });
 
-    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', async () => {
+    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -266,10 +259,9 @@ describe('<MobileDateRangePicker />', () => {
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).to.deep.equal([null, null]);
       expect(onClose.callCount).to.equal(1);
-      await flushMicrotasks();
     });
 
-    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', async () => {
+    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -292,7 +284,6 @@ describe('<MobileDateRangePicker />', () => {
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
-      await flushMicrotasks();
     });
 
     it('should correctly set focused styles when input is focused', () => {

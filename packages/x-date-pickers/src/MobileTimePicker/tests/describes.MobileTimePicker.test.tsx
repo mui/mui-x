@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  screen,
-  fireEvent,
-  fireTouchChangedEvent,
-  flushMicrotasks,
-} from '@mui/internal-test-utils';
+import { screen, fireEvent, fireTouchChangedEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -74,7 +69,7 @@ describe('<MobileTimePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: async (value, { isOpened, applySameValue }) => {
+    setNewValue: (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
         openPicker({ type: 'time', variant: 'mobile' });
       }
@@ -112,8 +107,6 @@ describe('<MobileTimePicker /> - Describes', () => {
         // return to the hours view in case we'd like to repeat the selection process
         fireUserEvent.mousePress(screen.getByRole('button', { name: 'Open previous view' }));
       }
-
-      await flushMicrotasks();
 
       return newValue;
     },

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { flushMicrotasks, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -52,14 +52,12 @@ describe('<MonthCalendar /> - Describes', () => {
         expect(activeMonth).to.have.attribute('aria-checked', 'true');
       }
     },
-    setNewValue: async (value) => {
+    setNewValue: (value) => {
       const newValue = adapterToUse.addMonths(value, 1);
 
       fireUserEvent.mousePress(
         screen.getByRole('radio', { name: adapterToUse.format(newValue, 'month') }),
       );
-
-      await flushMicrotasks();
 
       return newValue;
     },

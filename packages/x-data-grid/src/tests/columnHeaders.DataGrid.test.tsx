@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  within,
-  flushMicrotasks,
-} from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
 import { getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
@@ -123,7 +117,7 @@ describe('<DataGrid /> - Column headers', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
     });
 
-    it('menu icon button should close column menu when already open', async () => {
+    it('menu icon button should close column menu when already open', () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid {...baselineProps} columns={[{ field: 'brand' }]} />
@@ -137,7 +131,6 @@ describe('<DataGrid /> - Column headers', () => {
       fireUserEvent.mousePress(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).to.equal(null);
-      await flushMicrotasks();
     });
   });
 

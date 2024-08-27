@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describeConformance, fireEvent, flushMicrotasks, screen } from '@mui/internal-test-utils';
+import { describeConformance, fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -84,7 +84,7 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
         : expectedPlaceholder;
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: async (value, { isOpened, applySameValue, setEndDate = false }) => {
+    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
       if (!isOpened) {
         openPicker({
           type: 'date-time-range',
@@ -151,8 +151,6 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
           screen.getByRole('button', { name: adapterToUse.format(newValue[0], 'shortDate') }),
         );
       }
-
-      await flushMicrotasks();
 
       return newValue;
     },

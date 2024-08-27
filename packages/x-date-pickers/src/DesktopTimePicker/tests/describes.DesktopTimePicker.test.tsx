@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { flushMicrotasks, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -68,7 +68,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: async (value, { isOpened, applySameValue, selectSection, pressKey }) => {
+    setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue
         ? value
         : adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 5);
@@ -108,8 +108,6 @@ describe('<DesktopTimePicker /> - Describes', () => {
           }
         }
       }
-
-      await flushMicrotasks();
 
       return newValue;
     },

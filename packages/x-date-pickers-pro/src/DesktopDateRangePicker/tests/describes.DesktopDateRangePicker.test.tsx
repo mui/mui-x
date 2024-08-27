@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { flushMicrotasks, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   createPickerRenderer,
@@ -73,7 +73,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
         : 'MM/DD/YYYY';
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: async (
+    setNewValue: (
       value,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
@@ -96,8 +96,6 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
         selectSection('day');
         pressKey(undefined, 'ArrowUp');
       }
-
-      await flushMicrotasks();
 
       return newValue;
     },
@@ -137,7 +135,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: async (
+    setNewValue: (
       value,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
@@ -160,8 +158,6 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
         selectSection('day');
         pressKey(undefined, 'ArrowUp');
       }
-
-      await flushMicrotasks();
 
       return newValue;
     },

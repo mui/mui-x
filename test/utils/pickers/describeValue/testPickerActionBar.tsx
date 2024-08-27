@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { flushMicrotasks, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   getExpectedOnChangeCount,
@@ -32,7 +32,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
   describe('Picker action bar', () => {
     describe('clear action', () => {
-      it('should call onClose, onChange with empty value and onAccept with empty value', async () => {
+      it('should call onClose, onChange with empty value and onAccept with empty value', () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
@@ -56,10 +56,9 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         expect(onAccept.callCount).to.equal(1);
         expectPickerChangeHandlerValue(pickerParams.type, onAccept, emptyValue);
         expect(onClose.callCount).to.equal(1);
-        await flushMicrotasks();
       });
 
-      it('should not call onChange or onAccept if the value is already empty value', async () => {
+      it('should not call onChange or onAccept if the value is already empty value', () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
@@ -81,7 +80,6 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
-        await flushMicrotasks();
       });
     });
 
@@ -119,10 +117,9 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         }
         expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
-        await flushMicrotasks();
       });
 
-      it('should not call onChange if no prior value modification', async () => {
+      it('should not call onChange if no prior value modification', () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
@@ -145,7 +142,6 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
-        await flushMicrotasks();
       });
     });
 
@@ -176,10 +172,9 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         ); // The accepted value as already been committed, don't call onChange again
         expect(onAccept.callCount).to.equal(1);
         expect(onClose.callCount).to.equal(1);
-        await flushMicrotasks();
       });
 
-      it('should call onChange, onClose and onAccept when validating the default value', async () => {
+      it('should call onChange, onClose and onAccept when validating the default value', () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
@@ -202,10 +197,9 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         expect(onChange.callCount).to.equal(1);
         expect(onAccept.callCount).to.equal(1);
         expect(onClose.callCount).to.equal(1);
-        await flushMicrotasks();
       });
 
-      it('should call onClose but not onAccept when validating an already validated value', async () => {
+      it('should call onClose but not onAccept when validating an already validated value', () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
@@ -228,12 +222,11 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
-        await flushMicrotasks();
       });
     });
 
     describe('today action', () => {
-      it("should call onClose, onChange with today's value and onAccept with today's value", async () => {
+      it("should call onClose, onChange with today's value and onAccept with today's value", () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
@@ -266,7 +259,6 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         expect(onAccept.callCount).to.equal(1);
         expectPickerChangeHandlerValue(pickerParams.type, onAccept, startOfToday);
         expect(onClose.callCount).to.equal(1);
-        await flushMicrotasks();
       });
     });
   });

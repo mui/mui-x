@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { flushMicrotasks, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -18,7 +18,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
   });
 
   describe('value selection', () => {
-    it('should allow to select range within the same day', async () => {
+    it('should allow to select range within the same day', () => {
       render(<DesktopDateTimeRangePicker enableAccessibleFieldDOMStructure />);
 
       openPicker({ type: 'date-time-range', variant: 'desktop', initialFocus: 'start' });
@@ -39,8 +39,6 @@ describe('<DesktopDateTimeRangePicker />', () => {
       const endSectionsContainer = getFieldSectionsContainer(1);
       expect(expectFieldValueV7(startSectionsContainer, '01/11/2018 04:05 PM'));
       expect(expectFieldValueV7(endSectionsContainer, '01/11/2018 05:10 PM'));
-
-      await flushMicrotasks();
     });
   });
 

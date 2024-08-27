@@ -1,4 +1,4 @@
-import { flushMicrotasks, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -79,7 +79,7 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: async (value, { isOpened, applySameValue, selectSection, pressKey }) => {
+    setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue
         ? value
         : adapterToUse.addMinutes(adapterToUse.addHours(adapterToUse.addDays(value, 1), 1), 5);
@@ -125,8 +125,6 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
           }
         }
       }
-
-      await flushMicrotasks();
 
       return newValue;
     },

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describeConformance, flushMicrotasks, screen } from '@mui/internal-test-utils';
+import { describeConformance, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -83,7 +83,7 @@ describe('<DesktopDateTimeRangePicker /> - Describes', () => {
         : expectedPlaceholder;
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: async (
+    setNewValue: (
       value,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
@@ -149,8 +149,6 @@ describe('<DesktopDateTimeRangePicker /> - Describes', () => {
           }
         }
       }
-
-      await flushMicrotasks();
 
       return newValue;
     },

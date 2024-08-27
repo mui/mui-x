@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { flushMicrotasks, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { createPickerRenderer, openPicker } from 'test/utils/pickers';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
@@ -61,7 +61,7 @@ describe('<DesktopTimePicker />', () => {
   });
 
   describe('selecting behavior', () => {
-    it('should call "onAccept", "onChange", and "onClose" when selecting a single option', async () => {
+    it('should call "onAccept", "onChange", and "onClose" when selecting a single option', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -83,10 +83,9 @@ describe('<DesktopTimePicker />', () => {
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 9, 0));
       expect(onClose.callCount).to.equal(1);
-      await flushMicrotasks();
     });
 
-    it('should call "onAccept", "onChange", and "onClose" when selecting all section', async () => {
+    it('should call "onAccept", "onChange", and "onClose" when selecting all section', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -110,10 +109,9 @@ describe('<DesktopTimePicker />', () => {
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 14, 15));
       expect(onClose.callCount).to.equal(1);
-      await flushMicrotasks();
     });
 
-    it('should allow out of order section selection', async () => {
+    it('should allow out of order section selection', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -142,10 +140,9 @@ describe('<DesktopTimePicker />', () => {
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 14, 25));
       expect(onClose.callCount).to.equal(1);
-      await flushMicrotasks();
     });
 
-    it('should finish selection when selecting only the last section', async () => {
+    it('should finish selection when selecting only the last section', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -159,7 +156,6 @@ describe('<DesktopTimePicker />', () => {
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 12, 0));
       expect(onClose.callCount).to.equal(1);
-      await flushMicrotasks();
     });
   });
 });

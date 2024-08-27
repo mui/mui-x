@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { flushMicrotasks, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -59,7 +59,7 @@ describe('<DesktopDatePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: async (value, { isOpened, applySameValue, selectSection, pressKey }) => {
+    setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
 
       if (isOpened) {
@@ -70,8 +70,6 @@ describe('<DesktopDatePicker /> - Describes', () => {
         selectSection('day');
         pressKey(undefined, 'ArrowUp');
       }
-
-      await flushMicrotasks();
 
       return newValue;
     },

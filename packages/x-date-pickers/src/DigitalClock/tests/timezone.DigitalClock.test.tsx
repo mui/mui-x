@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { flushMicrotasks, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { getDateOffset, describeAdapters } from 'test/utils/pickers';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
@@ -22,7 +22,7 @@ describe('<DigitalClock /> - Timezone', () => {
       return;
     }
 
-    it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', async () => {
+    it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', () => {
       const onChange = spy();
       render(<DigitalClock onChange={onChange} />);
 
@@ -37,12 +37,11 @@ describe('<DigitalClock /> - Timezone', () => {
       // In a real world scenario, this should probably never occur.
       expect(adapter.getTimezone(actualDate)).to.equal(adapter.lib === 'dayjs' ? 'UTC' : 'system');
       expect(actualDate).toEqualDateTime(expectedDate);
-      await flushMicrotasks();
     });
 
     TIMEZONE_TO_TEST.forEach((timezone) => {
       describe(`Timezone: ${timezone}`, () => {
-        it('should use timezone prop for onChange when no value is provided', async () => {
+        it('should use timezone prop for onChange when no value is provided', () => {
           const onChange = spy();
           render(<DigitalClock onChange={onChange} timezone={timezone} />);
 
@@ -57,10 +56,9 @@ describe('<DigitalClock /> - Timezone', () => {
           const actualDate = onChange.lastCall.firstArg;
           expect(adapter.getTimezone(actualDate)).to.equal(timezone);
           expect(actualDate).toEqualDateTime(expectedDate);
-          await flushMicrotasks();
         });
 
-        it('should use timezone prop for rendering and value timezone for onChange when a value is provided', async () => {
+        it('should use timezone prop for rendering and value timezone for onChange when a value is provided', () => {
           const onChange = spy();
           const value = adapter.date('2022-04-17T04:30', timezone);
 
@@ -91,7 +89,6 @@ describe('<DigitalClock /> - Timezone', () => {
 
           expect(adapter.getTimezone(actualDate)).to.equal(timezone);
           expect(actualDate).toEqualDateTime(expectedDate);
-          await flushMicrotasks();
         });
       });
     });

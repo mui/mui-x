@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, flushMicrotasks, screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
@@ -132,7 +132,7 @@ describe('<DateCalendar />', () => {
   });
 
   // test: https://github.com/mui/mui-x/issues/12373
-  it('should not reset day to `startOfDay` if value already exists when finding the closest enabled date', async () => {
+  it('should not reset day to `startOfDay` if value already exists when finding the closest enabled date', () => {
     const onChange = spy();
     const defaultDate = adapterToUse.date('2019-01-02T11:12:13.550Z');
     render(<DateCalendar onChange={onChange} disablePast defaultValue={defaultDate} />);
@@ -153,7 +153,6 @@ describe('<DateCalendar />', () => {
     fireUserEvent.mousePress(screen.getByRole('radio', { name: '2019' }));
 
     expect(onChange.lastCall.firstArg).toEqualDateTime(defaultDate);
-    await flushMicrotasks();
   });
 
   describe('Slot: calendarHeader', () => {
@@ -183,7 +182,7 @@ describe('<DateCalendar />', () => {
       ).to.have.text('1');
     });
 
-    it('should use `referenceDate` when no value defined', async () => {
+    it('should use `referenceDate` when no value defined', () => {
       const onChange = spy();
 
       render(
@@ -200,10 +199,9 @@ describe('<DateCalendar />', () => {
       fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 3, 2, 12, 30));
-      await flushMicrotasks();
     });
 
-    it('should not use `referenceDate` when a value is defined', async () => {
+    it('should not use `referenceDate` when a value is defined', () => {
       const onChange = spy();
 
       render(
@@ -218,10 +216,9 @@ describe('<DateCalendar />', () => {
       fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
-      await flushMicrotasks();
     });
 
-    it('should not use `referenceDate` when a defaultValue is defined', async () => {
+    it('should not use `referenceDate` when a defaultValue is defined', () => {
       const onChange = spy();
 
       render(
@@ -236,10 +233,9 @@ describe('<DateCalendar />', () => {
       fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
-      await flushMicrotasks();
     });
 
-    it('should keep the time of the currently provided date', async () => {
+    it('should keep the time of the currently provided date', () => {
       const onChange = spy();
 
       render(
@@ -255,7 +251,6 @@ describe('<DateCalendar />', () => {
       expect(onChange.lastCall.firstArg).toEqualDateTime(
         adapterToUse.date('2018-01-02T11:11:11.111'),
       );
-      await flushMicrotasks();
     });
 
     it('should complete weeks when showDaysOutsideCurrentMonth=true', () => {
@@ -614,7 +609,7 @@ describe('<DateCalendar />', () => {
   });
 
   describe('Performance', () => {
-    it('should only render newly selected day when selecting a day without a previously selected day', async () => {
+    it('should only render newly selected day when selecting a day without a previously selected day', () => {
       const RenderCount = spy((props) => <PickersDay {...props} />);
 
       render(
@@ -628,10 +623,9 @@ describe('<DateCalendar />', () => {
       const renderCountBeforeChange = RenderCount.callCount;
       fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
-      await flushMicrotasks();
     });
 
-    it('should only re-render previously selected day and newly selected day when selecting a day', async () => {
+    it('should only re-render previously selected day and newly selected day when selecting a day', () => {
       const RenderCount = spy((props) => <PickersDay {...props} />);
 
       render(
@@ -646,7 +640,6 @@ describe('<DateCalendar />', () => {
       const renderCountBeforeChange = RenderCount.callCount;
       fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(4); // 2 render * 2 days
-      await flushMicrotasks();
     });
   });
 });

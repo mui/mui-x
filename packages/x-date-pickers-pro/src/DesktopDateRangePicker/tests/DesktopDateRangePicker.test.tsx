@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, fireEvent, act, within, flushMicrotasks } from '@mui/internal-test-utils';
+import { screen, fireEvent, act, within } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
@@ -48,7 +48,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getByText('May 2019')).toBeVisible();
   });
 
-  it(`should not crash when opening picker with invalid date value`, async () => {
+  it(`should not crash when opening picker with invalid date value`, () => {
     render(
       <DesktopDateRangePicker
         enableAccessibleFieldDOMStructure
@@ -219,7 +219,7 @@ describe('<DesktopDateRangePicker />', () => {
       }),
     );
 
-    it('should call onChange with updated start date then call onChange with updated end date, onClose and onAccept with update date range when opening from start input', async () => {
+    it('should call onChange with updated start date then call onChange with updated end date, onClose and onAccept with update date range when opening from start input', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -260,11 +260,9 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
       expect(onClose.callCount).to.equal(1);
-
-      await flushMicrotasks();
     });
 
-    it('should call onChange with updated end date, onClose and onAccept with update date range when opening from end input', async () => {
+    it('should call onChange with updated end date, onClose and onAccept with update date range when opening from end input', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -298,11 +296,9 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onClose.callCount).to.equal(1);
-
-      await flushMicrotasks();
     });
 
-    it('should not call onClose and onAccept when selecting the end date if props.closeOnSelect = false', async () => {
+    it('should not call onClose and onAccept when selecting the end date if props.closeOnSelect = false', () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
@@ -327,10 +323,9 @@ describe('<DesktopDateRangePicker />', () => {
 
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
-      await flushMicrotasks();
     });
 
-    it('should call onClose and onAccept with the live value when pressing Escape', async () => {
+    it('should call onClose and onAccept with the live value when pressing Escape', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -362,7 +357,6 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
       expect(onClose.callCount).to.equal(1);
-      await flushMicrotasks();
     });
 
     it('should call onClose when clicking outside of the picker without prior change', () => {
@@ -399,7 +393,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onAccept with the live value when clicking outside of the picker', async () => {
+    it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -443,10 +437,9 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
       expect(onClose.callCount).to.equal(1);
-      await flushMicrotasks();
     });
 
-    it('should not call onClose or onAccept when clicking outside of the picker if not opened', async () => {
+    it('should not call onClose or onAccept when clicking outside of the picker if not opened', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -465,7 +458,6 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
-      await flushMicrotasks();
     });
 
     it('should call onClose when blur the current field without prior change', function test() {
@@ -504,7 +496,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onAccept when blur the current field', async () => {
+    it('should call onClose and onAccept when blur the current field', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -543,10 +535,9 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
       expect(onClose.callCount).to.equal(1);
-      await flushMicrotasks();
     });
 
-    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', async () => {
+    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -575,10 +566,9 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).to.deep.equal([null, null]);
       expect(onClose.callCount).to.equal(1);
-      await flushMicrotasks();
     });
 
-    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', async () => {
+    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -601,7 +591,6 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
-      await flushMicrotasks();
     });
 
     // TODO: Write test

@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import {
-  screen,
-  fireEvent,
-  within,
-  fireTouchChangedEvent,
-  flushMicrotasks,
-} from '@mui/internal-test-utils';
+import { screen, fireEvent, within, fireTouchChangedEvent } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   buildPickerDragInteractions,
@@ -529,7 +523,7 @@ describe('<DateRangeCalendar />', () => {
   });
 
   describe('Performance', () => {
-    it('should only render the new start day when selecting a start day without a previously selected start day', async () => {
+    it('should only render the new start day when selecting a start day without a previously selected start day', () => {
       const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
 
       render(
@@ -543,10 +537,9 @@ describe('<DateRangeCalendar />', () => {
       const renderCountBeforeChange = RenderCount.callCount;
       fireUserEvent.mousePress(getPickerDay('2'));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
-      await flushMicrotasks();
     });
 
-    it('should only render the day inside range when selecting the end day', async () => {
+    it('should only render the day inside range when selecting the end day', () => {
       const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
 
       render(
@@ -562,7 +555,6 @@ describe('<DateRangeCalendar />', () => {
       const renderCountBeforeChange = RenderCount.callCount;
       fireUserEvent.mousePress(getPickerDay('4'));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
-      await flushMicrotasks();
     });
   });
 });

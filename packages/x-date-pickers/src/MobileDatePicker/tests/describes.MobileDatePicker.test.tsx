@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, fireEvent, flushMicrotasks } from '@mui/internal-test-utils';
+import { screen, fireEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -59,7 +59,7 @@ describe('<MobileDatePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: async (value, { isOpened, applySameValue }) => {
+    setNewValue: (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
         openPicker({ type: 'date', variant: 'mobile' });
       }
@@ -75,8 +75,6 @@ describe('<MobileDatePicker /> - Describes', () => {
         fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
         clock.runToLast();
       }
-
-      await flushMicrotasks();
 
       return newValue;
     },
