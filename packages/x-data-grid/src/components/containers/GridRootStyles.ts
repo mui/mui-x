@@ -38,6 +38,12 @@ const columnHeaderStyles = {
   },
 };
 
+const separatorIconDragStyles = {
+  width: 3,
+  rx: 1.5,
+  x: 10.5,
+};
+
 // Emotion thinks it knows better than us which selector we should use.
 // https://github.com/emotion-js/emotion/issues/1105#issuecomment-1722524968
 const ignoreSsrWarning =
@@ -184,12 +190,6 @@ export const GridRootStyles = styled('div', {
   const focusOutlineWidth = 1;
   const columnSeparatorTargetSize = 10;
   const columnSeparatorOffset = -5;
-
-  const separatorIconDragStyles = {
-    width: 3,
-    rx: 1.5,
-    x: 10.5,
-  };
 
   const gridStyle: CSSInterpolation = {
     '--unstable_DataGrid-radius': typeof radius === 'number' ? `${radius}px` : radius,
