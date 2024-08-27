@@ -324,6 +324,9 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       alignItems: 'center',
     },
+    [`& .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}`]: {
+      overflow: 'hidden',
+    },
     [`& .${c['columnHeader--sorted']} .${c.iconButtonContainer}, & .${c['columnHeader--filtered']} .${c.iconButtonContainer}`]:
       {
         visibility: 'visible',

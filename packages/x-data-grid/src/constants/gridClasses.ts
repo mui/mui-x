@@ -409,6 +409,10 @@ export interface GridClasses {
    */
   virtualScroller: string;
   /**
+   * Styles applied to the virtualization container when it is scrollable in the horizontal direction.
+   */
+  'virtualScroller--hasScrollX': string;
+  /**
    * Styles applied to the virtualization content.
    */
   virtualScrollerContent: string;
@@ -770,6 +774,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'toolbarContainer',
   'toolbarFilterList',
   'virtualScroller',
+  'virtualScroller--hasScrollX',
   'virtualScrollerContent',
   'virtualScrollerContent--overflowed',
   'virtualScrollerRenderZone',

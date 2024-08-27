@@ -1766,6 +1766,12 @@
       "isGlobal": false
     },
     {
+      "key": "virtualScroller--hasScrollX",
+      "className": "MuiDataGridPro-virtualScroller--hasScrollX",
+      "description": "Styles applied to the virtualization container when it is scrollable in the horizontal direction.",
+      "isGlobal": false
+    },
+    {
       "key": "virtualScrollerContent",
       "className": "MuiDataGridPro-virtualScrollerContent",
       "description": "Styles applied to the virtualization content.",

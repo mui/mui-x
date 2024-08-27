@@ -1008,6 +1008,11 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the virtualization container"
     },
+    "virtualScroller--hasScrollX": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the virtualization container",
+      "conditions": "it is scrollable in the horizontal direction"
+    },
     "virtualScrollerContent": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the virtualization content"
