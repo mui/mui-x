@@ -80,14 +80,14 @@ function DotIcon() {
 }
 
 const StyledTreeItemRoot = styled(TreeItem2Root)(({ theme }) => ({
-  color:
-    theme.palette.mode === 'light'
-      ? theme.palette.grey[800]
-      : theme.palette.grey[400],
+  color: theme.palette.grey[400],
   position: 'relative',
   [`& .${treeItemClasses.groupTransition}`]: {
     marginLeft: theme.spacing(3.5),
   },
+  ...theme.applyStyles('light', {
+    color: theme.palette.grey[800],
+  }),
 }));
 
 const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
@@ -100,10 +100,10 @@ const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
   fontWeight: 500,
   [`&.Mui-expanded `]: {
     '&:not(.Mui-focused, .Mui-selected, .Mui-selected.Mui-focused) .labelIcon': {
-      color:
-        theme.palette.mode === 'light'
-          ? theme.palette.primary.main
-          : theme.palette.primary.dark,
+      color: theme.palette.primary.dark,
+      ...theme.applyStyles('light', {
+        color: theme.palette.primary.main,
+      }),
     },
     '&::before': {
       content: '""',
@@ -113,22 +113,25 @@ const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
       top: '44px',
       height: 'calc(100% - 48px)',
       width: '1.5px',
-      backgroundColor:
-        theme.palette.mode === 'light'
-          ? theme.palette.grey[300]
-          : theme.palette.grey[700],
+      backgroundColor: theme.palette.grey[700],
+      ...theme.applyStyles('light', {
+        backgroundColor: theme.palette.grey[300],
+      }),
     },
   },
   '&:hover': {
     backgroundColor: alpha(theme.palette.primary.main, 0.1),
-    color: theme.palette.mode === 'light' ? theme.palette.primary.main : 'white',
+    color: 'white',
+    ...theme.applyStyles('light', {
+      color: theme.palette.primary.main,
+    }),
   },
   [`&.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused`]: {
-    backgroundColor:
-      theme.palette.mode === 'light'
-        ? theme.palette.primary.main
-        : theme.palette.primary.dark,
+    backgroundColor: theme.palette.primary.dark,
     color: theme.palette.primary.contrastText,
+    ...theme.applyStyles('light', {
+      backgroundColor: theme.palette.primary.main,
+    }),
   },
 }));
 
