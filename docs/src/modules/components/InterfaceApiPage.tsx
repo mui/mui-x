@@ -10,15 +10,14 @@ import { Translate, useTranslate, useUserLanguage } from '@mui/docs/i18n';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { MarkdownElement } from '@mui/docs/MarkdownElement';
 import { SectionTitle, SectionTitleProps } from '@mui/docs/SectionTitle';
-// @ts-expect-error The AppLayoutDocs is not yet typed
-import AppLayoutDocs from '@mui/monorepo/docs/src/modules/components/AppLayoutDocs';
-import PropertiesSection from '@mui/monorepo/docs/src/modules/components/ApiPage/sections/PropertiesSection';
-import { PropertyDefinition } from '@mui/monorepo/docs/src/modules/components/ApiPage/definitions/properties';
-import { LayoutStorageKeys } from '@mui/monorepo/docs/src/modules/components/ApiPage';
+import AppLayoutDocs from 'docs/src/modules/components/AppLayoutDocs';
+import PropertiesSection from 'docs/src/modules/components/ApiPage/sections/PropertiesSection';
+import { PropertyDefinition } from 'docs/src/modules/components/ApiPage/definitions/properties';
+import { LayoutStorageKeys } from 'docs/src/modules/components/ApiPage';
 import {
   DEFAULT_API_LAYOUT_STORAGE_KEYS,
   ApiDisplayOptions,
-} from '@mui/monorepo/docs/src/modules/components/ApiPage/sections/ToggleDisplayOption';
+} from 'docs/src/modules/components/ApiPage/sections/ToggleDisplayOption';
 import {
   InterfaceApiTranslation,
   InterfaceApiContent,
