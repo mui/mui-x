@@ -39,7 +39,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
         const value = scale.invert(mouseValue);
 
         if (axisData === undefined) {
-          return { value };
+          return { value, index: -1 };
         }
 
         const valueAsNumber = getAsANumber(value);
