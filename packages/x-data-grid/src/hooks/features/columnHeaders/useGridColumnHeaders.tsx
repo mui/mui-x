@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridSelector } from '../../utils';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -98,7 +99,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const [resizeCol, setResizeCol] = React.useState('');
 
   const apiRef = useGridPrivateApiContext();
-  const theme = useTheme();
+  const isRtl = useRtl();
   const rootProps = useGridRootProps();
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const hasVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
@@ -110,7 +111,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const offsetLeft = computeOffsetLeft(
     columnPositions,
     renderContext,
-    theme.direction,
+    isRtl,
     pinnedColumns.left.length,
   );
   const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
