@@ -45,7 +45,7 @@
     "directory": "packages/x-date-pickers"
   },
   "dependencies": {
-    "@babel/runtime": "^7.25.0",
+    "@babel/runtime": "^7.25.4",
     "@mui/system": "^5.16.7",
     "@mui/utils": "^5.16.6",
     "@types/react-transition-group": "^4.4.11",
