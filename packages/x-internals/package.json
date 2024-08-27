@@ -48,7 +48,7 @@
     "react": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.8",
+    "@mui/internal-test-utils": "^1.0.10",
     "rimraf": "^5.0.10"
   },
   "engines": {
