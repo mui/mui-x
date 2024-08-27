@@ -24,7 +24,7 @@ describe('LineChartPro', () => {
     async () => {
       const { findByText } = render(
         <LineChartPro
-          xAxis={[{ id: 'x', data: xData, zoom: true }]}
+          xAxis={[{ id: 'x', data: xData, zoom: { filterMode: 'discard' } }]}
           zoom={[{ axisId: 'x', start: 0.25, end: 0.75 }]}
           series={[
             {
