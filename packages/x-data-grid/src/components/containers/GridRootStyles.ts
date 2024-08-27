@@ -441,6 +441,9 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c.iconSeparator}`]: {
       color: 'inherit',
+      transition: t.transitions.create(['color', 'width'], {
+        duration: t.transitions.duration.shortest,
+      }),
     },
     [`& .${c.menuIcon}`]: {
       width: 0,
