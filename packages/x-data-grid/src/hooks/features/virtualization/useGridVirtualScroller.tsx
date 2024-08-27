@@ -555,14 +555,10 @@ export const useGridVirtualScroller = () => {
     if (enabledForColumns) {
       scrollerRef.current!.scrollLeft = 0;
     }
-  }, [enabledForColumns, gridRootRef, scrollerRef]);
-
-  useEnhancedEffect(() => {
-    // TODO a scroll reset should not be necessary
     if (enabledForRows) {
       scrollerRef.current!.scrollTop = 0;
     }
-  }, [enabledForRows, gridRootRef, scrollerRef]);
+  }, [enabledForColumns, enabledForRows, gridRootRef, scrollerRef]);
 
   useRunOnce(outerSize.width !== 0, () => {
     const inputs = inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns);
