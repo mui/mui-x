@@ -16,7 +16,7 @@ describe('<MultiSectionDigitalClock />', () => {
   const { render } = createPickerRenderer();
 
   describe('Reference date', () => {
-    it('should use `referenceDate` when no value defined', async () => {
+    it('should use `referenceDate` when no value defined', () => {
       const onChange = spy();
       const referenceDate = '2018-01-01T13:30:00';
 
@@ -36,7 +36,7 @@ describe('<MultiSectionDigitalClock />', () => {
       expect(screen.getByRole('option', { name: '30 minutes' })).to.have.attribute('tabindex', '0');
       expect(screen.getByRole('option', { name: 'PM' })).to.have.attribute('tabindex', '0');
 
-      await multiSectionDigitalClockHandler.setViewValue(
+      multiSectionDigitalClockHandler.setViewValue(
         adapterToUse,
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
@@ -52,7 +52,7 @@ describe('<MultiSectionDigitalClock />', () => {
       expect(screen.getByRole('option', { name: '0 minutes' })).to.have.attribute('tabindex', '0');
     });
 
-    it('should not use `referenceDate` when a value is defined', async () => {
+    it('should not use `referenceDate` when a value is defined', () => {
       const onChange = spy();
 
       function ControlledMultiSectionDigitalClock(props: MultiSectionDigitalClockProps<any>) {
@@ -78,7 +78,7 @@ describe('<MultiSectionDigitalClock />', () => {
         />,
       );
 
-      await multiSectionDigitalClockHandler.setViewValue(
+      multiSectionDigitalClockHandler.setViewValue(
         adapterToUse,
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
@@ -86,7 +86,7 @@ describe('<MultiSectionDigitalClock />', () => {
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
     });
 
-    it('should not use `referenceDate` when a defaultValue is defined', async () => {
+    it('should not use `referenceDate` when a defaultValue is defined', () => {
       const onChange = spy();
 
       render(
@@ -97,7 +97,7 @@ describe('<MultiSectionDigitalClock />', () => {
         />,
       );
 
-      await multiSectionDigitalClockHandler.setViewValue(
+      multiSectionDigitalClockHandler.setViewValue(
         adapterToUse,
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );

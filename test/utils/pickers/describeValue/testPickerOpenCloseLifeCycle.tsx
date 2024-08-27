@@ -165,12 +165,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       );
 
       // Change the value (same value)
-      setNewValue(values[0], {
-        isOpened: true,
-        applySameValue: true,
-        selectSection,
-        pressKey,
-      });
+      setNewValue(values[0], { isOpened: true, applySameValue: true, selectSection, pressKey });
       if (isRangeType) {
         setNewValue(values[0], {
           isOpened: true,

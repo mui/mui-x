@@ -11,7 +11,7 @@ interface ViewHandler<TView> {
 }
 
 export const timeClockHandler: ViewHandler<TimeView> = {
-  setViewValue: async (adapter, value, view) => {
+  setViewValue: (adapter, value, view) => {
     const hasMeridiem = adapter.is12HourCycleInCurrentLocale();
 
     let valueInt;

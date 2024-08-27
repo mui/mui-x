@@ -73,7 +73,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
         : 'MM/DD/YYYY';
       expectFieldValueV7(endFieldRoot, expectedEndValueStr);
     },
-    setNewValue: async (value, { isOpened, applySameValue, setEndDate = false }) => {
+    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
       let newValue: any[];
       if (applySameValue) {
         newValue = value;
