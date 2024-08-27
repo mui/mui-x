@@ -70,7 +70,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.8",
+    "@mui/internal-test-utils": "^1.0.10",
     "@types/prop-types": "^15.7.12",
     "rimraf": "^5.0.10"
   },
