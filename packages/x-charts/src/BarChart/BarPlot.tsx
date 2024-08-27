@@ -224,6 +224,9 @@ const enterStyle = ({ x, width, y, height }: AnimationData) => ({
 function BarPlot(props: BarPlotProps) {
   const { completedData, masksData } = useAggregatedData();
   const { skipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
+
+  const withoutBorderRadius = !borderRadius || borderRadius <= 0;
+
   const transition = useTransition(completedData, {
     keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
     from: leaveStyle,
@@ -233,7 +236,7 @@ function BarPlot(props: BarPlotProps) {
     immediate: skipAnimation,
   });
 
-  const maskTransition = useTransition(masksData, {
+  const maskTransition = useTransition(withoutBorderRadius ? [] : masksData, {
     keys: (v) => v.id,
     from: leaveStyle,
     leave: leaveStyle,
@@ -244,18 +247,19 @@ function BarPlot(props: BarPlotProps) {
 
   return (
     <React.Fragment>
-      {maskTransition((style, { id, hasPositive, hasNegative, layout }) => {
-        return (
-          <BarClipPath
-            maskId={id}
-            borderRadius={borderRadius}
-            hasNegative={hasNegative}
-            hasPositive={hasPositive}
-            layout={layout}
-            style={style}
-          />
-        );
-      })}
+      {!withoutBorderRadius &&
+        maskTransition((style, { id, hasPositive, hasNegative, layout }) => {
+          return (
+            <BarClipPath
+              maskId={id}
+              borderRadius={borderRadius}
+              hasNegative={hasNegative}
+              hasPositive={hasPositive}
+              layout={layout}
+              style={style}
+            />
+          );
+        })}
       {transition((style, { seriesId, dataIndex, color, maskId }) => {
         const barElement = (
           <BarElement
@@ -273,7 +277,7 @@ function BarPlot(props: BarPlotProps) {
           />
         );
 
-        if (!borderRadius || borderRadius <= 0) {
+        if (withoutBorderRadius) {
           return barElement;
         }
 
