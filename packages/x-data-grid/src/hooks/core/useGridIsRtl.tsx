@@ -5,7 +5,7 @@ import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 export const useGridIsRtl = (apiRef: React.MutableRefObject<GridPrivateApiCommon>): void => {
   const isRtl = useRtl();
 
-  if (apiRef.current.state.isRtl !== undefined) {
+  if (apiRef.current.state.isRtl === undefined) {
     apiRef.current.state.isRtl = isRtl;
   }
 
