@@ -332,6 +332,11 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
         handleValueChange(viewValue - keyboardControlStep, 'partial');
         event.preventDefault();
         break;
+      case 'Enter':
+      case ' ':
+        handleValueChange(viewValue, 'finish');
+        event.preventDefault();
+        break;
       default:
       // do nothing
     }

@@ -37,7 +37,7 @@ describe('<DataGrid /> - Toolbar', () => {
 
   describe('column selector', () => {
     it('should hide "id" column when hiding it from the column selector', () => {
-      const { getByText } = render(
+      render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
@@ -50,7 +50,7 @@ describe('<DataGrid /> - Toolbar', () => {
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
-      fireEvent.click(getByText('Columns'));
+      fireEvent.click(screen.getByText('Columns'));
       fireEvent.click(screen.getByRole('tooltip').querySelector('[name="id"]')!);
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
@@ -66,7 +66,7 @@ describe('<DataGrid /> - Toolbar', () => {
         },
       ];
 
-      const { getByText, getByRole } = render(
+      render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
@@ -83,8 +83,8 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      fireEvent.click(getByText('Columns'));
-      const showHideAllCheckbox = getByRole('checkbox', { name: 'Show/Hide All' });
+      fireEvent.click(screen.getByText('Columns'));
+      const showHideAllCheckbox = screen.getByRole('checkbox', { name: 'Show/Hide All' });
       fireEvent.click(showHideAllCheckbox);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
       fireEvent.click(showHideAllCheckbox);
@@ -135,7 +135,7 @@ describe('<DataGrid /> - Toolbar', () => {
         );
       };
 
-      const { getByText } = render(
+      render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
@@ -152,7 +152,7 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      fireEvent.click(getByText('Columns'));
+      fireEvent.click(screen.getByText('Columns'));
 
       const searchInput = document.querySelector('input[type="text"]')!;
       fireEvent.change(searchInput, { target: { value: 'test' } });

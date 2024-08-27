@@ -22,6 +22,12 @@ export interface GridFilterState {
    */
   filteredRowsLookup: Record<GridRowId, boolean>;
   /**
+   * Amount of children that are passing the filters or have children that are passing the filter (does not count grand children).
+   * If a row is not registered in this lookup, it is supposed to have no descendant passing the filters.
+   * If `GridDataSource` is being used to load the data, the value is `-1` if there are some children but the count is unknown.
+   */
+  filteredChildrenCountLookup: Record<GridRowId, number>;
+  /**
    * Amount of descendants that are passing the filters.
    * For the Tree Data, it includes all the intermediate depth levels (= amount of children + amount of grand children + ...).
    * For the Row grouping by column, it does not include the intermediate depth levels (= amount of descendant of maximum depth).

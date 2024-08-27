@@ -6,6 +6,14 @@ title: Data Grid - Filtering customization recipes
 
 <p class="description">Advanced filtering customization recipes.</p>
 
+## Persisting filters in local storage
+
+You can persist the filters in the local storage to keep the filters applied after the page is reloaded.
+
+In the demo below, the [`React.useSyncExternalStore` hook](https://react.dev/reference/react/useSyncExternalStore) is used to synchronize the filters with the local storage.
+
+{{"demo": "FilteringLocalStorage.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Quick filter outside of the grid
 
 The [Quick Filter](/x/react-data-grid/filtering/quick-filter/) component is typically used in the Data Grid's Toolbar component slot.
