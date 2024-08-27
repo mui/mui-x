@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
-import { useSpring, to } from '@react-spring/web';
+import { useSpring } from '@react-spring/web';
 
 function usePrevious<T>(value: T) {
-  const ref = React.useRef<{ current: T; previous?: T }>({
-    current: value,
-    previous: undefined,
+  const ref = React.useRef<{ currentPath: T; previousPath?: T }>({
+    currentPath: value,
+    previousPath: undefined,
   });
   React.useEffect(() => {
     ref.current = {
-      current: value,
-      previous: ref.current.current,
+      currentPath: value,
+      previousPath: ref.current.currentPath,
     };
   }, [value]);
   return ref.current;
@@ -21,10 +21,10 @@ export const useAnimatedPath = (path: string, skipAnimation?: boolean) => {
 
   const interpolator = React.useMemo(
     () =>
-      memoryRef.previous
-        ? interpolateString(memoryRef.previous, memoryRef.current)
-        : () => memoryRef.current,
-    [memoryRef],
+      memoryRef.previousPath
+        ? interpolateString(memoryRef.previousPath, memoryRef.currentPath)
+        : () => memoryRef.currentPath,
+    [memoryRef.currentPath, memoryRef.previousPath],
   );
 
   const [{ value }] = useSpring(
@@ -34,8 +34,8 @@ export const useAnimatedPath = (path: string, skipAnimation?: boolean) => {
       reset: true,
       immediate: skipAnimation,
     },
-    [memoryRef.current],
+    [memoryRef.currentPath],
   );
 
-  return to([value], interpolator);
+  return value.to(interpolator);
 };
