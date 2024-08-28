@@ -176,3 +176,5 @@ You need those listeners if you are using [axes highlight](/x/react-charts/toolt
   {/* ... */}
 </ChartContainer>
 ```
+
+{{"demo": "CustomTooltipPosition.js"}}

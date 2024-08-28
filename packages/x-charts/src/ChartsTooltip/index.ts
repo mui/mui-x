@@ -8,3 +8,6 @@ export * from './DefaultChartsAxisTooltipContent';
 export * from './DefaultChartsItemTooltipContent';
 
 export * from './ChartsTooltipTable';
+
+export * from './useItemTooltip';
+export { useMouseTracker } from './utils';
