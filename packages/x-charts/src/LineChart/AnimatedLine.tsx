@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { animated, useTransition } from '@react-spring/web';
 import { color as d3Color } from '@mui/x-charts-vendor/d3-color';
 import { styled } from '@mui/material/styles';
-import { useAnimatedPath } from '../internals/useAnimatedPath';
 import { cleanId } from '../internals/cleanId';
 import type { LineElementOwnerState } from './LineElement';
 import { useChartId } from '../hooks/useChartId';
 import { useDrawingArea } from '../hooks/useDrawingArea';
+import { useStringInterpolator } from '../internals/useStringInterpolator';
 
 export const LineElementPath = styled(animated.path, {
   name: 'MuiLineElement',
@@ -50,9 +50,9 @@ function AnimatedLine(props: AnimatedLineProps) {
   const { left, top, bottom, width, height, right } = useDrawingArea();
   const chartId = useChartId();
 
-  const path = useAnimatedPath(d, skipAnimation);
+  const stringInterpolator = useStringInterpolator(d);
 
-  const transitions = useTransition([1], {
+  const transitionAppear = useTransition([1], {
     from: { animatedWidth: left },
     to: { animatedWidth: width + left + right },
     enter: { animatedWidth: width + left + right },
@@ -61,16 +61,26 @@ function AnimatedLine(props: AnimatedLineProps) {
     immediate: skipAnimation,
   });
 
+  const transitionChange = useTransition([stringInterpolator], {
+    from: { value: 0 },
+    to: { value: 1 },
+    enter: { value: 1 },
+    reset: false,
+    immediate: skipAnimation,
+  });
+
   const clipId = cleanId(`${chartId}-${ownerState.id}-line-clip`);
   return (
     <React.Fragment>
       <clipPath id={clipId}>
-        {transitions((style) => (
+        {transitionAppear((style) => (
           <animated.rect x={0} y={0} width={style.animatedWidth} height={top + height + bottom} />
         ))}
       </clipPath>
       <g clipPath={`url(#${clipId})`}>
-        <LineElementPath {...other} ownerState={ownerState} d={path} />
+        {transitionChange((style, interpolator) => (
+          <LineElementPath {...other} ownerState={ownerState} d={style.value.to(interpolator)} />
+        ))}
       </g>
     </React.Fragment>
   );

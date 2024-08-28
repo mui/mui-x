@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { animated, useTransition } from '@react-spring/web';
 import { color as d3Color } from '@mui/x-charts-vendor/d3-color';
-import { useAnimatedPath } from '../internals/useAnimatedPath';
 import { cleanId } from '../internals/cleanId';
 import type { AreaElementOwnerState } from './AreaElement';
 import { useChartId, useDrawingArea } from '../hooks';
+import { useStringInterpolator } from '../internals/useStringInterpolator';
 
 export const AreaElementPath = styled(animated.path, {
   name: 'MuiAreaElement',
@@ -47,9 +47,9 @@ function AnimatedArea(props: AnimatedAreaProps) {
   const { left, top, right, bottom, width, height } = useDrawingArea();
   const chartId = useChartId();
 
-  const path = useAnimatedPath(d, skipAnimation);
+  const stringInterpolator = useStringInterpolator(d);
 
-  const transitions = useTransition([1], {
+  const transitionAppear = useTransition([1], {
     from: { animatedWidth: left },
     to: { animatedWidth: width + left + right },
     enter: { animatedWidth: width + left + right },
@@ -58,16 +58,26 @@ function AnimatedArea(props: AnimatedAreaProps) {
     immediate: skipAnimation,
   });
 
+  const transitionChange = useTransition([stringInterpolator], {
+    from: { value: 0 },
+    to: { value: 1 },
+    enter: { value: 1 },
+    reset: false,
+    immediate: skipAnimation,
+  });
+
   const clipId = cleanId(`${chartId}-${ownerState.id}-area-clip`);
   return (
     <React.Fragment>
       <clipPath id={clipId}>
-        {transitions((style) => (
+        {transitionAppear((style) => (
           <animated.rect x={0} y={0} width={style.animatedWidth} height={top + height + bottom} />
         ))}
       </clipPath>
       <g clipPath={`url(#${clipId})`}>
-        <AreaElementPath {...other} ownerState={ownerState} d={path} />
+        {transitionChange((style, interpolator) => (
+          <AreaElementPath {...other} ownerState={ownerState} d={style.value.to(interpolator)} />
+        ))}
       </g>
     </React.Fragment>
   );
