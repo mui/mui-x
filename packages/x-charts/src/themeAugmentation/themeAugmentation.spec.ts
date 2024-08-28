@@ -49,7 +49,7 @@ createTheme({
       styleOverrides: {
         root: { backgroundColor: 'red' },
         // @ts-expect-error invalid MuiChartsLegend class key
-        constent: { color: 'red' },
+        mark: { color: 'red' },
       },
     },
     MuiChartsTooltip: {
