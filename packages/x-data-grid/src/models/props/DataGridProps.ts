@@ -299,12 +299,12 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   rowSpacingType: 'margin' | 'border';
   /**
-   * If `true`, the vertical borders of the cells are displayed.
+   * If `true`, vertical borders will be displayed between cells.
    * @default false
    */
   showCellVerticalBorder: boolean;
   /**
-   * If `true`, the vertical borders of column headers are displayed.
+   * If `true`, vertical borders will be displayed between column header items.
    * @default false
    */
   showColumnVerticalBorder: boolean;
