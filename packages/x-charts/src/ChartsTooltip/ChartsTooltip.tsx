@@ -58,7 +58,7 @@ export interface ChartsTooltipProps<T extends ChartSeriesType> {
    * - 'item': Shows data about the item below the mouse.
    * - 'axis': Shows values associated with the hovered x value
    * - 'none': Does not display tooltip
-   * @default 'item'
+   * @default 'axis'
    */
   trigger?: TriggerOptions;
   /**
@@ -229,7 +229,7 @@ ChartsTooltip.propTypes = {
    * - 'item': Shows data about the item below the mouse.
    * - 'axis': Shows values associated with the hovered x value
    * - 'none': Does not display tooltip
-   * @default 'item'
+   * @default 'axis'
    */
   trigger: PropTypes.oneOf(['axis', 'item', 'none']),
 } as any;
