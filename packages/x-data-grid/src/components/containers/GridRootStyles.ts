@@ -38,6 +38,11 @@ const columnHeaderStyles = {
   },
 };
 
+const columnSeparatorTargetSize = 10;
+const columnSeparatorOffset = -5;
+
+const focusOutlineWidth = 1;
+
 const separatorIconDragStyles = {
   width: 3,
   rx: 1.5,
@@ -187,10 +192,6 @@ export const GridRootStyles = styled('div', {
     },
   };
 
-  const focusOutlineWidth = 1;
-  const columnSeparatorTargetSize = 10;
-  const columnSeparatorOffset = -5;
-
   const gridStyle: CSSInterpolation = {
     '--unstable_DataGrid-radius': typeof radius === 'number' ? `${radius}px` : radius,
     '--unstable_DataGrid-headWeight': t.typography.fontWeightMedium,
@@ -285,14 +286,17 @@ export const GridRootStyles = styled('div', {
     // Hide the column separator when:
     // - the column is focused and has an outline
     // - the next column is focused and has an outline
-    // - the column has a right border
-    // - the next column has a right border
+    // - the column has a left or right border
+    // - the next column is pinned right and has a left border
     [`& .${c.columnHeader}:focus,
       & .${c.columnHeader}:focus-within,
       & .${c.columnHeader}:has(+ .${c.columnHeader}:focus),
       & .${c.columnHeader}:has(+ .${c.columnHeader}:focus-within),
+      & .${c['columnHeader--withLeftBorder']},
       & .${c['columnHeader--withRightBorder']},
-      & .${c.columnHeader}:has(+ .${c['columnHeader--withRightBorder']})`]: {
+      & .${c.columnHeader}:has(+ .${c.filler} + .${c['columnHeader--withLeftBorder']}),
+      & .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}
+      `]: {
       [`& .${c.columnSeparator}`]: {
         opacity: 0,
         '@media (hover: none)': {
@@ -310,7 +314,7 @@ export const GridRootStyles = styled('div', {
     },
     [`&.${c['root--noToolbar']} [aria-rowindex="1"] .${c['columnHeader--last']}`]: {
       borderTopRightRadius:
-        !dimensions.hasScrollY || dimensions.scrollbarSize === 0
+        dimensions.hasScrollX && (!dimensions.hasScrollY || dimensions.scrollbarSize === 0)
           ? 'calc(var(--unstable_DataGrid-radius) - 1px)'
           : undefined,
     },
