@@ -16,6 +16,11 @@ export interface ChartsComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiChartsAxisHighlight'];
   };
   MuiChartsGrid?: {
+    /**
+     * Warning, does not work with LineChart, BarChart and ScatterChart.
+     * Those components skip the grid rendering if it seems unnecessary according to there props.
+     * This `defaultProps` only work if you call `<ChartsGrid />` in a composed chart.
+     */
     defaultProps?: ComponentsProps['MuiChartsGrid'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChartsGrid'];
   };
