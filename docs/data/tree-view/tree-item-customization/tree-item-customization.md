@@ -11,6 +11,28 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 <p class="description">Learn how to customize the Tree Item component.</p>
 
+## Anatomy
+
+Each tree item is shaped by a series of composable slots. Hover over them in the demo below to see each slot.
+
+{{"demo": "CustomTreeItemDemo.js", "hideToolbar": true}}
+
+### Checkbox
+
+The checkbox is present on the items if `checkboxSelection` is enabled on the tree view.
+
+#### Slot props
+
+You can pass props to the checkbox slot using the `slotProps` on the `TreeItem2` component.
+
+{{"demo": "CheckboxSlotProps.js"}}
+
+#### Slot
+
+You can entirely replace the slot with a new component.
+
+{{"demo": "CheckboxSlot.js"}}
+
 ## Basics
 
 ### Change nested item's indentation
