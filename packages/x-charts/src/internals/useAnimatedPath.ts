@@ -7,12 +7,13 @@ function usePrevious<T>(value: T) {
     currentPath: value,
     previousPath: undefined,
   });
-  React.useEffect(() => {
+  if (ref.current.currentPath !== value) {
     ref.current = {
       currentPath: value,
       previousPath: ref.current.currentPath,
     };
-  }, [value]);
+  }
+
   return ref.current;
 }
 
