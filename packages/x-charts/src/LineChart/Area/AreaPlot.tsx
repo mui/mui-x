@@ -1,20 +1,20 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { area as d3Area } from '@mui/x-charts-vendor/d3-shape';
-import { useCartesianContext } from '../context/CartesianProvider';
+import { useCartesianContext } from '../../context/CartesianProvider';
 import {
   AreaElement,
   AreaElementProps,
   AreaElementSlotProps,
   AreaElementSlots,
 } from './AreaElement';
-import { getValueToPositionMapper } from '../hooks/useScale';
-import getCurveFactory from '../internals/getCurve';
-import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { LineItemIdentifier } from '../models/seriesType/line';
-import { useChartGradient } from '../internals/components/ChartsAxesGradients';
-import { useLineSeries } from '../hooks/useSeries';
-import { AxisId } from '../models/axis';
+import { getValueToPositionMapper } from '../../hooks/useScale';
+import getCurveFactory from '../../internals/getCurve';
+import { DEFAULT_X_AXIS_KEY } from '../../constants';
+import { LineItemIdentifier } from '../../models/seriesType/line';
+import { useChartGradient } from '../../internals/components/ChartsAxesGradients';
+import { useLineSeries } from '../../hooks/useSeries';
+import { AxisId } from '../../models/axis';
 
 export interface AreaPlotSlots extends AreaElementSlots {}
 
