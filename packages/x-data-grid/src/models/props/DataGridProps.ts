@@ -304,7 +304,7 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   showCellVerticalBorder: boolean;
   /**
-   * If `true`, the right border of the column headers are displayed.
+   * If `true`, the vertical borders of column headers are displayed.
    * @default false
    */
   showColumnVerticalBorder: boolean;
