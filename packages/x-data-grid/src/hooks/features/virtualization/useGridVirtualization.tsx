@@ -67,20 +67,9 @@ export function useGridVirtualization(
     }));
   };
 
-  const setRowVirtualization = (enabled: boolean) => {
-    apiRef.current.setState((state) => ({
-      ...state,
-      virtualization: {
-        ...state.virtualization,
-        enabledForRows: enabled && !props.autoHeight,
-      },
-    }));
-  };
-
   const api = {
     unstable_setVirtualization: setVirtualization,
     unstable_setColumnVirtualization: setColumnVirtualization,
-    unstable_setRowVirtualization: setRowVirtualization,
   };
 
   useGridApiMethod(apiRef, api, 'public');
