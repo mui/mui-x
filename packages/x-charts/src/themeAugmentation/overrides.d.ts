@@ -2,7 +2,6 @@ import { BarLabelClassKey } from '../BarChart';
 import { BarElementClassKey } from '../BarChart/BarElement';
 import { ChartsAxisHighlightClassKey } from '../ChartsAxisHighlight';
 import { ChartsGridClassKey } from '../ChartsGrid';
-
 import { ChartsTooltipClassKey } from '../ChartsTooltip';
 import { AreaElementClassKey, LineElementClassKey, MarkElementClassKey } from '../LineChart';
 
