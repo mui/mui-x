@@ -543,9 +543,9 @@ export interface GridClasses {
   'scrollbarFiller--header': string;
   /**
    * @ignore - do not document.
-   * Styles applied to the scrollbar filler cell, with a border top.
+   * Styles applied to the scrollbar filler cell, with a border bottom.
    */
-  'scrollbarFiller--borderTop': string;
+  'scrollbarFiller--borderBottom': string;
   /**
    * @ignore - do not document.
    * Styles applied to the scrollbar filler cell.
@@ -763,7 +763,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'scrollbar--horizontal',
   'scrollbarFiller',
   'scrollbarFiller--header',
-  'scrollbarFiller--borderTop',
+  'scrollbarFiller--borderBottom',
   'scrollbarFiller--pinnedRight',
   'selectedRowCount',
   'sortIcon',
