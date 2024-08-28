@@ -70,13 +70,13 @@ describe('<DateCalendar />', () => {
     expect(screen.queryByText('January 2019')).toBeVisible();
     expect(screen.queryByLabelText('year view is open, switch to calendar view')).to.equal(null);
 
-    await user.click(screen.getByTitle('Previous month'));
+    await user.setup({ pointerEventsCheck: 0 }).click(screen.getByTitle('Previous month'));
     expect(onMonthChangeMock.callCount).to.equal(0);
 
-    await user.click(screen.getByTitle('Next month'));
+    await user.setup({ pointerEventsCheck: 0 }).click(screen.getByTitle('Next month'));
     expect(onMonthChangeMock.callCount).to.equal(0);
 
-    await user.click(screen.getByRole('gridcell', { name: '5' }));
+    await user.setup({ pointerEventsCheck: 0 }).click(screen.getByRole('gridcell', { name: '5' }));
     expect(onChangeMock.callCount).to.equal(0);
   });
 
