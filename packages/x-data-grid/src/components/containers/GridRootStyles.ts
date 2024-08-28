@@ -429,7 +429,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c.headerFilterRow}`]: {
       [`& .${c.columnHeader}`]: {
         boxSizing: 'border-box',
-        borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+        borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
       },
     },
 
@@ -686,8 +686,8 @@ export const GridRootStyles = styled('div', {
     [`& .${c.filler}`]: {
       flex: 1,
     },
-    [`& .${c['filler--borderTop']}`]: {
-      borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+    [`& .${c['filler--borderBottom']}`]: {
+      borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
     },
 
     /* Hide grid rows, row filler, and vertical scrollbar when skeleton overlay is visible */
