@@ -17,7 +17,7 @@ const barChartsParams = {
       label: 'A',
       stack: 'total',
       highlightScope: {
-        highlighted: 'item',
+        highlight: 'item',
       },
     },
     {
@@ -26,7 +26,7 @@ const barChartsParams = {
       label: 'B',
       stack: 'total',
       highlightScope: {
-        highlighted: 'item',
+        highlight: 'item',
       },
     },
     {
@@ -34,7 +34,7 @@ const barChartsParams = {
       data: [4, 2, 5, 4, 1],
       label: 'C',
       highlightScope: {
-        highlighted: 'item',
+        highlight: 'item',
       },
     },
   ],
