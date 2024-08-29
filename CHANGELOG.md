@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Aug 29, 2024_
 
-We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - 💫 Material UI v6 (`@mui/material@6`) is now supported (#14142) @cherniavskii
 - 🐞 Bugfixes
