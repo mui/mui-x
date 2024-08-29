@@ -22,10 +22,14 @@ module.exports = async ({ core, context, github }) => {
     } else {
       const order = await fetch(`${orderApi}${orderId}`, {
         headers: {
-          Authorization: orderApiToken,
+          Authorization: `Basic ${orderApiToken}`,
           'User-Agent': 'MUI-Tools-Private/X-Orders-Inspector v1',
         },
       });
+
+      if (!order.ok) {
+        core.info(`Request to ${orderApi} failed. Response status code: ${order.status}.`);
+      }
 
       const orderDetails = await order.json();
 

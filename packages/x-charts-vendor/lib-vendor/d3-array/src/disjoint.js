@@ -11,10 +11,10 @@ function disjoint(values, other) {
   for (const v of values) {
     if (set.has(v)) return false;
     let value, done;
-    while (({
+    while ({
       value,
       done
-    } = iterator.next())) {
+    } = iterator.next()) {
       if (done) break;
       if (Object.is(v, value)) return false;
       set.add(value);

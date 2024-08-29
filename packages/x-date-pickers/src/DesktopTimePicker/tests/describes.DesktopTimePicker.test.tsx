@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -12,7 +12,6 @@ import {
 } from 'test/utils/pickers';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DesktopTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -77,18 +76,14 @@ describe('<DesktopTimePicker /> - Describes', () => {
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         const hours = adapterToUse.format(newValue, hasMeridiem ? 'hours12h' : 'hours24h');
         const hoursNumber = adapterToUse.getHours(newValue);
-        fireUserEvent.mousePress(
-          screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }),
-        );
-        fireUserEvent.mousePress(
+        fireEvent.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
+        fireEvent.click(
           screen.getByRole('option', { name: `${adapterToUse.getMinutes(newValue)} minutes` }),
         );
         if (hasMeridiem) {
           // meridiem is an extra view on `DesktopTimePicker`
           // we need to click it to finish selection
-          fireUserEvent.mousePress(
-            screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }),
-          );
+          fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
         }
       } else {
         selectSection('hours');
