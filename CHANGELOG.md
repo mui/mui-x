@@ -30,7 +30,7 @@ Same changes as in `@mui/x-data-grid-pro@7.15.0`.
 - [charts] Fix `LineChart` transition stopping before completion (#14366) @JCQuintas
 - [charts] Fix tooltip with horizontal layout (#14337) @alexfauquette
 - [charts] Keep axis root classe usage explicit (#14378) @alexfauquette
-- [charts][docs] Fix sentence case h2 @oliviertassinari
+- [charts][docs] Fix sentence case `h2` @oliviertassinari
 
 #### `@mui/x-charts-pro@7.0.0-alpha.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
