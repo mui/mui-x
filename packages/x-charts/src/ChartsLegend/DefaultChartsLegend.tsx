@@ -3,10 +3,19 @@ import PropTypes from 'prop-types';
 import { FormattedSeries } from '../context/SeriesProvider';
 import { LegendPerItem, LegendPerItemProps } from './LegendPerItem';
 import { DrawingArea } from '../context/DrawingProvider';
-import { SeriesLegendItemContext } from './chartsLegend.types';
+import { LegendItemConfig, SeriesLegendItemContext } from './chartsLegend.types';
+
+const seriesContextBuilder = (context: LegendItemConfig): SeriesLegendItemContext =>
+  ({
+    type: 'series',
+    color: context.color,
+    label: context.label,
+    seriesId: context.seriesId!,
+    itemId: context.id,
+  }) as const;
 
 export interface LegendRendererProps
-  extends Omit<LegendPerItemProps, 'itemsToDisplay' | 'onItemClick'> {
+  extends Omit<LegendPerItemProps, 'itemsToDisplay' | 'contextBuilder'> {
   series: FormattedSeries;
   seriesToDisplay: LegendPerItemProps['itemsToDisplay'];
   /**
@@ -30,7 +39,13 @@ export interface LegendRendererProps
 function DefaultChartsLegend(props: LegendRendererProps) {
   const { drawingArea, seriesToDisplay, ...other } = props;
 
-  return <LegendPerItem {...other} itemsToDisplay={seriesToDisplay} />;
+  return (
+    <LegendPerItem
+      {...other}
+      itemsToDisplay={seriesToDisplay}
+      contextBuilder={seriesContextBuilder}
+    />
+  );
 }
 
 DefaultChartsLegend.propTypes = {

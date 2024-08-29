@@ -14,15 +14,14 @@ interface LegendItemContextBase {
 }
 
 export interface LegendItemConfig
-  extends Partial<Omit<SeriesLegendItemContext, 'type' | 'label' | 'color' | 'itemId'>>,
-    Partial<Omit<PiecewiseColorLegendItemContext, 'type' | 'label' | 'color'>>,
+  extends Partial<Omit<SeriesLegendItemContext, 'type' | 'itemId' | keyof LegendItemContextBase>>,
+    Partial<Omit<PiecewiseColorLegendItemContext, 'type' | keyof LegendItemContextBase>>,
     LegendItemContextBase {
   /**
    * The identifier of the legend element.
    * Used for internal purpose such as `key` props
    */
   id: number | string;
-  type: 'series' | 'piecewiseColor';
 }
 
 export interface SeriesLegendItemContext extends LegendItemContextBase {

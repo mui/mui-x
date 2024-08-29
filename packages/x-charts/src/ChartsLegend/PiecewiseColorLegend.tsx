@@ -5,7 +5,7 @@ import { useAxis } from './useAxis';
 import { ColorLegendSelector, PiecewiseLabelFormatterParams } from './legend.types';
 import { LegendPerItem, LegendPerItemProps } from './LegendPerItem';
 import { notNull } from '../internals/notNull';
-import { PiecewiseColorLegendItemContext } from './chartsLegend.types';
+import { LegendItemConfig, PiecewiseColorLegendItemContext } from './chartsLegend.types';
 
 function defaultLabelFormatter(params: PiecewiseLabelFormatterParams) {
   if (params.min === null) {
@@ -19,7 +19,7 @@ function defaultLabelFormatter(params: PiecewiseLabelFormatterParams) {
 
 export interface PiecewiseColorLegendProps
   extends ColorLegendSelector,
-    Omit<LegendPerItemProps, 'itemsToDisplay' | 'onItemClick'> {
+    Omit<LegendPerItemProps, 'itemsToDisplay' | 'contextBuilder'> {
   /**
    * Hide the first item of the legend, corresponding to the [-infinity, min] piece.
    * @default false
@@ -49,6 +49,15 @@ export interface PiecewiseColorLegendProps
     index: number,
   ) => void;
 }
+
+const piecewiseColorContextBuilder = (context: LegendItemConfig): PiecewiseColorLegendItemContext =>
+  ({
+    type: 'piecewiseColor',
+    color: context.color,
+    label: context.label,
+    maxValue: context.maxValue!,
+    minValue: context.minValue!,
+  }) as const;
 
 function PiecewiseColorLegend(props: PiecewiseColorLegendProps) {
   const {
@@ -101,12 +110,17 @@ function PiecewiseColorLegend(props: PiecewiseColorLegendProps) {
         label,
         minValue: data.min,
         maxValue: data.max,
-        type: 'piecewiseColor' as const,
       };
     })
     .filter(notNull);
 
-  return <LegendPerItem {...other} itemsToDisplay={itemsToDisplay} />;
+  return (
+    <LegendPerItem
+      {...other}
+      itemsToDisplay={itemsToDisplay}
+      contextBuilder={piecewiseColorContextBuilder}
+    />
+  );
 }
 
 PiecewiseColorLegend.propTypes = {

@@ -12,7 +12,6 @@ const legendGetter: LegendGetter<'scatter'> = (params) => {
     }
 
     acc.push({
-      type: 'series',
       id: seriesId,
       seriesId,
       color: series[seriesId].color,

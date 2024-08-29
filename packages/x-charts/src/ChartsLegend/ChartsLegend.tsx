@@ -4,37 +4,32 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { getSeriesToDisplay } from './utils';
-import { ChartsLegendClasses, getLegendUtilityClass } from './chartsLegendClasses';
+import { getLegendUtilityClass } from './chartsLegendClasses';
 import { DefaultizedProps } from '../models/helpers';
 import { DefaultChartsLegend, LegendRendererProps } from './DefaultChartsLegend';
 import { useDrawingArea } from '../hooks';
 import { useSeries } from '../hooks/useSeries';
 import { LegendPlacement } from './legend.types';
 
+export type ChartsLegendPropsBase = Omit<
+  LegendRendererProps,
+  keyof LegendPlacement | 'contextBuilder' | 'series' | 'seriesToDisplay'
+> &
+  LegendPlacement;
+
 export interface ChartsLegendSlots {
   /**
    * Custom rendering of the legend.
    * @default DefaultChartsLegend
    */
-  legend?: React.JSXElementConstructor<LegendRendererProps>;
+  legend?: React.JSXElementConstructor<ChartsLegendPropsBase>;
 }
 
 export interface ChartsLegendSlotProps {
-  legend?: Partial<LegendRendererProps>;
+  legend?: Partial<ChartsLegendPropsBase>;
 }
 
-export interface ChartsLegendProps
-  extends LegendPlacement,
-    Pick<LegendRendererProps, 'onItemClick'> {
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<ChartsLegendClasses>;
-  /**
-   * Set to true to hide the legend.
-   * @default false
-   */
-  hidden?: boolean;
+export interface ChartsLegendProps extends ChartsLegendPropsBase {
   /**
    * Overridable component slots.
    * @default {}
@@ -73,7 +68,7 @@ function ChartsLegend(inProps: ChartsLegendProps) {
     ...props,
     position: { horizontal: 'middle', vertical: 'top', ...props.position },
   };
-  const { position, direction, hidden, slots, slotProps, onItemClick } = defaultizedProps;
+  const { slots, slotProps, ...other } = defaultizedProps;
 
   const theme = useTheme();
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
@@ -88,14 +83,11 @@ function ChartsLegend(inProps: ChartsLegendProps) {
     elementType: ChartLegendRender,
     externalSlotProps: slotProps?.legend,
     additionalProps: {
-      position,
-      direction,
+      ...other,
       classes,
       drawingArea,
       series,
-      hidden,
       seriesToDisplay,
-      onItemClick,
     },
     ownerState: {},
   });

@@ -2,12 +2,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useRtl } from '@mui/system/RtlProvider';
 import { ChartsText, ChartsTextStyle } from '../ChartsText';
-import { SeriesId } from '../models/seriesType/common';
-import { LegendItemConfig, LegendItemContext } from './chartsLegend.types';
+import { LegendItemConfig } from './chartsLegend.types';
 import { ChartsLegendClasses } from './chartsLegendClasses';
 
 export interface ChartsLegendItemProps extends LegendItemConfig {
-  index: number;
   positionY: number;
   label: string;
   positionX: number;
@@ -22,37 +20,8 @@ export interface ChartsLegendItemProps extends LegendItemConfig {
   markGap: number;
   labelStyle: ChartsTextStyle;
   classes?: Omit<Partial<ChartsLegendClasses>, 'column' | 'row' | 'label'>;
-  onClick?: (
-    event: React.MouseEvent<SVGRectElement, MouseEvent>,
-    legendItem: LegendItemContext,
-    index: number,
-  ) => void;
+  onClick?: (event: React.MouseEvent<SVGRectElement, MouseEvent>) => void;
 }
-
-const createClickContext = (
-  type: LegendItemContext['type'],
-  {
-    seriesId,
-    itemId,
-    minValue,
-    maxValue,
-    color,
-    label,
-  }: {
-    seriesId?: SeriesId;
-    itemId: string | number;
-    minValue?: number | Date | null;
-    maxValue?: number | Date | null;
-    color: string;
-    label: string;
-  },
-) => {
-  if (type === 'piecewiseColor') {
-    return { type, color, label, minValue: minValue ?? null, maxValue: maxValue ?? null };
-  }
-
-  return { type, seriesId: seriesId!, itemId, color, label };
-};
 
 /**
  * @ignore - internal component.
@@ -75,11 +44,6 @@ function ChartsLegendItem(props: ChartsLegendItemProps) {
     markGap,
     labelStyle,
     classes,
-    index,
-    seriesId,
-    type,
-    minValue,
-    maxValue,
     onClick,
   } = props;
 
@@ -95,23 +59,7 @@ function ChartsLegendItem(props: ChartsLegendItemProps) {
         height={innerHeight + 4}
         fill="transparent"
         className={classes?.itemBackground}
-        onClick={
-          onClick
-            ? (e) =>
-                onClick(
-                  e,
-                  createClickContext(type, {
-                    seriesId,
-                    itemId: id,
-                    minValue,
-                    maxValue,
-                    color,
-                    label,
-                  }),
-                  index,
-                )
-            : undefined
-        }
+        onClick={onClick}
         style={{
           pointerEvents: onClick ? 'all' : 'none',
           cursor: onClick ? 'pointer' : 'unset',

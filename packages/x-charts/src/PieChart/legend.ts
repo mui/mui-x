@@ -13,7 +13,6 @@ const legendGetter: LegendGetter<'pie'> = (params) => {
       }
 
       acc.push({
-        type: 'series',
         id: item.id,
         seriesId,
         color: item.color,
