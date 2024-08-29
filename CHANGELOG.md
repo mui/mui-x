@@ -21,7 +21,17 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 #### `@mui/x-data-grid-premium@7.15.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-data-grid-pro@7.15.0`.
+### Date and Time Pickers
 
+#### `@mui/x-date-pickers@7.15.0`
+
+- [pickers] Add `onTouchStart` handler for `TimeClock` (#14305) @arthurbalduini
+
+#### `@mui/x-date-pickers-pro@7.15.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.15.0`, plus:
+
+- [DateTimeRangePicker] Fix date format resolving from views on 24hr locales (#14341) @arthurbalduini
 ### Charts
 
 #### `@mui/x-charts@7.15.0`
