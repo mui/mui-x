@@ -34,6 +34,7 @@ Same changes as in `@mui/x-data-grid-pro@7.15.0`.
 Same changes as in `@mui/x-date-pickers@7.15.0`, plus:
 
 - [DateTimeRangePicker] Fix date format resolving from views on 24hr locales (#14341) @arthurbalduini
+
 ### Charts
 
 #### `@mui/x-charts@7.15.0`
