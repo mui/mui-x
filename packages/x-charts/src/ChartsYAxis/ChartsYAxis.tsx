@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { useTicks } from '../hooks/useTicks';
 import { useDrawingArea } from '../hooks/useDrawingArea';
@@ -83,7 +84,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   } = defaultizedProps;
 
   const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
+  const isRtl = useRtl();
 
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
 
@@ -112,7 +113,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   const TickLabel = slots?.axisTickLabel ?? ChartsText;
   const Label = slots?.axisLabel ?? ChartsText;
 
-  const revertAnchor = (!isRTL && position === 'right') || (isRTL && position !== 'right');
+  const revertAnchor = (!isRtl && position === 'right') || (isRtl && position !== 'right');
   const axisTickLabelProps = useSlotProps({
     elementType: TickLabel,
     externalSlotProps: slotProps?.axisTickLabel,

@@ -44,7 +44,6 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.25.4",
-    "@mui/system": "^5.16.7",
     "@mui/utils": "^5.16.6",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-data-grid-pro": "workspace:*",
@@ -59,7 +58,8 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.14",
+    "@mui/material": "^5.15.14 || ^6.0.0",
+    "@mui/system": "^5.15.14 || ^6.0.0",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },
@@ -73,6 +73,8 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^1.0.10",
+    "@mui/material": "^5.16.5",
+    "@mui/system": "^5.16.7",
     "@types/prop-types": "^15.7.12",
     "date-fns": "^2.30.0",
     "rimraf": "^5.0.10"

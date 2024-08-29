@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useRtl } from '@mui/system/RtlProvider';
 import { useThemeProps } from '@mui/material/styles';
 import {
   ResponsiveChartContainer,
@@ -30,7 +31,6 @@ import {
   ChartsXAxisProps,
   ChartsYAxisProps,
 } from '../models/axis';
-import { useIsRTL } from '../internals/useIsRTL';
 import {
   ChartsOverlay,
   ChartsOverlayProps,
@@ -153,12 +153,12 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
     className,
     ...other
   } = props;
-  const isRTL = useIsRTL();
+  const isRtl = useRtl();
 
-  const margin = { ...(isRTL ? defaultRTLMargin : defaultMargin), ...marginProps };
+  const margin = { ...(isRtl ? defaultRTLMargin : defaultMargin), ...marginProps };
   const legend: ChartsLegendProps = {
     direction: 'column',
-    position: { vertical: 'middle', horizontal: isRTL ? 'left' : 'right' },
+    position: { vertical: 'middle', horizontal: isRtl ? 'left' : 'right' },
     ...legendProps,
   };
 

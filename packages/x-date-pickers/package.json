@@ -46,7 +46,6 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.25.4",
-    "@mui/system": "^5.16.7",
     "@mui/utils": "^5.16.6",
     "@types/react-transition-group": "^4.4.11",
     "clsx": "^2.1.1",
@@ -56,7 +55,8 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.14",
+    "@mui/material": "^5.15.14 || ^6.0.0",
+    "@mui/system": "^5.15.14 || ^6.0.0",
     "date-fns": "^2.25.0 || ^3.2.0",
     "date-fns-jalali": "^2.13.0-0 || ^3.2.0-0",
     "dayjs": "^1.10.7",
@@ -98,6 +98,8 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^1.0.10",
+    "@mui/material": "^5.16.5",
+    "@mui/system": "^5.16.7",
     "@types/luxon": "^3.4.2",
     "@types/moment-hijri": "^2.1.4",
     "@types/moment-jalaali": "^0.7.9",
