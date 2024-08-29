@@ -55,6 +55,12 @@
       "isGlobal": false
     },
     {
+      "key": "paper",
+      "className": "MuiDefaultChartsItemTooltipContent-paper",
+      "description": "Styles applied to the paper element.",
+      "isGlobal": false
+    },
+    {
       "key": "root",
       "className": "MuiDefaultChartsItemTooltipContent-root",
       "description": "Styles applied to the root element.",
