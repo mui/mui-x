@@ -1,6 +1,7 @@
 import * as React from 'react';
 import NoSsr from '@mui/material/NoSsr';
 import { useTheme, styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import { DrawingArea } from '../context/DrawingProvider';
 import { DefaultizedProps } from '../models/helpers';
 import { ChartsText, ChartsTextStyle } from '../ChartsText';
@@ -111,7 +112,7 @@ export function LegendPerItem(props: LegendPerItemProps) {
     labelStyle: inLabelStyle,
   } = props;
   const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
+  const isRtl = useRtl();
   const drawingArea = useDrawingArea();
 
   const labelStyle = React.useMemo(
@@ -200,11 +201,11 @@ export function LegendPerItem(props: LegendPerItemProps) {
           <g
             key={id}
             className={classes?.series}
-            transform={`translate(${gapX + (isRTL ? legendWidth - positionX : positionX)} ${gapY + positionY})`}
+            transform={`translate(${gapX + (isRtl ? legendWidth - positionX : positionX)} ${gapY + positionY})`}
           >
             <rect
               className={classes?.mark}
-              x={isRTL ? -itemMarkWidth : 0}
+              x={isRtl ? -itemMarkWidth : 0}
               y={-itemMarkHeight / 2}
               width={itemMarkWidth}
               height={itemMarkHeight}
@@ -213,7 +214,7 @@ export function LegendPerItem(props: LegendPerItemProps) {
             <ChartsText
               style={labelStyle}
               text={label}
-              x={(isRTL ? -1 : 1) * (itemMarkWidth + markGap)}
+              x={(isRtl ? -1 : 1) * (itemMarkWidth + markGap)}
               y={0}
             />
           </g>

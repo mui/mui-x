@@ -4,7 +4,7 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import useLazyRef from '@mui/utils/useLazyRef';
-import { useTheme, Direction } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import {
   findGridCellElementsFromCol,
   findGridElement,
@@ -112,11 +112,11 @@ function flipResizeDirection(side: ResizeDirection) {
   return 'Right';
 }
 
-function getResizeDirection(separator: HTMLElement, direction: Direction) {
+function getResizeDirection(separator: HTMLElement, isRtl: boolean) {
   const side = separator.classList.contains(gridClasses['columnSeparator--sideRight'])
     ? 'Right'
     : 'Left';
-  if (direction === 'rtl') {
+  if (isRtl) {
     // Resizing logic should be mirrored in the RTL case
     return flipResizeDirection(side);
   }
@@ -280,7 +280,7 @@ export const useGridColumnResize = (
     | 'onColumnWidthChange'
   >,
 ) => {
-  const theme = useTheme();
+  const isRtl = useRtl();
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
   const refs = useLazyRef(createResizeRefs).current;
@@ -491,7 +491,7 @@ export const useGridColumnResize = (
         ? []
         : findRightPinnedHeadersBeforeCol(apiRef.current, refs.columnHeaderElement);
 
-    resizeDirection.current = getResizeDirection(separator, theme.direction);
+    resizeDirection.current = getResizeDirection(separator, isRtl);
 
     initialOffsetToSeparator.current = computeOffsetToSeparator(
       xStart,
