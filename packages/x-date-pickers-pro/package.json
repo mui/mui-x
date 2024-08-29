@@ -42,7 +42,7 @@
     "directory": "packages/x-date-pickers-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.25.0",
+    "@babel/runtime": "^7.25.4",
     "@mui/system": "^5.16.7",
     "@mui/utils": "^5.16.6",
     "@mui/x-date-pickers": "workspace:*",
@@ -95,7 +95,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.8",
+    "@mui/internal-test-utils": "^1.0.10",
     "@types/luxon": "^3.4.2",
     "@types/prop-types": "^15.7.12",
     "date-fns": "^2.30.0",

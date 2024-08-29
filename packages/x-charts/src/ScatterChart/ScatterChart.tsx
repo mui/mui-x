@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useThemeProps } from '@mui/material/styles';
 import {
   ScatterPlot,
   ScatterPlotProps,
@@ -118,7 +119,8 @@ export interface ScatterChartProps
  *
  * - [ScatterChart API](https://mui.com/x/api/charts/scatter-chart/)
  */
-const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartProps, ref) {
+const ScatterChart = React.forwardRef(function ScatterChart(inProps: ScatterChartProps, ref) {
+  const props = useThemeProps({ props: inProps, name: 'MuiScatterChart' });
   const {
     chartContainerProps,
     zAxisProps,
