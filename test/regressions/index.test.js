@@ -13,16 +13,11 @@ function sleep(timeoutMS) {
 
 const isMaterialUIv6 = materialPackageJson.version.startsWith('6.');
 
-const ignoredMaterialUIv6Warnings = [
-  'MUI: The `experimental_extendTheme` has been stabilized.',
-  'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
-];
-
 const isConsoleWarningIgnored = (msg) => {
   if (
     msg &&
     isMaterialUIv6 &&
-    ignoredMaterialUIv6Warnings.some((warning) => msg.startsWith(warning))
+    msg.startsWith('MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.')
   ) {
     return true;
   }
