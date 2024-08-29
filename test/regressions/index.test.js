@@ -17,7 +17,9 @@ const isConsoleWarningIgnored = (msg) => {
   if (
     msg &&
     isMaterialUIv6 &&
-    msg.startsWith('MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.')
+    msg.startsWith(
+      'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
+    )
   ) {
     return true;
   }
