@@ -139,14 +139,6 @@ ChartsLegend.propTypes = {
    */
   markGap: PropTypes.number,
   /**
-   * Callback fired when a legend item is clicked.
-   * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
-   * @param {SeriesLegendItemContext} legendItem The legend item data.
-   * @param {number} index The index of the clicked legend item.
-   * @default undefined
-   */
-  onItemClick: PropTypes.func,
-  /**
    * Legend padding (in px).
    * Can either be a single number, or an object with top, left, bottom, right properties.
    * @default 10
