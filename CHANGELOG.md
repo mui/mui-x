@@ -16,7 +16,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 #### `@mui/x-data-grid-pro@7.15.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-- [DataGrid Pro] export GridRowReorderCell (#14079) @genepaul
+- [DataGridPro] Export `GridRowReorderCell` component (#14079) @genepaul
 
 #### `@mui/x-data-grid-premium@7.15.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
