@@ -18,7 +18,6 @@ const chartSetting = {
   },
 };
 
-
 export default function BarsDataset() {
   return (
     <BarChart

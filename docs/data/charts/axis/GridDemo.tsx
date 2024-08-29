@@ -9,7 +9,6 @@ const chartSetting = {
   height: 300,
 };
 
-
 export default function GridDemo() {
   return (
     <BarChart

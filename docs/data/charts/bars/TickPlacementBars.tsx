@@ -7,7 +7,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
-import { dataset , valueFormatter} from '../dataset/weather';
+import { dataset, valueFormatter } from '../dataset/weather';
 
 type TickParamsSelectorProps = {
   tickPlacement: 'end' | 'start' | 'middle' | 'extremities';

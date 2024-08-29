@@ -6,7 +6,13 @@ import {
 } from './scatter';
 import { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from './line';
 import { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
-import { PieSeriesType, DefaultizedPieSeriesType, PieItemIdentifier, PieValueType, DefaultizedPieValueType } from './pie';
+import {
+  PieSeriesType,
+  DefaultizedPieSeriesType,
+  PieItemIdentifier,
+  PieValueType,
+  DefaultizedPieValueType,
+} from './pie';
 import { DefaultizedProps, MakeOptional } from '../helpers';
 
 export interface ChartsSeriesConfig {
