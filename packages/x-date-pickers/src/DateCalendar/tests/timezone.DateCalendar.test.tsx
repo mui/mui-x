@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { describeAdapters } from 'test/utils/pickers';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
@@ -18,7 +17,7 @@ describe('<DateCalendar /> - Timezone', () => {
       const onChange = spy();
       render(<DateCalendar onChange={onChange} />);
 
-      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '25' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '25' }));
       const expectedDate = adapter.setDate(adapter.date(undefined, 'default'), 25);
 
       // Check the `onChange` value (uses default timezone, e.g: UTC, see TZ env variable)
@@ -35,7 +34,7 @@ describe('<DateCalendar /> - Timezone', () => {
         it('should use timezone prop for onChange when no value is provided', () => {
           const onChange = spy();
           render(<DateCalendar onChange={onChange} timezone={timezone} />);
-          fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '25' }));
+          fireEvent.click(screen.getByRole('gridcell', { name: '25' }));
           const expectedDate = adapter.setDate(
             adapter.startOfDay(adapter.date(undefined, timezone)),
             25,
@@ -53,7 +52,7 @@ describe('<DateCalendar /> - Timezone', () => {
 
           render(<DateCalendar value={value} onChange={onChange} timezone="America/Chicago" />);
 
-          fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '25' }));
+          fireEvent.click(screen.getByRole('gridcell', { name: '25' }));
           const expectedDate = adapter.setDate(value, 25);
 
           // Check the `onChange` value (uses timezone prop)

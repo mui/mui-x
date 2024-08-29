@@ -40,14 +40,16 @@
     "lru-cache": "^10.4.3"
   },
   "devDependencies": {
+    "@mui/icons-material": "^5.16.5",
+    "@mui/material": "^5.16.5",
     "@types/chance": "^1.1.6",
     "rimraf": "^5.0.10"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/icons-material": "^5.4.1",
-    "@mui/material": "^5.15.14",
+    "@mui/icons-material": "^5.4.1 || ^6.0.0",
+    "@mui/material": "^5.15.14 || ^6.0.0",
     "react": "^17.0.0 || ^18.0.0"
   },
   "peerDependenciesMeta": {

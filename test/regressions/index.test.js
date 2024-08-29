@@ -3,12 +3,28 @@ import { expect } from 'chai';
 import * as path from 'path';
 import * as childProcess from 'child_process';
 import { chromium } from '@playwright/test';
+import materialPackageJson from '@mui/material/package.json';
 
 function sleep(timeoutMS) {
   return new Promise((resolve) => {
     setTimeout(() => resolve(), timeoutMS);
   });
 }
+
+const isMaterialUIv6 = materialPackageJson.version.startsWith('6.');
+
+const isConsoleWarningIgnored = (msg) => {
+  if (
+    msg &&
+    isMaterialUIv6 &&
+    msg.startsWith(
+      'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
+    )
+  ) {
+    return true;
+  }
+  return false;
+};
 
 async function main() {
   const baseUrl = 'http://localhost:5001';
@@ -85,6 +101,9 @@ async function main() {
     it('should have no errors after the initial render', () => {
       const msg = errorConsole;
       errorConsole = undefined;
+      if (isConsoleWarningIgnored(msg)) {
+        return;
+      }
       expect(msg).to.equal(undefined);
     });
 
@@ -147,6 +166,9 @@ async function main() {
       it(`should have no errors rendering ${pathURL}`, () => {
         const msg = errorConsole;
         errorConsole = undefined;
+        if (isConsoleWarningIgnored(msg)) {
+          return;
+        }
         expect(msg).to.equal(undefined);
       });
     });

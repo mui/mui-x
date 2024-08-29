@@ -4,12 +4,9 @@ import { spy } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
 import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';
 import { createPickerRenderer } from 'test/utils/pickers';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<PickersActionBar />', () => {
-  const { render } = createPickerRenderer({
-    clock: 'fake',
-  });
+  const { render } = createPickerRenderer();
 
   it('should not render buttons if actions array is empty', () => {
     const onAccept = () => {};
@@ -29,13 +26,13 @@ describe('<PickersActionBar />', () => {
     expect(screen.queryByRole('button')).to.equal(null);
   });
 
-  it('should render button for "clear" action calling the associated callback', () => {
+  it('should render button for "clear" action calling the associated callback', async () => {
     const onAccept = spy();
     const onClear = spy();
     const onCancel = spy();
     const onSetToday = spy();
 
-    render(
+    const { user } = render(
       <PickersActionBar
         actions={['clear']}
         onAccept={onAccept}
@@ -45,17 +42,17 @@ describe('<PickersActionBar />', () => {
       />,
     );
 
-    fireUserEvent.mousePress(screen.getByText(/clear/i));
+    await user.click(screen.getByText(/clear/i));
     expect(onClear.callCount).to.equal(1);
   });
 
-  it('should render button for "cancel" action calling the associated callback', () => {
+  it('should render button for "cancel" action calling the associated callback', async () => {
     const onAccept = spy();
     const onClear = spy();
     const onCancel = spy();
     const onSetToday = spy();
 
-    render(
+    const { user } = render(
       <PickersActionBar
         actions={['cancel']}
         onAccept={onAccept}
@@ -65,17 +62,17 @@ describe('<PickersActionBar />', () => {
       />,
     );
 
-    fireUserEvent.mousePress(screen.getByText(/cancel/i));
+    await user.click(screen.getByText(/cancel/i));
     expect(onCancel.callCount).to.equal(1);
   });
 
-  it('should render button for "accept" action calling the associated callback', () => {
+  it('should render button for "accept" action calling the associated callback', async () => {
     const onAccept = spy();
     const onClear = spy();
     const onCancel = spy();
     const onSetToday = spy();
 
-    render(
+    const { user } = render(
       <PickersActionBar
         actions={['accept']}
         onAccept={onAccept}
@@ -85,17 +82,17 @@ describe('<PickersActionBar />', () => {
       />,
     );
 
-    fireUserEvent.mousePress(screen.getByText(/ok/i));
+    await user.click(screen.getByText(/ok/i));
     expect(onAccept.callCount).to.equal(1);
   });
 
-  it('should render button for "today" action calling the associated callback', () => {
+  it('should render button for "today" action calling the associated callback', async () => {
     const onAccept = spy();
     const onClear = spy();
     const onCancel = spy();
     const onSetToday = spy();
 
-    render(
+    const { user } = render(
       <PickersActionBar
         actions={['today']}
         onAccept={onAccept}
@@ -105,7 +102,7 @@ describe('<PickersActionBar />', () => {
       />,
     );
 
-    fireUserEvent.mousePress(screen.getByText(/today/i));
+    await user.click(screen.getByText(/today/i));
     expect(onSetToday.callCount).to.equal(1);
   });
 

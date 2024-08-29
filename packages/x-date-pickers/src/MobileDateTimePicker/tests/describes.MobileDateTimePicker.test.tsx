@@ -13,7 +13,6 @@ import {
 } from 'test/utils/pickers';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<MobileDateTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -79,7 +78,7 @@ describe('<MobileDateTimePicker /> - Describes', () => {
       const newValue = applySameValue
         ? value
         : adapterToUse.addMinutes(adapterToUse.addHours(adapterToUse.addDays(value, 1), 1), 5);
-      fireUserEvent.mousePress(
+      fireEvent.click(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
@@ -98,9 +97,7 @@ describe('<MobileDateTimePicker /> - Describes', () => {
       if (hasMeridiem) {
         const newHours = adapterToUse.getHours(newValue);
         // select appropriate meridiem
-        fireUserEvent.mousePress(
-          screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }),
-        );
+        fireEvent.click(screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }));
       }
 
       // Close the picker
@@ -110,7 +107,7 @@ describe('<MobileDateTimePicker /> - Describes', () => {
         clock.runToLast();
       } else {
         // return to the date view in case we'd like to repeat the selection process
-        fireUserEvent.mousePress(screen.getByRole('tab', { name: 'pick date' }));
+        fireEvent.click(screen.getByRole('tab', { name: 'pick date' }));
       }
 
       return newValue;

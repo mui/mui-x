@@ -2,17 +2,15 @@
 
 ## Testing multiple versions of React
 
-You can check integration of different versions of React (for example different [release channels](https://react.dev/community/versioning-policy) or PRs to React) by running the following commands:
+You can check integration of different versions of React (for example different [release channels](https://react.dev/community/versioning-policy) or PRs to React) by running the following command:
 
-1. `pnpm use-react-version <version>`.
+`pnpm use-react-version <version>`
 
-   Possible values for `version`:
+Possible values for `version`:
 
-   - default: `stable` (minimum supported React version)
-   - a tag on npm, for example `next`, `experimental` or `latest`
-   - an older version, for example `^17.0.0`
-
-2. `pnpm install`
+- default: `stable` (minimum supported React version)
+- a tag on npm, for example `next`, `experimental` or `latest`
+- an older version, for example `^17.0.0`
 
 ### CI
 
@@ -44,3 +42,27 @@ curl --request POST \
   --header 'Circle-Token: $CIRCLE_TOKEN' \
   --data-raw '{"branch":"pull/24289/head","parameters":{"react-version":"next"}}'
 ```
+
+## Testing multiple versions of Material UI
+
+Currently, we use `@mui/material` v5 in the MUI X repo and all tests are run against it.
+But MUI X packages are compatible with v5 and v6.
+You can run the tests against `@mui/material` v6 by running the following command:
+
+`pnpm use-material-ui-v6`
+
+### CI
+
+There's a `material-ui-v6` workflow in our CircleCI pipeline that you can trigger in CircleCI on the PR you want to test:
+
+1. Go to https://app.circleci.com/pipelines/github/mui/mui-x?branch=pull/PR_NUMBER and replace `PR_NUMBER` with the PR number you want to test.
+2. Click `Trigger Pipeline` button.
+3. Expand `Add parameters (optional)` and add the following parameter:
+
+   | Parameter type | Name       | Value            |
+   | :------------- | :--------- | :--------------- |
+   | `string`       | `workflow` | `material-ui-v6` |
+
+4. Click `Trigger Pipeline` button.
+
+![CircleCI workflow](./circleci-workflow.png)

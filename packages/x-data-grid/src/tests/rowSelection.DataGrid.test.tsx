@@ -1,7 +1,14 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  waitFor,
+  flushMicrotasks,
+} from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -221,7 +228,7 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getRow(0).querySelector('input')).to.have.property('checked', false);
     });
 
-    it('should set focus on the cell when clicking the checkbox', () => {
+    it('should set focus on the cell when clicking the checkbox', async () => {
       render(<TestDataGridSelection checkboxSelection />);
       expect(getActiveCell()).to.equal(null);
 
@@ -230,7 +237,9 @@ describe('<DataGrid /> - Row selection', () => {
 
       fireUserEvent.mousePress(checkboxInput!);
 
-      expect(getActiveCell()).to.equal('0-0');
+      await waitFor(() => {
+        expect(getActiveCell()).to.equal('0-0');
+      });
     });
 
     it('should select all visible rows regardless of pagination', () => {
@@ -527,7 +536,7 @@ describe('<DataGrid /> - Row selection', () => {
     describe('ripple', () => {
       clock.withFakeTimers();
 
-      it('should keep only one ripple visible when navigating between checkboxes', function test() {
+      it('should keep only one ripple visible when navigating between checkboxes', async function test() {
         if (isJSDOM) {
           // JSDOM doesn't fire "blur" when .focus is called in another element
           // FIXME Firefox doesn't show any ripple
@@ -539,6 +548,7 @@ describe('<DataGrid /> - Row selection', () => {
         fireEvent.keyDown(cell, { key: 'ArrowLeft' });
         fireEvent.keyDown(getCell(1, 0).querySelector('input')!, { key: 'ArrowUp' });
         clock.runToLast(); // Wait for transition
+        await flushMicrotasks();
         expect(document.querySelectorAll('.MuiTouchRipple-rippleVisible')).to.have.length(1);
       });
     });

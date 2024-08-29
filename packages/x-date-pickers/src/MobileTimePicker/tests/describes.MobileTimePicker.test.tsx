@@ -14,7 +14,6 @@ import {
 } from 'test/utils/pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<MobileTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -93,9 +92,7 @@ describe('<MobileTimePicker /> - Describes', () => {
       if (hasMeridiem) {
         const newHours = adapterToUse.getHours(newValue);
         // select appropriate meridiem
-        fireUserEvent.mousePress(
-          screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }),
-        );
+        fireEvent.click(screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }));
       }
 
       // Close the picker
@@ -105,7 +102,7 @@ describe('<MobileTimePicker /> - Describes', () => {
         clock.runToLast();
       } else {
         // return to the hours view in case we'd like to repeat the selection process
-        fireUserEvent.mousePress(screen.getByRole('button', { name: 'Open previous view' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Open previous view' }));
       }
 
       return newValue;

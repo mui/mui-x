@@ -13,7 +13,6 @@ import {
   openPicker,
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<MobileDatePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -156,7 +155,7 @@ describe('<MobileDatePicker />', () => {
 
       render(<MobileDatePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
 
-      fireUserEvent.mousePress(getFieldSectionsContainer());
+      fireEvent.click(getFieldSectionsContainer());
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
