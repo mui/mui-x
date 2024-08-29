@@ -11,9 +11,9 @@ import { useDrawingArea } from '../hooks';
 import { useSeries } from '../hooks/useSeries';
 import { LegendPlacement } from './legend.types';
 
-export type ChartsLegendPropsBase = Pick<
-  Omit<LegendRendererProps, keyof LegendPlacement>,
-  'classes' | 'hidden' | 'onItemClick'
+export type ChartsLegendPropsBase = Omit<
+  LegendRendererProps,
+  keyof LegendPlacement | 'contextBuilder' | 'series' | 'seriesToDisplay' | 'drawingArea'
 > &
   LegendPlacement;
 
@@ -115,6 +115,31 @@ ChartsLegend.propTypes = {
    */
   hidden: PropTypes.bool,
   /**
+   * Space between two legend items (in px).
+   * @default 10
+   */
+  itemGap: PropTypes.number,
+  /**
+   * Height of the item mark (in px).
+   * @default 20
+   */
+  itemMarkHeight: PropTypes.number,
+  /**
+   * Width of the item mark (in px).
+   * @default 20
+   */
+  itemMarkWidth: PropTypes.number,
+  /**
+   * Style applied to legend labels.
+   * @default theme.typography.subtitle1
+   */
+  labelStyle: PropTypes.object,
+  /**
+   * Space between the mark and the label (in px).
+   * @default 5
+   */
+  markGap: PropTypes.number,
+  /**
    * Callback fired when a legend item is clicked.
    * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
    * @param {SeriesLegendItemContext} legendItem The legend item data.
@@ -122,6 +147,20 @@ ChartsLegend.propTypes = {
    * @default undefined
    */
   onItemClick: PropTypes.func,
+  /**
+   * Legend padding (in px).
+   * Can either be a single number, or an object with top, left, bottom, right properties.
+   * @default 10
+   */
+  padding: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      bottom: PropTypes.number,
+      left: PropTypes.number,
+      right: PropTypes.number,
+      top: PropTypes.number,
+    }),
+  ]),
   /**
    * The position of the legend.
    */
