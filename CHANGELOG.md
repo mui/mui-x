@@ -23,6 +23,7 @@ You can now use MUI X components with either v5 or v6 of `@mui/material` package
 #### `@mui/x-data-grid-premium@7.15.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-data-grid-pro@7.15.0`.
+
 ### Date and Time Pickers
 
 #### `@mui/x-date-pickers@7.15.0`
