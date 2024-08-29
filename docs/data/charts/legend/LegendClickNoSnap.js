@@ -70,12 +70,7 @@ export default function LegendClickNoSnap() {
               horizontal: 'left',
               vertical: 'top',
             }}
-            slotProps={{
-              legend: {
-                onItemClick: (event, context, index) =>
-                  setItemData([context, index]),
-              },
-            }}
+            onItemClick={(event, context, index) => setItemData([context, index])}
           />
         </ResponsiveChartContainer>
         <Typography>Pie Chart Legend</Typography>
@@ -86,12 +81,7 @@ export default function LegendClickNoSnap() {
               horizontal: 'left',
               vertical: 'top',
             }}
-            slotProps={{
-              legend: {
-                onItemClick: (event, context, index) =>
-                  setItemData([context, index]),
-              },
-            }}
+            onItemClick={(event, context, index) => setItemData([context, index])}
           />
         </ResponsiveChartContainer>
         <Typography>Pie Chart Legend</Typography>

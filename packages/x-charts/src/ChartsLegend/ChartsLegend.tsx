@@ -23,7 +23,9 @@ export interface ChartsLegendSlotProps {
   legend?: Partial<LegendRendererProps>;
 }
 
-export interface ChartsLegendProps extends LegendPlacement {
+export interface ChartsLegendProps
+  extends LegendPlacement,
+    Pick<LegendRendererProps, 'onItemClick'> {
   /**
    * Override or extend the styles applied to the component.
    */
@@ -71,7 +73,7 @@ function ChartsLegend(inProps: ChartsLegendProps) {
     ...props,
     position: { horizontal: 'middle', vertical: 'top', ...props.position },
   };
-  const { position, direction, hidden, slots, slotProps } = defaultizedProps;
+  const { position, direction, hidden, slots, slotProps, onItemClick } = defaultizedProps;
 
   const theme = useTheme();
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
@@ -93,6 +95,7 @@ function ChartsLegend(inProps: ChartsLegendProps) {
       series,
       hidden,
       seriesToDisplay,
+      onItemClick,
     },
     ownerState: {},
   });
