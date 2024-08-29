@@ -74,7 +74,7 @@ export interface GridAggregationFunction<V = any, AV = V> {
   getCellValue?: (params: GridAggregationGetCellValueParams) => V;
 }
 
-interface GridAggregationParams<V = any> {
+export interface GridAggregationParams<V = any> {
   values: (V | undefined)[];
   groupId: GridRowId;
   field: GridColDef['field'];

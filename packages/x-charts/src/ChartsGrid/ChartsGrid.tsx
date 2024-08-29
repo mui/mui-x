@@ -66,14 +66,14 @@ export interface ChartsGridProps {
  *
  * - [ChartsGrid API](https://mui.com/x/api/charts/charts-axis/)
  */
-function ChartsGrid(props: ChartsGridProps) {
-  const themeProps = useThemeProps({ props, name: 'MuiChartsGrid' });
+function ChartsGrid(inProps: ChartsGridProps) {
+  const props = useThemeProps({ props: inProps, name: 'MuiChartsGrid' });
 
   const drawingArea = useDrawingArea();
-  const { vertical, horizontal, ...other } = themeProps;
+  const { vertical, horizontal, ...other } = props;
   const { xAxis, xAxisIds, yAxis, yAxisIds } = useCartesianContext();
 
-  const classes = useUtilityClasses(themeProps);
+  const classes = useUtilityClasses(props);
 
   const horizontalAxisId = yAxisIds[0];
   const verticalAxisId = xAxisIds[0];
