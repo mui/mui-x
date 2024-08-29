@@ -12,6 +12,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - 💫 Support Material UI v6 (`@mui/material@6`) peer dependency (#14142) @cherniavskii
 
 You can now use MUI X components with either v5 or v6 of `@mui/material` package 🎉
+
 - 🐞 Bugfixes
 
 ### Data Grid
