@@ -90,7 +90,8 @@
         "@mui/system",
         "@mui/types",
         "@mui/utils"
-      ]
+      ],
+      "allowedVersions": "< 6.0.0"
     },
     {
       "groupName": "MUI Internal",
