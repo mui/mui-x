@@ -6,21 +6,21 @@ export const AxisRoot = styled('g', {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })(({ theme }) => ({
-  [`.${axisClasses.tickLabel}`]: {
+  [`& .${axisClasses.tickLabel}`]: {
     ...theme.typography.caption,
     fill: (theme.vars || theme).palette.text.primary,
   },
-  [`.${axisClasses.label}`]: {
+  [`& .${axisClasses.label}`]: {
     ...theme.typography.body1,
     fill: (theme.vars || theme).palette.text.primary,
   },
 
-  [`.${axisClasses.line}`]: {
+  [`& .${axisClasses.line}`]: {
     stroke: (theme.vars || theme).palette.text.primary,
     shapeRendering: 'crispEdges',
     strokeWidth: 1,
   },
-  [`.${axisClasses.tick}`]: {
+  [`& .${axisClasses.tick}`]: {
     stroke: (theme.vars || theme).palette.text.primary,
     shapeRendering: 'crispEdges',
   },
