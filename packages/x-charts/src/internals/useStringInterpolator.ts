@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
-import { useSpring } from '@react-spring/web';
 
 function usePrevious<T>(value: T) {
   const ref = React.useRef<{ currentPath: T; previousPath?: T }>({
@@ -17,7 +16,7 @@ function usePrevious<T>(value: T) {
   return ref.current;
 }
 
-export const useAnimatedPath = (path: string, skipAnimation?: boolean) => {
+export const useStringInterpolator = (path: string) => {
   const memoryRef = usePrevious(path);
 
   const interpolator = React.useMemo(
@@ -28,15 +27,5 @@ export const useAnimatedPath = (path: string, skipAnimation?: boolean) => {
     [memoryRef.currentPath, memoryRef.previousPath],
   );
 
-  const [{ value }] = useSpring(
-    {
-      from: { value: 0 },
-      to: { value: 1 },
-      reset: true,
-      immediate: skipAnimation,
-    },
-    [memoryRef.currentPath],
-  );
-
-  return value.to(interpolator);
+  return interpolator;
 };
