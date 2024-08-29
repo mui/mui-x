@@ -55,6 +55,7 @@
     "typescript": "lerna run --no-bail --parallel typescript",
     "typescript:ci": "lerna run --concurrency 1 --no-bail --no-sort typescript",
     "use-react-version": "node scripts/useReactVersion.mjs",
+    "use-material-ui-v6": "node scripts/useMaterialUIv6.mjs",
     "build:codesandbox": "lerna run --concurrency 3 --no-private --scope \"@mui/*\" build",
     "install:codesandbox": "pnpm install --no-frozen-lockfile",
     "release:changelog": "node scripts/releaseChangelog.mjs",
