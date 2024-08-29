@@ -49,7 +49,7 @@ Same changes as in `@mui/x-charts@7.15.0`, plus:
 
 ### Docs
 
-- [charts] Fix sentence case `h2` @oliviertassinari
+- [docs] Fix sentence case `h2` @oliviertassinari
 - [docs] Clarify contribution guide references @oliviertassinari
 - [docs] Fix Stack Overflow issue canned response @oliviertassinari
 - [docs] Fix outdated link to support page @oliviertassinari
