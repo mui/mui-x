@@ -18,7 +18,7 @@ import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../mo
 import { MakeOptional } from '../models/helpers';
 import { LineSeriesType } from '../models/seriesType/line';
 import { CardinalDirections } from '../models/layout';
-import { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/Area';
+import { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';
 import { LinePlotSlots, LinePlotSlotProps } from '../LineChart/LinePlot';
 import { MarkPlotSlots, MarkPlotSlotProps } from '../LineChart/MarkPlot';
 import { LineHighlightPlotSlots, LineHighlightPlotSlotProps } from '../LineChart/LineHighlightPlot';

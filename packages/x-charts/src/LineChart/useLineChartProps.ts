@@ -5,7 +5,7 @@ import { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
 import { ChartsOnAxisClickHandlerProps } from '../ChartsOnAxisClickHandler';
 import { ChartsGridProps } from '../ChartsGrid';
 import { ChartsClipPathProps } from '../ChartsClipPath';
-import { AreaPlotProps } from './Area';
+import { AreaPlotProps } from './AreaPlot';
 import { LinePlotProps } from './LinePlot';
 import { MarkPlotProps } from './MarkPlot';
 import { ChartsOverlayProps } from '../ChartsOverlay';

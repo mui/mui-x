@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { animated, useTransition } from '@react-spring/web';
 import { color as d3Color } from '@mui/x-charts-vendor/d3-color';
-import { cleanId } from '../../internals/cleanId';
+import { cleanId } from '../internals/cleanId';
 import type { AreaElementOwnerState } from './AreaElement';
-import { useChartId, useDrawingArea } from '../../hooks';
-import { useStringInterpolator } from '../../internals/useStringInterpolator';
+import { useChartId, useDrawingArea } from '../hooks';
+import { useStringInterpolator } from '../internals/useStringInterpolator';
 
 export const AreaElementPath = styled(animated.path, {
   name: 'MuiAreaElement',
