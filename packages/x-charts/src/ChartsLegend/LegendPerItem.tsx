@@ -3,15 +3,15 @@ import NoSsr from '@mui/material/NoSsr';
 import { useTheme, styled } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
 import { DrawingArea } from '../context/DrawingProvider';
-import { DefaultizedProps } from '../models/helpers';
 import { ChartsText, ChartsTextStyle } from '../ChartsText';
 import { CardinalDirections } from '../models/layout';
 import { getWordsByLines } from '../internals/getWordsByLines';
-import type { ChartsLegendProps } from './ChartsLegend';
 import { GetItemSpaceType, LegendItemParams } from './chartsLegend.types';
 import { legendItemPlacements } from './legendItemsPlacement';
 import { useDrawingArea } from '../hooks/useDrawingArea';
-import { AnchorPosition, Direction } from './legend.types';
+import { AnchorPosition, Direction, LegendPlacement } from './legend.types';
+import { ChartsLegendClasses } from './chartsLegendClasses';
+import { DefaultizedProps } from '../models/helpers';
 
 export type ChartsLegendRootOwnerState = {
   position: AnchorPosition;
@@ -29,15 +29,15 @@ export const ChartsLegendRoot = styled('g', {
 })({});
 
 export interface LegendPerItemProps
-  extends DefaultizedProps<
-    Omit<ChartsLegendProps, 'slots' | 'slotProps'>,
-    'direction' | 'position'
-  > {
+  extends DefaultizedProps<LegendPlacement, keyof LegendPlacement> {
   /**
    * The ordered array of item to display in the legend.
    */
   itemsToDisplay: LegendItemParams[];
-  classes?: Record<'mark' | 'series' | 'root', string>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<ChartsLegendClasses>;
   /**
    * Style applied to legend labels.
    * @default theme.typography.subtitle1
@@ -69,6 +69,11 @@ export interface LegendPerItemProps
    * @default 10
    */
   padding?: number | Partial<CardinalDirections<number>>;
+  /**
+   * Set to true to hide the legend.
+   * @default false
+   */
+  hidden?: boolean;
 }
 
 /**
