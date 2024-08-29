@@ -57,7 +57,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
       <ZAxisContextProvider {...zAxisProps}>
         {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
         <ChartsAxis {...chartsAxisProps} />
-        {props.grid && <ChartsGrid {...gridProps} />}
+        <ChartsGrid {...gridProps} />
         <g data-drawing-container>
           {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
           <ScatterPlot {...scatterPlotProps} />
