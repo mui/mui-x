@@ -38,6 +38,7 @@ const useAggregatedData = () => {
   const seriesData = useLineSeries();
   const axisData = useCartesianContext();
 
+  // This memo prevents odd line chart behavior when hydrating.
   const allData = React.useMemo(() => {
     if (seriesData === undefined) {
       return [];
