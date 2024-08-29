@@ -10,6 +10,8 @@ import {
   createPackageFile,
 } from '@mui/monorepo/scripts/copyFilesUtils.mjs';
 
+const usePackageExports = process.env.MUI_USE_PACKAGE_EXPORTS === 'true';
+
 const packagePath = process.cwd();
 const buildPath = path.join(packagePath, './build');
 const srcPath = path.join(packagePath, './src');
@@ -37,6 +39,8 @@ async function addLicense(packageData) {
       './node/index.js',
       './umd/material-ui.development.js',
       './umd/material-ui.production.min.js',
+      './index.mjs',
+      './index.modern.mjs',
     ].map(async (file) => {
       try {
         await prepend(path.resolve(buildPath, file), license);
@@ -69,7 +73,9 @@ async function run() {
     // TypeScript
     await typescriptCopy({ from: srcPath, to: buildPath });
 
-    await createModulePackages({ from: srcPath, to: buildPath });
+    if (!usePackageExports) {
+      await createModulePackages({ from: srcPath, to: buildPath });
+    }
   } catch (err) {
     console.error(err);
     process.exit(1);

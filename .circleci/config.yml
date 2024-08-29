@@ -34,6 +34,7 @@ default-job: &default-job
     # expose it globally otherwise we have to thread it from each job to the install command
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
     REACT_VERSION: << parameters.react-version >>
+    MUI_USE_PACKAGE_EXPORTS: 'true'
   working_directory: /tmp/mui
   docker:
     - image: cimg/node:18.20
