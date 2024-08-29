@@ -9,12 +9,11 @@ import {
   openPicker,
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
 describe('<MobileDateRangePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describe('Field slot: SingleInputDateRangeField', () => {
     it('should render the input with a given `name` when `SingleInputDateRangeField` is used', () => {
@@ -37,29 +36,43 @@ describe('<MobileDateRangePicker />', () => {
   });
 
   describe('picker state', () => {
-    it('should open when focusing the start input', () => {
+    it('should open when focusing the start input', async () => {
       const onOpen = spy();
 
-      render(<MobileDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
+      const { user } = render(
+        <MobileDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />,
+      );
 
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'mobile',
+        initialFocus: 'start',
+        click: user.click,
+      });
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
     });
 
-    it('should open when focusing the end input', () => {
+    it('should open when focusing the end input', async () => {
       const onOpen = spy();
 
-      render(<MobileDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
+      const { user } = render(
+        <MobileDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />,
+      );
 
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'end' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'mobile',
+        initialFocus: 'end',
+        click: user.click,
+      });
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
     });
 
-    it('should call onChange with updated start date then call onChange with updated end date when opening from start input', () => {
+    it('should call onChange with updated start date then call onChange with updated end date when opening from start input', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -68,7 +81,7 @@ describe('<MobileDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <MobileDateRangePicker
           enableAccessibleFieldDOMStructure
           onChange={onChange}
@@ -85,13 +98,13 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the start date
-      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
+      await user.click(screen.getByRole('gridcell', { name: '3' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
 
       // Change the end date
-      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '5' }));
+      await user.click(screen.getByRole('gridcell', { name: '5' }));
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
@@ -100,7 +113,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onChange with updated end date when opening from end input', () => {
+    it('should call onChange with updated end date when opening from end input', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -109,7 +122,7 @@ describe('<MobileDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <MobileDateRangePicker
           enableAccessibleFieldDOMStructure
           onChange={onChange}
@@ -126,7 +139,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the end date
-      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
+      await user.click(screen.getByRole('gridcell', { name: '3' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
@@ -134,7 +147,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onClose and onAccept when selecting the end date if props.closeOnSelect = true', () => {
+    it('should call onClose and onAccept when selecting the end date if props.closeOnSelect = true', async () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
@@ -142,7 +155,7 @@ describe('<MobileDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <MobileDateRangePicker
           enableAccessibleFieldDOMStructure
           onAccept={onAccept}
@@ -155,7 +168,7 @@ describe('<MobileDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'end' });
 
       // Change the end date
-      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
+      await user.click(screen.getByRole('gridcell', { name: '3' }));
 
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
@@ -163,7 +176,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onChange with the initial value when clicking "Cancel" button', () => {
+    it('should call onClose and onChange with the initial value when clicking "Cancel" button', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -172,7 +185,7 @@ describe('<MobileDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <MobileDateRangePicker
           enableAccessibleFieldDOMStructure
           onChange={onChange}
@@ -186,10 +199,10 @@ describe('<MobileDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
       // Change the start date (already tested)
-      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
+      await user.click(screen.getByRole('gridcell', { name: '3' }));
 
       // Cancel the modifications
-      fireUserEvent.mousePress(screen.getByText(/cancel/i));
+      await user.click(screen.getByText(/cancel/i));
       expect(onChange.callCount).to.equal(2); // Start date change + reset
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
@@ -197,7 +210,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onAccept with the live value and onAccept with the live value when clicking the "OK"', () => {
+    it('should call onClose and onAccept with the live value and onAccept with the live value when clicking the "OK"', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -206,7 +219,7 @@ describe('<MobileDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <MobileDateRangePicker
           enableAccessibleFieldDOMStructure
           onChange={onChange}
@@ -219,10 +232,10 @@ describe('<MobileDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
       // Change the start date (already tested)
-      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
+      await user.click(screen.getByRole('gridcell', { name: '3' }));
 
       // Accept the modifications
-      fireUserEvent.mousePress(screen.getByText(/ok/i));
+      await user.click(screen.getByText(/ok/i));
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
@@ -230,7 +243,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
+    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -239,7 +252,7 @@ describe('<MobileDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <MobileDateRangePicker
           enableAccessibleFieldDOMStructure
           onChange={onChange}
@@ -253,7 +266,7 @@ describe('<MobileDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
       // Clear the date
-      fireUserEvent.mousePress(screen.getByText(/clear/i));
+      await user.click(screen.getByText(/clear/i));
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onChange.lastCall.args[0]).to.deep.equal([null, null]);
       expect(onAccept.callCount).to.equal(1);
@@ -261,12 +274,12 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
+    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
-      render(
+      const { user } = render(
         <MobileDateRangePicker
           enableAccessibleFieldDOMStructure
           onChange={onChange}
@@ -280,7 +293,7 @@ describe('<MobileDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
       // Clear the date
-      fireUserEvent.mousePress(screen.getByText(/clear/i));
+      await user.click(screen.getByText(/clear/i));
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);

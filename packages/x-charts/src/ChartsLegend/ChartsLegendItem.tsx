@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { useTheme } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import { ChartsText, ChartsTextStyle } from '../ChartsText';
 import { SeriesId } from '../models/seriesType/common';
 import { LegendItemConfig, LegendItemContext } from './chartsLegend.types';
@@ -58,8 +58,7 @@ const createClickContext = (
  * @ignore - internal component.
  */
 function ChartsLegendItem(props: ChartsLegendItemProps) {
-  const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
+  const isRTL = useRtl();
   const {
     id,
     positionY,
