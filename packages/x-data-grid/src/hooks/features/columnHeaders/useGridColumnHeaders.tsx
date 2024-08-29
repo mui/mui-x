@@ -28,7 +28,6 @@ import {
   gridColumnPositionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
 } from '../columns';
-import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfaces';
 import { gridColumnGroupsUnwrappedModelSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import { GridScrollbarFillerCell as ScrollbarFiller } from '../../../components/GridScrollbarFillerCell';
@@ -106,7 +105,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
-  const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
   const offsetLeft = computeOffsetLeft(
     columnPositions,
     renderContext,

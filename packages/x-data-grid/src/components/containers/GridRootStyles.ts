@@ -492,7 +492,7 @@ export const GridRootStyles = styled('div', {
       borderTopColor: 'transparent',
     },
     [`& .${c['pinnedRows--top']} :first-of-type`]: {
-      [`& .${c.cell}, .${c['scrollbarFiller']}`]: {
+      [`& .${c.cell}, .${c.scrollbarFiller}`]: {
         borderTop: 'none',
       },
     },
