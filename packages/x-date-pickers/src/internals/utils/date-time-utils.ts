@@ -7,7 +7,7 @@ import {
   TimeView,
 } from '../../models';
 import { resolveTimeFormat, isTimeView, isInternalTimeView } from './time-utils';
-import { resolveDateFormat } from './date-utils';
+import { isDatePickerView, resolveDateFormat } from './date-utils';
 import { DateOrTimeViewWithMeridiem } from '../models';
 import { DesktopOnlyTimePickerProps } from '../models/props/clock';
 import { DefaultizedProps } from '../models/helpers';
@@ -37,7 +37,7 @@ export const resolveDateTimeFormat = <TDate extends PickerValidDate>(
   views.forEach((view) => {
     if (isTimeView(view)) {
       timeViews.push(view as TimeView);
-    } else {
+    } else if (isDatePickerView(view)) {
       dateViews.push(view as DateView);
     }
   });
