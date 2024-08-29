@@ -491,6 +491,11 @@ export const GridRootStyles = styled('div', {
     [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
       borderTopColor: 'transparent',
     },
+    [`& .${c['pinnedRows--top']} :first-of-type`]: {
+      [`& .${c.cell}, .${c['scrollbarFiller']}`]: {
+        borderTop: 'none',
+      },
+    },
     [`&.${c['root--disableUserSelection']} .${c.cell}`]: {
       userSelect: 'none',
     },
@@ -673,6 +678,9 @@ export const GridRootStyles = styled('div', {
     [`.${c.scrollbarFiller}`]: {
       minWidth: 'calc(var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
       alignSelf: 'stretch',
+      [`&.${c['scrollbarFiller--borderTop']}`]: {
+        borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+      },
       [`&.${c['scrollbarFiller--borderBottom']}`]: {
         borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
       },

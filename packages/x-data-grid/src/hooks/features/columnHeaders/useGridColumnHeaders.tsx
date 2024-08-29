@@ -207,7 +207,14 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             )}
           />
         )}
-        {hasScrollbarFiller && <ScrollbarFiller header pinnedRight={isPinnedRight} />}
+        {hasScrollbarFiller && (
+          <ScrollbarFiller
+            header
+            pinnedRight={isPinnedRight}
+            borderBottom={borderBottom}
+            borderTop={false}
+          />
+        )}
       </React.Fragment>
     );
   };
@@ -301,7 +308,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         role="row"
         aria-rowindex={headerGroupingMaxDepth + 1}
         ownerState={rootProps}
-        className={pinnedRows.top.length === 0 ? gridClasses['row--borderBottom'] : undefined}
+        className={gridClasses['row--borderBottom']}
       >
         {leftRenderContext &&
           getColumnHeaders(
