@@ -45,7 +45,7 @@ Same changes as in `@mui/x-date-pickers@7.15.0`, plus:
 - [charts] Fix tooltip with horizontal layout (#14337) @alexfauquette
 - [charts] Keep axis root classe usage explicit (#14378) @alexfauquette
 
-#### `@mui/x-charts-pro@7.0.0-alpha.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@7.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-charts@7.15.0`, plus:
 
