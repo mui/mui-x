@@ -96,8 +96,8 @@ importers:
         specifier: ^5.16.7
         version: 5.16.7(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#55bea65c83c1beac77382fe961f8aa72eec21daa
-        version: https://codeload.github.com/mui/material-ui/tar.gz/55bea65c83c1beac77382fe961f8aa72eec21daa(encoding@0.1.13)
+        specifier: github:mui/material-ui#029eb3b1f4837591e729779da9a82f0a66187770
+        version: https://codeload.github.com/mui/material-ui/tar.gz/029eb3b1f4837591e729779da9a82f0a66187770(encoding@0.1.13)
       '@mui/utils':
         specifier: ^5.16.6
         version: 5.16.6(@types/react@18.3.4)(react@18.3.1)
@@ -3168,9 +3168,9 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/55bea65c83c1beac77382fe961f8aa72eec21daa':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/55bea65c83c1beac77382fe961f8aa72eec21daa}
-    version: 6.0.0-rc.0
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/029eb3b1f4837591e729779da9a82f0a66187770':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/029eb3b1f4837591e729779da9a82f0a66187770}
+    version: 6.0.0
     engines: {pnpm: 9.7.1}
 
   '@mui/private-theming@5.16.6':
@@ -11985,7 +11985,7 @@ snapshots:
       '@emotion/styled': 11.13.0(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react@18.3.1)
       '@types/react': 18.3.4
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/55bea65c83c1beac77382fe961f8aa72eec21daa(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/029eb3b1f4837591e729779da9a82f0a66187770(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 9.3.0(encoding@0.1.13)
       '@netlify/functions': 2.8.1
