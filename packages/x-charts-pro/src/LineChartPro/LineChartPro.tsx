@@ -25,14 +25,14 @@ import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
 import { useZoom } from '../context/ZoomProvider/useZoom';
 import { ZoomProps } from '../context/ZoomProvider';
 
-function LinePlotZoom(props: LinePlotProps) {
-  const { isInteracting } = useZoom();
-  return <LinePlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
-}
-
 function AreaPlotZoom(props: AreaPlotProps) {
   const { isInteracting } = useZoom();
   return <AreaPlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
+}
+
+function LinePlotZoom(props: LinePlotProps) {
+  const { isInteracting } = useZoom();
+  return <LinePlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
 }
 
 function MarkPlotZoom(props: MarkPlotProps) {
