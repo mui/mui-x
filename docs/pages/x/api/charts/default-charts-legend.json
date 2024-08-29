@@ -42,6 +42,12 @@
   ],
   "classes": [
     {
+      "key": "column",
+      "className": "MuiDefaultChartsLegend-column",
+      "description": "Styles applied to the legend with column layout.",
+      "isGlobal": false
+    },
+    {
       "key": "itemBackground",
       "className": "MuiDefaultChartsLegend-itemBackground",
       "description": "Styles applied to the item background.",
@@ -63,6 +69,12 @@
       "key": "root",
       "className": "MuiDefaultChartsLegend-root",
       "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "row",
+      "className": "MuiDefaultChartsLegend-row",
+      "description": "Styles applied to the legend with row layout.",
       "isGlobal": false
     },
     {

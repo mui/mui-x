@@ -141,7 +141,6 @@ DefaultChartsLegend.propTypes = {
       maxValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       minValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      type: PropTypes.oneOf(['piecewiseColor', 'series']).isRequired,
     }),
   ).isRequired,
 } as any;

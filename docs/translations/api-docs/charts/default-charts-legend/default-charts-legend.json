@@ -25,6 +25,10 @@
     "position": { "description": "The position of the legend." }
   },
   "classDescriptions": {
+    "column": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend with column layout"
+    },
     "itemBackground": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the item background"
@@ -32,6 +36,10 @@
     "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" },
     "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "series mark element" },
     "root": { "description": "Styles applied to the root element." },
+    "row": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend with row layout"
+    },
     "series": { "description": "Styles applied to {{nodeName}}.", "nodeName": "a series element" }
   }
 }

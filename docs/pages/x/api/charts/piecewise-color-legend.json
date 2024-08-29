@@ -60,6 +60,12 @@
   ],
   "classes": [
     {
+      "key": "column",
+      "className": "MuiPiecewiseColorLegend-column",
+      "description": "Styles applied to the legend with column layout.",
+      "isGlobal": false
+    },
+    {
       "key": "itemBackground",
       "className": "MuiPiecewiseColorLegend-itemBackground",
       "description": "Styles applied to the item background.",
@@ -81,6 +87,12 @@
       "key": "root",
       "className": "MuiPiecewiseColorLegend-root",
       "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "row",
+      "className": "MuiPiecewiseColorLegend-row",
+      "description": "Styles applied to the legend with row layout.",
       "isGlobal": false
     },
     {
