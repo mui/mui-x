@@ -19,7 +19,7 @@
     "./package.json": "./package.json",
     "./*": {
       "types": "./*.d.ts",
-      "import": "./es/*.js",
+      "import": "./es/*.mjs",
       "default": "./lib/*.js"
     }
   },
