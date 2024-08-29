@@ -22,11 +22,7 @@ export function ItemTooltip() {
           zIndex: (theme) => theme.zIndex.modal,
         }}
         open
-        placement={
-          mousePosition?.pointerType === 'mouse'
-            ? ('top-end' as const)
-            : ('top' as const)
-        }
+        placement={mousePosition?.pointerType === 'mouse' ? 'top-end' : 'top'}
         anchorEl={generateVirtualElement(mousePosition)}
         modifiers={[
           {
