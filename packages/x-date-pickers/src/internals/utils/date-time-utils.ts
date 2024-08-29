@@ -22,14 +22,12 @@ export const resolveDateTimeFormat = <TDate extends PickerValidDate>(
     format?: string;
     views: readonly DateOrTimeViewWithMeridiem[];
     ampm: boolean;
-    value?: TDate | [TDate | null, TDate | null] | null;
   },
+  ignoreDateResolving?: boolean,
 ) => {
   if (format) {
     return format;
   }
-
-  const { value } = other;
 
   const dateViews: DateView[] = [];
   const timeViews: TimeView[] = [];
@@ -51,8 +49,8 @@ export const resolveDateTimeFormat = <TDate extends PickerValidDate>(
   }
 
   const timeFormat = resolveTimeFormat(utils, { views: timeViews, ...other });
-  const dateFormat = Array.isArray(value)
-    ? utils.formats.keyboardDate // default for DateTimeRangePicker
+  const dateFormat = ignoreDateResolving
+    ? utils.formats.keyboardDate
     : resolveDateFormat(utils, { views: dateViews, ...other }, false);
 
   return `${dateFormat} ${timeFormat}`;
