@@ -159,7 +159,7 @@ const LineChart = React.forwardRef(function LineChart(inProps: LineChartProps, r
   return (
     <ResponsiveChartContainer ref={ref} {...chartContainerProps}>
       {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
-      {props.grid && <ChartsGrid {...gridProps} />}
+      <ChartsGrid {...gridProps} />
       <g {...clipPathGroupProps}>
         <AreaPlot {...areaPlotProps} />
         <LinePlot {...linePlotProps} />

@@ -66,7 +66,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(inProps: LineChartPr
       onZoomChange={onZoomChange}
     >
       {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
-      {props.grid && <ChartsGrid {...gridProps} />}
+      <ChartsGrid {...gridProps} />
       <g {...clipPathGroupProps}>
         <AreaPlotZoom {...areaPlotProps} />
         <LinePlotZoom {...linePlotProps} />

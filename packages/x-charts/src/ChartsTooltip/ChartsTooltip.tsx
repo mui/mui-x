@@ -58,7 +58,7 @@ export interface ChartsTooltipProps<T extends ChartSeriesType> {
    * - 'item': Shows data about the item below the mouse.
    * - 'axis': Shows values associated with the hovered x value
    * - 'none': Does not display tooltip
-   * @default 'item'
+   * @default 'axis'
    */
   trigger?: TriggerOptions;
   /**
@@ -94,6 +94,7 @@ const useUtilityClasses = <T extends ChartSeriesType>(ownerState: {
 
   const slots = {
     root: ['root'],
+    paper: ['paper'],
     table: ['table'],
     row: ['row'],
     cell: ['cell'],
@@ -124,12 +125,12 @@ const ChartsTooltipRoot = styled(Popper, {
  *
  * - [ChartsTooltip API](https://mui.com/x/api/charts/charts-tool-tip/)
  */
-function ChartsTooltip<T extends ChartSeriesType>(props: ChartsTooltipProps<T>) {
-  const themeProps = useThemeProps({
-    props,
+function ChartsTooltip<T extends ChartSeriesType>(inProps: ChartsTooltipProps<T>) {
+  const props = useThemeProps({
+    props: inProps,
     name: 'MuiChartsTooltip',
   });
-  const { trigger = 'axis', itemContent, axisContent, slots, slotProps } = themeProps;
+  const { trigger = 'axis', itemContent, axisContent, slots, slotProps } = props;
 
   const mousePosition = useMouseTracker();
 
@@ -140,7 +141,7 @@ function ChartsTooltip<T extends ChartSeriesType>(props: ChartsTooltipProps<T>) 
   const tooltipHasData = getTooltipHasData(trigger, displayedData);
   const popperOpen = mousePosition !== null && tooltipHasData;
 
-  const classes = useUtilityClasses({ classes: themeProps.classes });
+  const classes = useUtilityClasses({ classes: props.classes });
 
   const PopperComponent = slots?.popper ?? ChartsTooltipRoot;
   const popperProps = useSlotProps({
@@ -170,7 +171,7 @@ function ChartsTooltip<T extends ChartSeriesType>(props: ChartsTooltipProps<T>) 
   return (
     <NoSsr>
       {popperOpen && (
-        <PopperComponent {...popperProps}>
+        <PopperComponent {...popperProps} className={classes.root}>
           {trigger === 'item' ? (
             <ChartsItemTooltipContent
               itemData={displayedData as ItemInteractionData<T>}
@@ -228,7 +229,7 @@ ChartsTooltip.propTypes = {
    * - 'item': Shows data about the item below the mouse.
    * - 'axis': Shows values associated with the hovered x value
    * - 'none': Does not display tooltip
-   * @default 'item'
+   * @default 'axis'
    */
   trigger: PropTypes.oneOf(['axis', 'item', 'none']),
 } as any;

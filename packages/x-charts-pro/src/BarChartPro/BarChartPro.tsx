@@ -56,7 +56,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(inProps: BarChartProPr
       onZoomChange={onZoomChange}
     >
       {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
-      {props.grid && <ChartsGrid {...gridProps} />}
+      <ChartsGrid {...gridProps} />
       <g {...clipPathGroupProps}>
         <BarChartPlotZoom {...barPlotProps} />
         <ChartsOverlay {...overlayProps} />
