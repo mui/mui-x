@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.15.0
+
+_Aug 29, 2024_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 💫 Material UI v6 (`@mui/material@6`) is now supported (#14142) @cherniavskii
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid-pro@7.15.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+- [DataGrid Pro] export GridRowReorderCell (#14079) @genepaul
+
+#### `@mui/x-data-grid-premium@7.15.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.15.0`.
+
+### Charts
+
+#### `@mui/x-charts@7.15.0`
+
+- [charts] Add missing `themeAugmentation` in pro plan (#14313) @lhilgert9
+- [charts] Fix `LineChart` transition stopping before completion (#14366) @JCQuintas
+- [charts] Fix tooltip with horizontal layout (#14337) @alexfauquette
+- [charts] Keep axis root classe usage explicit (#14378) @alexfauquette
+- [charts][docs] Fix sentence case h2 @oliviertassinari
+
+#### `@mui/x-charts-pro@__VERSION-ALPHA__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.15.0`, plus:
+
+- [charts pro] Avoid relative reference to `@mui/x-charts` package (#14335) @LukasTy
+
+### Docs
+
+- [docs] Clarify contribution guide references @oliviertassinari
+- [docs] Fix Stack Overflow issue canned response @oliviertassinari
+- [docs] Fix outdated link to support page @oliviertassinari
+- [docs] Fix use of Material UI @oliviertassinari
+- [docs] Update deprecated props in docs (#14295) @JCQuintas
+
+### Core
+
+- [core] Allow only v5.x for `MUI Core` renovate group (#14382) @LukasTy
+- [core] Avoid visual regression when using `@mui/material@6` (#14357) @cherniavskii
+- [core] Remove renovate rule targeting only `next` releases of `@mui/docs` (#14364) @LukasTy
+- [core] Support `@mui/material@6` peer dependency (#14142) @cherniavskii
+- [core] Use `useRtl` instead of `useTheme` to access direction (#14359) @LukasTy
+- [code-infra] Typecheck nested folders in playground (#14352) @JCQuintas
+- [infra] Fix Issue cleanup action @oliviertassinari
+- [license] Prepare renaming of argument names @oliviertassinari
+
 ## 7.14.0
 
 _Aug 23, 2024_
