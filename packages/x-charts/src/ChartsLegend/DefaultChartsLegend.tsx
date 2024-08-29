@@ -15,7 +15,7 @@ const seriesContextBuilder = (context: LegendItemConfig): SeriesLegendItemContex
   }) as const;
 
 export interface LegendRendererProps
-  extends Omit<LegendPerItemProps, 'itemsToDisplay' | 'contextBuilder'> {
+  extends Omit<LegendPerItemProps, 'itemsToDisplay' | 'onItemClick'> {
   series: FormattedSeries;
   seriesToDisplay: LegendPerItemProps['itemsToDisplay'];
   /**
@@ -37,13 +37,17 @@ export interface LegendRendererProps
 }
 
 function DefaultChartsLegend(props: LegendRendererProps) {
-  const { drawingArea, seriesToDisplay, ...other } = props;
+  const { drawingArea, seriesToDisplay, onItemClick, ...other } = props;
 
   return (
     <LegendPerItem
       {...other}
       itemsToDisplay={seriesToDisplay}
-      contextBuilder={seriesContextBuilder}
+      onItemClick={
+        onItemClick
+          ? (e, i) => onItemClick(e, seriesContextBuilder(seriesToDisplay[i]), i)
+          : undefined
+      }
     />
   );
 }

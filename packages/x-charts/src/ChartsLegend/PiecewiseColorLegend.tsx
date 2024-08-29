@@ -19,7 +19,7 @@ function defaultLabelFormatter(params: PiecewiseLabelFormatterParams) {
 
 export interface PiecewiseColorLegendProps
   extends ColorLegendSelector,
-    Omit<LegendPerItemProps, 'itemsToDisplay' | 'contextBuilder'> {
+    Omit<LegendPerItemProps, 'itemsToDisplay' | 'onItemClick'> {
   /**
    * Hide the first item of the legend, corresponding to the [-infinity, min] piece.
    * @default false
@@ -66,6 +66,7 @@ function PiecewiseColorLegend(props: PiecewiseColorLegendProps) {
     hideFirst,
     hideLast,
     labelFormatter = defaultLabelFormatter,
+    onItemClick,
     ...other
   } = props;
 
@@ -118,7 +119,11 @@ function PiecewiseColorLegend(props: PiecewiseColorLegendProps) {
     <LegendPerItem
       {...other}
       itemsToDisplay={itemsToDisplay}
-      contextBuilder={piecewiseColorContextBuilder}
+      onItemClick={
+        onItemClick
+          ? (e, i) => onItemClick(e, piecewiseColorContextBuilder(itemsToDisplay[i]), i)
+          : undefined
+      }
     />
   );
 }

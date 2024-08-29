@@ -5,7 +5,7 @@ import { DrawingArea } from '../context/DrawingProvider';
 import { ChartsTextStyle } from '../ChartsText';
 import { CardinalDirections } from '../models/layout';
 import { getWordsByLines } from '../internals/getWordsByLines';
-import { GetItemSpaceType, LegendItemConfig, LegendItemContext } from './chartsLegend.types';
+import { GetItemSpaceType, LegendItemConfig } from './chartsLegend.types';
 import { legendItemPlacements } from './legendItemsPlacement';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { AnchorPosition, Direction, LegendPlacement } from './legend.types';
@@ -74,12 +74,7 @@ export interface LegendPerItemProps
    * @default false
    */
   hidden?: boolean;
-  contextBuilder: (context: LegendItemConfig) => LegendItemContext;
-  onItemClick?: (
-    event: React.MouseEvent<SVGRectElement, MouseEvent>,
-    legendItem: any,
-    index: number,
-  ) => void;
+  onItemClick?: (event: React.MouseEvent<SVGRectElement, MouseEvent>, index: number) => void;
 }
 
 /**
@@ -122,7 +117,6 @@ export function LegendPerItem(props: LegendPerItemProps) {
     padding: paddingProps = 10,
     labelStyle: inLabelStyle,
     onItemClick,
-    contextBuilder,
   } = props;
   const theme = useTheme();
   const drawingArea = useDrawingArea();
@@ -221,7 +215,7 @@ export function LegendPerItem(props: LegendPerItemProps) {
             markGap={markGap}
             labelStyle={labelStyle}
             classes={classes}
-            onClick={(e) => onItemClick?.(e, contextBuilder(item), i)}
+            onClick={onItemClick ? (e) => onItemClick(e, i) : undefined}
           />
         ))}
       </ChartsLegendRoot>
