@@ -10,6 +10,7 @@ import { cleanId } from '../internals/cleanId';
 import getColor from './getColor';
 import { useLineSeries } from '../hooks/useSeries';
 import { useDrawingArea } from '../hooks/useDrawingArea';
+import { useSkipAnimation } from '../context/AnimationProvider';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -54,8 +55,8 @@ export interface MarkPlotProps
  * - [MarkPlot API](https://mui.com/x/api/charts/mark-plot/)
  */
 function MarkPlot(props: MarkPlotProps) {
-  const { slots, slotProps, skipAnimation, onItemClick, ...other } = props;
-
+  const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, ...other } = props;
+  const skipAnimation = useSkipAnimation(inSkipAnimation);
   const seriesData = useLineSeries();
   const axisData = useCartesianContext();
   const chartId = useChartId();
