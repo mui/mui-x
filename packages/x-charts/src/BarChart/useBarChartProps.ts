@@ -96,13 +96,13 @@ export const useBarChartProps = (props: BarChartProps) => {
       axisHighlight?.y === 'none' &&
       !onAxisClick,
     className,
+    skipAnimation,
   };
 
   const barPlotProps: BarPlotProps = {
     onItemClick,
     slots,
     slotProps,
-    skipAnimation,
     borderRadius,
     barLabel,
   };

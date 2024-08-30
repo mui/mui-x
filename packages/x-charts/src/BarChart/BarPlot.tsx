@@ -14,6 +14,7 @@ import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { checkScaleErrors } from './checkScaleErrors';
 import { useBarSeries } from '../hooks/useSeries';
 import { SeriesFormatterResult } from '../context/PluginProvider';
+import { useSkipAnimation } from '../context/AnimationProvider';
 
 /**
  * Solution of the equations
@@ -54,7 +55,7 @@ export interface BarPlotSlotProps extends BarElementSlotProps, BarLabelSlotProps
 export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
   /**
    * If `true`, animations are skipped.
-   * @default false
+   * @default undefined
    */
   skipAnimation?: boolean;
   /**
@@ -223,7 +224,8 @@ const enterStyle = ({ x, width, y, height }: AnimationData) => ({
  */
 function BarPlot(props: BarPlotProps) {
   const { completedData, masksData } = useAggregatedData();
-  const { skipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
+  const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
+  const skipAnimation = useSkipAnimation(inSkipAnimation);
 
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
 
