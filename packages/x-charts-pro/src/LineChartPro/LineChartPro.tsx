@@ -25,6 +25,21 @@ import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
 import { useZoom } from '../context/ZoomProvider/useZoom';
 import { ZoomProps } from '../context/ZoomProvider';
 
+function AreaPlotZoom(props: AreaPlotProps) {
+  const { isInteracting } = useZoom();
+  return <AreaPlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
+}
+
+function LinePlotZoom(props: LinePlotProps) {
+  const { isInteracting } = useZoom();
+  return <LinePlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
+}
+
+function MarkPlotZoom(props: MarkPlotProps) {
+  const { isInteracting } = useZoom();
+  return <MarkPlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
+}
+
 export interface LineChartProProps extends LineChartProps, ZoomProps {}
 
 /**
@@ -211,6 +226,12 @@ LineChartPro.propTypes = {
    */
   onMarkClick: PropTypes.func,
   /**
+   * Callback fired when the zoom has changed.
+   *
+   * @param {ZoomData[]} zoomData Updated zoom data.
+   */
+  onZoomChange: PropTypes.func,
+  /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default null
@@ -278,7 +299,6 @@ LineChartPro.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -325,6 +345,11 @@ LineChartPro.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -342,6 +367,7 @@ LineChartPro.propTypes = {
       valueFormatter: PropTypes.func,
       zoom: PropTypes.oneOfType([
         PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
           maxEnd: PropTypes.number,
           maxSpan: PropTypes.number,
           minSpan: PropTypes.number,
@@ -360,7 +386,6 @@ LineChartPro.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -407,6 +432,11 @@ LineChartPro.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -424,6 +454,7 @@ LineChartPro.propTypes = {
       valueFormatter: PropTypes.func,
       zoom: PropTypes.oneOfType([
         PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
           maxEnd: PropTypes.number,
           maxSpan: PropTypes.number,
           minSpan: PropTypes.number,
@@ -435,105 +466,16 @@ LineChartPro.propTypes = {
       ]),
     }),
   ),
-} as any;
-
-function MarkPlotZoom(props: MarkPlotProps) {
-  const { isInteracting } = useZoom();
-  return <MarkPlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
-}
-
-MarkPlotZoom.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
   /**
-   * Callback fired when a line mark item is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {LineItemIdentifier} lineItemIdentifier The line mark item identifier.
+   * The list of zoom data related to each axis.
    */
-  onItemClick: PropTypes.func,
-  /**
-   * If `true`, animations are skipped.
-   * @default false
-   */
-  skipAnimation: PropTypes.bool,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps: PropTypes.object,
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.object,
-} as any;
-
-function LinePlotZoom(props: LinePlotProps) {
-  const { isInteracting } = useZoom();
-  return <LinePlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
-}
-
-LinePlotZoom.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  /**
-   * Callback fired when a line item is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {LineItemIdentifier} lineItemIdentifier The line item identifier.
-   */
-  onItemClick: PropTypes.func,
-  /**
-   * If `true`, animations are skipped.
-   * @default false
-   */
-  skipAnimation: PropTypes.bool,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps: PropTypes.object,
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.object,
-} as any;
-
-function AreaPlotZoom(props: AreaPlotProps) {
-  const { isInteracting } = useZoom();
-  return <AreaPlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
-}
-
-AreaPlotZoom.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  /**
-   * Callback fired when a line area item is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {LineItemIdentifier} lineItemIdentifier The line item identifier.
-   */
-  onItemClick: PropTypes.func,
-  /**
-   * If `true`, animations are skipped.
-   * @default false
-   */
-  skipAnimation: PropTypes.bool,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps: PropTypes.object,
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.object,
+  zoom: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
+    }),
+  ),
 } as any;
 
 export { LineChartPro };
