@@ -38,6 +38,7 @@
     },
     "showHighlight": { "type": { "name": "bool" }, "default": "false" },
     "showTooltip": { "type": { "name": "bool" }, "default": "false" },
+    "skipAnimation": { "type": { "name": "bool" }, "default": "undefined" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },

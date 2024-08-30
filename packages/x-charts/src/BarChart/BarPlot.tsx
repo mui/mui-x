@@ -322,7 +322,7 @@ BarPlot.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * If `true`, animations are skipped.
-   * @default false
+   * @default undefined
    */
   skipAnimation: PropTypes.bool,
   /**

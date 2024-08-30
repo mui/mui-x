@@ -325,7 +325,7 @@ PieChart.propTypes = {
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * If `true`, animations are skipped.
-   * @default false
+   * @default undefined
    */
   skipAnimation: PropTypes.bool,
   /**

@@ -332,6 +332,11 @@ SparkLineChart.propTypes = {
    */
   showTooltip: PropTypes.bool,
   /**
+   * If `true`, animations are skipped.
+   * @default undefined
+   */
+  skipAnimation: PropTypes.bool,
+  /**
    * The props used for each component slot.
    * @default {}
    */

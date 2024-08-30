@@ -31,6 +31,7 @@
     "series": {
       "description": "The array of series to display. Each type of series has its own specificity. Please refer to the appropriate docs page to learn more about it."
     },
+    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
