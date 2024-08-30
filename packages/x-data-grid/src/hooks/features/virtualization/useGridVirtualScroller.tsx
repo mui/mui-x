@@ -558,6 +558,12 @@ export const useGridVirtualScroller = () => {
     }
   }, [enabled, gridRootRef, scrollerRef]);
 
+  useEnhancedEffect(() => {
+    if (rootProps.mobileView) {
+      scrollerRef.current!.scrollLeft = 0;
+    }
+  }, [rootProps.mobileView, scrollerRef]);
+
   useRunOnce(outerSize.width !== 0, () => {
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
 
