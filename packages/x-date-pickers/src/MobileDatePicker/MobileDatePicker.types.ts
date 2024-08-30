@@ -25,7 +25,7 @@ export interface MobileDatePickerProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = false,
 > extends BaseDatePickerProps<TDate>,
-    MobileOnlyPickerProps {
+    MobileOnlyPickerProps {  
   /**
    * Overridable component slots.
    * @default {}
