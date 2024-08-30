@@ -60,6 +60,14 @@
       "optional": true
     }
   },
+  "exports": {
+    "./services/static-data": {
+      "types": "./services/static-data.d.ts",
+      "import": "./services/static-data.mjs",
+      "mui-modern": "./services/static-data.modern.mjs",
+      "require": "./services/static-data.js"
+    }
+  },
   "engines": {
     "node": ">=14.0.0"
   }
