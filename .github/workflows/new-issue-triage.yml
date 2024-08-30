@@ -1,0 +1,25 @@
+name: New issue triage
+on:
+  issues:
+    types:
+      - opened
+
+permissions: {}
+
+jobs:
+  issue_cleanup:
+    name: Clean issue body
+    uses: mui/mui-public/.github/workflows/issues_body-cleanup.yml@master
+    permissions:
+      contents: read
+      issues: write
+  order_id_validation:
+    name: Validate order ID
+    needs: issue_cleanup
+    if: needs.issue_cleanup.outputs.orderId != ''
+    uses: mui/mui-public/.github/workflows/issues_order-id-validation.yml@master
+    with:
+      orderId: ${{ needs.issue_cleanup.outputs.orderId }}
+    permissions:
+      contents: read
+      issues: write

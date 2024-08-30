@@ -11,6 +11,7 @@ export const gridVirtualizationSelector = (state: GridStateCommunity) => state.v
 /**
  * Get the enabled state for virtualization
  * @category Virtualization
+ * @deprecated Use `gridVirtualizationColumnEnabledSelector` and `gridVirtualizationRowEnabledSelector`
  */
 export const gridVirtualizationEnabledSelector = createSelector(
   gridVirtualizationSelector,
@@ -18,12 +19,21 @@ export const gridVirtualizationEnabledSelector = createSelector(
 );
 
 /**
- * Get the enabled state for virtualization
+ * Get the enabled state for column virtualization
  * @category Virtualization
  */
 export const gridVirtualizationColumnEnabledSelector = createSelector(
   gridVirtualizationSelector,
   (state) => state.enabledForColumns,
+);
+
+/**
+ * Get the enabled state for row virtualization
+ * @category Virtualization
+ */
+export const gridVirtualizationRowEnabledSelector = createSelector(
+  gridVirtualizationSelector,
+  (state) => state.enabledForRows,
 );
 
 /**

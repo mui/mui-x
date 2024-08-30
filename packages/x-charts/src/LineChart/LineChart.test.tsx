@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { createRenderer, describeConformance } from '@mui/internal-test-utils';
+import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import { describeConformance } from 'test/utils/describeConformance';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 describe('<LineChart />', () => {
@@ -19,7 +20,6 @@ describe('<LineChart />', () => {
         'slotPropsProp',
         'slotPropsCallback',
         'slotsProp',
-        'themeDefaultProps',
         'themeStyleOverrides',
         'themeVariants',
         'themeCustomPalette',

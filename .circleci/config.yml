@@ -100,6 +100,14 @@ commands:
             git --no-pager diff HEAD
 
       - when:
+          condition:
+            equal: [material-ui-v6, << pipeline.parameters.workflow >>]
+          steps:
+            - run:
+                name: Install @mui/material@next
+                command: pnpm use-material-ui-v6
+
+      - when:
           condition: << parameters.browsers >>
           steps:
             - run:
@@ -248,7 +256,7 @@ jobs:
           command: pnpm docs:typescript:formatted --disable-cache
       - run:
           name: '`pnpm docs:typescript:formatted` changes committed?'
-          command: git add -A && git diff --exit-code --staged
+          command: git add -A && git diff --exit-code --staged docs/src docs/data
       - run:
           name: Tests TypeScript definitions
           command: pnpm typescript:ci
@@ -383,3 +391,23 @@ workflows:
           <<: *default-context
           react-version: next
           name: test_e2e-react@next
+
+  material-ui-v6:
+    when:
+      equal: [material-ui-v6, << pipeline.parameters.workflow >>]
+    jobs:
+      - test_unit:
+          <<: *default-context
+          name: test_unit-material@next
+      - test_browser:
+          <<: *default-context
+          name: test_browser-material@next
+      - test_regressions:
+          <<: *default-context
+          name: test_regressions-material@next
+      - test_e2e:
+          <<: *default-context
+          name: test_e2e-material@next
+      - test_types:
+          <<: *default-context
+          name: test_types-material@next
