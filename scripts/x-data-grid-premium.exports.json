@@ -622,6 +622,7 @@
   { "name": "GridVirtualizationApi", "kind": "Interface" },
   { "name": "gridVirtualizationColumnEnabledSelector", "kind": "Variable" },
   { "name": "gridVirtualizationEnabledSelector", "kind": "Variable" },
+  { "name": "gridVirtualizationRowEnabledSelector", "kind": "Variable" },
   { "name": "gridVirtualizationSelector", "kind": "Variable" },
   { "name": "GridVirtualizationState", "kind": "TypeAlias" },
   { "name": "GridVisibilityOffIcon", "kind": "Variable" },
