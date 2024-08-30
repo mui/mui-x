@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { defaultMemoize } from 'reselect';
+import { lruMemoize } from 'reselect';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -69,7 +69,7 @@ function getVisibleRowsLookupState(
 }
 
 function createMemoizedValues() {
-  return defaultMemoize(Object.values);
+  return lruMemoize(Object.values);
 }
 
 /**
