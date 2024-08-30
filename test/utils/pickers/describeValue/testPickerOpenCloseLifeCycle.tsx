@@ -85,8 +85,12 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       } else {
         expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
       }
-      expect(onAccept.callCount).to.equal(pickerParams.variant === 'mobile' ? 0 : 1);
-      expect(onClose.callCount).to.equal(pickerParams.variant === 'mobile' ? 0 : 1);
+
+      const isTimeOrMobile =
+        pickerParams.variant === 'mobile' || pickerParams.type.includes('time');
+
+      expect(onAccept.callCount).to.equal(isTimeOrMobile ? 0 : 1);
+      expect(onClose.callCount).to.equal(isTimeOrMobile ? 0 : 1);
     });
 
     it('should not select input content after closing on mobile', () => {
