@@ -9,6 +9,7 @@ import {
   InteractionProvider,
   PluginProvider,
   SeriesProvider,
+  AnimationProvider,
 } from '@mui/x-charts/internals';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
@@ -33,6 +34,7 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
     cartesianProviderProps,
     chartsSurfaceProps,
     pluginProviderProps,
+    animationProviderProps,
     children,
   } = useChartContainerProProps(props, ref);
 
@@ -40,24 +42,26 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
 
   return (
     <DrawingProvider {...drawingProviderProps}>
-      <PluginProvider {...pluginProviderProps}>
-        <ZoomProvider {...zoomProviderProps}>
-          <SeriesProvider {...seriesProviderProps}>
-            <CartesianProviderPro {...cartesianProviderProps}>
-              <ZAxisContextProvider {...zAxisContextProps}>
-                <InteractionProvider>
-                  <HighlightedProvider {...highlightedProviderProps}>
-                    <ChartsSurface {...chartsSurfaceProps}>
-                      <ChartsAxesGradients />
-                      {children}
-                    </ChartsSurface>
-                  </HighlightedProvider>
-                </InteractionProvider>
-              </ZAxisContextProvider>
-            </CartesianProviderPro>
-          </SeriesProvider>
-        </ZoomProvider>
-      </PluginProvider>
+      <AnimationProvider {...animationProviderProps}>
+        <PluginProvider {...pluginProviderProps}>
+          <ZoomProvider {...zoomProviderProps}>
+            <SeriesProvider {...seriesProviderProps}>
+              <CartesianProviderPro {...cartesianProviderProps}>
+                <ZAxisContextProvider {...zAxisContextProps}>
+                  <InteractionProvider>
+                    <HighlightedProvider {...highlightedProviderProps}>
+                      <ChartsSurface {...chartsSurfaceProps}>
+                        <ChartsAxesGradients />
+                        {children}
+                      </ChartsSurface>
+                    </HighlightedProvider>
+                  </InteractionProvider>
+                </ZAxisContextProvider>
+              </CartesianProviderPro>
+            </SeriesProvider>
+          </ZoomProvider>
+        </PluginProvider>
+      </AnimationProvider>
     </DrawingProvider>
   );
 });

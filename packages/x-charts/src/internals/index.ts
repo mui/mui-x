@@ -31,6 +31,7 @@ export * from '../context/InteractionProvider';
 export * from '../context/SeriesProvider';
 export * from '../context/ZAxisContextProvider';
 export * from '../context/PluginProvider';
+export * from '../context/AnimationProvider';
 export type * from '../context/context.types';
 export { getAxisExtremum } from '../context/CartesianProvider/getAxisExtremum';
 
