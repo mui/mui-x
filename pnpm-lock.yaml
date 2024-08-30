@@ -576,7 +576,7 @@ importers:
         specifier: ^0.5.45
         version: 0.5.45
       next:
-        specifier: ^14.2.6
+        specifier: ^14.2.7
         version: 14.2.7(@babel/core@7.25.2)(@opentelemetry/api@1.8.0)(@playwright/test@1.44.1)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nprogress:
         specifier: ^0.2.0
