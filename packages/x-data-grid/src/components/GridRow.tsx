@@ -440,14 +440,20 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     );
   }
   if (rootProps.mobileView) {
-    cells.push(
-      getCell(
-        { ...rootProps.mobileColDef!, computedWidth: dimensions.viewportInnerSize.width },
-        0,
-        0,
-        1,
-      ),
-    );
+    const columnsToKeep = visibleColumns.filter((col) => {
+      if (col.type === 'actions') {
+        return true;
+      }
+      return false;
+    });
+    const columnsCount = columnsToKeep.length + 1;
+    const mobileColumnWidth =
+      dimensions.viewportInnerSize.width -
+      columnsToKeep.reduce((acc, col) => acc + col.computedWidth, 0);
+    cells.push(getCell({ ...rootProps.mobileColDef!, computedWidth: mobileColumnWidth }, 0, 0, 1));
+    columnsToKeep.forEach((column, colIndex) => {
+      cells.push(getCell(column, 1 + colIndex, 1 + colIndex, columnsCount));
+    });
   } else {
     for (let i = renderContext.firstColumnIndex; i < renderContext.lastColumnIndex; i += 1) {
       const column = visibleColumns[i];

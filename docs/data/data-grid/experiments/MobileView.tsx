@@ -1,9 +1,12 @@
 import * as React from 'react';
 import {
   DataGridPremium,
+  GridActionsCellItem,
   GridColDef,
   gridColumnLookupSelector,
   GridRenderCellParams,
+  GridRowId,
+  GridRowModel,
   GridToolbar,
   useGridApiContext,
   useGridSelector,
@@ -16,6 +19,9 @@ import Link from '@mui/material/Link';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useMediaQuery } from '@mui/system';
+import Tooltip from '@mui/material/Tooltip';
+import ArrowUpIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownIcon from '@mui/icons-material/ArrowDownward';
 
 function CellCard(props: GridRenderCellParams) {
   const apiRef = useGridApiContext();
@@ -100,6 +106,105 @@ export default function MobileView() {
 
   const mobileView = preferMediaQuery ? mobileViewQuery : mobileViewState;
 
+  const [pinnedRowsIds, setPinnedRowsIds] = React.useState<{
+    top: GridRowId[];
+    bottom: GridRowId[];
+  }>({
+    top: [],
+    bottom: [],
+  });
+
+  const { rows, pinnedRows } = React.useMemo(() => {
+    const rowsData: GridRowModel[] = [];
+    const pinnedRowsData: { top: GridRowModel[]; bottom: GridRowModel[] } = {
+      top: [],
+      bottom: [],
+    };
+
+    data.rows?.forEach((row) => {
+      if (pinnedRowsIds.top.includes(row.id)) {
+        pinnedRowsData.top.push(row);
+      } else if (pinnedRowsIds.bottom.includes(row.id)) {
+        pinnedRowsData.bottom.push(row);
+      } else {
+        rowsData.push(row);
+      }
+    });
+
+    return {
+      rows: rowsData,
+      pinnedRows: pinnedRowsData,
+    };
+  }, [pinnedRowsIds, data.rows]);
+
+  console.log('rows', rows);
+
+  const columns = React.useMemo<GridColDef[]>(() => {
+    return [
+      ...data.columns,
+      {
+        type: 'actions',
+        field: '',
+        getActions: (params) => {
+          const isPinnedTop = pinnedRowsIds.top.includes(params.id);
+          const isPinnedBottom = pinnedRowsIds.bottom.includes(params.id);
+          if (isPinnedTop || isPinnedBottom) {
+            return [
+              <GridActionsCellItem
+                label="Unpin"
+                icon={
+                  <Tooltip title="Unpin">
+                    {isPinnedTop ? <ArrowDownIcon /> : <ArrowUpIcon />}
+                  </Tooltip>
+                }
+                onClick={() =>
+                  setPinnedRowsIds((prevPinnedRowsIds) => ({
+                    top: prevPinnedRowsIds.top.filter(
+                      (rowId) => rowId !== params.id,
+                    ),
+                    bottom: prevPinnedRowsIds.bottom.filter(
+                      (rowId) => rowId !== params.id,
+                    ),
+                  }))
+                }
+              />,
+            ];
+          }
+          return [
+            <GridActionsCellItem
+              icon={
+                <Tooltip title="Pin at the top">
+                  <ArrowUpIcon />
+                </Tooltip>
+              }
+              label="Pin at the top"
+              onClick={() =>
+                setPinnedRowsIds((prevPinnedRowsIds) => ({
+                  ...prevPinnedRowsIds,
+                  top: [...prevPinnedRowsIds.top, params.id],
+                }))
+              }
+            />,
+            <GridActionsCellItem
+              icon={
+                <Tooltip title="Pin at the bottom">
+                  <ArrowDownIcon />
+                </Tooltip>
+              }
+              label="Pin at the bottom"
+              onClick={() =>
+                setPinnedRowsIds((prevPinnedRowsIds) => ({
+                  ...prevPinnedRowsIds,
+                  bottom: [...prevPinnedRowsIds.bottom, params.id],
+                }))
+              }
+            />,
+          ];
+        },
+      },
+    ];
+  }, [data.columns, pinnedRowsIds.bottom, pinnedRowsIds.top]);
+
   return (
     <div style={{ width: '100%' }}>
       <FormControlLabel
@@ -124,6 +229,9 @@ export default function MobileView() {
       <div style={{ height: '600px' }}>
         <DataGridPremium
           {...data}
+          rows={rows}
+          columns={columns}
+          pinnedRows={pinnedRows}
           slots={{ toolbar: GridToolbar }}
           mobileView={mobileView}
           mobileColDef={mobileColDef}
