@@ -73,7 +73,7 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^1.0.10",
-    "@mui/material": "^5.16.5",
+    "@mui/material": "^5.16.7",
     "@mui/system": "^5.16.7",
     "@types/prop-types": "^15.7.12",
     "date-fns": "^2.30.0",
