@@ -1,9 +1,17 @@
 import * as React from 'react';
-import { createSelector as reselectCreateSelector, Selector, SelectorResultArray } from 'reselect';
+import { lruMemoize, createSelectorCreator, Selector, SelectorResultArray } from 'reselect';
 import type { GridCoreApi } from '../models/api/gridCoreApi';
 import { warnOnce } from '../internals/utils/warning';
 
 type CacheKey = { id: number };
+
+const reselectCreateSelector = createSelectorCreator({
+  memoize: lruMemoize,
+  memoizeOptions: {
+    maxSize: 1,
+    equalityCheck: Object.is,
+  },
+});
 
 // TODO v8: Remove this type
 export interface OutputSelector<State, Result> {
