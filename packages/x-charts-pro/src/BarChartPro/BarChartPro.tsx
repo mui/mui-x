@@ -20,7 +20,7 @@ import { ZoomProps } from '../context/ZoomProvider';
 function BarChartPlotZoom(props: BarPlotProps) {
   const { isInteracting } = useZoom();
 
-  return <BarPlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
+  return <BarPlot {...props} skipAnimation={isInteracting || undefined} />;
 }
 
 export interface BarChartProProps extends BarChartProps, ZoomProps {}
