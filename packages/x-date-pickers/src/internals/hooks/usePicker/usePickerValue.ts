@@ -167,7 +167,7 @@ export const usePickerValue = <
     onChange,
     value: inValueWithoutRenderTimezone,
     defaultValue: inDefaultValue,
-    closeOnSelect = variant === 'desktop',
+    closeOnSelect = variant === 'desktop' && !valueType.includes('time'),
     timezone: timezoneProp,
     referenceDate,
   } = props;
