@@ -9,8 +9,20 @@ function UseSkipAnimation({ localSkipAnimation }: { localSkipAnimation?: boolean
   return <div>value: {skipAnimation}</div>;
 }
 
+const createMatchMedia = (matches: boolean) => () =>
+  ({ matches, addEventListener: () => {}, removeEventListener: () => {} }) as any;
+
 describe('useSkipAnimation', () => {
   const { render } = createRenderer();
+  const oldMatchMedia = window.matchMedia;
+
+  beforeEach(() => {
+    window.matchMedia = createMatchMedia(false);
+  });
+
+  afterEach(() => {
+    window.matchMedia = oldMatchMedia;
+  });
 
   it('should throw an error when parent context not present', function test() {
     if (!/jsdom/.test(window.navigator.userAgent)) {
@@ -50,7 +62,7 @@ describe('useSkipAnimation', () => {
   });
 
   it('should use preference when pref is true and skip is false', () => {
-    window.matchMedia = () => ({ matches: true }) as any;
+    window.matchMedia = createMatchMedia(true);
     render(
       <AnimationProvider skipAnimation={false}>
         <UseSkipAnimation />
@@ -61,7 +73,7 @@ describe('useSkipAnimation', () => {
   });
 
   it('should use preference when pref is false and skip is false', () => {
-    window.matchMedia = () => ({ matches: false }) as any;
+    window.matchMedia = createMatchMedia(false);
     render(
       <AnimationProvider skipAnimation={false}>
         <UseSkipAnimation />
@@ -72,7 +84,7 @@ describe('useSkipAnimation', () => {
   });
 
   it('should use preference when pref is true and local skip is false', () => {
-    window.matchMedia = () => ({ matches: true }) as any;
+    window.matchMedia = createMatchMedia(true);
     render(
       <AnimationProvider>
         <UseSkipAnimation localSkipAnimation={false} />
@@ -83,7 +95,7 @@ describe('useSkipAnimation', () => {
   });
 
   it('should use local skip when it is true', () => {
-    window.matchMedia = () => ({ matches: false }) as any;
+    window.matchMedia = createMatchMedia(false);
     render(
       <AnimationProvider>
         <UseSkipAnimation localSkipAnimation />
@@ -94,7 +106,7 @@ describe('useSkipAnimation', () => {
   });
 
   it('should use the global config if local is false', () => {
-    window.matchMedia = () => ({ matches: false }) as any;
+    window.matchMedia = createMatchMedia(false);
     render(
       <AnimationProvider skipAnimation>
         <UseSkipAnimation localSkipAnimation={false} />

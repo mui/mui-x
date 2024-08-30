@@ -92,6 +92,7 @@ export const useLineChartProps = (props: LineChartProps) => {
       axisHighlight?.y === 'none' &&
       !onAxisClick,
     className,
+    skipAnimation,
   };
 
   const axisClickHandlerProps: ChartsOnAxisClickHandlerProps = {
@@ -115,21 +116,18 @@ export const useLineChartProps = (props: LineChartProps) => {
     slots,
     slotProps,
     onItemClick: onAreaClick,
-    skipAnimation,
   };
 
   const linePlotProps: LinePlotProps = {
     slots,
     slotProps,
     onItemClick: onLineClick,
-    skipAnimation,
   };
 
   const markPlotProps: MarkPlotProps = {
     slots,
     slotProps,
     onItemClick: onMarkClick,
-    skipAnimation,
   };
 
   const overlayProps: ChartsOverlayProps = {

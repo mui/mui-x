@@ -190,6 +190,7 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
       highlightedItem={highlightedItem}
       onHighlightChange={onHighlightChange}
       className={className}
+      skipAnimation={skipAnimation}
     >
       <ChartsAxis
         topAxis={topAxis}
@@ -199,12 +200,7 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
         slots={slots}
         slotProps={slotProps}
       />
-      <PiePlot
-        slots={slots}
-        slotProps={slotProps}
-        onItemClick={onItemClick}
-        skipAnimation={skipAnimation}
-      />
+      <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
       <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight {...axisHighlight} />
