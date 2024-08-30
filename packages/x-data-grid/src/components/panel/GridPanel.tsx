@@ -7,7 +7,6 @@ import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { isEscapeKey } from '../../utils/keyboardUtils';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
@@ -68,7 +67,7 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
 
   const handleKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
-      if (isEscapeKey(event.key)) {
+      if (event.key === 'Escape') {
         apiRef.current.hidePreferences();
       }
     },
@@ -79,7 +78,10 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
     () => [
       {
         name: 'flip',
-        enabled: false,
+        enabled: true,
+        options: {
+          rootBoundary: 'document',
+        },
       },
       {
         name: 'isPlaced',
@@ -139,7 +141,7 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
 GridPanel.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Popper render function or node.

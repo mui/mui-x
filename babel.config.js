@@ -1,6 +1,16 @@
+// @ts-check
 const path = require('path');
 const generateReleaseInfo = require('./packages/x-license/generateReleaseInfo');
 
+/**
+ * @typedef {import('@babel/core')} babel
+ */
+
+/**
+ *
+ * @param {string} relativeToBabelConf
+ * @returns {string}
+ */
 function resolveAliasPath(relativeToBabelConf) {
   const resolvedPath = path.relative(process.cwd(), path.resolve(__dirname, relativeToBabelConf));
   return `./${resolvedPath.replace('\\', '/')}`;
@@ -15,14 +25,14 @@ const defaultAlias = {
   '@mui/x-date-pickers': resolveAliasPath('./packages/x-date-pickers/src'),
   '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
   '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),
+  '@mui/x-charts-pro': resolveAliasPath('./packages/x-charts-pro/src'),
+  '@mui/x-charts-vendor': resolveAliasPath('./packages/x-charts-vendor'),
   '@mui/x-tree-view': resolveAliasPath('./packages/x-tree-view/src'),
   '@mui/x-tree-view-pro': resolveAliasPath('./packages/x-tree-view-pro/src'),
+  '@mui/x-internals': resolveAliasPath('./packages/x-internals/src'),
   '@mui/material-nextjs': '@mui/monorepo/packages/mui-material-nextjs/src',
   '@mui-internal/api-docs-builder': resolveAliasPath(
     './node_modules/@mui/monorepo/packages/api-docs-builder',
-  ),
-  '@mui-internal/test-utils': resolveAliasPath(
-    './node_modules/@mui/monorepo/packages/test-utils/src',
   ),
   docs: resolveAliasPath('./node_modules/@mui/monorepo/docs'),
   test: resolveAliasPath('./test'),
@@ -33,6 +43,7 @@ const productionPlugins = [
   ['babel-plugin-react-remove-properties', { properties: ['data-mui-test'] }],
 ];
 
+/** @type {babel.ConfigFunction} */
 module.exports = function getBabelConfig(api) {
   const useESModules = api.env(['modern', 'stable', 'rollup']);
 
@@ -56,6 +67,16 @@ module.exports = function getBabelConfig(api) {
     '@babel/preset-typescript',
   ];
 
+  const usesAliases =
+    // in this config:
+    api.env(['coverage', 'development', 'test', 'benchmark']) ||
+    process.env.NODE_ENV === 'test' ||
+    // in webpack config:
+    api.env(['regressions']);
+
+  const outFileExtension = '.js';
+
+  /** @type {babel.PluginItem[]} */
   const plugins = [
     'babel-plugin-optimize-clsx',
     // Need the following 3 transforms for all targets in .browserslistrc.
@@ -91,8 +112,19 @@ module.exports = function getBabelConfig(api) {
       {
         test: /date-fns/i,
         replacer: 'date-fns-v3',
-        ignoreFilenames: 'AdapterDateFns.ts',
+        // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
+        filenameIncludes: 'src/AdapterDateFnsV3/',
       },
+    ]);
+    plugins.push([
+      'babel-plugin-replace-imports',
+      {
+        test: /date-fns-jalali/i,
+        replacer: 'date-fns-jalali-v3',
+        // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
+        filenameIncludes: 'src/AdapterDateFnsJalaliV3/',
+      },
+      'replace-date-fns-jalali-imports',
     ]);
   }
 
@@ -112,6 +144,17 @@ module.exports = function getBabelConfig(api) {
         },
       ]);
     }
+  }
+
+  if (useESModules) {
+    plugins.push([
+      '@mui/internal-babel-plugin-resolve-imports',
+      {
+        // Don't replace the extension when we're using aliases.
+        // Essentially only replace in production builds.
+        outExtension: usesAliases ? null : outFileExtension,
+      },
+    ]);
   }
 
   return {

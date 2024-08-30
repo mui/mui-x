@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import useId from '@mui/utils/useId';
 import { Watermark } from '@mui/x-license';
 import {
   applyDefaultDate,
@@ -20,7 +22,7 @@ import {
   PickerSelectionState,
   useNow,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
-  buildWarning,
+  warnOnce,
   useControlledValueWithTimezone,
   useViews,
 } from '@mui/x-date-pickers/internals';
@@ -33,7 +35,6 @@ import {
 import {
   DateRangeCalendarProps,
   DateRangeCalendarDefaultizedProps,
-  DateRangePosition,
   DateRangeCalendarOwnerState,
 } from './DateRangeCalendar.types';
 import {
@@ -43,7 +44,7 @@ import {
   isWithinRange,
 } from '../internals/utils/date-utils';
 import { calculateRangeChange, calculateRangePreview } from '../internals/utils/date-range-manager';
-import { DateRange } from '../models';
+import { DateRange, RangePosition } from '../models';
 import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../DateRangePickerDay';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { useDragRange } from './useDragRange';
@@ -76,11 +77,6 @@ const DateRangeCalendarMonthContainer = styled('div', {
 }));
 
 const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
-
-const warnInvalidCurrentMonthCalendarPosition = buildWarning([
-  'The `currentMonthCalendarPosition` prop must be an integer between `1` and the amount of calendars rendered.',
-  'For example if you have 2 calendars rendered, it should be equal to either 1 or 2.',
-]);
 
 const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
   minWidth: 312,
@@ -232,6 +228,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
 
   const utils = useUtils<TDate>();
   const now = useNow<TDate>(timezone);
+  const id = useId();
 
   const { rangePosition, onRangePositionChange } = useRangePosition({
     rangePosition: rangePositionProp,
@@ -239,7 +236,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     onRangePositionChange: inOnRangePositionChange,
   });
 
-  const handleDatePositionChange = useEventCallback((position: DateRangePosition) => {
+  const handleDatePositionChange = useEventCallback((position: RangePosition) => {
     if (rangePosition !== position) {
       onRangePositionChange(position);
     }
@@ -460,7 +457,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
       const isSelectedEndDate = isEndOfRange(utils, day, valueDayRange);
       const shouldInitDragging = !shouldDisableDragEditing && valueDayRange[0] && valueDayRange[1];
       const isElementDraggable = shouldInitDragging && (isSelectedStartDate || isSelectedEndDate);
-      let datePosition: DateRangePosition | undefined;
+      let datePosition: RangePosition | undefined;
       if (isSelectedStartDate) {
         datePosition = 'start';
       } else if (isSelectedEndDate) {
@@ -505,7 +502,10 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
   const visibleMonths = React.useMemo(() => {
     if (process.env.NODE_ENV !== 'production') {
       if (currentMonthCalendarPosition > calendars || currentMonthCalendarPosition < 1) {
-        warnInvalidCurrentMonthCalendarPosition();
+        warnOnce([
+          'MUI X: The `currentMonthCalendarPosition` prop must be an integer between `1` and the amount of calendars rendered.',
+          'For example if you have 2 calendars rendered, it should be equal to either 1 or 2.',
+        ]);
       }
     }
 
@@ -549,10 +549,16 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
       <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
       {calendarMonths.map((monthIndex) => {
         const month = visibleMonths[monthIndex];
+        const labelId = `${id}-grid-${monthIndex}-label`;
 
         return (
           <DateRangeCalendarMonthContainer key={monthIndex} className={classes.monthContainer}>
-            <CalendarHeader<TDate> {...calendarHeaderProps} month={month} monthIndex={monthIndex} />
+            <CalendarHeader<TDate>
+              {...calendarHeaderProps}
+              month={month}
+              monthIndex={monthIndex}
+              labelId={labelId}
+            />
             <DayCalendarForRange<TDate>
               className={classes.dayCalendar}
               {...calendarState}
@@ -576,6 +582,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
               fixedWeekNumber={fixedWeekNumber}
               displayWeekNumber={displayWeekNumber}
               timezone={timezone}
+              gridLabelId={labelId}
             />
           </DateRangeCalendarMonthContainer>
         );
@@ -587,7 +594,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
 DateRangeCalendar.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * If `true`, the main element is focused during the first mount.
@@ -688,10 +695,12 @@ DateRangeCalendar.propTypes = {
   loading: PropTypes.bool,
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**

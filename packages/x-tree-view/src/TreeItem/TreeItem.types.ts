@@ -1,12 +1,19 @@
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import { TransitionProps } from '@mui/material/transitions';
 import { SxProps } from '@mui/system';
 import { TreeItemContentProps } from './TreeItemContent';
 import { TreeItemClasses } from './treeItemClasses';
 import { TreeViewItemId } from '../models';
 import { SlotComponentPropsFromProps } from '../internals/models';
+import { MuiCancellableEventHandler } from '../internals/models/MuiCancellableEvent';
+import { UseTreeViewIconsSignature } from '../internals/plugins/useTreeViewIcons';
+import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
+import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
+import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
+import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
+import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
 
 export interface TreeItemSlots {
   /**
@@ -26,7 +33,7 @@ export interface TreeItemSlots {
    */
   icon?: React.ElementType;
   /**
-   * The component that animates to appearance / disappearance of the item's children.
+   * The component that animates the appearance / disappearance of the item's children.
    * @default TreeItem2Group
    */
   groupTransition?: React.ElementType;
@@ -91,6 +98,10 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
+  /**
+   * Callback fired when a key of the keyboard is pressed on the item.
+   */
+  onKeyDown?: MuiCancellableEventHandler<React.KeyboardEvent<HTMLLIElement>>;
 }
 
 export interface TreeItemOwnerState extends TreeItemProps {
@@ -98,4 +109,22 @@ export interface TreeItemOwnerState extends TreeItemProps {
   focused: boolean;
   selected: boolean;
   disabled: boolean;
+  indentationAtItemLevel: boolean;
 }
+
+/**
+ * Plugins that need to be present in the Tree View in order for `TreeItem` to work correctly.
+ */
+export type TreeItemMinimalPlugins = readonly [
+  UseTreeViewIconsSignature,
+  UseTreeViewSelectionSignature,
+  UseTreeViewItemsSignature,
+  UseTreeViewFocusSignature,
+  UseTreeViewExpansionSignature,
+  UseTreeViewKeyboardNavigationSignature,
+];
+
+/**
+ * Plugins that `TreeItem` can use if they are present, but are not required.
+ */
+export type TreeItemOptionalPlugins = readonly [];

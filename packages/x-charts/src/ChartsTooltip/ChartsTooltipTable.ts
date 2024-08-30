@@ -2,9 +2,13 @@ import { styled } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system';
 import { chartsTooltipClasses } from './chartsTooltipClasses';
 
+/**
+ * @ignore - internal component.
+ */
 export const ChartsTooltipPaper = styled('div', {
   name: 'MuiChartsTooltip',
   slot: 'Container',
+  overridesResolver: (props, styles) => styles.paper,
 })(({ theme }) => ({
   boxShadow: theme.shadows[1],
   backgroundColor: (theme.vars || theme).palette.background.paper,
@@ -13,9 +17,13 @@ export const ChartsTooltipPaper = styled('div', {
   borderRadius: theme.shape.borderRadius,
 }));
 
+/**
+ * @ignore - internal component.
+ */
 export const ChartsTooltipTable = styled('table', {
   name: 'MuiChartsTooltip',
   slot: 'Table',
+  overridesResolver: (props, styles) => styles.table,
 })(({ theme }) => ({
   borderSpacing: 0,
   '& thead td': {
@@ -23,9 +31,13 @@ export const ChartsTooltipTable = styled('table', {
   },
 }));
 
+/**
+ * @ignore - internal component.
+ */
 export const ChartsTooltipRow = styled('tr', {
   name: 'MuiChartsTooltip',
   slot: 'Row',
+  overridesResolver: (props, styles) => styles.row,
 })(({ theme }) => ({
   'tr:first-of-type& td': {
     paddingTop: theme.spacing(1),
@@ -35,9 +47,13 @@ export const ChartsTooltipRow = styled('tr', {
   },
 }));
 
+/**
+ * @ignore - internal component.
+ */
 export const ChartsTooltipCell = styled('td', {
   name: 'MuiChartsTooltip',
   slot: 'Cell',
+  overridesResolver: (props, styles) => styles.cell,
 })(({ theme }) => ({
   verticalAlign: 'middle',
   color: (theme.vars || theme).palette.text.secondary,
@@ -56,9 +72,13 @@ export const ChartsTooltipCell = styled('td', {
   },
 }));
 
+/**
+ * @ignore - internal component.
+ */
 export const ChartsTooltipMark = styled('div', {
   name: 'MuiChartsTooltip',
   slot: 'Mark',
+  overridesResolver: (props, styles) => styles.mark,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'color',
 })<{ color: string }>(({ theme, color }) => ({
   width: theme.spacing(1),

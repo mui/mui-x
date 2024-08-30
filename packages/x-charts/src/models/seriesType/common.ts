@@ -1,4 +1,4 @@
-import type { HighlightScope } from '../../context/HighlightProvider';
+import type { HighlightScope } from '../../context';
 import type { StackOffsetType, StackOrderType } from '../stacking';
 
 export type SeriesId = number | string;
@@ -25,6 +25,9 @@ export type CommonSeriesType<TValue> = {
    * @returns {string} The string to display.
    */
   valueFormatter?: SeriesValueFormatter<TValue>;
+  /**
+   * The scope to apply when the series is highlighted.
+   */
   highlightScope?: Partial<HighlightScope>;
 };
 
@@ -33,12 +36,22 @@ export type CommonDefaultizedProps = 'id' | 'valueFormatter' | 'data';
 export type CartesianSeriesType = {
   /**
    * The id of the x-axis used to render the series.
+   * @deprecated Use `xAxisId` instead
    */
   xAxisKey?: string;
   /**
    * The id of the y-axis used to render the series.
+   * @deprecated Use `xAxisId` instead
    */
   yAxisKey?: string;
+  /**
+   * The id of the x-axis used to render the series.
+   */
+  xAxisId?: string;
+  /**
+   * The id of the y-axis used to render the series.
+   */
+  yAxisId?: string;
 };
 
 export type StackableSeriesType = {

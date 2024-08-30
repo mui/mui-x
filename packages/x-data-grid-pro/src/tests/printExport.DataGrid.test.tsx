@@ -9,7 +9,7 @@ import {
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, screen, fireEvent, act } from '@mui-internal/test-utils';
+import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
 
 describe('<DataGridPro /> - Print export', () => {
   const { render, clock } = createRenderer();

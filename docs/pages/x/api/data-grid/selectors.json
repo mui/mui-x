@@ -153,6 +153,12 @@
     "supportsApiRef": false
   },
   {
+    "name": "gridEditRowsStateSelector",
+    "returnType": "GridEditingState",
+    "description": "Select the row editing state.",
+    "supportsApiRef": false
+  },
+  {
     "name": "gridExpandedRowCountSelector",
     "returnType": "number",
     "category": "Filtering",
@@ -161,7 +167,7 @@
   },
   {
     "name": "gridExpandedSortedRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
+    "returnType": "GridRowEntry<GridValidRowModel>[]",
     "category": "Filtering",
     "description": "Get the id and the model of the rows accessible after the filtering process.\nDoes not contain the collapsed children.",
     "supportsApiRef": true
@@ -195,8 +201,22 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridFilteredDescendantRowCountSelector",
+    "returnType": "number",
+    "category": "Filtering",
+    "description": "Get the amount of descendant rows accessible after the filtering process.",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridFilteredRowCountSelector",
+    "returnType": "number",
+    "category": "Filtering",
+    "description": "Get the amount of rows accessible after the filtering process.\nIncludes top level and descendant rows.",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridFilteredSortedRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
+    "returnType": "GridRowEntry<GridValidRowModel>[]",
     "category": "Filtering",
     "description": "Get the id and the model of the rows accessible after the filtering process.\nContains the collapsed children.",
     "supportsApiRef": true
@@ -210,7 +230,7 @@
   },
   {
     "name": "gridFilteredSortedTopLevelRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
+    "returnType": "GridRowEntry<GridValidRowModel>[]",
     "category": "Filtering",
     "description": "Get the id and the model of the top level rows accessible after the filtering process.",
     "supportsApiRef": true
@@ -299,7 +319,7 @@
   },
   {
     "name": "gridPaginatedVisibleSortedGridRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
+    "returnType": "GridRowEntry<GridValidRowModel>[]",
     "category": "Pagination",
     "description": "Get the id and the model of each row to include in the current page if the pagination is enabled.",
     "supportsApiRef": true
@@ -446,7 +466,7 @@
   },
   {
     "name": "gridSortedRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
+    "returnType": "GridRowEntry<GridValidRowModel>[]",
     "category": "Sorting",
     "description": "Get the id and the model of the rows after the sorting process.",
     "supportsApiRef": true

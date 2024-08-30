@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { useUtils } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
@@ -211,14 +211,6 @@ const DateRangePickerDayRoot = styled('div', {
   ],
 }));
 
-DateRangePickerDayRoot.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  ownerState: PropTypes.object.isRequired,
-} as any;
-
 const DateRangePickerDayRangeIntervalPreview = styled('div', {
   name: 'MuiDateRangePickerDay',
   slot: 'RangeIntervalPreview',
@@ -271,14 +263,6 @@ const DateRangePickerDayRangeIntervalPreview = styled('div', {
     },
   ],
 }));
-
-DateRangePickerDayRangeIntervalPreview.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  ownerState: PropTypes.object.isRequired,
-} as any;
 
 const DateRangePickerDayDay = styled(PickersDay, {
   name: 'MuiDateRangePickerDay',
@@ -393,7 +377,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<
 DateRangePickerDayRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * A ref for imperative actions.

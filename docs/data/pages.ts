@@ -1,4 +1,4 @@
-import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
+import type { MuiPage } from 'docs/src/MuiPage';
 import dataGridComponentApi from './data-grid-component-api-pages';
 import pickersComponentApi from './date-pickers-component-api-pages';
 import chartsComponentApi from './charts-component-api-pages';
@@ -51,7 +51,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/row-definition' },
           { pathname: '/x/react-data-grid/row-updates' },
           { pathname: '/x/react-data-grid/row-height' },
-          { pathname: '/x/react-data-grid/row-spanning', title: 'Row spanning', planned: true },
+          { pathname: '/x/react-data-grid/row-spanning', planned: true },
           { pathname: '/x/react-data-grid/master-detail', plan: 'pro' },
           { pathname: '/x/react-data-grid/row-ordering', plan: 'pro' },
           { pathname: '/x/react-data-grid/row-pinning', plan: 'pro' },
@@ -87,6 +87,7 @@ const pages: MuiPage[] = [
       },
       { pathname: '/x/react-data-grid/export' },
       { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste', newFeature: true },
+      { pathname: '/x/react-data-grid/overlays', title: 'Overlays' },
       { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
       {
         pathname: '/x/react-data-grid/style-group',
@@ -108,55 +109,40 @@ const pages: MuiPage[] = [
         children: [
           { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
           { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
-          { pathname: '/x/react-data-grid/aggregation', title: 'Aggregation', plan: 'premium' },
-          {
-            pathname: '/x/react-data-grid/pivoting',
-            title: 'Pivoting',
-            plan: 'premium',
-            planned: true,
-          },
+          { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
+          { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
         ],
       },
       {
         pathname: '/x/react-data-grid/server-side-data-group',
         title: 'Server-side data',
-        planned: true,
+        plan: 'pro',
         children: [
-          { pathname: '/x/react-data-grid/server-side-data', title: 'Overview', planned: true },
+          { pathname: '/x/react-data-grid/server-side-data', title: 'Overview' },
+          { pathname: '/x/react-data-grid/server-side-data/tree-data', plan: 'pro' },
           {
             pathname: '/x/react-data-grid/server-side-data/lazy-loading',
-            title: 'Lazy loading',
             plan: 'pro',
             planned: true,
           },
           {
             pathname: '/x/react-data-grid/server-side-data/infinite-loading',
-            title: 'Infinite loading',
-            plan: 'pro',
-            planned: true,
-          },
-          {
-            pathname: '/x/react-data-grid/server-side-data/tree-data',
-            title: 'Tree data',
             plan: 'pro',
             planned: true,
           },
           {
             pathname: '/x/react-data-grid/server-side-data/row-grouping',
-            title: 'Row grouping',
             plan: 'pro',
             planned: true,
           },
           {
             pathname: '/x/react-data-grid/server-side-data/aggregation',
-            title: 'Aggregation',
             plan: 'premium',
             planned: true,
           },
         ],
       },
       {
-        title: 'Advanced',
         pathname: '/x/react-data-grid/advanced',
         children: [
           { pathname: '/x/react-data-grid/api-object', title: 'API object' },
@@ -165,7 +151,6 @@ const pages: MuiPage[] = [
         ],
       },
       {
-        title: 'Recipes',
         pathname: '/x/react-data-grid/recipes',
         children: [
           { pathname: '/x/react-data-grid/recipes-editing', title: 'Editing' },
@@ -245,6 +230,7 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-date-pickers', title: 'Overview' },
       { pathname: '/x/react-date-pickers/getting-started' },
       { pathname: '/x/react-date-pickers/base-concepts' },
+      { pathname: '/x/react-date-pickers/accessibility' },
       { pathname: '/x/react-date-pickers/faq', title: 'FAQ' },
       {
         pathname: '/x/react-date-pickers-components',
@@ -312,7 +298,8 @@ const pages: MuiPage[] = [
             children: [
               {
                 pathname: '/x/react-date-pickers/time-range-picker',
-                title: 'Time Range Picker 🚧',
+                title: 'Time Range Picker',
+                planned: true,
               },
               {
                 pathname: '/x/react-date-pickers/time-range-field',
@@ -367,7 +354,7 @@ const pages: MuiPage[] = [
           },
           {
             pathname: '/x/react-date-pickers/timezone',
-            title: 'UTC and timezone',
+            title: 'UTC and timezones',
           },
           { pathname: '/x/react-date-pickers/calendar-systems' },
         ],
@@ -436,18 +423,31 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts/sparkline',
             title: 'Sparkline',
           },
-          { pathname: '/x/react-charts/gauge', title: 'Gauge' },
+          { pathname: '/x/react-charts/gauge' },
+          {
+            pathname: '/x/react-charts/heatmap',
+            title: 'Heatmap',
+            plan: 'pro',
+            unstable: true,
+          },
           {
             pathname: '/x/react-charts/common-features',
             subheader: 'Common features',
             children: [
-              { pathname: '/x/react-charts/axis', title: 'Axis' },
+              { pathname: '/x/react-charts/axis' },
               { pathname: '/x/react-charts/components', title: 'Custom components' },
-              { pathname: '/x/react-charts/composition', title: 'Composition' },
-              { pathname: '/x/react-charts/legend', title: 'Legend' },
-              { pathname: '/x/react-charts/stacking', title: 'Stacking' },
-              { pathname: '/x/react-charts/styling', title: 'Styling' },
+              { pathname: '/x/react-charts/composition' },
+              { pathname: '/x/react-charts/label' },
+              { pathname: '/x/react-charts/legend' },
+              { pathname: '/x/react-charts/stacking' },
+              { pathname: '/x/react-charts/styling' },
               { pathname: '/x/react-charts/tooltip', title: 'Tooltip & Highlights' },
+              {
+                pathname: '/x/react-charts/zoom-and-pan',
+                title: 'Zoom & Pan',
+                plan: 'pro',
+                unstable: true,
+              },
             ],
           },
           {
@@ -472,17 +472,11 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts-future',
             subheader: 'Future components',
             children: [
-              { pathname: '/x/react-charts/radar', title: 'Radar', planned: true },
-              { pathname: '/x/react-charts/tree-map', title: 'Treemap', planned: true },
-              {
-                pathname: '/x/react-charts/heat-map',
-                title: 'Heatmap',
-                plan: 'pro',
-                planned: true,
-              },
-              { pathname: '/x/react-charts/funnel', title: 'Funnel', plan: 'pro', planned: true },
-              { pathname: '/x/react-charts/sankey', title: 'Sankey', plan: 'pro', planned: true },
-              { pathname: '/x/react-charts/gantt', title: 'Gantt', plan: 'pro', planned: true },
+              { pathname: '/x/react-charts/radar', planned: true },
+              { pathname: '/x/react-charts/treemap', title: 'Treemap', planned: true },
+              { pathname: '/x/react-charts/funnel', plan: 'pro', planned: true },
+              { pathname: '/x/react-charts/sankey', plan: 'pro', planned: true },
+              { pathname: '/x/react-charts/gantt', plan: 'pro', planned: true },
             ],
           },
         ],
@@ -516,6 +510,16 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/rich-tree-view/expansion' },
           { pathname: '/x/react-tree-view/rich-tree-view/customization' },
           { pathname: '/x/react-tree-view/rich-tree-view/focus' },
+          { pathname: '/x/react-tree-view/rich-tree-view/editing' },
+          { pathname: '/x/react-tree-view/rich-tree-view/ordering', plan: 'pro' },
+        ],
+      },
+      {
+        pathname: '/x/react-tree-view/common-features',
+        subheader: 'Common features',
+        children: [
+          { pathname: '/x/react-tree-view/accessibility' },
+          { pathname: '/x/react-tree-view/tree-item-customization', title: 'Item customization' },
         ],
       },
       {

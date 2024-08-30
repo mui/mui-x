@@ -6,12 +6,12 @@ import {
 } from '@mui/utils';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useTimeout from '@mui/utils/useTimeout';
-import { useTheme, Theme } from '@mui/material/styles';
+import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
+import { useRtl } from '@mui/system/RtlProvider';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { useResizeObserver } from '../../utils/useResizeObserver';
 import { useRunOnce } from '../../utils/useRunOnce';
 import {
   gridVisibleColumnDefinitionsSelector,
@@ -25,6 +25,7 @@ import { GridPinnedRowsPosition } from '../rows/gridRowsInterfaces';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
 import { useGridApiEventHandler } from '../../utils';
+import * as platform from '../../../utils/platform';
 import { clamp, range } from '../../../utils/utils';
 import type {
   GridRenderContext,
@@ -67,7 +68,7 @@ const EMPTY_SCROLL_POSITION = { top: 0, left: 0 };
 export const EMPTY_DETAIL_PANELS = Object.freeze(new Map<GridRowId, React.ReactNode>());
 
 const createScrollCache = (
-  mode: 'ltr' | 'rtl',
+  isRtl: boolean,
   rowBufferPx: number,
   columnBufferPx: number,
   verticalBuffer: number,
@@ -75,7 +76,7 @@ const createScrollCache = (
 ) => ({
   direction: ScrollDirection.NONE,
   buffer: bufferForDirection(
-    mode,
+    isRtl,
     ScrollDirection.NONE,
     rowBufferPx,
     columnBufferPx,
@@ -85,7 +86,14 @@ const createScrollCache = (
 });
 type ScrollCache = ReturnType<typeof createScrollCache>;
 
-const isJSDOM = typeof window !== 'undefined' ? /jsdom/.test(window.navigator.userAgent) : false;
+let isJSDOM = false;
+try {
+  if (typeof window !== 'undefined') {
+    isJSDOM = /jsdom/.test(window.navigator.userAgent);
+  }
+} catch (_) {
+  /* ignore */
+}
 
 export const useGridVirtualScroller = () => {
   const apiRef = useGridPrivateApiContext() as React.MutableRefObject<PrivateApiWithInfiniteLoader>;
@@ -101,7 +109,7 @@ export const useGridVirtualScroller = () => {
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
 
-  const theme = useTheme();
+  const isRtl = useRtl();
   const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
   const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
@@ -141,7 +149,7 @@ export const useGridVirtualScroller = () => {
   const frozenContext = React.useRef<GridRenderContext | undefined>(undefined);
   const scrollCache = useLazyRef(() =>
     createScrollCache(
-      theme.direction,
+      isRtl,
       rootProps.rowBufferPx,
       rootProps.columnBufferPx,
       dimensions.rowHeight * 15,
@@ -246,7 +254,7 @@ export const useGridVirtualScroller = () => {
 
     scrollCache.direction = direction;
     scrollCache.buffer = bufferForDirection(
-      theme.direction,
+      isRtl,
       direction,
       rootProps.rowBufferPx,
       rootProps.columnBufferPx,
@@ -270,6 +278,8 @@ export const useGridVirtualScroller = () => {
   const forceUpdateRenderContext = () => {
     const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
     const nextRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
+    // Reset the frozen context when the render context changes, see the illustration in https://github.com/mui/mui-x/pull/12353
+    frozenContext.current = undefined;
     updateRenderContext(nextRenderContext);
   };
 
@@ -280,12 +290,12 @@ export const useGridVirtualScroller = () => {
     if (scrollTop < 0) {
       return;
     }
-    if (theme.direction === 'ltr') {
+    if (!isRtl) {
       if (scrollLeft < 0) {
         return;
       }
     }
-    if (theme.direction === 'rtl') {
+    if (isRtl) {
       if (scrollLeft > 0) {
         return;
       }
@@ -368,6 +378,7 @@ export const useGridVirtualScroller = () => {
 
     rowIndexes.forEach((rowIndexInPage) => {
       const { id, model } = rowModels[rowIndexInPage];
+      const rowIndex = (currentPage?.range?.firstRowIndex || 0) + rowIndexOffset + rowIndexInPage;
 
       // NOTE: This is an expensive feature, the colSpan code could be optimized.
       if (hasColSpan) {
@@ -419,6 +430,7 @@ export const useGridVirtualScroller = () => {
       }
 
       let isLastVisible = false;
+      const isLastVisibleInSection = rowIndexInPage === rowModels.length - 1;
       if (isLastSection) {
         if (!isPinnedSection) {
           const lastIndex = currentPage.rows.length - 1;
@@ -428,7 +440,7 @@ export const useGridVirtualScroller = () => {
             isLastVisible = true;
           }
         } else {
-          isLastVisible = rowIndexInPage === rowModels.length - 1;
+          isLastVisible = isLastVisibleInSection;
         }
       }
 
@@ -454,11 +466,10 @@ export const useGridVirtualScroller = () => {
       const offsetLeft = computeOffsetLeft(
         columnPositions,
         currentRenderContext,
-        theme.direction,
+        isRtl,
         pinnedColumns.left.length,
       );
-
-      const rowIndex = (currentPage?.range?.firstRowIndex || 0) + rowIndexOffset + rowIndexInPage;
+      const showBottomBorder = isLastVisibleInSection && params.position === 'top';
 
       rows.push(
         <rootProps.slots.row
@@ -479,9 +490,14 @@ export const useGridVirtualScroller = () => {
           isFirstVisible={isFirstVisible}
           isLastVisible={isLastVisible}
           isNotVisible={isNotVisible}
+          showBottomBorder={showBottomBorder}
           {...rowProps}
         />,
       );
+
+      if (isNotVisible) {
+        return;
+      }
 
       const panel = panels.get(id);
       if (panel) {
@@ -506,22 +522,13 @@ export const useGridVirtualScroller = () => {
   );
 
   const contentSize = React.useMemo(() => {
-    // In cases where the columns exceed the available width,
-    // the horizontal scrollbar should be shown even when there're no rows.
-    // Keeping 1px as minimum height ensures that the scrollbar will visible if necessary.
-    const height = Math.max(contentHeight, 1);
-
     const size: React.CSSProperties = {
       width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
-      height,
+      height: contentHeight,
     };
 
-    if (rootProps.autoHeight) {
-      if (currentPage.rows.length === 0) {
-        size.height = getMinimalContentHeight(apiRef); // Give room to show the overlay when there no rows.
-      } else {
-        size.height = contentHeight;
-      }
+    if (rootProps.autoHeight && currentPage.rows.length === 0) {
+      size.height = getMinimalContentHeight(apiRef); // Give room to show the overlay when there no rows.
     }
 
     return size;
@@ -581,12 +588,14 @@ export const useGridVirtualScroller = () => {
     }),
     getScrollerProps: () => ({
       ref: scrollerRef,
-      tabIndex: -1,
       onScroll: handleScroll,
       onWheel: handleWheel,
       onTouchMove: handleTouchMove,
       style: scrollerStyle,
       role: 'presentation',
+      // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
+      // https://github.com/mui/mui-x/pull/13891#discussion_r1683416024
+      tabIndex: platform.isFirefox ? -1 : undefined,
     }),
     getContentProps: () => ({
       style: contentSize,
@@ -934,10 +943,10 @@ export function areRenderContextsEqual(context1: GridRenderContext, context2: Gr
 export function computeOffsetLeft(
   columnPositions: number[],
   renderContext: GridColumnsRenderContext,
-  direction: Theme['direction'],
+  isRtl: boolean,
   pinnedLeftLength: number,
 ) {
-  const factor = direction === 'ltr' ? 1 : -1;
+  const factor = isRtl ? -1 : 1;
   const left =
     factor * (columnPositions[renderContext.firstColumnIndex] ?? 0) -
     (columnPositions[pinnedLeftLength] ?? 0);
@@ -967,14 +976,14 @@ function directionForDelta(dx: number, dy: number) {
 }
 
 function bufferForDirection(
-  mode: 'ltr' | 'rtl',
+  isRtl: boolean,
   direction: ScrollDirection,
   rowBufferPx: number,
   columnBufferPx: number,
   verticalBuffer: number,
   horizontalBuffer: number,
 ) {
-  if (mode === 'rtl') {
+  if (isRtl) {
     switch (direction) {
       case ScrollDirection.LEFT:
         direction = ScrollDirection.RIGHT;

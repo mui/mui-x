@@ -7,9 +7,11 @@ import {
   isInternalTimeView,
   PickerViewRenderer,
   PickerViewsRendererProps,
+  resolveDateTimeFormat,
+  useUtils,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { resolveComponentProps } from '@mui/base/utils';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
 import {
   renderDigitalClockTimeView,
@@ -138,6 +140,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
   inProps: DesktopDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const utils = useUtils<TDate>();
   // Props with the default values common to all date time range pickers
   const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
     TDate,
@@ -170,6 +173,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     ...defaultizedProps,
     views,
     viewRenderers,
+    format: resolveDateTimeFormat(utils, defaultizedProps, true),
     // force true to correctly handle `renderTimeViewClock` as a renderer
     ampmInClock: true,
     calendars: defaultizedProps.calendars ?? 1,
@@ -220,7 +224,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
 DesktopDateTimeRangePicker.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
@@ -355,6 +359,7 @@ DesktopDateTimeRangePicker.propTypes = {
   localeText: PropTypes.object,
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
@@ -368,6 +373,7 @@ DesktopDateTimeRangePicker.propTypes = {
   maxTime: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**
@@ -392,7 +398,9 @@ DesktopDateTimeRangePicker.propTypes = {
   /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onAccept: PropTypes.func,
   /**

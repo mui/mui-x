@@ -18,7 +18,7 @@ export type ZAxisContextProviderProps = {
 };
 
 type DefaultizedZAxisConfig = {
-  [axisKey: string]: ZAxisDefaultized;
+  [axisId: string]: ZAxisDefaultized;
 };
 
 export const ZAxisContext = React.createContext<{
@@ -47,7 +47,7 @@ function ZAxisContextProvider(props: ZAxisContextProviderProps) {
           return axisConfig;
         }
         if (dataset === undefined) {
-          throw Error('MUI X Charts: z-axis uses `dataKey` but no `dataset` is provided.');
+          throw Error('MUI X: z-axis uses `dataKey` but no `dataset` is provided.');
         }
         return {
           ...axisConfig,
@@ -69,7 +69,11 @@ function ZAxisContextProvider(props: ZAxisContextProviderProps) {
           axis.colorMap &&
           (axis.colorMap.type === 'ordinal' && axis.data
             ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
-            : getColorScale(axis.colorMap)),
+            : getColorScale(
+                axis.colorMap.type === 'continuous'
+                  ? { min: axis.min, max: axis.max, ...axis.colorMap }
+                  : axis.colorMap,
+              )),
       };
     });
 
@@ -85,7 +89,7 @@ function ZAxisContextProvider(props: ZAxisContextProviderProps) {
 ZAxisContextProvider.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
   /**
@@ -98,6 +102,15 @@ ZAxisContextProvider.propTypes = {
   zAxis: PropTypes.arrayOf(
     PropTypes.shape({
       colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
         PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
@@ -114,19 +127,12 @@ ZAxisContextProvider.propTypes = {
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
         }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
-        }),
       ]),
       data: PropTypes.array,
       dataKey: PropTypes.string,
       id: PropTypes.string,
+      max: PropTypes.number,
+      min: PropTypes.number,
     }),
   ),
 } as any;

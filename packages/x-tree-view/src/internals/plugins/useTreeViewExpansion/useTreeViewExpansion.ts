@@ -18,7 +18,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     return temp;
   }, [models.expandedItems.value]);
 
-  const setExpandedItems = (event: React.SyntheticEvent, value: string[]) => {
+  const setExpandedItems = (event: React.SyntheticEvent, value: TreeViewItemId[]) => {
     params.onExpandedItemsChange?.(event, value);
     models.expandedItems.setControlledValue(value);
   };
@@ -33,13 +33,15 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     [instance],
   );
 
-  const toggleItemExpansion = useEventCallback((event: React.SyntheticEvent, itemId: string) => {
-    const isExpandedBefore = instance.isItemExpanded(itemId);
-    instance.setItemExpansion(event, itemId, !isExpandedBefore);
-  });
+  const toggleItemExpansion = useEventCallback(
+    (event: React.SyntheticEvent, itemId: TreeViewItemId) => {
+      const isExpandedBefore = instance.isItemExpanded(itemId);
+      instance.setItemExpansion(event, itemId, !isExpandedBefore);
+    },
+  );
 
   const setItemExpansion = useEventCallback(
-    (event: React.SyntheticEvent, itemId: string, isExpanded: boolean) => {
+    (event: React.SyntheticEvent, itemId: TreeViewItemId, isExpanded: boolean) => {
       const isExpandedBefore = instance.isItemExpanded(itemId);
       if (isExpandedBefore === isExpanded) {
         return;
@@ -60,7 +62,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     },
   );
 
-  const expandAllSiblings = (event: React.KeyboardEvent, itemId: string) => {
+  const expandAllSiblings = (event: React.KeyboardEvent, itemId: TreeViewItemId) => {
     const itemMeta = instance.getItemMeta(itemId);
     const siblings = instance.getItemOrderedChildrenIds(itemMeta.parentId);
 
@@ -81,6 +83,18 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     }
   };
 
+  const expansionTrigger = React.useMemo(() => {
+    if (params.expansionTrigger) {
+      return params.expansionTrigger;
+    }
+
+    if (instance.isTreeViewEditable) {
+      return 'iconContainer';
+    }
+
+    return 'content';
+  }, [params.expansionTrigger, instance.isTreeViewEditable]);
+
   return {
     publicAPI: {
       setItemExpansion,
@@ -91,6 +105,11 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
       setItemExpansion,
       toggleItemExpansion,
       expandAllSiblings,
+    },
+    contextValue: {
+      expansion: {
+        expansionTrigger,
+      },
     },
   };
 };
@@ -113,4 +132,5 @@ useTreeViewExpansion.params = {
   defaultExpandedItems: true,
   onExpandedItemsChange: true,
   onItemExpansionToggle: true,
+  expansionTrigger: true,
 };

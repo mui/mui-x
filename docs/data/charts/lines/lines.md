@@ -1,7 +1,7 @@
 ---
 title: React Line chart
 productId: x-charts
-components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot, AnimatedLine, AnimatedArea, ChartsOnAxisClickHandler, ChartsGrid
+components: LineChart, LineChartPro, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot, AnimatedLine, AnimatedArea, ChartsOnAxisClickHandler, ChartsGrid
 ---
 
 # Charts - Lines
@@ -174,6 +174,20 @@ This series property adds the option to control the interpolation of a series.
 Different series could even have different interpolations.
 
 {{"demo": "InterpolationDemoNoSnap.js", "hideToolbar": true}}
+
+### Baseline
+
+The area chart draws a `baseline` on the Y axis `0`.
+This is useful as a base value, but customized visualizations may require a different baseline.
+
+To get the area filling the space above or below the line, set `baseline` to `"min"` or `"max"`.
+It is also possible to provide a `number` value to fix the baseline at the desired position.
+
+:::warning
+The `baseline` should not be used with stacked areas, as it will not work as expected.
+:::
+
+{{"demo": "AreaBaseline.js"}}
 
 ### Optimization
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
@@ -214,8 +214,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
       reduceAnimations,
       timezone,
       labelId: gridLabelId,
-      slots,
-      slotProps,
     },
     ownerState: props,
   });
@@ -311,6 +309,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
     disabled,
     timezone,
     gridLabelId,
+    slots,
+    slotProps,
   };
 
   const prevOpenViewRef = React.useRef(view);
@@ -336,7 +336,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
       ownerState={ownerState}
       {...other}
     >
-      <CalendarHeader {...calendarHeaderProps} />
+      <CalendarHeader {...calendarHeaderProps} slots={slots} slotProps={slotProps} />
       <DateCalendarViewTransitionContainer
         reduceAnimations={reduceAnimations}
         className={classes.viewTransitionContainer}
@@ -392,8 +392,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
               fixedWeekNumber={fixedWeekNumber}
               dayOfWeekFormatter={dayOfWeekFormatter}
               displayWeekNumber={displayWeekNumber}
-              slots={slots}
-              slotProps={slotProps}
               loading={loading}
               renderLoading={renderLoading}
             />
@@ -407,7 +405,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
 DateCalendar.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * If `true`, the main element is focused during the first mount.
@@ -474,10 +472,12 @@ DateCalendar.propTypes = {
   loading: PropTypes.bool,
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**

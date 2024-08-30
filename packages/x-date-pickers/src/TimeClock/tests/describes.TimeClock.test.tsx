@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen } from '@mui-internal/test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   clockPointerClasses,
   TimeClock,
   timeClockClasses as classes,
 } from '@mui/x-date-pickers/TimeClock';
 import {
-  wrapPickerMount,
   createPickerRenderer,
   adapterToUse,
   timeClockHandler,
@@ -21,11 +20,10 @@ describe('<TimeClock /> - Describes', () => {
   describeConformance(<TimeClock />, () => ({
     classes,
     inheritComponent: 'div',
-    wrapMount: wrapPickerMount,
     render,
     refInstanceof: window.HTMLDivElement,
     muiName: 'MuiTimeClock',
-    skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
+    skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
   describeValue(TimeClock, () => ({

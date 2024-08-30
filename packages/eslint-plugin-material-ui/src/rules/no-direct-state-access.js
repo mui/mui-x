@@ -1,4 +1,4 @@
-const { ESLintUtils, AST_NODE_TYPES } = require('@typescript-eslint/experimental-utils');
+const { ESLintUtils, AST_NODE_TYPES } = require('@typescript-eslint/utils');
 
 const createESLintRule = ESLintUtils.RuleCreator(() => ``);
 

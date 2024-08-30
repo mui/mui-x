@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
+import { SlotComponentPropsFromProps } from '../internals/SlotComponentPropsFromProps';
 import { ChartsLoadingOverlay } from './ChartsLoadingOverlay';
 import { useSeries } from '../hooks/useSeries';
 import { SeriesId } from '../models/seriesType/common';
@@ -39,17 +40,25 @@ export interface ChartsOverlaySlots {
   noDataOverlay?: React.ElementType<CommonOverlayProps>;
 }
 export interface ChartsOverlaySlotProps {
-  loadingOverlay?: Partial<CommonOverlayProps>;
-  noDataOverlay?: Partial<CommonOverlayProps>;
+  loadingOverlay?: SlotComponentPropsFromProps<CommonOverlayProps, {}, {}>;
+  noDataOverlay?: SlotComponentPropsFromProps<CommonOverlayProps, {}, {}>;
 }
 
 export interface ChartsOverlayProps {
   /**
    * If `true`, a loading overlay is displayed.
+   * @default false
    */
   loading?: boolean;
-
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: ChartsOverlaySlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ChartsOverlaySlotProps;
 }
 

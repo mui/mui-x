@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen } from '@mui-internal/test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
-  wrapPickerMount,
   adapterToUse,
   digitalClockHandler,
   describeValidation,
   describeValue,
   formatFullTimeValue,
 } from 'test/utils/pickers';
-import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
+import { DigitalClock, digitalClockClasses as classes } from '@mui/x-date-pickers/DigitalClock';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DigitalClock /> - Describes', () => {
@@ -25,22 +24,12 @@ describe('<DigitalClock /> - Describes', () => {
   }));
 
   describeConformance(<DigitalClock />, () => ({
-    classes: {} as any,
+    classes,
+    inheritComponent: 'div',
     render,
     muiName: 'MuiDigitalClock',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
-    skip: [
-      'componentProp',
-      'componentsProp',
-      'themeDefaultProps',
-      'themeStyleOverrides',
-      'themeVariants',
-      'mergeClassName',
-      'propsSpread',
-      'rootClass',
-      'reactTestRenderer',
-    ],
+    skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
   describeValue(DigitalClock, () => ({

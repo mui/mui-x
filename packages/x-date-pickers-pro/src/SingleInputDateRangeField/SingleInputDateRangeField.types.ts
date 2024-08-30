@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import TextField from '@mui/material/TextField';
 import { UseFieldInternalProps } from '@mui/x-date-pickers/internals';
 import { BuiltInFieldTextFieldProps, PickerValidDate } from '@mui/x-date-pickers/models';
@@ -8,8 +8,12 @@ import {
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
 } from '@mui/x-date-pickers/hooks';
-import { UseDateRangeFieldProps } from '../internals/models';
-import type { DateRange, RangeFieldSection, DateRangeValidationError } from '../models';
+import type {
+  DateRange,
+  RangeFieldSection,
+  DateRangeValidationError,
+  UseDateRangeFieldProps,
+} from '../models';
 
 export interface UseSingleInputDateRangeFieldProps<
   TDate extends PickerValidDate,
