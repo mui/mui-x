@@ -10,7 +10,7 @@ const reselectCreateSelector = createSelectorCreator({
   memoizeOptions: {
     maxSize: 1,
     equalityCheck: Object.is,
-  }
+  },
 });
 
 // TODO v8: Remove this type
