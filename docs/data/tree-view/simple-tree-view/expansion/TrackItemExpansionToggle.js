@@ -21,7 +21,6 @@ export default function TrackItemExpansionToggle() {
           Last action: {action.isExpanded ? 'expand' : 'collapse'} {action.itemId}
         </Typography>
       )}
-
       <Box sx={{ minHeight: 352, minWidth: 250 }}>
         <SimpleTreeView onItemExpansionToggle={handleItemExpansionToggle}>
           <TreeItem itemId="grid" label="Data Grid">
