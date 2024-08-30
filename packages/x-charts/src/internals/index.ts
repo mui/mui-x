@@ -5,7 +5,6 @@ export * from '../ResponsiveChartContainer/useChartContainerDimensions';
 export * from '../ResponsiveChartContainer/ResizableContainer';
 
 // hooks
-export { useReducedMotion } from '../hooks/useReducedMotion';
 export { useSeries } from '../hooks/useSeries';
 export { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 export { useDrawingArea } from '../hooks/useDrawingArea';
