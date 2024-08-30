@@ -142,5 +142,8 @@
     "/components/backdrop": "Backdrop",
     "/components/alert": "Alert",
     "/components/pagination": "Pagination"
+  },
+  "api-docs": {
+    "interfacePageDescription": "API reference docs for the {{name}} interface. Learn about the properties other APIs of this exported module."
   }
 }

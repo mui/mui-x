@@ -116,7 +116,7 @@ export default function ApiPage(props: ApiPageProps) {
   const { demos, properties } = pageContent;
 
   const { propertiesDescriptions, interfaceDescription } = descriptions[userLanguage];
-  const description = t('api-docs.pageDescription').replace(/{{name}}/, pageContent.name);
+  const description = t('api-docs.interfacePageDescription').replace(/{{name}}/, pageContent.name);
 
   return (
     <AppLayoutDocs
@@ -134,7 +134,7 @@ export default function ApiPage(props: ApiPageProps) {
           component="p"
           className="description"
           gutterBottom
-          dangerouslySetInnerHTML={{ __html: interfaceDescription }}
+          dangerouslySetInnerHTML={{ __html: description }}
         />
         <Heading hash="demos" />
         {demos && (
@@ -185,6 +185,18 @@ export default function ApiPage(props: ApiPageProps) {
 `)}
           language="jsx"
         />
+
+        {interfaceDescription ? (
+          <React.Fragment>
+            <br />
+            <br />
+            <span
+              dangerouslySetInnerHTML={{
+                __html: interfaceDescription,
+              }}
+            />
+          </React.Fragment>
+        ) : null}
 
         <PropertiesSection
           properties={getInterfaceApiDefinitions({
