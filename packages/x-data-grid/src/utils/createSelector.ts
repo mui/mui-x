@@ -9,6 +9,7 @@ const reselectCreateSelector = createSelectorCreator({
   memoize: lruMemoize,
   memoizeOptions: {
     maxSize: 1,
+    equalityCheck: Object.is,
   }
 });
 
