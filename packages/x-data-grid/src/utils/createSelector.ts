@@ -11,6 +11,10 @@ const reselectCreateSelector = createSelectorCreator({
     maxSize: 1,
     equalityCheck: Object.is,
   },
+  devModeChecks: {
+    inputStabilityCheck: 'once',
+    identityFunctionCheck: 'once',
+  },
 });
 
 // TODO v8: Remove this type
