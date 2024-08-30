@@ -51,7 +51,7 @@
     "@types/format-util": "^1.0.4",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
-    "reselect": "^4.1.8"
+    "reselect": "^5.1.0"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
