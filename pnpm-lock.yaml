@@ -6,7 +6,7 @@ settings:
 
 overrides:
   react-is: ^18.3.1
-  '@types/node': ^18.19.46
+  '@types/node': ^18.19.47
 
 patchedDependencies:
   babel-plugin-replace-imports@1.0.2:
@@ -141,7 +141,7 @@ importers:
         specifier: ^10.0.7
         version: 10.0.7
       '@types/node':
-        specifier: ^18.19.46
+        specifier: ^18.19.47
         version: 18.19.47
       '@types/react':
         specifier: ^18.3.4
@@ -9830,7 +9830,7 @@ packages:
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
-      '@types/node': ^18.19.46
+      '@types/node': ^18.19.47
       less: '*'
       lightningcss: ^1.21.0
       sass: '*'
@@ -9859,7 +9859,7 @@ packages:
     hasBin: true
     peerDependencies:
       '@edge-runtime/vm': '*'
-      '@types/node': ^18.19.46
+      '@types/node': ^18.19.47
       '@vitest/browser': 2.0.5
       '@vitest/ui': 2.0.5
       happy-dom: '*'
