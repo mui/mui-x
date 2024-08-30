@@ -155,6 +155,11 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
       <Container
         ref={useForkRef(ref, scrollbarRef)}
         className={classes.root}
+        style={
+          props.position === 'vertical' && rootProps.mobileView
+            ? { height: '100%', top: 0 }
+            : undefined
+        }
         tabIndex={-1}
         aria-hidden="true"
       >

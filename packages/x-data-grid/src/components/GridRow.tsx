@@ -439,12 +439,24 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       ),
     );
   }
-  for (let i = renderContext.firstColumnIndex; i < renderContext.lastColumnIndex; i += 1) {
-    const column = visibleColumns[i];
-    const indexInSection = i - pinnedColumns.left.length;
+  if (rootProps.mobileView) {
+    cells.push(
+      getCell(
+        { ...rootProps.mobileColDef!, computedWidth: dimensions.viewportInnerSize.width },
+        0,
+        0,
+        1,
+      ),
+    );
+  } else {
+    for (let i = renderContext.firstColumnIndex; i < renderContext.lastColumnIndex; i += 1) {
+      const column = visibleColumns[i];
+      const indexInSection = i - pinnedColumns.left.length;
 
-    cells.push(getCell(column, indexInSection, i, middleColumnsLength));
+      cells.push(getCell(column, indexInSection, i, middleColumnsLength));
+    }
   }
+
   if (hasVirtualFocusCellRight) {
     cells.push(
       getCell(

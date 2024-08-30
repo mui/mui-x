@@ -383,6 +383,10 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * @default false
    */
   disableAutosize: boolean;
+  /**
+   * If `true`, the horizontal scroll is disabled and a single column is displayed.
+   */
+  mobileView: boolean;
 }
 
 /**
@@ -808,6 +812,10 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnWidthChange?: GridEventListener<'columnWidthChange'>;
+  /**
+   * Definition of the column rendered when `mobileView` is enabled.
+   */
+  mobileColDef?: GridColDef;
 }
 
 export interface DataGridProSharedPropsWithDefaultValue {

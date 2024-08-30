@@ -515,10 +515,10 @@ export const useGridVirtualScroller = () => {
   const scrollerStyle = React.useMemo(
     () =>
       ({
-        overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
+        overflowX: !needsHorizontalScrollbar || rootProps.mobileView ? 'hidden' : undefined,
         overflowY: rootProps.autoHeight ? 'hidden' : undefined,
       }) as React.CSSProperties,
-    [needsHorizontalScrollbar, rootProps.autoHeight],
+    [needsHorizontalScrollbar, rootProps.autoHeight, rootProps.mobileView],
   );
 
   const contentSize = React.useMemo(() => {
