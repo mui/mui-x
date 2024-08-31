@@ -7,6 +7,7 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { gridFilteredSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { gridColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
+import { gridRowsLookupSelector } from './gridRowsSelector';
 
 export interface GridRowSpanningState {
   spannedCells: Record<GridRowId, Record<GridColDef['field'], number>>;
@@ -14,6 +15,7 @@ export interface GridRowSpanningState {
 }
 
 const EMPTY_STATE = { spannedCells: {}, hiddenCells: {} };
+const skippedFields = new Set(['__check__']);
 
 export const rowSpanningStateInitializer: GridStateInitializer = (state) => {
   return {
@@ -27,8 +29,11 @@ const getCellValue = (
   colDef: GridColDef,
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ) => {
-  const row = apiRef.current.getRow(rowId);
-  let cellValue = row?.[colDef.field];
+  const row = gridRowsLookupSelector(apiRef)[rowId];
+  if (!row) {
+    return null;
+  }
+  let cellValue = row[colDef.field];
   const valueGetter = colDef.rowSpanValueGetter ?? colDef.valueGetter;
   if (valueGetter) {
     cellValue = valueGetter(cellValue as never, row, colDef, apiRef);
@@ -52,6 +57,9 @@ export const useGridRowSpanning = (
     const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef);
     const colDefs = gridColumnDefinitionsSelector(apiRef);
     colDefs.forEach((colDef) => {
+      if (skippedFields.has(colDef.field)) {
+        return;
+      }
       // TODO Perf: Process rendered rows first and lazily process the rest
       filteredSortedRowIds.forEach((rowId, index) => {
         if (hiddenCells[rowId]?.[colDef.field]) {
