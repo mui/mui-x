@@ -6,7 +6,6 @@ import {
   GridEventListener,
   getDataGridUtilityClass,
   useGridSelector,
-  gridSortModelSelector,
   gridRowMaximumTreeDepthSelector,
   useGridApiOptionHandler,
   GridRowId,
@@ -55,7 +54,6 @@ export const useGridRowReorder = (
   props: Pick<DataGridProProcessedProps, 'rowReordering' | 'onRowOrderChange' | 'classes'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridRowReorder');
-  const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
   const dragRowNode = React.useRef<HTMLElement | null>(null);
   const originRowIndex = React.useRef<number | null>(null);
@@ -73,8 +71,8 @@ export const useGridRowReorder = (
   // TODO: remove sortModel check once row reorder is sorting compatible
   // remove treeDepth once row reorder is tree compatible
   const isRowReorderDisabled = React.useMemo((): boolean => {
-    return !props.rowReordering || !!sortModel.length || treeDepth !== 1;
-  }, [props.rowReordering, sortModel, treeDepth]);
+    return !props.rowReordering || treeDepth !== 1;
+  }, [props.rowReordering, treeDepth]);
 
   const handleDragStart = React.useCallback<GridEventListener<'rowDragStart'>>(
     (params, event) => {
@@ -117,6 +115,8 @@ export const useGridRowReorder = (
       }
 
       logger.debug(`Dragging over row ${params.id}`);
+      // eslint-disable-next-line no-console
+      console.log(`Dragging over row ${params.id}`)
       event.preventDefault();
       // Prevent drag events propagation.
       // For more information check here https://github.com/mui/mui-x/issues/2680.

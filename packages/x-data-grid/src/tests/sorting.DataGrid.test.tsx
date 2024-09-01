@@ -506,7 +506,7 @@ describe('<DataGrid /> - Sorting', () => {
       );
     }
 
-    const { setProps } = render(<TestCase sortModel={[{ field: 'brand', sort: 'asc' }]} />);
+    const { setProps } = render(<TestCase sortModel={[{ field: 'brand', sort: 'asc' }]}/>);
 
     expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     setProps({ sortModel: [] });
@@ -797,5 +797,38 @@ describe('<DataGrid /> - Sorting', () => {
       fireEvent.click(header);
       expect(getColumnValues(0)).to.deep.equal(['b', 'a', '', '']);
     });
+  });
+
+  // Row Reordering on sorted grid
+  it('should not apply sorting when rows order changes and sortModel set to empty', () => {
+    function TestCase(props: Partial<DataGridProps>) {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} {...props} />
+        </div>
+      );
+    }
+
+    const { setProps } = render(<TestCase sortModel={[{ field: 'brand', sort: 'asc' }]} rows={baselineProps.rows}/>);
+
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    setProps({ sortModel: [] , rows: [
+      {
+        id: 0,
+        brand: 'Nike',
+        isPublished: false,
+      },    
+      {
+        id: 2,
+        brand: 'Puma',
+        isPublished: true,
+      },
+      {
+        id: 1,
+        brand: 'Adidas',
+        isPublished: true,
+      },
+    ], });
+    expect(getColumnValues(0)).to.deep.equal(['Nike', 'Puma', 'Adidas']);
   });
 });
