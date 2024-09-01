@@ -4,7 +4,6 @@ import { GridRowId, GridValidRowModel } from '../../../models/gridRows';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { gridColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRenderContextSelector } from '../virtualization/gridVirtualizationSelectors';
@@ -22,6 +21,16 @@ const skippedFields = new Set(['__check__', '__reorder__']);
 
 function isUninitializedRowContext(renderContext: GridRenderContext) {
   return renderContext.firstRowIndex === 0 && renderContext.lastRowIndex === 0;
+}
+
+function isRowRenderContextUpdated(
+  prevRenderContext: GridRenderContext,
+  renderContext: GridRenderContext,
+) {
+  return (
+    prevRenderContext.firstRowIndex !== renderContext.firstRowIndex ||
+    prevRenderContext.lastRowIndex !== renderContext.lastRowIndex
+  );
 }
 
 function getUnprocessedRange(
@@ -247,7 +256,7 @@ export const useGridRowSpanning = (
     if (isFirstRender.current) {
       isFirstRender.current = false;
     }
-    if (!firstRender && prevRenderContext.current !== renderContext) {
+    if (!firstRender && isRowRenderContextUpdated(prevRenderContext.current, renderContext)) {
       prevRenderContext.current = renderContext;
       updateRowSpanningState(false);
       return;
