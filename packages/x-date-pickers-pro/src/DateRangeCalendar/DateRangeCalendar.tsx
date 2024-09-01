@@ -386,7 +386,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
       return;
     }
 
-    const displayingMonthRange = calendars - 1;
+    const displayingMonthRange = calendars - currentMonthCalendarPosition;
     const currentMonthNumber = utils.getMonth(calendarState.currentMonth);
     const requestedMonthNumber = utils.getMonth(date);
 
