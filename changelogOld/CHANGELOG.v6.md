@@ -1,4 +1,4 @@
-# Change Log for v6 releases
+# Changelog for v6 releases
 
 ## 6.19.12
 

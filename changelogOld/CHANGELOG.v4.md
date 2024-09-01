@@ -1,4 +1,4 @@
-# Change Log for v4 releases
+# Changelog for v4 releases
 
 ## 4.0.0
 
