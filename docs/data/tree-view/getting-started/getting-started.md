@@ -92,7 +92,6 @@ In order to benefit from the [CSS overrides](/material-ui/customization/theme-co
 Internally, it uses module augmentation to extend the default theme structure.
 
 ```tsx
-
 import type {} from '@mui/x-tree-view/themeAugmentation';
 
 const theme = createTheme({

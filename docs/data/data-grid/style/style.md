@@ -122,7 +122,7 @@ By default, the Data Grid uses the Material UI `theme.palette.background.defaul
 
 ```tsx
 import { createTheme } from '@mui/material/styles';
-import type {} from "@mui/x-data-grid/themeAugmentation";
+import type {} from '@mui/x-data-grid/themeAugmentation';
 
 const theme = createTheme({
   mixins: {

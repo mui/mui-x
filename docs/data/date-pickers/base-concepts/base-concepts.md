@@ -155,7 +155,6 @@ To benefit from the [CSS overrides](/material-ui/customization/theme-components/
 Internally, it uses module augmentation to extend the default theme structure.
 
 ```tsx
-
 import type {} from '@mui/x-date-pickers/themeAugmentation';
 import type {} from '@mui/x-date-pickers-pro/themeAugmentation';
 
