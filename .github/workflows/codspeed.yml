@@ -17,6 +17,8 @@ on:
       - 'master'
       - 'next'
 
+permissions: {}
+
 jobs:
   benchmarks:
     name: Benchmarks Charts
@@ -26,10 +28,10 @@ jobs:
     # L3: Run the benchmarks for pull requests with the label 'component: charts'
     # Yaml syntax looks a little weird, but it is correct.
     if: >-
-      ${{ 
-          (github.event_name == 'push') || 
-          (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'component: charts') || 
-          (github.event_name == 'pull_request' && github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'component: charts')) 
+      ${{
+          (github.event_name == 'push') ||
+          (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'component: charts') ||
+          (github.event_name == 'pull_request' && github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'component: charts'))
       }}
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
