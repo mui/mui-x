@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import * as React from 'react';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { GridEventListener } from '../../../models/events';
@@ -139,45 +138,39 @@ export const useGridSorting = (
    * API METHODS
    */
   const applySorting = React.useCallback<GridSortApi['applySorting']>(() => {
-   
-   
-      apiRef.current.setState((state) => {
-        if (props.sortingMode === 'server') {
-          logger.debug('Skipping sorting rows as sortingMode = server');
-          return {
-            ...state,
-            sorting: {
-              ...state.sorting,
-              sortedRows: getTreeNodeDescendants(
-                gridRowTreeSelector(apiRef),
-                GRID_ROOT_GROUP_ID,
-                false,
-              ),
-            },
-          };
-        }
-        const sortModel = gridSortModelSelector(state, apiRef.current.instanceId);
-        const sortedRowIds = gridSortedRowIdsSelector(apiRef);
-        if(sortModel.length===0 && sortedRowIds.length>0){
-          return state
-        }
-        
-        const sortRowList = buildAggregatedSortingApplier(sortModel, apiRef);
-        const sortedRows = apiRef.current.applyStrategyProcessor('sorting', {
-          sortRowList,
-        });
-        console.log("Applying sorting...")
+    apiRef.current.setState((state) => {
+      if (props.sortingMode === 'server') {
+        logger.debug('Skipping sorting rows as sortingMode = server');
         return {
           ...state,
-          sorting: { ...state.sorting, sortedRows },
+          sorting: {
+            ...state.sorting,
+            sortedRows: getTreeNodeDescendants(
+              gridRowTreeSelector(apiRef),
+              GRID_ROOT_GROUP_ID,
+              false,
+            ),
+          },
         };
+      }
+      const sortModel = gridSortModelSelector(state, apiRef.current.instanceId);
+      const sortedRowIds = gridSortedRowIdsSelector(apiRef);
+      if (sortModel.length === 0 && sortedRowIds.length > 0) {
+        return state;
+      }
+
+      const sortRowList = buildAggregatedSortingApplier(sortModel, apiRef);
+      const sortedRows = apiRef.current.applyStrategyProcessor('sorting', {
+        sortRowList,
       });
-  
-      apiRef.current.publishEvent('sortedRowsSet');
-      apiRef.current.forceUpdate();
-      
-    
-   
+      return {
+        ...state,
+        sorting: { ...state.sorting, sortedRows },
+      };
+    });
+
+    apiRef.current.publishEvent('sortedRowsSet');
+    apiRef.current.forceUpdate();
   }, [apiRef, logger, props.sortingMode]);
 
   const setSortModel = React.useCallback<GridSortApi['setSortModel']>(
@@ -190,7 +183,6 @@ export const useGridSorting = (
         );
         apiRef.current.forceUpdate();
         apiRef.current.applySorting();
-        console.log("setting sort Model...")
       }
     },
     [apiRef, logger, props.disableMultipleColumnsSorting],

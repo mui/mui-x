@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import * as React from 'react';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -358,19 +357,14 @@ export const useGridRows = (
       }
 
       apiRef.current.setState((state) => {
-        // gridSortedRowIdsSelector
         const sortedRowIds = gridSortedRowIdsSelector(apiRef);
-        // const group = gridRowTreeSelector(state, apiRef.current.instanceId)[
-        //   GRID_ROOT_GROUP_ID
-        // ] as GridGroupNode;
-        // const allRows = group.children;
+
         const oldIndex = sortedRowIds.findIndex((row) => row === rowId);
         if (oldIndex === -1 || oldIndex === targetIndex) {
           return state;
         }
 
         logger.debug(`Moving row ${rowId} to index ${targetIndex}`);
-        console.log(`Moving row ${rowId} to index ${targetIndex}`)
 
         const updatedRows = [...sortedRowIds];
         updatedRows.splice(targetIndex, 0, updatedRows.splice(oldIndex, 1)[0]);
@@ -379,16 +373,13 @@ export const useGridRows = (
           sorting: {
             ...state.sorting,
             sortModel: [],
-            sortedRows:updatedRows
+            sortedRows: updatedRows,
           },
         };
       });
-      // apiRef.current.forceUpdate();
-      // apiRef.current.publishEvent('rowsSet');
     },
     [apiRef, logger],
   );
-
 
   const replaceRows = React.useCallback<GridRowApi['unstable_replaceRows']>(
     (firstRowToRender, newRows) => {

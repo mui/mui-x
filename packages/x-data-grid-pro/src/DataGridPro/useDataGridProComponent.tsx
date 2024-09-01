@@ -47,7 +47,7 @@ import {
   useGridVirtualization,
   useGridColumnResize,
   columnResizeStateInitializer,
-} from '../../../x-data-grid/src/internals';
+} from '@mui/x-data-grid/internals';
 import { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 // Pro-only features

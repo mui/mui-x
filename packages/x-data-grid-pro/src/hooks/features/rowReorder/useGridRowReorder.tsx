@@ -68,8 +68,7 @@ export const useGridRowReorder = (
     };
   }, []);
 
-  // TODO: remove sortModel check once row reorder is sorting compatible
-  // remove treeDepth once row reorder is tree compatible
+  // TODO: remove treeDepth once row reorder is tree compatible
   const isRowReorderDisabled = React.useMemo((): boolean => {
     return !props.rowReordering || treeDepth !== 1;
   }, [props.rowReordering, treeDepth]);
@@ -115,8 +114,6 @@ export const useGridRowReorder = (
       }
 
       logger.debug(`Dragging over row ${params.id}`);
-      // eslint-disable-next-line no-console
-      console.log(`Dragging over row ${params.id}`)
       event.preventDefault();
       // Prevent drag events propagation.
       // For more information check here https://github.com/mui/mui-x/issues/2680.
