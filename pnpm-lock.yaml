@@ -531,8 +531,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^3.6.0
+        version: 3.6.0
       date-fns-jalali:
         specifier: ^2.30.0-0
         version: 2.30.0-0
@@ -1111,8 +1111,8 @@ importers:
         specifier: ^15.7.12
         version: 15.7.12
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^3.6.0
+        version: 3.6.0
       rimraf:
         specifier: ^5.0.10
         version: 5.0.10
@@ -1232,8 +1232,8 @@ importers:
         specifier: ^15.7.12
         version: 15.7.12
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^3.6.0
+        version: 3.6.0
       date-fns-jalali:
         specifier: ^2.30.0-0
         version: 2.30.0-0
@@ -1318,8 +1318,8 @@ importers:
         specifier: ^15.7.12
         version: 15.7.12
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^3.6.0
+        version: 3.6.0
       date-fns-jalali:
         specifier: ^2.30.0-0
         version: 2.30.0-0
