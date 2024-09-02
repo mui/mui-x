@@ -1,4 +1,5 @@
 import * as React from 'react';
+import resolveProps from '@mui/utils/resolveProps';
 import {
   GridColumnLookup,
   GridColumnsState,
@@ -23,7 +24,6 @@ import { gridDensityFactorSelector } from '../density/densitySelector';
 import { gridHeaderFilteringEnabledSelector } from '../headerFiltering/gridHeaderFilteringSelectors';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import type { GridDimensions } from '../dimensions/gridDimensionsApi';
-import resolveProps from '@mui/utils/resolveProps';
 
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
