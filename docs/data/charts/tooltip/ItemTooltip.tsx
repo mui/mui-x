@@ -14,6 +14,10 @@ export function ItemTooltip() {
     return null;
   }
 
+  // The pointer type can be used to have different behavior based on pointer type.
+  const isMousePointer = mousePosition?.pointerType === 'mouse';
+  // Adapt the tooltip offset to the size of the pointer.
+  const yOffset = isMousePointer ? 0 : 40 - mousePosition.height;
   return (
     <NoSsr>
       <Popper
@@ -22,22 +26,13 @@ export function ItemTooltip() {
           zIndex: (theme) => theme.zIndex.modal,
         }}
         open
-        placement={
-          mousePosition?.pointerType === 'mouse'
-            ? ('top-end' as const)
-            : ('top' as const)
-        }
+        placement={isMousePointer ? 'top-end' : 'top'}
         anchorEl={generateVirtualElement(mousePosition)}
         modifiers={[
           {
             name: 'offset',
             options: {
-              offset: [
-                0,
-                mousePosition?.pointerType === 'touch'
-                  ? 40 - mousePosition.height
-                  : 0,
-              ],
+              offset: [0, yOffset],
             },
           },
         ]}
