@@ -18,18 +18,18 @@ export const getLeftColumnIndex = ({
   currentColIndex,
   firstColIndex,
   lastColIndex,
-  direction,
+  isRtl,
 }: {
   currentColIndex: number;
   firstColIndex: number;
   lastColIndex: number;
-  direction: 'rtl' | 'ltr';
+  isRtl: boolean;
 }) => {
-  if (direction === 'rtl') {
+  if (isRtl) {
     if (currentColIndex < lastColIndex) {
       return currentColIndex + 1;
     }
-  } else if (direction === 'ltr') {
+  } else if (!isRtl) {
     if (currentColIndex > firstColIndex) {
       return currentColIndex - 1;
     }
@@ -41,18 +41,18 @@ export const getRightColumnIndex = ({
   currentColIndex,
   firstColIndex,
   lastColIndex,
-  direction,
+  isRtl,
 }: {
   currentColIndex: number;
   firstColIndex: number;
   lastColIndex: number;
-  direction: 'rtl' | 'ltr';
+  isRtl: boolean;
 }) => {
-  if (direction === 'rtl') {
+  if (isRtl) {
     if (currentColIndex > firstColIndex) {
       return currentColIndex - 1;
     }
-  } else if (direction === 'ltr') {
+  } else if (!isRtl) {
     if (currentColIndex < lastColIndex) {
       return currentColIndex + 1;
     }

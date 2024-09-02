@@ -1,4 +1,3 @@
-import type { Theme } from '@mui/material/styles';
 import type {
   GridColumnMenuState,
   GridColumnsInitialState,
@@ -32,7 +31,7 @@ import type { GridRowSpanningState } from '../hooks/features/rows/useGridRowSpan
  * The state of `DataGrid`.
  */
 export interface GridStateCommunity {
-  theme: Theme;
+  isRtl: boolean;
   dimensions: GridDimensionsState;
   rows: GridRowsState;
   visibleRowsLookup: GridVisibleRowsLookupState;
