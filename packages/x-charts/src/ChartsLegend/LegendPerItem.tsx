@@ -69,11 +69,6 @@ export interface LegendPerItemProps
    * @default 10
    */
   padding?: number | Partial<CardinalDirections<number>>;
-  /**
-   * Set to true to hide the legend.
-   * @default false
-   */
-  hidden?: boolean;
   onItemClick?: (event: React.MouseEvent<SVGRectElement, MouseEvent>, index: number) => void;
 }
 
