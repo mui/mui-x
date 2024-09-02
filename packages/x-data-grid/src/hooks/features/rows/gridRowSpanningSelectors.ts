@@ -12,3 +12,8 @@ export const gridRowSpanningSpannedCellsSelector = createSelector(
   gridRowSpanningStateSelector,
   (rowSpanning) => rowSpanning.spannedCells,
 );
+
+export const gridRowSpanningHiddenCellsOriginMapSelector = createSelector(
+  gridRowSpanningStateSelector,
+  (rowSpanning) => rowSpanning.hiddenCellOriginMap,
+);
