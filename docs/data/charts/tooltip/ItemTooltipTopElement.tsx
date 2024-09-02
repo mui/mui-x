@@ -10,10 +10,16 @@ import { generateVirtualElement, MousePosition } from './generateVirtualElement'
 export function ItemTooltipTopElement() {
   const tooltipData = useItemTooltip<'bar'>();
   const mousePosition = useMouseTracker();
-  const xAxis = useXAxis(); // Get xAxis config to access its data array.
-  const xScale = useXScale(); // Get the scale which map values to SVG coordinates. Pass the axis id to this hook if you use multiple one.
-  const yScale = useYScale(); // Get the scale which map values to SVG coordinates. Pass the axis id to this hook if you use multiple one.
-  const svgRef = useSvgRef(); // Get the ref of the <svg/> component.
+  // Get xAxis config to access its data array.
+  const xAxis = useXAxis();
+  // Get the scale which map values to SVG coordinates.
+  // Pass the axis id to this hook if you use multiple one.
+  const xScale = useXScale();
+  // Get the scale which map values to SVG coordinates.
+  // Pass the axis id to this hook if you use multiple one.
+  const yScale = useYScale();
+  // Get the ref of the <svg/> component.
+  const svgRef = useSvgRef();
 
   if (!tooltipData || !mousePosition || !xAxis.data) {
     // No data to display
@@ -31,14 +37,16 @@ export function ItemTooltipTopElement() {
 
   const xValue = xAxis.data[tooltipData.identifier.dataIndex];
 
-  const svgYPosition =
-    yScale(tooltipData.value) ?? 0 + (yScale as ScaleBand<any>).step() / 2;
+
+  const svgYPosition = yScale(tooltipData.value) ?? 0;
   const svgXPosition = xScale(xValue) ?? 0;
 
   const tooltipPosition: MousePosition = {
     ...mousePosition,
+    // Add the coordinate of the <svg/> to the to position inside the <svg/>.
     x: svgRef.current.getBoundingClientRect().left + svgXPosition,
-    y: svgRef.current.getBoundingClientRect().top + svgYPosition,
+    // Add half of `yScale.step()` to be in the middle of the band.
+    y: svgRef.current.getBoundingClientRect().top + svgYPosition + (yScale as ScaleBand<any>).step() / 2,
   };
 
   return (
