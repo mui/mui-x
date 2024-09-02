@@ -18,7 +18,7 @@ function defaultLabelFormatter(params: PiecewiseLabelFormatterParams) {
 
 export interface PiecewiseColorLegendProps
   extends ColorLegendSelector,
-    Omit<LegendPerItemProps, 'itemsToDisplay' | 'hidden'> {
+    Omit<LegendPerItemProps, 'itemsToDisplay'> {
   /**
    * Hide the first item of the legend, corresponding to the [-infinity, min] piece.
    * @default false
