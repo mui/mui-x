@@ -9,7 +9,7 @@ function AnimationProvider(props: AnimationProviderProps) {
   const { children, skipAnimation: inSkipAnimation } = props;
 
   // Skip animation test/jsdom
-  const isAnimationDisabledEnvironment = !window?.matchMedia;
+  const isAnimationDisabledEnvironment = typeof window === 'undefined' || !window?.matchMedia;
 
   // We use the value of `isAnimationDisabledEnvironment` as the initial value of `skipAnimation` to avoid
   // re-rendering the component on environments where matchMedia is not supported, hence skipAnimation will always be true.
