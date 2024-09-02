@@ -1,6 +1,7 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { expect } from 'chai';
-import { createRenderer, ErrorBoundary, screen } from '@mui/internal-test-utils';
+import { createRenderer, ErrorBoundary, fireEvent, screen } from '@mui/internal-test-utils';
 import { DataGrid, DataGridProps, GridRowModel, GridColDef } from '@mui/x-data-grid';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -324,6 +325,56 @@ describe('<DataGrid /> - Column grouping', () => {
       expect(
         Array.from(row2Headers).map((header) => header.getAttribute('aria-colindex')),
       ).to.deep.equal(['1', '2', '3']);
+    });
+
+    // https://github.com/mui/mui-x/issues/13985
+    it('should not throw when both `columns` and `columnGroupingModel` are updated twice', () => {
+      function Demo() {
+        const [props, setProps] = React.useState<
+          Pick<DataGridProps, 'columns' | 'columnGroupingModel'>
+        >({
+          columns: [],
+          columnGroupingModel: [],
+        });
+
+        const handleClick = () => {
+          ReactDOM.flushSync(() => {
+            setProps({
+              columns: [{ field: `field_0` }],
+              columnGroupingModel: [{ groupId: 'Group', children: [{ field: `field_0` }] }],
+            });
+          });
+
+          setProps({
+            columns: [{ field: `field_1` }],
+            columnGroupingModel: [{ groupId: 'Group', children: [{ field: `field_1` }] }],
+          });
+        };
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <button onClick={handleClick}>Update columns</button>
+            <DataGrid rows={[{ id: 1, field_0: 'Value 0', field_1: 'Value 1' }]} {...props} />
+          </div>
+        );
+      }
+      render(<Demo />);
+
+      fireEvent.click(screen.getByRole('button', { name: /Update columns/ }));
+
+      const row1Headers = document.querySelectorAll<HTMLElement>(
+        '[aria-rowindex="1"] [role="columnheader"]',
+      );
+      const row2Headers = document.querySelectorAll<HTMLElement>(
+        '[aria-rowindex="2"] [role="columnheader"]',
+      );
+
+      expect(
+        Array.from(row1Headers).map((header) => header.getAttribute('aria-label')),
+      ).to.deep.equal(['Group']);
+      expect(
+        Array.from(row2Headers).map((header) => header.getAttribute('aria-label')),
+      ).to.deep.equal(['field_1']);
     });
   });
 
