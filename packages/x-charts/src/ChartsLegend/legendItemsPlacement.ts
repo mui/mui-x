@@ -1,8 +1,8 @@
 import { ChartsTextStyle } from '../ChartsText';
-import { GetItemSpaceType, LegendItemConfig, LegendItemWithPosition } from './chartsLegend.types';
+import { GetItemSpaceType, LegendItemParams, LegendItemWithPosition } from './chartsLegend.types';
 
 export function legendItemPlacements(
-  itemsToDisplay: LegendItemConfig[],
+  itemsToDisplay: LegendItemParams[],
   getItemSpace: GetItemSpaceType,
   labelStyle: ChartsTextStyle,
   direction: string,

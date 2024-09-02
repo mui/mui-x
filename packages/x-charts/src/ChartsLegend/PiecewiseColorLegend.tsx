@@ -5,7 +5,7 @@ import { useAxis } from './useAxis';
 import { ColorLegendSelector, PiecewiseLabelFormatterParams } from './legend.types';
 import { LegendPerItem, LegendPerItemProps } from './LegendPerItem';
 import { notNull } from '../internals/notNull';
-import { LegendItemConfig, PiecewiseColorLegendItemContext } from './chartsLegend.types';
+import { LegendItemParams, PiecewiseColorLegendItemContext } from './chartsLegend.types';
 
 function defaultLabelFormatter(params: PiecewiseLabelFormatterParams) {
   if (params.min === null) {
@@ -50,7 +50,7 @@ export interface PiecewiseColorLegendProps
   ) => void;
 }
 
-const piecewiseColorContextBuilder = (context: LegendItemConfig): PiecewiseColorLegendItemContext =>
+const piecewiseColorContextBuilder = (context: LegendItemParams): PiecewiseColorLegendItemContext =>
   ({
     type: 'piecewiseColor',
     color: context.color,

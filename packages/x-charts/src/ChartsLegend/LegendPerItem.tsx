@@ -5,7 +5,7 @@ import { DrawingArea } from '../context/DrawingProvider';
 import { ChartsTextStyle } from '../ChartsText';
 import { CardinalDirections } from '../models/layout';
 import { getWordsByLines } from '../internals/getWordsByLines';
-import { GetItemSpaceType, LegendItemConfig } from './chartsLegend.types';
+import { GetItemSpaceType, LegendItemParams } from './chartsLegend.types';
 import { legendItemPlacements } from './legendItemsPlacement';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { AnchorPosition, Direction, LegendPlacement } from './legend.types';
@@ -33,7 +33,7 @@ export interface LegendPerItemProps
   /**
    * The ordered array of item to display in the legend.
    */
-  itemsToDisplay: LegendItemConfig[];
+  itemsToDisplay: LegendItemParams[];
   /**
    * Override or extend the styles applied to the component.
    */

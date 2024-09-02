@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { FormattedSeries } from '../context/SeriesProvider';
 import { LegendPerItem, LegendPerItemProps } from './LegendPerItem';
 import { DrawingArea } from '../context/DrawingProvider';
-import { LegendItemConfig, SeriesLegendItemContext } from './chartsLegend.types';
+import { LegendItemParams, SeriesLegendItemContext } from './chartsLegend.types';
 
-const seriesContextBuilder = (context: LegendItemConfig): SeriesLegendItemContext =>
+const seriesContextBuilder = (context: LegendItemParams): SeriesLegendItemContext =>
   ({
     type: 'series',
     color: context.color,

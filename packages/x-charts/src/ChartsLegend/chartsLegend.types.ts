@@ -13,7 +13,7 @@ interface LegendItemContextBase {
   label: string;
 }
 
-export interface LegendItemConfig
+export interface LegendItemParams
   extends Partial<Omit<SeriesLegendItemContext, 'type' | 'itemId' | keyof LegendItemContextBase>>,
     Partial<Omit<PiecewiseColorLegendItemContext, 'type' | keyof LegendItemContextBase>>,
     LegendItemContextBase {
@@ -62,7 +62,7 @@ export interface PiecewiseColorLegendItemContext extends LegendItemContextBase {
 
 export type LegendItemContext = SeriesLegendItemContext | PiecewiseColorLegendItemContext;
 
-export interface LegendItemWithPosition extends LegendItemConfig {
+export interface LegendItemWithPosition extends LegendItemParams {
   positionX: number;
   positionY: number;
   innerHeight: number;

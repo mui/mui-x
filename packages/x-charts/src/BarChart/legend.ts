@@ -1,4 +1,4 @@
-import { LegendItemConfig } from '../ChartsLegend/chartsLegend.types';
+import { LegendItemParams } from '../ChartsLegend/chartsLegend.types';
 import { LegendGetter } from '../context/PluginProvider';
 import { getLabel } from '../internals/getLabel';
 
@@ -19,7 +19,7 @@ const legendGetter: LegendGetter<'bar'> = (params) => {
     });
 
     return acc;
-  }, [] as LegendItemConfig[]);
+  }, [] as LegendItemParams[]);
 };
 
 export default legendGetter;

@@ -2,10 +2,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useRtl } from '@mui/system/RtlProvider';
 import { ChartsText, ChartsTextStyle } from '../ChartsText';
-import { LegendItemConfig } from './chartsLegend.types';
+import { LegendItemParams } from './chartsLegend.types';
 import { ChartsLegendClasses } from './chartsLegendClasses';
 
-export interface ChartsLegendItemProps extends LegendItemConfig {
+export interface ChartsLegendItemProps extends LegendItemParams {
   positionY: number;
   label: string;
   positionX: number;
