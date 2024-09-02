@@ -34,10 +34,19 @@ export interface LegendRendererProps
     legendItem: SeriesLegendItemContext,
     index: number,
   ) => void;
+  /**
+   * Set to true to hide the legend.
+   * @default false
+   */
+  hidden?: boolean;
 }
 
 function DefaultChartsLegend(props: LegendRendererProps) {
-  const { drawingArea, seriesToDisplay, onItemClick, ...other } = props;
+  const { drawingArea, seriesToDisplay, hidden, onItemClick, ...other } = props;
+
+  if (hidden) {
+    return null;
+  }
 
   return (
     <LegendPerItem

@@ -13,7 +13,7 @@ import { LegendPlacement } from './legend.types';
 
 export type ChartsLegendPropsBase = Omit<
   LegendRendererProps,
-  keyof LegendPlacement | 'contextBuilder' | 'series' | 'seriesToDisplay' | 'drawingArea'
+  keyof LegendPlacement | 'series' | 'seriesToDisplay' | 'drawingArea'
 > &
   LegendPlacement;
 

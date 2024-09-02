@@ -29,7 +29,7 @@ export const ChartsLegendRoot = styled('g', {
 })({});
 
 export interface LegendPerItemProps
-  extends DefaultizedProps<LegendPlacement, 'direction' | 'position'> {
+  extends DefaultizedProps<LegendPlacement, keyof LegendPlacement> {
   /**
    * The ordered array of item to display in the legend.
    */
@@ -105,7 +105,6 @@ const getStandardizedPadding = (padding: LegendPerItemProps['padding']) => {
  */
 export function LegendPerItem(props: LegendPerItemProps) {
   const {
-    hidden,
     position,
     direction,
     itemsToDisplay,
@@ -195,10 +194,6 @@ export function LegendPerItem(props: LegendPerItemProps) {
         return (totalHeight - legendHeight) / 2;
     }
   }, [position.vertical, padding.top, padding.bottom, totalHeight, legendHeight]);
-
-  if (hidden) {
-    return null;
-  }
 
   return (
     <NoSsr>
