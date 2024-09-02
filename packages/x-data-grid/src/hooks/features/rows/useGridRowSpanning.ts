@@ -4,7 +4,7 @@ import { GridRowId, GridValidRowModel } from '../../../models/gridRows';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { gridColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
+import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRenderContextSelector } from '../virtualization/gridVirtualizationSelectors';
 import { GridRenderContext } from '../../../models';
@@ -103,6 +103,7 @@ export const useGridRowSpanning = (
 ): void => {
   const { range, rows: visibleRows } = useGridVisibleRows(apiRef, props);
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
+  const colDefs = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const processedRange = React.useRef<{ firstRowIndex: number; lastRowIndex: number }>(EMPTY_RANGE);
 
   const updateRowSpanningState = React.useCallback(
@@ -129,8 +130,6 @@ export const useGridRowSpanning = (
       const hiddenCellOriginMap = resetState
         ? {}
         : { ...apiRef.current.state.rowSpanning.hiddenCellOriginMap };
-
-      const colDefs = gridColumnDefinitionsSelector(apiRef);
 
       if (resetState) {
         processedRange.current = EMPTY_RANGE;
@@ -272,7 +271,7 @@ export const useGridRowSpanning = (
         };
       });
     },
-    [apiRef, props.unstable_rowSpanning, range, renderContext, visibleRows],
+    [apiRef, props.unstable_rowSpanning, range, renderContext, visibleRows, colDefs],
   );
 
   const prevRenderContext = React.useRef(renderContext);
@@ -282,9 +281,11 @@ export const useGridRowSpanning = (
     if (isFirstRender.current) {
       isFirstRender.current = false;
     }
-    if (!firstRender && isRowRenderContextUpdated(prevRenderContext.current, renderContext)) {
+    if (!firstRender && prevRenderContext.current !== renderContext) {
+      if (isRowRenderContextUpdated(prevRenderContext.current, renderContext)) {
+        updateRowSpanningState(false);
+      }
       prevRenderContext.current = renderContext;
-      updateRowSpanningState(false);
       return;
     }
     updateRowSpanningState();
