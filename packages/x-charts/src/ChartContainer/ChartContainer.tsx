@@ -59,24 +59,22 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
 
   return (
     <DrawingProvider {...drawingProviderProps}>
-      <AnimationProvider {...animationProviderProps}>
-        <PluginProvider {...pluginProviderProps}>
-          <SeriesProvider {...seriesProviderProps}>
-            <CartesianProvider {...cartesianProviderProps}>
-              <ZAxisContextProvider {...zAxisContextProps}>
-                <InteractionProvider>
-                  <HighlightedProvider {...highlightedProviderProps}>
-                    <ChartsSurface {...chartsSurfaceProps}>
-                      <ChartsAxesGradients />
-                      {children}
-                    </ChartsSurface>
-                  </HighlightedProvider>
-                </InteractionProvider>
-              </ZAxisContextProvider>
-            </CartesianProvider>
-          </SeriesProvider>
-        </PluginProvider>
-      </AnimationProvider>
+      <PluginProvider {...pluginProviderProps}>
+        <SeriesProvider {...seriesProviderProps}>
+          <CartesianProvider {...cartesianProviderProps}>
+            <ZAxisContextProvider {...zAxisContextProps}>
+              <InteractionProvider>
+                <HighlightedProvider {...highlightedProviderProps}>
+                  <ChartsSurface {...chartsSurfaceProps}>
+                    <ChartsAxesGradients />
+                    <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
+                  </ChartsSurface>
+                </HighlightedProvider>
+              </InteractionProvider>
+            </ZAxisContextProvider>
+          </CartesianProvider>
+        </SeriesProvider>
+      </PluginProvider>
     </DrawingProvider>
   );
 });

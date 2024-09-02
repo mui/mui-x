@@ -9,18 +9,18 @@ function AnimationProvider(props: AnimationProviderProps) {
   // Taken from: https://github.com/pmndrs/react-spring/blob/fd65b605b85c3a24143c4ce9dd322fdfca9c66be/packages/shared/src/hooks/useReducedMotion.ts
   const [skipAnimation, setSkipAnimation] = React.useState<true | undefined>(undefined);
 
-  const handleMediaChange = React.useCallback((e: { matches: boolean | undefined }) => {
-    // Modification to the react-spring implementation such that this hook can remove animation but never activate it.
-    const inputValue = e.matches || undefined;
-    setSkipAnimation(inputValue);
-    Globals.assign({
-      skipAnimation: inputValue,
-    });
-  }, []);
-
   useIsomorphicLayoutEffect(() => {
     // Skip animation test/jsdom
     const shouldSkipAnimation = !window?.matchMedia;
+
+    const handleMediaChange = (e: { matches: boolean | undefined }) => {
+      // Modification to the react-spring implementation such that this hook can remove animation but never activate it.
+      const inputValue = e.matches || undefined;
+      setSkipAnimation(inputValue);
+      Globals.assign({
+        skipAnimation: inputValue,
+      });
+    };
 
     if (shouldSkipAnimation) {
       handleMediaChange({ matches: true });
