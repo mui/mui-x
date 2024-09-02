@@ -34,21 +34,39 @@
   ],
   "classes": [
     {
+      "key": "column",
+      "className": "MuiDefaultChartsLegend-column",
+      "description": "Styles applied to the legend with column layout.",
+      "isGlobal": false
+    },
+    {
+      "key": "label",
+      "className": "MuiDefaultChartsLegend-label",
+      "description": "Styles applied to the series label.",
+      "isGlobal": false
+    },
+    {
       "key": "mark",
       "className": "MuiDefaultChartsLegend-mark",
-      "description": "",
+      "description": "Styles applied to series mark element.",
       "isGlobal": false
     },
     {
       "key": "root",
       "className": "MuiDefaultChartsLegend-root",
-      "description": "",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "row",
+      "className": "MuiDefaultChartsLegend-row",
+      "description": "Styles applied to the legend with row layout.",
       "isGlobal": false
     },
     {
       "key": "series",
       "className": "MuiDefaultChartsLegend-series",
-      "description": "",
+      "description": "Styles applied to a series element.",
       "isGlobal": false
     }
   ],

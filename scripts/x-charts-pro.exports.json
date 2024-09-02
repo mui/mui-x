@@ -85,6 +85,7 @@
   { "name": "ChartsLegendClasses", "kind": "Interface" },
   { "name": "ChartsLegendClassKey", "kind": "TypeAlias" },
   { "name": "ChartsLegendProps", "kind": "Interface" },
+  { "name": "ChartsLegendPropsBase", "kind": "TypeAlias" },
   { "name": "ChartsLegendSlotProps", "kind": "Interface" },
   { "name": "ChartsLegendSlots", "kind": "Interface" },
   { "name": "ChartsOnAxisClickHandler", "kind": "Function" },

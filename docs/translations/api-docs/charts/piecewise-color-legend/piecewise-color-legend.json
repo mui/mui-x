@@ -11,7 +11,6 @@
     "direction": {
       "description": "The direction of the legend layout. The default depends on the chart."
     },
-    "hidden": { "description": "Set to true to hide the legend." },
     "hideFirst": {
       "description": "Hide the first item of the legend, corresponding to the [-infinity, min] piece."
     },
@@ -36,8 +35,17 @@
     "position": { "description": "The position of the legend." }
   },
   "classDescriptions": {
-    "mark": { "description": "" },
-    "root": { "description": "" },
-    "series": { "description": "" }
+    "column": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend with column layout"
+    },
+    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" },
+    "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "series mark element" },
+    "root": { "description": "Styles applied to the root element." },
+    "row": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend with row layout"
+    },
+    "series": { "description": "Styles applied to {{nodeName}}.", "nodeName": "a series element" }
   }
 }

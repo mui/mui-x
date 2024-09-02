@@ -112,11 +112,6 @@ PiecewiseColorLegend.propTypes = {
    */
   direction: PropTypes.oneOf(['column', 'row']).isRequired,
   /**
-   * Set to true to hide the legend.
-   * @default false
-   */
-  hidden: PropTypes.bool,
-  /**
    * Hide the first item of the legend, corresponding to the [-infinity, min] piece.
    * @default false
    */

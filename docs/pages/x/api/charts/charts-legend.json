@@ -3,6 +3,18 @@
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "direction": { "type": { "name": "enum", "description": "'column'<br>&#124;&nbsp;'row'" } },
     "hidden": { "type": { "name": "bool" }, "default": "false" },
+    "itemGap": { "type": { "name": "number" }, "default": "10" },
+    "itemMarkHeight": { "type": { "name": "number" }, "default": "20" },
+    "itemMarkWidth": { "type": { "name": "number" }, "default": "20" },
+    "labelStyle": { "type": { "name": "object" }, "default": "theme.typography.subtitle1" },
+    "markGap": { "type": { "name": "number" }, "default": "5" },
+    "padding": {
+      "type": {
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+      },
+      "default": "10"
+    },
     "position": {
       "type": {
         "name": "shape",
