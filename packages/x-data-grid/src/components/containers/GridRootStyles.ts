@@ -476,8 +476,7 @@ export const GridRootStyles = styled('div', {
     /* Cell styles */
     [`& .${c.cell}`]: {
       height: 'var(--height)',
-      minWidth: 'var(--width)',
-      maxWidth: 'var(--width)',
+      width: 'var(--width)',
       lineHeight: 'calc(var(--height) - 1px)', // -1px for the border
 
       boxSizing: 'border-box',

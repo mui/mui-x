@@ -312,14 +312,10 @@ export const useGridColumnResize = (
     refs.colDef!.flex = 0;
 
     refs.columnHeaderElement!.style.width = `${newWidth}px`;
-    refs.columnHeaderElement!.style.minWidth = `${newWidth}px`;
-    refs.columnHeaderElement!.style.maxWidth = `${newWidth}px`;
 
     const headerFilterElement = refs.headerFilterElement;
     if (headerFilterElement) {
       headerFilterElement.style.width = `${newWidth}px`;
-      headerFilterElement.style.minWidth = `${newWidth}px`;
-      headerFilterElement.style.maxWidth = `${newWidth}px`;
     }
 
     refs.groupHeaderElements!.forEach((element) => {
@@ -335,8 +331,6 @@ export const useGridColumnResize = (
       }
 
       div.style.width = finalWidth;
-      div.style.minWidth = finalWidth;
-      div.style.maxWidth = finalWidth;
     });
 
     refs.cellElements!.forEach((element) => {
@@ -427,8 +421,6 @@ export const useGridColumnResize = (
         const finalWidth: `${number}px` = `${newWidth}px`;
 
         div.style.width = finalWidth;
-        div.style.minWidth = finalWidth;
-        div.style.maxWidth = finalWidth;
       });
     }
 

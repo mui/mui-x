@@ -313,8 +313,6 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
         style={{
           height,
           width,
-          minWidth: width,
-          maxWidth: width,
           ...styleProp,
         }}
         role="columnheader"
