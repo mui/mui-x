@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -12,7 +12,7 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
   const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const theme = useTheme();
+  const isRtl = useRtl();
 
   const pinColumn = React.useCallback(
     (side: GridPinnedColumnPosition) => (event: React.MouseEvent<HTMLElement>) => {
@@ -76,7 +76,7 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
     );
   }
 
-  if (theme.direction === 'rtl') {
+  if (isRtl) {
     return (
       <React.Fragment>
         {pinToRightMenuItem}

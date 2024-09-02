@@ -59,20 +59,21 @@ const useUtilityClasses = (ownerState: DefaultizedChartsLegendProps & { theme: T
   return composeClasses(slots, getLegendUtilityClass, classes);
 };
 
-const defaultProps = {
-  position: { horizontal: 'middle', vertical: 'top' },
-  direction: 'row',
-} as const;
-
 function ChartsLegend(inProps: ChartsLegendProps) {
-  const props: DefaultizedChartsLegendProps = useThemeProps({
-    props: { ...defaultProps, ...inProps },
+  const props = useThemeProps({
+    props: inProps,
     name: 'MuiChartsLegend',
   });
 
-  const { position, direction, hidden, slots, slotProps } = props;
+  const defaultizedProps: DefaultizedChartsLegendProps = {
+    direction: 'row',
+    ...props,
+    position: { horizontal: 'middle', vertical: 'top', ...props.position },
+  };
+  const { position, direction, hidden, slots, slotProps } = defaultizedProps;
+
   const theme = useTheme();
-  const classes = useUtilityClasses({ ...props, theme });
+  const classes = useUtilityClasses({ ...defaultizedProps, theme });
 
   const drawingArea = useDrawingArea();
   const series = useSeries();
