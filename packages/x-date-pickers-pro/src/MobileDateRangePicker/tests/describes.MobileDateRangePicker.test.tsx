@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, userEvent, fireDiscreteEvent } from '@mui/internal-test-utils';
+import { screen, fireDiscreteEvent, fireEvent } from '@mui/internal-test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import {
   adapterToUse,
@@ -86,7 +86,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
         openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
       }
 
-      userEvent.mousePress(
+      fireEvent.click(
         screen.getAllByRole('gridcell', {
           name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
         })[0],

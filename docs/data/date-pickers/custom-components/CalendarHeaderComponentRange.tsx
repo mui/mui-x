@@ -30,7 +30,15 @@ function CustomCalendarHeader(props: PickersRangeCalendarHeaderProps<Dayjs>) {
     <CustomCalendarHeaderRoot>
       <IconButton
         onClick={selectPreviousMonth}
-        sx={{ visibility: monthIndex === 0 ? undefined : 'hidden' }}
+        sx={[
+          monthIndex === 0
+            ? {
+                visibility: null,
+              }
+            : {
+                visibility: 'hidden',
+              },
+        ]}
         title={`Previous ${calendars} month${calendars === 1 ? '' : 's'}`}
       >
         <ChevronLeft />
@@ -38,7 +46,15 @@ function CustomCalendarHeader(props: PickersRangeCalendarHeaderProps<Dayjs>) {
       <Typography>{month.format('MMMM YYYY')}</Typography>
       <IconButton
         onClick={selectNextMonth}
-        sx={{ visibility: monthIndex === calendars - 1 ? undefined : 'hidden' }}
+        sx={[
+          monthIndex === calendars - 1
+            ? {
+                visibility: null,
+              }
+            : {
+                visibility: 'hidden',
+              },
+        ]}
         title={`Next ${calendars} month${calendars === 1 ? '' : 's'}`}
       >
         <ChevronRight />

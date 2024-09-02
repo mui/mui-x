@@ -429,7 +429,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c.headerFilterRow}`]: {
       [`& .${c.columnHeader}`]: {
         boxSizing: 'border-box',
-        borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+        borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
       },
     },
 
@@ -490,6 +490,11 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
       borderTopColor: 'transparent',
+    },
+    [`& .${c['pinnedRows--top']} :first-of-type`]: {
+      [`& .${c.cell}, .${c.scrollbarFiller}`]: {
+        borderTop: 'none',
+      },
     },
     [`&.${c['root--disableUserSelection']} .${c.cell}`]: {
       userSelect: 'none',
@@ -674,7 +679,10 @@ export const GridRootStyles = styled('div', {
       minWidth: 'calc(var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
       alignSelf: 'stretch',
       [`&.${c['scrollbarFiller--borderTop']}`]: {
-        borderTop: '1px solid var(--rowBorderColor)',
+        borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+      },
+      [`&.${c['scrollbarFiller--borderBottom']}`]: {
+        borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
       },
       [`&.${c['scrollbarFiller--pinnedRight']}`]: {
         backgroundColor: 'var(--DataGrid-pinnedBackground)',
@@ -686,8 +694,8 @@ export const GridRootStyles = styled('div', {
     [`& .${c.filler}`]: {
       flex: 1,
     },
-    [`& .${c['filler--borderTop']}`]: {
-      borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+    [`& .${c['filler--borderBottom']}`]: {
+      borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
     },
 
     /* Hide grid rows, row filler, and vertical scrollbar when skeleton overlay is visible */
