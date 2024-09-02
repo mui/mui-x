@@ -18,6 +18,7 @@ jobs:
     needs: issue_cleanup
     if: needs.issue_cleanup.outputs.orderId != ''
     uses: mui/mui-public/.github/workflows/issues_order-id-validation.yml@master
+    secrets: inherit
     with:
       orderId: ${{ needs.issue_cleanup.outputs.orderId }}
     permissions:
