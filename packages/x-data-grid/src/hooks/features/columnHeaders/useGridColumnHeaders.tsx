@@ -167,7 +167,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       maxLastColumn = visibleColumns.length,
     } = params || {};
 
-    const firstColumnToRender = !hasVirtualization ? 0 : currentContext.firstColumnIndex;
+    const firstColumnToRender = currentContext.firstColumnIndex;
     const lastColumnToRender = !hasVirtualization ? maxLastColumn : currentContext.lastColumnIndex;
     const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
 
