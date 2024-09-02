@@ -38,10 +38,10 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Изтегли като Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: 'Търсене',
+  columnsManagementNoColumns: 'Няма колони',
+  columnsManagementShowHideAllText: 'Покажи/Скрий Всичко',
+  columnsManagementReset: 'Нулирай',
 
   // Filter panel text
   filterPanelAddFilter: 'Добави Филтър',
