@@ -23,6 +23,7 @@ import { gridDensityFactorSelector } from '../density/densitySelector';
 import { gridHeaderFilteringEnabledSelector } from '../headerFiltering/gridHeaderFilteringSelectors';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import type { GridDimensions } from '../dimensions/gridDimensionsApi';
+import resolveProps from '@mui/utils/resolveProps';
 
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
@@ -379,11 +380,7 @@ export const createColumnsState = ({
       }
     });
 
-    columnsState.lookup[field] = {
-      ...existingState,
-      ...newColumn,
-      hasBeenResized,
-    };
+    columnsState.lookup[field] = resolveProps(existingState, { ...newColumn, hasBeenResized });
   });
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
