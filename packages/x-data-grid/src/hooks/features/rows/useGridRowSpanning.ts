@@ -174,7 +174,7 @@ export const useGridRowSpanning = (
           let rowSpan = 0;
 
           // For first index, also scan in the previous rows to handle the reset state case e.g by sorting
-          const backwardsHiddenCells = [];
+          const backwardsHiddenCells: number[] = [];
           if (index === rangeToProcess.firstRowIndex) {
             let prevIndex = index - 1;
             const prevRowEntry = visibleRows[prevIndex];
