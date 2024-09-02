@@ -29,10 +29,13 @@ async function run(argv) {
     );
   }
 
+  const outFileExtension = '.js';
+
   const env = {
     NODE_ENV: 'production',
     BABEL_ENV: bundle,
     MUI_BUILD_VERBOSE: verbose,
+    MUI_OUT_FILE_EXTENSION: outFileExtension,
   };
   const babelConfigPath = path.resolve(getWorkspaceRoot(), 'babel.config.js');
   const srcDir = path.resolve('./src');
@@ -48,7 +51,11 @@ async function run(argv) {
     ...(providedIgnore || []),
   ];
 
-  let relativeOutDir = './';
+  let relativeOutDir = {
+    node: './',
+    modern: './modern',
+    stable: './esm',
+  }[bundle];
 
   if (!usePackageExports) {
     const topLevelNonIndexFiles = glob
@@ -86,12 +93,8 @@ async function run(argv) {
     `"${ignore.join('","')}"`,
   ];
 
-  if (usePackageExports) {
-    if (bundle === 'stable') {
-      babelArgs.push('--out-file-extension', '.mjs');
-    } else if (bundle === 'modern') {
-      babelArgs.push('--out-file-extension', '.modern.mjs');
-    }
+  if (outFileExtension !== '.js') {
+    babelArgs.push('--out-file-extension', outFileExtension);
   }
 
   if (largeFiles) {

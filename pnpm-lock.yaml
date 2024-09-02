@@ -99,8 +99,8 @@ importers:
         specifier: ^5.16.7
         version: 5.16.7(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/monorepo':
-        specifier: github:Janpot/material-ui#c1061e79089d1153abc1ae957d948e06ba8f9737
-        version: https://codeload.github.com/Janpot/material-ui/tar.gz/c1061e79089d1153abc1ae957d948e06ba8f9737(encoding@0.1.13)
+        specifier: github:Janpot/material-ui#6074ce98285be75824ecbb719ab2b1ade03a94db
+        version: https://codeload.github.com/Janpot/material-ui/tar.gz/6074ce98285be75824ecbb719ab2b1ade03a94db(encoding@0.1.13)
       '@mui/utils':
         specifier: ^5.16.6
         version: 5.16.6(@types/react@18.3.4)(react@18.3.1)
@@ -3182,8 +3182,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/Janpot/material-ui/tar.gz/c1061e79089d1153abc1ae957d948e06ba8f9737':
-    resolution: {tarball: https://codeload.github.com/Janpot/material-ui/tar.gz/c1061e79089d1153abc1ae957d948e06ba8f9737}
+  '@mui/monorepo@https://codeload.github.com/Janpot/material-ui/tar.gz/6074ce98285be75824ecbb719ab2b1ade03a94db':
+    resolution: {tarball: https://codeload.github.com/Janpot/material-ui/tar.gz/6074ce98285be75824ecbb719ab2b1ade03a94db}
     version: 6.0.0
     engines: {pnpm: 9.7.1}
 
@@ -12010,7 +12010,7 @@ snapshots:
       '@emotion/styled': 11.13.0(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react@18.3.1)
       '@types/react': 18.3.4
 
-  '@mui/monorepo@https://codeload.github.com/Janpot/material-ui/tar.gz/c1061e79089d1153abc1ae957d948e06ba8f9737(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/Janpot/material-ui/tar.gz/6074ce98285be75824ecbb719ab2b1ade03a94db(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 9.3.0(encoding@0.1.13)
       '@netlify/functions': 2.8.1
