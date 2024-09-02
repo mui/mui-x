@@ -12,7 +12,7 @@ packageName: '@mui/x-date-pickers'
 
 ## Getting started
 
-The default locale of MUI X is English (United States). If you want to use other locales—follow the instructions below.
+The default locale of MUI X is English (United States). If you want to use other locales, follow the instructions below.
 
 :::warning
 This page focuses on date format localization.

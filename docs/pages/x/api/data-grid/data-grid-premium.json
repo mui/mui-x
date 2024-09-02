@@ -75,7 +75,10 @@
     },
     "estimatedRowCount": { "type": { "name": "number" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ warnIfFocusStateIsNotSynced?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ ariaV8?: bool, warnIfFocusStateIsNotSynced?: bool }"
+      }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "filterMode": {
@@ -177,6 +180,10 @@
         "description": "{ clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool"
       },
       "default": "false"
+    },
+    "indeterminateCheckboxAction": {
+      "type": { "name": "enum", "description": "'deselect'<br>&#124;&nbsp;'select'" },
+      "default": "\"deselect\""
     },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": {

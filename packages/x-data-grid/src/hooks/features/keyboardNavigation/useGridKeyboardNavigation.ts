@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import { GridEventListener } from '../../../models/events';
 import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -38,18 +38,18 @@ const getLeftColumnIndex = ({
   currentColIndex,
   firstColIndex,
   lastColIndex,
-  direction,
+  isRtl,
 }: {
   currentColIndex: number;
   firstColIndex: number;
   lastColIndex: number;
-  direction: 'rtl' | 'ltr';
+  isRtl: boolean;
 }) => {
-  if (direction === 'rtl') {
+  if (isRtl) {
     if (currentColIndex < lastColIndex) {
       return currentColIndex + 1;
     }
-  } else if (direction === 'ltr') {
+  } else if (!isRtl) {
     if (currentColIndex > firstColIndex) {
       return currentColIndex - 1;
     }
@@ -61,18 +61,18 @@ const getRightColumnIndex = ({
   currentColIndex,
   firstColIndex,
   lastColIndex,
-  direction,
+  isRtl,
 }: {
   currentColIndex: number;
   firstColIndex: number;
   lastColIndex: number;
-  direction: 'rtl' | 'ltr';
+  isRtl: boolean;
 }) => {
-  if (direction === 'rtl') {
+  if (isRtl) {
     if (currentColIndex > firstColIndex) {
       return currentColIndex - 1;
     }
-  } else if (direction === 'ltr') {
+  } else if (!isRtl) {
     if (currentColIndex < lastColIndex) {
       return currentColIndex + 1;
     }
@@ -103,7 +103,7 @@ export const useGridKeyboardNavigation = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
   const initialCurrentPageRows = useGridVisibleRows(apiRef, props).rows;
-  const theme = useTheme();
+  const isRtl = useRtl();
 
   const currentPageRows = React.useMemo(
     () => enrichPageRowsWithPinnedRows(apiRef, initialCurrentPageRows),
@@ -220,7 +220,7 @@ export const useGridKeyboardNavigation = (
             currentColIndex: colIndexBefore,
             firstColIndex,
             lastColIndex,
-            direction: theme.direction,
+            isRtl,
           });
 
           if (rightColIndex !== null) {
@@ -235,7 +235,7 @@ export const useGridKeyboardNavigation = (
             currentColIndex: colIndexBefore,
             firstColIndex,
             lastColIndex,
-            direction: theme.direction,
+            isRtl,
           });
           if (leftColIndex !== null) {
             goToHeader(leftColIndex, event);
@@ -300,7 +300,7 @@ export const useGridKeyboardNavigation = (
       goToHeaderFilter,
       goToCell,
       getRowIdFromIndex,
-      theme.direction,
+      isRtl,
       goToHeader,
       goToGroupHeader,
     ],
@@ -337,7 +337,7 @@ export const useGridKeyboardNavigation = (
             currentColIndex: colIndexBefore,
             firstColIndex,
             lastColIndex,
-            direction: theme.direction,
+            isRtl,
           });
 
           if (rightColIndex !== null) {
@@ -352,7 +352,7 @@ export const useGridKeyboardNavigation = (
             currentColIndex: colIndexBefore,
             firstColIndex,
             lastColIndex,
-            direction: theme.direction,
+            isRtl,
           });
           if (leftColIndex !== null) {
             goToHeaderFilter(leftColIndex, event);
@@ -407,7 +407,7 @@ export const useGridKeyboardNavigation = (
       apiRef,
       currentPageRows.length,
       goToHeaderFilter,
-      theme.direction,
+      isRtl,
       goToHeader,
       goToCell,
       getRowIdFromIndex,
@@ -535,7 +535,6 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      const direction = theme.direction;
       const viewportPageSize = apiRef.current.getViewportPageSize();
 
       const colIndexBefore = (params as GridCellParams).field
@@ -573,14 +572,10 @@ export const useGridKeyboardNavigation = (
             currentColIndex: colIndexBefore,
             firstColIndex,
             lastColIndex,
-            direction,
+            isRtl,
           });
           if (rightColIndex !== null) {
-            goToCell(
-              rightColIndex,
-              getRowIdFromIndex(rowIndexBefore),
-              direction === 'rtl' ? 'left' : 'right',
-            );
+            goToCell(rightColIndex, getRowIdFromIndex(rowIndexBefore), isRtl ? 'left' : 'right');
           }
           break;
         }
@@ -590,14 +585,10 @@ export const useGridKeyboardNavigation = (
             currentColIndex: colIndexBefore,
             firstColIndex,
             lastColIndex,
-            direction,
+            isRtl,
           });
           if (leftColIndex !== null) {
-            goToCell(
-              leftColIndex,
-              getRowIdFromIndex(rowIndexBefore),
-              direction === 'rtl' ? 'right' : 'left',
-            );
+            goToCell(leftColIndex, getRowIdFromIndex(rowIndexBefore), isRtl ? 'right' : 'left');
           }
           break;
         }
@@ -685,7 +676,7 @@ export const useGridKeyboardNavigation = (
     [
       apiRef,
       currentPageRows,
-      theme.direction,
+      isRtl,
       goToCell,
       getRowIdFromIndex,
       headerFilteringEnabled,

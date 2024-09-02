@@ -12,6 +12,11 @@ It replaces the previous values. This approach has some drawbacks:
 
 {{"demo": "UpdateRowsProp.js", "bg": "inline"}}
 
+:::warning
+Updating the `rows` prop causes the Data Grid to recompute the row tree, resulting in losing the current tree information like the expanded rows state.
+Unless the recomputation is explicitly required, the API method `updateRows` should be used.
+:::
+
 ## The `updateRows` method
 
 If you want to only update part of the rows, you can use the `apiRef.current.updateRows` method.

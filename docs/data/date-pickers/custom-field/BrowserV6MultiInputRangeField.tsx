@@ -63,7 +63,14 @@ const BrowserField = React.forwardRef(
 
     return (
       <Box
-        sx={{ ...(sx || {}), display: 'flex', alignItems: 'center', flexGrow: 1 }}
+        sx={[
+          {
+            display: 'flex',
+            alignItems: 'center',
+            flexGrow: 1,
+          },
+          sx || {},
+        ]}
         id={id}
         ref={handleRef}
       >
