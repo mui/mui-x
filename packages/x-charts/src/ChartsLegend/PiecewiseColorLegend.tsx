@@ -18,7 +18,7 @@ function defaultLabelFormatter(params: PiecewiseLabelFormatterParams) {
 
 export interface PiecewiseColorLegendProps
   extends ColorLegendSelector,
-    Omit<LegendPerItemProps, 'itemsToDisplay'> {
+    Omit<LegendPerItemProps, 'itemsToDisplay' | 'hidden'> {
   /**
    * Hide the first item of the legend, corresponding to the [-infinity, min] piece.
    * @default false
@@ -111,11 +111,6 @@ PiecewiseColorLegend.propTypes = {
    * The default depends on the chart.
    */
   direction: PropTypes.oneOf(['column', 'row']).isRequired,
-  /**
-   * Set to true to hide the legend.
-   * @default false
-   */
-  hidden: PropTypes.bool,
   /**
    * Hide the first item of the legend, corresponding to the [-infinity, min] piece.
    * @default false

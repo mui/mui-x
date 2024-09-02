@@ -20,7 +20,6 @@
       "default": "The first axis item."
     },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "hidden": { "type": { "name": "bool" }, "default": "false" },
     "hideFirst": { "type": { "name": "bool" }, "default": "false" },
     "hideLast": { "type": { "name": "bool" }, "default": "false" },
     "itemGap": { "type": { "name": "number" }, "default": "10" },

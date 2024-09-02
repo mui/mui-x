@@ -69,11 +69,6 @@ export interface LegendPerItemProps
    * @default 10
    */
   padding?: number | Partial<CardinalDirections<number>>;
-  /**
-   * Set to true to hide the legend.
-   * @default false
-   */
-  hidden?: boolean;
 }
 
 /**
@@ -104,7 +99,6 @@ const getStandardizedPadding = (padding: LegendPerItemProps['padding']) => {
  */
 export function LegendPerItem(props: LegendPerItemProps) {
   const {
-    hidden,
     position,
     direction,
     itemsToDisplay,
@@ -194,10 +188,6 @@ export function LegendPerItem(props: LegendPerItemProps) {
         return (totalHeight - legendHeight) / 2;
     }
   }, [position.vertical, padding.top, padding.bottom, totalHeight, legendHeight]);
-
-  if (hidden) {
-    return null;
-  }
 
   return (
     <NoSsr>
