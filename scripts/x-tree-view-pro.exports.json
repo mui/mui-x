@@ -66,7 +66,7 @@
   { "name": "UseTreeItem2DragAndDropOverlaySlotOwnProps", "kind": "Interface" },
   { "name": "UseTreeItem2GroupTransitionSlotOwnProps", "kind": "Interface" },
   { "name": "UseTreeItem2IconContainerSlotOwnProps", "kind": "Interface" },
-  { "name": "UseTreeItem2LabelInputSlotOwnProps", "kind": "TypeAlias" },
+  { "name": "UseTreeItem2LabelInputSlotOwnProps", "kind": "Interface" },
   { "name": "UseTreeItem2LabelSlotOwnProps", "kind": "Interface" },
   { "name": "UseTreeItem2Parameters", "kind": "Interface" },
   { "name": "UseTreeItem2ReturnValue", "kind": "Interface" },
