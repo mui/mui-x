@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts-pro",
-  "version": "7.0.0-alpha.0",
+  "version": "7.0.0-alpha.3",
   "description": "The Pro plan edition of the Charts components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -39,9 +39,8 @@
     "directory": "packages/x-charts-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.25.0",
-    "@mui/system": "^5.16.5",
-    "@mui/utils": "^5.16.5",
+    "@babel/runtime": "^7.25.4",
+    "@mui/utils": "^5.16.6",
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-vendor": "workspace:*",
     "@mui/x-license": "workspace:*",
@@ -53,7 +52,8 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.14",
+    "@mui/material": "^5.15.14 || ^6.0.0",
+    "@mui/system": "^5.15.14 || ^6.0.0",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },
@@ -66,6 +66,8 @@
     }
   },
   "devDependencies": {
+    "@mui/material": "^5.16.7",
+    "@mui/system": "^5.16.7",
     "@react-spring/core": "^9.7.4",
     "@react-spring/shared": "^9.7.4",
     "@types/prop-types": "^15.7.12",
