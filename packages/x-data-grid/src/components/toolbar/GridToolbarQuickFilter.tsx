@@ -157,7 +157,15 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
           <rootProps.slots.baseIconButton
             aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
             size="small"
-            sx={{ visibility: searchValue ? 'visible' : 'hidden' }}
+            sx={[
+              searchValue
+                ? {
+                    visibility: 'visible',
+                  }
+                : {
+                    visibility: 'hidden',
+                  },
+            ]}
             onClick={handleSearchReset}
             {...rootProps.slotProps?.baseIconButton}
           >

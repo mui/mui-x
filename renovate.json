@@ -90,7 +90,8 @@
         "@mui/system",
         "@mui/types",
         "@mui/utils"
-      ]
+      ],
+      "allowedVersions": "< 6.0.0"
     },
     {
       "groupName": "MUI Internal",
@@ -107,11 +108,6 @@
     {
       "groupName": "GitHub Actions",
       "matchManagers": ["github-actions"]
-    },
-    {
-      "groupName": "@mui/docs",
-      "matchPackageNames": ["@mui/docs"],
-      "followTag": "next"
     }
   ],
   "postUpdateOptions": ["pnpmDedupe"],

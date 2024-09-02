@@ -30,10 +30,16 @@ export default function SxStyling() {
             fill: '#006BD6',
           },
         },
-        border: `1px solid rgba(${theme.palette.mode === 'dark' ? '255,255,255' : '0, 0, 0'}, 0.1)`,
-        backgroundImage: `linear-gradient(rgba(${theme.palette.mode === 'dark' ? '255,255,255' : '0, 0, 0'}, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(${theme.palette.mode === 'dark' ? '255,255,255' : '0, 0, 0'}, 0.1) 1px, transparent 1px)`,
+        border: '1px solid rgba(0, 0, 0, 0.1)',
+        backgroundImage:
+          'linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px)',
         backgroundSize: '35px 35px',
         backgroundPosition: '20px 20px, 20px 20px',
+        ...theme.applyStyles('dark', {
+          borderColor: 'rgba(255,255,255, 0.1)',
+          backgroundImage:
+            'linear-gradient(rgba(255,255,255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255, 0.1) 1px, transparent 1px)',
+        }),
       })}
       xAxis={[{ scaleType: 'band', data: labels }]}
       series={[
