@@ -5,7 +5,7 @@ import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import {
   gridVisibleColumnDefinitionsSelector,
-  gridColumnFieldsSelector,
+  gridVisibleColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -87,7 +87,7 @@ export const useGridKeyboardNavigation = (
           colIndex = nextCellColSpanInfo.rightVisibleCellIndex;
         }
       }
-      const field = gridColumnFieldsSelector(apiRef)[colIndex];
+      const field = gridVisibleColumnFieldsSelector(apiRef)[colIndex];
       const nonRowSpannedRowId = findNonRowSpannedCell(apiRef, rowId, field, rowSpanScanDirection);
       // `scrollToIndexes` requires a rowIndex relative to all visible rows.
       // Those rows do not include pinned rows, but pinned rows do not need scroll anyway.
