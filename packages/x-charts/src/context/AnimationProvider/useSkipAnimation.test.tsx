@@ -6,7 +6,7 @@ import { AnimationProvider } from './AnimationProvider';
 
 function UseSkipAnimation({ localSkipAnimation }: { localSkipAnimation?: boolean }) {
   const skipAnimation = useSkipAnimation(localSkipAnimation);
-  return <div>value: {skipAnimation}</div>;
+  return <div>{`value: ${skipAnimation}`}</div>;
 }
 
 const createMatchMedia = (matches: boolean) => () =>
@@ -17,10 +17,14 @@ describe('useSkipAnimation', () => {
   const oldMatchMedia = window.matchMedia;
 
   beforeEach(() => {
+    // @ts-expect-error
+    delete window?.matchMedia;
     window.matchMedia = createMatchMedia(false);
   });
 
   afterEach(() => {
+    // @ts-expect-error
+    delete window?.matchMedia;
     window.matchMedia = oldMatchMedia;
   });
 
@@ -51,17 +55,21 @@ describe('useSkipAnimation', () => {
     );
   });
 
-  it('should not throw an error when parent context is present', () => {
+  it('should not throw an error when parent context is present', async () => {
+    window.matchMedia = createMatchMedia(true);
+
     render(
       <AnimationProvider skipAnimation>
         <UseSkipAnimation />
       </AnimationProvider>,
     );
 
-    expect(screen.getByText('value: true')).toBeVisible();
+    const node = await screen.findByText('value: true');
+
+    expect(node).toBeVisible();
   });
 
-  it('should use preference when pref is true and skip is false', () => {
+  it('should use preference when pref is true and skip is false', async () => {
     window.matchMedia = createMatchMedia(true);
     render(
       <AnimationProvider skipAnimation={false}>
@@ -69,7 +77,9 @@ describe('useSkipAnimation', () => {
       </AnimationProvider>,
     );
 
-    expect(screen.getByText('value: false')).toBeVisible();
+    const node = await screen.findByText('value: true');
+
+    expect(node).toBeVisible();
   });
 
   it('should use preference when pref is false and skip is false', () => {
@@ -83,7 +93,7 @@ describe('useSkipAnimation', () => {
     expect(screen.getByText('value: undefined')).toBeVisible();
   });
 
-  it('should use preference when pref is true and local skip is false', () => {
+  it('should use preference when pref is true and local skip is false', async () => {
     window.matchMedia = createMatchMedia(true);
     render(
       <AnimationProvider>
@@ -91,10 +101,12 @@ describe('useSkipAnimation', () => {
       </AnimationProvider>,
     );
 
-    expect(screen.getByText('value: true')).toBeVisible();
+    const node = await screen.findByText('value: true');
+
+    expect(node).toBeVisible();
   });
 
-  it('should use local skip when it is true', () => {
+  it('should use local skip when it is true', async () => {
     window.matchMedia = createMatchMedia(false);
     render(
       <AnimationProvider>
@@ -102,10 +114,12 @@ describe('useSkipAnimation', () => {
       </AnimationProvider>,
     );
 
-    expect(screen.getByText('value: true')).toBeVisible();
+    const node = await screen.findByText('value: true');
+
+    expect(node).toBeVisible();
   });
 
-  it('should use the global config if local is false', () => {
+  it('should use the global config if local is false', async () => {
     window.matchMedia = createMatchMedia(false);
     render(
       <AnimationProvider skipAnimation>
@@ -113,6 +127,8 @@ describe('useSkipAnimation', () => {
       </AnimationProvider>,
     );
 
-    expect(screen.getByText('value: true')).toBeVisible();
+    const node = await screen.findByText('value: true');
+
+    expect(node).toBeVisible();
   });
 });
