@@ -107,7 +107,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
-  const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
   const offsetLeft = computeOffsetLeft(
     columnPositions,
