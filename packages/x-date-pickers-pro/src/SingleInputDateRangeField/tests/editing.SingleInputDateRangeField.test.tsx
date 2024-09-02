@@ -13,31 +13,31 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
   describeAdapters(`key: Delete`, SingleInputDateRangeField, ({ adapter, renderWithProps }) => {
     it('should clear all the sections when all sections are selected and all sections are completed', () => {
       // Test with v7 input
-      const v7Response = renderWithProps({
+      let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
 
-      v7Response.selectSection('month');
+      view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
 
-      fireEvent.keyDown(v7Response.getSectionsContainer(), { key: 'Delete' });
-      expectFieldValueV7(v7Response.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
+      fireEvent.keyDown(view.getSectionsContainer(), { key: 'Delete' });
+      expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
 
-      v7Response.unmount();
+      view.unmount();
 
       // Test with v6 input
-      const v6Response = renderWithProps({
+      view = renderWithProps({
         defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         enableAccessibleFieldDOMStructure: false,
       });
 
       const input = getTextbox();
-      v6Response.selectSection('month');
+      view.selectSection('month');
 
       // Select all sections
       fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
@@ -48,33 +48,33 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
     it('should clear all the sections when all sections are selected and not all sections are completed', () => {
       // Test with v7 input
-      const v7Response = renderWithProps({
+      let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
 
-      v7Response.selectSection('month');
+      view.selectSection('month');
 
       // Set a value for the "month" section
-      fireEvent.input(v7Response.getActiveSection(0), { target: { innerHTML: 'j' } });
-      expectFieldValueV7(v7Response.getSectionsContainer(), 'January YYYY – MMMM YYYY');
+      fireEvent.input(view.getActiveSection(0), { target: { innerHTML: 'j' } });
+      expectFieldValueV7(view.getSectionsContainer(), 'January YYYY – MMMM YYYY');
 
       // Select all sections
-      fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
 
-      fireEvent.keyDown(v7Response.getSectionsContainer(), { key: 'Delete' });
-      expectFieldValueV7(v7Response.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
+      fireEvent.keyDown(view.getSectionsContainer(), { key: 'Delete' });
+      expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
 
-      v7Response.unmount();
+      view.unmount();
 
       // Test with v6 input
-      const v6Response = renderWithProps({
+      view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         enableAccessibleFieldDOMStructure: false,
       });
 
       const input = getTextbox();
-      v6Response.selectSection('month');
+      view.selectSection('month');
 
       // Set a value for the "month" section
       fireEvent.change(input, {
@@ -93,33 +93,33 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       // Test with v7 input
       const onChangeV7 = spy();
 
-      const v7Response = renderWithProps({
+      let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         onChange: onChangeV7,
       });
 
-      v7Response.selectSection('month');
+      view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
 
-      fireEvent.keyDown(v7Response.getSectionsContainer(), { key: 'Delete' });
+      fireEvent.keyDown(view.getSectionsContainer(), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(0);
 
-      v7Response.unmount();
+      view.unmount();
 
       // Test with v6 input
       const onChangeV6 = spy();
 
-      const v6Response = renderWithProps({
+      view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         enableAccessibleFieldDOMStructure: false,
         onChange: onChangeV6,
       });
 
       const input = getTextbox();
-      v6Response.selectSection('month');
+      view.selectSection('month');
 
       // Select all sections
       fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
@@ -132,52 +132,52 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       // Test with v7 input
       const onChangeV7 = spy();
 
-      const v7Response = renderWithProps({
+      let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
         onChange: onChangeV7,
       });
 
-      v7Response.selectSection('month');
+      view.selectSection('month');
 
       // Start date
-      fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'Delete' });
+      fireEvent.keyDown(view.getActiveSection(0), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(1);
-      fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowRight' });
-      fireEvent.keyDown(v7Response.getActiveSection(1), { key: 'Delete' });
+      fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
+      fireEvent.keyDown(view.getActiveSection(1), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(1);
-      fireEvent.keyDown(v7Response.getActiveSection(1), { key: 'ArrowRight' });
-      fireEvent.keyDown(v7Response.getActiveSection(2), { key: 'Delete' });
+      fireEvent.keyDown(view.getActiveSection(1), { key: 'ArrowRight' });
+      fireEvent.keyDown(view.getActiveSection(2), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(2);
       expect(onChangeV7.lastCall.firstArg[0]).to.equal(null);
       expect(onChangeV7.lastCall.firstArg[1]).toEqualDateTime(adapter.addYears(adapter.date(), 1));
 
       // End date
-      fireEvent.keyDown(v7Response.getActiveSection(2), { key: 'ArrowRight' });
-      fireEvent.keyDown(v7Response.getActiveSection(3), { key: 'Delete' });
+      fireEvent.keyDown(view.getActiveSection(2), { key: 'ArrowRight' });
+      fireEvent.keyDown(view.getActiveSection(3), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(3);
-      fireEvent.keyDown(v7Response.getActiveSection(3), { key: 'ArrowRight' });
-      fireEvent.keyDown(v7Response.getActiveSection(4), { key: 'Delete' });
+      fireEvent.keyDown(view.getActiveSection(3), { key: 'ArrowRight' });
+      fireEvent.keyDown(view.getActiveSection(4), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(3);
-      fireEvent.keyDown(v7Response.getActiveSection(4), { key: 'ArrowRight' });
-      fireEvent.keyDown(v7Response.getActiveSection(5), { key: 'Delete' });
+      fireEvent.keyDown(view.getActiveSection(4), { key: 'ArrowRight' });
+      fireEvent.keyDown(view.getActiveSection(5), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(4);
       expect(onChangeV7.lastCall.firstArg[0]).to.equal(null);
       expect(onChangeV7.lastCall.firstArg[1]).to.equal(null);
 
-      v7Response.unmount();
+      view.unmount();
 
       // Test with v6 input
       const onChangeV6 = spy();
 
-      const v6Response = renderWithProps({
+      view = renderWithProps({
         enableAccessibleFieldDOMStructure: false,
         defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
         onChange: onChangeV6,
       });
 
       const input = getTextbox();
-      v6Response.selectSection('month');
+      view.selectSection('month');
 
       // Start date
       fireEvent.keyDown(input, { key: 'Delete' });
@@ -209,27 +209,27 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       // Test with v7 input
       const onChangeV7 = spy();
 
-      const v7Response = renderWithProps({
+      let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
         onChange: onChangeV7,
       });
 
-      v7Response.selectSection('month');
+      view.selectSection('month');
 
-      fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'Delete' });
+      fireEvent.keyDown(view.getActiveSection(0), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(1);
 
-      fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'Delete' });
+      fireEvent.keyDown(view.getActiveSection(0), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(1);
 
-      v7Response.unmount();
+      view.unmount();
 
       // Test with v6 input
       const onChangeV6 = spy();
 
-      const v6Response = renderWithProps({
+      view = renderWithProps({
         enableAccessibleFieldDOMStructure: false,
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
@@ -237,7 +237,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      v6Response.selectSection('month');
+      view.selectSection('month');
 
       fireEvent.keyDown(input, { key: 'Delete' });
       expect(onChangeV6.callCount).to.equal(1);
@@ -253,31 +253,31 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     ({ adapter, renderWithProps }) => {
       it('should clear all the sections when all sections are selected and all sections are completed (Backspace)', () => {
         // Test with v7 input
-        const v7Response = renderWithProps({
+        let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
           format: `${adapter.formats.month} ${adapter.formats.year}`,
         });
 
-        v7Response.selectSection('month');
+        view.selectSection('month');
 
         // Select all sections
-        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
 
-        v7Response.pressKey(null, '');
-        expectFieldValueV7(v7Response.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
+        view.pressKey(null, '');
+        expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
 
-        v7Response.unmount();
+        view.unmount();
 
         // Test with v6 input
-        const v6Response = renderWithProps({
+        view = renderWithProps({
           defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           enableAccessibleFieldDOMStructure: false,
         });
 
         const input = getTextbox();
-        v6Response.selectSection('month');
+        view.selectSection('month');
 
         // Select all sections
         fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
@@ -288,33 +288,33 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
       it('should clear all the sections when all sections are selected and not all sections are completed (Backspace)', () => {
         // Test with v7 input
-        const v7Response = renderWithProps({
+        let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           format: `${adapter.formats.month} ${adapter.formats.year}`,
         });
 
-        v7Response.selectSection('month');
+        view.selectSection('month');
 
         // Set a value for the "month" section
-        fireEvent.input(v7Response.getActiveSection(0), { target: { innerHTML: 'j' } });
-        expectFieldValueV7(v7Response.getSectionsContainer(), 'January YYYY – MMMM YYYY');
+        fireEvent.input(view.getActiveSection(0), { target: { innerHTML: 'j' } });
+        expectFieldValueV7(view.getSectionsContainer(), 'January YYYY – MMMM YYYY');
 
         // Select all sections
-        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
 
-        v7Response.pressKey(null, '');
-        expectFieldValueV7(v7Response.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
+        view.pressKey(null, '');
+        expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
 
-        v7Response.unmount();
+        view.unmount();
 
         // Test with v6 input
-        const v6Response = renderWithProps({
+        view = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           enableAccessibleFieldDOMStructure: false,
         });
 
         const input = getTextbox();
-        v6Response.selectSection('month');
+        view.selectSection('month');
 
         // Set a value for the "month" section
         fireEvent.change(input, {
@@ -333,33 +333,33 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         // Test with v7 input
         const onChangeV7 = spy();
 
-        const v7Response = renderWithProps({
+        let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           onChange: onChangeV7,
         });
 
-        v7Response.selectSection('month');
+        view.selectSection('month');
 
         // Select all sections
-        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
 
-        v7Response.pressKey(null, '');
+        view.pressKey(null, '');
         expect(onChangeV7.callCount).to.equal(0);
 
-        v7Response.unmount();
+        view.unmount();
 
         // Test with v6 input
         const onChangeV6 = spy();
 
-        const v6Response = renderWithProps({
+        view = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           enableAccessibleFieldDOMStructure: false,
           onChange: onChangeV6,
         });
 
         const input = getTextbox();
-        v6Response.selectSection('month');
+        view.selectSection('month');
 
         // Select all sections
         fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
@@ -372,22 +372,22 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         // Test with v7 input
         const onChangeV7 = spy();
 
-        const v7Response = renderWithProps({
+        let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
           onChange: onChangeV7,
         });
 
-        v7Response.selectSection('month');
+        view.selectSection('month');
 
         // Start date
-        v7Response.pressKey(0, '');
+        view.pressKey(0, '');
         expect(onChangeV7.callCount).to.equal(1);
-        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowRight' });
-        v7Response.pressKey(1, '');
+        fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
+        view.pressKey(1, '');
         expect(onChangeV7.callCount).to.equal(1);
-        fireEvent.keyDown(v7Response.getActiveSection(1), { key: 'ArrowRight' });
-        v7Response.pressKey(2, '');
+        fireEvent.keyDown(view.getActiveSection(1), { key: 'ArrowRight' });
+        view.pressKey(2, '');
         expect(onChangeV7.callCount).to.equal(2);
         expect(onChangeV7.lastCall.firstArg[0]).to.equal(null);
         expect(onChangeV7.lastCall.firstArg[1]).toEqualDateTime(
@@ -395,31 +395,31 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         );
 
         // End date
-        fireEvent.keyDown(v7Response.getActiveSection(2), { key: 'ArrowRight' });
-        v7Response.pressKey(3, '');
+        fireEvent.keyDown(view.getActiveSection(2), { key: 'ArrowRight' });
+        view.pressKey(3, '');
         expect(onChangeV7.callCount).to.equal(3);
-        fireEvent.keyDown(v7Response.getActiveSection(3), { key: 'ArrowRight' });
-        v7Response.pressKey(4, '');
+        fireEvent.keyDown(view.getActiveSection(3), { key: 'ArrowRight' });
+        view.pressKey(4, '');
         expect(onChangeV7.callCount).to.equal(3);
-        fireEvent.keyDown(v7Response.getActiveSection(4), { key: 'ArrowRight' });
-        v7Response.pressKey(5, '');
+        fireEvent.keyDown(view.getActiveSection(4), { key: 'ArrowRight' });
+        view.pressKey(5, '');
         expect(onChangeV7.callCount).to.equal(4);
         expect(onChangeV7.lastCall.firstArg[0]).to.equal(null);
         expect(onChangeV7.lastCall.firstArg[1]).to.equal(null);
 
-        v7Response.unmount();
+        view.unmount();
 
         // Test with v6 input
         const onChangeV6 = spy();
 
-        const v6Response = renderWithProps({
+        view = renderWithProps({
           enableAccessibleFieldDOMStructure: false,
           defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
           onChange: onChangeV6,
         });
 
         const input = getTextbox();
-        v6Response.selectSection('month');
+        view.selectSection('month');
 
         // Start date
         fireEvent.change(input, { target: { value: '/15/2022 – 06/15/2023' } });
@@ -453,27 +453,27 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         // Test with v7 input
         const onChangeV7 = spy();
 
-        const v7Response = renderWithProps({
+        let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
           onChange: onChangeV7,
         });
 
-        v7Response.selectSection('month');
+        view.selectSection('month');
 
-        v7Response.pressKey(0, '');
+        view.pressKey(0, '');
         expect(onChangeV7.callCount).to.equal(1);
 
-        v7Response.pressKey(0, '');
+        view.pressKey(0, '');
         expect(onChangeV7.callCount).to.equal(1);
 
-        v7Response.unmount();
+        view.unmount();
 
         // Test with v6 input
         const onChangeV6 = spy();
 
-        const v6Response = renderWithProps({
+        view = renderWithProps({
           enableAccessibleFieldDOMStructure: false,
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
@@ -481,7 +481,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        v6Response.selectSection('month');
+        view.selectSection('month');
 
         fireEvent.change(input, { target: { value: ' 2022 – June 2023' } });
         expect(onChangeV6.callCount).to.equal(1);
