@@ -104,8 +104,6 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
         ...style,
         height,
         width,
-        minWidth: width,
-        maxWidth: width,
       }}
       role="columnheader"
       tabIndex={tabIndex}
