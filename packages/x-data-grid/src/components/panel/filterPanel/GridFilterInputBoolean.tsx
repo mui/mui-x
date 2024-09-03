@@ -133,6 +133,7 @@ GridFilterInputBoolean.propTypes = {
   applyValue: PropTypes.func.isRequired,
   clearButton: PropTypes.node,
   focusElementRef: refType,
+  formControlClassName: PropTypes.string,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (for example `isEmpty`)
