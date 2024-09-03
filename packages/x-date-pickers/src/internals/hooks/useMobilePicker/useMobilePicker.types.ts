@@ -69,7 +69,13 @@ export interface MobileOnlyPickerProps
   extends BaseNonStaticPickerProps,
     BaseNonRangeNonStaticPickerProps,
     UsePickerValueNonStaticProps,
-    UsePickerViewsNonStaticProps {}
+    UsePickerViewsNonStaticProps {
+  /**
+   * If `true`, the popover or modal will close after submitting the full date.
+   * @default `false`
+   */
+  closeOnSelect?: UsePickerValueNonStaticProps['closeOnSelect'];
+}
 
 export interface UseMobilePickerProps<
   TDate extends PickerValidDate,

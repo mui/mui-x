@@ -1,4 +1,4 @@
-import { MakeOptional } from '@mui/x-date-pickers/internals';
+import { MakeOptional, MobileOnlyPickerProps } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   UseMobileRangePickerSlots,
@@ -28,6 +28,7 @@ export interface MobileDateRangePickerProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = false,
 > extends BaseDateRangePickerProps<TDate>,
+    MobileOnlyPickerProps,
     MobileRangeOnlyPickerProps {
   /**
    * Overridable component slots.
