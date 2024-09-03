@@ -6,6 +6,7 @@ import {
 } from '../DesktopDatePicker';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { BaseDateValidationProps } from '../internals/models/validation';
+import { UsePickerValueNonStaticProps } from '../internals/hooks/usePicker/usePickerValue.types';
 import {
   MobileDatePickerProps,
   MobileDatePickerSlots,
@@ -54,6 +55,11 @@ export interface DatePickerProps<
    * @default 4 on desktop, 3 on mobile
    */
   yearsPerRow?: 3 | 4;
+  /**
+   * If `true`, the popover or modal will close after submitting the full date.
+   * @default `true` for desktop, `false` for mobile variants (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   */
+  closeOnSelect?: UsePickerValueNonStaticProps['closeOnSelect'];
 }
 
 /**
