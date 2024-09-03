@@ -19,19 +19,11 @@ export default function RowSpanning() {
         <DataGrid
           rows={rows}
           columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
-              },
-            },
-          }}
           density="compact"
           showCellVerticalBorder
-          pageSizeOptions={[10]}
+          showColumnVerticalBorder
           disableRowSelectionOnClick
           unstable_rowSpanning={enabled}
-          disableVirtualization
           hideFooter
           sx={{
             '& .MuiDataGrid-row:hover': {

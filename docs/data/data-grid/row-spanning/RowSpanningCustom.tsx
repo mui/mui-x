@@ -4,22 +4,15 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 export default function RowSpanningCustom() {
   return (
-    <Box sx={{ height: 400, width: '100%' }}>
+    <Box sx={{ height: 350, width: '100%' }}>
       <DataGrid
         rows={rows}
         columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 10,
-            },
-          },
-        }}
         showCellVerticalBorder
-        pageSizeOptions={[10]}
+        showColumnVerticalBorder
         disableRowSelectionOnClick
+        hideFooter
         unstable_rowSpanning
-        disableVirtualization
         sx={{
           '& .MuiDataGrid-row:hover': {
             backgroundColor: 'transparent',
