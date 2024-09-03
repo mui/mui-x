@@ -30,8 +30,8 @@ importers:
         specifier: ^2.8.0
         version: 2.8.0
       '@babel/cli':
-        specifier: ^7.24.8
-        version: 7.24.8(@babel/core@7.25.2)
+        specifier: ^7.25.6
+        version: 7.25.6(@babel/core@7.25.2)
       '@babel/core':
         specifier: ^7.25.2
         version: 7.25.2
@@ -69,10 +69,10 @@ importers:
         specifier: ^7.24.6
         version: 7.24.6(@babel/core@7.25.2)
       '@babel/traverse':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@babel/types':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/cache':
         specifier: ^11.13.1
@@ -408,10 +408,10 @@ importers:
         specifier: ^7.25.2
         version: 7.25.2
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@babel/runtime-corejs2':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@docsearch/react':
         specifier: ^3.6.1
@@ -712,7 +712,7 @@ importers:
   packages/x-charts:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -774,7 +774,7 @@ importers:
   packages/x-charts-pro:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -839,7 +839,7 @@ importers:
   packages/x-charts-vendor:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@types/d3-color':
         specifier: ^3.1.3
@@ -927,10 +927,10 @@ importers:
         specifier: ^7.25.2
         version: 7.25.2
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@babel/traverse':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       jscodeshift:
         specifier: 17.0.0
@@ -956,7 +956,7 @@ importers:
   packages/x-data-grid:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -1012,7 +1012,7 @@ importers:
   packages/x-data-grid-generator:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -1053,7 +1053,7 @@ importers:
   packages/x-data-grid-premium:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -1121,7 +1121,7 @@ importers:
   packages/x-data-grid-pro:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -1180,7 +1180,7 @@ importers:
   packages/x-date-pickers:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -1263,7 +1263,7 @@ importers:
   packages/x-date-pickers-pro:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -1340,7 +1340,7 @@ importers:
   packages/x-internals:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@mui/utils':
         specifier: ^5.16.6
@@ -1360,7 +1360,7 @@ importers:
   packages/x-license:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@mui/utils':
         specifier: ^5.16.6
@@ -1380,7 +1380,7 @@ importers:
   packages/x-tree-view:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -1433,7 +1433,7 @@ importers:
   packages/x-tree-view-pro:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -1492,7 +1492,7 @@ importers:
   test:
     devDependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/cache':
         specifier: ^11.13.1
@@ -1726,8 +1726,8 @@ packages:
     resolution: {integrity: sha512-UyACLQe9rvCPbo9muhrLte1AD75kQlcGBuecjmaotaF9MBMj+9Yz+TYs1jJrlLMgqowfIgbXjBYmkXRUn36tCg==}
     engines: {node: '>=18.0.0'}
 
-  '@babel/cli@7.24.8':
-    resolution: {integrity: sha512-isdp+G6DpRyKc+3Gqxy2rjzgF7Zj9K0mzLNnxz+E/fgeag8qT3vVulX4gY9dGO1q0y+0lUv6V3a+uhUzMzrwXg==}
+  '@babel/cli@7.25.6':
+    resolution: {integrity: sha512-Z+Doemr4VtvSD2SNHTrkiFZ1LX+JI6tyRXAAOb4N9khIuPyoEPmTPJarPm8ljJV1D6bnMQjyHMWTT9NeKbQuXA==}
     engines: {node: '>=6.9.0'}
     hasBin: true
     peerDependencies:
@@ -5055,8 +5055,8 @@ packages:
     resolution: {integrity: sha512-OAlb+T7V4Op9OwdkjmguYRqncdlx5JiofwOAUkmTF+jNdHwzTaTs4sRAGpzLF3oOz5xAyDGrPgeIDFQmDOTiJw==}
     engines: {node: '>= 16'}
 
-  chokidar@3.5.3:
-    resolution: {integrity: sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==}
+  chokidar@3.6.0:
+    resolution: {integrity: sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==}
     engines: {node: '>= 8.10.0'}
 
   chownr@2.0.0:
@@ -10324,7 +10324,7 @@ snapshots:
 
   '@argos-ci/util@2.1.1': {}
 
-  '@babel/cli@7.24.8(@babel/core@7.25.2)':
+  '@babel/cli@7.25.6(@babel/core@7.25.2)':
     dependencies:
       '@babel/core': 7.25.2
       '@jridgewell/trace-mapping': 0.3.25
@@ -10336,7 +10336,7 @@ snapshots:
       slash: 2.0.0
     optionalDependencies:
       '@nicolo-ribaudo/chokidar-2': 2.1.8-no-fsevents.3
-      chokidar: 3.5.3
+      chokidar: 3.6.0
 
   '@babel/code-frame@7.24.7':
     dependencies:
@@ -14245,7 +14245,7 @@ snapshots:
 
   check-error@2.1.1: {}
 
-  chokidar@3.5.3:
+  chokidar@3.6.0:
     dependencies:
       anymatch: 3.1.3
       braces: 3.0.3
@@ -16966,7 +16966,7 @@ snapshots:
       '@colors/colors': 1.5.0
       body-parser: 1.20.2
       braces: 3.0.3
-      chokidar: 3.5.3
+      chokidar: 3.6.0
       connect: 3.7.0
       di: 0.0.1
       dom-serialize: 2.2.1
@@ -17564,7 +17564,7 @@ snapshots:
     dependencies:
       ansi-colors: 4.1.3
       browser-stdout: 1.3.1
-      chokidar: 3.5.3
+      chokidar: 3.6.0
       debug: 4.3.6(supports-color@8.1.1)
       diff: 5.2.0
       escape-string-regexp: 4.0.0
