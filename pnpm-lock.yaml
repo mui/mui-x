@@ -549,8 +549,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       jscodeshift:
-        specifier: 0.16.1
-        version: 0.16.1(@babel/preset-env@7.25.4(@babel/core@7.25.2))
+        specifier: 17.0.0
+        version: 17.0.0(@babel/preset-env@7.25.4(@babel/core@7.25.2))
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -933,8 +933,8 @@ importers:
         specifier: ^7.25.4
         version: 7.25.6
       jscodeshift:
-        specifier: 0.16.1
-        version: 0.16.1(@babel/preset-env@7.25.4(@babel/core@7.25.2))
+        specifier: 17.0.0
+        version: 17.0.0(@babel/preset-env@7.25.4(@babel/core@7.25.2))
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
@@ -7134,8 +7134,9 @@ packages:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
     hasBin: true
 
-  jscodeshift@0.16.1:
-    resolution: {integrity: sha512-oMQXySazy63awNBzMpXbbVv73u3irdxTeX2L5ueRyFRxi32qb9uzdZdOY5fTBYADBG19l5M/wnGknZSV1dzCdA==}
+  jscodeshift@17.0.0:
+    resolution: {integrity: sha512-Af+MFsNwLSVO+t4kKjJdJKh6iNbNHfDfFGdyltJ2wUFN3furgbvHguJmB85iou+fY7wbHgI8eiEKpp6doGgtKg==}
+    engines: {node: '>=16'}
     hasBin: true
     peerDependencies:
       '@babel/preset-env': ^7.1.6
@@ -16716,7 +16717,7 @@ snapshots:
     dependencies:
       argparse: 2.0.1
 
-  jscodeshift@0.16.1(@babel/preset-env@7.25.4(@babel/core@7.25.2)):
+  jscodeshift@17.0.0(@babel/preset-env@7.25.4(@babel/core@7.25.2)):
     dependencies:
       '@babel/core': 7.25.2
       '@babel/parser': 7.25.6
@@ -16728,12 +16729,11 @@ snapshots:
       '@babel/preset-flow': 7.24.7(@babel/core@7.25.2)
       '@babel/preset-typescript': 7.24.7(@babel/core@7.25.2)
       '@babel/register': 7.24.6(@babel/core@7.25.2)
-      chalk: 4.1.2
       flow-parser: 0.227.0
       graceful-fs: 4.2.11
       micromatch: 4.0.7
       neo-async: 2.6.2
-      node-dir: 0.1.17
+      picocolors: 1.0.1
       recast: 0.23.9
       temp: 0.9.4
       write-file-atomic: 5.0.1
