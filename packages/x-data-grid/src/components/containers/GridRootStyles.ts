@@ -27,13 +27,6 @@ function getBorderColor(theme: Theme) {
   return darken(alpha(theme.palette.divider, 1), 0.68);
 }
 
-const columnHeadersStyles = {
-  [`.${c.columnSeparator}, .${c['columnSeparator--resizing']}`]: {
-    visibility: 'visible',
-    width: 'auto',
-  },
-};
-
 const columnHeaderStyles = {
   [`& .${c.iconButtonContainer}`]: {
     visibility: 'visible',
@@ -43,6 +36,17 @@ const columnHeaderStyles = {
     width: 'auto',
     visibility: 'visible',
   },
+};
+
+const columnSeparatorTargetSize = 10;
+const columnSeparatorOffset = -5;
+
+const focusOutlineWidth = 1;
+
+const separatorIconDragStyles = {
+  width: 3,
+  rx: 1.5,
+  x: 10.5,
 };
 
 // Emotion thinks it knows better than us which selector we should use.
@@ -264,7 +268,6 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c.columnHeader}, & .${c.cell}`]: {
       WebkitTapHighlightColor: 'transparent',
-      lineHeight: null,
       padding: '0 10px',
       boxSizing: 'border-box',
     },
@@ -273,19 +276,45 @@ export const GridRootStyles = styled('div', {
         t.vars
           ? `rgba(${t.vars.palette.primary.mainChannel} / 0.5)`
           : alpha(t.palette.primary.main, 0.5)
-      } 1px`,
-      outlineWidth: 1,
-      outlineOffset: -1,
+      } ${focusOutlineWidth}px`,
+      outlineOffset: focusOutlineWidth * -1,
     },
     [`& .${c.columnHeader}:focus, & .${c.cell}:focus`]: {
-      outline: `solid ${t.palette.primary.main} 1px`,
+      outline: `solid ${t.palette.primary.main} ${focusOutlineWidth}px`,
+      outlineOffset: focusOutlineWidth * -1,
+    },
+    // Hide the column separator when:
+    // - the column is focused and has an outline
+    // - the next column is focused and has an outline
+    // - the column has a left or right border
+    // - the next column is pinned right and has a left border
+    [`& .${c.columnHeader}:focus,
+      & .${c.columnHeader}:focus-within,
+      & .${c.columnHeader}:has(+ .${c.columnHeader}:focus),
+      & .${c.columnHeader}:has(+ .${c.columnHeader}:focus-within),
+      & .${c['columnHeader--withLeftBorder']},
+      & .${c['columnHeader--withRightBorder']},
+      & .${c.columnHeader}:has(+ .${c.filler} + .${c['columnHeader--withLeftBorder']}),
+      & .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}
+      `]: {
+      [`& .${c.columnSeparator}`]: {
+        opacity: 0,
+        '@media (hover: none)': {
+          opacity: 1,
+          color: (t.vars || t).palette.primary.main,
+        },
+      },
+      // Show resizable separators again when the column is hovered
+      [`& .${c['columnSeparator--resizable']}:hover`]: {
+        opacity: 1,
+      },
     },
     [`&.${c['root--noToolbar']} [aria-rowindex="1"] [aria-colindex="1"]`]: {
       borderTopLeftRadius: 'calc(var(--unstable_DataGrid-radius) - 1px)',
     },
     [`&.${c['root--noToolbar']} [aria-rowindex="1"] .${c['columnHeader--last']}`]: {
       borderTopRightRadius:
-        !dimensions.hasScrollY || dimensions.scrollbarSize === 0
+        dimensions.hasScrollX && (!dimensions.hasScrollY || dimensions.scrollbarSize === 0)
           ? 'calc(var(--unstable_DataGrid-radius) - 1px)'
           : undefined,
     },
@@ -299,7 +328,7 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       alignItems: 'center',
     },
-    [`& .${c['columnHeader--last']}`]: {
+    [`& .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}`]: {
       overflow: 'hidden',
     },
     [`& .${c['columnHeader--sorted']} .${c.iconButtonContainer}, & .${c['columnHeader--filtered']} .${c.iconButtonContainer}`]:
@@ -316,12 +345,11 @@ export const GridRootStyles = styled('div', {
     [`& .${c.columnHeaderTitleContainer}`]: {
       display: 'flex',
       alignItems: 'center',
+      gap: t.spacing(0.25),
       minWidth: 0,
       flex: 1,
       whiteSpace: 'nowrap',
       overflow: 'hidden',
-      // to anchor the aggregation label
-      position: 'relative',
     },
     [`& .${c.columnHeaderTitleContainerContent}`]: {
       overflow: 'hidden',
@@ -346,16 +374,13 @@ export const GridRootStyles = styled('div', {
       {
         flexDirection: 'row-reverse',
       },
-    [`& .${c['columnHeader--alignCenter']} .${c.menuIcon}, & .${c['columnHeader--alignRight']} .${c.menuIcon}`]:
-      {
-        marginRight: 'auto',
-        marginLeft: -6,
-      },
-    [`& .${c['columnHeader--alignRight']} .${c.menuIcon}, & .${c['columnHeader--alignRight']} .${c.menuIcon}`]:
-      {
-        marginRight: 'auto',
-        marginLeft: -10,
-      },
+    [`& .${c['columnHeader--alignCenter']} .${c.menuIcon}`]: {
+      marginLeft: 'auto',
+    },
+    [`& .${c['columnHeader--alignRight']} .${c.menuIcon}`]: {
+      marginRight: 'auto',
+      marginLeft: -5,
+    },
     [`& .${c['columnHeader--moving']}`]: {
       backgroundColor: (t.vars || t).palette.action.hover,
     },
@@ -365,46 +390,54 @@ export const GridRootStyles = styled('div', {
       background: 'var(--DataGrid-pinnedBackground)',
     },
     [`& .${c.columnSeparator}`]: {
-      visibility: 'hidden',
       position: 'absolute',
+      overflow: 'hidden',
       zIndex: 3,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
+      alignItems: 'center',
+      maxWidth: columnSeparatorTargetSize,
       color: borderColor,
     },
     [`& .${c.columnHeaders}`]: {
       width: 'var(--DataGrid-rowWidth)',
     },
     '@media (hover: hover)': {
-      [`& .${c.columnHeaders}:hover`]: columnHeadersStyles,
       [`& .${c.columnHeader}:hover`]: columnHeaderStyles,
       [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortIcon}`]: {
         opacity: 0.5,
       },
     },
     '@media (hover: none)': {
-      [`& .${c.columnHeaders}`]: columnHeadersStyles,
       [`& .${c.columnHeader}`]: columnHeaderStyles,
     },
     [`& .${c['columnSeparator--sideLeft']}`]: {
-      left: -12,
+      left: columnSeparatorOffset,
     },
     [`& .${c['columnSeparator--sideRight']}`]: {
-      right: -12,
+      right: columnSeparatorOffset,
+    },
+    [`& .${c['columnHeader--withRightBorder']} .${c['columnSeparator--sideLeft']}`]: {
+      left: columnSeparatorOffset - 0.5,
+    },
+    [`& .${c['columnHeader--withRightBorder']} .${c['columnSeparator--sideRight']}`]: {
+      right: columnSeparatorOffset - 0.5,
     },
     [`& .${c['columnSeparator--resizable']}`]: {
       cursor: 'col-resize',
       touchAction: 'none',
-      '&:hover': {
-        color: (t.vars || t).palette.text.primary,
-        // Reset on touch devices, it doesn't add specificity
+      // Always appear as draggable on touch devices
+      '@media (hover: none)': {
+        [`& .${c.iconSeparator} rect`]: separatorIconDragStyles,
+        color: borderColor,
+      },
+      [`&:hover, &.${c['columnSeparator--resizing']}`]: {
+        color: (t.vars || t).palette.primary.main,
+        [`& .${c.iconSeparator} rect`]: separatorIconDragStyles,
         '@media (hover: none)': {
           color: borderColor,
         },
-      },
-      [`&.${c['columnSeparator--resizing']}`]: {
-        color: (t.vars || t).palette.text.primary,
       },
       '& svg': {
         pointerEvents: 'none',
@@ -412,12 +445,15 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c.iconSeparator}`]: {
       color: 'inherit',
+      transition: t.transitions.create(['color', 'width'], {
+        duration: t.transitions.duration.shortest,
+      }),
     },
     [`& .${c.menuIcon}`]: {
       width: 0,
       visibility: 'hidden',
       fontSize: 20,
-      marginRight: -10,
+      marginRight: -5,
       display: 'flex',
       alignItems: 'center',
     },
@@ -515,8 +551,8 @@ export const GridRootStyles = styled('div', {
       boxShadow: t.shadows[2],
       backgroundColor: (t.vars || t).palette.background.paper,
       '&:focus-within': {
-        outline: `solid ${(t.vars || t).palette.primary.main} 1px`,
-        outlineOffset: '-1px',
+        outline: `${focusOutlineWidth}px solid ${(t.vars || t).palette.primary.main}`,
+        outlineOffset: focusOutlineWidth * -1,
       },
     },
     [`& .${c['row--editing']}`]: {

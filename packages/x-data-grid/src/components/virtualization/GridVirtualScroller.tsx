@@ -29,14 +29,13 @@ const useUtilityClasses = (
   loadingOverlayVariant: GridLoadingOverlayVariant | null,
 ) => {
   const { classes } = ownerState;
-
   const slots = {
     root: [
       'main',
       dimensions.rightPinnedWidth > 0 && 'main--hasPinnedRight',
       loadingOverlayVariant === 'skeleton' && 'main--hasSkeletonLoadingOverlay',
     ],
-    scroller: ['virtualScroller'],
+    scroller: ['virtualScroller', dimensions.hasScrollX && 'virtualScroller--hasScrollX'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
