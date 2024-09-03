@@ -17,6 +17,7 @@ import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
 import { TimeViewWithMeridiem } from '../internals/models';
+import { UsePickerValueNonStaticProps } from '../internals/hooks/usePicker/usePickerValue.types';
 
 export interface BaseTimePickerSlots<TDate extends PickerValidDate> extends TimeClockSlots {
   /**
@@ -67,6 +68,11 @@ export interface BaseTimePickerProps<
    * If `undefined`, internally defined view will be used.
    */
   viewRenderers?: Partial<TimePickerViewRenderers<TDate, TView>>;
+  /**
+   * If `true`, the popover or modal will close after submitting the full date.
+   * @default `false`
+   */
+  closeOnSelect?: UsePickerValueNonStaticProps['closeOnSelect'];
 }
 
 type UseTimePickerDefaultizedProps<
