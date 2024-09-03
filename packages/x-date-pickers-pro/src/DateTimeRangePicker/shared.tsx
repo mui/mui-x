@@ -17,6 +17,7 @@ import {
   UseViewsOptions,
   DateTimeValidationProps,
   DateOrTimeViewWithMeridiem,
+  UsePickerValueNonStaticProps,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
@@ -122,6 +123,11 @@ export interface BaseDateTimeRangePickerProps<TDate extends PickerValidDate>
    * If `undefined`, internally defined view will be used.
    */
   viewRenderers?: Partial<DateTimeRangePickerRenderers<TDate, DateTimeRangePickerView>>;
+  /**
+   * If `true`, the popover or modal will close after submitting the full date.
+   * @default `false`
+   */
+  closeOnSelect?: UsePickerValueNonStaticProps['closeOnSelect'];
 }
 
 type UseDateTimeRangePickerDefaultizedProps<
