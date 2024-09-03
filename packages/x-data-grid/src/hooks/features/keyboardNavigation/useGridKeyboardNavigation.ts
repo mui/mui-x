@@ -515,7 +515,7 @@ export const useGridKeyboardNavigation = (
             goToCell(
               colIndexBefore,
               getRowIdFromIndex(rowIndexBefore + 1),
-              isRtl ? 'left' : 'right',
+              isRtl ? 'right' : 'left',
               'down',
             );
           }
