@@ -16,6 +16,14 @@
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/beBY.ts"
   },
   {
+    "languageTag": "bg-BG",
+    "importName": "bgBG",
+    "localeName": "Bulgarian",
+    "missingKeysCount": 0,
+    "totalKeysCount": 50,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/bgBG.ts"
+  },
+  {
     "languageTag": "ca-ES",
     "importName": "caES",
     "localeName": "Catalan",
