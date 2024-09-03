@@ -112,7 +112,10 @@ describe('<DataGrid /> - Row spanning', () => {
 
   const rowHeight = 52;
 
-  it('should span the repeating row values', () => {
+  it('should span the repeating row values', function test() {
+    if (isJSDOM) {
+      this.skip();
+    }
     render(<TestDataGrid />);
     const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
     expect(rowsWithSpannedCells.length).to.equal(1);
@@ -124,7 +127,10 @@ describe('<DataGrid /> - Row spanning', () => {
     expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
   });
 
-  it('should work with sorting', () => {
+  it('should work with sorting', function test() {
+    if (isJSDOM) {
+      this.skip();
+    }
     render(
       <TestDataGrid initialState={{ sorting: { sortModel: [{ field: 'code', sort: 'desc' }] } }} />,
     );
@@ -138,7 +144,10 @@ describe('<DataGrid /> - Row spanning', () => {
     expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
   });
 
-  it('should work with filtering', () => {
+  it('should work with filtering', function test() {
+    if (isJSDOM) {
+      this.skip();
+    }
     render(
       <TestDataGrid
         initialState={{
