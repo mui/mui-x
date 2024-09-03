@@ -16,6 +16,7 @@ export type GridFilterInputDateProps = GridFilterInputValueProps &
      * required is selected (for example `isEmpty`)
      */
     isFilterActive?: boolean;
+    formControlClassName?: string;
   };
 
 function convertFilterItemValueToInputValue(
@@ -54,6 +55,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
     clearButton,
     tabIndex,
     disabled,
+    formControlClassName,
     ...other
   } = props;
   const filterTimeout = useTimeout();
@@ -98,6 +100,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
       InputLabelProps={{
         shrink: true,
       }}
+      className={formControlClassName}
       inputRef={focusElementRef}
       InputProps={{
         ...(applying || clearButton

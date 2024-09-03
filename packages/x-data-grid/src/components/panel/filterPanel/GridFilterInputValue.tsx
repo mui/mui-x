@@ -16,6 +16,7 @@ export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
      * required is selected (for example `isEmpty`)
      */
     isFilterActive?: boolean;
+    formControlClassName?: string;
   };
 
 type ItemPlusTag = GridFilterItem & { fromInput?: string };
@@ -32,6 +33,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     isFilterActive,
     clearButton,
     InputProps,
+    formControlClassName,
     variant = 'standard',
     ...others
   } = props;
@@ -72,6 +74,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
       onChange={onFilterChange}
       variant={variant}
       type={type || 'text'}
+      className={formControlClassName}
       InputProps={{
         ...(applying || clearButton
           ? {

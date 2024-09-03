@@ -89,7 +89,7 @@ function CustomHeaderFilter(props) {
       {...mouseEventsHandlers}
     >
       <Button
-        centerRipple={false}
+        disableRipple
         onClick={() => apiRef.current.showFilterPanel(colDef.field)}
       >
         {activeFiltersCount > 0 ? `${activeFiltersCount} active` : 'Add'} filters

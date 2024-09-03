@@ -599,6 +599,7 @@ export interface GridClasses {
    */
   'columnHeader--withRightBorder': string;
   'columnHeader--withLeftBorder': string;
+  'headerFilterInput--compact': string;
   /**
    * Styles applied to the root of the grouping column of the tree data.
    */
@@ -685,6 +686,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--filtered',
   'columnHeader--pinnedLeft',
   'columnHeader--pinnedRight',
+  'headerFilterInput--compact',
   'columnHeader--last',
   'columnHeaderCheckbox',
   'columnHeaderDraggableContainer',

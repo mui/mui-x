@@ -64,6 +64,7 @@ export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
      */
     isFilterActive?: boolean;
     type?: 'singleSelect';
+    formControlClassName?: string;
   };
 
 function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
@@ -80,6 +81,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     isFilterActive,
     clearButton,
     InputLabelProps,
+    formControlClassName,
     ...others
   } = props;
   const filterValue = item.value ?? '';
@@ -123,7 +125,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
 
   return (
     <SingleSelectOperatorContainer>
-      <rootProps.slots.baseFormControl fullWidth>
+      <rootProps.slots.baseFormControl fullWidth className={formControlClassName}>
         <rootProps.slots.baseInputLabel
           {...rootProps.slotProps?.baseInputLabel}
           id={labelId}

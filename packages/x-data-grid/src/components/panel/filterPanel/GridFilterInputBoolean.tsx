@@ -14,6 +14,7 @@ export type GridFilterInputBooleanProps = GridFilterInputValueProps &
      * required is selected (for example `isEmpty`)
      */
     isFilterActive?: boolean;
+    formControlClassName?: string;
   };
 
 const BooleanOperatorContainer = styled('div')({
@@ -37,6 +38,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     label: labelProp,
     variant = 'standard',
     InputLabelProps,
+    formControlClassName,
     ...others
   } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
@@ -67,7 +69,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
 
   return (
     <BooleanOperatorContainer>
-      <rootProps.slots.baseFormControl fullWidth>
+      <rootProps.slots.baseFormControl fullWidth className={formControlClassName}>
         <rootProps.slots.baseInputLabel
           {...rootProps.slotProps?.baseInputLabel}
           id={labelId}
