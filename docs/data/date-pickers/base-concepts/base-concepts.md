@@ -155,12 +155,8 @@ To benefit from the [CSS overrides](/material-ui/customization/theme-components/
 Internally, it uses module augmentation to extend the default theme structure.
 
 ```tsx
-// When using TypeScript 4.x and above
 import type {} from '@mui/x-date-pickers/themeAugmentation';
 import type {} from '@mui/x-date-pickers-pro/themeAugmentation';
-// When using TypeScript 3.x and below
-import '@mui/x-date-pickers/themeAugmentation';
-import '@mui/x-date-pickers-pro/themeAugmentation';
 
 const theme = createTheme({
   components: {
