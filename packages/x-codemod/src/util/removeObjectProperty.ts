@@ -52,14 +52,16 @@ export default function removeObjectProperty({
       const objectProperties = j(targetAttribute).find(j.ObjectProperty);
 
       const propertiesToProcess = properties.length > 0 ? properties : objectProperties;
-      if (propertiesToProcess.length > 0) {
-        propertiesToProcess.forEach((path) => {
-          const keyName = (path.value.key as Identifier).name;
-          if (keyName) {
-            definedKeys.push(keyName);
-          }
-        });
+      if (propertiesToProcess.length === 0) {
+        return;
       }
+
+      propertiesToProcess.forEach((path) => {
+        const keyName = (path.value.key as Identifier).name;
+        if (keyName) {
+          definedKeys.push(keyName);
+        }
+      });
 
       if (definedKeys.length === 1 && definedKeys[0] === propKey) {
         // only that property is defined, remove the whole prop
