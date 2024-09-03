@@ -1,12 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import Skeleton from '@mui/material/Skeleton';
 import {
   unstable_composeClasses as composeClasses,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
-import clsx from 'clsx';
-import { fastMemo } from '../../utils/fastMemo';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import { createRandomNumberGenerator } from '../../utils/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
