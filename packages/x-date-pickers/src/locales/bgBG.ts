@@ -1,9 +1,15 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
 
-// This object is not Partial<PickersLocaleText> because it is the default values
+const views: Record<TimeViewWithMeridiem, string> = {
+  hours: 'часове',
+  minutes: 'минути',
+  seconds: 'секунди',
+  meridiem: 'преди обяд/след обяд',
+};
 
-const bgBGPickers: PickersLocaleText<any> = {
+const bgBGPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Минал месец',
   nextMonth: 'Следващ месец',
@@ -38,15 +44,13 @@ const bgBGPickers: PickersLocaleText<any> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Избери ${view}. ${
-      time === null ? 'Не е избран час' : `Избраният час е ${adapter.format(time, 'fullTime')}`
-    }`,
+    `Избери ${views[view]}. ${time === null ? 'Не е избран час' : `Избраният час е ${adapter.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} часа`,
   minutesClockNumberText: (minutes) => `${minutes} минути`,
   secondsClockNumberText: (seconds) => `${seconds} секунди`,
 
   // Digital clock labels
-  selectViewText: (view) => `Избери ${view}`,
+  selectViewText: (view) => `Избери ${views[view]}`,
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Седмица',
@@ -63,7 +67,6 @@ const bgBGPickers: PickersLocaleText<any> = {
     value !== null && utils.isValid(value)
       ? `Избери час, избраният час е ${utils.format(value, 'fullTime')}`
       : 'Избери час',
-
   fieldClearLabel: 'Изчисти стойност',
 
   // Table labels
@@ -93,7 +96,5 @@ const bgBGPickers: PickersLocaleText<any> = {
   // Common
   empty: 'Празно',
 };
-
-export const DEFAULT_LOCALE = bgBGPickers;
 
 export const bgBG = getPickersLocalization(bgBGPickers);
