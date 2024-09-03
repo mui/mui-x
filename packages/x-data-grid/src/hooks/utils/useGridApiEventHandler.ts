@@ -117,12 +117,23 @@ export const useGridApiEventHandler = createUseGridApiEventHandler(registryConta
 
 const optionsSubscriberOptions: EventListenerOptions = { isFirst: true };
 
+const registeredEvents = new Set<GridEvents>();
 export function useGridApiOptionHandler<Api extends GridApiCommon, E extends GridEvents>(
   apiRef: React.MutableRefObject<Api>,
   eventName: E,
   handler?: GridEventListener<E>,
 ) {
-  // Validate that only one per event name?
+  // Validate that only one handler per event name
+  React.useEffect(() => {
+    if (registeredEvents.has(eventName)) {
+      throw new Error(
+        `An Event with event name: '${eventName}' has already been registered. Subscribing to multiple events with the same event name is not allowed.`,
+      );
+    }
+    registeredEvents.add(eventName);
+    return () => registeredEvents.clear();
+  }, [eventName]);
+
   useGridApiEventHandler(apiRef, eventName, handler, optionsSubscriberOptions);
 }
 
