@@ -29,6 +29,7 @@ const GridColumnHeaderTitleRoot = styled('div', {
   overflow: 'hidden',
   whiteSpace: 'nowrap',
   fontWeight: 'var(--unstable_DataGrid-headWeight)',
+  lineHeight: 'normal',
 });
 
 const ColumnHeaderInnerTitle = React.forwardRef<
