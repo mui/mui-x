@@ -56,7 +56,7 @@
     {
       "groupName": "@types/node",
       "matchPackageNames": ["@types/node"],
-      "allowedVersions": "< 19.0.0"
+      "allowedVersions": "< 21.0.0"
     },
     {
       "groupName": "bundling fixtures",
