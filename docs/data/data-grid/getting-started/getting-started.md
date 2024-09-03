@@ -138,7 +138,6 @@ In order to benefit from the [CSS overrides](/material-ui/customization/theme-co
 Internally, it uses module augmentation to extend the default theme structure.
 
 ```tsx
-// When using TypeScript 4.x and above
 import type {} from '@mui/x-data-grid/themeAugmentation';
 import type {} from '@mui/x-data-grid-pro/themeAugmentation';
 import type {} from '@mui/x-data-grid-premium/themeAugmentation';
