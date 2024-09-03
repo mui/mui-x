@@ -259,7 +259,7 @@ describe('<DateCalendar />', () => {
     it('should complete weeks when showDaysOutsideCurrentMonth=true', () => {
       render(
         <DateCalendar
-          defaultValue={adapterToUse.date('2018-01-03T11:11:11:111')}
+          defaultValue={adapterToUse.date('2018-01-03T11:11:11.111')}
           view="day"
           showDaysOutsideCurrentMonth
         />,
@@ -270,7 +270,7 @@ describe('<DateCalendar />', () => {
     it('should complete weeks up to match `fixedWeekNumber`', () => {
       render(
         <DateCalendar
-          defaultValue={adapterToUse.date('2018-01-03T11:11:11:111')}
+          defaultValue={adapterToUse.date('2018-01-03T11:11:11.111')}
           view="day"
           showDaysOutsideCurrentMonth
           fixedWeekNumber={6}

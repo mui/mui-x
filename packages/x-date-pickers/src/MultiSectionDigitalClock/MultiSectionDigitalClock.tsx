@@ -396,12 +396,12 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     if (!isRtl) {
       return views;
     }
-    const digitViews = views.filter((v) => v !== 'meridiem');
-    const result: TimeViewWithMeridiem[] = digitViews.toReversed();
+    const digitViews: TimeViewWithMeridiem[] = views.filter((v) => v !== 'meridiem');
+    digitViews.reverse();
     if (views.includes('meridiem')) {
-      result.push('meridiem');
+      digitViews.push('meridiem');
     }
-    return result;
+    return digitViews;
   }, [isRtl, views]);
 
   const viewTimeOptions = React.useMemo(() => {

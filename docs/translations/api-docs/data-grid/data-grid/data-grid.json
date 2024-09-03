@@ -457,10 +457,10 @@
       "description": "Override the height/width of the Data Grid inner scrollbar."
     },
     "showCellVerticalBorder": {
-      "description": "If <code>true</code>, the vertical borders of the cells are displayed."
+      "description": "If <code>true</code>, vertical borders will be displayed between cells."
     },
     "showColumnVerticalBorder": {
-      "description": "If <code>true</code>, the right border of the column headers are displayed."
+      "description": "If <code>true</code>, vertical borders will be displayed between column header items."
     },
     "slotProps": {
       "description": "Overridable components props dynamically passed to the component at rendering."
