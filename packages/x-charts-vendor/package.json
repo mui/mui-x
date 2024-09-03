@@ -3,7 +3,6 @@
   "version": "7.15.0",
   "description": "Vendored dependencies for MUI X Charts",
   "author": "MUI Team",
-  "main": "./index.js",
   "keywords": [
     "data visualization",
     "React",
@@ -12,7 +11,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/mui/mui-x"
+    "url": "https://github.com/mui/mui-x.git",
+    "directory": "packages/x-charts-vendor"
   },
   "license": "MIT AND ISC",
   "exports": {
