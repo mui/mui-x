@@ -1,4 +1,5 @@
 import { MakeOptional } from '@mui/x-internals/types';
+import { UsePickerValueNonStaticProps } from '@mui/x-date-pickers/internals';
 import {
   UseDesktopRangePickerSlots,
   UseDesktopRangePickerSlotProps,
@@ -40,4 +41,9 @@ export interface DesktopDateRangePickerProps<
    * @default {}
    */
   slotProps?: DesktopDateRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  /**
+   * If `true`, the popover or modal will close after submitting the full date.
+   * @default `true`
+   */
+  closeOnSelect?: UsePickerValueNonStaticProps['closeOnSelect'];
 }

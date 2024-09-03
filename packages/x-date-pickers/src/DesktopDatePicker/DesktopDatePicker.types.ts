@@ -11,6 +11,7 @@ import {
 } from '../DatePicker/shared';
 import { DateView } from '../models';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
+import { UsePickerValueNonStaticProps } from '../internals/hooks/usePicker/usePickerValue.types';
 
 export interface DesktopDatePickerSlots
   extends BaseDatePickerSlots,
@@ -39,4 +40,9 @@ export interface DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure exten
    * @default 4
    */
   yearsPerRow?: 3 | 4;
+  /**
+   * If `true`, the popover or modal will close after submitting the full date.
+   * @default `true`
+   */
+  closeOnSelect?: UsePickerValueNonStaticProps['closeOnSelect'];
 }

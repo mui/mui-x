@@ -1,4 +1,8 @@
-import { BaseSingleInputFieldProps, PickerRangeValue } from '@mui/x-date-pickers/internals';
+import {
+  BaseSingleInputFieldProps,
+  PickerRangeValue,
+  UsePickerValueNonStaticProps,
+} from '@mui/x-date-pickers/internals';
 import {
   DesktopDateRangePickerProps,
   DesktopDateRangePickerSlots,
@@ -39,6 +43,11 @@ export interface DateRangePickerProps<TEnableAccessibleFieldDOMStructure extends
    * @default {}
    */
   slotProps?: DateRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  /**
+   * If `true`, the popover or modal will close after submitting the full date.
+   * @default `true` for desktop, `false` for mobile variants (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   */
+  closeOnSelect?: UsePickerValueNonStaticProps['closeOnSelect'];
 }
 
 /**

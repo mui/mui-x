@@ -3,6 +3,7 @@ import {
   DesktopDatePickerSlots,
   DesktopDatePickerSlotProps,
 } from '../DesktopDatePicker';
+import { UsePickerValueNonStaticProps } from '../internals/hooks/usePicker/usePickerValue.types';
 import { BaseSingleInputFieldProps, PickerValue } from '../internals/models';
 import {
   MobileDatePickerProps,
@@ -42,6 +43,11 @@ export interface DatePickerProps<TEnableAccessibleFieldDOMStructure extends bool
    * @default 4 on desktop, 3 on mobile
    */
   yearsPerRow?: 3 | 4;
+  /**
+   * If `true`, the popover or modal will close after submitting the full date.
+   * @default `true` for desktop, `false` for mobile variants (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   */
+  closeOnSelect?: UsePickerValueNonStaticProps['closeOnSelect'];
 }
 
 /**
