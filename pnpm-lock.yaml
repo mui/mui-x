@@ -13216,7 +13216,7 @@ snapshots:
     dependencies:
       '@types/node': 18.19.47
       tapable: 2.2.1
-      webpack: 5.94.0(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.94.0))
+      webpack: 5.94.0(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack-cli@5.1.4)
     transitivePeerDependencies:
       - '@swc/core'
       - esbuild
@@ -19451,17 +19451,6 @@ snapshots:
       mkdirp: 0.5.6
       rimraf: 2.6.3
 
-  terser-webpack-plugin@5.3.10(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack@5.94.0(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.94.0))):
-    dependencies:
-      '@jridgewell/trace-mapping': 0.3.25
-      jest-worker: 27.5.1
-      schema-utils: 3.3.0
-      serialize-javascript: 6.0.2
-      terser: 5.27.0
-      webpack: 5.94.0(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.94.0))
-    optionalDependencies:
-      '@swc/core': 1.6.13(@swc/helpers@0.5.5)
-
   terser-webpack-plugin@5.3.10(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack@5.94.0(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack-cli@5.1.4)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
@@ -19983,38 +19972,6 @@ snapshots:
       wildcard: 2.0.1
 
   webpack-sources@3.2.3: {}
-
-  webpack@5.94.0(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.94.0)):
-    dependencies:
-      '@types/estree': 1.0.5
-      '@webassemblyjs/ast': 1.12.1
-      '@webassemblyjs/wasm-edit': 1.12.1
-      '@webassemblyjs/wasm-parser': 1.12.1
-      acorn: 8.12.1
-      acorn-import-attributes: 1.9.5(acorn@8.12.1)
-      browserslist: 4.23.3
-      chrome-trace-event: 1.0.3
-      enhanced-resolve: 5.17.1
-      es-module-lexer: 1.5.4
-      eslint-scope: 5.1.1
-      events: 3.3.0
-      glob-to-regexp: 0.4.1
-      graceful-fs: 4.2.11
-      json-parse-even-better-errors: 2.3.1
-      loader-runner: 4.3.0
-      mime-types: 2.1.35
-      neo-async: 2.6.2
-      schema-utils: 3.3.0
-      tapable: 2.2.1
-      terser-webpack-plugin: 5.3.10(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack@5.94.0(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.94.0)))
-      watchpack: 2.4.1
-      webpack-sources: 3.2.3
-    optionalDependencies:
-      webpack-cli: 5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.94.0)
-    transitivePeerDependencies:
-      - '@swc/core'
-      - esbuild
-      - uglify-js
 
   webpack@5.94.0(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack-cli@5.1.4):
     dependencies:
