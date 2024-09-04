@@ -544,6 +544,7 @@
   { "name": "PaginationPropsOverrides", "kind": "Interface" },
   { "name": "PanelPropsOverrides", "kind": "Interface" },
   { "name": "PinnedRowsPropsOverrides", "kind": "Interface" },
+  { "name": "PropsFromSlot", "kind": "TypeAlias" },
   { "name": "renderActionsCell", "kind": "Variable" },
   { "name": "renderBooleanCell", "kind": "Variable" },
   { "name": "renderEditBooleanCell", "kind": "Variable" },

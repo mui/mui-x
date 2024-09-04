@@ -726,6 +726,9 @@ importers:
       '@mui/x-charts-vendor':
         specifier: workspace:*
         version: link:../x-charts-vendor
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
       '@react-spring/rafz':
         specifier: ^9.7.4
         version: 9.7.4
@@ -791,6 +794,9 @@ importers:
       '@mui/x-charts-vendor':
         specifier: workspace:*
         version: link:../x-charts-vendor
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
       '@mui/x-license':
         specifier: workspace:*
         version: link:../x-license/build
@@ -1191,6 +1197,9 @@ importers:
       '@mui/utils':
         specifier: ^5.16.6
         version: 5.16.6(@types/react@18.3.4)(react@18.3.1)
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
       '@types/react-transition-group':
         specifier: ^4.4.11
         version: 4.4.11
@@ -1277,6 +1286,9 @@ importers:
       '@mui/x-date-pickers':
         specifier: workspace:*
         version: link:../x-date-pickers/build
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
       '@mui/x-license':
         specifier: workspace:*
         version: link:../x-license/build

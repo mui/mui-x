@@ -4,6 +4,7 @@
   { "name": "getTreeItemUtilityClass", "kind": "Function" },
   { "name": "getTreeViewUtilityClass", "kind": "Function" },
   { "name": "MultiSelectTreeViewProps", "kind": "TypeAlias" },
+  { "name": "PropsFromSlot", "kind": "TypeAlias" },
   { "name": "RichTreeViewPro", "kind": "Variable" },
   { "name": "richTreeViewProClasses", "kind": "Variable" },
   { "name": "RichTreeViewProClasses", "kind": "Interface" },

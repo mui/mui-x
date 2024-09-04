@@ -147,7 +147,7 @@ const ratingColumnType: GridColTypeDef = {
 
 ## Custom filter panel
 
-You can customize the rendering of the filter panel as shown in [the component section](/x/react-data-grid/components/#overriding-components) of the documentation.
+You can customize the rendering of the filter panel as shown in [the component section](/x/react-data-grid/components/#component-slots) of the documentation.
 
 ### Customize the filter panel content
 

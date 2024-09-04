@@ -45,6 +45,7 @@
     "@babel/runtime": "^7.25.6",
     "@mui/utils": "^5.16.6",
     "@mui/x-date-pickers": "workspace:*",
+    "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",

@@ -241,6 +241,7 @@
   { "name": "PickersYearClassKey", "kind": "TypeAlias" },
   { "name": "PickerValidDate", "kind": "TypeAlias" },
   { "name": "PickerValidDateLookup", "kind": "Interface" },
+  { "name": "PropsFromSlot", "kind": "TypeAlias" },
   { "name": "renderDateViewCalendar", "kind": "Variable" },
   { "name": "renderDigitalClockTimeView", "kind": "Variable" },
   { "name": "renderMultiSectionDigitalClockTimeView", "kind": "Variable" },
