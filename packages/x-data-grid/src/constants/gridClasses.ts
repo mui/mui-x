@@ -599,6 +599,9 @@ export interface GridClasses {
    */
   'columnHeader--withRightBorder': string;
   'columnHeader--withLeftBorder': string;
+  /**
+   * Styles applied the form control of the header filter cell with density="compact".
+   */
   'headerFilterInput--compact': string;
   /**
    * Styles applied to the root of the grouping column of the tree data.
