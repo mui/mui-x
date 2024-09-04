@@ -129,7 +129,7 @@ export default function useTreeItem2HookStatus() {
           defaultSelectedItems={'pickers'}
           slots={{ item: CustomTreeItem }}
           isItemDisabled={(item) => Boolean(item?.disabled)}
-          isItemEditable
+          isItemEditable={(item) => Boolean(item?.editable)}
           experimentalFeatures={{
             labelEditing: true,
           }}

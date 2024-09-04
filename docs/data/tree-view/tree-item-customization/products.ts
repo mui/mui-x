@@ -4,30 +4,31 @@ type TreeItemType = {
   id: string;
   label: string;
   disabled?: boolean;
+  editable?: boolean;
 };
 
 export const MUI_X_PRODUCTS: TreeViewBaseItem<TreeItemType>[] = [
   {
     id: 'grid',
     label: 'Data Grid',
-
+    editable: true,
     children: [
-      { id: 'grid-community', label: '@mui/x-data-grid' },
-      { id: 'grid-pro', label: '@mui/x-data-grid-pro' },
-      { id: 'grid-premium', label: '@mui/x-data-grid-premium' },
+      { id: 'grid-community', label: '@mui/x-data-grid', editable: true },
+      { id: 'grid-pro', label: '@mui/x-data-grid-pro', editable: true },
+      { id: 'grid-premium', label: '@mui/x-data-grid-premium', editable: true },
     ],
   },
   {
     id: 'pickers',
     label: 'Date and time pickers',
-
+    editable: true,
     children: [
       {
         id: 'pickers-community',
         label: '@mui/x-date-pickers',
         disabled: true,
       },
-      { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
+      { id: 'pickers-pro', label: '@mui/x-date-pickers-pro', editable: true },
     ],
   },
   {
