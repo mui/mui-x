@@ -1757,10 +1757,6 @@ packages:
     resolution: {integrity: sha512-BBt3opiCOxUr9euZ5/ro/Xv8/V7yJ5bjYMqG/C1YAo8MIKAnumZalCN+msbci3Pigy4lIQfPUpfMM27HMGaYEA==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/generator@7.25.5':
-    resolution: {integrity: sha512-abd43wyLfbWoxC6ahM8xTkqLpGB2iWBVyuKC9/srhFunCd1SDNrV1s72bBpK4hLj8KLzHBBcOblvLQZBNw9r3w==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/generator@7.25.6':
     resolution: {integrity: sha512-VPC82gr1seXOpkjAAKoLhP50vx4vGNlF4msF64dSFq1P8RfB+QAuJWGHPXXPc8QyfVWwwB/TNNU4+ayZmHNbZw==}
     engines: {node: '>=6.9.0'}
@@ -1866,11 +1862,6 @@ packages:
     hasBin: true
     peerDependencies:
       '@babel/core': ^7.0.0-0
-
-  '@babel/parser@7.25.4':
-    resolution: {integrity: sha512-nq+eWrOgdtu3jG5Os4TQP3x3cLA8hR8TvJNjD8vnPa20WGycimcparWnLK4jJhElTK6SDyuJo1weMKO/5LpmLA==}
-    engines: {node: '>=6.0.0'}
-    hasBin: true
 
   '@babel/parser@7.25.6':
     resolution: {integrity: sha512-trGdfBdbD0l1ZPmcJ83eNxB9rbEax4ALFTF7fN386TMYbeCQbyme5cOEXQhbGXKebwGaB/J52w1mrklMcbgy6Q==}
@@ -10376,11 +10367,11 @@ snapshots:
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@babel/code-frame': 7.24.7
-      '@babel/generator': 7.25.5
+      '@babel/generator': 7.25.6
       '@babel/helper-compilation-targets': 7.25.2
       '@babel/helper-module-transforms': 7.25.2(@babel/core@7.25.2)
       '@babel/helpers': 7.25.0
-      '@babel/parser': 7.25.4
+      '@babel/parser': 7.25.6
       '@babel/template': 7.25.0
       '@babel/traverse': 7.25.6
       '@babel/types': 7.25.6
@@ -10391,13 +10382,6 @@ snapshots:
       semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
-
-  '@babel/generator@7.25.5':
-    dependencies:
-      '@babel/types': 7.25.6
-      '@jridgewell/gen-mapping': 0.3.5
-      '@jridgewell/trace-mapping': 0.3.25
-      jsesc: 2.5.2
 
   '@babel/generator@7.25.6':
     dependencies:
@@ -10553,10 +10537,6 @@ snapshots:
       node-environment-flags: 1.0.6
       regenerator-runtime: 0.14.1
       v8flags: 3.2.0
-
-  '@babel/parser@7.25.4':
-    dependencies:
-      '@babel/types': 7.25.6
 
   '@babel/parser@7.25.6':
     dependencies:
@@ -11265,7 +11245,7 @@ snapshots:
   '@babel/template@7.25.0':
     dependencies:
       '@babel/code-frame': 7.24.7
-      '@babel/parser': 7.25.4
+      '@babel/parser': 7.25.6
       '@babel/types': 7.25.6
 
   '@babel/traverse@7.25.6':
@@ -13010,7 +12990,7 @@ snapshots:
 
   '@types/babel__core@7.20.5':
     dependencies:
-      '@babel/parser': 7.25.4
+      '@babel/parser': 7.25.6
       '@babel/types': 7.25.6
       '@types/babel__generator': 7.6.8
       '@types/babel__template': 7.4.4
@@ -13022,7 +13002,7 @@ snapshots:
 
   '@types/babel__template@7.4.4':
     dependencies:
-      '@babel/parser': 7.25.4
+      '@babel/parser': 7.25.6
       '@babel/types': 7.25.6
 
   '@types/babel__traverse@7.20.6':
@@ -13952,7 +13932,7 @@ snapshots:
 
   babel-plugin-optimize-clsx@2.6.2:
     dependencies:
-      '@babel/generator': 7.25.5
+      '@babel/generator': 7.25.6
       '@babel/template': 7.25.0
       '@babel/types': 7.25.6
       find-cache-dir: 3.3.2
@@ -15413,7 +15393,7 @@ snapshots:
   eslint-plugin-react-compiler@0.0.0-experimental-9ed098e-20240725(eslint@8.57.0):
     dependencies:
       '@babel/core': 7.25.2
-      '@babel/parser': 7.25.4
+      '@babel/parser': 7.25.6
       '@babel/plugin-proposal-private-methods': 7.18.6(@babel/core@7.25.2)
       eslint: 8.57.0
       hermes-parser: 0.20.1
@@ -16647,7 +16627,7 @@ snapshots:
   istanbul-lib-instrument@6.0.2:
     dependencies:
       '@babel/core': 7.25.2
-      '@babel/parser': 7.25.4
+      '@babel/parser': 7.25.6
       '@istanbuljs/schema': 0.1.3
       istanbul-lib-coverage: 3.2.2
       semver: 7.6.3
@@ -16758,7 +16738,7 @@ snapshots:
   jscodeshift@17.0.0(@babel/preset-env@7.25.4(@babel/core@7.25.2)):
     dependencies:
       '@babel/core': 7.25.2
-      '@babel/parser': 7.25.4
+      '@babel/parser': 7.25.6
       '@babel/plugin-transform-class-properties': 7.25.4(@babel/core@7.25.2)
       '@babel/plugin-transform-modules-commonjs': 7.24.8(@babel/core@7.25.2)
       '@babel/plugin-transform-nullish-coalescing-operator': 7.24.7(@babel/core@7.25.2)
@@ -18572,7 +18552,7 @@ snapshots:
   react-docgen@5.4.3:
     dependencies:
       '@babel/core': 7.25.2
-      '@babel/generator': 7.25.5
+      '@babel/generator': 7.25.6
       '@babel/runtime': 7.25.6
       ast-types: 0.14.2
       commander: 2.20.3
