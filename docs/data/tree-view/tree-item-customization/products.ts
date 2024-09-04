@@ -1,6 +1,12 @@
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
-export const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
+type TreeItemType = {
+  id: string;
+  label: string;
+  disabled?: boolean;
+};
+
+export const MUI_X_PRODUCTS: TreeViewBaseItem<TreeItemType>[] = [
   {
     id: 'grid',
     label: 'Data Grid',
@@ -19,6 +25,7 @@ export const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
       {
         id: 'pickers-community',
         label: '@mui/x-date-pickers',
+        disabled: true,
       },
       { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
     ],
