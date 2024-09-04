@@ -461,50 +461,50 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   describe('column menu', () => {
-    it('should pin the column to the left when clicking the "Pin to left" pinning button', () => {
-      render(<TestCase />);
+    it('should pin the column to the left when clicking the "Pin to left" pinning button', async () => {
+      const { user } = render(<TestCase />);
       const columnCell = $('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
-      fireEvent.click(menuIconButton);
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
+      await user.click(menuIconButton);
+      await user.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
       expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).not.to.equal(null);
     });
 
-    it('should pin the column to the right when clicking the "Pin to right" pinning button', () => {
-      render(<TestCase />);
+    it('should pin the column to the right when clicking the "Pin to right" pinning button', async () => {
+      const { user } = render(<TestCase />);
       const columnCell = $('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
-      fireEvent.click(menuIconButton);
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to right' }));
+      await user.click(menuIconButton);
+      await user.click(screen.getByRole('menuitem', { name: 'Pin to right' }));
       expect($(`.${gridClasses['cell--pinnedRight']}[data-field="id"]`)).not.to.equal(null);
     });
 
-    it('should allow to invert the side when clicking on "Pin to right" pinning button on a left pinned column', () => {
-      render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
+    it('should allow to invert the side when clicking on "Pin to right" pinning button on a left pinned column', async () => {
+      const { user } = render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
       const columnCell = $('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
-      fireEvent.click(menuIconButton);
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to right' }));
+      await user.click(menuIconButton);
+      await user.click(screen.getByRole('menuitem', { name: 'Pin to right' }));
       expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
       expect($(`.${gridClasses['cell--pinnedRight']}[data-field="id"]`)).not.to.equal(null);
     });
 
-    it('should allow to invert the side when clicking on "Pin to left" pinning button on a right pinned column', () => {
-      render(<TestCase initialState={{ pinnedColumns: { right: ['id'] } }} />);
+    it('should allow to invert the side when clicking on "Pin to left" pinning button on a right pinned column', async () => {
+      const { user } = render(<TestCase initialState={{ pinnedColumns: { right: ['id'] } }} />);
       const columnCell = $('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
-      fireEvent.click(menuIconButton);
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
+      await user.click(menuIconButton);
+      await user.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
       expect($(`.${gridClasses['cell--pinnedRight']}[data-field="id"]`)).to.equal(null);
       expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).not.to.equal(null);
     });
 
-    it('should allow to unpin a pinned left column when clicking "Unpin" pinning button', () => {
-      render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
+    it('should allow to unpin a pinned left column when clicking "Unpin" pinning button', async () => {
+      const { user } = render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
       const columnCell = $('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
-      fireEvent.click(menuIconButton);
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Unpin' }));
+      await user.click(menuIconButton);
+      await user.click(screen.getByRole('menuitem', { name: 'Unpin' }));
       expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
     });
 
