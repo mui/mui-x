@@ -75,7 +75,7 @@ function ChartsLegendItem(props: ChartsLegendItemProps) {
         style={{ pointerEvents: 'none' }}
       />
       <ChartsText
-        style={{ ...labelStyle, pointerEvents: 'none' }}
+        style={{ pointerEvents: 'none', ...labelStyle }}
         text={label}
         x={(isRTL ? -1 : 1) * (itemMarkWidth + markGap)}
         y={0}
