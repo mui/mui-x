@@ -1,67 +1,60 @@
 import * as React from 'react';
-import { cartesianProviderUtils } from '@mui/x-charts/internals';
-import { ZoomContext, ZoomState } from './ZoomContext';
+import useControlled from '@mui/utils/useControlled';
+import { Initializable } from '@mui/x-charts/internals';
+import { ZoomContext } from './ZoomContext';
 import { defaultizeZoom } from './defaultizeZoom';
-import { AxisConfigForZoom, ZoomData } from './Zoom.types';
+import { ZoomData, ZoomProviderProps, ZoomState } from './Zoom.types';
+import { initializeZoomData } from './initializeZoomData';
 
-const { defaultizeAxis } = cartesianProviderUtils;
-
-type ZoomProviderProps = {
-  children: React.ReactNode;
-  /**
-   * The configuration of the x-axes.
-   * If not provided, a default axis config is used.
-   * An array of [[AxisConfig]] objects.
-   */
-  xAxis?: AxisConfigForZoom[];
-  /**
-   * The configuration of the y-axes.
-   * If not provided, a default axis config is used.
-   * An array of [[AxisConfig]] objects.
-   */
-  yAxis?: AxisConfigForZoom[];
-};
-
-export function ZoomProvider({ children, xAxis: inXAxis, yAxis: inYAxis }: ZoomProviderProps) {
+export function ZoomProvider({ children, xAxis, yAxis, zoom, onZoomChange }: ZoomProviderProps) {
   const [isInteracting, setIsInteracting] = React.useState<boolean>(false);
 
   const options = React.useMemo(
     () =>
-      [
-        ...defaultizeZoom(defaultizeAxis(inXAxis, 'x'), 'x'),
-        ...defaultizeZoom(defaultizeAxis(inYAxis, 'y'), 'y'),
-      ].reduce(
+      [...defaultizeZoom(xAxis, 'x'), ...defaultizeZoom(yAxis, 'y')].reduce(
         (acc, v) => {
           acc[v.axisId] = v;
           return acc;
         },
         {} as ZoomState['options'],
       ),
-    [inXAxis, inYAxis],
+    [xAxis, yAxis],
   );
 
-  const [zoomData, setZoomData] = React.useState<ZoomData[]>(() =>
-    Object.values(options).map(({ axisId, minStart: start, maxEnd: end }) => ({
-      axisId,
-      start,
-      end,
-    })),
+  // Default zoom data is initialized only once when uncontrolled. If the user changes the options
+  // after the initial render, the zoom data will not be updated until the next zoom interaction.
+  // This is required to avoid warnings about controlled/uncontrolled components.
+  const defaultZoomData = React.useRef<ZoomData[]>(initializeZoomData(options));
+
+  const [zoomData, setZoomData] = useControlled<ZoomData[]>({
+    controlled: zoom,
+    default: defaultZoomData.current,
+    name: 'ZoomProvider',
+    state: 'zoom',
+  });
+
+  const setZoomDataCallback = React.useCallback<ZoomState['setZoomData']>(
+    (newZoomData) => {
+      setZoomData(newZoomData);
+      onZoomChange?.(newZoomData);
+    },
+    [setZoomData, onZoomChange],
   );
 
-  const value = React.useMemo(
+  const value = React.useMemo<Initializable<ZoomState>>(
     () => ({
       isInitialized: true,
       data: {
-        isZoomEnabled: zoomData.length > 0,
+        isZoomEnabled: Object.keys(options).length > 0,
         isPanEnabled: isPanEnabled(options),
         options,
         zoomData,
-        setZoomData,
+        setZoomData: setZoomDataCallback,
         isInteracting,
         setIsInteracting,
       },
     }),
-    [zoomData, setZoomData, isInteracting, setIsInteracting, options],
+    [zoomData, isInteracting, setIsInteracting, options, setZoomDataCallback],
   );
 
   return <ZoomContext.Provider value={value}>{children}</ZoomContext.Provider>;

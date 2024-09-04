@@ -13,7 +13,7 @@ import {
   PickersTimezone,
   DateBuilderReturnType,
 } from '../models';
-import { buildWarning } from '../internals/utils/warning';
+import { warnOnce } from '../internals/utils/warning';
 
 defaultDayjs.extend(localizedFormatPlugin);
 defaultDayjs.extend(weekOfYearPlugin);
@@ -21,13 +21,6 @@ defaultDayjs.extend(isBetweenPlugin);
 defaultDayjs.extend(advancedFormatPlugin);
 
 type Constructor = (...args: Parameters<typeof defaultDayjs>) => Dayjs;
-
-const localeNotFoundWarning = buildWarning([
-  'Your locale has not been found.',
-  'Either the locale key is not a supported one. Locales supported by dayjs are available here: https://github.com/iamkun/dayjs/tree/dev/src/locale',
-  "Or you forget to import the locale from 'dayjs/locale/{localeUsed}'",
-  'fallback on English locale',
-]);
 
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
@@ -255,7 +248,15 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     let localeObject = locales[locale];
 
     if (localeObject === undefined) {
-      localeNotFoundWarning();
+      /* istanbul ignore next */
+      if (process.env.NODE_ENV !== 'production') {
+        warnOnce([
+          'MUI X: Your locale has not been found.',
+          'Either the locale key is not a supported one. Locales supported by dayjs are available here: https://github.com/iamkun/dayjs/tree/dev/src/locale.',
+          "Or you forget to import the locale from 'dayjs/locale/{localeUsed}'",
+          'fallback on English locale.',
+        ]);
+      }
       localeObject = locales.en;
     }
 
@@ -277,7 +278,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     if (timezone !== 'UTC') {
       const fixedValue = value.tz(this.cleanTimezone(timezone), true);
       // @ts-ignore
-      if ((fixedValue.$offset ?? 0) === (value.$offset ?? 0)) {
+      if (fixedValue.$offset === (value.$offset ?? 0)) {
         return value;
       }
       // Change only what is needed to avoid creating a new object with unwanted data
@@ -512,7 +513,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public startOfWeek = (value: Dayjs) => {
-    return this.adjustOffset(value.startOf('week'));
+    return this.adjustOffset(this.setLocaleToValue(value).startOf('week'));
   };
 
   public startOfDay = (value: Dayjs) => {
@@ -528,7 +529,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public endOfWeek = (value: Dayjs) => {
-    return this.adjustOffset(value.endOf('week'));
+    return this.adjustOffset(this.setLocaleToValue(value).endOf('week'));
   };
 
   public endOfDay = (value: Dayjs) => {
@@ -638,9 +639,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public getWeekArray = (value: Dayjs) => {
-    const cleanValue = this.setLocaleToValue(value);
-    const start = this.startOfWeek(this.startOfMonth(cleanValue));
-    const end = this.endOfWeek(this.endOfMonth(cleanValue));
+    const start = this.startOfWeek(this.startOfMonth(value));
+    const end = this.endOfWeek(this.endOfMonth(value));
 
     let count = 0;
     let current = start;

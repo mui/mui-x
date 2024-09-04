@@ -17,10 +17,7 @@ const Root = styled('div')(({ theme }) => ({
   fontWeight: 600,
   color: (theme.vars || theme).palette.text.secondary,
   '&.low': {
-    color:
-      theme.palette.mode === 'dark'
-        ? (theme.vars || theme).palette.text.primary
-        : (theme.vars || theme).palette.error.dark,
+    color: (theme.vars || theme).palette.error.dark,
     '& .progress-bar': {
       backgroundColor: (theme.vars || theme).palette.error.main,
       opacity: 0.3,
@@ -29,26 +26,29 @@ const Root = styled('div')(({ theme }) => ({
       border: `1px solid`,
       borderColor: (theme.vars || theme).palette.error.light,
     },
+    ...theme.applyStyles('dark', {
+      color: (theme.vars || theme).palette.text.primary,
+    }),
   },
   '&.medium': {
-    color:
-      theme.palette.mode === 'dark'
-        ? (theme.vars || theme).palette.text.primary
-        : (theme.vars || theme).palette.warning.dark,
+    color: (theme.vars || theme).palette.warning.dark,
     '& .progress-bar': {
       backgroundColor: (theme.vars || theme).palette.warning.main,
-      opacity: theme.palette.mode === 'dark' ? 0.4 : 0.25,
+      opacity: 0.25,
+      ...theme.applyStyles('dark', {
+        opacity: 0.4,
+      }),
     },
     '& .progress-background': {
       border: `1px solid`,
       borderColor: (theme.vars || theme).palette.warning.light,
     },
+    ...theme.applyStyles('dark', {
+      color: (theme.vars || theme).palette.text.primary,
+    }),
   },
   '&.high': {
-    color:
-      theme.palette.mode === 'dark'
-        ? (theme.vars || theme).palette.text.primary
-        : (theme.vars || theme).palette.success.dark,
+    color: (theme.vars || theme).palette.success.dark,
     '& .progress-bar': {
       backgroundColor: (theme.vars || theme).palette.success.main,
       opacity: 0.3,
@@ -57,6 +57,9 @@ const Root = styled('div')(({ theme }) => ({
       border: `1px solid`,
       borderColor: (theme.vars || theme).palette.success.light,
     },
+    ...theme.applyStyles('dark', {
+      color: (theme.vars || theme).palette.text.primary,
+    }),
   },
 }));
 

@@ -22,21 +22,16 @@
         "name": "enum",
         "description": "'axis'<br>&#124;&nbsp;'item'<br>&#124;&nbsp;'none'"
       },
-      "default": "'item'"
+      "default": "'axis'"
     }
   },
   "name": "ChartsTooltip",
   "imports": [
     "import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';",
-    "import { ChartsTooltip } from '@mui/x-charts';"
+    "import { ChartsTooltip } from '@mui/x-charts';",
+    "import { ChartsTooltip } from '@mui/x-charts-pro';"
   ],
   "slots": [
-    {
-      "name": "popper",
-      "description": "Custom component for the tooltip popper.",
-      "default": "ChartsTooltipRoot",
-      "class": null
-    },
     {
       "name": "axisContent",
       "description": "Custom component for displaying tooltip content when triggered by axis event.",
@@ -47,6 +42,12 @@
       "name": "itemContent",
       "description": "Custom component for displaying tooltip content when triggered by item event.",
       "default": "DefaultChartsItemTooltipContent",
+      "class": null
+    },
+    {
+      "name": "popper",
+      "description": "Custom component for the tooltip popper.",
+      "default": "ChartsTooltipRoot",
       "class": null
     }
   ],
@@ -73,6 +74,12 @@
       "key": "markCell",
       "className": "MuiChartsTooltip-markCell",
       "description": "Styles applied to the markCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "paper",
+      "className": "MuiChartsTooltip-paper",
+      "description": "Styles applied to the paper element.",
       "isGlobal": false
     },
     {

@@ -56,6 +56,10 @@ export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
 export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
+export {
+  gridFilteredChildrenCountLookupSelector,
+  gridExpandedSortedRowTreeLevelPositionLookupSelector,
+} from '../hooks/features/filter/gridFilterSelector';
 export { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
 export type {
   GridAggregatedFilterItemApplier,
@@ -74,6 +78,8 @@ export {
 export { useGridEditing, editingStateInitializer } from '../hooks/features/editing/useGridEditing';
 export { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
 export { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
+export { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
+export { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 export type {
   GridRowTreeCreationParams,
@@ -133,7 +139,13 @@ export type * from '../models/props/DataGridProps';
 export type * from '../models/gridDataSource';
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
-export { createSelector, createSelectorMemoized } from '../utils/createSelector';
+export {
+  createSelector,
+  createSelectorV8,
+  createSelectorMemoized,
+  createSelectorMemoizedV8,
+} from '../utils/createSelector';
+export { useGridSelectorV8 } from '../hooks/utils/useGridSelector';
 export { gridRowGroupsToFetchSelector } from '../hooks/features/rows/gridRowsSelector';
 export {
   findParentElementFromClassName,
@@ -142,8 +154,6 @@ export {
 } from '../utils/domUtils';
 export { isNavigationKey, isPasteShortcut } from '../utils/keyboardUtils';
 export * from '../utils/utils';
-export * from '../utils/fastMemo';
-export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
 export * from '../utils/getPublicApiRef';
 export * from '../utils/cellBorderUtils';

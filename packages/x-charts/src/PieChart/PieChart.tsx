@@ -1,5 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useRtl } from '@mui/system/RtlProvider';
+import { useThemeProps } from '@mui/material/styles';
 import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
@@ -29,7 +31,6 @@ import {
   ChartsXAxisProps,
   ChartsYAxisProps,
 } from '../models/axis';
-import { useIsRTL } from '../internals/useIsRTL';
 import {
   ChartsOverlay,
   ChartsOverlayProps,
@@ -123,7 +124,8 @@ const defaultRTLMargin = { top: 5, bottom: 5, left: 100, right: 5 };
  *
  * - [PieChart API](https://mui.com/x/api/charts/pie-chart/)
  */
-const PieChart = React.forwardRef(function PieChart(props: PieChartProps, ref) {
+const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref) {
+  const props = useThemeProps({ props: inProps, name: 'MuiPieChart' });
   const {
     xAxis,
     yAxis,
@@ -149,20 +151,20 @@ const PieChart = React.forwardRef(function PieChart(props: PieChartProps, ref) {
     highlightedItem,
     onHighlightChange,
     className,
-    ...rest
+    ...other
   } = props;
-  const isRTL = useIsRTL();
+  const isRtl = useRtl();
 
-  const margin = { ...(isRTL ? defaultRTLMargin : defaultMargin), ...marginProps };
+  const margin = { ...(isRtl ? defaultRTLMargin : defaultMargin), ...marginProps };
   const legend: ChartsLegendProps = {
     direction: 'column',
-    position: { vertical: 'middle', horizontal: isRTL ? 'left' : 'right' },
+    position: { vertical: 'middle', horizontal: isRtl ? 'left' : 'right' },
     ...legendProps,
   };
 
   return (
     <ResponsiveChartContainer
-      {...rest}
+      {...other}
       ref={ref}
       series={series.map((s) => ({ type: 'pie', ...s }))}
       width={width}
@@ -276,6 +278,20 @@ PieChart.propTypes = {
     classes: PropTypes.object,
     direction: PropTypes.oneOf(['column', 'row']),
     hidden: PropTypes.bool,
+    itemGap: PropTypes.number,
+    itemMarkHeight: PropTypes.number,
+    itemMarkWidth: PropTypes.number,
+    labelStyle: PropTypes.object,
+    markGap: PropTypes.number,
+    padding: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.shape({
+        bottom: PropTypes.number,
+        left: PropTypes.number,
+        right: PropTypes.number,
+        top: PropTypes.number,
+      }),
+    ]),
     position: PropTypes.shape({
       horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
       vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
@@ -378,7 +394,6 @@ PieChart.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -425,6 +440,11 @@ PieChart.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -449,7 +469,6 @@ PieChart.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -496,6 +515,11 @@ PieChart.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),

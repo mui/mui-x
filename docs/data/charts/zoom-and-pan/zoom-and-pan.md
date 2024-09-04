@@ -1,9 +1,10 @@
 ---
 title: Zoom & Pan
 productId: x-charts
+components: ScatterChartPro, BarChartPro, LineChartPro
 ---
 
-# Zoom & Pan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') 🚧
+# Zoom & Pan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Enables zooming and panning on specific charts or axis.</p>
 
@@ -25,7 +26,7 @@ The following actions are supported:
 {{"demo": "ZoomBarChart.js"}}
 {{"demo": "ZoomLineChart.js"}}
 
-## Zooming Options
+## Zooming options
 
 You can customize the zooming behavior by setting the `zoomOptions` prop.
 
@@ -39,3 +40,29 @@ The following options are available:
 - **panning**: Enables or disables panning.
 
 {{"demo": "ZoomOptionsNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+
+## Controlled zoom
+
+You can control the zoom state by setting the `zoom` and `onZoomChange` props.
+This way, you can control the zoom state from outside the chart.
+
+The `onZoomChange` prop is a function that receives the new zoom state.
+
+While the `zoom` prop is an array of objects that define the zoom state for each axis with zoom enabled.
+
+- **axisId**: The id of the axis to control.
+- **start**: The starting percentage of the axis range.
+- **end**: The ending percentage of the zoom range.
+
+{{"demo": "ZoomControlled.js"}}
+
+## Zoom filtering
+
+You can make the zoom of an axis affect one or more axes extremums by setting the `zoom.filterMode` prop on the axis config.
+
+- If `zoom.filterMode` is set to `"discard"` the data points outside the visible range of this axis are filtered out and the other axes will modify their zoom range to fit the visible ones.
+- If `zoom.filterMode` is set to `"keep"` (default) the data points outside the visible range are kept. Then, other axes will not be impacted.
+
+See how the secondary axis adapts to the visible part of the primary axis in the following example.
+
+{{"demo": "ZoomFilterMode.js"}}

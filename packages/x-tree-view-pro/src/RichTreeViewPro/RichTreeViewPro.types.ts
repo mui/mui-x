@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import { TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 import { TreeViewItemId } from '@mui/x-tree-view/models';

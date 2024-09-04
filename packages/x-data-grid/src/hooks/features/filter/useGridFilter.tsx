@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { defaultMemoize } from 'reselect';
+import { lruMemoize } from 'reselect';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -46,6 +46,7 @@ export const filterStateInitializer: GridStateInitializer<
     filter: {
       filterModel: sanitizeFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
       filteredRowsLookup: {},
+      filteredChildrenCountLookup: {},
       filteredDescendantCountLookup: {},
     },
     visibleRowsLookup: {},
@@ -68,7 +69,7 @@ function getVisibleRowsLookupState(
 }
 
 function createMemoizedValues() {
-  return defaultMemoize(Object.values);
+  return lruMemoize(Object.values);
 }
 
 /**
@@ -424,6 +425,7 @@ export const useGridFilter = (
       if (props.filterMode !== 'client' || !params.isRowMatchingFilters) {
         return {
           filteredRowsLookup: {},
+          filteredChildrenCountLookup: {},
           filteredDescendantCountLookup: {},
         };
       }
@@ -464,6 +466,7 @@ export const useGridFilter = (
 
       return {
         filteredRowsLookup,
+        filteredChildrenCountLookup: {},
         filteredDescendantCountLookup: {},
       };
     },

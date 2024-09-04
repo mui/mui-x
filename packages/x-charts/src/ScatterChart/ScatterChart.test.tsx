@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { createRenderer, describeConformance } from '@mui/internal-test-utils';
-import { ScatterChart } from './ScatterChart';
+import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import { describeConformance } from 'test/utils/describeConformance';
+import { ScatterChart } from '@mui/x-charts/ScatterChart';
 
 describe('<ScatterChart />', () => {
   const { render } = createRenderer();
@@ -31,7 +32,6 @@ describe('<ScatterChart />', () => {
         'slotPropsProp',
         'slotPropsCallback',
         'slotsProp',
-        'themeDefaultProps',
         'themeStyleOverrides',
         'themeVariants',
         'themeCustomPalette',

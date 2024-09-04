@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { ErrorBoundary, createRenderer } from '@mui/internal-test-utils';
+import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils';
 import { useSeries } from './useSeries';
-import barFormatter from '../BarChart/formatter';
-import { SeriesContextProvider } from '../context/SeriesContextProvider';
+import { SeriesProvider } from '../context/SeriesProvider';
+import { PluginProvider } from '../internals';
 
 function UseSeries() {
   const { bar } = useSeries();
@@ -41,15 +41,14 @@ describe('useSeries', () => {
   });
 
   it('should not throw an error when parent context is present', () => {
-    const { getByText } = render(
-      <SeriesContextProvider
-        series={[{ type: 'bar', id: 'test-id', data: [1, 2] }]}
-        seriesFormatters={{ bar: barFormatter }}
-      >
-        <UseSeries />
-      </SeriesContextProvider>,
+    render(
+      <PluginProvider>
+        <SeriesProvider series={[{ type: 'bar', id: 'test-id', data: [1, 2] }]}>
+          <UseSeries />
+        </SeriesProvider>
+      </PluginProvider>,
     );
 
-    expect(getByText('test-id')).toBeVisible();
+    expect(screen.getByText('test-id')).toBeVisible();
   });
 });

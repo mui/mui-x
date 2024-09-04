@@ -4,7 +4,7 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import useLazyRef from '@mui/utils/useLazyRef';
-import { useTheme, Direction } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import {
   findGridCellElementsFromCol,
   findGridElement,
@@ -112,11 +112,11 @@ function flipResizeDirection(side: ResizeDirection) {
   return 'Right';
 }
 
-function getResizeDirection(separator: HTMLElement, direction: Direction) {
+function getResizeDirection(separator: HTMLElement, isRtl: boolean) {
   const side = separator.classList.contains(gridClasses['columnSeparator--sideRight'])
     ? 'Right'
     : 'Left';
-  if (direction === 'rtl') {
+  if (isRtl) {
     // Resizing logic should be mirrored in the RTL case
     return flipResizeDirection(side);
   }
@@ -280,7 +280,7 @@ export const useGridColumnResize = (
     | 'onColumnWidthChange'
   >,
 ) => {
-  const theme = useTheme();
+  const isRtl = useRtl();
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
   const refs = useLazyRef(createResizeRefs).current;
@@ -312,14 +312,10 @@ export const useGridColumnResize = (
     refs.colDef!.flex = 0;
 
     refs.columnHeaderElement!.style.width = `${newWidth}px`;
-    refs.columnHeaderElement!.style.minWidth = `${newWidth}px`;
-    refs.columnHeaderElement!.style.maxWidth = `${newWidth}px`;
 
     const headerFilterElement = refs.headerFilterElement;
     if (headerFilterElement) {
       headerFilterElement.style.width = `${newWidth}px`;
-      headerFilterElement.style.minWidth = `${newWidth}px`;
-      headerFilterElement.style.maxWidth = `${newWidth}px`;
     }
 
     refs.groupHeaderElements!.forEach((element) => {
@@ -335,8 +331,6 @@ export const useGridColumnResize = (
       }
 
       div.style.width = finalWidth;
-      div.style.minWidth = finalWidth;
-      div.style.maxWidth = finalWidth;
     });
 
     refs.cellElements!.forEach((element) => {
@@ -401,6 +395,7 @@ export const useGridColumnResize = (
         nativeEvent.clientY === prevClientY
       ) {
         refs.previousMouseClickEvent = undefined;
+        apiRef.current.publishEvent('columnResizeStop', null, nativeEvent);
         return;
       }
     }
@@ -426,8 +421,6 @@ export const useGridColumnResize = (
         const finalWidth: `${number}px` = `${newWidth}px`;
 
         div.style.width = finalWidth;
-        div.style.minWidth = finalWidth;
-        div.style.maxWidth = finalWidth;
       });
     }
 
@@ -490,7 +483,7 @@ export const useGridColumnResize = (
         ? []
         : findRightPinnedHeadersBeforeCol(apiRef.current, refs.columnHeaderElement);
 
-    resizeDirection.current = getResizeDirection(separator, theme.direction);
+    resizeDirection.current = getResizeDirection(separator, isRtl);
 
     initialOffsetToSeparator.current = computeOffsetToSeparator(
       xStart,

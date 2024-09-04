@@ -26,11 +26,14 @@ export const getFakeContextValue = (
   runItemPlugins: () => ({
     rootRef: null,
     contentRef: null,
+    propsEnhancers: {},
   }),
   wrapItem: ({ children }) => children,
   wrapRoot: ({ children }) => children,
-  disabledItemsFocusable: false,
-  indentationAtItemLevel: false,
+  items: {
+    disabledItemsFocusable: false,
+    indentationAtItemLevel: false,
+  },
   icons: {
     slots: {},
     slotProps: {},

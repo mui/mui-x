@@ -33,3 +33,6 @@ export * from './ChartContainerPro';
 export * from './ScatterChartPro';
 export * from './BarChartPro';
 export * from './LineChartPro';
+
+// Pro context
+export * from './context';

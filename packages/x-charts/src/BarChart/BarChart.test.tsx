@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { createRenderer, describeConformance } from '@mui/internal-test-utils';
-import { BarChart } from './BarChart';
+import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import { describeConformance } from 'test/utils/describeConformance';
+import { BarChart } from '@mui/x-charts/BarChart';
 
 describe('<BarChart />', () => {
   const { render } = createRenderer();
@@ -20,7 +21,6 @@ describe('<BarChart />', () => {
         'slotPropsProp',
         'slotPropsCallback',
         'slotsProp',
-        'themeDefaultProps',
         'themeStyleOverrides',
         'themeVariants',
         'themeCustomPalette',

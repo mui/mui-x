@@ -156,7 +156,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
     area,
     curve = 'linear',
     className,
-    ...rest
+    ...other
   } = props;
 
   const defaultXHighlight: { x: 'band' | 'none' } =
@@ -168,7 +168,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
 
   return (
     <ResponsiveChartContainer
-      {...rest}
+      {...other}
       ref={ref}
       series={[
         {
@@ -377,7 +377,6 @@ SparkLineChart.propTypes = {
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   xAxis: PropTypes.shape({
-    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     classes: PropTypes.object,
     colorMap: PropTypes.oneOfType([
       PropTypes.shape({
@@ -422,6 +421,11 @@ SparkLineChart.propTypes = {
     slotProps: PropTypes.object,
     slots: PropTypes.object,
     stroke: PropTypes.string,
+    sx: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+      PropTypes.func,
+      PropTypes.object,
+    ]),
     tickFontSize: PropTypes.number,
     tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
     tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
@@ -439,7 +443,6 @@ SparkLineChart.propTypes = {
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   yAxis: PropTypes.shape({
-    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     classes: PropTypes.object,
     colorMap: PropTypes.oneOfType([
       PropTypes.shape({
@@ -484,6 +487,11 @@ SparkLineChart.propTypes = {
     slotProps: PropTypes.object,
     slots: PropTypes.object,
     stroke: PropTypes.string,
+    sx: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+      PropTypes.func,
+      PropTypes.object,
+    ]),
     tickFontSize: PropTypes.number,
     tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
     tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),

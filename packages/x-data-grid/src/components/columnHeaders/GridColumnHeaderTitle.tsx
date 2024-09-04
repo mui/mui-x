@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/system';
 import { isOverflown } from '../../utils/domUtils';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -29,6 +29,7 @@ const GridColumnHeaderTitleRoot = styled('div', {
   overflow: 'hidden',
   whiteSpace: 'nowrap',
   fontWeight: 'var(--unstable_DataGrid-headWeight)',
+  lineHeight: 'normal',
 });
 
 const ColumnHeaderInnerTitle = React.forwardRef<

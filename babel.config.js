@@ -1,6 +1,16 @@
+// @ts-check
 const path = require('path');
 const generateReleaseInfo = require('./packages/x-license/generateReleaseInfo');
 
+/**
+ * @typedef {import('@babel/core')} babel
+ */
+
+/**
+ *
+ * @param {string} relativeToBabelConf
+ * @returns {string}
+ */
 function resolveAliasPath(relativeToBabelConf) {
   const resolvedPath = path.relative(process.cwd(), path.resolve(__dirname, relativeToBabelConf));
   return `./${resolvedPath.replace('\\', '/')}`;
@@ -16,6 +26,7 @@ const defaultAlias = {
   '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
   '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),
   '@mui/x-charts-pro': resolveAliasPath('./packages/x-charts-pro/src'),
+  '@mui/x-charts-vendor': resolveAliasPath('./packages/x-charts-vendor'),
   '@mui/x-tree-view': resolveAliasPath('./packages/x-tree-view/src'),
   '@mui/x-tree-view-pro': resolveAliasPath('./packages/x-tree-view-pro/src'),
   '@mui/x-internals': resolveAliasPath('./packages/x-internals/src'),
@@ -32,6 +43,7 @@ const productionPlugins = [
   ['babel-plugin-react-remove-properties', { properties: ['data-mui-test'] }],
 ];
 
+/** @type {babel.ConfigFunction} */
 module.exports = function getBabelConfig(api) {
   const useESModules = api.env(['modern', 'stable', 'rollup']);
 
@@ -55,6 +67,16 @@ module.exports = function getBabelConfig(api) {
     '@babel/preset-typescript',
   ];
 
+  const usesAliases =
+    // in this config:
+    api.env(['coverage', 'development', 'test', 'benchmark']) ||
+    process.env.NODE_ENV === 'test' ||
+    // in webpack config:
+    api.env(['regressions']);
+
+  const outFileExtension = '.js';
+
+  /** @type {babel.PluginItem[]} */
   const plugins = [
     'babel-plugin-optimize-clsx',
     // Need the following 3 transforms for all targets in .browserslistrc.
@@ -122,6 +144,17 @@ module.exports = function getBabelConfig(api) {
         },
       ]);
     }
+  }
+
+  if (useESModules) {
+    plugins.push([
+      '@mui/internal-babel-plugin-resolve-imports',
+      {
+        // Don't replace the extension when we're using aliases.
+        // Essentially only replace in production builds.
+        outExtension: usesAliases ? null : outFileExtension,
+      },
+    ]);
   }
 
   return {

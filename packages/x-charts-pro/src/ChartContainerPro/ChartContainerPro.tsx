@@ -5,44 +5,45 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { HighlightedProvider, ZAxisContextProvider } from '@mui/x-charts/context';
 import {
   ChartsAxesGradients,
-  ColorProvider,
   DrawingProvider,
   InteractionProvider,
-  SeriesContextProvider,
-  useChartContainerProps,
+  PluginProvider,
+  SeriesProvider,
 } from '@mui/x-charts/internals';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
-import { CartesianContextProviderPro } from '../context/CartesianProviderPro';
-import { ZoomProvider } from '../context/ZoomProvider';
+import { CartesianProviderPro } from '../context/CartesianProviderPro';
+import { ZoomProps, ZoomProvider } from '../context/ZoomProvider';
+import { useChartContainerProProps } from './useChartContainerProProps';
 
 const releaseInfo = getReleaseInfo();
 
-export interface ChartContainerProProps extends ChartContainerProps {}
+export interface ChartContainerProProps extends ChartContainerProps, ZoomProps {}
 
 const ChartContainerPro = React.forwardRef(function ChartContainer(
   props: ChartContainerProProps,
   ref,
 ) {
   const {
-    children,
+    zoomProviderProps,
     drawingProviderProps,
-    colorProviderProps,
-    seriesContextProps,
-    cartesianContextProps,
+    seriesProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
+    cartesianProviderProps,
     chartsSurfaceProps,
-  } = useChartContainerProps(props, ref);
+    pluginProviderProps,
+    children,
+  } = useChartContainerProProps(props, ref);
 
   useLicenseVerifier('x-charts-pro', releaseInfo);
 
   return (
     <DrawingProvider {...drawingProviderProps}>
-      <ColorProvider {...colorProviderProps}>
-        <SeriesContextProvider {...seriesContextProps}>
-          <ZoomProvider xAxis={props.xAxis} yAxis={props.yAxis}>
-            <CartesianContextProviderPro {...cartesianContextProps}>
+      <PluginProvider {...pluginProviderProps}>
+        <ZoomProvider {...zoomProviderProps}>
+          <SeriesProvider {...seriesProviderProps}>
+            <CartesianProviderPro {...cartesianProviderProps}>
               <ZAxisContextProvider {...zAxisContextProps}>
                 <InteractionProvider>
                   <HighlightedProvider {...highlightedProviderProps}>
@@ -53,10 +54,10 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
                   </HighlightedProvider>
                 </InteractionProvider>
               </ZAxisContextProvider>
-            </CartesianContextProviderPro>
-          </ZoomProvider>
-        </SeriesContextProvider>
-      </ColorProvider>
+            </CartesianProviderPro>
+          </SeriesProvider>
+        </ZoomProvider>
+      </PluginProvider>
     </DrawingProvider>
   );
 });
@@ -114,6 +115,12 @@ ChartContainerPro.propTypes = {
    */
   onHighlightChange: PropTypes.func,
   /**
+   * Callback fired when the zoom has changed.
+   *
+   * @param {ZoomData[]} zoomData Updated zoom data.
+   */
+  onZoomChange: PropTypes.func,
+  /**
    * An array of plugins defining how to preprocess data.
    * If not provided, the container supports line, bar, scatter and pie charts.
    */
@@ -147,9 +154,17 @@ ChartContainerPro.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
         PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
@@ -165,15 +180,6 @@ ChartContainerPro.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
-        }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
         }),
       ]),
       data: PropTypes.array,
@@ -194,6 +200,11 @@ ChartContainerPro.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -209,6 +220,18 @@ ChartContainerPro.propTypes = {
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
+      zoom: PropTypes.oneOfType([
+        PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
+          maxEnd: PropTypes.number,
+          maxSpan: PropTypes.number,
+          minSpan: PropTypes.number,
+          minStart: PropTypes.number,
+          panning: PropTypes.bool,
+          step: PropTypes.number,
+        }),
+        PropTypes.bool,
+      ]),
     }),
   ),
   /**
@@ -218,9 +241,17 @@ ChartContainerPro.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
         PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
@@ -236,15 +267,6 @@ ChartContainerPro.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
-        }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
         }),
       ]),
       data: PropTypes.array,
@@ -265,6 +287,11 @@ ChartContainerPro.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -280,6 +307,18 @@ ChartContainerPro.propTypes = {
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
+      zoom: PropTypes.oneOfType([
+        PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
+          maxEnd: PropTypes.number,
+          maxSpan: PropTypes.number,
+          minSpan: PropTypes.number,
+          minStart: PropTypes.number,
+          panning: PropTypes.bool,
+          step: PropTypes.number,
+        }),
+        PropTypes.bool,
+      ]),
     }),
   ),
   /**
@@ -288,6 +327,15 @@ ChartContainerPro.propTypes = {
   zAxis: PropTypes.arrayOf(
     PropTypes.shape({
       colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
         PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
@@ -304,19 +352,22 @@ ChartContainerPro.propTypes = {
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
         }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
-        }),
       ]),
       data: PropTypes.array,
       dataKey: PropTypes.string,
       id: PropTypes.string,
+      max: PropTypes.number,
+      min: PropTypes.number,
+    }),
+  ),
+  /**
+   * The list of zoom data related to each axis.
+   */
+  zoom: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
     }),
   ),
 } as any;

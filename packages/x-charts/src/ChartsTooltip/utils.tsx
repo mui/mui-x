@@ -57,8 +57,10 @@ export function useMouseTracker() {
       return () => {};
     }
 
-    const handleOut = () => {
-      setMousePosition(null);
+    const handleOut = (event: PointerEvent) => {
+      if (event.pointerType !== 'mouse') {
+        setMousePosition(null);
+      }
     };
 
     const handleMove = (event: PointerEvent) => {

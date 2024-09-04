@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import Box from '@mui/material/Box';
 import {
   useGridSelector,
@@ -75,13 +75,16 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   return (
     <Box
       className={classes.root}
-      sx={{
-        ml:
-          rootProps.rowGroupingColumnMode === 'multiple'
-            ? 0
-            : (theme) =>
-                `calc(var(--DataGrid-cellOffsetMultiplier) * ${theme.spacing(rowNode.depth)})`,
-      }}
+      sx={[
+        rootProps.rowGroupingColumnMode === 'multiple'
+          ? {
+              ml: 0,
+            }
+          : (theme) => ({
+              ml: `calc(var(--DataGrid-cellOffsetMultiplier) * var(--depth) * ${theme.spacing(1)})`,
+            }),
+      ]}
+      style={{ '--depth': rowNode.depth } as any}
     >
       <div className={classes.toggle}>
         {filteredDescendantCount > 0 && (
