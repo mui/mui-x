@@ -6,7 +6,7 @@ settings:
 
 overrides:
   react-is: ^18.3.1
-  '@types/node': ^18.19.47
+  '@types/node': ^20.14.8
 
 patchedDependencies:
   babel-plugin-replace-imports@1.0.2:
@@ -27,11 +27,11 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       '@argos-ci/core':
-        specifier: ^2.5.1
-        version: 2.5.1
+        specifier: ^2.8.0
+        version: 2.8.0
       '@babel/cli':
-        specifier: ^7.24.8
-        version: 7.24.8(@babel/core@7.25.2)
+        specifier: ^7.25.6
+        version: 7.25.6(@babel/core@7.25.2)
       '@babel/core':
         specifier: ^7.25.2
         version: 7.25.2
@@ -69,10 +69,10 @@ importers:
         specifier: ^7.24.6
         version: 7.24.6(@babel/core@7.25.2)
       '@babel/traverse':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@babel/types':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/cache':
         specifier: ^11.13.1
@@ -141,8 +141,8 @@ importers:
         specifier: ^10.0.7
         version: 10.0.7
       '@types/node':
-        specifier: ^18.19.47
-        version: 18.19.47
+        specifier: ^20.14.8
+        version: 20.16.3
       '@types/react':
         specifier: ^18.3.4
         version: 18.3.4
@@ -408,10 +408,10 @@ importers:
         specifier: ^7.25.2
         version: 7.25.2
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@babel/runtime-corejs2':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@docsearch/react':
         specifier: ^3.6.1
@@ -549,8 +549,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       jscodeshift:
-        specifier: 0.16.1
-        version: 0.16.1(@babel/preset-env@7.25.4(@babel/core@7.25.2))
+        specifier: 17.0.0
+        version: 17.0.0(@babel/preset-env@7.25.4(@babel/core@7.25.2))
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -630,11 +630,11 @@ importers:
         specifier: ^6.1.12
         version: 6.1.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       stylis:
-        specifier: ^4.3.2
-        version: 4.3.2
+        specifier: ^4.3.4
+        version: 4.3.4
       stylis-plugin-rtl:
         specifier: ^2.1.1
-        version: 2.1.1(stylis@4.3.2)
+        version: 2.1.1(stylis@4.3.4)
       webpack-bundle-analyzer:
         specifier: ^4.10.2
         version: 4.10.2
@@ -712,7 +712,7 @@ importers:
   packages/x-charts:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -777,7 +777,7 @@ importers:
   packages/x-charts-pro:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -845,7 +845,7 @@ importers:
   packages/x-charts-vendor:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@types/d3-color':
         specifier: ^3.1.3
@@ -933,14 +933,14 @@ importers:
         specifier: ^7.25.2
         version: 7.25.2
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@babel/traverse':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       jscodeshift:
-        specifier: 0.16.1
-        version: 0.16.1(@babel/preset-env@7.25.4(@babel/core@7.25.2))
+        specifier: 17.0.0
+        version: 17.0.0(@babel/preset-env@7.25.4(@babel/core@7.25.2))
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
@@ -962,7 +962,7 @@ importers:
   packages/x-data-grid:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -1018,7 +1018,7 @@ importers:
   packages/x-data-grid-generator:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -1059,7 +1059,7 @@ importers:
   packages/x-data-grid-premium:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -1127,7 +1127,7 @@ importers:
   packages/x-data-grid-pro:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -1186,7 +1186,7 @@ importers:
   packages/x-date-pickers:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -1272,7 +1272,7 @@ importers:
   packages/x-date-pickers-pro:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -1352,7 +1352,7 @@ importers:
   packages/x-internals:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@mui/utils':
         specifier: ^5.16.6
@@ -1372,7 +1372,7 @@ importers:
   packages/x-license:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@mui/utils':
         specifier: ^5.16.6
@@ -1392,7 +1392,7 @@ importers:
   packages/x-tree-view:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -1445,7 +1445,7 @@ importers:
   packages/x-tree-view-pro:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/react':
         specifier: ^11.9.0
@@ -1504,7 +1504,7 @@ importers:
   test:
     devDependencies:
       '@babel/runtime':
-        specifier: ^7.25.4
+        specifier: ^7.25.6
         version: 7.25.6
       '@emotion/cache':
         specifier: ^11.13.1
@@ -1591,17 +1591,17 @@ importers:
         specifier: ^7.6.3
         version: 7.6.3
       stylis:
-        specifier: ^4.3.2
-        version: 4.3.2
+        specifier: ^4.3.4
+        version: 4.3.4
       stylis-plugin-rtl:
         specifier: ^2.1.1
-        version: 2.1.1(stylis@4.3.2)
+        version: 2.1.1(stylis@4.3.4)
 
   test/performance-charts:
     devDependencies:
       '@codspeed/vitest-plugin':
         specifier: ^3.1.1
-        version: 3.1.1(vite@5.3.4(@types/node@18.19.47)(terser@5.27.0))(vitest@2.0.5(@types/node@18.19.47)(@vitest/ui@2.0.5)(jsdom@24.1.3)(terser@5.27.0))
+        version: 3.1.1(vite@5.3.4(@types/node@20.16.3)(terser@5.27.0))(vitest@2.0.5(@types/node@20.16.3)(@vitest/ui@2.0.5)(jsdom@24.1.3)(terser@5.27.0))
       '@emotion/react':
         specifier: ^11.13.3
         version: 11.13.3(@types/react@18.3.4)(react@18.3.1)
@@ -1622,10 +1622,10 @@ importers:
         version: 14.5.2(@testing-library/dom@10.4.0)
       '@vitejs/plugin-react':
         specifier: ^4.3.1
-        version: 4.3.1(vite@5.3.4(@types/node@18.19.47)(terser@5.27.0))
+        version: 4.3.1(vite@5.3.4(@types/node@20.16.3)(terser@5.27.0))
       '@vitejs/plugin-react-swc':
         specifier: ^3.7.0
-        version: 3.7.0(@swc/helpers@0.5.5)(vite@5.3.4(@types/node@18.19.47)(terser@5.27.0))
+        version: 3.7.0(@swc/helpers@0.5.5)(vite@5.3.4(@types/node@20.16.3)(terser@5.27.0))
       '@vitest/ui':
         specifier: 2.0.5
         version: 2.0.5(vitest@2.0.5)
@@ -1640,7 +1640,7 @@ importers:
         version: 18.3.1(react@18.3.1)
       vitest:
         specifier: 2.0.5
-        version: 2.0.5(@types/node@18.19.47)(@vitest/ui@2.0.5)(jsdom@24.1.3)(terser@5.27.0)
+        version: 2.0.5(@types/node@20.16.3)(@vitest/ui@2.0.5)(jsdom@24.1.3)(terser@5.27.0)
 
 packages:
 
@@ -1726,20 +1726,20 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@argos-ci/api-client@0.2.0':
-    resolution: {integrity: sha512-stqugeAtbHjD2MwezvgJ4hU0HvlEGwGDVsJvUUD4YoRS0putS8yFjXuempkc90XGeHDEfYZgvG372rcK7/FClA==}
+  '@argos-ci/api-client@0.5.0':
+    resolution: {integrity: sha512-syJJmvLtJKQYXDmGYRb+ZKpzpSk/dReqhZZm2tnWn7ThxHaJRJ7Wu3J5nqDpCP3LxoYCVfvV/dmfoJO0v8+PbQ==}
     engines: {node: '>=18.0.0'}
 
-  '@argos-ci/core@2.5.1':
-    resolution: {integrity: sha512-tgao3GqREG6A6E6LwEVbSTyVrChtb21nbcNGg69BS7DmqPY8pff/UV61QDoX+3Z9Kw8Cn4cI6YpLvhL77xRmCg==}
+  '@argos-ci/core@2.8.0':
+    resolution: {integrity: sha512-n7WUnlK+QI9L/bbPrg88xrxojGdEe//+RIJKx1iIUEqgIMp5K8f9ANcpYGSS/d9BWASg7eFoXm5d6iRCz0Mrgw==}
     engines: {node: '>=18.0.0'}
 
   '@argos-ci/util@2.1.1':
     resolution: {integrity: sha512-UyACLQe9rvCPbo9muhrLte1AD75kQlcGBuecjmaotaF9MBMj+9Yz+TYs1jJrlLMgqowfIgbXjBYmkXRUn36tCg==}
     engines: {node: '>=18.0.0'}
 
-  '@babel/cli@7.24.8':
-    resolution: {integrity: sha512-isdp+G6DpRyKc+3Gqxy2rjzgF7Zj9K0mzLNnxz+E/fgeag8qT3vVulX4gY9dGO1q0y+0lUv6V3a+uhUzMzrwXg==}
+  '@babel/cli@7.25.6':
+    resolution: {integrity: sha512-Z+Doemr4VtvSD2SNHTrkiFZ1LX+JI6tyRXAAOb4N9khIuPyoEPmTPJarPm8ljJV1D6bnMQjyHMWTT9NeKbQuXA==}
     engines: {node: '>=6.9.0'}
     hasBin: true
     peerDependencies:
@@ -4179,8 +4179,8 @@ packages:
   '@types/moment-jalaali@0.7.9':
     resolution: {integrity: sha512-gsDOoAzRnCfQTbfdlUrCvX6R0wIto6CvwfvV2C3j4qJLK+DEiTK8Rl/xlOCBO9C6qeUfX8oyZ2UfjnXJTOvHSA==}
 
-  '@types/node@18.19.47':
-    resolution: {integrity: sha512-1f7dB3BL/bpd9tnDJrrHb66Y+cVrhxSOTGorRNdHwYTUlTay3HuTDPKo9a/4vX9pMQkhYBcAbL4jQdNlhCFP9A==}
+  '@types/node@20.16.3':
+    resolution: {integrity: sha512-/wdGiWRkMOm53gAsSyFMXFZHbVg7C6CbkrzHNpaHoYfsUWPg7m6ZRKtvQjgvQ9i8WT540a3ydRlRQbxjY30XxQ==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -5067,8 +5067,8 @@ packages:
     resolution: {integrity: sha512-OAlb+T7V4Op9OwdkjmguYRqncdlx5JiofwOAUkmTF+jNdHwzTaTs4sRAGpzLF3oOz5xAyDGrPgeIDFQmDOTiJw==}
     engines: {node: '>= 16'}
 
-  chokidar@3.5.3:
-    resolution: {integrity: sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==}
+  chokidar@3.6.0:
+    resolution: {integrity: sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==}
     engines: {node: '>= 8.10.0'}
 
   chownr@2.0.0:
@@ -7146,8 +7146,9 @@ packages:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
     hasBin: true
 
-  jscodeshift@0.16.1:
-    resolution: {integrity: sha512-oMQXySazy63awNBzMpXbbVv73u3irdxTeX2L5ueRyFRxi32qb9uzdZdOY5fTBYADBG19l5M/wnGknZSV1dzCdA==}
+  jscodeshift@17.0.0:
+    resolution: {integrity: sha512-Af+MFsNwLSVO+t4kKjJdJKh6iNbNHfDfFGdyltJ2wUFN3furgbvHguJmB85iou+fY7wbHgI8eiEKpp6doGgtKg==}
+    engines: {node: '>=16'}
     hasBin: true
     peerDependencies:
       '@babel/preset-env': ^7.1.6
@@ -9365,6 +9366,9 @@ packages:
   stylis@4.3.2:
     resolution: {integrity: sha512-bhtUjWd/z6ltJiQwg0dUfxEJ+W+jdqQd8TbWLWyeIJHlnsqmGLRFFd8e5mA0AZi/zx90smXRlN66YMTcaSFifg==}
 
+  stylis@4.3.4:
+    resolution: {integrity: sha512-osIBl6BGUmSfDkyH2mB7EFvCJntXDrLhKjHTRj/rK6xLH0yuPrHULDRQzKokSOD4VoorhtKpfcfW1GAntu8now==}
+
   sucrase@3.35.0:
     resolution: {integrity: sha512-8EbVDiu9iN/nESwxeSxDKe0dunta1GOlHufmSSXxMD2z2/tMZpDMpvXQGsc+ajGo8y2uYUmixaSRUc/QPoQ0GA==}
     engines: {node: '>=16 || 14 >=14.17'}
@@ -9681,8 +9685,8 @@ packages:
   unbox-primitive@1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}
 
-  undici-types@5.26.5:
-    resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
+  undici-types@6.19.8:
+    resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
 
   undici@5.28.4:
     resolution: {integrity: sha512-72RFADWFqKmUb2hmmvNODKL3p9hcB6Gt2DOQMis1SEBaV6a4MH8soBvzg+95CYhCKPFedut2JY9bMfrDl9D23g==}
@@ -9845,7 +9849,7 @@ packages:
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
-      '@types/node': ^18.19.47
+      '@types/node': ^20.14.8
       less: '*'
       lightningcss: ^1.21.0
       sass: '*'
@@ -9874,7 +9878,7 @@ packages:
     hasBin: true
     peerDependencies:
       '@edge-runtime/vm': '*'
-      '@types/node': ^18.19.47
+      '@types/node': ^20.14.8
       '@vitest/browser': 2.0.5
       '@vitest/ui': 2.0.5
       happy-dom: '*'
@@ -10313,13 +10317,13 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@argos-ci/api-client@0.2.0':
+  '@argos-ci/api-client@0.5.0':
     dependencies:
       openapi-fetch: 0.11.2
 
-  '@argos-ci/core@2.5.1':
+  '@argos-ci/core@2.8.0':
     dependencies:
-      '@argos-ci/api-client': 0.2.0
+      '@argos-ci/api-client': 0.5.0
       '@argos-ci/util': 2.1.1
       axios: 1.7.5(debug@4.3.6)
       convict: 6.2.4
@@ -10332,7 +10336,7 @@ snapshots:
 
   '@argos-ci/util@2.1.1': {}
 
-  '@babel/cli@7.24.8(@babel/core@7.25.2)':
+  '@babel/cli@7.25.6(@babel/core@7.25.2)':
     dependencies:
       '@babel/core': 7.25.2
       '@jridgewell/trace-mapping': 0.3.25
@@ -10344,7 +10348,7 @@ snapshots:
       slash: 2.0.0
     optionalDependencies:
       '@nicolo-ribaudo/chokidar-2': 2.1.8-no-fsevents.3
-      chokidar: 3.5.3
+      chokidar: 3.6.0
 
   '@babel/code-frame@7.24.7':
     dependencies:
@@ -11267,11 +11271,11 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@codspeed/vitest-plugin@3.1.1(vite@5.3.4(@types/node@18.19.47)(terser@5.27.0))(vitest@2.0.5(@types/node@18.19.47)(@vitest/ui@2.0.5)(jsdom@24.1.3)(terser@5.27.0))':
+  '@codspeed/vitest-plugin@3.1.1(vite@5.3.4(@types/node@20.16.3)(terser@5.27.0))(vitest@2.0.5(@types/node@20.16.3)(@vitest/ui@2.0.5)(jsdom@24.1.3)(terser@5.27.0))':
     dependencies:
       '@codspeed/core': 3.1.1
-      vite: 5.3.4(@types/node@18.19.47)(terser@5.27.0)
-      vitest: 2.0.5(@types/node@18.19.47)(@vitest/ui@2.0.5)(jsdom@24.1.3)(terser@5.27.0)
+      vite: 5.3.4(@types/node@20.16.3)(terser@5.27.0)
+      vitest: 2.0.5(@types/node@20.16.3)(@vitest/ui@2.0.5)(jsdom@24.1.3)(terser@5.27.0)
     transitivePeerDependencies:
       - debug
 
@@ -11570,7 +11574,7 @@ snapshots:
 
   '@fast-csv/format@4.3.5':
     dependencies:
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
       lodash.escaperegexp: 4.1.2
       lodash.isboolean: 3.0.3
       lodash.isequal: 4.5.0
@@ -11579,7 +11583,7 @@ snapshots:
 
   '@fast-csv/parse@4.3.6':
     dependencies:
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
       lodash.escaperegexp: 4.1.2
       lodash.groupby: 4.6.0
       lodash.isfunction: 3.0.9
@@ -12821,18 +12825,18 @@ snapshots:
 
   '@slack/logger@3.0.0':
     dependencies:
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
 
   '@slack/logger@4.0.0':
     dependencies:
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
 
   '@slack/oauth@2.6.3':
     dependencies:
       '@slack/logger': 3.0.0
       '@slack/web-api': 6.12.1
       '@types/jsonwebtoken': 8.5.9
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
       jsonwebtoken: 9.0.2
       lodash.isstring: 4.0.1
     transitivePeerDependencies:
@@ -12842,7 +12846,7 @@ snapshots:
     dependencies:
       '@slack/logger': 3.0.0
       '@slack/web-api': 6.12.1
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
       '@types/ws': 7.4.7
       eventemitter3: 5.0.1
       finity: 0.5.4
@@ -12859,7 +12863,7 @@ snapshots:
       '@slack/logger': 3.0.0
       '@slack/types': 2.11.0
       '@types/is-stream': 1.1.0
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
       axios: 1.7.5(debug@4.3.6)
       eventemitter3: 3.1.2
       form-data: 2.5.1
@@ -13002,7 +13006,7 @@ snapshots:
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
 
   '@types/chai-dom@1.11.3':
     dependencies:
@@ -13014,13 +13018,13 @@ snapshots:
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
 
   '@types/cookie@0.4.1': {}
 
   '@types/cors@2.8.17':
     dependencies:
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
 
   '@types/d3-array@3.2.1': {}
 
@@ -13061,7 +13065,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.17.42':
     dependencies:
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
       '@types/qs': 6.9.11
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
@@ -13078,7 +13082,7 @@ snapshots:
   '@types/fs-extra@11.0.4':
     dependencies:
       '@types/jsonfile': 6.1.4
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
 
   '@types/gtag.js@0.0.20': {}
 
@@ -13090,7 +13094,7 @@ snapshots:
 
   '@types/is-stream@1.1.0':
     dependencies:
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
 
   '@types/istanbul-lib-coverage@2.0.6': {}
 
@@ -13105,15 +13109,15 @@ snapshots:
 
   '@types/jsonfile@6.1.4':
     dependencies:
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
 
   '@types/jsonwebtoken@8.5.9':
     dependencies:
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
 
   '@types/karma@6.3.8':
     dependencies:
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
       log4js: 6.9.1
     transitivePeerDependencies:
       - supports-color
@@ -13144,9 +13148,9 @@ snapshots:
     dependencies:
       moment: 2.30.1
 
-  '@types/node@18.19.47':
+  '@types/node@20.16.3':
     dependencies:
-      undici-types: 5.26.5
+      undici-types: 6.19.8
 
   '@types/normalize-package-data@2.4.4': {}
 
@@ -13197,13 +13201,13 @@ snapshots:
   '@types/send@0.17.4':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
 
   '@types/serve-static@1.15.5':
     dependencies:
       '@types/http-errors': 2.0.4
       '@types/mime': 3.0.4
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
 
   '@types/sinon@17.0.3':
     dependencies:
@@ -13223,9 +13227,9 @@ snapshots:
 
   '@types/webpack-bundle-analyzer@4.7.0(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.94.0))':
     dependencies:
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
       tapable: 2.2.1
-      webpack: 5.94.0(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.94.0))
+      webpack: 5.94.0(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack-cli@5.1.4)
     transitivePeerDependencies:
       - '@swc/core'
       - esbuild
@@ -13234,7 +13238,7 @@ snapshots:
 
   '@types/ws@7.4.7':
     dependencies:
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
 
   '@types/yargs-parser@21.0.3': {}
 
@@ -13366,21 +13370,21 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitejs/plugin-react-swc@3.7.0(@swc/helpers@0.5.5)(vite@5.3.4(@types/node@18.19.47)(terser@5.27.0))':
+  '@vitejs/plugin-react-swc@3.7.0(@swc/helpers@0.5.5)(vite@5.3.4(@types/node@20.16.3)(terser@5.27.0))':
     dependencies:
       '@swc/core': 1.6.13(@swc/helpers@0.5.5)
-      vite: 5.3.4(@types/node@18.19.47)(terser@5.27.0)
+      vite: 5.3.4(@types/node@20.16.3)(terser@5.27.0)
     transitivePeerDependencies:
       - '@swc/helpers'
 
-  '@vitejs/plugin-react@4.3.1(vite@5.3.4(@types/node@18.19.47)(terser@5.27.0))':
+  '@vitejs/plugin-react@4.3.1(vite@5.3.4(@types/node@20.16.3)(terser@5.27.0))':
     dependencies:
       '@babel/core': 7.25.2
       '@babel/plugin-transform-react-jsx-self': 7.24.7(@babel/core@7.25.2)
       '@babel/plugin-transform-react-jsx-source': 7.24.7(@babel/core@7.25.2)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 5.3.4(@types/node@18.19.47)(terser@5.27.0)
+      vite: 5.3.4(@types/node@20.16.3)(terser@5.27.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -13419,7 +13423,7 @@ snapshots:
       pathe: 1.1.2
       sirv: 2.0.4
       tinyrainbow: 1.2.0
-      vitest: 2.0.5(@types/node@18.19.47)(@vitest/ui@2.0.5)(jsdom@24.1.3)(terser@5.27.0)
+      vitest: 2.0.5(@types/node@20.16.3)(@vitest/ui@2.0.5)(jsdom@24.1.3)(terser@5.27.0)
 
   '@vitest/utils@2.0.5':
     dependencies:
@@ -14253,7 +14257,7 @@ snapshots:
 
   check-error@2.1.1: {}
 
-  chokidar@3.5.3:
+  chokidar@3.6.0:
     dependencies:
       anymatch: 3.1.3
       braces: 3.0.3
@@ -14995,7 +14999,7 @@ snapshots:
     dependencies:
       '@types/cookie': 0.4.1
       '@types/cors': 2.8.17
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
       accepts: 1.3.8
       base64id: 2.0.0
       cookie: 0.4.2
@@ -16710,7 +16714,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -16725,7 +16729,7 @@ snapshots:
     dependencies:
       argparse: 2.0.1
 
-  jscodeshift@0.16.1(@babel/preset-env@7.25.4(@babel/core@7.25.2)):
+  jscodeshift@17.0.0(@babel/preset-env@7.25.4(@babel/core@7.25.2)):
     dependencies:
       '@babel/core': 7.25.2
       '@babel/parser': 7.25.6
@@ -16737,12 +16741,11 @@ snapshots:
       '@babel/preset-flow': 7.24.7(@babel/core@7.25.2)
       '@babel/preset-typescript': 7.24.7(@babel/core@7.25.2)
       '@babel/register': 7.24.6(@babel/core@7.25.2)
-      chalk: 4.1.2
       flow-parser: 0.227.0
       graceful-fs: 4.2.11
       micromatch: 4.0.7
       neo-async: 2.6.2
-      node-dir: 0.1.17
+      picocolors: 1.0.1
       recast: 0.23.9
       temp: 0.9.4
       write-file-atomic: 5.0.1
@@ -16975,7 +16978,7 @@ snapshots:
       '@colors/colors': 1.5.0
       body-parser: 1.20.2
       braces: 3.0.3
-      chokidar: 3.5.3
+      chokidar: 3.6.0
       connect: 3.7.0
       di: 0.0.1
       dom-serialize: 2.2.1
@@ -17573,7 +17576,7 @@ snapshots:
     dependencies:
       ansi-colors: 4.1.3
       browser-stdout: 1.3.1
-      chokidar: 3.5.3
+      chokidar: 3.6.0
       debug: 4.3.6(supports-color@8.1.1)
       diff: 5.2.0
       escape-string-regexp: 4.0.0
@@ -19381,14 +19384,16 @@ snapshots:
       '@babel/core': 7.25.2
       babel-plugin-macros: 3.1.0
 
-  stylis-plugin-rtl@2.1.1(stylis@4.3.2):
+  stylis-plugin-rtl@2.1.1(stylis@4.3.4):
     dependencies:
       cssjanus: 2.1.0
-      stylis: 4.3.2
+      stylis: 4.3.4
 
   stylis@4.2.0: {}
 
   stylis@4.3.2: {}
+
+  stylis@4.3.4: {}
 
   sucrase@3.35.0:
     dependencies:
@@ -19457,17 +19462,6 @@ snapshots:
     dependencies:
       mkdirp: 0.5.6
       rimraf: 2.6.3
-
-  terser-webpack-plugin@5.3.10(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack@5.94.0(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.94.0))):
-    dependencies:
-      '@jridgewell/trace-mapping': 0.3.25
-      jest-worker: 27.5.1
-      schema-utils: 3.3.0
-      serialize-javascript: 6.0.2
-      terser: 5.27.0
-      webpack: 5.94.0(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.94.0))
-    optionalDependencies:
-      '@swc/core': 1.6.13(@swc/helpers@0.5.5)
 
   terser-webpack-plugin@5.3.10(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack@5.94.0(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack-cli@5.1.4)):
     dependencies:
@@ -19700,7 +19694,7 @@ snapshots:
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
 
-  undici-types@5.26.5: {}
+  undici-types@6.19.8: {}
 
   undici@5.28.4:
     dependencies:
@@ -19860,13 +19854,13 @@ snapshots:
       unist-util-stringify-position: 2.0.3
       vfile-message: 2.0.4
 
-  vite-node@2.0.5(@types/node@18.19.47)(terser@5.27.0):
+  vite-node@2.0.5(@types/node@20.16.3)(terser@5.27.0):
     dependencies:
       cac: 6.7.14
       debug: 4.3.6(supports-color@8.1.1)
       pathe: 1.1.2
       tinyrainbow: 1.2.0
-      vite: 5.3.4(@types/node@18.19.47)(terser@5.27.0)
+      vite: 5.3.4(@types/node@20.16.3)(terser@5.27.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -19877,17 +19871,17 @@ snapshots:
       - supports-color
       - terser
 
-  vite@5.3.4(@types/node@18.19.47)(terser@5.27.0):
+  vite@5.3.4(@types/node@20.16.3)(terser@5.27.0):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.41
       rollup: 4.18.1
     optionalDependencies:
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
       fsevents: 2.3.3
       terser: 5.27.0
 
-  vitest@2.0.5(@types/node@18.19.47)(@vitest/ui@2.0.5)(jsdom@24.1.3)(terser@5.27.0):
+  vitest@2.0.5(@types/node@20.16.3)(@vitest/ui@2.0.5)(jsdom@24.1.3)(terser@5.27.0):
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@vitest/expect': 2.0.5
@@ -19905,11 +19899,11 @@ snapshots:
       tinybench: 2.8.0
       tinypool: 1.0.0
       tinyrainbow: 1.2.0
-      vite: 5.3.4(@types/node@18.19.47)(terser@5.27.0)
-      vite-node: 2.0.5(@types/node@18.19.47)(terser@5.27.0)
+      vite: 5.3.4(@types/node@20.16.3)(terser@5.27.0)
+      vite-node: 2.0.5(@types/node@20.16.3)(terser@5.27.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 18.19.47
+      '@types/node': 20.16.3
       '@vitest/ui': 2.0.5(vitest@2.0.5)
       jsdom: 24.1.3
     transitivePeerDependencies:
@@ -19990,38 +19984,6 @@ snapshots:
       wildcard: 2.0.1
 
   webpack-sources@3.2.3: {}
-
-  webpack@5.94.0(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.94.0)):
-    dependencies:
-      '@types/estree': 1.0.5
-      '@webassemblyjs/ast': 1.12.1
-      '@webassemblyjs/wasm-edit': 1.12.1
-      '@webassemblyjs/wasm-parser': 1.12.1
-      acorn: 8.12.1
-      acorn-import-attributes: 1.9.5(acorn@8.12.1)
-      browserslist: 4.23.3
-      chrome-trace-event: 1.0.3
-      enhanced-resolve: 5.17.1
-      es-module-lexer: 1.5.4
-      eslint-scope: 5.1.1
-      events: 3.3.0
-      glob-to-regexp: 0.4.1
-      graceful-fs: 4.2.11
-      json-parse-even-better-errors: 2.3.1
-      loader-runner: 4.3.0
-      mime-types: 2.1.35
-      neo-async: 2.6.2
-      schema-utils: 3.3.0
-      tapable: 2.2.1
-      terser-webpack-plugin: 5.3.10(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack@5.94.0(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.94.0)))
-      watchpack: 2.4.1
-      webpack-sources: 3.2.3
-    optionalDependencies:
-      webpack-cli: 5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.94.0)
-    transitivePeerDependencies:
-      - '@swc/core'
-      - esbuild
-      - uglify-js
 
   webpack@5.94.0(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack-cli@5.1.4):
     dependencies:
