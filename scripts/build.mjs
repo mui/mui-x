@@ -5,6 +5,7 @@ import path from 'path';
 import { promisify } from 'util';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
+import * as fs from 'fs/promises';
 import { getWorkspaceRoot } from './utils.mjs';
 
 const usePackageExports = process.env.MUI_USE_PACKAGE_EXPORTS === 'true';
@@ -29,14 +30,16 @@ async function run(argv) {
     );
   }
 
-  const outFileExtension = '.js';
+  const packageJsonPath = path.resolve('./package.json');
+  const packageJson = JSON.parse(await fs.readFile(packageJsonPath, { encoding: 'utf8' }));
 
-  const env = {
-    NODE_ENV: 'production',
-    BABEL_ENV: bundle,
-    MUI_BUILD_VERBOSE: verbose,
-    MUI_OUT_FILE_EXTENSION: outFileExtension,
-  };
+  const babelRuntimeVersion = packageJson.dependencies['@babel/runtime'];
+  if (!babelRuntimeVersion) {
+    throw new Error(
+      'package.json needs to have a dependency on `@babel/runtime` when building with `@babel/plugin-transform-runtime`.',
+    );
+  }
+
   const babelConfigPath = path.resolve(getWorkspaceRoot(), 'babel.config.js');
   const srcDir = path.resolve('./src');
   const extensions = ['.js', '.ts', '.tsx'];
@@ -50,6 +53,8 @@ async function run(argv) {
     '**/*.d.ts',
     ...(providedIgnore || []),
   ];
+
+  const outFileExtension = '.js';
 
   let relativeOutDir = {
     node: './',
@@ -79,6 +84,14 @@ async function run(argv) {
     }[bundle];
   }
   const outDir = path.resolve(outDirBase, relativeOutDir);
+
+  const env = {
+    NODE_ENV: 'production',
+    BABEL_ENV: bundle,
+    MUI_BUILD_VERBOSE: verbose,
+    MUI_BABEL_RUNTIME_VERSION: babelRuntimeVersion,
+    MUI_OUT_FILE_EXTENSION: outFileExtension,
+  };
 
   const babelArgs = [
     '--config-file',
