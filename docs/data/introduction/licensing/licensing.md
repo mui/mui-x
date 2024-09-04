@@ -43,6 +43,8 @@ These are the Pro npm packages:
 
 - [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro)
 - [`@mui/x-date-pickers-pro`](https://www.npmjs.com/package/@mui/x-date-pickers-pro)
+- [`@mui/x-tree-view-pro`](https://www.npmjs.com/package/@mui/x-tree-view-pro)
+- [`@mui/x-charts-pro`](https://www.npmjs.com/package/@mui/x-charts-pro)
 
 ### Premium plan <span class="plan-premium"></span>
 
@@ -104,21 +106,21 @@ You can also use it for the development of code not intended for production (for
 You don't need to contact us to use these components for the above cases.
 You will need to purchase a commercial license in order to remove the watermarks and console warnings.
 
-## How many developer seats do I need?
+## How many developer licenses do I need?
 
-The number of seats purchased on your license must correspond to the number of concurrent developers contributing changes to the front-end code of the project that uses MUI X Pro or Premium.
+The number of licenses purchased must correspond to the number of concurrent developers contributing changes to the front-end code of the project that uses MUI X Pro or Premium.
 
 - **Example 1.** Company 'A' is developing an application named 'AppA'.
   The app needs to render 10K rows of data in a table and allow users to group, filter, and sort.
   The dev team adds MUI X Pro to the project to satisfy this requirement.
   Five front-end and ten back-end developers are working on 'AppA'.
   Only one developer is tasked with maintaining the Data Grid, but there are five total developers who work on the front-end.
-  Company 'A' must purchase five seats.
+  Company 'A' must purchase five licenses.
 
 - **Example 2.** A UI development team at Company 'B' creates its own UI library for internal development that includes MUI X Pro components.
   The teams working on 'AppY' and 'AppZ' both adopt this new library.
   'AppY' has five front-end developers, and 'AppZ' has three; additionally, there are two front-end developers on the company's UI development team.
-  Company 'B' must purchase ten seats.
+  Company 'B' must purchase ten licenses.
 
 This is [the relevant clause in the EULA.](https://mui.com/legal/mui-x-eula/#required-quantity-of-licenses)
 
@@ -280,6 +282,15 @@ The annual license works **forever in production** with any version of MUI X Pr
 However, when the term ends, you are not allowed to use the current or older versions in **development**.
 
 To solve the issue, you can [renew your license](https://mui.com/r/x-get-license/) or stop making changes to code depending on MUI X's APIs.
+
+:::warning
+Make sure to set `process.env.NODE_ENV` to `'production'` in your build process to avoid the watermark in production.
+Most bundlers set this environment variable automatically when building for production, but for custom setups, you might need to set it manually.
+
+Note that `NODE_ENV=production` is not MUI X-specific and is a common practice in the JavaScript ecosystem.
+It allows bundlers and libraries to optimize the output for production and eliminate dead code, so it's worth checking if it's set correctly in your project.
+See related documentation for [Webpack](https://webpack.js.org/guides/production/#specify-the-mode), [Node.js](https://nodejs.org/en/learn/getting-started/nodejs-the-difference-between-development-and-production) and [Next.js](https://nextjs.org/docs/messages/non-standard-node-env) for more information.
+:::
 
 ### 4. License key plan mismatch
 

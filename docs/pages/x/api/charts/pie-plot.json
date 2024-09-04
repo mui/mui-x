@@ -18,7 +18,8 @@
   "name": "PiePlot",
   "imports": [
     "import { PiePlot } from '@mui/x-charts/PieChart';",
-    "import { PiePlot } from '@mui/x-charts';"
+    "import { PiePlot } from '@mui/x-charts';",
+    "import { PiePlot } from '@mui/x-charts-pro';"
   ],
   "slots": [
     { "name": "pieArc", "description": "", "class": null },

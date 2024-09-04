@@ -6,11 +6,11 @@ import {
   DataGridPremiumProps,
   GridColDef,
 } from '@mui/x-data-grid-premium';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, userEvent, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
-import { stub, SinonStub, spy } from 'sinon';
+import { SinonSpy, spy, stub, SinonStub } from 'sinon';
 import { getCell, getColumnValues, sleep } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
 describe('<DataGridPremium /> - Clipboard', () => {
@@ -59,29 +59,21 @@ describe('<DataGridPremium /> - Clipboard', () => {
   }
 
   describe('copy', () => {
-    let writeText: SinonStub;
-    const originalClipboard = navigator.clipboard;
-
-    beforeEach(function beforeEachHook() {
-      writeText = stub().resolves();
-
-      Object.defineProperty(navigator, 'clipboard', {
-        value: { writeText },
-        writable: true,
-      });
-    });
+    let writeText: SinonSpy | undefined;
 
     afterEach(function afterEachHook() {
-      Object.defineProperty(navigator, 'clipboard', { value: originalClipboard });
+      writeText?.restore();
     });
 
     ['ctrlKey', 'metaKey'].forEach((key) => {
       it(`should copy the selected cells to the clipboard when ${key} + C is pressed`, () => {
         render(<Test />);
 
+        writeText = spy(navigator.clipboard, 'writeText');
+
         const cell = getCell(0, 0);
         cell.focus();
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
 
         fireEvent.keyDown(cell, { key: 'Shift' });
         fireEvent.click(getCell(2, 2), { shiftKey: true });
@@ -100,9 +92,11 @@ describe('<DataGridPremium /> - Clipboard', () => {
     it(`should copy cells range selected in one row`, () => {
       render(<Test />);
 
+      writeText = spy(navigator.clipboard, 'writeText');
+
       const cell = getCell(0, 0);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
 
       fireEvent.keyDown(cell, { key: 'Shift' });
       fireEvent.click(getCell(0, 2), { shiftKey: true });
@@ -129,9 +123,11 @@ describe('<DataGridPremium /> - Clipboard', () => {
         </div>,
       );
 
+      writeText = spy(navigator.clipboard, 'writeText');
+
       const cell = getCell(0, 0);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
 
       fireEvent.keyDown(cell, { key: 'Ctrl' });
       fireEvent.click(getCell(1, 0), { ctrlKey: true });
@@ -158,9 +154,11 @@ describe('<DataGridPremium /> - Clipboard', () => {
         </div>,
       );
 
+      writeText = spy(navigator.clipboard, 'writeText');
+
       const cell = getCell(0, 0);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
 
       fireEvent.keyDown(cell, { key: 'Ctrl' });
       fireEvent.click(getCell(1, 0), { ctrlKey: true });
@@ -197,7 +195,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         const listener = spy();
         apiRef.current.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'v', code: 'KeyV', keyCode: 86, [key]: true }); // Ctrl+V
         expect(listener.callCount).to.equal(0);
       });
@@ -210,7 +208,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         const listener = spy();
         apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'v', code: 'KeyV', keyCode: 86, [key]: true }); // Ctrl+V
         expect(listener.callCount).to.equal(0);
       });
@@ -222,7 +220,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
         const cell = getCell(0, 1);
         cell.focus();
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
 
         fireEvent.keyDown(cell, { key: 'Shift' });
         fireEvent.click(getCell(2, 2), { shiftKey: true });
@@ -240,12 +238,55 @@ describe('<DataGridPremium /> - Clipboard', () => {
         expect(getCell(2, 2)).to.have.text(clipboardData);
       });
 
+      // Context: https://github.com/mui/mui-x/issues/14233
+      it('should paste into cells on the current page when `paginationMode="server"`', async () => {
+        const rowLength = 4;
+
+        const { setProps } = render(
+          <Test
+            rowLength={rowLength}
+            pagination
+            paginationModel={{ pageSize: 2, page: 0 }}
+            paginationMode="server"
+            pageSizeOptions={[2]}
+            rowCount={rowLength}
+            editMode="cell"
+          />,
+        );
+
+        const clipboardData = '12';
+        const cell = getCell(3, 1); // cell in the first row on the next page
+
+        expect(cell).not.to.have.text(clipboardData);
+
+        cell.focus();
+        fireUserEvent.mousePress(cell);
+        paste(cell, clipboardData);
+
+        // no update
+        await waitFor(() => {
+          expect(getCell(3, 1)).not.to.have.text(clipboardData);
+        });
+
+        // go to the next page
+        setProps({ paginationModel: { pageSize: 2, page: 1 } });
+
+        cell.focus();
+        fireUserEvent.mousePress(cell);
+        paste(cell, clipboardData);
+
+        // updated
+        await waitFor(() => {
+          expect(getCell(3, 1)).to.have.text(clipboardData);
+        });
+      });
+
       it('should not paste values outside of the selected cells range', async () => {
         render(<Test rowLength={5} colLength={5} />);
 
         const cell = getCell(0, 1);
         cell.focus();
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
 
         fireEvent.keyDown(cell, { key: 'Shift' });
         fireEvent.click(getCell(2, 2), { shiftKey: true });
@@ -282,7 +323,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
         const cell = getCell(0, 1);
         cell.focus();
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
 
         fireEvent.keyDown(cell, { key: 'Shift' });
         fireEvent.click(getCell(2, 2), { shiftKey: true });
@@ -328,7 +369,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
         const cell = getCell(1, 1);
         cell.focus();
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
 
         const clipboardData = [
           ['p11', 'p12', 'p13'],
@@ -346,10 +387,10 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
         await waitFor(() => {
           expect(getCell(3, 3).textContent).to.equal('p33');
-          expect(getCell(6, 2).textContent).to.equal('p62');
-          expect(getCell(7, 1).textContent).to.equal('p71');
-          expect(getCell(7, 3).textContent).to.equal('p73');
         });
+        expect(getCell(6, 2).textContent).to.equal('p62');
+        expect(getCell(7, 1).textContent).to.equal('p71');
+        expect(getCell(7, 3).textContent).to.equal('p73');
       });
     });
 
@@ -359,7 +400,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
         const cell = getCell(2, 1);
         cell.focus();
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
 
         const clipboardData = ['p01', 'p02', 'p03'].join('\t');
         paste(cell, clipboardData);
@@ -367,8 +408,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         await waitFor(() => {
           // the last row is not selected and should not be updated
           expect(getColumnValues(1)).to.deep.equal(['p02', 'p02', 'p02', 'JPYUSD']);
-          expect(getColumnValues(2)).to.deep.equal(['p03', 'p03', 'p03', '31']);
         });
+        expect(getColumnValues(2)).to.deep.equal(['p03', 'p03', 'p03', '31']);
       });
 
       it('should paste into selected rows if multiple rows of data are pasted', async () => {
@@ -376,7 +417,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
         const cell = getCell(2, 1);
         cell.focus();
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
 
         const clipboardData = [
           ['p01', 'p02', 'p03'].join('\t'),
@@ -389,8 +430,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         await waitFor(() => {
           // the last row is not selected and should not be updated
           expect(getColumnValues(1)).to.deep.equal(['p02', 'p12', 'p22', 'JPYUSD']);
-          expect(getColumnValues(2)).to.deep.equal(['p03', 'p13', 'p23', '31']);
         });
+        expect(getColumnValues(2)).to.deep.equal(['p03', 'p13', 'p23', '31']);
       });
 
       it('should ignore row selection when single cell value is pasted', async () => {
@@ -398,22 +439,22 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
         const cell = getCell(2, 1);
         cell.focus();
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
 
         paste(cell, 'pasted');
 
         await waitFor(() => {
           // should ignore selected rows and paste into selected cell
           expect(getColumnValues(1)).to.deep.equal(['USDGBP', 'USDEUR', 'pasted', 'JPYUSD']);
-          expect(getColumnValues(2)).to.deep.equal(['1', '11', '21', '31']);
         });
+        expect(getColumnValues(2)).to.deep.equal(['1', '11', '21', '31']);
       });
 
       it('should paste into selected rows when checkbox selection cell is focused', async () => {
         render(<Test checkboxSelection />);
 
         const checkboxInput = getCell(0, 0).querySelector('input')!;
-        userEvent.mousePress(checkboxInput!);
+        fireUserEvent.mousePress(checkboxInput!);
 
         const clipboardData = ['p01', 'p02', 'p03'].join('\t');
         paste(checkboxInput, clipboardData);
@@ -421,8 +462,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         await waitFor(() => {
           // the first column (id) is not editable and won't be updated
           expect(getCell(0, 2).textContent).to.equal('p02');
-          expect(getCell(0, 3).textContent).to.equal('p03');
         });
+        expect(getCell(0, 3).textContent).to.equal('p03');
       });
     });
 
@@ -453,7 +494,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       const cell = getCell(1, 0);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
 
       paste(cell, 'Nike');
 
@@ -471,7 +512,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
         const cell = getCell(0, 1);
         cell.focus();
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
 
         fireEvent.keyDown(cell, { key: 'Shift' });
         fireEvent.click(getCell(1, 2), { shiftKey: true });
@@ -516,7 +557,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       const cell = getCell(1, 0);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
 
       paste(cell, '0');
 
@@ -565,7 +606,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       const cell = getCell(1, 2);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
 
       paste(cell, 'John Doe');
 
@@ -606,7 +647,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       const cell = getCell(1, 0);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
 
       paste(cell, 'john doe');
 
@@ -645,7 +686,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       const cell = getCell(1, 0);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
 
       fireEvent.keyDown(cell, { key: 'Shift' });
       fireEvent.click(getCell(1, 4), { shiftKey: true });
@@ -654,10 +695,10 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       await waitFor(() => {
         expect(getColumnValues(1)).to.deep.equal(['Nike', 'Nike', 'Puma']);
-        expect(getColumnValues(2)).to.deep.equal(['Shoes', 'Shoes', 'Shoes']);
-        expect(getColumnValues(3)).to.deep.equal(['$120', '$100', '$90']);
-        expect(getColumnValues(4)).to.deep.equal(['4.0', '4.0', '4.9']);
       });
+      expect(getColumnValues(2)).to.deep.equal(['Shoes', 'Shoes', 'Shoes']);
+      expect(getColumnValues(3)).to.deep.equal(['$120', '$100', '$90']);
+      expect(getColumnValues(4)).to.deep.equal(['4.0', '4.0', '4.9']);
     });
 
     it('should call `processRowUpdate` with each row impacted by the paste', async () => {
@@ -668,7 +709,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       const cell = getCell(0, 1);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
 
       fireEvent.keyDown(cell, { key: 'Shift' });
       fireEvent.click(getCell(2, 2), { shiftKey: true });
@@ -711,7 +752,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       const cell = getCell(0, 1);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
 
       paste(cell, '12');
 
@@ -736,7 +777,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       const cell = getCell(0, 1);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
 
       paste(cell, '12');
 
@@ -763,7 +804,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       const cell = getCell(0, 1);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
 
       paste(cell, '12');
 
@@ -792,14 +833,14 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       const cell = getCell(0, 1);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
 
       paste(cell, '12');
 
       await waitFor(() => {
         expect(onProcessRowUpdateError.callCount).to.equal(1);
-        expect(onProcessRowUpdateError.args[0][0]).to.equal(error);
       });
+      expect(onProcessRowUpdateError.args[0][0]).to.equal(error);
     });
 
     it('should emit clipboard paste events', async () => {
@@ -824,7 +865,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       const cell = getCell(0, 1);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
 
       fireEvent.keyDown(cell, { key: 'Shift' });
       fireEvent.click(getCell(0, 2), { shiftKey: true });
@@ -848,17 +889,14 @@ describe('<DataGridPremium /> - Clipboard', () => {
         clipboardData = data;
         return Promise.resolve();
       };
-      const originalClipboard = navigator.clipboard;
+      let writeTextStub: SinonStub;
 
-      beforeEach(function beforeEachHook() {
-        Object.defineProperty(navigator, 'clipboard', {
-          value: { writeText },
-          writable: true,
-        });
-      });
+      const stubClipboard = () => {
+        writeTextStub = stub(navigator.clipboard, 'writeText').callsFake(writeText);
+      };
 
       afterEach(function afterEachHook() {
-        Object.defineProperty(navigator, 'clipboard', { value: originalClipboard });
+        writeTextStub.restore();
         clipboardData = '';
       });
 
@@ -871,13 +909,13 @@ describe('<DataGridPremium /> - Clipboard', () => {
       }
 
       function copyCell(cell: HTMLElement) {
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
       }
 
       function pasteIntoCell(cell: HTMLElement) {
         cell.focus();
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         paste(cell, clipboardData);
       }
 
@@ -892,6 +930,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         ];
 
         render(<CopyPasteTest columns={columns} rows={rows} />);
+        // Call after render to override the `@testing-library/user-event` stub
+        stubClipboard();
 
         const sourceCell = getCell(0, 1);
         const targetCell = getCell(1, 1);
@@ -914,6 +954,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         ];
 
         render(<CopyPasteTest columns={columns} rows={rows} />);
+        // Call after render to override the `@testing-library/user-event` stub
+        stubClipboard();
 
         const sourceCell = getCell(0, 1);
         const targetCell = getCell(1, 1);
@@ -936,6 +978,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         ];
 
         render(<CopyPasteTest columns={columns} rows={rows} />);
+        // Call after render to override the `@testing-library/user-event` stub
+        stubClipboard();
 
         const sourceCell = getCell(0, 1);
         const targetCell = getCell(1, 1);
@@ -967,6 +1011,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         ];
 
         render(<CopyPasteTest columns={columns} rows={rows} />);
+        // Call after render to override the `@testing-library/user-event` stub
+        stubClipboard();
 
         const sourceCell = getCell(0, 1);
         const targetCell = getCell(1, 1);
@@ -989,6 +1035,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         ];
 
         render(<CopyPasteTest columns={columns} rows={rows} />);
+        // Call after render to override the `@testing-library/user-event` stub
+        stubClipboard();
 
         const sourceCell = getCell(0, 1);
         const targetCell = getCell(1, 1);
@@ -1016,6 +1064,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         ];
 
         render(<CopyPasteTest columns={columns} rows={rows} />);
+        // Call after render to override the `@testing-library/user-event` stub
+        stubClipboard();
 
         const sourceCell = getCell(0, 1);
         const targetCell = getCell(1, 1);
@@ -1055,6 +1105,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         ];
 
         render(<CopyPasteTest columns={columns} rows={rows} />);
+        // Call after render to override the `@testing-library/user-event` stub
+        stubClipboard();
 
         const sourceCell = getCell(0, 1);
         const targetCell = getCell(1, 1);
@@ -1078,7 +1130,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       const cell = getCell(0, 1);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
 
       fireEvent.keyDown(cell, { key: 'Shift' });
       fireEvent.click(getCell(2, 2), { shiftKey: true });
@@ -1108,7 +1160,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       const cell = getCell(0, 1);
       cell.focus();
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
 
       let clipboardData = ['01', '11'].join('\n');
       // Add newline at the end
@@ -1118,10 +1170,10 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       await waitFor(() => {
         expect(getCell(0, 1)).to.have.text('01');
-        expect(getCell(1, 1)).to.have.text('11');
-        // Should not be empty
-        expect(getCell(2, 1)).to.have.text('GBPEUR');
       });
+      expect(getCell(1, 1)).to.have.text('11');
+      // Should not be empty
+      expect(getCell(2, 1)).to.have.text('GBPEUR');
     });
   });
 });

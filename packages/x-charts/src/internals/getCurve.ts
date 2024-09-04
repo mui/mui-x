@@ -7,7 +7,7 @@ import {
   curveStep,
   curveStepAfter,
   curveStepBefore,
-} from 'd3-shape';
+} from '@mui/x-charts-vendor/d3-shape';
 import { CurveType } from '../models/seriesType/line';
 
 export default function getCurveFactory(curveType?: CurveType) {

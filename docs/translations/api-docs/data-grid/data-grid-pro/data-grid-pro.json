@@ -183,6 +183,9 @@
     "ignoreValueFormatterDuringExport": {
       "description": "If <code>true</code>, the Data Grid will not use <code>valueFormatter</code> when exporting to CSV or copying to clipboard. If an object is provided, you can choose to ignore the <code>valueFormatter</code> for CSV export or clipboard export."
     },
+    "indeterminateCheckboxAction": {
+      "description": "If <code>select</code>, a group header checkbox in indeterminate state (like &quot;Select All&quot; checkbox) will select all the rows under it. If <code>deselect</code>, it will deselect all the rows under it. Works only if <code>checkboxSelection</code> is enabled."
+    },
     "initialState": {
       "description": "The initial state of the DataGridPro. The data in it will be set in the state on initialization but will not be controlled. If one of the data in <code>initialState</code> is also being controlled, then the control state wins."
     },
@@ -204,7 +207,7 @@
       "description": "Determines if a row can be selected.",
       "typeDescriptions": {
         "params": "With all properties from <a href='/x/api/data-grid/grid-row-params/'>GridRowParams</a>.",
-        "boolean": "A boolean indicating if the cell is selectable."
+        "boolean": "A boolean indicating if the row is selectable."
       }
     },
     "keepColumnPositionIfDraggedOutside": {
@@ -559,10 +562,10 @@
       "description": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called."
     },
     "showCellVerticalBorder": {
-      "description": "If <code>true</code>, the vertical borders of the cells are displayed."
+      "description": "If <code>true</code>, vertical borders will be displayed between cells."
     },
     "showColumnVerticalBorder": {
-      "description": "If <code>true</code>, the right border of the column headers are displayed."
+      "description": "If <code>true</code>, vertical borders will be displayed between column header items."
     },
     "slotProps": {
       "description": "Overridable components props dynamically passed to the component at rendering."

@@ -1,14 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getSimpleTreeViewUtilityClass } from './simpleTreeViewClasses';
 import { SimpleTreeViewProps } from './SimpleTreeView.types';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { SIMPLE_TREE_VIEW_PLUGINS, SimpleTreeViewPluginSignatures } from './SimpleTreeView.plugins';
-import { buildWarning } from '../internals/utils/warning';
+import { warnOnce } from '../internals/utils/warning';
 
 const useThemeProps = createUseThemeProps('MuiSimpleTreeView');
 
@@ -42,12 +42,6 @@ type SimpleTreeViewComponent = (<Multiple extends boolean | undefined = undefine
 
 const EMPTY_ITEMS: any[] = [];
 
-const itemsPropWarning = buildWarning([
-  'MUI X: The `SimpleTreeView` component does not support the `items` prop.',
-  'If you want to add items, you need to pass them as JSX children.',
-  'Check the documentation for more details: https://mui.com/x/react-tree-view/simple-tree-view/items/',
-]);
-
 /**
  *
  * Demos:
@@ -66,7 +60,11 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).items != null) {
-      itemsPropWarning();
+      warnOnce([
+        'MUI X: The `SimpleTreeView` component does not support the `items` prop.',
+        'If you want to add items, you need to pass them as JSX children.',
+        'Check the documentation for more details: https://mui.com/x/react-tree-view/simple-tree-view/items/.',
+      ]);
     }
   }
 
@@ -111,6 +109,8 @@ SimpleTreeView.propTypes = {
       focusItem: PropTypes.func.isRequired,
       getItem: PropTypes.func.isRequired,
       getItemDOMElement: PropTypes.func.isRequired,
+      getItemOrderedChildrenIds: PropTypes.func.isRequired,
+      getItemTree: PropTypes.func.isRequired,
       selectItem: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
     }),
@@ -192,6 +192,12 @@ SimpleTreeView.propTypes = {
    */
   onExpandedItemsChange: PropTypes.func,
   /**
+   * Callback fired when the `content` slot of a given tree item is clicked.
+   * @param {React.MouseEvent} event The DOM event that triggered the change.
+   * @param {string} itemId The id of the focused item.
+   */
+  onItemClick: PropTypes.func,
+  /**
    * Callback fired when a tree item is expanded or collapsed.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {array} itemId The itemId of the modified item.
@@ -199,10 +205,9 @@ SimpleTreeView.propTypes = {
    */
   onItemExpansionToggle: PropTypes.func,
   /**
-   * Callback fired when tree items are focused.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change. **Warning**: This is a generic event not a focus event.
+   * Callback fired when a given tree item is focused.
+   * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. **Warning**: This is a generic event not a focus event.
    * @param {string} itemId The id of the focused item.
-   * @param {string} value of the focused item.
    */
   onItemFocus: PropTypes.func,
   /**

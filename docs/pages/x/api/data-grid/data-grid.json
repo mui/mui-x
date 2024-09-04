@@ -123,6 +123,10 @@
       },
       "default": "false"
     },
+    "indeterminateCheckboxAction": {
+      "type": { "name": "enum", "description": "'deselect'<br>&#124;&nbsp;'select'" },
+      "default": "\"deselect\""
+    },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": {
       "type": { "name": "func" },
@@ -141,7 +145,7 @@
       }
     },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
-    "loading": { "type": { "name": "bool" } },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "logger": {
       "type": {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuList from '@mui/material/MenuList';
-import { useTheme } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import { unstable_useId as useId } from '@mui/utils';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { gridClasses } from '../../constants/gridClasses';
@@ -47,7 +47,7 @@ function GridActionsCell(props: GridActionsCellProps) {
   const buttonRef = React.useRef<HTMLButtonElement>(null);
   const ignoreCallToFocus = React.useRef(false);
   const touchRippleRefs = React.useRef<Record<string, TouchRippleActions | null>>({});
-  const theme = useTheme();
+  const isRtl = useRtl();
   const menuId = useId();
   const buttonId = useId();
   const rootProps = useGridRootProps();
@@ -149,7 +149,7 @@ function GridActionsCell(props: GridActionsCellProps) {
       }
 
       // for rtl mode we need to reverse the direction
-      const rtlMod = theme.direction === 'rtl' ? -1 : 1;
+      const rtlMod = isRtl ? -1 : 1;
       const indexMod = (direction === 'left' ? -1 : 1) * rtlMod;
 
       // if the button that should receive focus is disabled go one more step

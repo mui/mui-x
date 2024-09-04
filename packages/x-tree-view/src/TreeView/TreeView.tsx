@@ -96,6 +96,8 @@ TreeView.propTypes = {
       focusItem: PropTypes.func.isRequired,
       getItem: PropTypes.func.isRequired,
       getItemDOMElement: PropTypes.func.isRequired,
+      getItemOrderedChildrenIds: PropTypes.func.isRequired,
+      getItemTree: PropTypes.func.isRequired,
       selectItem: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
     }),
@@ -177,6 +179,12 @@ TreeView.propTypes = {
    */
   onExpandedItemsChange: PropTypes.func,
   /**
+   * Callback fired when the `content` slot of a given tree item is clicked.
+   * @param {React.MouseEvent} event The DOM event that triggered the change.
+   * @param {string} itemId The id of the focused item.
+   */
+  onItemClick: PropTypes.func,
+  /**
    * Callback fired when a tree item is expanded or collapsed.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {array} itemId The itemId of the modified item.
@@ -184,10 +192,9 @@ TreeView.propTypes = {
    */
   onItemExpansionToggle: PropTypes.func,
   /**
-   * Callback fired when tree items are focused.
-   * @param {React.SyntheticEvent} event The DOM event that triggered the change. **Warning**: This is a generic event not a focus event.
+   * Callback fired when a given tree item is focused.
+   * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. **Warning**: This is a generic event not a focus event.
    * @param {string} itemId The id of the focused item.
-   * @param {string} value of the focused item.
    */
   onItemFocus: PropTypes.func,
   /**

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import Typography from '@mui/material/Typography';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
 import {
@@ -502,7 +502,6 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
   const transitionKey = `${currentYearNumber}-${currentMonthNumber}`;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const slideNodeRef = React.useMemo(() => React.createRef<HTMLDivElement>(), [transitionKey]);
-  const startOfCurrentWeek = utils.startOfWeek(now);
 
   const focusableDay = React.useMemo<TDate | null>(() => {
     const startOfMonth = utils.startOfMonth(currentMonth);
@@ -574,7 +573,7 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
             key={i.toString()}
             variant="caption"
             role="columnheader"
-            aria-label={utils.format(utils.addDays(startOfCurrentWeek, i), 'weekday')}
+            aria-label={utils.format(weekday, 'weekday')}
             className={classes.weekDayLabel}
           >
             {dayOfWeekFormatter(weekday)}

@@ -1,9 +1,14 @@
-import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
+import type { MuiPage } from 'docs/src/MuiPage';
 
 const apiPages: MuiPage[] = [
   {
     pathname: '/x/api/tree-view/rich-tree-view',
     title: 'RichTreeView',
+  },
+  {
+    pathname: '/x/api/tree-view/rich-tree-view-pro',
+    title: 'RichTreeViewPro',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/tree-view/simple-tree-view',

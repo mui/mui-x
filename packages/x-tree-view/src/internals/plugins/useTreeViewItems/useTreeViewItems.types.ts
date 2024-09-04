@@ -1,5 +1,6 @@
+import * as React from 'react';
 import { TreeViewItemMeta, DefaultizedProps, TreeViewPluginSignature } from '../../models';
-import { TreeViewItemId } from '../../../models';
+import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 
 interface TreeViewItemProps {
   label: string;
@@ -22,6 +23,19 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
    * @returns {HTMLElement | null} The DOM element of the item with the given id.
    */
   getItemDOMElement: (itemId: TreeViewItemId) => HTMLElement | null;
+  /**
+   * Get the ids of a given item's children.
+   * Those ids are returned in the order they should be rendered.
+   * To get the root items, pass `null` as the `itemId`.
+   * @param {TreeViewItemId | null} itemId The id of the item to get the children of.
+   * @returns {TreeViewItemId[]} The ids of the item's children.
+   */
+  getItemOrderedChildrenIds: (itemId: TreeViewItemId | null) => TreeViewItemId[];
+  /**
+   * Get all the items in the same format as provided by `props.items`.
+   * @returns {TreeViewItemProps[]} The items in the tree.
+   */
+  getItemTree: () => TreeViewBaseItem[];
 }
 
 export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItemsPublicAPI<R> {
@@ -39,13 +53,6 @@ export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItems
    * @returns {TreeViewItemProps[]} The items to render.
    */
   getItemsToRender: () => TreeViewItemProps[];
-  /**
-   * Get the ids of a given item's children.
-   * Those ids are returned in the order they should be rendered.
-   * @param {TreeViewItemId | null} itemId The id of the item to get the children of.
-   * @returns {TreeViewItemId[]} The ids of the item's children.
-   */
-  getItemOrderedChildrenIds: (itemId: TreeViewItemId | null) => TreeViewItemId[];
   /**
    * Check if a given item is disabled.
    * An item is disabled if it was marked as disabled or if one of its ancestors is disabled.
@@ -79,7 +86,7 @@ export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItems
   areItemUpdatesPrevented: () => boolean;
 }
 
-export interface UseTreeViewItemsParameters<R extends {}> {
+export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
   /**
    * If `true`, will allow focus on disabled items.
    * @default false
@@ -112,6 +119,12 @@ export interface UseTreeViewItemsParameters<R extends {}> {
    */
   getItemId?: (item: R) => TreeViewItemId;
   /**
+   * Callback fired when the `content` slot of a given tree item is clicked.
+   * @param {React.MouseEvent} event The DOM event that triggered the change.
+   * @param {string} itemId The id of the focused item.
+   */
+  onItemClick?: (event: React.MouseEvent, itemId: string) => void;
+  /**
    * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".
    * @default 12px
@@ -119,7 +132,7 @@ export interface UseTreeViewItemsParameters<R extends {}> {
   itemChildrenIndentation?: string | number;
 }
 
-export type UseTreeViewItemsDefaultizedParameters<R extends {}> = DefaultizedProps<
+export type UseTreeViewItemsDefaultizedParameters<R extends { children?: R[] }> = DefaultizedProps<
   UseTreeViewItemsParameters<R>,
   'disabledItemsFocusable' | 'itemChildrenIndentation'
 >;
@@ -139,9 +152,13 @@ export interface UseTreeViewItemsState<R extends {}> {
   };
 }
 
-interface UseTreeViewItemsContextValue
-  extends Pick<UseTreeViewItemsDefaultizedParameters<any>, 'disabledItemsFocusable'> {
-  indentationAtItemLevel: boolean;
+interface UseTreeViewItemsContextValue {
+  items: Pick<
+    UseTreeViewItemsDefaultizedParameters<any>,
+    'disabledItemsFocusable' | 'onItemClick'
+  > & {
+    indentationAtItemLevel: boolean;
+  };
 }
 
 export type UseTreeViewItemsSignature = TreeViewPluginSignature<{

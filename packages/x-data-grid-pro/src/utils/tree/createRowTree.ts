@@ -33,7 +33,7 @@ export const createRowTree = (params: CreateRowTreeParams): GridRowTreeCreationV
       previousTree: params.previousTree,
       id: node.id,
       path: node.path,
-      hasServerChildren: node.hasServerChildren,
+      serverChildrenCount: node.serverChildrenCount,
       onDuplicatePath: params.onDuplicatePath,
       treeDepths,
       isGroupExpandedByDefault: params.isGroupExpandedByDefault,

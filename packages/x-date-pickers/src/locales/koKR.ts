@@ -25,10 +25,10 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: '시작',
   end: '종료',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: '시작 날짜',
+  startTime: '시작 시간',
+  endDate: '종료 날짜',
+  endTime: '종료 시간',
 
   // Action bar
   cancelButtonLabel: '취소',
@@ -77,24 +77,24 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'DD',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
+  year: '년',
+  month: '월',
+  day: '일',
+  weekDay: '평일',
+  hours: '시간',
+  minutes: '분',
+  seconds: '초',
   // meridiem: 'Meridiem',
 
   // Common
-  // empty: 'Empty',
+  empty: '공란',
 };
 
 export const koKR = getPickersLocalization(koKRPickers);

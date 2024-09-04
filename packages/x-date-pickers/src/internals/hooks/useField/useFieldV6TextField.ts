@@ -77,6 +77,7 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
 export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   const isRtl = useRtl();
   const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
+  const selectionSyncTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
 
   const {
     forwardedProps: {
@@ -87,7 +88,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       inputRef: inputRefProp,
       placeholder: inPlaceholder,
     },
-    internalProps: { readOnly = false },
+    internalProps: { readOnly = false, disabled = false },
     parsedSelectedSections,
     activeSectionIndex,
     state,
@@ -162,12 +163,16 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
               inputRef.current.setSelectionRange(selectionStart, selectionEnd);
             }
           }
-          setTimeout(() => {
+          clearTimeout(selectionSyncTimeoutRef.current);
+          selectionSyncTimeoutRef.current = setTimeout(() => {
             // handle case when the selection is not updated correctly
             // could happen on Android
             if (
               inputRef.current &&
               inputRef.current === getActiveElement(document) &&
+              // The section might loose all selection, where `selectionStart === selectionEnd`
+              // https://github.com/mui/mui-x/pull/13652
+              inputRef.current.selectionStart === inputRef.current.selectionEnd &&
               (inputRef.current.selectionStart !== selectionStart ||
                 inputRef.current.selectionEnd !== selectionEnd)
             ) {
@@ -182,8 +187,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       getActiveSectionIndexFromDOM: () => {
         const browserStartIndex = inputRef.current!.selectionStart ?? 0;
         const browserEndIndex = inputRef.current!.selectionEnd ?? 0;
-        const isInputReadOnly = !!inputRef.current?.readOnly;
-        if ((browserStartIndex === 0 && browserEndIndex === 0) || isInputReadOnly) {
+        if (browserStartIndex === 0 && browserEndIndex === 0) {
           return null;
         }
 
@@ -207,10 +211,6 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   );
 
   const syncSelectionFromDOM = () => {
-    if (readOnly) {
-      setSelectedSections(null);
-      return;
-    }
     const browserStartIndex = inputRef.current!.selectionStart ?? 0;
     let nextSectionIndex: number;
     if (browserStartIndex <= sections[0].startInInput) {
@@ -240,7 +240,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
         return;
       }
 
-      if (activeSectionIndex != null || readOnly) {
+      if (activeSectionIndex != null) {
         return;
       }
 
@@ -273,7 +273,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
     // prevent default to avoid the input `onChange` handler being called
     event.preventDefault();
 
-    if (readOnly) {
+    if (readOnly || disabled) {
       return;
     }
 
@@ -433,6 +433,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
 
     return () => {
       clearTimeout(focusTimeoutRef.current);
+      clearTimeout(selectionSyncTimeoutRef.current);
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

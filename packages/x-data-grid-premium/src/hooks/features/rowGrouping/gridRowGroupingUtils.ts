@@ -85,6 +85,7 @@ export const filterRowTreeFromGroupingColumns = (
 ): Omit<GridFilterState, 'filterModel'> => {
   const { apiRef, rowTree, isRowMatchingFilters, filterModel } = params;
   const filteredRowsLookup: Record<GridRowId, boolean> = {};
+  const filteredChildrenCountLookup: Record<GridRowId, number> = {};
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
   const filterCache = {};
 
@@ -112,6 +113,7 @@ export const filterRowTreeFromGroupingColumns = (
       isPassingFiltering = true;
     }
 
+    let filteredChildrenCount = 0;
     let filteredDescendantCount = 0;
     if (node.type === 'group') {
       node.children.forEach((childId) => {
@@ -122,6 +124,9 @@ export const filterRowTreeFromGroupingColumns = (
           [...ancestorsResults, filterResults],
         );
         filteredDescendantCount += childSubTreeSize;
+        if (childSubTreeSize > 0) {
+          filteredChildrenCount += 1;
+        }
       });
     }
 
@@ -147,6 +152,7 @@ export const filterRowTreeFromGroupingColumns = (
       return 0;
     }
 
+    filteredChildrenCountLookup[node.id] = filteredChildrenCount;
     filteredDescendantCountLookup[node.id] = filteredDescendantCount;
 
     if (node.type !== 'group') {
@@ -166,6 +172,7 @@ export const filterRowTreeFromGroupingColumns = (
 
   return {
     filteredRowsLookup,
+    filteredChildrenCountLookup,
     filteredDescendantCountLookup,
   };
 };

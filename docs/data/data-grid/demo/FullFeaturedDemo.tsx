@@ -15,9 +15,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectProps } from '@mui/material/Select';
 
 const AntDesignStyledDataGridPro = styled(DataGridPro)(({ theme }) => ({
-  border: `1px solid ${theme.palette.mode === 'light' ? '#f0f0f0' : '#303030'}`,
-  color:
-    theme.palette.mode === 'light' ? 'rgba(0,0,0,.85)' : 'rgba(255,255,255,0.85)',
+  border: '1px solid #303030',
+  color: 'rgba(255,255,255,0.85)',
   fontFamily: [
     '-apple-system',
     'BlinkMacSystemFont',
@@ -33,24 +32,28 @@ const AntDesignStyledDataGridPro = styled(DataGridPro)(({ theme }) => ({
   WebkitFontSmoothing: 'auto',
   letterSpacing: 'normal',
   '& .MuiDataGrid-columnsContainer': {
-    backgroundColor: theme.palette.mode === 'light' ? '#fafafa' : '#1d1d1d',
+    backgroundColor: '#1d1d1d',
+    ...theme.applyStyles('light', {
+      backgroundColor: '#fafafa',
+    }),
   },
   '& .MuiDataGrid-iconSeparator': {
     display: 'none',
   },
   '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
-    borderRight: `1px solid ${
-      theme.palette.mode === 'light' ? '#f0f0f0' : '#303030'
-    }`,
+    borderRight: '1px solid #303030',
+    ...theme.applyStyles('light', {
+      borderRightColor: '#f0f0f0',
+    }),
   },
   '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
-    borderBottom: `1px solid ${
-      theme.palette.mode === 'light' ? '#f0f0f0' : '#303030'
-    }`,
+    borderBottom: '1px solid #303030',
+    ...theme.applyStyles('light', {
+      borderBottomColor: '#f0f0f0',
+    }),
   },
   '& .MuiDataGrid-cell': {
-    color:
-      theme.palette.mode === 'light' ? 'rgba(0,0,0,.85)' : 'rgba(255,255,255,0.85)',
+    color: 'rgba(255,255,255,0.85)',
     fontFamily: [
       '-apple-system',
       'BlinkMacSystemFont',
@@ -66,26 +69,31 @@ const AntDesignStyledDataGridPro = styled(DataGridPro)(({ theme }) => ({
     WebkitFontSmoothing: 'auto',
     letterSpacing: 'normal',
     '& .MuiDataGrid-columnsContainer': {
-      backgroundColor: theme.palette.mode === 'light' ? '#fafafa' : '#1d1d1d',
+      backgroundColor: '#1d1d1d',
+      ...theme.applyStyles('light', {
+        backgroundColor: '#fafafa',
+      }),
     },
     '& .MuiDataGrid-iconSeparator': {
       display: 'none',
     },
     '& .MuiDataGrid-colCell, .MuiDataGrid-cell': {
-      borderRight: `1px solid ${
-        theme.palette.mode === 'light' ? '#f0f0f0' : '#303030'
-      }`,
+      borderRight: '1px solid #303030',
+      ...theme.applyStyles('light', {
+        borderRightColor: '#f0f0f0',
+      }),
     },
     '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
-      borderBottom: `1px solid ${
-        theme.palette.mode === 'light' ? '#f0f0f0' : '#303030'
-      }`,
+      borderBottom: '1px solid #303030',
+      ...theme.applyStyles('light', {
+        borderBottomColor: '#f0f0f0',
+      }),
     },
     '& .MuiDataGrid-cell': {
-      color:
-        theme.palette.mode === 'light'
-          ? 'rgba(0,0,0,.85)'
-          : 'rgba(255,255,255,0.65)',
+      color: 'rgba(255,255,255,0.65)',
+      ...theme.applyStyles('light', {
+        color: 'rgba(0,0,0,.85)',
+      }),
     },
     '& .MuiPaginationItem-root': {
       borderRadius: 0,
@@ -94,10 +102,11 @@ const AntDesignStyledDataGridPro = styled(DataGridPro)(({ theme }) => ({
       width: 16,
       height: 16,
       backgroundColor: 'transparent',
-      border: `1px solid ${
-        theme.palette.mode === 'light' ? '#d9d9d9' : 'rgb(67, 67, 67)'
-      }`,
+      border: '1px solid rgb(67, 67, 67)',
       borderRadius: 2,
+      ...theme.applyStyles('light', {
+        borderColor: '#d9d9d9',
+      }),
     },
     '& .MuiCheckbox-root svg path': {
       display: 'none',
@@ -129,7 +138,14 @@ const AntDesignStyledDataGridPro = styled(DataGridPro)(({ theme }) => ({
       top: '39%',
       border: 0,
     },
+    ...theme.applyStyles('light', {
+      color: 'rgba(0,0,0,.85)',
+    }),
   },
+  ...theme.applyStyles('light', {
+    borderColor: '#f0f0f0',
+    color: 'rgba(0,0,0,.85)',
+  }),
 }));
 
 const StyledBox = styled('div')(({ theme }) => ({

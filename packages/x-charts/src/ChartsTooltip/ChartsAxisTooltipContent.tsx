@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { AxisInteractionData } from '../context/InteractionProvider';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
@@ -8,7 +8,7 @@ import { AxisDefaultized } from '../models/axis';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsAxisTooltipContent } from './DefaultChartsAxisTooltipContent';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
-import { useColorProcessor } from '../hooks/useColor';
+import { useColorProcessor } from '../context/PluginProvider/useColorProcessor';
 import { isCartesianSeriesType } from '../internals/isCartesian';
 import { useSeries } from '../hooks/useSeries';
 
@@ -56,7 +56,7 @@ function ChartsAxisTooltipContent(props: {
 }) {
   const { content, contentProps, axisData, sx, classes } = props;
 
-  const isXaxis = (axisData.x && axisData.x.index) !== undefined;
+  const isXaxis = axisData.x && axisData.x.index !== -1;
 
   const dataIndex = isXaxis ? axisData.x && axisData.x.index : axisData.y && axisData.y.index;
   const axisValue = isXaxis ? axisData.x && axisData.x.value : axisData.y && axisData.y.value;
@@ -76,18 +76,26 @@ function ChartsAxisTooltipContent(props: {
       .forEach((seriesType) => {
         series[seriesType]!.seriesOrder.forEach((seriesId) => {
           const item = series[seriesType]!.series[seriesId];
-          const axisKey = isXaxis ? item.xAxisKey : item.yAxisKey;
+
+          const providedXAxisId = item.xAxisId ?? item.xAxisKey;
+          const providedYAxisId = item.yAxisId ?? item.yAxisKey;
+
+          const axisKey = isXaxis ? providedXAxisId : providedYAxisId;
+
           if (axisKey === undefined || axisKey === USED_AXIS_ID) {
             const seriesToAdd = series[seriesType]!.series[seriesId];
 
-            const zAxisKey = (seriesToAdd as any).zAxisKey ?? zAxisIds[0];
+            const xAxisId = providedXAxisId ?? xAxisIds[0];
+            const yAxisId = providedYAxisId ?? yAxisIds[0];
+            const zAxisId =
+              (seriesToAdd as any).zAxisId ?? (seriesToAdd as any).zAxisKey ?? zAxisIds[0];
 
             const getColor =
               colorProcessors[seriesType]?.(
                 seriesToAdd as any,
-                xAxis[seriesToAdd.xAxisKey ?? xAxisIds[0]],
-                yAxis[seriesToAdd.yAxisKey ?? yAxisIds[0]],
-                zAxisKey && zAxis[zAxisKey],
+                xAxis[xAxisId],
+                yAxis[yAxisId],
+                zAxisId && zAxis[zAxisId],
               ) ?? (() => '');
 
             rep.push({ ...seriesToAdd, getColor });
