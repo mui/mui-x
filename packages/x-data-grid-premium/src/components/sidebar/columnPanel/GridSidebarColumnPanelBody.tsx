@@ -7,6 +7,8 @@ import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormCon
 import Typography, { typographyClasses } from '@mui/material/Typography';
 import { svgIconClasses } from '@mui/material/SvgIcon';
 
+import Select, { selectClasses } from '@mui/material/Select';
+import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { PivotModel } from '../../../hooks/features/pivoting/useGridPivoting';
 import { useGridRootProps } from '../../../typeOverloads/reexports';
@@ -147,6 +149,22 @@ const PivotFieldDragHandle = styled('div')(({ theme }) => ({
   },
 }));
 
+const AggregationSelectRoot = styled(Select)(({ theme }) => ({
+  fontSize: theme.typography.pxToRem(12),
+  [`& .${selectClasses.select}.${selectClasses.outlined}.${outlinedInputClasses.input}`]: {
+    padding: theme.spacing(0.75, 3, 0.75, 1),
+  },
+  [`& .${selectClasses.icon}`]: {
+    right: 0,
+  },
+  '&:hover': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  [`&:not(:focus-within) .${outlinedInputClasses.notchedOutline}`]: {
+    border: 0,
+  },
+}));
+
 export interface FieldTransferObject {
   field: string;
   modelKey: 'columns' | 'rows' | 'values' | null;
@@ -238,10 +256,11 @@ function AggregationSelect({
   );
 
   return (
-    <rootProps.slots.baseSelect
+    <AggregationSelectRoot
+      as={rootProps.slots.baseSelect}
+      {...rootProps.slotProps?.baseSelect}
       size="small"
-      variant="standard"
-      sx={{ fontSize: 'small' }}
+      variant="outlined"
       value={aggFunc}
       onChange={(event) => {
         const newValue = event.target.value as string;
@@ -265,13 +284,14 @@ function AggregationSelect({
         <rootProps.slots.baseSelectOption
           key={func}
           value={func}
-          // @ts-ignore FIXME
-          style={{ fontSize: '12px' }}
+          native={false}
+          // @ts-ignore TODO: Fix types for MUISelectOption
+          dense
         >
           {func}
         </rootProps.slots.baseSelectOption>
       ))}
-    </rootProps.slots.baseSelect>
+    </AggregationSelectRoot>
   );
 }
 
@@ -591,24 +611,22 @@ export function GridSidebarColumnPanelBody({
         )}
         {availableFields.length > 0 && (
           <PivotSectionList>
-            {availableFields.map((field) => {
-              return (
-                <PivotSectionListItem
-                  key={field}
-                  field={field}
-                  modelKey={null}
-                  updatePivotModel={updatePivotModel}
-                  pivotModel={pivotModel}
-                  onPivotModelChange={onPivotModelChange}
-                  slots={rootProps.slots}
-                  slotProps={rootProps.slotProps}
-                  onDragStart={handleDragStart}
-                  onDragEnd={handleDragEnd}
-                >
-                  {getColumnName(field)}
-                </PivotSectionListItem>
-              );
-            })}
+            {availableFields.map((field) => (
+              <PivotSectionListItem
+                key={field}
+                field={field}
+                modelKey={null}
+                updatePivotModel={updatePivotModel}
+                pivotModel={pivotModel}
+                onPivotModelChange={onPivotModelChange}
+                slots={rootProps.slots}
+                slotProps={rootProps.slotProps}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+              >
+                {getColumnName(field)}
+              </PivotSectionListItem>
+            ))}
           </PivotSectionList>
         )}
       </PivotSection>
@@ -630,25 +648,23 @@ export function GridSidebarColumnPanelBody({
         )}
         {pivotModel.rows.length > 0 && (
           <PivotSectionList>
-            {pivotModel.rows.map(({ field }) => {
-              return (
-                <PivotSectionListItem
-                  key={field}
-                  field={field}
-                  modelKey="rows"
-                  data-field={field}
-                  pivotModel={pivotModel}
-                  updatePivotModel={updatePivotModel}
-                  onPivotModelChange={onPivotModelChange}
-                  slots={rootProps.slots}
-                  slotProps={rootProps.slotProps}
-                  onDragStart={handleDragStart}
-                  onDragEnd={handleDragEnd}
-                >
-                  {getColumnName(field)}
-                </PivotSectionListItem>
-              );
-            })}
+            {pivotModel.rows.map(({ field }) => (
+              <PivotSectionListItem
+                key={field}
+                field={field}
+                modelKey="rows"
+                data-field={field}
+                pivotModel={pivotModel}
+                updatePivotModel={updatePivotModel}
+                onPivotModelChange={onPivotModelChange}
+                slots={rootProps.slots}
+                slotProps={rootProps.slotProps}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+              >
+                {getColumnName(field)}
+              </PivotSectionListItem>
+            ))}
           </PivotSectionList>
         )}
       </PivotSection>
@@ -670,25 +686,23 @@ export function GridSidebarColumnPanelBody({
         )}
         {pivotModel.columns.length > 0 && (
           <PivotSectionList>
-            {pivotModel.columns.map(({ field, sort }) => {
-              return (
-                <PivotSectionListItem
-                  key={field}
-                  field={field}
-                  modelKey="columns"
-                  updatePivotModel={updatePivotModel}
-                  pivotModel={pivotModel}
-                  onPivotModelChange={onPivotModelChange}
-                  slots={rootProps.slots}
-                  slotProps={rootProps.slotProps}
-                  sort={sort}
-                  onDragStart={handleDragStart}
-                  onDragEnd={handleDragEnd}
-                >
-                  {getColumnName(field)}
-                </PivotSectionListItem>
-              );
-            })}
+            {pivotModel.columns.map(({ field, sort }) => (
+              <PivotSectionListItem
+                key={field}
+                field={field}
+                modelKey="columns"
+                updatePivotModel={updatePivotModel}
+                pivotModel={pivotModel}
+                onPivotModelChange={onPivotModelChange}
+                slots={rootProps.slots}
+                slotProps={rootProps.slotProps}
+                sort={sort}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+              >
+                {getColumnName(field)}
+              </PivotSectionListItem>
+            ))}
           </PivotSectionList>
         )}
       </PivotSection>
@@ -710,26 +724,24 @@ export function GridSidebarColumnPanelBody({
         )}
         {pivotModel.values.length > 0 && (
           <PivotSectionList>
-            {pivotModel.values.map(({ field, aggFunc }) => {
-              return (
-                <PivotSectionListItem
-                  key={field}
-                  field={field}
-                  modelKey="values"
-                  updatePivotModel={updatePivotModel}
-                  pivotModel={pivotModel}
-                  onPivotModelChange={onPivotModelChange}
-                  slots={rootProps.slots}
-                  slotProps={rootProps.slotProps}
-                  aggFunc={aggFunc}
-                  colDef={initialColumnsLookup[field]}
-                  onDragStart={handleDragStart}
-                  onDragEnd={handleDragEnd}
-                >
-                  {getColumnName(field)}
-                </PivotSectionListItem>
-              );
-            })}
+            {pivotModel.values.map(({ field, aggFunc }) => (
+              <PivotSectionListItem
+                key={field}
+                field={field}
+                modelKey="values"
+                updatePivotModel={updatePivotModel}
+                pivotModel={pivotModel}
+                onPivotModelChange={onPivotModelChange}
+                slots={rootProps.slots}
+                slotProps={rootProps.slotProps}
+                aggFunc={aggFunc}
+                colDef={initialColumnsLookup[field]}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+              >
+                {getColumnName(field)}
+              </PivotSectionListItem>
+            ))}
           </PivotSectionList>
         )}
       </PivotSection>
