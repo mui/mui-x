@@ -3,7 +3,7 @@ import {
   DATE_TIME_VALIDATION_PROP_NAMES,
   DATE_VALIDATION_PROP_NAMES,
   TIME_VALIDATION_PROP_NAMES,
-} from './validation/extractValidationProps';
+} from '../../validation/extractValidationProps';
 
 const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'value',
@@ -24,15 +24,21 @@ const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'dateSeparator',
 ] as const;
 
+type InternalPropNames<TValueType extends FieldValueType> =
+  | (typeof SHARED_FIELD_INTERNAL_PROP_NAMES)[number]
+  | (TValueType extends 'date' | 'date-time' ? (typeof DATE_VALIDATION_PROP_NAMES)[number] : never)
+  | (TValueType extends 'time' | 'date-time' ? (typeof TIME_VALIDATION_PROP_NAMES)[number] : never)
+  | (TValueType extends 'date-time' ? (typeof DATE_TIME_VALIDATION_PROP_NAMES)[number] : never);
+
 export const splitFieldInternalAndForwardedProps = <
-  TProps extends {},
-  TInternalPropNames extends keyof TProps,
+  TValueType extends FieldValueType,
+  TProps extends { [key in InternalPropNames<TValueType>]?: any },
 >(
   props: TProps,
-  valueType: FieldValueType,
+  valueType: TValueType,
 ) => {
-  const forwardedProps = { ...props } as Omit<TProps, TInternalPropNames>;
-  const internalProps = {} as Pick<TProps, TInternalPropNames>;
+  const forwardedProps = { ...props } as Omit<TProps, InternalPropNames<TValueType>>;
+  const internalProps = {} as Pick<TProps, InternalPropNames<TValueType>>;
 
   const extractProp = (propName: string) => {
     if (forwardedProps.hasOwnProperty(propName)) {

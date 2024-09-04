@@ -4,7 +4,7 @@ import {
 } from '../internals/utils/valueManagers';
 import { useField } from '../internals/hooks/useField';
 import { UseDateFieldProps } from './DateField.types';
-import { validateDate } from '../internals/utils/validation/validateDate';
+import { validateDate } from '../validation';
 import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
 import { FieldSection, PickerValidDate } from '../models';
 import { useDefaultizedDateField } from '../internals/hooks/defaultizedFieldProps';
@@ -22,10 +22,7 @@ export const useDateField = <
     TAllProps
   >(inProps);
 
-  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
-    typeof props,
-    keyof UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
-  >(props, 'date');
+  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps(props, 'date');
 
   return useField<
     TDate | null,

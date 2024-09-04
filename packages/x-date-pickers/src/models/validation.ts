@@ -21,3 +21,21 @@ export type TimeValidationError =
   | 'shouldDisableTime-seconds';
 
 export type DateTimeValidationError = DateValidationError | TimeValidationError;
+
+export interface OnErrorProps<TValue, TError> {
+  /**
+   * Callback fired when the error associated to the current value changes.
+   * When a validation error is detected, the `error` parameter contains a non-null value.
+   * This can be used to render an appropriate form error.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @param {TError} error The reason why the current value is not valid.
+   * @param {TValue} value The value associated to the error
+   */
+  onError?: (error: TError, value: TValue) => void;
+}
+
+export type InferError<TProps> =
+  TProps extends Pick<OnErrorProps<any, any>, 'onError'>
+    ? Parameters<Exclude<TProps['onError'], undefined>>[0]
+    : never;

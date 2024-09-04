@@ -7,7 +7,7 @@ import {
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { UseSingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
 import { rangeValueManager, getRangeFieldValueManager } from '../internals/utils/valueManagers';
-import { validateTimeRange } from '../internals/utils/validation/validateTimeRange';
+import { validateTimeRange } from '../validation';
 import { RangeFieldSection, DateRange } from '../models';
 
 export const useSingleInputTimeRangeField = <
@@ -23,10 +23,7 @@ export const useSingleInputTimeRangeField = <
     TAllProps
   >(inProps);
 
-  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
-    typeof props,
-    keyof UseSingleInputTimeRangeFieldProps<any, any>
-  >(props, 'time');
+  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps(props, 'time');
 
   const fieldValueManager = React.useMemo(
     () => getRangeFieldValueManager<TDate>({ dateSeparator: internalProps.dateSeparator }),

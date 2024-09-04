@@ -4,7 +4,6 @@ import { refType } from '@mui/utils';
 import {
   DIALOG_WIDTH,
   VIEW_HEIGHT,
-  extractValidationProps,
   isInternalTimeView,
   isDatePickerView,
   PickerViewRenderer,
@@ -14,6 +13,7 @@ import {
   resolveDateTimeFormat,
   useUtils,
 } from '@mui/x-date-pickers/internals';
+import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import {
@@ -32,7 +32,7 @@ import {
   UseMobileRangePickerProps,
   useMobileRangePicker,
 } from '../internals/hooks/useMobileRangePicker';
-import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
+import { validateDateTimeRange } from '../validation';
 import { DateTimeRangePickerView } from '../internals/models';
 import { DateRange } from '../models';
 import {
@@ -408,12 +408,12 @@ MobileDateTimeRangePicker.propTypes = {
   onClose: PropTypes.func,
   /**
    * Callback fired when the error associated to the current value changes.
-   * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
-   *
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * When a validation error is detected, the `error` parameter contains a non-null value.
+   * This can be used to render an appropriate form error.
    * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
-   * @param {TError} error The new error describing why the current value is not valid.
-   * @param {TValue} value The value associated to the error.
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @param {TError} error The reason why the current value is not valid.
+   * @param {TValue} value The value associated to the error
    */
   onError: PropTypes.func,
   /**
