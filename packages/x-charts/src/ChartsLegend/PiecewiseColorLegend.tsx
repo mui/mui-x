@@ -41,7 +41,6 @@ export interface PiecewiseColorLegendProps
    * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
    * @param {PiecewiseColorLegendItemContext} legendItem The legend item data.
    * @param {number} index The index of the clicked legend item.
-   * @default undefined
    */
   onItemClick?: (
     event: React.MouseEvent<SVGRectElement, MouseEvent>,
@@ -198,7 +197,6 @@ PiecewiseColorLegend.propTypes = {
    * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
    * @param {PiecewiseColorLegendItemContext} legendItem The legend item data.
    * @param {number} index The index of the clicked legend item.
-   * @default undefined
    */
   onItemClick: PropTypes.func,
   /**

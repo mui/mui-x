@@ -37,7 +37,6 @@
     "markGap": { "type": { "name": "number" }, "default": "5" },
     "onItemClick": {
       "type": { "name": "func" },
-      "default": "undefined",
       "signature": {
         "type": "function(event: React.MouseEvent<SVGRectElement, MouseEvent>, legendItem: PiecewiseColorLegendItemContext, index: number) => void",
         "describedArgs": ["event", "legendItem", "index"]

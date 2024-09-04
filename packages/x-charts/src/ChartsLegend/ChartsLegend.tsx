@@ -144,7 +144,6 @@ ChartsLegend.propTypes = {
    * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
    * @param {SeriesLegendItemContext} legendItem The legend item data.
    * @param {number} index The index of the clicked legend item.
-   * @default undefined
    */
   onItemClick: PropTypes.func,
   /**
