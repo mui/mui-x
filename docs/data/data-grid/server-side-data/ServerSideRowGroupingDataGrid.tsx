@@ -30,13 +30,11 @@ export default function ServerSideRowGroupingDataGrid() {
     return {
       getRows: async (params) => {
         const urlParams = new URLSearchParams({
-          paginationModel: encodeURIComponent(
-            JSON.stringify(params.paginationModel),
-          ),
-          filterModel: encodeURIComponent(JSON.stringify(params.filterModel)),
-          sortModel: encodeURIComponent(JSON.stringify(params.sortModel)),
-          groupKeys: encodeURIComponent(JSON.stringify(params.groupKeys)),
-          groupFields: encodeURIComponent(JSON.stringify(params.groupFields)),
+          paginationModel: JSON.stringify(params.paginationModel),
+          filterModel: JSON.stringify(params.filterModel),
+          sortModel: JSON.stringify(params.sortModel),
+          groupKeys: JSON.stringify(params.groupKeys),
+          groupFields: JSON.stringify(params.groupFields),
         });
         const getRowsResponse = await fetchRows(
           `https://mui.com/x/api/data-grid?${urlParams.toString()}`,

@@ -52,7 +52,6 @@ export const useGridDataSourceRowGroupingPreProcessors = (
       const parentPath = (params.updates as GridRowsPartialUpdates).groupKeys ?? [];
 
       const getRowTreeBuilderNode = (rowId: GridRowId) => {
-        const count = getChildrenCount(params.dataRowIdToModelLookup[rowId]);
         const leafKey = getGroupKey(params.dataRowIdToModelLookup[rowId]);
         return {
           id: rowId,
@@ -60,7 +59,7 @@ export const useGridDataSourceRowGroupingPreProcessors = (
             key,
             field: groupingRules[i]?.field ?? null,
           })),
-          hasServerChildren: !!count && count !== 0,
+          serverChildrenCount: getChildrenCount(params.dataRowIdToModelLookup[rowId]) ?? 0,
         };
       };
 
