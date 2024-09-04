@@ -7,6 +7,7 @@ import {
   includeFileInBuild,
   createModulePackages,
   typescriptCopy,
+  cjsCopy,
   createPackageFile,
 } from '@mui/monorepo/scripts/copyFilesUtils.mjs';
 
@@ -35,6 +36,8 @@ async function addLicense(packageData) {
   await Promise.all(
     [
       './index.js',
+      './index.mjs',
+      './index.modern.mjs',
       './esm/index.js',
       './modern/index.js',
       './node/index.js',
@@ -71,6 +74,8 @@ async function run() {
 
     // TypeScript
     await typescriptCopy({ from: srcPath, to: buildPath });
+    // cjs
+    await cjsCopy({ from: srcPath, to: buildPath });
 
     if (!usePackageExports) {
       await createModulePackages({ from: srcPath, to: buildPath });

@@ -54,15 +54,16 @@ async function run(argv) {
     ...(providedIgnore || []),
   ];
 
-  const outFileExtension = '.js';
-
-  let relativeOutDir = {
-    node: './',
-    modern: './modern',
-    stable: './esm',
+  let outFileExtension = {
+    node: '.js',
+    modern: '.modern.mjs',
+    stable: '.mjs',
   }[bundle];
 
+  let relativeOutDir = './';
+
   if (!usePackageExports) {
+    outFileExtension = '.js';
     const topLevelNonIndexFiles = glob
       .sync(`*{${extensions.join(',')}}`, { cwd: srcDir, ignore })
       .filter((file) => {
