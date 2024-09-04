@@ -29,7 +29,6 @@ export interface SeriesLegendItemContext extends LegendItemContextBase {
    * The type of the legend item
    * - `series` is used for series legend item
    * - `piecewiseColor` is used for piecewise color legend item
-   * - `pie` is used for pie legend item
    */
   type: 'series';
   /**
@@ -47,7 +46,6 @@ export interface PiecewiseColorLegendItemContext extends LegendItemContextBase {
    * The type of the legend item
    * - `series` is used for series legend item
    * - `piecewiseColor` is used for piecewise color legend item
-   * - `pie` is used for pie legend item
    */
   type: 'piecewiseColor';
   /**
