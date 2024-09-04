@@ -43,7 +43,7 @@
     "directory": "packages/x-data-grid-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.25.4",
+    "@babel/runtime": "^7.25.6",
     "@mui/utils": "^5.16.6",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-internals": "workspace:*",
@@ -51,7 +51,7 @@
     "@types/format-util": "^1.0.4",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
-    "reselect": "^5.1.0"
+    "reselect": "^5.1.1"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
