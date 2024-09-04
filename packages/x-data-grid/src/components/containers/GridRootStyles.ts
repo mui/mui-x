@@ -436,16 +436,17 @@ export const GridRootStyles = styled('div', {
     [`& .${c['columnSeparator--resizable']}`]: {
       cursor: 'col-resize',
       touchAction: 'none',
+      [`&.${c['columnSeparator--resizing']}`]: {
+        color: (t.vars || t).palette.primary.main,
+      },
       // Always appear as draggable on touch devices
       '@media (hover: none)': {
         [`& .${c.iconSeparator} rect`]: separatorIconDragStyles,
-        color: borderColor,
       },
-      [`&:hover, &.${c['columnSeparator--resizing']}`]: {
-        color: (t.vars || t).palette.primary.main,
-        [`& .${c.iconSeparator} rect`]: separatorIconDragStyles,
-        '@media (hover: none)': {
-          color: borderColor,
+      '@media (hover: hover)': {
+        '&:hover': {
+          color: (t.vars || t).palette.primary.main,
+          [`& .${c.iconSeparator} rect`]: separatorIconDragStyles,
         },
       },
       '& svg': {
