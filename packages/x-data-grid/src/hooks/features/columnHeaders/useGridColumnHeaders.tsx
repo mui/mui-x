@@ -28,6 +28,7 @@ import {
   GridColumnVisibilityModel,
   gridColumnPositionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
+  gridColumnLookupSelector,
 } from '../columns';
 import { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfaces';
 import { gridColumnGroupsUnwrappedModelSelector } from '../columnGrouping/gridColumnGroupsSelector';
@@ -106,6 +107,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
+  const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
   const offsetLeft = computeOffsetLeft(
     columnPositions,
     renderContext,
@@ -392,7 +394,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       firstVisibleColumnIndex,
     );
     const leftOverflow = hiddenGroupColumns.reduce((acc, field) => {
-      const column = apiRef.current.getColumn(field);
+      const column = columnsLookup[field];
       return acc + (column.computedWidth ?? 0);
     }, 0);
 
@@ -411,10 +413,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
       const headerInfo: HeaderInfo = {
         groupId,
-        width: columnFields.reduce(
-          (acc, field) => acc + apiRef.current.getColumn(field).computedWidth,
-          0,
-        ),
+        width: columnFields.reduce((acc, field) => acc + columnsLookup[field].computedWidth, 0),
         fields: columnFields,
         colIndex: columnIndex,
         hasFocus,
