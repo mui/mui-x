@@ -6,7 +6,6 @@ import { inputBaseClasses } from '@mui/material/InputBase';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -47,7 +46,8 @@ describe('<DesktopDatePicker />', () => {
       expect(handleViewChange.callCount).to.equal(1);
 
       // Dismiss the picker
-      fireUserEvent.keyPress(document.activeElement!, { key: 'Escape' });
+      // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
 
       openPicker({ type: 'date', variant: 'desktop' });
       expect(handleViewChange.callCount).to.equal(2);
@@ -72,7 +72,8 @@ describe('<DesktopDatePicker />', () => {
       expect(handleViewChange.callCount).to.equal(1);
 
       // Dismiss the picker
-      fireUserEvent.keyPress(document.activeElement!, { key: 'Escape' });
+      // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
 
       openPicker({ type: 'date', variant: 'desktop' });
       expect(handleViewChange.callCount).to.equal(2);
@@ -89,7 +90,8 @@ describe('<DesktopDatePicker />', () => {
       expect(screen.getByRole('radio', { checked: true, name: '2018' })).not.to.equal(null);
 
       // Dismiss the picker
-      fireUserEvent.keyPress(document.activeElement!, { key: 'Escape' });
+      // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       setProps({ views: ['month', 'year'] });
       openPicker({ type: 'date', variant: 'desktop' });
       // wait for all pending changes to be flushed
@@ -126,7 +128,8 @@ describe('<DesktopDatePicker />', () => {
       expect(screen.getByRole('radio', { checked: true, name: 'January' })).not.to.equal(null);
 
       // Dismiss the picker
-      fireUserEvent.keyPress(document.activeElement!, { key: 'Escape' });
+      // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       setProps({ view: 'year' });
       openPicker({ type: 'date', variant: 'desktop' });
       // wait for all pending changes to be flushed
@@ -221,7 +224,7 @@ describe('<DesktopDatePicker />', () => {
 
       render(<DesktopDatePicker onOpen={onOpen} />);
 
-      fireUserEvent.mousePress(screen.getByLabelText(/Choose date/));
+      fireEvent.click(screen.getByLabelText(/Choose date/));
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
@@ -245,14 +248,14 @@ describe('<DesktopDatePicker />', () => {
       openPicker({ type: 'date', variant: 'desktop' });
 
       // Select year
-      fireUserEvent.mousePress(screen.getByRole('radio', { name: '2025' }));
+      fireEvent.click(screen.getByRole('radio', { name: '2025' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2025, 0, 1));
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
       // Change the date (same value)
-      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '1' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '1' }));
       expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2025, 0, 1));
