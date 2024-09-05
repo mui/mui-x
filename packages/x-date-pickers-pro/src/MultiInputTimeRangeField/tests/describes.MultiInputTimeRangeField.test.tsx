@@ -9,7 +9,7 @@ import {
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MultiInputTimeRangeField />', () => {
-  const { render, clock } = createPickerRenderer();
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   describeConformance(<MultiInputTimeRangeField enableAccessibleFieldDOMStructure />, () => ({
     classes: {} as any,

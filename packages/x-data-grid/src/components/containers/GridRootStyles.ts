@@ -299,12 +299,13 @@ export const GridRootStyles = styled('div', {
       `]: {
       [`& .${c.columnSeparator}`]: {
         opacity: 0,
-        '@media (hover: none)': {
+      },
+      // Show resizable separators at all times on touch devices
+      '@media (hover: none)': {
+        [`& .${c['columnSeparator--resizable']}`]: {
           opacity: 1,
-          color: (t.vars || t).palette.primary.main,
         },
       },
-      // Show resizable separators again when the column is hovered
       [`& .${c['columnSeparator--resizable']}:hover`]: {
         opacity: 1,
       },
@@ -411,6 +412,14 @@ export const GridRootStyles = styled('div', {
     },
     '@media (hover: none)': {
       [`& .${c.columnHeader}`]: columnHeaderStyles,
+      [`& .${c.columnHeader}:focus,
+        & .${c.columnHeader}:focus-within,
+        & .${c.columnHeader}:has(+ .${c.columnHeader}:focus),
+        & .${c.columnHeader}:has(+ .${c.columnHeader}:focus-within)`]: {
+        [`.${c['columnSeparator--resizable']}`]: {
+          color: (t.vars || t).palette.primary.main,
+        },
+      },
     },
     [`& .${c['columnSeparator--sideLeft']}`]: {
       left: columnSeparatorOffset,
@@ -427,16 +436,17 @@ export const GridRootStyles = styled('div', {
     [`& .${c['columnSeparator--resizable']}`]: {
       cursor: 'col-resize',
       touchAction: 'none',
+      [`&.${c['columnSeparator--resizing']}`]: {
+        color: (t.vars || t).palette.primary.main,
+      },
       // Always appear as draggable on touch devices
       '@media (hover: none)': {
         [`& .${c.iconSeparator} rect`]: separatorIconDragStyles,
-        color: borderColor,
       },
-      [`&:hover, &.${c['columnSeparator--resizing']}`]: {
-        color: (t.vars || t).palette.primary.main,
-        [`& .${c.iconSeparator} rect`]: separatorIconDragStyles,
-        '@media (hover: none)': {
-          color: borderColor,
+      '@media (hover: hover)': {
+        '&:hover': {
+          color: (t.vars || t).palette.primary.main,
+          [`& .${c.iconSeparator} rect`]: separatorIconDragStyles,
         },
       },
       '& svg': {

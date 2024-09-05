@@ -71,6 +71,10 @@ export interface UseDesktopPickerSlotProps<
 > extends ExportedUseDesktopPickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>,
     Pick<PickersLayoutSlotProps<TDate | null, TDate, TView>, 'toolbar'> {}
 
+export interface UseDesktopPickerOwnerState {
+  open: boolean;
+}
+
 export interface ExportedUseDesktopPickerSlotProps<
   TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
@@ -96,7 +100,7 @@ export interface ExportedUseDesktopPickerSlotProps<
     {},
     UseDesktopPickerProps<TDate, any, TEnableAccessibleFieldDOMStructure, any, any>
   >;
-  openPickerIcon?: Record<string, any>;
+  openPickerIcon?: SlotComponentPropsFromProps<Record<string, any>, {}, UseDesktopPickerOwnerState>;
 }
 
 export interface DesktopOnlyPickerProps
