@@ -59,13 +59,13 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Choisir la date, la date sélectionnée est ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Choisir la date, la date sélectionnée est ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Choisir la date',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Choisir l'heure, l'heure sélectionnée est ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, formattedTime) =>
+    formattedTime
+      ? `Choisir l'heure, l'heure sélectionnée est ${formattedTime ?? utils.format(value, 'fullTime')}`
       : "Choisir l'heure",
   fieldClearLabel: 'Effacer la valeur',
 

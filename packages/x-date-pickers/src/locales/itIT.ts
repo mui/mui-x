@@ -59,13 +59,13 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Scegli la data, la data selezionata è ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Scegli la data, la data selezionata è ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Scegli la data',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Scegli l'ora, l'ora selezionata è ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Scegli l'ora, l'ora selezionata è ${formattedTime ?? utils.format(value, 'fullTime')}`
       : "Scegli l'ora",
   fieldClearLabel: 'Cancella valore',
 

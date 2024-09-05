@@ -59,13 +59,13 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `בחירת תאריך, התאריך שנבחר הוא ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `בחירת תאריך, התאריך שנבחר הוא ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'בחירת תאריך',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `בחירת שעה, השעה שנבחרה היא ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `בחירת שעה, השעה שנבחרה היא ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'בחירת שעה',
   fieldClearLabel: 'נקה ערך',
 

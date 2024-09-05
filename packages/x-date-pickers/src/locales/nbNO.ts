@@ -59,13 +59,13 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Velg dato, valgt dato er ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Velg dato, valgt dato er ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Velg dato',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Velg tid, valgt tid er ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Velg tid, valgt tid er ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Velg tid',
   // fieldClearLabel: 'Clear value',
 

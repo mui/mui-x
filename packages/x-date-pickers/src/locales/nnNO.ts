@@ -59,13 +59,13 @@ const nnNOPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Vel dato, vald dato er ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Vel dato, vald dato er ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Vel dato',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Vel tid, vald tid er ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Vel tid, vald tid er ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Vel tid',
   fieldClearLabel: 'Fjern verdi',
 

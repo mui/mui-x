@@ -60,13 +60,13 @@ const kzKZPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Күнді таңдаңыз, таңдалған күн ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Күнді таңдаңыз, таңдалған күн ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Күнді таңдаңыз',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Уақытты таңдаңыз, таңдалған уақыт ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Уақытты таңдаңыз, таңдалған уақыт ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Уақытты таңдаңыз',
   // fieldClearLabel: 'Clear value',
 

@@ -112,5 +112,5 @@ export interface UseMobilePickerParams<
     'valueManager' | 'valueType' | 'validator'
   > {
   props: TExternalProps;
-  getOpenDialogAriaText: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
+  getOpenDialogAriaText: (date: TDate | null) => string;
 }

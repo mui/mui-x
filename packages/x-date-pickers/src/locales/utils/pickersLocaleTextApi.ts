@@ -70,8 +70,28 @@ export interface PickersComponentAgnosticLocaleText<TDate extends PickerValidDat
   selectViewText: (view: TimeViewWithMeridiem) => string;
 
   // Open picker labels
-  openDatePickerDialogue: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
-  openTimePickerDialogue: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
+  openDatePickerDialogue: (
+    /**
+     * @deprecated Use `formattedTime` instead
+     */
+    date: TDate | null,
+    /**
+     * @deprecated Use `formattedTime` instead
+     */
+    utils: MuiPickersAdapter<TDate>,
+    formattedDate: string | null,
+  ) => string;
+  openTimePickerDialogue: (
+    /**
+     * @deprecated Use `formattedTime` instead
+     */
+    date: TDate | null,
+    /**
+     * @deprecated Use `formattedTime` instead
+     */
+    utils: MuiPickersAdapter<TDate>,
+    formattedTime: string | null,
+  ) => string;
 
   // Clear button label
   fieldClearLabel: string;

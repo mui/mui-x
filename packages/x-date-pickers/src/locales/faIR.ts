@@ -59,13 +59,13 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `تاریخ را انتخاب کنید، تاریخ انتخاب شده ${utils.format(value, 'fullDate')} می‌باشد`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `تاریخ را انتخاب کنید، تاریخ انتخاب شده ${formattedDate ?? utils.format(value, 'fullDate')} می‌باشد`
       : 'تاریخ را انتخاب کنید',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `ساعت را انتخاب کنید، ساعت انتخاب شده ${utils.format(value, 'fullTime')} می‌باشد`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `ساعت را انتخاب کنید، ساعت انتخاب شده ${formattedTime ?? utils.format(value, 'fullTime')} می‌باشد`
       : 'ساعت را انتخاب کنید',
   fieldClearLabel: 'پاک کردن مقدار',
 

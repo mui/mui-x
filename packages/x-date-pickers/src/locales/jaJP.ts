@@ -60,13 +60,13 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `日付を選択してください。選択した日付は ${utils.format(value, 'fullDate')} です`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `日付を選択してください。選択した日付は ${formattedDate ?? utils.format(value, 'fullDate')} です`
       : '日付を選択してください',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `時間を選択してください。選択した時間は ${utils.format(value, 'fullTime')} です`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `時間を選択してください。選択した時間は ${formattedTime ?? utils.format(value, 'fullTime')} です`
       : '時間を選択してください',
   fieldClearLabel: 'クリア',
 

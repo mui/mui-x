@@ -57,13 +57,13 @@ const zhHKPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `選擇日期，已選擇${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `選擇日期，已選擇${formattedDate ?? utils.format(value, 'fullDate')}`
       : '選擇日期',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `選擇時間，已選擇${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `選擇時間，已選擇${formattedTime ?? utils.format(value, 'fullTime')}`
       : '選擇時間',
   fieldClearLabel: '清除',
 

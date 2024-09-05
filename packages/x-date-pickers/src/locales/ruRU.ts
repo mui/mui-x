@@ -60,13 +60,13 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Выберите дату, выбрана дата ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Выберите дату, выбрана дата ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Выберите дату',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Выберите время, выбрано время ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Выберите время, выбрано время ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Выберите время',
   fieldClearLabel: 'Очистить значение',
 

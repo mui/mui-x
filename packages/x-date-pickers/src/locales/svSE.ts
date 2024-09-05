@@ -59,13 +59,13 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Välj datum, valt datum är ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Välj datum, valt datum är ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Välj datum',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Välj tid, vald tid är ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Välj tid, vald tid är ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Välj tid',
   fieldClearLabel: 'Rensa värde',
 

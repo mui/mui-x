@@ -151,5 +151,5 @@ export interface UseDesktopPickerParams<
     'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor'
   > {
   props: TExternalProps;
-  getOpenDialogAriaText: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
+  getOpenDialogAriaText: (date: TDate | null) => string;
 }

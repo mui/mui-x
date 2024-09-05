@@ -59,13 +59,13 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `تاریخ منتخب کریں، منتخب شدہ تاریخ ہے ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `تاریخ منتخب کریں، منتخب شدہ تاریخ ہے ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'تاریخ منتخب کریں',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `وقت منتخب کریں، منتخب شدہ وقت ہے ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `وقت منتخب کریں، منتخب شدہ وقت ہے ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'وقت منتخب کریں',
   // fieldClearLabel: 'Clear value',
 

@@ -60,13 +60,13 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Vælg dato, valgte dato er ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Vælg dato, valgte dato er ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Vælg dato',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Vælg tidspunkt, valgte tidspunkt er ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Vælg tidspunkt, valgte tidspunkt er ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Vælg tidspunkt',
   fieldClearLabel: 'ryd felt',
 

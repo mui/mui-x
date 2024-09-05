@@ -60,13 +60,13 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Абраць дату, абрана дата  ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Абраць дату, абрана дата  ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Абраць дату',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Абраць час, абрыны час  ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Абраць час, абрыны час  ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Абраць час',
   // fieldClearLabel: 'Clear value',
 

@@ -59,13 +59,13 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Elige fecha, la fecha elegida es ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Elige fecha, la fecha elegida es ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Elige fecha',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Elige hora, la hora elegida es ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Elige hora, la hora elegida es ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Elige hora',
   fieldClearLabel: 'Limpiar valor',
 

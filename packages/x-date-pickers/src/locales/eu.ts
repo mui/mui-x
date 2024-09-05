@@ -59,13 +59,13 @@ const euPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Data aukeratu, aukeratutako data ${utils.format(value, 'fullDate')} da`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Data aukeratu, aukeratutako data ${formattedDate ?? utils.format(value, 'fullDate')} da`
       : 'Data aukeratu',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Ordua aukeratu, aukeratutako ordua ${utils.format(value, 'fullTime')} da`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Ordua aukeratu, aukeratutako ordua ${formattedTime ?? utils.format(value, 'fullTime')} da`
       : 'Ordua aukeratu',
   fieldClearLabel: 'Balioa garbitu',
 

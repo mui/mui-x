@@ -59,13 +59,13 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Kies datum, geselecteerde datum is ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Kies datum, geselecteerde datum is ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Kies datum',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Kies tijd, geselecteerde tijd is ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Kies tijd, geselecteerde tijd is ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Kies tijd',
   fieldClearLabel: 'Wissen',
 

@@ -59,13 +59,13 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Tarih seçin, seçilen tarih: ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Tarih seçin, seçilen tarih: ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Tarih seç',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Saat seçin, seçilen saat: ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Saat seçin, seçilen saat: ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Saat seç',
   // fieldClearLabel: 'Clear value',
 

@@ -60,13 +60,13 @@ const roROPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Selectați data, data selectată este ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Selectați data, data selectată este ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Selectați data',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Selectați ora, ora selectată este ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Selectați ora, ora selectată este ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Selectați ora',
   fieldClearLabel: 'Golire conținut',
 
