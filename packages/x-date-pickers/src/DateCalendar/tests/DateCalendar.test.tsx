@@ -9,7 +9,7 @@ import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DateCalendar />', () => {
-  const { render } = createPickerRenderer();
+  const { render, clock } = createPickerRenderer({ clockConfig: new Date(2019, 0, 2) });
 
   it('switches between views uncontrolled', async () => {
     const handleViewChange = spy();
@@ -128,17 +128,13 @@ describe('<DateCalendar />', () => {
   });
 
   describe('with fake timers', () => {
-    const { render: renderWithFakeTimers, clock } = createPickerRenderer({
-      clock: 'fake',
-      clockConfig: new Date('2019-01-02'),
-    });
+    clock.withFakeTimers();
+
     // test: https://github.com/mui/mui-x/issues/12373
     it('should not reset day to `startOfDay` if value already exists when finding the closest enabled date', () => {
       const onChange = spy();
       const defaultDate = adapterToUse.date('2019-01-02T11:12:13.550Z');
-      renderWithFakeTimers(
-        <DateCalendar onChange={onChange} disablePast defaultValue={defaultDate} />,
-      );
+      render(<DateCalendar onChange={onChange} disablePast defaultValue={defaultDate} />);
 
       fireEvent.click(
         screen.getByRole('button', { name: 'calendar view is open, switch to year view' }),
