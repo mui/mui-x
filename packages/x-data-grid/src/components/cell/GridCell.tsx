@@ -68,11 +68,16 @@ export type GridCellProps = {
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
   onMouseUp?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseOver?: React.MouseEventHandler<HTMLDivElement>;
+  onKeyUp?: React.KeyboardEventHandler<HTMLDivElement>;
   onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
   onDragEnter?: React.DragEventHandler<HTMLDivElement>;
   onDragOver?: React.DragEventHandler<HTMLDivElement>;
-  [x: string]: any; // TODO v7: remove this - it breaks type safety
-};
+  onFocus?: React.FocusEventHandler<Element>;
+  children?: undefined;
+  style?: React.CSSProperties;
+  [x: `data-${string}`]: string;
+} & React.HTMLAttributes<HTMLDivElement>;
 
 const EMPTY_CELL_PARAMS: GridCellParams<any, any, any, GridTreeNodeWithRender> = {
   id: -1,
@@ -152,7 +157,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     width,
     className,
     style: styleProp,
-    gridHasScrollX,
     colSpan,
     disableDragEvents,
     isNotVisible,
@@ -329,10 +333,10 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       };
     }
 
-    const cellStyle: React.CSSProperties = {
+    const cellStyle = {
       '--width': `${width}px`,
       ...styleProp,
-    };
+    } as React.CSSProperties;
 
     if (pinnedPosition === PinnedPosition.LEFT) {
       cellStyle.left = pinnedOffset;
