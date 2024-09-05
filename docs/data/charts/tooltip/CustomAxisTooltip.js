@@ -50,11 +50,9 @@ export function CustomAxisTooltip() {
             borderColor: 'divider',
           }}
         >
-          {/* <pre>{tooltipData}</pre> */}
           <Typography>{tooltipData.axisFormattedValue}</Typography>
           {tooltipData.seriesItems.map((seriesItem) => (
-            <Stack direction="row" alignItems="center">
-              {/* key={seriesItem.seriesId}> */}
+            <Stack direction="row" alignItems="center" key={seriesItem.seriesId}>
               <div
                 style={{
                   width: 11,
