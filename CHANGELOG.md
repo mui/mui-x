@@ -9,6 +9,8 @@ _Sep 5, 2024_
 
 We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
+- 🎨 Update the design of Data Grid column headers (#14293)
+- 🧠 Add the `slots` concept introduction documentation page (#13881)
 - 🌍 Improve Chinese (zh-CN) and Dutch (nl-NL) locales on the Data Grid
 - 🐞 Bugfixes
 - 📚 Documentation improvements
@@ -23,8 +25,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [DataGrid] Allow to control the indeterminate checkbox behavior (#14247) @MBilalShafi
 - [DataGrid] Column header design updates (#14293) @KenanYusuf
 - [DataGrid] Fix error on simultaneous `columns` and `columnGroupingModel` update (#14368) @cherniavskii
-- [DataGrid] Fix first row flickering with autoHeight enabled (#14235) @KenanYusuf
-- [DataGrid] Fix separator styles on touch devices (#14471) @KenanYusuf
+- [DataGrid] Fix first row flickering with `autoHeight` prop enabled (#14235) @KenanYusuf
 - [DataGrid] Remove cell min-width / max-width styles (#14448) @oliviertassinari
 - [DataGrid] Restore reselect behavior (#14410) @romgrk
 - [l10n] Improve Chinese (zh-CN) locale (#14394) @lawvs
@@ -34,7 +35,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 
 Same changes as in `@mui/x-data-grid@7.16.0`, plus:
 
-- [DataGridPro] Fix double top border in header filters (#14375) @MBilalShafi
+- [DataGridPro] Fix duplicate top border in header filters (#14375) @MBilalShafi
 
 #### `@mui/x-data-grid-premium@7.16.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -56,19 +57,18 @@ Same changes as in `@mui/x-date-pickers@7.16.0`.
 
 #### `@mui/x-charts@7.16.0`
 
-- [charts] Fix JSDocs typo (#14497) @alexfauquette
+- [charts] Fix JSDoc typos (#14497) @alexfauquette
 - [charts] Fix `LineChart` not properly animating when hydrating (#14355) @JCQuintas
-- [charts] Fix themeAugmentation (#14372) @alexfauquette
+- [charts] Fix theme augmentation (#14372) @alexfauquette
 - [charts] Pass all props to legend (#14392) @JCQuintas
-- [charts] Replace ESM extensions by .mjs (#14387) @alexfauquette
+- [charts] Use `.mjs` extension for ESM build (#14387) @alexfauquette
 - [charts] Update `package.json` for vendor package (#14465) @alexfauquette
-- [charts] Use real world data for `PieChart` examples (#14297) @JCQuintas
 
-#### `@mui/x-charts-pro@7.0.0-alpha.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@7.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-charts@7.16.0`, plus:
 
-- [charts-pro] Fix props and automatic documentation on `BarChartPro` and `LineChartPro` (#14391) @JCQuintas
+- [charts-pro] Fix props and automated documentation on `BarChartPro` and `LineChartPro` (#14391) @JCQuintas
 
 ### Tree View
 
@@ -86,6 +86,7 @@ Same changes as in `@mui/x-charts@7.16.0`, plus:
 - [docs] Add the `slots` concept introduction page (#13881) @flaviendelangle
 - [docs] Remove TypeScript v3 outdated version mentions (#14443) @k-rajat19
 - [docs] Remove notion of seats (#14351) @oliviertassinari
+- [docs] Use real world data for `PieChart` examples (#14297) @JCQuintas
 
 ### Core
 
@@ -96,8 +97,8 @@ Same changes as in `@mui/x-charts@7.16.0`, plus:
 - [code-infra] Fully resolve imports in ESM target (#14234) @Janpot
 - [code-infra] Update runners from node 18 to 20 (#14466) @JCQuintas
 - [infra] Added `secrets: inherit` to workflow call (#14454) @michelengelen
-- [infra] Switch 'add closing message' to reusable workflow (#14499) @michelengelen
-- [infra] Switch issue triage workflow to reusable workflows (#14390) @michelengelen
+- [infra] Switch "add closing message" to reusable workflow (#14499) @michelengelen
+- [infra] Switch "issue triage workflow" to reusable workflows (#14390) @michelengelen
 
 ## 7.15.0
 
