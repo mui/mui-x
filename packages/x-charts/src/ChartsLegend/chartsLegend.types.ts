@@ -14,7 +14,7 @@ interface LegendItemContextBase {
 }
 
 export interface LegendItemParams
-  extends Partial<Omit<SeriesLegendItemContext, 'type' | 'itemId' | keyof LegendItemContextBase>>,
+  extends Partial<Omit<SeriesLegendItemContext, 'type' | keyof LegendItemContextBase>>,
     Partial<Omit<PiecewiseColorLegendItemContext, 'type' | keyof LegendItemContextBase>>,
     LegendItemContextBase {
   /**
@@ -38,7 +38,7 @@ export interface SeriesLegendItemContext extends LegendItemContextBase {
   /**
    * The identifier of the pie item
    */
-  itemId: PieItemId;
+  itemId?: PieItemId;
 }
 
 export interface PiecewiseColorLegendItemContext extends LegendItemContextBase {

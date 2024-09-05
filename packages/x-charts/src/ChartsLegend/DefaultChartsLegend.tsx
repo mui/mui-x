@@ -11,7 +11,7 @@ const seriesContextBuilder = (context: LegendItemParams): SeriesLegendItemContex
     color: context.color,
     label: context.label,
     seriesId: context.seriesId!,
-    itemId: context.id,
+    itemId: context.itemId,
   }) as const;
 
 export interface LegendRendererProps
@@ -148,6 +148,7 @@ DefaultChartsLegend.propTypes = {
     PropTypes.shape({
       color: PropTypes.string.isRequired,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      itemId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string.isRequired,
       maxValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       minValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),

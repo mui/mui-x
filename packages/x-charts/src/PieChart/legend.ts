@@ -17,6 +17,7 @@ const legendGetter: LegendGetter<'pie'> = (params) => {
         seriesId,
         color: item.color,
         label: formattedLabel,
+        itemId: item.id,
       });
     });
     return acc;
