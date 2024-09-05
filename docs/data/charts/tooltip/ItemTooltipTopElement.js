@@ -42,10 +42,11 @@ export function ItemTooltipTopElement() {
 
   const tooltipPosition = {
     ...mousePosition,
-    // Add the coordinate of the <svg/> to the to position inside the <svg/>.
-    x: svgRef.current.getBoundingClientRect().left + svgXPosition,
     // Add half of `yScale.step()` to be in the middle of the band.
-    y: svgRef.current.getBoundingClientRect().top + svgYPosition + yScale.step() / 2,
+    x:
+      svgRef.current.getBoundingClientRect().left + svgXPosition + xScale.step() / 2,
+    // Add the coordinate of the <svg/> to the to position inside the <svg/>.
+    y: svgRef.current.getBoundingClientRect().top + svgYPosition,
   };
 
   return (

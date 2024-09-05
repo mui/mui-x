@@ -4,6 +4,7 @@ import { useSeries } from '../hooks/useSeries';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
 import { useColorProcessor } from '../context/PluginProvider/useColorProcessor';
+import { SeriesId } from '../models/seriesType/common';
 import { CartesianChartSeriesType, ChartsSeriesConfig } from '../models/seriesType/config';
 import { getLabel } from '../internals/getLabel';
 import { isCartesianSeriesType } from '../internals/isCartesian';
@@ -20,6 +21,7 @@ export interface UseAxisTooltipReturnValue<
 }
 
 interface SeriesItem<T extends CartesianChartSeriesType> {
+  seriesId: SeriesId;
   color: string;
   value: ChartsSeriesConfig[T]['valueType'];
   formattedValue: string;
@@ -85,6 +87,7 @@ export function useAxisTooltip(): null | UseAxisTooltipReturnValue {
           const formattedLabel = getLabel(seriesToAdd.label, 'tooltip') ?? null;
 
           return {
+            seriesId,
             color,
             value,
             formattedValue,

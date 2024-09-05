@@ -18,6 +18,7 @@ export function ItemTooltip() {
   const isMousePointer = mousePosition?.pointerType === 'mouse';
   // Adapt the tooltip offset to the size of the pointer.
   const yOffset = isMousePointer ? 0 : 40 - mousePosition.height;
+
   return (
     <NoSsr>
       <Popper

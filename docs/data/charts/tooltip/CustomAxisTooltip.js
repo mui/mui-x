@@ -4,11 +4,11 @@ import Popper from '@mui/material/Popper';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useItemTooltip, useMouseTracker } from '@mui/x-charts/ChartsTooltip';
+import { useAxisTooltip, useMouseTracker } from '@mui/x-charts/ChartsTooltip';
 import { generateVirtualElement } from './generateVirtualElement';
 
-export function CustomItemTooltip() {
-  const tooltipData = useItemTooltip();
+export function CustomAxisTooltip() {
+  const tooltipData = useAxisTooltip();
   const mousePosition = useMouseTracker(); // Track the mouse position on chart.
 
   if (!tooltipData || !mousePosition) {
@@ -50,20 +50,25 @@ export function CustomItemTooltip() {
             borderColor: 'divider',
           }}
         >
-          <Stack direction="row" alignItems="center">
-            <div
-              style={{
-                width: 11,
-                height: 11,
-                borderRadius: '50%',
-                backgroundColor: tooltipData.color,
-              }}
-            />
-            <Typography sx={{ ml: 2 }} fontWeight="light">
-              {tooltipData.label}
-            </Typography>
-            <Typography sx={{ ml: 2 }}>{tooltipData.formattedValue}</Typography>
-          </Stack>
+          {/* <pre>{tooltipData}</pre> */}
+          <Typography>{tooltipData.axisFormattedValue}</Typography>
+          {tooltipData.seriesItems.map((seriesItem) => (
+            <Stack direction="row" alignItems="center">
+              {/* key={seriesItem.seriesId}> */}
+              <div
+                style={{
+                  width: 11,
+                  height: 11,
+                  borderRadius: '50%',
+                  backgroundColor: seriesItem.color,
+                }}
+              />
+              <Typography sx={{ ml: 2 }} fontWeight="light">
+                {seriesItem.formattedLabel}
+              </Typography>
+              <Typography sx={{ ml: 2 }}>{seriesItem.formattedValue}</Typography>
+            </Stack>
+          ))}
         </Paper>
       </Popper>
     </NoSsr>

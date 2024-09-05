@@ -296,6 +296,8 @@
   { "name": "unstable_usePieSeries", "kind": "Function" },
   { "name": "unstable_useScatterSeries", "kind": "Function" },
   { "name": "unstable_useSeries", "kind": "Function" },
+  { "name": "useAxisTooltip", "kind": "Function" },
+  { "name": "UseAxisTooltipReturnValue", "kind": "Interface" },
   { "name": "useChartId", "kind": "Function" },
   { "name": "useDrawingArea", "kind": "Function" },
   { "name": "useGaugeState", "kind": "Function" },

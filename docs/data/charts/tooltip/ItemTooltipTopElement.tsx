@@ -37,16 +37,18 @@ export function ItemTooltipTopElement() {
 
   const xValue = xAxis.data[tooltipData.identifier.dataIndex];
 
-
   const svgYPosition = yScale(tooltipData.value) ?? 0;
   const svgXPosition = xScale(xValue) ?? 0;
 
   const tooltipPosition: MousePosition = {
     ...mousePosition,
-    // Add the coordinate of the <svg/> to the to position inside the <svg/>.
-    x: svgRef.current.getBoundingClientRect().left + svgXPosition,
     // Add half of `yScale.step()` to be in the middle of the band.
-    y: svgRef.current.getBoundingClientRect().top + svgYPosition + (yScale as ScaleBand<any>).step() / 2,
+    x:
+      svgRef.current.getBoundingClientRect().left +
+      svgXPosition +
+      (xScale as ScaleBand<any>).step() / 2,
+    // Add the coordinate of the <svg/> to the to position inside the <svg/>.
+    y: svgRef.current.getBoundingClientRect().top + svgYPosition,
   };
 
   return (
