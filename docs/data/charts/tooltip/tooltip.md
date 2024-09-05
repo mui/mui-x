@@ -207,8 +207,6 @@ To follow the mouse position, you can use the `useMouseTracker`, or track events
 
 {{"demo": "CustomAxisTooltipContent.js"}}
 
-// Same section as the previouse one.
-
 ### Tooltip position
 
 This demo show example about how to use additional hooks such as `useXAxis` or `useDrawingArea` to customize the tooltip position.
