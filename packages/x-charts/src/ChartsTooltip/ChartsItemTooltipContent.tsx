@@ -16,7 +16,7 @@ export interface ChartsItemContentProps<T extends ChartSeriesType> {
    */
   itemData: ItemInteractionData<T>;
   /**
-   * The series linked to the triggered axis.
+   * The series linked to the triggered item.
    */
   series: ChartSeriesDefaultized<T>;
   /**
