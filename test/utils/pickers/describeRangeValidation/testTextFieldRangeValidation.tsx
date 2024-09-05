@@ -228,15 +228,15 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 
       expect(onErrorMock.callCount).to.equal(1);
       expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', null]);
-      // testInvalidStatus([true, false], isSingleInput);
-      //
-      // setProps({
-      //   value: [past, past],
-      // });
-      //
-      // expect(onErrorMock.callCount).to.equal(2);
-      // expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', 'disablePast']);
-      // testInvalidStatus([true, true], isSingleInput);
+      testInvalidStatus([true, false], isSingleInput);
+
+      setProps({
+        value: [past, past],
+      });
+
+      expect(onErrorMock.callCount).to.equal(2);
+      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', 'disablePast']);
+      testInvalidStatus([true, true], isSingleInput);
     });
 
     it('should apply disableFuture', function test() {
