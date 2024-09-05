@@ -1,19 +1,14 @@
 import * as React from 'react';
 import { alpha, styled } from '@mui/material/styles';
-import { GridColDef, GridSortDirection } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
-import Typography, { typographyClasses } from '@mui/material/Typography';
 import { svgIconClasses } from '@mui/material/SvgIcon';
 
-import Select, { selectClasses } from '@mui/material/Select';
-import { outlinedInputClasses } from '@mui/material/OutlinedInput';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { PivotModel } from '../../../hooks/features/pivoting/useGridPivoting';
 import { useGridRootProps } from '../../../typeOverloads/reexports';
 import { getAvailableAggregationFunctions } from '../../../hooks/features/aggregation/gridAggregationUtils';
-import { GridSidebarColumnPanelPivotMenu as PivotMenu } from './GridSidebarColumnPanelPivotMenu';
+import { PivotField } from './GridSidebarColumnPanelPivotField';
 
 function AutoAnimateContainer(props: React.HTMLAttributes<HTMLDivElement>) {
   const [parent] = useAutoAnimate({ duration: 150 });
@@ -92,79 +87,6 @@ const PivotSectionPlaceholder = styled('div')(({ theme }) => ({
   },
 }));
 
-const PivotField = styled('div')<{
-  dropPosition: DropPosition;
-  section: FieldTransferObject['modelKey'];
-}>(({ theme }) => ({
-  flexShrink: 0,
-  paddingRight: theme.spacing(1.5),
-  height: '35px',
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(0.5),
-  borderWidth: 0,
-  borderTopWidth: 2,
-  borderBottomWidth: 2,
-  borderStyle: 'solid',
-  borderColor: 'transparent',
-  margin: '-1px 0', // collapse vertical borders
-  cursor: 'grab',
-  variants: [
-    { props: { dropPosition: 'top' }, style: { borderTopColor: theme.palette.primary.main } },
-    {
-      props: { dropPosition: 'bottom' },
-      style: { borderBottomColor: theme.palette.primary.main },
-    },
-    {
-      props: { section: null },
-    },
-  ],
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover,
-  },
-}));
-
-const PivotFieldLabel = styled('div')(({ theme }) => ({
-  flex: 1,
-  minWidth: 0,
-  [`.${formControlLabelClasses.root}`]: {
-    width: '100%',
-    cursor: 'grab',
-  },
-  [`.${typographyClasses.root}`]: {
-    fontSize: theme.typography.pxToRem(14),
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-  },
-}));
-
-const PivotFieldDragHandle = styled('div')(({ theme }) => ({
-  display: 'flex',
-  color: theme.palette.text.primary,
-  opacity: 0,
-  marginRight: theme.spacing(-0.5),
-  '[draggable="true"]:hover > &': {
-    opacity: 0.3,
-  },
-}));
-
-const AggregationSelectRoot = styled(Select)(({ theme }) => ({
-  fontSize: theme.typography.pxToRem(12),
-  [`& .${selectClasses.select}.${selectClasses.outlined}.${outlinedInputClasses.input}`]: {
-    padding: theme.spacing(0.75, 3, 0.75, 1),
-  },
-  [`& .${selectClasses.icon}`]: {
-    right: 0,
-  },
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  [`&:not(:focus-within) .${outlinedInputClasses.notchedOutline}`]: {
-    border: 0,
-  },
-}));
-
 export interface FieldTransferObject {
   field: string;
   modelKey: 'columns' | 'rows' | 'values' | null;
@@ -179,266 +101,6 @@ export type UpdatePivotModel = (params: {
   targetField?: string;
   targetFieldPosition?: DropPosition;
 }) => void;
-
-const sortDirections: GridSortDirection[] = ['asc', 'desc', undefined];
-
-function SortSelect({
-  sort,
-  field,
-  onPivotModelChange,
-}: {
-  sort: PivotModel['columns'][number]['sort'];
-  field: FieldTransferObject['field'];
-  onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
-}) {
-  const rootProps = useGridRootProps();
-
-  return (
-    <rootProps.slots.baseSelect
-      size="small"
-      variant="standard"
-      sx={{ fontSize: '12px' }}
-      value={sort || ''}
-      onChange={(event) => {
-        const newValue = (event.target.value || undefined) as GridSortDirection;
-        onPivotModelChange((prev) => {
-          return {
-            ...prev,
-            columns: prev.columns.map((col) => {
-              if (col.field === field) {
-                return {
-                  ...col,
-                  sort: newValue!,
-                };
-              }
-              return col;
-            }),
-          };
-        });
-      }}
-    >
-      {sortDirections.map((sortDirection) => (
-        <rootProps.slots.baseSelectOption
-          key={sortDirection || ''}
-          value={sortDirection || ''}
-          // @ts-ignore FIXME
-          style={{ fontSize: '12px' }}
-        >
-          {sortDirection === 'asc' && 'A — Z'}
-          {sortDirection === 'desc' && 'Z — A'}
-          {sortDirection === undefined && 'None'}
-        </rootProps.slots.baseSelectOption>
-      ))}
-    </rootProps.slots.baseSelect>
-  );
-}
-
-function AggregationSelect({
-  aggFunc,
-  field,
-  onPivotModelChange,
-  colDef,
-}: {
-  aggFunc: PivotModel['values'][number]['aggFunc'];
-  field: FieldTransferObject['field'];
-  onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
-  colDef: GridColDef;
-}) {
-  const rootProps = useGridRootProps();
-
-  const availableAggregationFunctions = React.useMemo(
-    () =>
-      getAvailableAggregationFunctions({
-        aggregationFunctions: rootProps.aggregationFunctions,
-        colDef,
-      }),
-    [colDef, rootProps.aggregationFunctions],
-  );
-
-  return (
-    <AggregationSelectRoot
-      as={rootProps.slots.baseSelect}
-      {...rootProps.slotProps?.baseSelect}
-      size="small"
-      variant="outlined"
-      value={aggFunc}
-      onChange={(event) => {
-        const newValue = event.target.value as string;
-        onPivotModelChange((prev) => {
-          return {
-            ...prev,
-            values: prev.values.map((col) => {
-              if (col.field === field) {
-                return {
-                  ...col,
-                  aggFunc: newValue,
-                };
-              }
-              return col;
-            }),
-          };
-        });
-      }}
-    >
-      {availableAggregationFunctions.map((func) => (
-        <rootProps.slots.baseSelectOption
-          key={func}
-          value={func}
-          native={false}
-          // @ts-ignore TODO: Fix types for MUISelectOption
-          dense
-        >
-          {func}
-        </rootProps.slots.baseSelectOption>
-      ))}
-    </AggregationSelectRoot>
-  );
-}
-
-function PivotSectionListItem({
-  children,
-  field,
-  pivotModel,
-  updatePivotModel,
-  onPivotModelChange,
-  slots,
-  slotProps,
-  onDragStart,
-  onDragEnd,
-  ...props
-}: {
-  children: React.ReactNode;
-  field: FieldTransferObject['field'];
-  pivotModel: PivotModel;
-  updatePivotModel: UpdatePivotModel;
-  onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
-  slots: DataGridPremiumProcessedProps['slots'];
-  slotProps: DataGridPremiumProcessedProps['slotProps'];
-  onDragStart: (modelKey: FieldTransferObject['modelKey']) => void;
-  onDragEnd: () => void;
-} & (
-  | { modelKey: 'columns'; sort: PivotModel['columns'][number]['sort'] }
-  | { modelKey: 'rows' }
-  | { modelKey: 'values'; aggFunc: PivotModel['values'][number]['aggFunc']; colDef: GridColDef }
-  | { modelKey: null }
-)) {
-  const [dropPosition, setDropPosition] = React.useState<DropPosition>(null);
-  const rootProps = useGridRootProps();
-
-  const handleDragStart = React.useCallback(
-    (event: React.DragEvent) => {
-      const data: FieldTransferObject = { field, modelKey: props.modelKey };
-      event.dataTransfer.setData('text/plain', JSON.stringify(data));
-      event.dataTransfer.dropEffect = 'move';
-      onDragStart(props.modelKey);
-    },
-    [field, onDragStart, props.modelKey],
-  );
-
-  const getDropPosition = React.useCallback((event: React.DragEvent): DropPosition => {
-    const rect = (event.target as HTMLElement).getBoundingClientRect();
-    const y = event.clientY - rect.top;
-    if (y < rect.height / 2) {
-      return 'top';
-    }
-    return 'bottom';
-  }, []);
-
-  const handleDragOver = React.useCallback(
-    (event: React.DragEvent) => {
-      if (!event.currentTarget.contains(event.relatedTarget as HTMLElement)) {
-        setDropPosition(getDropPosition(event));
-      }
-    },
-    [getDropPosition],
-  );
-
-  const handleDragLeave = React.useCallback((event: React.DragEvent) => {
-    if (!event.currentTarget.contains(event.relatedTarget as HTMLElement)) {
-      setDropPosition(null);
-    }
-  }, []);
-
-  const handleDrop = React.useCallback(
-    (event: React.DragEvent) => {
-      setDropPosition(null);
-
-      if (!event.currentTarget.contains(event.relatedTarget as HTMLElement)) {
-        event.preventDefault();
-
-        const position = getDropPosition(event);
-
-        const { field: droppedField, modelKey: originSection } = JSON.parse(
-          event.dataTransfer.getData('text/plain'),
-        ) as FieldTransferObject;
-
-        updatePivotModel({
-          field: droppedField,
-          targetField: field,
-          targetFieldPosition: position,
-          originSection,
-          targetSection: props.modelKey,
-        });
-      }
-    },
-    [getDropPosition, updatePivotModel, field, props.modelKey],
-  );
-
-  const isSelectable = props.modelKey !== null;
-
-  return (
-    <PivotField
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-      onDragStart={handleDragStart}
-      onDragEnd={onDragEnd}
-      dropPosition={dropPosition}
-      section={props.modelKey}
-      draggable="true"
-    >
-      <PivotFieldDragHandle>
-        <slots.columnReorderIcon fontSize="small" />
-      </PivotFieldDragHandle>
-
-      <PivotFieldLabel>
-        {isSelectable ? (
-          <FormControlLabel
-            control={
-              <rootProps.slots.baseCheckbox
-                size="small"
-                {...rootProps.slotProps?.baseCheckbox}
-                // TODO: implement column visibility
-                defaultChecked
-              />
-            }
-            label={children}
-          />
-        ) : (
-          <Typography>{children}</Typography>
-        )}
-      </PivotFieldLabel>
-
-      {props.modelKey === 'columns' && (
-        <SortSelect sort={props.sort} field={field} onPivotModelChange={onPivotModelChange} />
-      )}
-      {props.modelKey === 'values' && (
-        <AggregationSelect
-          aggFunc={props.aggFunc}
-          field={field}
-          colDef={props.colDef}
-          onPivotModelChange={onPivotModelChange}
-        />
-      )}
-      <PivotMenu
-        field={field}
-        modelKey={props.modelKey}
-        pivotModel={pivotModel}
-        updatePivotModel={updatePivotModel}
-      />
-    </PivotField>
-  );
-}
 
 const INITIAL_DRAG_STATE = { active: false, dropZone: null, initialModelKey: null };
 
@@ -612,7 +274,7 @@ export function GridSidebarColumnPanelBody({
         {availableFields.length > 0 && (
           <PivotSectionList>
             {availableFields.map((field) => (
-              <PivotSectionListItem
+              <PivotField
                 key={field}
                 field={field}
                 modelKey={null}
@@ -625,7 +287,7 @@ export function GridSidebarColumnPanelBody({
                 onDragEnd={handleDragEnd}
               >
                 {getColumnName(field)}
-              </PivotSectionListItem>
+              </PivotField>
             ))}
           </PivotSectionList>
         )}
@@ -649,7 +311,7 @@ export function GridSidebarColumnPanelBody({
         {pivotModel.rows.length > 0 && (
           <PivotSectionList>
             {pivotModel.rows.map(({ field }) => (
-              <PivotSectionListItem
+              <PivotField
                 key={field}
                 field={field}
                 modelKey="rows"
@@ -663,7 +325,7 @@ export function GridSidebarColumnPanelBody({
                 onDragEnd={handleDragEnd}
               >
                 {getColumnName(field)}
-              </PivotSectionListItem>
+              </PivotField>
             ))}
           </PivotSectionList>
         )}
@@ -687,7 +349,7 @@ export function GridSidebarColumnPanelBody({
         {pivotModel.columns.length > 0 && (
           <PivotSectionList>
             {pivotModel.columns.map(({ field, sort }) => (
-              <PivotSectionListItem
+              <PivotField
                 key={field}
                 field={field}
                 modelKey="columns"
@@ -701,7 +363,7 @@ export function GridSidebarColumnPanelBody({
                 onDragEnd={handleDragEnd}
               >
                 {getColumnName(field)}
-              </PivotSectionListItem>
+              </PivotField>
             ))}
           </PivotSectionList>
         )}
@@ -725,7 +387,7 @@ export function GridSidebarColumnPanelBody({
         {pivotModel.values.length > 0 && (
           <PivotSectionList>
             {pivotModel.values.map(({ field, aggFunc }) => (
-              <PivotSectionListItem
+              <PivotField
                 key={field}
                 field={field}
                 modelKey="values"
@@ -740,7 +402,7 @@ export function GridSidebarColumnPanelBody({
                 onDragEnd={handleDragEnd}
               >
                 {getColumnName(field)}
-              </PivotSectionListItem>
+              </PivotField>
             ))}
           </PivotSectionList>
         )}

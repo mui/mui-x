@@ -637,6 +637,14 @@ export interface GridClasses {
    * Styles applied to pinned rows render zones.
    */
   pinnedRowsRenderZone: string;
+  /**
+   * Styles applied to the pivot field.
+   */
+  pivotField: string;
+  /**
+   * Styles applied to the pivot field when sorted.
+   */
+  'pivotField--sorted': string;
 }
 
 export type GridClassKey = keyof GridClasses;
@@ -718,6 +726,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'panelContent',
   'panelFooter',
   'paper',
+  'pivotField',
+  'pivotField--sorted',
   'editBooleanCell',
   'editInputCell',
   'filler',
