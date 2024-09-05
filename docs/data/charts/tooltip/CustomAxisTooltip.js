@@ -2,7 +2,6 @@ import * as React from 'react';
 import NoSsr from '@mui/material/NoSsr';
 import Popper from '@mui/material/Popper';
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useAxisTooltip, useMouseTracker } from '@mui/x-charts/ChartsTooltip';
 import { generateVirtualElement } from './generateVirtualElement';
@@ -44,29 +43,66 @@ export function CustomAxisTooltip() {
           elevation={0}
           sx={{
             m: 1,
-            p: 1.5,
             border: 'solid',
             borderWidth: 2,
             borderColor: 'divider',
+            table: { borderSpacing: 0 },
+            thead: {
+              td: {
+                px: 1.5,
+                py: 0.75,
+                borderBottom: 'solid',
+                borderWidth: 2,
+                borderColor: 'divider',
+              },
+            },
+            tbody: {
+              'tr:first-child': { td: { paddingTop: 1.5 } },
+              'tr:last-child': { td: { paddingBottom: 1.5 } },
+              tr: {
+                'td:first-child': { paddingLeft: 1.5 },
+                'td:last-child': { paddingRight: 1.5 },
+                td: {
+                  paddingRight: '7px',
+                  paddingBottom: '10px',
+                },
+              },
+            },
           }}
         >
-          <Typography>{tooltipData.axisFormattedValue}</Typography>
-          {tooltipData.seriesItems.map((seriesItem) => (
-            <Stack direction="row" alignItems="center" key={seriesItem.seriesId}>
-              <div
-                style={{
-                  width: 11,
-                  height: 11,
-                  borderRadius: '50%',
-                  backgroundColor: seriesItem.color,
-                }}
-              />
-              <Typography sx={{ ml: 2 }} fontWeight="light">
-                {seriesItem.formattedLabel}
-              </Typography>
-              <Typography sx={{ ml: 2 }}>{seriesItem.formattedValue}</Typography>
-            </Stack>
-          ))}
+          <table>
+            <thead>
+              <tr>
+                <td colSpan={3}>
+                  <Typography>{tooltipData.axisFormattedValue}</Typography>
+                </td>
+              </tr>
+            </thead>
+            <tbody>
+              {tooltipData.seriesItems.map((seriesItem) => (
+                <tr key={seriesItem.seriesId}>
+                  <td>
+                    <div
+                      style={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: 2,
+                        backgroundColor: seriesItem.color,
+                      }}
+                    />
+                  </td>
+                  <td>
+                    <Typography fontWeight="light">
+                      {seriesItem.formattedLabel}
+                    </Typography>
+                  </td>
+                  <td>
+                    <Typography>{seriesItem.formattedValue}</Typography>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </Paper>
       </Popper>
     </NoSsr>
