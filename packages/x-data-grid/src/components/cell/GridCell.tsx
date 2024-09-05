@@ -484,7 +484,6 @@ GridCell.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   align: PropTypes.oneOf(['center', 'left', 'right']).isRequired,
-  className: PropTypes.string,
   colIndex: PropTypes.number.isRequired,
   colSpan: PropTypes.number,
   column: PropTypes.object.isRequired,
@@ -497,13 +496,6 @@ GridCell.propTypes = {
   }),
   gridHasFiller: PropTypes.bool.isRequired,
   isNotVisible: PropTypes.bool.isRequired,
-  onClick: PropTypes.func,
-  onDoubleClick: PropTypes.func,
-  onDragEnter: PropTypes.func,
-  onDragOver: PropTypes.func,
-  onKeyDown: PropTypes.func,
-  onMouseDown: PropTypes.func,
-  onMouseUp: PropTypes.func,
   pinnedOffset: PropTypes.number.isRequired,
   pinnedPosition: PropTypes.oneOf([0, 1, 2, 3]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,

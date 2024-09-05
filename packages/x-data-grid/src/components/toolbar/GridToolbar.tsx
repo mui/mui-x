@@ -68,25 +68,4 @@ const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(
   },
 );
 
-GridToolbar.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  /**
-   * Props passed to the quick filter component.
-   */
-  quickFilterProps: PropTypes.object,
-  /**
-   * Show the quick filter component.
-   * @default false
-   */
-  showQuickFilter: PropTypes.bool,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-} as any;
-
 export { GridToolbar };
