@@ -162,6 +162,8 @@ export function GridSidebarColumnPanelBody({
 
       onPivotModelChange((prev) => {
         const newModel = { ...prev };
+        const isSameSection = targetSection === originSection;
+
         if (targetSection) {
           const newSectionArray = [...prev[targetSection]];
           let toIndex = newSectionArray.length;
@@ -177,24 +179,29 @@ export function GridSidebarColumnPanelBody({
           }
 
           if (targetSection === 'values') {
-            const availableAggregationFunctions = getAvailableAggregationFunctions({
-              aggregationFunctions: rootProps.aggregationFunctions,
-              colDef: initialColumnsLookup[field],
-            });
+            const aggFunc = isSameSection
+              ? prev.values.find((item) => item.field === field)?.aggFunc
+              : getAvailableAggregationFunctions({
+                  aggregationFunctions: rootProps.aggregationFunctions,
+                  colDef: initialColumnsLookup[field],
+                })[0];
             newSectionArray.splice(toIndex, 0, {
               field,
-              aggFunc: availableAggregationFunctions[0],
+              aggFunc,
             });
             newModel.values = newSectionArray as PivotModel['values'];
           } else if (targetSection === 'columns') {
-            newSectionArray.splice(toIndex, 0, { field, sort: 'asc' });
+            const sort = isSameSection
+              ? prev.columns.find((item) => item.field === field)?.sort
+              : undefined;
+            newSectionArray.splice(toIndex, 0, { field, sort });
             newModel.columns = newSectionArray as PivotModel['columns'];
           } else if (targetSection === 'rows') {
             newSectionArray.splice(toIndex, 0, { field });
             newModel.rows = newSectionArray as PivotModel['rows'];
           }
         }
-        if (targetSection !== originSection && originSection) {
+        if (!isSameSection && originSection) {
           // @ts-ignore FIXME
           newModel[originSection] = prev[originSection].filter((f) => {
             if (typeof f === 'string') {
