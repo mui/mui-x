@@ -349,18 +349,21 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
   const rowSpan = spannedCells[rowId]?.[field] ?? 1;
 
   let cellText = tooltip;
-  const handleMouseOver = React.useCallback<React.MouseEventHandler<HTMLDivElement>>(() => {
-    publish('cellMouseOver', onMouseOver);
+  const handleMouseOver = React.useCallback<React.MouseEventHandler<HTMLDivElement>>(
+    (event) => {
+      publish('cellMouseOver', onMouseOver)(event);
 
-    if (cellText && cellRef?.current) {
-      const isOver = isOverflown(cellRef.current);
-      if (isOver && tooltip !== cellText) {
-        setTooltip(cellText);
-      } else if (!isOver && tooltip) {
-        setTooltip(null);
+      if (cellText && cellRef?.current) {
+        const isOver = isOverflown(cellRef.current);
+        if (isOver && tooltip !== cellText) {
+          setTooltip(cellText);
+        } else if (!isOver && tooltip) {
+          setTooltip(null);
+        }
       }
-    }
-  }, [tooltip, cellText, publish, onMouseOver]);
+    },
+    [tooltip, cellText, publish, onMouseOver],
+  );
 
   const style = React.useMemo(() => {
     if (isNotVisible) {
