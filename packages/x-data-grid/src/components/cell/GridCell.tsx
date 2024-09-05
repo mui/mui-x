@@ -385,6 +385,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     return (
       <div
         data-colindex={colIndex}
+        role="presentation"
         style={{ ...style, minWidth: 'var(--width)', maxWidth: 'var(--width)' }}
       />
     );

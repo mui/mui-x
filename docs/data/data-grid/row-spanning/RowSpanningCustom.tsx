@@ -47,7 +47,7 @@ const columns: GridColDef[] = [
     headerName: 'Age',
     type: 'number',
     width: 100,
-    valueGetter: (value) => {
+    valueFormatter: (value) => {
       return `${value} yo`;
     },
     rowSpanValueGetter: (value, row) => {
