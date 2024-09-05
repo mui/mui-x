@@ -13,11 +13,11 @@ function UseSeries() {
 describe('useSeries', () => {
   const { render } = createRenderer();
 
-  it('should throw an error when parent context not present', function test() {
+  it('should throw an error when parent context not present', function test(t) {
     if (!/jsdom/.test(window.navigator.userAgent)) {
       // can't catch render errors in the browser for unknown reason
       // tried try-catch + error boundary + window onError preventDefault
-      this.skip();
+      t.skip();
     }
 
     const errorRef = React.createRef<any>();

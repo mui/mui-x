@@ -40,7 +40,6 @@ describe('ScatterChart - click event', () => {
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}
@@ -85,7 +84,6 @@ describe('ScatterChart - click event', () => {
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}
@@ -122,7 +120,6 @@ describe('ScatterChart - click event', () => {
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}
@@ -152,7 +149,6 @@ describe('ScatterChart - click event', () => {
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}

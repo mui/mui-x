@@ -37,7 +37,6 @@ describe('ChartsTooltip', () => {
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 400,
             height: 400,
           }}
@@ -102,7 +101,6 @@ describe('ChartsTooltip', () => {
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 400,
             height: 400,
           }}
@@ -170,7 +168,6 @@ describe('ChartsTooltip', () => {
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 400,
             height: 400,
           }}
@@ -213,7 +210,6 @@ describe('ChartsTooltip', () => {
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 400,
             height: 400,
           }}

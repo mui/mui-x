@@ -38,7 +38,6 @@ describe('BarChart - click event', () => {
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 400,
             height: 400,
           }}
@@ -111,7 +110,6 @@ describe('BarChart - click event', () => {
       render(
         <div
           style={{
-            margin: -8, // No idea why, but that make the SVG coordinates match the HTML coordinates
             width: 400,
             height: 400,
           }}
