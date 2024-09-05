@@ -130,9 +130,7 @@ describe('<DataGrid /> - Slots', () => {
             hideFooter
             disableVirtualization
             slots={{
-              cell: ({ rowIndex, colIndex }) => (
-                <span role="gridcell" data-rowindex={rowIndex} data-colindex={colIndex} />
-              ),
+              cell: ({ colIndex }) => <span role="gridcell" data-colindex={colIndex} />,
             }}
           />
         </div>,

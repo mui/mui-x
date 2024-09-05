@@ -55,7 +55,7 @@ describe('<DataGridPro/> - Components', () => {
       it(`should still publish the '${event}' event when overriding the '${prop}' prop in slots.cell`, () => {
         const propHandler = spy();
         const eventHandler = spy();
-        render(<TestCase slotProps={{ cell: { [prop]: propHandler } }} />);
+        render(<TestCase slotProps={{ cell: { [prop as any]: propHandler } }} />);
         apiRef!.current.subscribeEvent(event, eventHandler);
 
         expect(propHandler.callCount).to.equal(0);
@@ -104,7 +104,7 @@ describe('<DataGridPro/> - Components', () => {
       it(`should still publish the '${event}' event when overriding the '${prop}' prop in slots.row`, () => {
         const propHandler = spy();
         const eventHandler = spy();
-        render(<TestCase slotProps={{ row: { [prop]: propHandler } }} />);
+        render(<TestCase slotProps={{ row: { [prop as any]: propHandler } }} />);
         apiRef!.current.subscribeEvent(event, eventHandler);
 
         expect(propHandler.callCount).to.equal(0);
