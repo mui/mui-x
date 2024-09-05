@@ -14,11 +14,12 @@ export function checkMaterialVersion({
   packageJson: PackageJson & { devDependencies: { '@mui/material': string } };
   materialPackageJson: PackageJson;
 }) {
-  return it(`${packageJson.name} should resolve proper @mui/material version`, (t) => {
+  return it(`${packageJson.name} should resolve proper @mui/material version`, (t = {}) => {
     const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
     if (!isJSDOM) {
-      return t.skip();
+      // @ts-expect-error to support mocha and vitest
+      t.skip();
     }
 
     const expectedVersion = packageJson.devDependencies['@mui/material'];
