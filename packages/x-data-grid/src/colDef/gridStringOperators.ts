@@ -91,6 +91,8 @@ export const getGridStringOperators = (
       };
     },
     requiresFilterValue: false,
+    InputComponent: GridFilterInputValue,
+    InputComponentProps: { disabled: true },
   },
   {
     value: 'isNotEmpty',
@@ -100,6 +102,8 @@ export const getGridStringOperators = (
       };
     },
     requiresFilterValue: false,
+    InputComponent: GridFilterInputValue,
+    InputComponentProps: { disabled: true },
   },
   {
     value: 'isAnyOf',

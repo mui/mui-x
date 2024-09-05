@@ -109,6 +109,8 @@ export const getGridDateOperators = (showTime?: boolean): GridFilterOperator<any
       };
     },
     requiresFilterValue: false,
+    InputComponent: GridFilterInputDate,
+    InputComponentProps: { disabled: true },
   },
   {
     value: 'isNotEmpty',
@@ -118,5 +120,7 @@ export const getGridDateOperators = (showTime?: boolean): GridFilterOperator<any
       };
     },
     requiresFilterValue: false,
+    InputComponent: GridFilterInputDate,
+    InputComponentProps: { disabled: true },
   },
 ];

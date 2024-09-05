@@ -136,6 +136,8 @@ export const getGridNumericOperators = (): GridFilterOperator<
       };
     },
     requiresFilterValue: false,
+    InputComponent: GridFilterInputValue,
+    InputComponentProps: { disabled: true },
   },
   {
     value: 'isNotEmpty',
@@ -145,6 +147,8 @@ export const getGridNumericOperators = (): GridFilterOperator<
       };
     },
     requiresFilterValue: false,
+    InputComponent: GridFilterInputValue,
+    InputComponentProps: { disabled: true },
   },
   {
     value: 'isAnyOf',
