@@ -89,7 +89,7 @@ DefaultHeatmapTooltip.propTypes = {
     type: PropTypes.oneOf(['heatmap']).isRequired,
   }).isRequired,
   /**
-   * The series linked to the triggered axis.
+   * The series linked to the triggered item.
    */
   series: PropTypes.object.isRequired,
   sx: PropTypes.oneOfType([

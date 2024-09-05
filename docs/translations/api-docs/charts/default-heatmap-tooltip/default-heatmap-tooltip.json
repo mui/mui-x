@@ -10,7 +10,7 @@
       }
     },
     "itemData": { "description": "The data used to identify the triggered item." },
-    "series": { "description": "The series linked to the triggered axis." }
+    "series": { "description": "The series linked to the triggered item." }
   },
   "classDescriptions": {
     "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },
