@@ -1,0 +1,12 @@
+<DesktopDatePicker
+  label="Desktop variant"
+  slotProps={{
+    desktopPaper: { sx: { border: '5px red solid' } },
+  }}
+/>
+<MobileDatePicker
+  label="Mobile variant"
+  slotProps={{
+    mobilePaper: { sx: { border: '5px red solid' } },
+  }}
+/>
