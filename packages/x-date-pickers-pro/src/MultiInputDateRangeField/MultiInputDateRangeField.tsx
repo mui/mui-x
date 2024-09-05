@@ -22,7 +22,7 @@ import {
   MultiInputDateRangeFieldSlotProps,
 } from './MultiInputDateRangeField.types';
 import { useMultiInputDateRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
-import { MultiInputRangeFieldClasses, RangePosition, UseDateRangeFieldProps } from '../models';
+import { MultiInputRangeFieldClasses, RangePosition } from '../models';
 
 export const multiInputDateRangeFieldClasses: MultiInputRangeFieldClasses = generateUtilityClasses(
   'MuiMultiInputDateRangeField',
@@ -91,10 +91,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     name: 'MuiMultiInputDateRangeField',
   });
 
-  const { internalProps, forwardedProps } = splitFieldInternalAndForwardedProps<
-    typeof themeProps,
-    keyof Omit<UseDateRangeFieldProps<any, any>, 'clearable' | 'onClear'>
-  >(themeProps, 'date');
+  const { internalProps, forwardedProps } = splitFieldInternalAndForwardedProps(themeProps, 'date');
 
   const {
     slots,
