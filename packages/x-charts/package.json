@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts",
-  "version": "7.14.0",
+  "version": "7.16.0",
   "description": "The community edition of the Charts components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.js",
@@ -39,9 +39,10 @@
     "directory": "packages/x-charts"
   },
   "dependencies": {
-    "@babel/runtime": "^7.25.4",
+    "@babel/runtime": "^7.25.6",
     "@mui/utils": "^5.16.6",
     "@mui/x-charts-vendor": "workspace:*",
+    "@mui/x-internals": "workspace:*",
     "@react-spring/rafz": "^9.7.4",
     "@react-spring/web": "^9.7.4",
     "clsx": "^2.1.1",
@@ -64,8 +65,8 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.10",
-    "@mui/material": "^5.16.5",
+    "@mui/internal-test-utils": "^1.0.12",
+    "@mui/material": "^5.16.7",
     "@mui/system": "^5.16.7",
     "@react-spring/core": "^9.7.4",
     "@react-spring/shared": "^9.7.4",

@@ -28,8 +28,8 @@ import {
   GridColumnVisibilityModel,
   gridColumnPositionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
+  gridColumnLookupSelector,
 } from '../columns';
-import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfaces';
 import { gridColumnGroupsUnwrappedModelSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import { GridScrollbarFillerCell as ScrollbarFiller } from '../../../components/GridScrollbarFillerCell';
@@ -107,7 +107,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
-  const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
+  const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
   const offsetLeft = computeOffsetLeft(
     columnPositions,
     renderContext,
@@ -169,7 +169,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       maxLastColumn = visibleColumns.length,
     } = params || {};
 
-    const firstColumnToRender = !hasVirtualization ? 0 : currentContext.firstColumnIndex;
+    const firstColumnToRender = currentContext.firstColumnIndex;
     const lastColumnToRender = !hasVirtualization ? maxLastColumn : currentContext.lastColumnIndex;
     const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
 
@@ -184,7 +184,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     params: GetHeadersParams | undefined,
     children: React.ReactNode,
     leftOverflow: number,
-    borderTop: boolean = false,
+    borderBottom: boolean = false,
   ) => {
     const isPinnedRight = params?.position === GridPinnedColumnPosition.RIGHT;
     const isNotPinned = params?.position === undefined;
@@ -202,11 +202,19 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         {isNotPinned && (
           <div
             role="presentation"
-            className={clsx(gridClasses.filler, borderTop && gridClasses['filler--borderTop'])}
+            className={clsx(
+              gridClasses.filler,
+              borderBottom && gridClasses['filler--borderBottom'],
+            )}
           />
         )}
         {hasScrollbarFiller && (
-          <ScrollbarFiller header borderTop={borderTop} pinnedRight={isPinnedRight} />
+          <ScrollbarFiller
+            header
+            pinnedRight={isPinnedRight}
+            borderBottom={borderBottom}
+            borderTop={false}
+          />
         )}
       </React.Fragment>
     );
@@ -301,7 +309,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         role="row"
         aria-rowindex={headerGroupingMaxDepth + 1}
         ownerState={rootProps}
-        className={pinnedRows.top.length === 0 ? gridClasses['row--borderBottom'] : undefined}
+        className={gridClasses['row--borderBottom']}
       >
         {leftRenderContext &&
           getColumnHeaders(
@@ -386,7 +394,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       firstVisibleColumnIndex,
     );
     const leftOverflow = hiddenGroupColumns.reduce((acc, field) => {
-      const column = apiRef.current.getColumn(field);
+      const column = columnsLookup[field];
       return acc + (column.computedWidth ?? 0);
     }, 0);
 
@@ -405,10 +413,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
       const headerInfo: HeaderInfo = {
         groupId,
-        width: columnFields.reduce(
-          (acc, field) => acc + apiRef.current.getColumn(field).computedWidth,
-          0,
-        ),
+        width: columnFields.reduce((acc, field) => acc + columnsLookup[field].computedWidth, 0),
         fields: columnFields,
         colIndex: columnIndex,
         hasFocus,
