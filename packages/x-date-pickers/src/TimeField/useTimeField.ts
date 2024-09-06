@@ -4,8 +4,8 @@ import {
 } from '../internals/utils/valueManagers';
 import { useField } from '../internals/hooks/useField';
 import { UseTimeFieldProps } from './TimeField.types';
-import { validateTime } from '../validation';
-import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
+import { validateTime } from '../internals/utils/validation/validateTime';
+import { useSplitFieldInternalAndForwardedProps } from '../hooks';
 import { PickerValidDate, FieldSection } from '../models';
 import { useDefaultizedTimeField } from '../internals/hooks/defaultizedFieldProps';
 
@@ -22,7 +22,7 @@ export const useTimeField = <
     TAllProps
   >(inProps);
 
-  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps(props, 'time');
+  const { forwardedProps, internalProps } = useSplitFieldInternalAndForwardedProps(props, 'time');
 
   return useField<
     TDate | null,
