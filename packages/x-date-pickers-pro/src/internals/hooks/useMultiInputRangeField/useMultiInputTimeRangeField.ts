@@ -1,8 +1,5 @@
 import useEventCallback from '@mui/utils/useEventCallback';
-import {
-  unstable_useTimeField as useTimeField,
-  UseTimeFieldComponentProps,
-} from '@mui/x-date-pickers/TimeField';
+import { useTimeField, UseTimeFieldComponentProps } from '@mui/x-date-pickers/TimeField';
 import {
   useLocalizationContext,
   useValidation,

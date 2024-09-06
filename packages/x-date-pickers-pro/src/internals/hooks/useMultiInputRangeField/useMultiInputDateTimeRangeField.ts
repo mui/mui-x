@@ -1,6 +1,6 @@
 import useEventCallback from '@mui/utils/useEventCallback';
 import {
-  unstable_useDateTimeField as useDateTimeField,
+  useDateTimeField,
   UseDateTimeFieldComponentProps,
 } from '@mui/x-date-pickers/DateTimeField';
 import {
