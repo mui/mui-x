@@ -29,8 +29,14 @@ describe('BarChart - click event', () => {
   const { render } = createRenderer();
 
   beforeEach(() => {
-    if (window?.document?.body?.style?.margin) {
+    if (window?.document?.body?.style) {
       window.document.body.style.margin = '0';
+    }
+  });
+
+  afterEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '8px';
     }
   });
 

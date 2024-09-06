@@ -27,6 +27,18 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('ChartsTooltip', () => {
   const { render } = createRenderer();
 
+  beforeEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '0';
+    }
+  });
+
+  afterEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '8px';
+    }
+  });
+
   describe('axis trigger', () => {
     it('should show right values with vertical layout', function test() {
       if (isJSDOM) {
