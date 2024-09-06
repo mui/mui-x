@@ -15,11 +15,13 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-function GridCustomToolbar({
-  syncState,
-}: {
-  syncState: (stateToSave: GridInitialState) => void;
-}) {
+declare module '@mui/x-data-grid-pro' {
+  interface ToolbarPropsOverrides {
+    syncState: (stateToSave: GridInitialState) => void;
+  }
+}
+
+function GridCustomToolbar({ syncState }: GridSlotProps['toolbar']) {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
 
@@ -65,7 +67,7 @@ export default function RestoreStateInitialState() {
           {...data}
           loading={loading}
           slots={{ toolbar: GridCustomToolbar as GridSlots['toolbar'] }}
-          slotProps={{ toolbar: { syncState } as GridSlotProps['toolbar'] }}
+          slotProps={{ toolbar: { syncState } }}
         />
       </Box>
       <Box sx={{ height: 300 }}>

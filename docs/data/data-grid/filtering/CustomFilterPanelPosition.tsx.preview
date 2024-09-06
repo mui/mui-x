@@ -7,8 +7,6 @@
     panel: {
       anchorEl: filterButtonEl,
     },
-    toolbar: {
-      setFilterButtonEl,
-    } as GridSlotProps['toolbar'],
+    toolbar: { setFilterButtonEl },
   }}
 />

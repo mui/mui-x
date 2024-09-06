@@ -10,11 +10,15 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
-interface CustomToolbarProps {
-  setFilterButtonEl: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>;
+declare module '@mui/x-data-grid' {
+  interface ToolbarPropsOverrides {
+    setFilterButtonEl: React.Dispatch<
+      React.SetStateAction<HTMLButtonElement | null>
+    >;
+  }
 }
 
-function CustomToolbar({ setFilterButtonEl }: CustomToolbarProps) {
+function CustomToolbar({ setFilterButtonEl }: GridSlotProps['toolbar']) {
   return (
     <GridToolbarContainer>
       <GridToolbarFilterButton ref={setFilterButtonEl} />
@@ -43,9 +47,7 @@ export default function CustomFilterPanelPosition() {
           panel: {
             anchorEl: filterButtonEl,
           },
-          toolbar: {
-            setFilterButtonEl,
-          } as GridSlotProps['toolbar'],
+          toolbar: { setFilterButtonEl },
         }}
       />
     </div>

@@ -23,14 +23,16 @@ interface SelectedCellParams {
   field: string;
 }
 
-interface EditToolbarProps {
-  selectedCellParams?: SelectedCellParams;
-  cellModesModel: GridCellModesModel;
-  setCellModesModel: (value: GridCellModesModel) => void;
-  cellMode: 'view' | 'edit';
+declare module '@mui/x-data-grid' {
+  interface ToolbarPropsOverrides {
+    selectedCellParams: SelectedCellParams | null;
+    cellModesModel: GridCellModesModel;
+    setCellModesModel: (value: GridCellModesModel) => void;
+    cellMode: 'view' | 'edit';
+  }
 }
 
-function EditToolbar(props: EditToolbarProps) {
+function EditToolbar(props: GridSlotProps['toolbar']) {
   const { selectedCellParams, cellMode, cellModesModel, setCellModesModel } = props;
 
   const handleSaveOrEdit = () => {
@@ -158,7 +160,7 @@ export default function StartEditButtonGrid() {
             setSelectedCellParams,
             cellModesModel,
             setCellModesModel,
-          } as GridSlotProps['toolbar'],
+          },
           cell: {
             onFocus: handleCellFocus,
           },

@@ -3,7 +3,7 @@
     {...data}
     loading={loading}
     slots={{ toolbar: GridCustomToolbar as GridSlots['toolbar'] }}
-    slotProps={{ toolbar: { syncState } as GridSlotProps['toolbar'] }}
+    slotProps={{ toolbar: { syncState } }}
   />
 </Box>
 <Box sx={{ height: 300 }}>

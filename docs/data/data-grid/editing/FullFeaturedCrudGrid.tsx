@@ -71,14 +71,16 @@ const initialRows: GridRowsProp = [
   },
 ];
 
-interface EditToolbarProps {
-  setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
-  setRowModesModel: (
-    newModel: (oldModel: GridRowModesModel) => GridRowModesModel,
-  ) => void;
+declare module '@mui/x-data-grid' {
+  interface ToolbarPropsOverrides {
+    setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
+    setRowModesModel: (
+      newModel: (oldModel: GridRowModesModel) => GridRowModesModel,
+    ) => void;
+  }
 }
 
-function EditToolbar(props: EditToolbarProps) {
+function EditToolbar(props: GridSlotProps['toolbar']) {
   const { setRows, setRowModesModel } = props;
 
   const handleClick = () => {
@@ -242,7 +244,7 @@ export default function FullFeaturedCrudGrid() {
           toolbar: EditToolbar as GridSlots['toolbar'],
         }}
         slotProps={{
-          toolbar: { setRows, setRowModesModel } as GridSlotProps['toolbar'],
+          toolbar: { setRows, setRowModesModel },
         }}
       />
     </Box>
