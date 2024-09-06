@@ -37,9 +37,11 @@ const enUSPickers: PickersLocaleText<any> = {
   dateRangePickerToolbarTitle: 'Select date range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
+  clockLabelText: (view, time, utils, formattedTime) =>
     `Select ${view}. ${
-      time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`
+      !formattedTime && (time === null || !utils.isValid(time))
+        ? 'No time selected'
+        : `Selected time is ${formattedTime ?? utils.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} hours`,
   minutesClockNumberText: (minutes) => `${minutes} minutes`,
@@ -55,13 +57,13 @@ const enUSPickers: PickersLocaleText<any> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Choose date, selected date is ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Choose date, selected date is ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Choose date',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Choose time, selected time is ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Choose time, selected time is ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Choose time',
 
   fieldClearLabel: 'Clear value',

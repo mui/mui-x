@@ -14,6 +14,7 @@ import { extractValidationProps } from '../internals/utils/validation/extractVal
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
+import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 
 type MobileDatePickerComponent = (<
   TDate extends PickerValidDate,
@@ -88,8 +89,12 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
     props,
     valueManager: singleItemValueManager,
     valueType: 'date',
-    getOpenDialogAriaText:
-      props.localeText?.openDatePickerDialogue ?? translations.openDatePickerDialogue,
+    getOpenDialogAriaText: buildGetOpenDialogAriaText({
+      utils,
+      formatKey: 'fullDate',
+      contextTranslation: translations.openDatePickerDialogue,
+      propsTranslation: props.localeText?.openDatePickerDialogue,
+    }),
     validator: validateDate,
   });
 
