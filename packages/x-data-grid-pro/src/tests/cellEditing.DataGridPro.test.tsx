@@ -18,7 +18,7 @@ import { getCell, spyApi } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DataGridPro /> - Cell editing', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render, clock } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -315,6 +315,8 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       describe('with debounceMs > 0', () => {
+        clock.withFakeTimers();
+
         it('should debounce multiple changes if debounceMs > 0', () => {
           render(<TestCase />);
           act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));

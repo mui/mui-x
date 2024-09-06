@@ -264,6 +264,7 @@
   { "name": "PieSeriesType", "kind": "Interface" },
   { "name": "PieValueType", "kind": "TypeAlias" },
   { "name": "PopperProps", "kind": "TypeAlias" },
+  { "name": "PropsFromSlot", "kind": "TypeAlias" },
   { "name": "referenceLineClasses", "kind": "Variable" },
   { "name": "ResponsiveChartContainerPro", "kind": "Variable" },
   { "name": "ResponsiveChartContainerProProps", "kind": "Interface" },
