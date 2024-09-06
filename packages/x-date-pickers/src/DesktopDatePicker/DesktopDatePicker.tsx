@@ -15,6 +15,7 @@ import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
+import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 
 type DesktopDatePickerComponent = (<
   TDate extends PickerValidDate,
@@ -91,8 +92,12 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
     props,
     valueManager: singleItemValueManager,
     valueType: 'date',
-    getOpenDialogAriaText:
-      props.localeText?.openDatePickerDialogue ?? translations.openDatePickerDialogue,
+    getOpenDialogAriaText: buildGetOpenDialogAriaText({
+      utils,
+      formatKey: 'fullDate',
+      contextTranslation: translations.openDatePickerDialogue,
+      propsTranslation: props.localeText?.openDatePickerDialogue,
+    }),
     validator: validateDate,
   });
 

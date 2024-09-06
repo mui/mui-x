@@ -21,6 +21,7 @@ import { TimeViewWithMeridiem } from '../internals/models';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
 import { TimeView, PickerValidDate } from '../models';
+import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 
 type DesktopTimePickerComponent = (<
   TDate extends PickerValidDate,
@@ -129,8 +130,12 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
-    getOpenDialogAriaText:
-      props.localeText?.openTimePickerDialogue ?? translations.openTimePickerDialogue,
+    getOpenDialogAriaText: buildGetOpenDialogAriaText({
+      utils,
+      formatKey: 'fullTime',
+      contextTranslation: translations.openTimePickerDialogue,
+      propsTranslation: props.localeText?.openTimePickerDialogue,
+    }),
     validator: validateTime,
   });
 
