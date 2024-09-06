@@ -132,7 +132,6 @@ export {
   formatMeridiem,
 } from './utils/date-utils';
 export { resolveTimeViewsResponse, resolveDateTimeFormat } from './utils/date-time-utils';
-export { splitFieldInternalAndForwardedProps } from './utils/fields';
 export { getDefaultReferenceDate } from './utils/getDefaultReferenceDate';
 export {
   executeInTheNextEventLoopTick,
