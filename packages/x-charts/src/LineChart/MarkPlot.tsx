@@ -10,6 +10,7 @@ import { cleanId } from '../internals/cleanId';
 import getColor from './getColor';
 import { useLineSeries } from '../hooks/useSeries';
 import { useDrawingArea } from '../hooks/useDrawingArea';
+import { CircleMarkElement } from './CircleMarkElement';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -41,6 +42,12 @@ export interface MarkPlotProps
     event: React.MouseEvent<SVGElement, MouseEvent>,
     lineItemIdentifier: LineItemIdentifier,
   ) => void;
+  /**
+   * If `true` the mark element will only be able to render circle.
+   * Giving less customization options, but saving around 40ms per 1.000 marks.
+   * @default false
+   */
+  perfUpdate?: boolean;
 }
 
 /**
@@ -54,14 +61,14 @@ export interface MarkPlotProps
  * - [MarkPlot API](https://mui.com/x/api/charts/mark-plot/)
  */
 function MarkPlot(props: MarkPlotProps) {
-  const { slots, slotProps, skipAnimation, onItemClick, ...other } = props;
+  const { slots, slotProps, skipAnimation, onItemClick, perfUpdate, ...other } = props;
 
   const seriesData = useLineSeries();
   const axisData = useCartesianContext();
   const chartId = useChartId();
   const drawingArea = useDrawingArea();
 
-  const Mark = slots?.mark ?? MarkElement;
+  const Mark = slots?.mark ?? (perfUpdate ? CircleMarkElement : MarkElement);
 
   if (seriesData === undefined) {
     return null;
