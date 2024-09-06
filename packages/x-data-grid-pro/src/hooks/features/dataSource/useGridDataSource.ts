@@ -136,10 +136,10 @@ export const useGridDataSource = (
 
       if (cachedData !== undefined) {
         const rows = cachedData.rows;
-        if (cachedData.rowCount !== undefined) {
+        if (cachedData.rowCount && cachedData.rowCount >= 0) {
           apiRef.current.setRowCount(cachedData.rowCount);
         }
-        if (isLazyLoaded && !!cachedData.rowCount) {
+        if (isLazyLoaded) {
           apiRef.current.unstable_replaceRows(startingIndex, rows);
         } else {
           apiRef.current.setRows(rows);
@@ -158,10 +158,10 @@ export const useGridDataSource = (
       try {
         const getRowsResponse = await getRows(fetchParams);
         apiRef.current.unstable_dataSource.cache.set(fetchParams, getRowsResponse);
-        if (getRowsResponse.rowCount !== undefined) {
+        if (getRowsResponse.rowCount && getRowsResponse.rowCount >= 0) {
           apiRef.current.setRowCount(getRowsResponse.rowCount);
         }
-        if (isLazyLoaded && !!getRowsResponse.rowCount) {
+        if (isLazyLoaded) {
           apiRef.current.unstable_replaceRows(startingIndex, getRowsResponse.rows);
         } else {
           apiRef.current.setRows(getRowsResponse.rows);
@@ -223,7 +223,7 @@ export const useGridDataSource = (
         const rows = cachedData.rows;
         nestedDataManager.setRequestSettled(id);
         apiRef.current.updateServerRows(rows, rowNode.path);
-        if (cachedData.rowCount !== undefined) {
+        if (cachedData.rowCount && cachedData.rowCount >= 0) {
           apiRef.current.setRowCount(cachedData.rowCount);
         }
         apiRef.current.setRowChildrenExpansion(id, true);
@@ -249,7 +249,7 @@ export const useGridDataSource = (
         }
         nestedDataManager.setRequestSettled(id);
         apiRef.current.unstable_dataSource.cache.set(fetchParams, getRowsResponse);
-        if (getRowsResponse.rowCount !== undefined) {
+        if (getRowsResponse.rowCount && getRowsResponse.rowCount >= 0) {
           apiRef.current.setRowCount(getRowsResponse.rowCount);
         }
         apiRef.current.updateServerRows(getRowsResponse.rows, rowNode.path);
