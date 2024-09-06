@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  GridDataSource,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
@@ -15,7 +14,7 @@ export default function ServerSideRowGroupingDataGrid() {
     rowGrouping: true,
   });
 
-  const dataSource: GridDataSource = React.useMemo(() => {
+  const dataSource = React.useMemo(() => {
     return {
       getRows: async (params) => {
         const urlParams = new URLSearchParams({
@@ -42,7 +41,7 @@ export default function ServerSideRowGroupingDataGrid() {
     apiRef,
     initialState: {
       rowGrouping: {
-        model: ['company', 'director'],
+        model: ['company'],
       },
     },
   });
@@ -63,6 +62,7 @@ export default function ServerSideRowGroupingDataGrid() {
           unstable_dataSource={dataSource}
           apiRef={apiRef}
           initialState={initialState}
+          defaultGroupingExpansionDepth={-1}
         />
       </div>
     </div>

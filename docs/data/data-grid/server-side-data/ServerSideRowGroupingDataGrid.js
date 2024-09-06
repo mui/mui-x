@@ -5,25 +5,14 @@ import {
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import Snackbar from '@mui/material/Snackbar';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { alpha, styled, darken, lighten } from '@mui/material/styles';
 
 export default function ServerSideRowGroupingDataGrid() {
   const apiRef = useGridApiRef();
-  const [rootError, setRootError] = React.useState();
-  const [childrenError, setChildrenError] = React.useState();
-  const [shouldRequestsFail, setShouldRequestsFail] = React.useState(false);
 
-  const { fetchRows, columns } = useMockServer(
-    {
-      rowGrouping: true,
-    },
-    {},
-    shouldRequestsFail,
-  );
+  const { fetchRows, columns } = useMockServer({
+    rowGrouping: true,
+  });
 
   const dataSource = React.useMemo(() => {
     return {
@@ -59,79 +48,22 @@ export default function ServerSideRowGroupingDataGrid() {
 
   return (
     <div style={{ width: '100%' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Button
-          onClick={() => {
-            setRootError('');
-            apiRef.current.unstable_dataSource.fetchRows();
-          }}
-        >
-          Refetch rows
-        </Button>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={shouldRequestsFail}
-              onChange={(e) => setShouldRequestsFail(e.target.checked)}
-            />
-          }
-          label="Make the requests fail"
-        />
-      </div>
+      <Button
+        onClick={() => {
+          apiRef.current.unstable_dataSource.cache.clear();
+        }}
+      >
+        Clear cache
+      </Button>
+
       <div style={{ height: 400, position: 'relative' }}>
         <DataGridPremium
           columns={columns}
           unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(e, params) => {
-            if (!params.groupKeys || params.groupKeys.length === 0) {
-              setRootError(e.message);
-            } else {
-              setChildrenError(
-                `${e.message} (Requested level: ${params.groupKeys.join(' > ')})`,
-              );
-            }
-          }}
-          unstable_dataSourceCache={null}
           apiRef={apiRef}
           initialState={initialState}
-        />
-        {rootError && <ErrorOverlay error={rootError} />}
-        <Snackbar
-          open={!!childrenError}
-          autoHideDuration={3000}
-          onClose={() => setChildrenError('')}
-          message={childrenError}
         />
       </div>
     </div>
   );
-}
-
-function getBorderColor(theme) {
-  if (theme.palette.mode === 'light') {
-    return lighten(alpha(theme.palette.divider, 1), 0.88);
-  }
-  return darken(alpha(theme.palette.divider, 1), 0.68);
-}
-
-const StyledDiv = styled('div')(({ theme: t }) => ({
-  position: 'absolute',
-  zIndex: 10,
-  fontSize: '0.875em',
-  top: 0,
-  height: '100%',
-  width: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  borderRadius: '4px',
-  border: `1px solid ${getBorderColor(t)}`,
-  backgroundColor: t.palette.background.default,
-}));
-
-function ErrorOverlay({ error }) {
-  if (!error) {
-    return null;
-  }
-  return <StyledDiv>{error}</StyledDiv>;
 }

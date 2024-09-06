@@ -42,7 +42,7 @@ export default function ServerSideRowGroupingDataGrid() {
     apiRef,
     initialState: {
       rowGrouping: {
-        model: ['company', 'director'],
+        model: ['company'],
       },
     },
   });
@@ -63,6 +63,7 @@ export default function ServerSideRowGroupingDataGrid() {
           unstable_dataSource={dataSource}
           apiRef={apiRef}
           initialState={initialState}
+          defaultGroupingExpansionDepth={-1}
         />
       </div>
     </div>
