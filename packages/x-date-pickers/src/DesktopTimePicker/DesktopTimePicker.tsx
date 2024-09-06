@@ -134,7 +134,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
       utils,
       formatKey: 'fullTime',
       contextTranslation: translations.openTimePickerDialogue,
-      propsTranslation: props.localeText.openTimePickerDialogue,
+      propsTranslation: props.localeText?.openTimePickerDialogue,
     }),
     validator: validateTime,
   });

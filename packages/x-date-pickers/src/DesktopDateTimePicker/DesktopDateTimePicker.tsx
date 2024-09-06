@@ -231,7 +231,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
       utils,
       formatKey: 'fullDate',
       contextTranslation: translations.openDatePickerDialogue,
-      propsTranslation: props.localeText.openDatePickerDialogue,
+      propsTranslation: props.localeText?.openDatePickerDialogue,
     }),
     validator: validateDateTime,
     rendererInterceptor,

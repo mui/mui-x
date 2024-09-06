@@ -108,7 +108,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
       utils,
       formatKey: 'fullDate',
       contextTranslation: translations.openDatePickerDialogue,
-      propsTranslation: props.localeText.openDatePickerDialogue,
+      propsTranslation: props.localeText?.openDatePickerDialogue,
     }),
     validator: validateDateTime,
   });

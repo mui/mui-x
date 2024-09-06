@@ -21,11 +21,13 @@ export const buildGetOpenDialogAriaText = <TDate extends PickerValidDate>(params
     utils: MuiPickersAdapter<TDate>,
     formattedValue: string | null,
   ) => string;
-  propsTranslation: (
-    date: TDate | null,
-    utils: MuiPickersAdapter<TDate>,
-    formattedValue: string | null,
-  ) => string;
+  propsTranslation:
+    | ((
+        date: TDate | null,
+        utils: MuiPickersAdapter<TDate>,
+        formattedValue: string | null,
+      ) => string)
+    | undefined;
 }) => {
   const { utils, formatKey, contextTranslation, propsTranslation } = params;
 
