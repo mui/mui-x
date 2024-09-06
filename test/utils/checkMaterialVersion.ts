@@ -19,7 +19,8 @@ export function checkMaterialVersion({
 
     if (!isJSDOM) {
       // @ts-expect-error to support mocha and vitest
-      t.skip();
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     const expectedVersion = packageJson.devDependencies['@mui/material'];
