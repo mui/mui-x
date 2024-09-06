@@ -144,6 +144,6 @@
     "/components/pagination": "Pagination"
   },
   "api-docs": {
-    "interfacePageDescription": "API reference docs for the {{name}} interface. Learn about the properties other APIs of this exported module."
+    "interfacePageDescription": "Extended documentation for the {{name}} interface with detailed information on the module's properties and available APIs."
   }
 }
