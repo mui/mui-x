@@ -97,7 +97,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
       utils,
       formatKey: 'fullTime',
       contextTranslation: translations.openTimePickerDialogue,
-      propsTranslation: translations.openTimePickerDialogue,
+      propsTranslation: props.localeText.openTimePickerDialogue,
     }),
     validator: validateTime,
   });

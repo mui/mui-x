@@ -96,7 +96,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
       utils,
       formatKey: 'fullDate',
       contextTranslation: translations.openDatePickerDialogue,
-      propsTranslation: translations.openDatePickerDialogue,
+      propsTranslation: props.localeText.openDatePickerDialogue,
     }),
     validator: validateDate,
   });

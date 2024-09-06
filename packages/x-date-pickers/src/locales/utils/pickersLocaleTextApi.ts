@@ -63,7 +63,13 @@ export interface PickersComponentAgnosticLocaleText<TDate extends PickerValidDat
   // Clock labels
   clockLabelText: (
     view: TimeView,
+    /**
+     * @deprecated Use `formattedTime` instead
+     */
     time: TDate | null,
+    /**
+     * @deprecated Use `formattedTime` instead
+     */
     utils: MuiPickersAdapter<TDate>,
     // TODO v8: Make it required
     formattedTime?: string | null,
