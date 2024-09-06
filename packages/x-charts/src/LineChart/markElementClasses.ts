@@ -3,7 +3,6 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { SeriesId } from '../models/seriesType/common';
 
-
 export interface MarkElementClasses {
   /** Styles applied to the root element. */
   root: string;
