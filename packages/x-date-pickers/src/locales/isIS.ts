@@ -43,8 +43,8 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Velja tímabil',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Velja ${timeViews[view]}. ${time === null ? 'Enginn tími valinn' : `Valinn tími er ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Velja ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Enginn tími valinn' : `Valinn tími er ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} klukkustundir`,
   minutesClockNumberText: (minutes) => `${minutes} mínútur`,
   secondsClockNumberText: (seconds) => `${seconds} sekúndur`,

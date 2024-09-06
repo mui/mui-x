@@ -41,8 +41,8 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: '选择时间范围',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `选择 ${views[view]}. ${time === null ? '未选择时间' : `已选择${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `选择 ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? '未选择时间' : `已选择${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours}小时`,
   minutesClockNumberText: (minutes) => `${minutes}分钟`,
   secondsClockNumberText: (seconds) => `${seconds}秒`,

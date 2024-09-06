@@ -44,8 +44,8 @@ const skSKPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Vyberete rozmedzie dátumov',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `${timeViews[view] ?? view} vybraný. ${time === null ? 'Nie je vybraný čas' : `Vybraný čas je ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `${timeViews[view] ?? view} vybraný. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Nie je vybraný čas' : `Vybraný čas je ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} hodín`,
   minutesClockNumberText: (minutes) => `${minutes} minút`,
   secondsClockNumberText: (seconds) => `${seconds} sekúnd`,

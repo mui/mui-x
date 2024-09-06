@@ -43,8 +43,8 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Tarih aralığı seçin',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `${timeViews[view]} seç.  ${time === null ? 'Zaman seçilmedi' : `Seçilen zaman: ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `${timeViews[view]} seç.  ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Zaman seçilmedi' : `Seçilen zaman: ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} saat`,
   minutesClockNumberText: (minutes) => `${minutes} dakika`,
   secondsClockNumberText: (seconds) => `${seconds} saniye`,

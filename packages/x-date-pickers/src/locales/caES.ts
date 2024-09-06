@@ -43,8 +43,8 @@ const caESPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Seleccionar rang de dates',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Selecciona ${views[view]}. ${time === null ? 'Hora no seleccionada' : `L'hora seleccionada és ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Selecciona ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Hora no seleccionada' : `L'hora seleccionada és ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} hores`,
   minutesClockNumberText: (minutes) => `${minutes} minuts`,
   secondsClockNumberText: (seconds) => `${seconds} segons`,

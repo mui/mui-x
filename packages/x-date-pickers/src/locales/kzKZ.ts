@@ -44,8 +44,8 @@ const kzKZPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Кезеңді таңдаңыз',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `${timeViews[view]} таңдау. ${time === null ? 'Уақыт таңдалмаған' : `Таңдалған уақыт ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `${timeViews[view]} таңдау. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Уақыт таңдалмаған' : `Таңдалған уақыт ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} сағат`,
   minutesClockNumberText: (minutes) => `${minutes} минут`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,

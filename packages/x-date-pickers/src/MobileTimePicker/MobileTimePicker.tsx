@@ -96,8 +96,8 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     getOpenDialogAriaText: buildGetOpenDialogAriaText({
       utils,
       formatKey: 'fullTime',
-      contextTranslation: translations.openDatePickerDialogue,
-      propsTranslation: translations.openDatePickerDialogue,
+      contextTranslation: translations.openTimePickerDialogue,
+      propsTranslation: translations.openTimePickerDialogue,
     }),
     validator: validateTime,
   });

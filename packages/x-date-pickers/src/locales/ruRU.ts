@@ -44,8 +44,8 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Выбрать период',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Выбрать ${timeViews[view]}. ${time === null ? 'Время не выбрано' : `Выбрано время ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Выбрать ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Время не выбрано' : `Выбрано время ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} часов`,
   minutesClockNumberText: (minutes) => `${minutes} минут`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,

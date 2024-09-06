@@ -44,8 +44,8 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: '日付の範囲を選択',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `${timeViews[view] ?? view}を選択してください ${time === null ? '時間が選択されていません' : `選択した時間は ${adapter.format(time, 'fullTime')} です`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `${timeViews[view] ?? view}を選択してください ${!formattedTime && (time === null || !utils.isValid(time)) ? '時間が選択されていません' : `選択した時間は ${formattedTime ?? utils.format(time, 'fullTime')} です`}`,
   hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds} ${timeViews.seconds}`,

@@ -43,8 +43,8 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Wybierz zakres dat',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Wybierz ${timeViews[view]}. ${time === null ? 'Nie wybrano czasu' : `Wybrany czas to ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Wybierz ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Nie wybrano czasu' : `Wybrany czas to ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} godzin`,
   minutesClockNumberText: (minutes) => `${minutes} minut`,
   secondsClockNumberText: (seconds) => `${seconds} sekund`,

@@ -43,8 +43,8 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'محدوده تاریخ را انتخاب کنید',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    ` را انتخاب کنید ${timeViews[view]}. ${time === null ? 'هیچ ساعتی انتخاب نشده است' : `ساعت انتخاب ${adapter.format(time, 'fullTime')} می باشد`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    ` را انتخاب کنید ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'هیچ ساعتی انتخاب نشده است' : `ساعت انتخاب ${formattedTime ?? utils.format(time, 'fullTime')} می باشد`}`,
   hoursClockNumberText: (hours) => `${hours} ساعت‌ها`,
   minutesClockNumberText: (minutes) => `${minutes} دقیقه‌ها`,
   secondsClockNumberText: (seconds) => `${seconds} ثانیه‌ها`,

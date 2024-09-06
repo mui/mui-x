@@ -44,8 +44,8 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Абраць каляндарны перыяд',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Абярыце ${views[view]}. ${time === null ? 'Час не абраны' : `Абраны час ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Абярыце ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Час не абраны' : `Абраны час ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} гадзін`,
   minutesClockNumberText: (minutes) => `${minutes} хвілін`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,

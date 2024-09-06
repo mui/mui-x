@@ -43,8 +43,8 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'בחירת טווח תאריכים',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `בחירת ${views[view]}. ${time === null ? 'לא נבחרה שעה' : `השעה הנבחרת היא ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `בחירת ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'לא נבחרה שעה' : `השעה הנבחרת היא ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} שעות`,
   minutesClockNumberText: (minutes) => `${minutes} דקות`,
   secondsClockNumberText: (seconds) => `${seconds} שניות`,

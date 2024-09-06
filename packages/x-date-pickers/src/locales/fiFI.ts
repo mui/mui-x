@@ -43,8 +43,8 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Valitse aikaväli',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Valitse ${views[view]}. ${time === null ? 'Ei aikaa valittuna' : `Valittu aika on ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Valitse ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Ei aikaa valittuna' : `Valittu aika on ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} tuntia`,
   minutesClockNumberText: (minutes) => `${minutes} minuuttia`,
   secondsClockNumberText: (seconds) => `${seconds} sekuntia`,

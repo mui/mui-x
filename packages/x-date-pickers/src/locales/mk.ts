@@ -37,8 +37,8 @@ const mkPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Избери временски опсег',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Select ${view}. ${time === null ? 'Нема избрано време' : `Избраното време е ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Select ${view}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Нема избрано време' : `Избраното време е ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} часа`,
   minutesClockNumberText: (minutes) => `${minutes} минути`,
   secondsClockNumberText: (seconds) => `${seconds} секунди`,

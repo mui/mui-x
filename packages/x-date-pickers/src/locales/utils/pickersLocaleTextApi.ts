@@ -61,7 +61,13 @@ export interface PickersComponentAgnosticLocaleText<TDate extends PickerValidDat
   todayButtonLabel: string;
 
   // Clock labels
-  clockLabelText: (view: TimeView, time: TDate | null, adapter: MuiPickersAdapter<TDate>) => string;
+  clockLabelText: (
+    view: TimeView,
+    time: TDate | null,
+    utils: MuiPickersAdapter<TDate>,
+    // TODO v8: Make it required
+    formattedTime?: string | null,
+  ) => string;
   hoursClockNumberText: (hours: string) => string;
   minutesClockNumberText: (minutes: string) => string;
   secondsClockNumberText: (seconds: string) => string;
@@ -79,6 +85,7 @@ export interface PickersComponentAgnosticLocaleText<TDate extends PickerValidDat
      * @deprecated Use `formattedTime` instead
      */
     utils: MuiPickersAdapter<TDate>,
+    // TODO v8: Make it required
     formattedDate: string | null,
   ) => string;
   openTimePickerDialogue: (
@@ -90,6 +97,7 @@ export interface PickersComponentAgnosticLocaleText<TDate extends PickerValidDat
      * @deprecated Use `formattedTime` instead
      */
     utils: MuiPickersAdapter<TDate>,
+    // TODO v8: Make it required
     formattedTime: string | null,
   ) => string;
 

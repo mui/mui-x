@@ -43,8 +43,8 @@ const euPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Data tartea aukeratu',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Aukeratu ${views[view]}. ${time === null ? 'Ez da ordurik aukertau' : `Aukeratutako ordua ${adapter.format(time, 'fullTime')} da`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Aukeratu ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Ez da ordurik aukertau' : `Aukeratutako ordua ${formattedTime ?? utils.format(time, 'fullTime')} da`}`,
   hoursClockNumberText: (hours) => `${hours} ordu`,
   minutesClockNumberText: (minutes) => `${minutes} minutu`,
   secondsClockNumberText: (seconds) => `${seconds} segundu`,

@@ -44,8 +44,8 @@ const roROPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Selectați intervalul de date',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Selectați ${timeViews[view] ?? view}. ${time === null ? 'Nicio oră selectată' : `Ora selectată este ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Selectați ${timeViews[view] ?? view}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Nicio oră selectată' : `Ora selectată este ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds}`,

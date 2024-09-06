@@ -44,8 +44,8 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Datumsbereich auswählen',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `${timeViews[view] ?? view} auswählen. ${time === null ? 'Keine Uhrzeit ausgewählt' : `Gewählte Uhrzeit ist ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `${timeViews[view] ?? view} auswählen. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Keine Uhrzeit ausgewählt' : `Gewählte Uhrzeit ist ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds}`,

@@ -133,8 +133,8 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     getOpenDialogAriaText: buildGetOpenDialogAriaText({
       utils,
       formatKey: 'fullTime',
-      contextTranslation: translations.openDatePickerDialogue,
-      propsTranslation: translations.openDatePickerDialogue,
+      contextTranslation: translations.openTimePickerDialogue,
+      propsTranslation: translations.openTimePickerDialogue,
     }),
     validator: validateTime,
   });

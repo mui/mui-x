@@ -43,8 +43,8 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Seleziona intervallo di date',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Seleziona ${views[view]}. ${time === null ? 'Nessun orario selezionato' : `L'ora selezionata è ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Seleziona ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Nessun orario selezionato' : `L'ora selezionata è ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} ore`,
   minutesClockNumberText: (minutes) => `${minutes} minuti`,
   secondsClockNumberText: (seconds) => `${seconds} secondi`,

@@ -37,9 +37,11 @@ const enUSPickers: PickersLocaleText<any> = {
   dateRangePickerToolbarTitle: 'Select date range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
+  clockLabelText: (view, time, utils, formattedTime) =>
     `Select ${view}. ${
-      time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`
+      !formattedTime && (time === null || !utils.isValid(time))
+        ? 'No time selected'
+        : `Selected time is ${formattedTime ?? utils.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} hours`,
   minutesClockNumberText: (minutes) => `${minutes} minutes`,

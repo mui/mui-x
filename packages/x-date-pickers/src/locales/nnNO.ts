@@ -43,8 +43,8 @@ const nnNOPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Vel datoperiode',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Vel ${timeViews[view]}. ${time === null ? 'Ingen tid vald' : `Vald tid er ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Vel ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Ingen tid vald' : `Vald tid er ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} timar`,
   minutesClockNumberText: (minutes) => `${minutes} minuttar`,
   secondsClockNumberText: (seconds) => `${seconds} sekundar`,

@@ -43,8 +43,8 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Selecteer datumbereik',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Selecteer ${timeViews[view]}. ${time === null ? 'Geen tijd geselecteerd' : `Geselecteerde tijd is ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Selecteer ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Geen tijd geselecteerd' : `Geselecteerde tijd is ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} uren`,
   minutesClockNumberText: (minutes) => `${minutes} minuten`,
   secondsClockNumberText: (seconds) => `${seconds} seconden`,

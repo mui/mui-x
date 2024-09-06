@@ -43,8 +43,8 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'تاریخوں کی رینج منتخب کریں',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `${timeViews[view]} منتخب کریں ${time === null ? 'کوئی وقت منتخب نہیں' : `منتخب وقت ہے ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `${timeViews[view]} منتخب کریں ${!formattedTime && (time === null || !utils.isValid(time)) ? 'کوئی وقت منتخب نہیں' : `منتخب وقت ہے ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} گھنٹے`,
   minutesClockNumberText: (minutes) => `${minutes} منٹ`,
   secondsClockNumberText: (seconds) => `${seconds} سیکنڈ`,

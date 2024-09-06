@@ -43,8 +43,8 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Επιλέξτε εύρος ημερομηνιών',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Επιλέξτε ${views[view]}. ${time === null ? 'Δεν έχει επιλεγεί ώρα' : `Η επιλεγμένη ώρα είναι ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Επιλέξτε ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Δεν έχει επιλεγεί ώρα' : `Η επιλεγμένη ώρα είναι ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} ώρες`,
   minutesClockNumberText: (minutes) => `${minutes} λεπτά`,
   secondsClockNumberText: (seconds) => `${seconds} δευτερόλεπτα`,

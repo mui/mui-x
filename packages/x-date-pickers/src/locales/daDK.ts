@@ -44,8 +44,8 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Vælg datointerval',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Vælg ${timeViews[view] ?? view}. ${time === null ? 'Intet tidspunkt valgt' : `Valgte tidspunkt er ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Vælg ${timeViews[view] ?? view}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Intet tidspunkt valgt' : `Valgte tidspunkt er ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} timer`,
   minutesClockNumberText: (minutes) => `${minutes} minutter`,
   secondsClockNumberText: (seconds) => `${seconds} sekunder`,

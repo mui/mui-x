@@ -43,8 +43,8 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: '날짜 범위 선택하기',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `${views[view]} 선택하세요. ${time === null ? '시간을 선택하지 않았습니다.' : `현재 선택된 시간은 ${adapter.format(time, 'fullTime')}입니다.`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `${views[view]} 선택하세요. ${!formattedTime && (time === null || !utils.isValid(time)) ? '시간을 선택하지 않았습니다.' : `현재 선택된 시간은 ${formattedTime ?? utils.format(time, 'fullTime')}입니다.`}`,
   hoursClockNumberText: (hours) => `${hours}시`,
   minutesClockNumberText: (minutes) => `${minutes}분`,
   secondsClockNumberText: (seconds) => `${seconds}초`,
