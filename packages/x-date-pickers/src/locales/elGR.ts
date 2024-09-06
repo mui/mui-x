@@ -43,8 +43,8 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Επιλέξτε εύρος ημερομηνιών',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Επιλέξτε ${views[view]}. ${time === null ? 'Δεν έχει επιλεγεί ώρα' : `Η επιλεγμένη ώρα είναι ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Επιλέξτε ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Δεν έχει επιλεγεί ώρα' : `Η επιλεγμένη ώρα είναι ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} ώρες`,
   minutesClockNumberText: (minutes) => `${minutes} λεπτά`,
   secondsClockNumberText: (seconds) => `${seconds} δευτερόλεπτα`,
@@ -59,13 +59,13 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Επιλέξτε ημερομηνία, η επιλεγμένη ημερομηνία είναι ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Επιλέξτε ημερομηνία, η επιλεγμένη ημερομηνία είναι ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Επιλέξτε ημερομηνία',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Επιλέξτε ώρα, η επιλεγμένη ώρα είναι ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Επιλέξτε ώρα, η επιλεγμένη ώρα είναι ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Επιλέξτε ώρα',
   // fieldClearLabel: 'Clear value',
 

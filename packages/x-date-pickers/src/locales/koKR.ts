@@ -43,8 +43,8 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: '날짜 범위 선택하기',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `${views[view]} 선택하세요. ${time === null ? '시간을 선택하지 않았습니다.' : `현재 선택된 시간은 ${adapter.format(time, 'fullTime')}입니다.`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `${views[view]} 선택하세요. ${!formattedTime && (time === null || !utils.isValid(time)) ? '시간을 선택하지 않았습니다.' : `현재 선택된 시간은 ${formattedTime ?? utils.format(time, 'fullTime')}입니다.`}`,
   hoursClockNumberText: (hours) => `${hours}시`,
   minutesClockNumberText: (minutes) => `${minutes}분`,
   secondsClockNumberText: (seconds) => `${seconds}초`,
@@ -59,13 +59,13 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `날짜를 선택하세요. 현재 선택된 날짜는 ${utils.format(value, 'fullDate')}입니다.`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `날짜를 선택하세요. 현재 선택된 날짜는 ${formattedDate ?? utils.format(value, 'fullDate')}입니다.`
       : '날짜를 선택하세요',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `시간을 선택하세요. 현재 선택된 시간은 ${utils.format(value, 'fullTime')}입니다.`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `시간을 선택하세요. 현재 선택된 시간은 ${formattedTime ?? utils.format(value, 'fullTime')}입니다.`
       : '시간을 선택하세요',
   fieldClearLabel: '지우기',
 

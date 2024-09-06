@@ -43,8 +43,8 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'تاریخوں کی رینج منتخب کریں',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `${timeViews[view]} منتخب کریں ${time === null ? 'کوئی وقت منتخب نہیں' : `منتخب وقت ہے ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `${timeViews[view]} منتخب کریں ${!formattedTime && (time === null || !utils.isValid(time)) ? 'کوئی وقت منتخب نہیں' : `منتخب وقت ہے ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} گھنٹے`,
   minutesClockNumberText: (minutes) => `${minutes} منٹ`,
   secondsClockNumberText: (seconds) => `${seconds} سیکنڈ`,
@@ -59,13 +59,13 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `تاریخ منتخب کریں، منتخب شدہ تاریخ ہے ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `تاریخ منتخب کریں، منتخب شدہ تاریخ ہے ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'تاریخ منتخب کریں',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `وقت منتخب کریں، منتخب شدہ وقت ہے ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `وقت منتخب کریں، منتخب شدہ وقت ہے ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'وقت منتخب کریں',
   // fieldClearLabel: 'Clear value',
 

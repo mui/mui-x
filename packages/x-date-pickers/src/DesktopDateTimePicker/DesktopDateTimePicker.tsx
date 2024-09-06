@@ -41,6 +41,7 @@ import { DefaultizedProps } from '../internals/models/helpers';
 import { UsePickerViewsProps } from '../internals/hooks/usePicker/usePickerViews';
 import { isInternalTimeView } from '../internals/utils/time-utils';
 import { isDatePickerView } from '../internals/utils/date-utils';
+import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 
 const rendererInterceptor = function rendererInterceptor<
   TDate extends PickerValidDate,
@@ -226,8 +227,12 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
     props,
     valueManager: singleItemValueManager,
     valueType: 'date-time',
-    getOpenDialogAriaText:
-      props.localeText?.openDatePickerDialogue ?? translations.openDatePickerDialogue,
+    getOpenDialogAriaText: buildGetOpenDialogAriaText({
+      utils,
+      formatKey: 'fullDate',
+      contextTranslation: translations.openDatePickerDialogue,
+      propsTranslation: props.localeText?.openDatePickerDialogue,
+    }),
     validator: validateDateTime,
     rendererInterceptor,
   });

@@ -43,8 +43,8 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Velja tímabil',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Velja ${timeViews[view]}. ${time === null ? 'Enginn tími valinn' : `Valinn tími er ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Velja ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Enginn tími valinn' : `Valinn tími er ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} klukkustundir`,
   minutesClockNumberText: (minutes) => `${minutes} mínútur`,
   secondsClockNumberText: (seconds) => `${seconds} sekúndur`,
@@ -59,13 +59,13 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Velja dagsetningu, valin dagsetning er ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Velja dagsetningu, valin dagsetning er ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Velja dagsetningu',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Velja tíma, valinn tími er ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Velja tíma, valinn tími er ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Velja tíma',
   // fieldClearLabel: 'Clear value',
 

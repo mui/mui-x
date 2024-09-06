@@ -370,7 +370,12 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
         )}
         <ClockWrapper
           aria-activedescendant={selectedId}
-          aria-label={translations.clockLabelText(type, value, utils)}
+          aria-label={translations.clockLabelText(
+            type,
+            value,
+            utils,
+            value == null ? null : utils.format(value, 'fullTime'),
+          )}
           ref={listboxRef}
           role="listbox"
           onKeyDown={handleKeyDown}
