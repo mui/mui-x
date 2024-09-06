@@ -30,6 +30,12 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('ScatterChart - click event', () => {
   const { render } = createRenderer();
 
+  beforeEach(() => {
+    if (window?.document?.body?.style?.margin) {
+      window.document.body.style.margin = '0';
+    }
+  });
+
   describe('onItemClick - using vornoid', () => {
     it('should provide the right context as second argument when clicking svg', function test() {
       if (isJSDOM) {

@@ -12,6 +12,12 @@ const config = {
 describe('PieChart - click event', () => {
   const { render } = createRenderer();
 
+  beforeEach(() => {
+    if (window?.document?.body?.style?.margin) {
+      window.document.body.style.margin = '0';
+    }
+  });
+
   describe('onItemClick', () => {
     it('should add cursor="pointer" to bar elements', function test() {
       render(

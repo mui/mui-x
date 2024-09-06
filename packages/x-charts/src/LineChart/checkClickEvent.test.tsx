@@ -22,6 +22,12 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('LineChart - click event', () => {
   const { render } = createRenderer();
 
+  beforeEach(() => {
+    if (window?.document?.body?.style?.margin) {
+      window.document.body.style.margin = '0';
+    }
+  });
+
   describe('onAxisClick', () => {
     it('should provide the right context as second argument', function test() {
       if (isJSDOM) {

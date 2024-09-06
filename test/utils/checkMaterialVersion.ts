@@ -14,7 +14,7 @@ export function checkMaterialVersion({
   packageJson: PackageJson & { devDependencies: { '@mui/material': string } };
   materialPackageJson: PackageJson;
 }) {
-  return it(`${packageJson.name} should resolve proper @mui/material version`, (t = {}) => {
+  return it(`${packageJson.name} should resolve proper @mui/material version`, function test(t = {}) {
     const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
     if (!isJSDOM) {
