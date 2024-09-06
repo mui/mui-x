@@ -47,7 +47,7 @@ export class GridDataSourceCacheDefault {
     }
 
     // split the range into chunks
-    const chunkRanges = [];
+    const chunkRanges: { startIndex: number; endIndex: number }[] = [];
     for (let i = params.start; i < params.end; i += this.chunkSize) {
       const endIndex = Math.min(i + this.chunkSize - 1, params.end);
       chunkRanges.push({ startIndex: i, endIndex });
@@ -103,7 +103,7 @@ export class GridDataSourceCacheDefault {
       return undefined;
     }
 
-    const cachedResponses = [];
+    const cachedResponses: (GridGetRowsResponse | null)[] = [];
 
     for (let i = startChunk; i <= endChunk; i += 1) {
       const keyString = getKey({ ...key, start: chunks[i].startIndex, end: chunks[i].endIndex });

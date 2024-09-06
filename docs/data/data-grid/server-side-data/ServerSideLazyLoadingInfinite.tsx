@@ -7,7 +7,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
-function ServerSideLazyLoading() {
+function ServerSideLazyLoadingInfinite() {
   const { columns, fetchRows } = useMockServer(
     { rowLength: 120 },
     { useCursorPagination: false, minDelay: 300, maxDelay: 800 },
@@ -47,4 +47,4 @@ function ServerSideLazyLoading() {
   );
 }
 
-export default ServerSideLazyLoading;
+export default ServerSideLazyLoadingInfinite;
