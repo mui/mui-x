@@ -4,7 +4,7 @@ import { useSplitFieldInternalAndForwardedProps } from '@mui/x-date-pickers/hook
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { UseSingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
 import { rangeValueManager, getRangeFieldValueManager } from '../internals/utils/valueManagers';
-import { validateTimeRange } from '../internals/utils/validation/validateTimeRange';
+import { validateTimeRange } from '../validation';
 import { RangeFieldSection, DateRange } from '../models';
 
 export const useSingleInputTimeRangeField = <

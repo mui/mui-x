@@ -7,10 +7,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 import { DateFieldInPickerProps } from '@mui/x-date-pickers/DateField';
-import { splitFieldInternalAndForwardedProps } from '@mui/x-date-pickers/internals';
+import { useSplitFieldInternalAndForwardedProps } from '@mui/x-date-pickers/hooks';
 
 function ReadOnlyField(props: DateFieldInPickerProps<Dayjs, false>) {
-  const { internalProps, forwardedProps } = splitFieldInternalAndForwardedProps(
+  const { internalProps, forwardedProps } = useSplitFieldInternalAndForwardedProps(
     props,
     'date',
   );
