@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import {
   GridToolbarContainer,
@@ -67,34 +66,5 @@ const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(
     );
   },
 );
-
-GridToolbar.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  csvOptions: PropTypes.object,
-  excelOptions: PropTypes.any,
-  printOptions: PropTypes.object,
-  /**
-   * Props passed to the quick filter component.
-   */
-  quickFilterProps: PropTypes.object,
-  /**
-   * Show the quick filter component.
-   * @default false
-   */
-  showQuickFilter: PropTypes.bool,
-  /**
-   * The props used for each slot inside.
-   * @default {}
-   */
-  slotProps: PropTypes.object,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-} as any;
 
 export { GridToolbar };

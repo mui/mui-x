@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -22,12 +21,12 @@ export interface GridExportMenuItemProps<Options extends {}> {
 export interface GridToolbarExportProps {
   csvOptions?: GridCsvExportOptions & GridExportDisplayOptions;
   printOptions?: GridPrintExportOptions & GridExportDisplayOptions;
-  excelOptions?: any;
   /**
    * The props used for each slot inside.
    * @default {}
    */
   slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
+  [key: string]: any; // TODO v8: Remove this loophole
 }
 
 const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
@@ -53,20 +52,5 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
     );
   },
 );
-
-GridToolbarExport.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  csvOptions: PropTypes.object,
-  excelOptions: PropTypes.any,
-  printOptions: PropTypes.object,
-  /**
-   * The props used for each slot inside.
-   * @default {}
-   */
-  slotProps: PropTypes.object,
-} as any;
 
 export { GridToolbarExport };
