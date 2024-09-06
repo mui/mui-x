@@ -38,10 +38,10 @@ const zhTWGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: '匯出 Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: '搜尋',
+  columnsManagementNoColumns: '沒有列',
+  columnsManagementShowHideAllText: '顯示/隱藏 全部',
+  columnsManagementReset: '重置',
 
   // Filter panel text
   filterPanelAddFilter: '增加篩選器',
