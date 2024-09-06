@@ -6,9 +6,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 
-function CustomPaper(props) {
-  return <Paper {...props} />;
-}
+const CustomPaper = React.forwardRef(function CustomPaper(props, ref) {
+  // @ts-ignore
+  const { ownerState, ...other } = props;
+
+  return <Paper {...other} ref={ref} elevation={2} square />;
+});
 
 export default function PaperComponent() {
   return (
@@ -22,9 +25,7 @@ export default function PaperComponent() {
         />
         <MobileDatePicker
           label="Mobile variant"
-          slotProps={{
-            mobilePaper: { sx: { border: '5px red solid' } },
-          }}
+          slots={{ mobilePaper: CustomPaper }}
         />
       </DemoContainer>
     </LocalizationProvider>

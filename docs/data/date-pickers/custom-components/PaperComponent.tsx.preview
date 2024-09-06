@@ -6,7 +6,5 @@
 />
 <MobileDatePicker
   label="Mobile variant"
-  slotProps={{
-    mobilePaper: { sx: { border: '5px red solid' } },
-  }}
+  slots={{ mobilePaper: CustomPaper }}
 />
