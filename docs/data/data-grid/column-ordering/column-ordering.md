@@ -6,6 +6,13 @@ title: Data Grid - Column ordering
 
 <p class="description">Drag and drop your columns to reorder them.</p>
 
+:::warning
+There is a known issue with Firefox v129 that impacts this feature.
+Reordering is not working on that specific version of Firefox, since the `event.dataTransfer` is `null` resulting in an error.
+
+We would advice to update to v130 or higher if you experience this issue.
+:::
+
 By default, columns are ordered according to the order they are included in the `columns` array.
 
 By default, `DataGridPro` allows all column reordering by dragging the header cells and moving them left or right.
