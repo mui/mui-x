@@ -33,6 +33,17 @@ const GROUPING_COL_DEF_FORCED_PROPERTIES: Pick<GridColDef, 'type' | 'editable' |
   groupable: false,
 };
 
+const DATA_SOURCE_GROUPING_COL_DEF_FORCED_PROPERTIES: Pick<
+  GridColDef,
+  'type' | 'editable' | 'groupable' | 'filterable' | 'sortable' | 'aggregable'
+> = {
+  ...GROUPING_COL_DEF_FORCED_PROPERTIES,
+  // TODO: Support these features on the grouping column(s)
+  filterable: false,
+  sortable: false,
+  aggregable: false,
+};
+
 /**
  * When sorting two cells with different grouping criteria, we consider that the cell with the grouping criteria coming first in the model should be displayed below.
  * This can occur when some rows don't have all the fields. In which case we want the rows with the missing field to be displayed above.
@@ -361,7 +372,9 @@ export const createGroupingColDefForAllGroupingCriteria = ({
   // The properties that can't be overridden with `colDefOverride`
   const forcedProperties: Pick<GridColDef, 'field' | 'editable'> = {
     field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-    ...GROUPING_COL_DEF_FORCED_PROPERTIES,
+    ...(strategy === ROW_GROUPING_STRATEGY
+      ? GROUPING_COL_DEF_FORCED_PROPERTIES
+      : DATA_SOURCE_GROUPING_COL_DEF_FORCED_PROPERTIES),
   };
 
   return {

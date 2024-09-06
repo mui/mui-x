@@ -117,17 +117,17 @@ export const useMockServer = (
     [columns, options.treeData?.groupingField],
   );
 
+  const isTreeData = options.treeData?.groupingField != null;
+  const isRowGrouping = dataSetOptions?.rowGrouping;
+
   const columnsWithDefaultColDef: GridColDef[] = React.useMemo(
     () =>
-      columns.map((column) => ({
+      (isRowGrouping ? rowGroupingData.columns : columns).map((column) => ({
         ...defaultColDef[column.type || 'string'],
         ...column,
       })),
-    [columns],
+    [columns, rowGroupingData.columns, isRowGrouping],
   );
-
-  const isTreeData = options.treeData?.groupingField != null;
-  const isRowGrouping = dataSetOptions?.rowGrouping;
 
   const getGroupKey = React.useMemo(() => {
     if (isTreeData) {
@@ -254,7 +254,7 @@ export const useMockServer = (
           rowGroupingData.rows,
           params,
           serverOptionsWithDefault,
-          rowGroupingData.columns,
+          columnsWithDefaultColDef,
         );
 
         getRowsResponse = {
@@ -292,7 +292,7 @@ export const useMockServer = (
   );
 
   return {
-    columns: isRowGrouping ? rowGroupingData.columns : columnsWithDefaultColDef,
+    columns: columnsWithDefaultColDef,
     initialState: isRowGrouping ? {} : initialState,
     getGroupKey,
     getChildrenCount,

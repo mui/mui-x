@@ -499,7 +499,7 @@ export const processTreeDataRows = (
  * Simulates server data for row grouping feature
  */
 export const processRowGroupingRows = (
-  rows: GridRowModel[],
+  rows: GridValidRowModel[],
   queryOptions: ServerSideQueryOptions,
   serverOptions: ServerOptions,
   columnsWithDefaultColDef: GridColDef[],
@@ -559,10 +559,14 @@ export const processRowGroupingRows = (
   ) as GridValidRowModel[];
 
   // get root row count
-  const rootRowCount = findTreeDataRowChildren(filteredRows, []).length;
+  const rootRows = findTreeDataRowChildren(filteredRows, []);
+  const rootRowCount = rootRows.length;
 
   // find direct children referring to the `parentPath`
-  const childRows = findTreeDataRowChildren(filteredRows, queryOptions.groupKeys);
+  const childRows =
+    queryOptions.groupKeys.length > 0
+      ? findTreeDataRowChildren(filteredRows, queryOptions.groupKeys)
+      : rootRows;
 
   let childRowsWithDescendantCounts = childRows.map((row) => {
     const descendants = findTreeDataRowChildren(
@@ -570,7 +574,7 @@ export const processRowGroupingRows = (
       row[pathKey],
       pathKey,
       -1,
-      (row) => typeof row.id !== 'string' || !row.id.startsWith('auto-generated-parent-'),
+      ({ id }) => typeof id !== 'string' || !id.startsWith('auto-generated-parent-'),
     );
     const descendantCount = descendants.length;
     return { ...row, descendantCount } as GridRowModel;
