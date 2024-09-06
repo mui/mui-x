@@ -68,29 +68,30 @@ export function GridPrintExportMenuItem(props: GridPrintExportMenuItemProps) {
   );
 }
 
-const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps & { [key: string]: any}>(
-  function GridToolbarExport(props, ref) {
-    const { csvOptions = {}, printOptions = {}, excelOptions, ...other } = props;
+const GridToolbarExport = React.forwardRef<
+  HTMLButtonElement,
+  GridToolbarExportProps & { [key: string]: any }
+>(function GridToolbarExport(props, ref) {
+  const { csvOptions = {}, printOptions = {}, excelOptions, ...other } = props;
 
-    const apiRef = useGridApiContext();
+  const apiRef = useGridApiContext();
 
-    const preProcessedButtons = apiRef.current
-      .unstable_applyPipeProcessors('exportMenu', [], { excelOptions, csvOptions, printOptions })
-      .sort((a, b) => (a.componentName > b.componentName ? 1 : -1));
+  const preProcessedButtons = apiRef.current
+    .unstable_applyPipeProcessors('exportMenu', [], { excelOptions, csvOptions, printOptions })
+    .sort((a, b) => (a.componentName > b.componentName ? 1 : -1));
 
-    if (preProcessedButtons.length === 0) {
-      return null;
-    }
+  if (preProcessedButtons.length === 0) {
+    return null;
+  }
 
-    return (
-      <GridToolbarExportContainer {...other} ref={ref}>
-        {preProcessedButtons.map((button, index) =>
-          React.cloneElement(button.component, { key: index }),
-        )}
-      </GridToolbarExportContainer>
-    );
-  },
-);
+  return (
+    <GridToolbarExportContainer {...other} ref={ref}>
+      {preProcessedButtons.map((button, index) =>
+        React.cloneElement(button.component, { key: index }),
+      )}
+    </GridToolbarExportContainer>
+  );
+});
 
 GridToolbarExport.propTypes = {
   // ----------------------------- Warning --------------------------------
