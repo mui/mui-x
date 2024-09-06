@@ -26,7 +26,7 @@ export interface GridToolbarProps
   quickFilterProps?: GridToolbarQuickFilterProps;
 }
 
-const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(
+const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps & { [key: string]: any}>(
   function GridToolbar(props, ref) {
     // TODO v7: think about where export option should be passed.
     // from slotProps={{ toolbarExport: { ...exportOption } }} seems to be more appropriate
