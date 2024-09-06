@@ -190,6 +190,12 @@ MarkPlot.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * If `true` the mark element will only be able to render circle.
+   * Giving less customization options, but saving around 40ms per 1.000 marks.
+   * @default false
+   */
+  perfUpdate: PropTypes.bool,
+  /**
    * If `true`, animations are skipped.
    * @default false
    */

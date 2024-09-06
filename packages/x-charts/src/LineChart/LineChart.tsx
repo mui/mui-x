@@ -296,6 +296,10 @@ LineChart.propTypes = {
     top: PropTypes.number,
   }),
   /**
+   * If `true` marks will render `<circle />` instead of `<path />` and drop theme override for faster rendering.
+   */
+  markPerfUpdate: PropTypes.bool,
+  /**
    * Callback fired when an area element is clicked.
    */
   onAreaClick: PropTypes.func,

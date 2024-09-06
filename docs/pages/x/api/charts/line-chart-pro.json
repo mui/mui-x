@@ -48,6 +48,7 @@
       },
       "default": "object Depends on the charts type."
     },
+    "markPerfUpdate": { "type": { "name": "bool" } },
     "onAreaClick": { "type": { "name": "func" } },
     "onAxisClick": {
       "type": { "name": "func" },

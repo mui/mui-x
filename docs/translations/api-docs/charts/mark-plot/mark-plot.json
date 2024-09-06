@@ -8,6 +8,9 @@
         "lineItemIdentifier": "The line mark item identifier."
       }
     },
+    "perfUpdate": {
+      "description": "If <code>true</code> the mark element will only be able to render circle. Giving less customization options, but saving around 40ms per 1.000 marks."
+    },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }
