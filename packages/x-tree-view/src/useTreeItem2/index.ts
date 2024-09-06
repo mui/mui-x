@@ -5,7 +5,9 @@ export type {
   UseTreeItem2Status,
   UseTreeItem2RootSlotOwnProps,
   UseTreeItem2ContentSlotOwnProps,
+  UseTreeItem2LabelInputSlotOwnProps,
   UseTreeItem2LabelSlotOwnProps,
   UseTreeItem2IconContainerSlotOwnProps,
   UseTreeItem2GroupTransitionSlotOwnProps,
+  UseTreeItem2DragAndDropOverlaySlotOwnProps,
 } from './useTreeItem2.types';

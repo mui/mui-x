@@ -109,7 +109,7 @@ Planned features include:
 - [Pivoting](/x/react-data-grid/pivoting/) <span class="plan-premium"></span>
 - [Charts integration](/x/react-charts/) <span class="plan-premium"></span>
 
-You can find more details on, the [feature comparison](/x/react-data-grid/getting-started/#feature-comparison), our living quarterly [roadmap](https://github.com/mui/mui-x/projects/1) as well as on the open [GitHub issues](https://github.com/mui/mui-x/issues?q=is%3Aopen+label%3A%22component%3A+DataGrid%22+label%3Aenhancement).
+You can find more details on, the [feature comparison](/x/react-data-grid/getting-started/#feature-comparison), our living quarterly [roadmap](https://github.com/orgs/mui/projects/35) as well as on the open [GitHub issues](https://github.com/mui/mui-x/issues?q=is%3Aopen+label%3A%22component%3A+DataGrid%22+label%3Aenhancement).
 
 ## Resources
 

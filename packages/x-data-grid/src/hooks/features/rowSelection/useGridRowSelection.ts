@@ -186,6 +186,10 @@ export const useGridRowSelection = (
 
   const isRowSelectable = React.useCallback<GridRowSelectionApi['isRowSelectable']>(
     (id) => {
+      if (props.rowSelection === false) {
+        return false;
+      }
+
       if (propIsRowSelectable && !propIsRowSelectable(apiRef.current.getRowParams(id))) {
         return false;
       }
@@ -197,7 +201,7 @@ export const useGridRowSelection = (
 
       return true;
     },
-    [apiRef, propIsRowSelectable],
+    [apiRef, props.rowSelection, propIsRowSelectable],
   );
 
   const getSelectedRows = React.useCallback<GridRowSelectionApi['getSelectedRows']>(
@@ -443,17 +447,15 @@ export const useGridRowSelection = (
     GridEventListener<'headerSelectionCheckboxChange'>
   >(
     (params) => {
-      const shouldLimitSelectionToCurrentPage =
-        props.checkboxSelectionVisibleOnly && props.pagination;
-
-      const rowsToBeSelected = shouldLimitSelectionToCurrentPage
-        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
-        : gridExpandedSortedRowIdsSelector(apiRef);
+      const rowsToBeSelected =
+        props.pagination && props.checkboxSelectionVisibleOnly && props.paginationMode === 'client'
+          ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
+          : gridExpandedSortedRowIdsSelector(apiRef);
 
       const filterModel = gridFilterModelSelector(apiRef);
       apiRef.current.selectRows(rowsToBeSelected, params.value, filterModel?.items.length > 0);
     },
-    [apiRef, props.checkboxSelectionVisibleOnly, props.pagination],
+    [apiRef, props.checkboxSelectionVisibleOnly, props.pagination, props.paginationMode],
   );
 
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(

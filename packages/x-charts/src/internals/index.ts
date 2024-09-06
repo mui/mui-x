@@ -21,16 +21,19 @@ export * from './configInit';
 export * from './getLabel';
 export * from './getSVGPoint';
 export * from './isDefined';
+export { unstable_cleanupDOM } from './domUtils';
+export * from './getScale';
 
 // contexts
 
 export * from '../context/CartesianProvider';
 export * from '../context/DrawingProvider';
-export * from '../context/ColorProvider';
 export * from '../context/InteractionProvider';
 export * from '../context/SeriesProvider';
 export * from '../context/ZAxisContextProvider';
+export * from '../context/PluginProvider';
 export type * from '../context/context.types';
+export { getAxisExtremum } from '../context/CartesianProvider/getAxisExtremum';
 
 // series configuration
 export * from '../models/seriesType/config';

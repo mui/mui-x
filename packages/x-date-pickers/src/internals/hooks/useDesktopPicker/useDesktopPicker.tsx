@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import MuiInputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { PickersPopper } from '../../components/PickersPopper';
 import {
+  UseDesktopPickerOwnerState,
   UseDesktopPickerParams,
   UseDesktopPickerProps,
   UseDesktopPickerSlotProps,
 } from './useDesktopPicker.types';
-import { useUtils } from '../useUtils';
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
@@ -66,7 +66,6 @@ export const useDesktopPicker = <
     reduceAnimations,
   } = props;
 
-  const utils = useUtils<TDate>();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const fieldRef = React.useRef<FieldRef<FieldSection>>(null);
 
@@ -90,6 +89,11 @@ export const useDesktopPicker = <
     wrapperVariant: 'desktop',
   });
 
+  // TODO v8: Apply this ownerState to all the slots in this hook.
+  const ownerStateV8: UseDesktopPickerOwnerState = {
+    open,
+  };
+
   const InputAdornment = slots.inputAdornment ?? MuiInputAdornment;
   const { ownerState: inputAdornmentOwnerState, ...inputAdornmentProps } = useSlotProps({
     elementType: InputAdornment,
@@ -107,13 +111,18 @@ export const useDesktopPicker = <
     additionalProps: {
       disabled: disabled || readOnly,
       onClick: open ? actions.onClose : actions.onOpen,
-      'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
+      'aria-label': getOpenDialogAriaText(pickerFieldProps.value),
       edge: inputAdornmentProps.position,
     },
     ownerState: props,
   });
 
   const OpenPickerIcon = slots.openPickerIcon;
+  const openPickerIconProps = useSlotProps({
+    elementType: OpenPickerIcon,
+    externalSlotProps: innerSlotProps?.openPickerIcon,
+    ownerState: ownerStateV8,
+  });
 
   const Field = slots.field;
   const fieldProps = useSlotProps<
@@ -163,7 +172,7 @@ export const useDesktopPicker = <
         [`${inputAdornmentProps.position}Adornment`]: (
           <InputAdornment {...inputAdornmentProps}>
             <OpenPickerButton {...openPickerButtonProps}>
-              <OpenPickerIcon {...innerSlotProps?.openPickerIcon} />
+              <OpenPickerIcon {...openPickerIconProps} />
             </OpenPickerButton>
           </InputAdornment>
         ),

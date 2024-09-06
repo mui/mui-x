@@ -11,10 +11,10 @@ function superset(values, other) {
     const io = intern(o);
     if (set.has(io)) continue;
     let value, done;
-    while (({
+    while ({
       value,
       done
-    } = iterator.next())) {
+    } = iterator.next()) {
       if (done) return false;
       const ivalue = intern(value);
       set.add(ivalue);

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { GridScrollArea } from '../GridScrollArea';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -29,14 +29,13 @@ const useUtilityClasses = (
   loadingOverlayVariant: GridLoadingOverlayVariant | null,
 ) => {
   const { classes } = ownerState;
-
   const slots = {
     root: [
       'main',
       dimensions.rightPinnedWidth > 0 && 'main--hasPinnedRight',
       loadingOverlayVariant === 'skeleton' && 'main--hasSkeletonLoadingOverlay',
     ],
-    scroller: ['virtualScroller'],
+    scroller: ['virtualScroller', dimensions.hasScrollX && 'virtualScroller--hasScrollX'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
