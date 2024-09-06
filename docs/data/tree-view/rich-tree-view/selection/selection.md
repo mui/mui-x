@@ -103,7 +103,7 @@ To use the `apiRef` object, you need to initialize it using the `useTreeViewApiR
 ```tsx
 const apiRef = useTreeViewApiRef();
 
-return <SimpleTreeView apiRef={apiRef}>{children}</SimpleTreeView>;
+return <RichTreeView apiRef={apiRef} items={ITEMS}>;
 ```
 
 When your component first renders, `apiRef` will be `undefined`.

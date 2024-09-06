@@ -390,7 +390,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public startOfWeek = (value: Moment) => {
-    return value.clone().startOf('week');
+    return this.setLocaleToValue(value.clone()).startOf('week');
   };
 
   public startOfDay = (value: Moment) => {
@@ -406,7 +406,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public endOfWeek = (value: Moment) => {
-    return value.clone().endOf('week');
+    return this.setLocaleToValue(value.clone()).endOf('week');
   };
 
   public endOfDay = (value: Moment) => {
@@ -516,9 +516,8 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public getWeekArray = (value: Moment) => {
-    const cleanValue = this.setLocaleToValue(value);
-    const start = this.startOfWeek(this.startOfMonth(cleanValue));
-    const end = this.endOfWeek(this.endOfMonth(cleanValue));
+    const start = this.startOfWeek(this.startOfMonth(value));
+    const end = this.endOfWeek(this.endOfMonth(value));
 
     let count = 0;
     let current = start;

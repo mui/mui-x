@@ -118,7 +118,7 @@ const main = async () => {
 
     // Create library indexes and copy licenses to `lib-vendor.
     await Promise.all([
-      fs.writeFile(path.join(EsmBasePath, `${pkgName}.js`), getEsmIndex(pkg)),
+      fs.writeFile(path.join(EsmBasePath, `${pkgName}.mjs`), getEsmIndex(pkg)),
       fs.writeFile(path.join(CjsBasePath, `${pkgName}.js`), getCjsIndex(pkg)),
       fs
         .copyFile(path.join(pkgBase, 'LICENSE'), path.join(libVendorPath, 'LICENSE'))

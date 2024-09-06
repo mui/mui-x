@@ -12,7 +12,7 @@ packageName: '@mui/x-date-pickers'
 
 ## Getting started
 
-The default locale of MUI X is English (United States). If you want to use other locales—follow the instructions below.
+The default locale of MUI X is English (United States). If you want to use other locales, follow the instructions below.
 
 :::warning
 This page focuses on date format localization.
@@ -369,3 +369,12 @@ moment.updateLocale('en', {
   },
 });
 ```
+
+## RTL Support
+
+Right-to-left languages such as Arabic, Persian, or Hebrew are supported.
+Follow [this guide](/material-ui/customization/right-to-left/) to use them.
+
+The example below demonstrates how to use an RTL language (Arabic) with some of the Date and Time Pickers components.
+
+{{"demo": "PickersRTL.js"}}

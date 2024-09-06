@@ -7,7 +7,7 @@ import {
 import useLazyRef from '@mui/utils/useLazyRef';
 import useTimeout from '@mui/utils/useTimeout';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
-import { useTheme, Theme } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -41,7 +41,7 @@ import { GridRowProps } from '../../../components/GridRow';
 import { GridInfiniteLoaderPrivateApi } from '../../../models/api/gridInfiniteLoaderApi';
 import {
   gridRenderContextSelector,
-  gridVirtualizationEnabledSelector,
+  gridVirtualizationRowEnabledSelector,
   gridVirtualizationColumnEnabledSelector,
 } from './gridVirtualizationSelectors';
 import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
@@ -68,7 +68,7 @@ const EMPTY_SCROLL_POSITION = { top: 0, left: 0 };
 export const EMPTY_DETAIL_PANELS = Object.freeze(new Map<GridRowId, React.ReactNode>());
 
 const createScrollCache = (
-  mode: 'ltr' | 'rtl',
+  isRtl: boolean,
   rowBufferPx: number,
   columnBufferPx: number,
   verticalBuffer: number,
@@ -76,7 +76,7 @@ const createScrollCache = (
 ) => ({
   direction: ScrollDirection.NONE,
   buffer: bufferForDirection(
-    mode,
+    isRtl,
     ScrollDirection.NONE,
     rowBufferPx,
     columnBufferPx,
@@ -99,7 +99,7 @@ export const useGridVirtualScroller = () => {
   const apiRef = useGridPrivateApiContext() as React.MutableRefObject<PrivateApiWithInfiniteLoader>;
   const rootProps = useGridRootProps();
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
-  const enabled = useGridSelector(apiRef, gridVirtualizationEnabledSelector) && !isJSDOM;
+  const enabledForRows = useGridSelector(apiRef, gridVirtualizationRowEnabledSelector) && !isJSDOM;
   const enabledForColumns =
     useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector) && !isJSDOM;
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
@@ -109,7 +109,7 @@ export const useGridVirtualScroller = () => {
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
 
-  const theme = useTheme();
+  const isRtl = useRtl();
   const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
   const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
@@ -149,7 +149,7 @@ export const useGridVirtualScroller = () => {
   const frozenContext = React.useRef<GridRenderContext | undefined>(undefined);
   const scrollCache = useLazyRef(() =>
     createScrollCache(
-      theme.direction,
+      isRtl,
       rootProps.rowBufferPx,
       rootProps.columnBufferPx,
       dimensions.rowHeight * 15,
@@ -254,7 +254,7 @@ export const useGridVirtualScroller = () => {
 
     scrollCache.direction = direction;
     scrollCache.buffer = bufferForDirection(
-      theme.direction,
+      isRtl,
       direction,
       rootProps.rowBufferPx,
       rootProps.columnBufferPx,
@@ -262,7 +262,7 @@ export const useGridVirtualScroller = () => {
       MINIMUM_COLUMN_WIDTH * 6,
     );
 
-    const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
+    const inputs = inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns);
     const nextRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
 
     // Prevents batching render context changes
@@ -276,7 +276,7 @@ export const useGridVirtualScroller = () => {
   };
 
   const forceUpdateRenderContext = () => {
-    const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
+    const inputs = inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns);
     const nextRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
     // Reset the frozen context when the render context changes, see the illustration in https://github.com/mui/mui-x/pull/12353
     frozenContext.current = undefined;
@@ -290,12 +290,12 @@ export const useGridVirtualScroller = () => {
     if (scrollTop < 0) {
       return;
     }
-    if (theme.direction === 'ltr') {
+    if (!isRtl) {
       if (scrollLeft < 0) {
         return;
       }
     }
-    if (theme.direction === 'rtl') {
+    if (isRtl) {
       if (scrollLeft > 0) {
         return;
       }
@@ -466,7 +466,7 @@ export const useGridVirtualScroller = () => {
       const offsetLeft = computeOffsetLeft(
         columnPositions,
         currentRenderContext,
-        theme.direction,
+        isRtl,
         pinnedColumns.left.length,
       );
       const showBottomBorder = isLastVisibleInSection && params.position === 'top';
@@ -551,15 +551,17 @@ export const useGridVirtualScroller = () => {
   }, [apiRef, rowsMeta.currentPageTotalHeight]);
 
   useEnhancedEffect(() => {
-    if (enabled) {
-      // TODO a scroll reset should not be necessary
+    // TODO a scroll reset should not be necessary
+    if (enabledForColumns) {
       scrollerRef.current!.scrollLeft = 0;
+    }
+    if (enabledForRows) {
       scrollerRef.current!.scrollTop = 0;
     }
-  }, [enabled, gridRootRef, scrollerRef]);
+  }, [enabledForColumns, enabledForRows, gridRootRef, scrollerRef]);
 
   useRunOnce(outerSize.width !== 0, () => {
-    const inputs = inputsSelector(apiRef, rootProps, enabled, enabledForColumns);
+    const inputs = inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns);
 
     const initialRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
     updateRenderContext(initialRenderContext);
@@ -608,7 +610,7 @@ export const useGridVirtualScroller = () => {
 };
 
 type RenderContextInputs = {
-  enabled: boolean;
+  enabledForRows: boolean;
   enabledForColumns: boolean;
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>;
   autoHeight: boolean;
@@ -631,7 +633,7 @@ type RenderContextInputs = {
 function inputsSelector(
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   rootProps: ReturnType<typeof useGridRootProps>,
-  enabled: boolean,
+  enabledForRows: boolean,
   enabledForColumns: boolean,
 ): RenderContextInputs {
   const dimensions = gridDimensionsSelector(apiRef.current.state);
@@ -640,7 +642,7 @@ function inputsSelector(
   const lastRowId = apiRef.current.state.rows.dataRowIds.at(-1);
   const lastColumn = visibleColumns.at(-1);
   return {
-    enabled,
+    enabledForRows,
     enabledForColumns,
     apiRef,
     autoHeight: rootProps.autoHeight,
@@ -666,19 +668,17 @@ function computeRenderContext(
   scrollPosition: ScrollPosition,
   scrollCache: ScrollCache,
 ) {
-  let renderContext: GridRenderContext;
+  const renderContext: GridRenderContext = {
+    firstRowIndex: 0,
+    lastRowIndex: inputs.rows.length,
+    firstColumnIndex: 0,
+    lastColumnIndex: inputs.visibleColumns.length,
+  };
 
-  if (!inputs.enabled) {
-    renderContext = {
-      firstRowIndex: 0,
-      lastRowIndex: inputs.rows.length,
-      firstColumnIndex: 0,
-      lastColumnIndex: inputs.visibleColumns.length,
-    };
-  } else {
-    const { top, left } = scrollPosition;
-    const realLeft = Math.abs(left) + inputs.leftPinnedWidth;
+  const { top, left } = scrollPosition;
+  const realLeft = Math.abs(left) + inputs.leftPinnedWidth;
 
+  if (inputs.enabledForRows) {
     // Clamp the value because the search may return an index out of bounds.
     // In the last index, this is not needed because Array.slice doesn't include it.
     const firstRowIndex = Math.min(
@@ -694,46 +694,42 @@ function computeRenderContext(
       ? firstRowIndex + inputs.rows.length
       : getNearestIndexToRender(inputs, top + inputs.viewportInnerHeight);
 
+    renderContext.firstRowIndex = firstRowIndex;
+    renderContext.lastRowIndex = lastRowIndex;
+  }
+
+  if (inputs.enabledForColumns) {
     let firstColumnIndex = 0;
     let lastColumnIndex = inputs.columnPositions.length;
 
-    if (inputs.enabledForColumns) {
-      let hasRowWithAutoHeight = false;
+    let hasRowWithAutoHeight = false;
 
-      const [firstRowToRender, lastRowToRender] = getIndexesToRender({
-        firstIndex: firstRowIndex,
-        lastIndex: lastRowIndex,
-        minFirstIndex: 0,
-        maxLastIndex: inputs.rows.length,
-        bufferBefore: scrollCache.buffer.rowBefore,
-        bufferAfter: scrollCache.buffer.rowAfter,
-        positions: inputs.rowsMeta.positions,
-        lastSize: inputs.lastRowHeight,
-      });
+    const [firstRowToRender, lastRowToRender] = getIndexesToRender({
+      firstIndex: renderContext.firstRowIndex,
+      lastIndex: renderContext.lastRowIndex,
+      minFirstIndex: 0,
+      maxLastIndex: inputs.rows.length,
+      bufferBefore: scrollCache.buffer.rowBefore,
+      bufferAfter: scrollCache.buffer.rowAfter,
+      positions: inputs.rowsMeta.positions,
+      lastSize: inputs.lastRowHeight,
+    });
 
-      for (let i = firstRowToRender; i < lastRowToRender && !hasRowWithAutoHeight; i += 1) {
-        const row = inputs.rows[i];
-        hasRowWithAutoHeight = inputs.apiRef.current.rowHasAutoHeight(row.id);
-      }
-
-      if (!hasRowWithAutoHeight) {
-        firstColumnIndex = binarySearch(realLeft, inputs.columnPositions, {
-          atStart: true,
-          lastPosition: inputs.columnsTotalWidth,
-        });
-        lastColumnIndex = binarySearch(
-          realLeft + inputs.viewportInnerWidth,
-          inputs.columnPositions,
-        );
-      }
+    for (let i = firstRowToRender; i < lastRowToRender && !hasRowWithAutoHeight; i += 1) {
+      const row = inputs.rows[i];
+      hasRowWithAutoHeight = inputs.apiRef.current.rowHasAutoHeight(row.id);
     }
 
-    renderContext = {
-      firstRowIndex,
-      lastRowIndex,
-      firstColumnIndex,
-      lastColumnIndex,
-    };
+    if (!hasRowWithAutoHeight) {
+      firstColumnIndex = binarySearch(realLeft, inputs.columnPositions, {
+        atStart: true,
+        lastPosition: inputs.columnsTotalWidth,
+      });
+      lastColumnIndex = binarySearch(realLeft + inputs.viewportInnerWidth, inputs.columnPositions);
+    }
+
+    renderContext.firstColumnIndex = firstColumnIndex;
+    renderContext.lastColumnIndex = lastColumnIndex;
   }
 
   const actualRenderContext = deriveRenderContext(inputs, renderContext, scrollCache);
@@ -943,10 +939,10 @@ export function areRenderContextsEqual(context1: GridRenderContext, context2: Gr
 export function computeOffsetLeft(
   columnPositions: number[],
   renderContext: GridColumnsRenderContext,
-  direction: Theme['direction'],
+  isRtl: boolean,
   pinnedLeftLength: number,
 ) {
-  const factor = direction === 'ltr' ? 1 : -1;
+  const factor = isRtl ? -1 : 1;
   const left =
     factor * (columnPositions[renderContext.firstColumnIndex] ?? 0) -
     (columnPositions[pinnedLeftLength] ?? 0);
@@ -976,14 +972,14 @@ function directionForDelta(dx: number, dy: number) {
 }
 
 function bufferForDirection(
-  mode: 'ltr' | 'rtl',
+  isRtl: boolean,
   direction: ScrollDirection,
   rowBufferPx: number,
   columnBufferPx: number,
   verticalBuffer: number,
   horizontalBuffer: number,
 ) {
-  if (mode === 'rtl') {
+  if (isRtl) {
     switch (direction) {
       case ScrollDirection.LEFT:
         direction = ScrollDirection.RIGHT;

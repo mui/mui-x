@@ -35,3 +35,6 @@ export type {
   GridPrintExportOptions,
 } from './gridExport';
 export * from './gridFilterOperator';
+
+// Utils shared across the X packages
+export type { PropsFromSlot } from '@mui/x-internals/slots';

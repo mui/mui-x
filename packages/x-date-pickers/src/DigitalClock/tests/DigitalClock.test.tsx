@@ -93,16 +93,15 @@ describe('<DigitalClock />', () => {
   });
 
   it('forwards list class to MenuList', () => {
-    const { getByRole } = render(<DigitalClock classes={{ list: 'foo' }} />);
+    render(<DigitalClock classes={{ list: 'foo' }} />);
 
-    const list = getByRole('listbox');
-    expect(list).to.have.class('foo');
+    expect(screen.getByRole('listbox')).to.have.class('foo');
   });
 
   it('forwards item class to clock item', () => {
-    const { getAllByRole } = render(<DigitalClock classes={{ item: 'bar' }} />);
+    render(<DigitalClock classes={{ item: 'bar' }} />);
 
-    const options = getAllByRole('option');
+    const options = screen.getAllByRole('option');
     expect(options[0]).to.have.class('bar');
   });
 });

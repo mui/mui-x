@@ -133,7 +133,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     pinnedPosition,
     indexInSection,
     sectionLength,
-    rootProps.showCellVerticalBorder,
+    rootProps.showColumnVerticalBorder,
     gridHasFiller,
   );
 

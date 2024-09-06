@@ -146,7 +146,7 @@ export const useGridCellSelection = (
       const rowsInRange = visibleRows.rows.slice(finalStartRowIndex, finalEndRowIndex + 1);
       const columnsInRange = visibleColumns.slice(finalStartColumnIndex, finalEndColumnIndex + 1);
 
-      const newModel = keepOtherSelected ? apiRef.current.getCellSelectionModel() : {};
+      const newModel = keepOtherSelected ? { ...apiRef.current.getCellSelectionModel() } : {};
 
       rowsInRange.forEach((row) => {
         if (!newModel[row.id]) {

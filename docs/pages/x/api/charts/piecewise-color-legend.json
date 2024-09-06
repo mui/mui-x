@@ -20,7 +20,6 @@
       "default": "The first axis item."
     },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "hidden": { "type": { "name": "bool" }, "default": "false" },
     "hideFirst": { "type": { "name": "bool" }, "default": "false" },
     "hideLast": { "type": { "name": "bool" }, "default": "false" },
     "itemGap": { "type": { "name": "number" }, "default": "10" },
@@ -52,21 +51,39 @@
   ],
   "classes": [
     {
+      "key": "column",
+      "className": "MuiPiecewiseColorLegend-column",
+      "description": "Styles applied to the legend with column layout.",
+      "isGlobal": false
+    },
+    {
+      "key": "label",
+      "className": "MuiPiecewiseColorLegend-label",
+      "description": "Styles applied to the series label.",
+      "isGlobal": false
+    },
+    {
       "key": "mark",
       "className": "MuiPiecewiseColorLegend-mark",
-      "description": "",
+      "description": "Styles applied to series mark element.",
       "isGlobal": false
     },
     {
       "key": "root",
       "className": "MuiPiecewiseColorLegend-root",
-      "description": "",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "row",
+      "className": "MuiPiecewiseColorLegend-row",
+      "description": "Styles applied to the legend with row layout.",
       "isGlobal": false
     },
     {
       "key": "series",
       "className": "MuiPiecewiseColorLegend-series",
-      "description": "",
+      "description": "Styles applied to a series element.",
       "isGlobal": false
     }
   ],

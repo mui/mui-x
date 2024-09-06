@@ -23,14 +23,14 @@ describe('<DateRangePicker />', () => {
 
   it('should not open mobile picker dialog when clicked on input', () => {
     // Test with v7 input
-    const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+    const { unmount } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
     fireEvent.click(getFieldInputRoot());
     clock.runToLast();
 
     expect(screen.queryByRole('tooltip')).not.to.equal(null);
     expect(screen.queryByRole('dialog')).to.equal(null);
 
-    v7Response.unmount();
+    unmount();
 
     // Test with v6 input
     renderWithProps({ enableAccessibleFieldDOMStructure: false });

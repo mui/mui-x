@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen, userEvent } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -23,16 +23,16 @@ describe('<DesktopDateTimeRangePicker />', () => {
       openPicker({ type: 'date-time-range', variant: 'desktop', initialFocus: 'start' });
 
       // select start date range
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '11' }));
-      userEvent.mousePress(screen.getByRole('option', { name: '4 hours' }));
-      userEvent.mousePress(screen.getByRole('option', { name: '5 minutes' }));
-      userEvent.mousePress(screen.getByRole('option', { name: 'PM' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '11' }));
+      fireEvent.click(screen.getByRole('option', { name: '4 hours' }));
+      fireEvent.click(screen.getByRole('option', { name: '5 minutes' }));
+      fireEvent.click(screen.getByRole('option', { name: 'PM' }));
 
       // select end date range on the same day
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '11' }));
-      userEvent.mousePress(screen.getByRole('option', { name: '5 hours' }));
-      userEvent.mousePress(screen.getByRole('option', { name: '10 minutes' }));
-      userEvent.mousePress(screen.getByRole('option', { name: 'PM' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '11' }));
+      fireEvent.click(screen.getByRole('option', { name: '5 hours' }));
+      fireEvent.click(screen.getByRole('option', { name: '10 minutes' }));
+      fireEvent.click(screen.getByRole('option', { name: 'PM' }));
 
       const startSectionsContainer = getFieldSectionsContainer(0);
       const endSectionsContainer = getFieldSectionsContainer(1);

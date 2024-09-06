@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { ErrorBoundary, createRenderer } from '@mui/internal-test-utils';
+import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils';
 import { useHighlighted } from './useHighlighted';
 import { HighlightedProvider } from './HighlightedProvider';
 import { SeriesProvider } from '../SeriesProvider';
@@ -42,7 +42,7 @@ describe('useHighlighted', () => {
   });
 
   it('should not throw an error when parent context is present', () => {
-    const { getByText } = render(
+    render(
       <PluginProvider>
         <SeriesProvider series={[]}>
           <HighlightedProvider highlightedItem={{ seriesId: 'test-id' }}>
@@ -52,6 +52,6 @@ describe('useHighlighted', () => {
       </PluginProvider>,
     );
 
-    expect(getByText('test-id')).toBeVisible();
+    expect(screen.getByText('test-id')).toBeVisible();
   });
 });

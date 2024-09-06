@@ -14,7 +14,7 @@ import { hasPlugin } from '../../internals/utils/plugins';
 import { useSelector } from '@mui/x-tree-view/internals/hooks/useSelector';
 import { treeViewExpandedItemsMapSelector } from '@mui/x-tree-view/internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
 
-interface UseTreeItem2Interactions {
+export interface UseTreeItem2Interactions {
   handleExpansion: (event: React.MouseEvent) => void;
   handleSelection: (event: React.MouseEvent) => void;
   handleCheckboxSelection: (event: React.ChangeEvent<HTMLInputElement>) => void;

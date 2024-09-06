@@ -107,7 +107,7 @@ function MarkElement(props: MarkElementProps) {
   });
   const { axis } = React.useContext(InteractionContext);
 
-  const position = useSpring({ x, y, immediate: skipAnimation });
+  const position = useSpring({ to: { x, y }, immediate: skipAnimation });
   const ownerState = {
     id,
     classes: innerClasses,

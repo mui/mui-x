@@ -77,6 +77,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
         value,
         formattedValue: value,
         isEditable: false,
+        api: {} as any,
       };
       if (colDef && colDef.valueFormatter) {
         params.formattedValue = colDef.valueFormatter(value as never, row, colDef, apiRef);

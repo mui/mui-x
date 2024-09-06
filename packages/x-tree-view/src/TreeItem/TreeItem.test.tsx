@@ -21,12 +21,12 @@ describeTreeView<[]>('TreeItem component', ({ render, treeItemComponentName }) =
         </div>
       ));
 
-      const response = render({
+      const view = render({
         items: [{ id: '1' }],
         slotProps: { item: { ContentComponent } },
       });
 
-      expect(response.getItemContent('1').textContent).to.equal('MOCK CONTENT COMPONENT');
+      expect(view.getItemContent('1').textContent).to.equal('MOCK CONTENT COMPONENT');
     });
 
     it('should use the ContentProps prop when defined', function test() {
@@ -40,12 +40,12 @@ describeTreeView<[]>('TreeItem component', ({ render, treeItemComponentName }) =
         </div>
       ));
 
-      const response = render({
+      const view = render({
         items: [{ id: '1' }],
         slotProps: { item: { ContentComponent, ContentProps: { customProp: 'ABCDEF' } as any } },
       });
 
-      expect(response.getItemContent('1').textContent).to.equal('ABCDEF');
+      expect(view.getItemContent('1').textContent).to.equal('ABCDEF');
     });
 
     it('should render TreeItem when itemId prop is escaping characters without throwing an error', function test() {
@@ -53,11 +53,11 @@ describeTreeView<[]>('TreeItem component', ({ render, treeItemComponentName }) =
         this.skip();
       }
 
-      const response = render({
+      const view = render({
         items: [{ id: 'C:\\\\', label: 'ABCDEF' }],
       });
 
-      expect(response.getItemContent('C:\\\\').textContent).to.equal('ABCDEF');
+      expect(view.getItemContent('C:\\\\').textContent).to.equal('ABCDEF');
     });
   });
 });

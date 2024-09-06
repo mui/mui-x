@@ -151,6 +151,19 @@ Use the `onItemClick` prop to track the clicked item:
 
 ## Imperative API
 
+:::success
+To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+
+```tsx
+const apiRef = useTreeViewApiRef();
+
+return <RichTreeView apiRef={apiRef} items={ITEMS}>;
+```
+
+When your component first renders, `apiRef` will be `undefined`.
+After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
+:::
+
 ### Get an item by ID
 
 Use the `getItem` API method to get an item by its ID.

@@ -5,15 +5,15 @@ import { PickerValidDate } from '../../models';
 
 interface ValidationCommonProps<TError, TValue> {
   /**
-   * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
-   * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
-   * This can be used to render appropriate form error.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @param {TError} reason The reason why the current value is not valid.
-   * @param {TValue} value The invalid value.
+   * Callback fired when the error associated with the current value changes.
+   * When a validation error is detected, the `error` parameter contains a non-null value.
+   * This can be used to render an appropriate form error.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {TError} error The reason why the current value is not valid.
+   * @param {TValue} value The value associated with the error.
    */
-  onError?: (reason: TError, value: TValue) => void;
+  onError?: (error: TError, value: TValue) => void;
   value: TValue;
 }
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { expectPickerChangeHandlerValue } from 'test/utils/pickers';
-import { userEvent, screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTest, options) => {
@@ -49,7 +49,7 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
       );
 
       const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
-      userEvent.mousePress(shortcut);
+      fireEvent.click(shortcut);
 
       expect(onChange.callCount).to.equal(1);
       expectPickerChangeHandlerValue(pickerParams.type, onChange, values[1]);
@@ -87,7 +87,7 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
       );
 
       const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
-      userEvent.mousePress(shortcut);
+      fireEvent.click(shortcut);
 
       expect(onChange.callCount).to.equal(1);
       expectPickerChangeHandlerValue(pickerParams.type, onChange, values[1]);
@@ -125,7 +125,7 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
       );
 
       const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
-      userEvent.mousePress(shortcut);
+      fireEvent.click(shortcut);
 
       expect(onChange.callCount).to.equal(1);
       expectPickerChangeHandlerValue(pickerParams.type, onChange, values[1]);

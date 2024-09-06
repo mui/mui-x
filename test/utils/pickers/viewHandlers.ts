@@ -1,4 +1,4 @@
-import { fireTouchChangedEvent, userEvent, screen } from '@mui/internal-test-utils';
+import { fireEvent, fireTouchChangedEvent, screen } from '@mui/internal-test-utils';
 import { getClockTouchEvent, formatFullTimeValue } from 'test/utils/pickers';
 import { MuiPickersAdapter, TimeView } from '@mui/x-date-pickers/models';
 import { formatMeridiem } from '@mui/x-date-pickers/internals';
@@ -35,7 +35,7 @@ export const timeClockHandler: ViewHandler<TimeView> = {
 
 export const digitalClockHandler: ViewHandler<TimeView> = {
   setViewValue: (adapter, value) => {
-    userEvent.mousePress(screen.getByRole('option', { name: formatFullTimeValue(adapter, value) }));
+    fireEvent.click(screen.getByRole('option', { name: formatFullTimeValue(adapter, value) }));
   },
 };
 
@@ -44,10 +44,10 @@ export const multiSectionDigitalClockHandler: ViewHandler<TimeView> = {
     const hasMeridiem = adapter.is12HourCycleInCurrentLocale();
     const hoursLabel = parseInt(adapter.format(value, hasMeridiem ? 'hours12h' : 'hours24h'), 10);
     const minutesLabel = adapter.getMinutes(value).toString();
-    userEvent.mousePress(screen.getByRole('option', { name: `${hoursLabel} hours` }));
-    userEvent.mousePress(screen.getByRole('option', { name: `${minutesLabel} minutes` }));
+    fireEvent.click(screen.getByRole('option', { name: `${hoursLabel} hours` }));
+    fireEvent.click(screen.getByRole('option', { name: `${minutesLabel} minutes` }));
     if (hasMeridiem) {
-      userEvent.mousePress(
+      fireEvent.click(
         screen.getByRole('option', {
           name: formatMeridiem(adapter, adapter.getHours(value) >= 12 ? 'pm' : 'am'),
         }),

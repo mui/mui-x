@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useThemeProps } from '@mui/material/styles';
 import { AreaPlot, AreaPlotProps, AreaPlotSlotProps, AreaPlotSlots } from './AreaPlot';
 import { LinePlot, LinePlotProps, LinePlotSlotProps, LinePlotSlots } from './LinePlot';
 import {
@@ -135,7 +136,8 @@ export interface LineChartProps
  *
  * - [LineChart API](https://mui.com/x/api/charts/line-chart/)
  */
-const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref) {
+const LineChart = React.forwardRef(function LineChart(inProps: LineChartProps, ref) {
+  const props = useThemeProps({ props: inProps, name: 'MuiLineChart' });
   const {
     chartContainerProps,
     axisClickHandlerProps,
@@ -157,7 +159,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
   return (
     <ResponsiveChartContainer ref={ref} {...chartContainerProps}>
       {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
-      {props.grid && <ChartsGrid {...gridProps} />}
+      <ChartsGrid {...gridProps} />
       <g {...clipPathGroupProps}>
         <AreaPlot {...areaPlotProps} />
         <LinePlot {...linePlotProps} />
@@ -251,6 +253,20 @@ LineChart.propTypes = {
     classes: PropTypes.object,
     direction: PropTypes.oneOf(['column', 'row']),
     hidden: PropTypes.bool,
+    itemGap: PropTypes.number,
+    itemMarkHeight: PropTypes.number,
+    itemMarkWidth: PropTypes.number,
+    labelStyle: PropTypes.object,
+    markGap: PropTypes.number,
+    padding: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.shape({
+        bottom: PropTypes.number,
+        left: PropTypes.number,
+        right: PropTypes.number,
+        top: PropTypes.number,
+      }),
+    ]),
     position: PropTypes.shape({
       horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
       vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,

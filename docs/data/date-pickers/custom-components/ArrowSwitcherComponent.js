@@ -43,7 +43,6 @@ export default function ArrowSwitcherComponent() {
         {currentComponent === 'date' && (
           <DateCalendar defaultValue={dayjs('2022-04-17')} slots={slots} />
         )}
-
         {currentComponent === 'time' && (
           <Box sx={{ position: 'relative' }}>
             <TimeClock
@@ -53,7 +52,6 @@ export default function ArrowSwitcherComponent() {
             />
           </Box>
         )}
-
         {currentComponent === 'dateRange' && (
           <DateRangeCalendar
             defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}

@@ -132,7 +132,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     pinnedPosition,
     indexInSection,
     sectionLength,
-    rootProps.showCellVerticalBorder,
+    rootProps.showColumnVerticalBorder,
     gridHasFiller,
   );
 

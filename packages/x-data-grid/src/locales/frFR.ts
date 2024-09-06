@@ -42,7 +42,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   columnsManagementSearchTitle: 'Rechercher',
   columnsManagementNoColumns: 'Pas de colonnes',
   columnsManagementShowHideAllText: 'Afficher/masquer toutes',
-  // columnsManagementReset: 'Reset',
+  columnsManagementReset: 'Réinitialiser',
 
   // Filter panel text
   filterPanelAddFilter: 'Ajouter un filtre',

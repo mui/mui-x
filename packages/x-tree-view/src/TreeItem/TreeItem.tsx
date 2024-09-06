@@ -27,6 +27,7 @@ import { TreeItem2Provider } from '../TreeItem2Provider';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { useTreeItemState } from './useTreeItemState';
 import { isTargetInDescendants } from '../internals/utils/tree';
+import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
 import { useSelector } from '@mui/x-tree-view/internals/hooks/useSelector';
 import { treeViewDefaultFocusableItemIdSelector } from '@mui/x-tree-view/internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 
@@ -223,8 +224,16 @@ export const TreeItem = React.forwardRef(function TreeItem(
     ...other
   } = props;
 
-  const { expanded, focused, selected, disabled, editing, handleExpansion } =
-    useTreeItemState(itemId);
+  const {
+    expanded,
+    focused,
+    selected,
+    disabled,
+    editing,
+    handleExpansion,
+    handleCancelItemLabelEditing,
+    handleSaveItemLabel,
+  } = useTreeItemState(itemId);
 
   const { contentRef, rootRef, propsEnhancers } = runItemPlugins<TreeItemProps>(props);
   const rootRefObject = React.useRef<HTMLLIElement>(null);
@@ -380,28 +389,33 @@ export const TreeItem = React.forwardRef(function TreeItem(
     treeViewDefaultFocusableItemIdSelector(storeValue) === itemId ? 0 : -1,
   );
 
+  const sharedPropsEnhancerParams: Omit<
+    TreeViewItemPluginSlotPropsEnhancerParams,
+    'externalEventHandlers'
+  > = {
+    rootRefObject,
+    contentRefObject,
+    interactions: { handleSaveItemLabel, handleCancelItemLabelEditing },
+  };
+
   const enhancedRootProps =
     propsEnhancers.root?.({
-      rootRefObject,
-      contentRefObject,
+      ...sharedPropsEnhancerParams,
       externalEventHandlers: extractEventHandlers(other),
     }) ?? {};
   const enhancedContentProps =
     propsEnhancers.content?.({
-      rootRefObject,
-      contentRefObject,
+      ...sharedPropsEnhancerParams,
       externalEventHandlers: extractEventHandlers(ContentProps),
     }) ?? {};
   const enhancedDragAndDropOverlayProps =
     propsEnhancers.dragAndDropOverlay?.({
-      rootRefObject,
-      contentRefObject,
+      ...sharedPropsEnhancerParams,
       externalEventHandlers: {},
     }) ?? {};
   const enhancedLabelInputProps =
     propsEnhancers.labelInput?.({
-      rootRefObject,
-      contentRefObject,
+      ...sharedPropsEnhancerParams,
       externalEventHandlers: {},
     }) ?? {};
 

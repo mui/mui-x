@@ -11,10 +11,19 @@ export interface LegendRendererProps extends Omit<LegendPerItemProps, 'itemsToDi
    * @deprecated Use the `useDrawingArea` hook instead.
    */
   drawingArea: Omit<DrawingArea, 'isPointInside'>;
+  /**
+   * Set to true to hide the legend.
+   * @default false
+   */
+  hidden?: boolean;
 }
 
 function DefaultChartsLegend(props: LegendRendererProps) {
-  const { drawingArea, seriesToDisplay, ...other } = props;
+  const { drawingArea, seriesToDisplay, hidden, ...other } = props;
+
+  if (hidden) {
+    return null;
+  }
 
   return <LegendPerItem {...other} itemsToDisplay={seriesToDisplay} />;
 }

@@ -70,10 +70,10 @@
       "description": "Callback fired when component requests to be closed. Can be fired when selecting (by default on <code>desktop</code> mode) or clearing a value."
     },
     "onError": {
-      "description": "Callback fired when the error associated to the current value changes. If the error has a non-null value, then the <code>TextField</code> will be rendered in <code>error</code> state.",
+      "description": "Callback fired when the error associated with the current value changes. When a validation error is detected, the <code>error</code> parameter contains a non-null value. This can be used to render an appropriate form error.",
       "typeDescriptions": {
-        "error": "The new error describing why the current value is not valid.",
-        "value": "The value associated to the error."
+        "error": "The reason why the current value is not valid.",
+        "value": "The value associated with the error."
       }
     },
     "onMonthChange": {

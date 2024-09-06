@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, userEvent } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGrid, GridValueFormatter } from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -180,7 +181,7 @@ describe('<DataGrid /> - Cells', () => {
       </div>,
     );
 
-    userEvent.mousePress(getCell(0, 0));
+    fireUserEvent.mousePress(getCell(0, 0));
 
     expect(() => {
       getCell(1, 0).focus();
@@ -203,7 +204,7 @@ describe('<DataGrid /> - Cells', () => {
     const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
 
     const cell = getCell(1, 3);
-    userEvent.mousePress(cell);
+    fireUserEvent.mousePress(cell);
 
     const activeElementTextContent = document.activeElement?.textContent;
     const columnWidth = document.activeElement!.clientWidth;
@@ -240,7 +241,7 @@ describe('<DataGrid /> - Cells', () => {
     const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
 
     const thirdRowCell = getCell(2, 0);
-    userEvent.mousePress(thirdRowCell);
+    fireUserEvent.mousePress(thirdRowCell);
 
     let scrollTop = 6 * rowHeight;
     virtualScroller.scrollTop = scrollTop;

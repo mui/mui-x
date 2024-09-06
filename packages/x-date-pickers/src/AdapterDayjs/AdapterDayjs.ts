@@ -513,7 +513,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public startOfWeek = (value: Dayjs) => {
-    return this.adjustOffset(value.startOf('week'));
+    return this.adjustOffset(this.setLocaleToValue(value).startOf('week'));
   };
 
   public startOfDay = (value: Dayjs) => {
@@ -529,7 +529,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public endOfWeek = (value: Dayjs) => {
-    return this.adjustOffset(value.endOf('week'));
+    return this.adjustOffset(this.setLocaleToValue(value).endOf('week'));
   };
 
   public endOfDay = (value: Dayjs) => {
@@ -639,9 +639,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public getWeekArray = (value: Dayjs) => {
-    const cleanValue = this.setLocaleToValue(value);
-    const start = this.startOfWeek(this.startOfMonth(cleanValue));
-    const end = this.endOfWeek(this.endOfMonth(cleanValue));
+    const start = this.startOfWeek(this.startOfMonth(value));
+    const end = this.endOfWeek(this.endOfMonth(value));
 
     let count = 0;
     let current = start;

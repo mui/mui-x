@@ -4,7 +4,7 @@ import * as React from 'react';
 import MenuList from '@mui/material/MenuList';
 import { styled } from '@mui/material/styles';
 
-import { isHideMenuKey, isTabKey } from '../../../utils/keyboardUtils';
+import { isHideMenuKey } from '../../../utils/keyboardUtils';
 import { GridColumnMenuContainerProps } from './GridColumnMenuProps';
 import { gridClasses } from '../../../constants/gridClasses';
 
@@ -18,7 +18,7 @@ const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMen
 
     const handleListKeyDown = React.useCallback(
       (event: React.KeyboardEvent) => {
-        if (isTabKey(event.key)) {
+        if (event.key === 'Tab') {
           event.preventDefault();
         }
         if (isHideMenuKey(event.key)) {

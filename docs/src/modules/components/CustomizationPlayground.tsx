@@ -360,7 +360,7 @@ const CustomizationPlayground = function CustomizationPlayground({
                     id="select-component"
                     label=""
                     value={selectedDemo}
-                    onChange={(e) => selectDemo(e.target.value as string)}
+                    onChange={(event) => selectDemo(event.target.value as string)}
                   >
                     {Object.keys(examples || {}).map((item) => (
                       <MenuItem key={item} value={item}>

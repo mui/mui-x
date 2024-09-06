@@ -16,6 +16,9 @@ import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-p
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
   alignItems: 'center',
+  '& .MuiInputAdornment-root': {
+    height: 'auto',
+  },
 });
 
 const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content' })(

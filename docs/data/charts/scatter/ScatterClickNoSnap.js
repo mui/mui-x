@@ -27,7 +27,7 @@ const scatterChartsParams = {
       ],
       label: 'A',
       highlightScope: {
-        highlighted: 'item',
+        highlight: 'item',
       },
     },
     {
@@ -46,7 +46,7 @@ const scatterChartsParams = {
       ],
       label: 'B',
       highlightScope: {
-        highlighted: 'item',
+        highlight: 'item',
       },
     },
   ],

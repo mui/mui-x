@@ -25,6 +25,7 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the markCell element"
     },
+    "paper": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the paper element" },
     "root": { "description": "Styles applied to the root element." },
     "row": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the row element" },
     "table": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the table element" },

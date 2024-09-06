@@ -14,10 +14,10 @@ const StyledGridOverlay = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   height: '100%',
-  backgroundColor:
-    theme.palette.mode === 'light'
-      ? 'rgba(255, 255, 255, 0.9)'
-      : 'rgba(18, 18, 18, 0.9)',
+  backgroundColor: 'rgba(18, 18, 18, 0.9)',
+  ...theme.applyStyles('light', {
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+  }),
 }));
 
 function CircularProgressWithLabel(

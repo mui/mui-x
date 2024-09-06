@@ -19,35 +19,35 @@ describe('<DesktopDateTimePicker /> - Field', () => {
   });
 
   it('should pass the ampm prop to the field', () => {
-    const v7Response = renderWithProps({
+    const view = renderWithProps({
       enableAccessibleFieldDOMStructure: true as const,
       ampm: true,
     });
 
-    expectFieldValueV7(v7Response.getSectionsContainer(), 'MM/DD/YYYY hh:mm aa');
+    expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY hh:mm aa');
 
-    v7Response.setProps({ ampm: false });
-    expectFieldValueV7(v7Response.getSectionsContainer(), 'MM/DD/YYYY hh:mm');
+    view.setProps({ ampm: false });
+    expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY hh:mm');
   });
 
   it('should adapt the default field format based on the props of the picker', () => {
     const testFormat = (props: DesktopDateTimePickerProps<any, any>, expectedFormat: string) => {
       // Test with v7 input
-      const v7Response = renderWithProps(
+      let view = renderWithProps(
         { ...props, enableAccessibleFieldDOMStructure: true as const },
         { componentFamily: 'picker' },
       );
-      expectFieldValueV7(v7Response.getSectionsContainer(), expectedFormat);
-      v7Response.unmount();
+      expectFieldValueV7(view.getSectionsContainer(), expectedFormat);
+      view.unmount();
 
       // Test with v6 input
-      const v6Response = renderWithProps(
+      view = renderWithProps(
         { ...props, enableAccessibleFieldDOMStructure: false as const },
         { componentFamily: 'picker' },
       );
       const input = getTextbox();
       expectFieldPlaceholderV6(input, expectedFormat);
-      v6Response.unmount();
+      view.unmount();
     };
 
     testFormat({ views: ['day', 'hours', 'minutes'], ampm: false }, 'DD hh:mm');

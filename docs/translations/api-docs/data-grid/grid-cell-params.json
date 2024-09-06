@@ -1,6 +1,7 @@
 {
   "interfaceDescription": "Object passed as parameter in the column <a href=\"/x/api/data-grid/grid-col-def/\">GridColDef</a> cell renderer.",
   "propertiesDescriptions": {
+    "api": { "description": "GridApi that let you manipulate the grid." },
     "cellMode": { "description": "The mode of the cell." },
     "colDef": { "description": "The column of the row that the current cell belongs to." },
     "field": { "description": "The column field of the cell that triggered the event." },

@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ScaleSequential } from '@mui/x-charts-vendor/d3-scale';
 import { useTheme } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import ChartsContinuousGradient from '../internals/components/ChartsAxesGradients/ChartsContinuousGradient';
 import { AxisDefaultized, ContinuousScaleName } from '../models/axis';
 import { useChartId, useDrawingArea } from '../hooks';
@@ -205,6 +206,7 @@ const defaultLabelFormatter: LabelFormatter = ({ formattedValue }) => formattedV
 
 function ContinuousColorLegend(props: ContinuousColorLegendProps) {
   const theme = useTheme();
+  const isRtl = useRtl();
   const {
     id: idProp,
     minLabel = defaultLabelFormatter,
@@ -223,8 +225,6 @@ function ContinuousColorLegend(props: ContinuousColorLegendProps) {
 
   const chartId = useChartId();
   const id = idProp ?? `gradient-legend-${chartId}`;
-
-  const isRTL = theme.direction === 'rtl';
 
   const axisItem = useAxis({ axisDirection, axisId });
   const { width, height, left, right, top, bottom } = useDrawingArea();
@@ -277,7 +277,7 @@ function ContinuousColorLegend(props: ContinuousColorLegendProps) {
   // Place bar and texts
 
   const barBox =
-    direction === 'column' || (isRTL && direction === 'row')
+    direction === 'column' || (isRtl && direction === 'row')
       ? { width: thickness, height: size }
       : { width: size, height: thickness };
 

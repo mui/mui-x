@@ -18,10 +18,10 @@ function reduce(values, reducer, value) {
     if (done) return;
     ++index;
   }
-  while (({
+  while ({
     done,
     value: next
-  } = iterator.next()), !done) {
+  } = iterator.next(), !done) {
     value = reducer(value, next, ++index, values);
   }
   return value;

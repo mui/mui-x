@@ -106,13 +106,13 @@ describe('<DataGrid /> - Density', () => {
         );
       }
 
-      const { setProps, getByText } = render(<Grid rowHeight={rowHeight} density="standard" />);
+      const { setProps } = render(<Grid rowHeight={rowHeight} density="standard" />);
 
       expectHeight(rowHeight);
 
-      fireEvent.click(getByText('Density'));
+      fireEvent.click(screen.getByText('Density'));
       clock.tick(100);
-      fireEvent.click(getByText('Compact'));
+      fireEvent.click(screen.getByText('Compact'));
 
       // Not updated because of the controlled prop
       expectHeight(rowHeight);
@@ -138,9 +138,9 @@ describe('<DataGrid /> - Density', () => {
           </div>
         );
       }
-      const { getByText } = render(<Test />);
-      fireEvent.click(getByText('Density'));
-      fireEvent.click(getByText('Comfortable'));
+      render(<Test />);
+      fireEvent.click(screen.getByText('Density'));
+      fireEvent.click(screen.getByText('Comfortable'));
       expect(onDensityChange.callCount).to.equal(1);
       expect(onDensityChange.firstCall.args[0]).to.equal('comfortable');
     });
@@ -149,7 +149,7 @@ describe('<DataGrid /> - Density', () => {
   describe('density selection menu', () => {
     it('should increase grid density when selecting compact density', () => {
       const rowHeight = 30;
-      const { getByText } = render(
+      render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
@@ -161,16 +161,16 @@ describe('<DataGrid /> - Density', () => {
         </div>,
       );
 
-      fireEvent.click(getByText('Density'));
+      fireEvent.click(screen.getByText('Density'));
       clock.tick(100);
-      fireEvent.click(getByText('Compact'));
+      fireEvent.click(screen.getByText('Compact'));
 
       expectHeight(rowHeight * COMPACT_DENSITY_FACTOR);
     });
 
     it('should decrease grid density when selecting comfortable density', () => {
       const rowHeight = 30;
-      const { getByText } = render(
+      render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
@@ -182,8 +182,8 @@ describe('<DataGrid /> - Density', () => {
         </div>,
       );
 
-      fireEvent.click(getByText('Density'));
-      fireEvent.click(getByText('Comfortable'));
+      fireEvent.click(screen.getByText('Density'));
+      fireEvent.click(screen.getByText('Comfortable'));
 
       expectHeight(rowHeight * COMFORTABLE_DENSITY_FACTOR);
     });

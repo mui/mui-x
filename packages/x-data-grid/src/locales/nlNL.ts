@@ -39,10 +39,10 @@ const nlNLGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Downloaden als Excel-bestand',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: 'Zoeken',
+  columnsManagementNoColumns: 'Geen kolommen',
+  columnsManagementShowHideAllText: 'Toon/Verberg Alle',
+  columnsManagementReset: 'Reset',
 
   // Filter panel text
   filterPanelAddFilter: 'Filter toevoegen',

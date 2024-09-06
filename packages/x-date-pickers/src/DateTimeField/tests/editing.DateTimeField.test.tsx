@@ -26,15 +26,15 @@ describe('<DateTimeField /> - Editing', () => {
       const onChange = spy();
       const referenceDate = adapterToUse.date('2012-05-03T14:30:00');
 
-      const v7Response = renderWithProps({
+      const view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         onChange,
         referenceDate,
         format: adapterToUse.formats.month,
       });
 
-      v7Response.selectSection('month');
-      fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
+      view.selectSection('month');
+      fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowUp' });
 
       // All sections not present should equal the one from the referenceDate, and the month should equal January (because it's an ArrowUp on an empty month).
       expect(onChange.lastCall.firstArg).toEqualDateTime(adapterToUse.setMonth(referenceDate, 0));
@@ -45,7 +45,7 @@ describe('<DateTimeField /> - Editing', () => {
       const value = adapterToUse.date('2018-11-03T22:15:00');
       const referenceDate = adapterToUse.date('2012-05-03T14:30:00');
 
-      const v7Response = renderWithProps({
+      const view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         onChange,
         referenceDate,
@@ -53,8 +53,8 @@ describe('<DateTimeField /> - Editing', () => {
         format: adapterToUse.formats.month,
       });
 
-      v7Response.selectSection('month');
-      fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
+      view.selectSection('month');
+      fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowUp' });
 
       // Should equal the initial `value` prop with one less month.
       expect(onChange.lastCall.firstArg).toEqualDateTime(adapterToUse.setMonth(value, 11));
@@ -65,7 +65,7 @@ describe('<DateTimeField /> - Editing', () => {
       const defaultValue = adapterToUse.date('2018-11-03T22:15:00');
       const referenceDate = adapterToUse.date('2012-05-03T14:30:00');
 
-      const v7Response = renderWithProps({
+      const view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         onChange,
         referenceDate,
@@ -73,8 +73,8 @@ describe('<DateTimeField /> - Editing', () => {
         format: adapterToUse.formats.month,
       });
 
-      v7Response.selectSection('month');
-      fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
+      view.selectSection('month');
+      fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowUp' });
 
       // Should equal the initial `defaultValue` prop with one less month.
       expect(onChange.lastCall.firstArg).toEqualDateTime(adapterToUse.setMonth(defaultValue, 11));
@@ -84,14 +84,14 @@ describe('<DateTimeField /> - Editing', () => {
       it('should only keep year when granularity = month', () => {
         const onChange = spy();
 
-        const v7Response = renderWithProps({
+        const view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           onChange,
           format: adapterToUse.formats.month,
         });
 
-        v7Response.selectSection('month');
-        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
+        view.selectSection('month');
+        fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowUp' });
 
         expect(onChange.lastCall.firstArg).toEqualDateTime('2012-01-01');
       });
@@ -99,14 +99,14 @@ describe('<DateTimeField /> - Editing', () => {
       it('should only keep year and month when granularity = day', () => {
         const onChange = spy();
 
-        const v7Response = renderWithProps({
+        const view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           onChange,
           format: adapterToUse.formats.dayOfMonth,
         });
 
-        v7Response.selectSection('day');
-        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
+        view.selectSection('day');
+        fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowUp' });
 
         expect(onChange.lastCall.firstArg).toEqualDateTime('2012-05-01');
       });
@@ -114,20 +114,20 @@ describe('<DateTimeField /> - Editing', () => {
       it('should only keep up to the hours when granularity = minutes', () => {
         const onChange = spy();
 
-        const v7Response = renderWithProps({
+        const view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           onChange,
           format: adapterToUse.formats.fullTime24h,
         });
 
-        v7Response.selectSection('hours');
+        view.selectSection('hours');
 
         // Set hours
-        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
+        fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowUp' });
 
         // Set minutes
-        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowRight' });
-        fireEvent.keyDown(v7Response.getActiveSection(1), { key: 'ArrowUp' });
+        fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
+        fireEvent.keyDown(view.getActiveSection(1), { key: 'ArrowUp' });
 
         expect(onChange.lastCall.firstArg).toEqualDateTime('2012-05-03T00:00:00.000Z');
       });
@@ -138,15 +138,15 @@ describe('<DateTimeField /> - Editing', () => {
         const onChange = spy();
         const minDate = adapterToUse.date('2030-05-05T18:30:00');
 
-        const v7Response = renderWithProps({
+        const view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           onChange,
           minDate,
           format: adapterToUse.formats.month,
         });
 
-        v7Response.selectSection('month');
-        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
+        view.selectSection('month');
+        fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowUp' });
 
         // Respect the granularity and the minDate
         expect(onChange.lastCall.firstArg).toEqualDateTime('2030-01-01T00:00');
@@ -156,15 +156,15 @@ describe('<DateTimeField /> - Editing', () => {
         const onChange = spy();
         const minDate = adapterToUse.date('2007-05-05T18:30:00');
 
-        const v7Response = renderWithProps({
+        const view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           onChange,
           minDate,
           format: adapterToUse.formats.month,
         });
 
-        v7Response.selectSection('month');
-        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
+        view.selectSection('month');
+        fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowUp' });
 
         // Respect the granularity but not the minDate
         expect(onChange.lastCall.firstArg).toEqualDateTime('2012-01-01T00:00');
@@ -174,15 +174,15 @@ describe('<DateTimeField /> - Editing', () => {
         const onChange = spy();
         const maxDate = adapterToUse.date('2007-05-05T18:30:00');
 
-        const v7Response = renderWithProps({
+        const view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           onChange,
           maxDate,
           format: adapterToUse.formats.month,
         });
 
-        v7Response.selectSection('month');
-        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
+        view.selectSection('month');
+        fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowUp' });
 
         // Respect the granularity and the minDate
         expect(onChange.lastCall.firstArg).toEqualDateTime('2007-01-01T00:00');
@@ -192,15 +192,15 @@ describe('<DateTimeField /> - Editing', () => {
         const onChange = spy();
         const maxDate = adapterToUse.date('2030-05-05T18:30:00');
 
-        const v7Response = renderWithProps({
+        const view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           onChange,
           maxDate,
           format: adapterToUse.formats.month,
         });
 
-        v7Response.selectSection('month');
-        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowUp' });
+        view.selectSection('month');
+        fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowUp' });
 
         // Respect the granularity but not the maxDate
         expect(onChange.lastCall.firstArg).toEqualDateTime('2012-01-01T00:00');
@@ -209,17 +209,17 @@ describe('<DateTimeField /> - Editing', () => {
   });
 
   it('should correctly update `value` when both `format` and `value` are changed', () => {
-    const v7Response = renderWithProps({
+    const view = renderWithProps({
       enableAccessibleFieldDOMStructure: true,
       value: null,
       format: 'P',
     });
-    expectFieldValueV7(v7Response.getSectionsContainer(), 'MM/DD/YYYY');
+    expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
 
-    v7Response.setProps({
+    view.setProps({
       format: 'Pp',
       value: adapterToUse.date('2012-05-03T14:30:00'),
     });
-    expectFieldValueV7(v7Response.getSectionsContainer(), '05/03/2012, 02:30 PM');
+    expectFieldValueV7(view.getSectionsContainer(), '05/03/2012, 02:30 PM');
   });
 });

@@ -55,3 +55,14 @@ While the `zoom` prop is an array of objects that define the zoom state for each
 - **end**: The ending percentage of the zoom range.
 
 {{"demo": "ZoomControlled.js"}}
+
+## Zoom filtering
+
+You can make the zoom of an axis affect one or more axes extremums by setting the `zoom.filterMode` prop on the axis config.
+
+- If `zoom.filterMode` is set to `"discard"` the data points outside the visible range of this axis are filtered out and the other axes will modify their zoom range to fit the visible ones.
+- If `zoom.filterMode` is set to `"keep"` (default) the data points outside the visible range are kept. Then, other axes will not be impacted.
+
+See how the secondary axis adapts to the visible part of the primary axis in the following example.
+
+{{"demo": "ZoomFilterMode.js"}}

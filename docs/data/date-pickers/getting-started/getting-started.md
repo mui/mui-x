@@ -86,7 +86,7 @@ This component receives your chosen [date library's adapter](https://mui.com/x/r
 
 Each demonstration in the documentation has its own `LocalizationProvider` wrapper.
 This is **not** a pattern to reproduce.
-The reason is to keep examples atomic and functional—especially when running in a CodeSandbox.
+The reason is to keep examples atomic and functional, especially when running in a CodeSandbox.
 
 The general recommendation is to declare the `LocalizationProvider` once, wrapping your entire application.
 Then, you don't need to repeat the boilerplate code for every Date and Time Picker in your application.

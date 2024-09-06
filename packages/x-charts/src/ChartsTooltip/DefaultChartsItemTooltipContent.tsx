@@ -43,7 +43,7 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
     series.valueFormatter as CommonSeriesType<typeof value>['valueFormatter']
   )?.(value, { dataIndex: itemData.dataIndex });
   return (
-    <ChartsTooltipPaper sx={sx} className={classes.root}>
+    <ChartsTooltipPaper sx={sx} className={classes.paper}>
       <ChartsTooltipTable className={classes.table}>
         <tbody>
           <ChartsTooltipRow className={classes.row}>

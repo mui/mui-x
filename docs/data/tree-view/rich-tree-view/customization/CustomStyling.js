@@ -35,10 +35,7 @@ const MUI_X_PRODUCTS = [
 ];
 
 const CustomTreeItem = styled(TreeItem)(({ theme }) => ({
-  color:
-    theme.palette.mode === 'light'
-      ? theme.palette.grey[800]
-      : theme.palette.grey[200],
+  color: theme.palette.grey[200],
   [`& .${treeItemClasses.content}`]: {
     borderRadius: theme.spacing(0.5),
     padding: theme.spacing(0.5, 1),
@@ -50,18 +47,23 @@ const CustomTreeItem = styled(TreeItem)(({ theme }) => ({
   },
   [`& .${treeItemClasses.iconContainer}`]: {
     borderRadius: '50%',
-    backgroundColor:
-      theme.palette.mode === 'light'
-        ? alpha(theme.palette.primary.main, 0.25)
-        : theme.palette.primary.dark,
-    color: theme.palette.mode === 'dark' && theme.palette.primary.contrastText,
+    backgroundColor: theme.palette.primary.dark,
     padding: theme.spacing(0, 1.2),
+    ...theme.applyStyles('light', {
+      backgroundColor: alpha(theme.palette.primary.main, 0.25),
+    }),
+    ...theme.applyStyles('dark', {
+      color: theme.palette.primary.contrastText,
+    }),
   },
   [`& .${treeItemClasses.groupTransition}`]: {
     marginLeft: 15,
     paddingLeft: 18,
     borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
   },
+  ...theme.applyStyles('light', {
+    color: theme.palette.grey[800],
+  }),
 }));
 
 export default function CustomStyling() {
