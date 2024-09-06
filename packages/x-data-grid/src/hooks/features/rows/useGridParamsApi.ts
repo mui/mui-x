@@ -106,6 +106,27 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
     [apiRef],
   );
 
+  const getDefaultCellValue = React.useCallback<GridParamsApi['getDefaultCellValue']>(
+    (field) => {
+      const colDef = apiRef.current.getColumn(field);
+
+      switch (colDef.type) {
+        case 'boolean':
+          return false;
+        case 'date':
+        case 'dateTime':
+        case 'number':
+          return undefined;
+        case 'singleSelect':
+          return null;
+        case 'string':
+        default:
+          return '';
+      }
+    },
+    [apiRef],
+  );
+
   const getRowValue = React.useCallback<GridParamsApi['getRowValue']>(
     (row, colDef) => {
       const field = colDef.field;
@@ -164,6 +185,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
 
   const paramsApi: GridParamsApi = {
     getCellValue,
+    getDefaultCellValue,
     getCellParams,
     getCellElement,
     getRowValue,
