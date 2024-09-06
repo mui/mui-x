@@ -1,5 +1,9 @@
+import { useDateTimeField as useDateTimeFieldExport } from './useDateTimeField';
+
 export { DateTimeField } from './DateTimeField';
-export { useDateTimeField as unstable_useDateTimeField } from './useDateTimeField';
+export const useDateTimeField = useDateTimeFieldExport;
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const unstable_useDateTimeField = useDateTimeFieldExport;
 export type {
   UseDateTimeFieldProps,
   UseDateTimeFieldComponentProps,

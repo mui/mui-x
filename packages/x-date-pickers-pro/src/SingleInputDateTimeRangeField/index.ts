@@ -1,5 +1,9 @@
+import { useSingleInputDateTimeRangeField as useSingleInputDateTimeRangeFieldExport } from './useSingleInputDateTimeRangeField';
+
 export { SingleInputDateTimeRangeField } from './SingleInputDateTimeRangeField';
-export { useSingleInputDateTimeRangeField as unstable_useSingleInputDateTimeRangeField } from './useSingleInputDateTimeRangeField';
+export const useSingleInputDateTimeRangeField = useSingleInputDateTimeRangeFieldExport;
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const unstable_useSingleInputDateTimeRangeField = useSingleInputDateTimeRangeFieldExport;
 export type {
   UseSingleInputDateTimeRangeFieldProps,
   SingleInputDateTimeRangeFieldProps,

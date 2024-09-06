@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
+import { useDateField } from '@mui/x-date-pickers/DateField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 
 const BrowserField = React.forwardRef((props, ref) => {

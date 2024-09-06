@@ -5,10 +5,7 @@ import Box from '@mui/material/Box';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
-import {
-  unstable_useDateField as useDateField,
-  UseDateFieldProps,
-} from '@mui/x-date-pickers/DateField';
+import { useDateField, UseDateFieldProps } from '@mui/x-date-pickers/DateField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 import {
   BaseSingleInputFieldProps,
