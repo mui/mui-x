@@ -91,9 +91,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const dateSx = {
   [`& input[value=""]:not(:focus)`]: { color: 'transparent' },
 };
-const defaultInputComponents: {
-  [key in GridColType]: React.JSXElementConstructor<any> | null;
-} = {
+const defaultInputComponents: { [key in GridColType]: React.JSXElementConstructor<any> | null } = {
   string: GridFilterInputValue,
   number: GridFilterInputValue,
   date: GridFilterInputDate,
