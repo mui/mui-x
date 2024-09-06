@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   DataGrid,
+  GridSlotProps,
   GridSlots,
   GridToolbarContainer,
   GridToolbarFilterButton,
@@ -44,7 +45,7 @@ export default function CustomFilterPanelPosition() {
           },
           toolbar: {
             setFilterButtonEl,
-          },
+          } as GridSlotProps['toolbar'],
         }}
       />
     </div>

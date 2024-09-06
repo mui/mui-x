@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack';
 import {
   DataGridPro,
   GridInitialState,
+  GridSlotProps,
   GridSlots,
   GridToolbarContainer,
   GridToolbarDensitySelector,
@@ -64,7 +65,7 @@ export default function RestoreStateInitialState() {
           {...data}
           loading={loading}
           slots={{ toolbar: GridCustomToolbar as GridSlots['toolbar'] }}
-          slotProps={{ toolbar: { syncState } }}
+          slotProps={{ toolbar: { syncState } as GridSlotProps['toolbar'] }}
         />
       </Box>
       <Box sx={{ height: 300 }}>

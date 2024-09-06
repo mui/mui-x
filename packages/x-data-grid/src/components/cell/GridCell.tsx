@@ -48,7 +48,7 @@ export const gridPinnedColumnPositionLookup = {
   [PinnedPosition.VIRTUAL]: undefined,
 };
 
-export type GridCellProps = {
+export type GridCellProps = React.HTMLAttributes<HTMLDivElement> & {
   align: GridAlignment;
   className?: string;
   colIndex: number;
@@ -66,7 +66,9 @@ export type GridCellProps = {
   gridHasFiller: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
   onMouseUp?: React.MouseEventHandler<HTMLDivElement>;
   onMouseOver?: React.MouseEventHandler<HTMLDivElement>;
   onKeyUp?: React.KeyboardEventHandler<HTMLDivElement>;
@@ -77,7 +79,7 @@ export type GridCellProps = {
   children?: undefined;
   style?: React.CSSProperties;
   [x: `data-${string}`]: string;
-} & React.HTMLAttributes<HTMLDivElement>;
+};
 
 const EMPTY_CELL_PARAMS: GridCellParams<any, any, any, GridTreeNodeWithRender> = {
   id: -1,

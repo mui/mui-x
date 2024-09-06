@@ -19,6 +19,7 @@ import {
   GridRowModel,
   GridRowEditStopReasons,
   GridSlots,
+  GridSlotProps,
 } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
@@ -241,7 +242,7 @@ export default function FullFeaturedCrudGrid() {
           toolbar: EditToolbar as GridSlots['toolbar'],
         }}
         slotProps={{
-          toolbar: { setRows, setRowModesModel },
+          toolbar: { setRows, setRowModesModel } as GridSlotProps['toolbar'],
         }}
       />
     </Box>

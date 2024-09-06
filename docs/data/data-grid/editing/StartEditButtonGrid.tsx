@@ -10,6 +10,7 @@ import {
   GridEventListener,
   GridCellModesModel,
   GridSlots,
+  GridSlotProps,
 } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
@@ -157,7 +158,7 @@ export default function StartEditButtonGrid() {
             setSelectedCellParams,
             cellModesModel,
             setCellModesModel,
-          },
+          } as GridSlotProps['toolbar'],
           cell: {
             onFocus: handleCellFocus,
           },
