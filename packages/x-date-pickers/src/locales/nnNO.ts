@@ -43,8 +43,8 @@ const nnNOPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Vel datoperiode',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Vel ${timeViews[view]}. ${time === null ? 'Ingen tid vald' : `Vald tid er ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Vel ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Ingen tid vald' : `Vald tid er ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} timar`,
   minutesClockNumberText: (minutes) => `${minutes} minuttar`,
   secondsClockNumberText: (seconds) => `${seconds} sekundar`,
@@ -59,13 +59,13 @@ const nnNOPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Vel dato, vald dato er ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Vel dato, vald dato er ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Vel dato',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Vel tid, vald tid er ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Vel tid, vald tid er ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Vel tid',
   fieldClearLabel: 'Fjern verdi',
 

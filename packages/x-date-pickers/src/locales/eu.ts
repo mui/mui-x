@@ -43,8 +43,8 @@ const euPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Data tartea aukeratu',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Aukeratu ${views[view]}. ${time === null ? 'Ez da ordurik aukertau' : `Aukeratutako ordua ${adapter.format(time, 'fullTime')} da`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Aukeratu ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Ez da ordurik aukertau' : `Aukeratutako ordua ${formattedTime ?? utils.format(time, 'fullTime')} da`}`,
   hoursClockNumberText: (hours) => `${hours} ordu`,
   minutesClockNumberText: (minutes) => `${minutes} minutu`,
   secondsClockNumberText: (seconds) => `${seconds} segundu`,
@@ -59,13 +59,13 @@ const euPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Data aukeratu, aukeratutako data ${utils.format(value, 'fullDate')} da`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Data aukeratu, aukeratutako data ${formattedDate ?? utils.format(value, 'fullDate')} da`
       : 'Data aukeratu',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Ordua aukeratu, aukeratutako ordua ${utils.format(value, 'fullTime')} da`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Ordua aukeratu, aukeratutako ordua ${formattedTime ?? utils.format(value, 'fullTime')} da`
       : 'Ordua aukeratu',
   fieldClearLabel: 'Balioa garbitu',
 

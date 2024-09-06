@@ -44,8 +44,8 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Vyberete rozmezí dat',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `${timeViews[view] ?? view} vybrány. ${time === null ? 'Není vybrán čas' : `Vybraný čas je ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `${timeViews[view] ?? view} vybrány. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Není vybrán čas' : `Vybraný čas je ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} hodin`,
   minutesClockNumberText: (minutes) => `${minutes} minut`,
   secondsClockNumberText: (seconds) => `${seconds} sekund`,
@@ -60,13 +60,13 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Vyberte datum, vybrané datum je ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Vyberte datum, vybrané datum je ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Vyberte datum',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Vyberte čas, vybraný čas je ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Vyberte čas, vybraný čas je ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Vyberte čas',
   // fieldClearLabel: 'Clear value',
 
