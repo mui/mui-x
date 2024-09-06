@@ -2,6 +2,6 @@ import { createSelector } from '../../utils/createSelector';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 
 export const treeViewExpandedItemsMapSelector = createSelector<
-  [UseTreeViewExpansionSignature],
+  UseTreeViewExpansionSignature,
   Map<string, boolean>
 >((storeValue) => storeValue.cache.expandedItemsMap);

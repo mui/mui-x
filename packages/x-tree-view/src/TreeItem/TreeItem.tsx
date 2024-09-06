@@ -28,8 +28,8 @@ import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext'
 import { useTreeItemState } from './useTreeItemState';
 import { isTargetInDescendants } from '../internals/utils/tree';
 import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
-import { useSelector } from '@mui/x-tree-view/internals/hooks/useSelector';
-import { treeViewDefaultFocusableItemIdSelector } from '@mui/x-tree-view/internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
+import { useSelector } from '../internals/hooks/useSelector';
+import { treeViewDefaultFocusableItemIdSelector } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem');
 
@@ -201,6 +201,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     selection: { multiSelect },
     expansion: { expansionTrigger },
     instance,
+    store,
   } = useTreeViewContext<TreeItemMinimalPlugins, TreeItemOptionalPlugins>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
@@ -385,7 +386,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
   const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
 
-  const tabIndex = useSelector(instance, (storeValue) =>
+  const tabIndex = useSelector(store, (storeValue) =>
     treeViewDefaultFocusableItemIdSelector(storeValue) === itemId ? 0 : -1,
   );
 

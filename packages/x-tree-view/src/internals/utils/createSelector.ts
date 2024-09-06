@@ -1,37 +1,22 @@
-import {
-  TreeViewAnyPluginSignature,
-  TreeViewCacheValue,
-  TreeViewInstance,
-  TreeViewState,
-} from '../models';
+import { TreeViewAnyPluginSignature, TreeViewUsedStore } from '../models';
 import { Store } from './Store';
 
-type TreeViewInstanceWithTypedStore<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
-  Omit<TreeViewInstance<TSignatures>, 'selectorsStore'> & {
-    selectorsStore: Store<TreeViewState<TSignatures>, TreeViewCacheValue<TSignatures>>;
-  };
-
-export type TreeViewSelector<TSignatures extends readonly TreeViewAnyPluginSignature[], TValue> = (
-  instanceOrStoreValue:
-    | TreeViewInstanceWithTypedStore<TSignatures>
-    | Store<TreeViewState<TSignatures>, TreeViewCacheValue<TSignatures>>['value'],
+export type TreeViewSelector<TSignature extends TreeViewAnyPluginSignature, TValue> = (
+  storeOrStoreValue: TreeViewUsedStore<TSignature> | TreeViewUsedStore<TSignature>['value'],
 ) => TValue;
 
-export type TreeViewRawSelector<
-  TSignatures extends readonly TreeViewAnyPluginSignature[],
-  TValue,
-> = (storeValue: {
-  state: TreeViewState<TSignatures>;
-  cache: TreeViewCacheValue<TSignatures>;
-}) => TValue;
+export type TreeViewRawSelector<TSignature extends TreeViewAnyPluginSignature, TValue> = (
+  storeValue: TreeViewUsedStore<TSignature>['value'],
+) => TValue;
 
-export function createSelector<TSignatures extends readonly TreeViewAnyPluginSignature[], TValue>(
-  selector: TreeViewRawSelector<TSignatures, TValue>,
-): TreeViewSelector<TSignatures, TValue> {
-  return (instanceOrStore) => {
-    if ('selectorsStore' in instanceOrStore) {
-      return selector(instanceOrStore.selectorsStore.value);
+export function createSelector<TSignature extends TreeViewAnyPluginSignature, TValue>(
+  selector: TreeViewRawSelector<TSignature, TValue>,
+): TreeViewSelector<TSignature, TValue> {
+  return (storeOrStoreValue) => {
+    if (storeOrStoreValue instanceof Store) {
+      return selector(storeOrStoreValue.value);
     }
-    return selector(instanceOrStore);
+
+    return selector(storeOrStoreValue);
   };
 }

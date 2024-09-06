@@ -1,13 +1,13 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { TreeViewPlugin, TreeViewUsedInstance } from '../../models';
+import { TreeViewPlugin, TreeViewUsedStore } from '../../models';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 import { TreeViewItemId } from '../../../models';
 import { useUpdateSelectorsCache } from '../../hooks/useUpdateSelectorsCache';
 import { treeViewExpandedItemsMapSelector } from './useTreeViewExpansion.selectors';
 
 const useExpandedItemsMap = (
-  instance: TreeViewUsedInstance<UseTreeViewExpansionSignature>,
+  store: TreeViewUsedStore<UseTreeViewExpansionSignature>,
   expandedItems: string[],
 ) => {
   const expandedItemsMap = React.useMemo(() => {
@@ -19,7 +19,7 @@ const useExpandedItemsMap = (
     return temp;
   }, [expandedItems]);
 
-  useUpdateSelectorsCache(instance, (cache) => {
+  useUpdateSelectorsCache(store, (cache) => {
     if (expandedItemsMap !== cache.expandedItemsMap) {
       return { ...cache, expandedItemsMap };
     }
@@ -30,10 +30,11 @@ const useExpandedItemsMap = (
 
 export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature> = ({
   instance,
+  store,
   params,
   models,
 }) => {
-  useExpandedItemsMap(instance, models.expandedItems.value);
+  useExpandedItemsMap(store, models.expandedItems.value);
 
   const setExpandedItems = (event: React.SyntheticEvent, value: TreeViewItemId[]) => {
     params.onExpandedItemsChange?.(event, value);
@@ -41,7 +42,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   };
 
   const isItemExpanded = React.useCallback(
-    (itemId: string) => treeViewExpandedItemsMapSelector(instance).has(itemId),
+    (itemId: string) => treeViewExpandedItemsMapSelector(store).has(itemId),
     [instance],
   );
 

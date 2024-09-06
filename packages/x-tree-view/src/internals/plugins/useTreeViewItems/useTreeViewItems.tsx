@@ -103,24 +103,23 @@ const updateItemsState = ({
 export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   instance,
   params,
-  state,
-  setState,
+  store,
   experimentalFeatures,
 }) => {
   const getItemMeta = React.useCallback(
-    (itemId: string) => state.items.itemMetaMap[itemId],
-    [state.items.itemMetaMap],
+    (itemId: string) => store.value.state.items.itemMetaMap[itemId],
+    [store],
   );
 
   const getItem = React.useCallback(
-    (itemId: string) => state.items.itemMap[itemId],
-    [state.items.itemMap],
+    (itemId: string) => store.value.state.items.itemMap[itemId],
+    [store],
   );
 
   const getItemTree = React.useCallback(() => {
     const getItemFromItemId = (id: TreeViewItemId): TreeViewBaseItem => {
-      const { children: oldChildren, ...item } = state.items.itemMap[id];
-      const newChildren = state.items.itemOrderedChildrenIds[id];
+      const { children: oldChildren, ...item } = store.value.state.items.itemMap[id];
+      const newChildren = store.value.state.items.itemOrderedChildrenIds[id];
       if (newChildren) {
         item.children = newChildren.map(getItemFromItemId);
       }
@@ -128,8 +127,10 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       return item;
     };
 
-    return state.items.itemOrderedChildrenIds[TREE_VIEW_ROOT_PARENT_ID].map(getItemFromItemId);
-  }, [state.items.itemMap, state.items.itemOrderedChildrenIds]);
+    return store.value.state.items.itemOrderedChildrenIds[TREE_VIEW_ROOT_PARENT_ID].map(
+      getItemFromItemId,
+    );
+  }, [store]);
 
   const isItemDisabled = React.useCallback(
     (itemId: string | null): itemId is string => {
@@ -163,15 +164,15 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   const getItemIndex = React.useCallback(
     (itemId: string) => {
       const parentId = instance.getItemMeta(itemId).parentId ?? TREE_VIEW_ROOT_PARENT_ID;
-      return state.items.itemChildrenIndexes[parentId][itemId];
+      return store.value.state.items.itemChildrenIndexes[parentId][itemId];
     },
-    [instance, state.items.itemChildrenIndexes],
+    [instance, store],
   );
 
   const getItemOrderedChildrenIds = React.useCallback(
     (itemId: string | null) =>
-      state.items.itemOrderedChildrenIds[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ?? [],
-    [state.items.itemOrderedChildrenIds],
+      store.value.state.items.itemOrderedChildrenIds[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ?? [],
+    [store],
   );
 
   const getItemDOMElement = (itemId: string) => {
@@ -202,7 +203,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       return;
     }
 
-    setState((prevState) => {
+    store.updateState((prevState) => {
       const newState = updateItemsState({
         items: params.items,
         isItemDisabled: params.isItemDisabled,
@@ -218,29 +219,24 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 
       return { ...prevState, items: newState };
     });
-  }, [
-    instance,
-    setState,
-    params.items,
-    params.isItemDisabled,
-    params.getItemId,
-    params.getItemLabel,
-  ]);
+  }, [instance, store, params.items, params.isItemDisabled, params.getItemId, params.getItemLabel]);
 
   const getItemsToRender = () => {
     const getPropsFromItemId = (
       id: TreeViewItemId,
     ): ReturnType<typeof instance.getItemsToRender>[number] => {
-      const item = state.items.itemMetaMap[id];
+      const item = store.value.state.items.itemMetaMap[id];
       return {
         label: item.label!,
         itemId: item.id,
         id: item.idAttribute,
-        children: state.items.itemOrderedChildrenIds[id]?.map(getPropsFromItemId),
+        children: store.value.state.items.itemOrderedChildrenIds[id]?.map(getPropsFromItemId),
       };
     };
 
-    return state.items.itemOrderedChildrenIds[TREE_VIEW_ROOT_PARENT_ID].map(getPropsFromItemId);
+    return store.value.state.items.itemOrderedChildrenIds[TREE_VIEW_ROOT_PARENT_ID].map(
+      getPropsFromItemId,
+    );
   };
 
   return {

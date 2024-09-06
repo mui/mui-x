@@ -11,9 +11,11 @@ import { getFirstNavigableItem } from '../../utils/tree';
 import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
 import { convertSelectedItemsToArray } from '../useTreeViewSelection/useTreeViewSelection.utils';
 import { treeViewDefaultFocusableItemIdSelector } from './useTreeViewFocus.selectors';
+import { Store } from '../../utils/Store';
 
 const useDefaultFocusableItemId = (
   instance: TreeViewUsedInstance<UseTreeViewFocusSignature>,
+  store: Store<[UseTreeViewFocusSignature]>,
   selectedItems: string | string[] | null,
 ) => {
   let defaultFocusableItemId = convertSelectedItemsToArray(selectedItems).find((itemId) => {
@@ -29,7 +31,7 @@ const useDefaultFocusableItemId = (
     defaultFocusableItemId = getFirstNavigableItem(instance);
   }
 
-  useUpdateSelectorsCache(instance, (cache) => {
+  useUpdateSelectorsCache(store, (cache) => {
     if (defaultFocusableItemId !== cache.defaultFocusableItemId) {
       return { ...cache, defaultFocusableItemId };
     }
@@ -41,17 +43,17 @@ const useDefaultFocusableItemId = (
 export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   instance,
   params,
-  state,
-  setState,
+  store,
   models,
   rootRef,
 }) => {
-  useDefaultFocusableItemId(instance, models.selectedItems.value);
+  useDefaultFocusableItemId(instance, store, models.selectedItems.value);
 
   const setFocusedItemId = useEventCallback((itemId: React.SetStateAction<string | null>) => {
-    const cleanItemId = typeof itemId === 'function' ? itemId(state.focusedItemId) : itemId;
-    if (state.focusedItemId !== cleanItemId) {
-      setState((prevState) => ({ ...prevState, focusedItemId: cleanItemId }));
+    const cleanItemId =
+      typeof itemId === 'function' ? itemId(store.value.state.focusedItemId) : itemId;
+    if (store.value.state.focusedItemId !== cleanItemId) {
+      store.updateState((prevState) => ({ ...prevState, focusedItemId: cleanItemId }));
     }
   });
 
@@ -63,8 +65,8 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   );
 
   const isItemFocused = React.useCallback(
-    (itemId: string) => state.focusedItemId === itemId && isTreeViewFocused(),
-    [state.focusedItemId, isTreeViewFocused],
+    (itemId: string) => store.value.state.focusedItemId === itemId && isTreeViewFocused(),
+    [store.value.state.focusedItemId, isTreeViewFocused],
   );
 
   const isItemVisible = (itemId: string) => {
@@ -93,14 +95,14 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   });
 
   const removeFocusedItem = useEventCallback(() => {
-    if (state.focusedItemId == null) {
+    if (store.value.state.focusedItemId == null) {
       return;
     }
 
-    const itemMeta = instance.getItemMeta(state.focusedItemId);
+    const itemMeta = instance.getItemMeta(store.value.state.focusedItemId);
     if (itemMeta) {
       const itemElement = document.getElementById(
-        instance.getTreeItemIdAttribute(state.focusedItemId, itemMeta.idAttribute),
+        instance.getTreeItemIdAttribute(store.value.state.focusedItemId, itemMeta.idAttribute),
       );
 
       if (itemElement) {
@@ -112,8 +114,8 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   });
 
   useInstanceEventHandler(instance, 'removeItem', ({ id }) => {
-    const defaultFocusableItemId = treeViewDefaultFocusableItemIdSelector(instance);
-    if (state.focusedItemId === id && defaultFocusableItemId != null) {
+    const defaultFocusableItemId = treeViewDefaultFocusableItemIdSelector(store);
+    if (store.value.state.focusedItemId === id && defaultFocusableItemId != null) {
       innerFocusItem(null, defaultFocusableItemId);
     }
   });
@@ -127,7 +129,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       }
 
       // if the event bubbled (which is React specific) we don't want to steal focus
-      const defaultFocusableItemId = treeViewDefaultFocusableItemIdSelector(instance);
+      const defaultFocusableItemId = treeViewDefaultFocusableItemIdSelector(store);
       if (event.target === event.currentTarget && defaultFocusableItemId != null) {
         innerFocusItem(event, defaultFocusableItemId);
       }

@@ -22,7 +22,7 @@ function isPrintableCharacter(string: string) {
 
 export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   UseTreeViewKeyboardNavigationSignature
-> = ({ instance, params, state }) => {
+> = ({ instance, params, store }) => {
   const isRtl = useRtl();
   const firstCharMap = React.useRef<TreeViewFirstCharMap>({});
 
@@ -43,9 +43,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       newFirstCharMap[item.id] = item.label!.substring(0, 1).toLowerCase();
     };
 
-    Object.values(state.items.itemMetaMap).forEach(processItem);
+    Object.values(store.value.state.items.itemMetaMap).forEach(processItem);
     firstCharMap.current = newFirstCharMap;
-  }, [state.items.itemMetaMap, params.getItemId, instance]);
+  }, [store.value.state.items.itemMetaMap, params.getItemId, instance]);
 
   const getFirstMatchingItem = (itemId: string, query: string) => {
     const cleanQuery = query.toLowerCase();

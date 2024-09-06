@@ -6,16 +6,16 @@ import { TreeViewEventLookupElement } from './events';
 import type { TreeViewCorePluginSignatures } from '../corePlugins';
 import { TreeViewItemPlugin } from './itemPlugin';
 import { TreeViewItemId } from '../../models';
+import { Store } from '../utils/Store';
 
 export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSignature> {
   instance: TreeViewUsedInstance<TSignature>;
   params: TreeViewUsedDefaultizedParams<TSignature>;
-  state: TreeViewUsedState<TSignature>;
   slots: TSignature['slots'];
   slotProps: TSignature['slotProps'];
   experimentalFeatures: TreeViewUsedExperimentalFeatures<TSignature>;
   models: TreeViewUsedModels<TSignature>;
-  setState: React.Dispatch<React.SetStateAction<TreeViewUsedState<TSignature>>>;
+  store: TreeViewUsedStore<TSignature>;
   rootRef: React.RefObject<HTMLUListElement>;
   plugins: TreeViewPlugin<TreeViewAnyPluginSignature>[];
 }
@@ -123,7 +123,11 @@ export type TreeViewUsedInstance<TSignature extends TreeViewAnyPluginSignature> 
     $$signature: TSignature;
   };
 
-type TreeViewUsedState<TSignature extends TreeViewAnyPluginSignature> =
+export type TreeViewUsedStore<TSignature extends TreeViewAnyPluginSignature> = Store<
+  [TSignature, ...TSignature['dependencies']]
+>;
+
+export type TreeViewUsedState<TSignature extends TreeViewAnyPluginSignature> =
   PluginPropertyWithDependencies<TSignature, 'state'>;
 
 export type TreeViewUsedCacheValue<TSignature extends TreeViewAnyPluginSignature> =

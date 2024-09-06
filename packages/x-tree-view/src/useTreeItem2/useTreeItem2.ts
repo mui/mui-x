@@ -42,6 +42,7 @@ export const useTreeItem2 = <
     expansion: { expansionTrigger },
     instance,
     publicAPI,
+    store,
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
@@ -56,7 +57,7 @@ export const useTreeItem2 = <
   const handleContentRef = useForkRef(contentRef, contentRefObject)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
-  const rootTabIndex = useSelector(instance, (storeValue) =>
+  const rootTabIndex = useSelector(store, (storeValue) =>
     treeViewDefaultFocusableItemIdSelector(storeValue) === parameters.itemId ? 0 : -1,
   );
 

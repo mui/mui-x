@@ -1,9 +1,13 @@
+import type { TreeViewAnyPluginSignature, TreeViewCacheValue, TreeViewState } from '../models';
+
 type Listener<T> = (value: T) => void;
 
 let globalId = 0;
 
-export class Store<TState, TCache> {
-  public value: { state: TState; cache: TCache };
+export type StoreUpdater<TValue> = (value: TValue) => TValue;
+
+export class Store<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
+  public value: { state: TreeViewState<TSignatures>; cache: TreeViewCacheValue<TSignatures> };
 
   public instanceId: number;
 
@@ -33,11 +37,17 @@ export class Store<TState, TCache> {
     this.listeners.forEach((l) => l(value));
   };
 
-  public updateState = (state: TState) => {
-    this.update({ ...this.value, state });
+  public updateState = (updater: StoreUpdater<TreeViewState<TSignatures>>) => {
+    const newState = updater(this.value.state);
+    if (newState !== this.value.state) {
+      this.update({ ...this.value, state: newState });
+    }
   };
 
-  public updateCache = (cache: TCache) => {
-    this.update({ ...this.value, cache });
+  public updateCache = (updater: StoreUpdater<TreeViewCacheValue<TSignatures>>) => {
+    const newCache = updater(this.value.cache);
+    if (newCache !== this.value.cache) {
+      this.update({ ...this.value, cache: newCache });
+    }
   };
 }

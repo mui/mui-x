@@ -8,6 +8,8 @@ import {
   TreeViewPublicAPI,
   ConvertSignaturesIntoPlugins,
   TreeViewState,
+  TreeViewCacheValue,
+  TreeViewUsedStore,
 } from '../models';
 import {
   UseTreeViewBaseProps,
@@ -19,6 +21,7 @@ import { useTreeViewModels } from './useTreeViewModels';
 import { TREE_VIEW_CORE_PLUGINS, TreeViewCorePluginSignatures } from '../corePlugins';
 import { extractPluginParamsFromProps } from './extractPluginParamsFromProps';
 import { useTreeViewBuildContext } from './useTreeViewBuildContext';
+import { Store } from '../utils/Store';
 
 export function useTreeViewApiInitialization<T>(
   inputApiRef: React.MutableRefObject<T | undefined> | undefined,
@@ -65,22 +68,29 @@ export const useTreeView = <
   const innerRootRef: React.RefObject<HTMLUListElement> = React.useRef(null);
   const handleRootRef = useForkRef(innerRootRef, rootRef);
 
+  const storeRef = React.useRef<Store<TSignaturesWithCorePluginSignatures> | null>(null);
+  if (storeRef.current == null) {
+    const initialState = {} as TreeViewState<TSignaturesWithCorePluginSignatures>;
+    const initialCache = {} as TreeViewCacheValue<TSignaturesWithCorePluginSignatures>;
+
+    plugins.forEach((plugin) => {
+      if (plugin.getInitialState) {
+        Object.assign(initialState, plugin.getInitialState(pluginParams));
+      }
+      if (plugin.getInitialCache) {
+        Object.assign(initialCache, plugin.getInitialCache());
+      }
+    });
+
+    storeRef.current = new Store({ state: initialState, cache: initialCache });
+  }
+
   const contextValue = useTreeViewBuildContext({
     plugins,
     instance,
     publicAPI,
+    store: storeRef.current,
     rootRef: innerRootRef,
-  });
-
-  const [state, setState] = React.useState(() => {
-    const temp = {} as TreeViewState<TSignaturesWithCorePluginSignatures>;
-    plugins.forEach((plugin) => {
-      if (plugin.getInitialState) {
-        Object.assign(temp, plugin.getInitialState(pluginParams));
-      }
-    });
-
-    return temp;
   });
 
   const rootPropsGetters: (<TOther extends EventHandlers = {}>(
@@ -93,11 +103,10 @@ export const useTreeView = <
       slots,
       slotProps,
       experimentalFeatures,
-      state,
-      setState,
       rootRef: innerRootRef,
       models,
       plugins,
+      store: storeRef.current as any,
     });
 
     if (pluginResponse.getRootProps) {
