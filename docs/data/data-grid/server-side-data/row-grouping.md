@@ -6,9 +6,9 @@ title: React Server-side row grouping
 
 <p class="description">Lazy-loaded row grouping with server-side data source.</p>
 
-To dynamically load tree data from the server, including lazy-loading of children, create a data source and pass the `unstable_dataSource` prop to the Data Grid, as detailed in the [overview](/x/react-data-grid/server-side-data/).
+To dynamically load row grouping data from the server, including lazy-loading of children, create a data source and pass the `unstable_dataSource` prop to the Data Grid, as detailed in the [overview](/x/react-data-grid/server-side-data/).
 
-Just like tree data, you need to pass some additional properties to support the row grouping feature:
+Just like [tree data](/x/react-data-grid/server-side-data/tree-data/), you need to pass some additional properties to support the row grouping feature:
 
 - `getGroupKey`: Pass the group key for the row.
 - `getChildrenCount`: Pass the number of children for the row. If the children count is not available for some reason, but there are some children, return -1.
