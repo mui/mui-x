@@ -22,10 +22,10 @@ import {
   PickerSelectionState,
   useNow,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
-  warnOnce,
   useControlledValueWithTimezone,
   useViews,
 } from '@mui/x-date-pickers/internals';
+import { warnOnce } from '@mui/x-internals/warning';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import {
