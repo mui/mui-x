@@ -55,7 +55,7 @@ The documentation must be updated on the `docs-vX` branch (`docs-v4` for `v4.X` 
 <!-- #default-branch-switch -->
 
 ```bash
-pnpm docs:deploy
+yarn docs:deploy
 ```
 
 You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v6)
