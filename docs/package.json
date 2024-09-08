@@ -9,7 +9,7 @@
     "build:clean": "rimraf .next && pnpm build",
     "build-sw": "node ./scripts/buildServiceWorker.js",
     "dev": "next dev --port 3001",
-    "deploy": "git push -f upstream next:docs-next",
+    "deploy": "git push -f upstream master:docs-v7",
     "icons": "rimraf public/static/icons/* && node ./scripts/buildIcons.js",
     "serve": "serve ./export -l 3010",
     "create-playground": "cpy --cwd=scripts playground.template.tsx ../../pages/playground --rename=index.tsx",
