@@ -65,6 +65,9 @@
     "getDataAsExcel": {
       "description": "Returns the grid data as an exceljs workbook.<br />This method is used internally by <code>exportDataAsExcel</code>."
     },
+    "getDefaultCellValue": {
+      "description": "Gets the default value of a cell for the given <code>field</code>."
+    },
     "getExpandedDetailPanels": { "description": "Returns the rows whose detail panel is open." },
     "getFilterState": {
       "description": "Returns the filter state for the given filter model without applying it to the data grid."
