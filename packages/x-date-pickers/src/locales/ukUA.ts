@@ -43,8 +43,8 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Вибрати календарний період',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Вибрати ${timeViews[view]}. ${time === null ? 'Час не вибраний' : `Вибрано час ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Вибрати ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Час не вибраний' : `Вибрано час ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} годин`,
   minutesClockNumberText: (minutes) => `${minutes} хвилин`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,
@@ -59,13 +59,13 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Оберіть дату, обрана дата  ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Оберіть дату, обрана дата  ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Оберіть дату',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Оберіть час, обраний час  ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Оберіть час, обраний час  ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Оберіть час',
   fieldClearLabel: 'Очистити дані',
 
