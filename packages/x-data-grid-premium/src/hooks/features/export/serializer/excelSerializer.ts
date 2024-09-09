@@ -9,7 +9,6 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import {
-  warnOnce,
   GridStateColDef,
   GridSingleSelectColDef,
   isObject,
@@ -17,6 +16,7 @@ import {
   isSingleSelectColDef,
   gridHasColSpanSelector,
 } from '@mui/x-data-grid/internals';
+import { warnOnce } from '@mui/x-internals/warning';
 import { ColumnsStylesInterface, GridExcelExportOptions } from '../gridExcelExportInterface';
 import { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
 

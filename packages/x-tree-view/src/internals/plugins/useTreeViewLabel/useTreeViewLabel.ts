@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { warnOnce } from '../../utils/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import { TreeViewPlugin } from '../../models';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewLabelSignature } from './useTreeViewLabel.types';

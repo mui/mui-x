@@ -1,5 +1,6 @@
 import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
+import { warnOnce } from '@mui/x-internals/warning';
 import { useDrawingArea, useYScale } from '../hooks';
 import { CommonChartsReferenceLineProps, ReferenceLineRoot } from './common';
 import { ChartsText } from '../ChartsText';
@@ -7,7 +8,6 @@ import {
   ChartsReferenceLineClasses,
   getReferenceLineUtilityClass,
 } from './chartsReferenceLineClasses';
-import { warnOnce } from '../internals/warning';
 
 export type ChartsYReferenceLineProps<
   TValue extends string | number | Date = string | number | Date,

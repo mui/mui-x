@@ -58,7 +58,9 @@ const elGRGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'περιέχει',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'ισούται',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'ξεκινάει με',
   filterOperatorEndsWith: 'τελειώνει με',
   filterOperatorIs: 'είναι',
@@ -79,7 +81,9 @@ const elGRGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Περιέχει',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Ισούται',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Ξεκινάει με',
   headerFilterOperatorEndsWith: 'Τελειώνει με',
   headerFilterOperatorIs: 'Είναι',

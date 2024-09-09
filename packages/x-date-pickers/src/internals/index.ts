@@ -151,7 +151,6 @@ export { validateDate } from './utils/validation/validateDate';
 export { validateDateTime } from './utils/validation/validateDateTime';
 export { validateTime } from './utils/validation/validateTime';
 export { applyDefaultViewProps } from './utils/views';
-export { warnOnce } from './utils/warning';
 
 export { DayCalendar } from '../DateCalendar/DayCalendar';
 export type {

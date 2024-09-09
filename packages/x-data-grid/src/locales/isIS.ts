@@ -58,7 +58,9 @@ const isISGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'inniheldur',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'jafnt og',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'byrjar með',
   filterOperatorEndsWith: 'endar með',
   filterOperatorIs: 'er líka með',
@@ -79,7 +81,9 @@ const isISGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Inniheldur',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Jafnt og',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Byrjar með',
   headerFilterOperatorEndsWith: 'Endar með',
   headerFilterOperatorIs: 'Er jafnt og',

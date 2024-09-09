@@ -66,4 +66,3 @@ export type {
 } from './plugins/useTreeViewJSXItems';
 
 export { isTargetInDescendants } from './utils/tree';
-export { warnOnce } from './utils/warning';

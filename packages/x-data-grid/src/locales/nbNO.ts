@@ -58,7 +58,9 @@ const nbNOGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'inneholder',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'er lik',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'starter med',
   filterOperatorEndsWith: 'slutter med',
   filterOperatorIs: 'er',
@@ -79,7 +81,9 @@ const nbNOGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Inneholder',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Lik',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Starter på',
   headerFilterOperatorEndsWith: 'Slutter på',
   headerFilterOperatorIs: 'Er',

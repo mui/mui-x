@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { warnOnce } from '@mui/x-internals/warning';
 import { GridSortingModelApplier } from './gridSortingState';
 import type { GridRowId, GridTreeNode } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -10,7 +11,6 @@ import {
   GridSortModel,
   GridSortCellParams,
 } from '../../../models/gridSortModel';
-import { warnOnce } from '../../../internals/utils/warning';
 
 type GridSortingFieldComparator = {
   getSortCellParams: (id: GridRowId) => GridSortCellParams;

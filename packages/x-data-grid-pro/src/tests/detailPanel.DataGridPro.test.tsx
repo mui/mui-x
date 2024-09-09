@@ -489,9 +489,7 @@ describe('<DataGridPro /> - Detail panel', () => {
       <TestCase getDetailPanelContent={() => <DetailPanel />} detailPanelExpandedRowIds={[0]} />,
     );
     expect(screen.getByTestId(`detail-panel-content`).textContent).to.equal(`${counter}`);
-    act(() => {
-      setProps({ detailPanelExpandedRowIds: [1] });
-    });
+    setProps({ detailPanelExpandedRowIds: [1] });
     expect(screen.getByTestId(`detail-panel-content`).textContent).to.equal(`${counter}`);
   });
 

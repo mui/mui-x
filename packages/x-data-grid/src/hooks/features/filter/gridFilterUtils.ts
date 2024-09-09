@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { warnOnce } from '@mui/x-internals/warning';
 import {
   GridColDef,
   GridFilterItem,
@@ -14,7 +15,6 @@ import {
   GridFilterItemResult,
   GridQuickFilterValueResult,
 } from './gridFilterState';
-import { warnOnce } from '../../../internals/utils/warning';
 import { getPublicApiRef } from '../../../utils/getPublicApiRef';
 import {
   gridColumnFieldsSelector,

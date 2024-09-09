@@ -58,7 +58,9 @@ const svSEGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'innehåller',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'lika med',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'börjar med',
   filterOperatorEndsWith: 'slutar med',
   filterOperatorIs: 'är',
@@ -79,7 +81,9 @@ const svSEGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Innehåller',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Lika med',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Börjar med',
   headerFilterOperatorEndsWith: 'Slutar med',
   headerFilterOperatorIs: 'Är',
