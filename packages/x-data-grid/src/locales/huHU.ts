@@ -38,10 +38,10 @@ const huHUGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Mentés Excel fájlként',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: 'Keresés',
+  columnsManagementNoColumns: 'Nincsenek oszlopok',
+  columnsManagementShowHideAllText: 'Összes',
+  columnsManagementReset: 'Visszavon',
 
   // Filter panel text
   filterPanelAddFilter: 'Szűrő hozzáadása',
@@ -88,7 +88,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   // headerFilterOperatorIs: 'Is',
   // headerFilterOperatorNot: 'Is not',
   headerFilterOperatorAfter: 'Ezutáni:',
-  headerFilterOperatorOnOrAfter: 'Ekkozori vagy ezutáni:',
+  headerFilterOperatorOnOrAfter: 'Ekkori vagy ezutáni:',
   headerFilterOperatorBefore: 'Ezelőtti:',
   headerFilterOperatorOnOrBefore: 'Ekkori vagy ezelőtti:',
   headerFilterOperatorIsEmpty: 'Üres',
@@ -98,8 +98,8 @@ const huHUGrid: Partial<GridLocaleText> = {
   'headerFilterOperator!=': 'Nem egyenlő',
   'headerFilterOperator>': 'Nagyobb mint',
   'headerFilterOperator>=': 'Nagyobb vagy egyenlő',
-  'headerFilterOperator<': 'Kissebb mint',
-  'headerFilterOperator<=': 'Kissebb vagy enygenlő',
+  'headerFilterOperator<': 'Kisebb mint',
+  'headerFilterOperator<=': 'Kisebb vagy egyenlő',
 
   // Filter values text
   filterValueAny: 'bármilyen',
