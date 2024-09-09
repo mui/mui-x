@@ -182,6 +182,37 @@ The `publicAPI` provides a number of methods to programatically interact with th
 
 You can read more about the public API methods on each feature page of the Tree View.
 
-### `useTreeItemUtils`
+### `useTreeItem2Utils`
+
+The `useTreeItem2Utils` hook provides a set of interaction methods that allow you to implement custom behaviors for the tree view. It also returns the status of the item.
+
+```jsx
+const { interactions, status } = useTreeItem2Utils({
+  itemId: props.itemId,
+  children: props.children,
+});
+```
+
+In order to override the default interactions of the tree item, you can set `event.defaultMuiPrevented` to `true` in the event handlers, and implement your own behaviors.
+
+#### Selection
+
+You can select an item of the Tree View by clicking its content slot. The demo below demonstrates how to handle selection when the user clicks on an icon.
+
+{{"demo": "HandleSelectionDemo.js"}}
+
+#### Checkbox selection
+
+By default, checkbox selection is skipped if an item is disabled or if `disableSelection` is `true` on the tree view. Creating a custom handler for the `onChange` event on the checkbox slot allows you to bypass these conditions. The demo below shows you how to implement a custom checkbox selection behavior.
 
 {{"demo": "HandleCheckboxSelectionDemo.js"}}
+
+To read more about the selection API visit the dedicated documentation page for the [Rich Tree View](/x/react-tree-view/rich-tree-view/selection/) or the [Simple Tree View](/x/react-tree-view/simple-tree-view/selection/).
+
+#### Expansion
+
+By default, a tree item is expanded when clicking the content. You can change the expansion trigger using the `expansionTrigger` prop to the `iconContainer`. Read more about the expansion API on the dedicated [documentation page](/x/react-tree-view/rich-tree-view/expansion/#limit-expansion-to-icon-container/).
+
+To achieve a deeper customization of the expansion of an item use the `handleExpansion` interaction method. The demo below demonstrates how to introduce a new element that expands or collapses the item.
+
+{{"demo": "HandleExpansionDemo.js"}}

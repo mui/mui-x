@@ -106,46 +106,55 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     <React.Fragment>
       <TreeItem2Provider itemId={itemId}>
         <TreeItem2Root
-          {...getRootProps(other)}
-          onMouseOver={handleMouseOver}
-          onMouseLeave={handleMouseLeave}
-          data-name="TreeItem2Root"
+          {...getRootProps({
+            ...other,
+            onMouseOver: handleMouseOver,
+            onMouseLeave: handleMouseLeave,
+            'data-name': 'TreeItem2Root',
+          })}
         >
           <CustomTreeItem2Content
-            {...getContentProps()}
-            data-name="TreeItem2Content"
+            {...getContentProps({
+              'data-name': 'TreeItem2Content',
+            })}
           >
             <CustomTreeItem2IconContainer
-              {...getIconContainerProps()}
-              data-name="TreeItem2IconContainer"
+              {...getIconContainerProps({
+                'data-name': 'TreeItem2IconContainer',
+              })}
             >
               <TreeItem2Icon status={status} data-name="TreeItem2Icon" />
             </CustomTreeItem2IconContainer>
             <CustomTreeItem2Checkbox
-              {...getCheckboxProps()}
-              data-name="TreeItem2Checkbox"
+              {...getCheckboxProps({
+                'data-name': 'TreeItem2Checkbox',
+              })}
             />
             {status?.editable ? (
               <CustomTreeItem2LabelInput
-                {...getLabelInputProps()}
-                data-name="TreeItem2LabelInput"
+                {...getLabelInputProps({
+                  'data-name': 'TreeItem2LabelInput',
+                })}
               />
             ) : (
               <CustomTreeItem2Label
-                {...getLabelProps()}
-                data-name="TreeItem2Label"
+                {...getLabelProps({
+                  'data-name': 'TreeItem2Label',
+                })}
               />
             )}
 
             <TreeItem2DragAndDropOverlay
-              {...getDragAndDropOverlayProps()}
-              data-name="TreeItem2DragAndDropOverlay"
+              {...getDragAndDropOverlayProps({
+                'data-name': 'TreeItem2DragAndDropOverlay',
+              })}
             />
           </CustomTreeItem2Content>
           {children && (
             <CustomTreeItem2Transition
-              {...getGroupTransitionProps()}
-              data-name="TreeItem2GroupTransition"
+              {...getGroupTransitionProps({
+                'data-name': 'TreeItem2GroupTransition',
+              })}
             />
           )}
         </TreeItem2Root>
