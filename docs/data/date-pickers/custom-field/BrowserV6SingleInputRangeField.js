@@ -33,7 +33,13 @@ const BrowserField = React.forwardRef((props, ref) => {
 
   return (
     <Box
-      sx={{ ...(sx || {}), display: 'flex', alignItems: 'center' }}
+      sx={[
+        {
+          display: 'flex',
+          alignItems: 'center',
+        },
+        sx || {},
+      ]}
       id={id}
       ref={handleRef}
     >
@@ -57,7 +63,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
   textFieldProps.InputProps = {
     ...textFieldProps.InputProps,
     endAdornment: (
-      <InputAdornment position="end">
+      <InputAdornment position="end" sx={{ height: 'auto' }}>
         <IconButton onClick={onAdornmentClick}>
           <DateRangeIcon />
         </IconButton>

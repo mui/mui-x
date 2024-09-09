@@ -1,10 +1,15 @@
 import * as React from 'react';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
-import { createPickerRenderer } from 'test/utils/pickers';
+import {
+  adapterToUse,
+  createPickerRenderer,
+  describeRangeValidation,
+  setValueOnFieldInput,
+} from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MultiInputDateRangeField />', () => {
-  const { render } = createPickerRenderer();
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   describeConformance(<MultiInputDateRangeField enableAccessibleFieldDOMStructure />, () => ({
     classes: {} as any,
@@ -13,5 +18,15 @@ describe('<MultiInputDateRangeField />', () => {
     muiName: 'MuiMultiInputDateRangeField',
     refInstanceof: window.HTMLDivElement,
     skip: ['themeVariants', 'componentProp', 'componentsProp'],
+  }));
+
+  describeRangeValidation(MultiInputDateRangeField, () => ({
+    render,
+    clock,
+    componentFamily: 'field',
+    views: ['year', 'month', 'day'],
+    setValue: (value, { setEndDate } = {}) => {
+      setValueOnFieldInput(adapterToUse.format(value, 'keyboardDate'), setEndDate ? 1 : 0);
+    },
   }));
 });

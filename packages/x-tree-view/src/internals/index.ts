@@ -77,4 +77,3 @@ export type {
 
 export { clamp } from './utils/utils';
 export { isTargetInDescendants } from './utils/tree';
-export { warnOnce } from './utils/warning';

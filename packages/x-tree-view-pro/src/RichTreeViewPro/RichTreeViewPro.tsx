@@ -3,12 +3,8 @@ import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { Watermark } from '@mui/x-license';
 import useSlotProps from '@mui/utils/useSlotProps';
-import {
-  useTreeView,
-  TreeViewProvider,
-  warnOnce,
-  RichTreeViewItems,
-} from '@mui/x-tree-view/internals';
+import { useTreeView, TreeViewProvider, RichTreeViewItems } from '@mui/x-tree-view/internals';
+import { warnOnce } from '@mui/x-internals/warning';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
 import { RichTreeViewProProps } from './RichTreeViewPro.types';

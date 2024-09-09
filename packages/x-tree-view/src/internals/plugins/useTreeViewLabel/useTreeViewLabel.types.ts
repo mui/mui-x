@@ -76,5 +76,10 @@ export type UseTreeViewLabelSignature = TreeViewPluginSignature<{
   experimentalFeatures: 'labelEditing';
   dependencies: [UseTreeViewItemsSignature];
 }>;
-export interface UseTreeItem2LabelInputSlotPropsFromItemsReordering
-  extends TreeItem2LabelInputProps {}
+
+export interface UseTreeItem2LabelInputSlotPropsFromLabelEditing extends TreeItem2LabelInputProps {}
+
+declare module '@mui/x-tree-view/useTreeItem2' {
+  interface UseTreeItem2LabelInputSlotOwnProps
+    extends UseTreeItem2LabelInputSlotPropsFromLabelEditing {}
+}

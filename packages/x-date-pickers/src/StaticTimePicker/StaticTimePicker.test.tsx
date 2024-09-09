@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireTouchChangedEvent, screen, getAllByRole, fireEvent } from '@mui/internal-test-utils';
+import { fireTouchChangedEvent, screen, within, fireEvent } from '@mui/internal-test-utils';
 import { adapterToUse, createPickerRenderer, describeValidation } from 'test/utils/pickers';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
@@ -78,7 +78,7 @@ describe('<StaticTimePicker />', () => {
 
     // hours are not disabled
     const hoursContainer = screen.getByRole('listbox');
-    const hours = getAllByRole(hoursContainer, 'option');
+    const hours = within(hoursContainer).getAllByRole('option');
     const disabledHours = hours.filter((day) => day.getAttribute('aria-disabled') === 'true');
 
     expect(hours.length).to.equal(12);
@@ -128,7 +128,7 @@ describe('<StaticTimePicker />', () => {
 
     // hours are disabled
     const hoursContainer = screen.getByRole('listbox');
-    const hours = getAllByRole(hoursContainer, 'option');
+    const hours = within(hoursContainer).getAllByRole('option');
     const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
     expect(hours.length).to.equal(12);
     expect(disabledHours.length).to.equal(12);

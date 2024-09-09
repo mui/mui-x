@@ -58,7 +58,9 @@ const nnNOGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'inneheld',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'er lik',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'startar med',
   filterOperatorEndsWith: 'sluttar med',
   filterOperatorIs: 'er',
@@ -79,7 +81,9 @@ const nnNOGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Inneheld',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Lik',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Startar på',
   headerFilterOperatorEndsWith: 'Sluttar på',
   headerFilterOperatorIs: 'Er',
