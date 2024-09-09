@@ -2,11 +2,9 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { EventHandlers } from '@mui/utils';
-import ownerDocument from '@mui/utils/ownerDocument';
 import { TreeViewPlugin, TreeViewUsedInstance, TreeViewUsedStore } from '../../models';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
-import { getActiveElement } from '../../utils/utils';
 import { getFirstNavigableItem } from '../../utils/tree';
 import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
 import { convertSelectedItemsToArray } from '../useTreeViewSelection/useTreeViewSelection.utils';
@@ -46,7 +44,7 @@ const useDefaultFocusableItemId = (
         },
       };
     });
-  }, []);
+  }, [store, instance, selectedItems]);
 };
 
 export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
@@ -54,7 +52,6 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   params,
   store,
   models,
-  rootRef,
 }) => {
   useDefaultFocusableItemId(instance, store, models.selectedItems.value);
 
@@ -64,21 +61,6 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       store.update((prevState) => ({ ...prevState, focusedItemId: itemId }));
     }
   });
-
-  const isTreeViewFocused = React.useCallback(
-    () =>
-      !!rootRef.current &&
-      rootRef.current.contains(getActiveElement(ownerDocument(rootRef.current))),
-    [rootRef],
-  );
-
-  const isItemFocused = React.useCallback(
-    (itemId: string) => {
-      const focusedItemId = selectorFocusedItemId(store);
-      return focusedItemId === itemId && isTreeViewFocused();
-    },
-    [store, isTreeViewFocused],
-  );
 
   const isItemVisible = (itemId: string) => {
     const itemMeta = instance.getItemMeta(itemId);
@@ -148,15 +130,26 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       }
     };
 
+  const createRootHandleBlur =
+    (otherHandlers: EventHandlers) =>
+    (event: React.FocusEvent<HTMLUListElement> & MuiCancellableEvent) => {
+      otherHandlers.onBlur?.(event);
+      if (event.defaultMuiPrevented) {
+        return;
+      }
+
+      setFocusedItemId(null);
+    };
+
   return {
     getRootProps: (otherHandlers) => ({
       onFocus: createRootHandleFocus(otherHandlers),
+      onBlur: createRootHandleBlur(otherHandlers),
     }),
     publicAPI: {
       focusItem,
     },
     instance: {
-      isItemFocused,
       focusItem,
       removeFocusedItem,
     },

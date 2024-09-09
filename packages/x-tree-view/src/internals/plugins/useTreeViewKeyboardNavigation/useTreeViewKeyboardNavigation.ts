@@ -17,6 +17,7 @@ import { hasPlugin } from '../../utils/plugins';
 import { useTreeViewLabel } from '../useTreeViewLabel';
 import { selectorItemMetaMap } from '../useTreeViewItems/useTreeViewItems.selectors';
 import { useSelector } from '../../hooks/useSelector';
+import { selectorIsItemSelected } from '../useTreeViewSelection/useTreeViewSelection.selectors';
 
 function isPrintableCharacter(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
@@ -139,7 +140,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           if (params.multiSelect) {
             event.preventDefault();
             instance.selectItem({ event, itemId, keepExistingSelection: true });
-          } else if (!instance.isItemSelected(itemId)) {
+          } else if (!selectorIsItemSelected(store, itemId)) {
             instance.selectItem({ event, itemId });
             event.preventDefault();
           }

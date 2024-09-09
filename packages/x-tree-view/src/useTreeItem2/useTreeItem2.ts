@@ -57,8 +57,8 @@ export const useTreeItem2 = <
   const handleContentRef = useForkRef(contentRef, contentRefObject)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
-  const rootTabIndex = useSelector(store, (storeValue) =>
-    selectorDefaultFocusableItemId(storeValue) === parameters.itemId ? 0 : -1,
+  const rootTabIndex = useSelector(store, (state) =>
+    selectorDefaultFocusableItemId(state) === parameters.itemId ? 0 : -1,
   );
 
   const sharedPropsEnhancerParams: Omit<

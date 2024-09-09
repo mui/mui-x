@@ -7,6 +7,11 @@ import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus
 import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
 import { UseTreeViewLabelSignature, useTreeViewLabel } from '../internals/plugins/useTreeViewLabel';
 import { hasPlugin } from '../internals/utils/plugins';
+import { useSelector } from '../internals/hooks/useSelector';
+import { selectorIsItemExpanded } from '../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
+import { selectorIsItemFocused } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
+import { selectorIsItemDisabled } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
+import { selectorIsItemSelected } from '@mui/x-tree-view/internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
 
 type UseTreeItemStateMinimalPlugins = readonly [
   UseTreeViewSelectionSignature,
@@ -20,22 +25,24 @@ type UseTreeItemStateOptionalPlugins = readonly [UseTreeViewLabelSignature];
 export function useTreeItemState(itemId: string) {
   const {
     instance,
+    store,
     items: { onItemClick },
     selection: { multiSelect, checkboxSelection, disableSelection },
     expansion: { expansionTrigger },
   } = useTreeViewContext<UseTreeItemStateMinimalPlugins, UseTreeItemStateOptionalPlugins>();
 
+  const isExpanded = useSelector(store, (state) => selectorIsItemExpanded(state, itemId));
+  const isFocused = useSelector(store, (state) => selectorIsItemFocused(state, itemId));
+  const isSelected = useSelector(store, (state) => selectorIsItemSelected(state, itemId));
+  const isDisabled = useSelector(store, (state) => selectorIsItemDisabled(state, itemId));
+
   const expandable = instance.isItemExpandable(itemId);
-  const expanded = instance.isItemExpanded(itemId);
-  const focused = instance.isItemFocused(itemId);
-  const selected = instance.isItemSelected(itemId);
-  const disabled = instance.isItemDisabled(itemId);
   const editing = instance?.isItemBeingEdited ? instance?.isItemBeingEdited(itemId) : false;
   const editable = instance.isItemEditable ? instance.isItemEditable(itemId) : false;
 
   const handleExpansion = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!disabled) {
-      if (!focused) {
+    if (!isDisabled) {
+      if (!isFocused) {
         instance.focusItem(event, itemId);
       }
 
@@ -49,8 +56,8 @@ export function useTreeItemState(itemId: string) {
   };
 
   const handleSelection = (event: React.MouseEvent) => {
-    if (!disabled) {
-      if (!focused) {
+    if (!isDisabled) {
+      if (!isFocused) {
         instance.focusItem(event, itemId);
       }
 
@@ -68,7 +75,7 @@ export function useTreeItemState(itemId: string) {
   };
 
   const handleCheckboxSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (disableSelection || disabled) {
+    if (disableSelection || isDisabled) {
       return;
     }
 
@@ -86,7 +93,7 @@ export function useTreeItemState(itemId: string) {
   };
 
   const preventSelection = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.shiftKey || event.ctrlKey || event.metaKey || disabled) {
+    if (event.shiftKey || event.ctrlKey || event.metaKey || isDisabled) {
       // Prevent text selection
       event.preventDefault();
     }
@@ -136,10 +143,10 @@ export function useTreeItemState(itemId: string) {
   };
 
   return {
-    disabled,
-    expanded,
-    selected,
-    focused,
+    disabled: isDisabled,
+    expanded: isExpanded,
+    selected: isSelected,
+    focused: isFocused,
     editable,
     editing,
     disableSelection,

@@ -10,22 +10,31 @@ type StoreFromSignatures<TSignatures extends DefaultSignatures> =
       ? TreeViewUsedStore<TSignatures>
       : TreeViewStore<[]>;
 
+export type StoreOrStateFromSignatures<TSignatures extends DefaultSignatures> =
+  | StoreFromSignatures<TSignatures>
+  | StoreFromSignatures<TSignatures>['value'];
+
 export type TreeViewSelector<TSignatures extends DefaultSignatures, TValue> = (
-  storeOrStoreValue: StoreFromSignatures<TSignatures> | StoreFromSignatures<TSignatures>['value'],
+  storeOrState: StoreFromSignatures<TSignatures> | StoreFromSignatures<TSignatures>['value'],
 ) => TValue;
 
 export type TreeViewRawSelector<TSignatures extends DefaultSignatures, TValue> = (
-  storeValue: StoreFromSignatures<TSignatures>['value'],
+  state: StoreFromSignatures<TSignatures>['value'],
 ) => TValue;
+
+export function resolveState<TSignatures extends DefaultSignatures>(
+  storeOrState: StoreOrStateFromSignatures<TSignatures>,
+): StoreFromSignatures<TSignatures>['value'] {
+  if (storeOrState instanceof TreeViewStore) {
+    return storeOrState.value;
+  }
+
+  return storeOrState;
+}
 
 export function createSelector<TSignatures extends DefaultSignatures, TValue>(
   selector: TreeViewRawSelector<TSignatures, TValue>,
-): TreeViewSelector<TSignatures, TValue> {
-  return (storeOrStoreValue) => {
-    if (storeOrStoreValue instanceof TreeViewStore) {
-      return selector(storeOrStoreValue.value);
-    }
-
-    return selector(storeOrStoreValue);
-  };
+): // TODO: Try to support TreeViewSelector generic type
+TreeViewSelector<any[], TValue> {
+  return (storeOrState) => selector(resolveState(storeOrState));
 }

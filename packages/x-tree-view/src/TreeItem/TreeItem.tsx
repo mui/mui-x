@@ -386,8 +386,8 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
   const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
 
-  const tabIndex = useSelector(store, (storeValue) =>
-    selectorDefaultFocusableItemId(storeValue) === itemId ? 0 : -1,
+  const tabIndex = useSelector(store, (state) =>
+    selectorDefaultFocusableItemId(state) === itemId ? 0 : -1,
   );
 
   const sharedPropsEnhancerParams: Omit<

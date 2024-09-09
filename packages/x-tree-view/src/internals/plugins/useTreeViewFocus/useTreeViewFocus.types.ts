@@ -19,12 +19,6 @@ export interface UseTreeViewFocusPublicAPI {
 
 export interface UseTreeViewFocusInstance extends UseTreeViewFocusPublicAPI {
   /**
-   * Check if an item is the currently focused item.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} `true` if the item is focused, `false` otherwise.
-   */
-  isItemFocused: (itemId: TreeViewItemId) => boolean;
-  /**
    * Remove the focus from the currently focused item (both from the internal state and the DOM).
    */
   removeFocusedItem: () => void;

@@ -12,7 +12,10 @@ import {
 import type { UseTreeItem2Status } from '../../useTreeItem2';
 import { hasPlugin } from '../../internals/utils/plugins';
 import { useSelector } from '../../internals/hooks/useSelector';
-import { selectorExpandedItemsMap } from '../../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
+import { selectorIsItemExpanded } from '../../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
+import { selectorIsItemFocused } from '../../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
+import { selectorIsItemDisabled } from '../../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
+import { selectorIsItemSelected } from '../../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
 
 export interface UseTreeItem2Interactions {
   handleExpansion: (event: React.MouseEvent) => void;
@@ -64,16 +67,17 @@ export const useTreeItem2Utils = ({
     selection: { multiSelect },
   } = useTreeViewContext<UseTreeItem2UtilsMinimalPlugins, UseTreeItem2UtilsOptionalPlugins>();
 
-  const isExpanded = useSelector(store, (storeValue) =>
-    selectorExpandedItemsMap(storeValue).has(itemId),
-  );
+  const isExpanded = useSelector(store, (state) => selectorIsItemExpanded(state, itemId));
+  const isFocused = useSelector(store, (state) => selectorIsItemFocused(state, itemId));
+  const isSelected = useSelector(store, (state) => selectorIsItemSelected(state, itemId));
+  const isDisabled = useSelector(store, (state) => selectorIsItemDisabled(state, itemId));
 
   const status: UseTreeItem2Status = {
     expandable: isItemExpandable(children),
-    expanded: instance.isItemExpanded(itemId),
-    focused: instance.isItemFocused(itemId),
-    selected: instance.isItemSelected(itemId),
-    disabled: instance.isItemDisabled(itemId),
+    expanded: isExpanded,
+    focused: isFocused,
+    selected: isSelected,
+    disabled: isDisabled,
     editing: instance?.isItemBeingEdited ? instance?.isItemBeingEdited(itemId) : false,
     editable: instance.isItemEditable ? instance.isItemEditable(itemId) : false,
   };

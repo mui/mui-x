@@ -12,7 +12,7 @@ import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 import {
   selectorItemChildrenIndexes,
   selectorItemMap,
-  selectorItemMetaMap,
+  selectorItemMeta,
   selectorItemOrderedChildrenIds,
 } from './useTreeViewItems.selectors';
 
@@ -113,7 +113,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   experimentalFeatures,
 }) => {
   const getItemMeta = React.useCallback(
-    (itemId: string) => selectorItemMetaMap(store)[itemId],
+    (itemId: string) => selectorItemMeta(store, itemId),
     [store],
   );
 

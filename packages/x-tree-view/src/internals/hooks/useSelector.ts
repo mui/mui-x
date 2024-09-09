@@ -1,7 +1,7 @@
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
 import { TreeViewAnyPluginSignature } from '../models';
 import { TreeViewStore } from '../utils/TreeViewStore';
-import { TreeViewSelector } from '../utils/createSelector';
+import { TreeViewSelector } from '../utils/selectors';
 
 const defaultCompare = Object.is;
 
