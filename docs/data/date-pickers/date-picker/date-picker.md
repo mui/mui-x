@@ -93,7 +93,7 @@ If the view defined in `openTo` is not the first view, then the views before wil
 
 ## Reverse years
 
-The `reverseYears` prop can be set to show the years in descending order starting from the maximum value.
+The `reverseYears` prop can be set to show the years in reverse chronological order.
 
 {{"demo": "DatePickerReverseYears.js"}}
 

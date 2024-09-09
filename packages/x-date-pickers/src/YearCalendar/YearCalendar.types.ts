@@ -25,7 +25,9 @@ export interface YearCalendarSlotProps {
 
 export interface ExportedYearCalendarProps {
   /**
-   * Display years in descending order starting from the maximum value.
+   * If `false`, display the years in their default order (chronological)
+   * If `true`, reverse the order of displayed years
+   * @default false
    */
   reverseYears?: boolean;
   /**
