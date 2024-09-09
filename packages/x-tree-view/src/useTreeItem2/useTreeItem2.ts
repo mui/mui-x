@@ -28,6 +28,7 @@ import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext'
 import { isTargetInDescendants } from '../internals/utils/tree';
 import { useSelector } from '../internals/hooks/useSelector';
 import { selectorDefaultFocusableItemId } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
+import { selectorTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.selectors';
 
 export const useTreeItem2 = <
   TSignatures extends UseTreeItem2MinimalPlugins = UseTreeItem2MinimalPlugins,
@@ -52,11 +53,11 @@ export const useTreeItem2 = <
   const { interactions, status } = useTreeItem2Utils({ itemId, children });
   const rootRefObject = React.useRef<HTMLLIElement>(null);
   const contentRefObject = React.useRef<HTMLDivElement>(null);
-  const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
   const handleRootRef = useForkRef(rootRef, pluginRootRef, rootRefObject)!;
   const handleContentRef = useForkRef(contentRef, contentRefObject)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
+  const idAttribute = useSelector(store, (state) => selectorTreeItemIdAttribute(state, itemId, id));
   const rootTabIndex = useSelector(store, (state) =>
     selectorDefaultFocusableItemId(state) === parameters.itemId ? 0 : -1,
   );

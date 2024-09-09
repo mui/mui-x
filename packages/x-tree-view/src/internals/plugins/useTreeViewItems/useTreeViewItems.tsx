@@ -15,6 +15,7 @@ import {
   selectorItemMeta,
   selectorItemOrderedChildrenIds,
 } from './useTreeViewItems.selectors';
+import { selectorTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.selectors';
 
 interface UpdateNodesStateParameters
   extends Pick<
@@ -182,7 +183,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       return null;
     }
 
-    return document.getElementById(instance.getTreeItemIdAttribute(itemId, itemMeta.idAttribute));
+    const idAttribute = selectorTreeItemIdAttribute(store, itemId, itemMeta.idAttribute);
+    return document.getElementById(idAttribute);
   };
 
   const isItemNavigable = (itemId: string) => {

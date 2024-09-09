@@ -7,14 +7,23 @@ export type StoreUpdater<TValue> = (value: TValue) => TValue;
 export class TreeViewStore<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
   public value: TreeViewState<TSignatures>;
 
-  private listeners: Set<Listener<typeof this.value>>;
+  private listeners: Set<Listener<TreeViewState<TSignatures>>>;
 
-  constructor(value: typeof this.value) {
-    this.value = value;
+  private readonly forceUpdate: (state: TreeViewState<TSignatures>) => void;
+
+  constructor({
+    initialState,
+    forceUpdate,
+  }: {
+    initialState: TreeViewState<TSignatures>;
+    forceUpdate: (state: TreeViewState<TSignatures>) => void;
+  }) {
+    this.value = initialState;
     this.listeners = new Set();
+    this.forceUpdate = forceUpdate;
   }
 
-  public subscribe = (fn: Listener<typeof this.value>) => {
+  public subscribe = (fn: Listener<TreeViewState<TSignatures>>) => {
     this.listeners.add(fn);
     return () => {
       this.listeners.delete(fn);
@@ -29,7 +38,8 @@ export class TreeViewStore<TSignatures extends readonly TreeViewAnyPluginSignatu
     const newState = updater(this.value);
     if (newState !== this.value) {
       this.value = newState;
+      this.listeners.forEach((l) => l(newState));
+      this.forceUpdate(newState);
     }
-    this.listeners.forEach((l) => l(newState));
   };
 }

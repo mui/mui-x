@@ -37,7 +37,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
         selectedItemsMap,
       },
     }));
-  });
+  }, [store, models.selectedItems.value]);
 
   const setSelectedItems = (
     event: React.SyntheticEvent,

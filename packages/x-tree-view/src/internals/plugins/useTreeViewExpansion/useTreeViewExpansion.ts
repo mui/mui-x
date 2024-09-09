@@ -24,7 +24,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
         expandedItemsMap,
       },
     }));
-  });
+  }, [store, models.expandedItems.value]);
 
   const setExpandedItems = (event: React.SyntheticEvent, value: TreeViewItemId[]) => {
     params.onExpandedItemsChange?.(event, value);
