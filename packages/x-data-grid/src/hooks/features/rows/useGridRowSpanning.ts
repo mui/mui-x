@@ -145,14 +145,28 @@ const computeRowSpanningState = (
   return { spannedCells, hiddenCells, hiddenCellOriginMap, processedRange };
 };
 
+/**
+ * @requires columnsStateInitializer (method) - should be initialized before
+ * @requires rowsStateInitializer (method) - should be initialized before
+ * @requires filterStateInitializer (method) - should be initialized before
+ */
 export const rowSpanningStateInitializer: GridStateInitializer = (state, props, apiRef) => {
   if (props.unstable_rowSpanning) {
-    const rowIds = state.rows?.dataRowIds;
-    const orderedFields = state.columns?.orderedFields;
-    const dataRowIdToModelLookup = state.rows?.dataRowIdToModelLookup;
-    const columnsLookup = state.columns?.lookup;
+    const rowIds = state.rows!.dataRowIds || [];
+    const orderedFields = state.columns!.orderedFields || [];
+    const dataRowIdToModelLookup = state.rows!.dataRowIdToModelLookup;
+    const columnsLookup = state.columns!.lookup;
+    const isFilteringPending =
+      Boolean(state.filter!.filterModel!.items!.length) ||
+      Boolean(state.filter!.filterModel!.quickFilterValues?.length);
 
-    if (!rowIds?.length || !orderedFields?.length || !dataRowIdToModelLookup || !columnsLookup) {
+    if (
+      !rowIds.length ||
+      !orderedFields.length ||
+      !dataRowIdToModelLookup ||
+      !columnsLookup ||
+      isFilteringPending
+    ) {
       return {
         ...state,
         rowSpanning: EMPTY_STATE,
@@ -199,10 +213,12 @@ export const useGridRowSpanning = (
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
   const colDefs = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const processedRange = useLazyRef<RowRange, void>(() => {
-    return {
-      firstRowIndex: 0,
-      lastRowIndex: Math.min(19, Math.max(apiRef.current.state.rows.dataRowIds.length - 1, 0)),
-    };
+    return Object.keys(apiRef.current.state.rowSpanning.spannedCells).length > 0
+      ? {
+          firstRowIndex: 0,
+          lastRowIndex: Math.min(19, Math.max(apiRef.current.state.rows.dataRowIds.length - 1, 0)),
+        }
+      : EMPTY_RANGE;
   });
 
   const updateRowSpanningState = React.useCallback(
