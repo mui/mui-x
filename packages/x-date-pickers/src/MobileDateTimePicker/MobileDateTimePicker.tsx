@@ -17,6 +17,7 @@ import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
+import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 
 type MobileDateTimePickerComponent = (<
   TDate extends PickerValidDate,
@@ -102,8 +103,12 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
     props,
     valueManager: singleItemValueManager,
     valueType: 'date-time',
-    getOpenDialogAriaText:
-      props.localeText?.openDatePickerDialogue ?? translations.openDatePickerDialogue,
+    getOpenDialogAriaText: buildGetOpenDialogAriaText({
+      utils,
+      formatKey: 'fullDate',
+      contextTranslation: translations.openDatePickerDialogue,
+      propsTranslation: props.localeText?.openDatePickerDialogue,
+    }),
     validator: validateDateTime,
   });
 

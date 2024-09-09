@@ -13,6 +13,7 @@ import { PickerValidDate, TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
+import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 
 type MobileTimePickerComponent = (<
   TDate extends PickerValidDate,
@@ -91,8 +92,12 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
-    getOpenDialogAriaText:
-      props.localeText?.openTimePickerDialogue ?? translations.openTimePickerDialogue,
+    getOpenDialogAriaText: buildGetOpenDialogAriaText({
+      utils,
+      formatKey: 'fullTime',
+      contextTranslation: translations.openTimePickerDialogue,
+      propsTranslation: props.localeText?.openTimePickerDialogue,
+    }),
     validator: validateTime,
   });
 

@@ -1,8 +1,8 @@
+import { warnOnce } from '@mui/x-internals/warning';
 import { UsePickerParams, UsePickerProps, UsePickerResponse } from './usePicker.types';
 import { usePickerValue } from './usePickerValue';
 import { usePickerViews } from './usePickerViews';
 import { usePickerLayoutProps } from './usePickerLayoutProps';
-import { warnOnce } from '../../utils/warning';
 import { FieldSection, PickerValidDate, InferError } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 

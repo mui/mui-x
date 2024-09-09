@@ -144,7 +144,6 @@ export {
 } from './hooks/defaultizedFieldProps';
 export { useDefaultReduceAnimations } from './hooks/useDefaultReduceAnimations';
 export { applyDefaultViewProps } from './utils/views';
-export { warnOnce } from './utils/warning';
 
 export { DayCalendar } from '../DateCalendar/DayCalendar';
 export type {

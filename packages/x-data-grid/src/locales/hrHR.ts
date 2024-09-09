@@ -58,7 +58,9 @@ const hrHRGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'sadrži',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'jednaki',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'počinje sa',
   filterOperatorEndsWith: 'završava sa',
   filterOperatorIs: 'je',
@@ -79,7 +81,9 @@ const hrHRGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Sadrži',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Jednako',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Počinje sa',
   headerFilterOperatorEndsWith: 'Završava s',
   headerFilterOperatorIs: 'Je',
