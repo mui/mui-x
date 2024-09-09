@@ -36,6 +36,7 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: 'Löschen',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Heute',
+  // nextButtonLabel: 'Next',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Datum auswählen',

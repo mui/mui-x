@@ -35,6 +35,7 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: '초기화',
   okButtonLabel: '확인',
   todayButtonLabel: '오늘',
+  // nextButtonLabel: 'Next',
 
   // Toolbar titles
   datePickerToolbarTitle: '날짜 선택하기',

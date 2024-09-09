@@ -35,6 +35,7 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: 'کلئیر',
   okButtonLabel: 'اوکے',
   todayButtonLabel: 'آج',
+  // nextButtonLabel: 'Next',
 
   // Toolbar titles
   datePickerToolbarTitle: 'تاریخ منتخب کریں',

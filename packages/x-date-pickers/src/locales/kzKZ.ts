@@ -36,6 +36,7 @@ const kzKZPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: 'Тазарту',
   okButtonLabel: 'Ок',
   todayButtonLabel: 'Бүгін',
+  // nextButtonLabel: 'Next',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Күнді таңдау',

@@ -33,6 +33,7 @@ const zhHKPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: '清除',
   okButtonLabel: '確認',
   todayButtonLabel: '今日',
+  // nextButtonLabel: 'Next',
 
   // Toolbar titles
   datePickerToolbarTitle: '選擇日期',
