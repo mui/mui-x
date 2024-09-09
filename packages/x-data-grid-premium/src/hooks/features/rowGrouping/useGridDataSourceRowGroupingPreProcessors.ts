@@ -47,12 +47,18 @@ export const useGridDataSourceRowGroupingPreProcessors = (
       });
       apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
 
-      // TODO: Accomodate `groupingValueGetter`
-
-      const parentPath = (params.updates as GridRowsPartialUpdates).groupKeys ?? [];
-
       const getRowTreeBuilderNode = (rowId: GridRowId) => {
-        const leafKey = getGroupKey(params.dataRowIdToModelLookup[rowId]);
+        const parentPath = (params.updates as GridRowsPartialUpdates).groupKeys ?? [];
+        const row = params.dataRowIdToModelLookup[rowId];
+        const groupingRule = groupingRules[parentPath.length];
+        const groupingValueGetter = groupingRule?.groupingValueGetter;
+        const leafKey =
+          groupingValueGetter?.(
+            row[groupingRule.field] as never,
+            row,
+            columnsLookup[groupingRule.field],
+            apiRef,
+          ) ?? getGroupKey(params.dataRowIdToModelLookup[rowId]);
         return {
           id: rowId,
           path: [...parentPath, leafKey ?? rowId.toString()].map((key, i) => ({

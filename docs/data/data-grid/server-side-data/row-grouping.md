@@ -35,6 +35,12 @@ The following demo showcases how to implement server-side row grouping with a cu
 
 {{"demo": "ServerSideRowGroupingDataGrid.js", "bg": "inline"}}
 
+:::warning
+In the case of complex data, you might need to implement a custom `colDef.groupingValueGetter` to get the grouping value for the row which will then be passed in `groupKeys` parameter when calling `getRows`.
+
+If you use it, make sure the backend understands the `groupKeys` parameters as provided by the `groupingValueGetter` to get the grouping value for the subsequent children rows.
+:::
+
 ## Error handling
 
 If an error occurs during a `getRows` call, the Data Grid will display an error message in the row group cell. `unstable_onDataSourceError` is also triggered with the error and the fetch params.
