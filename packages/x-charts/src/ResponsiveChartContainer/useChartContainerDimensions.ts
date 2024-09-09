@@ -3,7 +3,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
 
 export const useChartContainerDimensions = (inWidth?: number, inHeight?: number) => {
-  const displayError = React.useRef<boolean>(false);
+  const stateRef = React.useRef({ displayError: false, initialCompute: true, computeRun: 0 });
   const rootRef = React.useRef(null);
 
   const [width, setWidth] = React.useState(0);
@@ -14,7 +14,7 @@ export const useChartContainerDimensions = (inWidth?: number, inHeight?: number)
     const mainEl = rootRef?.current;
 
     if (!mainEl) {
-      return;
+      return {};
     }
 
     const win = ownerWindow(mainEl);
@@ -25,12 +25,31 @@ export const useChartContainerDimensions = (inWidth?: number, inHeight?: number)
 
     setWidth(newWidth);
     setHeight(newHeight);
+
+    return { width: newWidth, height: newHeight };
   }, []);
 
   React.useEffect(() => {
     // Ensure the error detection occurs after the first rendering.
-    displayError.current = true;
+    stateRef.current.displayError = true;
   }, []);
+
+  // This effect is used to compute the size of the container on the initial render.
+  // It is not bound to the raf loop to avoid an unwanted "resize" event.
+  // https://github.com/mui/mui-x/issues/13477#issuecomment-2336634785
+  useEnhancedEffect(() => {
+    // computeRun is used to avoid infinite loops.
+    if (!stateRef.current.initialCompute || stateRef.current.computeRun > 20) {
+      return;
+    }
+
+    const computedSize = computeSize();
+    if (computedSize.width !== width || computedSize.height !== height) {
+      stateRef.current.computeRun += 1;
+    } else if (stateRef.current.initialCompute) {
+      stateRef.current.initialCompute = false;
+    }
+  }, [width, height, computeSize]);
 
   useEnhancedEffect(() => {
     if (inWidth !== undefined && inHeight !== undefined) {
@@ -67,17 +86,17 @@ export const useChartContainerDimensions = (inWidth?: number, inHeight?: number)
   }, [computeSize, inHeight, inWidth]);
 
   if (process.env.NODE_ENV !== 'production') {
-    if (displayError.current && inWidth === undefined && width === 0) {
+    if (stateRef.current.displayError && inWidth === undefined && width === 0) {
       console.error(
         `MUI X: ChartContainer does not have \`width\` prop, and its container has no \`width\` defined.`,
       );
-      displayError.current = false;
+      stateRef.current.displayError = false;
     }
-    if (displayError.current && inHeight === undefined && height === 0) {
+    if (stateRef.current.displayError && inHeight === undefined && height === 0) {
       console.error(
         `MUI X: ChartContainer does not have \`height\` prop, and its container has no \`height\` defined.`,
       );
-      displayError.current = false;
+      stateRef.current.displayError = false;
     }
   }
 
