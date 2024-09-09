@@ -30,7 +30,7 @@ export interface GridRowSpanningState {
 
 const EMPTY_STATE = { spannedCells: {}, hiddenCells: {}, hiddenCellOriginMap: {} };
 const EMPTY_RANGE = { firstRowIndex: 0, lastRowIndex: 0 };
-const skippedFields = new Set(['__check__', '__reorder__']);
+const skippedFields = new Set(['__check__', '__reorder__', '__detail_panel_toggle__']);
 
 const computeRowSpanningState = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
