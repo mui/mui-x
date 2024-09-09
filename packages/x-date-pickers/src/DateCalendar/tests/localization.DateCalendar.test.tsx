@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen, createRenderer, act } from '@mui/internal-test-utils';
+import { screen, createRenderer } from '@mui/internal-test-utils';
 import { DateCalendar, dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { createPickerRenderer, AdapterName, availableAdapters } from 'test/utils/pickers';
@@ -39,10 +39,8 @@ describe('<DateCalendar /> - localization', () => {
           'Sunday',
         );
 
-        act(() => {
-          setProps({
-            adapterLocale: adapterName === 'date-fns' ? fr : 'fr',
-          });
+        setProps({
+          adapterLocale: adapterName === 'date-fns' ? fr : 'fr',
         });
 
         expect(document.querySelector(`.${dayCalendarClasses.weekDayLabel}`)!.ariaLabel).to.equal(
