@@ -51,7 +51,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
     width,
     height,
     viewBox,
-    disableAxisListener = false,
+    disableAxisListener = true,
     className,
     title,
     desc,

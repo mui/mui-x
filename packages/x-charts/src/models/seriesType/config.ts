@@ -3,6 +3,7 @@ import { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from '.
 import { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
 import { PieSeriesType, DefaultizedPieSeriesType, PieItemIdentifier, PieValueType } from './pie';
 import { DefaultizedProps, MakeOptional } from '../helpers';
+import { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
 
 export interface ChartsSeriesConfig {
   bar: {
@@ -44,6 +45,12 @@ export interface ChartsSeriesConfig {
     series: DefaultizedPieSeriesType;
     seriesProp: PieSeriesType<MakeOptional<PieValueType, 'id'>>;
     itemIdentifier: PieItemIdentifier;
+  };
+  radar: {
+    seriesInput: DefaultizedProps<RadarSeriesType, 'id'> & { color: string };
+    series: DefaultizedRadarSeriesType;
+    seriesProp: RadarSeriesType;
+    itemIdentifier: RadarItemIdentifier;
   };
 }
 
