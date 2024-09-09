@@ -44,7 +44,7 @@ export interface MarkPlotProps
   ) => void;
   /**
    * If `true` the mark element will only be able to render circle.
-   * Giving less customization options, but saving around 40ms per 1.000 marks.
+   * Giving fewer customization options, but saving around 40ms per 1.000 marks.
    * @default false
    */
   perfUpdate?: boolean;
@@ -191,7 +191,7 @@ MarkPlot.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * If `true` the mark element will only be able to render circle.
-   * Giving less customization options, but saving around 40ms per 1.000 marks.
+   * Giving fewer customization options, but saving around 40ms per 1.000 marks.
    * @default false
    */
   perfUpdate: PropTypes.bool,
