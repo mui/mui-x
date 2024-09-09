@@ -170,7 +170,7 @@ const {
 } = useTreeItem2(props);
 ```
 
-You can use these statuses to apply custom styling to the item, or conditionally render subcomponents.
+You can use these statuses to apply custom styling to the item, or conditionally render sub-components.
 
 {{"demo": "useTreeItem2HookStatus.js"}}
 
@@ -216,3 +216,22 @@ By default, a tree item is expanded when clicking the content. You can change th
 To achieve a deeper customization of the expansion of an item use the `handleExpansion` interaction method. The demo below demonstrates how to introduce a new element that expands or collapses the item.
 
 {{"demo": "HandleExpansionDemo.js"}}
+
+#### Label editing
+
+The `useTreeItem2Utils` hook provides the following interaction methods related to the label editing behavior"
+
+```jsx
+const {
+  interactions: {
+    toggleItemEditing,
+    handleCancelItemLabelEditing,
+    handleSaveItemLabel,
+  },
+} = useTreeItem2Utils({
+  itemId: props.itemId,
+  children: props.children,
+});
+```
+
+To read more about customizing the editing behavior head to the [dedicated section](/x/react-tree-view/rich-tree-view/editing/#enable-editing-using-only-icons/) in the documentation.

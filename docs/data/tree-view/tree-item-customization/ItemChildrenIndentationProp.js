@@ -35,7 +35,7 @@ const MUI_X_PRODUCTS = [
 
 export default function ItemChildrenIndentationProp() {
   return (
-    <Box sx={{ minHeight: 352, minWidth: 250 }}>
+    <Box sx={{ minHeight: 352, minWidth: 350 }}>
       <RichTreeView
         items={MUI_X_PRODUCTS}
         itemChildrenIndentation={24}

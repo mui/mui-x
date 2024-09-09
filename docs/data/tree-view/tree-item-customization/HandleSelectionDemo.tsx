@@ -80,7 +80,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
 
 export default function HandleSelectionDemo() {
   return (
-    <Box sx={{ minHeight: 200, minWidth: 250 }}>
+    <Box sx={{ minHeight: 200, minWidth: 350 }}>
       <RichTreeView
         defaultExpandedItems={['grid', 'pickers']}
         items={MUI_X_PRODUCTS}

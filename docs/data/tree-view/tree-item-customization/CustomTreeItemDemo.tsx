@@ -216,7 +216,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
 
 export default function CustomTreeItemDemo() {
   return (
-    <Box sx={{ minHeight: 120, minWidth: 250 }}>
+    <Box sx={{ minHeight: 120, minWidth: 350 }}>
       <RichTreeView
         defaultExpandedItems={['1']}
         items={ITEMS}

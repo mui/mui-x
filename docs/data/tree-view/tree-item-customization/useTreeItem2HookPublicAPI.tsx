@@ -54,7 +54,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
 
 export default function useTreeItem2HookPublicAPI() {
   return (
-    <Box sx={{ minHeight: 200, minWidth: 300 }}>
+    <Box sx={{ minHeight: 200, minWidth: 350 }}>
       <RichTreeView
         defaultExpandedItems={['pickers']}
         items={MUI_X_PRODUCTS}

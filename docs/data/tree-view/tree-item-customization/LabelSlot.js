@@ -90,7 +90,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
 
 export default function LabelSlot() {
   return (
-    <Box sx={{ minHeight: 200, minWidth: 250 }}>
+    <Box sx={{ minHeight: 200, minWidth: 350 }}>
       <RichTreeView
         defaultExpandedItems={['pickers']}
         items={MUI_X_PRODUCTS}

@@ -33,7 +33,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
 
 export default function CheckboxSlotProps() {
   return (
-    <Box sx={{ minHeight: 200, minWidth: 250 }}>
+    <Box sx={{ minHeight: 200, minWidth: 350 }}>
       <RichTreeView
         defaultExpandedItems={['grid', 'pickers']}
         checkboxSelection

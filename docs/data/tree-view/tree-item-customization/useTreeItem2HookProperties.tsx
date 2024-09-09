@@ -57,7 +57,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
 
 export default function useTreeItem2HookProperties() {
   return (
-    <Box sx={{ minHeight: 200, minWidth: 250 }}>
+    <Box sx={{ minHeight: 200, minWidth: 350 }}>
       <RichTreeView
         items={MUI_X_PRODUCTS}
         defaultExpandedItems={['grid']}

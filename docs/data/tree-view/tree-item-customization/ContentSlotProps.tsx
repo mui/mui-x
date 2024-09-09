@@ -29,7 +29,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
 
 export default function ContentSlotProps() {
   return (
-    <Stack sx={{ minHeight: 200, minWidth: 250 }} spacing={2}>
+    <Stack sx={{ minHeight: 200, minWidth: 350 }} spacing={2}>
       <RichTreeView
         defaultExpandedItems={['pickers']}
         items={MUI_X_PRODUCTS}
