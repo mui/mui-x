@@ -24,6 +24,10 @@ See the [Customizing row spanned cells](#customizing-row-spanned-cells) section 
 The row spanning generally works with features like [sorting](/x/react-data-grid/sorting/) and [filtering](/x/react-data-grid/filtering/), be sure to check if everything works as expected when using it in combination with features like [column spanning](/x/react-data-grid/column-spanning/).
 :::
 
+:::warning
+The row spanning works by increasing the height of the spanned cell by a factor `rowHeight`, it doesn't work properly with variable and dynamic row height.
+:::
+
 ## Customizing row spanned cells
 
 You could customize the value used in row spanning computation using `colDef.rowSpanValueGetter` prop and both the value used in row spanning computation and the value used in cell using `colDef.valueGetter` prop.
