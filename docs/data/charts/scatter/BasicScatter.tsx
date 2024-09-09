@@ -177,7 +177,7 @@ export default function BasicScatter() {
         },
         {
           label: 'Series B',
-          data: data.map((v) => ({ x: v.x1, y: v.y2, id: v.id })),
+          data: data.map((v) => ({ x: v.x1, y: v.y2, id: `${v.id}b` })),
         },
       ]}
     />
