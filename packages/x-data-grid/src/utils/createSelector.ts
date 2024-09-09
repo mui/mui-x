@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { lruMemoize, createSelectorCreator, Selector, SelectorResultArray } from 'reselect';
+import { warnOnce } from '@mui/x-internals/warning';
 import type { GridCoreApi } from '../models/api/gridCoreApi';
-import { warnOnce } from '../internals/utils/warning';
 
 type CacheKey = { id: number };
 

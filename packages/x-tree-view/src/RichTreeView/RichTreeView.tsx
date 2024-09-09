@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
+import { warnOnce } from '@mui/x-internals/warning';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
 import { RichTreeViewProps } from './RichTreeView.types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
@@ -9,7 +10,6 @@ import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { TreeItem, TreeItemProps } from '../TreeItem';
-import { warnOnce } from '../internals/utils/warning';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 

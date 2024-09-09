@@ -2,13 +2,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
+import { warnOnce } from '@mui/x-internals/warning';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getSimpleTreeViewUtilityClass } from './simpleTreeViewClasses';
 import { SimpleTreeViewProps } from './SimpleTreeView.types';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { SIMPLE_TREE_VIEW_PLUGINS, SimpleTreeViewPluginSignatures } from './SimpleTreeView.plugins';
-import { warnOnce } from '../internals/utils/warning';
 
 const useThemeProps = createUseThemeProps('MuiSimpleTreeView');
 

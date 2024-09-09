@@ -1,7 +1,6 @@
 const warnedOnceCache = new Set();
 
-// TODO move to @mui/x-internals
-// TODO eventually move to @base_ui/internals. Base UI, etc. too need this helper.
+// TODO move to @base_ui/internals. Base UI, etc. need this helper.
 export function warnOnce(message: string | string[], gravity: 'warning' | 'error' = 'warning') {
   if (process.env.NODE_ENV === 'production') {
     return;

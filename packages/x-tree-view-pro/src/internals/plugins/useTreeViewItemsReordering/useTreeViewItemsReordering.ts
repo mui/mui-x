@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { warnOnce, TreeViewPlugin } from '@mui/x-tree-view/internals';
+import { TreeViewPlugin } from '@mui/x-tree-view/internals';
+import { warnOnce } from '@mui/x-internals/warning';
 import { TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
 import {
   TreeViewItemItemReorderingValidActions,
