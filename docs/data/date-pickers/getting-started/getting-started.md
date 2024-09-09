@@ -62,9 +62,10 @@ yarn add @mui/material @emotion/react @emotion/styled
   "react-dom": "^17.0.0 || ^18.0.0"
 },
 ```
+
 ## Date library adapter setup
 
-To integrate your chosen date library, you'll need to plug the corresponding adapter into a `LocalizationProvider` that wraps your Picker components.
+To integrate your chosen date library with the Date and Time Pickers, you'll need to plug the corresponding adapter into a `LocalizationProvider` that wraps your Picker components.
 
 Adapters are provided for each of the supported libraries, and all are exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`—for example,`AdapterDayjs`, which is used throughout this documentation for [Day.js](https://day.js.org/) integration:
 
