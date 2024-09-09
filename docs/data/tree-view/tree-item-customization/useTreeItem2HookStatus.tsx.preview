@@ -1,4 +1,4 @@
-<Box sx={{ minHeight: 200, minWidth: 300 }}>
+<Box sx={{ minHeight: 200, minWidth: 350 }}>
   <RichTreeView
     items={MUI_X_PRODUCTS}
     defaultExpandedItems={['pickers']}

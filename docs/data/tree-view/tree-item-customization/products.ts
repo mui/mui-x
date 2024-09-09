@@ -21,7 +21,6 @@ export const MUI_X_PRODUCTS: TreeViewBaseItem<TreeItemType>[] = [
   {
     id: 'pickers',
     label: 'Date and time pickers',
-    editable: true,
     children: [
       {
         id: 'pickers-community',

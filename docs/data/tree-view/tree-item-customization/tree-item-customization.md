@@ -15,7 +15,10 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 Each tree item is shaped by a series of composable slots. Hover over them in the demo below to see each slot.
 
-{{"demo": "CustomTreeItemDemo.js", "hideToolbar": true}}
+<!-- TBD which option is the best: interactive or image -->
+<!-- {{"demo": "CustomTreeItemDemo.js", "hideToolbar": true}} -->
+
+{{"component": "modules/components/TreeItem2Anatomy.js"}}
 
 ### Content
 
@@ -173,4 +176,12 @@ You can use these statuses to apply custom styling to the item, or conditionally
 
 #### Imperative API
 
+The `publicAPI` provides a number of methods to programatically interact with the Tree View. You can use the `useTreeItem2` hook to access the `publicAPI` object from within the Tree Item.
+
+{{"demo": "useTreeItem2HookPublicAPI.js"}}
+
+You can read more about the public API methods on each feature page of the Tree View.
+
 ### `useTreeItemUtils`
+
+{{"demo": "HandleCheckboxSelectionDemo.js"}}

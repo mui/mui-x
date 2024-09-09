@@ -29,7 +29,13 @@ function StatusLegend() {
     <Paper
       variant="outlined"
       elevation={2}
-      sx={(theme) => ({ padding: 2, background: theme.palette.grey[50] })}
+      sx={(theme) => ({
+        padding: 2,
+        background: theme.palette.grey[50],
+        ...theme.applyStyles('dark', {
+          background: theme.palette.grey[900],
+        }),
+      })}
     >
       <Stack spacing={1}>
         <Typography variant="subtitle2">Legend</Typography>
@@ -107,7 +113,11 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
           <Stack direction="row">
             {Object.keys(STATUS_ICONS).map((iconKey, index) => {
               if (status[iconKey]) {
-                return <div key={index}>{STATUS_ICONS[iconKey]}</div>;
+                return (
+                  <Box key={index} sx={{ display: 'flex' }}>
+                    {STATUS_ICONS[iconKey]}
+                  </Box>
+                );
               }
               return null;
             })}
@@ -122,7 +132,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
 export default function useTreeItem2HookStatus() {
   return (
     <Stack spacing={6} direction={{ md: 'row' }}>
-      <Box sx={{ minHeight: 200, minWidth: 300 }}>
+      <Box sx={{ minHeight: 200, minWidth: 350 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
           defaultExpandedItems={['pickers']}
