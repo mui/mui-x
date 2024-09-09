@@ -1,11 +1,17 @@
 import * as React from 'react';
 import { useGridApiContext } from '@mui/x-data-grid';
-import { COUNTRY_ISO_OPTIONS } from '@mui/x-data-grid-generator/services';
 import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
 
 import Box from '@mui/material/Box';
 import InputBase from '@mui/material/InputBase';
 import { styled } from '@mui/material/styles';
+
+export const COUNTRY_ISO_OPTIONS = [
+  { value: 'DE', code: 'DE', label: 'Germany', phone: '49' },
+  { value: 'ES', code: 'ES', label: 'Spain', phone: '34' },
+  { value: 'FR', code: 'FR', label: 'France', phone: '33' },
+  { value: 'GB', code: 'GB', label: 'United Kingdom', phone: '44' },
+];
 
 const Country = React.memo(function Country(props) {
   const { value } = props;

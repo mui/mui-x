@@ -8,7 +8,16 @@ import Select from '@mui/material/Select';
 import Tooltip from '@mui/material/Tooltip';
 import InfoIcon from '@mui/icons-material/Info';
 import { useGridApiContext } from '@mui/x-data-grid';
-import { INCOTERM_OPTIONS } from '@mui/x-data-grid-generator/services';
+
+export const INCOTERM_OPTIONS = [
+  'EXW (Ex Works)',
+  'FAS (Free Alongside Ship)',
+  'FCA (Free Carrier)',
+  'CPT (Carriage Paid To)',
+  'DAP (Delivered at Place)',
+  'DPU (Delivered at Place Unloaded)',
+  'DDP (Delivered Duty Paid)',
+];
 
 const Incoterm = React.memo(function Incoterm(props) {
   const { value } = props;

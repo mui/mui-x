@@ -17,7 +17,8 @@ import {
   useGridApiContext,
   useGridRootProps,
 } from '@mui/x-data-grid';
-import { STATUS_OPTIONS } from '@mui/x-data-grid-generator/services';
+
+export const STATUS_OPTIONS = ['Open', 'PartiallyFilled', 'Filled', 'Rejected'];
 
 interface StatusProps {
   status: string;

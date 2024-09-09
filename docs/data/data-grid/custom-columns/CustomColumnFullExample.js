@@ -1,29 +1,33 @@
 import * as React from 'react';
 import {
-  generateFilledQuantity,
   randomColor,
-  randomCountry,
   randomEmail,
-  randomIncoterm,
   randomInt,
   randomName,
-  randomRating,
-  randomStatusOptions,
+  randomArrayItem,
+  random,
 } from '@mui/x-data-grid-generator';
-import {
-  COUNTRY_ISO_OPTIONS_SORTED,
-  INCOTERM_OPTIONS,
-  STATUS_OPTIONS,
-} from '@mui/x-data-grid-generator/services';
 import { DataGrid, gridStringOrNumberComparator } from '@mui/x-data-grid';
 import { renderAvatar } from './cell-renderers/avatar';
 import { renderEmail } from './cell-renderers/email';
 import { renderEditRating, renderRating } from './cell-renderers/rating';
-import { renderCountry, renderEditCountry } from './cell-renderers/country';
+import {
+  COUNTRY_ISO_OPTIONS,
+  renderCountry,
+  renderEditCountry,
+} from './cell-renderers/country';
 import { renderSparkline } from './cell-renderers/sparkline';
 import { renderEditProgress, renderProgress } from './cell-renderers/progress';
-import { renderEditStatus, renderStatus } from './cell-renderers/status';
-import { renderEditIncoterm, renderIncoterm } from './cell-renderers/incoterm';
+import {
+  renderEditStatus,
+  renderStatus,
+  STATUS_OPTIONS,
+} from './cell-renderers/status';
+import {
+  INCOTERM_OPTIONS,
+  renderEditIncoterm,
+  renderIncoterm,
+} from './cell-renderers/incoterm';
 
 const columns = [
   {
@@ -66,7 +70,7 @@ const columns = [
     field: 'country',
     headerName: 'Country',
     type: 'singleSelect',
-    valueOptions: COUNTRY_ISO_OPTIONS_SORTED,
+    valueOptions: COUNTRY_ISO_OPTIONS,
     valueFormatter: (value) => value?.label,
     renderCell: renderCountry,
     renderEditCell: renderEditCountry,
@@ -137,13 +141,13 @@ const rows = Array.from({ length: 10 }, (_, index) => ({
   name: randomName({}, {}),
   avatar: randomColor(),
   email: randomEmail(),
-  rating: randomRating(),
-  country: randomCountry(),
+  rating: randomInt(1, 5),
+  country: randomArrayItem(COUNTRY_ISO_OPTIONS),
   salary: randomInt(35000, 80000),
   monthlyActivity: Array.from({ length: 30 }, () => randomInt(1, 25)),
-  budget: generateFilledQuantity({ quantity: 100 }),
-  status: randomStatusOptions(),
-  incoTerm: randomIncoterm(),
+  budget: random(0, 1).toPrecision(),
+  status: randomArrayItem(STATUS_OPTIONS),
+  incoTerm: randomArrayItem(INCOTERM_OPTIONS),
 }));
 
 export default function CustomColumnFullExample() {

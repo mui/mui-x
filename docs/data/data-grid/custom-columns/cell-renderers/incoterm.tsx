@@ -12,7 +12,16 @@ import {
   GridRenderEditCellParams,
   useGridApiContext,
 } from '@mui/x-data-grid';
-import { INCOTERM_OPTIONS } from '@mui/x-data-grid-generator/services';
+
+export const INCOTERM_OPTIONS = [
+  'EXW (Ex Works)',
+  'FAS (Free Alongside Ship)',
+  'FCA (Free Carrier)',
+  'CPT (Carriage Paid To)',
+  'DAP (Delivered at Place)',
+  'DPU (Delivered at Place Unloaded)',
+  'DDP (Delivered Duty Paid)',
+];
 
 interface IncotermProps {
   value: string | null | undefined;
