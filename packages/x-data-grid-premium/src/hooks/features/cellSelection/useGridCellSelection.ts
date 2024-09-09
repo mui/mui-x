@@ -292,7 +292,7 @@ export const useGridCellSelection = (
       }
 
       const { x: mouseX, y: mouseY } = mousePosition.current;
-      const { height, width } = dimensions.viewportInnerSize;
+      const { height, width } = dimensions.viewportOuterSize;
 
       let deltaX = 0;
       let deltaY = 0;
@@ -353,7 +353,7 @@ export const useGridCellSelection = (
       }
 
       const { x, y } = virtualScrollerRect;
-      const { height, width } = dimensions.viewportInnerSize;
+      const { height, width } = dimensions.viewportOuterSize;
       const mouseX = event.clientX - x;
       const mouseY = event.clientY - y - totalHeaderHeight;
       mousePosition.current = { x: mouseX, y: mouseY };
