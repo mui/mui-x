@@ -21,29 +21,14 @@ import {
   GridColDef,
   gridStringOrNumberComparator,
 } from '@mui/x-data-grid';
-import { renderAvatar } from '../../components/grid-cell-renderers/avatar';
-import { renderEmail } from '../../components/grid-cell-renderers/email';
-import {
-  renderEditRating,
-  renderRating,
-} from '../../components/grid-cell-renderers/rating';
-import {
-  renderCountry,
-  renderEditCountry,
-} from '../../components/grid-cell-renderers/country';
-import { renderSparkline } from '../../components/grid-cell-renderers/sparkline';
-import {
-  renderEditProgress,
-  renderProgress,
-} from '../../components/grid-cell-renderers/progress';
-import {
-  renderEditStatus,
-  renderStatus,
-} from '../../components/grid-cell-renderers/status';
-import {
-  renderEditIncoterm,
-  renderIncoterm,
-} from '../../components/grid-cell-renderers/incoterm';
+import { renderAvatar } from './cell-renderers/avatar';
+import { renderEmail } from './cell-renderers/email';
+import { renderEditRating, renderRating } from './cell-renderers/rating';
+import { renderCountry, renderEditCountry } from './cell-renderers/country';
+import { renderSparkline } from './cell-renderers/sparkline';
+import { renderEditProgress, renderProgress } from './cell-renderers/progress';
+import { renderEditStatus, renderStatus } from './cell-renderers/status';
+import { renderEditIncoterm, renderIncoterm } from './cell-renderers/incoterm';
 
 const columns: GridColDef<(typeof rows)[number]>[] = [
   {
