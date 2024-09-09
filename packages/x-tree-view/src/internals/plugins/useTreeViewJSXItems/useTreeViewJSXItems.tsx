@@ -25,7 +25,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
   instance.preventItemUpdates();
 
   const insertJSXItem = useEventCallback((item: TreeViewItemMeta) => {
-    store.updateState((prevState) => {
+    store.update((prevState) => {
       if (prevState.items.itemMetaMap[item.id] != null) {
         throw new Error(
           [
@@ -48,7 +48,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
     });
 
     return () => {
-      store.updateState((prevState) => {
+      store.update((prevState) => {
         const newItemMetaMap = { ...prevState.items.itemMetaMap };
         const newItemMap = { ...prevState.items.itemMap };
         delete newItemMetaMap[item.id];
@@ -69,7 +69,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
   const setJSXItemsOrderedChildrenIds = (parentId: string | null, orderedChildrenIds: string[]) => {
     const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
 
-    store.updateState((prevState) => ({
+    store.update((prevState) => ({
       ...prevState,
       items: {
         ...prevState.items,

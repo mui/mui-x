@@ -1,19 +1,28 @@
 import { TreeViewAnyPluginSignature, TreeViewUsedStore } from '../models';
-import { Store } from './Store';
+import { TreeViewStore } from './TreeViewStore';
 
-export type TreeViewSelector<TSignature extends TreeViewAnyPluginSignature, TValue> = (
-  storeOrStoreValue: TreeViewUsedStore<TSignature> | TreeViewUsedStore<TSignature>['value'],
+type DefaultSignatures = readonly TreeViewAnyPluginSignature[] | TreeViewAnyPluginSignature;
+
+type StoreFromSignatures<TSignatures extends DefaultSignatures> =
+  TSignatures extends readonly TreeViewAnyPluginSignature[]
+    ? TreeViewStore<TSignatures>
+    : TSignatures extends TreeViewAnyPluginSignature
+      ? TreeViewUsedStore<TSignatures>
+      : TreeViewStore<[]>;
+
+export type TreeViewSelector<TSignatures extends DefaultSignatures, TValue> = (
+  storeOrStoreValue: StoreFromSignatures<TSignatures> | StoreFromSignatures<TSignatures>['value'],
 ) => TValue;
 
-export type TreeViewRawSelector<TSignature extends TreeViewAnyPluginSignature, TValue> = (
-  storeValue: TreeViewUsedStore<TSignature>['value'],
+export type TreeViewRawSelector<TSignatures extends DefaultSignatures, TValue> = (
+  storeValue: StoreFromSignatures<TSignatures>['value'],
 ) => TValue;
 
-export function createSelector<TSignature extends TreeViewAnyPluginSignature, TValue>(
-  selector: TreeViewRawSelector<TSignature, TValue>,
-): TreeViewSelector<TSignature, TValue> {
+export function createSelector<TSignatures extends DefaultSignatures, TValue>(
+  selector: TreeViewRawSelector<TSignatures, TValue>,
+): TreeViewSelector<TSignatures, TValue> {
   return (storeOrStoreValue) => {
-    if (storeOrStoreValue instanceof Store) {
+    if (storeOrStoreValue instanceof TreeViewStore) {
       return selector(storeOrStoreValue.value);
     }
 

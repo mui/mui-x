@@ -8,7 +8,11 @@ import { createSelector } from '../../utils/createSelector';
  * @param {TreeViewInstance<[UseTreeViewFocusSignature]>} instance The instance of the tree view.
  * @returns {string} `true` if the item can be sequentially focusable, `false` otherwise.
  */
-export const treeViewDefaultFocusableItemIdSelector = createSelector<
+export const selectorDefaultFocusableItemId = createSelector<
   UseTreeViewFocusSignature,
   string | null
->((storeValue) => storeValue.cache.defaultFocusableItemId);
+>((storeValue) => storeValue.focus.defaultFocusableItemId);
+
+export const selectorFocusedItemId = createSelector<UseTreeViewFocusSignature, string | null>(
+  (storeValue) => storeValue.focus.focusedItemId,
+);

@@ -6,7 +6,7 @@ import { TreeViewEventLookupElement } from './events';
 import type { TreeViewCorePluginSignatures } from '../corePlugins';
 import { TreeViewItemPlugin } from './itemPlugin';
 import { TreeViewItemId } from '../../models';
-import { Store } from '../utils/Store';
+import { TreeViewStore } from '../utils/TreeViewStore';
 
 export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSignature> {
   instance: TreeViewUsedInstance<TSignature>;
@@ -123,15 +123,9 @@ export type TreeViewUsedInstance<TSignature extends TreeViewAnyPluginSignature> 
     $$signature: TSignature;
   };
 
-export type TreeViewUsedStore<TSignature extends TreeViewAnyPluginSignature> = Store<
+export type TreeViewUsedStore<TSignature extends TreeViewAnyPluginSignature> = TreeViewStore<
   [TSignature, ...TSignature['dependencies']]
 >;
-
-export type TreeViewUsedState<TSignature extends TreeViewAnyPluginSignature> =
-  PluginPropertyWithDependencies<TSignature, 'state'>;
-
-export type TreeViewUsedCacheValue<TSignature extends TreeViewAnyPluginSignature> =
-  PluginPropertyWithDependencies<TSignature, 'cache'>;
 
 type TreeViewUsedExperimentalFeatures<TSignature extends TreeViewAnyPluginSignature> =
   TreeViewExperimentalFeatures<[TSignature, ...TSignature['dependencies']]>;

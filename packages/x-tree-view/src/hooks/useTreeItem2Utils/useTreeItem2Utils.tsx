@@ -12,7 +12,7 @@ import {
 import type { UseTreeItem2Status } from '../../useTreeItem2';
 import { hasPlugin } from '../../internals/utils/plugins';
 import { useSelector } from '../../internals/hooks/useSelector';
-import { treeViewExpandedItemsMapSelector } from '../../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
+import { selectorExpandedItemsMap } from '../../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
 
 export interface UseTreeItem2Interactions {
   handleExpansion: (event: React.MouseEvent) => void;
@@ -65,7 +65,7 @@ export const useTreeItem2Utils = ({
   } = useTreeViewContext<UseTreeItem2UtilsMinimalPlugins, UseTreeItem2UtilsOptionalPlugins>();
 
   const isExpanded = useSelector(store, (storeValue) =>
-    treeViewExpandedItemsMapSelector(storeValue).has(itemId),
+    selectorExpandedItemsMap(storeValue).has(itemId),
   );
 
   const status: UseTreeItem2Status = {

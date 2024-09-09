@@ -4,6 +4,8 @@ import { TreeViewPlugin } from '../../models';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewLabelSignature } from './useTreeViewLabel.types';
 import { useTreeViewLabelItemPlugin } from './useTreeViewLabel.itemPlugin';
+import { useSelector } from '../../hooks/useSelector';
+import { selectorEditedItemId } from './useTreeViewLabel.selectors';
 
 export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
   instance,
@@ -20,16 +22,17 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
       ]);
     }
   }
-  const editedItemRef = React.useRef(store.value.state.editedItemId);
+
+  const editedItemRef = React.useRef(useSelector(store, selectorEditedItemId));
 
   const isItemBeingEditedRef = (itemId: TreeViewItemId) => editedItemRef.current === itemId;
 
   const setEditedItemId = (editedItemId: TreeViewItemId | null) => {
-    store.updateState((prevState) => ({ ...prevState, editedItemId }));
+    store.update((prevState) => ({ ...prevState, newEditedItemId: editedItemId }));
     editedItemRef.current = editedItemId;
   };
 
-  const isItemBeingEdited = (itemId: TreeViewItemId) => itemId === store.value.state.editedItemId;
+  const isItemBeingEdited = (itemId: TreeViewItemId) => itemId === selectorEditedItemId(store);
 
   const isTreeViewEditable = Boolean(params.isItemEditable) && !!experimentalFeatures.labelEditing;
 
@@ -57,7 +60,7 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
         ].join('\n'),
       );
     }
-    store.updateState((prevState) => {
+    store.update((prevState) => {
       const item = prevState.items.itemMetaMap[itemId];
       if (item.label !== label) {
         return {

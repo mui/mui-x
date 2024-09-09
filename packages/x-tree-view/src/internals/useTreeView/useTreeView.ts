@@ -8,8 +8,6 @@ import {
   TreeViewPublicAPI,
   ConvertSignaturesIntoPlugins,
   TreeViewState,
-  TreeViewCacheValue,
-  TreeViewUsedStore,
 } from '../models';
 import {
   UseTreeViewBaseProps,
@@ -21,7 +19,7 @@ import { useTreeViewModels } from './useTreeViewModels';
 import { TREE_VIEW_CORE_PLUGINS, TreeViewCorePluginSignatures } from '../corePlugins';
 import { extractPluginParamsFromProps } from './extractPluginParamsFromProps';
 import { useTreeViewBuildContext } from './useTreeViewBuildContext';
-import { Store } from '../utils/Store';
+import { TreeViewStore } from '../utils/TreeViewStore';
 
 export function useTreeViewApiInitialization<T>(
   inputApiRef: React.MutableRefObject<T | undefined> | undefined,
@@ -68,21 +66,17 @@ export const useTreeView = <
   const innerRootRef: React.RefObject<HTMLUListElement> = React.useRef(null);
   const handleRootRef = useForkRef(innerRootRef, rootRef);
 
-  const storeRef = React.useRef<Store<TSignaturesWithCorePluginSignatures> | null>(null);
+  const storeRef = React.useRef<TreeViewStore<TSignaturesWithCorePluginSignatures> | null>(null);
   if (storeRef.current == null) {
     const initialState = {} as TreeViewState<TSignaturesWithCorePluginSignatures>;
-    const initialCache = {} as TreeViewCacheValue<TSignaturesWithCorePluginSignatures>;
 
     plugins.forEach((plugin) => {
       if (plugin.getInitialState) {
         Object.assign(initialState, plugin.getInitialState(pluginParams));
       }
-      if (plugin.getInitialCache) {
-        Object.assign(initialCache, plugin.getInitialCache());
-      }
     });
 
-    storeRef.current = new Store({ state: initialState, cache: initialCache });
+    storeRef.current = new TreeViewStore(initialState);
   }
 
   const contextValue = useTreeViewBuildContext({

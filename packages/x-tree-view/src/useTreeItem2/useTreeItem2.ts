@@ -27,7 +27,7 @@ import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
 import { useSelector } from '../internals/hooks/useSelector';
-import { treeViewDefaultFocusableItemIdSelector } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
+import { selectorDefaultFocusableItemId } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 
 export const useTreeItem2 = <
   TSignatures extends UseTreeItem2MinimalPlugins = UseTreeItem2MinimalPlugins,
@@ -58,7 +58,7 @@ export const useTreeItem2 = <
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
   const rootTabIndex = useSelector(store, (storeValue) =>
-    treeViewDefaultFocusableItemIdSelector(storeValue) === parameters.itemId ? 0 : -1,
+    selectorDefaultFocusableItemId(storeValue) === parameters.itemId ? 0 : -1,
   );
 
   const sharedPropsEnhancerParams: Omit<
