@@ -50,17 +50,28 @@ describe('<YearCalendar />', () => {
   });
 
   it('should display years in chronological order by default', () => {
-    render(<YearCalendar minDate={adapterToUse.date('2020-01-01')} maxDate={adapterToUse.date('2024-12-31')} />);
+    render(
+      <YearCalendar
+        minDate={adapterToUse.date('2020-01-01')}
+        maxDate={adapterToUse.date('2024-12-31')}
+      />,
+    );
 
-    const yearButttons = screen.queryAllByMuiTest("year") 
-    expect(yearButttons[0].children.item(0)?.textContent).to.equal('2020')
+    const yearButttons = screen.queryAllByMuiTest('year');
+    expect(yearButttons[0].children.item(0)?.textContent).to.equal('2020');
   });
 
   it('should display years in reverse chronological order when props.reverseYears = true ', () => {
-    render(<YearCalendar minDate={adapterToUse.date('2020-01-01')} maxDate={adapterToUse.date('2024-12-31')} reverseYears />);
+    render(
+      <YearCalendar
+        minDate={adapterToUse.date('2020-01-01')}
+        maxDate={adapterToUse.date('2024-12-31')}
+        reverseYears
+      />,
+    );
 
-    const yearButtons = screen.queryAllByMuiTest("year")
-    expect(yearButtons[0].children.item(0)?.textContent).to.equal("2024")
+    const yearButtons = screen.queryAllByMuiTest('year');
+    expect(yearButtons[0].children.item(0)?.textContent).to.equal('2024');
   });
 
   describe('Disabled', () => {
