@@ -1,15 +1,14 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { GridColDef } from '../../../models/colDef';
-import { GridRowId, GridValidRowModel } from '../../../models/gridRows';
+import { GridRowId, GridValidRowModel, GridRowEntry } from '../../../models/gridRows';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRenderContextSelector } from '../virtualization/gridVirtualizationSelectors';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { GridRowEntry } from '../../../models/gridRows';
 import {
   getUnprocessedRange,
   isRowRenderContextUpdated,
@@ -28,17 +27,19 @@ export interface GridRowSpanningState {
   hiddenCellOriginMap: Record<number, Record<GridColDef['field'], number>>;
 }
 
+type RowRange = { firstRowIndex: number; lastRowIndex: number };
+
 const EMPTY_STATE = { spannedCells: {}, hiddenCells: {}, hiddenCellOriginMap: {} };
-const EMPTY_RANGE = { firstRowIndex: 0, lastRowIndex: 0 };
+const EMPTY_RANGE: RowRange = { firstRowIndex: 0, lastRowIndex: 0 };
 const skippedFields = new Set(['__check__', '__reorder__', '__detail_panel_toggle__']);
 
 const computeRowSpanningState = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   colDefs: GridColDef[],
   visibleRows: GridRowEntry<GridValidRowModel>[],
-  rangeToProcess: { firstRowIndex: number; lastRowIndex: number },
-  resetState: boolean = true,
-  processedRange: { firstRowIndex: number; lastRowIndex: number },
+  rangeToProcess: RowRange,
+  resetState: boolean,
+  processedRange: RowRange,
 ) => {
   const spannedCells = resetState ? {} : { ...apiRef.current.state.rowSpanning.spannedCells };
   const hiddenCells = resetState ? {} : { ...apiRef.current.state.rowSpanning.hiddenCells };
@@ -159,7 +160,7 @@ export const rowSpanningStateInitializer: GridStateInitializer = (state, props, 
     }
     const rangeToProcess = {
       firstRowIndex: 0,
-      lastRowIndex: Math.min(19, rowIds.length - 1),
+      lastRowIndex: Math.min(19, Math.max(rowIds.length - 1, 0)),
     };
     const rows = rowIds.map((id) => ({
       id,
@@ -197,10 +198,10 @@ export const useGridRowSpanning = (
   const { range, rows: visibleRows } = useGridVisibleRows(apiRef, props);
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
   const colDefs = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
-  const processedRange = useLazyRef(() => {
+  const processedRange = useLazyRef<RowRange, void>(() => {
     return {
       firstRowIndex: 0,
-      lastRowIndex: Math.min(19, apiRef.current.state.rows.dataRowIds.length - 1),
+      lastRowIndex: Math.min(19, Math.max(apiRef.current.state.rows.dataRowIds.length - 1, 0)),
     };
   });
 
@@ -284,7 +285,15 @@ export const useGridRowSpanning = (
         };
       });
     },
-    [apiRef, props.unstable_rowSpanning, range, renderContext, visibleRows, colDefs],
+    [
+      apiRef,
+      props.unstable_rowSpanning,
+      range,
+      renderContext,
+      visibleRows,
+      colDefs,
+      processedRange,
+    ],
   );
 
   const prevRenderContext = React.useRef(renderContext);
