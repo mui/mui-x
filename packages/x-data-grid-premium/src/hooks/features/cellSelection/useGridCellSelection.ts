@@ -292,7 +292,8 @@ export const useGridCellSelection = (
       }
 
       const { x: mouseX, y: mouseY } = mousePosition.current;
-      const { height, width } = dimensions.viewportOuterSize;
+      const { width, height: viewportOuterHeight } = dimensions.viewportOuterSize;
+      const height = viewportOuterHeight - totalHeaderHeight;
 
       let deltaX = 0;
       let deltaY = 0;
@@ -329,7 +330,7 @@ export const useGridCellSelection = (
     }
 
     autoScroll();
-  }, [apiRef, dimensions]);
+  }, [apiRef, dimensions, totalHeaderHeight]);
 
   const handleCellMouseOver = React.useCallback<GridEventListener<'cellMouseOver'>>(
     (params, event) => {
@@ -353,7 +354,8 @@ export const useGridCellSelection = (
       }
 
       const { x, y } = virtualScrollerRect;
-      const { height, width } = dimensions.viewportOuterSize;
+      const { width, height: viewportOuterHeight } = dimensions.viewportOuterSize;
+      const height = viewportOuterHeight - totalHeaderHeight;
       const mouseX = event.clientX - x;
       const mouseY = event.clientY - y - totalHeaderHeight;
       mousePosition.current = { x: mouseX, y: mouseY };
