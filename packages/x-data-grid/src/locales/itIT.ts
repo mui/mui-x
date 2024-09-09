@@ -58,7 +58,9 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'contiene',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'uguale a',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'comincia per',
   filterOperatorEndsWith: 'termina per',
   filterOperatorIs: 'uguale a',
@@ -79,7 +81,9 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Contiene',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'uguale a',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'comincia per',
   headerFilterOperatorEndsWith: 'termina per',
   headerFilterOperatorIs: 'uguale a',

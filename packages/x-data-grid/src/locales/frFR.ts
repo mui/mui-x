@@ -58,7 +58,9 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'contient',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'est égal à',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'commence par',
   filterOperatorEndsWith: 'se termine par',
   filterOperatorIs: 'est',
@@ -79,7 +81,9 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Contient',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Est égal à',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Commence par',
   headerFilterOperatorEndsWith: 'Se termine par',
   headerFilterOperatorIs: 'Est',

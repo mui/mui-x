@@ -3,280 +3,280 @@
     "languageTag": "ar-SD",
     "importName": "arSD",
     "localeName": "Arabic (Sudan)",
-    "missingKeysCount": 4,
-    "totalKeysCount": 118,
+    "missingKeysCount": 8,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/arSD.ts"
   },
   {
     "languageTag": "be-BY",
     "importName": "beBY",
     "localeName": "Belarusian",
-    "missingKeysCount": 30,
-    "totalKeysCount": 118,
+    "missingKeysCount": 34,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/beBY.ts"
   },
   {
     "languageTag": "bg-BG",
     "importName": "bgBG",
     "localeName": "Bulgarian",
-    "missingKeysCount": 4,
-    "totalKeysCount": 118,
+    "missingKeysCount": 8,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/bgBG.ts"
   },
   {
     "languageTag": "zh-HK",
     "importName": "zhHK",
     "localeName": "Chinese (Hong Kong)",
-    "missingKeysCount": 4,
-    "totalKeysCount": 118,
+    "missingKeysCount": 8,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/zhHK.ts"
   },
   {
     "languageTag": "zh-CN",
     "importName": "zhCN",
     "localeName": "Chinese (Simplified)",
-    "missingKeysCount": 0,
-    "totalKeysCount": 118,
+    "missingKeysCount": 4,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/zhCN.ts"
   },
   {
     "languageTag": "zh-TW",
     "importName": "zhTW",
     "localeName": "Chinese (Taiwan)",
-    "missingKeysCount": 4,
-    "totalKeysCount": 118,
+    "missingKeysCount": 8,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/zhTW.ts"
   },
   {
     "languageTag": "hr-HR",
     "importName": "hrHR",
     "localeName": "Croatian",
-    "missingKeysCount": 4,
-    "totalKeysCount": 118,
+    "missingKeysCount": 8,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/hrHR.ts"
   },
   {
     "languageTag": "cs-CZ",
     "importName": "csCZ",
     "localeName": "Czech",
-    "missingKeysCount": 0,
-    "totalKeysCount": 118,
+    "missingKeysCount": 4,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/csCZ.ts"
   },
   {
     "languageTag": "da-DK",
     "importName": "daDK",
     "localeName": "Danish",
-    "missingKeysCount": 1,
-    "totalKeysCount": 118,
+    "missingKeysCount": 5,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/daDK.ts"
   },
   {
     "languageTag": "nl-NL",
     "importName": "nlNL",
     "localeName": "Dutch",
-    "missingKeysCount": 0,
-    "totalKeysCount": 118,
+    "missingKeysCount": 4,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/nlNL.ts"
   },
   {
     "languageTag": "fi-FI",
     "importName": "fiFI",
     "localeName": "Finnish",
-    "missingKeysCount": 0,
-    "totalKeysCount": 118,
+    "missingKeysCount": 4,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/fiFI.ts"
   },
   {
     "languageTag": "fr-FR",
     "importName": "frFR",
     "localeName": "French",
-    "missingKeysCount": 0,
-    "totalKeysCount": 118,
+    "missingKeysCount": 4,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/frFR.ts"
   },
   {
     "languageTag": "de-DE",
     "importName": "deDE",
     "localeName": "German",
-    "missingKeysCount": 0,
-    "totalKeysCount": 118,
+    "missingKeysCount": 4,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/deDE.ts"
   },
   {
     "languageTag": "el-GR",
     "importName": "elGR",
     "localeName": "Greek",
-    "missingKeysCount": 4,
-    "totalKeysCount": 118,
+    "missingKeysCount": 8,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/elGR.ts"
   },
   {
     "languageTag": "he-IL",
     "importName": "heIL",
     "localeName": "Hebrew",
-    "missingKeysCount": 0,
-    "totalKeysCount": 118,
+    "missingKeysCount": 4,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/heIL.ts"
   },
   {
     "languageTag": "hu-HU",
     "importName": "huHU",
     "localeName": "Hungarian",
-    "missingKeysCount": 6,
-    "totalKeysCount": 118,
+    "missingKeysCount": 10,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/huHU.ts"
   },
   {
     "languageTag": "is-IS",
     "importName": "isIS",
     "localeName": "Icelandic",
-    "missingKeysCount": 4,
-    "totalKeysCount": 118,
+    "missingKeysCount": 8,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/isIS.ts"
   },
   {
     "languageTag": "it-IT",
     "importName": "itIT",
     "localeName": "Italian",
-    "missingKeysCount": 4,
-    "totalKeysCount": 118,
+    "missingKeysCount": 8,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/itIT.ts"
   },
   {
     "languageTag": "ja-JP",
     "importName": "jaJP",
     "localeName": "Japanese",
-    "missingKeysCount": 1,
-    "totalKeysCount": 118,
+    "missingKeysCount": 5,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/jaJP.ts"
   },
   {
     "languageTag": "ko-KR",
     "importName": "koKR",
     "localeName": "Korean",
-    "missingKeysCount": 31,
-    "totalKeysCount": 118,
+    "missingKeysCount": 35,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/koKR.ts"
   },
   {
     "languageTag": "nb-NO",
     "importName": "nbNO",
     "localeName": "Norwegian (Bokmål)",
-    "missingKeysCount": 0,
-    "totalKeysCount": 118,
+    "missingKeysCount": 4,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/nbNO.ts"
   },
   {
     "languageTag": "nn-NO",
     "importName": "nnNO",
     "localeName": "Norwegian (Nynorsk)",
-    "missingKeysCount": 0,
-    "totalKeysCount": 118,
+    "missingKeysCount": 4,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/nnNO.ts"
   },
   {
     "languageTag": "fa-IR",
     "importName": "faIR",
     "localeName": "Persian",
-    "missingKeysCount": 0,
-    "totalKeysCount": 118,
+    "missingKeysCount": 4,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/faIR.ts"
   },
   {
     "languageTag": "pl-PL",
     "importName": "plPL",
     "localeName": "Polish",
-    "missingKeysCount": 31,
-    "totalKeysCount": 118,
+    "missingKeysCount": 35,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/plPL.ts"
   },
   {
     "languageTag": "pt-PT",
     "importName": "ptPT",
     "localeName": "Portuguese",
-    "missingKeysCount": 0,
-    "totalKeysCount": 118,
+    "missingKeysCount": 4,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/ptPT.ts"
   },
   {
     "languageTag": "pt-BR",
     "importName": "ptBR",
     "localeName": "Portuguese (Brazil)",
-    "missingKeysCount": 0,
-    "totalKeysCount": 118,
+    "missingKeysCount": 4,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/ptBR.ts"
   },
   {
     "languageTag": "ro-RO",
     "importName": "roRO",
     "localeName": "Romanian",
-    "missingKeysCount": 4,
-    "totalKeysCount": 118,
+    "missingKeysCount": 8,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/roRO.ts"
   },
   {
     "languageTag": "ru-RU",
     "importName": "ruRU",
     "localeName": "Russian",
-    "missingKeysCount": 0,
-    "totalKeysCount": 118,
+    "missingKeysCount": 4,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/ruRU.ts"
   },
   {
     "languageTag": "sk-SK",
     "importName": "skSK",
     "localeName": "Slovak",
-    "missingKeysCount": 1,
-    "totalKeysCount": 118,
+    "missingKeysCount": 5,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/skSK.ts"
   },
   {
     "languageTag": "es-ES",
     "importName": "esES",
     "localeName": "Spanish",
-    "missingKeysCount": 0,
-    "totalKeysCount": 118,
+    "missingKeysCount": 4,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/esES.ts"
   },
   {
     "languageTag": "sv-SE",
     "importName": "svSE",
     "localeName": "Swedish",
-    "missingKeysCount": 1,
-    "totalKeysCount": 118,
+    "missingKeysCount": 5,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/svSE.ts"
   },
   {
     "languageTag": "tr-TR",
     "importName": "trTR",
     "localeName": "Turkish",
-    "missingKeysCount": 0,
-    "totalKeysCount": 118,
+    "missingKeysCount": 4,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/trTR.ts"
   },
   {
     "languageTag": "uk-UA",
     "importName": "ukUA",
     "localeName": "Ukrainian",
-    "missingKeysCount": 4,
-    "totalKeysCount": 118,
+    "missingKeysCount": 8,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/ukUA.ts"
   },
   {
     "languageTag": "ur-PK",
     "importName": "urPK",
     "localeName": "Urdu (Pakistan)",
-    "missingKeysCount": 4,
-    "totalKeysCount": 118,
+    "missingKeysCount": 8,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/urPK.ts"
   },
   {
     "languageTag": "vi-VN",
     "importName": "viVN",
     "localeName": "Vietnamese",
-    "missingKeysCount": 0,
-    "totalKeysCount": 118,
+    "missingKeysCount": 4,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/viVN.ts"
   }
 ]

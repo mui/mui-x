@@ -65,7 +65,9 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'obsahuje',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'rovná se',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'začíná na',
   filterOperatorEndsWith: 'končí na',
   filterOperatorIs: 'je',
@@ -86,7 +88,9 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Obsahuje',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Rovná se',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Začíná na',
   headerFilterOperatorEndsWith: 'Končí na',
   headerFilterOperatorIs: 'Je',

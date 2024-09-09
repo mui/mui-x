@@ -57,7 +57,9 @@ const bgBGGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'съдържа',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'равно',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'започва с',
   filterOperatorEndsWith: 'завършва с',
   filterOperatorIs: 'е',
@@ -78,7 +80,9 @@ const bgBGGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Съдържа',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Равнo',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Започва с',
   headerFilterOperatorEndsWith: 'Завършва с',
   headerFilterOperatorIs: 'Равно е на',

@@ -58,7 +58,9 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'Chứa',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'Bằng',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'Bắt đầu bằng',
   filterOperatorEndsWith: 'Kết thúc bằng',
   filterOperatorIs: 'Là',
@@ -79,7 +81,9 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Chứa',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Bằng',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Bắt đầu với',
   headerFilterOperatorEndsWith: 'Kết thúc với',
   headerFilterOperatorIs: 'là',

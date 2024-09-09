@@ -39,6 +39,21 @@ export const getGridStringOperators = (
     InputComponent: GridFilterInputValue,
   },
   {
+    value: 'doesNotContain',
+    getApplyFilterFn: (filterItem: GridFilterItem) => {
+      if (!filterItem.value) {
+        return null;
+      }
+      const filterItemValue = disableTrim ? filterItem.value : filterItem.value.trim();
+
+      const filterRegex = new RegExp(escapeRegExp(filterItemValue), 'i');
+      return (value): boolean => {
+        return value != null ? !filterRegex.test(String(value)) : true;
+      };
+    },
+    InputComponent: GridFilterInputValue,
+  },
+  {
     value: 'equals',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
       if (!filterItem.value) {
@@ -49,6 +64,21 @@ export const getGridStringOperators = (
       const collator = new Intl.Collator(undefined, { sensitivity: 'base', usage: 'search' });
       return (value): boolean => {
         return value != null ? collator.compare(filterItemValue, value.toString()) === 0 : false;
+      };
+    },
+    InputComponent: GridFilterInputValue,
+  },
+  {
+    value: 'doesNotEqual',
+    getApplyFilterFn: (filterItem: GridFilterItem) => {
+      if (!filterItem.value) {
+        return null;
+      }
+      const filterItemValue = disableTrim ? filterItem.value : filterItem.value.trim();
+
+      const collator = new Intl.Collator(undefined, { sensitivity: 'base', usage: 'search' });
+      return (value): boolean => {
+        return value != null ? collator.compare(filterItemValue, value.toString()) !== 0 : true;
       };
     },
     InputComponent: GridFilterInputValue,

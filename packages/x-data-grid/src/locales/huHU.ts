@@ -57,7 +57,9 @@ const huHUGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'tartalmazza:',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'egyenlő ezzel:',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'ezzel kezdődik:',
   filterOperatorEndsWith: 'ezzel végződik:',
   filterOperatorIs: 'a következő:',
@@ -78,7 +80,9 @@ const huHUGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Tartalmazza:',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Egyenlő ezzel:',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Ezzel kezdődik:',
   headerFilterOperatorEndsWith: 'Ezzel végződik:',
   // headerFilterOperatorIs: 'Is',
