@@ -283,6 +283,6 @@ function getGaussianSeriesData(
         Math.cos(2.0 * Math.PI * chance.floating({ min: 0, max: 0.99 })) *
         stdev[1] +
       mean[1];
-    return { x, y, z: x + y, id: i };
+    return { x, y, z: x + y, id: `${mean.join(',')}${i}` };
   });
 }
