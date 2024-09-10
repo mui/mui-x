@@ -28,6 +28,6 @@ jobs:
           cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
       - run: pnpm install --frozen-lockfile
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+        run: pnpm exec playwright install --with-deps
       - name: Run Tests
         run: pnpm vitest
