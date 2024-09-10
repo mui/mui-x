@@ -13,7 +13,11 @@ import {
   UseTreeViewSelectionInstance,
   UseTreeViewSelectionSignature,
 } from './useTreeViewSelection.types';
-import { convertSelectedItemsToArray, getLookupFromArray } from './useTreeViewSelection.utils';
+import {
+  convertSelectedItemsToArray,
+  getLookupFromArray,
+  getSelectedItemsMap,
+} from './useTreeViewSelection.utils';
 import { selectorIsItemSelected } from './useTreeViewSelection.selectors';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
@@ -26,15 +30,10 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   const lastSelectedRange = React.useRef<{ [itemId: string]: boolean }>({});
 
   useEnhancedEffect(() => {
-    const selectedItemsMap = new Map<TreeViewItemId, true>();
-    convertSelectedItemsToArray(models.selectedItems.value).forEach((id) => {
-      selectedItemsMap.set(id, true);
-    });
-
     store.update((prevState) => ({
       ...prevState,
       selection: {
-        selectedItemsMap,
+        selectedItemsMap: getSelectedItemsMap(models.selectedItems.value),
       },
     }));
   }, [store, models.selectedItems.value]);
@@ -236,7 +235,13 @@ useTreeViewSelection.getDefaultizedParams = (params) => ({
     params.defaultSelectedItems ?? (params.multiSelect ? DEFAULT_SELECTED_ITEMS : null),
 });
 
-useTreeViewSelection.getInitialState = () => ({ selection: { selectedItemsMap: new Map() } });
+useTreeViewSelection.getInitialState = (params) => ({
+  selection: {
+    selectedItemsMap: getSelectedItemsMap(
+      params.selectedItems === undefined ? params.defaultSelectedItems : params.selectedItems,
+    ),
+  },
+});
 
 useTreeViewSelection.params = {
   disableSelection: true,

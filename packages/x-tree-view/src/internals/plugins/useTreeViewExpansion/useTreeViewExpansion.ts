@@ -5,6 +5,7 @@ import { TreeViewPlugin } from '../../models';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 import { TreeViewItemId } from '../../../models';
 import { selectorExpandedItemsMap } from './useTreeViewExpansion.selectors';
+import { getExpandedItemsMap } from './useTreeViewExpansion.utils';
 
 export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature> = ({
   instance,
@@ -13,15 +14,10 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   models,
 }) => {
   useEnhancedEffect(() => {
-    const expandedItemsMap = new Map<TreeViewItemId, true>();
-    models.expandedItems.value.forEach((id) => {
-      expandedItemsMap.set(id, true);
-    });
-
     store.update((prevState) => ({
       ...prevState,
       expansion: {
-        expandedItemsMap,
+        expandedItemsMap: getExpandedItemsMap(models.expandedItems.value),
       },
     }));
   }, [store, models.expandedItems.value]);
@@ -135,7 +131,13 @@ useTreeViewExpansion.getDefaultizedParams = (params) => ({
   defaultExpandedItems: params.defaultExpandedItems ?? DEFAULT_EXPANDED_ITEMS,
 });
 
-useTreeViewExpansion.getInitialState = () => ({ expansion: { expandedItemsMap: new Map() } });
+useTreeViewExpansion.getInitialState = (params) => ({
+  expansion: {
+    expandedItemsMap: getExpandedItemsMap(
+      params.expandedItems === undefined ? params.defaultExpandedItems : params.expandedItems,
+    ),
+  },
+});
 
 useTreeViewExpansion.params = {
   expandedItems: true,
