@@ -685,6 +685,11 @@ DataGridRaw.propTypes = {
     pageSize: PropTypes.number.isRequired,
   }),
   /**
+   * If `true`, the Data Grid will not reset the column width when the `columns` prop is updated.
+   * @default false
+   */
+  persistColumnsWidth: PropTypes.bool,
+  /**
    * Callback called before updating a row with new values in the row and cell editing.
    * @template R
    * @param {R} newRow Row object with the new values.

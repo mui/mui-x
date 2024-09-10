@@ -579,6 +579,9 @@
     "paginationModel": {
       "description": "The pagination model of type GridPaginationModel which refers to current <code>page</code> and <code>pageSize</code>."
     },
+    "persistColumnsWidth": {
+      "description": "If <code>true</code>, the Data Grid will not reset the column width when the <code>columns</code> prop is updated."
+    },
     "pinnedColumns": { "description": "The column fields to display pinned to left or right." },
     "pinnedRows": { "description": "Rows data to pin on top or bottom." },
     "processRowUpdate": {

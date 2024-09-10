@@ -413,6 +413,7 @@
     "paginationModel": {
       "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
     },
+    "persistColumnsWidth": { "type": { "name": "bool" }, "default": "false" },
     "processRowUpdate": {
       "type": { "name": "func" },
       "signature": {

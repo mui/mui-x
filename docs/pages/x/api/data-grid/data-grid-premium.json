@@ -550,6 +550,7 @@
     "paginationModel": {
       "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
     },
+    "persistColumnsWidth": { "type": { "name": "bool" }, "default": "false" },
     "pinnedColumns": { "type": { "name": "object" } },
     "pinnedRows": {
       "type": {

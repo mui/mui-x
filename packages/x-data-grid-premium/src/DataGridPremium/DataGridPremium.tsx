@@ -892,6 +892,11 @@ DataGridPremiumRaw.propTypes = {
     pageSize: PropTypes.number.isRequired,
   }),
   /**
+   * If `true`, the Data Grid will not reset the column width when the `columns` prop is updated.
+   * @default false
+   */
+  persistColumnsWidth: PropTypes.bool,
+  /**
    * The column fields to display pinned to left or right.
    */
   pinnedColumns: PropTypes.object,

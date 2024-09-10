@@ -429,6 +429,9 @@
     "paginationModel": {
       "description": "The pagination model of type GridPaginationModel which refers to current <code>page</code> and <code>pageSize</code>."
     },
+    "persistColumnsWidth": {
+      "description": "If <code>true</code>, the Data Grid will not reset the column width when the <code>columns</code> prop is updated."
+    },
     "processRowUpdate": {
       "description": "Callback called before updating a row with new values in the row and cell editing.",
       "typeDescriptions": {
