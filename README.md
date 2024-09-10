@@ -28,24 +28,24 @@ Components include the Data Grid, Date and Time Pickers, Charts, and Tree View.
 
 MUI X extends the core functionality of [Material UI](https://github.com/mui/material-ui/), but the advanced components also stand on their own and can be fully customized to meet the needs of any design system.
 
-The MUI X codebase is **open-core**: [Community](#community-plan) components are MIT-licensed and free forever, while more advanced features and components require a [Pro](#pro-plan) or [Premium](#premium-plan) commercial license.
-See the [Licensing page](https://mui.com/x/introduction/licensing/) for details.
+MUI X is **open-core**: [Community](#community-plan) components are MIT-licensed and free forever, while more advanced features and components require a [Pro](#pro-plan) or [Premium](#premium-plan) commercial license.
+See [Licensing](#licensing) for details.
 
-## Components
+## Documentation
 
 - [Data Grid](https://mui.com/x/react-data-grid/)
 - [Date and Time Pickers](https://mui.com/x/react-date-pickers/)
 - [Charts](https://mui.com/x/react-charts/)
 - [Tree View](https://mui.com/x/react-tree-view/)
 
-## Installation
+### Installation
 
 - [Data Grid installation](https://mui.com/x/react-data-grid/getting-started/#installation)
 - [Date and Time Pickers installation](https://mui.com/x/react-date-pickers/getting-started/#installation)
 - [Charts installation](https://mui.com/x/react-charts/getting-started/#installation)
 - [Tree View installation](https://mui.com/x/react-tree-view/getting-started/#installation)
 
-## MIT vs. commercial licenses
+## Licensing
 
 The MUI X team has been building MIT-licensed React components since 2014, starting with Material UI.
 We are committed to the continued advancement of the open-source libraries.
@@ -57,7 +57,7 @@ Commercial licenses enable us to support a full-time staff of engineers, which i
 
 Rest assured that when we release features commercially, it's only because we believe you won't find a better MIT-licensed alternative anywhere else.
 
-See the [Pricing page](https://mui.com/pricing/) for a detailed comparison of features.
+See the [Licensing page](https://mui.com/x/introduction/licensing/) for complete details.
 
 ## Plans
 
@@ -111,4 +111,4 @@ Future plans and high-priority features and enhancements can be found in the [ro
 
 ## Security
 
-For details of supported versions and contact details for reporting security issues, please refer to the [security policy](https://github.com/mui/mui-x/security/policy).
+For details on supported versions and contact information for reporting security issues, please refer to the [security policy](https://github.com/mui/mui-x/security/policy).
