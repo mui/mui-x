@@ -51,10 +51,18 @@ export interface ChartsSeriesConfig {
     series: DefaultizedRadarSeriesType;
     seriesProp: RadarSeriesType;
     itemIdentifier: RadarItemIdentifier;
+    customTooltip: true;
   };
 }
 
 export type ChartSeriesType = keyof ChartsSeriesConfig;
+
+export type CommonTooltipChartSeriesType = keyof Pick<
+  ChartsSeriesConfig,
+  {
+    [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { customTooltip: true } ? never : Key;
+  }[ChartSeriesType]
+>;
 
 export type CartesianChartSeriesType = keyof Pick<
   ChartsSeriesConfig,

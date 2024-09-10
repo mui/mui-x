@@ -16,7 +16,7 @@ import {
   getTooltipHasData,
   TriggerOptions,
 } from './utils';
-import { ChartSeriesType } from '../models/seriesType/config';
+import { CommonTooltipChartSeriesType } from '../models/seriesType/config';
 import { ChartsItemContentProps, ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisContentProps, ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
 import { ChartsTooltipClasses, getChartsTooltipUtilityClass } from './chartsTooltipClasses';
@@ -28,7 +28,7 @@ export type PopperProps = BasePopperProps & {
   sx?: SxProps<Theme>;
 };
 
-export interface ChartsTooltipSlots<T extends ChartSeriesType> {
+export interface ChartsTooltipSlots<T extends CommonTooltipChartSeriesType> {
   /**
    * Custom component for the tooltip popper.
    * @default ChartsTooltipRoot
@@ -46,13 +46,13 @@ export interface ChartsTooltipSlots<T extends ChartSeriesType> {
   itemContent?: React.ElementType<ChartsItemContentProps<T>>;
 }
 
-export interface ChartsTooltipSlotProps<T extends ChartSeriesType> {
+export interface ChartsTooltipSlotProps<T extends CommonTooltipChartSeriesType> {
   popper?: Partial<PopperProps>;
   axisContent?: Partial<ChartsAxisContentProps>;
   itemContent?: Partial<ChartsItemContentProps<T>>;
 }
 
-export interface ChartsTooltipProps<T extends ChartSeriesType> {
+export interface ChartsTooltipProps<T extends CommonTooltipChartSeriesType> {
   /**
    * Select the kind of tooltip to display
    * - 'item': Shows data about the item below the mouse.
@@ -87,7 +87,7 @@ export interface ChartsTooltipProps<T extends ChartSeriesType> {
   slotProps?: ChartsTooltipSlotProps<T>;
 }
 
-const useUtilityClasses = <T extends ChartSeriesType>(ownerState: {
+const useUtilityClasses = <T extends CommonTooltipChartSeriesType>(ownerState: {
   classes: ChartsTooltipProps<T>['classes'];
 }) => {
   const { classes } = ownerState;
@@ -125,7 +125,7 @@ const ChartsTooltipRoot = styled(Popper, {
  *
  * - [ChartsTooltip API](https://mui.com/x/api/charts/charts-tool-tip/)
  */
-function ChartsTooltip<T extends ChartSeriesType>(inProps: ChartsTooltipProps<T>) {
+function ChartsTooltip<T extends CommonTooltipChartSeriesType>(inProps: ChartsTooltipProps<T>) {
   const props = useThemeProps({
     props: inProps,
     name: 'MuiChartsTooltip',

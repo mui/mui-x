@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { ChartSeriesType } from '../models/seriesType/config';
 import {
   ChartsTooltipTable,
   ChartsTooltipCell,
@@ -11,11 +10,12 @@ import {
 } from './ChartsTooltipTable';
 import type { ChartsItemContentProps } from './ChartsItemTooltipContent';
 import { CommonSeriesType } from '../models/seriesType/common';
+import { CommonTooltipChartSeriesType } from '../models/seriesType/config';
 import { getLabel } from '../internals/getLabel';
 
-function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeriesType>(
-  props: ChartsItemContentProps<T>,
-) {
+function DefaultChartsItemTooltipContent<
+  T extends CommonTooltipChartSeriesType = CommonTooltipChartSeriesType,
+>(props: ChartsItemContentProps<T>) {
   const { series, itemData, sx, classes, getColor } = props;
 
   if (itemData.dataIndex === undefined || !series.data[itemData.dataIndex]) {
