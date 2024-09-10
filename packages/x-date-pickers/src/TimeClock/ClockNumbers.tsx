@@ -1,4 +1,3 @@
-'use client';
 import * as React from 'react';
 import { ClockNumber } from './ClockNumber';
 import { MuiPickersAdapter, PickerValidDate } from '../models';

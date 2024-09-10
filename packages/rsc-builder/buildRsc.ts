@@ -38,6 +38,15 @@ async function processFile(
   const { lineToPrepend = `'use client';` } = options;
   const contents = await fse.readFile(filename, 'utf8');
 
+  if (
+    filename.indexOf('internal') !== -1 ||
+    !!contents.match(/@ignore - internal component\./) ||
+    !!contents.match(/@ignore - internal hook\./) ||
+    !!contents.match(/@ignore - do not document\./)
+  ) {
+    return;
+  }
+
   const lines = contents.split(/\r?\n/);
   if (lines[0] === lineToPrepend) {
     return;

@@ -1,4 +1,3 @@
-'use client';
 import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
 import { useRtl } from '@mui/system/RtlProvider';

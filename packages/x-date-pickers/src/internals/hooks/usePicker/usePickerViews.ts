@@ -1,4 +1,3 @@
-'use client';
 import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';

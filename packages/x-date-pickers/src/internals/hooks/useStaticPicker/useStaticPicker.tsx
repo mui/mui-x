@@ -1,4 +1,3 @@
-'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';

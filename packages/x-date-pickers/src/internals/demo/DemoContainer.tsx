@@ -1,4 +1,3 @@
-'use client';
 import * as React from 'react';
 import Stack, { StackProps, stackClasses } from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';

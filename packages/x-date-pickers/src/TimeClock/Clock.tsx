@@ -1,4 +1,3 @@
-'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import IconButton from '@mui/material/IconButton';
