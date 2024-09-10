@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import DialogContent from '@mui/material/DialogContent';
 import Fade from '@mui/material/Fade';

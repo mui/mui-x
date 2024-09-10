@@ -1,3 +1,4 @@
+'use client';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 const PREFERS_REDUCED_MOTION = '@media (prefers-reduced-motion: reduce)';

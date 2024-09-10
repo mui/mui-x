@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { useLocalizationContext } from './useUtils';
 import { MuiPickersAdapterContextValue } from '../../LocalizationProvider/LocalizationProvider';

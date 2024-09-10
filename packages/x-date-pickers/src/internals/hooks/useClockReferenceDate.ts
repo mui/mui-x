@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '../../models';
 import { singleItemValueManager } from '../utils/valueManagers';

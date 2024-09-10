@@ -1,3 +1,4 @@
+'use client';
 import { styled } from '@mui/material/styles';
 import { DIALOG_WIDTH, VIEW_HEIGHT } from '../../constants/dimensions';
 

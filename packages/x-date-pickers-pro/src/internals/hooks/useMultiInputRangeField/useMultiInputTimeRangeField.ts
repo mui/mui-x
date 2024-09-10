@@ -1,3 +1,4 @@
+'use client';
 import useEventCallback from '@mui/utils/useEventCallback';
 import {
   unstable_useTimeField as useTimeField,

@@ -1,3 +1,4 @@
+'use client';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useIsLandscape } from '../useIsLandscape';
 import { UsePickerValueLayoutResponse } from './usePickerValue.types';
