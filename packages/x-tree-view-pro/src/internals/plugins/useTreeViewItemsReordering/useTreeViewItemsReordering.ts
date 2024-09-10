@@ -255,6 +255,12 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       stopDraggingItem,
       setDragTargetItem,
     },
+    contextValue: {
+      itemsReordering: {
+        enabled: isItemsReorderingEnabled,
+        isItemReorderable: params.isItemReorderable,
+      },
+    },
   };
 };
 

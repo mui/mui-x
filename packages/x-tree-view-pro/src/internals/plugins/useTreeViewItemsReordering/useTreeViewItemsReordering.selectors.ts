@@ -30,6 +30,11 @@ export const selectorItemsReorderingForDraggedItem = createSelector(
   },
 );
 
+export const selectItemsReorderingIsValidDraggedItem = createSelector(
+  [selectorItemsReordering, (_, itemId: string) => itemId],
+  (itemsReordering, itemId) => itemsReordering && itemsReordering.draggedItemId === itemId,
+);
+
 export const selectorItemsReorderingIsValidTarget = createSelector(
   [selectorItemsReordering, (_, itemId: string) => itemId],
   (itemsReordering, itemId) => itemsReordering && itemsReordering.draggedItemId !== itemId,

@@ -8,7 +8,6 @@ import { useSelector } from '../../hooks/useSelector';
 import { selectorEditedItemId } from './useTreeViewLabel.selectors';
 
 export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
-  instance,
   store,
   params,
   experimentalFeatures,
@@ -30,25 +29,6 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
   const setEditedItemId = (editedItemId: TreeViewItemId | null) => {
     store.update((prevState) => ({ ...prevState, newEditedItemId: editedItemId }));
     editedItemRef.current = editedItemId;
-  };
-
-  const isItemBeingEdited = (itemId: TreeViewItemId) =>
-    itemId === selectorEditedItemId(store.value);
-
-  const isTreeViewEditable = Boolean(params.isItemEditable) && !!experimentalFeatures.labelEditing;
-
-  const isItemEditable = (itemId: TreeViewItemId): boolean => {
-    if (itemId == null || !isTreeViewEditable) {
-      return false;
-    }
-    const item = instance.getItem(itemId);
-
-    if (!item) {
-      return false;
-    }
-    return typeof params.isItemEditable === 'function'
-      ? params.isItemEditable(item)
-      : Boolean(params.isItemEditable);
   };
 
   const updateItemLabel = (itemId: TreeViewItemId, label: string) => {
@@ -84,19 +64,26 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
   return {
     instance: {
       setEditedItemId,
-      isItemBeingEdited,
       updateItemLabel,
-      isItemEditable,
-      isTreeViewEditable,
       isItemBeingEditedRef,
     },
     publicAPI: {
       updateItemLabel,
     },
+    contextValue: {
+      label: {
+        isItemEditable: experimentalFeatures.labelEditing ? params.isItemEditable : false,
+      },
+    },
   };
 };
 
 useTreeViewLabel.itemPlugin = useTreeViewLabelItemPlugin;
+
+useTreeViewLabel.getDefaultizedParams = (params) => ({
+  ...params,
+  isItemEditable: params.isItemEditable ?? false,
+});
 
 useTreeViewLabel.getInitialState = () => ({
   editedItemId: null,

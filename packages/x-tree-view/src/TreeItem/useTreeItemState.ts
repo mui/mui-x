@@ -12,6 +12,10 @@ import { selectorIsItemExpanded } from '../internals/plugins/useTreeViewExpansio
 import { selectorIsItemFocused } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { selectorIsItemDisabled } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
 import { selectorIsItemSelected } from '../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
+import {
+  selectorIsItemBeingEdited,
+  selectorIsItemEditable,
+} from '../internals/plugins/useTreeViewLabel/useTreeViewLabel.selectors';
 
 type UseTreeItemStateMinimalPlugins = readonly [
   UseTreeViewSelectionSignature,
@@ -29,16 +33,22 @@ export function useTreeItemState(itemId: string) {
     items: { onItemClick },
     selection: { multiSelect, checkboxSelection, disableSelection },
     expansion: { expansionTrigger },
+    label,
   } = useTreeViewContext<UseTreeItemStateMinimalPlugins, UseTreeItemStateOptionalPlugins>();
 
+  const expandable = instance.isItemExpandable(itemId);
   const isExpanded = useSelector(store, selectorIsItemExpanded, itemId);
   const isFocused = useSelector(store, selectorIsItemFocused, itemId);
   const isSelected = useSelector(store, selectorIsItemSelected, itemId);
   const isDisabled = useSelector(store, selectorIsItemDisabled, itemId);
-
-  const expandable = instance.isItemExpandable(itemId);
-  const editing = instance?.isItemBeingEdited ? instance?.isItemBeingEdited(itemId) : false;
-  const editable = instance.isItemEditable ? instance.isItemEditable(itemId) : false;
+  const isEditing = useSelector(store, (state) =>
+    label == null ? false : selectorIsItemBeingEdited(state, itemId),
+  );
+  const isEditable = useSelector(store, (state) =>
+    label == null
+      ? false
+      : selectorIsItemEditable(state, { itemId, isItemEditable: label.isItemEditable }),
+  );
 
   const handleExpansion = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!isDisabled) {
@@ -103,8 +113,8 @@ export function useTreeItemState(itemId: string) {
     if (!hasPlugin(instance, useTreeViewLabel)) {
       return;
     }
-    if (instance.isItemEditable(itemId)) {
-      if (instance.isItemBeingEdited(itemId)) {
+    if (isEditable) {
+      if (isEditing) {
         instance.setEditedItemId(null);
       } else {
         instance.setEditedItemId(itemId);
@@ -114,7 +124,7 @@ export function useTreeItemState(itemId: string) {
 
   const handleSaveItemLabel = (
     event: React.SyntheticEvent & MuiCancellableEvent,
-    label: string,
+    newLabel: string,
   ) => {
     if (!hasPlugin(instance, useTreeViewLabel)) {
       return;
@@ -125,7 +135,7 @@ export function useTreeItemState(itemId: string) {
     // To avoid creating an unwanted behavior we need to check if the item is being edited before calling `updateItemLabel`
     // using `instance.isItemBeingEditedRef` instead of `instance.isItemBeingEdited` since the state is not yet updated in this point
     if (instance.isItemBeingEditedRef(itemId)) {
-      instance.updateItemLabel(itemId, label);
+      instance.updateItemLabel(itemId, newLabel);
       toggleItemEditing();
       instance.focusItem(event, itemId);
     }
@@ -147,8 +157,8 @@ export function useTreeItemState(itemId: string) {
     expanded: isExpanded,
     selected: isSelected,
     focused: isFocused,
-    editable,
-    editing,
+    editable: isEditable,
+    editing: isEditing,
     disableSelection,
     checkboxSelection,
     handleExpansion,

@@ -1,4 +1,4 @@
-import { TreeViewPluginSignature } from '../../models';
+import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { TreeItem2LabelInputProps } from '../../../TreeItem2LabelInput';
@@ -21,27 +21,11 @@ export interface UseTreeViewLabelInstance extends UseTreeViewLabelPublicAPI {
   setEditedItemId: (itemId: TreeViewItemId | null) => void;
   /**
    * Checks if an item is being edited or not.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean}.
-   */
-  isItemBeingEdited: (itemId: TreeViewItemId) => boolean;
-  /**
-   * Checks if an item is being edited or not.
    * Purely internal use, used to avoid unnecessarily calling `updateItemLabel` twice.
    * @param {TreeViewItemId} itemId The id of the item to check.
    * @returns {boolean}.
    */
   isItemBeingEditedRef: (itemId: TreeViewItemId) => boolean;
-  /**
-   * Determines if a given item is editable.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} `true` if the item is editable.
-   */
-  isItemEditable: (itemId: TreeViewItemId) => boolean;
-  /**
-   * Set to `true` if the tree view is editable.
-   */
-  isTreeViewEditable: boolean;
 }
 
 export interface UseTreeViewLabelParameters<R extends {}> {
@@ -63,16 +47,26 @@ export interface UseTreeViewLabelParameters<R extends {}> {
   isItemEditable?: boolean | ((item: R) => boolean);
 }
 
+export type UseTreeViewLabelDefaultizedParameters<R extends {}> = DefaultizedProps<
+  UseTreeViewLabelParameters<R>,
+  'isItemEditable'
+>;
+
 export interface UseTreeViewLabelState {
   editedItemId: string | null;
 }
 
+export interface UseTreeViewLabelContextValue {
+  label: Pick<UseTreeViewLabelDefaultizedParameters<any>, 'isItemEditable'>;
+}
+
 export type UseTreeViewLabelSignature = TreeViewPluginSignature<{
   params: UseTreeViewLabelParameters<any>;
-  defaultizedParams: UseTreeViewLabelParameters<any>;
+  defaultizedParams: UseTreeViewLabelDefaultizedParameters<any>;
   publicAPI: UseTreeViewLabelPublicAPI;
   instance: UseTreeViewLabelInstance;
   state: UseTreeViewLabelState;
+  contextValue: UseTreeViewLabelContextValue;
   experimentalFeatures: 'labelEditing';
   dependencies: [UseTreeViewItemsSignature];
 }>;

@@ -117,11 +117,19 @@ export interface UseTreeViewItemsReorderingState {
   } | null;
 }
 
+interface UseTreeViewItemsReorderingContextValue {
+  itemsReordering: {
+    enabled: boolean;
+    isItemReorderable: ((itemId: string) => boolean) | undefined;
+  };
+}
+
 export type UseTreeViewItemsReorderingSignature = TreeViewPluginSignature<{
   params: UseTreeViewItemsReorderingParameters;
   defaultizedParams: UseTreeViewItemsReorderingDefaultizedParameters;
   instance: UseTreeViewItemsReorderingInstance;
   state: UseTreeViewItemsReorderingState;
+  contextValue: UseTreeViewItemsReorderingContextValue;
   experimentalFeatures: 'itemsReordering';
   dependencies: [UseTreeViewItemsSignature];
 }>;

@@ -25,7 +25,7 @@ export const isAndroid = () => navigator.userAgent.toLowerCase().includes('andro
 export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2Props> = ({
   props,
 }) => {
-  const { instance, store } =
+  const { instance, store, itemsReordering } =
     useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewItemsReorderingSignature]>();
   const { itemId } = props;
 
@@ -45,9 +45,10 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
         contentRefObject,
         externalEventHandlers,
       }): UseTreeItem2RootSlotPropsFromItemsReordering => {
-        // TODO selectors: Remove
-        const draggable = instance.canItemBeDragged(itemId);
-        if (!draggable) {
+        if (
+          !itemsReordering.enabled ||
+          (itemsReordering.isItemReorderable && !itemsReordering.isItemReorderable(itemId))
+        ) {
           return {};
         }
 
@@ -57,9 +58,9 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
             return;
           }
 
-          // We don't use `event.currentTarget` here.
-          // This is to allow people to pass `onDragStart` to another element than the root.
           if (isTargetInDescendants(event.target as HTMLElement, rootRefObject.current)) {
+            // We don't use `event.currentTarget` here.
+            // This is to allow people to pass `onDragStart` to another element than the root.
             return;
           }
 
