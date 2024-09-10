@@ -1,5 +1,5 @@
 import { lruMemoize, createSelectorCreator, CreateSelectorFunction } from 'reselect';
-import { TreeViewState, TreeViewStateCacheKey } from '../models';
+import { TreeViewAnyPluginSignature, TreeViewState, TreeViewStateCacheKey } from '../models';
 
 const reselectCreateSelector = createSelectorCreator({
   memoize: lruMemoize,
@@ -15,6 +15,11 @@ export type TreeViewSelectorWithArgs<TState, TArgs, TResult> = (
   state: TState,
   args: TArgs,
 ) => TResult;
+
+export type TreeViewRootSelector<
+  TMinimalSignatures extends TreeViewAnyPluginSignature[],
+  TResult,
+> = <TSignatures extends TMinimalSignatures>(state: TreeViewState<TSignatures>) => TResult;
 
 export const createSelector = ((...args: any) => {
   const selector = (state: TreeViewState<any>, selectorArgs: any) => {

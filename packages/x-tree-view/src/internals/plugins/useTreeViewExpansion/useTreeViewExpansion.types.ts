@@ -85,7 +85,7 @@ export type UseTreeViewExpansionDefaultizedParameters = DefaultizedProps<
   'defaultExpandedItems'
 >;
 
-interface UseTreeViewExpansionState {
+export interface UseTreeViewExpansionState {
   expansion: {
     expandedItemsMap: Map<string, true>;
   };

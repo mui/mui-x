@@ -1,8 +1,10 @@
-import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
-import { createSelector } from '../../utils/selectors';
-import { TreeViewState } from '../../models';
+import { UseTreeViewFocusSignature, UseTreeViewFocusState } from './useTreeViewFocus.types';
+import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
 
-const selectorFocus = (state: TreeViewState<[UseTreeViewFocusSignature]>) => state.focus;
+const selectorFocus: TreeViewRootSelector<
+  [UseTreeViewFocusSignature],
+  UseTreeViewFocusState['focus']
+> = (state) => state.focus;
 
 /**
  * Get the item that should be sequentially focusable (usually with the Tab key).

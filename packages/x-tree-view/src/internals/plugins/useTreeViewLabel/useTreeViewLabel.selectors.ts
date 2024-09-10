@@ -1,5 +1,7 @@
 import { UseTreeViewLabelSignature } from './useTreeViewLabel.types';
-import { TreeViewState } from '../../models';
+import { TreeViewRootSelector } from '../../utils/selectors';
 
-export const selectorEditedItemId = (state: TreeViewState<[UseTreeViewLabelSignature]>) =>
-  state.editedItemId;
+export const selectorEditedItemId: TreeViewRootSelector<
+  [UseTreeViewLabelSignature],
+  string | null
+> = (state) => state.editedItemId;

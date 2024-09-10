@@ -116,7 +116,7 @@ export type UseTreeViewSelectionDefaultizedParameters<Multiple extends boolean> 
   'disableSelection' | 'defaultSelectedItems' | 'multiSelect' | 'checkboxSelection'
 >;
 
-interface UseTreeViewSelectionState {
+export interface UseTreeViewSelectionState {
   selection: {
     selectedItemsMap: Map<string, true>;
   };

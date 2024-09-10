@@ -3,7 +3,6 @@ import { TreeViewPluginSignature } from '../../models';
 import type { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import type { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
-import { TreeViewItemId } from '../../../models';
 
 export interface UseTreeViewFocusPublicAPI {
   /**
