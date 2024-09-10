@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useLazyRef from '@mui/utils/useLazyRef';
 import { GridEventListener } from '../../../models/events';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColumnApi, GridColumnReorderApi } from '../../../models/api/gridColumnApi';
@@ -72,6 +73,7 @@ export function useGridColumns(
     | 'columns'
     | 'columnVisibilityModel'
     | 'onColumnVisibilityModelChange'
+    | 'persistColumnsWidth'
     | 'slots'
     | 'slotProps'
     | 'disableColumnSelector'
@@ -81,6 +83,7 @@ export function useGridColumns(
   const logger = useGridLogger(apiRef, 'useGridColumns');
 
   const previousColumnsProp = React.useRef(props.columns);
+  const previousColumnsState = useLazyRef(() => gridColumnsStateSelector(apiRef.current.state));
 
   apiRef.current.registerControlState({
     stateId: 'visibleColumns',
@@ -93,13 +96,14 @@ export function useGridColumns(
   const setGridColumnsState = React.useCallback(
     (columnsState: GridColumnsState) => {
       logger.debug('Updating columns state.');
+      previousColumnsState.current = columnsState;
 
       apiRef.current.setState(mergeColumnsState(columnsState));
       apiRef.current.publishEvent('columnsChange', columnsState.orderedFields);
       apiRef.current.updateRenderContext?.();
       apiRef.current.forceUpdate();
     },
-    [logger, apiRef],
+    [logger, apiRef, previousColumnsState],
   );
 
   /**
@@ -167,10 +171,11 @@ export function useGridColumns(
         columnsToUpsert: columns,
         initialState: undefined,
         keepOnlyColumnsToUpsert: false,
+        previousColumnsState: props.persistColumnsWidth ? previousColumnsState.current : undefined,
       });
       setGridColumnsState(columnsState);
     },
-    [apiRef, setGridColumnsState],
+    [apiRef, setGridColumnsState, props.persistColumnsWidth, previousColumnsState],
   );
 
   const setColumnVisibility = React.useCallback<GridColumnApi['setColumnVisibility']>(
@@ -448,10 +453,18 @@ export function useGridColumns(
       // If the user provides a model, we don't want to set it in the state here because it has it's dedicated `useEffect` which calls `setColumnVisibilityModel`
       columnsToUpsert: props.columns,
       keepOnlyColumnsToUpsert: true,
+      previousColumnsState: props.persistColumnsWidth ? previousColumnsState.current : undefined,
     });
     previousColumnsProp.current = props.columns;
     setGridColumnsState(columnsState);
-  }, [logger, apiRef, setGridColumnsState, props.columns]);
+  }, [
+    logger,
+    apiRef,
+    setGridColumnsState,
+    props.columns,
+    props.persistColumnsWidth,
+    previousColumnsState,
+  ]);
 
   React.useEffect(() => {
     if (props.columnVisibilityModel !== undefined) {
