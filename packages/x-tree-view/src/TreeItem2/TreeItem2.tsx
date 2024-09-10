@@ -11,7 +11,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeItem2Props, TreeItem2OwnerState } from './TreeItem2.types';
 import {
-  unstable_useTreeItem2 as useTreeItem2,
+  useTreeItem2,
   UseTreeItem2ContentSlotOwnProps,
   UseTreeItem2LabelSlotOwnProps,
   UseTreeItem2Status,
