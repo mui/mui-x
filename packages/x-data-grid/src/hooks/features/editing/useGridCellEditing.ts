@@ -3,6 +3,7 @@ import {
   unstable_useEventCallback as useEventCallback,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/utils';
+import { warnOnce } from '@mui/x-internals/warning';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -30,7 +31,6 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditingSelectors';
 import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
-import { warnOnce } from '../../../internals/utils/warning';
 import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
