@@ -22,23 +22,42 @@ type StateFromSelectors<TSelectors extends readonly any[]> = TSelectors extends 
     : {}
   : {};
 
-export type TreeViewSelector<TState, TArgs, TResult> = (state: TState, args: TArgs) => TResult;
+export type TreeViewSelectorWithArgs<TState, TArgs, TResult> = (
+  state: TState,
+  args: TArgs,
+) => TResult;
+export type TreeViewSelectorWithoutArgs<TState, TResult> = (state: TState) => TResult;
 
-type Combiner<InputSelectors extends SelectorArray, Args, Result> = (
+type CombinerWithArgs<InputSelectors extends SelectorArray, Args, Result> = (
   ...params: [...resultFuncArgs: SelectorResultArray<InputSelectors>, args: Args]
 ) => Result;
 
+type CombinerWithoutArgs<InputSelectors extends SelectorArray, Result> = (
+  ...resultFuncArgs: SelectorResultArray<InputSelectors>
+) => Result;
+
 interface CreateSelectorFunction {
+  <State, Result>(
+    selector: TreeViewSelectorWithoutArgs<State, Result>,
+  ): TreeViewSelectorWithoutArgs<State, Result>;
+
   <State, Result, Args>(
-    selector: TreeViewSelector<State, Args, Result>,
-  ): TreeViewSelector<State, Args, Result>;
+    selector: TreeViewSelectorWithArgs<State, Args, Result>,
+  ): TreeViewSelectorWithArgs<State, Args, Result>;
+
+  <InputSelectors extends SelectorArray, Result>(
+    ...createSelectorArgs: [
+      ...inputSelectors: InputSelectors,
+      combiner: CombinerWithoutArgs<InputSelectors, Result>,
+    ]
+  ): TreeViewSelectorWithoutArgs<StateFromSelectors<InputSelectors>, Result>;
 
   <InputSelectors extends SelectorArray, Args, Result>(
     ...createSelectorArgs: [
       ...inputSelectors: InputSelectors,
-      combiner: Combiner<InputSelectors, Args, Result>,
+      combiner: CombinerWithArgs<InputSelectors, Args, Result>,
     ]
-  ): TreeViewSelector<StateFromSelectors<InputSelectors>, Args, Result>;
+  ): TreeViewSelectorWithArgs<StateFromSelectors<InputSelectors>, Args, Result>;
 }
 
 export const createSelector: CreateSelectorFunction = (...args: any) => {

@@ -30,7 +30,7 @@ import { isTargetInDescendants } from '../internals/utils/tree';
 import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
 import { useSelector } from '../internals/hooks/useSelector';
 import { selectorDefaultFocusableItemId } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
-import { selectorTreeItemIdAttribute } from '@mui/x-tree-view/internals/corePlugins/useTreeViewId/useTreeViewId.selectors';
+import { selectorTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.selectors';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem');
 
