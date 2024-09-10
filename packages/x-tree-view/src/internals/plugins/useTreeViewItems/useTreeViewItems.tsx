@@ -114,15 +114,18 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   experimentalFeatures,
 }) => {
   const getItemMeta = React.useCallback(
-    (itemId: string) => selectorItemMeta(store, itemId),
+    (itemId: string) => selectorItemMeta(store.value, itemId),
     [store],
   );
 
-  const getItem = React.useCallback((itemId: string) => selectorItemMap(store)[itemId], [store]);
+  const getItem = React.useCallback(
+    (itemId: string) => selectorItemMap(store.value)[itemId],
+    [store],
+  );
 
   const getItemTree = React.useCallback(() => {
     const getItemFromItemId = (id: TreeViewItemId): TreeViewBaseItem => {
-      const { children: oldChildren, ...item } = selectorItemMap(store)[id];
+      const { children: oldChildren, ...item } = selectorItemMap(store.value)[id];
       const newChildren = instance.getItemOrderedChildrenIds(id);
       if (newChildren) {
         item.children = newChildren.map(getItemFromItemId);
@@ -166,14 +169,14 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   const getItemIndex = React.useCallback(
     (itemId: string) => {
       const parentId = instance.getItemMeta(itemId).parentId ?? TREE_VIEW_ROOT_PARENT_ID;
-      return selectorItemChildrenIndexes(store)[parentId][itemId];
+      return selectorItemChildrenIndexes(store.value)[parentId][itemId];
     },
     [instance, store],
   );
 
   const getItemOrderedChildrenIds = React.useCallback(
     (itemId: string | null) =>
-      selectorItemOrderedChildrenIds(store)[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ?? [],
+      selectorItemOrderedChildrenIds(store.value)[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ?? [],
     [store],
   );
 
@@ -183,7 +186,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       return null;
     }
 
-    const idAttribute = selectorTreeItemIdAttribute(store, itemId, itemMeta.idAttribute);
+    const idAttribute = selectorTreeItemIdAttribute(store.value, itemId, itemMeta.idAttribute);
     return document.getElementById(idAttribute);
   };
 

@@ -1,12 +1,13 @@
-import { createSelector, resolveState, StoreOrStateFromSignatures } from '../../utils/selectors';
+import { createSelector } from '../../utils/selectors';
 import { UseTreeViewIdSignature } from './useTreeViewId.types';
+import { TreeViewState } from '../../models';
 
-export const selectorTreeViewId = createSelector<UseTreeViewIdSignature, string>(
+export const selectorTreeViewId = createSelector<[UseTreeViewIdSignature], string>(
   (state) => state.id.treeId ?? '',
 );
 
-export const selectorTreeItemIdAttribute = (
-  storeOrState: StoreOrStateFromSignatures<any[]>,
+export const selectorTreeItemIdAttribute = <TState extends TreeViewState<[UseTreeViewIdSignature]>>(
+  state: TState,
   itemId: string,
   idAttribute: string | undefined,
 ) => {
@@ -14,7 +15,6 @@ export const selectorTreeItemIdAttribute = (
     return idAttribute;
   }
 
-  const state = resolveState(storeOrState);
   const treeId = selectorTreeViewId(state);
   return `${treeId}-${itemId}`;
 };

@@ -80,11 +80,11 @@ export const useTreeView = <
     storeRef.current = new TreeViewStore({ initialState, forceUpdate });
   }
 
-  const contextValue = useTreeViewBuildContext({
+  const contextValue = useTreeViewBuildContext<TSignatures>({
     plugins,
     instance,
     publicAPI,
-    store: storeRef.current,
+    store: storeRef.current as TreeViewStore<any>,
     rootRef: innerRootRef,
   });
 

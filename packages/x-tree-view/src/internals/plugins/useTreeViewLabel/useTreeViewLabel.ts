@@ -32,7 +32,8 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
     editedItemRef.current = editedItemId;
   };
 
-  const isItemBeingEdited = (itemId: TreeViewItemId) => itemId === selectorEditedItemId(store);
+  const isItemBeingEdited = (itemId: TreeViewItemId) =>
+    itemId === selectorEditedItemId(store.value);
 
   const isTreeViewEditable = Boolean(params.isItemEditable) && !!experimentalFeatures.labelEditing;
 

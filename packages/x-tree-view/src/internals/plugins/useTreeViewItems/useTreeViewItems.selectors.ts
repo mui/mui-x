@@ -6,29 +6,35 @@ import {
 } from './useTreeViewItems.types';
 import { TreeViewState } from '../../models';
 
-export const selectorItemMetaMap = createSelector<UseTreeViewItemsSignature, TreeViewItemMetaMap>(
+export const selectorItemMetaMap = createSelector<[UseTreeViewItemsSignature], TreeViewItemMetaMap>(
   (state) => state.items.itemMetaMap,
 );
 
 export const selectorItemOrderedChildrenIds = createSelector<
-  UseTreeViewItemsSignature,
+  [UseTreeViewItemsSignature],
   { [parentItemId: string]: string[] }
 >((state) => state.items.itemOrderedChildrenIds);
 
 export const selectorItemChildrenIndexes = createSelector<
-  UseTreeViewItemsSignature,
+  [UseTreeViewItemsSignature],
   { [parentItemId: string]: { [itemId: string]: number } }
 >((state) => state.items.itemChildrenIndexes);
 
-export const selectorItemMap = createSelector<UseTreeViewItemsSignature, TreeViewItemMap<any>>(
+export const selectorItemMap = createSelector<[UseTreeViewItemsSignature], TreeViewItemMap<any>>(
   (state) => state.items.itemMap,
 );
 
-export const selectorItemMeta = (state: TreeViewState<any[]>, itemId: string) => {
+export const selectorItemMeta = (
+  state: TreeViewState<[UseTreeViewItemsSignature]>,
+  itemId: string,
+) => {
   return selectorItemMetaMap(state)[itemId];
 };
 
-export const selectorIsItemDisabled = (state: TreeViewState<any[]>, itemId: string) => {
+export const selectorIsItemDisabled = (
+  state: TreeViewState<[UseTreeViewItemsSignature]>,
+  itemId: string,
+) => {
   if (itemId == null) {
     return false;
   }

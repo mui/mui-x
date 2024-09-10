@@ -5,6 +5,7 @@ import {
   useTreeViewContext,
   UseTreeViewItemsSignature,
   isTargetInDescendants,
+  useSelector,
 } from '@mui/x-tree-view/internals';
 import { TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 import {
@@ -14,17 +15,28 @@ import {
   TreeViewItemItemReorderingValidActions,
   UseTreeItem2ContentSlotPropsFromItemsReordering,
 } from './useTreeViewItemsReordering.types';
+import {
+  selectorItemsReorderingForDraggedItem,
+  selectorItemsReorderingIsValidTarget,
+} from './useTreeViewItemsReordering.selectors';
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
 export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2Props> = ({
   props,
 }) => {
-  const { itemsReordering, instance } =
+  const { instance, store } =
     useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewItemsReorderingSignature]>();
   const { itemId } = props;
 
   const validActionsRef = React.useRef<TreeViewItemItemReorderingValidActions | null>(null);
+
+  const itemsReorderingForDraggedItem = useSelector(store, (state) =>
+    selectorItemsReorderingForDraggedItem(state, itemId),
+  );
+  const isValidTarget = useSelector(store, (state) =>
+    selectorItemsReorderingIsValidTarget(state, itemId),
+  );
 
   return {
     propsEnhancers: {
@@ -95,8 +107,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
         externalEventHandlers,
         contentRefObject,
       }): UseTreeItem2ContentSlotPropsFromItemsReordering => {
-        const currentDrag = itemsReordering.currentDrag;
-        if (!currentDrag || currentDrag.draggedItemId === itemId) {
+        if (!isValidTarget) {
           return {};
         }
 
@@ -134,19 +145,18 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
         };
       },
       dragAndDropOverlay: (): UseTreeItem2DragAndDropOverlaySlotPropsFromItemsReordering => {
-        const currentDrag = itemsReordering.currentDrag;
-        if (!currentDrag || currentDrag.targetItemId !== itemId || currentDrag.action == null) {
+        if (!itemsReorderingForDraggedItem) {
           return {};
         }
 
         const targetDepth =
-          currentDrag.newPosition?.parentId == null
+          itemsReorderingForDraggedItem.newPosition?.parentId == null
             ? 0
             : // The depth is always defined because drag&drop is only usable with Rich Tree View components.
-              instance.getItemMeta(currentDrag.newPosition.parentId).depth! + 1;
+              instance.getItemMeta(itemsReorderingForDraggedItem.newPosition.parentId).depth! + 1;
 
         return {
-          action: currentDrag.action,
+          action: itemsReorderingForDraggedItem.action,
           style: { '--TreeView-targetDepth': targetDepth } as React.CSSProperties,
         };
       },

@@ -1,14 +1,15 @@
-import { createSelector, resolveState, StoreOrStateFromSignatures } from '../../utils/selectors';
+import { createSelector } from '../../utils/selectors';
 import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
+import { TreeViewState } from '../../models';
 
 export const selectorSelectedItemsMap = createSelector<
-  UseTreeViewSelectionSignature,
+  [UseTreeViewSelectionSignature],
   Map<string, true>
 >((state) => state.selection.selectedItemsMap);
 
 export const selectorIsItemSelected = (
-  storeOrState: StoreOrStateFromSignatures<any[]>,
+  state: TreeViewState<[UseTreeViewSelectionSignature]>,
   itemId: string,
 ) => {
-  return selectorSelectedItemsMap(resolveState(storeOrState)).has(itemId);
+  return selectorSelectedItemsMap(state).has(itemId);
 };

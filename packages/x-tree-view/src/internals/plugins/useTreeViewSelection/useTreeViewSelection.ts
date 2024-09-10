@@ -46,7 +46,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     if (params.onItemSelectionToggle) {
       if (params.multiSelect) {
         const addedItems = (newSelectedItems as string[]).filter(
-          (itemId) => !selectorIsItemSelected(store, itemId),
+          (itemId) => !selectorIsItemSelected(store.value, itemId),
         );
         const removedItems = (models.selectedItems.value as string[]).filter(
           (itemId) => !(newSelectedItems as string[]).includes(itemId),
@@ -89,7 +89,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     let newSelected: typeof models.selectedItems.value;
     if (keepExistingSelection) {
       const cleanSelectedItems = convertSelectedItemsToArray(models.selectedItems.value);
-      const isSelectedBefore = selectorIsItemSelected(store, itemId);
+      const isSelectedBefore = selectorIsItemSelected(store.value, itemId);
       if (isSelectedBefore && (shouldBeSelected === false || shouldBeSelected == null)) {
         newSelected = cleanSelectedItems.filter((id) => id !== itemId);
       } else if (!isSelectedBefore && (shouldBeSelected === true || shouldBeSelected == null)) {
@@ -101,7 +101,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       // eslint-disable-next-line no-lonely-if
       if (
         shouldBeSelected === false ||
-        (shouldBeSelected == null && selectorIsItemSelected(store, itemId))
+        (shouldBeSelected == null && selectorIsItemSelected(store.value, itemId))
       ) {
         newSelected = params.multiSelect ? [] : null;
       } else {

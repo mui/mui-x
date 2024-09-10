@@ -143,7 +143,7 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
 
   // Prevent any flashing
   useEnhancedEffect(() => {
-    const idAttributeWithDefault = selectorTreeItemIdAttribute(store, itemId, id);
+    const idAttributeWithDefault = selectorTreeItemIdAttribute(store.value, itemId, id);
     registerChild(idAttributeWithDefault, itemId);
 
     return () => {

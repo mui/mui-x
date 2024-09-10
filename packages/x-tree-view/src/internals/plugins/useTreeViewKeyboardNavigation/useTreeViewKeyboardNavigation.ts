@@ -140,7 +140,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           if (params.multiSelect) {
             event.preventDefault();
             instance.selectItem({ event, itemId, keepExistingSelection: true });
-          } else if (!selectorIsItemSelected(store, itemId)) {
+          } else if (!selectorIsItemSelected(store.value, itemId)) {
             instance.selectItem({ event, itemId });
             event.preventDefault();
           }

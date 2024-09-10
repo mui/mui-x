@@ -32,7 +32,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   };
 
   const isItemExpanded = React.useCallback(
-    (itemId: string) => selectorExpandedItemsMap(store).has(itemId),
+    (itemId: string) => selectorExpandedItemsMap(store.value).has(itemId),
     [store],
   );
 

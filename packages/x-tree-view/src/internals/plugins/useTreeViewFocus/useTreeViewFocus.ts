@@ -40,6 +40,7 @@ const useDefaultFocusableItemId = (
       return {
         ...prevState,
         focus: {
+          ...prevState.focus,
           defaultFocusableItemId,
         },
       };
@@ -56,7 +57,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   useDefaultFocusableItemId(instance, store, models.selectedItems.value);
 
   const setFocusedItemId = useEventCallback((itemId: string | null) => {
-    const focusedItemId = selectorFocusedItemId(store);
+    const focusedItemId = selectorFocusedItemId(store.value);
     if (focusedItemId !== itemId) {
       store.update((prevState) => ({ ...prevState, focusedItemId: itemId }));
     }
@@ -88,7 +89,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   });
 
   const removeFocusedItem = useEventCallback(() => {
-    const focusedItemId = selectorFocusedItemId(store);
+    const focusedItemId = selectorFocusedItemId(store.value);
     if (focusedItemId == null) {
       return;
     }
@@ -105,8 +106,8 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   });
 
   useInstanceEventHandler(instance, 'removeItem', ({ id }) => {
-    const focusedItemId = selectorFocusedItemId(store);
-    const defaultFocusableItemId = selectorDefaultFocusableItemId(store);
+    const focusedItemId = selectorFocusedItemId(store.value);
+    const defaultFocusableItemId = selectorDefaultFocusableItemId(store.value);
     if (focusedItemId === id && defaultFocusableItemId != null) {
       innerFocusItem(null, defaultFocusableItemId);
     }
@@ -121,7 +122,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       }
 
       // if the event bubbled (which is React specific) we don't want to steal focus
-      const defaultFocusableItemId = selectorDefaultFocusableItemId(store);
+      const defaultFocusableItemId = selectorDefaultFocusableItemId(store.value);
       if (event.target === event.currentTarget && defaultFocusableItemId != null) {
         innerFocusItem(event, defaultFocusableItemId);
       }
