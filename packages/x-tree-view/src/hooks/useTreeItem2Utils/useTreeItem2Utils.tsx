@@ -67,10 +67,10 @@ export const useTreeItem2Utils = ({
     selection: { multiSelect },
   } = useTreeViewContext<UseTreeItem2UtilsMinimalPlugins, UseTreeItem2UtilsOptionalPlugins>();
 
-  const isExpanded = useSelector(store, (state) => selectorIsItemExpanded(state, itemId));
-  const isFocused = useSelector(store, (state) => selectorIsItemFocused(state, itemId));
-  const isSelected = useSelector(store, (state) => selectorIsItemSelected(state, itemId));
-  const isDisabled = useSelector(store, (state) => selectorIsItemDisabled(state, itemId));
+  const isExpanded = useSelector(store, selectorIsItemExpanded, itemId);
+  const isFocused = useSelector(store, selectorIsItemFocused, itemId);
+  const isSelected = useSelector(store, selectorIsItemSelected, itemId);
+  const isDisabled = useSelector(store, selectorIsItemDisabled, itemId);
 
   const status: UseTreeItem2Status = {
     expandable: isItemExpandable(children),

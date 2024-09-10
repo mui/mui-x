@@ -36,6 +36,7 @@ export function useTreeViewApiInitialization<T>(
   return fallbackPublicApiRef.current;
 }
 
+let globalId = 0;
 export const useTreeView = <
   TSignatures extends readonly TreeViewAnyPluginSignature[],
   TProps extends Partial<UseTreeViewBaseProps<TSignatures>>,
@@ -69,7 +70,10 @@ export const useTreeView = <
   const [, forceUpdate] = React.useState({});
   const storeRef = React.useRef<TreeViewStore<TSignaturesWithCorePluginSignatures> | null>(null);
   if (storeRef.current == null) {
-    const initialState = {} as TreeViewState<TSignaturesWithCorePluginSignatures>;
+    globalId += 1;
+    const initialState = {
+      cacheKey: { id: globalId },
+    } as TreeViewState<TSignaturesWithCorePluginSignatures>;
 
     plugins.forEach((plugin) => {
       if (plugin.getInitialState) {

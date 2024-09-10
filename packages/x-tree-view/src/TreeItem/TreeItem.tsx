@@ -385,7 +385,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     instance.handleItemKeyDown(event, itemId);
   };
 
-  const idAttribute = useSelector(store, (state) => selectorTreeItemIdAttribute(state, itemId, id));
+  const idAttribute = useSelector(store, selectorTreeItemIdAttribute, { itemId, idAttribute: id });
   const tabIndex = useSelector(store, (state) =>
     selectorDefaultFocusableItemId(state) === itemId ? 0 : -1,
   );

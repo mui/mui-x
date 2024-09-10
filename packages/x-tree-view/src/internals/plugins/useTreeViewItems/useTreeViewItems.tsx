@@ -186,7 +186,10 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       return null;
     }
 
-    const idAttribute = selectorTreeItemIdAttribute(store.value, itemId, itemMeta.idAttribute);
+    const idAttribute = selectorTreeItemIdAttribute(store.value, {
+      itemId,
+      idAttribute: itemMeta.idAttribute,
+    });
     return document.getElementById(idAttribute);
   };
 

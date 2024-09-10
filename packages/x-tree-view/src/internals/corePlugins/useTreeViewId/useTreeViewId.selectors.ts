@@ -2,19 +2,17 @@ import { createSelector } from '../../utils/selectors';
 import { UseTreeViewIdSignature } from './useTreeViewId.types';
 import { TreeViewState } from '../../models';
 
-export const selectorTreeViewId = createSelector<[UseTreeViewIdSignature], string>(
-  (state) => state.id.treeId ?? '',
+export const selectorTreeViewId = createSelector(
+  (state: TreeViewState<[UseTreeViewIdSignature]>) => state.id.treeId ?? '',
 );
 
-export const selectorTreeItemIdAttribute = <TState extends TreeViewState<[UseTreeViewIdSignature]>>(
-  state: TState,
-  itemId: string,
-  idAttribute: string | undefined,
-) => {
-  if (idAttribute != null) {
-    return idAttribute;
-  }
+export const selectorTreeItemIdAttribute = createSelector(
+  selectorTreeViewId,
+  (treeId, args: { itemId: string; idAttribute: string | undefined }) => {
+    if (args.idAttribute != null) {
+      return args.idAttribute;
+    }
 
-  const treeId = selectorTreeViewId(state);
-  return `${treeId}-${itemId}`;
-};
+    return `${treeId}-${args.itemId}`;
+  },
+);

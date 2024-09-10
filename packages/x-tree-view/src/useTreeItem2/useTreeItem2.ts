@@ -57,7 +57,7 @@ export const useTreeItem2 = <
   const handleContentRef = useForkRef(contentRef, contentRefObject)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
-  const idAttribute = useSelector(store, (state) => selectorTreeItemIdAttribute(state, itemId, id));
+  const idAttribute = useSelector(store, selectorTreeItemIdAttribute, { itemId, idAttribute: id });
   const rootTabIndex = useSelector(store, (state) =>
     selectorDefaultFocusableItemId(state) === parameters.itemId ? 0 : -1,
   );

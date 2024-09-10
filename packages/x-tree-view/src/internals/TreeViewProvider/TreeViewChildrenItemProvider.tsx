@@ -37,7 +37,10 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
       // Undefined during 1st render
       const itemMeta = instance.getItemMeta(itemId);
       if (itemMeta !== undefined) {
-        idAttr = selectorTreeItemIdAttribute(store.value, itemId, itemMeta.idAttribute);
+        idAttr = selectorTreeItemIdAttribute(store.value, {
+          itemId,
+          idAttribute: itemMeta.idAttribute,
+        });
       }
     }
 

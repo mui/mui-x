@@ -1,61 +1,55 @@
 import { createSelector } from '../../utils/selectors';
-import {
-  UseTreeViewItemsSignature,
-  TreeViewItemMetaMap,
-  TreeViewItemMap,
-} from './useTreeViewItems.types';
+import { UseTreeViewItemsSignature } from './useTreeViewItems.types';
 import { TreeViewState } from '../../models';
 
-export const selectorItemMetaMap = createSelector<[UseTreeViewItemsSignature], TreeViewItemMetaMap>(
-  (state) => state.items.itemMetaMap,
+const selectorItems = createSelector(
+  (state: TreeViewState<[UseTreeViewItemsSignature]>) => state.items,
 );
 
-export const selectorItemOrderedChildrenIds = createSelector<
-  [UseTreeViewItemsSignature],
-  { [parentItemId: string]: string[] }
->((state) => state.items.itemOrderedChildrenIds);
+export const selectorItemMetaMap = createSelector(selectorItems, (items) => items.itemMetaMap);
 
-export const selectorItemChildrenIndexes = createSelector<
-  [UseTreeViewItemsSignature],
-  { [parentItemId: string]: { [itemId: string]: number } }
->((state) => state.items.itemChildrenIndexes);
-
-export const selectorItemMap = createSelector<[UseTreeViewItemsSignature], TreeViewItemMap<any>>(
-  (state) => state.items.itemMap,
+export const selectorItemOrderedChildrenIds = createSelector(
+  selectorItems,
+  (items) => items.itemOrderedChildrenIds,
 );
 
-export const selectorItemMeta = (
-  state: TreeViewState<[UseTreeViewItemsSignature]>,
-  itemId: string,
-) => {
-  return selectorItemMetaMap(state)[itemId];
-};
+export const selectorItemChildrenIndexes = createSelector(
+  selectorItems,
+  (items) => items.itemChildrenIndexes,
+);
 
-export const selectorIsItemDisabled = (
-  state: TreeViewState<[UseTreeViewItemsSignature]>,
-  itemId: string,
-) => {
-  if (itemId == null) {
-    return false;
-  }
+export const selectorItemMap = createSelector(selectorItems, (items) => items.itemMap);
 
-  let itemMeta = selectorItemMeta(state, itemId);
+export const selectorItemMeta = createSelector(
+  selectorItemMetaMap,
+  (itemMetaMap, itemId: string) => itemMetaMap[itemId],
+);
 
-  // This can be called before the item has been added to the item map.
-  if (!itemMeta) {
-    return false;
-  }
+export const selectorIsItemDisabled = createSelector(
+  selectorItemMetaMap,
+  (itemMetaMap, itemId: string) => {
+    if (itemId == null) {
+      return false;
+    }
 
-  if (itemMeta.disabled) {
-    return true;
-  }
+    let itemMeta = itemMetaMap[itemId];
 
-  while (itemMeta.parentId != null) {
-    itemMeta = selectorItemMeta(state, itemMeta.parentId);
+    // This can be called before the item has been added to the item map.
+    if (!itemMeta) {
+      return false;
+    }
+
     if (itemMeta.disabled) {
       return true;
     }
-  }
 
-  return false;
-};
+    while (itemMeta.parentId != null) {
+      itemMeta = itemMetaMap[itemMeta.parentId];
+      if (itemMeta.disabled) {
+        return true;
+      }
+    }
+
+    return false;
+  },
+);

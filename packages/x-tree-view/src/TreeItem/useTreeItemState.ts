@@ -11,7 +11,7 @@ import { useSelector } from '../internals/hooks/useSelector';
 import { selectorIsItemExpanded } from '../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
 import { selectorIsItemFocused } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { selectorIsItemDisabled } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
-import { selectorIsItemSelected } from '@mui/x-tree-view/internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
+import { selectorIsItemSelected } from '../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
 
 type UseTreeItemStateMinimalPlugins = readonly [
   UseTreeViewSelectionSignature,
@@ -31,10 +31,10 @@ export function useTreeItemState(itemId: string) {
     expansion: { expansionTrigger },
   } = useTreeViewContext<UseTreeItemStateMinimalPlugins, UseTreeItemStateOptionalPlugins>();
 
-  const isExpanded = useSelector(store, (state) => selectorIsItemExpanded(state, itemId));
-  const isFocused = useSelector(store, (state) => selectorIsItemFocused(state, itemId));
-  const isSelected = useSelector(store, (state) => selectorIsItemSelected(state, itemId));
-  const isDisabled = useSelector(store, (state) => selectorIsItemDisabled(state, itemId));
+  const isExpanded = useSelector(store, selectorIsItemExpanded, itemId);
+  const isFocused = useSelector(store, selectorIsItemFocused, itemId);
+  const isSelected = useSelector(store, selectorIsItemSelected, itemId);
+  const isDisabled = useSelector(store, selectorIsItemDisabled, itemId);
 
   const expandable = instance.isItemExpandable(itemId);
   const editing = instance?.isItemBeingEdited ? instance?.isItemBeingEdited(itemId) : false;

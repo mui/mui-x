@@ -31,12 +31,12 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
 
   const validActionsRef = React.useRef<TreeViewItemItemReorderingValidActions | null>(null);
 
-  const itemsReorderingForDraggedItem = useSelector(store, (state) =>
-    selectorItemsReorderingForDraggedItem(state, itemId),
+  const itemsReorderingForDraggedItem = useSelector(
+    store,
+    selectorItemsReorderingForDraggedItem,
+    itemId,
   );
-  const isValidTarget = useSelector(store, (state) =>
-    selectorItemsReorderingIsValidTarget(state, itemId),
-  );
+  const isValidTarget = useSelector(store, selectorItemsReorderingIsValidTarget, itemId);
 
   return {
     propsEnhancers: {
