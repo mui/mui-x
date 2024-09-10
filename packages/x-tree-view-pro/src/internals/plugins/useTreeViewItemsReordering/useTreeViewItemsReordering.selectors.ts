@@ -1,14 +1,13 @@
 import { createSelector, TreeViewState, selectorItemMetaMap } from '@mui/x-tree-view/internals';
 import { UseTreeViewItemsReorderingSignature } from './useTreeViewItemsReordering.types';
 
-export const selectorItemsReordering = createSelector(
-  (state: TreeViewState<[UseTreeViewItemsReorderingSignature]>) => state.itemsReordering,
-);
+export const selectorItemsReordering = (
+  state: TreeViewState<[UseTreeViewItemsReorderingSignature]>,
+) => state.itemsReordering;
 
 export const selectorItemsReorderingForDraggedItem = createSelector(
-  selectorItemsReordering,
-  selectorItemMetaMap,
-  (itemsReordering, itemMetaMap, itemId: string) => {
+  [selectorItemsReordering, selectorItemMetaMap, (_, itemId: string) => itemId],
+  (itemsReordering, itemMetaMap, itemId) => {
     if (
       !itemsReordering ||
       itemsReordering.targetItemId !== itemId ||
@@ -32,6 +31,6 @@ export const selectorItemsReorderingForDraggedItem = createSelector(
 );
 
 export const selectorItemsReorderingIsValidTarget = createSelector(
-  selectorItemsReordering,
-  (itemsReordering, itemId: string) => itemsReordering && itemsReordering.draggedItemId !== itemId,
+  [selectorItemsReordering, (_, itemId: string) => itemId],
+  (itemsReordering, itemId) => itemsReordering && itemsReordering.draggedItemId !== itemId,
 );

@@ -41,8 +41,12 @@ export type TreeViewExperimentalFeatures<
   TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
 > = MergeSignaturesProperty<[...TSignatures, ...TOptionalSignatures], 'experimentalFeatures'>;
 
+export type TreeViewStateCacheKey = { id: number };
+
 export type TreeViewState<
   TSignatures extends readonly TreeViewAnyPluginSignature[],
   TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
 > = MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'state'> &
-  Partial<MergeSignaturesProperty<TOptionalSignatures, 'state'>> & { cacheKey: { id: number } };
+  Partial<MergeSignaturesProperty<TOptionalSignatures, 'state'>> & {
+    cacheKey: TreeViewStateCacheKey;
+  };

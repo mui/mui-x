@@ -2,9 +2,7 @@ import { createSelector } from '../../utils/selectors';
 import { UseTreeViewItemsSignature } from './useTreeViewItems.types';
 import { TreeViewState } from '../../models';
 
-const selectorItems = createSelector(
-  (state: TreeViewState<[UseTreeViewItemsSignature]>) => state.items,
-);
+const selectorItems = (state: TreeViewState<[UseTreeViewItemsSignature]>) => state.items;
 
 export const selectorItemMetaMap = createSelector(selectorItems, (items) => items.itemMetaMap);
 
@@ -21,13 +19,13 @@ export const selectorItemChildrenIndexes = createSelector(
 export const selectorItemMap = createSelector(selectorItems, (items) => items.itemMap);
 
 export const selectorItemMeta = createSelector(
-  selectorItemMetaMap,
-  (itemMetaMap, itemId: string) => itemMetaMap[itemId],
+  [selectorItemMetaMap, (_, itemId: string) => itemId],
+  (itemMetaMap, itemId) => itemMetaMap[itemId],
 );
 
 export const selectorIsItemDisabled = createSelector(
-  selectorItemMetaMap,
-  (itemMetaMap, itemId: string) => {
+  [selectorItemMetaMap, (_, itemId: string) => itemId],
+  (itemMetaMap, itemId) => {
     if (itemId == null) {
       return false;
     }

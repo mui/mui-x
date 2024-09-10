@@ -2,6 +2,8 @@ import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { createSelector } from '../../utils/selectors';
 import { TreeViewState } from '../../models';
 
+const selectorFocus = (state: TreeViewState<[UseTreeViewFocusSignature]>) => state.focus;
+
 /**
  * Get the item that should be sequentially focusable (usually with the Tab key).
  * At any point in time, there is a single item that can be sequentially focused in the Tree View.
@@ -10,14 +12,13 @@ import { TreeViewState } from '../../models';
  * @returns {string} `true` if the item can be sequentially focusable, `false` otherwise.
  */
 export const selectorDefaultFocusableItemId = createSelector(
-  (state: TreeViewState<[UseTreeViewFocusSignature]>) => state.focus.defaultFocusableItemId,
+  selectorFocus,
+  (focus) => focus.defaultFocusableItemId,
 );
 
-export const selectorFocusedItemId = createSelector(
-  (state: TreeViewState<[UseTreeViewFocusSignature]>) => state.focus.focusedItemId,
-);
+export const selectorFocusedItemId = createSelector(selectorFocus, (focus) => focus.focusedItemId);
 
 export const selectorIsItemFocused = createSelector(
-  selectorFocusedItemId,
+  [selectorFocusedItemId, (_, itemId: string) => itemId],
   (focusedItemId, itemId) => focusedItemId === itemId,
 );
