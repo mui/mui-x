@@ -33,6 +33,8 @@ See [Licensing](#licensing) for details.
 
 ## Documentation
 
+Get started in the [MUI X documentation](https://mui.com/x/introduction/).
+
 - [Data Grid](https://mui.com/x/react-data-grid/)
 - [Date and Time Pickers](https://mui.com/x/react-date-pickers/)
 - [Charts](https://mui.com/x/react-charts/)
