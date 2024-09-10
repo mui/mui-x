@@ -23,7 +23,7 @@
 </div>
 
 [MUI X](https://mui.com/x/) is a suite of advanced React UI components for a wide range of complex use cases.
-Each component provides best-in-class UX and DX, with UX workflows for data-rich applications.
+Each component provides best-in-class UX and DX, with sophisticated UX workflows for data-rich applications.
 Components include the Data Grid, Date and Time Pickers, Charts, and Tree View.
 
 MUI X extends the core functionality of [Material UI](https://github.com/mui/material-ui/), but the advanced components also stand on their own and can be fully customized to meet the needs of any design system.
