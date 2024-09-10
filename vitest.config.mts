@@ -1,10 +1,7 @@
 import { defineConfig } from 'vitest/config';
-import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  plugins: [react()],
-  test: {
-    include: ['packages/x-charts/**/*.test.tsx'],
+  resolve: {
     alias: [
       {
         find: '@mui/x-charts',
@@ -15,17 +12,9 @@ export default defineConfig({
         replacement: new URL('./test/utils', import.meta.url).pathname,
       },
     ],
+  },
+  test: {
     globals: true,
     setupFiles: ['test/setup.ts'],
-    // environment: 'jsdom',
-    browser: {
-      enabled: true,
-      name: 'chromium',
-      provider: 'playwright',
-      headless: true,
-      // https://playwright.dev
-      providerOptions: {},
-      screenshotFailures: false,
-    },
   },
 });
