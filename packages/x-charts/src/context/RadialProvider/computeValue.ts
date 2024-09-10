@@ -1,6 +1,12 @@
 import { scaleBand, scalePoint, scaleTime } from '@mui/x-charts-vendor/d3-scale';
 import { AxisConfig, ScaleName } from '../../models';
-import { ChartsAxisProps, isBandScaleConfig, isPointScaleConfig } from '../../models/axis';
+import {
+  ChartsAxisProps,
+  ChartsRadialAxisProps,
+  ChartsRotationAxisProps,
+  isBandScaleConfig,
+  isPointScaleConfig,
+} from '../../models/axis';
 import { CartesianChartSeriesType } from '../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../internals/colorScale';
 import { getTickNumber } from '../../hooks/useTicks';
@@ -14,12 +20,22 @@ import { getAxisExtremum } from './getAxisExtremum';
 const getRange = (
   drawingArea: DrawingArea,
   axisDirection: 'radius' | 'rotation',
-  isReverse?: boolean,
+  axis: AxisConfig<ScaleName, any, ChartsRadialAxisProps | ChartsRotationAxisProps>,
 ) => {
   if (axisDirection === 'rotation') {
-    return isReverse ? [0, Math.PI * 2] : [Math.PI * 2, 0];
+    const { startAngle = 0, endAngle = startAngle + 360 } = axis as AxisConfig<
+      ScaleName,
+      any,
+      ChartsRotationAxisProps
+    >;
+    return axis.reverse
+      ? [(Math.PI * startAngle) / 180, (Math.PI * endAngle) / 180]
+      : [(Math.PI * endAngle) / 180, (Math.PI * startAngle) / 180];
   }
-  return [0, Math.min(drawingArea.width, drawingArea.height) / 2];
+
+  const { minRadius = 0, maxRadius = Math.min(drawingArea.width, drawingArea.height) / 2 } =
+    axis as AxisConfig<ScaleName, any, ChartsRadialAxisProps>;
+  return [minRadius, maxRadius];
 };
 
 const isDateData = (data?: any[]): data is Date[] => data?.[0] instanceof Date;
@@ -38,7 +54,7 @@ const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 const DEFAULT_BAR_GAP_RATIO = 0.1;
 
 type ComputeResult = {
-  axis: DefaultizedAxisConfig;
+  axis: DefaultizedAxisConfig<ChartsRadialAxisProps | ChartsRotationAxisProps>;
   axisIds: string[];
 };
 
@@ -50,13 +66,13 @@ type ComputeCommonParams = {
 
 export function computeValue(
   options: ComputeCommonParams & {
-    axis: AxisConfig<ScaleName, any, ChartsAxisProps>[];
+    axis: AxisConfig<ScaleName, any, ChartsRadialAxisProps>[];
     axisDirection: 'radius';
   },
 ): ComputeResult;
 export function computeValue(
   options: ComputeCommonParams & {
-    axis: AxisConfig<ScaleName, any, ChartsAxisProps>[];
+    axis: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
     axisDirection: 'rotation';
   },
 ): ComputeResult;
@@ -67,15 +83,14 @@ export function computeValue({
   extremumGetters,
   axisDirection,
 }: ComputeCommonParams & {
-  axis: AxisConfig<ScaleName, any, ChartsAxisProps>[];
+  axis: AxisConfig<ScaleName, any, ChartsRadialAxisProps | ChartsRotationAxisProps>[];
   axisDirection: 'radius' | 'rotation';
 }) {
-  const completeAxis: DefaultizedAxisConfig = {};
-  allAxis.forEach((eachAxis, axisIndex) => {
-    const axis = eachAxis as Readonly<AxisConfig<ScaleName, any, Readonly<ChartsAxisProps>>>;
+  const completeAxis: DefaultizedAxisConfig<ChartsRadialAxisProps | ChartsRotationAxisProps> = {};
+  allAxis.forEach((axis, axisIndex) => {
     const isDefaultAxis = axisIndex === 0;
 
-    const range = getRange(drawingArea, axisDirection, axis.reverse);
+    const range = getRange(drawingArea, axisDirection, axis);
 
     const [minData, maxData] = getAxisExtremum(
       axis,
@@ -94,10 +109,7 @@ export function computeValue({
         barGapRatio,
         ...axis,
         data,
-        scale: scaleBand(axis.data!, [
-          range[0],
-          range[1] - (range[1] - range[0]) / axis.data!.length,
-        ])
+        scale: scaleBand(axis.data!, range)
           .paddingInner(categoryGapRatio)
           .paddingOuter(categoryGapRatio / 2),
         tickNumber: axis.data!.length,
@@ -117,10 +129,7 @@ export function computeValue({
       completeAxis[axis.id] = {
         ...axis,
         data,
-        scale: scalePoint(axis.data!, [
-          range[0],
-          range[1] - (range[1] - range[0]) / axis.data!.length,
-        ]),
+        scale: scalePoint(axis.data!, range),
         tickNumber: axis.data!.length,
         colorScale:
           axis.colorMap &&

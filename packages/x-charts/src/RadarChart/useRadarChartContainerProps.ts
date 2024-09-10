@@ -67,8 +67,8 @@ export const useRadarChartContainerProps = (
         id: DEFAULT_X_AXIS_KEY,
         scaleType: 'point',
         data: metricNames,
-        min: (Math.PI * startAngle) / 180,
-        max: (Math.PI * endAngle) / 180,
+        startAngle,
+        endAngle,
       },
     ],
     radiusAxis: [
