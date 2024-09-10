@@ -1,7 +1,6 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { TreeViewPlugin } from '../../models';
-import { TreeViewItemId } from '../../../models';
 import {
   findOrderInTremauxTree,
   getAllNavigableItems,
