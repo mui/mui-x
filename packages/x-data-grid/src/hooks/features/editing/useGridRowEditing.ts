@@ -46,6 +46,7 @@ import {
   GridRowEditStartReasons,
 } from '../../../models/params/gridRowParams';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
+import { getDefaultCellValue } from './getDefaultCellValue';
 
 export const useGridRowEditing = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
@@ -434,7 +435,7 @@ export const useGridRowEditing = (
         let newValue = apiRef.current.getCellValue(id, field);
         if (fieldToFocus === field && (deleteValue || initialValue)) {
           if (deleteValue) {
-            newValue = apiRef.current.getDefaultCellValue(field);
+            newValue = getDefaultCellValue(apiRef.current.getColumn(field));
           } else if (initialValue) {
             newValue = initialValue;
           }

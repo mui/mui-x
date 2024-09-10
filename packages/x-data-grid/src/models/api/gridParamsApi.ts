@@ -14,12 +14,6 @@ export interface GridParamsApi {
    */
   getCellValue: <V extends any = any>(id: GridRowId, field: string) => V;
   /**
-   * Gets the default value of a cell for the given `field`.
-   * @param {string} field The column field.
-   * @returns {'' | false | null | undefined} The default cell value.
-   */
-  getDefaultCellValue: (field: string) => '' | false | null | undefined;
-  /**
    * Gets the cell value.
    * Use it instead of `getCellValue` for better performance if you have `row` and `colDef`.
    * @template V

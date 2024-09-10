@@ -111,10 +111,6 @@
       "required": true,
       "isPremiumPlan": true
     },
-    "getDefaultCellValue": {
-      "type": { "description": "(field: string) =&gt; '' | false | null | undefined" },
-      "required": true
-    },
     "getExpandedDetailPanels": {
       "type": { "description": "() =&gt; GridRowId[]" },
       "required": true,

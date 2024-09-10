@@ -39,6 +39,7 @@ import {
   GridCellEditStartReasons,
   GridCellEditStopReasons,
 } from '../../../models/params/gridEditCellParams';
+import { getDefaultCellValue } from './getDefaultCellValue';
 
 export const useGridCellEditing = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
@@ -337,7 +338,7 @@ export const useGridCellEditing = (
 
       let newValue = apiRef.current.getCellValue(id, field);
       if (deleteValue) {
-        newValue = apiRef.current.getDefaultCellValue(field);
+        newValue = getDefaultCellValue(apiRef.current.getColumn(field));
       } else if (initialValue) {
         newValue = initialValue;
       }
