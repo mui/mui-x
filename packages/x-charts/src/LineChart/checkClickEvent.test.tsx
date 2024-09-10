@@ -35,10 +35,12 @@ describe('LineChart - click event', () => {
   });
 
   describe('onAxisClick', () => {
-    it('should provide the right context as second argument', function test() {
+    it('should provide the right context as second argument', function test(t = {}) {
       if (isJSDOM) {
         // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       const onAxisClick = spy();
       render(
@@ -114,10 +116,12 @@ describe('LineChart - click event', () => {
       ]);
     });
 
-    it('should provide the right context as second argument', function test() {
+    it('should provide the right context as second argument', function test(t = {}) {
       if (isJSDOM) {
         // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       const onMarkClick = spy();
       render(
@@ -185,10 +189,12 @@ describe('LineChart - click event', () => {
       ]);
     });
 
-    it('should provide the right context as second argument', function test() {
+    it('should provide the right context as second argument', function test(t = {}) {
       if (isJSDOM) {
         // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       const onAreaClick = spy();
       render(
@@ -247,10 +253,12 @@ describe('LineChart - click event', () => {
       ]);
     });
 
-    it('should provide the right context as second argument', function test() {
+    it('should provide the right context as second argument', function test(t = {}) {
       if (isJSDOM) {
         // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       const onLineClick = spy();
       render(

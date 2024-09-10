@@ -41,10 +41,12 @@ describe('BarChart - click event', () => {
   });
 
   describe('onAxisClick', () => {
-    it('should provide the right context as second argument', function test() {
+    it('should provide the right context as second argument', function test(t = {}) {
       if (isJSDOM) {
         // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       const onAxisClick = spy();
       render(
@@ -92,10 +94,12 @@ describe('BarChart - click event', () => {
       });
     });
 
-    it('should provide the right context as second argument with layout="horizontal"', function test() {
+    it('should provide the right context as second argument with layout="horizontal"', function test(t = {}) {
       if (isJSDOM) {
         // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       const onAxisClick = spy();
       render(
@@ -166,10 +170,12 @@ describe('BarChart - click event', () => {
       ).to.deep.equal(['pointer', 'pointer', 'pointer', 'pointer']);
     });
 
-    it('should provide the right context as second argument', function test() {
+    it('should provide the right context as second argument', function test(t = {}) {
       if (isJSDOM) {
         // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       const onItemClick = spy();
       render(
