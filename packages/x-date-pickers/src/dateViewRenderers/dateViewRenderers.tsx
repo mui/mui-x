@@ -1,4 +1,3 @@
-'use client';
 import * as React from 'react';
 import { DateCalendar, DateCalendarProps } from '../DateCalendar';
 import { DateView, PickerValidDate } from '../models';
