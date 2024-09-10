@@ -45,6 +45,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
         contentRefObject,
         externalEventHandlers,
       }): UseTreeItem2RootSlotPropsFromItemsReordering => {
+        // TODO selectors: Remove
         const draggable = instance.canItemBeDragged(itemId);
         if (!draggable) {
           return {};
@@ -149,15 +150,11 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
           return {};
         }
 
-        const targetDepth =
-          itemsReorderingForDraggedItem.newPosition?.parentId == null
-            ? 0
-            : // The depth is always defined because drag&drop is only usable with Rich Tree View components.
-              instance.getItemMeta(itemsReorderingForDraggedItem.newPosition.parentId).depth! + 1;
-
         return {
           action: itemsReorderingForDraggedItem.action,
-          style: { '--TreeView-targetDepth': targetDepth } as React.CSSProperties,
+          style: {
+            '--TreeView-targetDepth': itemsReorderingForDraggedItem.targetDepth,
+          } as React.CSSProperties,
         };
       },
     },

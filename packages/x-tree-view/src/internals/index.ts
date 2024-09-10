@@ -50,6 +50,7 @@ export {
   useTreeViewItems,
   buildSiblingIndexes,
   TREE_VIEW_ROOT_PARENT_ID,
+  selectorItemMeta,
 } from './plugins/useTreeViewItems';
 export type {
   UseTreeViewItemsSignature,
