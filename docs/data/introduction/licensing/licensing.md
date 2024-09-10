@@ -8,7 +8,7 @@ The MUI X team has been building MIT-licensed React components since 2014, star
 Anything we release under an MIT license will remain MIT-licensed forever.
 Learn more about [our stewardship ethos](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
 
-We offer commercial licenses to developers who need the most advanced features and components that can't reasonably be maintained by the open-source community alone.
+We offer commercial licenses to developers who need the most advanced components and features that can't reasonably be maintained by the open-source community alone.
 These licenses make it possible for us to support a full-time staff of engineers.
 
 Rest assured that when we release features commercially, it's only because we believe you won't find a better MIT-licensed alternative anywhere else.
