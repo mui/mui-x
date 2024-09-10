@@ -53,6 +53,13 @@ const createEqualityFilterFn =
     };
   };
 
+const createEmptyFilterFn = (negate: boolean) => () => {
+  return (value: any): boolean => {
+    const isEmpty = value === '' || value == null;
+    return negate ? !isEmpty : isEmpty;
+  };
+};
+
 export const getGridStringOperators = (
   disableTrim: boolean = false,
 ): GridFilterOperator<any, number | string | null, any>[] => [
@@ -108,20 +115,12 @@ export const getGridStringOperators = (
   },
   {
     value: 'isEmpty',
-    getApplyFilterFn: () => {
-      return (value): boolean => {
-        return value === '' || value == null;
-      };
-    },
+    getApplyFilterFn: createEmptyFilterFn(false),
     requiresFilterValue: false,
   },
   {
     value: 'isNotEmpty',
-    getApplyFilterFn: () => {
-      return (value): boolean => {
-        return value !== '' && value != null;
-      };
-    },
+    getApplyFilterFn: createEmptyFilterFn(true),
     requiresFilterValue: false,
   },
   {
