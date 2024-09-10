@@ -128,7 +128,10 @@ export type TreeViewUsedStore<TSignature extends TreeViewAnyPluginSignature> = T
 >;
 
 type TreeViewUsedExperimentalFeatures<TSignature extends TreeViewAnyPluginSignature> =
-  TreeViewExperimentalFeatures<[TSignature, ...TSignature['dependencies']]>;
+  TreeViewExperimentalFeatures<
+    [TSignature, ...TSignature['dependencies']],
+    TSignature['optionalDependencies']
+  >;
 
 type RemoveSetValue<Models extends Record<string, TreeViewModel<any>>> = {
   [K in keyof Models]: Omit<Models[K], 'setValue'>;

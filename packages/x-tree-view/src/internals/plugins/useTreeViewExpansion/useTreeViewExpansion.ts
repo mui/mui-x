@@ -12,7 +12,10 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   store,
   params,
   models,
+  experimentalFeatures,
 }) => {
+  const isTreeViewEditable = Boolean(params.isItemEditable) && !!experimentalFeatures.labelEditing;
+
   useEnhancedEffect(() => {
     store.update((prevState) => ({
       ...prevState,
@@ -92,12 +95,12 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
       return params.expansionTrigger;
     }
 
-    if (instance.isTreeViewEditable) {
+    if (isTreeViewEditable) {
       return 'iconContainer';
     }
 
     return 'content';
-  }, [params.expansionTrigger, instance.isTreeViewEditable]);
+  }, [params.expansionTrigger, isTreeViewEditable]);
 
   return {
     publicAPI: {

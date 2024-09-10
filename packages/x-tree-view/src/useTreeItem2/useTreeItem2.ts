@@ -41,6 +41,7 @@ export const useTreeItem2 = <
     items: { onItemClick, disabledItemsFocusable, indentationAtItemLevel },
     selection: { multiSelect, disableSelection, checkboxSelection },
     expansion: { expansionTrigger },
+    label: labelContext,
     instance,
     publicAPI,
     store,
@@ -300,7 +301,7 @@ export const useTreeItem2 = <
       onDoubleClick: createLabelHandleDoubleClick(externalEventHandlers),
     };
 
-    if (instance.isTreeViewEditable) {
+    if (labelContext?.isItemEditable) {
       props.editable = status.editable;
     }
 
