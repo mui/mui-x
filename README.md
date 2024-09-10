@@ -29,7 +29,7 @@ Components include the Data Grid, Date and Time Pickers, Charts, and Tree View.
 MUI X extends the core functionality of [Material UI](https://github.com/mui/material-ui/), but the advanced components also stand on their own and can be fully customized to meet the needs of any design system.
 
 MUI X is **open-core**: [Community](#community-plan) components are MIT-licensed and free forever, while more advanced features and components require a [Pro](#pro-plan) or [Premium](#premium-plan) commercial license.
-See [Licensing](#licensing) for details.
+See [Licensing](#licensing) for more information.
 
 ## Documentation
 
@@ -49,13 +49,12 @@ Get started in the [MUI X documentation](https://mui.com/x/introduction/).
 
 ## Licensing
 
-The MUI X team has been building MIT-licensed React components since 2014, starting with Material UI.
-We are committed to the continued advancement of the open-source libraries.
+The MUI X team has been building MIT-licensed React components since 2014, starting with Material UI, and we're committed to the continued advancement of our open-source libraries.
 Anything we release under an MIT license will remain MIT-licensed forever.
-You can learn more about our stewardship ethos in [this document from our company handbook](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
+Learn more about [our stewardship ethos](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
 
-We offer commercial licenses to developers who need the most advanced features that cannot be easily maintained by the open-source community.
-Commercial licenses enable us to support a full-time staff of engineers, which is simply not possible through the MIT model.
+We offer commercial licenses to developers who need the most advanced features and components that can't reasonably be maintained by the open-source community alone.
+These licenses make it possible for us to support a full-time staff of engineers.
 
 Rest assured that when we release features commercially, it's only because we believe you won't find a better MIT-licensed alternative anywhere else.
 
