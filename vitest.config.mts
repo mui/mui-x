@@ -17,6 +17,7 @@ export default defineConfig({
     ],
     globals: true,
     setupFiles: ['test/setup.ts'],
+    // environment: 'jsdom',
     browser: {
       enabled: true,
       name: 'chromium',

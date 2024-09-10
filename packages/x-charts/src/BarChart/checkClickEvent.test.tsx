@@ -105,7 +105,6 @@ describe('BarChart - click event', () => {
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 400,
             height: 400,
           }}
