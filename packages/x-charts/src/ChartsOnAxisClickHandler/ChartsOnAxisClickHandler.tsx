@@ -38,7 +38,7 @@ function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
     const handleMouseClick = (event: MouseEvent) => {
       event.preventDefault();
 
-      const isXaxis = (axis.x && axis.x.index) !== undefined;
+      const isXaxis = axis.x && axis.x.index !== -1;
       const USED_AXIS_ID = isXaxis ? xAxisIds[0] : yAxisIds[0];
       const dataIndex = isXaxis ? axis.x && axis.x.index : axis.y && axis.y.index;
 
