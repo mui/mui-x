@@ -8,8 +8,16 @@ export default defineConfig({
         replacement: new URL('./packages/x-charts/src', import.meta.url).pathname,
       },
       {
+        find: '@mui/x-date-pickers',
+        replacement: new URL('./packages/x-date-pickers/src', import.meta.url).pathname,
+      },
+      {
         find: 'test/utils',
         replacement: new URL('./test/utils', import.meta.url).pathname,
+      },
+      {
+        find: '@mui/x-internals',
+        replacement: new URL('./packages/x-internals/src', import.meta.url).pathname,
       },
     ],
   },
