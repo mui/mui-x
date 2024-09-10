@@ -47,7 +47,7 @@ You must pass a `label` prop to each Tree Item component, as shown below:
 
 Use the `disabled` prop on the Tree Item component to disable interaction and focus:
 
-{{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}
+{{"demo": "DisabledJSXItem.js", "defaultCodeOpen": false}}
 
 #### The disabledItemsFocusable prop
 
@@ -71,3 +71,39 @@ When it's set to true:
 - Mouse or keyboard interaction will not select disabled items.
 - <kbd class="key">Shift</kbd> + arrow keys will not skip disabled items, but the disabled item will not be selected.
 - Programmatic focus will focus disabled items.
+
+{{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}
+
+## Track item clicks
+
+Use the `onItemClick` prop to track the clicked item:
+
+{{"demo": "OnItemClick.js"}}
+
+## Imperative API
+
+:::success
+To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+
+```tsx
+const apiRef = useTreeViewApiRef();
+
+return <SimpleTreeView apiRef={apiRef}>{children}</SimpleTreeView>;
+```
+
+When your component first renders, `apiRef` will be `undefined`.
+After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
+:::
+
+### Get an item's DOM element by ID
+
+Use the `getItemDOMElement` API method to get an item's DOM element by its ID.
+
+```ts
+const itemElement = apiRef.current.getItemDOMElement(
+  // The id of the item to get the DOM element of
+  itemId,
+);
+```
+
+{{"demo": "ApiMethodGetItemDOMElement.js", "defaultCodeOpen": false}}

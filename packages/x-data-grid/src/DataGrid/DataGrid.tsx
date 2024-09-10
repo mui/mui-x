@@ -2,6 +2,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridBody, GridFooterPlaceholder, GridHeader, GridRoot } from '../components';
+import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
+import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 import { DataGridProcessedProps, DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
@@ -15,20 +17,30 @@ import {
 
 export type { GridSlotsComponent as GridSlots } from '../models';
 
-const propValidators: PropValidator<DataGridProcessedProps>[] = [
-  ...propValidatorsDataGrid,
-  // Only validate in MIT version
-  (props) =>
-    (props.columns &&
-      props.columns.some((column) => column.resizable) &&
-      [
-        `MUI X: \`column.resizable = true\` is not a valid prop.`,
-        'Column resizing is not available in the MIT version.',
-        '',
-        'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
-      ].join('\n')) ||
-    undefined,
-];
+const configuration = {
+  hooks: {
+    useGridAriaAttributes,
+    useGridRowAriaAttributes,
+  },
+};
+let propValidators: PropValidator<DataGridProcessedProps>[];
+
+if (process.env.NODE_ENV !== 'production') {
+  propValidators = [
+    ...propValidatorsDataGrid,
+    // Only validate in MIT version
+    (props) =>
+      (props.columns &&
+        props.columns.some((column) => column.resizable) &&
+        [
+          `MUI X: \`column.resizable = true\` is not a valid prop.`,
+          'Column resizing is not available in the MIT version.',
+          '',
+          'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
+        ].join('\n')) ||
+      undefined,
+  ];
+}
 
 const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowModel>(
   inProps: DataGridProps<R>,
@@ -37,10 +49,11 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
   const props = useDataGridProps(inProps);
   const privateApiRef = useDataGridComponent(props.apiRef, props);
 
-  validateProps(props, propValidators);
-
+  if (process.env.NODE_ENV !== 'production') {
+    validateProps(props, propValidators);
+  }
   return (
-    <GridContextProvider privateApiRef={privateApiRef} props={props}>
+    <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
       <GridRoot
         className={props.className}
         style={props.style}
@@ -75,7 +88,7 @@ export const DataGrid = React.memo(DataGridRaw) as DataGridComponent;
 DataGridRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The ref object that allows Data Grid manipulation. Can be instantiated with `useGridApiRef()`.
@@ -92,7 +105,7 @@ DataGridRaw.propTypes = {
    */
   'aria-labelledby': PropTypes.string,
   /**
-   * If `true`, the Data Grid height is dynamic and follow the number of rows in the Data Grid.
+   * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
    * @default false
    */
   autoHeight: PropTypes.bool,
@@ -342,6 +355,14 @@ DataGridRaw.propTypes = {
     PropTypes.bool,
   ]),
   /**
+   * If `select`, a group header checkbox in indeterminate state (like "Select All" checkbox)
+   * will select all the rows under it.
+   * If `deselect`, it will deselect all the rows under it.
+   * Works only if `checkboxSelection` is enabled.
+   * @default "deselect"
+   */
+  indeterminateCheckboxAction: PropTypes.oneOf(['deselect', 'select']),
+  /**
    * The initial state of the DataGrid.
    * The data in it will be set in the state on initialization but will not be controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
@@ -356,7 +377,7 @@ DataGridRaw.propTypes = {
   /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {boolean} A boolean indicating if the cell is selectable.
+   * @returns {boolean} A boolean indicating if the row is selectable.
    */
   isRowSelectable: PropTypes.func,
   /**
@@ -368,6 +389,7 @@ DataGridRaw.propTypes = {
   keepNonExistentRowsSelected: PropTypes.bool,
   /**
    * If `true`, a loading overlay is displayed.
+   * @default false
    */
   loading: PropTypes.bool,
   /**
@@ -730,12 +752,12 @@ DataGridRaw.propTypes = {
    */
   scrollbarSize: PropTypes.number,
   /**
-   * If `true`, the vertical borders of the cells are displayed.
+   * If `true`, vertical borders will be displayed between cells.
    * @default false
    */
   showCellVerticalBorder: PropTypes.bool,
   /**
-   * If `true`, the right border of the column headers are displayed.
+   * If `true`, vertical borders will be displayed between column header items.
    * @default false
    */
   showColumnVerticalBorder: PropTypes.bool,

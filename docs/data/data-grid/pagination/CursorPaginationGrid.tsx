@@ -117,7 +117,7 @@ export default function CursorPaginationGrid() {
           aria-labelledby="demo-cursor-pagination-buttons-group-label"
           name="cursor-pagination-buttons-group"
           value={rowCountType}
-          onChange={(e) => setRowCountType(e.target.value as RowCountType)}
+          onChange={(event) => setRowCountType(event.target.value as RowCountType)}
         >
           <FormControlLabel value="known" control={<Radio />} label="Known" />
           <FormControlLabel value="unknown" control={<Radio />} label="Unknown" />

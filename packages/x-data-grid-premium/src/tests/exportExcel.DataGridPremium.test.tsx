@@ -8,7 +8,7 @@ import {
   DataGridPremiumProps,
   GridActionsCellItem,
 } from '@mui/x-data-grid-premium';
-import { createRenderer, screen, fireEvent, act } from '@mui-internal/test-utils';
+import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import { spy, SinonSpy } from 'sinon';
 import { expect } from 'chai';
 import Excel from 'exceljs';
@@ -17,7 +17,7 @@ import { spyApi } from 'test/utils/helperFn';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPremium /> - Export Excel', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -57,10 +57,10 @@ describe('<DataGridPremium /> - Export Excel', () => {
       expect(await act(() => apiRef.current.getDataAsExcel())).not.to.equal(null);
     });
 
-    it('should display export option', () => {
-      render(<TestCaseExcelExport slots={{ toolbar: GridToolbar }} />);
+    it('should display export option', async () => {
+      const { user } = render(<TestCaseExcelExport slots={{ toolbar: GridToolbar }} />);
 
-      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
+      await user.click(screen.getByRole('button', { name: 'Export' }));
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Download as Excel' })).not.to.equal(null);
     });
@@ -351,6 +351,46 @@ describe('<DataGridPremium /> - Export Excel', () => {
       expect(worksheet.getCell('A3').type).to.equal(Excel.ValueType.String);
       expect(worksheet.getCell('B3').type).to.equal(Excel.ValueType.String);
       expect(worksheet.getCell('C3').type).to.equal(Excel.ValueType.String);
+    });
+
+    it('should escape formulas in the cells', async () => {
+      function Test() {
+        apiRef = useGridApiRef();
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              columns={[{ field: 'name' }]}
+              rows={[
+                { id: 0, name: '=1+1' },
+                { id: 1, name: '+1+1' },
+                { id: 2, name: '-1+1' },
+                { id: 3, name: '@1+1' },
+                { id: 4, name: '\t1+1' },
+                { id: 5, name: '\r1+1' },
+                { id: 6, name: ',=1+1' },
+                { id: 7, name: 'value,=1+1' },
+              ]}
+            />
+          </div>
+        );
+      }
+
+      render(<Test />);
+
+      const workbook = await apiRef.current.getDataAsExcel();
+      const worksheet = workbook!.worksheets[0];
+
+      expect(worksheet.getCell('A1').value).to.equal('name');
+      expect(worksheet.getCell('A2').value).to.equal("'=1+1");
+      expect(worksheet.getCell('A3').value).to.equal("'+1+1");
+      expect(worksheet.getCell('A4').value).to.equal("'-1+1");
+      expect(worksheet.getCell('A5').value).to.equal("'@1+1");
+      expect(worksheet.getCell('A6').value).to.equal("'\t1+1");
+      expect(worksheet.getCell('A7').value).to.equal("'\r1+1");
+      expect(worksheet.getCell('A8').value).to.equal(',=1+1');
+      expect(worksheet.getCell('A9').value).to.equal('value,=1+1');
     });
   });
 

@@ -5,7 +5,7 @@ import Stack, { StackProps } from '@mui/material/Stack';
 import MuiTextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import {
   unstable_composeClasses as composeClasses,
   unstable_generateUtilityClass as generateUtilityClass,
@@ -22,8 +22,7 @@ import {
   MultiInputDateRangeFieldSlotProps,
 } from './MultiInputDateRangeField.types';
 import { useMultiInputDateRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
-import { UseDateRangeFieldProps } from '../internals/models/dateRange';
-import { MultiInputRangeFieldClasses, RangePosition } from '../models';
+import { MultiInputRangeFieldClasses, RangePosition, UseDateRangeFieldProps } from '../models';
 
 export const multiInputDateRangeFieldClasses: MultiInputRangeFieldClasses = generateUtilityClasses(
   'MuiMultiInputDateRangeField',
@@ -187,7 +186,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
 MultiInputDateRangeField.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * If `true`, the `input` element is focused during the first mount.
@@ -253,26 +252,30 @@ MultiInputDateRangeField.propTypes = {
   formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
   /**
-   * Callback fired when the error associated to the current value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
-   * @param {TError} error The new error.
-   * @param {TValue} value The value associated to the error.
+   * Callback fired when the error associated with the current value changes.
+   * When a validation error is detected, the `error` parameter contains a non-null value.
+   * This can be used to render an appropriate form error.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {TError} error The reason why the current value is not valid.
+   * @param {TValue} value The value associated with the error.
    */
   onError: PropTypes.func,
   /**

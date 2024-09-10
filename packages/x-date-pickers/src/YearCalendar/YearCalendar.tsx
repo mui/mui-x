@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { useTheme } from '@mui/system';
+import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_useForkRef as useForkRef,
@@ -115,6 +115,8 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
     yearsReversed,
     timezone: timezoneProp,
     gridLabelId,
+    slots,
+    slotProps,
     ...other
   } = props;
 
@@ -128,7 +130,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
   });
 
   const now = useNow<TDate>(timezone);
-  const theme = useTheme();
+  const isRtl = useRtl();
   const utils = useUtils<TDate>();
 
   const referenceDate = React.useMemo(
@@ -222,7 +224,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
     );
   }, [selectedYear]);
 
-  const horizontalDirection = theme.direction === 'ltr' && !yearsReversed ? 1 : -1;
+  const horizontalDirection = !isRtl && !yearsReversed ? 1 : -1;
   const verticalDirection = !yearsReversed ? yearsPerRow * 1 : yearsPerRow * -1;
 
   const handleKeyDown = useEventCallback((event: React.KeyboardEvent, year: number) => {
@@ -314,11 +316,13 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
             onKeyDown={handleKeyDown}
             autoFocus={internalHasFocus && yearNumber === focusedYear}
             disabled={isDisabled}
-            tabIndex={yearNumber === focusedYear ? 0 : -1}
+            tabIndex={yearNumber === focusedYear && !isDisabled ? 0 : -1}
             onFocus={handleYearFocus}
             onBlur={handleYearBlur}
             aria-current={todayYear === yearNumber ? 'date' : undefined}
             yearsPerRow={yearsPerRow}
+            slots={slots}
+            slotProps={slotProps}
           >
             {utils.format(year, 'year')}
           </PickersYear>
@@ -331,7 +335,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
 YearCalendar.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   autoFocus: PropTypes.bool,
   /**
@@ -367,10 +371,12 @@ YearCalendar.propTypes = {
   hasFocus: PropTypes.bool,
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**
@@ -397,6 +403,16 @@ YearCalendar.propTypes = {
    * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

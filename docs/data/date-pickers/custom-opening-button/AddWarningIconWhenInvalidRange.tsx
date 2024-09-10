@@ -12,7 +12,18 @@ function CustomInputAdornment(props: InputAdornmentProps & { hasError?: boolean 
   const { hasError, children, sx, ...other } = props;
   return (
     <InputAdornment {...other}>
-      <PriorityHighIcon color="error" sx={{ opacity: hasError ? 1 : 0 }} />
+      <PriorityHighIcon
+        color="error"
+        sx={[
+          hasError
+            ? {
+                opacity: 1,
+              }
+            : {
+                opacity: 0,
+              },
+        ]}
+      />
       {children}
     </InputAdornment>
   );
@@ -23,7 +34,7 @@ export default function AddWarningIconWhenInvalidRange() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DatePicker']}>
+      <DemoContainer components={['DateRangePicker']}>
         <DateRangePicker
           label="Picker with error icon"
           maxDate={dayjs('2022-04-19')}

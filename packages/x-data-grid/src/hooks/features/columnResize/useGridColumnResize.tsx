@@ -4,7 +4,7 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import useLazyRef from '@mui/utils/useLazyRef';
-import { useTheme, Direction } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import {
   findGridCellElementsFromCol,
   findGridElement,
@@ -19,6 +19,7 @@ import {
   findParentElementFromClassName,
   findLeftPinnedHeadersAfterCol,
   findRightPinnedHeadersBeforeCol,
+  escapeOperandAttributeSelector,
 } from '../../../utils/domUtils';
 import {
   GridAutosizeOptions,
@@ -56,28 +57,6 @@ import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommuni
 type AutosizeOptionsRequired = Required<GridAutosizeOptions>;
 
 type ResizeDirection = keyof typeof GridColumnHeaderSeparatorSides;
-
-// TODO: remove support for Safari < 13.
-// https://caniuse.com/#search=touch-action
-//
-// Safari, on iOS, supports touch action since v13.
-// Over 80% of the iOS phones are compatible
-// in August 2020.
-// Utilizing the CSS.supports method to check if touch-action is supported.
-// Since CSS.supports is supported on all but Edge@12 and IE and touch-action
-// is supported on both Edge@12 and IE if CSS.supports is not available that means that
-// touch-action will be supported
-let cachedSupportsTouchActionNone = false;
-function doesSupportTouchActionNone(): boolean {
-  if (cachedSupportsTouchActionNone === undefined) {
-    if (typeof CSS !== 'undefined' && typeof CSS.supports === 'function') {
-      cachedSupportsTouchActionNone = CSS.supports('touch-action', 'none');
-    } else {
-      cachedSupportsTouchActionNone = true;
-    }
-  }
-  return cachedSupportsTouchActionNone;
-}
 
 function trackFinger(event: any, currentTouchId: number | undefined): CursorCoordinates | boolean {
   if (currentTouchId !== undefined && event.changedTouches) {
@@ -133,11 +112,11 @@ function flipResizeDirection(side: ResizeDirection) {
   return 'Right';
 }
 
-function getResizeDirection(separator: HTMLElement, direction: Direction) {
+function getResizeDirection(separator: HTMLElement, isRtl: boolean) {
   const side = separator.classList.contains(gridClasses['columnSeparator--sideRight'])
     ? 'Right'
     : 'Left';
-  if (direction === 'rtl') {
+  if (isRtl) {
     // Resizing logic should be mirrored in the RTL case
     return flipResizeDirection(side);
   }
@@ -301,7 +280,7 @@ export const useGridColumnResize = (
     | 'onColumnWidthChange'
   >,
 ) => {
-  const theme = useTheme();
+  const isRtl = useRtl();
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
   const refs = useLazyRef(createResizeRefs).current;
@@ -333,14 +312,10 @@ export const useGridColumnResize = (
     refs.colDef!.flex = 0;
 
     refs.columnHeaderElement!.style.width = `${newWidth}px`;
-    refs.columnHeaderElement!.style.minWidth = `${newWidth}px`;
-    refs.columnHeaderElement!.style.maxWidth = `${newWidth}px`;
 
     const headerFilterElement = refs.headerFilterElement;
     if (headerFilterElement) {
       headerFilterElement.style.width = `${newWidth}px`;
-      headerFilterElement.style.minWidth = `${newWidth}px`;
-      headerFilterElement.style.maxWidth = `${newWidth}px`;
     }
 
     refs.groupHeaderElements!.forEach((element) => {
@@ -356,8 +331,6 @@ export const useGridColumnResize = (
       }
 
       div.style.width = finalWidth;
-      div.style.minWidth = finalWidth;
-      div.style.maxWidth = finalWidth;
     });
 
     refs.cellElements!.forEach((element) => {
@@ -422,6 +395,7 @@ export const useGridColumnResize = (
         nativeEvent.clientY === prevClientY
       ) {
         refs.previousMouseClickEvent = undefined;
+        apiRef.current.publishEvent('columnResizeStop', null, nativeEvent);
         return;
       }
     }
@@ -430,6 +404,9 @@ export const useGridColumnResize = (
       apiRef.current.setColumnWidth(refs.colDef.field, refs.colDef.width!);
       logger.debug(`Updating col ${refs.colDef.field} with new width: ${refs.colDef.width}`);
 
+      // Since during resizing we update the columns width outside of React, React is unable to
+      // reapply the right style properties. We need to sync the state manually.
+      // So we reapply the same logic as in https://github.com/mui/mui-x/blob/0511bf65543ca05d2602a5a3e0a6156f2fc8e759/packages/x-data-grid/src/hooks/features/columnHeaders/useGridColumnHeaders.tsx#L405
       const columnsState = gridColumnsStateSelector(apiRef.current.state);
       refs.groupHeaderElements!.forEach((element) => {
         const fields = getFieldsFromGroupHeaderElem(element);
@@ -444,8 +421,6 @@ export const useGridColumnResize = (
         const finalWidth: `${number}px` = `${newWidth}px`;
 
         div.style.width = finalWidth;
-        div.style.minWidth = finalWidth;
-        div.style.maxWidth = finalWidth;
       });
     }
 
@@ -468,7 +443,7 @@ export const useGridColumnResize = (
     );
 
     const headerFilterElement = root.querySelector(
-      `.${gridClasses.headerFilterRow} [data-field="${colDef.field}"]`,
+      `.${gridClasses.headerFilterRow} [data-field="${escapeOperandAttributeSelector(colDef.field)}"]`,
     );
     if (headerFilterElement) {
       refs.headerFilterElement = headerFilterElement as HTMLDivElement;
@@ -508,7 +483,7 @@ export const useGridColumnResize = (
         ? []
         : findRightPinnedHeadersBeforeCol(apiRef.current, refs.columnHeaderElement);
 
-    resizeDirection.current = getResizeDirection(separator, theme.direction);
+    resizeDirection.current = getResizeDirection(separator, isRtl);
 
     initialOffsetToSeparator.current = computeOffsetToSeparator(
       xStart,
@@ -592,10 +567,6 @@ export const useGridColumnResize = (
     // Let the event bubble if the target is not a col separator
     if (!cellSeparator) {
       return;
-    }
-    // If touch-action: none; is not supported we need to prevent the scroll manually.
-    if (!doesSupportTouchActionNone()) {
-      event.preventDefault();
     }
 
     const touch = event.changedTouches[0];
@@ -812,7 +783,7 @@ export const useGridColumnResize = (
     () => apiRef.current.columnHeadersContainerRef?.current,
     'touchstart',
     handleTouchStart,
-    { passive: doesSupportTouchActionNone() },
+    { passive: true },
   );
 
   useGridApiMethod(
