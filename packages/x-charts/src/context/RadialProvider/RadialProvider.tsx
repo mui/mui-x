@@ -3,8 +3,8 @@ import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useSeries } from '../../hooks/useSeries';
 import { RadialContext } from './RadialContext';
 import { computeValue } from './computeValue';
-import { useXExtremumGetter } from '../PluginProvider/useXExtremumGetter';
-import { useYExtremumGetter } from '../PluginProvider';
+import { useRadiusExtremumGetter } from '../PluginProvider/useRadiusExtremumGetter';
+import { useRotationExtremumGetter } from '../PluginProvider/useRotationExtremumGetter';
 import { RadialProviderProps } from './Radial.types';
 
 function RadialProvider(props: RadialProviderProps) {
@@ -12,8 +12,8 @@ function RadialProvider(props: RadialProviderProps) {
 
   const formattedSeries = useSeries();
   const drawingArea = useDrawingArea();
-  const xExtremumGetters = useXExtremumGetter();
-  const yExtremumGetters = useYExtremumGetter();
+  const rotationExtremumGetters = useRotationExtremumGetter();
+  const radiusExtremumGetters = useRadiusExtremumGetter();
 
   const rotationValues = React.useMemo(
     () =>
@@ -21,10 +21,10 @@ function RadialProvider(props: RadialProviderProps) {
         drawingArea,
         formattedSeries,
         axis: rotationAxis,
-        extremumGetters: xExtremumGetters,
+        extremumGetters: rotationExtremumGetters,
         axisDirection: 'rotation',
       }),
-    [drawingArea, formattedSeries, rotationAxis, xExtremumGetters],
+    [drawingArea, formattedSeries, rotationAxis, rotationExtremumGetters],
   );
 
   const radiusValues = React.useMemo(
@@ -33,10 +33,10 @@ function RadialProvider(props: RadialProviderProps) {
         drawingArea,
         formattedSeries,
         axis: radiusAxis,
-        extremumGetters: yExtremumGetters,
+        extremumGetters: radiusExtremumGetters,
         axisDirection: 'radius',
       }),
-    [drawingArea, formattedSeries, radiusAxis, yExtremumGetters],
+    [drawingArea, formattedSeries, radiusAxis, radiusExtremumGetters],
   );
 
   const value = React.useMemo(

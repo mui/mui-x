@@ -76,7 +76,6 @@ export const useRadarChartContainerProps = (
         id: DEFAULT_Y_AXIS_KEY,
         scaleType: 'linear',
         min: 0,
-        max: 100,
       },
     ],
     dataset,
