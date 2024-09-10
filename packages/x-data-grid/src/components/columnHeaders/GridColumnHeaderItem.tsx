@@ -38,6 +38,8 @@ interface GridColumnHeaderItemProps {
   indexInSection: number;
   sectionLength: number;
   gridHasFiller: boolean;
+  isLastUnpinned: boolean;
+  isSiblingFocused: boolean;
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
@@ -56,6 +58,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     showLeftBorder,
     filterItemsCounter,
     pinnedPosition,
+    isLastUnpinned,
+    isSiblingFocused,
   } = ownerState;
 
   const isColumnSorted = sortDirection != null;
@@ -79,6 +83,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       showLeftBorder && 'columnHeader--withLeftBorder',
       pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
       pinnedPosition === 'right' && 'columnHeader--pinnedRight',
+      isLastUnpinned && 'columnHeader--lastUnpinned',
+      isSiblingFocused && 'columnHeader--siblingFocused',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
     titleContainer: ['columnHeaderTitleContainer'],
