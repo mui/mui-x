@@ -2,9 +2,9 @@ import * as React from 'react';
 import { useDrawingArea, useRadiusScale, useRotationScale } from '../hooks';
 import { useRadarSeries } from '../hooks/useSeries';
 
-export interface RadarAreaPlotProps {}
+// export interface RadarAreaPlotProps {}
 
-export function RadarAreaPlot(props: RadarAreaPlotProps) {
+function RadarAreaPlot() {
   const rotationScale = useRotationScale<'point'>();
   const radiusScale = useRadiusScale();
   const radarSeries = useRadarSeries();
@@ -36,3 +36,5 @@ export function RadarAreaPlot(props: RadarAreaPlotProps) {
     </g>
   );
 }
+
+export { RadarAreaPlot };

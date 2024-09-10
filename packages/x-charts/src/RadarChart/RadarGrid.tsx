@@ -1,14 +1,16 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { useDrawingArea, useRadiusScale, useRotationScale } from '../hooks';
 
 export interface RadarGridProps {
   /**
-   * The number of
+   * The number of division
+   * @default 5
    */
   divisionNumber?: number;
 }
 
-export function RadarGrid(props: RadarGridProps) {
+function RadarGrid(props: RadarGridProps) {
   const { divisionNumber = 5 } = props;
   const rotationScale = useRotationScale<'point'>();
   const radiusScale = useRadiusScale();
@@ -51,3 +53,17 @@ export function RadarGrid(props: RadarGridProps) {
     </g>
   );
 }
+
+RadarGrid.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The number of division
+   * @default 5
+   */
+  divisionNumber: PropTypes.number,
+} as any;
+
+export { RadarGrid };

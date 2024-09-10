@@ -1,6 +1,7 @@
 ---
 title: React Radar chart
 productId: x-charts
+components: RadarChart, RadarAreaPlot, RadarGrid
 ---
 
 # Charts - Radar 🚧

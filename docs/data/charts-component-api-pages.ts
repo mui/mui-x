@@ -200,6 +200,18 @@ const apiPages: MuiPage[] = [
     title: 'PiePlot',
   },
   {
+    pathname: '/x/api/charts/radar-area-plot',
+    title: 'RadarAreaPlot',
+  },
+  {
+    pathname: '/x/api/charts/radar-chart',
+    title: 'RadarChart',
+  },
+  {
+    pathname: '/x/api/charts/radar-grid',
+    title: 'RadarGrid',
+  },
+  {
     pathname: '/x/api/charts/responsive-chart-container',
     title: 'ResponsiveChartContainer',
   },
