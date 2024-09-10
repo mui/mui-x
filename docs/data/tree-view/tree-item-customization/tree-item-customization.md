@@ -211,7 +211,7 @@ To read more about the selection API visit the dedicated documentation page for 
 
 #### Expansion
 
-By default, a tree item is expanded when clicking the content. You can change the expansion trigger using the `expansionTrigger` prop to the `iconContainer`. Read more about the expansion API on the dedicated [documentation page](/x/react-tree-view/rich-tree-view/expansion/#limit-expansion-to-icon-container/).
+By default, a tree item is expanded when clicking the content. You can change the expansion trigger using the `expansionTrigger` prop to the `iconContainer`. Read more about the expansion API on the dedicated [documentation page](/x/react-tree-view/rich-tree-view/expansion/#limit-expansion-to-icon-container).
 
 To achieve a deeper customization of the expansion of an item use the `handleExpansion` interaction method. The demo below demonstrates how to introduce a new element that expands or collapses the item.
 
@@ -234,4 +234,4 @@ const {
 });
 ```
 
-To read more about customizing the editing behavior head to the [dedicated section](/x/react-tree-view/rich-tree-view/editing/#enable-editing-using-only-icons/) in the documentation.
+To read more about customizing the editing behavior head to the [dedicated section](/x/react-tree-view/rich-tree-view/editing/#enable-editing-using-only-icons) in the documentation.
