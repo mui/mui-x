@@ -1443,6 +1443,9 @@ importers:
       '@types/prop-types':
         specifier: ^15.7.12
         version: 15.7.12
+      '@types/use-sync-external-store':
+        specifier: ^0.0.6
+        version: 0.0.6
       rimraf:
         specifier: ^5.0.10
         version: 5.0.10
@@ -1508,6 +1511,9 @@ importers:
       '@types/prop-types':
         specifier: ^15.7.12
         version: 15.7.12
+      '@types/use-sync-external-store':
+        specifier: ^0.0.6
+        version: 0.0.6
       rimraf:
         specifier: ^5.0.10
         version: 5.0.10
@@ -4265,6 +4271,9 @@ packages:
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
+
+  '@types/use-sync-external-store@0.0.6':
+    resolution: {integrity: sha512-zFDAD+tlpf2r4asuHEj0XH6pY6i0g5NeAHPn+15wk3BV6JA69eERFXC1gyGThDkVa1zCyKr5jox1+2LbV/AMLg==}
 
   '@types/webpack-bundle-analyzer@4.7.0':
     resolution: {integrity: sha512-c5i2ThslSNSG8W891BRvOd/RoCjI2zwph8maD22b1adtSns20j+0azDDMCK06DiVrzTgnwiDl5Ntmu1YRJw8Sg==}
@@ -13274,6 +13283,8 @@ snapshots:
   '@types/tsscmp@1.0.2': {}
 
   '@types/unist@3.0.3': {}
+
+  '@types/use-sync-external-store@0.0.6': {}
 
   '@types/webpack-bundle-analyzer@4.7.0(@swc/core@1.6.13(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.94.0))':
     dependencies:
