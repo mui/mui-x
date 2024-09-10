@@ -86,7 +86,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvid
 :::warning
 For practical purposes, each demo in the documentation has its own `LocalizationProvider` wrapper.
 **We _do not_ recommend reproducing this pattern as-is.**
-For almost all use cases, you should wrap your entire app with a single `LocalizationProvider` to avoid the need to repeat boilerplate code in multiple places.
+For almost all use cases, you should wrap your entire app with a single `LocalizationProvider` to avoid repeating boilerplate code in multiple places.
 :::
 
 {{"component": "modules/components/PickersRenderingInstructions.js"}}
