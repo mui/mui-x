@@ -16,6 +16,7 @@
 [![Renovate status](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://github.com/mui/mui-x/issues/2081)
 [![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/mui/mui-x.svg)](https://isitmaintained.com/project/mui/mui-x 'Average time to resolve an issue')
 [![Open Collective backers and sponsors](https://img.shields.io/opencollective/all/mui-org)](https://opencollective.com/mui-org)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/6293/badge)](https://bestpractices.coreinfrastructure.org/projects/6293)
 
 <!-- [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8715/badge)](https://www.bestpractices.dev/projects/8715) -->
 
@@ -27,10 +28,8 @@ Components include the Data Grid, Date and Time Pickers, Charts, and Tree View.
 
 MUI X extends the core functionality of [Material UI](https://github.com/mui/material-ui/), but the advanced components also stand on their own and can be fully customized to meet the needs of any design system.
 
-MUI X is **open core**: [Community](#community-plan) components are MIT-licensed and free forever, while more advanced features and components require a [Pro](#pro-plan) or [Premium](#premium-plan) commercial license.
+The MUI X codebase is **open-core**: [Community](#community-plan) components are MIT-licensed and free forever, while more advanced features and components require a [Pro](#pro-plan) or [Premium](#premium-plan) commercial license.
 See the [Licensing page](https://mui.com/x/introduction/licensing/) for details.
-
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/6293/badge)](https://bestpractices.coreinfrastructure.org/projects/6293)
 
 ## Components
 
