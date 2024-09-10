@@ -34,6 +34,10 @@ Use `treeItemClasses` to target internal elements of the Tree Item component and
 
 {{"demo": "CustomStyling.js"}}
 
+### Custom Tree Item
+
+You can leverage the Tree Item's customization API to build new layouts and manage behaviors. Learn more about the anatomy of the Tree Items and the customization utilities provided on the [Tree Item Customization page](/x/react-tree-view/#tree-item-components).
+
 ### Headless API
 
 Use the `useTreeItem2` hook to create your own component.

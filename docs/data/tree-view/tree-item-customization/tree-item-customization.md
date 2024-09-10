@@ -135,9 +135,9 @@ The `useTreeItem2` allows you to manage and customize individual tree items. You
 
 #### Slots properties
 
-The `useTreeItem2` hook offers granular control over the item's layout by providing resolvers to get the appropriate props for each slot. This allows you to build an entirely cutom layout for the tree items.
+The `useTreeItem2` hook offers granular control over the item's layout by providing resolvers to get the appropriate props for each slot. This allows you to build an entirely custom layout for the tree items.
 
-The demo below shouls you how to get the props needed for each slot, and how to pass them correctly.
+The demo below should you how to get the props needed for each slot, and how to pass them correctly.
 
 {{"demo": "useTreeItem2HookProperties.js"}}
 
