@@ -70,7 +70,7 @@ export const RadarChartContainer = React.forwardRef(function RadarChartContainer
     chartsSurfaceProps,
     pluginProviderProps,
   } = useRadarChartContainerProps(props, ref);
-  
+
   return (
     <DrawingProvider {...drawingProviderProps}>
       <PluginProvider {...pluginProviderProps}>
