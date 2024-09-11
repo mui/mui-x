@@ -50,7 +50,7 @@ const rows = [
   { id: 5, name: 'ایندریو', age: 65, occupation: 'مهندس', gender: 'ذكر' },
 ];
 
-export default function DataGridRTLVirtualization() {
+export default function DataGridRTLPinnedColumns() {
   const apiRef = useGridApiRef();
   const existingTheme = useTheme();
   const theme = React.useMemo(
