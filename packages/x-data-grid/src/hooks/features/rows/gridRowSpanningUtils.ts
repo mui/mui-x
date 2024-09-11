@@ -1,13 +1,11 @@
 import * as React from 'react';
-import { GridRenderContext } from '../../../models';
-import { GridValidRowModel } from '../../../models/gridRows';
-import { GridColDef } from '../../../models/colDef';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridRenderContext } from '../../../models';
+import type { GridValidRowModel } from '../../../models/gridRows';
+import type { GridColDef } from '../../../models/colDef';
+import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { RowRange } from './useGridRowSpanning';
 
-export function getUnprocessedRange(
-  testRange: { firstRowIndex: number; lastRowIndex: number },
-  processedRange: { firstRowIndex: number; lastRowIndex: number },
-) {
+export function getUnprocessedRange(testRange: RowRange, processedRange: RowRange) {
   if (
     testRange.firstRowIndex >= processedRange.firstRowIndex &&
     testRange.lastRowIndex <= processedRange.lastRowIndex
@@ -43,13 +41,9 @@ export function isUninitializedRowContext(renderContext: GridRenderContext) {
   return renderContext.firstRowIndex === 0 && renderContext.lastRowIndex === 0;
 }
 
-export function isRowRenderContextUpdated(
-  prevRenderContext: GridRenderContext,
-  renderContext: GridRenderContext,
-) {
+export function isRowRangeUpdated(range1: RowRange, range2: RowRange) {
   return (
-    prevRenderContext.firstRowIndex !== renderContext.firstRowIndex ||
-    prevRenderContext.lastRowIndex !== renderContext.lastRowIndex
+    range1.firstRowIndex !== range2.firstRowIndex || range1.lastRowIndex !== range2.lastRowIndex
   );
 }
 
