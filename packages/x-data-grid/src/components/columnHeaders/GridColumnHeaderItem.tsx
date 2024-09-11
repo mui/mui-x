@@ -83,6 +83,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       showLeftBorder && 'columnHeader--withLeftBorder',
       pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
       pinnedPosition === 'right' && 'columnHeader--pinnedRight',
+      // TODO: Remove classes below and restore `:has` selectors when they are supported in jsdom
+      // See https://github.com/mui/mui-x/pull/14559
       isLastUnpinned && 'columnHeader--lastUnpinned',
       isSiblingFocused && 'columnHeader--siblingFocused',
     ],
