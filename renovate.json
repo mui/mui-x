@@ -54,6 +54,10 @@
       "matchPackagePatterns": "@typescript-eslint/*"
     },
     {
+      "groupName": "ESLint plugins",
+      "matchPackagePatterns": "eslint-plugin-*"
+    },
+    {
       "groupName": "@types/node",
       "matchPackageNames": ["@types/node"],
       "allowedVersions": "< 21.0.0"
