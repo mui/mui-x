@@ -213,6 +213,12 @@ jobs:
           name: '`pnpm l10n` changes committed?'
           command: git add -A && git diff --exit-code --staged
       - run:
+          name: Sync RSC "use client" directives
+          command: pnpm rsc:build
+      - run:
+          name: '`pnpm rsc:build` changes committed?'
+          command: git add -A && git diff --exit-code --staged
+      - run:
           name: '`pnpm docs:link-check` changes committed?'
           command: |
             pnpm docs:link-check
