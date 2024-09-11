@@ -1,17 +1,23 @@
 import { md5 } from '../encoding/md5';
 import { base64Encode } from '../encoding/base64';
-import { LICENSE_SCOPES, LicenseScope, PlanVersion } from '../utils/licenseScope';
-import { LICENSING_MODELS, LicensingModel } from '../utils/licensingModel';
+import { PLAN_SCOPES, PlanScope, PlanVersion } from '../utils/plan';
+import { LICENSE_MODELS, LicenseModel } from '../utils/licenseModel';
 
 const licenseVersion = '2';
 
 export interface LicenseDetails {
   orderNumber: string;
   expiryDate: Date;
-  scope?: LicenseScope;
-  planScope?: LicenseScope; // TODO deprecate
-  licenseModel?: LicensingModel;
-  licensingModel?: LicensingModel; // TODO deprecate
+  /**
+   * @deprecated Use planScope instead.
+   */
+  scope?: PlanScope;
+  planScope?: PlanScope;
+  /**
+   * @deprecated Use licenseModel instead.
+   */
+  licensingModel?: LicenseModel; // TODO deprecate
+  licenseModel?: LicenseModel;
   planVersion: PlanVersion;
 }
 
@@ -25,11 +31,11 @@ function getClearLicenseString(details: LicenseDetails) {
     details.planScope = details.scope;
   }
 
-  if (details.planScope && !LICENSE_SCOPES.includes(details.planScope)) {
+  if (details.planScope && !PLAN_SCOPES.includes(details.planScope)) {
     throw new Error('MUI X: Invalid scope');
   }
 
-  if (details.licenseModel && !LICENSING_MODELS.includes(details.licenseModel)) {
+  if (details.licenseModel && !LICENSE_MODELS.includes(details.licenseModel)) {
     throw new Error('MUI X: Invalid licensing model');
   }
 
