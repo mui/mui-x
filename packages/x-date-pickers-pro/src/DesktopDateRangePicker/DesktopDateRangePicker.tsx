@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { extractValidationProps, PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
+import { PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
+import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
@@ -10,7 +11,7 @@ import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
-import { validateDateRange } from '../internals/utils/validation/validateDateRange';
+import { validateDateRange } from '../validation';
 import { DateRange } from '../models';
 
 type DesktopDateRangePickerComponent = (<

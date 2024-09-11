@@ -1,10 +1,8 @@
 import * as React from 'react';
-import {
-  DateComponentValidationProps,
-  validateDate,
-} from '../internals/utils/validation/validateDate';
+import { ValidateDateProps, validateDate } from '../validation';
 import { useLocalizationContext } from '../internals/hooks/useUtils';
-import { PickerValidDate } from '../models';
+import { PickerValidDate, TimezoneProps } from '../models';
+import { DefaultizedProps } from '../internals/models/helpers';
 
 export const useIsDateDisabled = <TDate extends PickerValidDate>({
   shouldDisableDate,
@@ -15,7 +13,7 @@ export const useIsDateDisabled = <TDate extends PickerValidDate>({
   disableFuture,
   disablePast,
   timezone,
-}: DateComponentValidationProps<TDate>) => {
+}: ValidateDateProps<TDate> & DefaultizedProps<TimezoneProps, 'timezone'>) => {
   const adapter = useLocalizationContext<TDate>();
 
   return React.useCallback(
@@ -23,6 +21,7 @@ export const useIsDateDisabled = <TDate extends PickerValidDate>({
       validateDate({
         adapter,
         value: day,
+        timezone,
         props: {
           shouldDisableDate,
           shouldDisableMonth,
@@ -31,7 +30,6 @@ export const useIsDateDisabled = <TDate extends PickerValidDate>({
           maxDate,
           disableFuture,
           disablePast,
-          timezone,
         },
       }) !== null,
     [

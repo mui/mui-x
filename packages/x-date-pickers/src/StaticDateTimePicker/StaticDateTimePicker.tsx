@@ -10,7 +10,7 @@ import { renderDateViewCalendar } from '../dateViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { DateOrTimeView, PickerValidDate } from '../models';
-import { validateDateTime } from '../internals/utils/validation/validateDateTime';
+import { validateDateTime } from '../validation';
 
 type StaticDateTimePickerComponent = (<TDate extends PickerValidDate>(
   props: StaticDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,

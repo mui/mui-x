@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   DefaultizedProps,
-  extractValidationProps,
   isDatePickerView,
   isInternalTimeView,
   PickerViewRenderer,
@@ -10,6 +9,7 @@ import {
   resolveDateTimeFormat,
   useUtils,
 } from '@mui/x-date-pickers/internals';
+import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
@@ -32,7 +32,7 @@ import {
   useDesktopRangePicker,
   UseDesktopRangePickerProps,
 } from '../internals/hooks/useDesktopRangePicker';
-import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
+import { validateDateTimeRange } from '../validation';
 import { DateTimeRangePickerView } from '../internals/models';
 import { DateRange } from '../models';
 import {

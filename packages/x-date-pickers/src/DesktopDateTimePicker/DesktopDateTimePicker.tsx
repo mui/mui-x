@@ -13,11 +13,10 @@ import {
 import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
-import { validateDateTime } from '../internals/utils/validation/validateDateTime';
+import { validateDateTime, extractValidationProps } from '../validation';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { CalendarIcon } from '../icons';
 import { UseDesktopPickerProps, useDesktopPicker } from '../internals/hooks/useDesktopPicker';
-import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { PickerViewsRendererProps } from '../internals/hooks/usePicker';
 import {
   resolveDateTimeFormat,
