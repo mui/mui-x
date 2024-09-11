@@ -6,33 +6,37 @@ import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
 import { alpha } from '@mui/material/styles';
-import { useTranslate, useUserLanguage } from '@mui/docs/i18n';
+import { Translate, useTranslate, useUserLanguage } from '@mui/docs/i18n';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { MarkdownElement } from '@mui/docs/MarkdownElement';
-import { SectionTitle } from '@mui/docs/SectionTitle';
+import { SectionTitle, SectionTitleProps } from '@mui/docs/SectionTitle';
 import AppLayoutDocs from 'docs/src/modules/components/AppLayoutDocs';
 import PropertiesSection from 'docs/src/modules/components/ApiPage/sections/PropertiesSection';
-import { DEFAULT_API_LAYOUT_STORAGE_KEYS } from 'docs/src/modules/components/ApiPage/sections/ToggleDisplayOption';
+import { PropertyDefinition } from 'docs/src/modules/components/ApiPage/definitions/properties';
+import { LayoutStorageKeys } from 'docs/src/modules/components/ApiPage';
+import {
+  DEFAULT_API_LAYOUT_STORAGE_KEYS,
+  ApiDisplayOptions,
+} from 'docs/src/modules/components/ApiPage/sections/ToggleDisplayOption';
+import {
+  InterfaceApiTranslation,
+  InterfaceApiContent,
+} from 'docsx/scripts/api/buildInterfacesDocumentation';
+import { TableOfContentsEntry } from '@mui/internal-markdown';
+import kebabCase from 'lodash/kebabCase';
 
-export function getTranslatedHeader(t, header) {
+type HeaderHash = 'demos' | 'import';
+
+export function getTranslatedHeader(t: Translate, header: HeaderHash) {
   const translations = {
     demos: t('api-docs.demos'),
     import: t('api-docs.import'),
   };
 
-  // TODO Drop runtime type-checking once we type-check this file
-  if (!translations.hasOwnProperty(header)) {
-    throw new TypeError(
-      `Unable to translate header '${header}'. Did you mean one of '${Object.keys(
-        translations,
-      ).join("', '")}'`,
-    );
-  }
-
   return translations[header] || header;
 }
 
-function Heading(props) {
+function Heading(props: Pick<SectionTitleProps<HeaderHash>, 'hash' | 'level'>) {
   const { hash, level = 'h2' } = props;
   const t = useTranslate();
 
@@ -44,7 +48,62 @@ Heading.propTypes = {
   level: PropTypes.string,
 };
 
-export default function ApiPage(props) {
+interface ApiPageProps {
+  descriptions: {
+    [lang: string]: InterfaceApiTranslation & {
+      // Table of Content added by the mapApiPageTranslations function
+      componentDescriptionToc: TableOfContentsEntry[];
+    };
+  };
+  pageContent: InterfaceApiContent;
+  defaultLayout?: ApiDisplayOptions;
+  /**
+   * The localStorage key used to save the user layout for each section.
+   * It's useful to dave different preferences on different pages.
+   * For example, the data grid has a different key that the core.
+   */
+  layoutStorageKey?: LayoutStorageKeys;
+}
+
+interface GetInterfaceApiDefinitionsParams {
+  interfaceName: string;
+  properties: InterfaceApiContent['properties'];
+  propertiesDescriptions: InterfaceApiTranslation['propertiesDescriptions'];
+  /**
+   * Add indicators that the properties is optional instead of showing it is required.
+   */
+  showOptionalAbbr?: boolean;
+}
+
+export function getInterfaceApiDefinitions(
+  params: GetInterfaceApiDefinitionsParams,
+): PropertyDefinition[] {
+  const { properties, propertiesDescriptions, interfaceName, showOptionalAbbr = false } = params;
+
+  return Object.entries(properties).map(([propertyName, propertyData]) => {
+    const isRequired = propertyData.required && !showOptionalAbbr;
+    const isOptional = !propertyData.required && showOptionalAbbr;
+
+    const typeName = propertyData.type.description;
+    const propDefault = propertyData.default;
+    const propDescription = propertiesDescriptions[propertyName];
+
+    return {
+      propName: propertyName,
+      hash: `${kebabCase(interfaceName)}-prop-${propertyName}`,
+      propertyName,
+      description: propDescription?.description,
+      isOptional,
+      isRequired,
+      typeName,
+      propDefault,
+      isProPlan: propertyData.isProPlan,
+      isPremiumPlan: propertyData.isPremiumPlan,
+    };
+  });
+}
+
+export default function ApiPage(props: ApiPageProps) {
   const {
     descriptions,
     pageContent,
@@ -54,21 +113,17 @@ export default function ApiPage(props) {
   const t = useTranslate();
   const userLanguage = useUserLanguage();
 
-  const { demos, filename = '', properties } = pageContent;
+  const { demos, properties } = pageContent;
 
-  const { componentDescription, propertiesDescriptions, interfaceDescription } =
-    descriptions[userLanguage];
-  const description = t('api-docs.pageDescription').replace(/{{name}}/, pageContent.name);
-
-  // Prefer linking the .tsx or .d.ts for the "Edit this page" link.
-  const apiSourceLocation = filename.replace('.js', '.d.ts');
+  const { propertiesDescriptions, interfaceDescription } = descriptions[userLanguage];
+  const description = t('api-docs.interfacePageDescription').replace(/{{name}}/, pageContent.name);
 
   return (
     <AppLayoutDocs
       description={description}
       disableToc={false}
       toc={[]}
-      location={apiSourceLocation}
+      location=""
       title={`${pageContent.name} API`}
       disableAd
     >
@@ -79,7 +134,7 @@ export default function ApiPage(props) {
           component="p"
           className="description"
           gutterBottom
-          dangerouslySetInnerHTML={{ __html: interfaceDescription }}
+          dangerouslySetInnerHTML={{ __html: description }}
         />
         <Heading hash="demos" />
         {demos && (
@@ -131,26 +186,29 @@ export default function ApiPage(props) {
           language="jsx"
         />
 
-        {componentDescription ? (
+        {interfaceDescription ? (
           <React.Fragment>
             <br />
             <br />
             <span
               dangerouslySetInnerHTML={{
-                __html: componentDescription,
+                __html: interfaceDescription,
               }}
             />
           </React.Fragment>
         ) : null}
+
         <PropertiesSection
-          properties={properties}
-          propertiesDescriptions={propertiesDescriptions}
-          componentName={pageContent.name}
+          properties={getInterfaceApiDefinitions({
+            propertiesDescriptions,
+            properties,
+            interfaceName: pageContent.name,
+            showOptionalAbbr: true,
+          })}
           title="api-docs.properties"
           titleHash="properties"
           defaultLayout={defaultLayout}
           layoutStorageKey={layoutStorageKey.props}
-          showOptionalAbbr
         />
       </MarkdownElement>
       <svg style={{ display: 'none' }} xmlns="http://www.w3.org/2000/svg">
@@ -162,15 +220,13 @@ export default function ApiPage(props) {
   );
 }
 
-ApiPage.propTypes = {
-  defaultLayout: PropTypes.oneOf(['collapsed', 'expanded', 'table']),
-  descriptions: PropTypes.object.isRequired,
-  layoutStorageKey: PropTypes.shape({
-    props: PropTypes.string,
-  }),
-  pageContent: PropTypes.object.isRequired,
-};
-
 if (process.env.NODE_ENV !== 'production') {
-  ApiPage.propTypes = exactProp(ApiPage.propTypes);
+  ApiPage.propTypes = exactProp({
+    defaultLayout: PropTypes.oneOf(['collapsed', 'expanded', 'table']),
+    descriptions: PropTypes.object.isRequired,
+    layoutStorageKey: PropTypes.shape({
+      props: PropTypes.string,
+    }),
+    pageContent: PropTypes.object.isRequired,
+  });
 }
