@@ -678,6 +678,9 @@ importers:
       '@types/moment-jalaali':
         specifier: ^0.7.9
         version: 0.7.9
+      '@types/prop-types':
+        specifier: ^15.7.12
+        version: 15.7.12
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
