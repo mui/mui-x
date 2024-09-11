@@ -940,11 +940,9 @@ export function computeOffsetLeft(
   renderContext: GridColumnsRenderContext,
   pinnedLeftLength: number,
 ) {
-  const factor = 1;
   const left =
-    factor * (columnPositions[renderContext.firstColumnIndex] ?? 0) -
+    (columnPositions[renderContext.firstColumnIndex] ?? 0) -
     (columnPositions[pinnedLeftLength] ?? 0);
-
   return Math.abs(left);
 }
 
