@@ -1,7 +1,7 @@
 import { defineWorkspace } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 
-const packages = ['charts'];
+const packages = ['charts', 'date-pickers'];
 
 export default defineWorkspace(
   packages.flatMap((name) => [

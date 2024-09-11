@@ -24,5 +24,7 @@ export default defineConfig({
   test: {
     globals: true,
     setupFiles: ['test/setup.ts'],
+    // Required for some datepickers tests that contain early returns.
+    passWithNoTests: true,
   },
 });
