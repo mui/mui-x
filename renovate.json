@@ -55,7 +55,17 @@
     },
     {
       "groupName": "ESLint plugins",
-      "matchPackagePatterns": "eslint-plugin-*"
+      "matchPackageNames": [
+        "eslint-plugin-filenames",
+        "eslint-plugin-import",
+        "eslint-plugin-jsdoc",
+        "eslint-plugin-jsx-a11y",
+        "eslint-plugin-mocha",
+        "eslint-plugin-prettier",
+        "eslint-plugin-react",
+        "eslint-plugin-react-hooks",
+        "eslint-plugin-testing-library"
+      ]
     },
     {
       "groupName": "@types/node",
