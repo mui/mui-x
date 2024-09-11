@@ -6,7 +6,6 @@
   "commitMessageTopic": "{{depName}}",
   "dependencyDashboard": true,
   "rebaseWhen": "conflicted",
-  "ignoreDeps": ["jsdom"],
   "labels": ["dependencies"],
   "stopUpdatingLabel": "on hold",
   "packageRules": [
@@ -55,9 +54,13 @@
       "matchPackagePatterns": "@typescript-eslint/*"
     },
     {
+      "groupName": "ESLint plugins",
+      "matchPackageNames": ["eslint-plugin-*", "!eslint-plugin-react-compiler"]
+    },
+    {
       "groupName": "@types/node",
       "matchPackageNames": ["@types/node"],
-      "allowedVersions": "< 19.0.0"
+      "allowedVersions": "< 21.0.0"
     },
     {
       "groupName": "bundling fixtures",
@@ -82,15 +85,21 @@
     {
       "groupName": "MUI Core",
       "matchPackageNames": [
-        "@mui/base",
         "@mui/icons-material",
         "@mui/joy",
         "@mui/lab",
         "@mui/material",
+        "@mui/material-nextjs",
         "@mui/styles",
         "@mui/system",
+        "@mui/types",
         "@mui/utils"
-      ]
+      ],
+      "allowedVersions": "< 6.0.0"
+    },
+    {
+      "groupName": "MUI Internal",
+      "matchPackagePatterns": ["@mui/internal-*", "@mui/docs"]
     },
     {
       "groupName": "Playwright",

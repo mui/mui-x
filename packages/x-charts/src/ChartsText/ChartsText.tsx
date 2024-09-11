@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GetWordsByLinesParams, getWordsByLines } from '../internals/getWordsByLines';
@@ -49,13 +50,11 @@ function ChartsText(props: ChartsTextProps) {
   if (angle) {
     transforms.push(`rotate(${angle}, ${x}, ${y})`);
   }
-  if (transforms.length) {
-    textProps.transform = transforms.join(' ');
-  }
 
   return (
     <text
       {...textProps}
+      transform={transforms.length > 0 ? transforms.join(' ') : undefined}
       x={x}
       y={y}
       textAnchor={textAnchor}

@@ -153,6 +153,12 @@
     "supportsApiRef": false
   },
   {
+    "name": "gridEditRowsStateSelector",
+    "returnType": "GridEditingState",
+    "description": "Select the row editing state.",
+    "supportsApiRef": false
+  },
+  {
     "name": "gridExpandedRowCountSelector",
     "returnType": "number",
     "category": "Filtering",
@@ -192,6 +198,20 @@
     "returnType": "GridColumnLookup",
     "category": "Columns",
     "description": "Get the filterable columns as a lookup (an object containing the field for keys and the definition for values).",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridFilteredDescendantRowCountSelector",
+    "returnType": "number",
+    "category": "Filtering",
+    "description": "Get the amount of descendant rows accessible after the filtering process.",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridFilteredRowCountSelector",
+    "returnType": "number",
+    "category": "Filtering",
+    "description": "Get the amount of rows accessible after the filtering process.\nIncludes top level and descendant rows.",
     "supportsApiRef": true
   },
   {
@@ -498,14 +518,22 @@
     "name": "gridVirtualizationColumnEnabledSelector",
     "returnType": "boolean",
     "category": "Virtualization",
-    "description": "Get the enabled state for virtualization",
+    "description": "Get the enabled state for column virtualization",
     "supportsApiRef": true
   },
   {
     "name": "gridVirtualizationEnabledSelector",
     "returnType": "boolean",
     "category": "Virtualization",
+    "deprecated": "Use `gridVirtualizationColumnEnabledSelector` and `gridVirtualizationRowEnabledSelector`",
     "description": "Get the enabled state for virtualization",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridVirtualizationRowEnabledSelector",
+    "returnType": "boolean",
+    "category": "Virtualization",
+    "description": "Get the enabled state for row virtualization",
     "supportsApiRef": true
   },
   {

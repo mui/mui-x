@@ -1,13 +1,11 @@
+'use client';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
 
-export const useChartContainerDimensions = (
-  inWidth?: number,
-  inHeight?: number,
-): [React.RefObject<HTMLDivElement>, number, number] => {
-  const rootRef = React.useRef<HTMLDivElement>(null);
+export const useChartContainerDimensions = (inWidth?: number, inHeight?: number) => {
   const displayError = React.useRef<boolean>(false);
+  const rootRef = React.useRef(null);
 
   const [width, setWidth] = React.useState(0);
   const [height, setHeight] = React.useState(0);
@@ -72,17 +70,17 @@ export const useChartContainerDimensions = (
   if (process.env.NODE_ENV !== 'production') {
     if (displayError.current && inWidth === undefined && width === 0) {
       console.error(
-        `MUI X Charts: ChartContainer does not have \`width\` prop, and its container has no \`width\` defined.`,
+        `MUI X: ChartContainer does not have \`width\` prop, and its container has no \`width\` defined.`,
       );
       displayError.current = false;
     }
     if (displayError.current && inHeight === undefined && height === 0) {
       console.error(
-        `MUI X Charts: ChartContainer does not have \`height\` prop, and its container has no \`height\` defined.`,
+        `MUI X: ChartContainer does not have \`height\` prop, and its container has no \`height\` defined.`,
       );
       displayError.current = false;
     }
   }
 
-  return [rootRef, inWidth ?? width, inHeight ?? height];
+  return { containerRef: rootRef, width: inWidth ?? width, height: inHeight ?? height };
 };

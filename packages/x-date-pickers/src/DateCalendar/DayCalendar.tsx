@@ -1,15 +1,17 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import Typography from '@mui/material/Typography';
-import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
-import { styled, useTheme, useThemeProps } from '@mui/material/styles';
+import useSlotProps from '@mui/utils/useSlotProps';
+import { useRtl } from '@mui/system/RtlProvider';
+import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useControlled as useControlled,
 } from '@mui/utils';
 import clsx from 'clsx';
 import { PickersDay, PickersDayProps, ExportedPickersDayProps } from '../PickersDay/PickersDay';
-import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 import {
@@ -27,7 +29,7 @@ import { useIsDateDisabled } from './useIsDateDisabled';
 import { findClosestEnabledDate, getWeekdays } from '../internals/utils/date-utils';
 import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
 import { PickerValidDate, TimezoneProps } from '../models';
-import { DefaultizedProps } from '../internals/models/helpers';
+import { DefaultizedProps, SlotComponentPropsFromProps } from '../internals/models/helpers';
 
 export interface DayCalendarSlots<TDate extends PickerValidDate> {
   /**
@@ -39,8 +41,8 @@ export interface DayCalendarSlots<TDate extends PickerValidDate> {
 }
 
 export interface DayCalendarSlotProps<TDate extends PickerValidDate> {
-  day?: SlotComponentProps<
-    typeof PickersDay,
+  day?: SlotComponentPropsFromProps<
+    PickersDayProps<TDate>,
     {},
     DayCalendarProps<TDate> & { day: TDate; selected: boolean }
   >;
@@ -371,8 +373,7 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
 
   const now = useNow<TDate>(timezone);
   const classes = useUtilityClasses(props);
-  const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
+  const isRtl = useRtl();
 
   const isDateDisabled = useIsDateDisabled({
     shouldDisableDate,
@@ -385,7 +386,7 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
     timezone,
   });
 
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
 
   const [internalHasFocus, setInternalHasFocus] = useControlled({
     name: 'DayCalendar',
@@ -428,14 +429,14 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
           event.preventDefault();
           break;
         case 'ArrowLeft': {
-          const newFocusedDayDefault = utils.addDays(day, isRTL ? 1 : -1);
-          const nextAvailableMonth = utils.addMonths(day, isRTL ? 1 : -1);
+          const newFocusedDayDefault = utils.addDays(day, isRtl ? 1 : -1);
+          const nextAvailableMonth = utils.addMonths(day, isRtl ? 1 : -1);
 
           const closestDayToFocus = findClosestEnabledDate({
             utils,
             date: newFocusedDayDefault,
-            minDate: isRTL ? newFocusedDayDefault : utils.startOfMonth(nextAvailableMonth),
-            maxDate: isRTL ? utils.endOfMonth(nextAvailableMonth) : newFocusedDayDefault,
+            minDate: isRtl ? newFocusedDayDefault : utils.startOfMonth(nextAvailableMonth),
+            maxDate: isRtl ? utils.endOfMonth(nextAvailableMonth) : newFocusedDayDefault,
             isDateDisabled,
             timezone,
           });
@@ -444,14 +445,14 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
           break;
         }
         case 'ArrowRight': {
-          const newFocusedDayDefault = utils.addDays(day, isRTL ? -1 : 1);
-          const nextAvailableMonth = utils.addMonths(day, isRTL ? -1 : 1);
+          const newFocusedDayDefault = utils.addDays(day, isRtl ? -1 : 1);
+          const nextAvailableMonth = utils.addMonths(day, isRtl ? -1 : 1);
 
           const closestDayToFocus = findClosestEnabledDate({
             utils,
             date: newFocusedDayDefault,
-            minDate: isRTL ? utils.startOfMonth(nextAvailableMonth) : newFocusedDayDefault,
-            maxDate: isRTL ? newFocusedDayDefault : utils.endOfMonth(nextAvailableMonth),
+            minDate: isRtl ? utils.startOfMonth(nextAvailableMonth) : newFocusedDayDefault,
+            maxDate: isRtl ? newFocusedDayDefault : utils.endOfMonth(nextAvailableMonth),
             isDateDisabled,
             timezone,
           });
@@ -501,7 +502,6 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
   const transitionKey = `${currentYearNumber}-${currentMonthNumber}`;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const slideNodeRef = React.useMemo(() => React.createRef<HTMLDivElement>(), [transitionKey]);
-  const startOfCurrentWeek = utils.startOfWeek(now);
 
   const focusableDay = React.useMemo<TDate | null>(() => {
     const startOfMonth = utils.startOfMonth(currentMonth);
@@ -562,10 +562,10 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
           <PickersCalendarWeekNumberLabel
             variant="caption"
             role="columnheader"
-            aria-label={localeText.calendarWeekNumberHeaderLabel}
+            aria-label={translations.calendarWeekNumberHeaderLabel}
             className={classes.weekNumberLabel}
           >
-            {localeText.calendarWeekNumberHeaderText}
+            {translations.calendarWeekNumberHeaderText}
           </PickersCalendarWeekNumberLabel>
         )}
         {getWeekdays(utils, now).map((weekday, i) => (
@@ -573,7 +573,7 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
             key={i.toString()}
             variant="caption"
             role="columnheader"
-            aria-label={utils.format(utils.addDays(startOfCurrentWeek, i), 'weekday')}
+            aria-label={utils.format(weekday, 'weekday')}
             className={classes.weekDayLabel}
           >
             {dayOfWeekFormatter(weekday)}
@@ -614,11 +614,11 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
                   <PickersCalendarWeekNumber
                     className={classes.weekNumber}
                     role="rowheader"
-                    aria-label={localeText.calendarWeekNumberAriaLabelText(
+                    aria-label={translations.calendarWeekNumberAriaLabelText(
                       utils.getWeekNumber(week[0]),
                     )}
                   >
-                    {localeText.calendarWeekNumberText(utils.getWeekNumber(week[0]))}
+                    {translations.calendarWeekNumberText(utils.getWeekNumber(week[0]))}
                   </PickersCalendarWeekNumber>
                 )}
                 {week.map((day, dayIndex) => (

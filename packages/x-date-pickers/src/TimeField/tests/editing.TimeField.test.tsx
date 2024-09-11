@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
-import { fireEvent } from '@mui-internal/test-utils';
+import { fireEvent } from '@mui/internal-test-utils';
 import {
   expectFieldValueV7,
   expectFieldValueV6,
@@ -204,6 +204,250 @@ describe('<TimeField /> - Editing', () => {
     });
   });
 
+  describeAdapters('key: PageDown', TimeField, ({ adapter, testFieldKeyPress }) => {
+    describe('24 hours format (PageDown)', () => {
+      describe('Hours field', () => {
+        it('should set hours field to maximal when no default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours24h,
+            key: 'PageDown',
+            expectedValue: '23',
+            selectedSection: 'hours',
+          });
+        });
+
+        it('should decrement hours field by 5 when default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours24h,
+            key: 'PageDown',
+            defaultValue: adapter.date('2024-06-04T10:25:00'),
+            expectedValue: '05',
+            selectedSection: 'hours',
+          });
+        });
+
+        it('should flip hours field when default value is lower than 5', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours24h,
+            key: 'PageDown',
+            defaultValue: adapter.date('2024-06-04T02:25:00'),
+            expectedValue: '21',
+            selectedSection: 'hours',
+          });
+        });
+      });
+
+      describe('Minutes field', () => {
+        it('should set minutes field to maximal when no default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.minutes,
+            key: 'PageDown',
+            expectedValue: '59',
+          });
+        });
+
+        it('should decrement minutes field by 5 when default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.minutes,
+            key: 'PageDown',
+            defaultValue: adapter.date('2024-06-04T10:59:00'),
+            expectedValue: '54',
+          });
+        });
+
+        it('should flip minutes field when default value is lower than 5', () => {
+          testFieldKeyPress({
+            format: adapter.formats.minutes,
+            key: 'PageDown',
+            defaultValue: adapter.date('2024-06-04T02:02:00'),
+            expectedValue: '57',
+          });
+        });
+      });
+    });
+
+    describe('12 hours format (PageDown)', () => {
+      describe('Hours field', () => {
+        it('should set hours field to maximal when no default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours12h,
+            key: 'PageDown',
+            expectedValue: '12',
+          });
+        });
+
+        it('should decrement hours field by 5 when default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours12h,
+            key: 'PageDown',
+            defaultValue: adapter.date('2024-06-04T10:25:00'),
+            expectedValue: '05',
+          });
+        });
+
+        it('should flip hours field when default value is lower than 5', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours12h,
+            key: 'PageDown',
+            defaultValue: adapter.date('2024-06-04T02:25:00'),
+            expectedValue: '09',
+          });
+        });
+      });
+
+      describe('Meridiem field', () => {
+        it('should set meridiem to PM when no default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.meridiem,
+            key: 'PageDown',
+            expectedValue: 'PM',
+            selectedSection: 'meridiem',
+          });
+        });
+
+        it('should switch between AM and PM when meridiem value is not empty', () => {
+          testFieldKeyPress({
+            format: adapter.formats.meridiem,
+            defaultValue: adapter.date('2024-05-30T02:12:25'),
+            key: 'PageDown',
+            expectedValue: 'PM',
+            selectedSection: 'meridiem',
+          });
+          testFieldKeyPress({
+            format: adapter.formats.meridiem,
+            defaultValue: adapter.date('2024-05-30T20:12:25'),
+            key: 'PageDown',
+            expectedValue: 'AM',
+            selectedSection: 'meridiem',
+          });
+        });
+      });
+    });
+  });
+
+  describeAdapters('key: PageUp', TimeField, ({ adapter, testFieldKeyPress }) => {
+    describe('24 hours format (PageUp)', () => {
+      describe('Hours field', () => {
+        it('should set hours field to minimal when no default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours24h,
+            key: 'PageUp',
+            expectedValue: '00',
+            selectedSection: 'hours',
+          });
+        });
+
+        it('should increment hours field by 5 when default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours24h,
+            key: 'PageUp',
+            defaultValue: adapter.date('2024-06-04T10:25:00'),
+            expectedValue: '15',
+            selectedSection: 'hours',
+          });
+        });
+
+        it('should flip hours field when default value is higher than 19', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours24h,
+            key: 'PageUp',
+            defaultValue: adapter.date('2024-06-04T21:25:00'),
+            expectedValue: '02',
+            selectedSection: 'hours',
+          });
+        });
+      });
+
+      describe('Minutes field', () => {
+        it('should set minutes field to minimal when no default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours24h,
+            key: 'PageUp',
+            expectedValue: '00',
+          });
+        });
+
+        it('should increment minutes field by 5 when default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.minutes,
+            key: 'PageUp',
+            defaultValue: adapter.date('2024-06-04T10:25:00'),
+            expectedValue: '30',
+          });
+        });
+
+        it('should flip minutes field when default value is higher than 55', () => {
+          testFieldKeyPress({
+            format: adapter.formats.minutes,
+            key: 'PageUp',
+            defaultValue: adapter.date('2024-06-04T21:56:00'),
+            expectedValue: '01',
+          });
+        });
+      });
+    });
+    describe('12 hours format (PageUp)', () => {
+      describe('Hours field', () => {
+        it('should set hours field to minimal when no default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours12h,
+            key: 'PageUp',
+            expectedValue: '01',
+            selectedSection: 'hours',
+          });
+        });
+
+        it('should increment hours field by 5 when default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours12h,
+            key: 'PageUp',
+            defaultValue: adapter.date('2024-06-04T05:25:00'),
+            expectedValue: '10',
+            selectedSection: 'hours',
+          });
+        });
+
+        it('should flip hours field when default value is higher than 07', () => {
+          testFieldKeyPress({
+            format: adapter.formats.hours12h,
+            key: 'PageUp',
+            defaultValue: adapter.date('2024-06-04T08:25:00'),
+            expectedValue: '01',
+            selectedSection: 'hours',
+          });
+        });
+      });
+
+      describe('Meridiem field', () => {
+        it('should set meridiem to AM when no default value is provided', () => {
+          testFieldKeyPress({
+            format: adapter.formats.meridiem,
+            key: 'PageUp',
+            expectedValue: 'AM',
+            selectedSection: 'meridiem',
+          });
+        });
+
+        it('should switch between AM and PM when meridiem value is not empty', () => {
+          testFieldKeyPress({
+            format: adapter.formats.meridiem,
+            defaultValue: adapter.date('2024-05-30T02:12:25'),
+            key: 'PageUp',
+            expectedValue: 'PM',
+            selectedSection: 'meridiem',
+          });
+          testFieldKeyPress({
+            format: adapter.formats.meridiem,
+            defaultValue: adapter.date('2024-05-30T20:12:25'),
+            key: 'PageUp',
+            expectedValue: 'AM',
+            selectedSection: 'meridiem',
+          });
+        });
+      });
+    });
+  });
+
   describeAdapters('Digit editing', TimeField, ({ adapter, renderWithProps, testFieldChange }) => {
     it('should set the minute to the digit pressed when no digit no value is provided', () => {
       testFieldChange({
@@ -253,27 +497,27 @@ describe('<TimeField /> - Editing', () => {
 
     it('should go to the next section when pressing `2` in a 12-hours format', () => {
       // Test with v7 input
-      const v7Response = renderWithProps({
+      let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: adapter.formats.fullTime12h,
       });
 
-      v7Response.selectSection('hours');
+      view.selectSection('hours');
 
-      v7Response.pressKey(0, '2');
-      expectFieldValueV7(v7Response.getSectionsContainer(), '02:mm aa');
+      view.pressKey(0, '2');
+      expectFieldValueV7(view.getSectionsContainer(), '02:mm aa');
       expect(getCleanedSelectedContent()).to.equal('mm');
 
-      v7Response.unmount();
+      view.unmount();
 
       // Test with v6 input
-      const v6Response = renderWithProps({
+      view = renderWithProps({
         enableAccessibleFieldDOMStructure: false,
         format: adapter.formats.fullTime12h,
       });
 
       const input = getTextbox();
-      v6Response.selectSection('hours');
+      view.selectSection('hours');
 
       // Press "2"
       fireEvent.change(input, { target: { value: '2:mm aa' } });
@@ -283,32 +527,32 @@ describe('<TimeField /> - Editing', () => {
 
     it('should go to the next section when pressing `1` then `3` in a 12-hours format', () => {
       // Test with v7 input
-      const v7Response = renderWithProps({
+      let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: adapter.formats.fullTime12h,
       });
 
-      v7Response.selectSection('hours');
+      view.selectSection('hours');
 
-      v7Response.pressKey(0, '1');
-      expectFieldValueV7(v7Response.getSectionsContainer(), '01:mm aa');
+      view.pressKey(0, '1');
+      expectFieldValueV7(view.getSectionsContainer(), '01:mm aa');
       expect(getCleanedSelectedContent()).to.equal('01');
 
       // Press "3"
-      v7Response.pressKey(0, '3');
-      expectFieldValueV7(v7Response.getSectionsContainer(), '03:mm aa');
+      view.pressKey(0, '3');
+      expectFieldValueV7(view.getSectionsContainer(), '03:mm aa');
       expect(getCleanedSelectedContent()).to.equal('mm');
 
-      v7Response.unmount();
+      view.unmount();
 
       // Test with v6 input
-      const v6Response = renderWithProps({
+      view = renderWithProps({
         enableAccessibleFieldDOMStructure: false,
         format: adapter.formats.fullTime12h,
       });
 
       const input = getTextbox();
-      v6Response.selectSection('hours');
+      view.selectSection('hours');
 
       // Press "1"
       fireEvent.change(input, { target: { value: '1:mm aa' } });
@@ -377,6 +621,13 @@ describe('<TimeField /> - Editing', () => {
         keyStrokes: [{ value: 'p', expected: 'PM' }],
       });
     });
+
+    it('should not edit when pressing the Space key', () => {
+      testFieldChange({
+        format: adapter.formats.hours24h,
+        keyStrokes: [{ value: ' ', expected: 'hh' }],
+      });
+    });
   });
 
   describeAdapters(
@@ -387,30 +638,30 @@ describe('<TimeField /> - Editing', () => {
         // Test with v7 input
         const onChangeV7 = spy();
 
-        const v7Response = renderWithProps({
+        let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV7,
         });
 
-        v7Response.selectSection('hours');
-        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowDown' });
+        view.selectSection('hours');
+        fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowDown' });
 
         expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
 
-        v7Response.unmount();
+        view.unmount();
 
         // Test with v6 input
         const onChangeV6 = spy();
 
-        const v6Response = renderWithProps({
+        view = renderWithProps({
           enableAccessibleFieldDOMStructure: false,
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV6,
         });
 
         const input = getTextbox();
-        v6Response.selectSection('hours');
+        view.selectSection('hours');
         fireEvent.keyDown(input, { key: 'ArrowDown' });
 
         expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
@@ -420,31 +671,31 @@ describe('<TimeField /> - Editing', () => {
         // Test with v7 input
         const onChangeV7 = spy();
 
-        const v7Response = renderWithProps({
+        let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV7,
           format: adapter.formats.fullTime24h,
         });
 
-        v7Response.selectSection('hours');
-        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'a', ctrlKey: true });
-        v7Response.pressKey(null, '');
-        fireEvent.keyDown(v7Response.getSectionsContainer(), { key: 'ArrowLeft' });
+        view.selectSection('hours');
+        fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+        view.pressKey(null, '');
+        fireEvent.keyDown(view.getSectionsContainer(), { key: 'ArrowLeft' });
 
-        v7Response.pressKey(0, '3');
-        expectFieldValueV7(v7Response.getSectionsContainer(), '03:mm');
+        view.pressKey(0, '3');
+        expectFieldValueV7(view.getSectionsContainer(), '03:mm');
 
-        v7Response.pressKey(1, '4');
-        expectFieldValueV7(v7Response.getSectionsContainer(), '03:04');
+        view.pressKey(1, '4');
+        expectFieldValueV7(view.getSectionsContainer(), '03:04');
         expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
 
-        v7Response.unmount();
+        view.unmount();
 
         // Test with v6 input
         const onChangeV6 = spy();
 
-        const v6Response = renderWithProps({
+        view = renderWithProps({
           enableAccessibleFieldDOMStructure: false,
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV6,
@@ -452,7 +703,7 @@ describe('<TimeField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        v6Response.selectSection('hours');
+        view.selectSection('hours');
         fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
         fireEvent.change(input, { target: { value: '' } });
         fireEvent.keyDown(input, { key: 'ArrowLeft' });
@@ -469,24 +720,24 @@ describe('<TimeField /> - Editing', () => {
         // Test with v7 input
         const onChangeV7 = spy();
 
-        const v7Response = renderWithProps({
+        let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV7,
           format: adapter.formats.hours24h,
         });
 
-        v7Response.selectSection('hours');
-        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowDown' });
+        view.selectSection('hours');
+        fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowDown' });
 
         expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
 
-        v7Response.unmount();
+        view.unmount();
 
         // Test with v6 input
         const onChangeV6 = spy();
 
-        const v6Response = renderWithProps({
+        view = renderWithProps({
           enableAccessibleFieldDOMStructure: false,
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV6,
@@ -494,7 +745,7 @@ describe('<TimeField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        v6Response.selectSection('hours');
+        view.selectSection('hours');
         fireEvent.keyDown(input, { key: 'ArrowDown' });
 
         expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));

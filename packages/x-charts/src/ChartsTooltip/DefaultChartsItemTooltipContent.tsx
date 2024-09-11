@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -28,7 +29,7 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
           displayedLabel: getLabel(series.data[itemData.dataIndex].label, 'tooltip'),
         }
       : {
-          color: getColor(itemData.dataIndex) ?? series.color,
+          color: getColor(itemData.dataIndex),
           displayedLabel: getLabel(series.label, 'tooltip'),
         };
 
@@ -43,7 +44,7 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
     series.valueFormatter as CommonSeriesType<typeof value>['valueFormatter']
   )?.(value, { dataIndex: itemData.dataIndex });
   return (
-    <ChartsTooltipPaper sx={sx} className={classes.root}>
+    <ChartsTooltipPaper sx={sx} className={classes.paper}>
       <ChartsTooltipTable className={classes.table}>
         <tbody>
           <ChartsTooltipRow className={classes.row}>

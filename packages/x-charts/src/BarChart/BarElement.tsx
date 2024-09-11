@@ -1,20 +1,17 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
-import { color as d3Color } from 'd3-color';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { color as d3Color } from '@mui/x-charts-vendor/d3-color';
 import { AnimatedProps, animated } from '@react-spring/web';
-import {
-  getIsFaded,
-  getIsHighlighted,
-  useInteractionItemProps,
-} from '../hooks/useInteractionItemProps';
-import { InteractionContext } from '../context/InteractionProvider';
-import { HighlightScope } from '../context/HighlightProvider';
+import { SlotComponentPropsFromProps } from '../internals/SlotComponentPropsFromProps';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { SeriesId } from '../models/seriesType/common';
+import { useItemHighlighted } from '../context';
 
 export interface BarElementClasses {
   /** Styles applied to the root element. */
@@ -73,7 +70,6 @@ interface BarProps
       height?: string | number | undefined;
       width?: string | number | undefined;
     }> {
-  highlightScope?: Partial<HighlightScope>;
   ownerState: BarElementOwnerState;
 }
 
@@ -84,14 +80,12 @@ export interface BarElementSlots {
    */
   bar?: React.ElementType<BarProps>;
 }
-
 export interface BarElementSlotProps {
-  bar?: Partial<BarProps>;
+  bar?: SlotComponentPropsFromProps<BarProps, {}, BarElementOwnerState>;
 }
 
 export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGRectElement>, 'ref' | 'id'> & {
-    highlightScope?: Partial<HighlightScope>;
     /**
      * The props used for each component slot.
      * @default {}
@@ -110,24 +104,17 @@ function BarElement(props: BarElementProps) {
     dataIndex,
     classes: innerClasses,
     color,
-    highlightScope,
     slots,
     slotProps,
     style,
     onClick,
     ...other
   } = props;
-  const getInteractionItemProps = useInteractionItemProps(highlightScope);
-
-  const { item } = React.useContext(InteractionContext);
-
-  const isHighlighted = getIsHighlighted(
-    item,
-    { type: 'bar', seriesId: id, dataIndex },
-    highlightScope,
-  );
-  const isFaded =
-    !isHighlighted && getIsFaded(item, { type: 'bar', seriesId: id, dataIndex }, highlightScope);
+  const getInteractionItemProps = useInteractionItemProps();
+  const { isFaded, isHighlighted } = useItemHighlighted({
+    seriesId: id,
+    dataIndex,
+  });
 
   const ownerState = {
     id,
@@ -165,10 +152,6 @@ BarElement.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
-  highlightScope: PropTypes.shape({
-    faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-  }),
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * The props used for each component slot.

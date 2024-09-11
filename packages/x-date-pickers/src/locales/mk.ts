@@ -42,8 +42,8 @@ const mkPickers: Partial<PickersLocaleText<any>> = {
   // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Select ${view}. ${time === null ? 'Нема избрано време' : `Избраното време е ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Select ${view}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Нема избрано време' : `Избраното време е ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} часа`,
   minutesClockNumberText: (minutes) => `${minutes} минути`,
   secondsClockNumberText: (seconds) => `${seconds} секунди`,
@@ -58,13 +58,13 @@ const mkPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Избери датум, избраниот датум е ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Избери датум, избраниот датум е ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Избери датум',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Избери време, избраното време е ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Избери време, избраното време е ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Избери време',
   fieldClearLabel: 'Избриши',
 

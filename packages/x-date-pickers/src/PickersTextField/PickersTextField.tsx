@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -139,6 +140,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
         areAllSectionsEmpty={areAllSectionsEmpty}
         onClick={onClick}
         onKeyDown={onKeyDown}
+        onKeyUp={onKeyUp}
         onInput={onInput}
         onPaste={onPaste}
         endAdornment={endAdornment}

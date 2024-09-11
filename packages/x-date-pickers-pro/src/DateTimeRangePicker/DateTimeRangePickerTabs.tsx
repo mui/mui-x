@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -5,13 +6,14 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TimeIcon, DateRangeIcon, ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers/icons';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DateOrTimeViewWithMeridiem,
-  useLocaleText,
   BaseTabsProps,
   ExportedBaseTabsProps,
   isDatePickerView,
 } from '@mui/x-date-pickers/internals';
+import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import {
@@ -106,7 +108,7 @@ const DateTimeRangePickerTabFiller = styled('div', {
 
 const tabOptions: TabValue[] = ['start-date', 'start-time', 'end-date', 'end-time'];
 
-const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
+const DateTimeRangePickerTabs = function DateTimeRangePickerTabs<TDate extends PickerValidDate>(
   inProps: DateTimeRangePickerTabsProps,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimeRangePickerTabs' });
@@ -122,7 +124,7 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
     sx,
   } = props;
 
-  const localeText = useLocaleText();
+  const translations = usePickersTranslations<TDate>();
   const classes = useUtilityClasses(props);
   const value = React.useMemo(() => viewToTab(view, rangePosition), [view, rangePosition]);
   const isPreviousHidden = value === 'start-date';
@@ -130,17 +132,23 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
   const tabLabel = React.useMemo(() => {
     switch (value) {
       case 'start-date':
-        return localeText.startDate;
+        return translations.startDate;
       case 'start-time':
-        return localeText.startTime;
+        return translations.startTime;
       case 'end-date':
-        return localeText.endDate;
+        return translations.endDate;
       case 'end-time':
-        return localeText.endTime;
+        return translations.endTime;
       default:
         return '';
     }
-  }, [localeText.endDate, localeText.endTime, localeText.startDate, localeText.startTime, value]);
+  }, [
+    translations.endDate,
+    translations.endTime,
+    translations.startDate,
+    translations.startTime,
+    value,
+  ]);
 
   const handleRangePositionChange = useEventCallback((newTab: TabValue) => {
     if (newTab.includes('start')) {
@@ -176,7 +184,7 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
         <IconButton
           onClick={changeToPreviousTab}
           className={classes.navigationButton}
-          title={localeText.openPreviousView}
+          title={translations.openPreviousView}
         >
           <ArrowLeftIcon />
         </IconButton>
@@ -195,7 +203,7 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
         <IconButton
           onClick={changeToNextTab}
           className={classes.navigationButton}
-          title={localeText.openNextView}
+          title={translations.openNextView}
         >
           <ArrowRightIcon />
         </IconButton>

@@ -800,6 +800,19 @@ async function initializeEnvironment(
             '04/11/2022',
           );
         });
+
+        it('should have consistent `placeholder` and `value` behavior', async () => {
+          await renderFixture('DatePicker/MobileDatePickerV6WithClearAction');
+
+          const input = page.getByRole('textbox');
+
+          await input.click({ position: { x: 10, y: 2 } });
+          await page.getByRole('button', { name: 'Clear' }).click();
+
+          await input.blur();
+          expect(await input.getAttribute('placeholder')).to.equal('MM/DD/YYYY');
+          expect(await input.inputValue()).to.equal('');
+        });
       });
     });
 
@@ -1008,6 +1021,28 @@ async function initializeEnvironment(
         await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
 
         expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022 – 04/13/2022');
+      });
+
+      it('should not change timezone when changing the start date from non DST to DST', async () => {
+        // firefox in CI is not happy with this test
+        if (browserType.name() === 'firefox') {
+          return;
+        }
+        const thrownErrors: string[] = [];
+        context.on('weberror', (webError) => {
+          thrownErrors.push(webError.error().message);
+        });
+
+        await renderFixture('DatePicker/SingleDesktopDateRangePickerWithTZ');
+
+        // open the picker
+        await page.getByRole('group').click();
+
+        await page.getByRole('spinbutton', { name: 'Month' }).first().press('ArrowDown');
+
+        expect(thrownErrors).not.to.contain(
+          'MUI X: The timezone of the start and the end date should be the same.',
+        );
       });
     });
   });

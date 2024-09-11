@@ -10,38 +10,29 @@ packageName: '@mui/x-charts'
 
 ## Installation
 
-Run one of the following commands to add the MUI X Charts to your project:
+Using your favorite package manager, install `@mui/x-charts-pro` for the commercial version, or `@mui/x-charts` for the free community version.
 
 <!-- #default-branch-switch -->
 
-<codeblock storageKey="package-manager">
-```bash npm
-npm install @mui/x-charts
-```
-
-```bash yarn
-yarn add @mui/x-charts
-```
-
-```bash pnpm
-pnpm add @mui/x-charts
-```
-
-</codeblock>
+{{"component": "modules/components/ChartsInstallationInstructions.js"}}
 
 The Charts package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:
 
 <codeblock storageKey="package-manager">
+
 ```bash npm
 npm install @mui/material @emotion/react @emotion/styled
 ```
-```bash yarn
-yarn add @mui/material @emotion/react @emotion/styled
-```
+
 ```bash pnpm
 pnpm add @mui/material @emotion/react @emotion/styled
 ```
+
+```bash yarn
+yarn add @mui/material @emotion/react @emotion/styled
+```
+
 </codeblock>
 
 <!-- #react-peer-version -->
@@ -64,41 +55,36 @@ Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styli
 npm install @mui/styled-engine-sc styled-components
 ```
 
-```bash yarn
-yarn add @mui/styled-engine-sc styled-components
-```
-
 ```bash pnpm
 pnpm add @mui/styled-engine-sc styled-components
+```
+
+```bash yarn
+yarn add @mui/styled-engine-sc styled-components
 ```
 
 </codeblock>
 
 Take a look at the [Styled engine guide](/material-ui/integrations/styled-components/) for more information about how to configure `styled-components` as the style engine.
 
-### Usage with Next.js
+### Usage with D3
 
-If you're using MUI X Charts with Next.js, you might face the following error:
+To help folks using CommonJS, the `@mui/x-charts` package uses a vendored package named `@mui/x-charts-vendor` to access D3 libraries.
 
-```bash
-[ESM][charts] Doesn't build due to require() of ES Module (ERR_REQUIRE_ESM)
-```
+If you need some D3 functions, you can import them with `@mui/x-charts-vendor/d3-color`.
 
-To solve it, transpile the package by adding `transpilePackages: ['@mui/x-charts']` to your `next.config.js` file.
-Visit [this GitHub issue and comment](https://github.com/mui/mui-x/issues/9826#issuecomment-1658333978) for details.
-
-## Displaying Charts
+## Displaying charts
 
 A Chart can be rendered in one of two ways: as a single component, or by composing subcomponents.
 
-### Single Charts
+### Single charts
 
 For common use cases, the single component is the recommended way.
 Those components' names end with "Chart", as opposed to "Plot", and only require the series prop describing the data to render.
 
 {{"demo": "SimpleCharts.js"}}
 
-### Composed Charts
+### Composed charts
 
 To combine different Charts, like Lines with Bars, you can use composition with the `ChartContainer` wrapper.
 
@@ -132,3 +118,30 @@ Visit the [Axis page](/x/react-charts/axis/) for more details.
 MUI X Charts follows the Material UI styling and features all of the customization tools you'd find there, making tweaking charts as straightforward as designing buttons.
 
 Visit the [Styling page](/x/react-charts/styling/) for more details.
+
+## TypeScript
+
+In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users need to import the following types.
+Internally, it uses module augmentation to extend the default theme structure.
+
+```tsx
+import type {} from '@mui/x-charts/themeAugmentation';
+import type {} from '@mui/x-charts-pro/themeAugmentation';
+
+const theme = createTheme({
+  components: {
+    MuiChartsAxis: {
+      styleOverrides: {
+        tick: {
+          stroke: '#006BD6',
+        },
+      },
+    },
+  },
+});
+```
+
+:::info
+You don't have to import the theme augmentation from both `@mui/x-charts` and `@mui/x-charts-pro` when using `@mui/x-charts-pro`.
+Importing it from `@mui/x-charts-pro` is enough.
+:::

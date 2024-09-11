@@ -1,7 +1,8 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { useTheme } from '@mui/system';
+import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_useControlled as useControlled,
@@ -106,6 +107,8 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
     monthsPerRow = 3,
     timezone: timezoneProp,
     gridLabelId,
+    slots,
+    slotProps,
     ...other
   } = props;
 
@@ -119,7 +122,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
   });
 
   const now = useNow<TDate>(timezone);
-  const theme = useTheme();
+  const isRtl = useRtl();
   const utils = useUtils<TDate>();
 
   const referenceDate = React.useMemo(
@@ -236,12 +239,12 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
         event.preventDefault();
         break;
       case 'ArrowLeft':
-        focusMonth((monthsInYear + month + (theme.direction === 'ltr' ? -1 : 1)) % monthsInYear);
+        focusMonth((monthsInYear + month + (isRtl ? 1 : -1)) % monthsInYear);
 
         event.preventDefault();
         break;
       case 'ArrowRight':
-        focusMonth((monthsInYear + month + (theme.direction === 'ltr' ? 1 : -1)) % monthsInYear);
+        focusMonth((monthsInYear + month + (isRtl ? -1 : 1)) % monthsInYear);
 
         event.preventDefault();
         break;
@@ -285,12 +288,14 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
             onKeyDown={handleKeyDown}
             autoFocus={internalHasFocus && monthNumber === focusedMonth}
             disabled={isDisabled}
-            tabIndex={monthNumber === focusedMonth ? 0 : -1}
+            tabIndex={monthNumber === focusedMonth && !isDisabled ? 0 : -1}
             onFocus={handleMonthFocus}
             onBlur={handleMonthBlur}
             aria-current={todayMonth === monthNumber ? 'date' : undefined}
             aria-label={monthLabel}
             monthsPerRow={monthsPerRow}
+            slots={slots}
+            slotProps={slotProps}
           >
             {monthText}
           </PickersMonth>
@@ -339,10 +344,12 @@ MonthCalendar.propTypes = {
   hasFocus: PropTypes.bool,
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**
@@ -374,6 +381,16 @@ MonthCalendar.propTypes = {
    * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

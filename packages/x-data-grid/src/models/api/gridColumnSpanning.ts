@@ -20,6 +20,8 @@ export interface GridColumnSpanningApi {
 }
 
 export interface GridColumnSpanningPrivateApi {
+  /** Reset the colspan cache */
+  resetColSpan: () => void;
   /**
    * Calculate column spanning for each cell in the row
    * @param {Object} options The options to apply on the calculation.

@@ -1,5 +1,7 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useThemeProps } from '@mui/material/styles';
 import {
   ScatterPlot,
   ScatterPlotProps,
@@ -30,7 +32,7 @@ import {
   ChartsOverlayProps,
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
-} from '../ChartsOverlay/ChartsOverlay';
+} from '../ChartsOverlay';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
 import {
@@ -39,22 +41,23 @@ import {
 } from '../ChartsVoronoiHandler/ChartsVoronoiHandler';
 import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
 import { ZAxisContextProvider, ZAxisContextProviderProps } from '../context/ZAxisContextProvider';
+import { useScatterChartProps } from './useScatterChartProps';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,
     ScatterPlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots,
+    ChartsTooltipSlots<'scatter'>,
     ChartsOverlaySlots {}
 export interface ScatterChartSlotProps
   extends ChartsAxisSlotProps,
     ScatterPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps,
+    ChartsTooltipSlotProps<'scatter'>,
     ChartsOverlaySlotProps {}
 
 export interface ScatterChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series'>,
+  extends Omit<ResponsiveChartContainerProps, 'series' | 'plugins'>,
     Omit<ZAxisContextProviderProps, 'children' | 'dataset'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -69,7 +72,7 @@ export interface ScatterChartProps
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    * @default { trigger: 'item' }
    */
-  tooltip?: ChartsTooltipProps;
+  tooltip?: ChartsTooltipProps<'scatter'>;
   /**
    * The configuration of axes highlight.
    * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
@@ -117,73 +120,35 @@ export interface ScatterChartProps
  *
  * - [ScatterChart API](https://mui.com/x/api/charts/scatter-chart/)
  */
-const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartProps, ref) {
+const ScatterChart = React.forwardRef(function ScatterChart(inProps: ScatterChartProps, ref) {
+  const props = useThemeProps({ props: inProps, name: 'MuiScatterChart' });
   const {
-    xAxis,
-    yAxis,
-    zAxis,
-    series,
-    tooltip,
-    axisHighlight,
-    voronoiMaxRadius,
-    disableVoronoi,
-    legend,
-    width,
-    height,
-    margin,
-    colors,
-    sx,
-    grid,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
-    onItemClick,
+    chartContainerProps,
+    zAxisProps,
+    voronoiHandlerProps,
+    chartsAxisProps,
+    gridProps,
+    scatterPlotProps,
+    overlayProps,
+    legendProps,
+    axisHighlightProps,
+    tooltipProps,
     children,
-    slots,
-    slotProps,
-    loading,
-  } = props;
+  } = useScatterChartProps(props);
   return (
-    <ResponsiveChartContainer
-      ref={ref}
-      series={series.map((s) => ({ type: 'scatter', ...s }))}
-      width={width}
-      height={height}
-      margin={margin}
-      colors={colors}
-      xAxis={xAxis}
-      yAxis={yAxis}
-      sx={sx}
-    >
-      <ZAxisContextProvider zAxis={zAxis}>
-        {!disableVoronoi && (
-          <ChartsVoronoiHandler
-            voronoiMaxRadius={voronoiMaxRadius}
-            onItemClick={onItemClick as ChartsVoronoiHandlerProps['onItemClick']}
-          />
-        )}
-
-        <ChartsAxis
-          topAxis={topAxis}
-          leftAxis={leftAxis}
-          rightAxis={rightAxis}
-          bottomAxis={bottomAxis}
-          slots={slots}
-          slotProps={slotProps}
-        />
-        {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}
-        <ScatterPlot
-          slots={slots}
-          slotProps={slotProps}
-          onItemClick={
-            disableVoronoi ? (onItemClick as ScatterPlotProps['onItemClick']) : undefined
-          }
-        />
-        <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
-        <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
-        <ChartsAxisHighlight x="none" y="none" {...axisHighlight} />
-        {!loading && <ChartsTooltip trigger="item" {...tooltip} />}
+    <ResponsiveChartContainer ref={ref} {...chartContainerProps}>
+      <ZAxisContextProvider {...zAxisProps}>
+        {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
+        <ChartsAxis {...chartsAxisProps} />
+        <ChartsGrid {...gridProps} />
+        <g data-drawing-container>
+          {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
+          <ScatterPlot {...scatterPlotProps} />
+        </g>
+        <ChartsOverlay {...overlayProps} />
+        <ChartsLegend {...legendProps} />
+        <ChartsAxisHighlight {...axisHighlightProps} />
+        {!props.loading && <ChartsTooltip {...tooltipProps} />}
         {children}
       </ZAxisContextProvider>
     </ResponsiveChartContainer>
@@ -245,6 +210,13 @@ ScatterChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * The item currently highlighted. Turns highlighting into a controlled prop.
+   */
+  highlightedItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  }),
+  /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default yAxisIds[0] The id of the first provided axis
@@ -257,6 +229,20 @@ ScatterChart.propTypes = {
     classes: PropTypes.object,
     direction: PropTypes.oneOf(['column', 'row']),
     hidden: PropTypes.bool,
+    itemGap: PropTypes.number,
+    itemMarkHeight: PropTypes.number,
+    itemMarkWidth: PropTypes.number,
+    labelStyle: PropTypes.object,
+    markGap: PropTypes.number,
+    padding: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.shape({
+        bottom: PropTypes.number,
+        left: PropTypes.number,
+        right: PropTypes.number,
+        top: PropTypes.number,
+      }),
+    ]),
     position: PropTypes.shape({
       horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
       vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
@@ -281,6 +267,12 @@ ScatterChart.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  /**
+   * The callback fired when the highlighted item changes.
+   *
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   */
+  onHighlightChange: PropTypes.func,
   /**
    * Callback fired when clicking on a scatter item.
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using Voronoi cells. Or the Mouse event from the scatter element, when `disableVoronoi=true`.
@@ -355,7 +347,6 @@ ScatterChart.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -396,12 +387,17 @@ ScatterChart.propTypes = {
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      position: PropTypes.oneOf(['bottom', 'top']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -426,7 +422,6 @@ ScatterChart.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -467,12 +462,17 @@ ScatterChart.propTypes = {
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      position: PropTypes.oneOf(['left', 'right']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -525,6 +525,8 @@ ScatterChart.propTypes = {
       data: PropTypes.array,
       dataKey: PropTypes.string,
       id: PropTypes.string,
+      max: PropTypes.number,
+      min: PropTypes.number,
     }),
   ),
 } as any;

@@ -1,8 +1,9 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ChartsXReferenceLine, ChartsXReferenceLineProps } from './ChartsXReferenceLine';
 import { ChartsYReferenceLine, ChartsYReferenceLineProps } from './ChartsYReferenceLine';
-import { XOR } from '../internals/utils';
+import { XOR } from '../internals/ts-generic';
 
 type ChartsReferenceLineProps<TValue extends string | number | Date = string | number | Date> = XOR<
   ChartsXReferenceLineProps<TValue>,
@@ -12,15 +13,11 @@ type ChartsReferenceLineProps<TValue extends string | number | Date = string | n
 function ChartsReferenceLine(props: ChartsReferenceLineProps) {
   const { x, y } = props;
   if (x !== undefined && y !== undefined) {
-    throw new Error(
-      'MUI X Charts: The ChartsReferenceLine cannot have both `x` and `y` props set.',
-    );
+    throw new Error('MUI X: The ChartsReferenceLine cannot have both `x` and `y` props set.');
   }
 
   if (x === undefined && y === undefined) {
-    throw new Error(
-      'MUI X Charts: The ChartsReferenceLine should have a value in `x` or `y` prop.',
-    );
+    throw new Error('MUI X: The ChartsReferenceLine should have a value in `x` or `y` prop.');
   }
 
   if (x !== undefined) {

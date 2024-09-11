@@ -1,8 +1,9 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { PickersLayoutProps } from './PickersLayout.types';
 import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
@@ -23,7 +24,7 @@ export const PickersLayoutRoot = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: { isLandscape: boolean } }>(({ theme }) => ({
+})<{ ownerState: PickersLayoutProps<any, any, any> }>({
   display: 'grid',
   gridAutoColumns: 'max-content auto max-content',
   gridAutoRows: 'max-content auto max-content',
@@ -33,10 +34,18 @@ export const PickersLayoutRoot = styled('div', {
       props: { isLandscape: true },
       style: {
         [`& .${pickersLayoutClasses.toolbar}`]: {
-          gridColumn: theme.direction === 'rtl' ? 3 : 1,
+          gridColumn: 1,
           gridRow: '2 / 3',
         },
         [`.${pickersLayoutClasses.shortcuts}`]: { gridColumn: '2 / 4', gridRow: 1 },
+      },
+    },
+    {
+      props: { isLandscape: true, isRtl: true },
+      style: {
+        [`& .${pickersLayoutClasses.toolbar}`]: {
+          gridColumn: 3,
+        },
       },
     },
     {
@@ -44,13 +53,21 @@ export const PickersLayoutRoot = styled('div', {
       style: {
         [`& .${pickersLayoutClasses.toolbar}`]: { gridColumn: '2 / 4', gridRow: 1 },
         [`& .${pickersLayoutClasses.shortcuts}`]: {
-          gridColumn: theme.direction === 'rtl' ? 3 : 1,
+          gridColumn: 1,
           gridRow: '2 / 3',
         },
       },
     },
+    {
+      props: { isLandscape: false, isRtl: true },
+      style: {
+        [`& .${pickersLayoutClasses.shortcuts}`]: {
+          gridColumn: 3,
+        },
+      },
+    },
   ],
-}));
+});
 
 export const PickersLayoutContentWrapper = styled('div', {
   name: 'MuiPickersLayout',
@@ -63,6 +80,14 @@ export const PickersLayoutContentWrapper = styled('div', {
   flexDirection: 'column',
 });
 
+type PickersLayoutComponent = (<
+  TValue,
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+>(
+  props: PickersLayoutProps<TValue, TDate, TView> & React.RefAttributes<HTMLDivElement>,
+) => React.JSX.Element) & { propTypes?: any };
+
 /**
  * Demos:
  *
@@ -72,25 +97,24 @@ export const PickersLayoutContentWrapper = styled('div', {
  *
  * - [PickersLayout API](https://mui.com/x/api/date-pickers/pickers-layout/)
  */
-const PickersLayout = function PickersLayout<
+const PickersLayout = React.forwardRef(function PickersLayout<
   TValue,
   TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
->(inProps: PickersLayoutProps<TValue, TDate, TView>) {
+>(inProps: PickersLayoutProps<TValue, TDate, TView>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
   const { toolbar, content, tabs, actionBar, shortcuts } = usePickerLayout(props);
-  const { sx, className, isLandscape, ref, wrapperVariant } = props;
+  const { sx, className, isLandscape, wrapperVariant } = props;
 
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(props);
 
   return (
     <PickersLayoutRoot
       ref={ref}
       sx={sx}
       className={clsx(className, classes.root)}
-      ownerState={ownerState}
+      ownerState={props}
     >
       {isLandscape ? shortcuts : toolbar}
       {isLandscape ? toolbar : shortcuts}
@@ -110,7 +134,7 @@ const PickersLayout = function PickersLayout<
       {actionBar}
     </PickersLayoutRoot>
   );
-};
+}) as PickersLayoutComponent;
 
 PickersLayout.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -125,6 +149,10 @@ PickersLayout.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
   isLandscape: PropTypes.bool.isRequired,
+  /**
+   * `true` if the application is in right-to-left direction.
+   */
+  isRtl: PropTypes.bool.isRequired,
   isValid: PropTypes.func.isRequired,
   onAccept: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,

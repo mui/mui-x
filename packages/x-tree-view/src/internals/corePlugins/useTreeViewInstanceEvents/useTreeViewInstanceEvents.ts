@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { EventManager } from '../../utils/EventManager';
+import { EventManager } from '@mui/x-internals/EventManager';
 import type { TreeViewPlugin } from '../../models';
 import { UseTreeViewInstanceEventsSignature } from './useTreeViewInstanceEvents.types';
 import type { TreeViewEventListener } from '../../models/events';

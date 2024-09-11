@@ -1,13 +1,12 @@
 import * as React from 'react';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import PropTypes from 'prop-types';
-import { InteractionContext } from '../../context/InteractionProvider';
-import { getIsFaded, getIsHighlighted } from '../../hooks/useInteractionItemProps';
+import { SlotComponentPropsFromProps } from '../../internals/SlotComponentPropsFromProps';
 import { useUtilityClasses } from './barLabelClasses';
-import { HighlighContext } from '../../context/HighlightProvider';
 import { BarLabelOwnerState, BarItem, BarLabelContext } from './BarLabel.types';
 import { getBarLabel } from './getBarLabel';
 import { BarLabel, BarLabelProps } from './BarLabel';
+import { useItemHighlighted } from '../../context';
 
 export interface BarLabelSlots {
   /**
@@ -18,7 +17,7 @@ export interface BarLabelSlots {
 }
 
 export interface BarLabelSlotProps {
-  barLabel?: Partial<BarLabelProps>;
+  barLabel?: SlotComponentPropsFromProps<BarLabelProps, {}, BarLabelOwnerState>;
 }
 
 export type BarLabelItemProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'> &
@@ -73,11 +72,10 @@ function BarLabelItem(props: BarLabelItemProps) {
     value,
     ...other
   } = props;
-  const { item } = React.useContext(InteractionContext);
-  const { scope } = React.useContext(HighlighContext);
-
-  const isHighlighted = getIsHighlighted(item, { type: 'bar', seriesId, dataIndex }, scope);
-  const isFaded = !isHighlighted && getIsFaded(item, { type: 'bar', seriesId, dataIndex }, scope);
+  const { isFaded, isHighlighted } = useItemHighlighted({
+    seriesId,
+    dataIndex,
+  });
 
   const ownerState = {
     seriesId,

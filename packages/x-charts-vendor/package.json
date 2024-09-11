@@ -1,0 +1,63 @@
+{
+  "name": "@mui/x-charts-vendor",
+  "version": "7.16.0",
+  "description": "Vendored dependencies for MUI X Charts",
+  "author": "MUI Team",
+  "keywords": [
+    "data visualization",
+    "React",
+    "d3",
+    "charting"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mui/mui-x.git",
+    "directory": "packages/x-charts-vendor"
+  },
+  "license": "MIT AND ISC",
+  "exports": {
+    "./package.json": "./package.json",
+    "./*": {
+      "types": "./*.d.ts",
+      "import": "./es/*.mjs",
+      "default": "./lib/*.js"
+    }
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.25.6",
+    "@types/d3-color": "^3.1.3",
+    "@types/d3-delaunay": "^6.0.4",
+    "@types/d3-interpolate": "^3.0.4",
+    "@types/d3-scale": "^4.0.8",
+    "@types/d3-shape": "^3.1.6",
+    "@types/d3-time": "^3.0.3",
+    "d3-color": "^3.1.0",
+    "d3-delaunay": "^6.0.4",
+    "d3-interpolate": "^3.0.1",
+    "d3-scale": "^4.0.2",
+    "d3-shape": "^3.2.0",
+    "d3-time": "^3.1.0",
+    "delaunator": "^5.0.1",
+    "robust-predicates": "^3.0.2"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.25.4",
+    "@types/d3-array": "^3.2.1",
+    "@types/d3-format": "^3.0.4",
+    "@types/d3-path": "^3.1.0",
+    "@types/d3-time-format": "^4.0.3",
+    "d3-array": "^3.2.4",
+    "d3-format": "^3.1.0",
+    "d3-path": "^3.1.0",
+    "d3-time-format": "^4.1.0",
+    "execa": "^9.3.1",
+    "internmap": "^2.0.3",
+    "rimraf": "^5.0.10"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "node ./scripts/build.js"
+  }
+}

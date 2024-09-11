@@ -2,11 +2,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
-import { fastMemo } from '../../utils/fastMemo';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
-import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderSeparatorProps } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
@@ -133,7 +132,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     pinnedPosition,
     indexInSection,
     sectionLength,
-    rootProps.showCellVerticalBorder,
+    rootProps.showColumnVerticalBorder,
     gridHasFiller,
   );
 
@@ -248,11 +247,13 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       )}
 
       {showSortIcon && (
-        <GridColumnHeaderSortIcon
+        <rootProps.slots.columnHeaderSortIcon
+          field={colDef.field}
           direction={sortDirection}
           index={sortIndex}
           sortingOrder={sortingOrder}
           disabled={!colDef.sortable}
+          {...rootProps.slotProps?.columnHeaderSortIcon}
         />
       )}
     </React.Fragment>

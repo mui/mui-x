@@ -1,8 +1,8 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { useTheme } from '@mui/material/styles';
-import { useValidation } from '../useValidation';
+import { useRtl } from '@mui/system/RtlProvider';
+import { useValidation } from '../../../validation';
 import { useUtils } from '../useUtils';
 import {
   UseFieldParams,
@@ -64,8 +64,7 @@ export const useField = <
     validator,
   } = params;
 
-  const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
+  const isRtl = useRtl();
 
   const stateResponse = useFieldState(params);
   const {
@@ -104,8 +103,8 @@ export const useField = <
   ) as UseFieldTextField<TEnableAccessibleFieldDOMStructure>;
 
   const sectionOrder = React.useMemo(
-    () => getSectionOrder(state.sections, isRTL && !enableAccessibleFieldDOMStructure),
-    [state.sections, isRTL, enableAccessibleFieldDOMStructure],
+    () => getSectionOrder(state.sections, isRtl && !enableAccessibleFieldDOMStructure),
+    [state.sections, isRtl, enableAccessibleFieldDOMStructure],
   );
 
   const { returnedValue, interactions } = useFieldTextField({
@@ -119,6 +118,9 @@ export const useField = <
   const handleContainerKeyDown = useEventCallback((event: React.KeyboardEvent<HTMLSpanElement>) => {
     onKeyDown?.(event);
 
+    if (disabled) {
+      return;
+    }
     // eslint-disable-next-line default-case
     switch (true) {
       // Select all
@@ -224,12 +226,13 @@ export const useField = <
     interactions.syncSelectionToDOM();
   });
 
-  const validationError = useValidation(
-    { ...internalProps, value: state.value, timezone },
+  const { hasValidationError } = useValidation({
+    props: internalProps,
     validator,
-    valueManager.isSameError,
-    valueManager.defaultErrorState,
-  );
+    timezone,
+    value: state.value,
+    onError: internalProps.onError,
+  });
 
   const inputError = React.useMemo(() => {
     // only override when `error` is undefined.
@@ -238,8 +241,8 @@ export const useField = <
       return error;
     }
 
-    return valueManager.hasError(validationError);
-  }, [valueManager, validationError, error]);
+    return hasValidationError;
+  }, [hasValidationError, error]);
 
   React.useEffect(() => {
     if (!inputError && activeSectionIndex == null) {

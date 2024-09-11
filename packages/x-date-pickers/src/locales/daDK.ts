@@ -26,10 +26,10 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Start',
   end: 'Slut',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Start dato',
+  startTime: 'Start tid',
+  endDate: 'Slut date',
+  endTime: 'Slut tid',
 
   // Generic range placeholders
   // from: 'From',
@@ -49,8 +49,8 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
   // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Vælg ${timeViews[view] ?? view}. ${time === null ? 'Intet tidspunkt valgt' : `Valgte tidspunkt er ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Vælg ${timeViews[view] ?? view}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Intet tidspunkt valgt' : `Valgte tidspunkt er ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} timer`,
   minutesClockNumberText: (minutes) => `${minutes} minutter`,
   secondsClockNumberText: (seconds) => `${seconds} sekunder`,
@@ -65,15 +65,15 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Vælg dato, valgte dato er ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Vælg dato, valgte dato er ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Vælg dato',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Vælg tidspunkt, valgte tidspunkt er ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Vælg tidspunkt, valgte tidspunkt er ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Vælg tidspunkt',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: 'ryd felt',
 
   // Table labels
   timeTableLabel: 'vælg tidspunkt',
@@ -90,17 +90,17 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'år',
+  month: 'måned',
+  day: 'dag',
+  weekDay: 'ugedag',
+  hours: 'timer',
+  minutes: 'minutter',
+  seconds: 'sekunder',
+  meridiem: 'middag',
 
   // Common
-  // empty: 'Empty',
+  empty: 'tom',
 };
 
 export const daDK = getPickersLocalization(daDKPickers);

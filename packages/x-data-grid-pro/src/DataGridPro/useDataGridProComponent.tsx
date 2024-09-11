@@ -58,6 +58,7 @@ import {
 } from '../hooks/features/columnReorder/useGridColumnReorder';
 import { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
 import { useGridTreeDataPreProcessors } from '../hooks/features/treeData/useGridTreeDataPreProcessors';
+import { useGridDataSourceTreeDataPreProcessors } from '../hooks/features/serverSideTreeData/useGridDataSourceTreeDataPreProcessors';
 import {
   useGridColumnPinning,
   columnPinningStateInitializer,
@@ -77,6 +78,10 @@ import {
   rowPinningStateInitializer,
 } from '../hooks/features/rowPinning/useGridRowPinning';
 import { useGridRowPinningPreProcessors } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
+import {
+  useGridDataSource,
+  dataSourceStateInitializer,
+} from '../hooks/features/dataSource/useGridDataSource';
 
 export const useDataGridProComponent = (
   inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
@@ -90,6 +95,7 @@ export const useDataGridProComponent = (
   useGridRowSelectionPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
+  useGridDataSourceTreeDataPreProcessors(apiRef, props);
   useGridLazyLoaderPreProcessors(apiRef, props);
   useGridRowPinningPreProcessors(apiRef);
   useGridDetailPanelPreProcessors(apiRef, props);
@@ -122,9 +128,10 @@ export const useDataGridProComponent = (
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
   useGridInitializeState(virtualizationStateInitializer, apiRef, props);
+  useGridInitializeState(dataSourceStateInitializer, apiRef, props);
 
   useGridHeaderFiltering(apiRef, props);
-  useGridTreeData(apiRef);
+  useGridTreeData(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);
   useGridColumnPinning(apiRef, props);
@@ -157,6 +164,7 @@ export const useDataGridProComponent = (
   useGridEvents(apiRef, props);
   useGridStatePersistence(apiRef);
   useGridVirtualization(apiRef, props);
+  useGridDataSource(apiRef, props);
 
   return apiRef;
 };

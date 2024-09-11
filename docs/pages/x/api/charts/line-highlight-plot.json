@@ -10,7 +10,8 @@
   "name": "LineHighlightPlot",
   "imports": [
     "import { LineHighlightPlot } from '@mui/x-charts/LineChart';",
-    "import { LineHighlightPlot } from '@mui/x-charts';"
+    "import { LineHighlightPlot } from '@mui/x-charts';",
+    "import { LineHighlightPlot } from '@mui/x-charts-pro';"
   ],
   "slots": [{ "name": "lineHighlight", "description": "", "class": null }],
   "classes": [],

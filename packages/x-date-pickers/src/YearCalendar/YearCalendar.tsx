@@ -1,7 +1,8 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { useTheme } from '@mui/system';
+import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_useForkRef as useForkRef,
@@ -114,6 +115,8 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
     yearsPerRow,
     timezone: timezoneProp,
     gridLabelId,
+    slots,
+    slotProps,
     ...other
   } = props;
 
@@ -127,7 +130,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
   });
 
   const now = useNow<TDate>(timezone);
-  const theme = useTheme();
+  const isRtl = useRtl();
   const utils = useUtils<TDate>();
 
   const referenceDate = React.useMemo(
@@ -232,11 +235,11 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
         event.preventDefault();
         break;
       case 'ArrowLeft':
-        focusYear(year + (theme.direction === 'ltr' ? -1 : 1));
+        focusYear(year + (isRtl ? 1 : -1));
         event.preventDefault();
         break;
       case 'ArrowRight':
-        focusYear(year + (theme.direction === 'ltr' ? 1 : -1));
+        focusYear(year + (isRtl ? -1 : 1));
         event.preventDefault();
         break;
       default:
@@ -305,11 +308,13 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
             onKeyDown={handleKeyDown}
             autoFocus={internalHasFocus && yearNumber === focusedYear}
             disabled={isDisabled}
-            tabIndex={yearNumber === focusedYear ? 0 : -1}
+            tabIndex={yearNumber === focusedYear && !isDisabled ? 0 : -1}
             onFocus={handleYearFocus}
             onBlur={handleYearBlur}
             aria-current={todayYear === yearNumber ? 'date' : undefined}
             yearsPerRow={yearsPerRow}
+            slots={slots}
+            slotProps={slotProps}
           >
             {utils.format(year, 'year')}
           </PickersYear>
@@ -358,10 +363,12 @@ YearCalendar.propTypes = {
   hasFocus: PropTypes.bool,
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**
@@ -388,6 +395,16 @@ YearCalendar.propTypes = {
    * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

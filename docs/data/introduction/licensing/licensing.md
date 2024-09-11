@@ -43,6 +43,8 @@ These are the Pro npm packages:
 
 - [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro)
 - [`@mui/x-date-pickers-pro`](https://www.npmjs.com/package/@mui/x-date-pickers-pro)
+- [`@mui/x-tree-view-pro`](https://www.npmjs.com/package/@mui/x-tree-view-pro)
+- [`@mui/x-charts-pro`](https://www.npmjs.com/package/@mui/x-charts-pro)
 
 ### Premium plan <span class="plan-premium"></span>
 
@@ -104,21 +106,21 @@ You can also use it for the development of code not intended for production (for
 You don't need to contact us to use these components for the above cases.
 You will need to purchase a commercial license in order to remove the watermarks and console warnings.
 
-## How many developer seats do I need?
+## How many developer licenses do I need?
 
-The number of seats purchased on your license must correspond to the number of concurrent developers contributing changes to the front-end code of the project that uses MUI X Pro or Premium.
+The number of licenses purchased must correspond to the number of concurrent developers contributing changes to the front-end code of the project that uses MUI X Pro or Premium.
 
 - **Example 1.** Company 'A' is developing an application named 'AppA'.
   The app needs to render 10K rows of data in a table and allow users to group, filter, and sort.
   The dev team adds MUI X Pro to the project to satisfy this requirement.
   Five front-end and ten back-end developers are working on 'AppA'.
   Only one developer is tasked with maintaining the Data Grid, but there are five total developers who work on the front-end.
-  Company 'A' must purchase five seats.
+  Company 'A' must purchase five licenses.
 
 - **Example 2.** A UI development team at Company 'B' creates its own UI library for internal development that includes MUI X Pro components.
   The teams working on 'AppY' and 'AppZ' both adopt this new library.
   'AppY' has five front-end developers, and 'AppZ' has three; additionally, there are two front-end developers on the company's UI development team.
-  Company 'B' must purchase ten seats.
+  Company 'B' must purchase ten licenses.
 
 This is [the relevant clause in the EULA.](https://mui.com/legal/mui-x-eula/#required-quantity-of-licenses)
 
@@ -281,6 +283,15 @@ However, when the term ends, you are not allowed to use the current or older ver
 
 To solve the issue, you can [renew your license](https://mui.com/r/x-get-license/) or stop making changes to code depending on MUI X's APIs.
 
+:::warning
+Make sure to set `process.env.NODE_ENV` to `'production'` in your build process to avoid the watermark in production.
+Most bundlers set this environment variable automatically when building for production, but for custom setups, you might need to set it manually.
+
+Note that `NODE_ENV=production` is not MUI X-specific and is a common practice in the JavaScript ecosystem.
+It allows bundlers and libraries to optimize the output for production and eliminate dead code, so it's worth checking if it's set correctly in your project.
+See related documentation for [Webpack](https://webpack.js.org/guides/production/#specify-the-mode), [Node.js](https://nodejs.org/en/learn/getting-started/nodejs-the-difference-between-development-and-production) and [Next.js](https://nextjs.org/docs/messages/non-standard-node-env) for more information.
+:::
+
 ### 4. License key plan mismatch
 
 This error indicates that your use of MUI X is not compatible with the plan of your license key.
@@ -290,7 +301,19 @@ This happens if you try to use `DataGridPremium` with a license key for the Pro 
 To solve the issue, you can [upgrade your plan](https://mui.com/r/x-get-license/?scope=premium) from Pro to Premium.
 Or if you didn\'t intend to use Premium features, you can replace the import of `@mui/x-data-grid-premium` with `@mui/x-data-grid-pro`.
 
-### 5. Invalid license key
+### 5. Component not included in your license
+
+This error indicates that the component you are trying to use is not covered by your current license.
+This happens if you try to use `ChartsPro` or `TreeViewPro` with a license that does not cover these products.
+
+To solve the issue, please consider an earlier [renewal](https://mui.com/r/x-get-license/).
+
+You might be eligible for a discount if you have an active Pro license.
+Contact [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%20discount) for additional information.
+
+Or if you didn't intend to use the Pro features, you can replace the import of `@mui/x-charts-pro` or `@mui/x-tree-view-pro` with `@mui/x-charts` or `@mui/x-tree-view` respectively.
+
+### 6. Invalid license key
 
 This error indicates that your MUI X license key format isn't valid.
 It could be because the license key is missing a character or has a typo.
@@ -298,7 +321,7 @@ It could be because the license key is missing a character or has a typo.
 To solve the issue, you need to double-check that `setLicenseKey()` is called with the right argument.
 Please check the [license key installation](/x/introduction/licensing/#license-key).
 
-### 6. Invalid license key (TypeError: extracting license expiry timestamp)
+### 7. Invalid license key (TypeError: extracting license expiry timestamp)
 
 The following JavaScript exception indicates that you may be trying to validate the new license's key format on an older version of the npm package.
 
