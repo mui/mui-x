@@ -182,6 +182,7 @@ LineChartPro.propTypes = {
     itemMarkWidth: PropTypes.number,
     labelStyle: PropTypes.object,
     markGap: PropTypes.number,
+    onItemClick: PropTypes.func,
     padding: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.shape({
