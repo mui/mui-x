@@ -5,7 +5,7 @@ import {
 import { useField } from '../internals/hooks/useField';
 import { UseDateTimeFieldProps } from './DateTimeField.types';
 import { validateDateTime } from '../internals/utils/validation/validateDateTime';
-import { useSplitFieldInternalAndForwardedProps } from '../hooks';
+import { useSplitFieldProps } from '../hooks';
 import { FieldSection, PickerValidDate } from '../models';
 import { useDefaultizedDateTimeField } from '../internals/hooks/defaultizedFieldProps';
 
@@ -22,10 +22,7 @@ export const useDateTimeField = <
     TAllProps
   >(inProps);
 
-  const { forwardedProps, internalProps } = useSplitFieldInternalAndForwardedProps(
-    props,
-    'date-time',
-  );
+  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date-time');
 
   return useField<
     TDate | null,

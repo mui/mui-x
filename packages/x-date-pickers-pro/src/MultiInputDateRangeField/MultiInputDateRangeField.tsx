@@ -12,7 +12,7 @@ import {
   unstable_generateUtilityClasses as generateUtilityClasses,
 } from '@mui/utils';
 import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
-import { useSplitFieldInternalAndForwardedProps } from '@mui/x-date-pickers/hooks';
+import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import {
@@ -89,10 +89,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     name: 'MuiMultiInputDateRangeField',
   });
 
-  const { internalProps, forwardedProps } = useSplitFieldInternalAndForwardedProps(
-    themeProps,
-    'date',
-  );
+  const { internalProps, forwardedProps } = useSplitFieldProps(themeProps, 'date');
 
   const {
     slots,

@@ -8,4 +8,4 @@ export type {
 
 export { usePickersTranslations } from './usePickersTranslations';
 
-export { useSplitFieldInternalAndForwardedProps } from './useSplitFieldInternalAndForwardedProps';
+export { useSplitFieldProps } from './useSplitFieldProps';
