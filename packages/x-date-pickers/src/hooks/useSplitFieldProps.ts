@@ -41,7 +41,7 @@ type InternalPropNames<TValueType extends FieldValueType> =
  * @param {TProps} props The props received by the field component.
  * @param {TValueType} valueType The type of the field value ('date', 'time', or 'date-time').
  */
-export const useSplitFieldInternalAndForwardedProps = <
+export const useSplitFieldProps = <
   TValueType extends FieldValueType,
   TProps extends { [key in InternalPropNames<TValueType>]?: any },
 >(

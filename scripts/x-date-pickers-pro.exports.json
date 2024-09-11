@@ -424,7 +424,7 @@
   { "name": "UseSingleInputDateRangeFieldProps", "kind": "Interface" },
   { "name": "UseSingleInputDateTimeRangeFieldProps", "kind": "Interface" },
   { "name": "UseSingleInputTimeRangeFieldProps", "kind": "Interface" },
-  { "name": "useSplitFieldInternalAndForwardedProps", "kind": "Variable" },
+  { "name": "useSplitFieldProps", "kind": "Variable" },
   { "name": "UseTimeFieldComponentProps", "kind": "TypeAlias" },
   { "name": "UseTimeFieldProps", "kind": "Interface" },
   { "name": "useValidation", "kind": "Function" },

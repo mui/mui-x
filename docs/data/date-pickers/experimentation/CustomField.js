@@ -6,14 +6,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
-
-import { useSplitFieldInternalAndForwardedProps } from '@mui/x-date-pickers/hooks';
+import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 
 function ReadOnlyField(props) {
-  const { internalProps, forwardedProps } = useSplitFieldInternalAndForwardedProps(
-    props,
-    'date',
-  );
+  const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
 
   const { value, timezone, format } = internalProps;
   const { InputProps, slotProps, slots, ...other } = forwardedProps;
