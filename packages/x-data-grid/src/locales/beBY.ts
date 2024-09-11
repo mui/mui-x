@@ -81,7 +81,9 @@ const beBYGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'змяшчае',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'роўны',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'пачынаецца з',
   filterOperatorEndsWith: 'скончваецца на',
   filterOperatorIs: 'роўны',
@@ -102,7 +104,9 @@ const beBYGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   // headerFilterOperatorStartsWith: 'Starts with',
   // headerFilterOperatorEndsWith: 'Ends with',
   // headerFilterOperatorIs: 'Is',
