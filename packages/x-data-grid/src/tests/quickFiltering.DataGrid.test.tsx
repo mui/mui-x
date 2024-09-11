@@ -16,7 +16,7 @@ import { getColumnValues, sleep } from 'test/utils/helperFn';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Quick filter', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render, clock } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -61,6 +61,12 @@ describe('<DataGrid /> - Quick filter', () => {
   }
 
   describe('component', () => {
+    clock.withFakeTimers();
+
+    after(() => {
+      clock.restore();
+    });
+
     it('should apply filter', () => {
       render(<TestCase />);
 
@@ -162,6 +168,12 @@ describe('<DataGrid /> - Quick filter', () => {
   });
 
   describe('quick filter logic', () => {
+    clock.withFakeTimers();
+
+    after(() => {
+      clock.restore();
+    });
+
     it('should return rows that match all values by default', () => {
       render(<TestCase />);
 
@@ -392,6 +404,12 @@ describe('<DataGrid /> - Quick filter', () => {
   });
 
   describe('column type: string', () => {
+    clock.withFakeTimers();
+
+    after(() => {
+      clock.restore();
+    });
+
     const getRows = ({ quickFilterValues }: Pick<GridFilterModel, 'quickFilterValues'>) => {
       const { unmount } = render(
         <TestCase
@@ -500,6 +518,12 @@ describe('<DataGrid /> - Quick filter', () => {
   });
 
   describe('column type: number', () => {
+    clock.withFakeTimers();
+
+    after(() => {
+      clock.restore();
+    });
+
     const getRows = ({ quickFilterValues }: Pick<GridFilterModel, 'quickFilterValues'>) => {
       const { unmount } = render(
         <TestCase
@@ -552,6 +576,12 @@ describe('<DataGrid /> - Quick filter', () => {
   });
 
   describe('column type: singleSelect', () => {
+    clock.withFakeTimers();
+
+    after(() => {
+      clock.restore();
+    });
+
     const getRows = ({ quickFilterValues }: Pick<GridFilterModel, 'quickFilterValues'>) => {
       const { unmount } = render(
         <TestCase
