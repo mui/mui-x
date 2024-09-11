@@ -170,7 +170,7 @@
     "karma-webpack": "^5.0.1",
     "lerna": "^8.1.8",
     "lodash": "^4.17.21",
-    "markdownlint-cli2": "^0.13.0",
+    "markdownlint-cli2": "^0.14.0",
     "mocha": "^10.7.3",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
