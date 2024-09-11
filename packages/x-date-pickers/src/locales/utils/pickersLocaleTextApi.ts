@@ -59,6 +59,7 @@ export interface PickersComponentAgnosticLocaleText<TDate extends PickerValidDat
   clearButtonLabel: string;
   okButtonLabel: string;
   todayButtonLabel: string;
+  nextButtonLabel: string;
 
   // Clock labels
   clockLabelText: (view: TimeView, time: TDate | null, adapter: MuiPickersAdapter<TDate>) => string;

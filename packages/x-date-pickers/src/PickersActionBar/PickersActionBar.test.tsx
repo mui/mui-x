@@ -12,6 +12,7 @@ describe('<PickersActionBar />', () => {
     const onAccept = () => {};
     const onClear = () => {};
     const onCancel = () => {};
+    const onNext = () => {};
     const onSetToday = () => {};
     render(
       <PickersActionBar
@@ -20,6 +21,7 @@ describe('<PickersActionBar />', () => {
         onClear={onClear}
         onCancel={onCancel}
         onSetToday={onSetToday}
+        onNext={onNext}
       />,
     );
 
@@ -30,6 +32,7 @@ describe('<PickersActionBar />', () => {
     const onAccept = spy();
     const onClear = spy();
     const onCancel = spy();
+    const onNext = spy();
     const onSetToday = spy();
 
     const { user } = render(
@@ -38,6 +41,7 @@ describe('<PickersActionBar />', () => {
         onAccept={onAccept}
         onClear={onClear}
         onCancel={onCancel}
+        onNext={onNext}
         onSetToday={onSetToday}
       />,
     );
@@ -50,6 +54,7 @@ describe('<PickersActionBar />', () => {
     const onAccept = spy();
     const onClear = spy();
     const onCancel = spy();
+    const onNext = spy();
     const onSetToday = spy();
 
     const { user } = render(
@@ -58,6 +63,7 @@ describe('<PickersActionBar />', () => {
         onAccept={onAccept}
         onClear={onClear}
         onCancel={onCancel}
+        onNext={onNext}
         onSetToday={onSetToday}
       />,
     );
@@ -70,6 +76,7 @@ describe('<PickersActionBar />', () => {
     const onAccept = spy();
     const onClear = spy();
     const onCancel = spy();
+    const onNext = spy();
     const onSetToday = spy();
 
     const { user } = render(
@@ -78,6 +85,7 @@ describe('<PickersActionBar />', () => {
         onAccept={onAccept}
         onClear={onClear}
         onCancel={onCancel}
+        onNext={onNext}
         onSetToday={onSetToday}
       />,
     );
@@ -90,6 +98,7 @@ describe('<PickersActionBar />', () => {
     const onAccept = spy();
     const onClear = spy();
     const onCancel = spy();
+    const onNext = spy();
     const onSetToday = spy();
 
     const { user } = render(
@@ -98,6 +107,7 @@ describe('<PickersActionBar />', () => {
         onAccept={onAccept}
         onClear={onClear}
         onCancel={onCancel}
+        onNext={onNext}
         onSetToday={onSetToday}
       />,
     );
@@ -110,6 +120,7 @@ describe('<PickersActionBar />', () => {
     const onAccept = () => {};
     const onClear = () => {};
     const onCancel = () => {};
+    const onNext = () => {};
     const onSetToday = () => {};
     render(
       <PickersActionBar
@@ -117,6 +128,7 @@ describe('<PickersActionBar />', () => {
         onAccept={onAccept}
         onClear={onClear}
         onCancel={onCancel}
+        onNext={onNext}
         onSetToday={onSetToday}
       />,
     );

@@ -232,6 +232,7 @@ export const useMobileRangePicker = <
           {...slotProps?.layout}
           slots={slots}
           slotProps={slotPropsForLayout}
+          rangePosition={rangePosition}
         >
           {renderCurrentView()}
         </Layout>

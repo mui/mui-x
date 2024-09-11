@@ -34,7 +34,7 @@ import {
 } from '../internals/hooks/useDesktopRangePicker';
 import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
 import { DateTimeRangePickerView } from '../internals/models';
-import { DateRange } from '../models';
+import { DateRange, RangePosition } from '../models';
 import {
   DateTimeRangePickerRenderers,
   useDateTimeRangePickerDefaultizedProps,
@@ -166,8 +166,14 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
   const views = !shouldHoursRendererContainMeridiemView
     ? defaultizedProps.views.filter((view) => view !== 'meridiem')
     : defaultizedProps.views;
-  const actionBarActions: PickersActionBarAction[] =
-    defaultizedProps.shouldRenderTimeInASingleColumn ? [] : ['accept'];
+  const getActionBarActions: (rangePosition: RangePosition) => PickersActionBarAction[] = (
+    rangePosition,
+  ) => {
+    if (defaultizedProps.shouldRenderTimeInASingleColumn) {
+      return [];
+    }
+    return rangePosition === 'start' ? ['next'] : ['accept'];
+  };
 
   const props = {
     ...defaultizedProps,
@@ -198,10 +204,12 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
         toolbarVariant: 'desktop',
         ...defaultizedProps.slotProps?.toolbar,
       },
-      actionBar: (ownerState: any) => ({
-        actions: actionBarActions,
-        ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
-      }),
+      actionBar: (ownerState: any) => {
+        return {
+          actions: getActionBarActions(ownerState.rangePosition),
+          ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
+        };
+      },
     },
   };
 

@@ -45,9 +45,9 @@ export interface UsePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
   TSection extends FieldSection,
   TExternalProps extends UsePickerProps<TValue, TDate, TView, any, any, any>,
-  TAdditionalProps extends {},
+  TAdditionalProps extends {} = {},
 > extends Pick<
-      UsePickerValueParams<TValue, TDate, TExternalProps>,
+      UsePickerValueParams<TValue, TDate, TExternalProps, TAdditionalProps>,
       'valueManager' | 'valueType' | 'wrapperVariant' | 'validator'
     >,
     Pick<

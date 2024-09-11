@@ -4,6 +4,7 @@ import { extractValidationProps, PickerViewRendererLookup } from '@mui/x-date-pi
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
+import { PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileDateRangePickerProps } from './MobileDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
@@ -11,7 +12,7 @@ import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateDateRange } from '../internals/utils/validation/validateDateRange';
-import { DateRange } from '../models';
+import { DateRange, RangePosition } from '../models';
 
 type MobileDateRangePickerComponent = (<
   TDate extends PickerValidDate,
@@ -49,6 +50,12 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
     ...defaultizedProps.viewRenderers,
   };
 
+  const getActionBarActions: (rangePosition: RangePosition) => PickersActionBarAction[] = (
+    rangePosition,
+  ) => {
+    return rangePosition === 'start' ? ['cancel', 'next'] : ['cancel', 'accept'];
+  };
+
   const props = {
     ...defaultizedProps,
     viewRenderers,
@@ -70,6 +77,12 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
       toolbar: {
         hidden: false,
         ...defaultizedProps.slotProps?.toolbar,
+      },
+      actionBar: (ownerState: any) => {
+        return {
+          actions: getActionBarActions(ownerState.rangePosition),
+          ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
+        };
       },
     },
   };

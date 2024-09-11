@@ -239,6 +239,7 @@ export const useDesktopRangePicker = <
           {...slotProps?.layout}
           slots={slots}
           slotProps={slotPropsForLayout}
+          rangePosition={rangePosition}
         >
           {renderCurrentView()}
         </Layout>
