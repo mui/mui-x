@@ -283,7 +283,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           columnHeaderFocus.field === siblingWithBorderingSeparator.field
         : false;
       const isLastUnpinned =
-        columnIndex + 1 === columnPositions.length - 1 - (pinnedColumns.right.length - 1);
+        columnIndex + 1 === columnPositions.length - pinnedColumns.right.length;
 
       columns.push(
         <GridColumnHeaderItem
