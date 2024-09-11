@@ -215,7 +215,7 @@ export interface InterfaceApiContent {
       type: { description: string };
       default?: string;
       required?: true;
-      plan?: 'pro' | 'premium' | 'community';
+      plan?: 'pro' | 'premium';
     };
   };
 }
@@ -368,7 +368,10 @@ export async function buildInterfacesDocumentationPage(
         return 1;
       })
       .forEach(({ name, description, type, default: defaultValue, required, planLevel }) => {
-        content.properties[name] = { type, plan: planLevel };
+        content.properties[name] = {
+          type,
+          ...(planLevel === 'community' ? {} : { plan: planLevel }), // Don't add noise with community plan as default
+        };
         if (defaultValue) {
           content.properties[name].default = defaultValue;
         }

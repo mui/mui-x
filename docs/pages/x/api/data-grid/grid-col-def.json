@@ -8,16 +8,9 @@
   "demos": "<ul><li><a href=\"/x/react-data-grid/column-definition/\">Column definition</a></li></ul>",
   "properties": {
     "field": { "type": { "description": "string" }, "required": true },
-    "aggregable": {
-      "type": { "description": "boolean" },
-      "default": "true",
-      "isPremiumPlan": true
-    },
+    "aggregable": { "type": { "description": "boolean" }, "plan": "premium", "default": "true" },
     "align": { "type": { "description": "GridAlignment" } },
-    "availableAggregationFunctions": {
-      "type": { "description": "string[]" },
-      "isPremiumPlan": true
-    },
+    "availableAggregationFunctions": { "type": { "description": "string[]" }, "plan": "premium" },
     "cellClassName": { "type": { "description": "GridCellClassNamePropType&lt;R, V&gt;" } },
     "colSpan": {
       "type": { "description": "number | GridColSpanFn&lt;R, V, F&gt;" },
@@ -43,7 +36,7 @@
     "groupable": { "type": { "description": "boolean" }, "default": "true" },
     "groupingValueGetter": {
       "type": { "description": "GridGroupingValueGetter&lt;R&gt;" },
-      "isPremiumPlan": true
+      "plan": "premium"
     },
     "headerAlign": { "type": { "description": "GridAlignment" } },
     "headerClassName": { "type": { "description": "GridColumnHeaderClassNamePropType" } },
@@ -54,7 +47,7 @@
     "minWidth": { "type": { "description": "number" }, "default": "50" },
     "pastedValueParser": {
       "type": { "description": "GridPastedValueParser&lt;R, V, F&gt;" },
-      "isPremiumPlan": true
+      "plan": "premium"
     },
     "pinnable": { "type": { "description": "boolean" }, "default": "true" },
     "preProcessEditCellProps": {
@@ -79,7 +72,7 @@
     },
     "renderHeaderFilter": {
       "type": { "description": "(params: GridRenderHeaderFilterProps) =&gt; React.ReactNode" },
-      "isProPlan": true
+      "plan": "pro"
     },
     "resizable": { "type": { "description": "boolean" }, "default": "true" },
     "sortable": { "type": { "description": "boolean" }, "default": "true" },
