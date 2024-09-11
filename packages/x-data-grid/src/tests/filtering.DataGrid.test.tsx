@@ -1252,6 +1252,30 @@ describe('<DataGrid /> - Filter', () => {
       );
     });
 
+    it('should filter with operator "isNotAnyOf"', () => {
+      // With simple options
+      expect(
+        getRows({ field: 'country', operator: 'isNotAnyOf', value: ['United States'] }).country,
+      ).to.deep.equal(['Germany', 'France']);
+      expect(
+        getRows({ field: 'country', operator: 'isNotAnyOf', value: [] }).country,
+      ).to.deep.equal(ALL_ROWS_COUNTRY);
+      expect(
+        getRows({ field: 'country', operator: 'isNotAnyOf', value: undefined }).country,
+      ).to.deep.equal(ALL_ROWS_COUNTRY);
+
+      // With object options
+      expect(getRows({ field: 'year', operator: 'isNotAnyOf', value: [1974] }).year).to.deep.equal([
+        'Year 1984',
+      ]);
+      expect(getRows({ field: 'year', operator: 'isNotAnyOf', value: [] }).year).to.deep.equal(
+        ALL_ROWS_YEAR,
+      );
+      expect(
+        getRows({ field: 'year', operator: 'isNotAnyOf', value: undefined }).year,
+      ).to.deep.equal(ALL_ROWS_YEAR);
+    });
+
     it('should support `valueParser`', () => {
       const valueOptions = [
         { value: 'Status 0', label: 'Payment Pending' },

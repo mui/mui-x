@@ -2,12 +2,27 @@ import { GridFilterInputSingleSelect } from '../components/panel/filterPanel/Gri
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridFilterInputMultipleSingleSelect } from '../components/panel/filterPanel/GridFilterInputMultipleSingleSelect';
 import { isObject } from '../utils/utils';
+import { GridFilterItem } from '../models';
 
 const parseObjectValue = (value: unknown) => {
   if (value == null || !isObject<{ value: unknown }>(value)) {
     return value;
   }
   return value.value;
+};
+
+const createAnyFilterFn = (negate: boolean) => (filterItem: GridFilterItem) => {
+  if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
+    return null;
+  }
+  const filterItemValues = filterItem.value.map(parseObjectValue);
+  return (value: unknown): boolean => {
+    if (value == null) {
+      return negate;
+    }
+    const isAnyOf = filterItemValues.includes(parseObjectValue(value));
+    return negate ? !isAnyOf : isAnyOf;
+  };
 };
 
 export const getGridSingleSelectOperators = (): GridFilterOperator[] => [
@@ -33,13 +48,12 @@ export const getGridSingleSelectOperators = (): GridFilterOperator[] => [
   },
   {
     value: 'isAnyOf',
-    getApplyFilterFn: (filterItem) => {
-      if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
-        return null;
-      }
-      const filterItemValues = filterItem.value.map(parseObjectValue);
-      return (value): boolean => filterItemValues.includes(parseObjectValue(value));
-    },
+    getApplyFilterFn: createAnyFilterFn(false),
+    InputComponent: GridFilterInputMultipleSingleSelect,
+  },
+  {
+    value: 'isNotAnyOf',
+    getApplyFilterFn: createAnyFilterFn(true),
     InputComponent: GridFilterInputMultipleSingleSelect,
   },
 ];
