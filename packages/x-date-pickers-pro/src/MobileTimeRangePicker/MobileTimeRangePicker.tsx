@@ -4,7 +4,6 @@ import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DefaultizedProps,
   DIALOG_WIDTH,
-  extractValidationProps,
   isInternalTimeView,
   PickerViewRenderer,
   PickerViewsRendererProps,
@@ -13,7 +12,7 @@ import {
   useUtils,
   VIEW_HEIGHT,
 } from '@mui/x-date-pickers/internals';
-import { resolveComponentProps } from '@mui/base/utils';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import refType from '@mui/utils/refType';
 import {
   multiSectionDigitalClockClasses,
@@ -24,6 +23,7 @@ import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
 } from '@mui/x-date-pickers/timeViewRenderers';
+import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileTimeRangePickerProps } from './MobileTimeRangePicker.types';
 import {
@@ -35,7 +35,7 @@ import {
   useMobileRangePicker,
   UseMobileRangePickerProps,
 } from '../internals/hooks/useMobileRangePicker';
-import { validateTimeRange } from '../internals/utils/validation/validateTimeRange';
+import { validateTimeRange } from '../validation/validateTimeRange';
 import { DateRange } from '../models';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';

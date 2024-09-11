@@ -9,7 +9,6 @@ import {
   PickersToolbarButton,
   useUtils,
   BaseToolbarProps,
-  useLocaleText,
   ExportedBaseToolbarProps,
   WrapperVariant,
   TimeViewWithMeridiem,
@@ -20,6 +19,7 @@ import {
   pickersToolbarClasses,
   pickersToolbarTextClasses,
 } from '@mui/x-date-pickers/internals';
+import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   TimeRangePickerToolbarClasses,
@@ -201,7 +201,7 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar<
     ...other
   } = props;
 
-  const localeText = useLocaleText<TDate>();
+  const translations = usePickersTranslations<TDate>();
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
@@ -229,7 +229,7 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar<
   return (
     <TimeRangePickerToolbarRoot
       {...other}
-      toolbarTitle={localeText.timeRangePickerToolbarTitle}
+      toolbarTitle={translations.timeRangePickerToolbarTitle}
       className={clsx(className, classes.root)}
       ownerState={ownerState}
       ref={ref}

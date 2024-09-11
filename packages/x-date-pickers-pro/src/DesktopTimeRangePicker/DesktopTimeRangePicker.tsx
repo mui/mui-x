@@ -1,13 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { resolveComponentProps } from '@mui/base/utils';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import {
-  extractValidationProps,
-  TimeViewWithMeridiem,
-  useUtils,
-  resolveTimeFormat,
-} from '@mui/x-date-pickers/internals';
+import { TimeViewWithMeridiem, useUtils, resolveTimeFormat } from '@mui/x-date-pickers/internals';
+import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopTimeRangePickerProps } from './DesktopTimeRangePicker.types';
 import {
@@ -16,7 +12,7 @@ import {
 } from '../TimeRangePicker/shared';
 import { MultiInputTimeRangeField } from '../MultiInputTimeRangeField';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
-import { validateTimeRange } from '../internals/utils/validation/validateTimeRange';
+import { validateTimeRange } from '../validation/validateTimeRange';
 import {
   renderDigitalClockTimeRangeView,
   renderMultiSectionDigitalClockTimeRangeView,

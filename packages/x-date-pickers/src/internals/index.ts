@@ -134,10 +134,9 @@ export {
   mergeDateAndTime,
   formatMeridiem,
 } from './utils/date-utils';
-export { resolveTimeViewsResponse, resolveDateTimeFormat } from './utils/date-time-utils';
 export { getDefaultReferenceDate } from './utils/getDefaultReferenceDate';
 export { isTimeView, isInternalTimeView, resolveTimeFormat, getMeridiem } from './utils/time-utils';
-export { resolveDateTimeFormat } from './utils/date-time-utils';
+export { resolveTimeViewsResponse, resolveDateTimeFormat } from './utils/date-time-utils';
 export {
   executeInTheNextEventLoopTick,
   getActiveElement,
