@@ -8,12 +8,16 @@ import {
   getActiveElement,
   usePicker,
   PickersPopper,
-  InferError,
   ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate, FieldRef, BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
+import {
+  PickerValidDate,
+  FieldRef,
+  BaseSingleInputFieldProps,
+  InferError,
+} from '@mui/x-date-pickers/models';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,

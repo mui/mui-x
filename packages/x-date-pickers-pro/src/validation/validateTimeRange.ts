@@ -1,34 +1,30 @@
-import { TimezoneProps } from '@mui/x-date-pickers/models';
-import {
-  Validator,
-  validateTime,
-  BaseTimeValidationProps,
-  DefaultizedProps,
-} from '@mui/x-date-pickers/internals';
-import { isRangeValid } from '../date-utils';
-import { TimeRangeValidationError, DateRange } from '../../../models';
+import { validateTime, Validator } from '@mui/x-date-pickers/validation';
+import { BaseTimeValidationProps } from '@mui/x-date-pickers/internals';
+import { isRangeValid } from '../internals/utils/date-utils';
+import { TimeRangeValidationError, DateRange } from '../models';
+import { rangeValueManager } from '../internals/utils/valueManagers';
 
-export interface TimeRangeComponentValidationProps
-  extends Required<BaseTimeValidationProps>,
-    DefaultizedProps<TimezoneProps, 'timezone'> {}
+export interface ValidateTimeRangeProps extends Required<BaseTimeValidationProps> {}
 
 export const validateTimeRange: Validator<
   DateRange<any>,
   any,
   TimeRangeValidationError,
-  TimeRangeComponentValidationProps
-> = ({ props, value, adapter }) => {
+  ValidateTimeRangeProps
+> = ({ adapter, value, timezone, props }) => {
   const [start, end] = value;
 
   const dateTimeValidations: TimeRangeValidationError = [
     validateTime({
       adapter,
       value: start,
+      timezone,
       props,
     }),
     validateTime({
       adapter,
       value: end,
+      timezone,
       props,
     }),
   ];
@@ -48,3 +44,5 @@ export const validateTimeRange: Validator<
 
   return [null, null];
 };
+
+validateTimeRange.valueManager = rangeValueManager;

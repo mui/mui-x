@@ -14,12 +14,12 @@ import {
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
-import { InferError } from '../useValidation';
 import {
   FieldSection,
   PickerValidDate,
   FieldRef,
   BaseSingleInputFieldProps,
+  InferError,
 } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 

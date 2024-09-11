@@ -6,7 +6,7 @@ import {
   MonthValidationProps,
   TimeValidationProps,
   YearValidationProps,
-} from '../../models/validation';
+} from '../internals/models/validation';
 
 export const DATE_VALIDATION_PROP_NAMES: (
   | keyof BaseDateValidationProps<any>

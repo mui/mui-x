@@ -4,7 +4,6 @@ import { refType } from '@mui/utils';
 import {
   DIALOG_WIDTH,
   VIEW_HEIGHT,
-  extractValidationProps,
   isInternalTimeView,
   isDatePickerView,
   PickerViewRenderer,
@@ -14,6 +13,7 @@ import {
   resolveDateTimeFormat,
   useUtils,
 } from '@mui/x-date-pickers/internals';
+import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import {
@@ -32,7 +32,7 @@ import {
   UseMobileRangePickerProps,
   useMobileRangePicker,
 } from '../internals/hooks/useMobileRangePicker';
-import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
+import { validateDateTimeRange } from '../validation';
 import { DateTimeRangePickerView } from '../internals/models';
 import { DateRange } from '../models';
 import {

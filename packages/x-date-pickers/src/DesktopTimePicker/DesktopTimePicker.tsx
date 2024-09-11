@@ -8,10 +8,9 @@ import { DesktopTimePickerProps } from './DesktopTimePicker.types';
 import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
-import { validateTime } from '../internals/utils/validation/validateTime';
+import { extractValidationProps, validateTime } from '../validation';
 import { ClockIcon } from '../icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
-import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,

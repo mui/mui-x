@@ -4,7 +4,7 @@ import {
 } from '../internals/utils/valueManagers';
 import { useField } from '../internals/hooks/useField';
 import { UseDateTimeFieldProps } from './DateTimeField.types';
-import { validateDateTime } from '../internals/utils/validation/validateDateTime';
+import { validateDateTime } from '../validation';
 import { useSplitFieldProps } from '../hooks';
 import { FieldSection, PickerValidDate } from '../models';
 import { useDefaultizedDateTimeField } from '../internals/hooks/defaultizedFieldProps';
