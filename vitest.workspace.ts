@@ -10,7 +10,7 @@ export default defineWorkspace(
       plugins: [react()],
       test: {
         include: [`packages/x-${name}/**/*.test.tsx`],
-        name: `${name}/browser`,
+        name: `browser/${name}`,
         browser: {
           enabled: true,
           name: 'chromium',
@@ -27,7 +27,7 @@ export default defineWorkspace(
       plugins: [react()],
       test: {
         include: [`packages/x-${name}/**/*.test.tsx`],
-        name: `${name}/jsdom`,
+        name: `jsdom/${name}`,
         environment: 'jsdom',
       },
     },

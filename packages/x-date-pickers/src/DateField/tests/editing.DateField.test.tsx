@@ -2086,8 +2086,8 @@ describe('<DateField /> - Editing', () => {
       let originalUserAgent: string = '';
 
       beforeEach(() => {
-        originalUserAgent = global.navigator.userAgent;
-        Object.defineProperty(global.navigator, 'userAgent', {
+        originalUserAgent = globalThis.navigator.userAgent;
+        Object.defineProperty(globalThis.navigator, 'userAgent', {
           configurable: true,
           writable: true,
           value:
@@ -2096,7 +2096,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       afterEach(() => {
-        Object.defineProperty(global.navigator, 'userAgent', {
+        Object.defineProperty(globalThis.navigator, 'userAgent', {
           configurable: true,
           value: originalUserAgent,
         });
