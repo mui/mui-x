@@ -75,7 +75,7 @@ It's published under an [MIT license](https://www.tldrlegal.com/license/mit-lice
 #### Pro plan
 
 MUI X Pro expands on the Community version with more advanced features and functionality.
-The Data Grid Pro comes with multi-filtering, multi-sorting, column resizing, and column pinning; you also gain access to the Date and Time Range Picker components,advanced Charts, and drag-and-drop reordering for the Tree View.
+The Data Grid Pro comes with multi-filtering, multi-sorting, column resizing, and column pinning; you also gain access to the Date and Time Range Picker components, advanced Charts, and drag-and-drop reordering for the Tree View.
 
 The Pro version is available under a commercial license—visit the [Pricing page](https://mui.com/pricing/) for details.
 
