@@ -1,12 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
+import { warnOnce } from '@mui/x-internals/warning';
 import { animated, useSpring } from '@react-spring/web';
 import { InteractionContext } from '../context/InteractionProvider';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../context';
 import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
-import { warnOnce } from '../internals/warning';
 
 export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
