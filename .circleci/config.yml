@@ -36,7 +36,7 @@ default-job: &default-job
     REACT_VERSION: << parameters.react-version >>
   working_directory: /tmp/mui
   docker:
-    - image: cimg/node:18.20
+    - image: cimg/node:20.17
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
 # are working on providing this feature back with appropriate security measures.
@@ -211,6 +211,12 @@ jobs:
           command: pnpm l10n
       - run:
           name: '`pnpm l10n` changes committed?'
+          command: git add -A && git diff --exit-code --staged
+      - run:
+          name: Sync RSC "use client" directives
+          command: pnpm rsc:build
+      - run:
+          name: '`pnpm rsc:build` changes committed?'
           command: git add -A && git diff --exit-code --staged
       - run:
           name: '`pnpm docs:link-check` changes committed?'

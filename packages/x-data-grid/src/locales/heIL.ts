@@ -58,7 +58,9 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'מכיל',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'שווה',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'מתחיל ב-',
   filterOperatorEndsWith: 'נגמר ב-',
   filterOperatorIs: 'הינו',
@@ -79,7 +81,9 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'מכיל',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'שווה',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'מתחיל ב-',
   headerFilterOperatorEndsWith: 'נגמר ב-',
   headerFilterOperatorIs: 'הינו',
