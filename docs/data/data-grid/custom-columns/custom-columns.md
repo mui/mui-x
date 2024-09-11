@@ -44,6 +44,18 @@ You can change the date format by importing different locale (`en-US` locale is 
 See [Localization](/x/react-date-pickers/localization/) for more information.
 :::
 
+## Full example
+
+The demo below shows the most common custom column renderers used across our demos.
+
+:::success
+You can copy the column definitions and custom cell renderers from the demo source code.
+
+All column definitions are located in the main component file, while each cell renderer is in a separate file.
+:::
+
+{{"demo": "CustomColumnFullExample.js", "bg": "inline"}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
