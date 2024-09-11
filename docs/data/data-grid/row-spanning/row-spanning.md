@@ -25,7 +25,7 @@ The row spanning generally works with features like [sorting](/x/react-data-grid
 :::
 
 :::warning
-The row spanning works by increasing the height of the spanned cell by a factor `rowHeight`, it doesn't work properly with variable and dynamic row height.
+The row spanning works by increasing the height of the spanned cell by a factor of `rowHeight`, it doesn't work properly with variable and dynamic row height.
 :::
 
 ## Customizing row spanned cells

@@ -51,7 +51,6 @@ const columns = [
       return `${value} yo`;
     },
     rowSpanValueGetter: (value, row) => {
-      console.log(row);
       return row ? `${row.name}-${row.age}` : value;
     },
   },
