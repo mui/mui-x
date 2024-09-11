@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { ValidateDateProps, validateDate } from '../validation';
 import { useLocalizationContext } from '../internals/hooks/useUtils';

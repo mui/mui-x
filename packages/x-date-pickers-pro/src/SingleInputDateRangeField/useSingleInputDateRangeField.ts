@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { useField, useDefaultizedDateField } from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';

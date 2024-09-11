@@ -29,6 +29,7 @@
     "prettier:all": "prettier --write . --ignore-path .eslintignore",
     "prettier:check": "prettier --check . --ignore-path .eslintignore",
     "proptypes": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@mui)/\" -x .ts,.tsx,.js ./docs/scripts/generateProptypes.ts",
+    "rsc:build": "tsx ./packages/rsc-builder/buildRsc.ts",
     "size:snapshot": "node --max-old-space-size=2048 ./scripts/sizeSnapshot/create",
     "size:why": "pnpm size:snapshot --analyze --accurateBundles",
     "tc": "node test/cli.js",
