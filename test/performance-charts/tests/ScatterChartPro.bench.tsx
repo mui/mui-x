@@ -36,7 +36,7 @@ describe('ScatterChartPro', () => {
         />,
       );
 
-      await findByText('80', { ignore: 'span' });
+      await findByText('70', { ignore: 'span' });
     },
     options,
   );

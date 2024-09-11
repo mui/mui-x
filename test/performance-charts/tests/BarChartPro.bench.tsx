@@ -36,7 +36,7 @@ describe('BarChartPro', () => {
         />,
       );
 
-      await findByText('80', { ignore: 'span' });
+      await findByText('60', { ignore: 'span' });
     },
     options,
   );
