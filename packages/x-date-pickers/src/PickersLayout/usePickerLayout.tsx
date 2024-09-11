@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { PickersActionBar } from '../PickersActionBar';
+import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
 import { PickersLayoutProps, SubComponents } from './PickersLayout.types';
 import { getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import { PickersShortcuts } from '../PickersShortcuts';
@@ -85,6 +85,8 @@ const usePickerLayout = <
       onCancel,
       onSetToday,
       onNext,
+      actions:
+        wrapperVariant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
     },
     className: classes.actionBar,
     ownerState: { ...props, wrapperVariant },
