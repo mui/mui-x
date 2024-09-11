@@ -104,11 +104,9 @@ describe('<MobileDateTimePicker />', () => {
       expect(screen.queryByRole('dialog')).toBeVisible();
     });
 
-    it('should call onChange when selecting each view', function test(t = {}) {
+    it('should call onChange when selecting each view', function test() {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
+        this.skip();
       }
 
       const onChange = spy();

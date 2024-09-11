@@ -35,12 +35,10 @@ describe('<StaticTimePicker />', () => {
     ],
   }));
 
-  it('should allow view modification, but not update value when `readOnly` prop is passed', function test(t = {}) {
+  it('should allow view modification, but not update value when `readOnly` prop is passed', function test() {
     // Only run in supported browsers
     if (typeof Touch === 'undefined') {
-      // @ts-expect-error to support mocha and vitest
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      this?.skip?.() || t?.skip();
+      this.skip();
     }
     const selectEvent = {
       changedTouches: [
@@ -87,12 +85,10 @@ describe('<StaticTimePicker />', () => {
     expect(disabledHours.length).to.equal(0);
   });
 
-  it('should allow switching between views and display disabled options when `disabled` prop is passed', function test(t = {}) {
+  it('should allow switching between views and display disabled options when `disabled` prop is passed', function test() {
     // Only run in supported browsers
     if (typeof Touch === 'undefined') {
-      // @ts-expect-error to support mocha and vitest
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      this?.skip?.() || t?.skip();
+      this.skip();
     }
     const selectEvent = {
       changedTouches: [

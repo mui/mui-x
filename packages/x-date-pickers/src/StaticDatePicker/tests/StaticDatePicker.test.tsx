@@ -42,11 +42,9 @@ describe('<StaticDatePicker />', () => {
       );
     }
 
-    it('should take focus when `autoFocus=true`', function test(t = {}) {
+    it('should take focus when `autoFocus=true`', function test() {
       if (isJSDOM) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
+        this.skip();
       }
 
       render(<Test autoFocus />);
@@ -55,11 +53,9 @@ describe('<StaticDatePicker />', () => {
       expect(isInside).to.equal(true);
     });
 
-    it('should not take focus when `autoFocus=false`', function test(t = {}) {
+    it('should not take focus when `autoFocus=false`', function test() {
       if (isJSDOM) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
+        this.skip();
       }
 
       render(<Test />);
