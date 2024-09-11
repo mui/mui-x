@@ -179,6 +179,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     onDragEnter,
     onDragOver,
     slotProps,
+    'aria-label': ariaLabel,
     ...other
   } = props;
 
@@ -527,6 +528,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
         aria-colindex={colIndex + 1}
         aria-colspan={colSpan}
         aria-rowspan={rowSpan}
+        aria-label={ariaLabel}
         style={style}
         tabIndex={tabIndex}
         onClick={publish('cellClick', onClick)}
