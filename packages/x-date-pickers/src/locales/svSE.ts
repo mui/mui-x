@@ -43,8 +43,8 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Välj datumintervall',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Välj ${timeViews[view]}. ${time === null ? 'Ingen tid vald' : `Vald tid är ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Välj ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Ingen tid vald' : `Vald tid är ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} timmar`,
   minutesClockNumberText: (minutes) => `${minutes} minuter`,
   secondsClockNumberText: (seconds) => `${seconds} sekunder`,
@@ -59,13 +59,13 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Välj datum, valt datum är ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Välj datum, valt datum är ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Välj datum',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Välj tid, vald tid är ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Välj tid, vald tid är ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Välj tid',
   fieldClearLabel: 'Rensa värde',
 
