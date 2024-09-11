@@ -230,7 +230,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     computedWidth: number;
   }) => {
     let style: React.CSSProperties | undefined;
-    if (pinnedPosition === 'left' || pinnedPosition === 'right') {
+
+    const isLeftPinned = pinnedPosition === GridPinnedColumnPosition.LEFT;
+    const isRightPinned = pinnedPosition === GridPinnedColumnPosition.RIGHT;
+
+    if (isLeftPinned || isRightPinned) {
       const pinnedOffset = getPinnedCellOffset(
         pinnedPosition,
         computedWidth,
@@ -238,12 +242,18 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         columnPositions,
         dimensions,
       );
+      let side = isLeftPinned ? 'left' : 'right';
+
+      if (isRtl) {
+        side = isLeftPinned ? 'right' : 'left';
+      }
+
       if (pinnedPosition === 'left') {
-        style = { left: pinnedOffset };
+        style = { [side]: pinnedOffset };
       }
 
       if (pinnedPosition === 'right') {
-        style = { right: pinnedOffset };
+        style = { [side]: pinnedOffset };
       }
     }
 
