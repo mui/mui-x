@@ -182,8 +182,6 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
     });
 
     it('should not call onClose or onAccept when selecting a date and `props.closeOnSelect` is false', function test() {
-      // increase the timeout of this test as it tends to sometimes fail on CI with `DesktopDateTimeRangePicker` or `MobileDateTimeRangePicker`
-      this.timeout(10000);
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
