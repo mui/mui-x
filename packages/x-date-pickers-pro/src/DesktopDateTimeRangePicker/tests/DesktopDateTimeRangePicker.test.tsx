@@ -196,4 +196,28 @@ describe('<DesktopDateTimeRangePicker />', () => {
       );
     });
   });
+
+  describe('picker actions', () => {
+    it('should render "next" action on start range and "ok" on end range by default', async () => {
+      render(<DesktopDateTimeRangePicker enableAccessibleFieldDOMStructure />);
+
+      await openPicker({
+        type: 'date-time-range',
+        variant: 'desktop',
+        initialFocus: 'start',
+      });
+
+      const nextButton = screen.getByText(/next/i);
+      expect(nextButton).toBeVisible();
+
+      await openPicker({
+        type: 'date-time-range',
+        variant: 'desktop',
+        initialFocus: 'end',
+      });
+
+      const okButton = screen.getByText(/ok/i);
+      expect(okButton).toBeVisible();
+    });
+  });
 });

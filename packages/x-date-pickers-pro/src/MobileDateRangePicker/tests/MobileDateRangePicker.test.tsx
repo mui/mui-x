@@ -309,6 +309,32 @@ describe('<MobileDateRangePicker />', () => {
     });
   });
 
+  describe('picker actions', () => {
+    it('should render "next" action on start range and "ok" on end range by default', async () => {
+      const { user } = render(<MobileDateRangePicker enableAccessibleFieldDOMStructure />);
+
+      await openPicker({
+        type: 'date-range',
+        variant: 'mobile',
+        initialFocus: 'start',
+        click: user.click,
+      });
+
+      const nextButton = screen.getByText(/next/i);
+      expect(nextButton).toBeVisible();
+
+      await openPicker({
+        type: 'date-range',
+        variant: 'mobile',
+        initialFocus: 'end',
+        click: user.click,
+      });
+
+      const okButton = screen.getByText(/ok/i);
+      expect(okButton).toBeVisible();
+    });
+  });
+
   // TODO: Write test
   // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
   // })

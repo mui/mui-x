@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { expect } from 'chai';
 import { describeConformance, fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
@@ -150,4 +151,28 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
       return newValue;
     },
   }));
+
+  describe('picker actions', () => {
+    it('should render "next" action on start range and "ok" on end range by default', async () => {
+      render(<MobileDateTimeRangePicker enableAccessibleFieldDOMStructure />);
+
+      await openPicker({
+        type: 'date-time-range',
+        variant: 'mobile',
+        initialFocus: 'start',
+      });
+
+      const nextButton = screen.getByText(/next/i);
+      expect(nextButton).toBeVisible();
+
+      await openPicker({
+        type: 'date-time-range',
+        variant: 'mobile',
+        initialFocus: 'end',
+      });
+
+      const okButton = screen.getByText(/ok/i);
+      expect(okButton).toBeVisible();
+    });
+  });
 });
