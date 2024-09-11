@@ -1,3 +1,4 @@
+'use client';
 import { useIsomorphicLayoutEffect, Globals } from '@react-spring/web';
 
 const handleMediaChange = (e: { matches: boolean | undefined }) => {
