@@ -1,9 +1,6 @@
 import * as React from 'react';
-import {
-  useField,
-  splitFieldInternalAndForwardedProps,
-  useDefaultizedDateField,
-} from '@mui/x-date-pickers/internals';
+import { useField, useDefaultizedDateField } from '@mui/x-date-pickers/internals';
+import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { UseSingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { rangeValueManager, getRangeFieldValueManager } from '../internals/utils/valueManagers';
@@ -23,10 +20,7 @@ export const useSingleInputDateRangeField = <
     TAllProps
   >(inProps);
 
-  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
-    typeof props,
-    keyof UseSingleInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
-  >(props, 'date');
+  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
 
   const fieldValueManager = React.useMemo(
     () => getRangeFieldValueManager<TDate>({ dateSeparator: internalProps.dateSeparator }),
