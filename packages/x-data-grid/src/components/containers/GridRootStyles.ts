@@ -291,8 +291,8 @@ export const GridRootStyles = styled('div', {
     [`& .${c.columnHeader}:focus,
       & .${c['columnHeader--withLeftBorder']},
       & .${c['columnHeader--withRightBorder']},
-      & .${c['columnHeader--lastUnpinned']},
       & .${c['columnHeader--siblingFocused']},
+      & .${c['virtualScroller--hasScrollX']} .${c['columnHeader--lastUnpinned']},
       & .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}
       `]: {
       [`& .${c.columnSeparator}`]: {
