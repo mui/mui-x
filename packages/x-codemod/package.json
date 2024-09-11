@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-codemod",
-  "version": "7.15.0",
+  "version": "7.16.0",
   "bin": "./codemod.js",
   "private": false,
   "author": "MUI Team",
@@ -33,9 +33,9 @@
   },
   "dependencies": {
     "@babel/core": "^7.25.2",
-    "@babel/runtime": "^7.25.4",
-    "@babel/traverse": "^7.25.4",
-    "jscodeshift": "0.16.1",
+    "@babel/runtime": "^7.25.6",
+    "@babel/traverse": "^7.25.6",
+    "jscodeshift": "17.0.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {

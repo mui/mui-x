@@ -11,12 +11,7 @@ import {
   PickersModalDialogSlotProps,
 } from '../../components/PickersModalDialog';
 import { UsePickerParams, UsePickerProps } from '../usePicker';
-import {
-  BaseSingleInputFieldProps,
-  FieldSection,
-  MuiPickersAdapter,
-  PickerValidDate,
-} from '../../../models';
+import { BaseSingleInputFieldProps, FieldSection, PickerValidDate } from '../../../models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -112,5 +107,5 @@ export interface UseMobilePickerParams<
     'valueManager' | 'valueType' | 'validator'
   > {
   props: TExternalProps;
-  getOpenDialogAriaText: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
+  getOpenDialogAriaText: (date: TDate | null) => string;
 }
