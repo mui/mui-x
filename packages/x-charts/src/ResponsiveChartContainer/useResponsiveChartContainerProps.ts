@@ -1,3 +1,4 @@
+'use client';
 import { ChartContainerProps } from '../ChartContainer';
 import type { ResponsiveChartContainerProps } from './ResponsiveChartContainer';
 import { useChartContainerDimensions } from './useChartContainerDimensions';
