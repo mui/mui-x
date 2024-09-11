@@ -12,6 +12,12 @@ import {
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
+const isVitest =
+  // VITEST is present on the environment when not in browser mode.
+  process.env.VITEST === 'true' ||
+  // VITEST_BROWSER_DEBUG is present on vitest in browser mode.
+  typeof process.env.VITEST_BROWSER_DEBUG !== 'undefined';
+
 describe('<TimeClock /> - Timezone', () => {
   describeAdapters('Timezone prop', TimeClock, ({ adapter, render }) => {
     if (!adapter.isTimezoneCompatible) {
@@ -33,7 +39,9 @@ describe('<TimeClock /> - Timezone', () => {
 
       // On dayjs, we are not able to know if a date is UTC because it's the system timezone or because it was created as UTC.
       // In a real world scenario, this should probably never occur.
-      expect(adapter.getTimezone(actualDate)).to.equal(adapter.lib === 'dayjs' ? 'UTC' : 'system');
+      expect(adapter.getTimezone(actualDate)).to.equal(
+        adapter.lib === 'dayjs' && !isVitest ? 'UTC' : 'system',
+      );
       expect(actualDate).toEqualDateTime(expectedDate);
     });
 
