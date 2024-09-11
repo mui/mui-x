@@ -130,7 +130,7 @@
     "chai": "^4.5.0",
     "chai-dom": "^1.12.0",
     "compression-webpack-plugin": "^11.1.0",
-    "concurrently": "^8.2.2",
+    "concurrently": "^9.0.0",
     "cpy-cli": "^5.0.0",
     "cross-env": "^7.0.3",
     "danger": "^12.3.3",
@@ -148,7 +148,7 @@
     "eslint-plugin-material-ui": "workspace:^",
     "eslint-plugin-mocha": "^10.5.0",
     "eslint-plugin-prettier": "^5.2.1",
-    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react": "^7.35.2",
     "eslint-plugin-react-compiler": "0.0.0-experimental-9ed098e-20240725",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-testing-library": "^6.3.0",
@@ -200,9 +200,9 @@
     "react-is": "^18.3.1",
     "@types/node": "^20.16.5"
   },
-  "packageManager": "pnpm@9.9.0",
+  "packageManager": "pnpm@9.10.0",
   "engines": {
-    "pnpm": "9.9.0"
+    "pnpm": "9.10.0"
   },
   "pnpm": {
     "patchedDependencies": {
