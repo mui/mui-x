@@ -108,12 +108,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
-  const offsetLeft = computeOffsetLeft(
-    columnPositions,
-    renderContext,
-    isRtl,
-    pinnedColumns.left.length,
-  );
+  const offsetLeft = computeOffsetLeft(columnPositions, renderContext, pinnedColumns.left.length);
   const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
 
   React.useEffect(() => {
