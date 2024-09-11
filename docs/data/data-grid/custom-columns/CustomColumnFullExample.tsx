@@ -92,7 +92,7 @@ const columns: GridColDef<(typeof rows)[number]>[] = [
       if (!value || typeof value !== 'number') {
         return value;
       }
-      return `${value.toLocaleString()}$`;
+      return `$${value.toLocaleString()}`;
     },
     editable: true,
   },
