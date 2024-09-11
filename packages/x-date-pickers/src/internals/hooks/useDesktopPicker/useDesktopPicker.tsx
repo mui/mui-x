@@ -11,16 +11,15 @@ import {
   UseDesktopPickerProps,
   UseDesktopPickerSlotProps,
 } from './useDesktopPicker.types';
-import { useUtils } from '../useUtils';
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
-import { InferError } from '../useValidation';
 import {
   FieldSection,
   PickerValidDate,
   FieldRef,
   BaseSingleInputFieldProps,
+  InferError,
 } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
@@ -67,7 +66,6 @@ export const useDesktopPicker = <
     reduceAnimations,
   } = props;
 
-  const utils = useUtils<TDate>();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const fieldRef = React.useRef<FieldRef<FieldSection>>(null);
 
@@ -113,7 +111,7 @@ export const useDesktopPicker = <
     additionalProps: {
       disabled: disabled || readOnly,
       onClick: open ? actions.onClose : actions.onOpen,
-      'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
+      'aria-label': getOpenDialogAriaText(pickerFieldProps.value),
       edge: inputAdornmentProps.position,
     },
     ownerState: props,

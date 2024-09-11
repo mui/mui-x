@@ -5,6 +5,7 @@ import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
 import localizedFormatPlugin from 'dayjs/plugin/localizedFormat';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
 import advancedFormatPlugin from 'dayjs/plugin/advancedFormat';
+import { warnOnce } from '@mui/x-internals/warning';
 import {
   FieldFormatTokenMap,
   MuiPickersAdapter,
@@ -13,7 +14,6 @@ import {
   PickersTimezone,
   DateBuilderReturnType,
 } from '../models';
-import { warnOnce } from '../internals/utils/warning';
 
 defaultDayjs.extend(localizedFormatPlugin);
 defaultDayjs.extend(weekOfYearPlugin);

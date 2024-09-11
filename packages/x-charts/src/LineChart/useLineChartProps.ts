@@ -1,3 +1,4 @@
+'use client';
 import useId from '@mui/utils/useId';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import type { LineChartProps } from './LineChart';
