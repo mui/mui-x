@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';

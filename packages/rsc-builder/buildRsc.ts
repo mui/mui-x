@@ -23,6 +23,14 @@ const PROJECTS: Project[] = [
     name: 'x-date-pickers-pro',
     rootPath: path.join(process.cwd(), 'packages/x-date-pickers-pro'),
   },
+  {
+    name: 'x-charts',
+    rootPath: path.join(process.cwd(), 'packages/x-charts'),
+  },
+  {
+    name: 'x-charts-pro',
+    rootPath: path.join(process.cwd(), 'packages/x-charts-pro'),
+  },
 ];
 
 async function processFile(

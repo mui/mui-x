@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import NoSsr from '@mui/material/NoSsr';
 import { useTheme, styled } from '@mui/material/styles';

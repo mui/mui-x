@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { animated } from '@react-spring/web';
