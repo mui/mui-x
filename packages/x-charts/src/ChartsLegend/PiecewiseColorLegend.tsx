@@ -6,6 +6,7 @@ import { useAxis } from './useAxis';
 import { ColorLegendSelector, PiecewiseLabelFormatterParams } from './legend.types';
 import { LegendPerItem, LegendPerItemProps } from './LegendPerItem';
 import { notNull } from '../internals/notNull';
+import { LegendItemParams, PiecewiseColorLegendItemContext } from './chartsLegend.types';
 
 function defaultLabelFormatter(params: PiecewiseLabelFormatterParams) {
   if (params.min === null) {
@@ -19,7 +20,7 @@ function defaultLabelFormatter(params: PiecewiseLabelFormatterParams) {
 
 export interface PiecewiseColorLegendProps
   extends ColorLegendSelector,
-    Omit<LegendPerItemProps, 'itemsToDisplay'> {
+    Omit<LegendPerItemProps, 'itemsToDisplay' | 'onItemClick'> {
   /**
    * Hide the first item of the legend, corresponding to the [-infinity, min] piece.
    * @default false
@@ -36,7 +37,27 @@ export interface PiecewiseColorLegendProps
    * @returns {string|null} The displayed label, or `null` to skip the item.
    */
   labelFormatter?: (params: PiecewiseLabelFormatterParams) => string | null;
+  /**
+   * Callback fired when a legend item is clicked.
+   * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
+   * @param {PiecewiseColorLegendItemContext} legendItem The legend item data.
+   * @param {number} index The index of the clicked legend item.
+   */
+  onItemClick?: (
+    event: React.MouseEvent<SVGRectElement, MouseEvent>,
+    legendItem: PiecewiseColorLegendItemContext,
+    index: number,
+  ) => void;
 }
+
+const piecewiseColorContextBuilder = (context: LegendItemParams): PiecewiseColorLegendItemContext =>
+  ({
+    type: 'piecewiseColor',
+    color: context.color,
+    label: context.label,
+    maxValue: context.maxValue!,
+    minValue: context.minValue!,
+  }) as const;
 
 function PiecewiseColorLegend(props: PiecewiseColorLegendProps) {
   const {
@@ -45,6 +66,7 @@ function PiecewiseColorLegend(props: PiecewiseColorLegendProps) {
     hideFirst,
     hideLast,
     labelFormatter = defaultLabelFormatter,
+    onItemClick,
     ...other
   } = props;
 
@@ -68,24 +90,42 @@ function PiecewiseColorLegend(props: PiecewiseColorLegendProps) {
         return null;
       }
 
-      const label = labelFormatter({
-        ...(index === 0
+      const data = {
+        ...(isFirst
           ? { min: null, formattedMin: null }
           : { min: colorMap.thresholds[index - 1], formattedMin: formattedLabels[index - 1] }),
-        ...(index === colorMap.colors.length - 1
+        ...(isLast
           ? { max: null, formattedMax: null }
           : { max: colorMap.thresholds[index], formattedMax: formattedLabels[index] }),
-      });
+      };
+
+      const label = labelFormatter(data);
 
       if (label === null) {
         return null;
       }
 
-      return { id: label, color, label };
+      return {
+        id: label,
+        color,
+        label,
+        minValue: data.min,
+        maxValue: data.max,
+      };
     })
     .filter(notNull);
 
-  return <LegendPerItem {...other} itemsToDisplay={itemsToDisplay} />;
+  return (
+    <LegendPerItem
+      {...other}
+      itemsToDisplay={itemsToDisplay}
+      onItemClick={
+        onItemClick
+          ? (e, i) => onItemClick(e, piecewiseColorContextBuilder(itemsToDisplay[i]), i)
+          : undefined
+      }
+    />
+  );
 }
 
 PiecewiseColorLegend.propTypes = {
@@ -153,6 +193,13 @@ PiecewiseColorLegend.propTypes = {
    * @default 5
    */
   markGap: PropTypes.number,
+  /**
+   * Callback fired when a legend item is clicked.
+   * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
+   * @param {PiecewiseColorLegendItemContext} legendItem The legend item data.
+   * @param {number} index The index of the clicked legend item.
+   */
+  onItemClick: PropTypes.func,
   /**
    * Legend padding (in px).
    * Can either be a single number, or an object with top, left, bottom, right properties.
