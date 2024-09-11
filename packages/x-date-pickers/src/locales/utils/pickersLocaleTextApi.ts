@@ -62,7 +62,19 @@ export interface PickersComponentAgnosticLocaleText<TDate extends PickerValidDat
   nextButtonLabel: string;
 
   // Clock labels
-  clockLabelText: (view: TimeView, time: TDate | null, adapter: MuiPickersAdapter<TDate>) => string;
+  clockLabelText: (
+    view: TimeView,
+    /**
+     * @deprecated Use `formattedTime` instead
+     */
+    time: TDate | null,
+    /**
+     * @deprecated Use `formattedTime` instead
+     */
+    utils: MuiPickersAdapter<TDate>,
+    // TODO v8: Make it required
+    formattedTime?: string | null,
+  ) => string;
   hoursClockNumberText: (hours: string) => string;
   minutesClockNumberText: (minutes: string) => string;
   secondsClockNumberText: (seconds: string) => string;
@@ -71,8 +83,30 @@ export interface PickersComponentAgnosticLocaleText<TDate extends PickerValidDat
   selectViewText: (view: TimeViewWithMeridiem) => string;
 
   // Open picker labels
-  openDatePickerDialogue: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
-  openTimePickerDialogue: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
+  openDatePickerDialogue: (
+    /**
+     * @deprecated Use `formattedTime` instead
+     */
+    date: TDate | null,
+    /**
+     * @deprecated Use `formattedTime` instead
+     */
+    utils: MuiPickersAdapter<TDate>,
+    // TODO v8: Make it required
+    formattedDate: string | null,
+  ) => string;
+  openTimePickerDialogue: (
+    /**
+     * @deprecated Use `formattedTime` instead
+     */
+    date: TDate | null,
+    /**
+     * @deprecated Use `formattedTime` instead
+     */
+    utils: MuiPickersAdapter<TDate>,
+    // TODO v8: Make it required
+    formattedTime: string | null,
+  ) => string;
 
   // Clear button label
   fieldClearLabel: string;

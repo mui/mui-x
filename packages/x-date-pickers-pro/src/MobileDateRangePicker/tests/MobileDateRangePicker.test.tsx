@@ -92,7 +92,12 @@ describe('<MobileDateRangePicker />', () => {
       );
 
       // Open the picker
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'mobile',
+        initialFocus: 'start',
+        click: user.click,
+      });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -133,7 +138,12 @@ describe('<MobileDateRangePicker />', () => {
       );
 
       // Open the picker
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'end' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'mobile',
+        initialFocus: 'end',
+        click: user.click,
+      });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -165,7 +175,12 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'end' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'mobile',
+        initialFocus: 'end',
+        click: user.click,
+      });
 
       // Change the end date
       await user.click(screen.getByRole('gridcell', { name: '3' }));
@@ -196,7 +211,12 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'mobile',
+        initialFocus: 'start',
+        click: user.click,
+      });
 
       // Change the start date (already tested)
       await user.click(screen.getByRole('gridcell', { name: '3' }));
@@ -229,7 +249,12 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'mobile',
+        initialFocus: 'start',
+        click: user.click,
+      });
 
       // Change the start date (already tested)
       await user.click(screen.getByRole('gridcell', { name: '3' }));
@@ -263,7 +288,12 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'mobile',
+        initialFocus: 'start',
+        click: user.click,
+      });
 
       // Clear the date
       await user.click(screen.getByText(/clear/i));
@@ -290,7 +320,12 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'mobile',
+        initialFocus: 'start',
+        click: user.click,
+      });
 
       // Clear the date
       await user.click(screen.getByText(/clear/i));

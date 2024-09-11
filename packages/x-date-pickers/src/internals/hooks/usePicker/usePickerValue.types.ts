@@ -1,6 +1,5 @@
 import { FieldChangeHandlerContext, UseFieldInternalProps } from '../useField';
-import { InferError, Validator } from '../useValidation';
-import { UseFieldValidationProps } from '../useField/useField.types';
+import { Validator } from '../../../validation';
 import { WrapperVariant } from '../../models/common';
 import {
   FieldSection,
@@ -10,6 +9,8 @@ import {
   PickersTimezone,
   PickerChangeHandlerContext,
   PickerValidDate,
+  OnErrorProps,
+  InferError,
 } from '../../../models';
 import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
 import {
@@ -207,7 +208,7 @@ export type PickerValueUpdateAction<TValue, TError> =
 /**
  * Props used to handle the value that are common to all pickers.
  */
-export interface UsePickerValueBaseProps<TValue, TError> {
+export interface UsePickerValueBaseProps<TValue, TError> extends OnErrorProps<TValue, TError> {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -220,30 +221,20 @@ export interface UsePickerValueBaseProps<TValue, TError> {
   defaultValue?: TValue;
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange?: (value: TValue, context: PickerChangeHandlerContext<TError>) => void;
   /**
    * Callback fired when the value is accepted.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onAccept?: (value: TValue, context: PickerChangeHandlerContext<TError>) => void;
-  /**
-   * Callback fired when the error associated to the current value changes.
-   * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
-   *
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
-   * @param {TError} error The new error describing why the current value is not valid.
-   * @param {TValue} value The value associated to the error.
-   */
-  onError?: (error: TError, value: TValue) => void;
 }
 
 /**
@@ -290,13 +281,8 @@ export interface UsePickerValueParams<
   valueManager: PickerValueManager<TValue, TDate, InferError<TExternalProps>>;
   valueType: FieldValueType;
   wrapperVariant: WrapperVariant;
-  validator: Validator<
-    TValue,
-    TDate,
-    InferError<TExternalProps>,
-    UseFieldValidationProps<TValue, TExternalProps>
-  >;
   additionalViewProps: TAdditionalProps;
+  validator: Validator<TValue, TDate, InferError<TExternalProps>, TExternalProps>;
 }
 
 export interface UsePickerValueActions {

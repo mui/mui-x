@@ -1,0 +1,1 @@
+<DatePicker slots={{ openPickerIcon: FlightTakeoffIcon }} />
