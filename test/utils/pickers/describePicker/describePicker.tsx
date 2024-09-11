@@ -11,9 +11,11 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
 
   const propsToOpen = variant === 'static' ? {} : { open: true };
 
-  it('should forward the `inputRef` prop to the text field (<input /> textfield DOM structure only)', function test() {
+  it('should forward the `inputRef` prop to the text field (<input /> textfield DOM structure only)', function test(t = {}) {
     if (fieldType === 'multi-input' || variant === 'static') {
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     const inputRef = React.createRef<HTMLInputElement>();
@@ -23,9 +25,11 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
   });
 
   describe('Localization', () => {
-    it('should respect the `localeText` prop', function test() {
+    it('should respect the `localeText` prop', function test(t = {}) {
       if (hasNoView) {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(
@@ -41,9 +45,11 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
   });
 
   describe('Component slot: OpenPickerIcon', () => {
-    it('should render custom component', function test() {
+    it('should render custom component', function test(t = {}) {
       if (variant === 'static' || fieldType === 'multi-input') {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       function HomeIcon(props: SvgIconProps) {
@@ -69,9 +75,11 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
   });
 
   describe('Component slot: DesktopPaper', () => {
-    it('should forward onClick and onTouchStart', function test() {
+    it('should forward onClick and onTouchStart', function test(t = {}) {
       if (hasNoView || variant !== 'desktop') {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       const handleClick = spy();
@@ -99,9 +107,11 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
   });
 
   describe('Component slot: Popper', () => {
-    it('should forward onClick and onTouchStart', function test() {
+    it('should forward onClick and onTouchStart', function test(t = {}) {
       if (hasNoView || variant !== 'desktop') {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       const handleClick = spy();
@@ -129,9 +139,11 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
   });
 
   describe('Component slot: Toolbar', () => {
-    it('should render toolbar on mobile but not on desktop when `hidden` is not defined', function test() {
+    it('should render toolbar on mobile but not on desktop when `hidden` is not defined', function test(t = {}) {
       if (hasNoView) {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(
@@ -148,9 +160,11 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
       }
     });
 
-    it('should render toolbar when `hidden` is `false`', function test() {
+    it('should render toolbar when `hidden` is `false`', function test(t = {}) {
       if (hasNoView) {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(
@@ -163,9 +177,11 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
       expect(screen.getByTestId('pickers-toolbar')).toBeVisible();
     });
 
-    it('should not render toolbar when `hidden` is `true`', function test() {
+    it('should not render toolbar when `hidden` is `true`', function test(t = {}) {
       if (hasNoView) {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(
@@ -180,9 +196,11 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
   });
 
   describe('prop: disableOpenPicker', () => {
-    it('should not render the open picker button, but still render the picker if its open', function test() {
+    it('should not render the open picker button, but still render the picker if its open', function test(t = {}) {
       if (variant === 'static') {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(

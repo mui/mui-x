@@ -923,10 +923,12 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should support day with letter suffix', function test() {
+    it('should support day with letter suffix', function test(t = {}) {
       // Luxon don't have any day format with a letter suffix
       if (adapter.lib === 'luxon') {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       testFieldChange({

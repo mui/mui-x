@@ -520,9 +520,11 @@ describe('<DateCalendar />', () => {
       expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('January 2022');
     });
 
-    it('should scroll to show the selected year', function test() {
+    it('should scroll to show the selected year', function test(t = {}) {
       if (isJSDOM) {
-        this.skip(); // Needs layout
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       render(
         <DateCalendar

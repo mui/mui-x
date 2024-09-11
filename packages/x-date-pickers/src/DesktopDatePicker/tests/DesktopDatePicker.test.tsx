@@ -101,9 +101,11 @@ describe('<DesktopDatePicker />', () => {
       expect(screen.getByRole('radio', { checked: true, name: 'January' })).not.to.equal(null);
     });
 
-    it('should move the focus to the newly opened views', function test() {
+    it('should move the focus to the newly opened views', function test(t = {}) {
       if (isJSDOM) {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       render(<DesktopDatePicker defaultValue={new Date(2019, 5, 5)} openTo="year" />);
 
@@ -157,13 +159,6 @@ describe('<DesktopDatePicker />', () => {
       );
     });
 
-    before(function beforeHook() {
-      // JSDOM has neither layout nor window.scrollTo
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        this.skip();
-      }
-    });
-
     let originalScrollX: number;
     let originalScrollY: number;
 
@@ -173,10 +168,17 @@ describe('<DesktopDatePicker />', () => {
     });
 
     afterEach(() => {
-      window.scrollTo(originalScrollX, originalScrollY);
+      window.scrollTo?.(originalScrollX, originalScrollY);
     });
 
-    it('does not scroll when opened', () => {
+    it('does not scroll when opened', (t = {}) => {
+      // JSDOM has neither layout nor window.scrollTo
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
+      }
+
       const handleClose = spy();
       const handleOpen = spy();
       function BottomAnchoredDesktopTimePicker() {
