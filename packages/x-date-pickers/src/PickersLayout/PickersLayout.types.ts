@@ -134,6 +134,7 @@ export interface PickersLayoutProps<
    * `true` if the application is in right-to-left direction.
    */
   isRtl: boolean;
+  rangePosition?: 'start' | 'end';
 }
 
 export interface SubComponents<TValue> {

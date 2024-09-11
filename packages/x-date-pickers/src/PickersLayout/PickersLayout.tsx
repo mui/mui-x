@@ -159,6 +159,7 @@ PickersLayout.propTypes = {
   onClear: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   onDismiss: PropTypes.func.isRequired,
+  onNext: PropTypes.func.isRequired,
   onOpen: PropTypes.func.isRequired,
   onSelectShortcut: PropTypes.func.isRequired,
   onSetToday: PropTypes.func.isRequired,
@@ -167,6 +168,7 @@ PickersLayout.propTypes = {
    * Force rendering in particular orientation.
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
+  rangePosition: PropTypes.oneOf(['end', 'start']),
   readOnly: PropTypes.bool,
   /**
    * The props used for each component slot.

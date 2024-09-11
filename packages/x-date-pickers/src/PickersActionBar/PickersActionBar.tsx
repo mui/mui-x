@@ -94,7 +94,7 @@ PickersActionBar.propTypes = {
    * @default `['cancel', 'accept']` for mobile and `[]` for desktop
    */
   actions: PropTypes.arrayOf(
-    PropTypes.oneOf(['accept', 'cancel', 'clear', 'today', 'next']).isRequired,
+    PropTypes.oneOf(['accept', 'cancel', 'clear', 'next', 'today']).isRequired,
   ),
   /**
    * If `true`, the actions do not have additional margin.
@@ -104,6 +104,7 @@ PickersActionBar.propTypes = {
   onAccept: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   onClear: PropTypes.func.isRequired,
+  onNext: PropTypes.func.isRequired,
   onSetToday: PropTypes.func.isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
