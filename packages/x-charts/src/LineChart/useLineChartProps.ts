@@ -54,7 +54,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     highlightedItem,
     onHighlightChange,
     className,
-    markPerfUpdate,
+    experimentalMarkRendering,
     ...other
   } = props;
 
@@ -131,7 +131,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     slotProps,
     onItemClick: onMarkClick,
     skipAnimation,
-    perfUpdate: markPerfUpdate,
+    experimentalRendering: experimentalMarkRendering,
   };
 
   const overlayProps: ChartsOverlayProps = {

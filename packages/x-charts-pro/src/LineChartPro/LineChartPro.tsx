@@ -146,6 +146,10 @@ LineChartPro.propTypes = {
    */
   disableLineItemHighlight: PropTypes.bool,
   /**
+   * If `true` marks will render `<circle />` instead of `<path />` and drop theme override for faster rendering.
+   */
+  experimentalMarkRendering: PropTypes.bool,
+  /**
    * Option to display a cartesian grid in the background.
    */
   grid: PropTypes.shape({
@@ -214,10 +218,6 @@ LineChartPro.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
-  /**
-   * If `true` marks will render `<circle />` instead of `<path />` and drop theme override for faster rendering.
-   */
-  markPerfUpdate: PropTypes.bool,
   /**
    * Callback fired when an area element is clicked.
    */

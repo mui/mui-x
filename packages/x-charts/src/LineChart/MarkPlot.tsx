@@ -47,7 +47,7 @@ export interface MarkPlotProps
    * Giving fewer customization options, but saving around 40ms per 1.000 marks.
    * @default false
    */
-  perfUpdate?: boolean;
+  experimentalRendering?: boolean;
 }
 
 /**
@@ -61,14 +61,14 @@ export interface MarkPlotProps
  * - [MarkPlot API](https://mui.com/x/api/charts/mark-plot/)
  */
 function MarkPlot(props: MarkPlotProps) {
-  const { slots, slotProps, skipAnimation, onItemClick, perfUpdate, ...other } = props;
+  const { slots, slotProps, skipAnimation, onItemClick, experimentalRendering, ...other } = props;
 
   const seriesData = useLineSeries();
   const axisData = useCartesianContext();
   const chartId = useChartId();
   const drawingArea = useDrawingArea();
 
-  const Mark = slots?.mark ?? (perfUpdate ? CircleMarkElement : MarkElement);
+  const Mark = slots?.mark ?? (experimentalRendering ? CircleMarkElement : MarkElement);
 
   if (seriesData === undefined) {
     return null;
@@ -184,17 +184,17 @@ MarkPlot.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * If `true` the mark element will only be able to render circle.
+   * Giving fewer customization options, but saving around 40ms per 1.000 marks.
+   * @default false
+   */
+  experimentalRendering: PropTypes.bool,
+  /**
    * Callback fired when a line mark item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
    * @param {LineItemIdentifier} lineItemIdentifier The line mark item identifier.
    */
   onItemClick: PropTypes.func,
-  /**
-   * If `true` the mark element will only be able to render circle.
-   * Giving fewer customization options, but saving around 40ms per 1.000 marks.
-   * @default false
-   */
-  perfUpdate: PropTypes.bool,
   /**
    * If `true`, animations are skipped.
    * @default false

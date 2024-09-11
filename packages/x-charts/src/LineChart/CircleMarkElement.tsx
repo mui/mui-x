@@ -54,8 +54,8 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   if (shape !== 'circle') {
     warnOnce(
       [
-        `MUI X: The mark element of your line chart have shape "${shape}" which is not supported when using \`perfUpdate=true\`.`,
-        'Only "circle" are supported with `perfUpdate`.',
+        `MUI X: The mark element of your line chart have shape "${shape}" which is not supported when using \`experimentalRendering=true\`.`,
+        'Only "circle" are supported with `experimentalRendering`.',
       ].join('\n'),
       'error',
     );
