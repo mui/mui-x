@@ -356,7 +356,6 @@ export const useGridColumnResize = (
 
     if (pinnedPosition === GridPinnedColumnPosition.LEFT) {
       updateProperty(refs.fillerLeft, 'width', widthDiff);
-
       refs.leftPinnedCellsAfter.forEach((cell) => {
         updateProperty(cell, 'left', widthDiff);
       });
@@ -367,7 +366,6 @@ export const useGridColumnResize = (
 
     if (pinnedPosition === GridPinnedColumnPosition.RIGHT) {
       updateProperty(refs.fillerRight, 'width', widthDiff);
-
       refs.rightPinnedCellsBefore.forEach((cell) => {
         updateProperty(cell, 'right', widthDiff);
       });
@@ -474,20 +472,20 @@ export const useGridColumnResize = (
     refs.leftPinnedCellsAfter =
       pinnedPosition !== GridPinnedColumnPosition.LEFT
         ? []
-        : findLeftPinnedCellsAfterCol(apiRef.current, refs.columnHeaderElement);
+        : findLeftPinnedCellsAfterCol(apiRef.current, refs.columnHeaderElement, isRtl);
     refs.rightPinnedCellsBefore =
       pinnedPosition !== GridPinnedColumnPosition.RIGHT
         ? []
-        : findRightPinnedCellsBeforeCol(apiRef.current, refs.columnHeaderElement);
+        : findRightPinnedCellsBeforeCol(apiRef.current, refs.columnHeaderElement, isRtl);
 
     refs.leftPinnedHeadersAfter =
       pinnedPosition !== GridPinnedColumnPosition.LEFT
         ? []
-        : findLeftPinnedHeadersAfterCol(apiRef.current, refs.columnHeaderElement);
+        : findLeftPinnedHeadersAfterCol(apiRef.current, refs.columnHeaderElement, isRtl);
     refs.rightPinnedHeadersBefore =
       pinnedPosition !== GridPinnedColumnPosition.RIGHT
         ? []
-        : findRightPinnedHeadersBeforeCol(apiRef.current, refs.columnHeaderElement);
+        : findRightPinnedHeadersBeforeCol(apiRef.current, refs.columnHeaderElement, isRtl);
 
     resizeDirection.current = getResizeDirection(separator, isRtl);
 
