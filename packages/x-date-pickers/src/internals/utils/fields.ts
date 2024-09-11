@@ -3,6 +3,7 @@ import {
   DATE_TIME_VALIDATION_PROP_NAMES,
   DATE_VALIDATION_PROP_NAMES,
   TIME_VALIDATION_PROP_NAMES,
+  DATE_RANGE_VALIDATION_PROP_NAMES,
 } from './validation/extractValidationProps';
 
 const SHARED_FIELD_INTERNAL_PROP_NAMES = [
@@ -46,12 +47,14 @@ export const splitFieldInternalAndForwardedProps = <
 
   if (valueType === 'date') {
     DATE_VALIDATION_PROP_NAMES.forEach(extractProp);
+    DATE_RANGE_VALIDATION_PROP_NAMES.forEach(extractProp);
   } else if (valueType === 'time') {
     TIME_VALIDATION_PROP_NAMES.forEach(extractProp);
   } else if (valueType === 'date-time') {
     DATE_VALIDATION_PROP_NAMES.forEach(extractProp);
     TIME_VALIDATION_PROP_NAMES.forEach(extractProp);
     DATE_TIME_VALIDATION_PROP_NAMES.forEach(extractProp);
+    DATE_RANGE_VALIDATION_PROP_NAMES.forEach(extractProp);
   }
 
   return { forwardedProps, internalProps };
