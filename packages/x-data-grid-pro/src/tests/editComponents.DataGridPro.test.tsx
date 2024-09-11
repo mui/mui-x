@@ -10,7 +10,7 @@ import {
   renderEditInputCell,
   renderEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
-import { act, createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { getCell, spyApi } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
@@ -39,7 +39,7 @@ const generateDate = (
 };
 
 describe('<DataGridPro /> - Edit components', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render, clock } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -67,7 +67,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
 
-      const input = cell.querySelector('input')!;
+      const input = within(cell).getByRole<HTMLInputElement>('textbox');
       expect(input.value).to.equal('Nike');
 
       fireEvent.change(input, { target: { value: 'Puma' } });
@@ -80,44 +80,46 @@ describe('<DataGridPro /> - Edit components', () => {
       });
     });
 
-    it('should pass the value prop to the input', () => {
+    it('should pass the value prop to the input', async () => {
       defaultData.columns[0].valueParser = (value) => (value as string).toUpperCase();
-      render(<TestCase />);
+      const { user } = render(<TestCase />);
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
-      const input = cell.querySelector('input')!;
+      const input = within(cell).getByRole<HTMLInputElement>('textbox');
       expect(input.value).to.equal('Nike');
 
       fireEvent.change(input, { target: { value: 'Puma' } });
-      expect(input.value).to.equal('PUMA');
-
-      clock.tick(200);
       expect(input.value).to.equal('PUMA');
     });
 
-    it('should display a indicator while processing the props', async () => {
-      defaultData.columns[0].preProcessEditCellProps = () =>
-        new Promise((resolve) => {
-          setTimeout(resolve, 500);
-        });
-      render(<TestCase />);
+    describe('with fake timers', () => {
+      clock.withFakeTimers();
 
-      const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      it('should display a indicator while processing the props', async () => {
+        defaultData.columns[0].preProcessEditCellProps = ({ props }) =>
+          new Promise((resolve) => {
+            setTimeout(() => resolve(props), 500);
+          });
+        render(<TestCase />);
 
-      const input = cell.querySelector('input')!;
-      expect(input.value).to.equal('Nike');
+        const cell = getCell(0, 0);
+        fireEvent.doubleClick(cell);
 
-      expect(screen.queryByTestId('LoadIcon')).to.equal(null);
-      fireEvent.change(input, { target: { value: 'Puma' } });
-      act(() => clock.tick(200));
-      expect(screen.queryByTestId('LoadIcon')).not.to.equal(null);
+        const input = within(cell).getByRole<HTMLInputElement>('textbox');
+        expect(input.value).to.equal('Nike');
 
-      clock.tick(500);
-      await act(() => Promise.resolve());
-      expect(screen.queryByTestId('LoadIcon')).to.equal(null);
+        expect(screen.queryByTestId('LoadIcon')).to.equal(null);
+        fireEvent.change(input, { target: { value: 'Puma' } });
+
+        clock.tick(200);
+        expect(screen.queryByTestId('LoadIcon')).not.to.equal(null);
+
+        clock.tick(500);
+        await act(() => Promise.resolve());
+        expect(screen.queryByTestId('LoadIcon')).to.equal(null);
+      });
     });
 
     it('should call onValueChange if defined', async () => {
@@ -129,9 +131,9 @@ describe('<DataGridPro /> - Edit components', () => {
       render(<TestCase />);
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      fireEvent.dblClick(cell);
 
-      const input = cell.querySelector('input')!;
+      const input = within(cell).getByRole<HTMLInputElement>('textbox');
       fireEvent.change(input, { target: { value: 'Puma' } });
       await act(() => Promise.resolve());
 
@@ -153,7 +155,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
 
-      const input = cell.querySelector('input')!;
+      const input = within(cell).getByRole<HTMLInputElement>('spinbutton');
       expect(input.value).to.equal('100');
 
       fireEvent.change(input, { target: { value: '110' } });
@@ -166,60 +168,61 @@ describe('<DataGridPro /> - Edit components', () => {
       });
     });
 
-    it('should the value prop to the input', () => {
-      render(<TestCase />);
+    it('should the value prop to the input', async () => {
+      const { user } = render(<TestCase />);
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
-      const input = cell.querySelector('input')!;
+      const input = within(cell).getByRole<HTMLInputElement>('spinbutton');
       expect(input.value).to.equal('100');
 
       fireEvent.change(input, { target: { value: '110' } });
-      expect(input.value).to.equal('110');
-
-      clock.tick(200);
       expect(input.value).to.equal('110');
     });
 
     it('should keep values as numbers', async () => {
       const preProcessEditCellPropsSpy = spy(({ props }) => props);
       defaultData.columns[0].preProcessEditCellProps = preProcessEditCellPropsSpy;
-      render(<TestCase />);
+      const { user } = render(<TestCase />);
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
-      const input = cell.querySelector('input')!;
+      const input = within(cell).getByRole<HTMLInputElement>('spinbutton');
       expect(input.value).to.equal('100');
 
       fireEvent.change(input, { target: { value: '110' } });
-      act(() => clock.tick(200));
-      expect(preProcessEditCellPropsSpy.lastCall.args[0].props.value).to.equal(110);
-      await act(() => Promise.resolve()); // To avoid mutating the state after unmount
+      await waitFor(() =>
+        expect(preProcessEditCellPropsSpy.lastCall.args[0].props.value).to.equal(110),
+      );
     });
 
-    it('should display a indicator while processing the props', async () => {
-      defaultData.columns[0].preProcessEditCellProps = ({ props }) =>
-        new Promise((resolve) => {
-          setTimeout(() => resolve(props), 500);
-        });
-      render(<TestCase />);
+    describe('with fake timers', () => {
+      clock.withFakeTimers();
 
-      const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      it('should display a indicator while processing the props', async () => {
+        defaultData.columns[0].preProcessEditCellProps = ({ props }) =>
+          new Promise((resolve) => {
+            setTimeout(() => resolve(props), 500);
+          });
+        render(<TestCase />);
 
-      const input = cell.querySelector('input')!;
-      expect(input.value).to.equal('100');
+        const cell = getCell(0, 0);
+        fireEvent.doubleClick(cell);
 
-      expect(screen.queryByTestId('LoadIcon')).to.equal(null);
-      fireEvent.change(input, { target: { value: 110 } });
-      clock.tick(200);
-      expect(screen.queryByTestId('LoadIcon')).not.to.equal(null);
+        const input = within(cell).getByRole<HTMLInputElement>('spinbutton');
+        expect(input.value).to.equal('100');
 
-      clock.tick(500);
-      await act(() => Promise.resolve());
-      expect(screen.queryByTestId('LoadIcon')).to.equal(null);
+        expect(screen.queryByTestId('LoadIcon')).to.equal(null);
+        fireEvent.change(input, { target: { value: 110 } });
+        clock.tick(200);
+        expect(screen.queryByTestId('LoadIcon')).not.to.equal(null);
+
+        clock.tick(500);
+        await act(() => Promise.resolve());
+        expect(screen.queryByTestId('LoadIcon')).to.equal(null);
+      });
     });
   });
 
@@ -467,13 +470,13 @@ describe('<DataGridPro /> - Edit components', () => {
       ];
     });
 
-    it('should call setEditCellValue with the correct value when valueOptions is an array of strings', () => {
-      render(<TestCase />);
+    it('should call setEditCellValue with the correct value when valueOptions is an array of strings', async () => {
+      const { user } = render(<TestCase />);
       const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
-      fireEvent.click(screen.queryAllByRole('option')[1]);
+      await user.dblClick(cell);
+      await user.click(screen.queryAllByRole('option')[1]);
 
       expect(spiedSetEditCellValue.lastCall.args[0]).to.deep.equal({
         id: 0,
@@ -482,7 +485,7 @@ describe('<DataGridPro /> - Edit components', () => {
       });
     });
 
-    it('should call setEditCellValue with the correct value when valueOptions is an array of objects', () => {
+    it('should call setEditCellValue with the correct value when valueOptions is an array of objects', async () => {
       defaultData.rows = [{ id: 0, brand: 0 }];
       defaultData.columns = [
         {
@@ -495,12 +498,12 @@ describe('<DataGridPro /> - Edit components', () => {
           editable: true,
         },
       ];
-      render(<TestCase />);
+      const { user } = render(<TestCase />);
       const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
-      fireEvent.click(screen.queryAllByRole('option')[1]);
+      await user.dblClick(cell);
+      await user.click(screen.queryAllByRole('option')[1]);
 
       expect(spiedSetEditCellValue.lastCall.args[0]).to.deep.equal({
         id: 0,
@@ -509,7 +512,7 @@ describe('<DataGridPro /> - Edit components', () => {
       });
     });
 
-    it('should call setEditCellValue with the correct value when valueOptions is a function', () => {
+    it('should call setEditCellValue with the correct value when valueOptions is a function', async () => {
       defaultData.columns = [
         {
           field: 'brand',
@@ -518,12 +521,12 @@ describe('<DataGridPro /> - Edit components', () => {
           editable: true,
         },
       ];
-      render(<TestCase />);
+      const { user } = render(<TestCase />);
       const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
-      fireEvent.click(screen.queryAllByRole('option')[1]);
+      await user.dblClick(cell);
+      await user.click(screen.queryAllByRole('option')[1]);
 
       expect(spiedSetEditCellValue.lastCall.args[0]).to.deep.equal({
         id: 0,
@@ -592,8 +595,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
       fireUserEvent.mousePress(screen.queryAllByRole('option')[1]);
-      clock.runToLast();
-      expect(screen.queryByRole('listbox')).to.equal(null);
+      await waitFor(() => expect(screen.queryByRole('listbox')).to.equal(null));
       fireEvent.keyDown(screen.getByRole('combobox'), { key: 'Enter' });
       expect(screen.queryByRole('listbox')).to.equal(null);
 
@@ -615,7 +617,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
 
-      const input = cell.querySelector('input')!;
+      const input = within(cell).getByRole<HTMLInputElement>('checkbox');
       expect(input.checked).to.equal(false);
 
       fireEvent.click(input);
@@ -632,16 +634,15 @@ describe('<DataGridPro /> - Edit components', () => {
       defaultData.columns[0].renderEditCell = (params) =>
         renderEditBooleanCell({ ...params, onValueChange });
 
-      render(<TestCase />);
+      const { user } = render(<TestCase />);
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
-      const input = cell.querySelector('input')!;
-      fireEvent.click(input);
-      await act(() => Promise.resolve());
+      const input = within(cell).getByRole<HTMLInputElement>('checkbox');
+      await user.click(input);
 
-      expect(onValueChange.callCount).to.equal(1);
+      await waitFor(() => expect(onValueChange.callCount).to.equal(1));
       expect(onValueChange.lastCall.args[1]).to.equal(true);
     });
   });
