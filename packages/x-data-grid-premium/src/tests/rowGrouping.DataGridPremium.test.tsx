@@ -71,6 +71,10 @@ const baselineProps: BaselineProps = {
 describe('<DataGridPremium /> - Row grouping', () => {
   const { render, clock } = createRenderer();
 
+  after(() => {
+    clock.restore();
+  });
+
   let apiRef: React.MutableRefObject<GridApi>;
 
   function Test(props: Partial<DataGridPremiumProps>) {

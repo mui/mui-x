@@ -511,6 +511,10 @@ describe('<DataGridPro /> - Column pinning', () => {
     describe('with fake timers', () => {
       clock.withFakeTimers();
 
+      after(() => {
+        clock.restore();
+      });
+
       it('should not render menu items if the column has `pinnable` equals to false', () => {
         render(
           <TestCase

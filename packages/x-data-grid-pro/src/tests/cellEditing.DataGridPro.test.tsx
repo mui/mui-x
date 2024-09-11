@@ -317,6 +317,10 @@ describe('<DataGridPro /> - Cell editing', () => {
       describe('with debounceMs > 0', () => {
         clock.withFakeTimers();
 
+        after(() => {
+          clock.restore();
+        });
+
         it('should debounce multiple changes if debounceMs > 0', () => {
           render(<TestCase />);
           act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
