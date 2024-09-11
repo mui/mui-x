@@ -37,8 +37,8 @@ Exclusive features are marked with the <span class="plan-pro" aria-label="MUI X
 
 - [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro)
 - [`@mui/x-date-pickers-pro`](https://www.npmjs.com/package/@mui/x-date-pickers-pro)
-- [`@mui/x-tree-view-pro`](https://www.npmjs.com/package/@mui/x-tree-view-pro)
 - [`@mui/x-charts-pro`](https://www.npmjs.com/package/@mui/x-charts-pro)
+- [`@mui/x-tree-view-pro`](https://www.npmjs.com/package/@mui/x-tree-view-pro)
 
 ### Premium plan <span class="plan-premium"></span>
 
