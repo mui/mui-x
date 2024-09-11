@@ -1,5 +1,6 @@
 {
   "props": {
+    "experimentalRendering": { "type": { "name": "bool" }, "default": "false" },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
@@ -7,7 +8,6 @@
         "describedArgs": ["event", "lineItemIdentifier"]
       }
     },
-    "experimentalRendering": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
