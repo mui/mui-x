@@ -6,29 +6,38 @@ globalThis.before = beforeAll;
 // @ts-ignore
 globalThis.after = afterAll;
 
-class Touch {
-  constructor(instance) {
-    this.instance = instance;
-  }
+const isVitest =
+  // VITEST is present on the environment when not in browser mode.
+  process.env.VITEST === 'true';
 
-  get identifier() {
-    return this.instance.identifier;
-  }
+// Only necessary when not in browser mode.
+if (isVitest) {
+  class Touch {
+    instance: any;
+    constructor(instance: any) {
+      this.instance = instance;
+    }
 
-  get pageX() {
-    return this.instance.pageX;
-  }
+    get identifier() {
+      return this.instance.identifier;
+    }
 
-  get pageY() {
-    return this.instance.pageY;
-  }
+    get pageX() {
+      return this.instance.pageX;
+    }
 
-  get clientX() {
-    return this.instance.clientX;
-  }
+    get pageY() {
+      return this.instance.pageY;
+    }
 
-  get clientY() {
-    return this.instance.clientY;
+    get clientX() {
+      return this.instance.clientX;
+    }
+
+    get clientY() {
+      return this.instance.clientY;
+    }
   }
+  // @ts-expect-error
+  globalThis.window.Touch = Touch;
 }
-globalThis.window.Touch = Touch;
