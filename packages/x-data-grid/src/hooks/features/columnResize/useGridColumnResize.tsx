@@ -356,6 +356,7 @@ export const useGridColumnResize = (
 
     if (pinnedPosition === GridPinnedColumnPosition.LEFT) {
       updateProperty(refs.fillerLeft, 'width', widthDiff);
+
       refs.leftPinnedCellsAfter.forEach((cell) => {
         updateProperty(cell, 'left', widthDiff);
       });
@@ -366,6 +367,7 @@ export const useGridColumnResize = (
 
     if (pinnedPosition === GridPinnedColumnPosition.RIGHT) {
       updateProperty(refs.fillerRight, 'width', widthDiff);
+
       refs.rightPinnedCellsBefore.forEach((cell) => {
         updateProperty(cell, 'right', widthDiff);
       });
