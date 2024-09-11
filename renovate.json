@@ -55,7 +55,7 @@
     },
     {
       "groupName": "ESLint plugins",
-      "matchPackagePatterns": ["eslint-plugin-*", "!eslint-plugin-react-compiler"]
+      "matchPackageNames": ["eslint-plugin-*", "!eslint-plugin-react-compiler"]
     },
     {
       "groupName": "@types/node",
