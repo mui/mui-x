@@ -36,9 +36,7 @@ export default function CustomFilterPanelPosition() {
           panel: {
             anchorEl: filterButtonEl,
           },
-          toolbar: {
-            setFilterButtonEl,
-          },
+          toolbar: { setFilterButtonEl },
         }}
       />
     </div>

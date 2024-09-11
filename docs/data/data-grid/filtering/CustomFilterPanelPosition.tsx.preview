@@ -7,8 +7,6 @@
     panel: {
       anchorEl: filterButtonEl,
     },
-    toolbar: {
-      setFilterButtonEl,
-    },
+    toolbar: { setFilterButtonEl },
   }}
 />
