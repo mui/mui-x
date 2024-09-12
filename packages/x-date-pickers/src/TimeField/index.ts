@@ -4,4 +4,5 @@ export type {
   UseTimeFieldProps,
   UseTimeFieldComponentProps,
   TimeFieldProps,
+  TimeFieldInPickerProps,
 } from './TimeField.types';

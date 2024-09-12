@@ -70,6 +70,7 @@ export default apiPages;
       'x-charts/src/ChartsLegend/LegendPerItem.tsx',
       'x-charts/src/RadarChart/RadarChartContainer.tsx',
       'x-charts/src/RadarChart/ResponsiveRadarChartContainer.tsx',
+      'x-charts/src/LineChart/CircleMarkElement.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,

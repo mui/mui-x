@@ -29,5 +29,5 @@ export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
     return expandedRowIds.includes(rowId);
   },
   renderCell: (params) => <GridDetailPanelToggleCell {...params} />,
-  renderHeader: () => null,
+  renderHeader: ({ colDef }) => <div aria-label={colDef.headerName} />,
 };

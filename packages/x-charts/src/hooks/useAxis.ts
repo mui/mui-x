@@ -1,3 +1,4 @@
+'use client';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { useRadialContext } from '../context/RadialProvider';
 
