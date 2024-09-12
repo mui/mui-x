@@ -55,8 +55,7 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
   const { pivotParams } = props;
-
-  const hasPivotModel = pivotParams?.pivotModel != null;
+  const { pivotSettingsOpen } = pivotParams;
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
@@ -64,7 +63,7 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
       <GridRoot
-        className={clsx(props.className, hasPivotModel && gridClasses.sidePanel)}
+        className={clsx(props.className, pivotSettingsOpen && gridClasses.sidePanel)}
         style={props.style}
         sx={props.sx}
         ref={ref}
@@ -80,7 +79,7 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
           </GridBody>
           <GridFooterPlaceholder />
         </div>
-        {hasPivotModel && (
+        {pivotSettingsOpen && (
           <GridSidebar>
             <GridSidebarColumnPanel pivotParams={pivotParams} />
           </GridSidebar>

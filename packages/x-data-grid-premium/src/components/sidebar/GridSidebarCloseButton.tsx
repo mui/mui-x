@@ -9,7 +9,11 @@ export function GridSidebarCloseButton(props: IconButtonProps) {
   const { slots } = rootProps;
 
   return (
-    <slots.baseIconButton size="small" {...props}>
+    <slots.baseIconButton
+      size="small"
+      {...props}
+      onClick={() => rootProps.pivotParams?.onPivotSettingsOpenChange(false)}
+    >
       {/* Replace with a new slots.closeButtonIcon or similar */}
       <slots.filterPanelDeleteIcon fontSize="small" />
     </slots.baseIconButton>

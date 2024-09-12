@@ -37,13 +37,9 @@ const PivotSection = styled(AutoAnimateContainer)(({ theme }) => ({
 }));
 
 const PivotSectionTitle = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(0.75),
-  fontSize: theme.typography.pxToRem(14),
-  fontWeight: theme.typography.fontWeightMedium,
+  fontSize: theme.typography.pxToRem(12),
   color: theme.palette.text.secondary,
-  padding: theme.spacing(1.25, 2.5),
+  padding: theme.spacing(1, 2),
   [`.${svgIconClasses.root}`]: {
     fontSize: theme.typography.pxToRem(18),
     marginLeft: -1,
@@ -64,9 +60,12 @@ const PivotSectionList = styled(AutoAnimateContainer)(({ theme }) => ({
 const PivotSectionPlaceholder = styled('div')(({ theme }) => ({
   flex: 1,
   display: 'flex',
+  flexDirection: 'column',
   justifyContent: 'center',
+  gap: theme.spacing(1),
   alignItems: 'center',
   height: 60,
+  padding: theme.spacing(1.5),
   margin: theme.spacing(1.5),
   border: `1px dashed ${theme.palette.grey[400]}`,
   borderRadius: 4,
@@ -307,13 +306,13 @@ export function GridSidebarColumnPanelBody({
         data-section="rows"
         data-drag-over={drag.dropZone === 'rows'}
       >
-        <PivotSectionTitle>
-          {/* TODO: Replace with pivotRowsIcon or a more generic rowsIcon */}
-          <rootProps.slots.densityStandardIcon />
-          Rows
-        </PivotSectionTitle>
+        <PivotSectionTitle>Rows</PivotSectionTitle>
         {pivotModel.rows.length === 0 && (
-          <PivotSectionPlaceholder>Drag here to create rows</PivotSectionPlaceholder>
+          <PivotSectionPlaceholder>
+            {/* TODO: Replace with pivotRowsIcon or a more generic rowsIcon */}
+            <rootProps.slots.densityStandardIcon />
+            Drag here to create rows
+          </PivotSectionPlaceholder>
         )}
         {pivotModel.rows.length > 0 && (
           <PivotSectionList>
@@ -345,13 +344,13 @@ export function GridSidebarColumnPanelBody({
         data-section="columns"
         data-drag-over={drag.dropZone === 'columns'}
       >
-        <PivotSectionTitle>
-          {/* TODO: Replace with pivotColumnsIcon or a more generic columnsIcon */}
-          <rootProps.slots.columnSelectorIcon />
-          Columns
-        </PivotSectionTitle>
+        <PivotSectionTitle>Columns</PivotSectionTitle>
         {pivotModel.columns.length === 0 && (
-          <PivotSectionPlaceholder>Drag here to create columns</PivotSectionPlaceholder>
+          <PivotSectionPlaceholder>
+            {/* TODO: Replace with pivotColumnsIcon or a more generic columnsIcon */}
+            <rootProps.slots.columnSelectorIcon />
+            Drag here to create columns
+          </PivotSectionPlaceholder>
         )}
         {pivotModel.columns.length > 0 && (
           <PivotSectionList>
@@ -383,13 +382,13 @@ export function GridSidebarColumnPanelBody({
         data-section="values"
         data-drag-over={drag.dropZone === 'values'}
       >
-        <PivotSectionTitle>
-          {/* TODO: Replace with pivotValuesIcon or a more generic valuesIcon */}
-          <rootProps.slots.columnMenuAggregationIcon />
-          Values
-        </PivotSectionTitle>
+        <PivotSectionTitle>Values</PivotSectionTitle>
         {pivotModel.values.length === 0 && (
-          <PivotSectionPlaceholder>Drag here to create values</PivotSectionPlaceholder>
+          <PivotSectionPlaceholder>
+            {/* TODO: Replace with pivotValuesIcon or a more generic valuesIcon */}
+            <rootProps.slots.columnMenuAggregationIcon />
+            Drag here to create values
+          </PivotSectionPlaceholder>
         )}
         {pivotModel.values.length > 0 && (
           <PivotSectionList>

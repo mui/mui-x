@@ -265,6 +265,7 @@ export const useGridPivoting = ({
   const isPivot = pivotMode;
   const setIsPivot = onPivotModeChange;
   // const [isPivot, setIsPivot] = React.useState(initialIsPivot);
+  const [pivotSettingsOpen, setPivotSettingsOpen] = React.useState(false);
   const exportedStateRef = React.useRef<GridInitialStatePremium | null>(null);
   const prevProps = usePreviousProps({ isPivot });
   const nonPivotDataRef = React.useRef<{ rows: GridRowModel[]; columns: GridColDef[] } | undefined>(
@@ -319,5 +320,7 @@ export const useGridPivoting = ({
     pivotModel,
     onPivotModelChange,
     initialColumns: nonPivotDataRef.current?.columns,
+    pivotSettingsOpen,
+    onPivotSettingsOpenChange: setPivotSettingsOpen,
   };
 };

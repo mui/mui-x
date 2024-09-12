@@ -60,8 +60,8 @@ const PivotFieldRoot = styled('div', {
   section: FieldTransferObject['modelKey'];
 }>(({ theme }) => ({
   flexShrink: 0,
-  paddingRight: theme.spacing(1.5),
-  height: '35px',
+  paddingRight: theme.spacing(1),
+  height: '32px',
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(0.5),
@@ -108,7 +108,9 @@ const PivotFieldActionContainer = styled('div')({
 });
 
 const PivotFieldDragHandle = styled('div')(({ theme }) => ({
+  width: 16,
   display: 'flex',
+  justifyContent: 'center',
   color: theme.palette.text.primary,
   opacity: 0,
   marginRight: theme.spacing(-0.5),

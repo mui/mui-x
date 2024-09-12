@@ -11,7 +11,7 @@ import { GridSidebarSearchButton } from '../GridSidebarSearchButton';
 const HeaderRow = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  padding: theme.spacing(1.5, 2.5),
+  padding: theme.spacing(1.25, 2),
   '& + &': {
     borderTop: `1px solid ${alpha(theme.palette.divider, 0.06)}`,
   },
