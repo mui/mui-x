@@ -160,4 +160,46 @@ describe('<DataGridPro /> - Infnite loader', () => {
     // should not load more rows because the threshold is not reached
     expect(getRow.callCount).to.equal(5);
   });
+
+  it('should not call `onRowsScrollEnd` if there are rows pinned to the bottom and the viewport scroll is at the top', async function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+    const baseRows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+      { id: 3, brand: 'Under Armor' },
+      { id: 4, brand: 'Jordan' },
+      { id: 5, brand: 'Reebok' },
+    ];
+    const pinnedRows = {
+      bottom: [{ id: 6, brand: 'Unbranded' }],
+    };
+    const handleRowsScrollEnd = spy();
+    function TestCase({ rows }: { rows: typeof baseRows }) {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            columns={[{ field: 'brand', width: 100 }]}
+            rows={rows}
+            onRowsScrollEnd={handleRowsScrollEnd}
+            pinnedRows={pinnedRows}
+          />
+        </div>
+      );
+    }
+    const { container } = render(<TestCase rows={baseRows} />);
+    const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
+    virtualScroller.dispatchEvent(new Event('scroll'));
+    // after initial render and a scroll event that did not reach the bottom of the grid
+    // the `onRowsScrollEnd` should not be called
+    expect(handleRowsScrollEnd.callCount).to.equal(0);
+    // arbitrary number to make sure that the bottom of the grid window is reached.
+    virtualScroller.scrollTop = 12345;
+    virtualScroller.dispatchEvent(new Event('scroll'));
+    await waitFor(() => {
+      expect(handleRowsScrollEnd.callCount).to.equal(1);
+    });
+  });
 });
