@@ -41,7 +41,6 @@ const DATA_SOURCE_GROUPING_COL_DEF_FORCED_PROPERTIES: Pick<
   // TODO: Support these features on the grouping column(s)
   filterable: false,
   sortable: false,
-  aggregable: false,
 };
 
 /**
