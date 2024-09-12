@@ -1,10 +1,11 @@
+'use client';
 import {
   singleItemFieldValueManager,
   singleItemValueManager,
 } from '../internals/utils/valueManagers';
 import { useField } from '../internals/hooks/useField';
 import { UseTimeFieldProps } from './TimeField.types';
-import { validateTime } from '../internals/utils/validation/validateTime';
+import { validateTime } from '../validation';
 import { useSplitFieldProps } from '../hooks';
 import { PickerValidDate, FieldSection } from '../models';
 import { useDefaultizedTimeField } from '../internals/hooks/defaultizedFieldProps';

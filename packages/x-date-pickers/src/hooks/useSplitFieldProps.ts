@@ -1,10 +1,11 @@
+'use client';
 import * as React from 'react';
 import { FieldValueType } from '../models';
 import {
   DATE_TIME_VALIDATION_PROP_NAMES,
   DATE_VALIDATION_PROP_NAMES,
   TIME_VALIDATION_PROP_NAMES,
-} from '../internals/utils/validation/extractValidationProps';
+} from '../validation/extractValidationProps';
 
 const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'value',
