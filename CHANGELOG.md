@@ -13,7 +13,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 🧑‍💻 New Data Grid [custom columns demo](https://mui.com/x/react-data-grid/custom-columns/#full-example)
 - 🐞 Bugfixes
 - 📚 Documentation improvements
-- 🌍 Improve Hungarian (hu-HU) locales on the Data Grid
+- 🌍 Improve Hungarian (hu-HU) locale on the Data Grid
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -25,7 +25,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [DataGrid] Add demo to the "Custom columns" page that does not use generator (#13695) @arminmeh
 - [DataGrid] Fix Voice Over reading the column name twice (#14482) @arminmeh
 - [DataGrid] Fix bug in CRUD example (#14513) @michelengelen
-- [DataGrid] Fix failing jsdom tests caused by `:has` selectors (#14559) @KenanYusuf
+- [DataGrid] Fix failing jsdom tests caused by `:has()` selectors (#14559) @KenanYusuf
 - [DataGrid] Refactor string operator filter functions (#14564) @KenanYusuf
 - [l10n] Improve Hungarian (hu-HU) locale (#14506) @ntamas
 
@@ -59,8 +59,8 @@ Same changes as in `@mui/x-date-pickers@7.16.1`, plus:
 
 - [charts] Add `"use client"` directive to every public component and hook (#14578) @flaviendelangle
 - [charts] Allow `onItemClick` on the `Legend` component (#14231) @JCQuintas
-- [charts] Fix `onAxisClick` with `layour='horizontal'` (#14547) @alexfauquette
-- [charts] Replace `path` with `circle` for perf improvement (#14518) @alexfauquette
+- [charts] Fix `onAxisClick` with `layout='horizontal'` (#14547) @alexfauquette
+- [charts] Replace `path` with `circle` for performance improvement (#14518) @alexfauquette
 
 #### `@mui/x-charts-pro@7.0.1-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -74,10 +74,10 @@ Same changes as in `@mui/x-charts@7.16.1`.
 
 ### Docs
 
-- [docs] Add missing callout on Imperative API tree view sections (#14503) @flaviendelangle
+- [docs] Add missing callout on "Imperative API" tree view sections (#14503) @flaviendelangle
 - [docs] Fix broken redirection to MUI X v5 @oliviertassinari
 - [docs] Fix multiple `console.error` messages on `charts` docs (#14554) @JCQuintas
-- [docs] Fixed typo in Recipes Row Grouping (#14549) @Miodini
+- [docs] Fixed typo in Row Grouping recipes (#14549) @Miodini
 - [docs] Match title with blog posts @oliviertassinari
 
 ### Core
