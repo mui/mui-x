@@ -7,7 +7,7 @@ import {
 import { useMockServer } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
 
-export default function ServerSideRowGroupingDataGrid() {
+export default function ServerSideRowGroupingGroupExpansion() {
   const apiRef = useGridApiRef();
 
   const { fetchRows, columns } = useMockServer({

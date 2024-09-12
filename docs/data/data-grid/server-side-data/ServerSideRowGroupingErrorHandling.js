@@ -11,7 +11,7 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { alpha, styled, darken, lighten } from '@mui/material/styles';
 
-export default function ServerSideRowGroupingDataGrid() {
+export default function ServerSideRowGroupingErrorHandling() {
   const apiRef = useGridApiRef();
   const [rootError, setRootError] = React.useState();
   const [childrenError, setChildrenError] = React.useState();
