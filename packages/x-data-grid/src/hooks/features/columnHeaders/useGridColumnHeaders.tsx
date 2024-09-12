@@ -274,6 +274,17 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         computedWidth: colDef.computedWidth,
       });
 
+      const siblingWithBorderingSeparator =
+        pinnedPosition === GridPinnedColumnPosition.RIGHT
+          ? renderedColumns[i - 1]
+          : renderedColumns[i + 1];
+      const isSiblingFocused = siblingWithBorderingSeparator
+        ? columnHeaderFocus !== null &&
+          columnHeaderFocus.field === siblingWithBorderingSeparator.field
+        : false;
+      const isLastUnpinned =
+        columnIndex + 1 === columnPositions.length - pinnedColumns.right.length;
+
       columns.push(
         <GridColumnHeaderItem
           key={colDef.field}
@@ -295,6 +306,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           indexInSection={i}
           sectionLength={renderedColumns.length}
           gridHasFiller={gridHasFiller}
+          isLastUnpinned={isLastUnpinned}
+          isSiblingFocused={isSiblingFocused}
           {...other}
         />,
       );

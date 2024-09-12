@@ -289,12 +289,10 @@ export const GridRootStyles = styled('div', {
     // - the column has a left or right border
     // - the next column is pinned right and has a left border
     [`& .${c.columnHeader}:focus,
-      & .${c.columnHeader}:focus-within,
-      & .${c.columnHeader}:has(+ .${c.columnHeader}:focus),
-      & .${c.columnHeader}:has(+ .${c.columnHeader}:focus-within),
       & .${c['columnHeader--withLeftBorder']},
       & .${c['columnHeader--withRightBorder']},
-      & .${c.columnHeader}:has(+ .${c.filler} + .${c['columnHeader--withLeftBorder']}),
+      & .${c['columnHeader--siblingFocused']},
+      & .${c['virtualScroller--hasScrollX']} .${c['columnHeader--lastUnpinned']},
       & .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}
       `]: {
       [`& .${c.columnSeparator}`]: {
@@ -413,9 +411,7 @@ export const GridRootStyles = styled('div', {
     '@media (hover: none)': {
       [`& .${c.columnHeader}`]: columnHeaderStyles,
       [`& .${c.columnHeader}:focus,
-        & .${c.columnHeader}:focus-within,
-        & .${c.columnHeader}:has(+ .${c.columnHeader}:focus),
-        & .${c.columnHeader}:has(+ .${c.columnHeader}:focus-within)`]: {
+        & .${c['columnHeader--siblingFocused']}`]: {
         [`.${c['columnSeparator--resizable']}`]: {
           color: (t.vars || t).palette.primary.main,
         },

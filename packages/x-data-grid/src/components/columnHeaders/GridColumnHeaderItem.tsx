@@ -38,6 +38,8 @@ interface GridColumnHeaderItemProps {
   indexInSection: number;
   sectionLength: number;
   gridHasFiller: boolean;
+  isLastUnpinned: boolean;
+  isSiblingFocused: boolean;
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
@@ -56,6 +58,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     showLeftBorder,
     filterItemsCounter,
     pinnedPosition,
+    isLastUnpinned,
+    isSiblingFocused,
   } = ownerState;
 
   const isColumnSorted = sortDirection != null;
@@ -79,6 +83,10 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       showLeftBorder && 'columnHeader--withLeftBorder',
       pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
       pinnedPosition === 'right' && 'columnHeader--pinnedRight',
+      // TODO: Remove classes below and restore `:has` selectors when they are supported in jsdom
+      // See https://github.com/mui/mui-x/pull/14559
+      isLastUnpinned && 'columnHeader--lastUnpinned',
+      isSiblingFocused && 'columnHeader--siblingFocused',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
     titleContainer: ['columnHeaderTitleContainer'],
@@ -326,7 +334,9 @@ GridColumnHeaderItem.propTypes = {
   indexInSection: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
   isLast: PropTypes.bool.isRequired,
+  isLastUnpinned: PropTypes.bool.isRequired,
   isResizing: PropTypes.bool.isRequired,
+  isSiblingFocused: PropTypes.bool.isRequired,
   pinnedPosition: PropTypes.oneOf(['left', 'right']),
   sectionLength: PropTypes.number.isRequired,
   separatorSide: PropTypes.oneOf(['left', 'right']),
