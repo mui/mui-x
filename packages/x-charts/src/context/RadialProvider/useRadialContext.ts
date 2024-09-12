@@ -6,4 +6,3 @@ export const useRadialContext = (): RadialContextState => {
   const { data } = React.useContext(RadialContext);
   return data;
 };
-

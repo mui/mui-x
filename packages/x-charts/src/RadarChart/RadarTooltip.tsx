@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { generateVirtualElement, useMouseTracker } from '../../ChartsTooltip/utils';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 import NoSsr from '@mui/material/NoSsr';
 import Popper from '@mui/material/Popper';
 import { useRadarSeriesTooltip } from './useRadarTooltip';
-import { Paper, Typography } from '@mui/material';
+import { generateVirtualElement, useMouseTracker } from '../ChartsTooltip/utils';
 
-export default function ChartsRadarTooltip() {
+export function RadarTooltip() {
   const tooltipData = useRadarSeriesTooltip();
   const mousePosition = useMouseTracker();
 

@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { InteractionContext, ItemInteractionData } from '../../context/InteractionProvider';
-import { useSeries } from '../../hooks/useSeries';
-import { useColorProcessor } from '../../context/PluginProvider/useColorProcessor';
-import { ChartSeriesType } from '../../models/seriesType/config';
-import { getLabel } from '../../internals/getLabel';
-import { CommonSeriesType } from '../../models/seriesType/common';
-import { RadarItemIdentifier } from '../../models/seriesType/radar';
-import { useRadialContext } from '../../context/RadialProvider';
+import { InteractionContext, ItemInteractionData } from '../context/InteractionProvider';
+import { useSeries } from '../hooks/useSeries';
+import { ChartSeriesType } from '../models/seriesType/config';
+import { getLabel } from '../internals/getLabel';
+import { CommonSeriesType } from '../models/seriesType/common';
+import { RadarItemIdentifier } from '../models/seriesType/radar';
+import { useRadialContext } from '../context/RadialProvider';
 
 export interface RadarTooltipPoint {
   label: string | undefined;
@@ -34,7 +33,6 @@ export function useRadarSeriesTooltip(): null | UseRadarSeriesTooltipReturnValue
   const series = useSeries();
 
   const { radiusAxis, radiusAxisIds } = useRadialContext();
-  const colorProcessors = useColorProcessor();
 
   if (!item || !isRadarItem(item)) {
     return null;

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useDrawingArea, useRadiusAxis, useRadiusScale, useRotationScale } from '../hooks';
+import { useDrawingArea } from '../hooks/useDrawingArea';
+import { useRotationScale } from '../hooks/useScale';
 import { useRadarSeries } from '../hooks/useSeries';
 import { useRadialContext } from '../context/RadialProvider';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';

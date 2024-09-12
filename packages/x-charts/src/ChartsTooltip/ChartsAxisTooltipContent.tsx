@@ -12,9 +12,10 @@ import { useColorProcessor } from '../context/PluginProvider/useColorProcessor';
 import { isCartesianSeriesType } from '../internals/isCartesian';
 import { useSeries } from '../hooks/useSeries';
 
-type ChartSeriesDefaultizedWithColorGetter = ChartSeriesDefaultized<CommonTooltipChartSeriesType> & {
-  getColor: (dataIndex: number) => string;
-};
+type ChartSeriesDefaultizedWithColorGetter =
+  ChartSeriesDefaultized<CommonTooltipChartSeriesType> & {
+    getColor: (dataIndex: number) => string;
+  };
 
 export type ChartsAxisContentProps = {
   /**

@@ -212,6 +212,10 @@ const apiPages: MuiPage[] = [
     title: 'RadarGrid',
   },
   {
+    pathname: '/x/api/charts/radar-tooltip',
+    title: 'RadarTooltip',
+  },
+  {
     pathname: '/x/api/charts/responsive-chart-container',
     title: 'ResponsiveChartContainer',
   },

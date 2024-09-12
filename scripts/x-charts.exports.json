@@ -263,6 +263,7 @@
   { "name": "RadarChartSlots", "kind": "Interface" },
   { "name": "RadarGrid", "kind": "Function" },
   { "name": "RadarGridProps", "kind": "Interface" },
+  { "name": "RadarTooltip", "kind": "Function" },
   { "name": "referenceLineClasses", "kind": "Variable" },
   { "name": "ResponsiveChartContainer", "kind": "Variable" },
   { "name": "ResponsiveChartContainerProps", "kind": "Interface" },

@@ -90,12 +90,7 @@ export function computeValue({
   allAxis.forEach((axis, axisIndex) => {
     const range = getRange(drawingArea, axisDirection, axis);
 
-    const [minData, maxData] = getAxisExtremum(
-      axis,
-      extremumGetters,
-      axisIndex,
-      formattedSeries,
-    );
+    const [minData, maxData] = getAxisExtremum(axis, extremumGetters, axisIndex, formattedSeries);
     const data = axis.data ?? [];
 
     if (isBandScaleConfig(axis)) {
