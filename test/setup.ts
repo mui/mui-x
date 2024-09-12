@@ -1,5 +1,6 @@
 import { beforeAll, afterAll } from 'vitest';
 import 'test/utils/addChaiAssertions';
+import 'test/utils/setupPickers';
 
 // @ts-ignore
 globalThis.before = beforeAll;
