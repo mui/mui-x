@@ -71,13 +71,17 @@ export const useGridDataSourceLazyLoader = (
     const rootGroupChildren = [...rootGroup.children];
 
     const pageRowCount = privateApiRef.current.state.pagination.rowCount;
-    const rowCount = privateApiRef.current.getRowsCount();
+    const rootChildrenCount = rootGroupChildren.length;
 
-    if (pageRowCount === undefined || rowCount >= pageRowCount) {
+    if (
+      pageRowCount === undefined ||
+      rootChildrenCount === 0 ||
+      rootChildrenCount >= pageRowCount
+    ) {
       return;
     }
 
-    for (let i = 0; i < pageRowCount - rowCount; i += 1) {
+    for (let i = 0; i < pageRowCount - rootChildrenCount; i += 1) {
       const skeletonId = getSkeletonRowId(i);
 
       rootGroupChildren.push(skeletonId);
@@ -286,6 +290,7 @@ export const useGridDataSourceLazyLoader = (
   );
 
   useGridApiEventHandler(privateApiRef, 'rowsFetched', handleDataUpdate);
+  useGridApiEventHandler(privateApiRef, 'rowCountChange', handleDataUpdate);
   useGridApiEventHandler(privateApiRef, 'scrollPositionChange', handleScrolling);
   useGridApiEventHandler(
     privateApiRef,
