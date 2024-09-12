@@ -208,8 +208,8 @@ export const useMockServer = (
 
   const fetchRows = React.useCallback(
     async (requestUrl: string): Promise<GridGetRowsResponse> => {
-      if ((!data && !rowGroupingData.rows && isRowGrouping) || !requestUrl) {
-        sendEmptyResponse();
+      if (!(requestUrl && (data || (isRowGrouping && rowGroupingData.rows)))) {
+        return sendEmptyResponse();
       }
       const params = decodeParams(requestUrl);
       const verbose = serverOptions?.verbose ?? true;
@@ -239,7 +239,7 @@ export const useMockServer = (
 
       if (isTreeData) {
         const { rows, rootRowCount } = await processTreeDataRows(
-          data!.rows,
+          data?.rows ?? [],
           params,
           serverOptionsWithDefault,
           columnsWithDefaultColDef,
@@ -263,7 +263,7 @@ export const useMockServer = (
         };
       } else {
         const { returnedRows, nextCursor, totalRowCount } = await loadServerRows(
-          data!.rows,
+          data?.rows ?? [],
           { ...params, ...params.paginationModel },
           serverOptionsWithDefault,
           columnsWithDefaultColDef,
