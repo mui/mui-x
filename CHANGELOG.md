@@ -10,6 +10,7 @@ _Sep 12, 2024_
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Charts performance improvement
+- 🧑‍💻 New Data Grid [custom columns demo](https://mui.com/x/react-data-grid/custom-columns/#full-example)
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 - 🌍 Improve Hungarian (hu-HU) locales on the Data Grid
@@ -85,7 +86,6 @@ Same changes as in `@mui/x-charts@7.16.1`.
 - [code-infra] Fix charts benchmark workflow (#14573) @JCQuintas
 - [docs-infra] Type interface API pages (#14138) @alexfauquette
 - [infra] Create `ESLint plugins` renovate group (#14574) @LukasTy
-- [infra] Fix renovate ESLInt group config (#14577) @LukasTy
 - [license] Clean-up terminology to match codebase (#14531) @oliviertassinari
 - [test] Remove dead `act()` logic (#14529) @oliviertassinari
 
