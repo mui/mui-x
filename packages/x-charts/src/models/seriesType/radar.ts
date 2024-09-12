@@ -8,6 +8,10 @@ export interface RadarSeriesType extends CommonSeriesType<number> {
    * The label to display on the tooltip or the legend. It can be a string or a function.
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
+  /**
+   * If `true` show marks at value position.
+   */
+  showMark?: boolean;
 }
 
 /**

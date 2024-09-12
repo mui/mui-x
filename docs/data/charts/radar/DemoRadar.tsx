@@ -1,17 +1,42 @@
 import * as React from 'react';
 import { RadarChart } from '@mui/x-charts/RadarChart';
 
+// Data from https://ourworldindata.org/emissions-by-fuel
+
+const highlightScope = { highlight: 'item', fade: 'global' } as const;
+function valueFormatter(v: number | null) {
+  if (v === null) {
+    return 'NaN';
+  }
+  return `${v.toLocaleString()}t CO2eq/pers`;
+}
+
 export default function DemoRadar() {
   return (
     <RadarChart
       height={300}
-      width={300}
       series={[
-        { type: 'radar', data: [35, 44, 24, 34, 83], color: 'green', label: 'S1' },
-        { type: 'radar', data: [56, 34, 97, 15, 26], color: 'blue', label: 'S2' },
+        {
+          label: 'USA',
+          data: [6.65, 2.76, 5.15, 0.19, 0.07, 0.12],
+          highlightScope,
+          valueFormatter,
+        },
+        {
+          label: 'Australia',
+          data: [5.52, 5.5, 3.19, 0.51, 0.15, 0.11],
+          highlightScope,
+          valueFormatter,
+        },
+        {
+          label: 'United Kingdom',
+          data: [2.26, 0.29, 2.03, 0.05, 0.04, 0.06],
+          highlightScope,
+          valueFormatter,
+        },
       ]}
       radar={{
-        metrics: ['A', 'B', 'C', 'D', 'E'],
+        metrics: ['Oil', 'Coal', 'Gas', 'Flaring', 'Other industry', 'Cement'],
       }}
     />
   );
