@@ -14,6 +14,7 @@ type ExtremumGetterParams<T extends ChartSeriesType> = {
   series: Record<SeriesId, ChartSeries<T>>;
   axis: AxisConfig;
   isDefaultAxis: boolean;
+  axisIndex: number;
   getFilters?: (params: {
     currentAxisId: AxisId | undefined;
     seriesXAxisId?: AxisId;

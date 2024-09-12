@@ -88,14 +88,12 @@ export function computeValue({
 }) {
   const completeAxis: DefaultizedAxisConfig<ChartsRadialAxisProps | ChartsRotationAxisProps> = {};
   allAxis.forEach((axis, axisIndex) => {
-    const isDefaultAxis = axisIndex === 0;
-
     const range = getRange(drawingArea, axisDirection, axis);
 
     const [minData, maxData] = getAxisExtremum(
       axis,
       extremumGetters,
-      isDefaultAxis,
+      axisIndex,
       formattedSeries,
     );
     const data = axis.data ?? [];

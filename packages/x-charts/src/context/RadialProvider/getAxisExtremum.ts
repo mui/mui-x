@@ -8,7 +8,7 @@ const axisExtremumCallback = <T extends CartesianChartSeriesType>(
   chartType: T,
   axis: AxisConfig,
   getters: ExtremumGettersConfig<T>,
-  isDefaultAxis: boolean,
+  axisIndex: number,
   formattedSeries: FormattedSeries,
 ): ExtremumGetterResult => {
   const getter = getters[chartType];
@@ -17,7 +17,8 @@ const axisExtremumCallback = <T extends CartesianChartSeriesType>(
   const [minChartTypeData, maxChartTypeData] = getter?.({
     series,
     axis,
-    isDefaultAxis,
+    axisIndex,
+    isDefaultAxis: axisIndex === 0,
   }) ?? [Infinity, -Infinity];
 
   const [minData, maxData] = acc;
@@ -28,14 +29,14 @@ const axisExtremumCallback = <T extends CartesianChartSeriesType>(
 export const getAxisExtremum = (
   axis: AxisConfig,
   getters: ExtremumGettersConfig,
-  isDefaultAxis: boolean,
+  axisIndex: number,
   formattedSeries: FormattedSeries,
 ) => {
   const charTypes = Object.keys(getters) as CartesianChartSeriesType[];
 
   const extremums = charTypes.reduce<ExtremumGetterResult>(
     (acc, charType) =>
-      axisExtremumCallback(acc, charType, axis, getters, isDefaultAxis, formattedSeries),
+      axisExtremumCallback(acc, charType, axis, getters, axisIndex, formattedSeries),
     [Infinity, -Infinity],
   );
 

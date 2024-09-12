@@ -9,8 +9,9 @@ import { HighlightedProviderProps } from '../context';
 import { ChartsSurfaceProps } from '../ChartsSurface';
 import { PluginProviderProps } from '../context/PluginProvider';
 import { useReducedMotion } from '../hooks/useReducedMotion';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
+import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { plugin } from './plugin';
+import { AxisConfig, ChartsRadialAxisProps } from '../models/axis';
 
 export const useRadarChartContainerProps = (
   props: RadarChartContainerProps,
@@ -38,9 +39,17 @@ export const useRadarChartContainerProps = (
   const svgRef = React.useRef<SVGSVGElement>(null);
   const chartSurfaceRef = useForkRef(ref, svgRef);
 
-  const metricNames = radar.metrics.map((m) => (typeof m === 'string' ? m : m.name));
+  const radiusAxis: AxisConfig<'linear', any, ChartsRadialAxisProps>[] = radar.metrics.map((m) => {
+    const name = typeof m === 'string' ? m : m.name;
+    return {
+      id: name,
+      label: name,
+      min: 0,
+      scaleType: 'linear',
+    };
+  });
   const startAngle = radar.startAngle ?? 0;
-  const endAngle = startAngle + ((metricNames.length - 1) * 360) / metricNames.length;
+  const endAngle = startAngle + ((radiusAxis.length - 1) * 360) / radiusAxis.length;
 
   useReducedMotion(); // a11y reduce motion (see: https://react-spring.dev/docs/utilities/use-reduced-motion)
 
@@ -66,18 +75,12 @@ export const useRadarChartContainerProps = (
       {
         id: DEFAULT_X_AXIS_KEY,
         scaleType: 'point',
-        data: metricNames,
+        data: radiusAxis.map((item) => item.id),
         startAngle,
         endAngle,
       },
     ],
-    radiusAxis: [
-      {
-        id: DEFAULT_Y_AXIS_KEY,
-        scaleType: 'linear',
-        min: 0,
-      },
-    ],
+    radiusAxis,
     dataset,
   };
 
