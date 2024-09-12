@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
