@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import {
   UseDesktopPickerSlots,
   ExportedUseDesktopPickerSlotProps,
@@ -46,14 +47,11 @@ export interface DesktopDateTimePickerProps<
     DesktopOnlyPickerProps,
     DesktopOnlyTimePickerProps<TDate> {
   /**
-   * Available views.
+   * If `false`, display the years in their default order (chronological)
+   * If `true`, reverse the order of displayed years
+   * @default false
    */
-  views?: readonly DateOrTimeView[];
-  /**
-   * Years rendered per row.
-   * @default 4
-   */
-  yearsPerRow?: 3 | 4;
+  reverseYears: boolean;
   /**
    * Overridable component slots.
    * @default {}
@@ -64,4 +62,13 @@ export interface DesktopDateTimePickerProps<
    * @default {}
    */
   slotProps?: DesktopDateTimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  /**
+   * Available views.
+   */
+  views?: readonly DateOrTimeView[];
+  /**
+   * Years rendered per row.
+   * @default 4
+   */
+  yearsPerRow?: 3 | 4;
 }

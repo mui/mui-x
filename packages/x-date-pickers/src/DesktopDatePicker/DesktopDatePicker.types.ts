@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import {
   UseDesktopPickerSlots,
   ExportedUseDesktopPickerSlotProps,
@@ -27,10 +28,11 @@ export interface DesktopDatePickerProps<
 > extends BaseDatePickerProps<TDate>,
     DesktopOnlyPickerProps {
   /**
-   * Years rendered per row.
-   * @default 4
+   * If `false`, display the years in their default order (chronological)
+   * If `true`, reverse the order of displayed years
+   * @default false
    */
-  yearsPerRow?: 3 | 4;
+  reverseYears: boolean;
   /**
    * Overridable component slots.
    * @default {}
@@ -41,4 +43,9 @@ export interface DesktopDatePickerProps<
    * @default {}
    */
   slotProps?: DesktopDatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  /**
+   * Years rendered per row.
+   * @default 4
+   */
+  yearsPerRow?: 3 | 4;
 }

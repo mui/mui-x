@@ -142,6 +142,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
     loading,
     renderLoading,
     displayWeekNumber,
+    reverseYears,
     yearsPerRow,
     monthsPerRow,
     timezone: timezoneProp,
@@ -355,6 +356,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
               hasFocus={hasFocus}
               onFocusedViewChange={(isViewFocused) => setFocusedView('year', isViewFocused)}
               yearsPerRow={yearsPerRow}
+              reverseYears={reverseYears}
               referenceDate={referenceDate}
             />
           )}
@@ -547,6 +549,12 @@ DateCalendar.propTypes = {
    * @default () => <span data-mui-test="loading-progress">...</span>
    */
   renderLoading: PropTypes.func,
+  /**
+   * If `false`, display the years in their default order (chronological)
+   * If `true`, reverse the order of displayed years
+   * @default false
+   */
+  reverseYears: PropTypes.bool,
   /**
    * Disable specific date.
    *

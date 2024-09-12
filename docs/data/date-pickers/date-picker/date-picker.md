@@ -91,6 +91,12 @@ If the view defined in `openTo` is not the first view, then the views before wil
 (for example view the default behaviors, the `year` is only accessible when clicking on the toolbar).
 :::
 
+## Reverse years
+
+The `reverseYears` prop can be set to show the years in reverse chronological order.
+
+{{"demo": "DatePickerReverseYears.js"}}
+
 ## Landscape orientation
 
 By default, the Date Picker component automatically sets the orientation based on the `window.orientation` value.

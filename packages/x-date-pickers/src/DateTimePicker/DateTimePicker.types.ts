@@ -44,10 +44,11 @@ export interface DateTimePickerProps<
    */
   desktopModeMediaQuery?: string;
   /**
-   * Years rendered per row.
-   * @default 4 on desktop, 3 on mobile
+   * If `false`, display the years in their default order (chronological)
+   * If `true`, reverse the order of displayed years
+   * @default false
    */
-  yearsPerRow?: 3 | 4;
+  reverseYears: boolean;
   /**
    * Overridable component slots.
    * @default {}
@@ -58,4 +59,9 @@ export interface DateTimePickerProps<
    * @default {}
    */
   slotProps?: DateTimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  /**
+   * Years rendered per row.
+   * @default 4 on desktop, 3 on mobile
+   */
+  yearsPerRow?: 3 | 4;
 }
