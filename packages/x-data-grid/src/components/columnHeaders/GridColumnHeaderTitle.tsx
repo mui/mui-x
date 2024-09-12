@@ -30,6 +30,12 @@ const GridColumnHeaderTitleRoot = styled('div', {
   whiteSpace: 'nowrap',
   fontWeight: 'var(--unstable_DataGrid-headWeight)',
   lineHeight: 'normal',
+  // To prevent Safari adding its own tooltip for truncated text
+  // https://zzz.buzz/2017/07/31/prevent-tooltip-over-truncated-text-in-safari/
+  '::after': {
+    content: '""',
+    display: 'block',
+  },
 });
 
 const ColumnHeaderInnerTitle = React.forwardRef<
