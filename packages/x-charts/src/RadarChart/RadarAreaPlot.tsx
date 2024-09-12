@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useDrawingArea, useRadiusAxis, useRadiusScale, useRotationScale } from '../hooks';
 import { useRadarSeries } from '../hooks/useSeries';
 import { useRadialContext } from '../context/RadialProvider';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 
 function RadarAreaPlot() {
   const rotationScale = useRotationScale<'point'>();
@@ -9,6 +10,7 @@ function RadarAreaPlot() {
   const radarSeries = useRadarSeries();
 
   const drawingArea = useDrawingArea();
+  const getInteractionItemProps = useInteractionItemProps();
 
   const cx = drawingArea.left + drawingArea.width / 2;
   const cy = drawingArea.top + drawingArea.height / 2;
@@ -32,6 +34,7 @@ function RadarAreaPlot() {
               return `${cx - r * Math.sin(angle)} ${cy - r * Math.cos(angle)}`;
             })
             .join('L')} Z`}
+          {...getInteractionItemProps({ type: 'radar', seriesId })}
         />
       ))}
     </g>
