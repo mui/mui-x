@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '@mui/x-date-pickers/models';
 import { getDateOffset } from 'test/utils/pickers';
+import moment from 'moment';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 import { TEST_DATE_ISO_STRING, TEST_DATE_LOCALE_STRING } from './describeGregorianAdapter.utils';
 
@@ -889,6 +890,10 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     });
 
     it('should respect the locale of the adapter, not the locale of the date', function test() {
+      if (adapter.lib === 'moment') {
+        moment.locale('en');
+      }
+
       const dateFr = adapterFr.date('2022-03-17', 'default');
       const weekArray = adapter.getWeekArray(dateFr);
 

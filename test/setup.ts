@@ -1,6 +1,7 @@
 import { beforeAll, afterAll } from 'vitest';
 import 'test/utils/addChaiAssertions';
 import 'test/utils/setupPickers';
+import 'test/utils/licenseRelease';
 
 // @ts-ignore
 globalThis.before = beforeAll;
@@ -15,6 +16,7 @@ const isVitest =
 if (isVitest) {
   class Touch {
     instance: any;
+
     constructor(instance: any) {
       this.instance = instance;
     }

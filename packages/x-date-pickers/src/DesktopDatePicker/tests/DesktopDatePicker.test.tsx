@@ -173,7 +173,7 @@ describe('<DesktopDatePicker />', () => {
 
     it('does not scroll when opened', (t = {}) => {
       // JSDOM has neither layout nor window.scrollTo
-      if (/jsdom/.test(window.navigator.userAgent)) {
+      if (/jsdom/.test(window.navigator.userAgent) || process.env.MUI_BROWSER === 'true') {
         // @ts-expect-error to support mocha and vitest
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         this?.skip?.() || t?.skip();

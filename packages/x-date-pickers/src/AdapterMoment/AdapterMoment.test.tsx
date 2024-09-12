@@ -25,7 +25,11 @@ describe('<AdapterMoment />', () => {
     frenchLocale: 'fr',
   };
 
+  moment.locale('en');
+
   describeGregorianAdapter(AdapterMoment, commonParams);
+
+  moment.locale('en');
 
   // Makes sure that all the tests that do not use timezones works fine when dayjs do not support UTC / timezone.
   describeGregorianAdapter(AdapterMoment, {

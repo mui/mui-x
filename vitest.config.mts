@@ -47,26 +47,8 @@ export default defineConfig({
     setupFiles: ['test/setup.ts'],
     // Required for some datepickers tests that contain early returns.
     passWithNoTests: true,
+    env: {
+      MUI_VITEST: 'true',
+    },
   },
 });
-
-// plugins.push([
-//   'babel-plugin-replace-imports',
-//   {
-//     test: /date-fns/i,
-//     replacer: 'date-fns-v3',
-//     // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
-//     filenameIncludes: 'src/AdapterDateFnsV3/',
-//   },
-// ]);
-// plugins.push([
-//   'babel-plugin-replace-imports',
-//   {
-//     test: /date-fns-jalali/i,
-//     replacer: 'date-fns-jalali-v3',
-//     // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
-//     filenameIncludes: 'src/AdapterDateFnsJalaliV3/',
-//   },
-//   'replace-date-fns-jalali-imports',
-// ]);
-// }

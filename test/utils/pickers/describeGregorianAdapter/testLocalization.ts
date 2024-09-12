@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { cleanText } from 'test/utils/pickers';
+import moment from 'moment';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 import { TEST_DATE_ISO_STRING } from './describeGregorianAdapter.utils';
 
@@ -42,6 +43,10 @@ export const testLocalization: DescribeGregorianAdapterTestSuite = ({ adapter })
   });
 
   it('Method: getCurrentLocaleCode', () => {
+    if (adapter.lib === 'moment') {
+      moment.locale('en');
+    }
+
     // Returns the default locale
     expect(adapter.getCurrentLocaleCode()).to.match(/en/);
   });

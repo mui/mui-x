@@ -116,7 +116,7 @@ describe('findClosestEnabledDate', () => {
     });
 
     expect(result).toEqualDateTime(adapterToUse.addDays(tryDate, 1));
-    clock.reset();
+    clock.restore();
   });
 
   it('should return `null` when disablePast+disableFuture and now is invalid', () => {
@@ -180,7 +180,7 @@ describe('findClosestEnabledDate', () => {
     });
 
     expect(result).toEqualDateTime(adapterToUse.date('2000-01-02T11:12:13.550Z'));
-    clock.reset();
+    clock.restore();
   });
 
   it('should return maxDate if it is before the date and valid', () => {

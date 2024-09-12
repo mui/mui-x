@@ -10,9 +10,12 @@ export default defineWorkspace(
         extends: './vitest.config.mts',
         plugins: [react()],
         test: {
-          include: [`packages/x-${name}/**/*.test.tsx`],
-          exclude: [`packages/x-${name}/**/*V3.test.tsx`],
+          include: [`packages/x-${name}/src/**/*.test.{ts,tsx,js,jsx}`],
+          exclude: [`packages/x-${name}/src/**/*V3.test.{ts,tsx,js,jsx}`],
           name: `browser/${name}`,
+          env: {
+            MUI_BROWSER: 'true',
+          },
           browser: {
             enabled: true,
             name: 'chromium',
@@ -28,9 +31,13 @@ export default defineWorkspace(
         extends: './vitest.config.mts',
         plugins: [react()],
         test: {
-          include: [`packages/x-${name}/**/*.test.tsx`],
+          include: [`packages/x-${name}/src/**/*.test.{ts,tsx,js,jsx}`],
+          exclude: [`packages/x-${name}/src/**/*.browser.test.{ts,tsx,js,jsx}`],
           name: `jsdom/${name}`,
           environment: 'jsdom',
+          env: {
+            MUI_JSDOM: 'true',
+          },
         },
       },
     ],
