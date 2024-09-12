@@ -14,34 +14,8 @@ import {
 } from '../context';
 import { PluginProvider, PluginProviderProps } from '../context/PluginProvider';
 import { useRadarChartContainerProps } from './useRadarChartContainerProps';
+import { RadarConfig } from './Radar.types';
 
-interface MetricConfig {
-  /**
-   * The name of the metric.
-   */
-  name: string;
-  /**
-   * The minimal value of the domain.
-   * @default 0
-   */
-  min?: number;
-  /**
-   * The maximal value of the domain.
-   * If not provided, it gets computed to display the entire chart data.
-   */
-  max?: number;
-}
-interface RadarConfig {
-  /**
-   * The different metrics shown by radar.
-   */
-  metrics: string[] | MetricConfig[];
-  /**
-   * The angle of the first axis (in deg)
-   * @default 0
-   */
-  startAngle?: number;
-}
 export type RadarChartContainerProps = Omit<
   ChartsSurfaceProps &
     Omit<SeriesProviderProps, 'seriesFormatters'> &
