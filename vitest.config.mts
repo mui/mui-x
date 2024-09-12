@@ -24,7 +24,9 @@ export default defineConfig({
         find: 'date-fns',
         replacement: 'date-fns-v3',
         customResolver(source, importer) {
-          if (importer?.includes('src/AdapterDateFnsV3')) return source;
+          if (importer?.includes('src/AdapterDateFnsV3')) {
+            return source;
+          }
           return null;
         },
       },
@@ -32,7 +34,9 @@ export default defineConfig({
         find: 'date-fns-jalali',
         replacement: 'date-fns-jalali-v3',
         customResolver(source, importer) {
-          if (importer?.includes('src/AdapterDateFnsJalaliV3')) return source;
+          if (importer?.includes('src/AdapterDateFnsJalaliV3')) {
+            return source;
+          }
           return null;
         },
       },
