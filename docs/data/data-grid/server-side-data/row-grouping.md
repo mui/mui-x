@@ -13,7 +13,7 @@ Just like [tree data](/x/react-data-grid/server-side-data/tree-data/), you need 
 - `getGroupKey`: Pass the group key for the row.
 - `getChildrenCount`: Pass the number of children for the row. If the children count is not available for some reason, but there are some children, return -1.
 
-Apart from the `groupKeys` parameter, the `getRows` callback would recieve an additional parameter `groupFields` which refers to the current `rowGroupingModel`, use it on the server side to extract the appropriate data chunk for a specific `getRows` call.
+Apart from the `groupKeys` parameter, the `getRows` callback would recieve an additional parameter `groupFields` which refers to the current `rowGroupingModel`, use it on the server-side to extract the appropriate data chunk for a specific `getRows` call.
 
 ```tsx
 const customDataSource: GridDataSource = {
