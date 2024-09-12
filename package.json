@@ -93,7 +93,7 @@
     "@mui/icons-material": "^5.16.7",
     "@mui/internal-babel-plugin-resolve-imports": "1.0.17",
     "@mui/internal-markdown": "^1.0.12",
-    "@mui/internal-test-utils": "https://pkg.csb.dev/mui/material-ui/commit/de384fbe/@mui/internal-test-utils",
+    "@mui/internal-test-utils": "https://pkg.csb.dev/mui/material-ui/commit/91ee9d15/@mui/internal-test-utils",
     "@mui/material": "^5.16.7",
     "@mui/monorepo": "github:mui/material-ui#dd2faca9c6192b79510948cecd3bce2380f27d64",
     "@mui/utils": "^5.16.6",
