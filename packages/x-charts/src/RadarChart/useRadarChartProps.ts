@@ -38,7 +38,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     })),
     width,
     height,
-    margin: { left: 5, top: 5, right: 5, bottom: 5, ...margin },
+    margin: { left: 5, top: 50, right: 5, bottom: 5, ...margin },
     colors,
     sx,
     radar,

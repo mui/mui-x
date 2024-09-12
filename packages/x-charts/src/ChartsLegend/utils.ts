@@ -6,12 +6,14 @@ import getBarLegend from '../BarChart/legend';
 import getScatterLegend from '../ScatterChart/legend';
 import getLineLegend from '../LineChart/legend';
 import getPieLegend from '../PieChart/legend';
+import getRadarLegend from '../RadarChart/legend';
 
 const legendGetter: { [T in ChartSeriesType]?: LegendGetter<T> } = {
   bar: getBarLegend,
   scatter: getScatterLegend,
   line: getLineLegend,
   pie: getPieLegend,
+  radar: getRadarLegend,
 };
 
 export function getSeriesToDisplay(series: FormattedSeries) {
