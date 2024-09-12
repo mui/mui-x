@@ -57,7 +57,7 @@ Same changes as in `@mui/x-date-pickers@7.16.1`, plus:
 
 - [charts] Add `"use client"` directive to every public component and hook (#14578) @flaviendelangle
 - [charts] Allow `onItemClick` on the `Legend` component (#14231) @JCQuintas
-- [charts] Fix `onAxisClick` with layour='horizontal' (#14547) @alexfauquette
+- [charts] Fix `onAxisClick` with `layour='horizontal'` (#14547) @alexfauquette
 - [charts] Replace `path` with `circle` for perf improvement (#14518) @alexfauquette
 
 #### `@mui/x-charts-pro@7.0.1-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
