@@ -3,5 +3,5 @@
   maxDate={currentYear}
   openTo="year"
   reverseYears
-  views={['year']}
+  views={['year', 'month']}
 />

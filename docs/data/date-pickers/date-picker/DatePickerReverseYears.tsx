@@ -5,8 +5,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
+const currentYear = dayjs();
+
 export default function DatePickerReverseYears() {
-  const currentYear = dayjs();
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DatePicker']}>
@@ -15,7 +16,7 @@ export default function DatePickerReverseYears() {
           maxDate={currentYear}
           openTo="year"
           reverseYears
-          views={['year']}
+          views={['year', 'month']}
         />
       </DemoContainer>
     </LocalizationProvider>
