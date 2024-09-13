@@ -315,7 +315,7 @@ useTreeViewItems.getDefaultizedParams = ({ params }) => ({
 useTreeViewItems.wrapRoot = ({ children, instance }) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const contextValue = React.useCallback(
-    (itemId) => instance.getItemMeta(itemId)?.depth ?? 0,
+    (itemId: TreeViewItemId) => instance.getItemMeta(itemId)?.depth ?? 0,
     [instance],
   );
   return (
