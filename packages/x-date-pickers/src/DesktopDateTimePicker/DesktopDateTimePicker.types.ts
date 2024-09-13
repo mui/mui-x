@@ -61,4 +61,9 @@ export interface DesktopDateTimePickerProps<
    * Available views.
    */
   views?: readonly DateOrTimeView[];
+  /**
+   * Years rendered per row.
+   * @default 4
+   */
+  yearsPerRow: 3 | 4
 }
