@@ -110,6 +110,9 @@
       "description": "Component displaying when passed <code>loading</code> true.",
       "typeDescriptions": { "React.ReactNode": "The node to render when loading." }
     },
+    "reverseYears": {
+      "description": "If <code>false</code>, display the years in their default order (chronological) If <code>true</code>, reverse the order of displayed years"
+    },
     "shouldDisableDate": {
       "description": "Disable specific date.<br>Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
       "typeDescriptions": {

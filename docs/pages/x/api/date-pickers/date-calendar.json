@@ -81,6 +81,7 @@
         "returned": "React.ReactNode"
       }
     },
+    "reverseYears": { "type": { "name": "bool" }, "default": "false" },
     "shouldDisableDate": {
       "type": { "name": "func" },
       "signature": {

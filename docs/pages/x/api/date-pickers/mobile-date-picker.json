@@ -107,6 +107,7 @@
         "returned": "React.ReactNode"
       }
     },
+    "reverseYears": { "type": { "name": "bool" }, "default": "false" },
     "selectedSections": {
       "type": {
         "name": "union",

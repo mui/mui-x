@@ -17,6 +17,7 @@
       "type": { "name": "object" },
       "default": "The closest valid year using the validation props, except callbacks such as `shouldDisableYear`."
     },
+    "reverseYears": { "type": { "name": "bool" }, "default": "false" },
     "shouldDisableYear": {
       "type": { "name": "func" },
       "signature": {

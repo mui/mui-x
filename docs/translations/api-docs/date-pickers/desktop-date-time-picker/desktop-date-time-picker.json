@@ -132,6 +132,9 @@
       "description": "Component displaying when passed <code>loading</code> true.",
       "typeDescriptions": { "React.ReactNode": "The node to render when loading." }
     },
+    "reverseYears": {
+      "description": "If <code>false</code>, display the years in their default order (chronological) If <code>true</code>, reverse the order of displayed years"
+    },
     "selectedSections": {
       "description": "The currently selected sections. This prop accepts four formats: 1. If a number is provided, the section at this index will be selected. 2. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 3. If <code>&quot;all&quot;</code> is provided, all the sections will be selected. 4. If <code>null</code> is provided, no section will be selected. If not provided, the selected sections will be handled internally."
     },
