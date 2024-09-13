@@ -8,7 +8,7 @@ import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 import { useSplitFieldProps, useFieldPlaceholder } from '@mui/x-date-pickers/hooks';
 import TextField from '@mui/material/TextField';
 
-function ReadonlyField(props) {
+function ReadonlyDateField(props) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { value, timezone, format } = internalProps;
   const { InputProps, slotProps, slots, ...other } = forwardedProps;
@@ -33,7 +33,9 @@ function ReadonlyField(props) {
 }
 
 function ReadonlyFieldDatePicker(props) {
-  return <DatePicker slots={{ ...props.slots, field: ReadonlyField }} {...props} />;
+  return (
+    <DatePicker slots={{ ...props.slots, field: ReadonlyDateField }} {...props} />
+  );
 }
 
 export default function CustomReadonlyBehaviorMaterialTextField() {
