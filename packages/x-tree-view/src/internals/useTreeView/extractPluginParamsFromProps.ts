@@ -54,10 +54,16 @@ export const extractPluginParamsFromProps = <
     }
   });
 
+  const cleanExperimentalFeatures =
+    experimentalFeatures ?? ({} as NonNullable<typeof experimentalFeatures>);
+
   const defaultizedPluginParams = plugins.reduce(
     (acc, plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
       if (plugin.getDefaultizedParams) {
-        return plugin.getDefaultizedParams(acc);
+        return plugin.getDefaultizedParams({
+          params: acc,
+          experimentalFeatures: cleanExperimentalFeatures,
+        });
       }
 
       return acc;
@@ -71,6 +77,6 @@ export const extractPluginParamsFromProps = <
     pluginParams: defaultizedPluginParams,
     slots: slots ?? ({} as any),
     slotProps: slotProps ?? ({} as any),
-    experimentalFeatures: experimentalFeatures ?? ({} as any),
+    experimentalFeatures: cleanExperimentalFeatures,
   };
 };
