@@ -54,6 +54,10 @@ function GridBooleanCellRaw(props: GridBooleanCellProps) {
     [rootProps.slots.booleanCellFalseIcon, rootProps.slots.booleanCellTrueIcon, value],
   );
 
+  if (value === undefined) {
+    return null;
+  }
+
   return (
     <Icon
       fontSize="small"

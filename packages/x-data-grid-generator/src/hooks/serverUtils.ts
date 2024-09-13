@@ -10,7 +10,6 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import { GridStateColDef } from '@mui/x-data-grid-pro/internals';
-import { UseDemoDataOptions } from './useDemoData';
 import { randomInt } from '../services/random-generator';
 
 export interface FakeServerResponse {
@@ -55,12 +54,6 @@ export interface ServerSideQueryOptions {
   lastRowToRender?: number;
   groupFields?: string[];
 }
-
-export const DEFAULT_DATASET_OPTIONS: UseDemoDataOptions = {
-  dataSet: 'Commodity',
-  rowLength: 100,
-  maxColumns: 6,
-};
 
 declare const DISABLE_CHANCE_RANDOM: any;
 export const disableDelay = typeof DISABLE_CHANCE_RANDOM !== 'undefined' && DISABLE_CHANCE_RANDOM;

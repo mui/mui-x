@@ -74,6 +74,12 @@ The following demo uses `defaultGroupingExpansionDepth='-1'` to expand all the g
 
 {{"demo": "ServerSideRowGroupingGroupExpansion.js", "bg": "inline"}}
 
+## Demo
+
+In the following demo, use the auto generated data based on the `Commodities` dataset to simulate the server-side row grouping.
+
+{{"demo": "ServerSideRowGroupingFullDataGrid.js", "bg": "inline"}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
