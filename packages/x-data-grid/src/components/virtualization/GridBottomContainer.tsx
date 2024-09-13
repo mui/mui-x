@@ -24,8 +24,12 @@ export function GridBottomContainer(props: React.HTMLAttributes<HTMLDivElement>)
   const classes = useUtilityClasses();
 
   const apiRef = useGridApiContext();
-  const { viewportOuterSize, minimumSize } = useGridSelector(apiRef, gridDimensionsSelector);
-  const offset = Math.max(viewportOuterSize.height - minimumSize.height, 0);
+  const { viewportOuterSize, minimumSize, hasScrollX, scrollbarSize } = useGridSelector(
+    apiRef,
+    gridDimensionsSelector,
+  );
+  const scrollHeight = hasScrollX ? scrollbarSize : 0;
+  const offset = Math.max(viewportOuterSize.height - minimumSize.height - scrollHeight, 0);
 
   let style = props.style;
   if (offset !== 0) {
