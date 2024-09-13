@@ -360,7 +360,7 @@ const TreeItem2Raw = React.forwardRef(function TreeItem2(
  */
 export const TreeItem2 = React.memo(TreeItem2Raw) as TreeItem2Component;
 
-TreeItem2.propTypes = {
+TreeItem2Raw.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
