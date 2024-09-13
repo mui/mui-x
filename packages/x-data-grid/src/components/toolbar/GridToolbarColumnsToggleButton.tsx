@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { ToggleButtonProps } from '@mui/material/ToggleButton';
 import { TooltipProps } from '@mui/material/Tooltip';
 import { unstable_useId as useId } from '@mui/material/utils';
@@ -93,5 +94,17 @@ const GridToolbarColumnsToggleButton = React.forwardRef<
     </rootProps.slots.baseTooltip>
   );
 });
+
+GridToolbarColumnsToggleButton.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The props used for each slot inside.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+} as any;
 
 export { GridToolbarColumnsToggleButton };

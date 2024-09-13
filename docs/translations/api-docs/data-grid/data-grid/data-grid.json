@@ -1034,6 +1034,7 @@
     }
   },
   "slotDescriptions": {
+    "arrowDropDownIcon": "Icon displayed on dropdown toggles.",
     "baseButton": "The custom Button component used in the grid.",
     "baseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
     "baseChip": "The custom Chip component used in the grid.",
@@ -1045,6 +1046,8 @@
     "baseSelect": "The custom Select component used in the grid.",
     "baseSelectOption": "The custom SelectOption component used in the grid.",
     "baseTextField": "The custom TextField component used in the grid.",
+    "baseToggleButton": "The custom ToggleButton component used in the grid.",
+    "baseToggleButtonGroup": "The custom ToggleButtonGroup component used in the grid.",
     "baseTooltip": "The custom Tooltip component used in the grid.",
     "booleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",
     "booleanCellTrueIcon": "Icon displayed on the boolean cell to represent the true value.",
@@ -1092,6 +1095,7 @@
     "openFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",
     "pagination": "Pagination component rendered in the grid footer by default.",
     "panel": "Panel component wrapping the filters and columns panels.",
+    "printIcon": "Icon displayed on the print button in the toolbar.",
     "quickFilterClearIcon": "Icon displayed on the quick filter reset input.",
     "quickFilterIcon": "Icon displayed on the quick filter input.",
     "row": "Component rendered for each row.",
