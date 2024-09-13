@@ -1,3 +1,4 @@
+'use client';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsGridProps } from '../ChartsGrid';

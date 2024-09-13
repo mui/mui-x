@@ -20,67 +20,67 @@ export const getGridStringQuickFilterFn: GetApplyQuickFilterFn<any, unknown> = (
   };
 };
 
+const createContainsFilterFn =
+  (disableTrim: boolean, negate: boolean) => (filterItem: GridFilterItem) => {
+    if (!filterItem.value) {
+      return null;
+    }
+    const trimmedValue = disableTrim ? filterItem.value : filterItem.value.trim();
+    const filterRegex = new RegExp(escapeRegExp(trimmedValue), 'i');
+    return (value: any): boolean => {
+      if (value == null) {
+        return negate;
+      }
+      const matches = filterRegex.test(String(value));
+      return negate ? !matches : matches;
+    };
+  };
+
+const createEqualityFilterFn =
+  (disableTrim: boolean, negate: boolean) => (filterItem: GridFilterItem) => {
+    if (!filterItem.value) {
+      return null;
+    }
+    const trimmedValue = disableTrim ? filterItem.value : filterItem.value.trim();
+
+    const collator = new Intl.Collator(undefined, { sensitivity: 'base', usage: 'search' });
+    return (value: any): boolean => {
+      if (value == null) {
+        return negate;
+      }
+      const isEqual = collator.compare(trimmedValue, value.toString()) === 0;
+      return negate ? !isEqual : isEqual;
+    };
+  };
+
+const createEmptyFilterFn = (negate: boolean) => () => {
+  return (value: any): boolean => {
+    const isEmpty = value === '' || value == null;
+    return negate ? !isEmpty : isEmpty;
+  };
+};
+
 export const getGridStringOperators = (
   disableTrim: boolean = false,
 ): GridFilterOperator<any, number | string | null, any>[] => [
   {
     value: 'contains',
-    getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.value) {
-        return null;
-      }
-      const filterItemValue = disableTrim ? filterItem.value : filterItem.value.trim();
-
-      const filterRegex = new RegExp(escapeRegExp(filterItemValue), 'i');
-      return (value): boolean => {
-        return value != null ? filterRegex.test(String(value)) : false;
-      };
-    },
+    getApplyFilterFn: createContainsFilterFn(disableTrim, false),
     InputComponent: GridFilterInputValue,
   },
   {
     value: 'doesNotContain',
-    getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.value) {
-        return null;
-      }
-      const filterItemValue = disableTrim ? filterItem.value : filterItem.value.trim();
-
-      const filterRegex = new RegExp(escapeRegExp(filterItemValue), 'i');
-      return (value): boolean => {
-        return value != null ? !filterRegex.test(String(value)) : true;
-      };
-    },
+    getApplyFilterFn: createContainsFilterFn(disableTrim, true),
     InputComponent: GridFilterInputValue,
   },
   {
     value: 'equals',
-    getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.value) {
-        return null;
-      }
-      const filterItemValue = disableTrim ? filterItem.value : filterItem.value.trim();
-
-      const collator = new Intl.Collator(undefined, { sensitivity: 'base', usage: 'search' });
-      return (value): boolean => {
-        return value != null ? collator.compare(filterItemValue, value.toString()) === 0 : false;
-      };
-    },
+    getApplyFilterFn: createEqualityFilterFn(disableTrim, false),
     InputComponent: GridFilterInputValue,
   },
   {
     value: 'doesNotEqual',
-    getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.value) {
-        return null;
-      }
-      const filterItemValue = disableTrim ? filterItem.value : filterItem.value.trim();
-
-      const collator = new Intl.Collator(undefined, { sensitivity: 'base', usage: 'search' });
-      return (value): boolean => {
-        return value != null ? collator.compare(filterItemValue, value.toString()) !== 0 : true;
-      };
-    },
+    getApplyFilterFn: createEqualityFilterFn(disableTrim, true),
     InputComponent: GridFilterInputValue,
   },
   {
@@ -115,20 +115,12 @@ export const getGridStringOperators = (
   },
   {
     value: 'isEmpty',
-    getApplyFilterFn: () => {
-      return (value): boolean => {
-        return value === '' || value == null;
-      };
-    },
+    getApplyFilterFn: createEmptyFilterFn(false),
     requiresFilterValue: false,
   },
   {
     value: 'isNotEmpty',
-    getApplyFilterFn: () => {
-      return (value): boolean => {
-        return value !== '' && value != null;
-      };
-    },
+    getApplyFilterFn: createEmptyFilterFn(true),
     requiresFilterValue: false,
   },
   {

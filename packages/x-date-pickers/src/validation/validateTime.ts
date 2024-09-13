@@ -1,20 +1,19 @@
-import { createIsAfterIgnoreDatePart } from '../time-utils';
-import { Validator } from '../../hooks/useValidation';
-import { BaseTimeValidationProps, TimeValidationProps } from '../../models/validation';
-import { PickerValidDate, TimeValidationError, TimezoneProps } from '../../../models';
-import { DefaultizedProps } from '../../models/helpers';
+import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
+import { Validator } from './useValidation';
+import { BaseTimeValidationProps, TimeValidationProps } from '../internals/models/validation';
+import { PickerValidDate, TimeValidationError } from '../models';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 
-export interface TimeComponentValidationProps<TDate extends PickerValidDate>
+export interface ValidateTimeProps<TDate extends PickerValidDate>
   extends Required<BaseTimeValidationProps>,
-    TimeValidationProps<TDate>,
-    DefaultizedProps<TimezoneProps, 'timezone'> {}
+    TimeValidationProps<TDate> {}
 
 export const validateTime: Validator<
   any | null,
   any,
   TimeValidationError,
-  TimeComponentValidationProps<any>
-> = ({ adapter, value, props }): TimeValidationError => {
+  ValidateTimeProps<any>
+> = ({ adapter, value, timezone, props }): TimeValidationError => {
   if (value === null) {
     return null;
   }
@@ -27,7 +26,6 @@ export const validateTime: Validator<
     disableIgnoringDatePartForTimeValidation = false,
     disablePast,
     disableFuture,
-    timezone,
   } = props;
 
   const now = adapter.utils.date(undefined, timezone);
@@ -68,3 +66,5 @@ export const validateTime: Validator<
       return null;
   }
 };
+
+validateTime.valueManager = singleItemValueManager;

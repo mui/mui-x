@@ -1,39 +1,32 @@
-import { Validator } from '../../hooks/useValidation';
+import { Validator } from './useValidation';
 import {
   BaseDateValidationProps,
   DayValidationProps,
   MonthValidationProps,
   YearValidationProps,
-} from '../../models/validation';
-import { DateValidationError, PickerValidDate, TimezoneProps } from '../../../models';
-import { applyDefaultDate } from '../date-utils';
-import { DefaultizedProps } from '../../models/helpers';
+} from '../internals/models/validation';
+import { DateValidationError, PickerValidDate } from '../models';
+import { applyDefaultDate } from '../internals/utils/date-utils';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 
-export interface DateComponentValidationProps<TDate extends PickerValidDate>
+export interface ValidateDateProps<TDate extends PickerValidDate>
   extends DayValidationProps<TDate>,
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
-    Required<BaseDateValidationProps<TDate>>,
-    DefaultizedProps<TimezoneProps, 'timezone'> {}
+    Required<BaseDateValidationProps<TDate>> {}
 
 export const validateDate: Validator<
   any | null,
   any,
   DateValidationError,
-  DateComponentValidationProps<any>
-> = ({ props, value, adapter }): DateValidationError => {
+  ValidateDateProps<any>
+> = ({ props, value, timezone, adapter }): DateValidationError => {
   if (value === null) {
     return null;
   }
 
-  const {
-    shouldDisableDate,
-    shouldDisableMonth,
-    shouldDisableYear,
-    disablePast,
-    disableFuture,
-    timezone,
-  } = props;
+  const { shouldDisableDate, shouldDisableMonth, shouldDisableYear, disablePast, disableFuture } =
+    props;
 
   const now = adapter.utils.date(undefined, timezone);
   const minDate = applyDefaultDate(adapter.utils, props.minDate, adapter.defaultDates.minDate);
@@ -68,3 +61,5 @@ export const validateDate: Validator<
       return null;
   }
 };
+
+validateDate.valueManager = singleItemValueManager;

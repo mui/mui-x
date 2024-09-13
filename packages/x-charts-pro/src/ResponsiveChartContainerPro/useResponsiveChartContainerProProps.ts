@@ -1,3 +1,4 @@
+'use client';
 import { useResponsiveChartContainerProps } from '@mui/x-charts/internals';
 import type { ChartContainerProProps } from '../ChartContainerPro';
 import type { ResponsiveChartContainerProProps } from './ResponsiveChartContainerPro';

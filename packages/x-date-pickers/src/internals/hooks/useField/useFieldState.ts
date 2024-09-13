@@ -21,12 +21,12 @@ import {
   getLocalizedDigits,
 } from './useField.utils';
 import { buildSectionsFromFormat } from './buildSectionsFromFormat';
-import { InferError } from '../useValidation';
 import {
   FieldSection,
   FieldSelectedSections,
   PickersTimezone,
   PickerValidDate,
+  InferError,
 } from '../../../models';
 import { useValueWithTimezone } from '../useValueWithTimezone';
 import {
@@ -228,7 +228,8 @@ export const useFieldState = <
       validationError: validator({
         adapter,
         value,
-        props: { ...internalProps, value, timezone },
+        timezone,
+        props: internalProps,
       }),
     };
 

@@ -1,10 +1,11 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { StaticDatePickerProps } from './StaticDatePicker.types';
 import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { validateDate } from '../internals/utils/validation/validateDate';
+import { validateDate } from '../validation';
 import { DateView, PickerValidDate } from '../models';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 

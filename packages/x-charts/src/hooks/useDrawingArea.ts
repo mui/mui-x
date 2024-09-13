@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { DrawingArea, DrawingContext } from '../context/DrawingProvider';
 

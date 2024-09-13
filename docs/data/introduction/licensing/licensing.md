@@ -4,26 +4,23 @@
 
 ## MIT vs. commercial licenses
 
-The MUI X team has been building MIT-licensed React components since 2014, starting with Material UI.
-We are committed to the continued advancement of the open-source libraries.
+The MUI X team has been building MIT-licensed React components since 2014, starting with Material UI, and we're committed to the continued advancement of our open-source libraries.
 Anything we release under an MIT license will remain MIT-licensed forever.
-You can learn more about our stewardship ethos in [this document from our company handbook](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
+Learn more about [our stewardship ethos](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
 
-We offer commercial licenses to developers who need the most advanced features that cannot be easily maintained by the open-source community.
-Commercial licenses enable us to support a full-time staff of engineers, which is simply not possible through the MIT model.
+We offer commercial licenses to developers who need the most advanced components and features that can't reasonably be maintained by the open-source community alone.
+These licenses make it possible for us to support a full-time staff of engineers.
 
-Rest assured that when we release features commercially, it's only because we believe that you will not find a better MIT-licensed alternative anywhere else.
+Rest assured that when we release features commercially, it's only because we believe you won't find a better MIT-licensed alternative anywhere else.
 
-See [the Pricing page](https://mui.com/r/x-get-license/) for a detailed feature comparison.
+See the [Pricing page](https://mui.com/r/x-get-license/) for a detailed feature comparison.
 
 ## Plans
 
 ### Community plan
 
-The MUI X Community plan is [published under an MIT license](https://www.tldrlegal.com/license/mit-license) and is [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
-This version contains features that we believe are maintainable by contributions from the open-source community.
-
-These are the Community MIT-licensed npm packages:
+The free Community version of MUI X contains components and features that we believe are maintainable by contributions from the open-source community.
+It's published under an [MIT license](https://www.tldrlegal.com/license/mit-license) and it's [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
 
 - [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid)
 - [`@mui/x-date-pickers`](https://www.npmjs.com/package/@mui/x-date-pickers)
@@ -33,27 +30,22 @@ These are the Community MIT-licensed npm packages:
 ### Pro plan <span class="plan-pro"></span>
 
 MUI X Pro expands on the Community version with more advanced features and functionality.
-The Data Grid Pro comes with multi-filtering, multi-sorting, column resizing, and column pinning in addition to the baseline features.
-You also gain access to the Date and Time Range Picker components.
+The Data Grid Pro comes with multi-filtering, multi-sorting, column resizing, and column pinning; you also gain access to the Date and Time Range Picker components, advanced Charts, and drag-and-drop reordering for the Tree View.
 
-The Pro version is available under a commercial license—visit [the Pricing page](https://mui.com/r/x-get-license/) for details.
+The Pro version is available under a commercial license—visit the [Pricing page](https://mui.com/r/x-get-license/) for details.
 Exclusive features are marked with the <span class="plan-pro" aria-label="MUI X Pro plan icon"></span> icon throughout the documentation.
-
-These are the Pro npm packages:
 
 - [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro)
 - [`@mui/x-date-pickers-pro`](https://www.npmjs.com/package/@mui/x-date-pickers-pro)
-- [`@mui/x-tree-view-pro`](https://www.npmjs.com/package/@mui/x-tree-view-pro)
 - [`@mui/x-charts-pro`](https://www.npmjs.com/package/@mui/x-charts-pro)
+- [`@mui/x-tree-view-pro`](https://www.npmjs.com/package/@mui/x-tree-view-pro)
 
 ### Premium plan <span class="plan-premium"></span>
 
-MUI X Premium unlocks the most advanced features of the Data Grid, including row grouping and Excel exporting, on top of everything else offered in the Pro plan.
+MUI X Premium unlocks the most advanced features of the Data Grid, including row grouping and Excel exporting, as well as everything offered in the Pro plan.
 
 The Premium version is available under a commercial license—visit [the Pricing page](https://mui.com/r/x-get-license/) for details.
 Exclusive features are marked with the <span class="plan-premium" aria-label="MUI X Premium plan icon"></span> icon throughout the documentation.
-
-These are the Premium npm packages:
 
 - [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium)
 

@@ -67,7 +67,7 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
     formattedTime || (value !== null && utils.isValid(value))
       ? `Velja tíma, valinn tími er ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Velja tíma',
-  // fieldClearLabel: 'Clear value',
+  // fieldClearLabel: 'Clear',
 
   // Table labels
   timeTableLabel: 'velja tíma',

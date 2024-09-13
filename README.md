@@ -5,9 +5,6 @@
 
 <h1 align="center">MUI X</h1>
 
-[MUI X](https://mui.com/x/) is a collection of advanced React UI components for complex use cases. Use the native integration with [Material UI](https://github.com/mui/material-ui/) or extend your design system.
-They feature state-of-the-art functionality and complex UX workflows for data-rich applications and support a wide range of use cases.
-
 <div align="center">
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mui/mui-x/blob/HEAD/LICENSE)
@@ -19,99 +16,93 @@ They feature state-of-the-art functionality and complex UX workflows for data-ri
 [![Renovate status](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://github.com/mui/mui-x/issues/2081)
 [![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/mui/mui-x.svg)](https://isitmaintained.com/project/mui/mui-x 'Average time to resolve an issue')
 [![Open Collective backers and sponsors](https://img.shields.io/opencollective/all/mui-org)](https://opencollective.com/mui-org)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/6293/badge)](https://bestpractices.coreinfrastructure.org/projects/6293)
 
 <!-- [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8715/badge)](https://www.bestpractices.dev/projects/8715) -->
 
 </div>
 
-MUI X is **open core**—base components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
-See the [Licensing page](https://mui.com/x/introduction/licensing/) for details.
+[MUI X](https://mui.com/x/) is a suite of advanced React UI components for a wide range of complex use cases.
+Each component provides best-in-class UX and DX, with sophisticated UX workflows for data-rich applications.
+Components include the Data Grid, Date and Time Pickers, Charts, and Tree View.
 
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/6293/badge)](https://bestpractices.coreinfrastructure.org/projects/6293)
+MUI X extends the core functionality of [Material UI](https://github.com/mui/material-ui/), but the advanced components also stand on their own and can be fully customized to meet the needs of any design system.
 
-## Components
+MUI X is **open-core**: [Community](#community-plan) components are MIT-licensed and free forever, while more advanced features and components require a [Pro](#pro-plan) or [Premium](#premium-plan) commercial license.
+See [Licensing](#licensing) for more information.
+
+## Documentation
+
+Get started in the [MUI X documentation](https://mui.com/x/introduction/).
 
 - [Data Grid](https://mui.com/x/react-data-grid/)
 - [Date and Time Pickers](https://mui.com/x/react-date-pickers/)
 - [Charts](https://mui.com/x/react-charts/)
 - [Tree View](https://mui.com/x/react-tree-view/)
 
-## Installation
+### Installation
 
-### Data Grid
+- [Data Grid installation](https://mui.com/x/react-data-grid/getting-started/#installation)
+- [Date and Time Pickers installation](https://mui.com/x/react-date-pickers/getting-started/#installation)
+- [Charts installation](https://mui.com/x/react-charts/getting-started/#installation)
+- [Tree View installation](https://mui.com/x/react-tree-view/getting-started/#installation)
 
-Read the Data Grid [Installation instructions](https://mui.com/x/react-data-grid/getting-started/#installation) in the MUI X docs.
+## Licensing
 
-### Date and Time Pickers
-
-Read the Date and Time Pickers [Installation instructions](https://mui.com/x/react-date-pickers/getting-started/#installation) in the MUI X docs.
-
-### Charts
-
-Read the Charts [Installation instructions](https://mui.com/x/react-charts/getting-started/#installation) in the MUI X docs.
-
-### Tree View
-
-Read the Tree View [Installation instructions](https://mui.com/x/react-tree-view/getting-started/#installation) in the MUI X docs.
-
-## MIT vs. commercial licenses
-
-We has been building MIT-licensed React components since 2014, and we are committed to the continued advancement of the open-source libraries.
+The MUI X team has been building MIT-licensed React components since 2014, starting with Material UI, and we're committed to the continued advancement of our open-source libraries.
 Anything we release under an MIT license will remain MIT-licensed forever.
-You can learn more about our stewardship ethos in [this document from our company handbook](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
+Learn more about [our stewardship ethos](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
 
-We offer commercial licenses to developers who need the most advanced features that cannot be easily maintained by the open-source community.
-Commercial licenses enable us to support a full-time staff of engineers, which is simply not possible through the MIT model.
+We offer commercial licenses to developers who need the most advanced components and features that can't reasonably be maintained by the open-source community alone.
+These licenses make it possible for us to support a full-time staff of engineers.
 
-Rest assured that when we release features commercially, it's only because we believe that you will not find a better MIT-licensed alternative anywhere else.
+Rest assured that when we release features commercially, it's only because we believe you won't find a better MIT-licensed alternative anywhere else.
 
-See the [Pricing](https://mui.com/pricing/) page for a detailed feature comparison.
+See the [Licensing page](https://mui.com/x/introduction/licensing/) for complete details.
 
-## Plans
+### Plans
 
-### Community plan
+#### Community plan
 
-The free version of MUI X is [published under an MIT license](https://www.tldrlegal.com/license/mit-license) and is [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
-This version contains features that we believe are maintainable by contributions from the open-source community.
-
-MIT licensed packages:
+The free Community version of MUI X contains components and features that we believe are maintainable by contributions from the open-source community.
+It's published under an [MIT license](https://www.tldrlegal.com/license/mit-license) and it's [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
 
 - [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid)
 - [`@mui/x-date-pickers`](https://www.npmjs.com/package/@mui/x-date-pickers)
 - [`@mui/x-charts`](https://www.npmjs.com/package/@mui/x-charts)
 - [`@mui/x-tree-view`](https://www.npmjs.com/package/@mui/x-tree-view)
 
-### Pro plan
+#### Pro plan
 
-The Pro version of MUI X expands on the features of the free version with more advanced capabilities such as multi-filtering, multi-sorting, column resizing and column pinning for the data grid; as well as the date range picker component.
+MUI X Pro expands on the Community version with more advanced features and functionality.
+The Data Grid Pro comes with multi-filtering, multi-sorting, column resizing, and column pinning; you also gain access to the Date and Time Range Picker components, advanced Charts, and drag-and-drop reordering for the Tree View.
 
-The Pro version is available under a commercial license—visit [the Pricing page](https://mui.com/pricing/) for details.
-
-Pro packages:
+The Pro version is available under a commercial license—visit the [Pricing page](https://mui.com/pricing/) for details.
 
 - [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro)
 - [`@mui/x-date-pickers-pro`](https://www.npmjs.com/package/@mui/x-date-pickers-pro)
+- [`@mui/x-charts-pro`](https://www.npmjs.com/package/@mui/x-charts-pro)
+- [`@mui/x-tree-view-pro`](https://www.npmjs.com/package/@mui/x-tree-view-pro)
 
-### Premium plan
+#### Premium plan
 
-The Premium version of MUI X covers the most advanced features of the data grid, such as row grouping, Excel export, and aggregation, in addition to everything that's included in the Pro plan.
+MUI X Premium unlocks the most advanced features of the Data Grid, including row grouping and Excel exporting, as well as everything offered in the Pro plan.
 
-The Premium version is available under a commercial license—visit [the Pricing page](https://mui.com/pricing/) for details.
-
-Premium package:
+The Premium version is available under a commercial license—visit the [Pricing page](https://mui.com/pricing/) for details.
 
 - [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium)
 
 ## Support
 
-From community guidance to critical business support, we're here to help. Read the [support guide](https://mui.com/x/introduction/support/).
+From community guidance to critical business support, we're here to help.
+Read the [Support guide](https://mui.com/x/introduction/support/) for details.
 
 ## Contributing
 
-Read the [contributing guide](/CONTRIBUTING.md) to learn about our development process, how to propose bug fixes and improvements, and how to build and test your changes.
+Read the [Contributing guide](/CONTRIBUTING.md) to learn about our development process, how to propose bug fixes and improvements, and how to build and test your changes.
 
 Contributing to MUI X is about more than just issues and pull requests!
-There are many other ways to [support MUI X](https://mui.com/material-ui/getting-started/faq/#mui-is-awesome-how-can-i-support-the-project) beyond contributing to the code base.
+There are many other ways to [support MUI X](https://mui.com/material-ui/getting-started/faq/#mui-is-an-awesome-organization-how-can-i-support-it) beyond contributing to the code base.
 
 ## Changelog
 
@@ -123,4 +114,4 @@ Future plans and high-priority features and enhancements can be found in the [ro
 
 ## Security
 
-For details of supported versions and contact details for reporting security issues, please refer to the [security policy](https://github.com/mui/mui-x/security/policy).
+For details on supported versions and contact information for reporting security issues, please refer to the [security policy](https://github.com/mui/mui-x/security/policy).

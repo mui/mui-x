@@ -14,6 +14,7 @@ Globals.assign({
 
 const blacklist = [
   /^docs-(.*)(?<=NoSnap)\.png$/, // Excludes demos that we don't want
+  /^docs-data-grid-custom-columns-cell-renderers\/(.*)\.png$/, // Custom components used to build docs pages
   'docs-data-grid-filtering/RemoveBuiltInOperators.png', // Needs interaction
   'docs-data-grid-filtering/CustomRatingOperator.png', // Needs interaction
   'docs-data-grid-filtering/CustomInputComponent.png', // Needs interaction

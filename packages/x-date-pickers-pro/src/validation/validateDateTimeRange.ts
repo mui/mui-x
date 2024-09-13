@@ -1,27 +1,22 @@
-import { PickerValidDate, TimezoneProps } from '@mui/x-date-pickers/models';
-import {
-  Validator,
-  validateDateTime,
-  BaseDateValidationProps,
-  TimeValidationProps,
-  DefaultizedProps,
-} from '@mui/x-date-pickers/internals';
-import { isRangeValid } from '../date-utils';
-import { DayRangeValidationProps } from '../../models/dateRange';
-import { DateTimeRangeValidationError, DateRange } from '../../../models';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { validateDateTime, Validator } from '@mui/x-date-pickers/validation';
+import { BaseDateValidationProps, TimeValidationProps } from '@mui/x-date-pickers/internals';
+import { isRangeValid } from '../internals/utils/date-utils';
+import { DayRangeValidationProps } from '../internals/models/dateRange';
+import { DateTimeRangeValidationError, DateRange } from '../models';
+import { rangeValueManager } from '../internals/utils/valueManagers';
 
-export interface DateTimeRangeComponentValidationProps<TDate extends PickerValidDate>
+export interface ValidateDateTimeRangeProps<TDate extends PickerValidDate>
   extends DayRangeValidationProps<TDate>,
     TimeValidationProps<TDate>,
-    Required<BaseDateValidationProps<TDate>>,
-    DefaultizedProps<TimezoneProps, 'timezone'> {}
+    Required<BaseDateValidationProps<TDate>> {}
 
 export const validateDateTimeRange: Validator<
   DateRange<any>,
   any,
   DateTimeRangeValidationError,
-  DateTimeRangeComponentValidationProps<any>
-> = ({ props, value, adapter }) => {
+  ValidateDateTimeRangeProps<any>
+> = ({ adapter, value, timezone, props }) => {
   const [start, end] = value;
 
   const { shouldDisableDate, ...otherProps } = props;
@@ -30,6 +25,7 @@ export const validateDateTimeRange: Validator<
     validateDateTime({
       adapter,
       value: start,
+      timezone,
       props: {
         ...otherProps,
         shouldDisableDate: (day) => !!shouldDisableDate?.(day, 'start'),
@@ -38,6 +34,7 @@ export const validateDateTimeRange: Validator<
     validateDateTime({
       adapter,
       value: end,
+      timezone,
       props: {
         ...otherProps,
         shouldDisableDate: (day) => !!shouldDisableDate?.(day, 'end'),
@@ -60,3 +57,5 @@ export const validateDateTimeRange: Validator<
 
   return [null, null];
 };
+
+validateDateTimeRange.valueManager = rangeValueManager;

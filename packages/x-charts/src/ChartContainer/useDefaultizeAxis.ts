@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { MakeOptional } from '../models/helpers';

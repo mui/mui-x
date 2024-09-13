@@ -124,7 +124,14 @@ It only impacts the rendering part and does not impact the internal calculations
 ## What is the purpose of useDemoData hook used in the documentation examples?
 
 The `useDemoData` hook is a utility hook from the `@mui/x-data-grid-generator` package.
-It generates random data for the Data Grid. It is often used in documentation examples to provide realistic data without polluting the code with data generation logic.
+It contains columns definitions and generates random data for the Data Grid.
+It is often used in our demos to provide realistic data without polluting the code with data generation logic.
+
+:::success
+Looking for the column definitions and custom cell renderers from the `useDemoData` hook?
+
+Check out the [Custom columns demo](/x/react-data-grid/custom-columns/#full-example) where you can copy them from the demo source code.
+:::
 
 Here's how it's used:
 

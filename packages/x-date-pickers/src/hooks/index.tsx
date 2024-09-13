@@ -7,3 +7,5 @@ export type {
 } from './useClearableField';
 
 export { usePickersTranslations } from './usePickersTranslations';
+
+export { useSplitFieldProps } from './useSplitFieldProps';

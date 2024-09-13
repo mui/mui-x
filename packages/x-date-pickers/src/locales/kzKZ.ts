@@ -68,7 +68,7 @@ const kzKZPickers: Partial<PickersLocaleText<any>> = {
     formattedTime || (value !== null && utils.isValid(value))
       ? `Уақытты таңдаңыз, таңдалған уақыт ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Уақытты таңдаңыз',
-  // fieldClearLabel: 'Clear value',
+  // fieldClearLabel: 'Clear',
 
   // Table labels
   timeTableLabel: 'уақытты таңдау',

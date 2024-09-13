@@ -13,7 +13,7 @@ import {
 import {
   UseTreeItem2LabelInputSlotOwnProps,
   UseTreeItem2LabelSlotOwnProps,
-  unstable_useTreeItem2 as useTreeItem2,
+  useTreeItem2,
 } from '@mui/x-tree-view/useTreeItem2';
 import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';

@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { ChartSeriesType, DatasetType } from '../../models/seriesType/config';

@@ -36,7 +36,9 @@ const ColumnHeaderInnerTitle = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(function ColumnHeaderInnerTitle(props, ref) {
-  const { className, ...other } = props;
+  // Tooltip adds aria-label to the props, which is not needed since the children prop is a string
+  // See https://github.com/mui/mui-x/pull/14482
+  const { className, 'aria-label': ariaLabel, ...other } = props;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
 

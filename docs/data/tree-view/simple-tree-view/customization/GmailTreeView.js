@@ -20,7 +20,7 @@ import {
   TreeItem2Root,
   TreeItem2GroupTransition,
 } from '@mui/x-tree-view/TreeItem2';
-import { unstable_useTreeItem2 as useTreeItem } from '@mui/x-tree-view/useTreeItem2';
+import { useTreeItem2 } from '@mui/x-tree-view/useTreeItem2';
 import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
 import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
 
@@ -83,7 +83,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     getLabelProps,
     getGroupTransitionProps,
     status,
-  } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
+  } = useTreeItem2({ id, itemId, children, label, disabled, rootRef: ref });
 
   const style = {
     '--tree-view-color': theme.palette.mode !== 'dark' ? color : colorForDarkMode,

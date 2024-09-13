@@ -11,9 +11,10 @@ import {
   FieldSection,
   PickerValidDate,
   BuiltInFieldTextFieldProps,
+  BaseSingleInputFieldProps,
 } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { MakeOptional } from '../internals/models/helpers';
+import { MakeOptional, DefaultizedProps } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,
   DayValidationProps,
@@ -39,6 +40,19 @@ export interface UseDateFieldProps<
     YearValidationProps<TDate>,
     BaseDateValidationProps<TDate>,
     ExportedUseClearableFieldProps {}
+
+/**
+ * Props the field can receive when used inside a date picker.
+ * (`DatePicker`, `DesktopDatePicker` or `MobileDatePicker` component).
+ */
+export type DateFieldInPickerProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> = DefaultizedProps<
+  UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  'format' | 'timezone' | keyof BaseDateValidationProps<TDate>
+> &
+  BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, false, DateValidationError>;
 
 export type UseDateFieldComponentProps<
   TDate extends PickerValidDate,

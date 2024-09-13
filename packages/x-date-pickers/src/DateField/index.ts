@@ -4,4 +4,5 @@ export type {
   UseDateFieldProps,
   UseDateFieldComponentProps,
   DateFieldProps,
+  DateFieldInPickerProps,
 } from './DateField.types';
