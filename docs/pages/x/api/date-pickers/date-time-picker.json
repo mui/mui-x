@@ -1,10 +1,5 @@
 {
   "props": {
-    "yearsPerRow": {
-      "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
-      "default": "4 on desktop, 3 on mobile",
-      "required": true
-    },
     "ampm": { "type": { "name": "bool" }, "default": "utils.is12HourCycleInCurrentLocale()" },
     "ampmInClock": { "type": { "name": "bool" }, "default": "true on desktop, false on mobile" },
     "autoFocus": { "type": { "name": "bool" } },
@@ -215,6 +210,10 @@
     "yearsOrder": {
       "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" },
       "default": "'asc'"
+    },
+    "yearsPerRow": {
+      "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
+      "default": "4 on desktop, 3 on mobile"
     }
   },
   "name": "DateTimePicker",
