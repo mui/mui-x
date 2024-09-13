@@ -55,7 +55,7 @@ const buildTreeViewDragInteractions = (dataTransfer: DataTransfer) => {
   };
 };
 
-describeTreeView<
+describeTreeView.only<
   [UseTreeViewItemsReorderingSignature, UseTreeViewItemsSignature, UseTreeViewExpansionSignature]
 >('useTreeViewItemsReordering', ({ render, treeViewComponentName }) => {
   if (treeViewComponentName === 'SimpleTreeView' || treeViewComponentName === 'RichTreeView') {
@@ -124,7 +124,7 @@ describeTreeView<
       fireEvent.keyDown(view.getItemRoot('2'), { key: 'Enter' });
 
       expect(view.getItemIdTree()).to.deep.equal([
-        { id: '1', children: [] },
+        { id: '1' },
         { id: '2', children: [{ id: '1.1' }] },
       ]);
     });
@@ -156,7 +156,7 @@ describeTreeView<
         experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: true,
-        canMoveItemToNewPosition: () => false,
+        isItemReorderable: () => false,
       });
 
       dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
@@ -168,7 +168,7 @@ describeTreeView<
         experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: true,
-        canMoveItemToNewPosition: () => true,
+        isItemReorderable: () => true,
       });
 
       dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));

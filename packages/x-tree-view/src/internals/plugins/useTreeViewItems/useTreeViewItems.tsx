@@ -127,7 +127,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     const getItemFromItemId = (id: TreeViewItemId): TreeViewBaseItem => {
       const { children: oldChildren, ...item } = selectorItemMap(store.value)[id];
       const newChildren = instance.getItemOrderedChildrenIds(id);
-      if (newChildren) {
+      if (newChildren.length > 0) {
         item.children = newChildren.map(getItemFromItemId);
       }
 
