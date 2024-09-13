@@ -252,6 +252,10 @@ Use the `setRowChildrenExpansion` method on `apiRef` to programmatically set the
 
 {{"demo": "RowGroupingSetChildrenExpansion.js", "bg": "inline", "defaultCodeOpen": false}}
 
+:::warning
+The `apiRef.current.setRowChildrenExpansion` method is not compatible with the [server-side tree data](/x/react-data-grid/server-side-data/tree-data/) and [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/). Use `apiRef.current.unstable_dataSource.fetchRows` instead.
+:::
+
 ### Customize grouping cell indent
 
 To change the default cell indent, you can use the `--DataGrid-cellOffsetMultiplier` CSS variable:
@@ -280,8 +284,8 @@ If you are rendering leaves with the `leafField` property of `groupingColDef`, t
 
 You can force the filtering to be applied on another grouping criteria with the `mainGroupingCriteria` property of `groupingColDef`
 
-:::warning
-This feature is not yet compatible with `sortingMode = "server"` and `filteringMode = "server"`.
+:::info
+For server-side lazy fetching, filtering, sorting the row grouped data, use the [server side row grouping](/x/react-data-grid/server-side-data/row-grouping/) feature.
 :::
 
 {{"demo": "RowGroupingFilteringSingleGroupingColDef.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -331,6 +335,10 @@ const rows = apiRef.current.getRowGroupChildren({
 ```
 
 {{"demo": "RowGroupingGetRowGroupChildren.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+The `apiRef.current.getRowGroupChildren` method is not compatible with the [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/) since all the rows might not be available to get at a given instance.
+:::
 
 ## Row group panel 🚧
 
