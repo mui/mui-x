@@ -10,19 +10,17 @@ interface CreatePickerRendererOptions extends CreateRendererOptions {
   instance?: any;
 }
 
-let vi: any;
-
-if (process.env.MUI_VITEST === 'true') {
-  vi = (await import('vitest')).vi;
-}
-
 export function createPickerRenderer({
   locale,
   adapterName,
   instance,
   ...createRendererOptions
 }: CreatePickerRendererOptions = {}) {
-  const { clock, render: clientRender } = createRenderer({ ...createRendererOptions, vi });
+  const { clock, render: clientRender } = createRenderer({
+    ...createRendererOptions,
+    // @ts-expect-error is global
+    vi,
+  });
 
   let adapterLocale = [
     'date-fns',
