@@ -32,7 +32,7 @@ export interface ExportedYearCalendarProps {
   yearsOrder?: 'asc' | 'desc';
   /**
    * Years rendered per row.
-   * @default 3
+   * @default 4 on desktop, 3 on mobile
    */
   yearsPerRow?: 3 | 4;
 }
