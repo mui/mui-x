@@ -7,7 +7,7 @@ import {
   unstable_useId as useId,
 } from '@mui/utils';
 import { TooltipProps } from '@mui/material/Tooltip';
-import { ChipProps } from '@mui/material/chip';
+import { ChipProps } from '@mui/material/Chip';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridFilterActiveItemsSelector } from '../../hooks/features/filter/gridFilterSelector';
