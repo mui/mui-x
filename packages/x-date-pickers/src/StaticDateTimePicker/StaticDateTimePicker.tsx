@@ -282,6 +282,12 @@ StaticDateTimePicker.propTypes = {
    */
   renderLoading: PropTypes.func,
   /**
+   * If `false`, display the years in their default order (chronological)
+   * If `true`, reverse the order of displayed years
+   * @default false
+   */
+  reverseYears: PropTypes.bool,
+  /**
    * Disable specific date.
    *
    * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.

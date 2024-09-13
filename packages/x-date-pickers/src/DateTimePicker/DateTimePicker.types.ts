@@ -48,7 +48,7 @@ export interface DateTimePickerProps<
    * If `true`, reverse the order of displayed years
    * @default false
    */
-  reverseYears: boolean;
+  reverseYears?: boolean;
   /**
    * Overridable component slots.
    * @default {}
