@@ -7,20 +7,8 @@ export const getFakeContextValue = (
 ): TreeViewContextValue<SimpleTreeViewPluginSignatures> => ({
   instance: {
     isItemExpandable: () => false,
-    isItemExpanded: () => false,
-    isItemDisabled: () => false,
-    getTreeItemIdAttribute: () => '',
-    mapFirstCharFromJSX: () => () => {},
   } as any,
-  publicAPI: {
-    focusItem: () => {},
-    getItem: () => ({}),
-    getItemOrderedChildrenIds: () => [],
-    setItemExpansion: () => {},
-    getItemDOMElement: () => null,
-    selectItem: () => {},
-    getItemTree: () => [],
-  },
+  publicAPI: {} as any,
   runItemPlugins: () => ({
     rootRef: null,
     contentRef: null,
@@ -45,5 +33,15 @@ export const getFakeContextValue = (
     current: null,
   },
   expansion: { expansionTrigger: 'content' },
-  store: new TreeViewStore({ initialState: {} as any, forceUpdate: () => {} }),
+  store: new TreeViewStore({
+    initialState: {
+      cacheKey: { id: 1 },
+      id: { treeId: undefined },
+      items: { itemMetaMap: {}, itemMap: {}, itemOrderedChildrenIds: {}, itemChildrenIndexes: {} },
+      expansion: { expandedItemsMap: new Map() },
+      selection: { selectedItemsMap: new Map() },
+      focus: { focusedItemId: null, defaultFocusableItemId: null },
+    },
+    forceUpdate: () => {},
+  }),
 });
