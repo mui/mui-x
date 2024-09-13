@@ -105,7 +105,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     slotProps: {
       ...defaultizedProps.slotProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
+        ...(resolveComponentProps(defaultizedProps.slotProps?.field, ownerState) as any),
         ...extractValidationProps(defaultizedProps),
         ref,
       }),

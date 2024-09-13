@@ -72,7 +72,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
     slotProps: {
       ...defaultizedProps.slotProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
+        ...(resolveComponentProps(defaultizedProps.slotProps?.field, ownerState) as any),
         ...extractValidationProps(defaultizedProps),
         ref,
       }),

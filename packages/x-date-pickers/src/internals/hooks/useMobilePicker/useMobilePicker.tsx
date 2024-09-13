@@ -118,6 +118,7 @@ export const useMobilePicker = <
       timezone,
       label,
       name,
+      onOpen: actions.onOpen,
       ...(inputRef ? { inputRef } : {}),
     },
     ownerState: props,

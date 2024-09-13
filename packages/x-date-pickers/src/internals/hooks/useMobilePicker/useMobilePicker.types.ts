@@ -11,7 +11,11 @@ import {
   PickersModalDialogSlotProps,
 } from '../../components/PickersModalDialog';
 import { UsePickerParams, UsePickerProps } from '../usePicker';
-import { BaseSingleInputFieldProps, FieldSection, PickerValidDate } from '../../../models';
+import {
+  BaseSingleInputFieldPropsInPickerSlots,
+  FieldSection,
+  PickerValidDate,
+} from '../../../models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -45,7 +49,7 @@ export interface ExportedUseMobilePickerSlotProps<
 > extends PickersModalDialogSlotProps,
     ExportedPickersLayoutSlotProps<TDate | null, TDate, TView> {
   field?: SlotComponentPropsFromProps<
-    BaseSingleInputFieldProps<
+    BaseSingleInputFieldPropsInPickerSlots<
       TDate | null,
       TDate,
       FieldSection,
