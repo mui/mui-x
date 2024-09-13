@@ -1,3 +1,4 @@
+'use client';
 import { useChartContainerProps } from '@mui/x-charts/internals';
 import { ZoomProviderProps } from '../context/ZoomProvider';
 import type { ChartContainerProProps } from './ChartContainerPro';

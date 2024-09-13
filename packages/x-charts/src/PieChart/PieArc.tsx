@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
