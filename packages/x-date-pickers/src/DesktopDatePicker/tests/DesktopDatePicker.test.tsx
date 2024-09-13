@@ -168,12 +168,14 @@ describe('<DesktopDatePicker />', () => {
     });
 
     afterEach(() => {
-      window.scrollTo?.(originalScrollX, originalScrollY);
+      if (isJSDOM || process.env.MUI_BROWSER === 'true') {
+        window.scrollTo?.(originalScrollX, originalScrollY);
+      }
     });
 
-    it('does not scroll when opened', (t = {}) => {
+    it('does not scroll when opened', function test(t = {}) {
       // JSDOM has neither layout nor window.scrollTo
-      if (/jsdom/.test(window.navigator.userAgent) || process.env.MUI_BROWSER === 'true') {
+      if (isJSDOM || process.env.MUI_BROWSER === 'true') {
         // @ts-expect-error to support mocha and vitest
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         this?.skip?.() || t?.skip();

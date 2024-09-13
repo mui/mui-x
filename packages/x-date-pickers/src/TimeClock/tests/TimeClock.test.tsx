@@ -276,7 +276,7 @@ describe('<TimeClock />', () => {
       },
     };
 
-    it('should select enabled hour', (t = {}) => {
+    it('should select enabled hour', function test(t = {}) {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
         // @ts-expect-error to support mocha and vitest
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -305,7 +305,7 @@ describe('<TimeClock />', () => {
       expect(handleViewChange.callCount).to.equal(0);
     });
 
-    it('should select enabled minute', (t = {}) => {
+    it('should select enabled minute', function test(t = {}) {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
         // @ts-expect-error to support mocha and vitest
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -335,7 +335,7 @@ describe('<TimeClock />', () => {
       expect(handleViewChange.callCount).to.equal(0);
     });
 
-    it('should not select minute when time is disabled', (t = {}) => {
+    it('should not select minute when time is disabled', function test(t = {}) {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
         // @ts-expect-error to support mocha and vitest
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -359,7 +359,7 @@ describe('<TimeClock />', () => {
       expect(handleChange.callCount).to.equal(0);
     });
 
-    it('should not select minute when time is disabled (no current value)', (t = {}) => {
+    it('should not select minute when time is disabled (no current value)', function test(t = {}) {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
         // @ts-expect-error to support mocha and vitest
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -383,7 +383,7 @@ describe('<TimeClock />', () => {
       expect(handleChange.callCount).to.equal(0);
     });
 
-    it('should not select disabled hour', (t = {}) => {
+    it('should not select disabled hour', function test(t = {}) {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
         // @ts-expect-error to support mocha and vitest
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -407,7 +407,7 @@ describe('<TimeClock />', () => {
       expect(handleChange.callCount).to.equal(0);
     });
 
-    it('should not select disabled hour (no current value)', (t = {}) => {
+    it('should not select disabled hour (no current value)', function test(t = {}) {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
         // @ts-expect-error to support mocha and vitest
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -431,7 +431,7 @@ describe('<TimeClock />', () => {
       expect(handleChange.callCount).to.equal(0);
     });
 
-    it('should visually disable the dates not matching minutesStep', (t = {}) => {
+    it('should visually disable the dates not matching minutesStep', function test(t = {}) {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
         // @ts-expect-error to support mocha and vitest
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -452,7 +452,7 @@ describe('<TimeClock />', () => {
       expect(screen.getByLabelText('30 minutes')).not.to.have.class('Mui-disabled');
     });
 
-    it('should select enabled second', (t = {}) => {
+    it('should select enabled second', function test(t = {}) {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
         // @ts-expect-error to support mocha and vitest
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -482,7 +482,7 @@ describe('<TimeClock />', () => {
       expect(handleViewChange.callCount).to.equal(0);
     });
 
-    it('should not select second when time is disabled', (t = {}) => {
+    it('should not select second when time is disabled', function test(t = {}) {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
         // @ts-expect-error to support mocha and vitest
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -506,7 +506,7 @@ describe('<TimeClock />', () => {
       expect(handleChange.callCount).to.equal(0);
     });
 
-    it('should not select second when time is disabled (no current value)', (t = {}) => {
+    it('should not select second when time is disabled (no current value)', function test(t = {}) {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
         // @ts-expect-error to support mocha and vitest
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -530,7 +530,7 @@ describe('<TimeClock />', () => {
       expect(handleChange.callCount).to.equal(0);
     });
 
-    it('should select enabled hour on touch and drag', (t = {}) => {
+    it('should select enabled hour on touch and drag', function test(t = {}) {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
         // @ts-expect-error to support mocha and vitest
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -558,7 +558,7 @@ describe('<TimeClock />', () => {
       expect(handleViewChange.callCount).to.equal(0);
     });
 
-    it('should select enabled hour and move to next view on touch end', (t = {}) => {
+    it('should select enabled hour and move to next view on touch end', function test(t = {}) {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
         // @ts-expect-error to support mocha and vitest
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
