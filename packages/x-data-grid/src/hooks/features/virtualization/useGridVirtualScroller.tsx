@@ -503,7 +503,7 @@ export const useGridVirtualScroller = () => {
       if (panel) {
         rows.push(panel);
       }
-      if (isLastVisible) {
+      if (params.position === undefined && isLastVisibleInSection) {
         rows.push(apiRef.current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }));
       }
     });
