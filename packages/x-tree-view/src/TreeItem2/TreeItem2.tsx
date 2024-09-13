@@ -214,17 +214,7 @@ type TreeItem2Component = ((
   props: TreeItem2Props & React.RefAttributes<HTMLLIElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-/**
- *
- * Demos:
- *
- * - [Tree View](https://mui.com/x/react-tree-view/)
- *
- * API:
- *
- * - [TreeItem2 API](https://mui.com/x/api/tree-view/tree-item-2/)
- */
-export const TreeItem2 = React.forwardRef(function TreeItem2(
+const TreeItem2Raw = React.forwardRef(function TreeItem2(
   inProps: TreeItem2Props,
   forwardedRef: React.Ref<HTMLLIElement>,
 ) {
@@ -357,6 +347,18 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
     </TreeItem2Provider>
   );
 }) as TreeItem2Component;
+
+/**
+ *
+ * Demos:
+ *
+ * - [Tree View](https://mui.com/x/react-tree-view/)
+ *
+ * API:
+ *
+ * - [TreeItem2 API](https://mui.com/x/api/tree-view/tree-item-2/)
+ */
+export const TreeItem2 = React.memo(TreeItem2Raw) as TreeItem2Component;
 
 TreeItem2.propTypes = {
   // ----------------------------- Warning --------------------------------
