@@ -151,6 +151,10 @@ Learn more about the accessible DOM structure and its difference compared to the
 
 ## Usage with another UI
 
+### Using a read-only `TextField`
+
+{{"demo": "CustomReadonlyBehaviorMaterialTextField.js", "defaultCodeOpen": false}}
+
 ### Using an `Autocomplete`
 
 If your user can only select a value in a small list of available dates,

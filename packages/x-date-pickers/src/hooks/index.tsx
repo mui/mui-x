@@ -9,3 +9,5 @@ export type {
 export { usePickersTranslations } from './usePickersTranslations';
 
 export { useSplitFieldProps } from './useSplitFieldProps';
+
+export { useFieldPlaceholder } from './useFieldPlaceholder';
