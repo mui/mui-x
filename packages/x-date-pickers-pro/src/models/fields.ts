@@ -95,6 +95,17 @@ export interface BaseMultiInputFieldProps<
   };
 }
 
+export type BaseMultiInputFieldPropsInPickerSlots<
+  TValue,
+  TDate extends PickerValidDate,
+  TSection extends FieldSection,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TError,
+> = Omit<
+  BaseMultiInputFieldProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>,
+  'onOpen'
+>;
+
 /**
  * Props the text field receives when used with a multi input picker.
  * Only contains what the MUI components are passing to the text field, not what users can pass using the `props.slotProps.textField`.

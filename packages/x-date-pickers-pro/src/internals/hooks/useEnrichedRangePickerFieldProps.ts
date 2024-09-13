@@ -19,7 +19,6 @@ import {
 } from '@mui/x-date-pickers/hooks';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
-  BaseFieldProps,
   onSpaceOrEnter,
   UsePickerResponse,
   WrapperVariant,
@@ -36,6 +35,7 @@ import {
   RangePosition,
   FieldType,
   UseDateRangeFieldProps,
+  BaseMultiInputFieldPropsInPickerSlots,
 } from '../../models';
 import { UseRangePositionResponse } from './useRangePosition';
 
@@ -64,7 +64,7 @@ export interface RangePickerFieldSlotProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends UseClearableFieldSlotProps {
   field?: SlotComponentPropsFromProps<
-    BaseMultiInputFieldProps<
+    BaseMultiInputFieldPropsInPickerSlots<
       DateRange<TDate>,
       TDate,
       RangeFieldSection,
@@ -83,21 +83,33 @@ export interface RangePickerFieldSlotProps<
   >;
 }
 
+export type RangePickerPropsForFieldSlot<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TError,
+> =
+  | BaseSingleInputFieldProps<
+      DateRange<TDate>,
+      TDate,
+      RangeFieldSection,
+      TEnableAccessibleFieldDOMStructure,
+      TError
+    >
+  | BaseMultiInputFieldProps<
+      DateRange<TDate>,
+      TDate,
+      RangeFieldSection,
+      TEnableAccessibleFieldDOMStructure,
+      TError
+    >;
+
 export interface UseEnrichedRangePickerFieldPropsParams<
   TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  FieldProps extends BaseFieldProps<
-    DateRange<TDate>,
+  FieldProps extends RangePickerPropsForFieldSlot<
     TDate,
-    RangeFieldSection,
-    TEnableAccessibleFieldDOMStructure,
-    TError
-  > = BaseFieldProps<
-    DateRange<TDate>,
-    TDate,
-    RangeFieldSection,
     TEnableAccessibleFieldDOMStructure,
     TError
   >,
@@ -451,12 +463,18 @@ export const useEnrichedRangePickerFieldProps = <
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
+  FieldProps extends RangePickerPropsForFieldSlot<
+    TDate,
+    TEnableAccessibleFieldDOMStructure,
+    TError
+  >,
 >(
   params: UseEnrichedRangePickerFieldPropsParams<
     TDate,
     TView,
     TEnableAccessibleFieldDOMStructure,
-    TError
+    TError,
+    FieldProps
   >,
 ) => {
   /* eslint-disable react-hooks/rules-of-hooks */

@@ -12,21 +12,19 @@ import {
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
 } from '@mui/x-date-pickers/internals';
-import {
-  PickerValidDate,
-  FieldRef,
-  BaseSingleInputFieldProps,
-  InferError,
-} from '@mui/x-date-pickers/models';
+import { PickerValidDate, FieldRef, InferError } from '@mui/x-date-pickers/models';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
   UseDesktopRangePickerSlotProps,
 } from './useDesktopRangePicker.types';
-import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
+import {
+  RangePickerPropsForFieldSlot,
+  useEnrichedRangePickerFieldProps,
+} from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange, BaseMultiInputFieldProps, RangeFieldSection } from '../../../models';
+import { DateRange, RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
@@ -138,24 +136,11 @@ export const useDesktopRangePicker = <
   const fieldProps = useSlotProps<
     typeof Field,
     UseDesktopRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>['field'],
-    | Partial<
-        BaseSingleInputFieldProps<
-          DateRange<TDate>,
-          TDate,
-          RangeFieldSection,
-          TEnableAccessibleFieldDOMStructure,
-          InferError<TExternalProps>
-        >
-      >
-    | Partial<
-        BaseMultiInputFieldProps<
-          DateRange<TDate>,
-          TDate,
-          RangeFieldSection,
-          TEnableAccessibleFieldDOMStructure,
-          InferError<TExternalProps>
-        >
-      >,
+    RangePickerPropsForFieldSlot<
+      TDate,
+      TEnableAccessibleFieldDOMStructure,
+      InferError<TExternalProps>
+    >,
     TExternalProps
   >({
     elementType: Field,
@@ -172,6 +157,7 @@ export const useDesktopRangePicker = <
       selectedSections,
       onSelectedSectionsChange,
       timezone,
+      onOpen: actions.onOpen,
       autoFocus: autoFocus && !props.open,
       ref: fieldContainerRef,
       ...(fieldType === 'single-input' ? { inputRef, name } : {}),
@@ -183,7 +169,8 @@ export const useDesktopRangePicker = <
     TDate,
     TView,
     TEnableAccessibleFieldDOMStructure,
-    InferError<TExternalProps>
+    InferError<TExternalProps>,
+    typeof fieldProps
   >({
     wrapperVariant: 'desktop',
     fieldType,
