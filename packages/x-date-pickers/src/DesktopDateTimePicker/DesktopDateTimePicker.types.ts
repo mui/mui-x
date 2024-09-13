@@ -65,5 +65,5 @@ export interface DesktopDateTimePickerProps<
    * Years rendered per row.
    * @default 4
    */
-  yearsPerRow: 3 | 4
+  yearsPerRow: 3 | 4;
 }

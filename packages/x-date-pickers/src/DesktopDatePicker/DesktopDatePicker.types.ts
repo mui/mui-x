@@ -38,4 +38,9 @@ export interface DesktopDatePickerProps<
    * @default {}
    */
   slotProps?: DesktopDatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  /**
+   * Years rendered per row.
+   * @default 4
+   */
+  yearsPerRow: 3 | 4;
 }
