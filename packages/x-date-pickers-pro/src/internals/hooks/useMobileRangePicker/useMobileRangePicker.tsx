@@ -113,6 +113,7 @@ export const useMobileRangePicker = <
     typeof Field,
     UseMobileRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>['field'],
     RangePickerPropsForFieldSlot<
+      boolean,
       TDate,
       TEnableAccessibleFieldDOMStructure,
       InferError<TExternalProps>
@@ -145,8 +146,7 @@ export const useMobileRangePicker = <
     TDate,
     TView,
     TEnableAccessibleFieldDOMStructure,
-    InferError<TExternalProps>,
-    typeof fieldProps
+    InferError<TExternalProps>
   >({
     wrapperVariant: 'mobile',
     fieldType,

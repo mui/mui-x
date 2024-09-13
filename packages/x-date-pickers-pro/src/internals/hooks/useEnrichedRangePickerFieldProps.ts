@@ -84,35 +84,36 @@ export interface RangePickerFieldSlotProps<
 }
 
 export type RangePickerPropsForFieldSlot<
+  TIsSingleInput extends boolean,
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > =
-  | BaseSingleInputFieldProps<
-      DateRange<TDate>,
-      TDate,
-      RangeFieldSection,
-      TEnableAccessibleFieldDOMStructure,
-      TError
-    >
-  | BaseMultiInputFieldProps<
-      DateRange<TDate>,
-      TDate,
-      RangeFieldSection,
-      TEnableAccessibleFieldDOMStructure,
-      TError
-    >;
+  | (TIsSingleInput extends true
+      ? BaseSingleInputFieldProps<
+          DateRange<TDate>,
+          TDate,
+          RangeFieldSection,
+          TEnableAccessibleFieldDOMStructure,
+          TError
+        >
+      : never)
+  | (TIsSingleInput extends false
+      ? BaseMultiInputFieldProps<
+          DateRange<TDate>,
+          TDate,
+          RangeFieldSection,
+          TEnableAccessibleFieldDOMStructure,
+          TError
+        >
+      : never);
 
 export interface UseEnrichedRangePickerFieldPropsParams<
+  TIsSingleInput extends boolean,
   TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  FieldProps extends RangePickerPropsForFieldSlot<
-    TDate,
-    TEnableAccessibleFieldDOMStructure,
-    TError
-  >,
 > extends Pick<
       UsePickerResponse<DateRange<TDate>, TView, RangeFieldSection, any>,
       'open' | 'actions'
@@ -128,7 +129,12 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   localeText: PickersInputLocaleText<TDate> | undefined;
   pickerSlotProps: RangePickerFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure> | undefined;
   pickerSlots: RangePickerFieldSlots | undefined;
-  fieldProps: FieldProps;
+  fieldProps: RangePickerPropsForFieldSlot<
+    TIsSingleInput,
+    TDate,
+    TEnableAccessibleFieldDOMStructure,
+    TError
+  >;
   anchorRef?: React.Ref<HTMLDivElement>;
   currentView?: TView | null;
   initialView?: TView;
@@ -163,17 +169,11 @@ const useMultiInputFieldSlotProps = <
   startFieldRef,
   endFieldRef,
 }: UseEnrichedRangePickerFieldPropsParams<
+  false,
   TDate,
   TView,
   TEnableAccessibleFieldDOMStructure,
-  TError,
-  BaseMultiInputFieldProps<
-    DateRange<TDate>,
-    TDate,
-    RangeFieldSection,
-    TEnableAccessibleFieldDOMStructure,
-    TError
-  >
+  TError
 >) => {
   type ReturnType = BaseMultiInputFieldProps<
     DateRange<TDate>,
@@ -348,17 +348,11 @@ const useSingleInputFieldSlotProps = <
   anchorRef,
   currentView,
 }: UseEnrichedRangePickerFieldPropsParams<
+  true,
   TDate,
   TView,
   TEnableAccessibleFieldDOMStructure,
-  TError,
-  BaseSingleInputFieldProps<
-    DateRange<TDate>,
-    TDate,
-    RangeFieldSection,
-    TEnableAccessibleFieldDOMStructure,
-    TError
-  >
+  TError
 >) => {
   type ReturnType = BaseSingleInputFieldProps<
     DateRange<TDate>,
@@ -463,18 +457,13 @@ export const useEnrichedRangePickerFieldProps = <
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  FieldProps extends RangePickerPropsForFieldSlot<
-    TDate,
-    TEnableAccessibleFieldDOMStructure,
-    TError
-  >,
 >(
   params: UseEnrichedRangePickerFieldPropsParams<
+    boolean,
     TDate,
     TView,
     TEnableAccessibleFieldDOMStructure,
-    TError,
-    FieldProps
+    TError
   >,
 ) => {
   /* eslint-disable react-hooks/rules-of-hooks */
@@ -488,9 +477,25 @@ export const useEnrichedRangePickerFieldProps = <
   }
 
   if (params.fieldType === 'multi-input') {
-    return useMultiInputFieldSlotProps(params);
+    return useMultiInputFieldSlotProps(
+      params as unknown as UseEnrichedRangePickerFieldPropsParams<
+        false,
+        TDate,
+        TView,
+        TEnableAccessibleFieldDOMStructure,
+        TError
+      >,
+    );
   }
 
-  return useSingleInputFieldSlotProps(params);
+  return useSingleInputFieldSlotProps(
+    params as UseEnrichedRangePickerFieldPropsParams<
+      true,
+      TDate,
+      TView,
+      TEnableAccessibleFieldDOMStructure,
+      TError
+    >,
+  );
   /* eslint-enable react-hooks/rules-of-hooks */
 };

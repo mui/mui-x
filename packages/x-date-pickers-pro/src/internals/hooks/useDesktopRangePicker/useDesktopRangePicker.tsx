@@ -137,6 +137,7 @@ export const useDesktopRangePicker = <
     typeof Field,
     UseDesktopRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>['field'],
     RangePickerPropsForFieldSlot<
+      boolean,
       TDate,
       TEnableAccessibleFieldDOMStructure,
       InferError<TExternalProps>
@@ -169,8 +170,7 @@ export const useDesktopRangePicker = <
     TDate,
     TView,
     TEnableAccessibleFieldDOMStructure,
-    InferError<TExternalProps>,
-    typeof fieldProps
+    InferError<TExternalProps>
   >({
     wrapperVariant: 'desktop',
     fieldType,
