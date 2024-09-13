@@ -1,10 +1,11 @@
+'use client';
 import * as React from 'react';
 import { useField, useDefaultizedTimeField } from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { UseSingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
 import { rangeValueManager, getRangeFieldValueManager } from '../internals/utils/valueManagers';
-import { validateTimeRange } from '../internals/utils/validation/validateTimeRange';
+import { validateTimeRange } from '../validation';
 import { RangeFieldSection, DateRange } from '../models';
 
 export const useSingleInputTimeRangeField = <

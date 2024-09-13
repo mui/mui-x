@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
