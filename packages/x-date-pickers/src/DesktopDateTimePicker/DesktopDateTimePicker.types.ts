@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import {
   UseDesktopPickerSlots,
   ExportedUseDesktopPickerSlotProps,
