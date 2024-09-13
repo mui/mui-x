@@ -192,6 +192,17 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     setSelectedItems(event, newSelectedItems);
   };
 
+  const pluginContextValue = React.useMemo(
+    () => ({
+      selection: {
+        multiSelect: params.multiSelect,
+        checkboxSelection: params.checkboxSelection,
+        disableSelection: params.disableSelection,
+      },
+    }),
+    [params.multiSelect, params.checkboxSelection, params.disableSelection],
+  );
+
   return {
     getRootProps: () => ({
       'aria-multiselectable': params.multiSelect,
@@ -207,13 +218,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       selectRangeFromItemToEnd,
       selectItemFromArrowNavigation,
     },
-    contextValue: {
-      selection: {
-        multiSelect: params.multiSelect,
-        checkboxSelection: params.checkboxSelection,
-        disableSelection: params.disableSelection,
-      },
-    },
+    contextValue: pluginContextValue,
   };
 };
 

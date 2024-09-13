@@ -47,6 +47,11 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ st
     }
   };
 
+  const pluginContextValue = React.useMemo(
+    () => ({ label: { isItemEditable: params.isItemEditable } }),
+    [params.isItemEditable],
+  );
+
   return {
     instance: {
       setEditedItemId,
@@ -56,11 +61,7 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ st
     publicAPI: {
       updateItemLabel,
     },
-    contextValue: {
-      label: {
-        isItemEditable: params.isItemEditable,
-      },
-    },
+    contextValue: pluginContextValue,
   };
 };
 

@@ -247,6 +247,16 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
     [instance, store, params.itemChildrenIndentation],
   );
 
+  const pluginContextValue = React.useMemo(
+    () => ({
+      itemsReordering: {
+        enabled: isItemsReorderingEnabled,
+        isItemReorderable: params.isItemReorderable,
+      },
+    }),
+    [isItemsReorderingEnabled, params.isItemReorderable],
+  );
+
   return {
     instance: {
       canItemBeDragged,
@@ -255,12 +265,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       stopDraggingItem,
       setDragTargetItem,
     },
-    contextValue: {
-      itemsReordering: {
-        enabled: isItemsReorderingEnabled,
-        isItemReorderable: params.isItemReorderable,
-      },
-    },
+    contextValue: pluginContextValue,
   };
 };
 

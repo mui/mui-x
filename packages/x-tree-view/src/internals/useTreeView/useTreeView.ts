@@ -84,7 +84,7 @@ export const useTreeView = <
     storeRef.current = new TreeViewStore({ initialState, forceUpdate });
   }
 
-  const contextValue = useTreeViewBuildContext<TSignatures>({
+  const baseContextValue = useTreeViewBuildContext<TSignatures>({
     plugins,
     instance,
     publicAPI,
@@ -95,6 +95,8 @@ export const useTreeView = <
   const rootPropsGetters: (<TOther extends EventHandlers = {}>(
     otherHandlers: TOther,
   ) => React.HTMLAttributes<HTMLUListElement>)[] = [];
+
+  const pluginContextValues: any[] = [];
   const runPlugin = (plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
     const pluginResponse = plugin({
       instance,
@@ -121,7 +123,7 @@ export const useTreeView = <
     }
 
     if (pluginResponse.contextValue) {
-      Object.assign(contextValue, pluginResponse.contextValue);
+      pluginContextValues.push(pluginResponse.contextValue);
     }
   };
 
@@ -143,6 +145,12 @@ export const useTreeView = <
 
     return rootProps;
   };
+
+  const contextValue = React.useMemo(() => {
+    const copiedBaseContextValue = { ...baseContextValue };
+    return Object.assign(copiedBaseContextValue, ...pluginContextValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [baseContextValue, ...pluginContextValues]);
 
   return {
     getRootProps,

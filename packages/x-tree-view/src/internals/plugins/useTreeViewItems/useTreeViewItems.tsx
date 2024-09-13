@@ -16,6 +16,7 @@ import {
   selectorItemOrderedChildrenIds,
 } from './useTreeViewItems.selectors';
 import { selectorTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.selectors';
+import useEventCallback from '@mui/utils/useEventCallback';
 
 interface UpdateNodesStateParameters
   extends Pick<
@@ -246,6 +247,24 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     return instance.getItemOrderedChildrenIds(null).map(getPropsFromItemId);
   };
 
+  // Wrap `props.onItemClick` with `useEventCallback` to prevent unneeded context updates.
+  const handleItemClick = useEventCallback((event: React.MouseEvent, itemId: string) => {
+    if (params.onItemClick) {
+      params.onItemClick(event, itemId);
+    }
+  });
+
+  const pluginContextValue = React.useMemo(
+    () => ({
+      items: {
+        onItemClick: handleItemClick,
+        disabledItemsFocusable: params.disabledItemsFocusable,
+        indentationAtItemLevel: experimentalFeatures.indentationAtItemLevel ?? false,
+      },
+    }),
+    [handleItemClick, params.disabledItemsFocusable, experimentalFeatures.indentationAtItemLevel],
+  );
+
   return {
     getRootProps: () => ({
       style: {
@@ -274,13 +293,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       preventItemUpdates,
       areItemUpdatesPrevented,
     },
-    contextValue: {
-      items: {
-        onItemClick: params.onItemClick,
-        disabledItemsFocusable: params.disabledItemsFocusable,
-        indentationAtItemLevel: experimentalFeatures.indentationAtItemLevel ?? false,
-      },
-    },
+    contextValue: pluginContextValue,
   };
 };
 

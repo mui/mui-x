@@ -153,10 +153,8 @@ export interface UseTreeViewItemsState<R extends {}> {
 }
 
 interface UseTreeViewItemsContextValue {
-  items: Pick<
-    UseTreeViewItemsDefaultizedParameters<any>,
-    'disabledItemsFocusable' | 'onItemClick'
-  > & {
+  items: Pick<UseTreeViewItemsDefaultizedParameters<any>, 'disabledItemsFocusable'> & {
+    onItemClick: (event: React.MouseEvent, itemId: string) => void;
     indentationAtItemLevel: boolean;
   };
 }
