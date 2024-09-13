@@ -8,12 +8,10 @@ globalThis.before = beforeAll;
 // @ts-ignore
 globalThis.after = afterAll;
 
-const isVitest =
-  // VITEST is present on the environment when not in browser mode.
-  process.env.VITEST === 'true';
+const isVitestJsdom = process.env.MUI_JSDOM === 'true';
 
 // Only necessary when not in browser mode.
-if (isVitest) {
+if (isVitestJsdom) {
   class Touch {
     instance: any;
 
