@@ -9,7 +9,7 @@ import { SlotComponentPropsFromProps } from '../internals/models/helpers';
 
 export interface YearCalendarSlots {
   /**
-   * Button displayed to render a single year in the "year" view.
+   * Button displayed to render a single year in the `year` view.
    * @default YearCalendarButton
    */
   yearButton?: React.ElementType;
