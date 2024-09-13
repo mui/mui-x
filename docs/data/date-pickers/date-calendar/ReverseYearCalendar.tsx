@@ -11,7 +11,7 @@ export default function ReverseYearCalendar() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['YearCalendar']}>
-        <DemoItem label="Years in reverse">
+        <DemoItem label="Years in descending order">
           <YearCalendar maxDate={currentYear} reverseYears />
         </DemoItem>
       </DemoContainer>
