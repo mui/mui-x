@@ -18,8 +18,7 @@ export function createPickerRenderer({
 }: CreatePickerRendererOptions = {}) {
   const { clock, render: clientRender } = createRenderer({
     ...createRendererOptions,
-    // @ts-expect-error is global
-    vi,
+    vi: globalThis.vi ?? undefined,
   });
 
   let adapterLocale = [
