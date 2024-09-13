@@ -331,8 +331,6 @@ const TreeItem2Raw = React.forwardRef(function TreeItem2(
     className: classes.dragAndDropOverlay,
   });
 
-  console.log('RENDER', itemId);
-
   return (
     <TreeItem2Provider itemId={itemId}>
       <Root {...rootProps}>

@@ -6,7 +6,7 @@ interface TreeViewItemProps {
   label: string;
   itemId: string;
   id: string | undefined;
-  children?: TreeViewItemProps[];
+  children: TreeViewItemProps[];
 }
 
 export interface UseTreeViewItemsPublicAPI<R extends {}> {

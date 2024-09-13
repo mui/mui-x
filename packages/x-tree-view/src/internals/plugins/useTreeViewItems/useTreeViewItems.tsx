@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewPlugin } from '../../models';
 import {
   UseTreeViewItemsSignature,
@@ -16,7 +17,6 @@ import {
   selectorItemOrderedChildrenIds,
 } from './useTreeViewItems.selectors';
 import { selectorTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.selectors';
-import useEventCallback from '@mui/utils/useEventCallback';
 
 interface UpdateNodesStateParameters
   extends Pick<
@@ -313,8 +313,13 @@ useTreeViewItems.getDefaultizedParams = ({ params }) => ({
 });
 
 useTreeViewItems.wrapRoot = ({ children, instance }) => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const contextValue = React.useCallback(
+    (itemId) => instance.getItemMeta(itemId)?.depth ?? 0,
+    [instance],
+  );
   return (
-    <TreeViewItemDepthContext.Provider value={(itemId) => instance.getItemMeta(itemId)?.depth ?? 0}>
+    <TreeViewItemDepthContext.Provider value={contextValue}>
       {children}
     </TreeViewItemDepthContext.Provider>
   );

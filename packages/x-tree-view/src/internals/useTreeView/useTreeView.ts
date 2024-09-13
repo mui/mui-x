@@ -49,10 +49,14 @@ export const useTreeView = <
     ...TreeViewCorePluginSignatures,
     ...TSignatures,
   ];
-  const plugins = [
-    ...TREE_VIEW_CORE_PLUGINS,
-    ...inPlugins,
-  ] as unknown as ConvertSignaturesIntoPlugins<TSignaturesWithCorePluginSignatures>;
+  const plugins = React.useMemo(
+    () =>
+      [
+        ...TREE_VIEW_CORE_PLUGINS,
+        ...inPlugins,
+      ] as unknown as ConvertSignaturesIntoPlugins<TSignaturesWithCorePluginSignatures>,
+    [inPlugins],
+  );
 
   const { pluginParams, forwardedProps, apiRef, experimentalFeatures, slots, slotProps } =
     extractPluginParamsFromProps<TSignatures, typeof props>({
