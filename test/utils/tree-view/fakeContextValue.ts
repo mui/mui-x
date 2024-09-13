@@ -1,5 +1,6 @@
 import { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvider';
 import { SimpleTreeViewPluginSignatures } from '@mui/x-tree-view/SimpleTreeView/SimpleTreeView.plugins';
+import { TreeViewStore } from '@mui/x-tree-view/internals/utils/TreeViewStore';
 
 export const getFakeContextValue = (
   features: { checkboxSelection?: boolean } = {},
@@ -7,9 +8,7 @@ export const getFakeContextValue = (
   instance: {
     isItemExpandable: () => false,
     isItemExpanded: () => false,
-    isItemFocused: () => false,
-    isItemSelected: () => false,
-    isItemDisabled: (itemId: string | null): itemId is string => !!itemId,
+    isItemDisabled: () => false,
     getTreeItemIdAttribute: () => '',
     mapFirstCharFromJSX: () => () => {},
   } as any,
@@ -46,4 +45,5 @@ export const getFakeContextValue = (
     current: null,
   },
   expansion: { expansionTrigger: 'content' },
+  store: new TreeViewStore({ initialState: {} as any, forceUpdate: () => {} }),
 });
