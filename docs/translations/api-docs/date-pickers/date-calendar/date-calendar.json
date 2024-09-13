@@ -77,9 +77,6 @@
       "description": "Component displaying when passed <code>loading</code> true.",
       "typeDescriptions": { "React.ReactNode": "The node to render when loading." }
     },
-    "reverseYears": {
-      "description": "If <code>false</code>, display the years in their default order (chronological) If <code>true</code>, reverse the order of displayed years"
-    },
     "shouldDisableDate": {
       "description": "Disable specific date.<br>Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
       "typeDescriptions": {
@@ -118,6 +115,9 @@
       "description": "The visible view. Used when the component view is controlled. Must be a valid option from <code>views</code> list."
     },
     "views": { "description": "Available views." },
+    "yearsOrder": {
+      "description": "Years are displayed in ascending (chronological) order by default If <code>desc</code>, years are displayed in descending order"
+    },
     "yearsPerRow": { "description": "Years rendered per row." }
   },
   "classDescriptions": {

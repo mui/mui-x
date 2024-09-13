@@ -1,3 +1,0 @@
-<DemoItem label="Years in reverse">
-  <YearCalendar maxDate={currentYear} reverseYears />
-</DemoItem>

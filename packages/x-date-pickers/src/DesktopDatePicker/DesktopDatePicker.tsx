@@ -313,12 +313,6 @@ DesktopDatePicker.propTypes = {
    */
   renderLoading: PropTypes.func,
   /**
-   * If `false`, display the years in their default order (chronological)
-   * If `true`, reverse the order of displayed years
-   * @default false
-   */
-  reverseYears: PropTypes.bool,
-  /**
    * The currently selected sections.
    * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
@@ -429,8 +423,14 @@ DesktopDatePicker.propTypes = {
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
   /**
+   * Years are displayed in ascending (chronological) order by default
+   * If `desc`, years are displayed in descending order
+   * @default 'asc'
+   */
+  yearsOrder: PropTypes.oneOf(['asc', 'desc']),
+  /**
    * Years rendered per row.
-   * @default 4
+   * @default 3
    */
   yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;

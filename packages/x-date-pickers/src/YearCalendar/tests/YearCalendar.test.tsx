@@ -49,7 +49,7 @@ describe('<YearCalendar />', () => {
     expect(onChangeMock.callCount).to.equal(0);
   });
 
-  it('should display years in chronological order by default', () => {
+  it('should display years in ascending (chronological order) by default', () => {
     render(
       <YearCalendar
         minDate={adapterToUse.date('2020-01-01')}
@@ -61,12 +61,12 @@ describe('<YearCalendar />', () => {
     expect(yearButttons[0].children.item(0)?.textContent).to.equal('2020');
   });
 
-  it('should display years in reverse chronological order when props.reverseYears = true ', () => {
+  it('should display years in descending (reverse chronological) order when props.yearsOrder = "desc"', () => {
     render(
       <YearCalendar
         minDate={adapterToUse.date('2020-01-01')}
         maxDate={adapterToUse.date('2024-12-31')}
-        reverseYears
+        yearsOrder='desc'
       />,
     );
 

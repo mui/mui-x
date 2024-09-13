@@ -1,7 +1,7 @@
 <DatePicker
-  label="Years in reverse"
+  label="Years in descending order"
   maxDate={currentYear}
   openTo="year"
-  reverseYears
   views={['year', 'month']}
+  yearsOrder="desc"
 />

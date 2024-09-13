@@ -17,6 +17,7 @@ import {
   MultiSectionDigitalClockSlotProps,
 } from '../MultiSectionDigitalClock';
 import { DigitalClockSlots, DigitalClockSlotProps } from '../DigitalClock';
+import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
 export interface DesktopDateTimePickerSlots<TDate extends PickerValidDate>
   extends BaseDateTimePickerSlots<TDate>,
@@ -44,13 +45,8 @@ export interface DesktopDateTimePickerProps<
   TEnableAccessibleFieldDOMStructure extends boolean = false,
 > extends BaseDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>,
     DesktopOnlyPickerProps,
-    DesktopOnlyTimePickerProps<TDate> {
-  /**
-   * If `false`, display the years in their default order (chronological)
-   * If `true`, reverse the order of displayed years
-   * @default false
-   */
-  reverseYears?: boolean;
+    DesktopOnlyTimePickerProps<TDate>,
+    ExportedYearCalendarProps {
   /**
    * Overridable component slots.
    * @default {}
@@ -65,9 +61,4 @@ export interface DesktopDateTimePickerProps<
    * Available views.
    */
   views?: readonly DateOrTimeView[];
-  /**
-   * Years rendered per row.
-   * @default 4
-   */
-  yearsPerRow?: 3 | 4;
 }

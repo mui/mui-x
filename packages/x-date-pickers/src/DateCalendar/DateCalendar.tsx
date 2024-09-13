@@ -142,7 +142,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
     loading,
     renderLoading,
     displayWeekNumber,
-    reverseYears,
+    yearsOrder = 'asc',
     yearsPerRow,
     monthsPerRow,
     timezone: timezoneProp,
@@ -355,8 +355,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
               shouldDisableYear={shouldDisableYear}
               hasFocus={hasFocus}
               onFocusedViewChange={(isViewFocused) => setFocusedView('year', isViewFocused)}
+              yearsOrder={yearsOrder}
               yearsPerRow={yearsPerRow}
-              reverseYears={reverseYears}
               referenceDate={referenceDate}
             />
           )}
@@ -550,12 +550,6 @@ DateCalendar.propTypes = {
    */
   renderLoading: PropTypes.func,
   /**
-   * If `false`, display the years in their default order (chronological)
-   * If `true`, reverse the order of displayed years
-   * @default false
-   */
-  reverseYears: PropTypes.bool,
-  /**
    * Disable specific date.
    *
    * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
@@ -631,6 +625,12 @@ DateCalendar.propTypes = {
    * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
+  /**
+   * Years are displayed in ascending (chronological) order by default
+   * If `desc`, years are displayed in descending order
+   * @default 'asc'
+   */
+  yearsOrder: PropTypes.oneOf(['asc', 'desc']),
   /**
    * Years rendered per row.
    * @default 3

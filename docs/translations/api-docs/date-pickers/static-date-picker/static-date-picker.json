@@ -90,9 +90,6 @@
       "description": "Component displaying when passed <code>loading</code> true.",
       "typeDescriptions": { "React.ReactNode": "The node to render when loading." }
     },
-    "reverseYears": {
-      "description": "If <code>false</code>, display the years in their default order (chronological) If <code>true</code>, reverse the order of displayed years"
-    },
     "shouldDisableDate": {
       "description": "Disable specific date.<br>Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
       "typeDescriptions": {
@@ -134,6 +131,9 @@
       "description": "Define custom view renderers for each section. If <code>null</code>, the section will only have field editing. If <code>undefined</code>, internally defined view will be used."
     },
     "views": { "description": "Available views." },
+    "yearsOrder": {
+      "description": "Years are displayed in ascending (chronological) order by default If <code>desc</code>, years are displayed in descending order"
+    },
     "yearsPerRow": { "description": "Years rendered per row." }
   },
   "classDescriptions": {},

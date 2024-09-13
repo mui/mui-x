@@ -112,8 +112,8 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
     onYearFocus,
     hasFocus,
     onFocusedViewChange,
+    yearsOrder = 'asc',
     yearsPerRow,
-    reverseYears,
     timezone: timezoneProp,
     gridLabelId,
     slots,
@@ -225,8 +225,8 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
     );
   }, [selectedYear]);
 
-  const verticalDirection = !reverseYears ? yearsPerRow * 1 : yearsPerRow * -1;
-  const horizontalDirection = isRtl || reverseYears ? -1 : 1;
+  const verticalDirection = yearsOrder !== "desc" ? yearsPerRow * 1 : yearsPerRow * -1;
+  const horizontalDirection = isRtl || yearsOrder === "desc" ? -1 : 1;
 
   const handleKeyDown = useEventCallback((event: React.KeyboardEvent, year: number) => {
     switch (event.key) {
@@ -290,7 +290,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
   }, [autoFocus]);
 
   const yearRange = utils.getYearRange([minDate, maxDate]);
-  if (reverseYears) {
+  if (yearsOrder === 'desc') {
     yearRange.reverse();
   }
 
@@ -398,12 +398,6 @@ YearCalendar.propTypes = {
    */
   referenceDate: PropTypes.object,
   /**
-   * If `false`, display the years in their default order (chronological)
-   * If `true`, reverse the order of displayed years
-   * @default false
-   */
-  reverseYears: PropTypes.bool,
-  /**
    * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
@@ -441,6 +435,12 @@ YearCalendar.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.object,
+  /**
+   * Years are displayed in ascending (chronological) order by default
+   * If `desc`, years are displayed in descending order
+   * @default 'asc'
+   */
+  yearsOrder: PropTypes.oneOf(['asc', 'desc']),
   /**
    * Years rendered per row.
    * @default 3

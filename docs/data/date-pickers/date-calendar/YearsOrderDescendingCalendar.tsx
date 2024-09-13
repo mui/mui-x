@@ -7,14 +7,14 @@ import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 
 const currentYear = dayjs();
 
-export default function ReverseYearCalendar() {
+export default function YearsOrderDescendingCalendar() {
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    (<LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['YearCalendar']}>
-        <DemoItem label="Years in reverse">
-          <YearCalendar maxDate={currentYear} reverseYears />
+        <DemoItem label="Years in descending order">
+          <YearCalendar maxDate={currentYear} yearsOrder="desc" />
         </DemoItem>
       </DemoContainer>
-    </LocalizationProvider>
+    </LocalizationProvider>)
   );
 }

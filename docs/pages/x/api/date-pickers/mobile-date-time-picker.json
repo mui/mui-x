@@ -115,7 +115,6 @@
         "returned": "React.ReactNode"
       }
     },
-    "reverseYears": { "type": { "name": "bool" }, "default": "false" },
     "selectedSections": {
       "type": {
         "name": "union",
@@ -194,6 +193,10 @@
         "name": "arrayOf",
         "description": "Array&lt;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'&gt;"
       }
+    },
+    "yearsOrder": {
+      "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" },
+      "default": "'asc'"
     },
     "yearsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
