@@ -19,6 +19,7 @@ export const getFakeContextValue = (
   items: {
     disabledItemsFocusable: false,
     indentationAtItemLevel: false,
+    onItemClick: () => {},
   },
   icons: {
     slots: {},
