@@ -3,6 +3,93 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.17.0
+
+_Sep 13, 2024_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 📊 Charts performance improvement
+- 🧑‍💻 New Data Grid [custom columns demo](https://mui.com/x/react-data-grid/custom-columns/#full-example)
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+- 🌍 Improve Hungarian (hu-HU) locale on the Data Grid
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.17.0`
+
+- [DataGrid] Add "does not equal" and "does not contain" filter operators (#14489) @KenanYusuf
+- [DataGrid] Add demo to the "Custom columns" page that does not use generator (#13695) @arminmeh
+- [DataGrid] Fix Voice Over reading the column name twice (#14482) @arminmeh
+- [DataGrid] Fix bug in CRUD example (#14513) @michelengelen
+- [DataGrid] Fix failing jsdom tests caused by `:has()` selectors (#14559) @KenanYusuf
+- [DataGrid] Refactor string operator filter functions (#14564) @KenanYusuf
+- [l10n] Improve Hungarian (hu-HU) locale (#14506) @ntamas
+
+#### `@mui/x-data-grid-pro@7.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.17.0`.
+
+#### `@mui/x-data-grid-premium@7.17.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.17.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.17.0`
+
+- [fields] Improve `useSplitFieldProps` and make it public (#14514) @flaviendelangle
+- [pickers] Improve clear action label (#14243) @oliviertassinari
+- [pickers] Add `"use client"` directive to every public component and hook (#14562) @flaviendelangle
+- [pickers] Allow custom fields to validate the value (#14486) @flaviendelangle
+- [pickers] Stop using utils in locales (#14505) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.17.0`, plus:
+
+- [DateRangePicker] Fix `currentMonthCalendarPosition` not scrolling to future sibling (#14442) @GMchris
+
+### Charts
+
+#### `@mui/x-charts@7.17.0`
+
+- [charts] Add `"use client"` directive to every public component and hook (#14578) @flaviendelangle
+- [charts] Allow `onItemClick` on the `Legend` component (#14231) @JCQuintas
+- [charts] Fix `onAxisClick` with `layout='horizontal'` (#14547) @alexfauquette
+- [charts] Replace `path` with `circle` for performance improvement (#14518) @alexfauquette
+
+#### `@mui/x-charts-pro@7.0.0-beta.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.17.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.17.0`
+
+- [TreeView] Make `useTreeItem2` stable (#14498) @flaviendelangle
+
+### Docs
+
+- [docs] Add missing callout on "Imperative API" tree view sections (#14503) @flaviendelangle
+- [docs] Fix broken redirection to MUI X v5 @oliviertassinari
+- [docs] Fix multiple `console.error` messages on `charts` docs (#14554) @JCQuintas
+- [docs] Fixed typo in Row Grouping recipes (#14549) @Miodini
+- [docs] Match title with blog posts @oliviertassinari
+
+### Core
+
+- [core] Move warning methods to `@mui/x-internals` (#14528) @k-rajat19
+- [core] Sync with core release flow @oliviertassinari
+- [code-infra] Fix charts benchmark workflow (#14573) @JCQuintas
+- [docs-infra] Type interface API pages (#14138) @alexfauquette
+- [infra] Create `ESLint plugins` renovate group (#14574) @LukasTy
+- [license] Clean-up terminology to match codebase (#14531) @oliviertassinari
+- [test] Remove dead `act()` logic (#14529) @oliviertassinari
+
 ## 7.16.0
 
 _Sep 5, 2024_
