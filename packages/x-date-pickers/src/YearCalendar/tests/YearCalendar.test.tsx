@@ -66,7 +66,7 @@ describe('<YearCalendar />', () => {
       <YearCalendar
         minDate={adapterToUse.date('2020-01-01')}
         maxDate={adapterToUse.date('2024-12-31')}
-        yearsOrder='desc'
+        yearsOrder="desc"
       />,
     );
 

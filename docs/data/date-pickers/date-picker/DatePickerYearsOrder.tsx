@@ -9,7 +9,7 @@ const currentYear = dayjs();
 
 export default function DatePickerYearsOrder() {
   return (
-    (<LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DatePicker']}>
         <DatePicker
           label="Years in descending order"
@@ -19,6 +19,6 @@ export default function DatePickerYearsOrder() {
           yearsOrder="desc"
         />
       </DemoContainer>
-    </LocalizationProvider>)
+    </LocalizationProvider>
   );
 }
