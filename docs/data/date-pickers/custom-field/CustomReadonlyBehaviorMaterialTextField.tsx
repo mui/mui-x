@@ -32,9 +32,7 @@ function ReadonlyField(props: DateFieldInPickerProps<Dayjs, false>) {
   );
 }
 
-function ReadonlyFieldDatePicker(
-  props: Omit<DatePickerProps<Dayjs>, 'open' | 'onOpen' | 'onClose'>,
-) {
+function ReadonlyFieldDatePicker(props: DatePickerProps<Dayjs>) {
   return <DatePicker slots={{ ...props.slots, field: ReadonlyField }} {...props} />;
 }
 
