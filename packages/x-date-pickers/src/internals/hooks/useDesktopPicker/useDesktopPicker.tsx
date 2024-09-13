@@ -156,6 +156,7 @@ export const useDesktopPicker = <
       timezone,
       label,
       name,
+      onOpen: actions.onOpen,
       autoFocus: autoFocus && !props.open,
       focused: open ? true : undefined,
       ...(inputRef ? { inputRef } : {}),

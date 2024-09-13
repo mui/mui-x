@@ -24,6 +24,7 @@ const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'disabled',
   'readOnly',
   'dateSeparator',
+  'onOpen',
 ] as const;
 
 type InternalPropNames<TValueType extends FieldValueType> =

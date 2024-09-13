@@ -10,7 +10,7 @@ import TextField from '@mui/material/TextField';
 
 function ReadonlyDateField(props) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { value, timezone, format } = internalProps;
+  const { value, timezone, format, onOpen } = internalProps;
   const { InputProps, slotProps, slots, ...other } = forwardedProps;
 
   const placeholder = useFieldPlaceholder(internalProps);
@@ -28,6 +28,7 @@ function ReadonlyDateField(props) {
       placeholder={placeholder}
       InputProps={{ ...InputProps, readOnly: true }}
       error={hasValidationError}
+      onClick={onOpen}
     />
   );
 }
@@ -38,7 +39,7 @@ function ReadonlyFieldDatePicker(props) {
   );
 }
 
-export default function CustomReadonlyBehaviorMaterialTextField() {
+export default function ReadonlyMaterialTextField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <ReadonlyFieldDatePicker />

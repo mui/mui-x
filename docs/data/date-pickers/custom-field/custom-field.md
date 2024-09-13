@@ -153,7 +153,7 @@ Learn more about the accessible DOM structure and its difference compared to the
 
 ### Using a read-only `TextField`
 
-{{"demo": "CustomReadonlyBehaviorMaterialTextField.js", "defaultCodeOpen": false}}
+{{"demo": "custom-behavior/ReadonlyMaterialTextField.js", "defaultCodeOpen": false}}
 
 ### Using an `Autocomplete`
 
