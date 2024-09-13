@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, SxProps, Theme } from '@mui/system';
+import { styled, SxProps, Theme } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -31,8 +31,9 @@ const GridToolbarContainerRoot = styled('div', {
   display: 'flex',
   alignItems: 'center',
   flexWrap: 'wrap',
-  gap: theme.spacing(1),
-  padding: theme.spacing(0.5, 0.5, 0),
+  gap: theme.spacing(0.5),
+  padding: theme.spacing(0.75, 0.75),
+  borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
 const GridToolbarContainer = React.forwardRef<HTMLDivElement, GridToolbarContainerProps>(

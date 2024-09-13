@@ -12,6 +12,8 @@ import type { InputLabelProps } from '@mui/material/InputLabel';
 import type { PopperProps } from '@mui/material/Popper';
 import type { TablePaginationProps } from '@mui/material/TablePagination';
 import type { ChipProps } from '@mui/material/Chip';
+import type { ToggleButtonProps } from '@mui/material/ToggleButton';
+import type { ToggleButtonGroupProps } from '@mui/material/ToggleButtonGroup';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
@@ -45,6 +47,8 @@ export interface BasePopperPropsOverrides {}
 export interface BaseInputLabelPropsOverrides {}
 export interface BaseSelectOptionPropsOverrides {}
 export interface BaseChipPropsOverrides {}
+export interface BaseToggleButtonPropsOverrides {}
+export interface BaseToggleButtonGroupPropsOverrides {}
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
 export interface ColumnHeaderFilterIconButtonPropsOverrides {}
@@ -82,6 +86,8 @@ export interface GridSlotProps {
     value: any;
     children?: React.ReactNode;
   } & BaseSelectOptionPropsOverrides;
+  baseToggleButton: ToggleButtonProps & BaseToggleButtonPropsOverrides;
+  baseToggleButtonGroup: ToggleButtonGroupProps & BaseToggleButtonGroupPropsOverrides;
   baseChip: ChipProps & BaseChipPropsOverrides;
   cell: GridCellProps & CellPropsOverrides;
   columnHeaders: GridColumnHeadersProps;
