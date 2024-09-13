@@ -7,21 +7,7 @@ import { useTreeViewLabelItemPlugin } from './useTreeViewLabel.itemPlugin';
 import { useSelector } from '../../hooks/useSelector';
 import { selectorEditedItemId } from './useTreeViewLabel.selectors';
 
-export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
-  store,
-  params,
-  experimentalFeatures,
-}) => {
-  if (process.env.NODE_ENV !== 'production') {
-    if (params.isItemEditable && !experimentalFeatures?.labelEditing) {
-      warnOnce([
-        'MUI X: The label editing feature requires the `labelEditing` experimental feature to be enabled.',
-        'You can do it by passing `experimentalFeatures={{ labelEditing: true}}` to the `RichTreeViewPro` component.',
-        'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/editing/',
-      ]);
-    }
-  }
-
+export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ store, params }) => {
   const editedItemRef = React.useRef(useSelector(store, selectorEditedItemId));
 
   const isItemBeingEditedRef = (itemId: TreeViewItemId) => editedItemRef.current === itemId;
@@ -72,7 +58,7 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
     },
     contextValue: {
       label: {
-        isItemEditable: experimentalFeatures.labelEditing ? params.isItemEditable : false,
+        isItemEditable: params.isItemEditable,
       },
     },
   };
@@ -80,10 +66,22 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
 
 useTreeViewLabel.itemPlugin = useTreeViewLabelItemPlugin;
 
-useTreeViewLabel.getDefaultizedParams = (params) => ({
-  ...params,
-  isItemEditable: params.isItemEditable ?? false,
-});
+useTreeViewLabel.getDefaultizedParams = ({ params, experimentalFeatures }) => {
+  if (process.env.NODE_ENV !== 'production') {
+    if (params.isItemEditable && !experimentalFeatures?.labelEditing) {
+      warnOnce([
+        'MUI X: The label editing feature requires the `labelEditing` experimental feature to be enabled.',
+        'You can do it by passing `experimentalFeatures={{ labelEditing: true}}` to the `RichTreeViewPro` component.',
+        'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/editing/',
+      ]);
+    }
+  }
+
+  return {
+    ...params,
+    isItemEditable: experimentalFeatures.labelEditing ? (params.isItemEditable ?? false) : false,
+  };
+};
 
 useTreeViewLabel.getInitialState = () => ({
   editedItemId: null,

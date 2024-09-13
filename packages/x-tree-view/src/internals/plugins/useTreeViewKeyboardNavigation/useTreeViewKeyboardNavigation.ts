@@ -18,6 +18,10 @@ import { useTreeViewLabel } from '../useTreeViewLabel';
 import { selectorItemMetaMap } from '../useTreeViewItems/useTreeViewItems.selectors';
 import { useSelector } from '../../hooks/useSelector';
 import { selectorIsItemSelected } from '../useTreeViewSelection/useTreeViewSelection.selectors';
+import {
+  selectorIsItemBeingEdited,
+  selectorIsItemEditable,
+} from '../useTreeViewLabel/useTreeViewLabel.selectors';
 
 function isPrintableCharacter(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
@@ -25,7 +29,7 @@ function isPrintableCharacter(string: string) {
 
 export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   UseTreeViewKeyboardNavigationSignature
-> = ({ instance, params, store }) => {
+> = ({ instance, store, params }) => {
   const isRtl = useRtl();
   const firstCharMap = React.useRef<TreeViewFirstCharMap>({});
 
@@ -129,8 +133,8 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       case key === 'Enter': {
         if (
           hasPlugin(instance, useTreeViewLabel) &&
-          instance.isItemEditable(itemId) &&
-          !instance.isItemBeingEdited(itemId)
+          selectorIsItemEditable(store.value, { itemId, isItemEditable: params.isItemEditable! }) &&
+          !selectorIsItemBeingEdited(store.value, itemId)
         ) {
           instance.setEditedItemId(itemId);
         } else if (canToggleItemExpansion(itemId)) {

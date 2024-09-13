@@ -157,9 +157,10 @@ export type TreeRootWrapper<TSignatures extends readonly TreeViewAnyPluginSignat
 
 export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
   (options: TreeViewPluginOptions<TSignature>): TreeViewResponse<TSignature>;
-  getDefaultizedParams?: (
-    params: TreeViewUsedParams<TSignature>,
-  ) => TSignature['defaultizedParams'];
+  getDefaultizedParams?: (options: {
+    params: TreeViewUsedParams<TSignature>;
+    experimentalFeatures: TreeViewUsedExperimentalFeatures<TSignature>;
+  }) => TSignature['defaultizedParams'];
   getInitialState?: (params: TreeViewUsedDefaultizedParams<TSignature>) => TSignature['state'];
   getInitialCache?: () => TSignature['cache'];
   models?: TreeViewModelsInitializer<TSignature>;
