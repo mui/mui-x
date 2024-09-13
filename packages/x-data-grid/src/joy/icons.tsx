@@ -16,6 +16,7 @@ import SvgIcon, { SvgIconProps } from '@mui/joy/SvgIcon';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridSortDirection } from '../models/gridSortModel';
 import { GridIconSlotsComponent } from '../models/gridIconSlotsComponent';
+import { GridArrowDropDownIcon, GridPrintIcon } from '../components';
 
 function createSvgIcon(path: React.ReactNode, displayName: string): typeof SvgIcon {
   const fontSizeMap = { small: 'lg', medium: 'xl', large: 'xl2', inherit: undefined } as const;
@@ -305,6 +306,7 @@ const GridColumnUnsortedIcon = React.memo(function GridColumnHeaderSortIcon(
 });
 
 const joyIconSlots: GridIconSlotsComponent = {
+  arrowDropDownIcon: GridArrowDropDownIcon,
   booleanCellTrueIcon: GridCheckIcon,
   booleanCellFalseIcon: GridCloseIcon,
   columnMenuIcon: GridTripleDotsVerticalIcon,
@@ -340,6 +342,7 @@ const joyIconSlots: GridIconSlotsComponent = {
   filterPanelAddIcon: GridAddIcon,
   filterPanelRemoveAllIcon: GridDeleteForeverIcon,
   columnReorderIcon: GridDragIcon,
+  printIcon: GridPrintIcon,
 };
 
 export default joyIconSlots;
