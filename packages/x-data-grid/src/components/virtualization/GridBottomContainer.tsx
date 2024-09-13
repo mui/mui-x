@@ -3,6 +3,9 @@ import clsx from 'clsx';
 import { styled } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import { gridClasses, getDataGridUtilityClass } from '../../constants/gridClasses';
+import { gridDimensionsSelector } from '../../hooks/features/dimensions/gridDimensionsSelectors';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
 
 const useUtilityClasses = () => {
   const slots = {
@@ -20,10 +23,20 @@ const Element = styled('div')({
 export function GridBottomContainer(props: React.HTMLAttributes<HTMLDivElement>) {
   const classes = useUtilityClasses();
 
+  const apiRef = useGridApiContext();
+  const { viewportOuterSize, minimumSize } = useGridSelector(apiRef, gridDimensionsSelector);
+  const offset = Math.max(viewportOuterSize.height - minimumSize.height, 0);
+
+  let style = props.style;
+  if (offset !== 0) {
+    style = { ...style, transform: `translateY(${offset}px)` };
+  }
+
   return (
     <Element
       {...props}
       className={clsx(classes.root, props.className, gridClasses['container--bottom'])}
+      style={style}
       role="presentation"
     />
   );
