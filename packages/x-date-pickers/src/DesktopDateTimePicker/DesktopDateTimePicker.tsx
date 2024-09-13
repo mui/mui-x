@@ -641,7 +641,7 @@ DesktopDateTimePicker.propTypes = {
    * Years rendered per row.
    * @default 4
    */
-  yearsPerRow: PropTypes.oneOf([3, 4]).isRequired,
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
 
 export { DesktopDateTimePicker };

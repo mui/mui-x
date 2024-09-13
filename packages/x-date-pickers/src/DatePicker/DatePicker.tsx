@@ -381,7 +381,7 @@ DatePicker.propTypes = {
   yearsOrder: PropTypes.oneOf(['asc', 'desc']),
   /**
    * Years rendered per row.
-   * @default 4 on desktop, 3 on mobile
+   * @default 4
    */
   yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
