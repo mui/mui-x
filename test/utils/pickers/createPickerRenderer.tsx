@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { createRenderer, CreateRendererOptions, RenderOptions } from '@mui/internal-test-utils';
-import { vi } from 'vitest';
 import { AdapterClassToUse, AdapterName, adapterToUse, availableAdapters } from './adapters';
 
 interface CreatePickerRendererOptions extends CreateRendererOptions {
@@ -9,6 +8,12 @@ interface CreatePickerRendererOptions extends CreateRendererOptions {
   locale?: Locale;
   adapterName?: AdapterName;
   instance?: any;
+}
+
+let vi: any;
+
+if (process.env.MUI_VITEST === 'true') {
+  vi = (await import('vitest')).vi;
 }
 
 export function createPickerRenderer({
