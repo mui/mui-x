@@ -41,11 +41,19 @@ type Props = {
 
 function GridVirtualScrollerFiller({ rowsLength }: Props) {
   const apiRef = useGridApiContext();
-  const { hasScrollX, hasScrollY, scrollbarSize, leftPinnedWidth, rightPinnedWidth } =
-    useGridSelector(apiRef, gridDimensionsSelector);
+  const {
+    viewportOuterSize,
+    minimumSize,
+    hasScrollX,
+    hasScrollY,
+    scrollbarSize,
+    leftPinnedWidth,
+    rightPinnedWidth,
+  } = useGridSelector(apiRef, gridDimensionsSelector);
 
   const height = hasScrollX ? scrollbarSize : 0;
-  if (height === 0) {
+  const needsLastRowBorder = viewportOuterSize.height - minimumSize.height > 0;
+  if (height === 0 && !needsLastRowBorder) {
     return null;
   }
 
