@@ -29,7 +29,13 @@ export function GridBottomContainer(props: React.HTMLAttributes<HTMLDivElement>)
     gridDimensionsSelector,
   );
   const scrollHeight = hasScrollX ? scrollbarSize : 0;
-  const offset = Math.max(viewportOuterSize.height - minimumSize.height - scrollHeight, 0);
+  const offset = Math.max(
+    viewportOuterSize.height -
+      minimumSize.height -
+      // Subtract scroll height twice to account for GridVirtualScrollerFiller and horizontal scrollbar
+      2 * scrollHeight,
+    0,
+  );
 
   let style = props.style;
   if (offset !== 0) {
