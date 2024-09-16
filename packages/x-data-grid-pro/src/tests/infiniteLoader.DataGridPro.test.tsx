@@ -198,14 +198,14 @@ describe('<DataGridPro /> - Infnite loader', () => {
     }
     const { container } = render(<TestCase rows={baseRows} pinnedRows={basePinnedRows} />);
     const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
-    await sleep(1);
     // after initial render and a scroll event that did not reach the bottom of the grid
     // the `onRowsScrollEnd` should not be called
     expect(handleRowsScrollEnd.callCount).to.equal(0);
     // arbitrary number to make sure that the bottom of the grid window is reached.
     virtualScroller.scrollTop = 12345;
     virtualScroller.dispatchEvent(new Event('scroll'));
-    await sleep(1);
-    expect(handleRowsScrollEnd.callCount).to.equal(1);
+    await waitFor(() => {
+      expect(handleRowsScrollEnd.callCount).to.equal(1);
+    });
   });
 });
