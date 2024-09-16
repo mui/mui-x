@@ -176,3 +176,39 @@ You need those listeners if you are using [axes highlight](/x/react-charts/toolt
   {/* ... */}
 </ChartContainer>
 ```
+
+### Overriding content
+
+#### Item Tooltip
+
+You can create your own tooltip by using `useItemTooltip`.
+This hook returns the information about the current item user is interacting with.
+It contains:
+
+- `identifier`: An object that identify the item. Which often contains its series type, series id, and data index.
+- `color`: The color used to display the item. This includes the impact of [color map](/x/react-charts/styling/#values-color).
+- `label`, `value`, `formattedValue`: Values computed to simplify the tooltip creation.
+
+To follow the mouse position, you can use the `useMouseTracker`, or track events on the SVG thanks to `useSvgRef`.
+
+{{"demo": "CustomTooltipContent.js"}}
+
+#### Axis Tooltip
+
+Like in previous section, you can create your own tooltip by using `useAxisTooltip`.
+This hook returns the information about the current axis user is interacting with and the relevant series.
+It contains:
+
+- `identifier`: An object that identify the axis. Which often contains its series type, series id, and data index.
+- `color`: The color used to display the item. This includes the impact of [color map](/x/react-charts/styling/#values-color).
+- `label`, `value`, `formattedValue`: Values computed to simplify the tooltip creation.
+
+To follow the mouse position, you can use the `useMouseTracker`, or track events on the SVG thanks to `useSvgRef`.
+
+{{"demo": "CustomAxisTooltipContent.js"}}
+
+### Tooltip position
+
+This demo show example about how to use additional hooks such as `useXAxis` or `useDrawingArea` to customize the tooltip position.
+
+{{"demo": "CustomTooltipPosition.js"}}
