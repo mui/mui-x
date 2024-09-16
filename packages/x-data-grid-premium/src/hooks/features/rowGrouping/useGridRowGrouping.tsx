@@ -63,6 +63,7 @@ export const useGridRowGrouping = (
     | 'disableRowGrouping'
     | 'slotProps'
     | 'slots'
+    | 'unstable_dataSource'
   >,
 ) => {
   apiRef.current.registerControlState({
@@ -73,9 +74,6 @@ export const useGridRowGrouping = (
     changeEvent: 'rowGroupingModelChange',
   });
 
-  /**
-   * API METHODS
-   */
   const setRowGroupingModel = React.useCallback<GridRowGroupingApi['setRowGroupingModel']>(
     (model) => {
       const currentModel = gridRowGroupingModelSelector(apiRef);
@@ -212,9 +210,6 @@ export const useGridRowGrouping = (
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
-  /**
-   * EVENTS
-   */
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
@@ -233,10 +228,15 @@ export const useGridRowGrouping = (
           return;
         }
 
+        if (props.unstable_dataSource && !params.rowNode.childrenExpanded) {
+          apiRef.current.unstable_dataSource.fetchRows(params.id);
+          return;
+        }
+
         apiRef.current.setRowChildrenExpansion(params.id, !params.rowNode.childrenExpanded);
       }
     },
-    [apiRef, props.rowGroupingColumnMode],
+    [apiRef, props.rowGroupingColumnMode, props.unstable_dataSource],
   );
 
   const checkGroupingColumnsModelDiff = React.useCallback<
@@ -268,9 +268,6 @@ export const useGridRowGrouping = (
   useGridApiEventHandler(apiRef, 'columnsChange', checkGroupingColumnsModelDiff);
   useGridApiEventHandler(apiRef, 'rowGroupingModelChange', checkGroupingColumnsModelDiff);
 
-  /**
-   * EFFECTS
-   */
   React.useEffect(() => {
     if (props.rowGroupingModel !== undefined) {
       apiRef.current.setRowGroupingModel(props.rowGroupingModel);

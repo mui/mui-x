@@ -73,16 +73,6 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
     );
   }
 
-  // TODO: Add back `handleKeyDown`
-  // const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
-  //   if (event.key === ' ') {
-  //     // We call event.stopPropagation to avoid unfolding the row and also scrolling to bottom
-  //     // TODO: Remove and add a check inside useGridKeyboardNavigation
-  //     event.stopPropagation();
-  //   }
-  //   apiRef.current.publishEvent('cellKeyDown', props, event);
-  // };
-
   return descendantCount > 0 ? (
     <rootProps.slots.baseIconButton
       size="small"
@@ -120,7 +110,6 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
 
   let cellContent: React.ReactNode;
 
-  // FIXME: The value of `rowNode.groupingField` is always `__no_field__` here
   const colDef = apiRef.current.getColumn(rowNode.groupingField!);
   if (typeof colDef?.renderCell === 'function') {
     cellContent = colDef.renderCell(props);
