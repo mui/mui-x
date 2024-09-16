@@ -10,7 +10,7 @@ import {
   buildFieldInteractions,
 } from 'test/utils/pickers';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import 'moment/dist/locale/fa';
+import 'moment/locale/fa';
 
 describe('<AdapterMomentJalaali />', () => {
   describeJalaliAdapter(AdapterMomentJalaali, {

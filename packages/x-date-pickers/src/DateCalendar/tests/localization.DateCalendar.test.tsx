@@ -7,8 +7,8 @@ import { createPickerRenderer, AdapterName, availableAdapters } from 'test/utils
 import { he, fr } from 'date-fns/locale';
 import 'dayjs/locale/he';
 import 'dayjs/locale/fr';
-import 'moment/dist/locale/he';
-import 'moment/dist/locale/fr';
+import 'moment/locale/he';
+import 'moment/locale/fr';
 import moment from 'moment';
 
 const ADAPTERS_TO_USE: AdapterName[] = ['date-fns', 'dayjs', 'luxon', 'moment'];

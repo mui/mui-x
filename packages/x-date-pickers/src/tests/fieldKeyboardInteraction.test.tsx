@@ -15,7 +15,7 @@ import {
   getDateSectionConfigFromFormatToken,
   cleanLeadingZeros,
 } from '../internals/hooks/useField/useField.utils';
-import 'moment/dist/locale/fa';
+import 'moment/locale/fa';
 
 const testDate = '2018-05-15T09:35:10';
 

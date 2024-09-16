@@ -40,6 +40,10 @@ export default defineConfig({
           return null;
         },
       },
+      {
+        find: 'moment/locale',
+        replacement: 'moment/dist/locale',
+      },
     ],
   },
   test: {
