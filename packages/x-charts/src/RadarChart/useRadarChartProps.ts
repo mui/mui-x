@@ -2,6 +2,7 @@ import type { RadarChartProps } from './RadarChart';
 import { ResponsiveRadarChartContainerProps } from './ResponsiveRadarChartContainer';
 import { ChartsOverlayProps } from '../ChartsOverlay';
 import { ChartsLegendProps } from '../ChartsLegend';
+import { RadarGridProps } from './RadarGrid';
 
 /**
  * A helper function that extracts RadarChartProps from the input props
@@ -38,7 +39,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     })),
     width,
     height,
-    margin: { left: 5, top: 50, right: 5, bottom: 5, ...margin },
+    margin: { left: 10, top: 70, right: 10, bottom: 30, ...margin },
     colors,
     sx,
     radar,
@@ -56,10 +57,15 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     slotProps,
   };
 
+  const radarGridProps: RadarGridProps = {
+    divisionNumber: radar.divisionNumber,
+  };
+  
   return {
     radarChartContainerProps,
     overlayProps,
     legendProps,
+    radarGridProps,
     children,
   };
 };

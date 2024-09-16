@@ -29,15 +29,16 @@ This item can either be:
   - `max`: The maximal value along this direction (by default the maximal value along this direction).
 
 {{"demo": "RadarAxis.js" }}
-{{"demo": "DemoRadar.js" }}
 
 ## Grid
 
 The radar chart displays a grid behind the series that can be configured with
 
 - `startAngle` The rotation angle of the entire chart
-- `nbSteps` The nb of division of the grid
-- `colors` An array with the colors to fill the grid areas
+- `divisionNumber` The nb of division of the grid
+<!-- - `colors` An array with the colors to fill the grid areas -->
+
+{{"demo": "DemoRadarNoSnap.js" }}
 
 ## Composition
 

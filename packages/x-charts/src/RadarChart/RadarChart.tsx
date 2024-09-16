@@ -19,6 +19,7 @@ import {
 import { MakeOptional } from '../models/helpers';
 import { RadarSeriesType } from '../models/seriesType/radar';
 import { RadarTooltip } from './RadarTooltip';
+import { RadarLabels } from './RadarLabels';
 
 export interface RadarChartSlots extends ChartsLegendSlots, ChartsOverlaySlots {}
 export interface RadarChartSlotProps extends ChartsLegendSlotProps, ChartsOverlaySlotProps {}
@@ -46,9 +47,9 @@ export interface RadarChartProps
 
 const RadarChart = React.forwardRef(function RadarChart(inProps: RadarChartProps, ref) {
   const props = useThemeProps({ props: inProps, name: 'MuiRadarChart' });
-  const { children } = useRadarChartProps(props);
 
-  const { radarChartContainerProps, overlayProps } = useRadarChartProps(props);
+  const { radarChartContainerProps, overlayProps, radarGridProps, children } =
+    useRadarChartProps(props);
 
   return (
     <ResponsiveRadarChartContainer ref={ref} {...radarChartContainerProps}>
@@ -56,10 +57,11 @@ const RadarChart = React.forwardRef(function RadarChart(inProps: RadarChartProps
                  <ChartsRadarHighlight />
                  {!props.loading && <RadarTooltip />} */}
 
-      <RadarGrid />
+      <RadarGrid {...radarGridProps} />
       <ChartsOverlay {...overlayProps} />
       <RadarAreaPlot />
       <ChartsLegend />
+      <RadarLabels />
       <RadarTooltip />
       {children}
     </ResponsiveRadarChartContainer>

@@ -30,4 +30,8 @@ export interface RadarConfig {
    * @default 0
    */
   startAngle?: number;
+  /**
+   * The number of steps in the radar grid.
+   */
+  divisionNumber?: number;
 }
