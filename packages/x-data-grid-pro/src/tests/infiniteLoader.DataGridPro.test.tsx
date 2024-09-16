@@ -161,7 +161,7 @@ describe('<DataGridPro /> - Infnite loader', () => {
     expect(getRow.callCount).to.equal(5);
   });
 
-  it('should not call `onRowsScrollEnd` if there are rows pinned to the bottom and the viewport scroll is at the top', async function test() {
+  it('should not observe intersections with the rows pinned to the bottom', async function test() {
     if (isJSDOM) {
       this.skip(); // Needs layout
     }
@@ -178,6 +178,8 @@ describe('<DataGridPro /> - Infnite loader', () => {
     };
 
     const handleRowsScrollEnd = spy();
+    const observe = spy(window.IntersectionObserver.prototype, 'observe');
+
     function TestCase({
       rows,
       pinnedRows,
@@ -186,7 +188,7 @@ describe('<DataGridPro /> - Infnite loader', () => {
       pinnedRows: typeof basePinnedRows;
     }) {
       return (
-        <div style={{ width: 300, height: 300 }}>
+        <div style={{ width: 300, height: 100 }}>
           <DataGridPro
             columns={[{ field: 'brand', width: 100 }]}
             rows={rows}
@@ -198,14 +200,17 @@ describe('<DataGridPro /> - Infnite loader', () => {
     }
     const { container } = render(<TestCase rows={baseRows} pinnedRows={basePinnedRows} />);
     const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
-    // after initial render and a scroll event that did not reach the bottom of the grid
-    // the `onRowsScrollEnd` should not be called
-    expect(handleRowsScrollEnd.callCount).to.equal(0);
+    // on the initial render, last row is not visible and the `observe` method is not called
+    expect(observe.callCount).to.equal(0);
     // arbitrary number to make sure that the bottom of the grid window is reached.
     virtualScroller.scrollTop = 12345;
     virtualScroller.dispatchEvent(new Event('scroll'));
-    await waitFor(() => {
+    // observer was attached and `onRowsScrollEnd` was called
+    expect(observe.callCount).to.equal(1);
+    waitFor(() => {
       expect(handleRowsScrollEnd.callCount).to.equal(1);
     });
+
+    observe.restore();
   });
 });
