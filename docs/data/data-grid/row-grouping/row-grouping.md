@@ -11,6 +11,10 @@ In the following example, movies are grouped based on their production `company`
 
 {{"demo": "RowGroupingBasicExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
+:::info
+If you are looking for row grouping on the server-side, see [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/).
+:::
+
 ## Grouping criteria
 
 ### Initialize the row grouping
@@ -283,10 +287,6 @@ When using `rowGroupingColumnMode = "single"`, the default behavior is to:
 If you are rendering leaves with the `leafField` property of `groupingColDef`, the sorting and filtering will be applied on the leaves based on the `sortComparator` and `filterOperators` of their original column.
 
 You can force the filtering to be applied on another grouping criteria with the `mainGroupingCriteria` property of `groupingColDef`
-
-:::info
-For server-side lazy fetching, filtering, sorting the row grouped data, use the [server side row grouping](/x/react-data-grid/server-side-data/row-grouping/) feature.
-:::
 
 {{"demo": "RowGroupingFilteringSingleGroupingColDef.js", "bg": "inline", "defaultCodeOpen": false}}
 

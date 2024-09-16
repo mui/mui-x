@@ -72,7 +72,7 @@ export default function ServerSideRowGroupingFullDataGrid() {
           slotProps={{
             toolbar: {
               showQuickFilter: true,
-            }
+            },
           }}
           groupingColDef={{
             width: 250,
