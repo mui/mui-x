@@ -68,7 +68,7 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
     formattedTime || (value !== null && utils.isValid(value))
       ? `Абраць час, абрыны час  ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Абраць час',
-  // fieldClearLabel: 'Clear value',
+  // fieldClearLabel: 'Clear',
 
   // Table labels
   timeTableLabel: 'абраць час',

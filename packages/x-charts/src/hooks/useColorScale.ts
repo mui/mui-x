@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { AxisScaleComputedConfig, ScaleName } from '../models/axis';
