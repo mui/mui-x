@@ -12,7 +12,7 @@ export const LICENSE_MODELS = [
   /**
    * Legacy. The previous name for 'annual'.
    * Can be removed once old license keys generated with 'subscription' are no longer supported.
-   * It could up to 2030.
+   * To support for a while. We need more years of backward support and we sell multi year licenses.
    */
   'subscription',
 ] as const;
