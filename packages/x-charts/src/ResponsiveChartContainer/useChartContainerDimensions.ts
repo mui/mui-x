@@ -3,7 +3,11 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
 
-export const useChartContainerDimensions = (inWidth?: number, inHeight?: number) => {
+export const useChartContainerDimensions = (
+  inWidth?: number,
+  inHeight?: number,
+  resolveSizeBeforeRender?: boolean,
+) => {
   const stateRef = React.useRef({ displayError: false, initialCompute: true, computeRun: 0 });
   const rootRef = React.useRef(null);
 
@@ -40,7 +44,11 @@ export const useChartContainerDimensions = (inWidth?: number, inHeight?: number)
   // https://github.com/mui/mui-x/issues/13477#issuecomment-2336634785
   useEnhancedEffect(() => {
     // computeRun is used to avoid infinite loops.
-    if (!stateRef.current.initialCompute || stateRef.current.computeRun > 20) {
+    if (
+      !resolveSizeBeforeRender ||
+      !stateRef.current.initialCompute ||
+      stateRef.current.computeRun > 20
+    ) {
       return;
     }
 
@@ -50,7 +58,7 @@ export const useChartContainerDimensions = (inWidth?: number, inHeight?: number)
     } else if (stateRef.current.initialCompute) {
       stateRef.current.initialCompute = false;
     }
-  }, [width, height, computeSize]);
+  }, [width, height, computeSize, resolveSizeBeforeRender]);
 
   useEnhancedEffect(() => {
     if (inWidth !== undefined && inHeight !== undefined) {
