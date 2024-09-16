@@ -36,7 +36,6 @@ export const gridGetRowsParamsSelector = createSelector(
   gridFilterModelSelector,
   gridSortModelSelector,
   gridPaginationModelSelector,
-  gridRowGroupingModelSelector,
   gridRowGroupingSanitizedModelSelector,
   (filterModel, sortModel, paginationModel, rowGroupingModel) => {
     return {
