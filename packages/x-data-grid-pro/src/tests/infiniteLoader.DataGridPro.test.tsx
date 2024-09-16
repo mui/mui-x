@@ -165,7 +165,7 @@ describe('<DataGridPro /> - Infnite loader', () => {
     expect(getRow.callCount).to.equal(5);
   });
 
-  it.only('should not observe intersections with the rows pinned to the bottom', async function test() {
+  it('should not observe intersections with the rows pinned to the bottom', async function test() {
     if (isJSDOM) {
       this.skip(); // Needs layout
     }
