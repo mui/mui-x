@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { createRenderer } from '@mui/internal-test-utils';
+import { createRenderer, waitFor, fireEvent, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGrid, useGridApiRef, DataGridProps, GridApi } from '@mui/x-data-grid';
-import { getCell } from 'test/utils/helperFn';
+import { getCell, getActiveCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -127,48 +127,122 @@ describe('<DataGrid /> - Row spanning', () => {
     expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
   });
 
-  it('should work with sorting', function test() {
-    if (isJSDOM) {
-      this.skip();
-    }
-    render(
-      <TestDataGrid initialState={{ sorting: { sortModel: [{ field: 'code', sort: 'desc' }] } }} />,
-    );
-    const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
-    expect(rowsWithSpannedCells.length).to.equal(1);
-    const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows('4');
-    expect(rowIndex).to.equal(1);
-    const spanValue = apiRef.current.state.rowSpanning.spannedCells['4'];
-    expect(spanValue).to.deep.equal({ code: 3, totalPrice: 3 });
-    const spannedCell = getCell(rowIndex, 0);
-    expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
+  describe('sorting', () => {
+    it('should work with sorting when initializing sorting', function test() {
+      if (isJSDOM) {
+        this.skip();
+      }
+      render(
+        <TestDataGrid
+          initialState={{ sorting: { sortModel: [{ field: 'code', sort: 'desc' }] } }}
+        />,
+      );
+      const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
+      expect(rowsWithSpannedCells.length).to.equal(1);
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows('4');
+      expect(rowIndex).to.equal(1);
+      const spanValue = apiRef.current.state.rowSpanning.spannedCells['4'];
+      expect(spanValue).to.deep.equal({ code: 3, totalPrice: 3 });
+      const spannedCell = getCell(rowIndex, 0);
+      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
+    });
+
+    it('should work with sorting when controlling sorting', function test() {
+      if (isJSDOM) {
+        this.skip();
+      }
+      render(<TestDataGrid sortModel={[{ field: 'code', sort: 'desc' }]} />);
+      const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
+      expect(rowsWithSpannedCells.length).to.equal(1);
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows('4');
+      expect(rowIndex).to.equal(1);
+      const spanValue = apiRef.current.state.rowSpanning.spannedCells['4'];
+      expect(spanValue).to.deep.equal({ code: 3, totalPrice: 3 });
+      const spannedCell = getCell(rowIndex, 0);
+      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
+    });
   });
 
-  it('should work with filtering', function test() {
-    if (isJSDOM) {
-      this.skip();
-    }
-    render(
-      <TestDataGrid
-        initialState={{
-          filter: {
-            filterModel: {
-              items: [{ field: 'description', operator: 'contains', value: 'Upgrade' }],
+  describe('filtering', () => {
+    it('should work with filtering when initializing filter', function test() {
+      if (isJSDOM) {
+        this.skip();
+      }
+      render(
+        <TestDataGrid
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ field: 'description', operator: 'contains', value: 'Upgrade' }],
+              },
             },
-          },
-        }}
-      />,
-    );
-    const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
-    expect(rowsWithSpannedCells.length).to.equal(1);
-    const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows('5');
-    expect(rowIndex).to.equal(0);
-    const spanValue = apiRef.current.state.rowSpanning.spannedCells['5'];
-    expect(spanValue).to.deep.equal({ code: 2, totalPrice: 2 });
-    const spannedCell = getCell(rowIndex, 0);
-    expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
+          }}
+        />,
+      );
+      const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
+      expect(rowsWithSpannedCells.length).to.equal(1);
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows('5');
+      expect(rowIndex).to.equal(0);
+      const spanValue = apiRef.current.state.rowSpanning.spannedCells['5'];
+      expect(spanValue).to.deep.equal({ code: 2, totalPrice: 2 });
+      const spannedCell = getCell(rowIndex, 0);
+      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
+    });
+
+    it('should work with filtering when controlling filter', function test() {
+      if (isJSDOM) {
+        this.skip();
+      }
+      render(
+        <TestDataGrid
+          filterModel={{
+            items: [{ field: 'description', operator: 'contains', value: 'Upgrade' }],
+          }}
+        />,
+      );
+      const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
+      expect(rowsWithSpannedCells.length).to.equal(1);
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows('5');
+      expect(rowIndex).to.equal(0);
+      const spanValue = apiRef.current.state.rowSpanning.spannedCells['5'];
+      expect(spanValue).to.deep.equal({ code: 2, totalPrice: 2 });
+      const spannedCell = getCell(rowIndex, 0);
+      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
+    });
   });
 
-  // TODO: Add tests for keyboard navigation
-  // TODO: Add tests for column reordering
+  describe('pagination', () => {
+    it('should only compute the row spanning state for current page', async () => {
+      render(
+        <TestDataGrid
+          pagination
+          initialState={{ pagination: { paginationModel: { pageSize: 4, page: 0 } } }}
+          pageSizeOptions={[4]}
+        />,
+      );
+      expect(Object.keys(apiRef.current.state.rowSpanning.spannedCells).length).to.equal(0);
+      apiRef.current.setPage(1);
+      await waitFor(() =>
+        expect(Object.keys(apiRef.current.state.rowSpanning.spannedCells).length).to.equal(1),
+      );
+      expect(Object.keys(apiRef.current.state.rowSpanning.hiddenCells).length).to.equal(1);
+    });
+  });
+
+  describe('keyboard navigation', () => {
+    it('should respect the spanned cells when navigating using keyboard', () => {
+      render(<TestDataGrid />);
+      // Set focus to the cell with value `- 16GB RAM Upgrade`
+      act(() => apiRef.current.setCellFocus(5, 'description'));
+      expect(getActiveCell()).to.equal('4-1');
+      const cell41 = getCell(4, 1);
+      fireEvent.keyDown(cell41, { key: 'ArrowLeft' });
+      expect(getActiveCell()).to.equal('3-0');
+      const cell30 = getCell(3, 0);
+      fireEvent.keyDown(cell30, { key: 'ArrowRight' });
+      expect(getActiveCell()).to.equal('3-1');
+    });
+  });
+
+  // TODO: Add tests for row reordering
 });
