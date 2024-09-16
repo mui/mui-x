@@ -15,6 +15,7 @@ import {
 import 'moment/dist/locale/de';
 import 'moment/dist/locale/fr';
 import 'moment/dist/locale/ko';
+import 'moment/dist/locale/ru';
 
 describe('<AdapterMoment />', () => {
   const commonParams = {
