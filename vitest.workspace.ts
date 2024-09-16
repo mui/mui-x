@@ -5,7 +5,7 @@ const packages = ['charts', 'date-pickers'];
 
 // Ideally we move the configuration to each package.
 // Currently it doesn't work because vitest doesn't detect two different configurations in the same package.
-// We could bypass this limitation by having a folder per configuration.
+// We could bypass this limitation by having a folder per configuration. Eg: `packages/x-charts/browser` & `packages/x-charts/jsdom`.
 
 export default defineWorkspace(
   packages.flatMap(
@@ -14,8 +14,11 @@ export default defineWorkspace(
         extends: './vitest.config.mts',
         plugins: [react()],
         test: {
-          include: [`packages/x-${name}/src/**/*.test.{ts,tsx,js,jsx}`],
-          exclude: [`packages/x-${name}/src/**/*V3.test.{ts,tsx,js,jsx}`],
+          include: [`packages/x-${name}/src/**/*.test.?(c|m)[jt]s?(x)`],
+          exclude: [
+            `packages/x-${name}/src/**/*.jsdom.test.?(c|m)[jt]s?(x)`,
+            `packages/x-${name}/src/**/*V3.test.?(c|m)[jt]s?(x)`,
+          ],
           name: `browser/${name}`,
           env: {
             MUI_BROWSER: 'true',
@@ -35,8 +38,8 @@ export default defineWorkspace(
         extends: './vitest.config.mts',
         plugins: [react()],
         test: {
-          include: [`packages/x-${name}/src/**/*.test.{ts,tsx,js,jsx}`],
-          exclude: [`packages/x-${name}/src/**/*.browser.test.{ts,tsx,js,jsx}`],
+          include: [`packages/x-${name}/src/**/*.test.?(c|m)[jt]s?(x)`],
+          exclude: [`packages/x-${name}/src/**/*.browser.test.?(c|m)[jt]s?(x)`],
           name: `jsdom/${name}`,
           environment: 'jsdom',
           env: {
