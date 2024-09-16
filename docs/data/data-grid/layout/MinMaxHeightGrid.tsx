@@ -45,7 +45,7 @@ export default function MinMaxHeightGrid() {
         </div>
 
         {/** Visualize max and min container height */}
-        {!loading && <ContainerMeasurements containerRef={containerRef} />}
+        {<ContainerMeasurements containerRef={containerRef} />}
       </div>
     </Box>
   );
@@ -62,31 +62,12 @@ function ContainerMeasurements({
     setContainerHeight(entry[0].contentRect.height);
   });
 
-  return (
-    <React.Fragment>
-      <Measurment
-        height={minHeight}
-        label={`min-height: ${minHeight}px`}
-        visible={containerHeight === minHeight}
-      />
-      <Measurment
-        height={maxHeight}
-        label={`max-height: ${maxHeight}px`}
-        visible={containerHeight === maxHeight}
-      />
-    </React.Fragment>
-  );
-}
+  const label = `${containerHeight}px`;
 
-function Measurment({
-  height,
-  label,
-  visible = false,
-}: {
-  height: React.CSSProperties['height'];
-  label: string;
-  visible: boolean;
-}) {
+  if (containerHeight === 0) {
+    return null;
+  }
+
   return (
     <Box
       sx={(theme) => ({
@@ -94,15 +75,13 @@ function Measurment({
         top: 0,
         left: -20,
         width: 20,
-        height,
+        height: containerHeight,
         borderColor: theme.palette.text.secondary,
         borderStyle: 'dashed',
         borderTopWidth: 1,
         borderRightWidth: 0,
         borderBottomWidth: 1,
         borderLeftWidth: 1,
-        opacity: visible ? 1 : 0,
-        transition: 'opacity 0.2s',
       })}
     >
       <Typography
