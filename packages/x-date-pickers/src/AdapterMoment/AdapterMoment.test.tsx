@@ -12,9 +12,9 @@ import {
   TEST_DATE_ISO_STRING,
   buildFieldInteractions,
 } from 'test/utils/pickers';
-import 'moment/locale/de';
-import 'moment/locale/fr';
-import 'moment/locale/ko';
+import 'moment/dist/locale/de';
+import 'moment/dist/locale/fr';
+import 'moment/dist/locale/ko';
 
 describe('<AdapterMoment />', () => {
   const commonParams = {

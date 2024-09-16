@@ -9,7 +9,7 @@ import {
   describeHijriAdapter,
   buildFieldInteractions,
 } from 'test/utils/pickers';
-import 'moment/locale/ar';
+import 'moment/dist/locale/ar';
 
 describe('<AdapterMomentHijri />', () => {
   describeHijriAdapter(AdapterMomentHijri, {
