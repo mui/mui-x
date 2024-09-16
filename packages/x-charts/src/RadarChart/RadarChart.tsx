@@ -20,6 +20,7 @@ import { MakeOptional } from '../models/helpers';
 import { RadarSeriesType } from '../models/seriesType/radar';
 import { RadarTooltip } from './RadarTooltip';
 import { RadarLabels } from './RadarLabels';
+import { RadarPlot } from './RadarPlot/RadarPlot';
 
 export interface RadarChartSlots extends ChartsLegendSlots, ChartsOverlaySlots {}
 export interface RadarChartSlotProps extends ChartsLegendSlotProps, ChartsOverlaySlotProps {}
@@ -60,6 +61,7 @@ const RadarChart = React.forwardRef(function RadarChart(inProps: RadarChartProps
       <RadarGrid {...radarGridProps} />
       <ChartsOverlay {...overlayProps} />
       <RadarAreaPlot />
+      <RadarPlot />
       <ChartsLegend />
       <RadarLabels />
       <RadarTooltip />

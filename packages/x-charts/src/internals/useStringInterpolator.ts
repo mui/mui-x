@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
 
-function usePrevious<T>(value: T) {
+function usePrevious<T>(value: T, initialValue?: T) {
   const ref = React.useRef<{ currentPath: T; previousPath?: T }>({
     currentPath: value,
-    previousPath: undefined,
+    previousPath: initialValue,
   });
   if (ref.current.currentPath !== value) {
     ref.current = {
@@ -16,8 +16,8 @@ function usePrevious<T>(value: T) {
   return ref.current;
 }
 
-export const useStringInterpolator = (path: string) => {
-  const memoryRef = usePrevious(path);
+export const useStringInterpolator = (path: string, initialPath?: string) => {
+  const memoryRef = usePrevious(path, initialPath);
 
   const interpolator = React.useMemo(
     () =>
