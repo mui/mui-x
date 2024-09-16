@@ -58,7 +58,7 @@ export const useChartContainerDimensions = (inWidth?: number, inHeight?: number)
 
     return () => {
       if (animationFrame) {
-        window.cancelAnimationFrame(animationFrame);
+        cancelAnimationFrame(animationFrame);
       }
 
       if (elementToObserve) {

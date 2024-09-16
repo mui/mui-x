@@ -1,6 +1,9 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "experimentalRendering": {
+      "description": "If <code>true</code> the mark element will only be able to render circle. Giving fewer customization options, but saving around 40ms per 1.000 marks."
+    },
     "onItemClick": {
       "description": "Callback fired when a line mark item is clicked.",
       "typeDescriptions": {

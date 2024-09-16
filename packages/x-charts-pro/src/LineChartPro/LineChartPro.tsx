@@ -147,6 +147,10 @@ LineChartPro.propTypes = {
    */
   disableLineItemHighlight: PropTypes.bool,
   /**
+   * If `true` marks will render `<circle />` instead of `<path />` and drop theme override for faster rendering.
+   */
+  experimentalMarkRendering: PropTypes.bool,
+  /**
    * Option to display a cartesian grid in the background.
    */
   grid: PropTypes.shape({
@@ -182,6 +186,7 @@ LineChartPro.propTypes = {
     itemMarkWidth: PropTypes.number,
     labelStyle: PropTypes.object,
     markGap: PropTypes.number,
+    onItemClick: PropTypes.func,
     padding: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.shape({
