@@ -33,6 +33,12 @@ But for some columns, it can be useful to manually get and format the value to r
 
 ### Value getter
 
+:::warning
+Note that the signature of `valueGetter` has changed in v7 – see the [migration guide](https://mui.com/x/migration/migration-data-grid-v6/) for details.
+
+If you're using v6, please use the [v6 documentation](https://v6.mui.com/x/react-data-grid/column-definition/#value-getter).
+:::
+
 Sometimes a column might not have a desired value.
 You can use the `valueGetter` attribute of `GridColDef` to:
 
@@ -101,6 +107,12 @@ The value passed to the `groupingValueGetter` is the raw row value (`row[field]`
 :::
 
 ### Value formatter
+
+:::warning
+Note that the signature of `valueFormatter` has changed in v7 – see the [migration guide](https://mui.com/x/migration/migration-data-grid-v6/) for details.
+
+If you're using v6, please use the [v6 documentation](https://v6.mui.com/x/react-data-grid/column-definition/#value-formatter).
+:::
 
 The value formatter allows you to convert the value before displaying it.
 Common use cases include converting a JavaScript `Date` object to a date string or a `Number` into a formatted number (for example "1,000.50").
