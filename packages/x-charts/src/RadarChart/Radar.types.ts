@@ -21,6 +21,11 @@ export interface RadarConfig {
    */
   metrics: string[] | MetricConfig[];
   /**
+   * The default max value for axis.
+   * If will be override is `metrics` contains a `max` property.
+   */
+  max?: number;
+  /**
    * The angle of the first axis (in deg)
    * @default 0
    */

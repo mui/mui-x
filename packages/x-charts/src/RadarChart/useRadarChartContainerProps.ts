@@ -40,12 +40,14 @@ export const useRadarChartContainerProps = (
   const chartSurfaceRef = useForkRef(ref, svgRef);
 
   const radiusAxis: AxisConfig<'linear', any, ChartsRadialAxisProps>[] = radar.metrics.map((m) => {
-    const name = typeof m === 'string' ? m : m.name;
+    const { name, min = 0, max = radar.max } = typeof m === 'string' ? { name: m } : m;
+
     return {
       id: name,
       label: name,
-      min: 0,
       scaleType: 'linear',
+      min,
+      max,
     };
   });
   const startAngle = radar.startAngle ?? 0;
