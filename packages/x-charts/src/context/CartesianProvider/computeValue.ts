@@ -89,7 +89,6 @@ export function computeValue({
   const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
     const axis = eachAxis as Readonly<AxisConfig<ScaleName, any, Readonly<ChartsAxisProps>>>;
-    const isDefaultAxis = axisIndex === 0;
     const zoomOption = zoomOptions?.[axis.id];
     const zoom = zoomData?.find(({ axisId }) => axisId === axis.id);
     const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
@@ -98,7 +97,7 @@ export function computeValue({
     const [minData, maxData] = getAxisExtremum(
       axis,
       extremumGetters,
-      isDefaultAxis,
+      axisIndex,
       formattedSeries,
       zoom === undefined && !zoomOption ? getFilters : undefined, // Do not apply filtering if zoom is already defined.
     );
