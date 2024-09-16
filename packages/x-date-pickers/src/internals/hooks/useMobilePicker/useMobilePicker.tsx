@@ -12,12 +12,12 @@ import { usePicker } from '../usePicker';
 import { onSpaceOrEnter } from '../../utils/utils';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
-import { InferError } from '../useValidation';
 import {
   FieldSection,
   BaseSingleInputFieldProps,
   PickerValidDate,
   FieldRef,
+  InferError,
 } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 

@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
@@ -152,6 +153,7 @@ ScatterChartPro.propTypes = {
     itemMarkWidth: PropTypes.number,
     labelStyle: PropTypes.object,
     markGap: PropTypes.number,
+    onItemClick: PropTypes.func,
     padding: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.shape({

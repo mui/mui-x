@@ -67,7 +67,7 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
     formattedTime || (value !== null && utils.isValid(value))
       ? `Saat seçin, seçilen saat: ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Saat seç',
-  // fieldClearLabel: 'Clear value',
+  // fieldClearLabel: 'Clear',
 
   // Table labels
   timeTableLabel: 'saat seç',

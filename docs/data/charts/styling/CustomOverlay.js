@@ -36,6 +36,7 @@ function LoadingOverlay() {
 
         return (
           <LoadingReact
+            key={index}
             x={xScale(item)}
             width={bandWidth}
             y={bottom - barHeight}
