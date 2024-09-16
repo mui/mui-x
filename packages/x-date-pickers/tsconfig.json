@@ -6,8 +6,7 @@
       "@mui/material/themeCssVarsAugmentation",
       "chai-dom",
       "mocha",
-      "node",
-      "@vitest/browser/providers/playwright"
+      "node"
     ],
     "noImplicitAny": false
   },

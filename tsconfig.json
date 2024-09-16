@@ -8,7 +8,6 @@
     "strict": true,
     "baseUrl": "./",
     "allowJs": true,
-    "types": ["@vitest/browser/providers/playwright"],
     "paths": {
       "@mui/x-data-grid": ["./packages/x-data-grid/src"],
       "@mui/x-data-grid/*": ["./packages/x-data-grid/src/*"],
