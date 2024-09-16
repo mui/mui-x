@@ -20,6 +20,14 @@ You can predefine dimensions for the parent of the data grid.
 
 {{"demo": "FixedSizeGrid.js", "bg": "inline"}}
 
+## Minimum and maximum height
+
+The Data Grid can take the minimum and maximum height of the parent flex container into account and adjust its size accordingly.
+
+In the demo below, the Data Grid is placed inside a flex container with a minimum height of 200px and a maximum height of 400px and adapts its height when the number of rows changes.
+
+{{"demo": "MinMaxHeightGrid.js", "bg": "inline"}}
+
 ## Auto height
 
 The `autoHeight` prop enables the Data Grid to adjust its size based on its content.
@@ -27,6 +35,8 @@ This means that the Data Grid's height will be determined by the number of rows,
 
 :::warning
 This is not recommended for large datasets as row virtualization will not be able to improve performance by limiting the number of elements rendered in the DOM.
+
+Prefer setting the [minimum and maximum height on the parent container](/x/react-data-grid/layout/#minimum-and-maximum-height) instead.
 :::
 
 {{"demo": "AutoHeightGrid.js", "bg": "inline"}}
