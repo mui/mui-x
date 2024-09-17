@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
 import { AxisDefaultized } from '../models/axis';
