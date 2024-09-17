@@ -54,8 +54,8 @@ export default function MinMaxHeightGrid() {
 function ContainerMeasurements({ containerRef }) {
   const [containerHeight, setContainerHeight] = React.useState(0);
 
-  useResizeObserver(containerRef, (entry) => {
-    setContainerHeight(entry[0].contentRect.height);
+  useResizeObserver(containerRef, (entries) => {
+    setContainerHeight(entries[0].contentRect.height);
   });
 
   const label = `${containerHeight}px`;

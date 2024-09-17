@@ -22,6 +22,7 @@ export function useResizeObserver(
 
     const target = ref.current;
     const observer = new ResizeObserver((entries) => {
+      console.log('resize', entries);
       // See https://github.com/mui/mui-x/issues/8733
       // In dev, we avoid the React warning by moving the task to the next frame.
       // In prod, we want the task to run in the same frame as to avoid tear.
