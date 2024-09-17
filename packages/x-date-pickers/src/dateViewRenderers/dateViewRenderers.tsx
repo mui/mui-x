@@ -40,7 +40,7 @@ export const renderDateViewCalendar = <TDate extends PickerValidDate>({
   onMonthChange,
   monthsPerRow,
   onYearChange,
-  yearsOrder = 'asc',
+  yearsOrder,
   yearsPerRow,
   slots,
   slotProps,
