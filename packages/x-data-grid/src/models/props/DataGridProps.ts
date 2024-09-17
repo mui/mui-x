@@ -245,6 +245,14 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   ignoreDiacritics: boolean;
   /**
+   * If `select`, a group header checkbox in indeterminate state (like "Select All" checkbox)
+   * will select all the rows under it.
+   * If `deselect`, it will deselect all the rows under it.
+   * Works only if `checkboxSelection` is enabled.
+   * @default "deselect"
+   */
+  indeterminateCheckboxAction: 'select' | 'deselect';
+  /**
    * If `true`, the selection model will retain selected rows that do not exist.
    * Useful when using server side pagination and row selections need to be retained
    * when changing pages.
@@ -299,12 +307,12 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   rowSpacingType: 'margin' | 'border';
   /**
-   * If `true`, the vertical borders of the cells are displayed.
+   * If `true`, vertical borders will be displayed between cells.
    * @default false
    */
   showCellVerticalBorder: boolean;
   /**
-   * If `true`, the right border of the column headers are displayed.
+   * If `true`, vertical borders will be displayed between column header items.
    * @default false
    */
   showColumnVerticalBorder: boolean;

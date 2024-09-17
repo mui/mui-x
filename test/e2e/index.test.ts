@@ -708,7 +708,7 @@ async function initializeEnvironment(
 
           const monthSection = page.getByRole('spinbutton', { name: 'Month' });
           await monthSection.press('2');
-          await page.getByRole('button', { name: 'Clear value' }).click();
+          await page.getByRole('button', { name: 'Clear' }).click();
 
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('MM');
         });
@@ -720,7 +720,7 @@ async function initializeEnvironment(
           // locator.fill('2') does not work reliably for this case in all browsers
           await textbox.focus();
           await textbox.press('2');
-          await page.getByRole('button', { name: 'Clear value' }).click();
+          await page.getByRole('button', { name: 'Clear' }).click();
 
           // firefox does not support document.getSelection().toString() on input elements
           if (browserType.name() === 'firefox') {

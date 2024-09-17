@@ -428,6 +428,14 @@ DataGridProRaw.propTypes = {
     PropTypes.bool,
   ]),
   /**
+   * If `select`, a group header checkbox in indeterminate state (like "Select All" checkbox)
+   * will select all the rows under it.
+   * If `deselect`, it will deselect all the rows under it.
+   * Works only if `checkboxSelection` is enabled.
+   * @default "deselect"
+   */
+  indeterminateCheckboxAction: PropTypes.oneOf(['deselect', 'select']),
+  /**
    * The initial state of the DataGridPro.
    * The data in it will be set in the state on initialization but will not be controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
@@ -905,12 +913,12 @@ DataGridProRaw.propTypes = {
    */
   scrollEndThreshold: PropTypes.number,
   /**
-   * If `true`, the vertical borders of the cells are displayed.
+   * If `true`, vertical borders will be displayed between cells.
    * @default false
    */
   showCellVerticalBorder: PropTypes.bool,
   /**
-   * If `true`, the right border of the column headers are displayed.
+   * If `true`, vertical borders will be displayed between column header items.
    * @default false
    */
   showColumnVerticalBorder: PropTypes.bool,

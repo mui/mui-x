@@ -38,10 +38,10 @@ const zhCNGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: '导出至Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: '搜索',
+  columnsManagementNoColumns: '没有列',
+  columnsManagementShowHideAllText: '显示/隐藏所有',
+  columnsManagementReset: '重置',
 
   // Filter panel text
   filterPanelAddFilter: '添加筛选器',
@@ -57,7 +57,9 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: '包含',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: '等于',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: '开始于',
   filterOperatorEndsWith: '结束于',
   filterOperatorIs: '是',
@@ -78,7 +80,9 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: '包含',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: '等于',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: '开始于',
   headerFilterOperatorEndsWith: '结束于',
   headerFilterOperatorIs: '是',
@@ -94,7 +98,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   'headerFilterOperator!=': '不等于',
   'headerFilterOperator>': '大于',
   'headerFilterOperator>=': '大于或等于',
-  'headerFilterOperator<': '小雨',
+  'headerFilterOperator<': '小于',
   'headerFilterOperator<=': '小于或等于',
 
   // Filter values text

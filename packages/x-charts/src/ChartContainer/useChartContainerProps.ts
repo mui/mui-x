@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import type { DrawingProviderProps } from '../context/DrawingProvider';
@@ -40,7 +41,7 @@ export const useChartContainerProps = (
 
   useReducedMotion(); // a11y reduce motion (see: https://react-spring.dev/docs/utilities/use-reduced-motion)
 
-  const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis);
+  const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis, dataset);
 
   const drawingProviderProps: Omit<DrawingProviderProps, 'children'> = {
     width,

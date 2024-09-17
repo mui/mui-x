@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { userEvent, screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { YearCalendar, yearCalendarClasses as classes } from '@mui/x-date-pickers/YearCalendar';
 import {
   createPickerRenderer,
@@ -51,7 +51,7 @@ describe('<YearCalendar /> - Describes', () => {
     },
     setNewValue: (value) => {
       const newValue = adapterToUse.addYears(value, 1);
-      userEvent.mousePress(
+      fireEvent.click(
         screen.getByRole('radio', { name: adapterToUse.getYear(newValue).toString() }),
       );
 
