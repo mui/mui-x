@@ -91,8 +91,8 @@ the field consumes some props (e.g: `shouldRespectLeadingZeros`) and forwards th
   ```js
   <DatePicker
     slotProps={{ field: { shouldRespectLeadingZeros: true } }}
-    enableAccessibleFieldDOMStructure
-  />
+    enableAccessibleFieldDOMStructure={false}
+   />
   <DatePicker
     slotProps={{ field: { shouldRespectLeadingZeros: true } }}
   />
@@ -106,8 +106,8 @@ the field consumes some props (e.g: `shouldRespectLeadingZeros`) and forwards th
   ```js
   <DatePicker
     slotProps={{ field: { size: 'small' } }}
-    enableAccessibleFieldDOMStructure
-  />
+    enableAccessibleFieldDOMStructure={false}
+   />
   <DatePicker
     slotProps={{ field: { size: 'small' } }}
   />
@@ -123,7 +123,7 @@ Both components below will render a small size UI:
 ```js
 <DatePicker
   slotProps={{ textField: { size: 'small' } }}
-  enableAccessibleFieldDOMStructure
+  enableAccessibleFieldDOMStructure={false}
 />
 <DatePicker
   slotProps={{ textField: { size: 'small' } }}

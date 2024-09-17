@@ -31,7 +31,7 @@ describe('<MobileTimePicker /> - Describes', () => {
     variant: 'mobile',
   }));
 
-  describeConformance(<MobileTimePicker enableAccessibleFieldDOMStructure />, () => ({
+  describeConformance(<MobileTimePicker />, () => ({
     classes: {} as any,
     render,
     muiName: 'MuiMobileTimePicker',

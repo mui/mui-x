@@ -45,7 +45,7 @@ describe('<DateRangePicker />', () => {
     const originalMatchMedia = window.matchMedia;
     window.matchMedia = stubMatchMedia(false);
 
-    render(<DateRangePicker enableAccessibleFieldDOMStructure />);
+    render(<DateRangePicker />);
     fireEvent.click(getFieldInputRoot());
     clock.runToLast();
 

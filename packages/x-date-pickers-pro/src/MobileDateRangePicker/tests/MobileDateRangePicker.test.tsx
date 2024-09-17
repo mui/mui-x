@@ -19,18 +19,20 @@ describe('<MobileDateRangePicker />', () => {
     it('should render the input with a given `name` when `SingleInputDateRangeField` is used', () => {
       // Test with v7 input
       const { unmount } = render(
-        <MobileDateRangePicker
-          name="test"
-          enableAccessibleFieldDOMStructure
-          slots={{ field: SingleInputDateRangeField }}
-        />,
+        <MobileDateRangePicker name="test" slots={{ field: SingleInputDateRangeField }} />,
       );
       expect(screen.getByRole<HTMLInputElement>('textbox', { hidden: true }).name).to.equal('test');
 
       unmount();
 
       // Test with v6 input
-      render(<MobileDateRangePicker name="test" slots={{ field: SingleInputDateRangeField }} />);
+      render(
+        <MobileDateRangePicker
+          enableAccessibleFieldDOMStructure={false}
+          name="test"
+          slots={{ field: SingleInputDateRangeField }}
+        />,
+      );
       expect(screen.getByRole<HTMLInputElement>('textbox').name).to.equal('test');
     });
   });
@@ -39,9 +41,7 @@ describe('<MobileDateRangePicker />', () => {
     it('should open when focusing the start input', async () => {
       const onOpen = spy();
 
-      const { user } = render(
-        <MobileDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />,
-      );
+      const { user } = render(<MobileDateRangePicker onOpen={onOpen} />);
 
       await openPicker({
         type: 'date-range',
@@ -57,9 +57,7 @@ describe('<MobileDateRangePicker />', () => {
     it('should open when focusing the end input', async () => {
       const onOpen = spy();
 
-      const { user } = render(
-        <MobileDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />,
-      );
+      const { user } = render(<MobileDateRangePicker onOpen={onOpen} />);
 
       await openPicker({
         type: 'date-range',
@@ -83,7 +81,6 @@ describe('<MobileDateRangePicker />', () => {
 
       const { user } = render(
         <MobileDateRangePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -129,7 +126,6 @@ describe('<MobileDateRangePicker />', () => {
 
       const { user } = render(
         <MobileDateRangePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -167,7 +163,6 @@ describe('<MobileDateRangePicker />', () => {
 
       const { user } = render(
         <MobileDateRangePicker
-          enableAccessibleFieldDOMStructure
           onAccept={onAccept}
           onClose={onClose}
           defaultValue={defaultValue}
@@ -202,7 +197,6 @@ describe('<MobileDateRangePicker />', () => {
 
       const { user } = render(
         <MobileDateRangePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -241,7 +235,6 @@ describe('<MobileDateRangePicker />', () => {
 
       const { user } = render(
         <MobileDateRangePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -279,7 +272,6 @@ describe('<MobileDateRangePicker />', () => {
 
       const { user } = render(
         <MobileDateRangePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -311,7 +303,6 @@ describe('<MobileDateRangePicker />', () => {
 
       const { user } = render(
         <MobileDateRangePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -335,7 +326,7 @@ describe('<MobileDateRangePicker />', () => {
     });
 
     it('should correctly set focused styles when input is focused', () => {
-      render(<MobileDateRangePicker enableAccessibleFieldDOMStructure />);
+      render(<MobileDateRangePicker />);
 
       const startSectionsContainer = getFieldSectionsContainer();
       fireEvent.focus(startSectionsContainer);

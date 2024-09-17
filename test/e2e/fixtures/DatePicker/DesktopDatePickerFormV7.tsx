@@ -17,7 +17,6 @@ export default function DesktopDatePickerFormV7() {
           label="Desktop Date Picker"
           name="startDate"
           defaultValue={dayjs('2022-04-17')}
-          enableAccessibleFieldDOMStructure
         />
       </LocalizationProvider>
       {submittedDate && <label role="status">Submitted: {submittedDate}</label>}

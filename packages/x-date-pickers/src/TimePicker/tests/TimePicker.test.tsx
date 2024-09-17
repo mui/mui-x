@@ -12,7 +12,7 @@ describe('<TimePicker />', () => {
     const originalMatchMedia = window.matchMedia;
     window.matchMedia = stubMatchMedia(false);
 
-    render(<TimePicker enableAccessibleFieldDOMStructure />);
+    render(<TimePicker />);
 
     expect(screen.getByLabelText(/Choose time/)).to.have.class(pickersInputBaseClasses.input);
 

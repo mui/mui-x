@@ -223,7 +223,6 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         <div>
           <div id="label-id">external label</div>
           <ElementToTest
-            enableAccessibleFieldDOMStructure
             open
             {...(isRangeType && {
               localeText: {

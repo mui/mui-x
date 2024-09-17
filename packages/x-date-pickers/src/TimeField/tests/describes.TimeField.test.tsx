@@ -22,7 +22,7 @@ describe('<TimeField /> - Describes', () => {
     componentFamily: 'field',
   }));
 
-  describeConformance(<TimeField enableAccessibleFieldDOMStructure />, () => ({
+  describeConformance(<TimeField />, () => ({
     classes: {} as any,
     inheritComponent: PickersTextField,
     render,

@@ -8,7 +8,6 @@ export default function ReadonlyDesktopDateRangePickerSingleV7() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateRangePicker
-        enableAccessibleFieldDOMStructure
         slots={{ field: SingleInputDateRangeField }}
         slotProps={{ field: { readOnly: true } }}
       />
