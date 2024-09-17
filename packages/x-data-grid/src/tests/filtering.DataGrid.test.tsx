@@ -1192,8 +1192,6 @@ describe('<DataGrid /> - Filter', () => {
 
       // With object options
       expect(getRows({ field: 'year', operator: 'is', value: 1974 }).year).to.deep.equal([
-        '',
-        '',
         'Year 1984',
       ]);
       expect(getRows({ field: 'year', operator: 'is', value: undefined }).year).to.deep.equal(
@@ -1268,6 +1266,8 @@ describe('<DataGrid /> - Filter', () => {
 
       // With object options
       expect(getRows({ field: 'year', operator: 'isNotAnyOf', value: [1974] }).year).to.deep.equal([
+        '',
+        '',
         'Year 1984',
       ]);
       expect(getRows({ field: 'year', operator: 'isNotAnyOf', value: [] }).year).to.deep.equal(
