@@ -41,7 +41,7 @@ export interface DesktopDateTimePickerSlotProps<
 
 export interface DesktopDateTimePickerProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends BaseDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>,
     DesktopOnlyPickerProps,
     DesktopOnlyTimePickerProps<TDate> {

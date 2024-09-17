@@ -23,7 +23,7 @@ export interface TimePickerSlotProps<
 
 export interface TimePickerProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends DesktopTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
     Omit<
       MobileTimePickerProps<TDate, TimeViewWithMeridiem, TEnableAccessibleFieldDOMStructure>,

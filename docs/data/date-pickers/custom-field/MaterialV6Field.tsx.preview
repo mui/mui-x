@@ -1,2 +1,2 @@
-<DateField />
-<DatePicker />
+<DateField enableAccessibleFieldDOMStructure={false} />
+<DatePicker enableAccessibleFieldDOMStructure={false} />

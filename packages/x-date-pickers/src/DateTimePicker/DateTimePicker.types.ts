@@ -27,7 +27,7 @@ export interface DateTimePickerSlotProps<
 
 export interface DateTimePickerProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
     Omit<
       MobileDateTimePickerProps<

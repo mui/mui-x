@@ -108,7 +108,7 @@ export const useFieldState = <
       onSelectedSectionsChange,
       shouldRespectLeadingZeros = false,
       timezone: timezoneProp,
-      enableAccessibleFieldDOMStructure = false,
+      enableAccessibleFieldDOMStructure = true,
     },
   } = params;
 

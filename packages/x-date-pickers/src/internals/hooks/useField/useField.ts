@@ -54,7 +54,7 @@ export const useField = <
     internalProps: {
       unstableFieldRef,
       minutesStep,
-      enableAccessibleFieldDOMStructure = false,
+      enableAccessibleFieldDOMStructure = true,
       disabled = false,
       readOnly = false,
     },

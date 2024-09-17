@@ -22,7 +22,7 @@ export interface DatePickerSlotProps<
 
 export interface DatePickerProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends DesktopDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
     MobileDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure> {
   /**

@@ -9,8 +9,8 @@ export default function MaterialV6Field() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateField', 'DatePicker']}>
-        <DateField />
-        <DatePicker />
+        <DateField enableAccessibleFieldDOMStructure={false} />
+        <DatePicker enableAccessibleFieldDOMStructure={false} />
       </DemoContainer>
     </LocalizationProvider>
   );
