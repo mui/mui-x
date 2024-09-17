@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useSeries } from '../../hooks/useSeries';
