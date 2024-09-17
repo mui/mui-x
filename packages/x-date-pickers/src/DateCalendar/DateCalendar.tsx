@@ -142,7 +142,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
     loading,
     renderLoading,
     displayWeekNumber,
-    yearsOrder = 'asc',
+    yearsOrder,
     yearsPerRow,
     monthsPerRow,
     timezone: timezoneProp,
