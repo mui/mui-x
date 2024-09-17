@@ -45,7 +45,7 @@ export default function MinMaxHeightGrid() {
         </div>
 
         {/** Visualize max and min container height */}
-        {<ContainerMeasurements containerRef={containerRef} />}
+        <ContainerMeasurements containerRef={containerRef} />
       </div>
     </Box>
   );
