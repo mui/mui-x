@@ -48,19 +48,21 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
  */
 function AnimatedLine(props: AnimatedLineProps) {
   const { d, skipAnimation, ownerState, ...other } = props;
-  const { left, top, bottom, width, height, right } = useDrawingArea();
+  const drawingArea = useDrawingArea();
   const chartId = useChartId();
 
   const stringInterpolator = useStringInterpolator(d);
 
-  const transitionAppear = useTransition([1], {
-    from: { animatedWidth: left },
-    to: { animatedWidth: width + left + right },
-    enter: { animatedWidth: width + left + right },
-    leave: { animatedWidth: left },
-    reset: false,
-    immediate: skipAnimation,
-  });
+  const transitionAppear = useTransition<typeof drawingArea, { animatedWidth: number }>(
+    [drawingArea],
+    {
+      from: (v) => ({ animatedWidth: v.left }),
+      enter: (v) => ({ animatedWidth: v.width + v.left + v.right }),
+      leave: (v) => ({ animatedWidth: v.width + v.left + v.right }),
+      reset: false,
+      immediate: skipAnimation,
+    },
+  );
 
   const transitionChange = useTransition([stringInterpolator], {
     from: { value: 0 },
@@ -75,7 +77,12 @@ function AnimatedLine(props: AnimatedLineProps) {
     <React.Fragment>
       <clipPath id={clipId}>
         {transitionAppear((style) => (
-          <animated.rect x={0} y={0} width={style.animatedWidth} height={top + height + bottom} />
+          <animated.rect
+            x={0}
+            y={0}
+            width={style.animatedWidth}
+            height={drawingArea.top + drawingArea.height + drawingArea.bottom}
+          />
         ))}
       </clipPath>
       <g clipPath={`url(#${clipId})`}>
