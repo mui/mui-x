@@ -179,7 +179,7 @@ export const GridRootStyles = styled('div', {
     : blend(pinnedBackground, selectedBackground, selectedOpacity);
   const pinnedSelectedHoverBackground = t.vars
     ? hoverColor
-    : blend(pinnedSelectedBackground, hoverColor, hoverOpacity);
+    : blend(pinnedBackground, selectedHoverBackground, selectedOpacity + hoverOpacity);
 
   const selectedStyles = {
     backgroundColor: selectedBackground,
