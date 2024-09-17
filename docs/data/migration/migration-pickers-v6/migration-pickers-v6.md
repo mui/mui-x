@@ -16,7 +16,7 @@ To read more about the changes from the new major, check out [the blog post abou
 In `package.json`, change the version of the date pickers package to `^7.0.0`.
 
 ```diff
--"@mui/x-date-pickers": "6.x.x",
+-"@mui/x-date-pickers": "^6.0.0",
 +"@mui/x-date-pickers": "^7.0.0",
 ```
 
@@ -42,7 +42,7 @@ If you're using the commercial version of the Pickers ([Pro](/x/introduction/lic
 If you have `@mui/x-license-pro` in the `dependencies` section of your `package.json`, rename and update the license package to the latest version:
 
 ```diff
--"@mui/x-license-pro": "6.x.x",
+-"@mui/x-license-pro": ^6.0.0",
 +"@mui/x-license": "^7.0.0",
 ```
 
