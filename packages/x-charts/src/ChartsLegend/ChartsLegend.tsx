@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
@@ -51,6 +52,7 @@ const useUtilityClasses = (ownerState: DefaultizedChartsLegendProps & { theme: T
     mark: ['mark'],
     label: ['label'],
     series: ['series'],
+    itemBackground: ['itemBackground'],
   };
 
   return composeClasses(slots, getLegendUtilityClass, classes);
@@ -138,6 +140,13 @@ ChartsLegend.propTypes = {
    * @default 5
    */
   markGap: PropTypes.number,
+  /**
+   * Callback fired when a legend item is clicked.
+   * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
+   * @param {SeriesLegendItemContext} legendItem The legend item data.
+   * @param {number} index The index of the clicked legend item.
+   */
+  onItemClick: PropTypes.func,
   /**
    * Legend padding (in px).
    * Can either be a single number, or an object with top, left, bottom, right properties.

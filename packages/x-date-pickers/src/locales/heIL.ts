@@ -43,8 +43,8 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'בחירת טווח תאריכים',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `בחירת ${views[view]}. ${time === null ? 'לא נבחרה שעה' : `השעה הנבחרת היא ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `בחירת ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'לא נבחרה שעה' : `השעה הנבחרת היא ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} שעות`,
   minutesClockNumberText: (minutes) => `${minutes} דקות`,
   secondsClockNumberText: (seconds) => `${seconds} שניות`,
@@ -59,13 +59,13 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `בחירת תאריך, התאריך שנבחר הוא ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `בחירת תאריך, התאריך שנבחר הוא ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'בחירת תאריך',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `בחירת שעה, השעה שנבחרה היא ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `בחירת שעה, השעה שנבחרה היא ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'בחירת שעה',
   fieldClearLabel: 'נקה ערך',
 

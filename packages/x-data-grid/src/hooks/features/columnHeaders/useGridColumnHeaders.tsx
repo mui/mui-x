@@ -108,12 +108,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
-  const offsetLeft = computeOffsetLeft(
-    columnPositions,
-    renderContext,
-    isRtl,
-    pinnedColumns.left.length,
-  );
+  const offsetLeft = computeOffsetLeft(columnPositions, renderContext, pinnedColumns.left.length);
   const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
 
   React.useEffect(() => {
@@ -230,7 +225,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     computedWidth: number;
   }) => {
     let style: React.CSSProperties | undefined;
-    if (pinnedPosition === 'left' || pinnedPosition === 'right') {
+
+    const isLeftPinned = pinnedPosition === GridPinnedColumnPosition.LEFT;
+    const isRightPinned = pinnedPosition === GridPinnedColumnPosition.RIGHT;
+
+    if (isLeftPinned || isRightPinned) {
       const pinnedOffset = getPinnedCellOffset(
         pinnedPosition,
         computedWidth,
@@ -238,12 +237,18 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         columnPositions,
         dimensions,
       );
+      let side = isLeftPinned ? 'left' : 'right';
+
+      if (isRtl) {
+        side = isLeftPinned ? 'right' : 'left';
+      }
+
       if (pinnedPosition === 'left') {
-        style = { left: pinnedOffset };
+        style = { [side]: pinnedOffset };
       }
 
       if (pinnedPosition === 'right') {
-        style = { right: pinnedOffset };
+        style = { [side]: pinnedOffset };
       }
     }
 
@@ -274,6 +279,17 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         computedWidth: colDef.computedWidth,
       });
 
+      const siblingWithBorderingSeparator =
+        pinnedPosition === GridPinnedColumnPosition.RIGHT
+          ? renderedColumns[i - 1]
+          : renderedColumns[i + 1];
+      const isSiblingFocused = siblingWithBorderingSeparator
+        ? columnHeaderFocus !== null &&
+          columnHeaderFocus.field === siblingWithBorderingSeparator.field
+        : false;
+      const isLastUnpinned =
+        columnIndex + 1 === columnPositions.length - pinnedColumns.right.length;
+
       columns.push(
         <GridColumnHeaderItem
           key={colDef.field}
@@ -295,6 +311,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           indexInSection={i}
           sectionLength={renderedColumns.length}
           gridHasFiller={gridHasFiller}
+          isLastUnpinned={isLastUnpinned}
+          isSiblingFocused={isSiblingFocused}
           {...other}
         />,
       );
