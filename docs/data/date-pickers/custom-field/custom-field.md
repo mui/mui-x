@@ -151,10 +151,6 @@ Learn more about the accessible DOM structure and its difference compared to the
 
 ## Usage with another UI
 
-### Using a read-only `TextField`
-
-{{"demo": "custom-behavior/ReadonlyMaterialTextField.js", "defaultCodeOpen": false}}
-
 ### Using an `Autocomplete`
 
 If your user can only select a value in a small list of available dates,
@@ -162,10 +158,17 @@ you can replace the field with an `Autocomplete` listing those dates:
 
 {{"demo": "PickerWithAutocompleteField.js", "defaultCodeOpen": false}}
 
+### Using a read-only `TextField`
+
+If you only want to allow the user to pick a value through the views,
+but you still want the UI to look like a `TextField`, you can replace the field with a read-only `TextField`:
+
+{{"demo": "custom-behavior/ReadonlyMaterialTextField.js", "defaultCodeOpen": false}}
+
 ### Using a `Button`
 
 If you only want to allow the user to pick a value through the views,
-you can replace the field with a `Button`:
+and you don't want the UI to look like a `TextField`, you can replace the field with a `Button`:
 
 {{"demo": "PickerWithButtonField.js", "defaultCodeOpen": false}}
 
