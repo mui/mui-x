@@ -589,7 +589,7 @@ async function initializeEnvironment(
       });
 
       // https://github.com/mui/mui-x/issues/3524#issuecomment-2313533915
-      it.only('should allow vertical scroll when inside of a flex parent with maxHeight', async () => {
+      it('should allow vertical scroll when inside of a flex parent with maxHeight', async () => {
         await renderFixture('DataGrid/MaxHeight');
         await page.mouse.move(150, 150);
         await page.mouse.wheel(0, 50);
