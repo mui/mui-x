@@ -2518,7 +2518,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.4`.
   ```
 
 - The headless field hooks (e.g.: `useDateField`) now returns a new prop called `enableAccessibleFieldDOMStructure`.
-  This property is utilized to determine whether the anticipated UI is constructed using an accessible DOM structure. Learn more about this new [accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure).
+  This property is utilized to determine whether the anticipated UI is constructed using an accessible DOM structure.
 
   When building a custom UI, you are most-likely only supporting one DOM structure, so you can remove `enableAccessibleFieldDOMStructure` before it is passed to the DOM:
 

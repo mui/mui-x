@@ -64,12 +64,7 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
-## Breaking changes
-
-Since v7 is a major release, it contains some changes that affect the public API.
-These changes were done for consistency, improve stability and make room for new features.
-
-### New DOM structure for the field
+## New DOM structure for the field
 
 Before v8, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component,
 but unfortunately presents a few limitations in terms of accessibility when managing multiple section values.
@@ -145,7 +140,7 @@ these props will now be passed to the hidden `<input />` element.
 If you are passing a custom field component to your pickers, you need to create a new one that is using the accessible DOM structure.
 This new component will need to use the `PickersSectionList` component instead of an `<input />` HTML element.
 
-You can have a look at the [custom PickersTextField](/x/react-date-pickers/custom-field/#using-custom-pickerstextfield) to have a concrete example.
+You can have a look at the [Using a custom input](/x/react-date-pickers/custom-field/#using-a-custom-input) to have a concrete example.
 
 :::info
 If your custom field was used to create a Joy UI design component,
@@ -157,11 +152,11 @@ you may want to wait a few weeks for the release of an out-of-the-box Joy `Picke
 If you are passing a custom `TextField` component to your fields and pickers,
 you need to create a new one that is using the accessible DOM structure.
 
-You can have a look at the second demo of the [Material PickersTextField section](/x/react-date-pickers/custom-field/#using-material-pickerstextfield) to have a concrete example.
+You can have a look at the second demo of the [Wrapping PickersTextField](/x/react-date-pickers/custom-field/#wrapping-pickerstextfield) to have a concrete example.
 
 :::info
 If your custom `TextField` was used to apply a totally different input that did not use `@mui/material/TextField`,
-please consider having a look at the [custom PickersTextField](/x/react-date-pickers/custom-field/#using-custom-pickerstextfield) section which uses `slots.field`.
+please consider having a look at the [Using a custom input](/x/react-date-pickers/custom-field/#using-a-custom-input) section which uses `slots.field`.
 This approach can be more appropriate for deeper changes.
 :::
 
