@@ -53,7 +53,7 @@
     },
     "yearsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
-      "default": "4 on desktop, 3 on mobile"
+      "default": "3"
     }
   },
   "name": "YearCalendar",

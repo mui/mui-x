@@ -185,7 +185,7 @@
     },
     "views": { "description": "Available views." },
     "yearsOrder": {
-      "description": "Years are displayed in ascending (chronological) order by default If <code>desc</code>, years are displayed in descending order"
+      "description": "Years are displayed in ascending (chronological) order by default. If <code>desc</code>, years are displayed in descending order."
     },
     "yearsPerRow": { "description": "Years rendered per row." }
   },

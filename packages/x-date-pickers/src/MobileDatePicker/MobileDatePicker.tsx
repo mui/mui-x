@@ -420,14 +420,14 @@ MobileDatePicker.propTypes = {
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
   /**
-   * Years are displayed in ascending (chronological) order by default
-   * If `desc`, years are displayed in descending order
+   * Years are displayed in ascending (chronological) order by default.
+   * If `desc`, years are displayed in descending order.
    * @default 'asc'
    */
   yearsOrder: PropTypes.oneOf(['asc', 'desc']),
   /**
    * Years rendered per row.
-   * @default 4 on desktop, 3 on mobile
+   * @default 3
    */
   yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
