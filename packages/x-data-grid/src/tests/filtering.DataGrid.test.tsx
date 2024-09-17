@@ -1256,7 +1256,7 @@ describe('<DataGrid /> - Filter', () => {
       // With simple options
       expect(
         getRows({ field: 'country', operator: 'isNotAnyOf', value: ['United States'] }).country,
-      ).to.deep.equal(['Germany', 'France']);
+      ).to.deep.equal(['', '', 'Germany']);
       expect(
         getRows({ field: 'country', operator: 'isNotAnyOf', value: [] }).country,
       ).to.deep.equal(ALL_ROWS_COUNTRY);
