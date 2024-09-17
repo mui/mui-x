@@ -29,7 +29,7 @@ If you're starting from scratch with no other date libraries in your app, we rec
 
 ### Peer dependencies
 
-#### Material UI
+#### Material UI
 
 The Date and Time Pickers have a peer dependency on `@mui/material`.
 If you're not already using it, install it with the following command:
