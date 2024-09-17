@@ -25,8 +25,8 @@ export interface YearCalendarSlotProps {
 
 export interface ExportedYearCalendarProps {
   /**
-   * Years are displayed in ascending (chronological) order by default
-   * If `desc`, years are displayed in descending order
+   * Years are displayed in ascending (chronological) order by default.
+   * If `desc`, years are displayed in descending order.
    * @default 'asc'
    */
   yearsOrder?: 'asc' | 'desc';
