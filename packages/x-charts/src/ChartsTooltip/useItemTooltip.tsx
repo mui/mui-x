@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { InteractionContext, ItemInteractionData } from '../context/InteractionProvider';
 import { useSeries } from '../hooks/useSeries';

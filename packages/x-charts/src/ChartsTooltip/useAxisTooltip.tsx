@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { AxisInteractionData, InteractionContext } from '../context/InteractionProvider';
 import { useSeries } from '../hooks/useSeries';
