@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useSeries } from '../../hooks/useSeries';
 import { PolarContext } from './PolarContext';
-import { computeValue } from './computeValue';
+import { computeAxisValue } from '../computeAxisValue';
 import { useRadiusExtremumGetter } from '../PluginProvider/useRadiusExtremumGetter';
 import { useRotationExtremumGetter } from '../PluginProvider/useRotationExtremumGetter';
 import { PolarProviderProps } from './Polar.types';
@@ -18,7 +18,7 @@ function PolarProvider(props: PolarProviderProps) {
 
   const rotationValues = React.useMemo(
     () =>
-      computeValue({
+      computeAxisValue({
         drawingArea,
         formattedSeries,
         axis: rotationAxis,
@@ -30,7 +30,7 @@ function PolarProvider(props: PolarProviderProps) {
 
   const radiusValues = React.useMemo(
     () =>
-      computeValue({
+      computeAxisValue({
         drawingArea,
         formattedSeries,
         axis: radiusAxis,

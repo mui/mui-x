@@ -13,7 +13,7 @@ import {
 import { useZoom } from '../ZoomProvider/useZoom';
 import { createAxisFilterMapper, createGetAxisFilters } from './createAxisFilterMapper';
 
-const { computeValue } = cartesianProviderUtils;
+const { computeAxisValue } = cartesianProviderUtils;
 
 export interface CartesianProviderProProps extends CartesianProviderProps {}
 
@@ -66,7 +66,7 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
 
   const xValues = React.useMemo(
     () =>
-      computeValue({
+      computeAxisValue({
         drawingArea,
         formattedSeries,
         axis: xAxis,
@@ -81,7 +81,7 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
 
   const yValues = React.useMemo(
     () =>
-      computeValue({
+      computeAxisValue({
         drawingArea,
         formattedSeries,
         axis: yAxis,
