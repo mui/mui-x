@@ -7,7 +7,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
-import { dataset } from '../dataset/weather';
+import { dataset, valueFormatter } from '../dataset/weather';
 
 function TickParamsSelector({
   tickPlacement,
@@ -56,8 +56,6 @@ function TickParamsSelector({
     </Stack>
   );
 }
-
-const valueFormatter = (value) => `${value}mm`;
 
 const chartSetting = {
   yAxis: [

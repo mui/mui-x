@@ -8,6 +8,7 @@ import {
   unstable_capitalize as capitalize,
 } from '@mui/utils';
 import { fastMemo } from '@mui/x-internals/fastMemo';
+import { useRtl } from '@mui/system/RtlProvider';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import {
@@ -175,6 +176,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
 
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
+  const isRtl = useRtl();
 
   const field = column.field;
 
@@ -334,16 +336,21 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       ...styleProp,
     };
 
-    if (pinnedPosition === PinnedPosition.LEFT) {
-      cellStyle.left = pinnedOffset;
-    }
+    const isLeftPinned = pinnedPosition === PinnedPosition.LEFT;
+    const isRightPinned = pinnedPosition === PinnedPosition.RIGHT;
 
-    if (pinnedPosition === PinnedPosition.RIGHT) {
-      cellStyle.right = pinnedOffset;
+    if (isLeftPinned || isRightPinned) {
+      let side: 'left' | 'right' = isLeftPinned ? 'left' : 'right';
+
+      if (isRtl) {
+        side = isLeftPinned ? 'right' : 'left';
+      }
+
+      cellStyle[side] = pinnedOffset;
     }
 
     return cellStyle;
-  }, [width, isNotVisible, styleProp, pinnedOffset, pinnedPosition]);
+  }, [width, isNotVisible, styleProp, pinnedOffset, pinnedPosition, isRtl]);
 
   React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {

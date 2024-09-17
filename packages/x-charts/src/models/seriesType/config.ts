@@ -1,7 +1,18 @@
-import { ScatterSeriesType, DefaultizedScatterSeriesType, ScatterItemIdentifier } from './scatter';
+import {
+  ScatterSeriesType,
+  DefaultizedScatterSeriesType,
+  ScatterItemIdentifier,
+  ScatterValueType,
+} from './scatter';
 import { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from './line';
 import { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
-import { PieSeriesType, DefaultizedPieSeriesType, PieItemIdentifier, PieValueType } from './pie';
+import {
+  PieSeriesType,
+  DefaultizedPieSeriesType,
+  PieItemIdentifier,
+  PieValueType,
+  DefaultizedPieValueType,
+} from './pie';
 import { DefaultizedProps, MakeOptional } from '../helpers';
 
 export interface ChartsSeriesConfig {
@@ -19,6 +30,7 @@ export interface ChartsSeriesConfig {
      */
     seriesProp: BarSeriesType;
     itemIdentifier: BarItemIdentifier;
+    valueType: number | null;
     canBeStacked: true;
     cartesian: true;
   };
@@ -27,6 +39,7 @@ export interface ChartsSeriesConfig {
     series: DefaultizedLineSeriesType;
     seriesProp: LineSeriesType;
     itemIdentifier: LineItemIdentifier;
+    valueType: number | null;
     canBeStacked: true;
     cartesian: true;
   };
@@ -34,6 +47,7 @@ export interface ChartsSeriesConfig {
     seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> & { color: string };
     series: DefaultizedScatterSeriesType;
     seriesProp: ScatterSeriesType;
+    valueType: ScatterValueType;
     itemIdentifier: ScatterItemIdentifier;
     cartesian: true;
   };
@@ -44,6 +58,7 @@ export interface ChartsSeriesConfig {
     series: DefaultizedPieSeriesType;
     seriesProp: PieSeriesType<MakeOptional<PieValueType, 'id'>>;
     itemIdentifier: PieItemIdentifier;
+    valueType: DefaultizedPieValueType;
   };
 }
 

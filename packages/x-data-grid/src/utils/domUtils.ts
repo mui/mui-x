@@ -166,23 +166,31 @@ const findPinnedCells = ({
   return cells;
 };
 
-export function findLeftPinnedCellsAfterCol(api: GridPrivateApiCommunity, col: HTMLElement) {
+export function findLeftPinnedCellsAfterCol(
+  api: GridPrivateApiCommunity,
+  col: HTMLElement,
+  isRtl: boolean,
+) {
   const colIndex = parseCellColIndex(col);
   return findPinnedCells({
     api,
     colIndex,
-    position: 'left',
-    filterFn: (index) => index > colIndex!,
+    position: isRtl ? 'right' : 'left',
+    filterFn: (index) => (isRtl ? index < colIndex! : index > colIndex!),
   });
 }
 
-export function findRightPinnedCellsBeforeCol(api: GridPrivateApiCommunity, col: HTMLElement) {
+export function findRightPinnedCellsBeforeCol(
+  api: GridPrivateApiCommunity,
+  col: HTMLElement,
+  isRtl: boolean,
+) {
   const colIndex = parseCellColIndex(col);
   return findPinnedCells({
     api,
     colIndex,
-    position: 'right',
-    filterFn: (index) => index < colIndex!,
+    position: isRtl ? 'left' : 'right',
+    filterFn: (index) => (isRtl ? index > colIndex! : index < colIndex!),
   });
 }
 
@@ -218,23 +226,31 @@ const findPinnedHeaders = ({
   return elements;
 };
 
-export function findLeftPinnedHeadersAfterCol(api: GridPrivateApiCommunity, col: HTMLElement) {
+export function findLeftPinnedHeadersAfterCol(
+  api: GridPrivateApiCommunity,
+  col: HTMLElement,
+  isRtl: boolean,
+) {
   const colIndex = parseCellColIndex(col);
   return findPinnedHeaders({
     api,
-    position: 'left',
+    position: isRtl ? 'right' : 'left',
     colIndex,
-    filterFn: (index) => index > colIndex!,
+    filterFn: (index) => (isRtl ? index < colIndex! : index > colIndex!),
   });
 }
 
-export function findRightPinnedHeadersBeforeCol(api: GridPrivateApiCommunity, col: HTMLElement) {
+export function findRightPinnedHeadersBeforeCol(
+  api: GridPrivateApiCommunity,
+  col: HTMLElement,
+  isRtl: boolean,
+) {
   const colIndex = parseCellColIndex(col);
   return findPinnedHeaders({
     api,
-    position: 'right',
+    position: isRtl ? 'left' : 'right',
     colIndex,
-    filterFn: (index) => index < colIndex!,
+    filterFn: (index) => (isRtl ? index > colIndex! : index < colIndex!),
   });
 }
 

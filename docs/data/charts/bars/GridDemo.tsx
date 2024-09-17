@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { dataset } from '../dataset/weather';
+import { dataset, valueFormatter } from '../dataset/weather';
 
 const chartSetting = {
   xAxis: [
@@ -11,8 +11,6 @@ const chartSetting = {
   width: 500,
   height: 400,
 };
-
-const valueFormatter = (value: number | null) => `${value}mm`;
 
 export default function GridDemo() {
   return (
