@@ -164,6 +164,17 @@ export interface GridClasses {
    */
   'columnHeader--last': string;
   /**
+   * Styles applied to the last unpinned column header item.
+   * @ignore - do not document.
+   */
+  'columnHeader--lastUnpinned': string;
+  /**
+   * Styles applied to a column header item when its sibling with a bordering separator is focused.
+   * @ignore - do not document.
+   */
+  'columnHeader--siblingFocused': string;
+
+  /**
    * Styles applied to the header checkbox cell element.
    */
   columnHeaderCheckbox: string;
@@ -408,6 +419,11 @@ export interface GridClasses {
    * Styles applied to the virtualization container.
    */
   virtualScroller: string;
+  /**
+   * Styles applied to the virtualization container when it is scrollable in the horizontal direction.
+   * @ignore - do not document.
+   */
+  'virtualScroller--hasScrollX': string;
   /**
    * Styles applied to the virtualization content.
    */
@@ -681,6 +697,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--pinnedLeft',
   'columnHeader--pinnedRight',
   'columnHeader--last',
+  'columnHeader--lastUnpinned',
+  'columnHeader--siblingFocused',
   'columnHeaderCheckbox',
   'columnHeaderDraggableContainer',
   'columnHeaderTitle',
@@ -776,6 +794,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'toolbarContainer',
   'toolbarFilterList',
   'virtualScroller',
+  'virtualScroller--hasScrollX',
   'virtualScrollerContent',
   'virtualScrollerContent--overflowed',
   'virtualScrollerRenderZone',
