@@ -39,7 +39,7 @@ import {
   GridCellEditStartReasons,
   GridCellEditStopReasons,
 } from '../../../models/params/gridEditCellParams';
-import { getDefaultCellValue } from './getDefaultCellValue';
+import { getDefaultCellValue } from './utils';
 
 export const useGridCellEditing = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
