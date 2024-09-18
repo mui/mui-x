@@ -1,4 +1,4 @@
-export type * from './overrides';
-export type * from './props';
+export * from './overrides';
+export * from './props';
 // TODO v5
 // export * from './components';
