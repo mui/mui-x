@@ -589,9 +589,6 @@
         "Promise<R> | R": "The final values to update the row."
       }
     },
-    "propagateRowSelection": {
-      "description": "If <code>true</code>, following behavior happens with nested data: 1. Selecting/deselecting a parent row would select/deselect all the children rows. 2. When all the child rows are selected, the parent row will be auto selected. 3. When a child row is deselected, if one or more parent rows are already selected, they will be moved to an indeterminate state. 4. Select All checkbox in the header row would select/deselect all the rows including child rows. Works with tree data and row grouping on the client-side only."
-    },
     "resizeThrottleMs": { "description": "The milliseconds throttle delay for resizing the grid." },
     "rowBufferPx": { "description": "Row region in pixels to render before/after the viewport" },
     "rowCount": {
@@ -610,6 +607,9 @@
     "rows": { "description": "Set of rows of type GridRowsProp." },
     "rowSelection": { "description": "If <code>false</code>, the row selection mode is disabled." },
     "rowSelectionModel": { "description": "Sets the row selection model of the Data Grid." },
+    "rowSelectionPropagation": {
+      "description": "The following behavior happens for each of the possible values: 1. <code>none</code> - No row selection propagation. 2. <code>parents</code> - Selecting all children will auto-select the parent(s). 3. <code>children</code> - Selecting a parent will auto-select all its descendants. 4. <code>both</code> - Both <code>parents</code> and <code>children</code> behavior.<br>Works with tree data and row grouping on the client-side only."
+    },
     "rowsLoadingMode": {
       "description": "Loading rows can be processed on the server or client-side. Set it to &#39;client&#39; if you would like enable infnite loading. Set it to &#39;server&#39; if you would like to enable lazy loading. * @default &quot;client&quot;"
     },

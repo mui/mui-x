@@ -106,7 +106,6 @@ export const gridFilteredSortedRowIdsSelector = createSelectorMemoized(
   (filteredSortedRowEntries) => filteredSortedRowEntries.map((row) => row.id),
 );
 
-
 /**
  * Get a `Set` containing the ids of the rows accessible after the filtering process.
  * Contains the collapsed children.

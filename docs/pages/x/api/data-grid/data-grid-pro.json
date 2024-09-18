@@ -505,7 +505,6 @@
         "returned": "Promise<R> | R"
       }
     },
-    "propagateRowSelection": { "type": { "name": "bool" }, "default": "false" },
     "resizeThrottleMs": { "type": { "name": "number" }, "default": "60" },
     "rowBufferPx": { "type": { "name": "number" }, "default": "150" },
     "rowCount": { "type": { "name": "number" } },
@@ -523,6 +522,13 @@
         "name": "union",
         "description": "Array&lt;number<br>&#124;&nbsp;string&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string"
       }
+    },
+    "rowSelectionPropagation": {
+      "type": {
+        "name": "enum",
+        "description": "'both'<br>&#124;&nbsp;'children'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'parents'"
+      },
+      "default": "'none'"
     },
     "rowsLoadingMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" }

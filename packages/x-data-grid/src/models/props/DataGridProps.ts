@@ -33,6 +33,7 @@ import { GridColumnGroupingModel } from '../gridColumnGrouping';
 import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
 import type { GridAutosizeOptions } from '../../hooks/features/columnResize';
 import type { GridDataSource } from '../gridDataSource';
+import type { GridRowSelectionPropagation } from '../gridRowSelectionModel';
 
 export interface GridExperimentalFeatures {
   /**
@@ -817,15 +818,16 @@ export interface DataGridProSharedPropsWithDefaultValue {
    */
   headerFilters: boolean;
   /**
-   * If `true`, following behavior happens with nested data:
-   * 1. Selecting/deselecting a parent row would select/deselect all the children rows.
-   * 2. When all the child rows are selected, the parent row will be auto selected.
-   * 3. When a child row is deselected, if one or more parent rows are already selected, they will be moved to an indeterminate state.
-   * 4. Select All checkbox in the header row would select/deselect all the rows including child rows.
+   * The following behavior happens for each of the possible values:
+   * 1. `none` - No row selection propagation.
+   * 2. `parents` - Selecting all children will auto-select the parent(s).
+   * 3. `children` - Selecting a parent will auto-select all its descendants.
+   * 4. `both` - Both `parents` and `children` behavior.
+   *
    * Works with tree data and row grouping on the client-side only.
-   * @default false
+   * @default 'none'
    */
-  propagateRowSelection: boolean;
+  rowSelectionPropagation: GridRowSelectionPropagation;
 }
 
 export interface DataGridProSharedPropsWithoutDefaultValue {

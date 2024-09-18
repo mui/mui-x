@@ -827,16 +827,6 @@ DataGridProRaw.propTypes = {
    */
   processRowUpdate: PropTypes.func,
   /**
-   * If `true`, following behavior happens with nested data:
-   * 1. Selecting/deselecting a parent row would select/deselect all the children rows.
-   * 2. When all the child rows are selected, the parent row will be auto selected.
-   * 3. When a child row is deselected, if one or more parent rows are already selected, they will be moved to an indeterminate state.
-   * 4. Select All checkbox in the header row would select/deselect all the rows including child rows.
-   * Works with tree data and row grouping on the client-side only.
-   * @default false
-   */
-  propagateRowSelection: PropTypes.bool,
-  /**
    * The milliseconds throttle delay for resizing the grid.
    * @default 60
    */
@@ -891,6 +881,17 @@ DataGridProRaw.propTypes = {
     PropTypes.number,
     PropTypes.string,
   ]),
+  /**
+   * The following behavior happens for each of the possible values:
+   * 1. `none` - No row selection propagation.
+   * 2. `parents` - Selecting all children will auto-select the parent(s).
+   * 3. `children` - Selecting a parent will auto-select all its descendants.
+   * 4. `both` - Both `parents` and `children` behavior.
+   *
+   * Works with tree data and row grouping on the client-side only.
+   * @default 'none'
+   */
+  rowSelectionPropagation: PropTypes.oneOf(['both', 'children', 'none', 'parents']),
   /**
    * Loading rows can be processed on the server or client-side.
    * Set it to 'client' if you would like enable infnite loading.

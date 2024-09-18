@@ -85,8 +85,7 @@
       }
     },
     "renderHeaderFilter": {
-      "type": { "description": "(params: GridRenderHeaderFilterProps) =&gt; React.ReactNode" },
-      "isProPlan": true
+      "type": { "description": "(params: GridRenderHeaderFilterProps) =&gt; React.ReactNode" }
     },
     "resizable": { "type": { "description": "boolean" }, "default": "true" },
     "sortable": { "type": { "description": "boolean" }, "default": "true" },

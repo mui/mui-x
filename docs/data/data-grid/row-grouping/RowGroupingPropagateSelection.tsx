@@ -3,12 +3,18 @@ import {
   DataGridPremium,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
+  GridRowSelectionPropagation,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 export default function RowGroupingPropagateSelection() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
+  const [value, setValue] = React.useState<GridRowSelectionPropagation>('both');
 
   const initialState = useKeepGroupedColumnsHidden({
     apiRef,
@@ -19,15 +25,30 @@ export default function RowGroupingPropagateSelection() {
     },
   });
 
+  const handleValueChange = React.useCallback((event: SelectChangeEvent) => {
+    setValue(event.target.value as GridRowSelectionPropagation);
+  }, []);
+
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGridPremium
-        {...data}
-        apiRef={apiRef}
-        initialState={initialState}
-        checkboxSelection
-        propagateRowSelection
-      />
+    <div style={{ width: '100%' }}>
+      <FormControl variant="standard" sx={{ pb: 1, px: 1 }} fullWidth>
+        <InputLabel>Propagation behavior</InputLabel>
+        <Select value={value} onChange={handleValueChange}>
+          <MenuItem value="both">`both` - Both Parents and Children</MenuItem>
+          <MenuItem value="parents">`parents` - Parents only</MenuItem>
+          <MenuItem value="children">`children` - Children only</MenuItem>
+          <MenuItem value="none">`none` - No selection propagation</MenuItem>
+        </Select>
+      </FormControl>
+      <div style={{ height: 400 }}>
+        <DataGridPremium
+          {...data}
+          apiRef={apiRef}
+          initialState={initialState}
+          checkboxSelection
+          rowSelectionPropagation={value}
+        />
+      </div>
     </div>
   );
 }

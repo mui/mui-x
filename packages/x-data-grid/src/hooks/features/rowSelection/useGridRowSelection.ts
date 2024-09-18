@@ -66,6 +66,7 @@ export const rowSelectionStateInitializer: GridStateInitializer<
 /**
  * @requires useGridRows (state, method) - can be after
  * @requires useGridParamsApi (method) - can be after
+ * @requires useGridParamsApi (method) - can be after
  * @requires useGridFocus (state) - can be after
  * @requires useGridKeyboardNavigation (`cellKeyDown` event must first be consumed by it)
  */
@@ -85,7 +86,7 @@ export const useGridRowSelection = (
     | 'classes'
     | 'keepNonExistentRowsSelected'
     | 'rowSelection'
-    | 'propagateRowSelection'
+    | 'rowSelectionPropagation'
     | 'signature'
   >,
 ): void => {
@@ -100,6 +101,9 @@ export const useGridRowSelection = (
       },
     [props.rowSelection],
   );
+
+  const applyRowSelectionPropagation =
+    !props.disableMultipleRowSelection && (props.rowSelectionPropagation ?? 'none') !== 'none';
 
   const propRowSelectionModel = React.useMemo(() => {
     return getSelectionModelPropValue(
@@ -226,8 +230,13 @@ export const useGridRowSelection = (
         const newSelection: GridRowId[] = [];
         if (isSelected) {
           newSelection.push(id);
-          if (props.propagateRowSelection) {
-            const rowsToSelect = findRowsToSelect(apiRef, tree, id);
+          if (applyRowSelectionPropagation) {
+            const rowsToSelect = findRowsToSelect(
+              apiRef,
+              tree,
+              id,
+              props.rowSelectionPropagation ?? 'none',
+            );
             rowsToSelect.forEach((rowId) => {
               newSelection.push(rowId);
             });
@@ -245,12 +254,22 @@ export const useGridRowSelection = (
 
         if (isSelected) {
           newSelection.add(id);
-          if (props.propagateRowSelection) {
-            const rowsToSelect = findRowsToSelect(apiRef, tree, id);
+          if (applyRowSelectionPropagation) {
+            const rowsToSelect = findRowsToSelect(
+              apiRef,
+              tree,
+              id,
+              props.rowSelectionPropagation ?? 'none',
+            );
             rowsToSelect.forEach(newSelection.add, newSelection);
           }
-        } else if (props.propagateRowSelection) {
-          const rowsToDeselect = findRowsToDeselect(apiRef, tree, id);
+        } else if (applyRowSelectionPropagation) {
+          const rowsToDeselect = findRowsToDeselect(
+            apiRef,
+            tree,
+            id,
+            props.rowSelectionPropagation ?? 'none',
+          );
           rowsToDeselect.forEach((parentId) => {
             newSelection.delete(parentId);
           });
@@ -262,7 +281,14 @@ export const useGridRowSelection = (
         }
       }
     },
-    [apiRef, logger, canHaveMultipleSelection, tree, props.propagateRowSelection],
+    [
+      apiRef,
+      logger,
+      applyRowSelectionPropagation,
+      tree,
+      props.rowSelectionPropagation,
+      canHaveMultipleSelection,
+    ],
   );
 
   const selectRows = React.useCallback<GridRowMultiSelectionApi['selectRows']>(
@@ -271,13 +297,14 @@ export const useGridRowSelection = (
 
       const selectableIds = ids.filter((id) => apiRef.current.isRowSelectable(id));
 
+      const rowSelectionPropagation = props.rowSelectionPropagation ?? 'none';
       let newSelection: GridRowId[];
       if (resetSelection) {
         if (isSelected) {
           newSelection = selectableIds;
-          if (props.propagateRowSelection) {
+          if (applyRowSelectionPropagation) {
             selectableIds.forEach((id) => {
-              const rowsToSelect = findRowsToSelect(apiRef, tree, id);
+              const rowsToSelect = findRowsToSelect(apiRef, tree, id, rowSelectionPropagation);
               rowsToSelect.forEach((rowId) => {
                 newSelection.push(rowId);
               });
@@ -295,16 +322,16 @@ export const useGridRowSelection = (
         selectableIds.forEach((id) => {
           if (isSelected) {
             selectionLookup[id] = id;
-            if (props.propagateRowSelection) {
-              const rowsToSelect = findRowsToSelect(apiRef, tree, id);
+            if (applyRowSelectionPropagation) {
+              const rowsToSelect = findRowsToSelect(apiRef, tree, id, rowSelectionPropagation);
               rowsToSelect.forEach((rowId) => {
                 selectionLookup[rowId] = rowId;
               });
             }
           } else {
             delete selectionLookup[id];
-            if (props.propagateRowSelection) {
-              const rowsToDeselect = findRowsToDeselect(apiRef, tree, id);
+            if (applyRowSelectionPropagation) {
+              const rowsToDeselect = findRowsToDeselect(apiRef, tree, id, rowSelectionPropagation);
               rowsToDeselect.forEach((parentId) => {
                 delete selectionLookup[parentId];
               });
@@ -320,7 +347,14 @@ export const useGridRowSelection = (
         apiRef.current.setRowSelectionModel(newSelection);
       }
     },
-    [apiRef, logger, canHaveMultipleSelection, props.propagateRowSelection, tree],
+    [
+      logger,
+      props.rowSelectionPropagation,
+      canHaveMultipleSelection,
+      apiRef,
+      applyRowSelectionPropagation,
+      tree,
+    ],
   );
 
   const selectRowRange = React.useCallback<GridRowMultiSelectionApi['selectRowRange']>(
@@ -581,7 +615,7 @@ export const useGridRowSelection = (
   );
 
   const handleRowPropagation = React.useCallback(() => {
-    if (!props.propagateRowSelection) {
+    if (props.rowSelectionPropagation === 'none') {
       return;
     }
     const filteredRows = gridFilteredSortedRowIdsSetSelector(apiRef);
@@ -602,7 +636,7 @@ export const useGridRowSelection = (
       }
     });
     apiRef.current.selectRows(Array.from(newSelectedRows), true, true);
-  }, [apiRef, props.propagateRowSelection, tree]);
+  }, [apiRef, props.rowSelectionPropagation, tree]);
 
   useGridApiEventHandler(
     apiRef,
@@ -675,9 +709,6 @@ export const useGridRowSelection = (
   }, [apiRef, canHaveMultipleSelection, checkboxSelection, isStateControlled, props.rowSelection]);
 
   React.useEffect(() => {
-    // TODO v8: Remove when `propagateRowSelection` is the default behavior
-    if (props.propagateRowSelection) {
-      runIfRowSelectionIsEnabled(handleRowPropagation);
-    }
-  }, [handleRowPropagation, props.propagateRowSelection, runIfRowSelectionIsEnabled]);
+    runIfRowSelectionIsEnabled(handleRowPropagation);
+  }, [handleRowPropagation, runIfRowSelectionIsEnabled]);
 };
