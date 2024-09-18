@@ -58,7 +58,9 @@ const roROGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'conține',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'este egal cu',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'începe cu',
   filterOperatorEndsWith: 'se termină cu',
   filterOperatorIs: 'este',
@@ -79,7 +81,9 @@ const roROGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Conține',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Egal cu',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Începe cu',
   headerFilterOperatorEndsWith: 'Se termină cu',
   headerFilterOperatorIs: 'Este',
