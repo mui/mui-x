@@ -203,7 +203,9 @@ export const GridRootStyles = styled('div', {
         t.palette.action.selectedOpacity + t.palette.action.hoverOpacity,
       );
 
-  const pinnedBackgroundColor = blend(pinnedBackground, hoverColor, hoverOpacity);
+  const pinnedBackgroundColor = t.vars
+    ? hoverColor
+    : blend(pinnedBackground, hoverColor, hoverOpacity);
   const pinnedHoverStyles = getPinnedBackgroundStyles({
     hoverOpacity,
     selectedOpacity,
@@ -211,11 +213,9 @@ export const GridRootStyles = styled('div', {
     backgroundColor: pinnedBackgroundColor,
   });
 
-  const pinnedSelectedBackgroundColor = blend(
-    pinnedBackground,
-    selectedBackground,
-    selectedOpacity,
-  );
+  const pinnedSelectedBackgroundColor = t.vars
+    ? selectedBackground
+    : blend(pinnedBackground, selectedBackground, selectedOpacity);
   const pinnedSelectedStyles = getPinnedBackgroundStyles({
     hoverOpacity,
     selectedOpacity,
@@ -223,11 +223,9 @@ export const GridRootStyles = styled('div', {
     backgroundColor: pinnedSelectedBackgroundColor,
   });
 
-  const pinnedSelectedHoverBackgroundColor = blend(
-    pinnedBackground,
-    selectedHoverBackground,
-    hoverOpacity + selectedOpacity,
-  );
+  const pinnedSelectedHoverBackgroundColor = t.vars
+    ? selectedHoverBackground
+    : blend(pinnedBackground, selectedHoverBackground, hoverOpacity + selectedOpacity);
   const pinnedSelectedHoverStyles = getPinnedBackgroundStyles({
     hoverOpacity,
     selectedOpacity,
