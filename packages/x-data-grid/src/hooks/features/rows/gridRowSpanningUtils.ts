@@ -37,8 +37,8 @@ export function getUnprocessedRange(testRange: RowRange, processedRange: RowRang
   return testRange;
 }
 
-export function isUninitializedRowContext(renderContext: GridRenderContext) {
-  return renderContext.firstRowIndex === 0 && renderContext.lastRowIndex === 0;
+export function isRowContextInitialized(renderContext: GridRenderContext) {
+  return renderContext.firstRowIndex !== 0 || renderContext.lastRowIndex !== 0;
 }
 
 export function isRowRangeUpdated(range1: RowRange, range2: RowRange) {

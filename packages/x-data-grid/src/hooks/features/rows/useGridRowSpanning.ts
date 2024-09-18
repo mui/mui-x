@@ -12,7 +12,7 @@ import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import {
   getUnprocessedRange,
   isRowRangeUpdated,
-  isUninitializedRowContext,
+  isRowContextInitialized,
   getCellValue,
 } from './gridRowSpanningUtils';
 
@@ -32,6 +32,12 @@ export type RowRange = { firstRowIndex: number; lastRowIndex: number };
 const EMPTY_STATE = { spannedCells: {}, hiddenCells: {}, hiddenCellOriginMap: {} };
 const EMPTY_RANGE: RowRange = { firstRowIndex: 0, lastRowIndex: 0 };
 const skippedFields = new Set(['__check__', '__reorder__', '__detail_panel_toggle__']);
+/**
+ * Default number of rows to process during state initialization to avoid flickering.
+ * Number `20` is arbitrarily chosen to be large enough to cover most of the cases without
+ * compromising performance.
+ */
+const DEFAULT_ROWS_TO_PROCESS = 20;
 
 const computeRowSpanningState = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
@@ -175,7 +181,7 @@ export const rowSpanningStateInitializer: GridStateInitializer = (state, props, 
     }
     const rangeToProcess = {
       firstRowIndex: 0,
-      lastRowIndex: Math.min(19, Math.max(rowIds.length - 1, 0)),
+      lastRowIndex: Math.min(DEFAULT_ROWS_TO_PROCESS - 1, Math.max(rowIds.length - 1, 0)),
     };
     const rows = rowIds.map((id) => ({
       id,
@@ -218,7 +224,10 @@ export const useGridRowSpanning = (
     return Object.keys(apiRef.current.state.rowSpanning.spannedCells).length > 0
       ? {
           firstRowIndex: 0,
-          lastRowIndex: Math.min(19, Math.max(apiRef.current.state.rows.dataRowIds.length - 1, 0)),
+          lastRowIndex: Math.min(
+            DEFAULT_ROWS_TO_PROCESS - 1,
+            Math.max(apiRef.current.state.rows.dataRowIds.length - 1, 0),
+          ),
         }
       : EMPTY_RANGE;
   });
@@ -239,7 +248,7 @@ export const useGridRowSpanning = (
         return;
       }
 
-      if (range === null || isUninitializedRowContext(renderContext)) {
+      if (range === null || !isRowContextInitialized(renderContext)) {
         return;
       }
 

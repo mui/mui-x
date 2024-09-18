@@ -69,6 +69,7 @@ export const useGridKeyboardNavigation = (
    * @param {number} colIndex Index of the column to focus
    * @param {GridRowId} rowId index of the row to focus
    * @param {string} closestColumnToUse Which closest column cell to use when the cell is spanned by `colSpan`.
+   * @param {string} rowSpanScanDirection Which direction to search to find the next cell not hidden by `rowSpan`.
    * TODO replace with apiRef.current.moveFocusToRelativeCell()
    */
   const goToCell = React.useCallback(
