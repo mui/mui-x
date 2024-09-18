@@ -786,6 +786,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   onProcessRowUpdateError?: (error: any) => void;
   columnGroupingModel?: GridColumnGroupingModel;
   /**
+   * Sets the height in pixels of the column group headers in the Data Grid.
+   * Inherits the `columnHeaderHeight` value if not set.
+   */
+  columnGroupHeaderHeight?: number;
+  /**
    * Callback called when the data is copied to the clipboard.
    * @param {string} data The data copied to the clipboard.
    */
