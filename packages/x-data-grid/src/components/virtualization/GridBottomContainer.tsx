@@ -20,7 +20,7 @@ const Element = styled('div')({
   bottom: 'calc(var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
 });
 
-export function GridBottomContainer(props: React.HTMLAttributes<HTMLDivElement>) {
+export function GridBottomContainer(props: React.PropsWithChildren) {
   const classes = useUtilityClasses();
 
   const apiRef = useGridApiContext();
@@ -37,16 +37,11 @@ export function GridBottomContainer(props: React.HTMLAttributes<HTMLDivElement>)
     0,
   );
 
-  let style = props.style;
-  if (offset !== 0) {
-    style = { ...style, transform: `translateY(${offset}px)` };
-  }
-
   return (
     <Element
       {...props}
-      className={clsx(classes.root, props.className, gridClasses['container--bottom'])}
-      style={style}
+      className={clsx(classes.root, gridClasses['container--bottom'])}
+      style={{ transform: `translateY(${offset}px)` }}
       role="presentation"
     />
   );
