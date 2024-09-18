@@ -174,6 +174,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
   },
   {
     field: 'incoTerm',
+    headerName: 'Incoterm',
     generateData: randomIncoterm,
     renderCell: renderIncoterm,
     renderEditCell: renderEditIncoterm,

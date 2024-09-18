@@ -13,8 +13,8 @@ describe('<DataGridPremium /> - License', () => {
       generateLicense({
         expiryDate: addYears(new Date(), 1),
         orderNumber: 'Test',
-        licensingModel: 'subscription',
-        scope: 'pro',
+        licenseModel: 'subscription',
+        planScope: 'pro',
         planVersion: 'initial',
       }),
     );

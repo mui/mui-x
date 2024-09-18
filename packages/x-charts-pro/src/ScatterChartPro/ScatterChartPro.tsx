@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
@@ -152,6 +153,7 @@ ScatterChartPro.propTypes = {
     itemMarkWidth: PropTypes.number,
     labelStyle: PropTypes.object,
     markGap: PropTypes.number,
+    onItemClick: PropTypes.func,
     padding: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.shape({
@@ -203,6 +205,16 @@ ScatterChartPro.propTypes = {
    * @param {ZoomData[]} zoomData Updated zoom data.
    */
   onZoomChange: PropTypes.func,
+  /**
+   * The chart will try to wait for the parent container to resolve its size
+   * before it renders for the first time.
+   *
+   * This can be useful in some scenarios where the chart appear to grow after
+   * the first render, like when used inside a grid.
+   *
+   * @default false
+   */
+  resolveSizeBeforeRender: PropTypes.bool,
   /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
