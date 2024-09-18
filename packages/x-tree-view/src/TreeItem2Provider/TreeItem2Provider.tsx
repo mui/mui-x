@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types';
 import { TreeItem2ProviderProps } from './TreeItem2Provider.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
+import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
 
 function TreeItem2Provider(props: TreeItem2ProviderProps) {
-  const { children, itemId, idAttribute } = props;
-  const { wrapItem } = useTreeViewContext<[]>();
+  const { children, itemId, id } = props;
+  const { wrapItem, instance, treeId } = useTreeViewContext<[]>();
+  const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
 
-  return wrapItem({ children, itemId, idAttribute });
+  return wrapItem({ children, instance, itemId, idAttribute });
 }
 
 TreeItem2Provider.propTypes = {

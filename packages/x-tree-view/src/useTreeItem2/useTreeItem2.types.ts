@@ -36,7 +36,7 @@ export interface UseTreeItem2Parameters {
 
 export interface UseTreeItem2ContextProviderProps {
   itemId: string;
-  idAttribute: string | undefined;
+  id: string | undefined;
 }
 
 export interface UseTreeItem2RootSlotPropsFromUseTreeItem {

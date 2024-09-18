@@ -16,7 +16,8 @@ import {
   selectorItemMeta,
   selectorItemOrderedChildrenIds,
 } from './useTreeViewItems.selectors';
-import { selectorTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.selectors';
+import { selectorTreeViewId } from '../../corePlugins/useTreeViewId/useTreeViewId.selectors';
+import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
 
 interface UpdateNodesStateParameters
   extends Pick<
@@ -187,9 +188,10 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       return null;
     }
 
-    const idAttribute = selectorTreeItemIdAttribute(store.value, {
+    const idAttribute = generateTreeItemIdAttribute({
+      treeId: selectorTreeViewId(store.value),
       itemId,
-      idAttribute: itemMeta.idAttribute,
+      id: itemMeta.idAttribute,
     });
     return document.getElementById(idAttribute);
   };

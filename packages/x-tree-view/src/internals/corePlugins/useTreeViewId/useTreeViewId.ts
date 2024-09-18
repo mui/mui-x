@@ -30,6 +30,9 @@ export const useTreeViewId: TreeViewPlugin<UseTreeViewIdSignature> = ({ params, 
     getRootProps: () => ({
       id: treeId,
     }),
+    contextValue: {
+      treeId,
+    },
   };
 };
 
@@ -37,4 +40,7 @@ useTreeViewId.params = {
   id: true,
 };
 
-useTreeViewId.getInitialState = ({ id }) => ({ id: { treeId: id } });
+useTreeViewId.getInitialState = ({ id }) => {
+  globalId += 1;
+  return { id: { treeId: id ?? `mui-tree-view-${globalId}` } };
+};

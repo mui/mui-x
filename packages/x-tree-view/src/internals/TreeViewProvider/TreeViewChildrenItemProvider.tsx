@@ -4,7 +4,6 @@ import { useTreeViewContext } from './useTreeViewContext';
 import { escapeOperandAttributeSelector } from '../utils/utils';
 import type { UseTreeViewJSXItemsSignature } from '../plugins/useTreeViewJSXItems';
 import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
-import { selectorTreeItemIdAttribute } from '../corePlugins/useTreeViewId/useTreeViewId.selectors';
 
 export const TreeViewChildrenItemContext =
   React.createContext<TreeViewChildrenItemContextValue | null>(null);
@@ -14,15 +13,15 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 interface TreeViewChildrenItemProviderProps {
-  itemId?: string;
-  idAttribute?: string;
+  itemId: string | null;
+  idAttribute: string | null;
   children: React.ReactNode;
 }
 
 export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProviderProps) {
   const { children, itemId = null, idAttribute } = props;
 
-  const { instance, store, rootRef } =
+  const { instance, rootRef } =
     useTreeViewContext<[UseTreeViewJSXItemsSignature, UseTreeViewItemsSignature]>();
   const childrenIdAttrToIdRef = React.useRef<Map<string, string>>(new Map());
 
@@ -31,22 +30,8 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
       return;
     }
 
-    let idAttr: string | null = null;
-    if (itemId == null) {
-      idAttr = rootRef.current.id;
-    } else {
-      idAttr = selectorTreeItemIdAttribute(store.value, {
-        itemId,
-        idAttribute,
-      });
-    }
-
-    if (idAttr == null) {
-      return;
-    }
-
     const previousChildrenIds = instance.getItemOrderedChildrenIds(itemId ?? null) ?? [];
-    const escapedIdAttr = escapeOperandAttributeSelector(idAttr);
+    const escapedIdAttr = escapeOperandAttributeSelector(idAttribute ?? rootRef.current.id);
     const childrenElements = rootRef.current.querySelectorAll(
       `${itemId == null ? '' : `*[id="${escapedIdAttr}"] `}[role="treeitem"]:not(*[id="${escapedIdAttr}"] [role="treeitem"] [role="treeitem"])`,
     );
