@@ -26,6 +26,47 @@ To have the option of using the latest API from `@mui/material`, the package pee
 It is a change in minor version only, so it should not cause any breaking changes.
 Please update your `@mui/material` package to this or a newer version.
 
+## Run codemods
+
+The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v7.
+You can run `v7.0.0/tree-view/preset-safe` targeting only Tree View or `v7.0.0/preset-safe` to target other MUI X components like the Data Grid as well.
+
+You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
+
+<!-- #default-branch-switch -->
+
+```bash
+// Data Grid specific
+npx @mui/x-codemod@latest v7.0.0/tree-view/preset-safe <path>
+
+// Target other MUI X components as well
+npx @mui/x-codemod@latest v7.0.0/preset-safe <path>
+```
+
+:::info
+If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for the Tree View](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-tree-view-v700) for more details.
+:::
+
+Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
+
+If you have already applied the `v7.0.0/tree-view/preset-safe` (or `v7.0.0/preset-safe`) codemod, then you should not need to take any further action on these items. If there's a specific part of the breaking change that is not part of the codemod or needs some manual work, it will be listed in the end of each section.
+
+All other changes must be handled manually.
+
+:::warning
+Not all use cases are covered by codemods. In some scenarios, like props spreading, cross-file dependencies, etc., the changes are not properly identified and therefore must be handled manually.
+
+For example, if a codemod tries to rename a prop, but this prop is hidden with the spread operator, it won't be transformed as expected.
+
+```tsx
+<RichTreeView {...newProps} />
+```
+
+After running the codemods, make sure to test your application and that you don't have any console errors.
+
+Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
+:::
+
 ## Breaking changes
 
 Since `v7` is a major release, it contains changes that affect the public API.

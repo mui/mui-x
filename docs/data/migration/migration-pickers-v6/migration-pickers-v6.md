@@ -48,7 +48,8 @@ If you have `@mui/x-license-pro` in the `dependencies` section of your `package.
 
 ## Run codemods
 
-The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v7. You can run `v7.0.0/pickers/preset-safe` targeting only Date and Time Pickers or `v7.0.0/preset-safe` to target Data Grid as well.
+The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v7.
+You can run `v7.0.0/pickers/preset-safe` targeting only Date and Time Pickers or `v7.0.0/preset-safe` to target other MUI X components like the Data Grid as well.
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
@@ -58,7 +59,7 @@ You can either run it on a specific file, folder, or your entire codebase when c
 // Date and Time Pickers specific
 npx @mui/x-codemod@latest v7.0.0/pickers/preset-safe <path>
 
-// Target Data Grid as well
+// Target other MUI X components as well
 npx @mui/x-codemod@latest v7.0.0/preset-safe <path>
 ```
 
@@ -78,7 +79,7 @@ Not all use cases are covered by codemods. In some scenarios, like props spreadi
 For example, if a codemod tries to rename a prop, but this prop is hidden with the spread operator, it won't be transformed as expected.
 
 ```tsx
-<DatePicker {...pickerProps} />
+<DatePicker {...newProps} />
 ```
 
 After running the codemods, make sure to test your application and that you don't have any console errors.
