@@ -17,7 +17,7 @@ describeTreeView<
     UseTreeViewExpansionSignature,
     UseTreeViewSelectionSignature,
   ]
->('useTreeViewKeyboardNavigation', ({ render, treeViewComponentName, setup }) => {
+>('useTreeViewKeyboardNavigation', ({ render, treeViewComponentName }) => {
   describe('Navigation (focus and expansion)', () => {
     describe('key: ArrowDown', () => {
       it('should move the focus to a sibling item', () => {
@@ -888,8 +888,6 @@ describeTreeView<
 
       describe('key: Home', () => {
         it('should select select the focused item and all the items above when Home is pressed while holding Shift + Ctrl', () => {
-          if (setup !== 'SimpleTreeView + TreeItem') return;
-
           const view = render({
             items: [{ id: '1' }, { id: '2', children: [{ id: '2.1' }] }, { id: '3' }, { id: '4' }],
             multiSelect: true,
