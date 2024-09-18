@@ -65,7 +65,6 @@ export interface UseGridColumnHeadersProps {
 export interface GetHeadersParams {
   position?: GridPinnedColumnPosition;
   renderContext?: GridColumnsRenderContext;
-  minFirstColumn?: number;
   maxLastColumn?: number;
 }
 
@@ -158,11 +157,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   // Helper for computation common between getColumnHeaders and getColumnGroupHeaders
   const getColumnsToRender = (params?: GetHeadersParams) => {
-    const {
-      renderContext: currentContext = renderContext,
-      // TODO: `minFirstColumn` is not used anymore, could be refactored out.
-      maxLastColumn = visibleColumns.length,
-    } = params || {};
+    const { renderContext: currentContext = renderContext, maxLastColumn = visibleColumns.length } =
+      params || {};
 
     const firstColumnToRender = currentContext.firstColumnIndex;
     const lastColumnToRender = !hasVirtualization ? maxLastColumn : currentContext.lastColumnIndex;
@@ -334,14 +330,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             {
               position: GridPinnedColumnPosition.LEFT,
               renderContext: leftRenderContext,
-              minFirstColumn: leftRenderContext.firstColumnIndex,
               maxLastColumn: leftRenderContext.lastColumnIndex,
             },
             { disableReorder: true },
           )}
         {getColumnHeaders({
           renderContext,
-          minFirstColumn: pinnedColumns.left.length,
           maxLastColumn: visibleColumns.length - pinnedColumns.right.length,
         })}
         {rightRenderContext &&
@@ -349,7 +343,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             {
               position: GridPinnedColumnPosition.RIGHT,
               renderContext: rightRenderContext,
-              minFirstColumn: rightRenderContext.firstColumnIndex,
               maxLastColumn: rightRenderContext.lastColumnIndex,
             },
             {
@@ -499,7 +492,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
               params: {
                 position: GridPinnedColumnPosition.LEFT,
                 renderContext: leftRenderContext,
-                minFirstColumn: leftRenderContext.firstColumnIndex,
                 maxLastColumn: leftRenderContext.lastColumnIndex,
               },
             })}
@@ -510,7 +502,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
               params: {
                 position: GridPinnedColumnPosition.RIGHT,
                 renderContext: rightRenderContext,
-                minFirstColumn: rightRenderContext.firstColumnIndex,
                 maxLastColumn: rightRenderContext.lastColumnIndex,
               },
             })}
