@@ -411,6 +411,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
           }),
         ).getByText('max'),
       );
+      clock.runToLast();
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
     });

@@ -16,7 +16,7 @@ To read more about the changes from the new major, check out [the blog post abou
 In `package.json`, change the version of the tree view package to `^7.0.0`.
 
 ```diff
--"@mui/x-tree-view": "6.x.x",
+-"@mui/x-tree-view": "^6.0.0",
 +"@mui/x-tree-view": "^7.0.0",
 ```
 
@@ -76,8 +76,8 @@ The required `nodeId` prop used by the `TreeItem` has been renamed to `itemId` f
 
 ```diff
  <TreeView>
--  <TreeItem label='Item 1' nodeId='one'>
-+  <TreeItem label='Item 1' itemId='one'>
+-  <TreeItem label="Item 1" nodeId="one">
++  <TreeItem label="Item 1" itemId="one">
  </TreeView>
 ```
 

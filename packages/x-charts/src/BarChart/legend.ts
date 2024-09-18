@@ -12,10 +12,12 @@ const legendGetter: LegendGetter<'bar'> = (params) => {
     }
 
     acc.push({
+      id: seriesId,
+      seriesId,
       color: series[seriesId].color,
       label: formattedLabel,
-      id: seriesId,
     });
+
     return acc;
   }, [] as LegendItemParams[]);
 };

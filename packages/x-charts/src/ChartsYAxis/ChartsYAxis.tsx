@@ -1,8 +1,9 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
+import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { useTicks } from '../hooks/useTicks';
@@ -27,6 +28,12 @@ const useUtilityClasses = (ownerState: ChartsYAxisProps & { theme: Theme }) => {
 
   return composeClasses(slots, getAxisUtilityClass, classes);
 };
+
+const YAxisRoot = styled(AxisRoot, {
+  name: 'MuiChartsYAxis',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})({});
 
 const defaultProps = {
   position: 'left',
@@ -157,7 +164,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   }
 
   return (
-    <AxisRoot
+    <YAxisRoot
       transform={`translate(${position === 'right' ? left + width : left}, 0)`}
       className={classes.root}
       sx={sx}
@@ -204,7 +211,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
           <Label {...labelRefPoint} {...axisLabelProps} text={label} />
         </g>
       )}
-    </AxisRoot>
+    </YAxisRoot>
   );
 }
 
