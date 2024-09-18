@@ -1,4 +1,4 @@
 export * from '@mui/x-date-pickers/themeAugmentation';
-export type * from './overrides';
-export type * from './props';
-export type * from './components';
+export * from './overrides';
+export * from './props';
+export * from './components';
