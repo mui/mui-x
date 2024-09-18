@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridPreferencesPanel } from './panel/GridPreferencesPanel';
+import { GridPreferencePanelsValue } from '../hooks';
 
 export function GridHeader() {
   const rootProps = useGridRootProps();
@@ -10,7 +11,16 @@ export function GridHeader() {
 
   return (
     <React.Fragment>
-      <GridPreferencesPanel filterButtonRef={filterButtonRef} columnsButtonRef={columnsButtonRef} />
+      <GridPreferencesPanel
+        type={GridPreferencePanelsValue.filters}
+        anchorEl={filterButtonRef.current}
+      />
+
+      <GridPreferencesPanel
+        type={GridPreferencePanelsValue.columns}
+        anchorEl={columnsButtonRef.current}
+      />
+
       {rootProps.slots.toolbar && (
         <rootProps.slots.toolbar
           filterButtonRef={filterButtonRef}

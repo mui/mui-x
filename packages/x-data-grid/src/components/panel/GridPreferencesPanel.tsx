@@ -8,39 +8,32 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface GridPreferencesPanelProps {
   /**
-   * Ref for the filter button.
+   * Type of the panel.
    */
-  filterButtonRef: React.RefObject<HTMLButtonElement>;
+  type: GridPreferencePanelsValue;
   /**
-   * Ref for the column button.
+   * Anchor element for the panel.
    */
-  columnsButtonRef: React.RefObject<HTMLButtonElement>;
+  anchorEl: HTMLButtonElement | null;
 }
 
-export function GridPreferencesPanel({
-  filterButtonRef,
-  columnsButtonRef,
-}: GridPreferencesPanelProps) {
+export function GridPreferencesPanel({ type, anchorEl }: GridPreferencesPanelProps) {
   const apiRef = useGridApiContext();
   const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
   const rootProps = useGridRootProps();
   const preferencePanelState = useGridSelector(apiRef, gridPreferencePanelStateSelector);
 
-  const panelContent = apiRef.current.unstable_applyPipeProcessors(
-    'preferencePanel',
-    null,
-    preferencePanelState.openedPanelValue ?? GridPreferencePanelsValue.filters,
-  );
+  const isOpen =
+    columns.length > 0 &&
+    preferencePanelState.open &&
+    type === preferencePanelState.openedPanelValue;
 
-  const anchorEl =
-    preferencePanelState.openedPanelValue === GridPreferencePanelsValue.filters
-      ? filterButtonRef.current
-      : columnsButtonRef.current;
+  const panelContent = apiRef.current.unstable_applyPipeProcessors('preferencePanel', null, type);
 
   return (
     <rootProps.slots.panel
       as={rootProps.slots.basePopper}
-      open={columns.length > 0 && preferencePanelState.open}
+      open={isOpen}
       id={preferencePanelState.panelId}
       aria-labelledby={preferencePanelState.labelId}
       anchorEl={anchorEl}

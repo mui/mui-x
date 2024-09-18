@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import { unstable_generateUtilityClasses as generateUtilityClasses } from '@mui/utils';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';
+import Grow from '@mui/material/Grow';
 import Popper from '@mui/material/Popper';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -60,6 +61,7 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
   const rootProps = useGridRootProps();
   const classes = gridPanelClasses;
   const [isPlaced, setIsPlaced] = React.useState(false);
+  // const [isOpen, setIsOpen] = React.useState(props.open);
 
   const handleClickAway = React.useCallback(() => {
     apiRef.current.hidePreferences();
@@ -122,18 +124,23 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
       ownerState={rootProps}
       anchorEl={anchorEl ?? fallbackAnchorEl}
       modifiers={modifiers}
+      transition
       {...other}
     >
-      <ClickAwayListener mouseEvent="onMouseUp" onClickAway={handleClickAway}>
-        <GridPaperRoot
-          className={classes.paper}
-          ownerState={rootProps}
-          elevation={8}
-          onKeyDown={handleKeyDown}
-        >
-          {isPlaced && children}
-        </GridPaperRoot>
-      </ClickAwayListener>
+      {({ TransitionProps }) => (
+        <ClickAwayListener mouseEvent="onMouseDown" onClickAway={handleClickAway}>
+          <Grow {...TransitionProps} timeout={350} style={{ transformOrigin: 'top right' }}>
+            <GridPaperRoot
+              className={classes.paper}
+              ownerState={rootProps}
+              elevation={8}
+              onKeyDown={handleKeyDown}
+            >
+              {isPlaced && children}
+            </GridPaperRoot>
+          </Grow>
+        </ClickAwayListener>
+      )}
     </GridPanelRoot>
   );
 });
