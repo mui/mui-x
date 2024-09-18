@@ -12,15 +12,6 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
   params,
   experimentalFeatures,
 }) => {
-  if (process.env.NODE_ENV !== 'production') {
-    if (params.isItemEditable && !experimentalFeatures?.labelEditing) {
-      warnOnce([
-        'MUI X: The label editing feature requires the `labelEditing` experimental feature to be enabled.',
-        'You can do it by passing `experimentalFeatures={{ labelEditing: true}}` to the `RichTreeViewPro` component.',
-        'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/editing/',
-      ]);
-    }
-  }
   const editedItemRef = React.useRef(state.editedItemId);
 
   const isItemBeingEditedRef = (itemId: TreeViewItemId) => editedItemRef.current === itemId;
@@ -32,7 +23,7 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
 
   const isItemBeingEdited = (itemId: TreeViewItemId) => itemId === state.editedItemId;
 
-  const isTreeViewEditable = Boolean(params.isItemEditable) && !!experimentalFeatures.labelEditing;
+  const isTreeViewEditable = Boolean(params.isItemEditable);
 
   const isItemEditable = (itemId: TreeViewItemId): boolean => {
     if (itemId == null || !isTreeViewEditable) {
@@ -94,6 +85,24 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
 };
 
 useTreeViewLabel.itemPlugin = useTreeViewLabelItemPlugin;
+
+useTreeViewLabel.getDefaultizedParams = ({ params, experimentalFeatures }) => {
+  const canUseFeature = experimentalFeatures?.labelEditing;
+  if (process.env.NODE_ENV !== 'production') {
+    if (params.isItemEditable && !canUseFeature) {
+      warnOnce([
+        'MUI X: The label editing feature requires the `labelEditing` experimental feature to be enabled.',
+        'You can do it by passing `experimentalFeatures={{ labelEditing: true}}` to the `RichTreeViewPro` component.',
+        'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/editing/',
+      ]);
+    }
+  }
+
+  return {
+    ...params,
+    isItemEditable: canUseFeature ? (params.isItemEditable ?? false) : false,
+  };
+};
 
 useTreeViewLabel.getInitialState = () => ({
   editedItemId: null,
