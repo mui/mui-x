@@ -10,20 +10,20 @@ import {
   ChartsRotationAxisProps,
 } from '../models/axis';
 import { CartesianChartSeriesType } from '../models/seriesType/config';
-import { getColorScale, getOrdinalColorScale } from '../internals/colorScale';
+import { getColorScale, getOrdinalColorScale } from './colorScale';
 import { getTickNumber } from '../hooks/useTicks';
-import { getScale } from '../internals/getScale';
-import { DrawingArea } from './DrawingProvider';
-import { FormattedSeries } from './SeriesProvider';
-import { zoomScaleRange } from './CartesianProvider/zoom';
-import { ExtremumGetter } from './PluginProvider';
+import { getScale } from './getScale';
+import { DrawingArea } from '../context/DrawingProvider';
+import { FormattedSeries } from '../context/SeriesProvider';
+import { zoomScaleRange } from '../context/CartesianProvider/zoom';
+import { ExtremumGetter } from '../context/PluginProvider';
 import {
   DefaultizedAxisConfig,
   ZoomData,
   ZoomOptions,
   GetZoomAxisFilters,
-} from './CartesianProvider/Cartesian.types';
-import { getAxisExtremum } from './CartesianProvider/getAxisExtremum';
+} from '../context/CartesianProvider/Cartesian.types';
+import { getAxisExtremum } from '../context/CartesianProvider/getAxisExtremum';
 
 function getRange(
   drawingArea: DrawingArea,

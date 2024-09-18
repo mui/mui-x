@@ -5,15 +5,13 @@ import {
   useSeries,
   CartesianContext,
   CartesianProviderProps,
-  cartesianProviderUtils,
+  computeAxisValue,
   useXExtremumGetter,
   useYExtremumGetter,
   ZoomAxisFilters,
 } from '@mui/x-charts/internals';
 import { useZoom } from '../ZoomProvider/useZoom';
 import { createAxisFilterMapper, createGetAxisFilters } from './createAxisFilterMapper';
-
-const { computeAxisValue } = cartesianProviderUtils;
 
 export interface CartesianProviderProProps extends CartesianProviderProps {}
 

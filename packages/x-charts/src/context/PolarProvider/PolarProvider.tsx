@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
+import { computeAxisValue } from '../../internals/computeAxisValue';
 import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useSeries } from '../../hooks/useSeries';
 import { PolarContext } from './PolarContext';
-import { computeAxisValue } from '../computeAxisValue';
 import { useRadiusExtremumGetter } from '../PluginProvider/useRadiusExtremumGetter';
 import { useRotationExtremumGetter } from '../PluginProvider/useRotationExtremumGetter';
 import { PolarProviderProps } from './Polar.types';

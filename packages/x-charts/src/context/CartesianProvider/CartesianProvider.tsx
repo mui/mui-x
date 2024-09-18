@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
+import { computeAxisValue } from '../../internals/computeAxisValue';
 import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useSeries } from '../../hooks/useSeries';
 import { CartesianContext } from './CartesianContext';
-import { computeAxisValue } from '../computeAxisValue';
 import { useXExtremumGetter } from '../PluginProvider/useXExtremumGetter';
 import { useYExtremumGetter } from '../PluginProvider';
 import { CartesianProviderProps } from './Cartesian.types';
