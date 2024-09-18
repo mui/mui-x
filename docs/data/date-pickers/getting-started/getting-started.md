@@ -9,7 +9,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 # Date and Time Pickers - Getting started
 
-<p class="description">Install the Date and Time Pickers and set up your date library to start building.</p>
+<p class="description">Install the Date and Time Pickers package and set up your date library to start building.</p>
 
 ## Installation
 
