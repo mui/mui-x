@@ -55,7 +55,7 @@ const GridPaperRoot = styled(Paper, {
 }));
 
 const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
-  const { children, className, classes: classesProp, ...other } = props;
+  const { children, className, classes: classesProp, anchorEl, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const classes = gridPanelClasses;
@@ -98,7 +98,7 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
     [],
   );
 
-  const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
+  const [fallbackAnchorEl, setFallbackAnchorEl] = React.useState<Element | null>(null);
 
   React.useEffect(() => {
     const panelAnchor = apiRef.current.rootElementRef?.current?.querySelector(
@@ -106,11 +106,11 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
     );
 
     if (panelAnchor) {
-      setAnchorEl(panelAnchor);
+      setFallbackAnchorEl(panelAnchor);
     }
   }, [apiRef]);
 
-  if (!anchorEl) {
+  if (!anchorEl && !fallbackAnchorEl) {
     return null;
   }
 
@@ -120,7 +120,7 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
       placement="bottom-start"
       className={clsx(className, classes.panel)}
       ownerState={rootProps}
-      anchorEl={anchorEl}
+      anchorEl={anchorEl ?? fallbackAnchorEl}
       modifiers={modifiers}
       {...other}
     >

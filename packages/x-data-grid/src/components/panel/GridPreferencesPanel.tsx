@@ -6,7 +6,21 @@ import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-export function GridPreferencesPanel() {
+interface GridPreferencesPanelProps {
+  /**
+   * Ref for the filter button.
+   */
+  filterButtonRef: React.RefObject<HTMLButtonElement>;
+  /**
+   * Ref for the column button.
+   */
+  columnsButtonRef: React.RefObject<HTMLButtonElement>;
+}
+
+export function GridPreferencesPanel({
+  filterButtonRef,
+  columnsButtonRef,
+}: GridPreferencesPanelProps) {
   const apiRef = useGridApiContext();
   const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
   const rootProps = useGridRootProps();
@@ -18,12 +32,18 @@ export function GridPreferencesPanel() {
     preferencePanelState.openedPanelValue ?? GridPreferencePanelsValue.filters,
   );
 
+  const anchorEl =
+    preferencePanelState.openedPanelValue === GridPreferencePanelsValue.filters
+      ? filterButtonRef.current
+      : columnsButtonRef.current;
+
   return (
     <rootProps.slots.panel
       as={rootProps.slots.basePopper}
       open={columns.length > 0 && preferencePanelState.open}
       id={preferencePanelState.panelId}
       aria-labelledby={preferencePanelState.labelId}
+      anchorEl={anchorEl}
       {...rootProps.slotProps?.panel}
       {...rootProps.slotProps?.basePopper}
     >
