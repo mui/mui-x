@@ -1,13 +1,14 @@
+'use client';
 import * as React from 'react';
+import { computeAxisValue } from '../../internals/computeAxisValue';
 import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useSeries } from '../../hooks/useSeries';
-import { RadialContext } from './RadialContext';
-import { computeValue } from './computeValue';
+import { PolarContext } from './PolarContext';
 import { useRadiusExtremumGetter } from '../PluginProvider/useRadiusExtremumGetter';
 import { useRotationExtremumGetter } from '../PluginProvider/useRotationExtremumGetter';
-import { RadialProviderProps } from './Radial.types';
+import { PolarProviderProps } from './Polar.types';
 
-function RadialProvider(props: RadialProviderProps) {
+function PolarProvider(props: PolarProviderProps) {
   const { rotationAxis, radiusAxis, children } = props;
 
   const formattedSeries = useSeries();
@@ -17,7 +18,7 @@ function RadialProvider(props: RadialProviderProps) {
 
   const rotationValues = React.useMemo(
     () =>
-      computeValue({
+      computeAxisValue({
         drawingArea,
         formattedSeries,
         axis: rotationAxis,
@@ -29,7 +30,7 @@ function RadialProvider(props: RadialProviderProps) {
 
   const radiusValues = React.useMemo(
     () =>
-      computeValue({
+      computeAxisValue({
         drawingArea,
         formattedSeries,
         axis: radiusAxis,
@@ -52,7 +53,7 @@ function RadialProvider(props: RadialProviderProps) {
     [rotationValues, radiusValues],
   );
 
-  return <RadialContext.Provider value={value}>{children}</RadialContext.Provider>;
+  return <PolarContext.Provider value={value}>{children}</PolarContext.Provider>;
 }
 
-export { RadialProvider };
+export { PolarProvider };

@@ -9,7 +9,7 @@ function RadarPlot() {
     <g>
       {seriesCoordinates?.map((seriesCoordinate) => (
         <React.Fragment>
-          <RadarSeriesPlot {...seriesCoordinate} color='red' cx={cx} cy={cy} />
+          <RadarSeriesPlot {...seriesCoordinate} color="red" cx={cx} cy={cy} />
           {/* {seriesCoordinate.showMark && <RadarDotPlot {...seriesCoordinate} />} */}
         </React.Fragment>
       ))}

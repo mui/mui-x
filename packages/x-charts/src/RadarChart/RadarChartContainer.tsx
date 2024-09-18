@@ -4,7 +4,7 @@ import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvide
 import { SeriesProvider, SeriesProviderProps } from '../context/SeriesProvider';
 import { InteractionProvider } from '../context/InteractionProvider';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import { RadialProvider, RadialProviderProps } from '../context/RadialProvider';
+import { PolarProvider, PolarProviderProps } from '../context/PolarProvider';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import {
   HighlightedProvider,
@@ -20,7 +20,7 @@ export type RadarChartContainerProps = Omit<
   ChartsSurfaceProps &
     Omit<SeriesProviderProps, 'seriesFormatters'> &
     Omit<DrawingProviderProps, 'svgRef'> &
-    Pick<RadialProviderProps, 'dataset'> &
+    Pick<PolarProviderProps, 'dataset'> &
     ZAxisContextProviderProps &
     HighlightedProviderProps &
     PluginProviderProps,
@@ -49,7 +49,7 @@ export const RadarChartContainer = React.forwardRef(function RadarChartContainer
     <DrawingProvider {...drawingProviderProps}>
       <PluginProvider {...pluginProviderProps}>
         <SeriesProvider {...seriesProviderProps}>
-          <RadialProvider {...radialProviderProps}>
+          <PolarProvider {...radialProviderProps}>
             <ZAxisContextProvider {...zAxisContextProps}>
               <InteractionProvider>
                 <HighlightedProvider {...highlightedProviderProps}>
@@ -60,7 +60,7 @@ export const RadarChartContainer = React.forwardRef(function RadarChartContainer
                 </HighlightedProvider>
               </InteractionProvider>
             </ZAxisContextProvider>
-          </RadialProvider>
+          </PolarProvider>
         </SeriesProvider>
       </PluginProvider>
     </DrawingProvider>

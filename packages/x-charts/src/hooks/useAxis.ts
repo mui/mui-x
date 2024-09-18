@@ -1,6 +1,6 @@
 'use client';
 import { useCartesianContext } from '../context/CartesianProvider';
-import { useRadialContext } from '../context/RadialProvider';
+import { usePolarContext } from '../context/PolarProvider';
 
 export function useXAxis(identifier?: number | string) {
   const { xAxis, xAxisIds } = useCartesianContext();
@@ -19,7 +19,7 @@ export function useYAxis(identifier?: number | string) {
 }
 
 export function useRadiusAxis(identifier?: number | string) {
-  const { radiusAxis, radiusAxisIds } = useRadialContext();
+  const { radiusAxis, radiusAxisIds } = usePolarContext();
 
   const id = typeof identifier === 'string' ? identifier : radiusAxisIds[identifier ?? 0];
 
@@ -27,7 +27,7 @@ export function useRadiusAxis(identifier?: number | string) {
 }
 
 export function useRotationAxis(identifier?: number | string) {
-  const { rotationAxis, rotationAxisIds } = useRadialContext();
+  const { rotationAxis, rotationAxisIds } = usePolarContext();
 
   const id = typeof identifier === 'string' ? identifier : rotationAxisIds[identifier ?? 0];
 

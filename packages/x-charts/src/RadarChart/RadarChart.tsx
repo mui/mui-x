@@ -55,8 +55,8 @@ const RadarChart = React.forwardRef(function RadarChart(inProps: RadarChartProps
   return (
     <ResponsiveRadarChartContainer ref={ref} {...radarChartContainerProps}>
       {/* 
-                 <ChartsRadarHighlight />
-                 {!props.loading && <RadarTooltip />} */}
+                  <ChartsRadarHighlight />
+                  {!props.loading && <RadarTooltip />} */}
 
       <RadarGrid {...radarGridProps} />
       <ChartsOverlay {...overlayProps} />
@@ -128,6 +128,8 @@ RadarChart.propTypes = {
    */
   onHighlightChange: PropTypes.func,
   radar: PropTypes.shape({
+    divisionNumber: PropTypes.number,
+    max: PropTypes.number,
     metrics: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.string),
       PropTypes.arrayOf(

@@ -5,7 +5,7 @@ import { ChartSeriesType } from '../models/seriesType/config';
 import { getLabel } from '../internals/getLabel';
 import { CommonSeriesType } from '../models/seriesType/common';
 import { RadarItemIdentifier } from '../models/seriesType/radar';
-import { useRadialContext } from '../context/RadialProvider';
+import { usePolarContext } from '../context/PolarProvider';
 
 export interface RadarTooltipPoint {
   label: string | undefined;
@@ -32,7 +32,7 @@ export function useRadarSeriesTooltip(): null | UseRadarSeriesTooltipReturnValue
   const { item } = React.useContext(InteractionContext);
   const series = useSeries();
 
-  const { radiusAxis, radiusAxisIds } = useRadialContext();
+  const { radiusAxis, radiusAxisIds } = usePolarContext();
 
   if (!item || !isRadarItem(item)) {
     return null;

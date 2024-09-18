@@ -23,7 +23,7 @@ export function RadarSeriesPlot(props: any) {
   });
 
   const transitionDots = useTransition(points, {
-    keys: (point, index) => `${seriesId}-${index}`,
+    keys: (point) => `${seriesId}-${point.dataIndex}`,
     from: { x: cx, y: cy },
     leave: { x: cx, y: cy },
     enter: (point) => ({ x: point.x, y: point.y }),
@@ -61,7 +61,7 @@ export function RadarSeriesPlot(props: any) {
           fill="red"
           stroke={color}
           strokeOpacity={isSeriesFaded ? 0.5 : 1}
-        //   fill={color}
+          //   fill={color}
           fillOpacity={isSeriesHighlighted ? 0.8 : 0.1}
           {...getInteractionItemProps({ type: 'radar', seriesId })}
         />

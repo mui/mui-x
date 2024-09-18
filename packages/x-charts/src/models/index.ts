@@ -6,7 +6,7 @@ export type {
   ChartsYAxisProps,
   ChartsXAxisProps,
   ChartsRotationAxisProps,
-  ChartsRadialAxisProps,
+  ChartsRadiusAxisProps,
   ScaleName,
   ContinuousScaleName,
 } from './axis';

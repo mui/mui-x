@@ -1,12 +1,12 @@
 import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useRotationScale } from '../../hooks/useScale';
 import { useRadarSeries } from '../../hooks/useSeries';
-import { useRadialContext } from '../../context/RadialProvider';
+import { usePolarContext } from '../../context/PolarProvider';
 import { useHighlighted } from '../../context/HighlightedProvider';
 
 export function useRadarCoordinates() {
   const rotationScale = useRotationScale<'point'>();
-  const { radiusAxis } = useRadialContext();
+  const { radiusAxis } = usePolarContext();
   const radarSeries = useRadarSeries();
 
   const drawingArea = useDrawingArea();
@@ -42,6 +42,7 @@ export function useRadarCoordinates() {
             y: cy - r * Math.cos(angle),
             isItemHighlighted,
             isItemFaded,
+            dataIndex,
           };
         }),
       };

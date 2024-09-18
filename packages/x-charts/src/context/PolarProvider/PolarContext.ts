@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import { Initializable } from '../context.types';
-import { RadialContextState } from './Radial.types';
+import { PolarContextState } from './Polar.types';
 
-export const RadialContext = React.createContext<Initializable<RadialContextState>>({
+export const PolarContext = React.createContext<Initializable<PolarContextState>>({
   isInitialized: false,
   data: {
     rotationAxis: {},
@@ -14,5 +14,5 @@ export const RadialContext = React.createContext<Initializable<RadialContextStat
 });
 
 if (process.env.NODE_ENV !== 'production') {
-  RadialContext.displayName = 'RadialContext';
+  PolarContext.displayName = 'PolarContext';
 }

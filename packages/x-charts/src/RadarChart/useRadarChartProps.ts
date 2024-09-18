@@ -60,7 +60,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
   const radarGridProps: RadarGridProps = {
     divisionNumber: radar.divisionNumber,
   };
-  
+
   return {
     radarChartContainerProps,
     overlayProps,

@@ -169,13 +169,13 @@ export interface ChartsRotationAxisProps extends ChartsAxisProps {
   endAngle?: number;
 }
 
-export interface ChartsRadialAxisProps extends ChartsAxisProps {
+export interface ChartsRadiusAxisProps extends ChartsAxisProps {
   /**
-   * The minimal radius (in deg).
+   * The minimal radius.
    */
   minRadius?: number;
   /**
-   * The maximal radius (in deg).
+   * The maximal radius.
    */
   maxRadius?: number;
 }

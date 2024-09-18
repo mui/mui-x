@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { useRotationScale } from '../hooks/useScale';
-import { useRadialContext } from '../context/RadialProvider';
+import { usePolarContext } from '../context/PolarProvider';
 
 function getTextAnchor(dx: number) {
   if (dx > 0.2) {
@@ -25,7 +25,7 @@ function getDominantBaseline(dy: number) {
 
 function RadarLabels() {
   const rotationScale = useRotationScale<'point'>();
-  const { radiusAxis } = useRadialContext();
+  const { radiusAxis } = usePolarContext();
 
   const drawingArea = useDrawingArea();
 

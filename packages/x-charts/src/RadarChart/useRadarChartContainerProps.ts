@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import type { DrawingProviderProps } from '../context/DrawingProvider';
-import type { RadialProviderProps } from '../context/RadialProvider';
+import type { PolarProviderProps } from '../context/PolarProvider';
 import type { SeriesProviderProps } from '../context/SeriesProvider';
 import type { ZAxisContextProviderProps } from '../context/ZAxisContextProvider';
 import type { RadarChartContainerProps } from './RadarChartContainer';
@@ -11,7 +11,7 @@ import { PluginProviderProps } from '../context/PluginProvider';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { plugin } from './plugin';
-import { AxisConfig, ChartsRadialAxisProps } from '../models/axis';
+import { AxisConfig, ChartsRadiusAxisProps } from '../models/axis';
 
 export const useRadarChartContainerProps = (
   props: RadarChartContainerProps,
@@ -39,7 +39,7 @@ export const useRadarChartContainerProps = (
   const svgRef = React.useRef<SVGSVGElement>(null);
   const chartSurfaceRef = useForkRef(ref, svgRef);
 
-  const radiusAxis: AxisConfig<'linear', any, ChartsRadialAxisProps>[] = radar.metrics.map((m) => {
+  const radiusAxis: AxisConfig<'linear', any, ChartsRadiusAxisProps>[] = radar.metrics.map((m) => {
     const { name, min = 0, max = radar.max } = typeof m === 'string' ? { name: m } : m;
 
     return {
@@ -72,7 +72,7 @@ export const useRadarChartContainerProps = (
     dataset,
   };
 
-  const radialProviderProps: Omit<RadialProviderProps, 'children'> = {
+  const radialProviderProps: Omit<PolarProviderProps, 'children'> = {
     rotationAxis: [
       {
         id: DEFAULT_X_AXIS_KEY,

@@ -2,13 +2,13 @@ import * as React from 'react';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { useRotationScale } from '../hooks/useScale';
 import { useRadarSeries } from '../hooks/useSeries';
-import { useRadialContext } from '../context/RadialProvider';
+import { usePolarContext } from '../context/PolarProvider';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useHighlighted } from '../context/HighlightedProvider';
 
 function RadarAreaPlot() {
   const rotationScale = useRotationScale<'point'>();
-  const { radiusAxis } = useRadialContext();
+  const { radiusAxis } = usePolarContext();
   const radarSeries = useRadarSeries();
 
   const drawingArea = useDrawingArea();

@@ -26,6 +26,9 @@
       "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
     },
     "plotType": { "description": "Type of plot used." },
+    "resolveSizeBeforeRender": {
+      "description": "The chart will try to wait for the parent container to resolve its size before it renders for the first time.<br>This can be useful in some scenarios where the chart appear to grow after the first render, like when used inside a grid."
+    },
     "showHighlight": {
       "description": "Set to <code>true</code> to highlight the value. With line, it shows a point. With bar, it shows a highlight band."
     },
@@ -42,10 +45,10 @@
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
     "xAxis": {
-      "description": "The xAxis configuration. Notice it is a single <a href='/x/api/charts/axis-config/'>AxisConfig</a> object, not an array of configuration."
+      "description": "The xAxis configuration. Notice it is a single [[AxisConfig]] object, not an array of configuration."
     },
     "yAxis": {
-      "description": "The yAxis configuration. Notice it is a single <a href='/x/api/charts/axis-config/'>AxisConfig</a> object, not an array of configuration."
+      "description": "The yAxis configuration. Notice it is a single [[AxisConfig]] object, not an array of configuration."
     }
   },
   "classDescriptions": {},
