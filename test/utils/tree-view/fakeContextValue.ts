@@ -30,6 +30,7 @@ export const getFakeContextValue = (
     checkboxSelection: features.checkboxSelection ?? false,
     disableSelection: false,
   },
+  treeId: 'mui-tree-view-1',
   rootRef: {
     current: null,
   },
@@ -37,7 +38,7 @@ export const getFakeContextValue = (
   store: new TreeViewStore({
     initialState: {
       cacheKey: { id: 1 },
-      id: { treeId: undefined },
+      id: { treeId: 'mui-tree-view-1' },
       items: { itemMetaMap: {}, itemMap: {}, itemOrderedChildrenIds: {}, itemChildrenIndexes: {} },
       expansion: { expandedItemsMap: new Map() },
       selection: { selectedItemsMap: new Map() },

@@ -115,7 +115,7 @@ export const useTreeViewBuildContext = <TSignatures extends readonly TreeViewAny
 
       return finalChildren;
     },
-    [plugins],
+    [plugins, instance],
   );
 
   const wrapRoot = React.useCallback<TreeRootWrapper<TSignatures>>(
