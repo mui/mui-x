@@ -182,12 +182,12 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
 
 useTreeViewJSXItems.itemPlugin = useTreeViewJSXItemsItemPlugin;
 
-useTreeViewJSXItems.wrapItem = ({ children, itemId }) => {
+useTreeViewJSXItems.wrapItem = ({ children, itemId, idAttribute }) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
   return (
-    <TreeViewChildrenItemProvider itemId={itemId}>
+    <TreeViewChildrenItemProvider itemId={itemId} idAttribute={idAttribute}>
       <TreeViewItemDepthContext.Provider value={(depthContext as number) + 1}>
         {children}
       </TreeViewItemDepthContext.Provider>

@@ -15,11 +15,12 @@ if (process.env.NODE_ENV !== 'production') {
 
 interface TreeViewChildrenItemProviderProps {
   itemId?: string;
+  idAttribute?: string;
   children: React.ReactNode;
 }
 
 export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProviderProps) {
-  const { children, itemId = null } = props;
+  const { children, itemId = null, idAttribute } = props;
 
   const { instance, store, rootRef } =
     useTreeViewContext<[UseTreeViewJSXItemsSignature, UseTreeViewItemsSignature]>();
@@ -34,14 +35,10 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
     if (itemId == null) {
       idAttr = rootRef.current.id;
     } else {
-      // Undefined during 1st render
-      const itemMeta = instance.getItemMeta(itemId);
-      if (itemMeta !== undefined) {
-        idAttr = selectorTreeItemIdAttribute(store.value, {
-          itemId,
-          idAttribute: itemMeta.idAttribute,
-        });
-      }
+      idAttr = selectorTreeItemIdAttribute(store.value, {
+        itemId,
+        idAttribute,
+      });
     }
 
     if (idAttr == null) {

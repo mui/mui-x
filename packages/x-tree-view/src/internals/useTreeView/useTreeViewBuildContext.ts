@@ -98,13 +98,13 @@ export const useTreeViewBuildContext = <TSignatures extends readonly TreeViewAny
   );
 
   const wrapItem = React.useCallback<TreeItemWrapper<TSignatures>>(
-    ({ itemId, children }) => {
+    ({ itemId, children, idAttribute }) => {
       let finalChildren: React.ReactNode = children;
       // The wrappers are reversed to ensure that the first wrapper is the outermost one.
       for (let i = plugins.length - 1; i >= 0; i -= 1) {
         const plugin = plugins[i];
         if (plugin.wrapItem) {
-          finalChildren = plugin.wrapItem({ itemId, children: finalChildren, instance });
+          finalChildren = plugin.wrapItem({ itemId, children: finalChildren, idAttribute });
         }
       }
 
