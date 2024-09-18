@@ -23,11 +23,11 @@ export interface ChartsLegendSlots {
    * Custom rendering of the legend.
    * @default DefaultChartsLegend
    */
-  legend?: React.JSXElementConstructor<ChartsLegendPropsBase>;
+  legend?: React.JSXElementConstructor<LegendRendererProps>;
 }
 
 export interface ChartsLegendSlotProps {
-  legend?: Partial<ChartsLegendPropsBase>;
+  legend?: Partial<LegendRendererProps>;
 }
 
 export interface ChartsLegendProps extends ChartsLegendPropsBase {
