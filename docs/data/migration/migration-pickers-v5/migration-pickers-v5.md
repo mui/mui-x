@@ -15,7 +15,7 @@ To get started, check out [the blog post about the release of MUI X v6](https:/
 In `package.json`, change the version of the date pickers package to `^6.0.0`.
 
 ```diff
--"@mui/x-date-pickers": "5.X.X",
+-"@mui/x-date-pickers": "^5.0.0",
 +"@mui/x-date-pickers": "^6.0.0",
 ```
 

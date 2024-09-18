@@ -67,6 +67,7 @@ export const useGridPrintExport = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'columnHeaderHeight' | 'headerFilterHeight'>,
 ): void => {
+  const hasRootReference = apiRef.current.rootElementRef.current !== null;
   const logger = useGridLogger(apiRef, 'useGridPrintExport');
   const doc = React.useRef<Document | null>(null);
   const previousGridState = React.useRef<GridInitialStateCommunity | null>(null);
@@ -76,7 +77,7 @@ export const useGridPrintExport = (
 
   React.useEffect(() => {
     doc.current = ownerDocument(apiRef.current.rootElementRef!.current!);
-  }, [apiRef]);
+  }, [apiRef, hasRootReference]);
 
   // Returns a promise because updateColumns triggers state update and
   // the new state needs to be in place before the grid can be sized correctly
