@@ -56,6 +56,11 @@ export interface GridBaseSlots {
    */
   basePopper: React.JSXElementConstructor<GridSlotProps['basePopper']>;
   /**
+   * The custom Popover component used in the grid.
+   * @default Popover
+   */
+  basePopover: React.JSXElementConstructor<GridSlotProps['basePopover']>;
+  /**
    * The custom InputLabel component used in the grid.
    * @default InputLabel
    */

@@ -10,6 +10,7 @@ import type { InputAdornmentProps } from '@mui/material/InputAdornment';
 import type { TooltipProps } from '@mui/material/Tooltip';
 import type { InputLabelProps } from '@mui/material/InputLabel';
 import type { PopperProps } from '@mui/material/Popper';
+import type { PopoverProps } from '@mui/material/Popover';
 import type { TablePaginationProps } from '@mui/material/TablePagination';
 import type { ChipProps } from '@mui/material/Chip';
 import type { ToggleButtonProps } from '@mui/material/ToggleButton';
@@ -44,6 +45,7 @@ export interface BaseIconButtonPropsOverrides {}
 export interface BaseInputAdornmentPropsOverrides {}
 export interface BaseTooltipPropsOverrides {}
 export interface BasePopperPropsOverrides {}
+export interface BasePopoverPropsOverrides {}
 export interface BaseInputLabelPropsOverrides {}
 export interface BaseSelectOptionPropsOverrides {}
 export interface BaseChipPropsOverrides {}
@@ -78,6 +80,7 @@ export interface GridSlotProps {
   baseButton: ButtonProps & BaseButtonPropsOverrides;
   baseIconButton: IconButtonProps & BaseIconButtonPropsOverrides;
   basePopper: PopperProps & BasePopperPropsOverrides;
+  basePopover: PopoverProps & BasePopoverPropsOverrides;
   baseTooltip: TooltipProps & BaseTooltipPropsOverrides;
   baseInputLabel: InputLabelProps & BaseInputLabelPropsOverrides;
   baseInputAdornment: InputAdornmentProps & BaseInputAdornmentPropsOverrides;

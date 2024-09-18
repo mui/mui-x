@@ -7,6 +7,7 @@ import MUIIconButton from '@mui/material/IconButton';
 import MUIInputAdornment from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
+import MUIPopover from '@mui/material/Popover';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUIChip from '@mui/material/Chip';
 import MUIToggleButton from '@mui/material/ToggleButton';
@@ -96,6 +97,7 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
   baseInputAdornment: MUIInputAdornment,
   baseTooltip: MUITooltip,
   basePopper: MUIPopper,
+  basePopover: MUIPopover,
   baseInputLabel: MUIInputLabel,
   baseSelectOption: MUISelectOption,
   baseChip: MUIChip,

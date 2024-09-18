@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useId as useId } from '@mui/utils';
 import { ToggleButtonGroupProps } from '@mui/material/ToggleButtonGroup';
-import Popover from '@mui/material/Popover';
 import { ToggleButtonProps } from '@mui/material/ToggleButton';
 import { TooltipProps } from '@mui/material/Tooltip';
 import { gridDensitySelector } from '../../hooks/features/density/densitySelector';
@@ -48,30 +47,25 @@ const GridToolbarDensityToggleButton = React.forwardRef<
     }
   };
 
-  const startIcon = React.useMemo<React.ReactElement>(() => {
-    switch (density) {
-      case 'compact':
-        return <rootProps.slots.densityCompactIcon fontSize="small" />;
-      case 'comfortable':
-        return <rootProps.slots.densityComfortableIcon fontSize="small" />;
-      default:
-        return <rootProps.slots.densityStandardIcon fontSize="small" />;
-    }
-  }, [density, rootProps]);
+  const densityIcons = {
+    compact: <rootProps.slots.densityCompactIcon fontSize="small" />,
+    standard: <rootProps.slots.densityStandardIcon fontSize="small" />,
+    comfortable: <rootProps.slots.densityComfortableIcon fontSize="small" />,
+  };
 
   const densityOptions: GridDensityOption[] = [
     {
-      icon: <rootProps.slots.densityCompactIcon fontSize="small" />,
+      icon: densityIcons.compact,
       label: apiRef.current.getLocaleText('toolbarDensityCompact'),
       value: 'compact',
     },
     {
-      icon: <rootProps.slots.densityStandardIcon fontSize="small" />,
+      icon: densityIcons.standard,
       label: apiRef.current.getLocaleText('toolbarDensityStandard'),
       value: 'standard',
     },
     {
-      icon: <rootProps.slots.densityComfortableIcon fontSize="small" />,
+      icon: densityIcons.comfortable,
       label: apiRef.current.getLocaleText('toolbarDensityComfortable'),
       value: 'comfortable',
     },
@@ -125,12 +119,12 @@ const GridToolbarDensityToggleButton = React.forwardRef<
           onChange={handleDensitySelectorOpen}
           {...rootProps.slotProps?.baseToggleButton}
         >
-          {startIcon}
+          {densityIcons[density]}
           <rootProps.slots.arrowDropDownIcon fontSize="small" sx={{ mr: -0.75 }} />
         </rootProps.slots.baseToggleButton>
       </rootProps.slots.baseTooltip>
 
-      <Popover
+      <rootProps.slots.basePopover
         open={!!anchorEl}
         anchorEl={anchorEl}
         onClose={handleDensitySelectorOpen}
@@ -188,7 +182,7 @@ const GridToolbarDensityToggleButton = React.forwardRef<
             </rootProps.slots.baseTooltip>
           ))}
         </rootProps.slots.baseToggleButtonGroup>
-      </Popover>
+      </rootProps.slots.basePopover>
     </React.Fragment>
   );
 });
