@@ -38,6 +38,38 @@ const columnHeaderStyles = {
   },
 };
 
+function getPinnedCellBackgroundStyles({
+  backgroundColor,
+  selectedBackground,
+  hoverOpacity,
+  selectedOpacity,
+}: {
+  backgroundColor: string;
+  selectedBackground: string;
+  hoverOpacity: number;
+  selectedOpacity: number;
+}) {
+  const selectedBackgroundColor = blend(backgroundColor, selectedBackground, selectedOpacity);
+
+  const hoverSelectedBackgroundColor = blend(
+    backgroundColor,
+    selectedBackground,
+    hoverOpacity + selectedOpacity,
+  );
+
+  return {
+    [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
+      backgroundColor,
+      '&.Mui-selected': {
+        backgroundColor: selectedBackgroundColor,
+        '&:hover': {
+          backgroundColor: hoverSelectedBackgroundColor,
+        },
+      },
+    },
+  };
+}
+
 const columnSeparatorTargetSize = 10;
 const columnSeparatorOffset = -5;
 
@@ -171,15 +203,37 @@ export const GridRootStyles = styled('div', {
         t.palette.action.selectedOpacity + t.palette.action.hoverOpacity,
       );
 
-  const pinnedHoverBackground = t.vars
-    ? hoverColor
-    : blend(pinnedBackground, hoverColor, hoverOpacity);
-  const pinnedSelectedBackground = t.vars
-    ? selectedBackground
-    : blend(pinnedBackground, selectedBackground, selectedOpacity);
-  const pinnedSelectedHoverBackground = t.vars
-    ? hoverColor
-    : blend(pinnedBackground, selectedHoverBackground, selectedOpacity + hoverOpacity);
+  const pinnedBackgroundColor = blend(pinnedBackground, hoverColor, hoverOpacity);
+  const pinnedCellHoverStyles = getPinnedCellBackgroundStyles({
+    hoverOpacity,
+    selectedOpacity,
+    selectedBackground,
+    backgroundColor: pinnedBackgroundColor,
+  });
+
+  const pinnedCellSelectedBackgroundColor = blend(
+    pinnedBackground,
+    selectedBackground,
+    selectedOpacity,
+  );
+  const pinnedCellSelectedStyles = getPinnedCellBackgroundStyles({
+    hoverOpacity,
+    selectedOpacity,
+    selectedBackground,
+    backgroundColor: pinnedCellSelectedBackgroundColor,
+  });
+
+  const pinnedCellSelectedHoverBackgroundColor = blend(
+    pinnedBackground,
+    selectedHoverBackground,
+    hoverOpacity + selectedOpacity,
+  );
+  const pinnedCellSelectedHoverStyles = getPinnedCellBackgroundStyles({
+    hoverOpacity,
+    selectedOpacity,
+    selectedBackground,
+    backgroundColor: pinnedCellSelectedHoverBackgroundColor,
+  });
 
   const selectedStyles = {
     backgroundColor: selectedBackground,
@@ -642,21 +696,9 @@ export const GridRootStyles = styled('div', {
       background: 'var(--DataGrid-pinnedBackground)',
     },
     [`& .${c.virtualScrollerContent} .${c.row}`]: {
-      '&:hover': {
-        [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
-          backgroundColor: pinnedHoverBackground,
-        },
-      },
-      [`&.Mui-selected`]: {
-        [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
-          backgroundColor: pinnedSelectedBackground,
-        },
-        '&:hover': {
-          [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
-            backgroundColor: pinnedSelectedHoverBackground,
-          },
-        },
-      },
+      '&:hover': pinnedCellHoverStyles,
+      '&.Mui-selected': pinnedCellSelectedStyles,
+      '&.Mui-selected:hover': pinnedCellSelectedHoverStyles,
     },
     [`& .${c.cellOffsetLeft}`]: {
       flex: '0 0 auto',
