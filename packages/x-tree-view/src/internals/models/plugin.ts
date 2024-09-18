@@ -144,7 +144,7 @@ export type TreeViewUsedModels<TSignature extends TreeViewAnyPluginSignature> =
 export type TreeViewUsedEvents<TSignature extends TreeViewAnyPluginSignature> =
   TSignature['events'] & MergeSignaturesProperty<TreeViewRequiredPlugins<TSignature>, 'events'>;
 
-export type TreeItemWrapper<TSignatures extends readonly TreeViewAnyPluginSignature[]> = (params: {
+export type TreeItemWrapper = (params: {
   itemId: TreeViewItemId;
   children: React.ReactNode;
   idAttribute: string | undefined;
@@ -171,7 +171,7 @@ export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
    * @param {{ nodeId: TreeViewItemId; children: React.ReactNode; }} params The params of the item.
    * @returns {React.ReactNode} The wrapped item.
    */
-  wrapItem?: TreeItemWrapper<[TSignature, ...TSignature['dependencies']]>;
+  wrapItem?: TreeItemWrapper;
   /**
    * Render function used to add React wrappers around the TreeView.
    * @param {{ children: React.ReactNode; }} params The params of the root.

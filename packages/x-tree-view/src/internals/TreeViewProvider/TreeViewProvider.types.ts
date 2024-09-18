@@ -23,7 +23,7 @@ export type TreeViewContextValue<
     publicAPI: TreeViewPublicAPI<TSignatures, TOptionalSignatures>;
     store: TreeViewStore<TSignatures>;
     rootRef: React.RefObject<HTMLUListElement>;
-    wrapItem: TreeItemWrapper<TSignatures>;
+    wrapItem: TreeItemWrapper;
     wrapRoot: TreeRootWrapper<TSignatures>;
     runItemPlugins: TreeViewItemPluginsRunner;
   };
