@@ -41,6 +41,9 @@ useTreeViewId.params = {
 };
 
 useTreeViewId.getInitialState = ({ id }) => {
-  globalId += 1;
+  if (id == null) {
+    globalId += 1;
+  }
+
   return { id: { treeId: id ?? `mui-tree-view-${globalId}` } };
 };
