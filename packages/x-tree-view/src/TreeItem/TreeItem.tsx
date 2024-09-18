@@ -422,7 +422,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     }) ?? {};
 
   return (
-    <TreeItem2Provider itemId={itemId}>
+    <TreeItem2Provider itemId={itemId} idAttribute={id}>
       <TreeItemRoot
         className={clsx(classes.root, className)}
         role="treeitem"

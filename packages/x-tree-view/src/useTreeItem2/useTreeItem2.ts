@@ -191,6 +191,8 @@ export const useTreeItem2 = <
       }
     };
 
+  const getContextProviderProps = () => ({ itemId, idAttribute });
+
   const getRootProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
   ): UseTreeItem2RootSlotProps<ExternalProps> => {
@@ -379,6 +381,7 @@ export const useTreeItem2 = <
   };
 
   return {
+    getContextProviderProps,
     getRootProps,
     getContentProps,
     getGroupTransitionProps,
