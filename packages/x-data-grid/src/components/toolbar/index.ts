@@ -1,4 +1,6 @@
 export * from './GridToolbar';
+export * from './GridToolbarV8';
+
 export * from './GridToolbarColumnsButton';
 export * from './GridToolbarDensitySelector';
 export type {
