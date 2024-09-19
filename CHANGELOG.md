@@ -15,7 +15,7 @@ We'd like to offer a big thanks to the 2 contributors who made this release poss
 
 #### `@mui/x-data-grid-premium@6.20.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-- [DataGridPremium] Fix onCellSelectionModelChange not triggered when additional cell range is selected (#14650) @arminmeh
+- [DataGridPremium] Fix `onCellSelectionModelChange` not triggered when additional cell range is selected (#14650) @arminmeh
 
 ### Docs
 
