@@ -31,9 +31,6 @@ const Scrollbar = styled('div')({
   position: 'absolute',
   display: 'inline-block',
   zIndex: 6,
-  '& > div': {
-    display: 'inline-block',
-  },
   // In macOS Safari and Gnome Web, scrollbars are overlaid and don't affect the layout. So we consider
   // their size to be 0px throughout all the calculations, but the floating scrollbar container does need
   // to appear and have a real size. We set it to 14px because it seems like an acceptable value and we
@@ -69,9 +66,7 @@ const ScrollbarHorizontal = styled(Scrollbar)({
   bottom: '0px',
 });
 
-const Content = styled('div')({
-  display: 'inline-block',
-});
+const Content = styled('div')(null);
 
 const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollbarProps>(
   function GridVirtualScrollbar(props, ref) {
