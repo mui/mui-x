@@ -199,7 +199,8 @@
   },
   "resolutions": {
     "react-is": "^18.3.1",
-    "@types/node": "^20.16.5"
+    "@types/node": "^20.16.5",
+    "@mui/internal-test-utils": "https://pkg.csb.dev/mui/material-ui/commit/9aaeecbc/@mui/internal-test-utils"
   },
   "packageManager": "pnpm@9.10.0",
   "engines": {
