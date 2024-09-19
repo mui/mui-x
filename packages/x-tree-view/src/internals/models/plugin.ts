@@ -122,14 +122,6 @@ export type TreeViewUsedInstance<TSignature extends TreeViewAnyPluginSignature> 
      */
     $$signature: TSignature;
   };
-//
-// export type TreeViewUsedInstance<TSignature extends TreeViewAnyPluginSignature> =
-//   PluginPropertyWithDependencies<TSignature, 'instance'> & {
-//     /**
-//      * Private property only defined in TypeScript to be able to access the plugin signature from the instance object.
-//      */
-//     $$signature: TSignature;
-//   };
 
 export type TreeViewUsedStore<TSignature extends TreeViewAnyPluginSignature> = TreeViewStore<
   [TSignature, ...TSignature['dependencies']]
