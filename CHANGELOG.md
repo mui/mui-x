@@ -7,8 +7,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Sep 19, 2024_
 
-We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
+- ⏰ Support `date-fns` v4 (#14673) @LukasTy
+- 🎉Add option for Pickers to change the order of displayed years (#11780) @thomasmoon
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -20,14 +22,14 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 - [DataGrid] Add default reset value in row edit mode (#14050) @michelengelen
 - [DataGrid] Add `columnGroupHeaderHeight` prop for sizing column group headers (#14637) @KenanYusuf
-- [DataGrid] Fix document reference when the grid is rendered in a popup window (#14649) @arminmeh
+- [DataGrid] Fix `document` reference when the grid is rendered in a popup window (#14649) @arminmeh
 - [DataGrid] Remove `minFirstColumn` from `GetHeadersParams` interface (#14450) @k-rajat19
 
 #### `@mui/x-data-grid-pro@7.18.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@7.18.0`, plus:
 
-- [DataGridPro] Fix `onRowsScrollEnd` being triggered instantly when using a bottom pinned row (#14602) @arminmeh
+- [DataGridPro] Fix `onRowsScrollEnd` being triggered instantly when bottom pinned row is present (#14602) @arminmeh
 - [DataGridPro] Fix header filters rendering issue for `isEmpty` and `isNotEmpty` filter operators (#14493) @k-rajat19
 - [DataGridPro] Fix pinned columns in RTL mode (#14586) @KenanYusuf
 
