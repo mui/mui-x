@@ -49,6 +49,31 @@ describe('<YearCalendar />', () => {
     expect(onChangeMock.callCount).to.equal(0);
   });
 
+  it('should display years in ascending (chronological order) by default', () => {
+    render(
+      <YearCalendar
+        minDate={adapterToUse.date('2020-01-01')}
+        maxDate={adapterToUse.date('2024-12-31')}
+      />,
+    );
+
+    const yearButttons = screen.queryAllByMuiTest('year');
+    expect(yearButttons[0].children.item(0)?.textContent).to.equal('2020');
+  });
+
+  it('should display years in descending (reverse chronological) order when props.yearsOrder = "desc"', () => {
+    render(
+      <YearCalendar
+        minDate={adapterToUse.date('2020-01-01')}
+        maxDate={adapterToUse.date('2024-12-31')}
+        yearsOrder="desc"
+      />,
+    );
+
+    const yearButtons = screen.queryAllByMuiTest('year');
+    expect(yearButtons[0].children.item(0)?.textContent).to.equal('2024');
+  });
+
   describe('Disabled', () => {
     it('should disable all years if props.disabled = true', () => {
       const onChange = spy();

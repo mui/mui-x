@@ -115,6 +115,9 @@
       "description": "The visible view. Used when the component view is controlled. Must be a valid option from <code>views</code> list."
     },
     "views": { "description": "Available views." },
+    "yearsOrder": {
+      "description": "Years are displayed in ascending (chronological) order by default. If <code>desc</code>, years are displayed in descending order."
+    },
     "yearsPerRow": { "description": "Years rendered per row." }
   },
   "classDescriptions": {
@@ -128,12 +131,12 @@
     "calendarHeader": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
     "day": "Custom component for day. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
     "leftArrowIcon": "Icon displayed in the left view switch button.",
-    "monthButton": "Button displayed to render a single month in the &quot;month&quot; view.",
+    "monthButton": "Button displayed to render a single month in the <code>month</code> view.",
     "nextIconButton": "Button allowing to switch to the right view.",
     "previousIconButton": "Button allowing to switch to the left view.",
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "switchViewButton": "Button displayed to switch between different calendar views.",
-    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &quot;year&quot;.",
-    "yearButton": "Button displayed to render a single year in the &quot;year&quot; view."
+    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is <code>year</code>.",
+    "yearButton": "Button displayed to render a single year in the <code>year</code> view."
   }
 }

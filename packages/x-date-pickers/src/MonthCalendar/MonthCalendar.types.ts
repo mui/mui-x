@@ -9,7 +9,7 @@ import { SlotComponentPropsFromProps } from '../internals/models/helpers';
 
 export interface MonthCalendarSlots {
   /**
-   * Button displayed to render a single month in the "month" view.
+   * Button displayed to render a single month in the `month` view.
    * @default MonthCalendarButton
    */
   monthButton?: React.ElementType;

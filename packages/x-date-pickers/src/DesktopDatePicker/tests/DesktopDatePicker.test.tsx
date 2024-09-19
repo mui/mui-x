@@ -264,7 +264,7 @@ describe('<DesktopDatePicker />', () => {
   });
 
   describe('Month navigation', () => {
-    it('should not allow to navigate to previous month if props.minDate is after the last date of the previous month', () => {
+    it('should not allow to navigate to previous month if props.minDate is after the last day of the previous month', () => {
       render(
         <DesktopDatePicker
           defaultValue={adapterToUse.date('2018-02-10')}
@@ -277,7 +277,7 @@ describe('<DesktopDatePicker />', () => {
       expect(screen.getByLabelText('Previous month')).to.have.attribute('disabled');
     });
 
-    it('should allow to navigate to previous month if props.minDate is the last date of the previous month', () => {
+    it('should allow to navigate to previous month if props.minDate is the last day of the previous month', () => {
       render(
         <DesktopDatePicker
           defaultValue={adapterToUse.date('2018-02-10')}
@@ -290,7 +290,7 @@ describe('<DesktopDatePicker />', () => {
       expect(screen.getByLabelText('Previous month')).not.to.have.attribute('disabled');
     });
 
-    it('should not allow to navigate to next month if props.maxDate is before the last date of the next month', () => {
+    it('should not allow to navigate to next month if props.maxDate is before the first day of the next month', () => {
       render(
         <DesktopDatePicker
           defaultValue={adapterToUse.date('2018-02-10')}
@@ -303,11 +303,11 @@ describe('<DesktopDatePicker />', () => {
       expect(screen.getByLabelText('Next month')).to.have.attribute('disabled');
     });
 
-    it('should allow to navigate to next month if props.maxDate is the first date of the next month', () => {
+    it('should allow to navigate to next month if props.maxDate is the first day of the next month', () => {
       render(
         <DesktopDatePicker
           defaultValue={adapterToUse.date('2018-02-10')}
-          minDate={adapterToUse.date('2018-01-01')}
+          maxDate={adapterToUse.date('2018-03-01')}
         />,
       );
 

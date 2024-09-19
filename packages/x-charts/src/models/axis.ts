@@ -158,6 +158,28 @@ export interface ChartsXAxisProps extends ChartsAxisProps {
   position?: 'top' | 'bottom';
 }
 
+export interface ChartsRotationAxisProps extends ChartsAxisProps {
+  /**
+   * The start angle (in deg).
+   */
+  startAngle?: number;
+  /**
+   * The end angle (in deg).
+   */
+  endAngle?: number;
+}
+
+export interface ChartsRadiusAxisProps extends ChartsAxisProps {
+  /**
+   * The minimal radius.
+   */
+  minRadius?: number;
+  /**
+   * The maximal radius.
+   */
+  maxRadius?: number;
+}
+
 export type ScaleName = keyof AxisScaleConfig;
 export type ContinuousScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
 

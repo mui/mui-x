@@ -73,4 +73,4 @@ Note that for some tooling (like Jest) that doesn't play well with `package.json
 
 ## Licenses
 
-This project is released under the MIT license, but the vendored in libraries include other licenses (e.g. ISC) that we enumerate in our `package.json:license` field.
+This project is released under the MIT license, but the vendored in libraries include other licenses (for example ISC) that we enumerate in our `package.json:license` field.

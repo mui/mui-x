@@ -243,7 +243,7 @@ The module augmentation feature isn't implemented yet for the other sets of comp
 
 ## Slots of the X components
 
-You can find the list of slots in the API documentation of each component (e.g. [DataGrid](/x/api/data-grid/data-grid/#slots), [DatePicker](/x/api/date-pickers/date-picker/#slots), [BarChart](/x/api/charts/bar-chart/#slots) or [RichTreeView](/x/api/tree-view/rich-tree-view/#slots)).
+You can find the list of slots in the API documentation of each component (for example [DataGrid](/x/api/data-grid/data-grid/#slots), [DatePicker](/x/api/date-pickers/date-picker/#slots), [BarChart](/x/api/charts/bar-chart/#slots) or [RichTreeView](/x/api/tree-view/rich-tree-view/#slots)).
 
 Most of the slots have a standalone doc example to show how to use them:
 

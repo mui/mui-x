@@ -159,6 +159,9 @@
       "description": "Define custom view renderers for each section. If <code>null</code>, the section will only have field editing. If <code>undefined</code>, internally defined view will be used."
     },
     "views": { "description": "Available views." },
+    "yearsOrder": {
+      "description": "Years are displayed in ascending (chronological) order by default. If <code>desc</code>, years are displayed in descending order."
+    },
     "yearsPerRow": { "description": "Years rendered per row." }
   },
   "classDescriptions": {},
@@ -178,7 +181,7 @@
     "leftArrowIcon": "Icon displayed in the left view switch button.",
     "mobilePaper": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
     "mobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
-    "monthButton": "Button displayed to render a single month in the &quot;month&quot; view.",
+    "monthButton": "Button displayed to render a single month in the <code>month</code> view.",
     "nextIconButton": "Button allowing to switch to the right view.",
     "openPickerButton": "Button to open the picker on desktop.",
     "openPickerIcon": "Icon displayed in the open picker button on desktop.",
@@ -187,9 +190,9 @@
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "shortcuts": "Custom component for the shortcuts.",
     "switchViewButton": "Button displayed to switch between different calendar views.",
-    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &quot;year&quot;.",
+    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is <code>year</code>.",
     "textField": "Form control with an input to render the value inside the default field.",
     "toolbar": "Custom component for the toolbar rendered above the views.",
-    "yearButton": "Button displayed to render a single year in the &quot;year&quot; view."
+    "yearButton": "Button displayed to render a single year in the <code>year</code> view."
   }
 }

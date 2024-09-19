@@ -15,6 +15,11 @@ import {
   gridVisibleColumnFieldsSelector,
   getDataGridUtilityClass,
   useGridSelector,
+  GridFilterInputValue,
+  GridFilterInputDate,
+  GridFilterInputBoolean,
+  GridColType,
+  GridFilterInputSingleSelect,
   gridFilterModelSelector,
   gridFilterableColumnLookupSelector,
   GridPinnedColumnPosition,
@@ -86,7 +91,16 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const dateSx = {
   [`& input[value=""]:not(:focus)`]: { color: 'transparent' },
 };
-
+const defaultInputComponents: { [key in GridColType]: React.JSXElementConstructor<any> | null } = {
+  string: GridFilterInputValue,
+  number: GridFilterInputValue,
+  date: GridFilterInputDate,
+  dateTime: GridFilterInputDate,
+  boolean: GridFilterInputBoolean,
+  singleSelect: GridFilterInputSingleSelect,
+  actions: null,
+  custom: null,
+};
 const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCellProps>(
   (props, ref) => {
     const {
@@ -147,7 +161,9 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     );
 
     const InputComponent =
-      colDef.filterable || isFilterReadOnly ? currentOperator!.InputComponent : null;
+      colDef.filterable || isFilterReadOnly
+        ? (currentOperator.InputComponent ?? defaultInputComponents[colDef.type as GridColType])
+        : null;
 
     const applyFilterChanges = React.useCallback(
       (updatedItem: GridFilterItem) => {

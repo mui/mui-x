@@ -10,6 +10,7 @@ import {
 } from '../DatePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
 import { DateView, PickerValidDate } from '../models';
+import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
 export interface DesktopDatePickerSlots<TDate extends PickerValidDate>
   extends BaseDatePickerSlots<TDate>,
@@ -25,12 +26,8 @@ export interface DesktopDatePickerProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = false,
 > extends BaseDatePickerProps<TDate>,
-    DesktopOnlyPickerProps {
-  /**
-   * Years rendered per row.
-   * @default 4
-   */
-  yearsPerRow?: 3 | 4;
+    DesktopOnlyPickerProps,
+    ExportedYearCalendarProps {
   /**
    * Overridable component slots.
    * @default {}
@@ -41,4 +38,9 @@ export interface DesktopDatePickerProps<
    * @default {}
    */
   slotProps?: DesktopDatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  /**
+   * Years rendered per row.
+   * @default 4
+   */
+  yearsPerRow?: 3 | 4;
 }

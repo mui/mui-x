@@ -98,7 +98,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.12",
+    "@mui/internal-test-utils": "^1.0.14",
     "@mui/material": "^5.16.7",
     "@mui/system": "^5.16.7",
     "@types/luxon": "^3.4.2",
@@ -113,7 +113,7 @@
     "moment-hijri": "^2.30.0",
     "moment-jalaali": "^0.10.1",
     "moment-timezone": "^0.5.45",
-    "rimraf": "^5.0.10"
+    "rimraf": "^6.0.1"
   },
   "engines": {
     "node": ">=14.0.0"

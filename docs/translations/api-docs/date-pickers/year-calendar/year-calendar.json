@@ -42,10 +42,13 @@
       "seeMoreText": "See the {{link}} for more details."
     },
     "value": { "description": "The selected value. Used when the component is controlled." },
+    "yearsOrder": {
+      "description": "Years are displayed in ascending (chronological) order by default. If <code>desc</code>, years are displayed in descending order."
+    },
     "yearsPerRow": { "description": "Years rendered per row." }
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": {
-    "yearButton": "Button displayed to render a single year in the &quot;year&quot; view."
+    "yearButton": "Button displayed to render a single year in the <code>year</code> view."
   }
 }

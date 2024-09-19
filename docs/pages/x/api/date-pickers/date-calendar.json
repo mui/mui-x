@@ -140,6 +140,10 @@
         "description": "Array&lt;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'&gt;"
       }
     },
+    "yearsOrder": {
+      "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" },
+      "default": "'asc'"
+    },
     "yearsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "3"
@@ -172,7 +176,7 @@
     },
     {
       "name": "monthButton",
-      "description": "Button displayed to render a single month in the \"month\" view.",
+      "description": "Button displayed to render a single month in the `month` view.",
       "default": "MonthCalendarButton",
       "class": null
     },
@@ -202,13 +206,13 @@
     },
     {
       "name": "switchViewIcon",
-      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is \"year\".",
+      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is `year`.",
       "default": "ArrowDropDown",
       "class": null
     },
     {
       "name": "yearButton",
-      "description": "Button displayed to render a single year in the \"year\" view.",
+      "description": "Button displayed to render a single year in the `year` view.",
       "default": "YearCalendarButton",
       "class": null
     }

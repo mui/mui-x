@@ -26,6 +26,6 @@
     "previousIconButton": "Button allowing to switch to the left view.",
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "switchViewButton": "Button displayed to switch between different calendar views.",
-    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &quot;year&quot;."
+    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is <code>year</code>."
   }
 }

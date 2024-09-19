@@ -1,0 +1,6 @@
+<DataGrid
+  rows={rows}
+  columns={columns}
+  columnGroupingModel={columnGroupingModel}
+  columnGroupHeaderHeight={36}
+/>

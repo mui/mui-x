@@ -36,4 +36,9 @@ export interface MobileDatePickerProps<
    * @default {}
    */
   slotProps?: MobileDatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow?: 3 | 4;
 }
