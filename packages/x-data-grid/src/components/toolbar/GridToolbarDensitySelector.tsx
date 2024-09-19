@@ -8,7 +8,7 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { gridDensitySelector } from '../../hooks/features/density/densitySelector';
 import { GridDensity } from '../../models/gridDensity';
-import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
+import { isHideMenuKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { GridDensityOption } from '../../models/api/gridDensityApi';
@@ -83,7 +83,7 @@ const GridToolbarDensitySelector = React.forwardRef<
   };
 
   const handleListKeyDown = (event: React.KeyboardEvent) => {
-    if (isTabKey(event.key)) {
+    if (event.key === 'Tab') {
       event.preventDefault();
     }
     if (isHideMenuKey(event.key)) {
@@ -154,7 +154,7 @@ const GridToolbarDensitySelector = React.forwardRef<
 GridToolbarDensitySelector.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The props used for each slot inside.

@@ -1,31 +1,41 @@
+'use client';
 import { useIsomorphicLayoutEffect, Globals } from '@react-spring/web';
+
+const handleMediaChange = (e: { matches: boolean | undefined }) => {
+  Globals.assign({
+    // Modification such the react-spring implementation such that this hook can remove animation but never activate animation.
+    skipAnimation: e.matches || undefined,
+  });
+};
 
 /**
  * Returns `boolean` or `null`, used to automatically
  * set skipAnimations to the value of the user's
  * `prefers-reduced-motion` query.
  *
- * The return value, post-effect, is the value of their prefered setting
+ * The return value, post-effect, is the value of their preferred setting
  */
 export const useReducedMotion = () => {
-  // Taken from: https://github.com/pmndrs/react-spring/blob/02ec877bbfab0df46da0e4a47d5f68d3e731206a/packages/shared/src/hooks/useReducedMotion.ts#L13
+  // Taken from: https://github.com/pmndrs/react-spring/blob/fd65b605b85c3a24143c4ce9dd322fdfca9c66be/packages/shared/src/hooks/useReducedMotion.ts
 
   useIsomorphicLayoutEffect(() => {
-    const mql = window.matchMedia('(prefers-reduced-motion)');
+    // Skip animation test/jsdom
+    const shouldSkipAnimation = !window?.matchMedia;
 
-    const handleMediaChange = (e: MediaQueryListEvent | MediaQueryList) => {
-      Globals.assign({
-        // Modification such the react-spring implementation such that this hook can remove animation but never activate animation.
-        skipAnimation: e.matches || undefined,
-      });
-    };
+    if (shouldSkipAnimation) {
+      handleMediaChange({ matches: true });
+      return undefined;
+    }
+
+    const mql = window.matchMedia('(prefers-reduced-motion)');
 
     handleMediaChange(mql);
 
-    mql.addEventListener('change', handleMediaChange);
+    // MatchMedia is not fully supported in all environments, so we need to check if it exists before calling addEventListener
+    mql.addEventListener?.('change', handleMediaChange);
 
     return () => {
-      mql.removeEventListener('change', handleMediaChange);
+      mql.removeEventListener?.('change', handleMediaChange);
     };
   }, []);
 };

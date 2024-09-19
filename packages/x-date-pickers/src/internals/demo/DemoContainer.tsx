@@ -3,7 +3,7 @@ import Stack, { StackProps, stackClasses } from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { SxProps, Theme } from '@mui/material/styles';
 import { textFieldClasses } from '@mui/material/TextField';
-import { pickersTextFieldClasses } from '@mui/x-date-pickers/PickersTextField';
+import { pickersTextFieldClasses } from '../../PickersTextField';
 
 interface DemoGridProps {
   children: React.ReactNode;

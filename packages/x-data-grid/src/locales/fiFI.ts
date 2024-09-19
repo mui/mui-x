@@ -39,9 +39,10 @@ const fiFIGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Lataa Excel-muodossa',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
+  columnsManagementSearchTitle: 'Hae',
+  columnsManagementNoColumns: 'Ei sarakkeita näytettäväksi',
+  columnsManagementShowHideAllText: 'Näytä/Piilota kaikki',
+  columnsManagementReset: 'Palauta',
 
   // Filter panel text
   filterPanelAddFilter: 'Lisää suodatin',
@@ -57,7 +58,9 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'sisältää',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'on yhtä suuri kuin',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'alkaa',
   filterOperatorEndsWith: 'päättyy',
   filterOperatorIs: 'on',
@@ -78,7 +81,9 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Sisältää',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'On yhtä suuri kuin',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Alkaa',
   headerFilterOperatorEndsWith: 'Päättyy',
   headerFilterOperatorIs: 'On',

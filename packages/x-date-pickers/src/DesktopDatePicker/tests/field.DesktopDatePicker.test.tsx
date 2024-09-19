@@ -1,4 +1,4 @@
-import { fireEvent } from '@mui-internal/test-utils';
+import { fireEvent } from '@mui/internal-test-utils';
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
 import {
   createPickerRenderer,
@@ -25,7 +25,7 @@ describe('<DesktopDatePicker /> - Field', () => {
 
     it('should be able to reset a single section', () => {
       // Test with v7 input
-      const v7Response = renderWithProps(
+      let view = renderWithProps(
         {
           enableAccessibleFieldDOMStructure: true as const,
           format: `${adapterToUse.formats.month} ${adapterToUse.formats.dayOfMonth}`,
@@ -33,22 +33,22 @@ describe('<DesktopDatePicker /> - Field', () => {
         { componentFamily: 'picker' },
       );
 
-      v7Response.selectSection('month');
-      expectFieldValueV7(v7Response.getSectionsContainer(), 'MMMM DD');
+      view.selectSection('month');
+      expectFieldValueV7(view.getSectionsContainer(), 'MMMM DD');
 
-      v7Response.pressKey(0, 'N');
-      expectFieldValueV7(v7Response.getSectionsContainer(), 'November DD');
+      view.pressKey(0, 'N');
+      expectFieldValueV7(view.getSectionsContainer(), 'November DD');
 
-      v7Response.pressKey(1, '4');
-      expectFieldValueV7(v7Response.getSectionsContainer(), 'November 04');
+      view.pressKey(1, '4');
+      expectFieldValueV7(view.getSectionsContainer(), 'November 04');
 
-      v7Response.pressKey(1, '');
-      expectFieldValueV7(v7Response.getSectionsContainer(), 'November DD');
+      view.pressKey(1, '');
+      expectFieldValueV7(view.getSectionsContainer(), 'November DD');
 
-      v7Response.unmount();
+      view.unmount();
 
       // Test with v6 input
-      const v6Response = renderWithProps(
+      view = renderWithProps(
         {
           enableAccessibleFieldDOMStructure: false as const,
           format: `${adapterToUse.formats.month} ${adapterToUse.formats.dayOfMonth}`,
@@ -57,7 +57,7 @@ describe('<DesktopDatePicker /> - Field', () => {
       );
 
       const input = getTextbox();
-      v6Response.selectSection('month');
+      view.selectSection('month');
       expectFieldPlaceholderV6(input, 'MMMM DD');
 
       fireEvent.change(input, { target: { value: 'N DD' } }); // Press "N"
@@ -73,21 +73,21 @@ describe('<DesktopDatePicker /> - Field', () => {
     it('should adapt the default field format based on the props of the picker', () => {
       const testFormat = (props: DesktopDatePickerProps<any, any>, expectedFormat: string) => {
         // Test with v7 input
-        const v7Response = renderWithProps(
+        let view = renderWithProps(
           { ...props, enableAccessibleFieldDOMStructure: true as const },
           { componentFamily: 'picker' },
         );
-        expectFieldValueV7(v7Response.getSectionsContainer(), expectedFormat);
-        v7Response.unmount();
+        expectFieldValueV7(view.getSectionsContainer(), expectedFormat);
+        view.unmount();
 
         // Test with v6 input
-        const v6Response = renderWithProps(
+        view = renderWithProps(
           { ...props, enableAccessibleFieldDOMStructure: false as const },
           { componentFamily: 'picker' },
         );
         const input = getTextbox();
         expectFieldPlaceholderV6(input, expectedFormat);
-        v6Response.unmount();
+        view.unmount();
       };
 
       testFormat({ views: ['year'] }, 'YYYY');
@@ -138,24 +138,40 @@ describe('<DesktopDatePicker /> - Field', () => {
       Component: DesktopDatePicker,
     });
 
-    it('should allow to override the placeholder (v6 only)', () => {
-      renderWithProps({
-        enableAccessibleFieldDOMStructure: false,
-        slotProps: {
-          textField: {
-            placeholder: 'Custom placeholder',
+    describe('placeholder override (v6 only)', () => {
+      it('should allow to override the placeholder', () => {
+        renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          slotProps: {
+            textField: {
+              placeholder: 'Custom placeholder',
+            },
           },
-        },
+        });
+
+        const input = getTextbox();
+        expectFieldPlaceholderV6(input, 'Custom placeholder');
       });
 
-      const input = getTextbox();
-      expectFieldPlaceholderV6(input, 'Custom placeholder');
+      it('should render blank placeholder when prop is an empty string', () => {
+        renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          slotProps: {
+            textField: {
+              placeholder: '',
+            },
+          },
+        });
+
+        const input = getTextbox();
+        expectFieldPlaceholderV6(input, '');
+      });
     });
   });
 
   describeAdapters('Timezone', DesktopDatePicker, ({ adapter, renderWithProps }) => {
     it('should clear the selected section when all sections are completed when using timezones', () => {
-      const v7Response = renderWithProps(
+      const view = renderWithProps(
         {
           enableAccessibleFieldDOMStructure: true as const,
           value: adapter.date()!,
@@ -165,11 +181,11 @@ describe('<DesktopDatePicker /> - Field', () => {
         { componentFamily: 'picker' },
       );
 
-      expectFieldValueV7(v7Response.getSectionsContainer(), 'June 2022');
-      v7Response.selectSection('month');
+      expectFieldValueV7(view.getSectionsContainer(), 'June 2022');
+      view.selectSection('month');
 
-      v7Response.pressKey(0, '');
-      expectFieldValueV7(v7Response.getSectionsContainer(), 'MMMM 2022');
+      view.pressKey(0, '');
+      expectFieldValueV7(view.getSectionsContainer(), 'MMMM 2022');
     });
   });
 });

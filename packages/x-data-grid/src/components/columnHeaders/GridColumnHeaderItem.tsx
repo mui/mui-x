@@ -2,11 +2,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
-import { fastMemo } from '../../utils/fastMemo';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
-import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderSeparatorProps } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
@@ -39,6 +38,8 @@ interface GridColumnHeaderItemProps {
   indexInSection: number;
   sectionLength: number;
   gridHasFiller: boolean;
+  isLastUnpinned: boolean;
+  isSiblingFocused: boolean;
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
@@ -57,6 +58,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     showLeftBorder,
     filterItemsCounter,
     pinnedPosition,
+    isLastUnpinned,
+    isSiblingFocused,
   } = ownerState;
 
   const isColumnSorted = sortDirection != null;
@@ -80,6 +83,10 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       showLeftBorder && 'columnHeader--withLeftBorder',
       pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
       pinnedPosition === 'right' && 'columnHeader--pinnedRight',
+      // TODO: Remove classes below and restore `:has` selectors when they are supported in jsdom
+      // See https://github.com/mui/mui-x/pull/14559
+      isLastUnpinned && 'columnHeader--lastUnpinned',
+      isSiblingFocused && 'columnHeader--siblingFocused',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
     titleContainer: ['columnHeaderTitleContainer'],
@@ -133,7 +140,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     pinnedPosition,
     indexInSection,
     sectionLength,
-    rootProps.showCellVerticalBorder,
+    rootProps.showColumnVerticalBorder,
     gridHasFiller,
   );
 
@@ -248,11 +255,13 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       )}
 
       {showSortIcon && (
-        <GridColumnHeaderSortIcon
+        <rootProps.slots.columnHeaderSortIcon
+          field={colDef.field}
           direction={sortDirection}
           index={sortIndex}
           sortingOrder={sortingOrder}
           disabled={!colDef.sortable}
+          {...rootProps.slotProps?.columnHeaderSortIcon}
         />
       )}
     </React.Fragment>
@@ -312,7 +321,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 GridColumnHeaderItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   colDef: PropTypes.object.isRequired,
   colIndex: PropTypes.number.isRequired,
@@ -325,7 +334,9 @@ GridColumnHeaderItem.propTypes = {
   indexInSection: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
   isLast: PropTypes.bool.isRequired,
+  isLastUnpinned: PropTypes.bool.isRequired,
   isResizing: PropTypes.bool.isRequired,
+  isSiblingFocused: PropTypes.bool.isRequired,
   pinnedPosition: PropTypes.oneOf(['left', 'right']),
   sectionLength: PropTypes.number.isRequired,
   separatorSide: PropTypes.oneOf(['left', 'right']),

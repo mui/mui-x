@@ -1,10 +1,35 @@
+import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { YearCalendarClasses } from './yearCalendarClasses';
 import { BaseDateValidationProps, YearValidationProps } from '../internals/models/validation';
 import { PickerValidDate, TimezoneProps } from '../models';
+import type { PickersYearProps } from './PickersYear';
+import { SlotComponentPropsFromProps } from '../internals/models/helpers';
+
+export interface YearCalendarSlots {
+  /**
+   * Button displayed to render a single year in the `year` view.
+   * @default YearCalendarButton
+   */
+  yearButton?: React.ElementType;
+}
+
+export interface YearCalendarSlotProps {
+  yearButton?: SlotComponentPropsFromProps<
+    React.HTMLAttributes<HTMLButtonElement> & { sx: SxProps },
+    {},
+    PickersYearProps
+  >;
+}
 
 export interface ExportedYearCalendarProps {
+  /**
+   * Years are displayed in ascending (chronological) order by default.
+   * If `desc`, years are displayed in descending order.
+   * @default 'asc'
+   */
+  yearsOrder?: 'asc' | 'desc';
   /**
    * Years rendered per row.
    * @default 3
@@ -23,6 +48,16 @@ export interface YearCalendarProps<TDate extends PickerValidDate>
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<YearCalendarClasses>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: YearCalendarSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: YearCalendarSlotProps;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

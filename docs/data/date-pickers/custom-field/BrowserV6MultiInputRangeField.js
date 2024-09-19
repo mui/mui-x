@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -30,7 +30,14 @@ const BrowserField = React.forwardRef((props, ref) => {
 
   return (
     <Box
-      sx={{ ...(sx || {}), display: 'flex', alignItems: 'center', flexGrow: 1 }}
+      sx={[
+        {
+          display: 'flex',
+          alignItems: 'center',
+          flexGrow: 1,
+        },
+        sx || {},
+      ]}
       id={id}
       ref={handleRef}
     >

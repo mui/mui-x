@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -11,6 +12,7 @@ import {
 } from './ChartsTooltipTable';
 import type { ChartsItemContentProps } from './ChartsItemTooltipContent';
 import { CommonSeriesType } from '../models/seriesType/common';
+import { getLabel } from '../internals/getLabel';
 
 function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeriesType>(
   props: ChartsItemContentProps<T>,
@@ -24,19 +26,25 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
     series.type === 'pie'
       ? {
           color: getColor(itemData.dataIndex),
-          displayedLabel: series.data[itemData.dataIndex].label,
+          displayedLabel: getLabel(series.data[itemData.dataIndex].label, 'tooltip'),
         }
       : {
-          color: getColor(itemData.dataIndex) ?? series.color,
-          displayedLabel: series.label,
+          color: getColor(itemData.dataIndex),
+          displayedLabel: getLabel(series.label, 'tooltip'),
         };
 
-  const value = series.data[itemData.dataIndex];
+  const value =
+    series.type === 'pie'
+      ? {
+          ...series.data[itemData.dataIndex],
+          label: getLabel(series.data[itemData.dataIndex].label, 'tooltip'),
+        }
+      : series.data[itemData.dataIndex];
   const formattedValue = (
     series.valueFormatter as CommonSeriesType<typeof value>['valueFormatter']
   )?.(value, { dataIndex: itemData.dataIndex });
   return (
-    <ChartsTooltipPaper sx={sx} className={classes.root}>
+    <ChartsTooltipPaper sx={sx} className={classes.paper}>
       <ChartsTooltipTable className={classes.table}>
         <tbody>
           <ChartsTooltipRow className={classes.row}>
@@ -59,7 +67,7 @@ function DefaultChartsItemTooltipContent<T extends ChartSeriesType = ChartSeries
 DefaultChartsItemTooltipContent.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Override or extend the styles applied to the component.

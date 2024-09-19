@@ -1,7 +1,8 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useForkRef from '@mui/utils/useForkRef';
 import { styled } from '@mui/material/styles';
+import useForkRef from '@mui/utils/useForkRef';
 import { useChartContainerDimensions } from '../ResponsiveChartContainer/useChartContainerDimensions';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
@@ -64,10 +65,10 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(props: GaugeCont
     children,
     ...other
   } = props;
-  const [containerRef, width, height] = useChartContainerDimensions(inWidth, inHeight);
+  const { containerRef, width, height } = useChartContainerDimensions(inWidth, inHeight);
 
   const svgRef = React.useRef<SVGSVGElement>(null);
-  const handleRef = useForkRef(ref, svgRef);
+  const chartSurfaceRef = useForkRef(ref, svgRef);
 
   return (
     <ResizableContainer
@@ -101,7 +102,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(props: GaugeCont
             <ChartsSurface
               width={width}
               height={height}
-              ref={handleRef}
+              ref={chartSurfaceRef}
               title={title}
               desc={desc}
               disableAxisListener
@@ -119,7 +120,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(props: GaugeCont
 GaugeContainer.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
   className: PropTypes.string,
@@ -158,7 +159,7 @@ GaugeContainer.propTypes = {
    */
   height: PropTypes.number,
   /**
-   * The radius between circle center and the begining of the arc.
+   * The radius between circle center and the beginning of the arc.
    * Can be a number (in px) or a string with a percentage such as '50%'.
    * The '100%' is the maximal radius that fit into the drawing area.
    * @default '80%'

@@ -1,10 +1,11 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Skeleton from '@mui/material/Skeleton';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 import {
   DayCalendarSkeletonClasses,
@@ -68,16 +69,6 @@ const DayCalendarSkeletonDay = styled(Skeleton, {
   ],
 });
 
-DayCalendarSkeletonDay.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  ownerState: PropTypes.shape({
-    day: PropTypes.number.isRequired,
-  }).isRequired,
-} as any;
-
 const monthMap = [
   [0, 1, 1, 1, 1, 1, 1],
   [1, 1, 1, 1, 1, 1, 1],
@@ -128,7 +119,7 @@ function DayCalendarSkeleton(inProps: DayCalendarSkeletonProps) {
 DayCalendarSkeleton.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Override or extend the styles applied to the component.

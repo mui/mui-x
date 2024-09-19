@@ -1,6 +1,7 @@
+'use client';
 import * as React from 'react';
-import { useSlotProps } from '@mui/base/utils';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
+import composeClasses from '@mui/utils/composeClasses';
 import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
 import { PickersLayoutProps, SubComponents } from './PickersLayout.types';
 import { getPickersLayoutUtilityClass } from './pickersLayoutClasses';
@@ -74,7 +75,6 @@ const usePickerLayout = <
   const classes = useUtilityClasses(props);
 
   // Action bar
-
   const ActionBar = slots?.actionBar ?? PickersActionBar;
   const actionBarProps = useSlotProps({
     elementType: ActionBar,
@@ -86,14 +86,13 @@ const usePickerLayout = <
       onSetToday,
       actions:
         wrapperVariant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
-      className: classes.actionBar,
     },
+    className: classes.actionBar,
     ownerState: { ...props, wrapperVariant },
   });
   const actionBar = <ActionBar {...actionBarProps} />;
 
   // Toolbar
-
   const Toolbar = slots?.toolbar;
   const toolbarProps = useSlotProps({
     elementType: Toolbar!,
@@ -107,18 +106,16 @@ const usePickerLayout = <
       views,
       disabled,
       readOnly,
-      className: classes.toolbar,
     },
+    className: classes.toolbar,
     ownerState: { ...props, wrapperVariant },
   });
   const toolbar = toolbarHasView(toolbarProps) && !!Toolbar ? <Toolbar {...toolbarProps} /> : null;
 
   // Content
-
   const content = children;
 
   // Tabs
-
   const Tabs = slots?.tabs;
   const tabs =
     view && Tabs ? (
@@ -126,7 +123,6 @@ const usePickerLayout = <
     ) : null;
 
   // Shortcuts
-
   const Shortcuts = slots?.shortcuts ?? PickersShortcuts;
   const shortcutsProps = useSlotProps({
     elementType: Shortcuts!,
@@ -135,17 +131,15 @@ const usePickerLayout = <
       isValid,
       isLandscape,
       onChange: onSelectShortcut,
-      className: classes.shortcuts,
     },
+    className: classes.shortcuts,
     ownerState: {
       isValid,
       isLandscape,
       onChange: onSelectShortcut,
-      className: classes.shortcuts,
       wrapperVariant,
     },
   });
-
   const shortcuts = view && !!Shortcuts ? <Shortcuts {...shortcutsProps} /> : null;
 
   return {

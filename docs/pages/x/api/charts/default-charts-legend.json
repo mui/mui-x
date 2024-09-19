@@ -1,10 +1,5 @@
 {
   "props": {
-    "classes": {
-      "type": { "name": "object" },
-      "required": true,
-      "additionalInfo": { "cssApi": true }
-    },
     "direction": {
       "type": { "name": "enum", "description": "'column'<br>&#124;&nbsp;'row'" },
       "required": true
@@ -16,12 +11,20 @@
       },
       "required": true
     },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "hidden": { "type": { "name": "bool" }, "default": "false" },
     "itemGap": { "type": { "name": "number" }, "default": "10" },
     "itemMarkHeight": { "type": { "name": "number" }, "default": "20" },
     "itemMarkWidth": { "type": { "name": "number" }, "default": "20" },
     "labelStyle": { "type": { "name": "object" }, "default": "theme.typography.subtitle1" },
     "markGap": { "type": { "name": "number" }, "default": "5" },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGRectElement, MouseEvent>, legendItem: SeriesLegendItemContext, index: number) => void",
+        "describedArgs": ["event", "legendItem", "index"]
+      }
+    },
     "padding": {
       "type": {
         "name": "union",
@@ -33,25 +36,50 @@
   "name": "DefaultChartsLegend",
   "imports": [
     "import { DefaultChartsLegend } from '@mui/x-charts/ChartsLegend';",
-    "import { DefaultChartsLegend } from '@mui/x-charts';"
+    "import { DefaultChartsLegend } from '@mui/x-charts';",
+    "import { DefaultChartsLegend } from '@mui/x-charts-pro';"
   ],
   "classes": [
     {
+      "key": "column",
+      "className": "MuiDefaultChartsLegend-column",
+      "description": "Styles applied to the legend with column layout.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemBackground",
+      "className": "MuiDefaultChartsLegend-itemBackground",
+      "description": "Styles applied to the item background.",
+      "isGlobal": false
+    },
+    {
+      "key": "label",
+      "className": "MuiDefaultChartsLegend-label",
+      "description": "Styles applied to the series label.",
+      "isGlobal": false
+    },
+    {
       "key": "mark",
       "className": "MuiDefaultChartsLegend-mark",
-      "description": "",
+      "description": "Styles applied to series mark element.",
       "isGlobal": false
     },
     {
       "key": "root",
       "className": "MuiDefaultChartsLegend-root",
-      "description": "",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "row",
+      "className": "MuiDefaultChartsLegend-row",
+      "description": "Styles applied to the legend with row layout.",
       "isGlobal": false
     },
     {
       "key": "series",
       "className": "MuiDefaultChartsLegend-series",
-      "description": "",
+      "description": "Styles applied to a series element.",
       "isGlobal": false
     }
   ],

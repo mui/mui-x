@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import List, { ListProps } from '@mui/material/List';
@@ -12,6 +13,11 @@ interface PickersShortcutsItemGetValueParams<TValue> {
 export interface PickersShortcutsItem<TValue> {
   label: string;
   getValue: (params: PickersShortcutsItemGetValueParams<TValue>) => TValue;
+  /**
+   * Identifier of the shortcut.
+   * If provided, it will be used as the key of the shortcut.
+   */
+  id?: string;
 }
 
 export type PickersShortcutsItemContext = Omit<PickersShortcutsItem<unknown>, 'getValue'>;
@@ -64,6 +70,7 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
     const newValue = getValue({ isValid });
 
     return {
+      ...item,
       label: item.label,
       onClick: () => {
         onChange(newValue, changeImportance, item);
@@ -87,7 +94,7 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
     >
       {resolvedItems.map((item) => {
         return (
-          <ListItem key={item.label}>
+          <ListItem key={item.id ?? item.label}>
             <Chip {...item} />
           </ListItem>
         );
@@ -99,7 +106,7 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
 PickersShortcuts.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Importance of the change when picking a shortcut:
@@ -132,6 +139,7 @@ PickersShortcuts.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({
       getValue: PropTypes.func.isRequired,
+      id: PropTypes.string,
       label: PropTypes.string.isRequired,
     }),
   ),

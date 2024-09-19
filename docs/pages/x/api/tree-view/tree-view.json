@@ -3,9 +3,10 @@
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current?: { focusItem: func, getItem: func, setItemExpansion: func } }"
+        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, selectItem: func, setItemExpansion: func } }"
       }
     },
+    "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "children": { "type": { "name": "node" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "defaultExpandedItems": {
@@ -16,13 +17,31 @@
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
     "expandedItems": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "expansionTrigger": {
+      "type": { "name": "enum", "description": "'content'<br>&#124;&nbsp;'iconContainer'" },
+      "default": "'content'"
+    },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ indentationAtItemLevel?: bool }" }
+    },
     "id": { "type": { "name": "string" } },
+    "itemChildrenIndentation": {
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "default": "12px"
+    },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedItemsChange": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(event: React.SyntheticEvent, itemIds: array) => void",
         "describedArgs": ["event", "itemIds"]
+      }
+    },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent, itemId: string) => void",
+        "describedArgs": ["event", "itemId"]
       }
     },
     "onItemExpansionToggle": {
@@ -35,8 +54,8 @@
     "onItemFocus": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemId: string, value: string) => void",
-        "describedArgs": ["event", "itemId", "value"]
+        "type": "function(event: React.SyntheticEvent | null, itemId: string) => void",
+        "describedArgs": ["event", "itemId"]
       }
     },
     "onItemSelectionToggle": {
@@ -67,7 +86,8 @@
   "name": "TreeView",
   "imports": [
     "import { TreeView } from '@mui/x-tree-view/TreeView';",
-    "import { TreeView } from '@mui/x-tree-view';"
+    "import { TreeView } from '@mui/x-tree-view';",
+    "import { TreeView } from '@mui/x-tree-view-pro';"
   ],
   "slots": [
     {
@@ -100,5 +120,6 @@
   "filename": "/packages/x-tree-view/src/TreeView/TreeView.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-tree-view/getting-started/\">Tree View - Getting Started</a></li></ul>",
-  "cssComponent": false
+  "cssComponent": false,
+  "deprecated": true
 }

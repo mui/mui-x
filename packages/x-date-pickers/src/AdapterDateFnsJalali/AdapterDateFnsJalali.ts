@@ -44,80 +44,10 @@ import isWithinInterval from 'date-fns-jalali/isWithinInterval';
 import defaultLocale from 'date-fns-jalali/locale/fa-IR';
 // @ts-ignore
 import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
-import {
-  AdapterFormats,
-  AdapterOptions,
-  DateBuilderReturnType,
-  FieldFormatTokenMap,
-  MuiPickersAdapter,
-} from '../models';
+import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
+import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
 
 type DateFnsLocale = typeof defaultLocale;
-
-const formatTokenMap: FieldFormatTokenMap = {
-  // Year
-  y: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
-  yy: 'year',
-  yyy: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
-  yyyy: 'year',
-
-  // Month
-  M: { sectionType: 'month', contentType: 'digit', maxLength: 2 },
-  MM: 'month',
-  MMMM: { sectionType: 'month', contentType: 'letter' },
-  MMM: { sectionType: 'month', contentType: 'letter' },
-  L: { sectionType: 'month', contentType: 'digit', maxLength: 2 },
-  LL: 'month',
-  LLL: { sectionType: 'month', contentType: 'letter' },
-  LLLL: { sectionType: 'month', contentType: 'letter' },
-
-  // Day of the month
-  d: { sectionType: 'day', contentType: 'digit', maxLength: 2 },
-  dd: 'day',
-  do: { sectionType: 'day', contentType: 'digit-with-letter' },
-
-  // Day of the week
-  E: { sectionType: 'weekDay', contentType: 'letter' },
-  EE: { sectionType: 'weekDay', contentType: 'letter' },
-  EEE: { sectionType: 'weekDay', contentType: 'letter' },
-  EEEE: { sectionType: 'weekDay', contentType: 'letter' },
-  EEEEE: { sectionType: 'weekDay', contentType: 'letter' },
-  i: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
-  ii: 'weekDay',
-  iii: { sectionType: 'weekDay', contentType: 'letter' },
-  iiii: { sectionType: 'weekDay', contentType: 'letter' },
-  e: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
-  ee: 'weekDay',
-  eee: { sectionType: 'weekDay', contentType: 'letter' },
-  eeee: { sectionType: 'weekDay', contentType: 'letter' },
-  eeeee: { sectionType: 'weekDay', contentType: 'letter' },
-  eeeeee: { sectionType: 'weekDay', contentType: 'letter' },
-  c: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
-  cc: 'weekDay',
-  ccc: { sectionType: 'weekDay', contentType: 'letter' },
-  cccc: { sectionType: 'weekDay', contentType: 'letter' },
-  ccccc: { sectionType: 'weekDay', contentType: 'letter' },
-  cccccc: { sectionType: 'weekDay', contentType: 'letter' },
-
-  // Meridiem
-  a: 'meridiem',
-  aa: 'meridiem',
-  aaa: 'meridiem',
-
-  // Hours
-  H: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
-  HH: 'hours',
-  h: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
-  hh: 'hours',
-
-  // Minutes
-  m: { sectionType: 'minutes', contentType: 'digit', maxLength: 2 },
-  mm: 'minutes',
-
-  // Seconds
-  s: { sectionType: 'seconds', contentType: 'digit', maxLength: 2 },
-  ss: 'seconds',
-};
 
 const defaultFormats: AdapterFormats = {
   year: 'yyyy',
@@ -191,56 +121,33 @@ declare module '@mui/x-date-pickers/models' {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLocale> {
-  public isMUIAdapter = true;
-
-  public isTimezoneCompatible = false;
-
-  public lib = 'date-fns-jalali';
-
-  public locale?: DateFnsLocale;
-
-  public formats: AdapterFormats;
-
-  public formatTokenMap = formatTokenMap;
-
-  public escapedCharacters = { start: "'", end: "'" };
-
+export class AdapterDateFnsJalali
+  extends AdapterDateFnsBase<DateFnsLocale>
+  implements MuiPickersAdapter<Date, DateFnsLocale>
+{
   constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
-    this.locale = locale;
-    this.formats = { ...defaultFormats, ...formats };
+    /* istanbul ignore next */
+    if (process.env.NODE_ENV !== 'production') {
+      if (typeof addDays !== 'function') {
+        throw new Error(
+          [
+            'MUI: The `date-fns-jalali` package v3.x is not compatible with this adapter.',
+            'Please, install v2.x of the package or use the `AdapterDateFnsJalaliV3` instead.',
+          ].join('\n'),
+        );
+      }
+    }
+    super({
+      locale: locale ?? defaultLocale,
+      // some formats are different in jalali adapter,
+      // this ensures that `AdapterDateFnsBase` formats are overridden
+      formats: { ...defaultFormats, ...formats },
+      longFormatters,
+      lib: 'date-fns-jalali',
+    });
   }
 
-  public date = <T extends string | null | undefined>(
-    value?: T,
-  ): DateBuilderReturnType<T, Date> => {
-    type R = DateBuilderReturnType<T, Date>;
-    if (typeof value === 'undefined') {
-      return <R>new Date();
-    }
-
-    if (value === null) {
-      return <R>null;
-    }
-
-    return <R>new Date(value);
-  };
-
-  public getInvalidDate = () => new Date('Invalid Date');
-
-  public getTimezone = (): string => {
-    return 'default';
-  };
-
-  public setTimezone = (value: Date): Date => {
-    return value;
-  };
-
-  public toJsDate = (value: Date) => {
-    return value;
-  };
-
-  public parse = (value: string, format: string) => {
+  public parse = (value: string, format: string): Date | null => {
     if (value === '') {
       return null;
     }
@@ -248,39 +155,7 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
     return dateFnsParse(value, format, new Date(), { locale: this.locale });
   };
 
-  public getCurrentLocaleCode = () => {
-    return this.locale?.code || 'fa-IR';
-  };
-
-  // Note: date-fns input types are more lenient than this adapter, so we need to expose our more
-  // strict signature and delegate to the more lenient signature. Otherwise, we have downstream type errors upon usage.
-  public is12HourCycleInCurrentLocale = () => {
-    if (this.locale) {
-      return /a/.test(this.locale.formatLong!.time());
-    }
-
-    // By default, date-fns-jalali is using fa-IR locale with am/pm enabled
-    return true;
-  };
-
-  public expandFormat = (format: string) => {
-    // @see https://github.com/date-fns/date-fns/blob/master/src/format/index.js#L31
-    const longFormatRegexp = /P+p+|P+|p+|''|'(''|[^'])+('|$)|./g;
-    const locale = this.locale ?? defaultLocale;
-    return format
-      .match(longFormatRegexp)!
-      .map((token) => {
-        const firstCharacter = token[0];
-        if (firstCharacter === 'p' || firstCharacter === 'P') {
-          const longFormatter = longFormatters[firstCharacter];
-          return longFormatter(token, locale.formatLong, {});
-        }
-        return token;
-      })
-      .join('');
-  };
-
-  public isValid = (value: Date | null) => {
+  public isValid = (value: Date | null): boolean => {
     if (value == null) {
       return false;
     }
@@ -288,21 +163,21 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
     return isValid(value);
   };
 
-  public format = (value: Date, formatKey: keyof AdapterFormats) => {
+  public format = (value: Date, formatKey: keyof AdapterFormats): string => {
     return this.formatByString(value, this.formats[formatKey]);
   };
 
-  public formatByString = (value: Date, formatString: string) => {
+  public formatByString = (value: Date, formatString: string): string => {
     return dateFnsFormat(value, formatString, { locale: this.locale });
   };
 
-  public formatNumber = (numberToFormat: string) => {
+  public formatNumber = (numberToFormat: string): string => {
     return numberToFormat
       .replace(/\d/g, (match) => NUMBER_SYMBOL_MAP[match as keyof typeof NUMBER_SYMBOL_MAP])
       .replace(/,/g, '،');
   };
 
-  public isEqual = (value: Date | null, comparing: Date | null) => {
+  public isEqual = (value: Date | null, comparing: Date | null): boolean => {
     if (value === null && comparing === null) {
       return true;
     }
@@ -314,171 +189,171 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
     return isEqual(value, comparing);
   };
 
-  public isSameYear = (value: Date, comparing: Date) => {
+  public isSameYear = (value: Date, comparing: Date): boolean => {
     return isSameYear(value, comparing);
   };
 
-  public isSameMonth = (value: Date, comparing: Date) => {
+  public isSameMonth = (value: Date, comparing: Date): boolean => {
     return isSameMonth(value, comparing);
   };
 
-  public isSameDay = (value: Date, comparing: Date) => {
+  public isSameDay = (value: Date, comparing: Date): boolean => {
     return isSameDay(value, comparing);
   };
 
-  public isSameHour = (value: Date, comparing: Date) => {
+  public isSameHour = (value: Date, comparing: Date): boolean => {
     return isSameHour(value, comparing);
   };
 
-  public isAfter = (value: Date, comparing: Date) => {
+  public isAfter = (value: Date, comparing: Date): boolean => {
     return isAfter(value, comparing);
   };
 
-  public isAfterYear = (value: Date, comparing: Date) => {
+  public isAfterYear = (value: Date, comparing: Date): boolean => {
     return isAfter(value, this.endOfYear(comparing));
   };
 
-  public isAfterDay = (value: Date, comparing: Date) => {
+  public isAfterDay = (value: Date, comparing: Date): boolean => {
     return isAfter(value, this.endOfDay(comparing));
   };
 
-  public isBefore = (value: Date, comparing: Date) => {
+  public isBefore = (value: Date, comparing: Date): boolean => {
     return isBefore(value, comparing);
   };
 
-  public isBeforeYear = (value: Date, comparing: Date) => {
+  public isBeforeYear = (value: Date, comparing: Date): boolean => {
     return isBefore(value, this.startOfYear(comparing));
   };
 
-  public isBeforeDay = (value: Date, comparing: Date) => {
+  public isBeforeDay = (value: Date, comparing: Date): boolean => {
     return isBefore(value, this.startOfDay(comparing));
   };
 
-  public isWithinRange = (value: Date, [start, end]: [Date, Date]) => {
+  public isWithinRange = (value: Date, [start, end]: [Date, Date]): boolean => {
     return isWithinInterval(value, { start, end });
   };
 
-  public startOfYear = (value: Date) => {
+  public startOfYear = (value: Date): Date => {
     return startOfYear(value);
   };
 
-  public startOfMonth = (value: Date) => {
+  public startOfMonth = (value: Date): Date => {
     return startOfMonth(value);
   };
 
-  public startOfWeek = (value: Date) => {
+  public startOfWeek = (value: Date): Date => {
     return startOfWeek(value, { locale: this.locale });
   };
 
-  public startOfDay = (value: Date) => {
+  public startOfDay = (value: Date): Date => {
     return startOfDay(value);
   };
 
-  public endOfYear = (value: Date) => {
+  public endOfYear = (value: Date): Date => {
     return endOfYear(value);
   };
 
-  public endOfMonth = (value: Date) => {
+  public endOfMonth = (value: Date): Date => {
     return endOfMonth(value);
   };
 
-  public endOfWeek = (value: Date) => {
+  public endOfWeek = (value: Date): Date => {
     return endOfWeek(value, { locale: this.locale });
   };
 
-  public endOfDay = (value: Date) => {
+  public endOfDay = (value: Date): Date => {
     return endOfDay(value);
   };
 
-  public addYears = (value: Date, amount: number) => {
+  public addYears = (value: Date, amount: number): Date => {
     return addYears(value, amount);
   };
 
-  public addMonths = (value: Date, amount: number) => {
+  public addMonths = (value: Date, amount: number): Date => {
     return addMonths(value, amount);
   };
 
-  public addWeeks = (value: Date, amount: number) => {
+  public addWeeks = (value: Date, amount: number): Date => {
     return addWeeks(value, amount);
   };
 
-  public addDays = (value: Date, amount: number) => {
+  public addDays = (value: Date, amount: number): Date => {
     return addDays(value, amount);
   };
 
-  public addHours = (value: Date, amount: number) => {
+  public addHours = (value: Date, amount: number): Date => {
     return addHours(value, amount);
   };
 
-  public addMinutes = (value: Date, amount: number) => {
+  public addMinutes = (value: Date, amount: number): Date => {
     return addMinutes(value, amount);
   };
 
-  public addSeconds = (value: Date, amount: number) => {
+  public addSeconds = (value: Date, amount: number): Date => {
     return addSeconds(value, amount);
   };
 
-  public getYear = (value: Date) => {
+  public getYear = (value: Date): number => {
     return getYear(value);
   };
 
-  public getMonth = (value: Date) => {
+  public getMonth = (value: Date): number => {
     return getMonth(value);
   };
 
-  public getDate = (value: Date) => {
+  public getDate = (value: Date): number => {
     return getDate(value);
   };
 
-  public getHours = (value: Date) => {
+  public getHours = (value: Date): number => {
     return getHours(value);
   };
 
-  public getMinutes = (value: Date) => {
+  public getMinutes = (value: Date): number => {
     return getMinutes(value);
   };
 
-  public getSeconds = (value: Date) => {
+  public getSeconds = (value: Date): number => {
     return getSeconds(value);
   };
 
-  public getMilliseconds = (value: Date) => {
+  public getMilliseconds = (value: Date): number => {
     return getMilliseconds(value);
   };
 
-  public setYear = (value: Date, year: number) => {
+  public setYear = (value: Date, year: number): Date => {
     return setYear(value, year);
   };
 
-  public setMonth = (value: Date, month: number) => {
+  public setMonth = (value: Date, month: number): Date => {
     return setMonth(value, month);
   };
 
-  public setDate = (value: Date, date: number) => {
+  public setDate = (value: Date, date: number): Date => {
     return setDate(value, date);
   };
 
-  public setHours = (value: Date, hours: number) => {
+  public setHours = (value: Date, hours: number): Date => {
     return setHours(value, hours);
   };
 
-  public setMinutes = (value: Date, minutes: number) => {
+  public setMinutes = (value: Date, minutes: number): Date => {
     return setMinutes(value, minutes);
   };
 
-  public setSeconds = (value: Date, seconds: number) => {
+  public setSeconds = (value: Date, seconds: number): Date => {
     return setSeconds(value, seconds);
   };
 
-  public setMilliseconds = (value: Date, milliseconds: number) => {
+  public setMilliseconds = (value: Date, milliseconds: number): Date => {
     return setMilliseconds(value, milliseconds);
   };
 
-  public getDaysInMonth = (value: Date) => {
+  public getDaysInMonth = (value: Date): number => {
     return getDaysInMonth(value);
   };
 
-  public getWeekArray = (value: Date) => {
+  public getWeekArray = (value: Date): Date[][] => {
     const start = this.startOfWeek(this.startOfMonth(value));
     const end = this.endOfWeek(this.endOfMonth(value));
 
@@ -498,15 +373,11 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
     return nestedWeeks;
   };
 
-  public getWeekNumber = (date: Date) => {
+  public getWeekNumber = (date: Date): number => {
     return getWeek(date, { locale: this.locale });
   };
 
-  public getDayOfWeek(value: Date) {
-    return value.getDay() + 1;
-  }
-
-  public getYearRange = ([start, end]: [Date, Date]) => {
+  public getYearRange = ([start, end]: [Date, Date]): Date[] => {
     const startDate = this.startOfYear(start);
     const endDate = this.endOfYear(end);
     const years: Date[] = [];

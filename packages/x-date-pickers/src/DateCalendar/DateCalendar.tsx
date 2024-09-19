@@ -1,7 +1,8 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
@@ -141,6 +142,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
     loading,
     renderLoading,
     displayWeekNumber,
+    yearsOrder,
     yearsPerRow,
     monthsPerRow,
     timezone: timezoneProp,
@@ -214,8 +216,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
       reduceAnimations,
       timezone,
       labelId: gridLabelId,
-      slots,
-      slotProps,
     },
     ownerState: props,
   });
@@ -311,6 +311,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
     disabled,
     timezone,
     gridLabelId,
+    slots,
+    slotProps,
   };
 
   const prevOpenViewRef = React.useRef(view);
@@ -336,7 +338,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
       ownerState={ownerState}
       {...other}
     >
-      <CalendarHeader {...calendarHeaderProps} />
+      <CalendarHeader {...calendarHeaderProps} slots={slots} slotProps={slotProps} />
       <DateCalendarViewTransitionContainer
         reduceAnimations={reduceAnimations}
         className={classes.viewTransitionContainer}
@@ -353,6 +355,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
               shouldDisableYear={shouldDisableYear}
               hasFocus={hasFocus}
               onFocusedViewChange={(isViewFocused) => setFocusedView('year', isViewFocused)}
+              yearsOrder={yearsOrder}
               yearsPerRow={yearsPerRow}
               referenceDate={referenceDate}
             />
@@ -392,8 +395,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
               fixedWeekNumber={fixedWeekNumber}
               dayOfWeekFormatter={dayOfWeekFormatter}
               displayWeekNumber={displayWeekNumber}
-              slots={slots}
-              slotProps={slotProps}
               loading={loading}
               renderLoading={renderLoading}
             />
@@ -407,7 +408,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
 DateCalendar.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * If `true`, the main element is focused during the first mount.
@@ -474,10 +475,12 @@ DateCalendar.propTypes = {
   loading: PropTypes.bool,
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**
@@ -487,7 +490,7 @@ DateCalendar.propTypes = {
   monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TView The view type. Will be one of date or time views.
    * @param {TValue} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
@@ -622,6 +625,12 @@ DateCalendar.propTypes = {
    * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
+  /**
+   * Years are displayed in ascending (chronological) order by default.
+   * If `desc`, years are displayed in descending order.
+   * @default 'asc'
+   */
+  yearsOrder: PropTypes.oneOf(['asc', 'desc']),
   /**
    * Years rendered per row.
    * @default 3

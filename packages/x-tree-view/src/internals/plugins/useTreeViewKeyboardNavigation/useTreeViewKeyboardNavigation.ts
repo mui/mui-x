@@ -1,18 +1,20 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { TreeViewItemMeta, TreeViewPlugin } from '../../models';
+import { TreeViewItemMeta, TreeViewPlugin, MuiCancellableEvent } from '../../models';
 import {
   getFirstNavigableItem,
   getLastNavigableItem,
   getNextNavigableItem,
   getPreviousNavigableItem,
+  isTargetInDescendants,
 } from '../../utils/tree';
 import {
   TreeViewFirstCharMap,
   UseTreeViewKeyboardNavigationSignature,
 } from './useTreeViewKeyboardNavigation.types';
-import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
+import { hasPlugin } from '../../utils/plugins';
+import { useTreeViewLabel } from '../useTreeViewLabel';
 
 function isPrintableCharacter(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
@@ -21,8 +23,7 @@ function isPrintableCharacter(string: string) {
 export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   UseTreeViewKeyboardNavigationSignature
 > = ({ instance, params, state }) => {
-  const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
+  const isRtl = useRtl();
   const firstCharMap = React.useRef<TreeViewFirstCharMap>({});
 
   const updateFirstCharMap = useEventCallback(
@@ -61,11 +62,13 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
     let matchingItemId: string | null = null;
     let currentItemId: string = getNextItem(itemId);
-    // The "currentItemId !== itemId" condition is to avoid an infinite loop when there is no matching item.
-    while (matchingItemId == null && currentItemId !== itemId) {
+    const checkedItems: Record<string, true> = {};
+    // The "!checkedItems[currentItemId]" condition avoids an infinite loop when there is no matching item.
+    while (matchingItemId == null && !checkedItems[currentItemId]) {
       if (firstCharMap.current[currentItemId] === cleanQuery) {
         matchingItemId = currentItemId;
       } else {
+        checkedItems[currentItemId] = true;
         currentItemId = getNextItem(currentItemId);
       }
     }
@@ -89,7 +92,10 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       return;
     }
 
-    if (event.altKey || event.currentTarget !== event.target) {
+    if (
+      event.altKey ||
+      isTargetInDescendants(event.target as HTMLElement, event.currentTarget as HTMLElement)
+    ) {
       return;
     }
 
@@ -103,10 +109,13 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         event.preventDefault();
         if (params.multiSelect && event.shiftKey) {
           instance.expandSelectionRange(event, itemId);
-        } else if (params.multiSelect) {
-          instance.selectItem(event, itemId, true);
         } else {
-          instance.selectItem(event, itemId);
+          instance.selectItem({
+            event,
+            itemId,
+            keepExistingSelection: params.multiSelect,
+            shouldBeSelected: params.multiSelect ? undefined : true,
+          });
         }
         break;
       }
@@ -114,15 +123,21 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // If the focused item has children, we expand it.
       // If the focused item has no children, we select it.
       case key === 'Enter': {
-        if (canToggleItemExpansion(itemId)) {
+        if (
+          hasPlugin(instance, useTreeViewLabel) &&
+          instance.isItemEditable(itemId) &&
+          !instance.isItemBeingEdited(itemId)
+        ) {
+          instance.setEditedItemId(itemId);
+        } else if (canToggleItemExpansion(itemId)) {
           instance.toggleItemExpansion(event, itemId);
           event.preventDefault();
         } else if (canToggleItemSelection(itemId)) {
           if (params.multiSelect) {
             event.preventDefault();
-            instance.selectItem(event, itemId, true);
+            instance.selectItem({ event, itemId, keepExistingSelection: true });
           } else if (!instance.isItemSelected(itemId)) {
-            instance.selectItem(event, itemId);
+            instance.selectItem({ event, itemId });
             event.preventDefault();
           }
         }
@@ -166,7 +181,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // If the focused item is expanded, we move the focus to its first child
       // If the focused item is collapsed and has children, we expand it
-      case (key === 'ArrowRight' && !isRTL) || (key === 'ArrowLeft' && isRTL): {
+      case (key === 'ArrowRight' && !isRtl) || (key === 'ArrowLeft' && isRtl): {
         if (instance.isItemExpanded(itemId)) {
           const nextItemId = getNextNavigableItem(instance, itemId);
           if (nextItemId) {
@@ -183,7 +198,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // If the focused item is expanded, we collapse it
       // If the focused item is collapsed and has a parent, we move the focus to this parent
-      case (key === 'ArrowLeft' && !isRTL) || (key === 'ArrowRight' && isRTL): {
+      case (key === 'ArrowLeft' && !isRtl) || (key === 'ArrowRight' && isRtl): {
         if (canToggleItemExpansion(itemId) && instance.isItemExpanded(itemId)) {
           instance.toggleItemExpansion(event, itemId);
           event.preventDefault();

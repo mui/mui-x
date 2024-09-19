@@ -1,5 +1,5 @@
 import dayjs, { Dayjs } from 'dayjs';
-import { DateTimeField } from '@mui/x-date-pickers';
+import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { expect } from 'chai';
@@ -37,6 +37,17 @@ describe('<AdapterDayjs />', () => {
       // Makes sure that we don't run timezone related tests, that would not work.
       adapter.isTimezoneCompatible = false;
     },
+  });
+
+  describe('Adapter timezone', () => {
+    it('setTimezone: should throw warning if no plugin is available', () => {
+      const modifiedAdapter = new AdapterDayjs();
+      // @ts-ignore
+      modifiedAdapter.hasTimezonePlugin = () => false;
+
+      const date = modifiedAdapter.date(TEST_DATE_ISO_STRING)!;
+      expect(() => modifiedAdapter.setTimezone(date, 'Europe/London')).to.throw();
+    });
   });
 
   describe('Adapter localization', () => {
@@ -137,21 +148,18 @@ describe('<AdapterDayjs />', () => {
         });
 
         it('should have correct placeholder', () => {
-          const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+          const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-          expectFieldValueV7(
-            v7Response.getSectionsContainer(),
-            localizedTexts[localeKey].placeholder,
-          );
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
         it('should have well formatted value', () => {
-          const v7Response = renderWithProps({
+          const view = renderWithProps({
             enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
           });
 
-          expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });

@@ -40,6 +40,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   columnsManagementSearchTitle: 'Search',
   columnsManagementNoColumns: 'No columns',
   columnsManagementShowHideAllText: 'Show/Hide All',
+  columnsManagementReset: 'Reset',
 
   // Filter panel text
   filterPanelAddFilter: 'Add filter',
@@ -55,7 +56,9 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Filter operators text
   filterOperatorContains: 'contains',
+  filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'equals',
+  filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'starts with',
   filterOperatorEndsWith: 'ends with',
   filterOperatorIs: 'is',
@@ -76,7 +79,9 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Contains',
+  headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Equals',
+  headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Starts with',
   headerFilterOperatorEndsWith: 'Ends with',
   headerFilterOperatorIs: 'Is',

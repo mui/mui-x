@@ -39,9 +39,10 @@ const viVNGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Xuất Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
+  columnsManagementSearchTitle: 'Tìm kiếm',
+  columnsManagementNoColumns: 'Không có cột',
+  columnsManagementShowHideAllText: 'Hiện/Ẩn Tất cả',
+  columnsManagementReset: 'Đặt lại',
 
   // Filter panel text
   filterPanelAddFilter: 'Thêm bộ lọc',
@@ -57,7 +58,9 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'Chứa',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'Bằng',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'Bắt đầu bằng',
   filterOperatorEndsWith: 'Kết thúc bằng',
   filterOperatorIs: 'Là',
@@ -78,7 +81,9 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Chứa',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Bằng',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Bắt đầu với',
   headerFilterOperatorEndsWith: 'Kết thúc với',
   headerFilterOperatorIs: 'là',

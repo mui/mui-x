@@ -120,3 +120,37 @@ A few common use-cases are:
 - Formatting a boolean value to `Yes` or `No`
 
 It only impacts the rendering part and does not impact the internal calculations like filtering or sorting. You can know more about it in the [value formatter](/x/react-data-grid/column-definition/#value-formatter) section.
+
+## What is the purpose of useDemoData hook used in the documentation examples?
+
+The `useDemoData` hook is a utility hook from the `@mui/x-data-grid-generator` package.
+It contains columns definitions and generates random data for the Data Grid.
+It is often used in our demos to provide realistic data without polluting the code with data generation logic.
+
+:::success
+Looking for the column definitions and custom cell renderers from the `useDemoData` hook?
+
+Check out the [Custom columns demo](/x/react-data-grid/custom-columns/#full-example) where you can copy them from the demo source code.
+:::
+
+Here's how it's used:
+
+```tsx
+import * as React from 'react';
+import { DataGrid } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
+
+export default function Demo() {
+  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
+
+  return <DataGrid {...data} />;
+}
+```
+
+It comes with two datasets: `Commodity` and `Employee`. You can customize the data generation by passing the custom options of type [`UseDemoDataOptions`](https://github.com/mui/mui-x/blob/6aad22644ee710690b90dc2ac6bbafceb91fecf0/packages/x-data-grid-generator/src/hooks/useDemoData.ts#L29-L36).
+
+:::error
+`@mui/x-data-grid-generator` is a development-only package and should not be used in production.
+You can use it to create a reproduction of a bug or generate demo data in your development environment.
+You should not rely on its API – we don't follow semver for this package.
+:::

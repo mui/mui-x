@@ -10,7 +10,9 @@ export function findParentElementFromClassName(elem: Element, className: string)
   return elem.closest(`.${className}`);
 }
 
-function escapeOperandAttributeSelector(operand: string): string {
+// TODO, eventually replaces this function with CSS.escape, once available in jsdom, either added manually or built in
+// https://github.com/jsdom/jsdom/issues/1550#issuecomment-236734471
+export function escapeOperandAttributeSelector(operand: string): string {
   return operand.replace(/["\\]/g, '\\$&');
 }
 
@@ -68,16 +70,19 @@ export function getFieldFromHeaderElem(colCellEl: Element): string {
 }
 
 export function findHeaderElementFromField(elem: Element, field: string): HTMLDivElement {
-  return elem.querySelector(`[data-field="${field}"]`)!;
+  return elem.querySelector(`[data-field="${escapeOperandAttributeSelector(field)}"]`)!;
 }
 
 export function getFieldsFromGroupHeaderElem(colCellEl: Element): string[] {
-  const fieldsString = colCellEl.getAttribute('data-fields');
-  return fieldsString?.startsWith('|-') ? fieldsString!.slice(2, -2).split('-|-') : [];
+  return colCellEl.getAttribute('data-fields')!.slice(2, -2).split('-|-');
 }
 
 export function findGroupHeaderElementsFromField(elem: Element, field: string): Element[] {
-  return Array.from(elem.querySelectorAll<HTMLDivElement>(`[data-fields*="|-${field}-|"]`) ?? []);
+  return Array.from(
+    elem.querySelectorAll<HTMLDivElement>(
+      `[data-fields*="|-${escapeOperandAttributeSelector(field)}-|"]`,
+    ) ?? [],
+  );
 }
 
 export function findGridCellElementsFromCol(col: HTMLElement, api: GridPrivateApiCommunity) {
@@ -161,23 +166,31 @@ const findPinnedCells = ({
   return cells;
 };
 
-export function findLeftPinnedCellsAfterCol(api: GridPrivateApiCommunity, col: HTMLElement) {
+export function findLeftPinnedCellsAfterCol(
+  api: GridPrivateApiCommunity,
+  col: HTMLElement,
+  isRtl: boolean,
+) {
   const colIndex = parseCellColIndex(col);
   return findPinnedCells({
     api,
     colIndex,
-    position: 'left',
-    filterFn: (index) => index > colIndex!,
+    position: isRtl ? 'right' : 'left',
+    filterFn: (index) => (isRtl ? index < colIndex! : index > colIndex!),
   });
 }
 
-export function findRightPinnedCellsBeforeCol(api: GridPrivateApiCommunity, col: HTMLElement) {
+export function findRightPinnedCellsBeforeCol(
+  api: GridPrivateApiCommunity,
+  col: HTMLElement,
+  isRtl: boolean,
+) {
   const colIndex = parseCellColIndex(col);
   return findPinnedCells({
     api,
     colIndex,
-    position: 'right',
-    filterFn: (index) => index < colIndex!,
+    position: isRtl ? 'left' : 'right',
+    filterFn: (index) => (isRtl ? index > colIndex! : index < colIndex!),
   });
 }
 
@@ -213,36 +226,46 @@ const findPinnedHeaders = ({
   return elements;
 };
 
-export function findLeftPinnedHeadersAfterCol(api: GridPrivateApiCommunity, col: HTMLElement) {
+export function findLeftPinnedHeadersAfterCol(
+  api: GridPrivateApiCommunity,
+  col: HTMLElement,
+  isRtl: boolean,
+) {
   const colIndex = parseCellColIndex(col);
   return findPinnedHeaders({
     api,
-    position: 'left',
+    position: isRtl ? 'right' : 'left',
     colIndex,
-    filterFn: (index) => index > colIndex!,
+    filterFn: (index) => (isRtl ? index < colIndex! : index > colIndex!),
   });
 }
 
-export function findRightPinnedHeadersBeforeCol(api: GridPrivateApiCommunity, col: HTMLElement) {
+export function findRightPinnedHeadersBeforeCol(
+  api: GridPrivateApiCommunity,
+  col: HTMLElement,
+  isRtl: boolean,
+) {
   const colIndex = parseCellColIndex(col);
   return findPinnedHeaders({
     api,
-    position: 'right',
+    position: isRtl ? 'left' : 'right',
     colIndex,
-    filterFn: (index) => index < colIndex!,
+    filterFn: (index) => (isRtl ? index > colIndex! : index < colIndex!),
   });
 }
 
 export function findGridHeader(api: GridPrivateApiCommunity, field: string) {
   const headers = api.columnHeadersContainerRef!.current!;
-  return headers.querySelector(`:scope > div > [data-field="${field}"][role="columnheader"]`);
+  return headers.querySelector(
+    `:scope > div > [data-field="${escapeOperandAttributeSelector(field)}"][role="columnheader"]`,
+  );
 }
 
 export function findGridCells(api: GridPrivateApiCommunity, field: string) {
   const container = api.virtualScrollerRef!.current!;
   return Array.from(
     container.querySelectorAll(
-      `:scope > div > div > div > [data-field="${field}"][role="gridcell"]`,
+      `:scope > div > div > div > [data-field="${escapeOperandAttributeSelector(field)}"][role="gridcell"]`,
     ),
   );
 }

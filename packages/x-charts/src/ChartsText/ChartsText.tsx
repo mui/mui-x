@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GetWordsByLinesParams, getWordsByLines } from '../internals/getWordsByLines';
@@ -41,7 +42,7 @@ function ChartsText(props: ChartsTextProps) {
       break;
   }
 
-  const transforms = [];
+  const transforms: string[] = [];
   // if (scaleToFit) {
   //   const lineWidth = wordsByLines[0].width;
   //   transforms.push(`scale(${(isNumber(width as number) ? (width as number) / lineWidth : 1) / lineWidth})`);
@@ -49,13 +50,11 @@ function ChartsText(props: ChartsTextProps) {
   if (angle) {
     transforms.push(`rotate(${angle}, ${x}, ${y})`);
   }
-  if (transforms.length) {
-    textProps.transform = transforms.join(' ');
-  }
 
   return (
     <text
       {...textProps}
+      transform={transforms.length > 0 ? transforms.join(' ') : undefined}
       x={x}
       y={y}
       textAnchor={textAnchor}
@@ -79,7 +78,7 @@ function ChartsText(props: ChartsTextProps) {
 ChartsText.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Height of a text line (in `em`).

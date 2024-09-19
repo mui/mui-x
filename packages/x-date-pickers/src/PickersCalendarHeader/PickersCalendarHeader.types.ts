@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
 import SvgIcon from '@mui/material/SvgIcon';
 import { SxProps, Theme } from '@mui/material/styles';
@@ -20,7 +20,7 @@ export interface PickersCalendarHeaderSlots extends PickersArrowSwitcherSlots {
    */
   switchViewButton?: React.ElementType;
   /**
-   * Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.
+   * Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is `year`.
    * @default ArrowDropDown
    */
   switchViewIcon?: React.ElementType;
@@ -43,7 +43,7 @@ export interface PickersCalendarHeaderSlotProps<TDate extends PickerValidDate>
   switchViewIcon?: SlotComponentProps<
     typeof SvgIcon,
     PickersCalendarHeaderSlotPropsOverrides,
-    undefined
+    PickersCalendarHeaderOwnerState<TDate>
   >;
 }
 
@@ -67,6 +67,10 @@ export interface PickersCalendarHeaderProps<TDate extends PickerValidDate>
   view: DateView;
   reduceAnimations: boolean;
   onViewChange?: (view: DateView) => void;
+  /**
+   * Id of the calendar text element.
+   * It is used to establish an `aria-labelledby` relationship with the calendar `grid` element.
+   */
   labelId?: string;
   /**
    * Override or extend the styles applied to the component.

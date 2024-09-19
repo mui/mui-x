@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
@@ -133,8 +134,8 @@ export const LocalizationProvider = function LocalizationProvider<
       }
 
       return {
-        minDate: utils.date('1900-01-01T00:00:00.000')!,
-        maxDate: utils.date('2099-12-31T00:00:00.000')!,
+        minDate: utils.date('1900-01-01T00:00:00.000'),
+        maxDate: utils.date('2099-12-31T00:00:00.000'),
       };
     }, [utils]);
 
@@ -156,7 +157,7 @@ export const LocalizationProvider = function LocalizationProvider<
 LocalizationProvider.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Locale for the date library you are using

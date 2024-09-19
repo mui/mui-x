@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
@@ -50,7 +51,7 @@ const HighlightElement = styled('circle', {
 }));
 
 export type LineHighlightElementProps = LineHighlightElementOwnerState &
-  Omit<React.ComponentPropsWithoutRef<'circle'>, 'id'> & {};
+  Omit<React.SVGProps<SVGCircleElement>, 'ref' | 'id'>;
 
 /**
  * Demos:
@@ -90,7 +91,7 @@ function LineHighlightElement(props: LineHighlightElementProps) {
 LineHighlightElement.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,

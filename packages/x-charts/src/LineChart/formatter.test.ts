@@ -1,15 +1,15 @@
 import { expect } from 'chai';
-import { FormatterParams } from '../models/seriesType/config';
 import lineFormatter from './formatter';
+import { SeriesFormatterParams } from '../context/PluginProvider';
 
 const seriesOrder = ['id1'];
-const seriesDataset: FormatterParams<'line'>['series'] = {
+const seriesDataset: SeriesFormatterParams<'line'>['series'] = {
   id1: {
     // useless info
     type: 'line',
     id: 'id1',
     color: 'red',
-    // usefull info
+    // useful info
     dataKey: 'k',
   },
 };

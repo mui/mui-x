@@ -34,6 +34,5 @@ export * from './MobileDateTimeRangePicker';
 // View renderers
 export * from './dateRangeViewRenderers';
 
-export type { UseDateRangeFieldProps } from './internals/models/dateRange';
-
 export * from './models';
+export * from './validation';

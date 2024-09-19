@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import Typography from '@mui/material/Typography';
 
 const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   {
@@ -57,7 +57,7 @@ export default function TrackItemSelectionToggle() {
           ? 'No item selection recorded'
           : `Last selected item: ${lastSelectedItem}`}
       </Typography>
-      <Box sx={{ minHeight: 200, minWidth: 300, flexGrow: 1 }}>
+      <Box sx={{ minHeight: 352, minWidth: 300 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
           onItemSelectionToggle={handleItemSelectionToggle}

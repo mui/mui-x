@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-import { HighlightScope } from '@mui/x-charts';
+import { HighlightScope } from '@mui/x-charts/context';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
@@ -73,13 +73,13 @@ const pieChartsParams = {
       data: [{ value: 5 }, { value: 10 }, { value: 15 }],
       label: 'Series 1',
       outerRadius: 80,
-      highlighted: { additionalRadius: 10 },
+      highlight: { additionalRadius: 10 },
     },
     {
       data: [{ value: 5 }, { value: 10 }, { value: 15 }],
       label: 'Series 1',
       innerRadius: 90,
-      highlighted: { additionalRadius: 10 },
+      highlight: { additionalRadius: 10 },
     },
   ],
   height: 400,

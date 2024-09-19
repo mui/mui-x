@@ -15,11 +15,9 @@ import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import { useTreeItem2, UseTreeItem2Parameters } from '@mui/x-tree-view/useTreeItem2';
 import {
-  unstable_useTreeItem2 as useTreeItem2,
-  UseTreeItem2Parameters,
-} from '@mui/x-tree-view/useTreeItem2';
-import {
+  TreeItem2Checkbox,
   TreeItem2Content,
   TreeItem2IconContainer,
   TreeItem2Label,
@@ -27,6 +25,7 @@ import {
 } from '@mui/x-tree-view/TreeItem2';
 import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
 import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
+import { TreeItem2DragAndDropOverlay } from '@mui/x-tree-view/TreeItem2DragAndDropOverlay';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
 type FileType = 'image' | 'pdf' | 'doc' | 'video' | 'folder' | 'pinned' | 'trash';
@@ -96,14 +95,14 @@ declare module 'react' {
 }
 
 const StyledTreeItemRoot = styled(TreeItem2Root)(({ theme }) => ({
-  color:
-    theme.palette.mode === 'light'
-      ? theme.palette.grey[800]
-      : theme.palette.grey[400],
+  color: theme.palette.grey[400],
   position: 'relative',
   [`& .${treeItemClasses.groupTransition}`]: {
     marginLeft: theme.spacing(3.5),
   },
+  ...theme.applyStyles('light', {
+    color: theme.palette.grey[800],
+  }),
 })) as unknown as typeof TreeItem2Root;
 
 const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
@@ -114,15 +113,12 @@ const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
   padding: theme.spacing(0.5),
   paddingRight: theme.spacing(1),
   fontWeight: 500,
-  [`& .${treeItemClasses.iconContainer}`]: {
-    marginRight: theme.spacing(2),
-  },
   [`&.Mui-expanded `]: {
     '&:not(.Mui-focused, .Mui-selected, .Mui-selected.Mui-focused) .labelIcon': {
-      color:
-        theme.palette.mode === 'light'
-          ? theme.palette.primary.main
-          : theme.palette.primary.dark,
+      color: theme.palette.primary.dark,
+      ...theme.applyStyles('light', {
+        color: theme.palette.primary.main,
+      }),
     },
     '&::before': {
       content: '""',
@@ -132,22 +128,25 @@ const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
       top: '44px',
       height: 'calc(100% - 48px)',
       width: '1.5px',
-      backgroundColor:
-        theme.palette.mode === 'light'
-          ? theme.palette.grey[300]
-          : theme.palette.grey[700],
+      backgroundColor: theme.palette.grey[700],
+      ...theme.applyStyles('light', {
+        backgroundColor: theme.palette.grey[300],
+      }),
     },
   },
   '&:hover': {
     backgroundColor: alpha(theme.palette.primary.main, 0.1),
-    color: theme.palette.mode === 'light' ? theme.palette.primary.main : 'white',
+    color: 'white',
+    ...theme.applyStyles('light', {
+      color: theme.palette.primary.main,
+    }),
   },
   [`&.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused`]: {
-    backgroundColor:
-      theme.palette.mode === 'light'
-        ? theme.palette.primary.main
-        : theme.palette.primary.dark,
+    backgroundColor: theme.palette.primary.dark,
     color: theme.palette.primary.contrastText,
+    ...theme.applyStyles('light', {
+      backgroundColor: theme.palette.primary.main,
+    }),
   },
 }));
 
@@ -247,8 +246,10 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     getRootProps,
     getContentProps,
     getIconContainerProps,
+    getCheckboxProps,
     getLabelProps,
     getGroupTransitionProps,
+    getDragAndDropOverlayProps,
     status,
     publicAPI,
   } = useTreeItem2({ id, itemId, children, label, disabled, rootRef: ref });
@@ -278,10 +279,11 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
           <TreeItem2IconContainer {...getIconContainerProps()}>
             <TreeItem2Icon status={status} />
           </TreeItem2IconContainer>
-
+          <TreeItem2Checkbox {...getCheckboxProps()} />
           <CustomLabel
             {...getLabelProps({ icon, expandable: expandable && status.expanded })}
           />
+          <TreeItem2DragAndDropOverlay {...getDragAndDropOverlayProps()} />
         </CustomTreeItemContent>
         {children && <TransitionComponent {...getGroupTransitionProps()} />}
       </StyledTreeItemRoot>
@@ -293,7 +295,6 @@ export default function FileExplorer() {
   return (
     <RichTreeView
       items={ITEMS}
-      aria-label="file explorer"
       defaultExpandedItems={['1', '1.1']}
       defaultSelectedItems="1.1"
       sx={{ height: 'fit-content', flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}

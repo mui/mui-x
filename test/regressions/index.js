@@ -1,15 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { LicenseInfo } from '@mui/x-license';
 import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
 import { Globals } from '@react-spring/web';
-// This license key is only valid for use with Material UI SAS's projects
-// See the terms: https://mui.com/r/x-license-eula
-LicenseInfo.setLicenseKey(
-  'd483a722e0dc68f4d483487da0ccac45Tz1NVUktRG9jLEU9MTcxNTE2MzgwOTMwNyxTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLEtWPTI=',
-);
+import { setupTestLicenseKey } from '../utils/testLicense';
+
+setupTestLicenseKey();
 
 Globals.assign({
   skipAnimation: true,
@@ -17,9 +14,11 @@ Globals.assign({
 
 const blacklist = [
   /^docs-(.*)(?<=NoSnap)\.png$/, // Excludes demos that we don't want
+  /^docs-data-grid-custom-columns-cell-renderers\/(.*)\.png$/, // Custom components used to build docs pages
   'docs-data-grid-filtering/RemoveBuiltInOperators.png', // Needs interaction
   'docs-data-grid-filtering/CustomRatingOperator.png', // Needs interaction
   'docs-data-grid-filtering/CustomInputComponent.png', // Needs interaction
+  /^docs-charts-tooltip\/(.*).png/, // Needs interaction
   'docs-date-pickers-date-calendar/DateCalendarServerRequest.png', // Has random behavior (TODO: Use seeded random)
   // 'docs-system-typography',
 ];
@@ -71,6 +70,10 @@ requireDocs.keys().forEach((path) => {
   // TODO: Why does webpack include a key for the absolute and relative path?
   // We just want the relative path
   if (!path.startsWith('./')) {
+    return;
+  }
+
+  if (requireDocs(path).default === undefined) {
     return;
   }
 

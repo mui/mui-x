@@ -7,8 +7,8 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
-import type { GridApiCommunity } from '../../internals';
-import { fastMemo } from '../../utils/fastMemo';
+import { fastMemo } from '@mui/x-internals/fastMemo';
+import { useRtl } from '@mui/system/RtlProvider';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import {
@@ -75,11 +75,7 @@ export type GridCellProps = {
   [x: string]: any; // TODO v7: remove this - it breaks type safety
 };
 
-type CellParamsWithAPI = GridCellParams<any, any, any, GridTreeNodeWithRender> & {
-  api: GridApiCommunity;
-};
-
-const EMPTY_CELL_PARAMS: CellParamsWithAPI = {
+const EMPTY_CELL_PARAMS: GridCellParams<any, any, any, GridTreeNodeWithRender> = {
   id: -1,
   field: '__unset__',
   row: {},
@@ -146,7 +142,7 @@ let warnedOnce = false;
 
 // TODO(v7): Removing the wrapper will break the docs performance visualization demo.
 
-const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) => {
+const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCell(props, ref) {
   const {
     column,
     rowId,
@@ -180,22 +176,21 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
 
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
+  const isRtl = useRtl();
 
   const field = column.field;
 
-  const cellParamsWithAPI = useGridSelector(
+  const cellParams = useGridSelector(
     apiRef,
     () => {
       // This is required because `.getCellParams` tries to get the `state.rows.tree` entry
       // associated with `rowId`/`fieldId`, but this selector runs after the state has been
       // updated, while `rowId`/`fieldId` reference an entry in the old state.
       try {
-        const cellParams = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
+        const result = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
           rowId,
           field,
         );
-
-        const result = cellParams as CellParamsWithAPI;
         result.api = apiRef.current;
         return result;
       } catch (e) {
@@ -215,7 +210,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     }),
   );
 
-  const { cellMode, hasFocus, isEditable = false, value, formattedValue } = cellParamsWithAPI;
+  const { cellMode, hasFocus, isEditable = false, value } = cellParams;
 
   const canManageOwnFocus =
     column.type === 'actions' &&
@@ -223,7 +218,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
       .getActions?.(apiRef.current.getRowParams(rowId))
       .some((action) => !action.props.disabled);
   const tabIndex =
-    (cellMode === 'view' || !isEditable) && !canManageOwnFocus ? cellParamsWithAPI.tabIndex : -1;
+    (cellMode === 'view' || !isEditable) && !canManageOwnFocus ? cellParams.tabIndex : -1;
 
   const { classes: rootClasses, getCellClassName } = rootProps;
 
@@ -243,7 +238,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   if (column.cellClassName) {
     classNames.push(
       typeof column.cellClassName === 'function'
-        ? column.cellClassName(cellParamsWithAPI)
+        ? column.cellClassName(cellParams)
         : column.cellClassName,
     );
   }
@@ -253,10 +248,10 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   }
 
   if (getCellClassName) {
-    classNames.push(getCellClassName(cellParamsWithAPI));
+    classNames.push(getCellClassName(cellParams));
   }
 
-  const valueToRender = formattedValue == null ? value : formattedValue;
+  const valueToRender = cellParams.formattedValue ?? value;
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
   const focusElementRef = React.useRef<FocusElement>(null);
@@ -341,16 +336,21 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
       ...styleProp,
     };
 
-    if (pinnedPosition === PinnedPosition.LEFT) {
-      cellStyle.left = pinnedOffset;
-    }
+    const isLeftPinned = pinnedPosition === PinnedPosition.LEFT;
+    const isRightPinned = pinnedPosition === PinnedPosition.RIGHT;
 
-    if (pinnedPosition === PinnedPosition.RIGHT) {
-      cellStyle.right = pinnedOffset;
+    if (isLeftPinned || isRightPinned) {
+      let side: 'left' | 'right' = isLeftPinned ? 'left' : 'right';
+
+      if (isRtl) {
+        side = isLeftPinned ? 'right' : 'left';
+      }
+
+      cellStyle[side] = pinnedOffset;
     }
 
     return cellStyle;
-  }, [width, isNotVisible, styleProp, pinnedOffset, pinnedPosition]);
+  }, [width, isNotVisible, styleProp, pinnedOffset, pinnedPosition, isRtl]);
 
   React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
@@ -373,7 +373,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     }
   }, [hasFocus, cellMode, apiRef]);
 
-  if (cellParamsWithAPI === EMPTY_CELL_PARAMS) {
+  if (cellParams === EMPTY_CELL_PARAMS) {
     return null;
   }
 
@@ -411,7 +411,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   let title: string | undefined;
 
   if (editCellState === null && column.renderCell) {
-    children = column.renderCell(cellParamsWithAPI);
+    children = column.renderCell(cellParams);
   }
 
   if (editCellState !== null && column.renderEditCell) {
@@ -420,9 +420,14 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { changeReason, unstable_updateValueOnRender, ...editCellStateRest } = editCellState;
 
+    const formattedValue = column.valueFormatter
+      ? column.valueFormatter(editCellState.value as never, updatedRow, column, apiRef)
+      : cellParams.formattedValue;
+
     const params: GridRenderEditCellParams = {
-      ...cellParamsWithAPI,
+      ...cellParams,
       row: updatedRow,
+      formattedValue,
       ...editCellStateRest,
     };
 
@@ -479,7 +484,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
 GridCell.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   align: PropTypes.oneOf(['center', 'left', 'right']).isRequired,
   className: PropTypes.string,

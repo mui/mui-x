@@ -14,7 +14,7 @@
       "description": "The id of the element containing a label for the Data Grid."
     },
     "autoHeight": {
-      "description": "If <code>true</code>, the Data Grid height is dynamic and follow the number of rows in the Data Grid."
+      "description": "If <code>true</code>, the Data Grid height is dynamic and follows the number of rows in the Data Grid."
     },
     "autoPageSize": {
       "description": "If <code>true</code>, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar."
@@ -38,6 +38,9 @@
     },
     "columnBufferPx": {
       "description": "Column region in pixels to render before/after the viewport"
+    },
+    "columnGroupHeaderHeight": {
+      "description": "Sets the height in pixels of the column group headers in the Data Grid. Inherits the <code>columnHeaderHeight</code> value if not set."
     },
     "columnHeaderHeight": {
       "description": "Sets the height in pixel of the column headers in the Data Grid."
@@ -202,6 +205,9 @@
     "ignoreValueFormatterDuringExport": {
       "description": "If <code>true</code>, the Data Grid will not use <code>valueFormatter</code> when exporting to CSV or copying to clipboard. If an object is provided, you can choose to ignore the <code>valueFormatter</code> for CSV export or clipboard export."
     },
+    "indeterminateCheckboxAction": {
+      "description": "If <code>select</code>, a group header checkbox in indeterminate state (like &quot;Select All&quot; checkbox) will select all the rows under it. If <code>deselect</code>, it will deselect all the rows under it. Works only if <code>checkboxSelection</code> is enabled."
+    },
     "initialState": {
       "description": "The initial state of the DataGridPremium. The data in it is set in the state on initialization but isn&#39;t controlled. If one of the data in <code>initialState</code> is also being controlled, then the control state wins."
     },
@@ -223,7 +229,7 @@
       "description": "Determines if a row can be selected.",
       "typeDescriptions": {
         "params": "With all properties from <a href='/x/api/data-grid/grid-row-params/'>GridRowParams</a>.",
-        "boolean": "A boolean indicating if the cell is selectable."
+        "boolean": "A boolean indicating if the row is selectable."
       }
     },
     "keepColumnPositionIfDraggedOutside": {
@@ -232,7 +238,7 @@
     "keepNonExistentRowsSelected": {
       "description": "If <code>true</code>, the selection model will retain selected rows that do not exist. Useful when using server side pagination and row selections need to be retained when changing pages."
     },
-    "loading": { "description": "If <code>true</code>, a  loading overlay is displayed." },
+    "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": {
       "description": "Set the locale text of the Data Grid. You can find all the translation keys supported in <a href=\"https://github.com/mui/mui-x/blob/HEAD/packages/x-data-grid/src/constants/localeTextConstants.ts\">the source</a> in the GitHub repository."
     },
@@ -617,10 +623,10 @@
       "description": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called."
     },
     "showCellVerticalBorder": {
-      "description": "If <code>true</code>, the vertical borders of the cells are displayed."
+      "description": "If <code>true</code>, vertical borders will be displayed between cells."
     },
     "showColumnVerticalBorder": {
-      "description": "If <code>true</code>, the right border of the column headers are displayed."
+      "description": "If <code>true</code>, vertical borders will be displayed between column header items."
     },
     "slotProps": {
       "description": "Overridable components props dynamically passed to the component at rendering."
@@ -1128,6 +1134,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the row&#39;s draggable placeholder element inside the special row reorder cell"
     },
+    "rowSkeleton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the skeleton row element"
+    },
     "scrollArea": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "both scroll area elements"
@@ -1218,6 +1228,7 @@
     "columnFilteredIcon": "Icon displayed on the column header menu to show that a filter has been applied to the column.",
     "columnHeaderFilterIconButton": "Filter icon component rendered in each column header.",
     "columnHeaders": "Component responsible for rendering the column headers.",
+    "columnHeaderSortIcon": "Sort icon component rendered in each column header.",
     "columnMenu": "Column menu component rendered by clicking on the 3 dots &quot;kebab&quot; icon in column headers.",
     "columnMenuAggregationIcon": "Icon displayed in column menu for aggregation",
     "columnMenuClearIcon": "Icon displayed in column menu for clearing values",

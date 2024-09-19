@@ -83,7 +83,7 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
             label={label}
             color="primary"
             onChange={handleAggregationItemChange}
-            onBlur={(e) => e.stopPropagation()}
+            onBlur={(event) => event.stopPropagation()}
             fullWidth
           >
             <MenuItem value="">...</MenuItem>
@@ -108,7 +108,7 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
 GridColumnMenuAggregationItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   colDef: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,

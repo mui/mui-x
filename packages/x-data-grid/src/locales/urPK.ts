@@ -42,6 +42,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   // columnsManagementSearchTitle: 'Search',
   // columnsManagementNoColumns: 'No columns',
   // columnsManagementShowHideAllText: 'Show/Hide All',
+  // columnsManagementReset: 'Reset',
 
   // Filter panel text
   filterPanelAddFilter: 'نیا فلٹر',
@@ -57,7 +58,9 @@ const urPKGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'شامل ہے',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'برابر ہے',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'شروع ہوتا ہے',
   filterOperatorEndsWith: 'ختم ہوتا ہے',
   filterOperatorIs: 'ہے',
@@ -78,7 +81,9 @@ const urPKGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'شامل ہے',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'برابر ہے',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'شروع ہوتا ہے',
   headerFilterOperatorEndsWith: 'ختم ہوتا ہے',
   headerFilterOperatorIs: 'ہے',

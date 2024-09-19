@@ -6,8 +6,8 @@
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
-    "maxDate": { "type": { "name": "object" } },
-    "minDate": { "type": { "name": "object" } },
+    "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
+    "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
     "onChange": {
       "type": { "name": "func" },
       "signature": { "type": "function(value: TDate) => void", "describedArgs": ["value"] }
@@ -25,6 +25,12 @@
         "returned": "boolean"
       }
     },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -41,6 +47,10 @@
       }
     },
     "value": { "type": { "name": "object" } },
+    "yearsOrder": {
+      "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" },
+      "default": "'asc'"
+    },
     "yearsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "3"
@@ -51,6 +61,14 @@
     "import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';",
     "import { YearCalendar } from '@mui/x-date-pickers';",
     "import { YearCalendar } from '@mui/x-date-pickers-pro';"
+  ],
+  "slots": [
+    {
+      "name": "yearButton",
+      "description": "Button displayed to render a single year in the `year` view.",
+      "default": "YearCalendarButton",
+      "class": null
+    }
   ],
   "classes": [
     {
@@ -66,6 +84,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/YearCalendar/YearCalendar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li>\n<li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
   "cssComponent": false
 }

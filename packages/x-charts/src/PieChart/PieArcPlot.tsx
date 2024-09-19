@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
@@ -14,6 +15,7 @@ import {
   ValueWithHighlight,
   useTransformData,
 } from './dataTransform/useTransformData';
+import { useHighlighted } from '../context';
 
 export interface PieArcPlotSlots {
   pieArc?: React.JSXElementConstructor<PieArcProps>;
@@ -26,11 +28,11 @@ export interface PieArcPlotSlotProps {
 export interface PieArcPlotProps
   extends Pick<
       DefaultizedPieSeriesType,
-      'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle' | 'id' | 'highlightScope'
+      'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle' | 'id'
     >,
     ComputedPieRadius {
   /**
-   * Override the arc attibutes when it is faded.
+   * Override the arc attributes when it is faded.
    * @default { additionalRadius: -5 }
    */
   faded?: DefaultizedPieSeriesType['faded'];
@@ -71,7 +73,6 @@ function PieArcPlot(props: PieArcPlotProps) {
     cornerRadius = 0,
     paddingAngle = 0,
     id,
-    highlightScope,
     highlighted,
     faded = { additionalRadius: -5 },
     data,
@@ -86,7 +87,6 @@ function PieArcPlot(props: PieArcPlotProps) {
     cornerRadius,
     paddingAngle,
     id,
-    highlightScope,
     highlighted,
     faded,
     data,
@@ -95,6 +95,7 @@ function PieArcPlot(props: PieArcPlotProps) {
     ...defaultTransitionConfig,
     immediate: skipAnimation,
   });
+  const { highlightScope } = useHighlighted();
 
   if (data.length === 0) {
     return null;
@@ -153,7 +154,7 @@ function PieArcPlot(props: PieArcPlotProps) {
 PieArcPlot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The radius between circle center and the arc label in px.
@@ -172,14 +173,14 @@ PieArcPlot.propTypes = {
       formattedValue: PropTypes.string.isRequired,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       index: PropTypes.number.isRequired,
-      label: PropTypes.string,
+      label: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
       padAngle: PropTypes.number.isRequired,
       startAngle: PropTypes.number.isRequired,
       value: PropTypes.number.isRequired,
     }),
   ).isRequired,
   /**
-   * Override the arc attibutes when it is faded.
+   * Override the arc attributes when it is faded.
    * @default { additionalRadius: -5 }
    */
   faded: PropTypes.shape({
@@ -192,7 +193,7 @@ PieArcPlot.propTypes = {
     paddingAngle: PropTypes.number,
   }),
   /**
-   * Override the arc attibutes when it is highlighted.
+   * Override the arc attributes when it is highlighted.
    */
   highlighted: PropTypes.shape({
     additionalRadius: PropTypes.number,
@@ -203,13 +204,9 @@ PieArcPlot.propTypes = {
     outerRadius: PropTypes.number,
     paddingAngle: PropTypes.number,
   }),
-  highlightScope: PropTypes.shape({
-    faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-  }),
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
-   * The radius between circle center and the begining of the arc.
+   * The radius between circle center and the beginning of the arc.
    * @default 0
    */
   innerRadius: PropTypes.number,

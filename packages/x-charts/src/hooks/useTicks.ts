@@ -1,6 +1,8 @@
+'use client';
 import * as React from 'react';
 import { AxisConfig, D3Scale } from '../models/axis';
 import { isBandScale } from '../internals/isBandScale';
+import { isInfinity } from '../internals/isInfinity';
 
 export interface TickParams {
   /**
@@ -21,10 +23,12 @@ export interface TickParams {
    */
   tickNumber?: number;
   /**
-   * Defines which ticks are displayed. Its value can be:
+   * Defines which ticks are displayed.
+   * Its value can be:
    * - 'auto' In such case the ticks are computed based on axis scale and other parameters.
-   * - a filtering function of the form `(value, index) => boolean` which is available only if the axis has a data property.
+   * - a filtering function of the form `(value, index) => boolean` which is available only if the axis has "point" scale.
    * - an array containing the values where ticks should be displayed.
+   * @see See {@link https://mui.com/x/react-charts/axis/#fixed-tick-positions}
    * @default 'auto'
    */
   tickInterval?: 'auto' | ((value: any, index: number) => boolean) | any[];
@@ -44,7 +48,7 @@ export interface TickParams {
 
 export function getTickNumber(
   params: TickParams & {
-    range: any[];
+    range: number[];
     domain: any[];
   },
 ) {
@@ -99,8 +103,12 @@ export function useTicks(
 
       if (scale.bandwidth() > 0) {
         // scale type = 'band'
+        const filteredDomain =
+          (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
+          (typeof tickInterval === 'object' && tickInterval) ||
+          domain;
         return [
-          ...domain.map((value) => ({
+          ...filteredDomain.map((value) => ({
             value,
             formattedValue: valueFormatter?.(value, { location: 'tick' }) ?? `${value}`,
             offset:
@@ -137,6 +145,13 @@ export function useTicks(
         offset: scale(value)!,
         labelOffset: 0,
       }));
+    }
+
+    const domain = scale.domain();
+    // Skip axis rendering if no data is available
+    // - The domains contains Infinity for continuous scales.
+    if (domain.some(isInfinity)) {
+      return [];
     }
 
     const ticks = typeof tickInterval === 'object' ? tickInterval : scale.ticks(tickNumber);

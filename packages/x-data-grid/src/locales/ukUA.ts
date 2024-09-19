@@ -8,18 +8,19 @@ type PluralForm = {
   many: string;
 };
 
-const getPluralForm = (count: number, options: PluralForm) => {
-  let pluralForm = options.many;
+function getPluralForm(count: number, options: PluralForm) {
+  const penultimateDigit = Math.floor(count / 10) % 10;
   const lastDigit = count % 10;
 
-  if (lastDigit > 1 && lastDigit < 5) {
+  let pluralForm = options.many;
+  if (penultimateDigit !== 1 && lastDigit > 1 && lastDigit < 5) {
     pluralForm = options.few;
-  } else if (lastDigit === 1) {
+  } else if (penultimateDigit !== 1 && lastDigit === 1) {
     pluralForm = options.one;
   }
 
   return `${count} ${pluralForm}`;
-};
+}
 
 const ukUAGrid: Partial<GridLocaleText> = {
   // Root
@@ -65,6 +66,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // columnsManagementSearchTitle: 'Search',
   // columnsManagementNoColumns: 'No columns',
   // columnsManagementShowHideAllText: 'Show/Hide All',
+  // columnsManagementReset: 'Reset',
 
   // Filter panel text
   filterPanelAddFilter: 'Додати фільтр',
@@ -80,7 +82,9 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'містить',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'дорівнює',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'починається з',
   filterOperatorEndsWith: 'закінчується на',
   filterOperatorIs: 'дорівнює',
@@ -101,7 +105,9 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Містить',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Дорівнює',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Починається з',
   headerFilterOperatorEndsWith: 'Закінчується на',
   headerFilterOperatorIs: 'Дорівнює',

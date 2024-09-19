@@ -41,6 +41,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   // columnsManagementSearchTitle: 'Search',
   // columnsManagementNoColumns: 'No columns',
   // columnsManagementShowHideAllText: 'Show/Hide All',
+  // columnsManagementReset: 'Reset',
 
   // Filter panel text
   filterPanelAddFilter: '필터 추가',
@@ -56,7 +57,9 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: '포함하는',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: '값이 같은',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: '시작하는',
   filterOperatorEndsWith: '끝나는',
   filterOperatorIs: '~인',
@@ -77,7 +80,9 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   // headerFilterOperatorStartsWith: 'Starts with',
   // headerFilterOperatorEndsWith: 'Ends with',
   // headerFilterOperatorIs: 'Is',

@@ -42,6 +42,7 @@ const zhHKGrid: Partial<GridLocaleText> = {
   // columnsManagementSearchTitle: 'Search',
   // columnsManagementNoColumns: 'No columns',
   // columnsManagementShowHideAllText: 'Show/Hide All',
+  // columnsManagementReset: 'Reset',
 
   // Filter panel text
   filterPanelAddFilter: '新增過濾器',
@@ -57,7 +58,9 @@ const zhHKGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: '包含',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: '等於',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: '以。。開始',
   filterOperatorEndsWith: '以。。結束',
   filterOperatorIs: '是',
@@ -78,7 +81,9 @@ const zhHKGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: '包含',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: '等於',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: '以。。開始',
   headerFilterOperatorEndsWith: '以。。結束',
   headerFilterOperatorIs: '是',

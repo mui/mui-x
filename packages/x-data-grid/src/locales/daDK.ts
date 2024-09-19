@@ -41,7 +41,8 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Columns management text
   columnsManagementSearchTitle: 'Søg',
   columnsManagementNoColumns: 'Ingen søjler',
-  columnsManagementShowHideAllText: 'Vis/Shjul Alle',
+  columnsManagementShowHideAllText: 'Vis/Skjul Alle',
+  // columnsManagementReset: 'Reset',
 
   // Filter panel text
   filterPanelAddFilter: 'Tilføj filter',
@@ -57,7 +58,9 @@ const daDKGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'indeholder',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'lig med',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'begynder med',
   filterOperatorEndsWith: 'ender med',
   filterOperatorIs: 'er lig med',
@@ -78,7 +81,9 @@ const daDKGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Indeholder',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Lig med',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Begynder med',
   headerFilterOperatorEndsWith: 'Ender med',
   headerFilterOperatorIs: 'Er lig med',

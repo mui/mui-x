@@ -1,9 +1,10 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SvgContext } from '../context/DrawingProvider';
 import { InteractionContext } from '../context/InteractionProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
-import { SeriesContext } from '../context/SeriesContextProvider';
+import { useSeries } from '../hooks/useSeries';
+import { useSvgRef } from '../hooks';
+import { useCartesianContext } from '../context/CartesianProvider';
 
 type AxisData = {
   dataIndex: number;
@@ -24,10 +25,10 @@ export interface ChartsOnAxisClickHandlerProps {
 function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
   const { onAxisClick } = props;
 
-  const svgRef = React.useContext(SvgContext);
-  const series = React.useContext(SeriesContext);
+  const svgRef = useSvgRef();
+  const series = useSeries();
   const { axis } = React.useContext(InteractionContext);
-  const { xAxisIds, xAxis, yAxisIds, yAxis } = React.useContext(CartesianContext);
+  const { xAxisIds, xAxis, yAxisIds, yAxis } = useCartesianContext();
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -38,7 +39,7 @@ function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
     const handleMouseClick = (event: MouseEvent) => {
       event.preventDefault();
 
-      const isXaxis = (axis.x && axis.x.index) !== undefined;
+      const isXaxis = axis.x && axis.x.index !== -1;
       const USED_AXIS_ID = isXaxis ? xAxisIds[0] : yAxisIds[0];
       const dataIndex = isXaxis ? axis.x && axis.x.index : axis.y && axis.y.index;
 
@@ -53,7 +54,11 @@ function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
         .forEach((seriesType) => {
           series[seriesType]?.seriesOrder.forEach((seriesId) => {
             const seriesItem = series[seriesType]!.series[seriesId];
-            const axisKey = isXaxis ? seriesItem.xAxisKey : seriesItem.yAxisKey;
+
+            const providedXAxisId = seriesItem.xAxisId ?? seriesItem.xAxisKey;
+            const providedYAxisId = seriesItem.yAxisId ?? seriesItem.yAxisKey;
+
+            const axisKey = isXaxis ? providedXAxisId : providedYAxisId;
             if (axisKey === undefined || axisKey === USED_AXIS_ID) {
               seriesValues[seriesId] = seriesItem.data[dataIndex];
             }
@@ -76,7 +81,7 @@ function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
 ChartsOnAxisClickHandler.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The function called for onClick events.

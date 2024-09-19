@@ -34,10 +34,10 @@
       }
     },
     "onError": {
-      "description": "Callback fired when the error associated to the current value changes.",
+      "description": "Callback fired when the error associated with the current value changes. When a validation error is detected, the <code>error</code> parameter contains a non-null value. This can be used to render an appropriate form error.",
       "typeDescriptions": {
-        "error": "The new error.",
-        "value": "The value associated to the error."
+        "error": "The reason why the current value is not valid.",
+        "value": "The value associated with the error."
       }
     },
     "onSelectedSectionsChange": {

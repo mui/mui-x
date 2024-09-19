@@ -1,14 +1,17 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SeriesContext } from '../context/SeriesContextProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { useChartId } from '../hooks/useChartId';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
-import { cleanId } from '../internals/utils';
+import { cleanId } from '../internals/cleanId';
 import getColor from './getColor';
+import { useLineSeries } from '../hooks/useSeries';
+import { useDrawingArea } from '../hooks/useDrawingArea';
+import { CircleMarkElement } from './CircleMarkElement';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -40,6 +43,12 @@ export interface MarkPlotProps
     event: React.MouseEvent<SVGElement, MouseEvent>,
     lineItemIdentifier: LineItemIdentifier,
   ) => void;
+  /**
+   * If `true` the mark element will only be able to render circle.
+   * Giving fewer customization options, but saving around 40ms per 1.000 marks.
+   * @default false
+   */
+  experimentalRendering?: boolean;
 }
 
 /**
@@ -53,13 +62,14 @@ export interface MarkPlotProps
  * - [MarkPlot API](https://mui.com/x/api/charts/mark-plot/)
  */
 function MarkPlot(props: MarkPlotProps) {
-  const { slots, slotProps, skipAnimation, onItemClick, ...other } = props;
+  const { slots, slotProps, skipAnimation, onItemClick, experimentalRendering, ...other } = props;
 
-  const seriesData = React.useContext(SeriesContext).line;
-  const axisData = React.useContext(CartesianContext);
+  const seriesData = useLineSeries();
+  const axisData = useCartesianContext();
   const chartId = useChartId();
+  const drawingArea = useDrawingArea();
 
-  const Mark = slots?.mark ?? MarkElement;
+  const Mark = slots?.mark ?? (experimentalRendering ? CircleMarkElement : MarkElement);
 
   if (seriesData === undefined) {
     return null;
@@ -74,6 +84,8 @@ function MarkPlot(props: MarkPlotProps) {
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.map((seriesId) => {
           const {
+            xAxisId: xAxisIdProp,
+            yAxisId: yAxisIdProp,
             xAxisKey = defaultXAxisId,
             yAxisKey = defaultYAxisId,
             stackedData,
@@ -85,36 +97,26 @@ function MarkPlot(props: MarkPlotProps) {
             return null;
           }
 
-          const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
-          const yScale = yAxis[yAxisKey].scale;
-          const xData = xAxis[xAxisKey].data;
+          const xAxisId = xAxisIdProp ?? xAxisKey;
+          const yAxisId = yAxisIdProp ?? yAxisKey;
 
-          const xRange = xAxis[xAxisKey].scale.range();
-          const yRange = yScale.range();
-
-          const isInRange = ({ x, y }: { x: number; y: number }) => {
-            if (x < Math.min(...xRange) || x > Math.max(...xRange)) {
-              return false;
-            }
-            if (y < Math.min(...yRange) || y > Math.max(...yRange)) {
-              return false;
-            }
-            return true;
-          };
+          const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
+          const yScale = yAxis[yAxisId].scale;
+          const xData = xAxis[xAxisId].data;
 
           if (xData === undefined) {
             throw new Error(
-              `MUI X Charts: ${
-                xAxisKey === DEFAULT_X_AXIS_KEY
+              `MUI X: ${
+                xAxisId === DEFAULT_X_AXIS_KEY
                   ? 'The first `xAxis`'
-                  : `The x-axis with id "${xAxisKey}"`
+                  : `The x-axis with id "${xAxisId}"`
               } should have data property to be able to display a line plot.`,
             );
           }
 
           const clipId = cleanId(`${chartId}-${seriesId}-line-clip`); // We assume that if displaying line mark, the line will also be rendered
 
-          const colorGetter = getColor(series[seriesId], xAxis[xAxisKey], yAxis[yAxisKey]);
+          const colorGetter = getColor(series[seriesId], xAxis[xAxisId], yAxis[yAxisId]);
 
           return (
             <g key={seriesId} clipPath={`url(#${clipId})`}>
@@ -134,7 +136,7 @@ function MarkPlot(props: MarkPlotProps) {
                     // Remove missing data point
                     return false;
                   }
-                  if (!isInRange({ x, y })) {
+                  if (!drawingArea.isPointInside({ x, y })) {
                     // Remove out of range
                     return false;
                   }
@@ -159,7 +161,6 @@ function MarkPlot(props: MarkPlotProps) {
                       color={colorGetter(index)}
                       x={x}
                       y={y!} // Don't know why TS doesn't get from the filter that y can't be null
-                      highlightScope={series[seriesId].highlightScope}
                       skipAnimation={skipAnimation}
                       onClick={
                         onItemClick &&
@@ -181,8 +182,14 @@ function MarkPlot(props: MarkPlotProps) {
 MarkPlot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true` the mark element will only be able to render circle.
+   * Giving fewer customization options, but saving around 40ms per 1.000 marks.
+   * @default false
+   */
+  experimentalRendering: PropTypes.bool,
   /**
    * Callback fired when a line mark item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.

@@ -42,6 +42,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   columnsManagementSearchTitle: 'Buscar',
   columnsManagementNoColumns: 'Nenhuma coluna',
   columnsManagementShowHideAllText: 'Mostrar/Ocultar Todas',
+  columnsManagementReset: 'Redefinir',
 
   // Filter panel text
   filterPanelAddFilter: 'Adicionar filtro',
@@ -57,7 +58,9 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'contém',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'é igual a',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'começa com',
   filterOperatorEndsWith: 'termina com',
   filterOperatorIs: 'é',
@@ -78,7 +81,9 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Contém',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Igual',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Começa com',
   headerFilterOperatorEndsWith: 'Termina com',
   headerFilterOperatorIs: 'É',

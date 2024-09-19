@@ -6,6 +6,7 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import {
   GridFilterItem,
   GridFilterOperator,
@@ -14,12 +15,16 @@ import {
   gridVisibleColumnFieldsSelector,
   getDataGridUtilityClass,
   useGridSelector,
+  GridFilterInputValue,
+  GridFilterInputDate,
+  GridFilterInputBoolean,
+  GridColType,
+  GridFilterInputSingleSelect,
   gridFilterModelSelector,
   gridFilterableColumnLookupSelector,
   GridPinnedColumnPosition,
 } from '@mui/x-data-grid';
 import {
-  fastMemo,
   GridStateColDef,
   useGridPrivateApiContext,
   gridHeaderFilteringEditFieldSelector,
@@ -86,7 +91,16 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const dateSx = {
   [`& input[value=""]:not(:focus)`]: { color: 'transparent' },
 };
-
+const defaultInputComponents: { [key in GridColType]: React.JSXElementConstructor<any> | null } = {
+  string: GridFilterInputValue,
+  number: GridFilterInputValue,
+  date: GridFilterInputDate,
+  dateTime: GridFilterInputDate,
+  boolean: GridFilterInputBoolean,
+  singleSelect: GridFilterInputSingleSelect,
+  actions: null,
+  custom: null,
+};
 const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCellProps>(
   (props, ref) => {
     const {
@@ -123,8 +137,12 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const isMenuOpen = menuOpenField === colDef.field;
 
     // TODO: Support for `isAnyOf` operator
-    const filterOperators =
-      colDef.filterOperators?.filter((operator) => operator.value !== 'isAnyOf') ?? [];
+    const filterOperators = React.useMemo(() => {
+      if (!colDef.filterOperators) {
+        return [];
+      }
+      return colDef.filterOperators.filter((operator) => operator.value !== 'isAnyOf');
+    }, [colDef.filterOperators]);
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const filterableColumnsLookup = useGridSelector(apiRef, gridFilterableColumnLookupSelector);
 
@@ -136,10 +154,16 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       return filterModelItem ? !filterableColumnsLookup[filterModelItem.field] : false;
     }, [colDef.field, filterModel, filterableColumnsLookup]);
 
-    const currentOperator = filterOperators![0];
+    const currentOperator = React.useMemo(
+      () =>
+        filterOperators.find((operator) => operator.value === item.operator) ?? filterOperators![0],
+      [item.operator, filterOperators],
+    );
 
     const InputComponent =
-      colDef.filterable || isFilterReadOnly ? currentOperator!.InputComponent : null;
+      colDef.filterable || isFilterReadOnly
+        ? (currentOperator.InputComponent ?? defaultInputComponents[colDef.type as GridColType])
+        : null;
 
     const applyFilterChanges = React.useCallback(
       (updatedItem: GridFilterItem) => {
@@ -286,10 +310,10 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const classes = useUtilityClasses(ownerState as OwnerState);
 
-    const isNoInputOperator =
-      filterOperators?.find(({ value }) => item.operator === value)?.requiresFilterValue === false;
+    const isNoInputOperator = currentOperator.requiresFilterValue === false;
 
     const isApplied = Boolean(item?.value) || isNoInputOperator;
+
     const label =
       currentOperator.headerLabel ??
       apiRef.current.getLocaleText(
@@ -305,13 +329,11 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
         style={{
           height,
           width,
-          minWidth: width,
-          maxWidth: width,
           ...styleProp,
         }}
         role="columnheader"
         aria-colindex={colIndex + 1}
-        aria-label={headerFilterComponent == null ? colDef.headerName ?? colDef.field : undefined}
+        aria-label={headerFilterComponent == null ? (colDef.headerName ?? colDef.field) : undefined}
         {...other}
         {...mouseEventsHandlers}
       >
@@ -377,7 +399,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 GridHeaderFilterCell.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   colDef: PropTypes.object.isRequired,
   colIndex: PropTypes.number.isRequired,

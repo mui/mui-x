@@ -1,6 +1,6 @@
 import * as React from 'react';
-import Grid from '@mui/material/Unstable_Grid2';
-import InfoCard from 'docs/src/components/action/InfoCard';
+import Grid from '@mui/material/Grid';
+import { InfoCard } from '@mui/docs/InfoCard';
 import AccountTreeRounded from '@mui/icons-material/AccountTreeRounded';
 import PivotTableChartRoundedIcon from '@mui/icons-material/PivotTableChartRounded';
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
@@ -38,7 +38,7 @@ export default function InstallationGrid() {
   return (
     <Grid container spacing={2}>
       {content.map(({ icon, title, description, link }) => (
-        <Grid key={title} xs={12} sm={6}>
+        <Grid item key={title} xs={12} sm={6}>
           <InfoCard
             classNameTitle="algolia-lvl3"
             link={link}

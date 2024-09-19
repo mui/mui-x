@@ -43,6 +43,7 @@ export const useGridFocus = (
   const logger = useGridLogger(apiRef, 'useGridFocus');
 
   const lastClickedCell = React.useRef<GridCellParams | null>(null);
+  const hasRootReference = apiRef.current.rootElementRef.current !== null;
 
   const publishCellFocusOut = React.useCallback(
     (cell: GridCellCoordinates | null, event: GridEventLookup['cellFocusOut']['event']) => {
@@ -331,7 +332,7 @@ export const useGridFocus = (
 
   const handleBlur = React.useCallback<GridEventListener<'columnHeaderBlur'>>(
     (_, event) => {
-      if (event.relatedTarget?.className.includes(gridClasses.columnHeader)) {
+      if (event.relatedTarget?.getAttribute('class')?.includes(gridClasses.columnHeader)) {
         return;
       }
       logger.debug(`Clearing focus`);
@@ -489,7 +490,7 @@ export const useGridFocus = (
     return () => {
       doc.removeEventListener('mouseup', handleDocumentClick);
     };
-  }, [apiRef, handleDocumentClick]);
+  }, [apiRef, hasRootReference, handleDocumentClick]);
 
   useGridApiEventHandler(apiRef, 'columnHeaderBlur', handleBlur);
   useGridApiEventHandler(apiRef, 'cellDoubleClick', handleCellDoubleClick);

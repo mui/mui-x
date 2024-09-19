@@ -32,6 +32,8 @@
         "boolean": "If <code>true</code>, the year will be disabled."
       }
     },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
@@ -40,7 +42,13 @@
       "seeMoreText": "See the {{link}} for more details."
     },
     "value": { "description": "The selected value. Used when the component is controlled." },
+    "yearsOrder": {
+      "description": "Years are displayed in ascending (chronological) order by default. If <code>desc</code>, years are displayed in descending order."
+    },
     "yearsPerRow": { "description": "Years rendered per row." }
   },
-  "classDescriptions": { "root": { "description": "Styles applied to the root element." } }
+  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
+  "slotDescriptions": {
+    "yearButton": "Button displayed to render a single year in the <code>year</code> view."
+  }
 }

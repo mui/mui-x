@@ -18,7 +18,7 @@ import {
   GridStateColDef,
   GridColumnHeaderRow,
 } from '@mui/x-data-grid/internals';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
@@ -166,19 +166,16 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           getColumnFilters({
             position: GridPinnedColumnPosition.LEFT,
             renderContext: leftRenderContext,
-            minFirstColumn: leftRenderContext.firstColumnIndex,
             maxLastColumn: leftRenderContext.lastColumnIndex,
           })}
         {getColumnFilters({
           renderContext,
-          minFirstColumn: pinnedColumns.left.length,
           maxLastColumn: visibleColumns.length - pinnedColumns.right.length,
         })}
         {rightRenderContext &&
           getColumnFilters({
             position: GridPinnedColumnPosition.RIGHT,
             renderContext: rightRenderContext,
-            minFirstColumn: rightRenderContext.firstColumnIndex,
             maxLastColumn: rightRenderContext.lastColumnIndex,
           })}
       </GridColumnHeaderRow>

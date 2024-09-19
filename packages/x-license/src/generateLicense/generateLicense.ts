@@ -1,29 +1,37 @@
 import { md5 } from '../encoding/md5';
 import { base64Encode } from '../encoding/base64';
-import { LICENSE_SCOPES, LicenseScope } from '../utils/licenseScope';
-import { LICENSING_MODELS, LicensingModel } from '../utils/licensingModel';
+import { PLAN_SCOPES, PlanScope, PlanVersion } from '../utils/plan';
+import { LICENSE_MODELS, LicenseModel } from '../utils/licenseModel';
 
 const licenseVersion = '2';
 
 export interface LicenseDetails {
-  orderNumber: string;
   expiryDate: Date;
-  scope: LicenseScope;
-  licensingModel: LicensingModel;
+  licenseModel?: LicenseModel;
+  orderNumber: string;
+  planScope?: PlanScope;
+  planVersion: PlanVersion;
 }
 
 function getClearLicenseString(details: LicenseDetails) {
-  if (details.scope && !LICENSE_SCOPES.includes(details.scope)) {
+  if (details.planScope && !PLAN_SCOPES.includes(details.planScope)) {
     throw new Error('MUI X: Invalid scope');
   }
 
-  if (details.licensingModel && !LICENSING_MODELS.includes(details.licensingModel)) {
+  if (details.licenseModel && !LICENSE_MODELS.includes(details.licenseModel)) {
     throw new Error('MUI X: Invalid licensing model');
   }
 
-  return `O=${details.orderNumber},E=${details.expiryDate.getTime()},S=${details.scope},LM=${
-    details.licensingModel
-  },KV=${licenseVersion}`;
+  const keyParts = [
+    `O=${details.orderNumber}`,
+    `E=${details.expiryDate.getTime()}`,
+    `S=${details.planScope}`,
+    `LM=${details.licenseModel}`,
+    `PV=${details.planVersion}`,
+    `KV=${licenseVersion}`,
+  ];
+
+  return keyParts.join(',');
 }
 
 export function generateLicense(details: LicenseDetails) {

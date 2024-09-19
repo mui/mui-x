@@ -42,6 +42,7 @@ const esESGrid: Partial<GridLocaleText> = {
   columnsManagementSearchTitle: 'Buscar',
   columnsManagementNoColumns: 'Sin columnas',
   columnsManagementShowHideAllText: 'Mostrar/Ocultar todas',
+  columnsManagementReset: 'Restablecer',
 
   // Filter panel text
   filterPanelAddFilter: 'Agregar filtro',
@@ -57,7 +58,9 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'contiene',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'es igual',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'comienza con',
   filterOperatorEndsWith: 'termina con',
   filterOperatorIs: 'es',
@@ -78,7 +81,9 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Contiene',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Es igual a',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Comienza con',
   headerFilterOperatorEndsWith: 'Termina con',
   headerFilterOperatorIs: 'Es',
@@ -170,10 +175,10 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Agregación',
-  aggregationFunctionLabelSum: 'sum',
-  aggregationFunctionLabelAvg: 'avg',
-  aggregationFunctionLabelMin: 'min',
-  aggregationFunctionLabelMax: 'max',
+  aggregationFunctionLabelSum: 'suma',
+  aggregationFunctionLabelAvg: 'promedio',
+  aggregationFunctionLabelMin: 'mínimo',
+  aggregationFunctionLabelMax: 'máximo',
   aggregationFunctionLabelSize: 'tamaño',
 };
 

@@ -17,7 +17,7 @@ The `<DemoContainer />` is an internal component used together with the `<DemoIt
 
 This helps avoid the repeated use of layout components, such as `<Box />` or `<Stack />`, while keeping the code minimal and clear, and allowing readers to focus on what is important - the demo itself.
 
-:::warn
+:::warning
 You should never use these components in your application.
 :::
 
