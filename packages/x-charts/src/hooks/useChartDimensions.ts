@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { DEFAULT_MARGINS } from '../constants';
 import { LayoutConfig } from '../models/layout';

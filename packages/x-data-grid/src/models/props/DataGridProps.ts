@@ -307,12 +307,12 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   rowSpacingType: 'margin' | 'border';
   /**
-   * If `true`, the vertical borders of the cells are displayed.
+   * If `true`, vertical borders will be displayed between cells.
    * @default false
    */
   showCellVerticalBorder: boolean;
   /**
-   * If `true`, the right border of the column headers are displayed.
+   * If `true`, vertical borders will be displayed between column header items.
    * @default false
    */
   showColumnVerticalBorder: boolean;
@@ -785,6 +785,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onProcessRowUpdateError?: (error: any) => void;
   columnGroupingModel?: GridColumnGroupingModel;
+  /**
+   * Sets the height in pixels of the column group headers in the Data Grid.
+   * Inherits the `columnHeaderHeight` value if not set.
+   */
+  columnGroupHeaderHeight?: number;
   /**
    * Callback called when the data is copied to the clipboard.
    * @param {string} data The data copied to the clipboard.
