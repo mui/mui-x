@@ -54,8 +54,8 @@ export const useGridDataSourceLazyLoader = (
   const renderContext = useGridSelector(privateApiRef, gridRenderContextSelector);
   const renderedRowsIntervalCache = React.useRef(INTERVAL_CACHE_INITIAL_STATE);
   const previousLastRowIndex = React.useRef(0);
+  const loadingTrigger = React.useRef<LoadingTrigger | null>(null);
   const isDisabled = !props.unstable_dataSource || props.lazyLoading !== true;
-  const [loadingMode, setLoadingMode] = React.useState<LoadingTrigger | null>(null);
 
   const heights = React.useMemo(
     () => ({
@@ -65,7 +65,49 @@ export const useGridDataSourceLazyLoader = (
     [dimensions.viewportInnerSize.height, dimensions.contentSize.height],
   );
 
-  const addSkeletonRows = React.useCallback(() => {
+  const resetGrid = React.useCallback(() => {
+    privateApiRef.current.setRows([]);
+    previousLastRowIndex.current = 0;
+    const getRowsParams: GridGetRowsParams = {
+      start: 0,
+      end: paginationModel.pageSize - 1,
+      sortModel,
+      filterModel,
+    };
+
+    privateApiRef.current.publishEvent('getRows', getRowsParams);
+  }, [privateApiRef, sortModel, filterModel, paginationModel.pageSize]);
+
+  const ensureValidRowCount = React.useCallback(
+    (previousLoadingTrigger: LoadingTrigger, newLoadingTrigger: LoadingTrigger) => {
+      // switching from lazy loading to infinite loading should always reset the grid
+      // since there is no guarantee that the new data will be placed correctly
+      // there might be some skeleton rows in between the data or the data has changed (row count became unknown)
+      if (
+        previousLoadingTrigger === LoadingTrigger.VIEWPORT &&
+        newLoadingTrigger === LoadingTrigger.SCROLL_END
+      ) {
+        resetGrid();
+        return;
+      }
+
+      // switching from infinite loading to lazy loading should reset the grid only if the known row count
+      // is smaller than the amount of rows rendered
+      const tree = privateApiRef.current.state.rows.tree;
+      const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
+      const rootGroupChildren = [...rootGroup.children];
+
+      const pageRowCount = privateApiRef.current.state.pagination.rowCount;
+      const rootChildrenCount = rootGroupChildren.length;
+
+      if (rootChildrenCount > pageRowCount) {
+        resetGrid();
+      }
+    },
+    [privateApiRef, resetGrid],
+  );
+
+  const adjustGridRows = React.useCallback(() => {
     const tree = privateApiRef.current.state.rows.tree;
     const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
     const rootGroupChildren = [...rootGroup.children];
@@ -73,14 +115,12 @@ export const useGridDataSourceLazyLoader = (
     const pageRowCount = privateApiRef.current.state.pagination.rowCount;
     const rootChildrenCount = rootGroupChildren.length;
 
-    if (
-      pageRowCount === undefined ||
-      rootChildrenCount === 0 ||
-      rootChildrenCount >= pageRowCount
-    ) {
+    // if row count cannot be determined or all rows are there, do nothing
+    if (pageRowCount === -1 || rootChildrenCount === 0 || rootChildrenCount === pageRowCount) {
       return;
     }
 
+    // fill the grid with skeleton rows
     for (let i = 0; i < pageRowCount - rootChildrenCount; i += 1) {
       const skeletonId = getSkeletonRowId(i);
 
@@ -110,11 +150,51 @@ export const useGridDataSourceLazyLoader = (
     );
   }, [privateApiRef]);
 
+  const updateLoadingTrigger = React.useCallback(
+    (rowCount: number) => {
+      const newLoadingTrigger =
+        rowCount === -1 ? LoadingTrigger.SCROLL_END : LoadingTrigger.VIEWPORT;
+
+      if (loadingTrigger.current !== newLoadingTrigger) {
+        loadingTrigger.current = newLoadingTrigger;
+      }
+
+      if (loadingTrigger.current !== null) {
+        ensureValidRowCount(loadingTrigger.current, newLoadingTrigger);
+      }
+    },
+    [ensureValidRowCount],
+  );
+
+  const handleDataUpdate = React.useCallback(() => {
+    if (isDisabled) {
+      return;
+    }
+
+    if (loadingTrigger.current === null) {
+      updateLoadingTrigger(privateApiRef.current.state.pagination.rowCount);
+    }
+
+    adjustGridRows();
+    privateApiRef.current.state.rows.loading = false;
+    privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
+  }, [privateApiRef, isDisabled, updateLoadingTrigger, adjustGridRows]);
+
+  const handleRowCountChange = React.useCallback(() => {
+    if (isDisabled || loadingTrigger.current === null) {
+      return;
+    }
+
+    updateLoadingTrigger(privateApiRef.current.state.pagination.rowCount);
+    adjustGridRows();
+    privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
+  }, [privateApiRef, isDisabled, updateLoadingTrigger, adjustGridRows]);
+
   const handleScrolling: GridEventListener<'scrollPositionChange'> = React.useCallback(
     (newScrollPosition) => {
       if (
         isDisabled ||
-        loadingMode !== LoadingTrigger.SCROLL_END ||
+        loadingTrigger.current !== LoadingTrigger.SCROLL_END ||
         previousLastRowIndex.current >= renderContext.lastRowIndex
       ) {
         return;
@@ -141,7 +221,6 @@ export const useGridDataSourceLazyLoader = (
       privateApiRef,
       props.scrollEndThreshold,
       isDisabled,
-      loadingMode,
       sortModel,
       filterModel,
       heights,
@@ -150,29 +229,11 @@ export const useGridDataSourceLazyLoader = (
     ],
   );
 
-  const handleDataUpdate = React.useCallback(() => {
-    if (isDisabled) {
-      return;
-    }
-
-    const pageRowCount = privateApiRef.current.state.pagination.rowCount;
-    const newLoadingMode =
-      pageRowCount === undefined || pageRowCount === -1
-        ? LoadingTrigger.SCROLL_END
-        : LoadingTrigger.VIEWPORT;
-    if (loadingMode !== newLoadingMode) {
-      setLoadingMode(newLoadingMode);
-    }
-
-    addSkeletonRows();
-    privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
-  }, [privateApiRef, isDisabled, loadingMode, addSkeletonRows]);
-
   const handleRenderedRowsIntervalChange = React.useCallback<
     GridEventListener<'renderedRowsIntervalChange'>
   >(
     (params) => {
-      if (isDisabled) {
+      if (isDisabled || loadingTrigger.current !== LoadingTrigger.VIEWPORT) {
         return;
       }
 
@@ -234,13 +295,13 @@ export const useGridDataSourceLazyLoader = (
 
       privateApiRef.current.setRows([]);
       previousLastRowIndex.current = 0;
-      if (loadingMode === LoadingTrigger.VIEWPORT) {
+      if (loadingTrigger.current === LoadingTrigger.VIEWPORT) {
         // replace all rows with skeletons to maintain the same scroll position
-        addSkeletonRows();
+        adjustGridRows();
       }
 
       const rangeParams =
-        loadingMode === LoadingTrigger.VIEWPORT
+        loadingTrigger.current === LoadingTrigger.VIEWPORT
           ? {
               start: renderContext.firstRowIndex,
               end: renderContext.lastRowIndex,
@@ -261,11 +322,10 @@ export const useGridDataSourceLazyLoader = (
     [
       privateApiRef,
       isDisabled,
-      loadingMode,
       filterModel,
       paginationModel.pageSize,
       renderContext,
-      addSkeletonRows,
+      adjustGridRows,
     ],
   );
 
@@ -290,7 +350,7 @@ export const useGridDataSourceLazyLoader = (
   );
 
   useGridApiEventHandler(privateApiRef, 'rowsFetched', handleDataUpdate);
-  useGridApiEventHandler(privateApiRef, 'rowCountChange', handleDataUpdate);
+  useGridApiEventHandler(privateApiRef, 'rowCountChange', handleRowCountChange);
   useGridApiEventHandler(privateApiRef, 'scrollPositionChange', handleScrolling);
   useGridApiEventHandler(
     privateApiRef,
