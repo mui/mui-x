@@ -138,8 +138,8 @@ importers:
         specifier: ^4.17.7
         version: 4.17.7
       '@types/mocha':
-        specifier: ^10.0.7
-        version: 10.0.7
+        specifier: ^10.0.8
+        version: 10.0.8
       '@types/node':
         specifier: ^20.16.5
         version: 20.16.5
@@ -722,8 +722,8 @@ importers:
         version: 17.7.2
     devDependencies:
       '@types/mocha':
-        specifier: ^10.0.7
-        version: 10.0.7
+        specifier: ^10.0.8
+        version: 10.0.8
       '@types/node':
         specifier: ^20.16.5
         version: 20.16.5
@@ -4192,8 +4192,8 @@ packages:
   '@types/minimist@1.2.5':
     resolution: {integrity: sha512-hov8bUuiLiyFPGyFPE1lwWhmzYbirOXQNNo40+y3zow8aFVTeyn3VWL0VFFfdNddA8S4Vf0Tc062rzyNr7Paag==}
 
-  '@types/mocha@10.0.7':
-    resolution: {integrity: sha512-GN8yJ1mNTcFcah/wKEFIJckJx9iJLoMSzWcfRRuxz/Jk+U6KQNnml+etbtxFK8lPjzOw3zp4Ha/kjSst9fsHYw==}
+  '@types/mocha@10.0.8':
+    resolution: {integrity: sha512-HfMcUmy9hTMJh66VNcmeC9iVErIZJli2bszuXc6julh5YGuRb/W5OnkHjwLNYdFlMis0sY3If5SEAp+PktdJjw==}
 
   '@types/moment-hijri@2.1.4':
     resolution: {integrity: sha512-pGX1DaSducJDkJAC3q8fCuemow0pzI4oa0iKcspwQNPXuwlI55WRgBVrA6NVi+rf8bZN1qjWVsGdUatrLhZk6Q==}
@@ -13188,7 +13188,7 @@ snapshots:
 
   '@types/minimist@1.2.5': {}
 
-  '@types/mocha@10.0.7': {}
+  '@types/mocha@10.0.8': {}
 
   '@types/moment-hijri@2.1.4':
     dependencies:
