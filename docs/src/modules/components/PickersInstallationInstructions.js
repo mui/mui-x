@@ -10,7 +10,6 @@ const packages = {
 
 const peerDependency = {
   label: 'Date library',
-  installationComment: '// Install date library (if not already installed)',
   packages: ['dayjs', 'date-fns', 'luxon', 'moment'],
 };
 
