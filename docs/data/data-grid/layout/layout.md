@@ -8,18 +8,6 @@ Instead, it takes up the space given by its parent.
 The Data Grid will raise an error in the console if its container has no intrinsic dimensions.
 :::
 
-## Percentage dimensions
-
-When using percentages (%) for height or width, make sure that the Data Grid's parent container has intrinsic dimensions.
-Browsers adjust the element based on a percentage of its parent's size.
-If the parent has no size, the percentage will be zero.
-
-## Predefined dimensions
-
-You can predefine dimensions for the parent of the data grid.
-
-{{"demo": "FixedSizeGrid.js", "bg": "inline"}}
-
 ## Flex parent container
 
 The Data Grid can be placed inside a flex container with `flex-direction: column`.
@@ -33,6 +21,18 @@ This is effectively equivalent to setting `autoHeight={true}`, but with the adde
 In the demo below, the Data Grid is placed inside a flex container with a minimum height of 200px and a maximum height of 400px and adapts its height when the number of rows changes.
 
 {{"demo": "MinMaxHeightGrid.js", "bg": "inline"}}
+
+## Percentage dimensions
+
+When using percentages (%) for height or width, make sure that the Data Grid's parent container has intrinsic dimensions.
+Browsers adjust the element based on a percentage of its parent's size.
+If the parent has no size, the percentage will be zero.
+
+## Predefined dimensions
+
+You can predefine dimensions for the parent of the data grid.
+
+{{"demo": "FixedSizeGrid.js", "bg": "inline"}}
 
 ## Auto height
 
