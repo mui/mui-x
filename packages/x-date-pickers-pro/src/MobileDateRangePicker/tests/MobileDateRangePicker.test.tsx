@@ -39,15 +39,12 @@ describe('<MobileDateRangePicker />', () => {
     it('should open when focusing the start input', async () => {
       const onOpen = spy();
 
-      const { user } = render(
-        <MobileDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />,
-      );
+      render(<MobileDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
 
       await openPicker({
         type: 'date-range',
         variant: 'mobile',
         initialFocus: 'start',
-        click: user.click,
       });
 
       expect(onOpen.callCount).to.equal(1);
@@ -57,15 +54,12 @@ describe('<MobileDateRangePicker />', () => {
     it('should open when focusing the end input', async () => {
       const onOpen = spy();
 
-      const { user } = render(
-        <MobileDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />,
-      );
+      render(<MobileDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
 
       await openPicker({
         type: 'date-range',
         variant: 'mobile',
         initialFocus: 'end',
-        click: user.click,
       });
 
       expect(onOpen.callCount).to.equal(1);
@@ -96,7 +90,6 @@ describe('<MobileDateRangePicker />', () => {
         type: 'date-range',
         variant: 'mobile',
         initialFocus: 'start',
-        click: user.click,
       });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
@@ -142,7 +135,6 @@ describe('<MobileDateRangePicker />', () => {
         type: 'date-range',
         variant: 'mobile',
         initialFocus: 'end',
-        click: user.click,
       });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
@@ -179,7 +171,6 @@ describe('<MobileDateRangePicker />', () => {
         type: 'date-range',
         variant: 'mobile',
         initialFocus: 'end',
-        click: user.click,
       });
 
       // Change the end date
@@ -215,7 +206,6 @@ describe('<MobileDateRangePicker />', () => {
         type: 'date-range',
         variant: 'mobile',
         initialFocus: 'start',
-        click: user.click,
       });
 
       // Change the start date (already tested)
@@ -253,7 +243,6 @@ describe('<MobileDateRangePicker />', () => {
         type: 'date-range',
         variant: 'mobile',
         initialFocus: 'start',
-        click: user.click,
       });
 
       // Change the start date (already tested)
@@ -292,7 +281,6 @@ describe('<MobileDateRangePicker />', () => {
         type: 'date-range',
         variant: 'mobile',
         initialFocus: 'start',
-        click: user.click,
       });
 
       // Clear the date
@@ -324,7 +312,6 @@ describe('<MobileDateRangePicker />', () => {
         type: 'date-range',
         variant: 'mobile',
         initialFocus: 'start',
-        click: user.click,
       });
 
       // Clear the date

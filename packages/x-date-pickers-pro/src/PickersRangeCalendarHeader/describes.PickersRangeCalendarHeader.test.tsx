@@ -12,7 +12,7 @@ const CALENDARS_TO_CLASSES_MAP: Record<1 | 2, ConformanceOptions['classes']> = {
 };
 
 describe('<PickersRangeCalendarHeader /> - Describes', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   Object.entries(CALENDARS_TO_CLASSES_MAP).forEach(([calendars, classes]) => {
     describeConformance(

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen } from '@mui/internal-test-utils';
+import { screen, waitFor } from '@mui/internal-test-utils';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import {
   getAllFieldInputRoot,
@@ -57,7 +57,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       assertRenderedValue(emptyValue);
     });
 
-    it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', () => {
+    it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', async () => {
       const onChange = spy();
 
       const v7Response = renderWithProps({
@@ -65,7 +65,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         defaultValue: values[0],
         onChange,
       });
-      const newValue = setNewValue(values[0], {
+      const newValue = await setNewValue(values[0], {
         selectSection: v7Response.selectSection,
         pressKey: v7Response.pressKey,
       });
@@ -82,7 +82,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       }
     });
 
-    it('should call onChange when updating a value defined with `props.value`', () => {
+    it('should call onChange when updating a value defined with `props.value`', async () => {
       const onChange = spy();
 
       const useControlledElement = (props) => {
@@ -101,7 +101,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         { enableAccessibleFieldDOMStructure: true, value: values[0], onChange },
         { hook: useControlledElement },
       );
-      const newValue = setNewValue(values[0], {
+      const newValue = await setNewValue(values[0], {
         selectSection: v7Response.selectSection,
         pressKey: v7Response.pressKey,
       });
@@ -173,7 +173,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       expect(handleChange.callCount).to.equal(0);
     });
 
-    it('should have correct labelledby relationship when toolbar is shown', () => {
+    it('should have correct labelledby relationship when toolbar is shown', async () => {
       if (componentFamily !== 'picker' || isDesktopRange) {
         return;
       }
@@ -185,14 +185,16 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         localeText: { toolbarTitle: 'Test toolbar' },
       });
 
-      if (params.variant === 'mobile' && params.type === 'date-time-range') {
-        expect(screen.getByLabelText('Start End')).to.have.attribute('role', 'dialog');
-      } else {
-        expect(screen.getByLabelText('Test toolbar')).to.have.attribute('role', 'dialog');
-      }
+      await waitFor(() => {
+        if (params.variant === 'mobile' && params.type === 'date-time-range') {
+          expect(screen.getByLabelText('Start End')).to.have.attribute('role', 'dialog');
+        } else {
+          expect(screen.getByLabelText('Test toolbar')).to.have.attribute('role', 'dialog');
+        }
+      });
     });
 
-    it('should have correct labelledby relationship with provided label when toolbar is hidden', () => {
+    it('should have correct labelledby relationship with provided label when toolbar is hidden', async () => {
       if (componentFamily !== 'picker' || isDesktopRange) {
         return;
       }
@@ -211,7 +213,9 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           : { label: 'test relationship' }),
       });
 
-      expect(screen.getByRole('dialog', { name: 'test relationship' })).not.to.equal(null);
+      await waitFor(() =>
+        expect(screen.getByRole('dialog', { name: 'test relationship' })).not.to.equal(null),
+      );
     });
 
     it('should have correct labelledby relationship without label and hidden toolbar but external props', () => {

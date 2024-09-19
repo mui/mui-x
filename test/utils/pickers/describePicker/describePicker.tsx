@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, fireEvent, createDescribe } from '@mui/internal-test-utils';
+import { screen, createDescribe, waitFor } from '@mui/internal-test-utils';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import { DescribePickerOptions } from './describePicker.types';
 
@@ -23,7 +23,7 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
   });
 
   describe('Localization', () => {
-    it('should respect the `localeText` prop', function test() {
+    it('should respect the `localeText` prop', async function test() {
       if (hasNoView) {
         this.skip();
       }
@@ -36,7 +36,7 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
         />,
       );
 
-      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+      await waitFor(() => expect(screen.queryByText('Custom cancel')).not.to.equal(null));
     });
   });
 
@@ -69,20 +69,20 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
   });
 
   describe('Component slot: DesktopPaper', () => {
-    it('should forward onClick and onTouchStart', function test() {
+    it('should forward onClick and onPointerDown', async function test() {
       if (hasNoView || variant !== 'desktop') {
         this.skip();
       }
 
       const handleClick = spy();
-      const handleTouchStart = spy();
-      render(
+      const handlePointerDown = spy();
+      const { user } = render(
         <ElementToTest
           {...propsToOpen}
           slotProps={{
             desktopPaper: {
               onClick: handleClick,
-              onTouchStart: handleTouchStart,
+              onPointerDown: handlePointerDown,
               'data-testid': 'paper',
             },
           }}
@@ -90,29 +90,28 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
       );
       const paper = screen.getByTestId('paper');
 
-      fireEvent.click(paper);
-      fireEvent.touchStart(paper);
+      await user.click(paper);
 
       expect(handleClick.callCount).to.equal(1);
-      expect(handleTouchStart.callCount).to.equal(1);
+      expect(handlePointerDown.callCount).to.equal(1);
     });
   });
 
   describe('Component slot: Popper', () => {
-    it('should forward onClick and onTouchStart', function test() {
+    it('should forward onClick and onPointerDown', async function test() {
       if (hasNoView || variant !== 'desktop') {
         this.skip();
       }
 
       const handleClick = spy();
-      const handleTouchStart = spy();
-      render(
+      const handlePointerDown = spy();
+      const { user } = render(
         <ElementToTest
           {...propsToOpen}
           slotProps={{
             popper: {
               onClick: handleClick,
-              onTouchStart: handleTouchStart,
+              onPointerDown: handlePointerDown,
               'data-testid': 'popper',
             },
           }}
@@ -120,16 +119,15 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
       );
       const popper = screen.getByTestId('popper');
 
-      fireEvent.click(popper);
-      fireEvent.touchStart(popper);
+      await user.click(popper);
 
       expect(handleClick.callCount).to.equal(1);
-      expect(handleTouchStart.callCount).to.equal(1);
+      expect(handlePointerDown.callCount).to.equal(1);
     });
   });
 
   describe('Component slot: Toolbar', () => {
-    it('should render toolbar on mobile but not on desktop when `hidden` is not defined', function test() {
+    it('should render toolbar on mobile but not on desktop when `hidden` is not defined', async function test() {
       if (hasNoView) {
         this.skip();
       }
@@ -141,14 +139,16 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
         />,
       );
 
-      if (variant === 'desktop') {
-        expect(screen.queryByTestId('pickers-toolbar')).to.equal(null);
-      } else {
-        expect(screen.getByTestId('pickers-toolbar')).toBeVisible();
-      }
+      await waitFor(() => {
+        if (variant === 'desktop') {
+          expect(screen.queryByTestId('pickers-toolbar')).to.equal(null);
+        } else {
+          expect(screen.getByTestId('pickers-toolbar')).toBeVisible();
+        }
+      });
     });
 
-    it('should render toolbar when `hidden` is `false`', function test() {
+    it('should render toolbar when `hidden` is `false`', async function test() {
       if (hasNoView) {
         this.skip();
       }
@@ -160,10 +160,10 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
         />,
       );
 
-      expect(screen.getByTestId('pickers-toolbar')).toBeVisible();
+      await waitFor(() => expect(screen.getByTestId('pickers-toolbar')).toBeVisible());
     });
 
-    it('should not render toolbar when `hidden` is `true`', function test() {
+    it('should not render toolbar when `hidden` is `true`', async function test() {
       if (hasNoView) {
         this.skip();
       }
@@ -175,12 +175,12 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
         />,
       );
 
-      expect(screen.queryByTestId('pickers-toolbar')).to.equal(null);
+      await waitFor(() => expect(screen.queryByTestId('pickers-toolbar')).to.equal(null));
     });
   });
 
   describe('prop: disableOpenPicker', () => {
-    it('should not render the open picker button, but still render the picker if its open', function test() {
+    it('should not render the open picker button, but still render the picker if its open', async function test() {
       if (variant === 'static') {
         this.skip();
       }
@@ -199,7 +199,7 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
         />,
       );
 
-      expect(screen.queryByRole('button', { name: /Choose/ })).to.equal(null);
+      await waitFor(() => expect(screen.queryByRole('button', { name: /Choose/ })).to.equal(null));
       // check if anything has been rendered inside the layout content wrapper
       expect(document.querySelector('.test-pickers-content-wrapper')?.hasChildNodes()).to.equal(
         true,

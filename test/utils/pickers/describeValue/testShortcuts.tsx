@@ -2,31 +2,23 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { expectPickerChangeHandlerValue } from 'test/utils/pickers';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTest, options) => {
-  const {
-    componentFamily,
-    render,
-    renderWithProps,
-    values,
-    emptyValue,
-    setNewValue,
-    ...pickerParams
-  } = options;
+  const { componentFamily, render, values } = options;
 
   if (componentFamily !== 'picker') {
     return;
   }
 
   describe('Picker shortcuts', () => {
-    it('should call onClose, onChange and onAccept when picking a shortcut without explicit changeImportance', () => {
+    it('should call onClose, onChange and onAccept when picking a shortcut without explicit changeImportance', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
-      render(
+      const { user } = render(
         <ElementToTest
           enableAccessibleFieldDOMStructure
           onChange={onChange}
@@ -49,21 +41,21 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
       );
 
       const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
-      fireEvent.click(shortcut);
+      await user.click(shortcut);
 
       expect(onChange.callCount).to.equal(1);
-      expectPickerChangeHandlerValue(pickerParams.type, onChange, values[1]);
+      expectPickerChangeHandlerValue(onChange.lastCall.firstArg, values[1]);
       expect(onAccept.callCount).to.equal(1);
-      expectPickerChangeHandlerValue(pickerParams.type, onAccept, values[1]);
+      expectPickerChangeHandlerValue(onAccept.lastCall.firstArg, values[1]);
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onChange when picking a shortcut with changeImportance="accept"', () => {
+    it('should call onClose and onChange when picking a shortcut with changeImportance="accept"', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
-      render(
+      const { user } = render(
         <ElementToTest
           enableAccessibleFieldDOMStructure
           onChange={onChange}
@@ -87,21 +79,21 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
       );
 
       const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
-      fireEvent.click(shortcut);
+      await user.click(shortcut);
 
       expect(onChange.callCount).to.equal(1);
-      expectPickerChangeHandlerValue(pickerParams.type, onChange, values[1]);
+      expectPickerChangeHandlerValue(onChange.lastCall.firstArg, values[1]);
       expect(onAccept.callCount).to.equal(1);
-      expectPickerChangeHandlerValue(pickerParams.type, onAccept, values[1]);
+      expectPickerChangeHandlerValue(onAccept.lastCall.firstArg, values[1]);
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onChange when picking a shortcut with changeImportance="set"', () => {
+    it('should call onClose and onChange when picking a shortcut with changeImportance="set"', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
-      render(
+      const { user } = render(
         <ElementToTest
           enableAccessibleFieldDOMStructure
           onChange={onChange}
@@ -125,10 +117,10 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
       );
 
       const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
-      fireEvent.click(shortcut);
+      await user.click(shortcut);
 
       expect(onChange.callCount).to.equal(1);
-      expectPickerChangeHandlerValue(pickerParams.type, onChange, values[1]);
+      expectPickerChangeHandlerValue(onChange.lastCall.firstArg, values[1]);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });

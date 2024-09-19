@@ -32,6 +32,7 @@ function innerDescribeAdapters<P extends {}>(
         clock: 'fake',
         clockConfig: new Date(2022, 5, 15),
         instance: adapterName === 'moment' ? momentTZ : undefined,
+        clockOptions: { toFake: ['Date'] },
       });
 
       const fieldInteractions = buildFieldInteractions<P>({

@@ -58,17 +58,18 @@ describe('<MobileTimePicker />', () => {
       const onClose = spy();
       const defaultValue = adapterToUse.date('2018-01-01');
 
-      const { user } = render(
+      render(
         <MobileTimePicker
           enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
           defaultValue={defaultValue}
+          reduceAnimations
         />,
       );
 
-      await openPicker({ type: 'time', variant: 'mobile', click: user.click });
+      await openPicker({ type: 'time', variant: 'mobile' });
 
       // Change the hours
       const hourClockEvent = getClockTouchEvent(11, '12hours');

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, fireEvent, act, within } from '@mui/internal-test-utils';
+import { screen, act, within, waitFor } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
@@ -22,12 +22,13 @@ const getPickerDay = (name: string, picker = 'January 2018') =>
   within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
 
 describe('<DesktopDateRangePicker />', () => {
-  const { render, clock } = createPickerRenderer({
+  const { render } = createPickerRenderer({
     clock: 'fake',
     clockConfig: new Date(2018, 0, 10),
+    clockOptions: { toFake: ['Date'] },
   });
 
-  it('should scroll current month to the active selection when focusing appropriate field', () => {
+  it('should scroll current month to the active selection when focusing appropriate field', async () => {
     render(
       <DesktopDateRangePicker
         enableAccessibleFieldDOMStructure
@@ -36,18 +37,30 @@ describe('<DesktopDateRangePicker />', () => {
       />,
     );
 
-    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+    await openPicker({
+      type: 'date-range',
+      variant: 'desktop',
+      initialFocus: 'start',
+    });
     expect(screen.getByText('May 2019')).toBeVisible();
 
-    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
+    await openPicker({
+      type: 'date-range',
+      variant: 'desktop',
+      initialFocus: 'end',
+    });
     expect(screen.getByText('October 2019')).toBeVisible();
 
     // scroll back
-    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+    await openPicker({
+      type: 'date-range',
+      variant: 'desktop',
+      initialFocus: 'start',
+    });
     expect(screen.getByText('May 2019')).toBeVisible();
   });
 
-  it(`should not crash when opening picker with invalid date value`, () => {
+  it(`should not crash when opening picker with invalid date value`, async () => {
     render(
       <DesktopDateRangePicker
         enableAccessibleFieldDOMStructure
@@ -55,7 +68,11 @@ describe('<DesktopDateRangePicker />', () => {
       />,
     );
 
-    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+    await openPicker({
+      type: 'date-range',
+      variant: 'desktop',
+      initialFocus: 'start',
+    });
     expect(screen.getByRole('tooltip')).toBeVisible();
   });
 
@@ -91,7 +108,7 @@ describe('<DesktopDateRangePicker />', () => {
   });
 
   describe('Field slot: SingleInputDateRangeField', () => {
-    it('should add focused class to the field when it is focused', () => {
+    it('should add focused class to the field when it is focused', async () => {
       // test v7 behavior
       const { unmount } = render(
         <DesktopDateRangePicker
@@ -101,7 +118,7 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       const sectionsContainer = getFieldSectionsContainer();
-      act(() => sectionsContainer.focus());
+      await act(() => sectionsContainer.focus());
 
       expect(sectionsContainer.parentElement).to.have.class('Mui-focused');
 
@@ -111,7 +128,7 @@ describe('<DesktopDateRangePicker />', () => {
       render(<DesktopDateRangePicker slots={{ field: SingleInputDateRangeField }} />);
 
       const input = getTextbox();
-      act(() => input.focus());
+      await act(() => input.focus());
 
       expect(input.parentElement).to.have.class('Mui-focused');
     });
@@ -136,17 +153,17 @@ describe('<DesktopDateRangePicker />', () => {
   });
 
   describe('Component slot: Popper', () => {
-    it('should forward onClick and onTouchStart', () => {
+    it('should forward onClick and onPointerDown', async () => {
       const handleClick = spy();
-      const handleTouchStart = spy();
-      render(
+      const handlePointerDown = spy();
+      const { user } = render(
         <DesktopDateRangePicker
           enableAccessibleFieldDOMStructure
           open
           slotProps={{
             popper: {
               onClick: handleClick,
-              onTouchStart: handleTouchStart,
+              onPointerDown: handlePointerDown,
               // @ts-expect-error `data-*` attributes are not recognized in props objects
               'data-testid': 'popper',
             },
@@ -155,70 +172,84 @@ describe('<DesktopDateRangePicker />', () => {
       );
       const popper = screen.getByTestId('popper');
 
-      fireEvent.click(popper);
-      fireEvent.touchStart(popper);
+      await user.click(popper);
 
       expect(handleClick.callCount).to.equal(1);
-      expect(handleTouchStart.callCount).to.equal(1);
+      expect(handlePointerDown.callCount).to.equal(1);
     });
   });
 
   describe('picker state', () => {
-    it('should open when clicking the start input', () => {
+    it('should open when clicking the start input', async () => {
       const onOpen = spy();
 
       render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'start',
+      });
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.getByRole('tooltip')).toBeVisible();
     });
 
-    it('should open when clicking the end input', () => {
+    it('should open when clicking the end input', async () => {
       const onOpen = spy();
 
       render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'end',
+      });
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.getByRole('tooltip')).toBeVisible();
     });
 
     ['Enter', ' '].forEach((key) =>
-      it(`should open when pressing "${key}" in the start input`, () => {
+      it(`should open when pressing "${key}" in the start input`, async () => {
         const onOpen = spy();
 
-        render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
+        const { user } = render(
+          <DesktopDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />,
+        );
 
         const startInput = getFieldSectionsContainer();
-        act(() => startInput.focus());
+        await act(() => startInput.focus());
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key });
+        await user.keyboard(`{${key}}`);
 
+        await waitFor(() => expect(screen.queryByRole('tooltip')).toBeVisible());
         expect(onOpen.callCount).to.equal(1);
         expect(screen.getByRole('tooltip')).toBeVisible();
       }),
     );
 
     ['Enter', ' '].forEach((key) =>
-      it(`should open when pressing "${key}" in the end input`, () => {
+      it(`should open when pressing "${key}" in the end input`, async () => {
         const onOpen = spy();
 
-        render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
+        const { user } = render(
+          <DesktopDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />,
+        );
 
         const endInput = getFieldSectionsContainer(1);
-        act(() => endInput.focus());
+        await act(() => endInput.focus());
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key });
+        await user.keyboard(`{${key}}`);
+
+        await waitFor(() => expect(screen.queryByRole('tooltip')).toBeVisible());
 
         expect(onOpen.callCount).to.equal(1);
         expect(screen.getByRole('tooltip')).toBeVisible();
       }),
     );
 
-    it('should call onChange with updated start date then call onChange with updated end date, onClose and onAccept with update date range when opening from start input', () => {
+    it('should call onChange with updated start date then call onChange with updated end date, onClose and onAccept with update date range when opening from start input', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -227,7 +258,7 @@ describe('<DesktopDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <DesktopDateRangePicker
           enableAccessibleFieldDOMStructure
           onChange={onChange}
@@ -238,19 +269,23 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Open the picker
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'start',
+      });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
       // Change the start date
-      fireEvent.click(getPickerDay('3'));
+      await user.click(getPickerDay('3'));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
 
       // Change the end date
-      fireEvent.click(getPickerDay('5'));
+      await user.click(getPickerDay('5'));
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
@@ -261,7 +296,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onChange with updated end date, onClose and onAccept with update date range when opening from end input', () => {
+    it('should call onChange with updated end date, onClose and onAccept with update date range when opening from end input', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -270,7 +305,7 @@ describe('<DesktopDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <DesktopDateRangePicker
           enableAccessibleFieldDOMStructure
           onChange={onChange}
@@ -281,13 +316,17 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Open the picker
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'end',
+      });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
       // Change the end date
-      fireEvent.click(getPickerDay('3'));
+      await user.click(getPickerDay('3'));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
@@ -297,7 +336,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should not call onClose and onAccept when selecting the end date if props.closeOnSelect = false', () => {
+    it('should not call onClose and onAccept when selecting the end date if props.closeOnSelect = false', async () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<any> = [
@@ -305,7 +344,7 @@ describe('<DesktopDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <DesktopDateRangePicker
           enableAccessibleFieldDOMStructure
           onAccept={onAccept}
@@ -315,16 +354,20 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'end',
+      });
 
       // Change the end date
-      fireEvent.click(getPickerDay('3'));
+      await user.click(getPickerDay('3'));
 
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onClose and onAccept with the live value when pressing Escape', () => {
+    it('should call onClose and onAccept with the live value when pressing Escape', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -333,7 +376,7 @@ describe('<DesktopDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <DesktopDateRangePicker
           enableAccessibleFieldDOMStructure
           onChange={onChange}
@@ -343,14 +386,18 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'start',
+      });
 
       // Change the start date (already tested)
-      fireEvent.click(getPickerDay('3'));
+      await user.click(getPickerDay('3'));
 
       // Dismiss the picker
       // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target -- don't care
-      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+      await user.keyboard('{Escape}');
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
@@ -358,12 +405,12 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose when clicking outside of the picker without prior change', () => {
+    it('should call onClose when clicking outside of the picker without prior change', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
-      render(
+      const { user } = render(
         <div>
           <DesktopDateRangePicker
             enableAccessibleFieldDOMStructure
@@ -375,24 +422,27 @@ describe('<DesktopDateRangePicker />', () => {
         </div>,
       );
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'start',
+      });
 
-      // Dismiss the picker
       const input = document.getElementById('test-id')!;
 
-      fireEvent.mouseDown(input);
-      act(() => {
+      // Dismiss the picker
+      await user.pointer({ keys: '[MouseLeft>]', target: input });
+      await act(() => {
         input.focus();
       });
-      fireEvent.mouseUp(input);
-      clock.runToLast();
+      await user.pointer({ keys: '[/MouseLeft]', target: input });
 
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
+    it('should call onClose and onAccept with the live value when clicking outside of the picker', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -401,7 +451,7 @@ describe('<DesktopDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <div>
           <DesktopDateRangePicker
             enableAccessibleFieldDOMStructure
@@ -414,22 +464,24 @@ describe('<DesktopDateRangePicker />', () => {
         </div>,
       );
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'start',
+      });
 
       // Change the start date (already tested)
-      fireEvent.click(getPickerDay('3'));
-      clock.runToLast();
+      await user.click(getPickerDay('3'));
 
-      // Dismiss the picker
+      expect(onClose.callCount).to.equal(0);
+
       const input = document.getElementById('test-id')!;
-
-      fireEvent.mouseDown(input);
-      act(() => {
+      // Dismiss the picker
+      await user.pointer({ keys: '[MouseLeft>]', target: input });
+      await act(() => {
         input.focus();
       });
-      fireEvent.mouseUp(input);
-
-      clock.runToLast();
+      await user.pointer({ keys: '[/MouseLeft]', target: input });
 
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onAccept.callCount).to.equal(1);
@@ -438,12 +490,12 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should not call onClose or onAccept when clicking outside of the picker if not opened', () => {
+    it('should not call onClose or onAccept when clicking outside of the picker if not opened', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
-      render(
+      const { user } = render(
         <DesktopDateRangePicker
           enableAccessibleFieldDOMStructure
           onChange={onChange}
@@ -453,13 +505,13 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Dismiss the picker
-      fireEvent.click(document.body);
+      await user.click(document.body);
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onClose when blur the current field without prior change', function test() {
+    it('should call onClose when blur the current field without prior change', async function test() {
       // test:unit does not call `blur` when focusing another element.
       if (isJSDOM) {
         this.skip();
@@ -484,18 +536,23 @@ describe('<DesktopDateRangePicker />', () => {
         </React.Fragment>,
       );
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'start',
+      });
       expect(screen.getByRole('tooltip')).toBeVisible();
 
-      document.querySelector<HTMLButtonElement>('#test')!.focus();
-      clock.runToLast();
+      await act(() => {
+        document.querySelector<HTMLButtonElement>('#test')!.focus();
+      });
 
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onAccept when blur the current field', () => {
+    it('should call onClose and onAccept when blur the current field', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -504,7 +561,7 @@ describe('<DesktopDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <div>
           <DesktopDateRangePicker
             enableAccessibleFieldDOMStructure
@@ -517,18 +574,21 @@ describe('<DesktopDateRangePicker />', () => {
         </div>,
       );
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'start',
+      });
       expect(screen.getByRole('tooltip')).toBeVisible();
 
       // Change the start date (already tested)
-      fireEvent.click(getPickerDay('3'));
-      clock.runToLast();
+      await user.click(getPickerDay('3'));
 
-      act(() => {
+      await act(() => {
         document.querySelector<HTMLButtonElement>('#test')!.focus();
       });
-      clock.runToLast();
 
+      await waitFor(() => expect(screen.queryByRole('tooltip')).to.equal(null));
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
@@ -536,7 +596,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
+    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -545,7 +605,7 @@ describe('<DesktopDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <DesktopDateRangePicker
           enableAccessibleFieldDOMStructure
           onChange={onChange}
@@ -556,10 +616,14 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'start',
+      });
 
       // Clear the date
-      fireEvent.click(screen.getByText(/clear/i));
+      await user.click(screen.getByText(/clear/i));
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onChange.lastCall.args[0]).to.deep.equal([null, null]);
       expect(onAccept.callCount).to.equal(1);
@@ -567,12 +631,12 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
+    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
-      render(
+      const { user } = render(
         <DesktopDateRangePicker
           enableAccessibleFieldDOMStructure
           onChange={onChange}
@@ -583,10 +647,14 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'start',
+      });
 
       // Clear the date
-      fireEvent.click(screen.getByText(/clear/i));
+      await user.click(screen.getByText(/clear/i));
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
@@ -595,7 +663,7 @@ describe('<DesktopDateRangePicker />', () => {
     // TODO: Write test
     // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
     // })
-    it('should not close picker when switching focus from start to end input', () => {
+    it('should not close picker when switching focus from start to end input', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -611,16 +679,24 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Open the picker (already tested)
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'start',
+      });
 
       // Switch to end date
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'end',
+      });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should not close picker when switching focus from end to start input', () => {
+    it('should not close picker when switching focus from end to start input', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -636,10 +712,18 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Open the picker (already tested)
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'end',
+      });
 
       // Switch to start date
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'start',
+      });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -647,10 +731,14 @@ describe('<DesktopDateRangePicker />', () => {
   });
 
   describe('disabled dates', () => {
-    it('should respect the disablePast prop', () => {
+    it('should respect the disablePast prop', async () => {
       render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure disablePast />);
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'start',
+      });
 
       expect(getPickerDay('8')).to.have.attribute('disabled');
       expect(getPickerDay('9')).to.have.attribute('disabled');
@@ -659,10 +747,14 @@ describe('<DesktopDateRangePicker />', () => {
       expect(getPickerDay('12')).not.to.have.attribute('disabled');
     });
 
-    it('should respect the disableFuture prop', () => {
+    it('should respect the disableFuture prop', async () => {
       render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure disableFuture />);
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'start',
+      });
 
       expect(getPickerDay('8')).not.to.have.attribute('disabled');
       expect(getPickerDay('9')).not.to.have.attribute('disabled');
@@ -671,7 +763,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(getPickerDay('12')).to.have.attribute('disabled');
     });
 
-    it('should respect the minDate prop', () => {
+    it('should respect the minDate prop', async () => {
       render(
         <DesktopDateRangePicker
           enableAccessibleFieldDOMStructure
@@ -679,7 +771,11 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'start',
+      });
 
       expect(getPickerDay('13')).to.have.attribute('disabled');
       expect(getPickerDay('14')).to.have.attribute('disabled');
@@ -688,7 +784,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(getPickerDay('17')).not.to.have.attribute('disabled');
     });
 
-    it('should respect the maxDate prop', () => {
+    it('should respect the maxDate prop', async () => {
       render(
         <DesktopDateRangePicker
           enableAccessibleFieldDOMStructure
@@ -696,7 +792,11 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      await openPicker({
+        type: 'date-range',
+        variant: 'desktop',
+        initialFocus: 'start',
+      });
 
       expect(getPickerDay('13')).not.to.have.attribute('disabled');
       expect(getPickerDay('14')).not.to.have.attribute('disabled');

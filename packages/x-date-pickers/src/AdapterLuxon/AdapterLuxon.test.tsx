@@ -95,7 +95,6 @@ describe('<AdapterLuxon />', () => {
 
       describe(`test with the ${localeName} locale`, () => {
         const { render, clock, adapter } = createPickerRenderer({
-          clock: 'fake',
           adapterName: 'luxon',
           locale: localeObject,
         });
@@ -151,7 +150,6 @@ describe('<AdapterLuxon />', () => {
 
       describe(`test with the ${localeName} locale`, () => {
         const { render, adapter, clock } = createPickerRenderer({
-          clock: 'fake',
           adapterName: 'luxon',
           locale: localeObject,
         });

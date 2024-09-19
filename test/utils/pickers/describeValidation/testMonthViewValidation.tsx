@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 import * as React from 'react';
-import { screen } from '@mui/internal-test-utils';
+import { screen, waitFor } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
-  const { views, componentFamily, render, clock } = getOptions();
+  const { views, componentFamily, render } = getOptions();
 
   if (componentFamily === 'field' || !views.includes('month')) {
     return;
@@ -40,7 +40,7 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
       expect(screen.getByText('May')).not.to.have.attribute('disabled');
     });
 
-    it('should apply disablePast', function test() {
+    it('should apply disablePast', async function test() {
       let now;
       function WithFakeTimer(props) {
         now = adapterToUse.date();
@@ -57,24 +57,26 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
 
       if (!adapterToUse.isSameYear(now, nextMonth)) {
         setProps({ value: nextMonth });
-        clock.runToLast();
       }
-      expect(screen.getByText(adapterToUse.format(nextMonth, 'monthShort'))).not.to.have.attribute(
-        'disabled',
+      await waitFor(() =>
+        expect(
+          screen.getByText(adapterToUse.format(nextMonth, 'monthShort')),
+        ).not.to.have.attribute('disabled'),
       );
 
       if (!adapterToUse.isSameYear(prevMonth, nextMonth)) {
         setProps({ value: prevMonth });
-        clock.runToLast();
       }
-      expect(screen.getByText(adapterToUse.format(prevMonth, 'monthShort'))).to.have.attribute(
-        'disabled',
+      await waitFor(() =>
+        expect(screen.getByText(adapterToUse.format(prevMonth, 'monthShort'))).to.have.attribute(
+          'disabled',
+        ),
       );
 
       // TODO: define what appends when value is `null`
     });
 
-    it('should apply disableFuture', function test() {
+    it('should apply disableFuture', async function test() {
       let now;
       function WithFakeTimer(props) {
         now = adapterToUse.date();
@@ -91,18 +93,20 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
 
       if (!adapterToUse.isSameYear(now, nextMonth)) {
         setProps({ value: nextMonth });
-        clock.runToLast();
       }
-      expect(screen.getByText(adapterToUse.format(nextMonth, 'monthShort'))).to.have.attribute(
-        'disabled',
+      await waitFor(() =>
+        expect(screen.getByText(adapterToUse.format(nextMonth, 'monthShort'))).to.have.attribute(
+          'disabled',
+        ),
       );
 
       if (!adapterToUse.isSameYear(prevMonth, nextMonth)) {
         setProps({ value: prevMonth });
-        clock.runToLast();
       }
-      expect(screen.getByText(adapterToUse.format(prevMonth, 'monthShort'))).not.to.have.attribute(
-        'disabled',
+      await waitFor(() =>
+        expect(
+          screen.getByText(adapterToUse.format(prevMonth, 'monthShort')),
+        ).not.to.have.attribute('disabled'),
       );
 
       // TODO: define what appends when value is `null`

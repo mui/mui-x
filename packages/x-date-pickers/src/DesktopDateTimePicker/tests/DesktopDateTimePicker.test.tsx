@@ -35,7 +35,7 @@ describe('<DesktopDateTimePicker />', () => {
         />,
       );
 
-      await openPicker({ type: 'date-time', variant: 'desktop', click: user.click });
+      await openPicker({ type: 'date-time', variant: 'desktop' });
 
       // Select year
       await user.click(screen.getByRole('radio', { name: '2025' }));
@@ -75,7 +75,7 @@ describe('<DesktopDateTimePicker />', () => {
       />,
     );
 
-    await openPicker({ type: 'date-time', variant: 'desktop', click: user.click });
+    await openPicker({ type: 'date-time', variant: 'desktop' });
 
     // Change the date multiple times to check that picker doesn't close after cycling through all views internally
     await user.click(screen.getByRole('gridcell', { name: '2' }));

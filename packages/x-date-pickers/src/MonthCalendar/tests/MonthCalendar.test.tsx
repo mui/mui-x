@@ -1,16 +1,21 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 
 describe('<MonthCalendar />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date(2019, 0, 1) });
+  const { render, clock } = createPickerRenderer({
+    clockConfig: new Date(2019, 0, 1),
+    clockOptions: { toFake: ['Date'] },
+  });
 
-  it('should allow to pick month standalone by click, `Enter` and `Space`', () => {
+  it('should allow to pick month standalone by click, `Enter` and `Space`', async () => {
     const onChange = spy();
-    render(<MonthCalendar value={adapterToUse.date('2019-02-02')} onChange={onChange} />);
+    const { user } = render(
+      <MonthCalendar value={adapterToUse.date('2019-02-02')} onChange={onChange} />,
+    );
     const targetMonth = screen.getByRole('radio', { name: 'February' });
 
     // A native button implies Enter and Space keydown behavior
@@ -20,67 +25,57 @@ describe('<MonthCalendar />', () => {
     // - fireEvent.keyUp(targetDay, { key: 'Space' })
     expect(targetMonth.tagName).to.equal('BUTTON');
 
-    fireEvent.click(targetMonth);
+    await user.click(targetMonth);
 
     expect(onChange.callCount).to.equal(1);
     expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 2));
   });
 
-  it('should select start of month without time when no initial value is present', () => {
-    const onChange = spy();
-    render(<MonthCalendar onChange={onChange} />);
-
-    fireEvent.click(screen.getByRole('radio', { name: 'February' }));
-
-    expect(onChange.callCount).to.equal(1);
-    expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 1, 0, 0, 0));
-  });
-
-  it('does not allow to pick months if readOnly prop is passed', () => {
+  it('does not allow to pick months if readOnly prop is passed', async () => {
     const onChangeMock = spy();
-    render(
+    const { user } = render(
       <MonthCalendar value={adapterToUse.date('2019-02-02')} onChange={onChangeMock} readOnly />,
     );
 
-    fireEvent.click(screen.getByText('Mar', { selector: 'button' }));
+    await user.click(screen.getByText('Mar', { selector: 'button' }));
     expect(onChangeMock.callCount).to.equal(0);
 
-    fireEvent.click(screen.getByText('Apr', { selector: 'button' }));
+    await user.click(screen.getByText('Apr', { selector: 'button' }));
     expect(onChangeMock.callCount).to.equal(0);
 
-    fireEvent.click(screen.getByText('Jul', { selector: 'button' }));
+    await user.click(screen.getByText('Jul', { selector: 'button' }));
     expect(onChangeMock.callCount).to.equal(0);
   });
 
-  it('clicking on a PickersMonth button should not trigger the form submit', () => {
+  it('clicking on a PickersMonth button should not trigger the form submit', async () => {
     const onSubmitMock = spy();
-    render(
+    const { user } = render(
       <form onSubmit={onSubmitMock}>
         <MonthCalendar defaultValue={adapterToUse.date('2018-02-02')} />
       </form>,
     );
 
-    fireEvent.click(screen.getByText('Mar', { selector: 'button' }));
+    await user.click(screen.getByText('Mar', { selector: 'button' }));
     expect(onSubmitMock.callCount).to.equal(0);
   });
 
   describe('Disabled', () => {
     it('should disable all months if props.disabled = true', () => {
       const onChange = spy();
-      render(
+      const { user } = render(
         <MonthCalendar value={adapterToUse.date('2019-02-15')} onChange={onChange} disabled />,
       );
 
-      screen.getAllByRole('radio').forEach((monthButton) => {
+      screen.getAllByRole('radio').forEach(async (monthButton) => {
         expect(monthButton).to.have.attribute('disabled');
-        fireEvent.click(monthButton);
+        await user.click(monthButton);
         expect(onChange.callCount).to.equal(0);
       });
     });
 
-    it('should disable months before props.minDate but not the month in which props.minDate is', () => {
+    it('should disable months before props.minDate but not the month in which props.minDate is', async () => {
       const onChange = spy();
-      render(
+      const { user } = render(
         <MonthCalendar
           value={adapterToUse.date('2019-02-15')}
           onChange={onChange}
@@ -94,16 +89,16 @@ describe('<MonthCalendar />', () => {
       expect(january).to.have.attribute('disabled');
       expect(february).not.to.have.attribute('disabled');
 
-      fireEvent.click(january);
+      await user.click(january);
       expect(onChange.callCount).to.equal(0);
 
-      fireEvent.click(february);
+      await user.click(february);
       expect(onChange.callCount).to.equal(1);
     });
 
-    it('should disable months after props.maxDate but not the month in which props.maxDate is', () => {
+    it('should disable months after props.maxDate but not the month in which props.maxDate is', async () => {
       const onChange = spy();
-      render(
+      const { user } = render(
         <MonthCalendar
           value={adapterToUse.date('2019-02-15')}
           onChange={onChange}
@@ -117,16 +112,16 @@ describe('<MonthCalendar />', () => {
       expect(may).to.have.attribute('disabled');
       expect(april).not.to.have.attribute('disabled');
 
-      fireEvent.click(may);
+      await user.click(may);
       expect(onChange.callCount).to.equal(0);
 
-      fireEvent.click(april);
+      await user.click(april);
       expect(onChange.callCount).to.equal(1);
     });
 
-    it('should disable months if props.shouldDisableMonth returns true', () => {
+    it('should disable months if props.shouldDisableMonth returns true', async () => {
       const onChange = spy();
-      render(
+      const { user } = render(
         <MonthCalendar
           value={adapterToUse.date('2019-02-02')}
           onChange={onChange}
@@ -140,26 +135,40 @@ describe('<MonthCalendar />', () => {
       expect(april).to.have.attribute('disabled');
       expect(jun).not.to.have.attribute('disabled');
 
-      fireEvent.click(april);
+      await user.click(april);
       expect(onChange.callCount).to.equal(0);
 
-      fireEvent.click(jun);
+      await user.click(jun);
       expect(onChange.callCount).to.equal(1);
     });
 
-    it('should disable months after initial render when "disableFuture" prop changes', () => {
-      const { setProps } = render(<MonthCalendar />);
+    describe('with fake timers', () => {
+      clock.withFakeTimers();
 
-      const january = screen.getByText('Jan', { selector: 'button' });
-      const february = screen.getByText('Feb', { selector: 'button' });
+      it('should select start of month without time when no initial value is present', async () => {
+        const onChange = spy();
+        const { user } = render(<MonthCalendar onChange={onChange} />);
 
-      expect(january).not.to.have.attribute('disabled');
-      expect(february).not.to.have.attribute('disabled');
+        await user.click(screen.getByRole('radio', { name: 'February' }));
 
-      setProps({ disableFuture: true });
+        expect(onChange.callCount).to.equal(1);
+        expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 1, 0, 0, 0));
+      });
 
-      expect(january).not.to.have.attribute('disabled');
-      expect(february).to.have.attribute('disabled');
+      it('should disable months after initial render when "disableFuture" prop changes', () => {
+        const { setProps } = render(<MonthCalendar />);
+
+        const january = screen.getByText('Jan', { selector: 'button' });
+        const february = screen.getByText('Feb', { selector: 'button' });
+
+        expect(january).not.to.have.attribute('disabled');
+        expect(february).not.to.have.attribute('disabled');
+
+        setProps({ disableFuture: true });
+
+        expect(january).not.to.have.attribute('disabled');
+        expect(february).to.have.attribute('disabled');
+      });
     });
 
     it('should not mark the `referenceDate` month as selected', () => {

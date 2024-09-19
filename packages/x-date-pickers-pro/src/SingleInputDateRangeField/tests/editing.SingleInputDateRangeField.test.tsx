@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { fireEvent } from '@mui/internal-test-utils';
 import {
   expectFieldValueV7,
   expectFieldValueV6,
@@ -11,7 +10,7 @@ import {
 
 describe('<SingleInputDateRangeField /> - Editing', () => {
   describeAdapters(`key: Delete`, SingleInputDateRangeField, ({ adapter, renderWithProps }) => {
-    it('should clear all the sections when all sections are selected and all sections are completed', () => {
+    it('should clear all the sections when all sections are selected and all sections are completed', async () => {
       // Test with v7 input
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
@@ -19,12 +18,12 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
 
-      view.selectSection('month');
+      await view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      await view.user.keyboard('{Control>}a{/Control}');
 
-      fireEvent.keyDown(view.getSectionsContainer(), { key: 'Delete' });
+      await view.user.keyboard('{Delete}');
       expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
 
       view.unmount();
@@ -37,32 +36,32 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      view.selectSection('month');
+      await view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+      await view.user.keyboard('{Control>}a{/Control}');
 
-      fireEvent.keyDown(input, { key: 'Delete' });
+      await view.user.keyboard('{Delete}');
       expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
     });
 
-    it('should clear all the sections when all sections are selected and not all sections are completed', () => {
+    it('should clear all the sections when all sections are selected and not all sections are completed', async () => {
       // Test with v7 input
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
 
-      view.selectSection('month');
+      await view.selectSection('month');
 
       // Set a value for the "month" section
-      fireEvent.input(view.getActiveSection(0), { target: { innerHTML: 'j' } });
+      await view.user.keyboard('j');
       expectFieldValueV7(view.getSectionsContainer(), 'January YYYY – MMMM YYYY');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      await view.user.keyboard('{Control>}a{/Control}');
 
-      fireEvent.keyDown(view.getSectionsContainer(), { key: 'Delete' });
+      await view.user.keyboard('{Delete}');
       expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
 
       view.unmount();
@@ -74,22 +73,20 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      view.selectSection('month');
+      await view.selectSection('month');
 
       // Set a value for the "month" section
-      fireEvent.change(input, {
-        target: { value: 'j YYYY – MMMM YYYY' },
-      }); // Press "j"
+      await view.user.keyboard('j');
       expectFieldValueV6(input, 'January YYYY – MMMM YYYY');
 
       // Select all sections
-      fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+      await view.user.keyboard('{Control>}a{/Control}');
 
-      fireEvent.keyDown(input, { key: 'Delete' });
+      await view.user.keyboard('{Delete}');
       expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
     });
 
-    it('should not call `onChange` when clearing all sections and both dates are already empty', () => {
+    it('should not call `onChange` when clearing all sections and both dates are already empty', async () => {
       // Test with v7 input
       const onChangeV7 = spy();
 
@@ -99,12 +96,12 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         onChange: onChangeV7,
       });
 
-      view.selectSection('month');
+      await view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      await view.user.keyboard('{Control>}a{/Control}');
 
-      fireEvent.keyDown(view.getSectionsContainer(), { key: 'Delete' });
+      await view.user.keyboard('{Delete}');
       expect(onChangeV7.callCount).to.equal(0);
 
       view.unmount();
@@ -118,17 +115,16 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         onChange: onChangeV6,
       });
 
-      const input = getTextbox();
-      view.selectSection('month');
+      await view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+      await view.user.keyboard('{Control>}a{/Control}');
 
-      fireEvent.keyDown(input, { key: 'Delete' });
+      await view.user.keyboard('{Delete}');
       expect(onChangeV6.callCount).to.equal(0);
     });
 
-    it('should call `onChange` when clearing the first and last section of each date', () => {
+    it('should call `onChange` when clearing the first and last section of each date', async () => {
       // Test with v7 input
       const onChangeV7 = spy();
 
@@ -138,29 +134,29 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         onChange: onChangeV7,
       });
 
-      view.selectSection('month');
+      await view.selectSection('month');
 
       // Start date
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'Delete' });
+      await view.user.keyboard('{Delete}');
       expect(onChangeV7.callCount).to.equal(1);
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
-      fireEvent.keyDown(view.getActiveSection(1), { key: 'Delete' });
+      await view.user.keyboard('{ArrowRight}');
+      await view.user.keyboard('{Delete}');
       expect(onChangeV7.callCount).to.equal(1);
-      fireEvent.keyDown(view.getActiveSection(1), { key: 'ArrowRight' });
-      fireEvent.keyDown(view.getActiveSection(2), { key: 'Delete' });
+      await view.user.keyboard('{ArrowRight}');
+      await view.user.keyboard('{Delete}');
       expect(onChangeV7.callCount).to.equal(2);
       expect(onChangeV7.lastCall.firstArg[0]).to.equal(null);
       expect(onChangeV7.lastCall.firstArg[1]).toEqualDateTime(adapter.addYears(adapter.date(), 1));
 
       // End date
-      fireEvent.keyDown(view.getActiveSection(2), { key: 'ArrowRight' });
-      fireEvent.keyDown(view.getActiveSection(3), { key: 'Delete' });
+      await view.user.keyboard('{ArrowRight}');
+      await view.user.keyboard('{Delete}');
       expect(onChangeV7.callCount).to.equal(3);
-      fireEvent.keyDown(view.getActiveSection(3), { key: 'ArrowRight' });
-      fireEvent.keyDown(view.getActiveSection(4), { key: 'Delete' });
+      await view.user.keyboard('{ArrowRight}');
+      await view.user.keyboard('{Delete}');
       expect(onChangeV7.callCount).to.equal(3);
-      fireEvent.keyDown(view.getActiveSection(4), { key: 'ArrowRight' });
-      fireEvent.keyDown(view.getActiveSection(5), { key: 'Delete' });
+      await view.user.keyboard('{ArrowRight}');
+      await view.user.keyboard('{Delete}');
       expect(onChangeV7.callCount).to.equal(4);
       expect(onChangeV7.lastCall.firstArg[0]).to.equal(null);
       expect(onChangeV7.lastCall.firstArg[1]).to.equal(null);
@@ -176,36 +172,35 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         onChange: onChangeV6,
       });
 
-      const input = getTextbox();
-      view.selectSection('month');
+      await view.selectSection('month');
 
       // Start date
-      fireEvent.keyDown(input, { key: 'Delete' });
+      await view.user.keyboard('{Delete}');
       expect(onChangeV6.callCount).to.equal(1);
-      fireEvent.keyDown(input, { key: 'ArrowRight' });
-      fireEvent.keyDown(input, { key: 'Delete' });
+      await view.user.keyboard('{ArrowRight}');
+      await view.user.keyboard('{Delete}');
       expect(onChangeV6.callCount).to.equal(1);
-      fireEvent.keyDown(input, { key: 'ArrowRight' });
-      fireEvent.keyDown(input, { key: 'Delete' });
+      await view.user.keyboard('{ArrowRight}');
+      await view.user.keyboard('{Delete}');
       expect(onChangeV6.callCount).to.equal(2);
       expect(onChangeV6.lastCall.firstArg[0]).to.equal(null);
       expect(onChangeV6.lastCall.firstArg[1]).toEqualDateTime(adapter.addYears(adapter.date(), 1));
 
       // End date
-      fireEvent.keyDown(input, { key: 'ArrowRight' });
-      fireEvent.keyDown(input, { key: 'Delete' });
+      await view.user.keyboard('{ArrowRight}');
+      await view.user.keyboard('{Delete}');
       expect(onChangeV6.callCount).to.equal(3);
-      fireEvent.keyDown(input, { key: 'ArrowRight' });
-      fireEvent.keyDown(input, { key: 'Delete' });
+      await view.user.keyboard('{ArrowRight}');
+      await view.user.keyboard('{Delete}');
       expect(onChangeV6.callCount).to.equal(3);
-      fireEvent.keyDown(input, { key: 'ArrowRight' });
-      fireEvent.keyDown(input, { key: 'Delete' });
+      await view.user.keyboard('{ArrowRight}');
+      await view.user.keyboard('{Delete}');
       expect(onChangeV6.callCount).to.equal(4);
       expect(onChangeV6.lastCall.firstArg[0]).to.equal(null);
       expect(onChangeV6.lastCall.firstArg[1]).to.equal(null);
     });
 
-    it('should not call `onChange` if the section is already empty', () => {
+    it('should not call `onChange` if the section is already empty', async () => {
       // Test with v7 input
       const onChangeV7 = spy();
 
@@ -216,12 +211,12 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         onChange: onChangeV7,
       });
 
-      view.selectSection('month');
+      await view.selectSection('month');
 
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'Delete' });
+      await view.user.keyboard('{Delete}');
       expect(onChangeV7.callCount).to.equal(1);
 
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'Delete' });
+      await view.user.keyboard('{Delete}');
       expect(onChangeV7.callCount).to.equal(1);
 
       view.unmount();
@@ -236,13 +231,12 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         onChange: onChangeV6,
       });
 
-      const input = getTextbox();
-      view.selectSection('month');
+      await view.selectSection('month');
 
-      fireEvent.keyDown(input, { key: 'Delete' });
+      await view.user.keyboard('{Delete}');
       expect(onChangeV6.callCount).to.equal(1);
 
-      fireEvent.keyDown(input, { key: 'Delete' });
+      await view.user.keyboard('{Delete}');
       expect(onChangeV6.callCount).to.equal(1);
     });
   });
@@ -251,7 +245,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     `Backspace editing`,
     SingleInputDateRangeField,
     ({ adapter, renderWithProps }) => {
-      it('should clear all the sections when all sections are selected and all sections are completed (Backspace)', () => {
+      it('should clear all the sections when all sections are selected and all sections are completed (Backspace)', async () => {
         // Test with v7 input
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
@@ -259,12 +253,12 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           format: `${adapter.formats.month} ${adapter.formats.year}`,
         });
 
-        view.selectSection('month');
+        await view.selectSection('month');
 
         // Select all sections
-        fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+        await view.user.keyboard('{Control>}a{/Control}');
 
-        view.pressKey(null, '');
+        await view.user.keyboard('{Backspace}');
         expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
 
         view.unmount();
@@ -277,32 +271,32 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        view.selectSection('month');
+        await view.selectSection('month');
 
         // Select all sections
-        fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+        await view.user.keyboard('{Control>}a{/Control}');
 
-        fireEvent.change(input, { target: { value: '' } });
+        await view.user.keyboard('{Backspace}');
         expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
       });
 
-      it('should clear all the sections when all sections are selected and not all sections are completed (Backspace)', () => {
+      it('should clear all the sections when all sections are selected and not all sections are completed (Backspace)', async () => {
         // Test with v7 input
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           format: `${adapter.formats.month} ${adapter.formats.year}`,
         });
 
-        view.selectSection('month');
+        await view.selectSection('month');
 
         // Set a value for the "month" section
-        fireEvent.input(view.getActiveSection(0), { target: { innerHTML: 'j' } });
+        await view.user.keyboard('j');
         expectFieldValueV7(view.getSectionsContainer(), 'January YYYY – MMMM YYYY');
 
         // Select all sections
-        fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+        await view.user.keyboard('{Control>}a{/Control}');
 
-        view.pressKey(null, '');
+        await view.user.keyboard('{Backspace}');
         expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
 
         view.unmount();
@@ -314,22 +308,20 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        view.selectSection('month');
+        await view.selectSection('month');
 
         // Set a value for the "month" section
-        fireEvent.change(input, {
-          target: { value: 'j YYYY – MMMM YYYY' },
-        }); // Press "j"
+        await view.user.keyboard('j');
         expectFieldValueV6(input, 'January YYYY – MMMM YYYY');
 
         // Select all sections
-        fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+        await view.user.keyboard('{Control>}a{/Control}');
 
-        fireEvent.change(input, { target: { value: '' } });
+        await view.user.keyboard('{Backspace}');
         expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
       });
 
-      it('should not call `onChange` when clearing all sections and both dates are already empty (Backspace)', () => {
+      it('should not call `onChange` when clearing all sections and both dates are already empty (Backspace)', async () => {
         // Test with v7 input
         const onChangeV7 = spy();
 
@@ -339,12 +331,12 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        view.selectSection('month');
+        await view.selectSection('month');
 
         // Select all sections
-        fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+        await view.user.keyboard('{Control>}a{/Control}');
 
-        view.pressKey(null, '');
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV7.callCount).to.equal(0);
 
         view.unmount();
@@ -358,17 +350,16 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV6,
         });
 
-        const input = getTextbox();
-        view.selectSection('month');
+        await view.selectSection('month');
 
         // Select all sections
-        fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+        await view.user.keyboard('{Control>}a{/Control}');
 
-        fireEvent.change(input, { target: { value: 'Delete' } });
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV6.callCount).to.equal(0);
       });
 
-      it('should call `onChange` when clearing the first and last section of each date (Backspace)', () => {
+      it('should call `onChange` when clearing the first and last section of each date (Backspace)', async () => {
         // Test with v7 input
         const onChangeV7 = spy();
 
@@ -378,16 +369,16 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        view.selectSection('month');
+        await view.selectSection('month');
 
         // Start date
-        view.pressKey(0, '');
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV7.callCount).to.equal(1);
-        fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
-        view.pressKey(1, '');
+        await view.user.keyboard('{ArrowRight}');
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV7.callCount).to.equal(1);
-        fireEvent.keyDown(view.getActiveSection(1), { key: 'ArrowRight' });
-        view.pressKey(2, '');
+        await view.user.keyboard('{ArrowRight}');
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV7.callCount).to.equal(2);
         expect(onChangeV7.lastCall.firstArg[0]).to.equal(null);
         expect(onChangeV7.lastCall.firstArg[1]).toEqualDateTime(
@@ -395,14 +386,14 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         );
 
         // End date
-        fireEvent.keyDown(view.getActiveSection(2), { key: 'ArrowRight' });
-        view.pressKey(3, '');
+        await view.user.keyboard('{ArrowRight}');
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV7.callCount).to.equal(3);
-        fireEvent.keyDown(view.getActiveSection(3), { key: 'ArrowRight' });
-        view.pressKey(4, '');
+        await view.user.keyboard('{ArrowRight}');
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV7.callCount).to.equal(3);
-        fireEvent.keyDown(view.getActiveSection(4), { key: 'ArrowRight' });
-        view.pressKey(5, '');
+        await view.user.keyboard('{ArrowRight}');
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV7.callCount).to.equal(4);
         expect(onChangeV7.lastCall.firstArg[0]).to.equal(null);
         expect(onChangeV7.lastCall.firstArg[1]).to.equal(null);
@@ -418,17 +409,16 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV6,
         });
 
-        const input = getTextbox();
-        view.selectSection('month');
+        await view.selectSection('month');
 
         // Start date
-        fireEvent.change(input, { target: { value: '/15/2022 – 06/15/2023' } });
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV6.callCount).to.equal(1);
-        fireEvent.keyDown(input, { key: 'ArrowRight' });
-        fireEvent.change(input, { target: { value: 'MM//2022 – 06/15/2023' } });
+        await view.user.keyboard('{ArrowRight}');
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV6.callCount).to.equal(1);
-        fireEvent.keyDown(input, { key: 'ArrowRight' });
-        fireEvent.change(input, { target: { value: 'MM/DD/ – 06/15/2023' } });
+        await view.user.keyboard('{ArrowRight}');
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV6.callCount).to.equal(2);
         expect(onChangeV6.lastCall.firstArg[0]).to.equal(null);
         expect(onChangeV6.lastCall.firstArg[1]).toEqualDateTime(
@@ -436,20 +426,20 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         );
 
         // End date
-        fireEvent.keyDown(input, { key: 'ArrowRight' });
-        fireEvent.change(input, { target: { value: 'MM/DD/YYYY – /15/2023' } });
+        await view.user.keyboard('{ArrowRight}');
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV6.callCount).to.equal(3);
-        fireEvent.keyDown(input, { key: 'ArrowRight' });
-        fireEvent.change(input, { target: { value: 'MM/DD/YYYY – MM//2023' } });
+        await view.user.keyboard('{ArrowRight}');
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV6.callCount).to.equal(3);
-        fireEvent.keyDown(input, { key: 'ArrowRight' });
-        fireEvent.change(input, { target: { value: 'MM/DD/YYYY – MM/DD/' } });
+        await view.user.keyboard('{ArrowRight}');
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV6.callCount).to.equal(4);
         expect(onChangeV6.lastCall.firstArg[0]).to.equal(null);
         expect(onChangeV6.lastCall.firstArg[1]).to.equal(null);
       });
 
-      it('should not call `onChange` if the section is already empty (Backspace)', () => {
+      it('should not call `onChange` if the section is already empty (Backspace)', async () => {
         // Test with v7 input
         const onChangeV7 = spy();
 
@@ -460,12 +450,12 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        view.selectSection('month');
+        await view.selectSection('month');
 
-        view.pressKey(0, '');
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV7.callCount).to.equal(1);
 
-        view.pressKey(0, '');
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV7.callCount).to.equal(1);
 
         view.unmount();
@@ -480,13 +470,12 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV6,
         });
 
-        const input = getTextbox();
-        view.selectSection('month');
+        await view.selectSection('month');
 
-        fireEvent.change(input, { target: { value: ' 2022 – June 2023' } });
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV6.callCount).to.equal(1);
 
-        fireEvent.change(input, { target: { value: ' 2022 – June 2023' } });
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV6.callCount).to.equal(1);
       });
     },

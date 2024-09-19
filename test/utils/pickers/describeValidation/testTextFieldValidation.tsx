@@ -165,7 +165,14 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       let now;
       function WithFakeTimer(props: any) {
         now = adapterToUse.date();
-        return <ElementToTest enableAccessibleFieldDOMStructure value={now} {...props} />;
+        return (
+          <ElementToTest
+            enableAccessibleFieldDOMStructure
+            // to avoid now being the same as the value
+            value={adapterToUse.addMinutes(now, 1)}
+            {...props}
+          />
+        );
       }
 
       const onErrorMock = spy();

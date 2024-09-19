@@ -16,7 +16,7 @@ import { formatMeridiem } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MultiSectionDigitalClock /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer();
 
   describeValidation(MultiSectionDigitalClock, () => ({
     render,
@@ -63,9 +63,9 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
         }
       }
     },
-    setNewValue: (value) => {
+    setNewValue: async (value) => {
       const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 5);
-      multiSectionDigitalClockHandler.setViewValue(adapterToUse, newValue);
+      await multiSectionDigitalClockHandler.setViewValue(adapterToUse, newValue);
 
       return newValue;
     },
