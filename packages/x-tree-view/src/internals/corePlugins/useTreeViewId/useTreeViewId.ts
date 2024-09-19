@@ -3,8 +3,7 @@ import { TreeViewPlugin } from '../../models';
 import { UseTreeViewIdSignature } from './useTreeViewId.types';
 import { useSelector } from '../../hooks/useSelector';
 import { selectorTreeViewId } from './useTreeViewId.selectors';
-
-let globalId = 0;
+import { createTreeViewDefaultId } from './useTreeViewId.utils';
 
 export const useTreeViewId: TreeViewPlugin<UseTreeViewIdSignature> = ({ params, store }) => {
   const treeId = useSelector(store, selectorTreeViewId);
@@ -15,13 +14,9 @@ export const useTreeViewId: TreeViewPlugin<UseTreeViewIdSignature> = ({ params, 
         return prevState;
       }
 
-      if (params.id == null) {
-        globalId += 1;
-      }
-
       return {
         ...prevState,
-        id: { ...prevState.id, treeId: params.id ?? `mui-tree-view-${globalId}` },
+        id: { ...prevState.id, treeId: params.id ?? createTreeViewDefaultId() },
       };
     });
   }, [store, params.id]);
@@ -40,10 +35,4 @@ useTreeViewId.params = {
   id: true,
 };
 
-useTreeViewId.getInitialState = ({ id }) => {
-  if (id == null) {
-    globalId += 1;
-  }
-
-  return { id: { treeId: id ?? `mui-tree-view-${globalId}` } };
-};
+useTreeViewId.getInitialState = ({ id }) => ({ id: { treeId: id ?? createTreeViewDefaultId() } });

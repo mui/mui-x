@@ -1,3 +1,9 @@
+let globalTreeViewDefaultId = 0;
+export const createTreeViewDefaultId = () => {
+  globalTreeViewDefaultId += 1;
+  return `mui-tree-view-${globalTreeViewDefaultId}`;
+};
+
 export const generateTreeItemIdAttribute = ({
   id,
   treeId,
