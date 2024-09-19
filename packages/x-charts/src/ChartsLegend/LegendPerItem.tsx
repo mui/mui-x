@@ -2,15 +2,15 @@
 import * as React from 'react';
 import NoSsr from '@mui/material/NoSsr';
 import { useTheme, styled } from '@mui/material/styles';
-import { useRtl } from '@mui/system/RtlProvider';
 import { DrawingArea } from '../context/DrawingProvider';
-import { ChartsText, ChartsTextStyle } from '../ChartsText';
+import { ChartsTextStyle } from '../ChartsText';
 import { CardinalDirections } from '../models/layout';
 import { getWordsByLines } from '../internals/getWordsByLines';
 import { GetItemSpaceType, LegendItemParams } from './chartsLegend.types';
 import { legendItemPlacements } from './legendItemsPlacement';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { AnchorPosition, Direction, LegendPlacement } from './legend.types';
+import { ChartsLegendItem } from './ChartsLegendItem';
 import { ChartsLegendClasses } from './chartsLegendClasses';
 import { DefaultizedProps } from '../models/helpers';
 
@@ -70,6 +70,7 @@ export interface LegendPerItemProps
    * @default 10
    */
   padding?: number | Partial<CardinalDirections<number>>;
+  onItemClick?: (event: React.MouseEvent<SVGRectElement, MouseEvent>, index: number) => void;
 }
 
 /**
@@ -110,9 +111,9 @@ export function LegendPerItem(props: LegendPerItemProps) {
     itemGap = 10,
     padding: paddingProps = 10,
     labelStyle: inLabelStyle,
+    onItemClick,
   } = props;
   const theme = useTheme();
-  const isRtl = useRtl();
   const drawingArea = useDrawingArea();
 
   const labelStyle = React.useMemo(
@@ -193,27 +194,20 @@ export function LegendPerItem(props: LegendPerItemProps) {
   return (
     <NoSsr>
       <ChartsLegendRoot className={classes?.root}>
-        {itemsWithPosition.map(({ id, label, color, positionX, positionY }) => (
-          <g
-            key={id}
-            className={classes?.series}
-            transform={`translate(${gapX + (isRtl ? legendWidth - positionX : positionX)} ${gapY + positionY})`}
-          >
-            <rect
-              className={classes?.mark}
-              x={isRtl ? -itemMarkWidth : 0}
-              y={-itemMarkHeight / 2}
-              width={itemMarkWidth}
-              height={itemMarkHeight}
-              fill={color}
-            />
-            <ChartsText
-              style={labelStyle}
-              text={label}
-              x={(isRtl ? -1 : 1) * (itemMarkWidth + markGap)}
-              y={0}
-            />
-          </g>
+        {itemsWithPosition.map((item, i) => (
+          <ChartsLegendItem
+            {...item}
+            key={item.id}
+            gapX={gapX}
+            gapY={gapY}
+            legendWidth={legendWidth}
+            itemMarkHeight={itemMarkHeight}
+            itemMarkWidth={itemMarkWidth}
+            markGap={markGap}
+            labelStyle={labelStyle}
+            classes={classes}
+            onClick={onItemClick ? (e) => onItemClick(e, i) : undefined}
+          />
         ))}
       </ChartsLegendRoot>
     </NoSsr>

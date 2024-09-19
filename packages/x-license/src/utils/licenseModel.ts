@@ -1,4 +1,4 @@
-export const LICENSING_MODELS = [
+export const LICENSE_MODELS = [
   /**
    * A license is outdated if the current version of the software was released after the expiry date of the license.
    * But the license can be used indefinitely with an older version of the software.
@@ -10,9 +10,11 @@ export const LICENSING_MODELS = [
    */
   'annual',
   /**
-   * TODO 2025 remove, legacy name of annual.
+   * Legacy. The previous name for 'annual'.
+   * Can be removed once old license keys generated with 'subscription' are no longer supported.
+   * To support for a while. We need more years of backward support and we sell multi year licenses.
    */
   'subscription',
 ] as const;
 
-export type LicensingModel = (typeof LICENSING_MODELS)[number];
+export type LicenseModel = (typeof LICENSE_MODELS)[number];
