@@ -48,7 +48,7 @@ Same changes as in `@mui/x-data-grid@6.20.4`.
 
 Same changes as in `@mui/x-data-grid-pro@6.20.4`.
 
-## v6.20.3
+## 6.20.3
 
 _Jun 28, 2024_
 
