@@ -36,7 +36,7 @@ export function useTreeViewApiInitialization<T>(
   return fallbackPublicApiRef.current;
 }
 
-let globalId = 0;
+let globalId: number = 0;
 export const useTreeView = <
   TSignatures extends readonly TreeViewAnyPluginSignature[],
   TProps extends Partial<UseTreeViewBaseProps<TSignatures>>,

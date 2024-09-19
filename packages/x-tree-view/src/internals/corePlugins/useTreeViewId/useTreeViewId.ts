@@ -10,7 +10,7 @@ export const useTreeViewId: TreeViewPlugin<UseTreeViewIdSignature> = ({ params, 
 
   React.useEffect(() => {
     store.update((prevState) => {
-      if (prevState.id.treeId === params.id) {
+      if (params.id === prevState.id.providedTreeId && prevState.id.treeId !== undefined) {
         return prevState;
       }
 
@@ -35,4 +35,4 @@ useTreeViewId.params = {
   id: true,
 };
 
-useTreeViewId.getInitialState = ({ id }) => ({ id: { treeId: id ?? createTreeViewDefaultId() } });
+useTreeViewId.getInitialState = ({ id }) => ({ id: { treeId: undefined, providedTreeId: id } });
