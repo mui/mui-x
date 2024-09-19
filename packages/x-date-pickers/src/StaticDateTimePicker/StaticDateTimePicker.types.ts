@@ -32,4 +32,9 @@ export interface StaticDateTimePickerProps<TDate extends PickerValidDate>
    * @default {}
    */
   slotProps?: StaticDateTimePickerSlotProps<TDate>;
+  /**
+   * Years rendered per row.
+   * @default `4` when `displayStaticWrapperAs === 'desktop'`, `3` otherwise.
+   */
+  yearsPerRow?: 3 | 4;
 }
