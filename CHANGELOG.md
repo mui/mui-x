@@ -75,7 +75,7 @@ Same changes as in `@mui/x-charts@7.17.0`.
 ### Docs
 
 - [docs] Add missing callout on "Imperative API" tree view sections (#14503) @flaviendelangle
-- [docs] Fix broken redirection to MUI X v5 @oliviertassinari
+- [docs] Fix broken redirection to MUI X v5 @oliviertassinari
 - [docs] Fix multiple `console.error` messages on `charts` docs (#14554) @JCQuintas
 - [docs] Fixed typo in Row Grouping recipes (#14549) @Miodini
 - [docs] Match title with blog posts @oliviertassinari
@@ -195,7 +195,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 - 💫 Support Material UI v6 (`@mui/material@6`) peer dependency (#14142) @cherniavskii
 
-You can now use MUI X components with either v5 or v6 of `@mui/material` package 🎉
+You can now use MUI X components with either v5 or v6 of `@mui/material` package 🎉
 
 - 🐞 Bugfixes
 
@@ -240,7 +240,7 @@ Same changes as in `@mui/x-charts@7.15.0`, plus:
 
 - [docs] Fix sentence case `h2` @oliviertassinari
 - [docs] Clarify contribution guide references @oliviertassinari
-- [docs] Fix Stack Overflow issue canned response @oliviertassinari
+- [docs] Fix Stack Overflow issue canned response @oliviertassinari
 - [docs] Fix outdated link to support page @oliviertassinari
 - [docs] Fix use of Material UI @oliviertassinari
 - [docs] Update deprecated props in docs (#14295) @JCQuintas
@@ -498,7 +498,7 @@ The [Pro plan](https://mui.com/x/introduction/licensing/#pro-plan) is receiving 
 
 As always, every feature released as part of the MIT plan will remain free and MIT licensed forever.
 
-This expansion of the Pro plan comes with some adjustments to our pricing strategy. Learn more about those in the [Upcoming changes to MUI X pricing in 2024](https://mui.com/blog/mui-x-sep-2024-price-update/) blog post.
+This expansion of the Pro plan comes with some adjustments to our pricing strategy. Learn more about those in the [Upcoming changes to MUI X pricing in 2024](https://mui.com/blog/mui-x-sep-2024-price-update/) blog post.
 
 ### Highlights
 
@@ -563,7 +563,7 @@ Same changes as in `@mui/x-date-pickers@7.12.0`.
 #### `@mui/x-charts@7.12.0`
 
 - [charts] Fix incorrect `axisId` prop being allowed in xAxis/yAxis config. Use `id` instead. (#13986) @JCQuintas
-- [charts] Use vendor to have Common JS bundle working out of the box (#13608) @alexfauquette
+- [charts] Use vendor to have CommonJS bundle working out of the box (#13608) @alexfauquette
 - [charts] Divide the `SeriesProvider` to use in filtering (#14026) @JCQuintas
 
 ### Tree View
