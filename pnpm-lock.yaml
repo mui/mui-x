@@ -27,8 +27,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       '@argos-ci/core':
-        specifier: ^2.8.0
-        version: 2.8.0
+        specifier: ^2.8.1
+        version: 2.8.1
       '@babel/cli':
         specifier: ^7.25.6
         version: 7.25.6(@babel/core@7.25.2)
@@ -1749,8 +1749,8 @@ packages:
     resolution: {integrity: sha512-syJJmvLtJKQYXDmGYRb+ZKpzpSk/dReqhZZm2tnWn7ThxHaJRJ7Wu3J5nqDpCP3LxoYCVfvV/dmfoJO0v8+PbQ==}
     engines: {node: '>=18.0.0'}
 
-  '@argos-ci/core@2.8.0':
-    resolution: {integrity: sha512-n7WUnlK+QI9L/bbPrg88xrxojGdEe//+RIJKx1iIUEqgIMp5K8f9ANcpYGSS/d9BWASg7eFoXm5d6iRCz0Mrgw==}
+  '@argos-ci/core@2.8.1':
+    resolution: {integrity: sha512-5ygruMnfQ3OY6LvywnwTycZFg6oTG5UYvPCVdwQiOh+8FgUZUyJge7QBVfeWW+qC0UXFMo+f3eTQ5YFvTwc0ZA==}
     engines: {node: '>=18.0.0'}
 
   '@argos-ci/util@2.1.1':
@@ -10399,7 +10399,7 @@ snapshots:
     dependencies:
       openapi-fetch: 0.11.2
 
-  '@argos-ci/core@2.8.0':
+  '@argos-ci/core@2.8.1':
     dependencies:
       '@argos-ci/api-client': 0.5.0
       '@argos-ci/util': 2.1.1
