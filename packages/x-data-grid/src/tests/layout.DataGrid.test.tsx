@@ -198,10 +198,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
     describe('warnings', () => {
       clock.withFakeTimers();
 
-      after(() => {
-        clock.restore();
-      });
-
       it('should error if the container has no intrinsic height', () => {
         expect(() => {
           render(
@@ -235,10 +231,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
     describe('swallow warnings', () => {
       clock.withFakeTimers();
-
-      after(() => {
-        clock.restore();
-      });
 
       beforeEach(() => {
         stub(console, 'error');

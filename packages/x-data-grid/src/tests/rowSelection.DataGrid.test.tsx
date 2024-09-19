@@ -556,10 +556,6 @@ describe('<DataGrid /> - Row selection', () => {
     describe('ripple', () => {
       clock.withFakeTimers();
 
-      after(() => {
-        clock.restore();
-      });
-
       it('should keep only one ripple visible when navigating between checkboxes', async function test() {
         if (isJSDOM) {
           // JSDOM doesn't fire "blur" when .focus is called in another element

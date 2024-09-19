@@ -56,10 +56,6 @@ describe('<DataGridPro /> - Print export', () => {
   describe('Export toolbar', () => {
     clock.withFakeTimers();
 
-    after(() => {
-      clock.restore();
-    });
-
     it('should display print button by default', () => {
       render(<Test slots={{ toolbar: GridToolbar }} />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));

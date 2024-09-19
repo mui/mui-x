@@ -177,10 +177,6 @@ describe('<DataGridPro /> - Events params', () => {
   describe('onCellClick', () => {
     clock.withFakeTimers();
 
-    after(() => {
-      clock.restore();
-    });
-
     let eventStack: string[] = [];
     const push = (name: string) => () => {
       eventStack.push(name);

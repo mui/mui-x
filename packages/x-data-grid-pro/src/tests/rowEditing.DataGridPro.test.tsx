@@ -365,10 +365,6 @@ describe('<DataGridPro /> - Row editing', () => {
       describe('with debounceMs > 0', () => {
         clock.withFakeTimers();
 
-        after(() => {
-          clock.restore();
-        });
-
         it('should debounce multiple changes if debounceMs > 0', () => {
           render(<TestCase />);
           act(() => apiRef.current.startRowEditMode({ id: 0 }));
@@ -729,10 +725,6 @@ describe('<DataGridPro /> - Row editing', () => {
       describe('with pending value mutation', () => {
         clock.withFakeTimers();
 
-        after(() => {
-          clock.restore();
-        });
-
         it('should run all pending value mutations before calling processRowUpdate', async () => {
           const processRowUpdate = spy((newRow) => newRow);
           render(<TestCase processRowUpdate={processRowUpdate} />);
@@ -968,10 +960,6 @@ describe('<DataGridPro /> - Row editing', () => {
   describe('stop edit mode', () => {
     describe('by clicking outside the cell', () => {
       clock.withFakeTimers();
-
-      after(() => {
-        clock.restore();
-      });
 
       it(`should publish 'rowEditStop' with reason=rowFocusOut`, () => {
         render(<TestCase />);

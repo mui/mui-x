@@ -97,10 +97,6 @@ describe('<DataGridPro /> - Edit components', () => {
     describe('with fake timers', () => {
       clock.withFakeTimers();
 
-      after(() => {
-        clock.restore();
-      });
-
       it('should display a indicator while processing the props', async () => {
         defaultData.columns[0].preProcessEditCellProps = ({ props }) =>
           new Promise((resolve) => {
@@ -204,10 +200,6 @@ describe('<DataGridPro /> - Edit components', () => {
 
     describe('with fake timers', () => {
       clock.withFakeTimers();
-
-      after(() => {
-        clock.restore();
-      });
 
       it('should display a indicator while processing the props', async () => {
         defaultData.columns[0].preProcessEditCellProps = ({ props }) =>

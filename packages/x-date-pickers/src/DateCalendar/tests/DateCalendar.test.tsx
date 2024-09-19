@@ -133,10 +133,6 @@ describe('<DateCalendar />', () => {
   describe('with fake timers', () => {
     clock.withFakeTimers();
 
-    after(() => {
-      clock.restore();
-    });
-
     // test: https://github.com/mui/mui-x/issues/12373
     it('should not reset day to `startOfDay` if value already exists when finding the closest enabled date', async () => {
       const onChange = spy();
