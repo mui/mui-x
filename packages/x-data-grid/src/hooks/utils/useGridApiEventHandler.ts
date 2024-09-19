@@ -122,7 +122,6 @@ export function useGridApiOptionHandler<Api extends GridApiCommon, E extends Gri
   eventName: E,
   handler?: GridEventListener<E>,
 ) {
-  // Validate that only one per event name?
   useGridApiEventHandler(apiRef, eventName, handler, optionsSubscriberOptions);
 }
 
