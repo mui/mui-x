@@ -4,4 +4,5 @@
   openTo="year"
   views={['year', 'month']}
   yearsOrder="desc"
+  sx={{ minWidth: 250 }}
 />
