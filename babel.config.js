@@ -104,14 +104,14 @@ module.exports = function getBabelConfig(api) {
 
   if (process.env.NODE_ENV === 'test') {
     plugins.push(['@babel/plugin-transform-export-namespace-from']);
-    // We replace `date-fns` imports with an aliased `date-fns@v3` version installed as `date-fns-v3` for tests.
+    // We replace `date-fns` imports with an aliased `date-fns@v4` version installed as `date-fns-v4` for tests.
     // The plugin is patched to only run on `AdapterDateFnsV3.ts`.
-    // TODO: remove when we upgrade to date-fns v3 by default.
+    // TODO: remove when we upgrade to date-fns v4 by default.
     plugins.push([
       'babel-plugin-replace-imports',
       {
         test: /date-fns/i,
-        replacer: 'date-fns-v3',
+        replacer: 'date-fns-v4',
         // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
         filenameIncludes: 'src/AdapterDateFnsV3/',
       },
