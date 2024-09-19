@@ -8,7 +8,7 @@ function TreeItem2Provider(props: TreeItem2ProviderProps) {
   const { wrapItem, instance, treeId } = useTreeViewContext<[]>();
   const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
 
-  return wrapItem({ children, instance, itemId, idAttribute });
+  return wrapItem({ children, itemId, instance, idAttribute });
 }
 
 TreeItem2Provider.propTypes = {
