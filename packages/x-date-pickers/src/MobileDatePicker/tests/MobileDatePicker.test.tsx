@@ -204,7 +204,6 @@ describe('<MobileDatePicker />', () => {
 
       // Open and Dismiss the picker
       await openPicker({ type: 'date', variant: 'mobile' });
-      // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
       await view.user.keyboard('{Escape}');
 
       // Verify it's still a clean value

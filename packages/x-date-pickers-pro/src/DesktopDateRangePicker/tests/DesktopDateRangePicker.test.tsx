@@ -220,7 +220,6 @@ describe('<DesktopDateRangePicker />', () => {
 
         const startInput = getFieldSectionsContainer();
         await act(() => startInput.focus());
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         await user.keyboard(`{${key}}`);
 
         await waitFor(() => expect(screen.queryByRole('tooltip')).toBeVisible());
@@ -239,7 +238,6 @@ describe('<DesktopDateRangePicker />', () => {
 
         const endInput = getFieldSectionsContainer(1);
         await act(() => endInput.focus());
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         await user.keyboard(`{${key}}`);
 
         await waitFor(() => expect(screen.queryByRole('tooltip')).toBeVisible());
@@ -396,7 +394,6 @@ describe('<DesktopDateRangePicker />', () => {
       await user.click(getPickerDay('3'));
 
       // Dismiss the picker
-      // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target -- don't care
       await user.keyboard('{Escape}');
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onAccept.callCount).to.equal(1);

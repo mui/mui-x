@@ -2,7 +2,6 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
 import { DateCalendar, dateCalendarClasses as classes } from '@mui/x-date-pickers/DateCalendar';
-import { pickersDayClasses } from '@mui/x-date-pickers/PickersDay';
 import {
   adapterToUse,
   createPickerRenderer,
@@ -38,12 +37,12 @@ describe('<DateCalendar /> - Describes', () => {
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
-      const selectedCells = document.querySelectorAll(`.${pickersDayClasses.selected}`);
+      const selectedCell = screen.queryByRole('gridcell', { selected: true });
       if (expectedValue == null) {
-        expect(selectedCells).to.have.length(0);
+        expect(selectedCell).to.equal(null);
       } else {
-        expect(selectedCells).to.have.length(1);
-        expect(selectedCells[0]).to.have.text(adapterToUse.getDate(expectedValue).toString());
+        expect(selectedCell).not.to.equal(null);
+        expect(selectedCell).to.have.text(adapterToUse.getDate(expectedValue).toString());
       }
     },
     setNewValue: async (value) => {
