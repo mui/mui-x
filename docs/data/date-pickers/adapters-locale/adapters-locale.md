@@ -45,7 +45,7 @@ We support `date-fns` package v2.x, v3.x, and v4.x major versions.
 
 A single adapter cannot work for all `date-fns` versions, because the way functions are exported has been changed in v3.x.
 
-To use `date-fns` v3.x or v4.x, you will have to import the adapter from `@mui/x-date-pickers/AdapterDateFnsV3` instead of `@mui/x-date-pickers/AdapterDateFns`.
+To use `date-fns` v3.x or v4.x, you need to import the adapter from `@mui/x-date-pickers/AdapterDateFnsV3` instead of `@mui/x-date-pickers/AdapterDateFns`.
 :::
 
 ```tsx
