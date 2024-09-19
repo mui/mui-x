@@ -105,8 +105,8 @@ importers:
         specifier: ^5.16.6
         version: 5.16.6(@types/react@18.3.4)(react@18.3.1)
       '@next/eslint-plugin-next':
-        specifier: 14.2.9
-        version: 14.2.9
+        specifier: 14.2.12
+        version: 14.2.12
       '@octokit/plugin-retry':
         specifier: ^7.1.1
         version: 7.1.1(@octokit/core@4.2.4(encoding@0.1.13))
@@ -3300,8 +3300,8 @@ packages:
   '@next/env@14.2.9':
     resolution: {integrity: sha512-hnDAoDPMii31V0ivibI8p6b023jOF1XblWTVjsDUoZKwnZlaBtJFZKDwFqi22R8r9i6W08dThUWU7Bsh2Rg8Ww==}
 
-  '@next/eslint-plugin-next@14.2.9':
-    resolution: {integrity: sha512-tmLXuDNfPTqoFuSfsd9Q4R96SS/UCKTPtBnnR+cKDcbh8xZU+126vZnRWH1WEpOmS4Vl2Hy/X6SPmgOGZzn+hA==}
+  '@next/eslint-plugin-next@14.2.12':
+    resolution: {integrity: sha512-cPrKbXtK8NTThOOFNxRGGTw+5s02Ek8z8ri/hZqeKs6uP8LOTGqFyBy6hpCXt7TvLzzriWiiwRyD4h0XYmPEEg==}
 
   '@next/swc-darwin-arm64@14.2.9':
     resolution: {integrity: sha512-/kfQifl3uLYi3DlwFlzCkgxe6fprJNLzzTUFknq3M5wGYicDIbdGlxUl6oHpVLJpBB/CBY3Y//gO6alz/K4NWA==}
@@ -12173,7 +12173,7 @@ snapshots:
 
   '@next/env@14.2.9': {}
 
-  '@next/eslint-plugin-next@14.2.9':
+  '@next/eslint-plugin-next@14.2.12':
     dependencies:
       glob: 10.3.10
 
