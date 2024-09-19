@@ -5,7 +5,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import { useTreeView, TreeViewProvider } from '@mui/x-tree-view/internals';
+import { useTreeView, TreeViewProvider, RichTreeViewItems } from '@mui/x-tree-view/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
@@ -168,7 +168,11 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   return (
     <TreeViewProvider value={contextValue}>
       <Root {...rootProps}>
-        {itemsToRender.map(renderItem)}
+        <RichTreeViewItems
+          slots={slots}
+          slotProps={slotProps}
+          itemsToRender={instance.getItemsToRender()}
+        />
         <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
       </Root>
     </TreeViewProvider>
