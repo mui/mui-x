@@ -71,7 +71,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.14",
+    "@mui/internal-test-utils": "https://pkg.csb.dev/mui/material-ui/commit/9aaeecbc/@mui/internal-test-utils",
     "@mui/joy": "^5.0.0-beta.48",
     "@mui/material": "^5.16.7",
     "@mui/system": "^5.16.7",

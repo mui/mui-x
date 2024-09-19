@@ -93,7 +93,7 @@
     "@mui/icons-material": "^5.16.7",
     "@mui/internal-babel-plugin-resolve-imports": "1.0.18",
     "@mui/internal-markdown": "^1.0.14",
-    "@mui/internal-test-utils": "^1.0.14",
+    "@mui/internal-test-utils": "https://pkg.csb.dev/mui/material-ui/commit/9aaeecbc/@mui/internal-test-utils",
     "@mui/material": "^5.16.7",
     "@mui/monorepo": "github:mui/material-ui#263c7259451d5b928bbdfd299c9c0afc89dfec02",
     "@mui/utils": "^5.16.6",
@@ -199,8 +199,7 @@
   },
   "resolutions": {
     "react-is": "^18.3.1",
-    "@types/node": "^20.16.5",
-    "@mui/internal-test-utils": "https://pkg.csb.dev/mui/material-ui/commit/9aaeecbc/@mui/internal-test-utils"
+    "@types/node": "^20.16.5"
   },
   "packageManager": "pnpm@9.10.0",
   "engines": {

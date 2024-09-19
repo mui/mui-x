@@ -98,7 +98,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.14",
+    "@mui/internal-test-utils": "https://pkg.csb.dev/mui/material-ui/commit/9aaeecbc/@mui/internal-test-utils",
     "@mui/material": "^5.16.7",
     "@mui/system": "^5.16.7",
     "@types/luxon": "^3.4.2",
