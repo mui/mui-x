@@ -367,45 +367,150 @@ describe('<DataGrid /> - Row selection', () => {
       expect(input2.checked).to.equal(true);
     });
 
-    it('should only select filtered items when "select all" is toggled after applying a filter', async () => {
-      render(
-        <TestDataGridSelection
-          checkboxSelection
-          initialState={{
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
-          }}
-        />,
-      );
-      const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
-      fireEvent.click(selectAllCheckbox);
-      await waitFor(() => {
-        expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
-      });
-      expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
+    describe('prop: keepUnfilteredRowsSelected = true', () => {
+      it('should keep the unfiltered rows when filtering', async () => {
+        render(
+          <TestDataGridSelection
+            checkboxSelection
+            initialState={{
+              preferencePanel: {
+                open: true,
+                openedPanelValue: GridPreferencePanelsValue.filters,
+              },
+            }}
+            keepUnfilteredRowsSelected
+          />,
+        );
+        const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+        fireEvent.click(selectAllCheckbox);
+        await waitFor(() => {
+          expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+        });
+        expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
 
-      fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
-        target: { value: 1 },
+        fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
+          target: { value: 1 },
+        });
+        await waitFor(() => {
+          // Previous selection remains, but only one row is visible
+          expect(getSelectedRowIds()).to.deep.equal([1]);
+        });
+        expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
       });
-      await waitFor(() => {
-        // Previous selection remains, but only one row is visible
-        expect(getSelectedRowIds()).to.deep.equal([1]);
-      });
-      expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
 
-      fireEvent.click(selectAllCheckbox); // Unselect all
-      await waitFor(() => {
-        expect(getSelectedRowIds()).to.deep.equal([]);
-      });
-      expect(grid('selectedRowCount')).to.equal(null);
+      it('should keep the previously selected unfiltered rows when filtering and then doing "Select All" or "Deselect All"', async () => {
+        render(
+          <TestDataGridSelection
+            checkboxSelection
+            initialState={{
+              preferencePanel: {
+                open: true,
+                openedPanelValue: GridPreferencePanelsValue.filters,
+              },
+            }}
+            keepUnfilteredRowsSelected
+          />,
+        );
+        const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+        fireEvent.click(selectAllCheckbox);
+        await waitFor(() => {
+          expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+        });
+        expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
 
-      fireEvent.click(selectAllCheckbox); // Select all filtered rows
-      await waitFor(() => {
-        expect(getSelectedRowIds()).to.deep.equal([1]);
+        fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
+          target: { value: 1 },
+        });
+        await waitFor(() => {
+          // Previous selection remains, but only one row is visible
+          expect(getSelectedRowIds()).to.deep.equal([1]);
+        });
+        expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
+
+        fireEvent.click(selectAllCheckbox); // Unselect all
+        await waitFor(() => {
+          expect(getSelectedRowIds()).to.deep.equal([]);
+        });
+        expect(grid('selectedRowCount')?.textContent).to.equal('3 rows selected');
+
+        fireEvent.click(selectAllCheckbox); // Select all filtered rows
+        await waitFor(() => {
+          expect(getSelectedRowIds()).to.deep.equal([1]);
+        });
+        expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
       });
-      expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
+    });
+
+    describe('prop: keepUnfilteredRowsSelected = false', () => {
+      it('should remove the unfiltered rows when filtering', async () => {
+        render(
+          <TestDataGridSelection
+            checkboxSelection
+            initialState={{
+              preferencePanel: {
+                open: true,
+                openedPanelValue: GridPreferencePanelsValue.filters,
+              },
+            }}
+          />,
+        );
+        const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+        fireEvent.click(selectAllCheckbox);
+        await waitFor(() => {
+          expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+        });
+        expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
+
+        fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
+          target: { value: 1 },
+        });
+        await waitFor(() => {
+          // Previous selection is cleaned with only the filtered rows
+          expect(getSelectedRowIds()).to.deep.equal([1]);
+        });
+        expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
+      });
+
+      it('should only select filtered items when "select all" is toggled after applying a filter', async () => {
+        render(
+          <TestDataGridSelection
+            checkboxSelection
+            initialState={{
+              preferencePanel: {
+                open: true,
+                openedPanelValue: GridPreferencePanelsValue.filters,
+              },
+            }}
+          />,
+        );
+        const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+        fireEvent.click(selectAllCheckbox);
+        await waitFor(() => {
+          expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+        });
+        expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
+
+        fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
+          target: { value: 1 },
+        });
+        await waitFor(() => {
+          // Previous selection remains, but only one row is visible
+          expect(getSelectedRowIds()).to.deep.equal([1]);
+        });
+        expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
+
+        fireEvent.click(selectAllCheckbox); // Unselect all
+        await waitFor(() => {
+          expect(getSelectedRowIds()).to.deep.equal([]);
+        });
+        expect(grid('selectedRowCount')).to.equal(null);
+
+        fireEvent.click(selectAllCheckbox); // Select all filtered rows
+        await waitFor(() => {
+          expect(getSelectedRowIds()).to.deep.equal([1]);
+        });
+        expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
+      });
     });
 
     describe('prop: indeterminateCheckboxAction = "select"', () => {
@@ -664,6 +769,7 @@ describe('<DataGrid /> - Row selection', () => {
           rowSelectionModel={[0, 1, 2]}
           checkboxSelection
           keepNonExistentRowsSelected
+          keepUnfilteredRowsSelected
           onRowSelectionModelChange={onRowSelectionModelChange}
           {...data}
         />,

@@ -20,7 +20,7 @@ import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import {
   gridExpandedSortedRowIdsSelector,
-  gridFilterModelSelector,
+  gridFilteredSortedRowIdsSetSelector,
 } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { GridCellModes } from '../../../models/gridEditRowModel';
@@ -82,6 +82,7 @@ export const useGridRowSelection = (
     | 'paginationMode'
     | 'classes'
     | 'keepNonExistentRowsSelected'
+    | 'keepUnfilteredRowsSelected'
     | 'rowSelection'
     | 'signature'
   >,
@@ -326,19 +327,32 @@ export const useGridRowSelection = (
   /**
    * EVENTS
    */
+  const isFirstRender = React.useRef(true);
   const removeOutdatedSelection = React.useCallback(() => {
-    if (props.keepNonExistentRowsSelected) {
+    let firstRender = false;
+    if (isFirstRender.current) {
+      // `filteredRows` is not available before filtering process is done
+      firstRender = true;
+      isFirstRender.current = false;
+    }
+    if (props.keepNonExistentRowsSelected && (props.keepUnfilteredRowsSelected || firstRender)) {
       return;
     }
     const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
     const rowsLookup = gridRowsLookupSelector(apiRef);
+    const filteredRows = gridFilteredSortedRowIdsSetSelector(apiRef);
 
     // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
     const selectionLookup = { ...selectedIdsLookupSelector(apiRef) };
 
     let hasChanged = false;
     currentSelection.forEach((id: GridRowId) => {
-      if (!rowsLookup[id]) {
+      if (!props.keepNonExistentRowsSelected && !rowsLookup[id]) {
+        delete selectionLookup[id];
+        hasChanged = true;
+        return;
+      }
+      if (!props.keepUnfilteredRowsSelected && !filteredRows.has(id)) {
         delete selectionLookup[id];
         hasChanged = true;
       }
@@ -347,7 +361,7 @@ export const useGridRowSelection = (
     if (hasChanged) {
       apiRef.current.setRowSelectionModel(Object.values(selectionLookup));
     }
-  }, [apiRef, props.keepNonExistentRowsSelected]);
+  }, [apiRef, props.keepNonExistentRowsSelected, props.keepUnfilteredRowsSelected, isFirstRender]);
 
   const handleSingleRowSelection = React.useCallback(
     (id: GridRowId, event: React.MouseEvent | React.KeyboardEvent) => {
@@ -452,8 +466,7 @@ export const useGridRowSelection = (
           ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
           : gridExpandedSortedRowIdsSelector(apiRef);
 
-      const filterModel = gridFilterModelSelector(apiRef);
-      apiRef.current.selectRows(rowsToBeSelected, params.value, filterModel?.items.length > 0);
+      apiRef.current.selectRows(rowsToBeSelected, params.value);
     },
     [apiRef, props.checkboxSelectionVisibleOnly, props.pagination, props.paginationMode],
   );
@@ -537,6 +550,11 @@ export const useGridRowSelection = (
   useGridApiEventHandler(
     apiRef,
     'sortedRowsSet',
+    runIfRowSelectionIsEnabled(removeOutdatedSelection),
+  );
+  useGridApiEventHandler(
+    apiRef,
+    'filteredRowsSet',
     runIfRowSelectionIsEnabled(removeOutdatedSelection),
   );
   useGridApiEventHandler(apiRef, 'rowClick', runIfRowSelectionIsEnabled(handleRowClick));

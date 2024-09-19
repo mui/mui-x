@@ -62,6 +62,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   indeterminateCheckboxAction: 'deselect',
   keepColumnPositionIfDraggedOutside: false,
   keepNonExistentRowsSelected: false,
+  keepUnfilteredRowsSelected: false,
   loading: false,
   logger: console,
   logLevel: process.env.NODE_ENV === 'production' ? ('error' as const) : ('warn' as const),
