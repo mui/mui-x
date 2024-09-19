@@ -221,9 +221,9 @@ importers:
       date-fns-jalali-v3:
         specifier: npm:date-fns-jalali@3.6.0-1
         version: date-fns-jalali@3.6.0-1
-      date-fns-v3:
-        specifier: npm:date-fns@3.6.0
-        version: date-fns@3.6.0
+      date-fns-v4:
+        specifier: npm:date-fns@4.1.0
+        version: date-fns@4.1.0
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -5537,8 +5537,8 @@ packages:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
     engines: {node: '>=0.11'}
 
-  date-fns@3.6.0:
-    resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
+  date-fns@4.1.0:
+    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
 
   date-format@4.0.14:
     resolution: {integrity: sha512-39BOQLs9ZjKh0/patS9nrT8wc3ioX3/eA/zgbKNopnF2wCqJEoxywwwElATYvRsXdnOxA/OQeQoFZ3rFjVajhg==}
@@ -14836,7 +14836,7 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.25.6
 
-  date-fns@3.6.0: {}
+  date-fns@4.1.0: {}
 
   date-format@4.0.14: {}
 
