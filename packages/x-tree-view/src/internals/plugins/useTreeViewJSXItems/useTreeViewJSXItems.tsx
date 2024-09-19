@@ -17,7 +17,7 @@ import {
 import type { TreeItemProps } from '../../../TreeItem';
 import type { TreeItem2Props } from '../../../TreeItem2';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
-import { selectorTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.selectors';
+import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
 
 export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> = ({
   instance,
@@ -122,7 +122,7 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
   rootRef,
   contentRef,
 }) => {
-  const { instance, store } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
+  const { instance, store, treeId } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
   const { children, disabled = false, label, itemId, id } = props;
 
   const parentContext = React.useContext(TreeViewChildrenItemContext);
@@ -143,16 +143,13 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
 
   // Prevent any flashing
   useEnhancedEffect(() => {
-    const idAttributeWithDefault = selectorTreeItemIdAttribute(store.value, {
-      itemId,
-      idAttribute: id,
-    });
-    registerChild(idAttributeWithDefault, itemId);
+    const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
+    registerChild(idAttribute, itemId);
 
     return () => {
-      unregisterChild(idAttributeWithDefault);
+      unregisterChild(idAttribute);
     };
-  }, [store, instance, registerChild, unregisterChild, itemId, id]);
+  }, [store, instance, registerChild, unregisterChild, itemId, id, treeId]);
 
   React.useEffect(() => {
     return instance.insertJSXItem({
@@ -182,12 +179,12 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
 
 useTreeViewJSXItems.itemPlugin = useTreeViewJSXItemsItemPlugin;
 
-useTreeViewJSXItems.wrapItem = ({ children, itemId }) => {
+useTreeViewJSXItems.wrapItem = ({ children, itemId, idAttribute }) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
   return (
-    <TreeViewChildrenItemProvider itemId={itemId}>
+    <TreeViewChildrenItemProvider itemId={itemId} idAttribute={idAttribute}>
       <TreeViewItemDepthContext.Provider value={(depthContext as number) + 1}>
         {children}
       </TreeViewItemDepthContext.Provider>
@@ -196,7 +193,7 @@ useTreeViewJSXItems.wrapItem = ({ children, itemId }) => {
 };
 
 useTreeViewJSXItems.wrapRoot = ({ children }) => (
-  <TreeViewChildrenItemProvider>
+  <TreeViewChildrenItemProvider itemId={null} idAttribute={null}>
     <TreeViewItemDepthContext.Provider value={0}>{children}</TreeViewItemDepthContext.Provider>
   </TreeViewChildrenItemProvider>
 );

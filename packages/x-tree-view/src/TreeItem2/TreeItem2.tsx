@@ -224,6 +224,7 @@ const TreeItem2Raw = React.forwardRef(function TreeItem2(
   const { id, itemId, label, disabled, children, slots = {}, slotProps = {}, ...other } = props;
 
   const {
+    getContextProviderProps,
     getRootProps,
     getContentProps,
     getIconContainerProps,
@@ -333,7 +334,7 @@ const TreeItem2Raw = React.forwardRef(function TreeItem2(
   });
 
   return (
-    <TreeItem2Provider itemId={itemId}>
+    <TreeItem2Provider {...getContextProviderProps()}>
       <Root {...rootProps}>
         <Content {...contentProps}>
           <IconContainer {...iconContainerProps}>

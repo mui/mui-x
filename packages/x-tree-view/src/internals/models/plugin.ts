@@ -148,6 +148,7 @@ export type TreeItemWrapper<TSignatures extends readonly TreeViewAnyPluginSignat
   itemId: TreeViewItemId;
   children: React.ReactNode;
   instance: TreeViewInstance<TSignatures>;
+  idAttribute: string;
 }) => React.ReactNode;
 
 export type TreeRootWrapper<TSignatures extends readonly TreeViewAnyPluginSignature[]> = (params: {

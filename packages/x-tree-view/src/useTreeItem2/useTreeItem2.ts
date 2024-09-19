@@ -28,7 +28,7 @@ import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext'
 import { isTargetInDescendants } from '../internals/utils/tree';
 import { useSelector } from '../internals/hooks/useSelector';
 import { selectorDefaultFocusableItemId } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
-import { selectorTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.selectors';
+import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
 
 export const useTreeItem2 = <
   TSignatures extends UseTreeItem2MinimalPlugins = UseTreeItem2MinimalPlugins,
@@ -42,6 +42,7 @@ export const useTreeItem2 = <
     selection: { multiSelect, disableSelection, checkboxSelection },
     expansion: { expansionTrigger },
     label: labelContext,
+    treeId,
     instance,
     publicAPI,
     store,
@@ -58,7 +59,7 @@ export const useTreeItem2 = <
   const handleContentRef = useForkRef(contentRef, contentRefObject)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
-  const idAttribute = useSelector(store, selectorTreeItemIdAttribute, { itemId, idAttribute: id });
+  const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
   const rootTabIndex = useSelector(store, (state) =>
     selectorDefaultFocusableItemId(state) === parameters.itemId ? 0 : -1,
   );
@@ -190,6 +191,8 @@ export const useTreeItem2 = <
         interactions.handleExpansion(event);
       }
     };
+
+  const getContextProviderProps = () => ({ itemId, id });
 
   const getRootProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
@@ -379,6 +382,7 @@ export const useTreeItem2 = <
   };
 
   return {
+    getContextProviderProps,
     getRootProps,
     getContentProps,
     getGroupTransitionProps,
