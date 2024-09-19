@@ -10,7 +10,6 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({
   state,
   setState,
   params,
-  experimentalFeatures,
 }) => {
   const editedItemRef = React.useRef(state.editedItemId);
 
