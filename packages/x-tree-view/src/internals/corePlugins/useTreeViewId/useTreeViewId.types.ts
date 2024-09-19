@@ -17,7 +17,7 @@ export interface UseTreeViewIdState {
 }
 
 interface UseTreeViewIdContextValue {
-  treeId: string;
+  treeId: string | undefined;
 }
 
 export type UseTreeViewIdSignature = TreeViewPluginSignature<{

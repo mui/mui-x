@@ -18,11 +18,11 @@ export const createTreeViewDefaultId = () => {
  */
 export const generateTreeItemIdAttribute = ({
   id,
-  treeId,
+  treeId = '',
   itemId,
 }: {
   id: TreeViewItemId | undefined;
-  treeId: TreeViewItemId;
+  treeId: string | undefined;
   itemId: string;
 }): string => {
   if (id != null) {
