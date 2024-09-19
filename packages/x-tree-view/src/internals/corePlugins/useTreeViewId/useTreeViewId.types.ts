@@ -1,5 +1,4 @@
 import { TreeViewPluginSignature } from '../../models';
-import { TreeViewItemId } from '../../../models';
 
 export interface UseTreeViewIdParameters {
   /**
