@@ -189,6 +189,7 @@ More examples of how to customize the detail panel:
 
 - [One expanded detail panel at a time](/x/react-data-grid/row-recipes/#one-expanded-detail-panel-at-a-time)
 - [Expand or collapse all detail panels](/x/react-data-grid/row-recipes/#expand-or-collapse-all-detail-panels)
+- [Toggling detail panels on row click](/x/react-data-grid/row-recipes/#toggling-detail-panels-on-row-click)
 
 ## apiRef
 
