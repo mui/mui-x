@@ -3,6 +3,81 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.18.0
+
+_Sep 19, 2024_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.18.0`
+
+- [DataGrid] Add default reset value in row edit mode (#14050) @michelengelen
+- [DataGrid] Add `columnGroupHeaderHeight` prop for sizing column group headers (#14637) @KenanYusuf
+- [DataGrid] Fix document reference when the grid is rendered in a popup window (#14649) @arminmeh
+- [DataGrid] Remove `minFirstColumn` from `GetHeadersParams` interface (#14450) @k-rajat19
+
+#### `@mui/x-data-grid-pro@7.18.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.18.0`, plus:
+
+- [DataGridPro] Fix `onRowsScrollEnd` being triggered instantly when using a bottom pinned row (#14602) @arminmeh
+- [DataGridPro] Fix header filters rendering issue for `isEmpty` and `isNotEmpty` filter operators (#14493) @k-rajat19
+- [DataGridPro] Fix pinned columns in RTL mode (#14586) @KenanYusuf
+
+#### `@mui/x-data-grid-premium@7.18.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.18.0`.
+
+### Charts
+
+#### `@mui/x-charts@7.18.0`
+
+- [charts] Add a `PolarProvider` to manage polar axes (#14642) @alexfauquette
+- [charts] Fix `LineChart` animation being stuck with initial drawing area value (#14553) @JCQuintas
+- [charts] Fix legend slot typing (#14657) @alexfauquette
+- [charts] Pass the axis index to extremum getter (#14641) @alexfauquette
+- [charts] Provide hooks to create custom tooltip (#14377) @alexfauquette
+
+#### `@mui/x-charts-pro@7.0.0-beta.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.18.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.18.0`
+
+- [TreeView] Add `"use client"` directive to every public component and hook (#14579) @flaviendelangle
+
+### Docs
+
+- [docs] Add `groupingValueGetter` callout in column definition docs (#14599) @michelengelen
+- [docs] Clean v6 => v7 migration guide (#14652) @flaviendelangle
+- [docs] Copy `vale-action.yml` from main repo @oliviertassinari
+- [docs] Edit the Pickers Getting started doc (#14555) @samuelsycamore
+- [docs] Fix TypeScript capitalization @oliviertassinari
+- [docs] Fix Vale error @oliviertassinari
+- [docs] Make the migration guide diff a bit easier to read @oliviertassinari
+- [docs] Report Vale at warning level (#14660) @oliviertassinari
+- [docs] Warn about the `valueGetter` and `valueFormatter` signature change (#14613) @cherniavskii
+- [docs] Polish code formatting (#14603) @oliviertassinari
+- [test] Spy on `observe` method to avoid flaky wait for a callback (#14640) @arminmeh
+
+### Core
+
+- [core] Fix 301 link to Next.js and git diff @oliviertassinari
+- [core] Fix failing CI on `master` (#14644) @cherniavskii
+- [core] Fix `package.json` repository rule @oliviertassinari
+- [core] MUI X repository moved to a new location @oliviertassinari
+- [docs-infra] Strengthen CSP (#14581) @oliviertassinari
+- [license] Finish renaming of LicensingModel (#14615) @oliviertassinari
+
 ## 7.17.0
 
 _Sep 13, 2024_
