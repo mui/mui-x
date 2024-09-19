@@ -1,4 +1,4 @@
-# Change Log for v6 releases
+# Changelog for v6 releases
 
 ## 6.19.12
 
@@ -2188,7 +2188,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
   It already contains [line](https://mui.com/x/react-charts/lines/), [bar](https://mui.com/x/react-charts/bars/), and [scatter](https://mui.com/x/react-charts/scatter/) charts, with basic customization features. Check out the [documentation](https://mui.com/x/react-charts/) to see what it can do, and open issues to get the feature you need implemented.
 
-- 🚀 Introducing UTC and timezone support for pickers.
+- 🚀 Introducing UTC and timezones support for pickers.
 
   <img width="774" src="https://github.com/mui/mui-x/assets/3165635/ad95a404-ee67-4aff-b996-ad6cbb322348" alt="Pickers time zone switching">
 
@@ -5374,7 +5374,7 @@ You can find more information about the new api, including how to set those tran
 - [pickers] Clean slots on `PickersArrowSwitcher` component (#5890) @flaviendelangle
 - [pickers] Fix invalid date error when decreasing `DateField` day (#6071) @alexfauquette
 - [pickers] Fix mobile section selection (#6207) @oliviertassinari
-- [pickers] Fix usage with Typescript 4.8 (#6229) @flaviendelangle
+- [pickers] Fix usage with TypeScript 4.8 (#6229) @flaviendelangle
 - [pickers] Improve error message when no adapter context is found (#6211) @flaviendelangle
 - [pickers] Remove `valueStr` from the field state (#6142) @flaviendelangle
 - [pickers] Remove remaining deprecated locale props (#6233) @flaviendelangle

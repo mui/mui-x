@@ -1,4 +1,4 @@
-import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
+import type { MuiPage } from 'docs/src/MuiPage';
 import dataGridComponentApi from './data-grid-component-api-pages';
 import pickersComponentApi from './date-pickers-component-api-pages';
 import chartsComponentApi from './charts-component-api-pages';
@@ -12,13 +12,19 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/introduction-group',
     title: 'Introduction',
-
     children: [
       { pathname: `/x/introduction`, title: 'Overview' },
       { pathname: `/x/introduction/installation` },
       { pathname: `/x/introduction/licensing` },
       { pathname: `/x/introduction/support` },
       { pathname: `/x/introduction/roadmap` },
+    ],
+  },
+  {
+    pathname: '/x/common-features-group',
+    title: 'Common concepts',
+    children: [
+      { pathname: `/x/common-concepts/custom-components`, title: 'Custom slots and subcomponents' },
     ],
   },
   {
@@ -88,7 +94,7 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/export' },
       { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste', newFeature: true },
       { pathname: '/x/react-data-grid/overlays', title: 'Overlays' },
-      { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
+      { pathname: '/x/react-data-grid/components', title: 'Custom slots and subcomponents' },
       {
         pathname: '/x/react-data-grid/style-group',
         title: 'Style',
@@ -354,7 +360,7 @@ const pages: MuiPage[] = [
           },
           {
             pathname: '/x/react-date-pickers/timezone',
-            title: 'UTC and timezone',
+            title: 'UTC and timezones',
           },
           { pathname: '/x/react-date-pickers/calendar-systems' },
         ],
@@ -510,6 +516,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/rich-tree-view/expansion' },
           { pathname: '/x/react-tree-view/rich-tree-view/customization' },
           { pathname: '/x/react-tree-view/rich-tree-view/focus' },
+          { pathname: '/x/react-tree-view/rich-tree-view/editing' },
           { pathname: '/x/react-tree-view/rich-tree-view/ordering', plan: 'pro' },
         ],
       },

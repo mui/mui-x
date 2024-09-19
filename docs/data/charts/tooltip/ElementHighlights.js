@@ -73,13 +73,13 @@ const pieChartsParams = {
       data: [{ value: 5 }, { value: 10 }, { value: 15 }],
       label: 'Series 1',
       outerRadius: 80,
-      highlighted: { additionalRadius: 10 },
+      highlight: { additionalRadius: 10 },
     },
     {
       data: [{ value: 5 }, { value: 10 }, { value: 15 }],
       label: 'Series 1',
       innerRadius: 90,
-      highlighted: { additionalRadius: 10 },
+      highlight: { additionalRadius: 10 },
     },
   ],
   height: 400,
@@ -130,7 +130,6 @@ export default function ElementHighlights() {
             }))}
           />
         )}
-
         {chartType === 'line' && (
           <LineChart
             {...lineChartsParams}
@@ -144,7 +143,6 @@ export default function ElementHighlights() {
             }))}
           />
         )}
-
         {chartType === 'scatter' && (
           <ScatterChart
             {...scatterChartsParams}
@@ -157,7 +155,6 @@ export default function ElementHighlights() {
             }))}
           />
         )}
-
         {chartType === 'pie' && (
           <PieChart
             {...pieChartsParams}

@@ -11,6 +11,7 @@ import {
   UseTreeItem2LabelSlotProps,
   UseTreeItemIconContainerSlotProps,
   UseTreeItem2CheckboxSlotProps,
+  UseTreeItem2LabelInputSlotProps,
   UseTreeItem2MinimalPlugins,
   UseTreeItem2OptionalPlugins,
   UseTreeItem2DragAndDropOverlaySlotProps,
@@ -18,9 +19,13 @@ import {
   UseTreeItem2ContentSlotPropsFromUseTreeItem,
 } from './useTreeItem2.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
-import { MuiCancellableEvent } from '../internals/models';
+import {
+  MuiCancellableEvent,
+  TreeViewItemPluginSlotPropsEnhancerParams,
+} from '../internals/models';
 import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
+import { isTargetInDescendants } from '../internals/utils/tree';
 
 export const useTreeItem2 = <
   TSignatures extends UseTreeItem2MinimalPlugins = UseTreeItem2MinimalPlugins,
@@ -48,6 +53,12 @@ export const useTreeItem2 = <
   const handleRootRef = useForkRef(rootRef, pluginRootRef, rootRefObject)!;
   const handleContentRef = useForkRef(contentRef, contentRefObject)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
+  const rootTabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
+
+  const sharedPropsEnhancerParams: Omit<
+    TreeViewItemPluginSlotPropsEnhancerParams,
+    'externalEventHandlers'
+  > = { rootRefObject, contentRefObject, interactions };
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>
@@ -71,6 +82,25 @@ export const useTreeItem2 = <
         return;
       }
 
+      const rootElement = instance.getItemDOMElement(itemId);
+
+      // Don't blur the root when switching to editing mode
+      // the input that triggers the root blur can be either the relatedTarget (when entering editing state) or the target (when exiting editing state)
+      // when we enter the editing state, we focus the input -> we don't want to remove the focused item from the state
+      if (
+        status.editing ||
+        // we can exit the editing state by clicking outside the input (within the tree item) or by pressing Enter or Escape -> we don't want to remove the focused item from the state in these cases
+        // we can also exit the editing state by clicking on the root itself -> want to remove the focused item from the state in this case
+        (event.relatedTarget &&
+          isTargetInDescendants(event.relatedTarget as HTMLElement, rootElement) &&
+          ((event.target &&
+            (event.target as HTMLElement)?.dataset?.element === 'labelInput' &&
+            isTargetInDescendants(event.target as HTMLElement, rootElement)) ||
+            (event.relatedTarget as HTMLElement)?.dataset?.element === 'labelInput'))
+      ) {
+        return;
+      }
+
       instance.removeFocusedItem();
     };
 
@@ -78,11 +108,23 @@ export const useTreeItem2 = <
     (otherHandlers: EventHandlers) =>
     (event: React.KeyboardEvent<HTMLElement> & MuiCancellableEvent) => {
       otherHandlers.onKeyDown?.(event);
-      if (event.defaultMuiPrevented) {
+      if (
+        event.defaultMuiPrevented ||
+        (event.target as HTMLElement)?.dataset?.element === 'labelInput'
+      ) {
         return;
       }
 
       instance.handleItemKeyDown(event, itemId);
+    };
+
+  const createLabelHandleDoubleClick =
+    (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
+      otherHandlers.onDoubleClick?.(event);
+      if (event.defaultMuiPrevented) {
+        return;
+      }
+      interactions.toggleItemEditing();
     };
 
   const createContentHandleClick =
@@ -93,7 +135,6 @@ export const useTreeItem2 = <
       if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;
       }
-
       if (expansionTrigger === 'content') {
         interactions.handleExpansion(event);
       }
@@ -167,7 +208,7 @@ export const useTreeItem2 = <
       ...externalEventHandlers,
       ref: handleRootRef,
       role: 'treeitem',
-      tabIndex: instance.canItemBeTabbed(itemId) ? 0 : -1,
+      tabIndex: rootTabIndex,
       id: idAttribute,
       'aria-expanded': status.expandable ? status.expanded : undefined,
       'aria-selected': ariaSelected,
@@ -186,7 +227,7 @@ export const useTreeItem2 = <
     }
 
     const enhancedRootProps =
-      propsEnhancers.root?.({ rootRefObject, contentRefObject, externalEventHandlers }) ?? {};
+      propsEnhancers.root?.({ ...sharedPropsEnhancerParams, externalEventHandlers }) ?? {};
 
     return {
       ...props,
@@ -213,7 +254,7 @@ export const useTreeItem2 = <
     }
 
     const enhancedContentProps =
-      propsEnhancers.content?.({ rootRefObject, contentRefObject, externalEventHandlers }) ?? {};
+      propsEnhancers.content?.({ ...sharedPropsEnhancerParams, externalEventHandlers }) ?? {};
 
     return {
       ...props,
@@ -245,11 +286,37 @@ export const useTreeItem2 = <
       ...extractEventHandlers(externalProps),
     };
 
-    return {
+    const props: UseTreeItem2LabelSlotProps<ExternalProps> = {
       ...externalEventHandlers,
       children: label,
       ...externalProps,
+      onDoubleClick: createLabelHandleDoubleClick(externalEventHandlers),
     };
+
+    if (instance.isTreeViewEditable) {
+      props.editable = status.editable;
+    }
+
+    return props;
+  };
+
+  const getLabelInputProps = <ExternalProps extends Record<string, any> = {}>(
+    externalProps: ExternalProps = {} as ExternalProps,
+  ): UseTreeItem2LabelInputSlotProps<ExternalProps> => {
+    const externalEventHandlers = extractEventHandlers(externalProps);
+
+    const enhancedLabelInputProps =
+      propsEnhancers.labelInput?.({
+        rootRefObject,
+        contentRefObject,
+        externalEventHandlers,
+        interactions,
+      }) ?? {};
+
+    return {
+      ...externalProps,
+      ...enhancedLabelInputProps,
+    } as UseTreeItem2LabelInputSlotProps<ExternalProps>;
   };
 
   const getIconContainerProps = <ExternalProps extends Record<string, any> = {}>(
@@ -289,14 +356,11 @@ export const useTreeItem2 = <
   const getDragAndDropOverlayProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
   ): UseTreeItem2DragAndDropOverlaySlotProps<ExternalProps> => {
-    const externalEventHandlers = {
-      ...extractEventHandlers(externalProps),
-    };
+    const externalEventHandlers = extractEventHandlers(externalProps);
 
     const enhancedDragAndDropOverlayProps =
       propsEnhancers.dragAndDropOverlay?.({
-        rootRefObject,
-        contentRefObject,
+        ...sharedPropsEnhancerParams,
         externalEventHandlers,
       }) ?? {};
 
@@ -313,6 +377,7 @@ export const useTreeItem2 = <
     getIconContainerProps,
     getCheckboxProps,
     getLabelProps,
+    getLabelInputProps,
     getDragAndDropOverlayProps,
     rootRef: handleRootRef,
     status,

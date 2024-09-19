@@ -153,7 +153,7 @@ interface DataGridProRegularProps<R extends GridValidRowModel> {
    * @param {R} row The row from which we want the path.
    * @returns {string[]} The path to the row.
    */
-  getTreeDataPath?: (row: R) => string[];
+  getTreeDataPath?: (row: R) => readonly string[];
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>

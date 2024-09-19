@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Watermark } from '@mui/x-license/Watermark';
@@ -93,6 +94,16 @@ ResponsiveChartContainerPro.propTypes = {
    */
   plugins: PropTypes.arrayOf(PropTypes.object),
   /**
+   * The chart will try to wait for the parent container to resolve its size
+   * before it renders for the first time.
+   *
+   * This can be useful in some scenarios where the chart appear to grow after
+   * the first render, like when used inside a grid.
+   *
+   * @default false
+   */
+  resolveSizeBeforeRender: PropTypes.bool,
+  /**
    * The array of series to display.
    * Each type of series has its own specificity.
    * Please refer to the appropriate docs page to learn more about it.
@@ -167,6 +178,11 @@ ResponsiveChartContainerPro.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -184,6 +200,7 @@ ResponsiveChartContainerPro.propTypes = {
       valueFormatter: PropTypes.func,
       zoom: PropTypes.oneOfType([
         PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
           maxEnd: PropTypes.number,
           maxSpan: PropTypes.number,
           minSpan: PropTypes.number,
@@ -248,6 +265,11 @@ ResponsiveChartContainerPro.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -265,6 +287,7 @@ ResponsiveChartContainerPro.propTypes = {
       valueFormatter: PropTypes.func,
       zoom: PropTypes.oneOfType([
         PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
           maxEnd: PropTypes.number,
           maxSpan: PropTypes.number,
           minSpan: PropTypes.number,

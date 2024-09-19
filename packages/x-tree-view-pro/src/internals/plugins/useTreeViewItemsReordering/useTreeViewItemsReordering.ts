@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { warnOnce, TreeViewPlugin } from '@mui/x-tree-view/internals';
+import { TreeViewPlugin } from '@mui/x-tree-view/internals';
+import { warnOnce } from '@mui/x-internals/warning';
 import { TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
 import {
   TreeViewItemItemReorderingValidActions,
@@ -55,18 +56,19 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
   const getDroppingTargetValidActions = React.useCallback(
     (itemId: string) => {
-      if (!state.itemsReordering) {
+      const itemsReordering = state.itemsReordering;
+      if (!itemsReordering) {
         throw new Error('There is no ongoing reordering.');
       }
 
-      if (itemId === state.itemsReordering.draggedItemId) {
+      if (itemId === itemsReordering.draggedItemId) {
         return {};
       }
 
       const canMoveItemToNewPosition = params.canMoveItemToNewPosition;
       const targetItemMeta = instance.getItemMeta(itemId);
       const targetItemIndex = instance.getItemIndex(targetItemMeta.id);
-      const draggedItemMeta = instance.getItemMeta(state.itemsReordering.draggedItemId);
+      const draggedItemMeta = instance.getItemMeta(itemsReordering.draggedItemId);
       const draggedItemIndex = instance.getItemIndex(draggedItemMeta.id);
 
       const oldPosition: TreeViewItemReorderPosition = {
@@ -84,7 +86,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
           isValid = false;
         } else if (canMoveItemToNewPosition) {
           isValid = canMoveItemToNewPosition({
-            itemId,
+            itemId: itemsReordering.draggedItemId,
             oldPosition,
             newPosition: positionAfterAction,
           });

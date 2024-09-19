@@ -1,7 +1,8 @@
+'use client';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import type { DrawingProviderProps } from '../context/DrawingProvider';
-import type { CartesianContextProviderProps } from '../context/CartesianProvider';
+import type { CartesianProviderProps } from '../context/CartesianProvider';
 import type { SeriesProviderProps } from '../context/SeriesProvider';
 import type { ZAxisContextProviderProps } from '../context/ZAxisContextProvider';
 import type { ChartContainerProps } from './ChartContainer';
@@ -40,7 +41,7 @@ export const useChartContainerProps = (
 
   useReducedMotion(); // a11y reduce motion (see: https://react-spring.dev/docs/utilities/use-reduced-motion)
 
-  const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis);
+  const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis, dataset);
 
   const drawingProviderProps: Omit<DrawingProviderProps, 'children'> = {
     width,
@@ -59,7 +60,7 @@ export const useChartContainerProps = (
     dataset,
   };
 
-  const cartesianContextProps: Omit<CartesianContextProviderProps, 'children'> = {
+  const cartesianProviderProps: Omit<CartesianProviderProps, 'children'> = {
     xAxis: defaultizedXAxis,
     yAxis: defaultizedYAxis,
     dataset,
@@ -90,7 +91,7 @@ export const useChartContainerProps = (
     children,
     drawingProviderProps,
     seriesProviderProps,
-    cartesianContextProps,
+    cartesianProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
     chartsSurfaceProps,

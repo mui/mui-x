@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
@@ -14,6 +15,16 @@ export interface ResponsiveChartContainerProps
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height?: number;
+  /**
+   * The chart will try to wait for the parent container to resolve its size
+   * before it renders for the first time.
+   *
+   * This can be useful in some scenarios where the chart appear to grow after
+   * the first render, like when used inside a grid.
+   *
+   * @default false
+   */
+  resolveSizeBeforeRender?: boolean;
 }
 
 const ResponsiveChartContainer = React.forwardRef(function ResponsiveChartContainer(
@@ -87,6 +98,16 @@ ResponsiveChartContainer.propTypes = {
    * If not provided, the container supports line, bar, scatter and pie charts.
    */
   plugins: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * The chart will try to wait for the parent container to resolve its size
+   * before it renders for the first time.
+   *
+   * This can be useful in some scenarios where the chart appear to grow after
+   * the first render, like when used inside a grid.
+   *
+   * @default false
+   */
+  resolveSizeBeforeRender: PropTypes.bool,
   /**
    * The array of series to display.
    * Each type of series has its own specificity.
@@ -162,6 +183,11 @@ ResponsiveChartContainer.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -232,6 +258,11 @@ ResponsiveChartContainer.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),

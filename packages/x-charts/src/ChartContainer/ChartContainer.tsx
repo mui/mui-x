@@ -1,13 +1,11 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
 import { SeriesProvider, SeriesProviderProps } from '../context/SeriesProvider';
 import { InteractionProvider } from '../context/InteractionProvider';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import {
-  CartesianContextProvider,
-  CartesianContextProviderProps,
-} from '../context/CartesianProvider';
+import { CartesianProvider, CartesianProviderProps } from '../context/CartesianProvider';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import {
   HighlightedProvider,
@@ -24,7 +22,7 @@ export type ChartContainerProps = Omit<
   ChartsSurfaceProps &
     Omit<SeriesProviderProps, 'seriesFormatters'> &
     Omit<DrawingProviderProps, 'svgRef'> &
-    Pick<CartesianContextProviderProps, 'dataset'> &
+    Pick<CartesianProviderProps, 'dataset'> &
     ZAxisContextProviderProps &
     HighlightedProviderProps &
     PluginProviderProps,
@@ -50,7 +48,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
     children,
     drawingProviderProps,
     seriesProviderProps,
-    cartesianContextProps,
+    cartesianProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
     chartsSurfaceProps,
@@ -61,7 +59,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
     <DrawingProvider {...drawingProviderProps}>
       <PluginProvider {...pluginProviderProps}>
         <SeriesProvider {...seriesProviderProps}>
-          <CartesianContextProvider {...cartesianContextProps}>
+          <CartesianProvider {...cartesianProviderProps}>
             <ZAxisContextProvider {...zAxisContextProps}>
               <InteractionProvider>
                 <HighlightedProvider {...highlightedProviderProps}>
@@ -72,7 +70,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
                 </HighlightedProvider>
               </InteractionProvider>
             </ZAxisContextProvider>
-          </CartesianContextProvider>
+          </CartesianProvider>
         </SeriesProvider>
       </PluginProvider>
     </DrawingProvider>
@@ -211,6 +209,11 @@ ChartContainer.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -281,6 +284,11 @@ ChartContainer.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),

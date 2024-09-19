@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ChartContainerProps } from '@mui/x-charts/ChartContainer';
@@ -12,7 +13,7 @@ import {
 } from '@mui/x-charts/internals';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
-import { CartesianContextProviderPro } from '../context/CartesianProviderPro';
+import { CartesianProviderPro } from '../context/CartesianProviderPro';
 import { ZoomProps, ZoomProvider } from '../context/ZoomProvider';
 import { useChartContainerProProps } from './useChartContainerProProps';
 
@@ -30,7 +31,7 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
     seriesProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
-    cartesianContextProps,
+    cartesianProviderProps,
     chartsSurfaceProps,
     pluginProviderProps,
     children,
@@ -41,9 +42,9 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
   return (
     <DrawingProvider {...drawingProviderProps}>
       <PluginProvider {...pluginProviderProps}>
-        <SeriesProvider {...seriesProviderProps}>
-          <ZoomProvider {...zoomProviderProps}>
-            <CartesianContextProviderPro {...cartesianContextProps}>
+        <ZoomProvider {...zoomProviderProps}>
+          <SeriesProvider {...seriesProviderProps}>
+            <CartesianProviderPro {...cartesianProviderProps}>
               <ZAxisContextProvider {...zAxisContextProps}>
                 <InteractionProvider>
                   <HighlightedProvider {...highlightedProviderProps}>
@@ -54,9 +55,9 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
                   </HighlightedProvider>
                 </InteractionProvider>
               </ZAxisContextProvider>
-            </CartesianContextProviderPro>
-          </ZoomProvider>
-        </SeriesProvider>
+            </CartesianProviderPro>
+          </SeriesProvider>
+        </ZoomProvider>
       </PluginProvider>
     </DrawingProvider>
   );
@@ -200,6 +201,11 @@ ChartContainerPro.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -217,6 +223,7 @@ ChartContainerPro.propTypes = {
       valueFormatter: PropTypes.func,
       zoom: PropTypes.oneOfType([
         PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
           maxEnd: PropTypes.number,
           maxSpan: PropTypes.number,
           minSpan: PropTypes.number,
@@ -281,6 +288,11 @@ ChartContainerPro.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -298,6 +310,7 @@ ChartContainerPro.propTypes = {
       valueFormatter: PropTypes.func,
       zoom: PropTypes.oneOfType([
         PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
           maxEnd: PropTypes.number,
           maxSpan: PropTypes.number,
           minSpan: PropTypes.number,

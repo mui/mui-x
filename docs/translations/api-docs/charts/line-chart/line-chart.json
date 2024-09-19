@@ -18,6 +18,9 @@
     "disableLineItemHighlight": {
       "description": "If <code>true</code>, render the line highlight item."
     },
+    "experimentalMarkRendering": {
+      "description": "If <code>true</code> marks will render <code>&lt;circle /&gt;</code> instead of <code>&lt;path /&gt;</code> and drop theme override for faster rendering."
+    },
     "grid": { "description": "Option to display a cartesian grid in the background." },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
@@ -46,6 +49,9 @@
     },
     "onLineClick": { "description": "Callback fired when a line element is clicked." },
     "onMarkClick": { "description": "Callback fired when a mark element is clicked." },
+    "resolveSizeBeforeRender": {
+      "description": "The chart will try to wait for the parent container to resolve its size before it renders for the first time.<br>This can be useful in some scenarios where the chart appear to grow after the first render, like when used inside a grid."
+    },
     "rightAxis": {
       "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
     },

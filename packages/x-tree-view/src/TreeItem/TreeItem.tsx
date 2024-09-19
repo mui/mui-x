@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -26,6 +27,8 @@ import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 import { TreeItem2Provider } from '../TreeItem2Provider';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { useTreeItemState } from './useTreeItemState';
+import { isTargetInDescendants } from '../internals/utils/tree';
+import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem');
 
@@ -42,6 +45,9 @@ const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
     iconContainer: ['iconContainer'],
     checkbox: ['checkbox'],
     label: ['label'],
+    labelInput: ['labelInput'],
+    editing: ['editing'],
+    editable: ['editable'],
     groupTransition: ['groupTransition'],
   };
 
@@ -217,7 +223,16 @@ export const TreeItem = React.forwardRef(function TreeItem(
     ...other
   } = props;
 
-  const { expanded, focused, selected, disabled, handleExpansion } = useTreeItemState(itemId);
+  const {
+    expanded,
+    focused,
+    selected,
+    disabled,
+    editing,
+    handleExpansion,
+    handleCancelItemLabelEditing,
+    handleSaveItemLabel,
+  } = useTreeItemState(itemId);
 
   const { contentRef, rootRef, propsEnhancers } = runItemPlugins<TreeItemProps>(props);
   const rootRefObject = React.useRef<HTMLLIElement>(null);
@@ -343,33 +358,60 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
   function handleBlur(event: React.FocusEvent<HTMLLIElement>) {
     onBlur?.(event);
+    if (
+      editing ||
+      // we can exit the editing state by clicking outside the input (within the tree item) or by pressing Enter or Escape -> we don't want to remove the focused item from the state in these cases
+      // we can also exit the editing state by clicking on the root itself -> want to remove the focused item from the state in this case
+      (event.relatedTarget &&
+        isTargetInDescendants(event.relatedTarget as HTMLElement, rootRefObject.current) &&
+        ((event.target &&
+          (event.target as HTMLElement)?.dataset?.element === 'labelInput' &&
+          isTargetInDescendants(event.target as HTMLElement, rootRefObject.current)) ||
+          (event.relatedTarget as HTMLElement)?.dataset?.element === 'labelInput'))
+    ) {
+      return;
+    }
     instance.removeFocusedItem();
   }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
     onKeyDown?.(event);
+    if ((event.target as HTMLElement)?.dataset?.element === 'labelInput') {
+      return;
+    }
     instance.handleItemKeyDown(event, itemId);
   };
 
   const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
   const tabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
 
+  const sharedPropsEnhancerParams: Omit<
+    TreeViewItemPluginSlotPropsEnhancerParams,
+    'externalEventHandlers'
+  > = {
+    rootRefObject,
+    contentRefObject,
+    interactions: { handleSaveItemLabel, handleCancelItemLabelEditing },
+  };
+
   const enhancedRootProps =
     propsEnhancers.root?.({
-      rootRefObject,
-      contentRefObject,
+      ...sharedPropsEnhancerParams,
       externalEventHandlers: extractEventHandlers(other),
     }) ?? {};
   const enhancedContentProps =
     propsEnhancers.content?.({
-      rootRefObject,
-      contentRefObject,
+      ...sharedPropsEnhancerParams,
       externalEventHandlers: extractEventHandlers(ContentProps),
     }) ?? {};
   const enhancedDragAndDropOverlayProps =
     propsEnhancers.dragAndDropOverlay?.({
-      rootRefObject,
-      contentRefObject,
+      ...sharedPropsEnhancerParams,
+      externalEventHandlers: {},
+    }) ?? {};
+  const enhancedLabelInputProps =
+    propsEnhancers.labelInput?.({
+      ...sharedPropsEnhancerParams,
       externalEventHandlers: {},
     }) ?? {};
 
@@ -408,8 +450,11 @@ export const TreeItem = React.forwardRef(function TreeItem(
             selected: classes.selected,
             focused: classes.focused,
             disabled: classes.disabled,
+            editable: classes.editable,
+            editing: classes.editing,
             iconContainer: classes.iconContainer,
             label: classes.label,
+            labelInput: classes.labelInput,
             checkbox: classes.checkbox,
           }}
           label={label}
@@ -425,6 +470,9 @@ export const TreeItem = React.forwardRef(function TreeItem(
           {...((enhancedDragAndDropOverlayProps as any).action == null
             ? {}
             : { dragAndDropOverlayProps: enhancedDragAndDropOverlayProps })}
+          {...((enhancedLabelInputProps as any).value == null
+            ? {}
+            : { labelInputProps: enhancedLabelInputProps })}
           ref={handleContentRef}
         />
         {children && (

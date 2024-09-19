@@ -87,7 +87,7 @@ Let's take a look at the minimal `GridDataSource` interface configuration.
 ```tsx
 interface GridDataSource {
   /**
-   * This method will be called when the grid needs to fetch some rows
+   * This method will be called when the grid needs to fetch some rows.
    * @param {GridGetRowsParams} params The parameters required to fetch the rows
    * @returns {Promise<GridGetRowsResponse>} A promise that resolves to the data of type [GridGetRowsResponse]
    */

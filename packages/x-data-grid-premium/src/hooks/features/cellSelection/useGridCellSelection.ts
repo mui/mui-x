@@ -62,6 +62,7 @@ export const useGridCellSelection = (
     | 'columnHeaderHeight'
   >,
 ) => {
+  const hasRootReference = apiRef.current.rootElementRef.current !== null;
   const visibleRows = useGridVisibleRows(apiRef, props);
   const cellWithVirtualFocus = React.useRef<GridCellCoordinates | null>();
   const lastMouseDownCell = React.useRef<GridCellCoordinates | null>();
@@ -146,7 +147,7 @@ export const useGridCellSelection = (
       const rowsInRange = visibleRows.rows.slice(finalStartRowIndex, finalEndRowIndex + 1);
       const columnsInRange = visibleColumns.slice(finalStartColumnIndex, finalEndColumnIndex + 1);
 
-      const newModel = keepOtherSelected ? apiRef.current.getCellSelectionModel() : {};
+      const newModel = keepOtherSelected ? { ...apiRef.current.getCellSelectionModel() } : {};
 
       rowsInRange.forEach((row) => {
         if (!newModel[row.id]) {
@@ -476,7 +477,7 @@ export const useGridCellSelection = (
       const document = ownerDocument(rootRef);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [apiRef, handleMouseUp, stopAutoScroll]);
+  }, [apiRef, hasRootReference, handleMouseUp, stopAutoScroll]);
 
   const checkIfCellIsSelected = React.useCallback<GridPipeProcessor<'isCellSelected'>>(
     (isSelected, { id, field }) => {

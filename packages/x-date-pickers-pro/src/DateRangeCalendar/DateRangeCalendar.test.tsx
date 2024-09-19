@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import {
-  screen,
-  fireEvent,
-  getByRole,
-  fireTouchChangedEvent,
-  userEvent,
-} from '@mui/internal-test-utils';
+import { screen, fireEvent, within, fireTouchChangedEvent } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   buildPickerDragInteractions,
@@ -24,7 +18,7 @@ import { describeConformance } from 'test/utils/describeConformance';
 import { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
-  getByRole(screen.getByRole('grid', { name: picker }), 'gridcell', { name });
+  within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
 
 const dynamicShouldDisableDate = (date, position: RangePosition) => {
   if (position === 'end') {
@@ -493,6 +487,23 @@ describe('<DateRangeCalendar />', () => {
       clock.runToLast();
       expect(getPickerDay('1', 'April 2018')).not.to.equal(null);
     });
+
+    describe('prop: currentMonthCalendarPosition', () => {
+      it('should switch to the selected month when changing value from the outside', () => {
+        const { setProps } = render(
+          <DateRangeCalendar
+            value={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-15')]}
+            currentMonthCalendarPosition={2}
+          />,
+        );
+
+        setProps({
+          value: [adapterToUse.date('2018-02-11'), adapterToUse.date('2018-02-22')],
+        });
+        clock.runToLast();
+        expect(getPickerDay('1', 'February 2018')).not.to.equal(null);
+      });
+    });
   });
 
   ['readOnly', 'disabled'].forEach((prop) => {
@@ -540,7 +551,7 @@ describe('<DateRangeCalendar />', () => {
       );
 
       const renderCountBeforeChange = RenderCount.callCount;
-      userEvent.mousePress(getPickerDay('2'));
+      fireEvent.click(getPickerDay('2'));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
     });
 
@@ -555,10 +566,10 @@ describe('<DateRangeCalendar />', () => {
         />,
       );
 
-      userEvent.mousePress(getPickerDay('2'));
+      fireEvent.click(getPickerDay('2'));
 
       const renderCountBeforeChange = RenderCount.callCount;
-      userEvent.mousePress(getPickerDay('4'));
+      fireEvent.click(getPickerDay('4'));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
     });
   });

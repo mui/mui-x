@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { InteractionContext } from '../context/InteractionProvider';
 import { useCartesianContext } from '../context/CartesianProvider';
@@ -39,7 +40,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
         const value = scale.invert(mouseValue);
 
         if (axisData === undefined) {
-          return { value };
+          return { value, index: -1 };
         }
 
         const valueAsNumber = getAsANumber(value);
@@ -109,7 +110,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       mousePosition.current.x = svgPoint.x;
       mousePosition.current.y = svgPoint.y;
 
-      if (!drawingArea.isPointInside(svgPoint, event.target as SVGElement)) {
+      if (!drawingArea.isPointInside(svgPoint, { targetElement: event.target as SVGElement })) {
         if (mousePosition.current.isInChart) {
           dispatch({ type: 'exitChart' });
           mousePosition.current.isInChart = false;

@@ -261,7 +261,7 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
     handleValueChange(newSelectedValue, isFinish);
   };
 
-  const handleTouchMove = (event: React.TouchEvent) => {
+  const handleTouchSelection = (event: React.TouchEvent) => {
     isMoving.current = true;
     setTime(event, 'shallow');
   };
@@ -332,6 +332,11 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
         handleValueChange(viewValue - keyboardControlStep, 'partial');
         event.preventDefault();
         break;
+      case 'Enter':
+      case ' ':
+        handleValueChange(viewValue, 'finish');
+        event.preventDefault();
+        break;
       default:
       // do nothing
     }
@@ -342,7 +347,8 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
       <ClockClock className={classes.clock}>
         <ClockSquareMask
           data-mui-test="clock"
-          onTouchMove={handleTouchMove}
+          onTouchMove={handleTouchSelection}
+          onTouchStart={handleTouchSelection}
           onTouchEnd={handleTouchEnd}
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
@@ -364,7 +370,12 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
         )}
         <ClockWrapper
           aria-activedescendant={selectedId}
-          aria-label={translations.clockLabelText(type, value, utils)}
+          aria-label={translations.clockLabelText(
+            type,
+            value,
+            utils,
+            value == null ? null : utils.format(value, 'fullTime'),
+          )}
           ref={listboxRef}
           role="listbox"
           onKeyDown={handleKeyDown}

@@ -3,6 +3,7 @@ import {
   unstable_useEventCallback as useEventCallback,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/utils';
+import { warnOnce } from '@mui/x-internals/warning';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -30,7 +31,6 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditingSelectors';
 import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
-import { warnOnce } from '../../../internals/utils/warning';
 import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
@@ -39,6 +39,7 @@ import {
   GridCellEditStartReasons,
   GridCellEditStopReasons,
 } from '../../../models/params/gridEditCellParams';
+import { getDefaultCellValue } from './utils';
 
 export const useGridCellEditing = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
@@ -336,24 +337,7 @@ export const useGridCellEditing = (
 
       let newValue = apiRef.current.getCellValue(id, field);
       if (deleteValue) {
-        const fieldType = apiRef.current.getColumn(field).type;
-        switch (fieldType) {
-          case 'boolean':
-            newValue = false;
-            break;
-          case 'date':
-          case 'dateTime':
-          case 'number':
-            newValue = undefined;
-            break;
-          case 'singleSelect':
-            newValue = null;
-            break;
-          case 'string':
-          default:
-            newValue = '';
-            break;
-        }
+        newValue = getDefaultCellValue(apiRef.current.getColumn(field));
       } else if (initialValue) {
         newValue = initialValue;
       }

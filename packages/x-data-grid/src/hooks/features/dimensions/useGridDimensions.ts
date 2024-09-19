@@ -5,6 +5,7 @@ import {
   unstable_useEventCallback as useEventCallback,
   unstable_ownerWindow as ownerWindow,
 } from '@mui/utils';
+import { throttle } from '@mui/x-internals/throttle';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -13,7 +14,6 @@ import {
   useGridApiOptionHandler,
 } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { throttle } from '../../../utils/throttle';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi, GridDimensionsPrivateApi } from './gridDimensionsApi';
@@ -42,6 +42,7 @@ type RootProps = Pick<
   | 'rowHeight'
   | 'resizeThrottleMs'
   | 'columnHeaderHeight'
+  | 'columnGroupHeaderHeight'
   | 'headerFilterHeight'
 >;
 
@@ -59,6 +60,7 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   hasScrollY: false,
   scrollbarSize: 0,
   headerHeight: 0,
+  groupHeaderHeight: 0,
   headerFilterHeight: 0,
   rowWidth: 0,
   rowHeight: 0,
@@ -92,6 +94,9 @@ export function useGridDimensions(
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const rowHeight = Math.floor(props.rowHeight * densityFactor);
   const headerHeight = Math.floor(props.columnHeaderHeight * densityFactor);
+  const groupHeaderHeight = Math.floor(
+    (props.columnGroupHeaderHeight ?? props.columnHeaderHeight) * densityFactor,
+  );
   const headerFilterHeight = Math.floor(
     (props.headerFilterHeight ?? props.columnHeaderHeight) * densityFactor,
   );
@@ -248,6 +253,7 @@ export function useGridDimensions(
       hasScrollY,
       scrollbarSize,
       headerHeight,
+      groupHeaderHeight,
       headerFilterHeight,
       rowWidth,
       rowHeight,
@@ -275,6 +281,7 @@ export function useGridDimensions(
     rowsMeta.currentPageTotalHeight,
     rowHeight,
     headerHeight,
+    groupHeaderHeight,
     headerFilterHeight,
     columnsTotalWidth,
     headersTotalHeight,
