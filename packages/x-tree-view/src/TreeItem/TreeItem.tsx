@@ -31,7 +31,6 @@ import { isTargetInDescendants } from '../internals/utils/tree';
 import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
 import { useSelector } from '../internals/hooks/useSelector';
 import { selectorDefaultFocusableItemId } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
-import { selectorTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.selectors';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem');
 
@@ -202,6 +201,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     items: { disabledItemsFocusable, indentationAtItemLevel },
     selection: { multiSelect },
     expansion: { expansionTrigger },
+    treeId,
     instance,
     store,
   } = useTreeViewContext<TreeItemMinimalPlugins, TreeItemOptionalPlugins>();
@@ -386,7 +386,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     instance.handleItemKeyDown(event, itemId);
   };
 
-  const idAttribute = useSelector(store, selectorTreeItemIdAttribute, { itemId, idAttribute: id });
+  const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
   const tabIndex = useSelector(store, (state) =>
     selectorDefaultFocusableItemId(state) === itemId ? 0 : -1,
   );
