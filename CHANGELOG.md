@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.20.5
+
+_Sep 19, 2024_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid-premium@6.20.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+- [DataGridPremium] Fix onCellSelectionModelChange not triggered when additional cell range is selected (#14650) @arminmeh
+
+### Docs
+
+- [docs] Fix "What's new in MUI X" link to use absolute URL @oliviertassinari
+
+### Core
+
+- [core] Fix `readme` deploy instruction @oliviertassinari
+- [core] Sync with core release flow @oliviertassinari
+
 ## 6.20.4
 
 _Jul 18, 2024_
