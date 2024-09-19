@@ -158,9 +158,9 @@ export const useGridDataSource = (
       try {
         const getRowsResponse = await getRows(fetchParams);
         apiRef.current.unstable_dataSource.cache.set(fetchParams, getRowsResponse);
-        if (getRowsResponse.rowCount && getRowsResponse.rowCount >= 0) {
-          apiRef.current.setRowCount(getRowsResponse.rowCount);
-        }
+        apiRef.current.setRowCount(
+          getRowsResponse.rowCount === undefined ? -1 : getRowsResponse.rowCount,
+        );
         if (isLazyLoaded) {
           apiRef.current.unstable_replaceRows(startingIndex, getRowsResponse.rows);
         } else {
@@ -249,9 +249,9 @@ export const useGridDataSource = (
         }
         nestedDataManager.setRequestSettled(id);
         apiRef.current.unstable_dataSource.cache.set(fetchParams, getRowsResponse);
-        if (getRowsResponse.rowCount && getRowsResponse.rowCount >= 0) {
-          apiRef.current.setRowCount(getRowsResponse.rowCount);
-        }
+        apiRef.current.setRowCount(
+          getRowsResponse.rowCount === undefined ? -1 : getRowsResponse.rowCount,
+        );
         apiRef.current.updateServerRows(getRowsResponse.rows, rowNode.path);
         apiRef.current.setRowChildrenExpansion(id, true);
       } catch (error) {
