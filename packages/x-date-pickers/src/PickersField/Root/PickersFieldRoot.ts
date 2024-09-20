@@ -7,6 +7,7 @@ import {
   PickerValidDate,
   InferValueFromDate,
   InferFieldSection,
+  InferFieldInternalProps,
 } from '../../models';
 import type { PickerValueManager } from '../../internals/hooks/usePicker';
 import type { Validator } from '../../validation';
@@ -34,10 +35,11 @@ const PickersFieldRoot = React.forwardRef(function PickersFieldRoot<
 namespace PickersFieldRoot {
   export interface OwnerState {}
 
-  export interface Props<TController extends PickersFieldRoot.Controller<any, any, any, any>>
-    extends BaseUIComponentProps<'div', OwnerState> {
-    controller: TController;
-  }
+  export type Props<TController extends PickersFieldRoot.Controller<any, any, any, any>> =
+    BaseUIComponentProps<'div', OwnerState> &
+      InferFieldInternalProps<TController> & {
+        controller: TController;
+      };
 
   export interface Controller<
     TDate extends PickerValidDate,

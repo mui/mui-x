@@ -6,13 +6,14 @@ import {
   singleItemFieldValueManager,
   singleItemValueManager,
 } from '../internals/utils/valueManagers';
-import { validateDate } from '../validation';
+import { validateDate, ValidateDateProps } from '../validation';
+import { UseFieldInternalProps } from '../internals/hooks/useField';
 
 const getDateFieldController = <TDate extends PickerValidDate>(): PickersField.Root.Controller<
   TDate,
   false,
   DateValidationError,
-  any
+  UseFieldInternalProps<any, any, any, true, any> & ValidateDateProps<TDate>
 > => ({
   valueManager: singleItemValueManager,
   fieldValueManager: singleItemFieldValueManager,
