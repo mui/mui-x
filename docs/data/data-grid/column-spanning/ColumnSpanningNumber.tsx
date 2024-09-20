@@ -2,7 +2,6 @@ import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 
 const other = {
-  autoHeight: true,
   showCellVerticalBorder: true,
   showColumnVerticalBorder: true,
 };
@@ -14,7 +13,7 @@ const rows = [
 
 export default function ColumnSpanningNumber() {
   return (
-    <div style={{ width: '100%' }}>
+    <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
       <DataGrid
         columns={[
           { field: 'username', colSpan: 2, hideable: false },
