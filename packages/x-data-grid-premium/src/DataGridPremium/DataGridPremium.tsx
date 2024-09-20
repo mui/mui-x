@@ -170,6 +170,11 @@ DataGridPremiumRaw.propTypes = {
    * @default 150
    */
   columnBufferPx: PropTypes.number,
+  /**
+   * Sets the height in pixels of the column group headers in the Data Grid.
+   * Inherits the `columnHeaderHeight` value if not set.
+   */
+  columnGroupHeaderHeight: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
    * Sets the height in pixel of the column headers in the Data Grid.
@@ -1073,6 +1078,11 @@ DataGridPremiumRaw.propTypes = {
     set: PropTypes.func.isRequired,
   }),
   unstable_onDataSourceError: PropTypes.func,
+  /**
+   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
+   * @default false
+   */
+  unstable_rowSpanning: PropTypes.bool,
 } as any;
 
 interface DataGridPremiumComponent {

@@ -166,19 +166,16 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           getColumnFilters({
             position: GridPinnedColumnPosition.LEFT,
             renderContext: leftRenderContext,
-            minFirstColumn: leftRenderContext.firstColumnIndex,
             maxLastColumn: leftRenderContext.lastColumnIndex,
           })}
         {getColumnFilters({
           renderContext,
-          minFirstColumn: pinnedColumns.left.length,
           maxLastColumn: visibleColumns.length - pinnedColumns.right.length,
         })}
         {rightRenderContext &&
           getColumnFilters({
             position: GridPinnedColumnPosition.RIGHT,
             renderContext: rightRenderContext,
-            minFirstColumn: rightRenderContext.firstColumnIndex,
             maxLastColumn: rightRenderContext.lastColumnIndex,
           })}
       </GridColumnHeaderRow>
