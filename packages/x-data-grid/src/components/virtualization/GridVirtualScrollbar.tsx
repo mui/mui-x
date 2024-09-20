@@ -66,8 +66,6 @@ const ScrollbarHorizontal = styled(Scrollbar)({
   bottom: '0px',
 });
 
-const Content = styled('div')(null);
-
 const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollbarProps>(
   function GridVirtualScrollbar(props, ref) {
     const apiRef = useGridPrivateApiContext();
@@ -153,7 +151,7 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
         tabIndex={-1}
         aria-hidden="true"
       >
-        <Content ref={contentRef} className={classes.content} />
+        <div ref={contentRef} className={classes.content} />
       </Container>
     );
   },
