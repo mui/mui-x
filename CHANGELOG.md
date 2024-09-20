@@ -5,12 +5,16 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 7.18.0
 
-_Sep 19, 2024_
+_Sep 20, 2024_
 
-We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
+
+- 💫 Support [Row spanning](https://mui.com/x/react-data-grid/row-spanning/) on the Data Grid that automatically merges the consecutive cells in a column based on the cell value
+
+  <img width="600" src="https://github.com/user-attachments/assets/d32ec936-d238-4c92-9e1a-af6788d74cdf" alt="data grid row spanning" />
 
 - ⏰ Support `date-fns` v4 (#14673) @LukasTy
-- 🎉Add option for Pickers to change the order of displayed years (#11780) @thomasmoon
+- 🎉 Add option for Pickers to change the order of displayed years (#11780) @thomasmoon
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -24,6 +28,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [DataGrid] Add `columnGroupHeaderHeight` prop for sizing column group headers (#14637) @KenanYusuf
 - [DataGrid] Fix `document` reference when the grid is rendered in a popup window (#14649) @arminmeh
 - [DataGrid] Remove `minFirstColumn` from `GetHeadersParams` interface (#14450) @k-rajat19
+- [DataGrid] Row spanning (#14124) @MBilalShafi
 
 #### `@mui/x-data-grid-pro@7.18.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -36,6 +41,17 @@ Same changes as in `@mui/x-data-grid@7.18.0`, plus:
 #### `@mui/x-data-grid-premium@7.18.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-data-grid-pro@7.18.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.18.0`
+
+- [pickers] Add option to change the order of displayed years (#11780) @thomasmoon
+- [pickers] Support `date-fns` v4 (#14673) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.18.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.18.0`.
 
 ### Charts
 
