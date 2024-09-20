@@ -61,10 +61,10 @@ namespace PickersFieldRoot {
       InferFieldSection<TIsRange>
     >;
     validator: Validator<InferValueFromDate<TDate, TIsRange>, TDate, TError, TInternalProps>;
-    getDefaultInternalProps: (params: {
-      inputProps: TInputInternalProps;
-      adapter: MuiPickersAdapterContextValue<TDate>;
-    }) => TInternalProps;
+    getDefaultInternalProps: (
+      adapter: MuiPickersAdapterContextValue<TDate>,
+      inputProps: TInputInternalProps,
+    ) => TInternalProps;
     valueType: FieldValueType;
   }
 }

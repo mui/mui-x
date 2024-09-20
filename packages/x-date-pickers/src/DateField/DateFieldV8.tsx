@@ -15,7 +15,7 @@ const getDateFieldController = buildFieldControllerGetter({
   fieldValueManager: singleItemFieldValueManager,
   validator: validateDate,
   valueType: 'date',
-  getDefaultInternalProps: ({ inputProps, adapter }) => ({
+  getDefaultInternalProps: (adapter, inputProps: { disablePast: boolean }) => ({
     ...inputProps,
     disablePast: inputProps.disablePast ?? false,
     disableFuture: inputProps.disableFuture ?? false,
