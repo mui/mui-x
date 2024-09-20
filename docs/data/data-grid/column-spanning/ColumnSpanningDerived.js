@@ -139,6 +139,7 @@ const columns = [
 const rootStyles = {
   display: 'flex',
   flexDirection: 'column',
+  height: 'fit-content',
   width: '100%',
   '& .Maths': {
     backgroundColor: 'rgba(157, 255, 118, 0.49)',

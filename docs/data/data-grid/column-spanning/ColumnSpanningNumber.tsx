@@ -13,7 +13,14 @@ const rows = [
 
 export default function ColumnSpanningNumber() {
   return (
-    <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+    <div
+      style={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        height: 'fit-content',
+      }}
+    >
       <DataGrid
         columns={[
           { field: 'username', colSpan: 2, hideable: false },
