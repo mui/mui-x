@@ -11,7 +11,7 @@ import {
   GridRowsPartialUpdates,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { DATA_SOURCE_ROW_GROUPING_STRATEGY, getGroupingRules } from './gridRowGroupingUtils';
+import { ROW_GROUPING_STRATEGY_DATA_SOURCE, getGroupingRules } from './gridRowGroupingUtils';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 
@@ -75,7 +75,7 @@ export const useGridDataSourceRowGroupingPreProcessors = (
           nodes: params.updates.rows.map(getRowTreeBuilderNode),
           defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
           isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-          groupingName: DATA_SOURCE_ROW_GROUPING_STRATEGY,
+          groupingName: ROW_GROUPING_STRATEGY_DATA_SOURCE,
         });
       }
 
@@ -94,7 +94,7 @@ export const useGridDataSourceRowGroupingPreProcessors = (
         previousTreeDepth: params.previousTreeDepths!,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-        groupingName: DATA_SOURCE_ROW_GROUPING_STRATEGY,
+        groupingName: ROW_GROUPING_STRATEGY_DATA_SOURCE,
       });
     },
     [
@@ -119,20 +119,20 @@ export const useGridDataSourceRowGroupingPreProcessors = (
 
   useGridRegisterStrategyProcessor(
     apiRef,
-    DATA_SOURCE_ROW_GROUPING_STRATEGY,
+    ROW_GROUPING_STRATEGY_DATA_SOURCE,
     'rowTreeCreation',
     createRowTreeForRowGrouping,
   );
   useGridRegisterStrategyProcessor(
     apiRef,
-    DATA_SOURCE_ROW_GROUPING_STRATEGY,
+    ROW_GROUPING_STRATEGY_DATA_SOURCE,
     'filtering',
     filterRows,
   );
-  useGridRegisterStrategyProcessor(apiRef, DATA_SOURCE_ROW_GROUPING_STRATEGY, 'sorting', sortRows);
+  useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY_DATA_SOURCE, 'sorting', sortRows);
   useGridRegisterStrategyProcessor(
     apiRef,
-    DATA_SOURCE_ROW_GROUPING_STRATEGY,
+    ROW_GROUPING_STRATEGY_DATA_SOURCE,
     'visibleRowsLookupCreation',
     getVisibleRowsLookup,
   );

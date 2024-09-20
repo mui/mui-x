@@ -19,7 +19,7 @@ import {
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   getRowGroupingFieldFromGroupingCriteria,
-  ROW_GROUPING_STRATEGY,
+  ROW_GROUPING_STRATEGY_DEFAULT,
   isGroupingColumn,
   mergeStateWithRowGroupingModel,
   setStrategyAvailability,
@@ -258,7 +258,7 @@ export const useGridRowGrouping = (
 
       // Refresh the row tree creation strategy processing
       // TODO: Add a clean way to re-run a strategy processing without publishing a private event
-      if (apiRef.current.getActiveStrategy('rowTree') === ROW_GROUPING_STRATEGY) {
+      if (apiRef.current.getActiveStrategy('rowTree') === ROW_GROUPING_STRATEGY_DEFAULT) {
         apiRef.current.publishEvent('activeStrategyProcessorChange', 'rowTreeCreation');
       }
     }
