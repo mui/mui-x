@@ -2,9 +2,8 @@
 
 <p class="description">Span cells across several rows.</p>
 
-Each cell takes up the height of one row.
-Row spanning lets you change this default behavior, so cells can span multiple rows.
-This is very close to the "row spanning" in an HTML `<table>`.
+By default, each cell in a Data Grid takes up the height of one row.
+The row spanning feature makes it possible for a cell to fill multiple rows in a single column.
 
 To enable, pass the `unstable_rowSpanning` prop to the Data Grid.
 The Data Grid will automatically merge consecutive cells with the repeating values in the same column.
@@ -15,40 +14,37 @@ Switch off the toggle button to see actual rows.
 {{"demo": "RowSpanning.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
-In the above demo, the `quantity` column has been delibrately excluded from row spanning computation by using `colDef.rowSpanValueGetter` prop.
+In this demo, the `quantity` column has been deliberately excluded from the row spanning computation using the `colDef.rowSpanValueGetter` prop.
 
-See the [Customizing row spanned cells](#customizing-row-spanned-cells) section for more details.
+See the [Customizing row-spanning cells](#customizing-row-spanning-cells) section for more details.
 :::
 
 :::warning
-The row spanning generally works with features like [sorting](/x/react-data-grid/sorting/) and [filtering](/x/react-data-grid/filtering/), be sure to check if everything works as expected when using it in combination with features like [column spanning](/x/react-data-grid/column-spanning/).
+Row spanning works well with features like [sorting](/x/react-data-grid/sorting/) and [filtering](/x/react-data-grid/filtering/), but be sure to check that everything works as expected when using it with [column spanning](/x/react-data-grid/column-spanning/).
 :::
 
 :::warning
-The row spanning works by increasing the height of the spanned cell by a factor of `rowHeight`, it doesn't work properly with variable and dynamic row height.
+Row spanning works by increasing the height of the spanned cell by a factor of `rowHeight`—it won't work properly with a variable or dynamic height.
 :::
 
-## Customizing row spanned cells
+## Customizing row-spanning cells
 
 You could customize the value used in row spanning computation using `colDef.rowSpanValueGetter` prop and both the value used in row spanning computation and the value used in cell using `colDef.valueGetter` prop.
+This can be useful when there are other repeating values present that should not span multiple rows.
 
-This could be useful when there _are_ some repeating values but should not be row spanned due to belonging to different entities.
-
-In the following example, `rowSpanValueGetter` is used to avoid merging `age` cells that do not belong to the same person.
+In the following example, `rowSpanValueGetter` is used to avoid merging `age` cells that don't belong to the same person.
 
 {{"demo": "RowSpanningCustom.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Usage with column spanning
 
-Row spanning could be used in conjunction with column spanning to achieve cells that span both rows and columns.
-
-The following weekly university class schedule uses cells that span both rows and columns.
+Row spanning can be used in conjunction with column spanning to create cells that span multiple rows and columns simultaneously, as shown in the demo below:
 
 {{"demo": "RowSpanningClassSchedule.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Demo
 
-Here's the familiar calender demo that you might have seen in the column spanning [documentation](/x/react-data-grid/column-spanning/#function-signature), implemented with the row spanning.
+The demo below recreates the calendar from the [column spanning documentation](/x/react-data-grid/column-spanning/#function-signature) using the row spanning feature:
 
 {{"demo": "RowSpanningCalender.js", "bg": "inline", "defaultCodeOpen": false}}
 
