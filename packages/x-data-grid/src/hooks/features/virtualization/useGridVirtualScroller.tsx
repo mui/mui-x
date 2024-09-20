@@ -466,7 +466,6 @@ export const useGridVirtualScroller = () => {
       const offsetLeft = computeOffsetLeft(
         columnPositions,
         currentRenderContext,
-        isRtl,
         pinnedColumns.left.length,
       );
       const showBottomBorder = isLastVisibleInSection && params.position === 'top';
@@ -503,7 +502,7 @@ export const useGridVirtualScroller = () => {
       if (panel) {
         rows.push(panel);
       }
-      if (isLastVisible) {
+      if (params.position === undefined && isLastVisibleInSection) {
         rows.push(apiRef.current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }));
       }
     });
@@ -939,14 +938,11 @@ export function areRenderContextsEqual(context1: GridRenderContext, context2: Gr
 export function computeOffsetLeft(
   columnPositions: number[],
   renderContext: GridColumnsRenderContext,
-  isRtl: boolean,
   pinnedLeftLength: number,
 ) {
-  const factor = isRtl ? -1 : 1;
   const left =
-    factor * (columnPositions[renderContext.firstColumnIndex] ?? 0) -
+    (columnPositions[renderContext.firstColumnIndex] ?? 0) -
     (columnPositions[pinnedLeftLength] ?? 0);
-
   return Math.abs(left);
 }
 
