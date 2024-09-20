@@ -38,38 +38,6 @@ const columnHeaderStyles = {
   },
 };
 
-function getPinnedBackgroundStyles({
-  backgroundColor,
-  selectedBackground,
-  hoverOpacity,
-  selectedOpacity,
-}: {
-  backgroundColor: string;
-  selectedBackground: string;
-  hoverOpacity: number;
-  selectedOpacity: number;
-}) {
-  const selectedBackgroundColor = blend(backgroundColor, selectedBackground, selectedOpacity);
-
-  const selectedHoverBackgroundColor = blend(
-    backgroundColor,
-    selectedBackground,
-    hoverOpacity + selectedOpacity,
-  );
-
-  return {
-    [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
-      backgroundColor,
-      '&.Mui-selected': {
-        backgroundColor: selectedBackgroundColor,
-        '&:hover': {
-          backgroundColor: selectedHoverBackgroundColor,
-        },
-      },
-    },
-  };
-}
-
 const columnSeparatorTargetSize = 10;
 const columnSeparatorOffset = -5;
 
@@ -189,51 +157,47 @@ export const GridRootStyles = styled('div', {
   const hoverColor = (t.vars || t).palette.action.hover;
 
   const selectedOpacity = (t.vars || t).palette.action.selectedOpacity;
+  const selectedHoverOpacity = t.vars
+    ? (`calc(${hoverOpacity} + ${selectedOpacity})` as unknown as number) // TODO: Improve type
+    : hoverOpacity + selectedOpacity;
   const selectedBackground = t.vars
     ? `rgba(${t.vars.palette.primary.mainChannel} / ${selectedOpacity})`
     : alpha(t.palette.primary.main, selectedOpacity);
 
   const selectedHoverBackground = t.vars
-    ? `rgba(${t.vars.palette.primary.mainChannel} / calc(
-                ${t.vars.palette.action.selectedOpacity} +
-                ${t.vars.palette.action.hoverOpacity}
-              ))`
-    : alpha(
-        t.palette.primary.main,
-        t.palette.action.selectedOpacity + t.palette.action.hoverOpacity,
-      );
+    ? `rgba(${t.vars.palette.primary.mainChannel} / ${selectedHoverOpacity})`
+    : alpha(t.palette.primary.main, selectedHoverOpacity);
 
   const blendFn = t.vars ? blendCssVars : blend;
 
-  const pinnedBackgroundColor = t.vars
-    ? hoverColor
-    : blendFn(pinnedBackground, hoverColor, hoverOpacity);
-  const pinnedHoverStyles = getPinnedBackgroundStyles({
-    hoverOpacity,
-    selectedOpacity,
-    selectedBackground,
-    backgroundColor: pinnedBackgroundColor,
+  const getPinnedBackgroundStyles = (backgroundColor: string) => ({
+    [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
+      backgroundColor,
+      '&.Mui-selected': {
+        backgroundColor: blendFn(backgroundColor, selectedBackground, selectedOpacity),
+        '&:hover': {
+          backgroundColor: blendFn(backgroundColor, selectedBackground, selectedHoverOpacity),
+        },
+      },
+    },
   });
 
-  const pinnedSelectedBackgroundColor = t.vars
-    ? selectedBackground
-    : blendFn(pinnedBackground, selectedBackground, selectedOpacity);
-  const pinnedSelectedStyles = getPinnedBackgroundStyles({
-    hoverOpacity,
-    selectedOpacity,
-    selectedBackground,
-    backgroundColor: pinnedSelectedBackgroundColor,
-  });
+  const pinnedBackgroundColor = blendFn(pinnedBackground, hoverColor, hoverOpacity);
+  const pinnedHoverStyles = getPinnedBackgroundStyles(pinnedBackgroundColor);
 
-  const pinnedSelectedHoverBackgroundColor = t.vars
-    ? selectedHoverBackground
-    : blendFn(pinnedBackground, selectedHoverBackground, hoverOpacity + selectedOpacity);
-  const pinnedSelectedHoverStyles = getPinnedBackgroundStyles({
-    hoverOpacity,
-    selectedOpacity,
+  const pinnedSelectedBackgroundColor = blendFn(
+    pinnedBackground,
     selectedBackground,
-    backgroundColor: pinnedSelectedHoverBackgroundColor,
-  });
+    selectedOpacity,
+  );
+  const pinnedSelectedStyles = getPinnedBackgroundStyles(pinnedSelectedBackgroundColor);
+
+  const pinnedSelectedHoverBackgroundColor = blendFn(
+    pinnedBackground,
+    selectedHoverBackground,
+    selectedHoverOpacity,
+  );
+  const pinnedSelectedHoverStyles = getPinnedBackgroundStyles(pinnedSelectedHoverBackgroundColor);
 
   const selectedStyles = {
     backgroundColor: selectedBackground,
@@ -827,6 +791,6 @@ function blend(background: string, overlay: string, opacity: number, gamma: numb
 }
 
 const removeOpacity = (color: string) => `rgb(from ${color} r g b / 1)`;
-function blendCssVars(background: string, overlay: string, opacity: number) {
+function blendCssVars(background: string, overlay: string, opacity: string | number) {
   return `color-mix(in srgb,${background}, ${removeOpacity(overlay)} calc(${opacity} * 100%))`;
 }
