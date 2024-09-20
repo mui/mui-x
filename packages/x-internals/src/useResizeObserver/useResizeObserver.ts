@@ -13,8 +13,6 @@ export function useResizeObserver(
   const fnRef = React.useRef(null as unknown as typeof fn);
   fnRef.current = fn;
 
-  const target = ref.current;
-
   useEnhancedEffect(() => {
     if (enabled === false || typeof ResizeObserver === 'undefined') {
       return noop;
@@ -22,6 +20,7 @@ export function useResizeObserver(
 
     let frameID = 0;
 
+    const target = ref.current;
     const observer = new ResizeObserver((entries) => {
       // See https://github.com/mui/mui-x/issues/8733
       // In dev, we avoid the React warning by moving the task to the next frame.
@@ -46,5 +45,5 @@ export function useResizeObserver(
 
       observer.disconnect();
     };
-  }, [enabled, target]);
+  }, [ref, enabled]);
 }
