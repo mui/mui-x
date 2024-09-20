@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 6.20.5
 
-_Sep 19, 2024_
+_Sep 20, 2024_
 
 We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
 
