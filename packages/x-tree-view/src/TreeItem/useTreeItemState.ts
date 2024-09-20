@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { MuiCancellableEvent } from '../internals/models/MuiCancellableEvent';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
