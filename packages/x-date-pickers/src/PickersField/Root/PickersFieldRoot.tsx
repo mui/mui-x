@@ -14,9 +14,10 @@ import type { Validator } from '../../validation';
 import { FieldValueManager, UseFieldInternalProps } from '../../internals/hooks/useField';
 import { PickersFieldProvider } from './PickersFieldProvider';
 import { useSplitFieldProps } from '../../hooks';
+import { MuiPickersAdapterContextValue } from '../../LocalizationProvider/LocalizationProvider';
 
 const PickersFieldRoot = React.forwardRef(function PickersFieldRoot<
-  TController extends PickersFieldRoot.Controller<any, any, any, any>,
+  TController extends PickersFieldRoot.Controller<any, any, any, any, any>,
 >(props: PickersFieldRoot.Props<TController>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
   const { render, className, controller, ...otherProps } = props;
 
@@ -40,7 +41,7 @@ const PickersFieldRoot = React.forwardRef(function PickersFieldRoot<
 namespace PickersFieldRoot {
   export interface OwnerState {}
 
-  export type Props<TController extends PickersFieldRoot.Controller<any, any, any, any>> =
+  export type Props<TController extends PickersFieldRoot.Controller<any, any, any, any, any>> =
     BaseUIComponentProps<'div', OwnerState> &
       InferFieldInternalProps<TController> & {
         controller: TController;
@@ -50,6 +51,7 @@ namespace PickersFieldRoot {
     TDate extends PickerValidDate,
     TIsRange extends boolean,
     TError,
+    TInputInternalProps extends Partial<UseFieldInternalProps<any, any, any, true, any>>,
     TInternalProps extends UseFieldInternalProps<any, any, any, true, any>,
   > {
     valueManager: PickerValueManager<InferValueFromDate<TDate, TIsRange>, TDate, TError>;
@@ -59,6 +61,10 @@ namespace PickersFieldRoot {
       InferFieldSection<TIsRange>
     >;
     validator: Validator<InferValueFromDate<TDate, TIsRange>, TDate, TError, TInternalProps>;
+    getDefaultInternalProps: (params: {
+      inputProps: TInputInternalProps;
+      adapter: MuiPickersAdapterContextValue<TDate>;
+    }) => TInternalProps;
     valueType: FieldValueType;
   }
 }

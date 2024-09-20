@@ -7,6 +7,7 @@ import {
 } from '../internals/utils/valueManagers';
 import { validateDate } from '../validation';
 import { buildFieldControllerGetter } from '../internals/utils/controller';
+import { applyDefaultDate } from '../internals/utils/date-utils';
 
 const getDateFieldController = buildFieldControllerGetter({
   isRange: false,
@@ -14,13 +15,13 @@ const getDateFieldController = buildFieldControllerGetter({
   fieldValueManager: singleItemFieldValueManager,
   validator: validateDate,
   valueType: 'date',
-  getDefaultProps: (props: any) => ({
-    ...props,
-    disablePast: props.disablePast ?? false,
-    disableFuture: props.disableFuture ?? false,
-    format: props.format ?? utils.formats.keyboardDate,
-    minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
+  getDefaultInternalProps: ({ inputProps, adapter }) => ({
+    ...inputProps,
+    disablePast: inputProps.disablePast ?? false,
+    disableFuture: inputProps.disableFuture ?? false,
+    format: inputProps.format ?? adapter.utils.formats.keyboardDate,
+    minDate: applyDefaultDate(adapter.utils, inputProps.minDate, adapter.defaultDates.minDate),
+    maxDate: applyDefaultDate(adapter.utils, inputProps.maxDate, adapter.defaultDates.maxDate),
   }),
 });
 
