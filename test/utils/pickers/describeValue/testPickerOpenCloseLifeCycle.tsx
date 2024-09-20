@@ -68,11 +68,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       expect(onClose.callCount).to.equal(0);
 
       // Change the value
-      let newValue = await setNewValue(values[0], {
-        isOpened: true,
-        selectSection,
-        pressKey,
-      });
+      let newValue = await setNewValue(values[0], { isOpened: true, selectSection, pressKey });
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
       if (isRangeType) {
         newValue = await setNewValue(newValue, {
@@ -130,11 +126,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       expect(onClose.callCount).to.equal(0);
 
       // Change the value
-      let newValue = await setNewValue(values[0], {
-        isOpened: true,
-        selectSection,
-        pressKey,
-      });
+      let newValue = await setNewValue(values[0], { isOpened: true, selectSection, pressKey });
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
       if (isRangeType) {
         newValue = await setNewValue(newValue, {
@@ -214,11 +206,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       );
 
       // Change the value
-      let newValue = await setNewValue(values[0], {
-        isOpened: true,
-        selectSection,
-        pressKey,
-      });
+      let newValue = await setNewValue(values[0], { isOpened: true, selectSection, pressKey });
       const initialChangeCount = getExpectedOnChangeCount(componentFamily, pickerParams);
       expect(onChange.callCount).to.equal(initialChangeCount);
       if (isRangeType) {
@@ -238,11 +226,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       expect(onClose.callCount).to.equal(0);
 
       // Change the value
-      let newValueBis = await setNewValue(newValue, {
-        isOpened: true,
-        selectSection,
-        pressKey,
-      });
+      let newValueBis = await setNewValue(newValue, { isOpened: true, selectSection, pressKey });
       if (isRangeType) {
         expect(onChange.callCount).to.equal(
           initialChangeCount +
@@ -290,11 +274,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       );
 
       // Change the value (already tested)
-      const newValue = await setNewValue(values[0], {
-        isOpened: true,
-        selectSection,
-        pressKey,
-      });
+      const newValue = await setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
       // Dismiss the picker
       await user.keyboard('{Escape}');
@@ -363,11 +343,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       );
 
       // Change the value (already tested)
-      const newValue = await setNewValue(values[0], {
-        isOpened: true,
-        selectSection,
-        pressKey,
-      });
+      const newValue = await setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
       // Dismiss the picker
       await user.keyboard('{Escape}');

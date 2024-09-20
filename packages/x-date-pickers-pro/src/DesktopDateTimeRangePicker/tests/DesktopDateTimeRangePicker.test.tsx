@@ -21,11 +21,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
     it('should allow to select range within the same day', async () => {
       const { user } = render(<DesktopDateTimeRangePicker enableAccessibleFieldDOMStructure />);
 
-      await openPicker({
-        type: 'date-time-range',
-        variant: 'desktop',
-        initialFocus: 'start',
-      });
+      await openPicker({ type: 'date-time-range', variant: 'desktop', initialFocus: 'start' });
 
       // select start date range
       await user.click(screen.getByRole('gridcell', { name: '11' }));

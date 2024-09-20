@@ -305,7 +305,6 @@ describe('<DateField /> - Editing', () => {
 
       // Select all sections
       await view.user.keyboard('{Control>}a{/Control}');
-      // fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
 
       await view.user.keyboard('{Delete}');
       expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY');

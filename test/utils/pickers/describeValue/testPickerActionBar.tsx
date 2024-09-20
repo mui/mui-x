@@ -100,11 +100,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         });
 
         // Change the value (already tested)
-        await setNewValue(values[0], {
-          isOpened: true,
-          selectSection,
-          pressKey,
-        });
+        await setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Cancel the modifications
         await user.click(screen.getByText(/cancel/i));
@@ -166,11 +162,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         });
 
         // Change the value (already tested)
-        await setNewValue(values[0], {
-          isOpened: true,
-          selectSection,
-          pressKey,
-        });
+        await setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Accept the modifications
         await user.click(screen.getByText(/ok/i));

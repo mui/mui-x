@@ -37,26 +37,14 @@ describe('<DesktopDateRangePicker />', () => {
       />,
     );
 
-    await openPicker({
-      type: 'date-range',
-      variant: 'desktop',
-      initialFocus: 'start',
-    });
+    await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
     expect(screen.getByText('May 2019')).toBeVisible();
 
-    await openPicker({
-      type: 'date-range',
-      variant: 'desktop',
-      initialFocus: 'end',
-    });
+    await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
     expect(screen.getByText('October 2019')).toBeVisible();
 
     // scroll back
-    await openPicker({
-      type: 'date-range',
-      variant: 'desktop',
-      initialFocus: 'start',
-    });
+    await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
     expect(screen.getByText('May 2019')).toBeVisible();
   });
 
@@ -68,11 +56,7 @@ describe('<DesktopDateRangePicker />', () => {
       />,
     );
 
-    await openPicker({
-      type: 'date-range',
-      variant: 'desktop',
-      initialFocus: 'start',
-    });
+    await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
     expect(screen.getByRole('tooltip')).toBeVisible();
   });
 
@@ -185,11 +169,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
 
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'start',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.getByRole('tooltip')).toBeVisible();
@@ -200,11 +180,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
 
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'end',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.getByRole('tooltip')).toBeVisible();
@@ -267,11 +243,7 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Open the picker
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'start',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -314,11 +286,7 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Open the picker
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'end',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -352,11 +320,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'end',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
 
       // Change the end date
       await user.click(getPickerDay('3'));
@@ -384,11 +348,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'start',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Change the start date (already tested)
       await user.click(getPickerDay('3'));
@@ -419,11 +379,7 @@ describe('<DesktopDateRangePicker />', () => {
         </div>,
       );
 
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'start',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       const input = document.getElementById('test-id')!;
 
@@ -461,11 +417,7 @@ describe('<DesktopDateRangePicker />', () => {
         </div>,
       );
 
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'start',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Change the start date (already tested)
       await user.click(getPickerDay('3'));
@@ -533,11 +485,7 @@ describe('<DesktopDateRangePicker />', () => {
         </React.Fragment>,
       );
 
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'start',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
       expect(screen.getByRole('tooltip')).toBeVisible();
 
       await act(() => {
@@ -571,11 +519,7 @@ describe('<DesktopDateRangePicker />', () => {
         </div>,
       );
 
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'start',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
       expect(screen.getByRole('tooltip')).toBeVisible();
 
       // Change the start date (already tested)
@@ -613,11 +557,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'start',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Clear the date
       await user.click(screen.getByText(/clear/i));
@@ -644,11 +584,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'start',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Clear the date
       await user.click(screen.getByText(/clear/i));
@@ -676,18 +612,10 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Open the picker (already tested)
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'start',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Switch to end date
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'end',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -709,18 +637,10 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Open the picker (already tested)
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'end',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
 
       // Switch to start date
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'start',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -731,11 +651,7 @@ describe('<DesktopDateRangePicker />', () => {
     it('should respect the disablePast prop', async () => {
       render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure disablePast />);
 
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'start',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       expect(getPickerDay('8')).to.have.attribute('disabled');
       expect(getPickerDay('9')).to.have.attribute('disabled');
@@ -747,11 +663,7 @@ describe('<DesktopDateRangePicker />', () => {
     it('should respect the disableFuture prop', async () => {
       render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure disableFuture />);
 
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'start',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       expect(getPickerDay('8')).not.to.have.attribute('disabled');
       expect(getPickerDay('9')).not.to.have.attribute('disabled');
@@ -768,11 +680,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'start',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       expect(getPickerDay('13')).to.have.attribute('disabled');
       expect(getPickerDay('14')).to.have.attribute('disabled');
@@ -789,11 +697,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      await openPicker({
-        type: 'date-range',
-        variant: 'desktop',
-        initialFocus: 'start',
-      });
+      await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       expect(getPickerDay('13')).not.to.have.attribute('disabled');
       expect(getPickerDay('14')).not.to.have.attribute('disabled');
