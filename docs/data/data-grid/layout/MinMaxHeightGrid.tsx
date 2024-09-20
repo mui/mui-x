@@ -5,7 +5,6 @@ import Stack from '@mui/material/Stack';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Typography from '@mui/material/Typography';
-import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 
 const minHeight = 200;
 const maxHeight = 400;
@@ -58,9 +57,18 @@ function ContainerMeasurements({
 }) {
   const [containerHeight, setContainerHeight] = React.useState(0);
 
-  useResizeObserver(containerRef, (entries) => {
-    setContainerHeight(entries[0].contentRect.height);
-  });
+  React.useEffect(() => {
+    const target = containerRef.current;
+    const observer = new ResizeObserver((entries) => {
+      setContainerHeight(entries[0].contentRect.height);
+    });
+    if (target) {
+      observer.observe(target);
+    }
+    return () => {
+      observer.disconnect();
+    };
+  }, [containerRef]);
 
   const label = `${containerHeight}px`;
 
