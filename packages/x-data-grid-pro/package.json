@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-pro",
-  "version": "7.17.0",
+  "version": "7.18.0",
   "description": "The Pro plan edition of the Data Grid components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -70,11 +70,11 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.12",
+    "@mui/internal-test-utils": "^1.0.14",
     "@mui/material": "^5.16.7",
     "@mui/system": "^5.16.7",
     "@types/prop-types": "^15.7.12",
-    "rimraf": "^5.0.10"
+    "rimraf": "^6.0.1"
   },
   "engines": {
     "node": ">=14.0.0"

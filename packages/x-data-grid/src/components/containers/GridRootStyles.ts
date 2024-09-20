@@ -203,9 +203,11 @@ export const GridRootStyles = styled('div', {
         t.palette.action.selectedOpacity + t.palette.action.hoverOpacity,
       );
 
+  const blendFn = t.vars ? blendCssVars : blend;
+
   const pinnedBackgroundColor = t.vars
     ? hoverColor
-    : blend(pinnedBackground, hoverColor, hoverOpacity);
+    : blendFn(pinnedBackground, hoverColor, hoverOpacity);
   const pinnedHoverStyles = getPinnedBackgroundStyles({
     hoverOpacity,
     selectedOpacity,
@@ -215,7 +217,7 @@ export const GridRootStyles = styled('div', {
 
   const pinnedSelectedBackgroundColor = t.vars
     ? selectedBackground
-    : blend(pinnedBackground, selectedBackground, selectedOpacity);
+    : blendFn(pinnedBackground, selectedBackground, selectedOpacity);
   const pinnedSelectedStyles = getPinnedBackgroundStyles({
     hoverOpacity,
     selectedOpacity,
@@ -225,7 +227,7 @@ export const GridRootStyles = styled('div', {
 
   const pinnedSelectedHoverBackgroundColor = t.vars
     ? selectedHoverBackground
-    : blend(pinnedBackground, selectedHoverBackground, hoverOpacity + selectedOpacity);
+    : blendFn(pinnedBackground, selectedHoverBackground, hoverOpacity + selectedOpacity);
   const pinnedSelectedHoverStyles = getPinnedBackgroundStyles({
     hoverOpacity,
     selectedOpacity,
@@ -822,4 +824,9 @@ function blend(background: string, overlay: string, opacity: number, gamma: numb
     type: 'rgb',
     values: rgb as any,
   });
+}
+
+const removeOpacity = (color: string) => `rgb(from ${color} r g b / 1)`;
+function blendCssVars(background: string, overlay: string, opacity: number) {
+  return `color-mix(in srgb,${background}, ${removeOpacity(overlay)} calc(${opacity} * 100%))`;
 }
