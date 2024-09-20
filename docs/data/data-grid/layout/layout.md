@@ -11,7 +11,7 @@ The Data Grid will raise an error in the console if its container has no intrins
 ## Flex parent container
 
 The Data Grid can be placed inside a flex container with `flex-direction: column`.
-Without setting the minimum and maximum height, the Data Grid will take as much space as it needs to display all rows.
+Without setting the minimum and maximum height, the Data Grid takes as much space as it needs to display all rows.
 
 :::warning
 Consider setting `maxHeight` on the flex parent container, otherwise row virtualization will not be able to improve performance by limiting the number of elements rendered in the DOM.
