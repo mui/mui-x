@@ -628,7 +628,8 @@
       "additionalInfo": { "sx": true }
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
-    "treeData": { "type": { "name": "bool" }, "default": "false" }
+    "treeData": { "type": { "name": "bool" }, "default": "false" },
+    "unstable_rowSpanning": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGridPremium",
   "imports": [

@@ -53,6 +53,10 @@ import {
   columnResizeStateInitializer,
   useGridColumnResize,
 } from '../hooks/features/columnResize/useGridColumnResize';
+import {
+  rowSpanningStateInitializer,
+  useGridRowSpanning,
+} from '../hooks/features/rows/useGridRowSpanning';
 
 export const useDataGridComponent = (
   inputApiRef: React.MutableRefObject<GridApiCommunity> | undefined,
@@ -81,6 +85,7 @@ export const useDataGridComponent = (
   useGridInitializeState(sortingStateInitializer, apiRef, props);
   useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
   useGridInitializeState(filterStateInitializer, apiRef, props);
+  useGridInitializeState(rowSpanningStateInitializer, apiRef, props);
   useGridInitializeState(densityStateInitializer, apiRef, props);
   useGridInitializeState(columnResizeStateInitializer, apiRef, props);
   useGridInitializeState(paginationStateInitializer, apiRef, props);
@@ -93,6 +98,7 @@ export const useDataGridComponent = (
   useGridRowSelection(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
+  useGridRowSpanning(apiRef, props);
   useGridParamsApi(apiRef);
   useGridColumnSpanning(apiRef);
   useGridColumnGrouping(apiRef, props);

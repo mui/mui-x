@@ -803,4 +803,9 @@ DataGridRaw.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
+   * @default false
+   */
+  unstable_rowSpanning: PropTypes.bool,
 } as any;

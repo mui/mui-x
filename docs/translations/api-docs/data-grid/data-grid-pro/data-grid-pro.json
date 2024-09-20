@@ -587,6 +587,9 @@
     },
     "treeData": {
       "description": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop."
+    },
+    "unstable_rowSpanning": {
+      "description": "If <code>true</code>, the Data Grid will auto span the cells over the rows having the same value."
     }
   },
   "classDescriptions": {
