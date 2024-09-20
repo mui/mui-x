@@ -171,15 +171,11 @@ export const GridRootStyles = styled('div', {
         t.palette.action.selectedOpacity + t.palette.action.hoverOpacity,
       );
 
-  const pinnedHoverBackground = t.vars
-    ? hoverColor
-    : blend(pinnedBackground, hoverColor, hoverOpacity);
-  const pinnedSelectedBackground = t.vars
-    ? selectedBackground
-    : blend(pinnedBackground, selectedBackground, selectedOpacity);
-  const pinnedSelectedHoverBackground = t.vars
-    ? hoverColor
-    : blend(pinnedSelectedBackground, hoverColor, hoverOpacity);
+  const blendFn = t.vars ? blendCssVars : blend;
+
+  const pinnedHoverBackground = blendFn(pinnedBackground, hoverColor, hoverOpacity);
+  const pinnedSelectedBackground = blendFn(pinnedBackground, selectedBackground, selectedOpacity);
+  const pinnedSelectedHoverBackground = blendFn(pinnedSelectedBackground, hoverColor, hoverOpacity);
 
   const selectedStyles = {
     backgroundColor: selectedBackground,
@@ -779,4 +775,9 @@ function blend(background: string, overlay: string, opacity: number, gamma: numb
     type: 'rgb',
     values: rgb as any,
   });
+}
+
+const removeOpacity = (color: string) => `rgb(from ${color} r g b / 1)`;
+function blendCssVars(background: string, overlay: string, opacity: number) {
+  return `color-mix(in srgb,${background}, ${removeOpacity(overlay)} calc(${opacity} * 100%))`;
 }
