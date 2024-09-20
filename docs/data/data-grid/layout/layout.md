@@ -20,7 +20,7 @@ Consider setting `maxHeight` on the flex parent container, otherwise row virtual
 {{"demo": "FlexGrid.js", "bg": "inline"}}
 
 :::success
-This is effectively equivalent to setting [`autoHeight`](/x/react-data-grid/layout/#auto-height), but with the added benefit of being able to set the minimum and maximum height of the parent container.
+The flex parent in the demo above is effectively equivalent [`autoHeight`](/x/react-data-grid/layout/#auto-height) prop, but with the added benefit of being able to set the minimum and maximum height of the parent container.
 :::
 
 ### Minimum and maximum height
