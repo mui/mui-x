@@ -20,6 +20,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { GridToolbarTooltip } from './GridToolbarTooltip';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -129,12 +130,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
 
     const isOpen = preferencePanel.open && preferencePanel.panelId === filterPanelId;
     return (
-      <rootProps.slots.baseTooltip
-        title={tooltipContentNode}
-        enterDelay={1000}
-        {...tooltipProps}
-        {...rootProps.slotProps?.baseTooltip}
-      >
+      <GridToolbarTooltip title={tooltipContentNode} {...tooltipProps}>
         <rootProps.slots.baseButton
           ref={ref}
           id={filterButtonId}
@@ -148,13 +144,13 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
               <rootProps.slots.openFilterButtonIcon />
             </Badge>
           }
-          {...buttonProps}
           onClick={toggleFilter}
           {...rootProps.slotProps?.baseButton}
+          {...buttonProps}
         >
           {apiRef.current.getLocaleText('toolbarFilters')}
         </rootProps.slots.baseButton>
-      </rootProps.slots.baseTooltip>
+      </GridToolbarTooltip>
     );
   },
 );

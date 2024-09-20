@@ -10,6 +10,10 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { GridDensityOption } from '../../models/api/gridDensityApi';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridToolbarTooltip } from './GridToolbarTooltip';
+import { GridToolbarToggleButtonGroup } from './GridToolbarToggleButtonGroup';
+import { GridToolbarToggleButton } from './GridToolbarToggleButton';
+import { GridToolbarPopover } from './GridToolbarPopover';
 
 interface GridToolbarDensityToggleButtonProps {
   /**
@@ -87,102 +91,49 @@ const GridToolbarDensityToggleButton = React.forwardRef<
 
   return (
     <React.Fragment>
-      <rootProps.slots.baseTooltip
+      <GridToolbarTooltip
         title={apiRef.current.getLocaleText('toolbarDensityLabel')}
-        enterDelay={1000}
-        slotProps={{
-          popper: {
-            modifiers: [
-              {
-                name: 'offset',
-                options: {
-                  offset: [0, -10],
-                },
-              },
-            ],
-          },
-        }}
         {...tooltipProps}
-        {...rootProps.slotProps?.baseTooltip}
       >
-        <rootProps.slots.baseToggleButton
+        <GridToolbarToggleButton
           ref={ref}
-          size="small"
           aria-label={apiRef.current.getLocaleText('toolbarDensityLabel')}
           id={densityButtonId}
-          sx={{
-            border: 0,
-          }}
-          {...toggleButtonProps}
           value="density"
           selected={!!anchorEl}
           onChange={handleDensitySelectorOpen}
-          {...rootProps.slotProps?.baseToggleButton}
+          {...toggleButtonProps}
         >
           {densityIcons[density]}
           <rootProps.slots.arrowDropDownIcon fontSize="small" sx={{ mr: -0.75 }} />
-        </rootProps.slots.baseToggleButton>
-      </rootProps.slots.baseTooltip>
+        </GridToolbarToggleButton>
+      </GridToolbarTooltip>
 
-      <rootProps.slots.basePopover
+      <GridToolbarPopover
         open={!!anchorEl}
         anchorEl={anchorEl}
         onClose={handleDensitySelectorOpen}
         id={densityMenuId}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
       >
-        <rootProps.slots.baseToggleButtonGroup
-          color="primary"
-          size="small"
+        <GridToolbarToggleButtonGroup
           value={density}
           onChange={handleDensityUpdate}
-          sx={{
-            gap: 0.25,
-            p: 0.5,
-          }}
           exclusive
           {...toggleButtonGroupProps}
-          {...rootProps.slotProps?.baseToggleButtonGroup}
         >
           {densityOptions.map((option) => (
-            <rootProps.slots.baseTooltip
-              key={option.value}
-              title={option.label}
-              enterDelay={1000}
-              slotProps={{
-                popper: {
-                  modifiers: [
-                    {
-                      name: 'offset',
-                      options: {
-                        offset: [0, -10],
-                      },
-                    },
-                  ],
-                },
-              }}
-              {...tooltipProps}
-              {...rootProps.slotProps?.baseTooltip}
-            >
-              <rootProps.slots.baseToggleButton
+            <GridToolbarTooltip key={option.value} title={option.label} {...tooltipProps}>
+              <GridToolbarToggleButton
                 value={option.value}
                 aria-label={option.label}
-                sx={{
-                  border: 0,
-                  borderRadius: '4px !important', // TODO: Properly style the toggle button
-                }}
                 {...toggleButtonProps}
-                {...rootProps.slotProps?.baseToggleButton}
               >
                 {option.icon}
-              </rootProps.slots.baseToggleButton>
-            </rootProps.slots.baseTooltip>
+              </GridToolbarToggleButton>
+            </GridToolbarTooltip>
           ))}
-        </rootProps.slots.baseToggleButtonGroup>
-      </rootProps.slots.basePopover>
+        </GridToolbarToggleButtonGroup>
+      </GridToolbarPopover>
     </React.Fragment>
   );
 });

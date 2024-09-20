@@ -67,6 +67,18 @@ GridToolbarV8.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * Ref for the column button.
+   */
+  columnsButtonRef: PropTypes.shape({
+    current: PropTypes.object,
+  }),
+  /**
+   * Ref for the filter button.
+   */
+  filterButtonRef: PropTypes.shape({
+    current: PropTypes.object,
+  }),
+  /**
    * Props passed to the quick filter component.
    */
   quickFilterProps: PropTypes.object,

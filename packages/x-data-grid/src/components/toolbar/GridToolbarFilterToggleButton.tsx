@@ -10,6 +10,8 @@ import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFilterActiveItemsSelector } from '../../hooks/features/filter/gridFilterSelector';
+import { GridToolbarToggleButton } from './GridToolbarToggleButton';
+import { GridToolbarTooltip } from './GridToolbarTooltip';
 
 export interface GridToolbarFilterToggleButtonProps {
   /**
@@ -33,6 +35,9 @@ const GridToolbarFilterToggleButton = React.forwardRef<
   const filterButtonId = useId();
   const filterPanelId = useId();
 
+  const filterCount = activeFilters.length;
+  const hasFilters = filterCount > 0;
+
   const toggleFilter = () => {
     const { open, openedPanelValue } = preferencePanel;
     if (open && openedPanelValue === GridPreferencePanelsValue.filters) {
@@ -53,50 +58,35 @@ const GridToolbarFilterToggleButton = React.forwardRef<
 
   const isOpen = preferencePanel.open && preferencePanel.panelId === filterPanelId;
   return (
-    <rootProps.slots.baseTooltip
+    <GridToolbarTooltip
       title={
         preferencePanel.open
           ? (apiRef.current.getLocaleText('toolbarFiltersTooltipHide') as React.ReactElement)
           : (apiRef.current.getLocaleText('toolbarFiltersTooltipShow') as React.ReactElement)
       }
-      enterDelay={1000}
-      slotProps={{
-        popper: {
-          modifiers: [
-            {
-              name: 'offset',
-              options: {
-                offset: [0, -10],
-              },
-            },
-          ],
-        },
-      }}
       {...tooltipProps}
-      {...rootProps.slotProps?.baseTooltip}
     >
-      <Badge badgeContent={activeFilters.length} color="primary" variant="dot" overlap="circular">
-        <rootProps.slots.baseToggleButton
+      <Badge badgeContent={filterCount} color="primary" variant="dot" overlap="circular">
+        <GridToolbarToggleButton
           ref={ref}
           id={filterButtonId}
-          size="small"
-          sx={{
-            border: 0,
-          }}
           aria-label={apiRef.current.getLocaleText('toolbarFiltersLabel')}
           aria-controls={isOpen ? filterPanelId : undefined}
           aria-expanded={isOpen}
           aria-haspopup
           value="filter"
           selected={isOpen}
+          color={hasFilters ? 'primary' : undefined}
           onChange={toggleFilter}
-          {...rootProps.slotProps?.baseToggleButton}
           {...toggleButtonProps}
         >
-          <rootProps.slots.openFilterButtonIcon fontSize="small" />
-        </rootProps.slots.baseToggleButton>
+          <rootProps.slots.openFilterButtonIcon
+            fontSize="small"
+            color={hasFilters ? 'primary' : undefined}
+          />
+        </GridToolbarToggleButton>
       </Badge>
-    </rootProps.slots.baseTooltip>
+    </GridToolbarTooltip>
   );
 });
 

@@ -27,6 +27,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   const slots = {
     root: ['toolbarFilterList'],
+    chip: ['toolbarChip'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -37,8 +38,16 @@ const GridToolbarFilterListRoot = styled('ul', {
   slot: 'ToolbarFilterList',
   overridesResolver: (_props, styles) => styles.toolbarFilterList,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
-  margin: theme.spacing(1, 1, 0.5),
+  margin: theme.spacing(1),
   padding: theme.spacing(0, 1),
+}));
+
+const GridToolbarChip = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'ToolbarChip',
+  overridesResolver: (_props, styles) => styles.toolbarChip,
+})<{ ownerState: OwnerState }>(({ theme }) => ({
+  margin: theme.spacing(0, 0.25),
 }));
 
 export interface GridToolbarFilterChipProps {
@@ -80,23 +89,20 @@ const GridToolbarFilterChip = React.forwardRef<HTMLButtonElement, GridToolbarFil
       };
 
       return (
-        <div>
-          {apiRef.current.getLocaleText('toolbarFiltersTooltipActive')(activeFilters.length)}
-          <GridToolbarFilterListRoot className={classes.root} ownerState={rootProps}>
-            {activeFilters.map((item, index) => ({
-              ...(lookup[item.field!] && (
-                <li key={index}>
-                  {`${lookup[item.field!].headerName || item.field}
+        <GridToolbarFilterListRoot className={classes.root} ownerState={rootProps}>
+          {activeFilters.map((item, index) => ({
+            ...(lookup[item.field!] && (
+              <li key={index}>
+                {`${lookup[item.field!].headerName || item.field}
                   ${getOperatorLabel(item)}
                   ${
                     // implicit check for null and undefined
                     item.value != null ? getFilterItemValue(item) : ''
                   }`}
-                </li>
-              )),
-            }))}
-          </GridToolbarFilterListRoot>
-        </div>
+              </li>
+            )),
+          }))}
+        </GridToolbarFilterListRoot>
       );
     }, [apiRef, rootProps, activeFilters, lookup, classes]);
 
@@ -137,9 +143,10 @@ const GridToolbarFilterChip = React.forwardRef<HTMLButtonElement, GridToolbarFil
         {...tooltipProps}
         {...rootProps.slotProps?.baseTooltip}
       >
-        <rootProps.slots.baseChip
-          sx={{ mx: 0.25 }}
-          label={`${activeFilters.length} filter${activeFilters.length > 1 ? 's' : ''}`}
+        <GridToolbarChip
+          ownerState={rootProps}
+          className={classes.chip}
+          label={apiRef.current.getLocaleText('toolbarFiltersTooltipActive')(activeFilters.length)}
           onClick={toggleFilter}
           onDelete={() => {
             apiRef.current.setFilterModel({

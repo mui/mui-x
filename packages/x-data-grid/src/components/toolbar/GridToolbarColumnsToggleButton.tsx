@@ -8,6 +8,8 @@ import { gridPreferencePanelStateSelector } from '../../hooks/features/preferenc
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridToolbarTooltip } from './GridToolbarTooltip';
+import { GridToolbarToggleButton } from './GridToolbarToggleButton';
 
 interface GridToolbarColumnsToggleButtonProps {
   /**
@@ -54,44 +56,25 @@ const GridToolbarColumnsToggleButton = React.forwardRef<
   const isOpen = preferencePanel.open && preferencePanel.panelId === columnPanelId;
 
   return (
-    <rootProps.slots.baseTooltip
+    <GridToolbarTooltip
       title={apiRef.current.getLocaleText('toolbarColumnsLabel')}
-      enterDelay={1000}
-      slotProps={{
-        popper: {
-          modifiers: [
-            {
-              name: 'offset',
-              options: {
-                offset: [0, -10],
-              },
-            },
-          ],
-        },
-      }}
       {...tooltipProps}
-      {...rootProps.slotProps?.baseTooltip}
     >
-      <rootProps.slots.baseToggleButton
+      <GridToolbarToggleButton
         ref={ref}
         id={columnButtonId}
-        size="small"
-        sx={{
-          border: 0,
-        }}
         aria-label={apiRef.current.getLocaleText('toolbarColumnsLabel')}
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-controls={isOpen ? columnPanelId : undefined}
         value="columns"
         selected={isOpen}
-        {...toggleButtonProps}
         onChange={showColumns}
-        {...rootProps.slotProps?.baseToggleButton}
+        {...toggleButtonProps}
       >
         <rootProps.slots.columnSelectorIcon fontSize="small" />
-      </rootProps.slots.baseToggleButton>
-    </rootProps.slots.baseTooltip>
+      </GridToolbarToggleButton>
+    </GridToolbarTooltip>
   );
 });
 

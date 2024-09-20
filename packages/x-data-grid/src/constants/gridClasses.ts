@@ -589,6 +589,26 @@ export interface GridClasses {
    */
   toolbarFilterList: string;
   /**
+   * Styles applied to the toolbar chip element.
+   */
+  toolbarChip: string;
+  /**
+   * Styles applied to the toolbar separator element.
+   */
+  toolbarSeparator: string;
+  /**
+   * Styles applied to the toolbar toggle button element.
+   */
+  toolbarToggleButton: string;
+  /**
+   * Styles applied to the toolbar toggle button group element.
+   */
+  toolbarToggleButtonGroup: string;
+  /**
+   * Styles applied to the toolbar popover element.
+   */
+  toolbarPopover: string;
+  /**
    * Styles applied the grid if `showColumnVerticalBorder={true}`.
    */
   withVerticalBorder: string;
@@ -793,6 +813,11 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'sortIcon',
   'toolbarContainer',
   'toolbarFilterList',
+  'toolbarChip',
+  'toolbarSeparator',
+  'toolbarToggleButton',
+  'toolbarToggleButtonGroup',
+  'toolbarPopover',
   'virtualScroller',
   'virtualScroller--hasScrollX',
   'virtualScrollerContent',

@@ -4,6 +4,8 @@ import { ToggleButtonProps } from '@mui/material/ToggleButton';
 import { TooltipProps } from '@mui/material/Tooltip';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridToolbarToggleButton } from './GridToolbarToggleButton';
+import { GridToolbarTooltip } from './GridToolbarTooltip';
 
 interface GridToolbarPrintToggleButtonProps {
   /**
@@ -29,39 +31,20 @@ const GridToolbarPrintToggleButton = React.forwardRef<
   };
 
   return (
-    <rootProps.slots.baseTooltip
+    <GridToolbarTooltip
       title={apiRef.current.getLocaleText('toolbarExportPrint')}
-      enterDelay={1000}
-      slotProps={{
-        popper: {
-          modifiers: [
-            {
-              name: 'offset',
-              options: {
-                offset: [0, -10],
-              },
-            },
-          ],
-        },
-      }}
       {...tooltipProps}
-      {...rootProps.slotProps?.baseTooltip}
     >
-      <rootProps.slots.baseToggleButton
+      <GridToolbarToggleButton
         ref={ref}
-        size="small"
-        sx={{
-          border: 0,
-        }}
         value="print"
         selected={false}
-        {...toggleButtonProps}
         onChange={showPrint}
-        {...rootProps.slotProps?.baseToggleButton}
+        {...toggleButtonProps}
       >
         <rootProps.slots.printIcon fontSize="small" />
-      </rootProps.slots.baseToggleButton>
-    </rootProps.slots.baseTooltip>
+      </GridToolbarToggleButton>
+    </GridToolbarTooltip>
   );
 });
 

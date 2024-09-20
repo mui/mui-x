@@ -10,6 +10,8 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridMenu } from '../menu/GridMenu';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridClasses } from '../../constants/gridClasses';
+import { GridToolbarTooltip } from './GridToolbarTooltip';
+import { GridToolbarToggleButton } from './GridToolbarToggleButton';
 
 interface GridToolbarExportContainerProps {
   /**
@@ -63,31 +65,13 @@ const GridToolbarExportContainer = React.forwardRef<
 
   return (
     <React.Fragment>
-      <rootProps.slots.baseTooltip
+      <GridToolbarTooltip
         title={apiRef.current.getLocaleText('toolbarExportLabel')}
-        enterDelay={1000}
-        slotProps={{
-          popper: {
-            modifiers: [
-              {
-                name: 'offset',
-                options: {
-                  offset: [0, -10],
-                },
-              },
-            ],
-          },
-        }}
         {...tooltipProps}
-        {...rootProps.slotProps?.baseTooltip}
       >
         {toggleButtonProps ? (
-          <rootProps.slots.baseToggleButton
+          <GridToolbarToggleButton
             ref={handleRef}
-            size="small"
-            sx={{
-              border: 0,
-            }}
             aria-expanded={open}
             aria-label={apiRef.current.getLocaleText('toolbarExportLabel')}
             aria-haspopup="menu"
@@ -95,13 +79,12 @@ const GridToolbarExportContainer = React.forwardRef<
             id={exportButtonId}
             value="export"
             selected={open}
-            {...toggleButtonProps}
             onChange={handleMenuOpen}
-            {...rootProps.slotProps?.baseToggleButton}
+            {...toggleButtonProps}
           >
             <rootProps.slots.exportIcon fontSize="small" />
             <rootProps.slots.arrowDropDownIcon fontSize="small" sx={{ mr: -0.75 }} />
-          </rootProps.slots.baseToggleButton>
+          </GridToolbarToggleButton>
         ) : (
           <rootProps.slots.baseButton
             ref={handleRef}
@@ -112,14 +95,14 @@ const GridToolbarExportContainer = React.forwardRef<
             aria-haspopup="menu"
             aria-controls={open ? exportMenuId : undefined}
             id={exportButtonId}
-            {...buttonProps}
             onClick={handleMenuOpen}
             {...rootProps.slotProps?.baseButton}
+            {...buttonProps}
           >
             {apiRef.current.getLocaleText('toolbarExport')}
           </rootProps.slots.baseButton>
         )}
-      </rootProps.slots.baseTooltip>
+      </GridToolbarTooltip>
       <GridMenu
         open={open}
         target={buttonRef.current}
