@@ -12,6 +12,7 @@ import { ExportedPickersSectionListProps, PickersSectionListRef } from '../Picke
 import type { UseFieldResponse } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
 import { PickerValidDate } from './pickers';
+import type { PickersFieldRoot } from '../PickersField/index.barrel';
 
 // Update PickersComponentAgnosticLocaleText -> viewNames when adding new entries
 export type FieldSectionType =
@@ -206,3 +207,20 @@ export type BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure extend
         | 'type'
       >
     : Partial<Omit<PickersTextFieldProps, keyof ExportedPickersSectionListProps>>;
+
+export type DateRange<TDate extends PickerValidDate> = [TDate | null, TDate | null];
+
+export type InferValueFromDate<
+  TDate extends PickerValidDate,
+  TISRange extends boolean,
+> = TISRange extends true ? DateRange<TDate> : TDate | null;
+
+export type InferFieldSection<TIsRange extends boolean> = TIsRange extends true
+  ? RangeFieldSection
+  : FieldSection;
+
+export type RangePosition = 'start' | 'end';
+
+export interface RangeFieldSection extends FieldSection {
+  dateName: RangePosition;
+}
