@@ -12,12 +12,17 @@ import {
 import type { PickerValueManager } from '../../internals/hooks/usePicker';
 import type { Validator } from '../../validation';
 import { FieldValueManager, UseFieldInternalProps } from '../../internals/hooks/useField';
+import { PickersFieldProvider } from './PickersFieldProvider';
+import { useSplitFieldProps } from '../../hooks';
 
 const PickersFieldRoot = React.forwardRef(function PickersFieldRoot<
   TController extends PickersFieldRoot.Controller<any, any, any, any>,
 >(props: PickersFieldRoot.Props<TController>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
-  const { render, className, ...otherProps } = props;
-  const { getRootProps } = usePickersFieldRoot({});
+  const { render, className, controller, ...otherProps } = props;
+
+  const { internalProps, forwardedProps } = useSplitFieldProps(props, controller.valueType);
+
+  const { getRootProps, contextValue } = usePickersFieldRoot({ controller, internalProps });
   const ownerState: PickersFieldRoot.OwnerState = {};
 
   const { renderElement } = useComponentRenderer({
@@ -26,10 +31,10 @@ const PickersFieldRoot = React.forwardRef(function PickersFieldRoot<
     ref: forwardedRef,
     ownerState,
     className,
-    extraProps: otherProps,
+    extraProps: forwardedProps,
   });
 
-  return renderElement();
+  return <PickersFieldProvider value={contextValue}>{renderElement()}</PickersFieldProvider>;
 });
 
 namespace PickersFieldRoot {

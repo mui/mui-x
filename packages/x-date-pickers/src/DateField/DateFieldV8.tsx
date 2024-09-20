@@ -1,31 +1,34 @@
 import * as React from 'react';
 import * as PickersField from '../PickersField';
 import { PickerValidDate } from '../models/pickers';
-import { DateValidationError } from '../models/validation';
 import {
   singleItemFieldValueManager,
   singleItemValueManager,
 } from '../internals/utils/valueManagers';
-import { validateDate, ValidateDateProps } from '../validation';
-import { UseFieldInternalProps } from '../internals/hooks/useField';
+import { validateDate } from '../validation';
+import { buildFieldControllerGetter } from '../internals/utils/controller';
 
-const getDateFieldController = <TDate extends PickerValidDate>(): PickersField.Root.Controller<
-  TDate,
-  false,
-  DateValidationError,
-  UseFieldInternalProps<any, any, any, true, any> & ValidateDateProps<TDate>
-> => ({
+const getDateFieldController = buildFieldControllerGetter({
+  isRange: false,
   valueManager: singleItemValueManager,
   fieldValueManager: singleItemFieldValueManager,
   validator: validateDate,
   valueType: 'date',
+  getDefaultProps: (props: any) => ({
+    ...props,
+    disablePast: props.disablePast ?? false,
+    disableFuture: props.disableFuture ?? false,
+    format: props.format ?? utils.formats.keyboardDate,
+    minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
+  }),
 });
 
-export function DateFieldV8<TDate extends PickerValidDate>() {
+export function DateFieldV8<TDate extends PickerValidDate>(props: any) {
   const controller = React.useMemo(() => getDateFieldController<TDate>(), []);
 
   return (
-    <PickersField.Root controller={controller}>
+    <PickersField.Root controller={controller} {...props}>
       <PickersField.Content />
     </PickersField.Root>
   );
