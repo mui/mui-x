@@ -311,9 +311,9 @@ export const useGridColumnReorder = (
       event.stopPropagation();
 
       clearTimeout(removeDnDStylesTimeout.current);
-      
-     // For more information check here https://github.com/mui/mui-x/issues/14678
-      if(dragColNode.current!.classList.contains(classes.columnHeaderDragging)){
+
+      // For more information check here https://github.com/mui/mui-x/issues/14678
+      if (dragColNode.current!.classList.contains(classes.columnHeaderDragging)) {
         dragColNode.current!.classList.remove(classes.columnHeaderDragging);
       }
 
@@ -341,7 +341,13 @@ export const useGridColumnReorder = (
       }));
       apiRef.current.forceUpdate();
     },
-    [apiRef, props.disableColumnReorder, props.keepColumnPositionIfDraggedOutside, logger, classes.columnHeaderDragging],
+    [
+      apiRef,
+      props.disableColumnReorder,
+      props.keepColumnPositionIfDraggedOutside,
+      logger,
+      classes.columnHeaderDragging,
+    ],
   );
 
   useGridApiEventHandler(apiRef, 'columnHeaderDragStart', handleDragStart);
