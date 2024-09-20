@@ -13,12 +13,8 @@ import type { Validator } from '../../validation';
 import { FieldValueManager, UseFieldInternalProps } from '../../internals/hooks/useField';
 
 const PickersFieldRoot = React.forwardRef(function PickersFieldRoot<
-  TDate extends PickerValidDate,
   TController extends PickersFieldRoot.Controller<any, any, any, any>,
->(
-  props: PickersFieldRoot.Props<TDate, TController>,
-  forwardedRef: React.ForwardedRef<HTMLDivElement>,
-) {
+>(props: PickersFieldRoot.Props<TController>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
   const { render, className, ...otherProps } = props;
   const { getRootProps } = usePickersFieldRoot({});
   const ownerState: PickersFieldRoot.OwnerState = {};
@@ -38,10 +34,8 @@ const PickersFieldRoot = React.forwardRef(function PickersFieldRoot<
 namespace PickersFieldRoot {
   export interface OwnerState {}
 
-  export interface Props<
-    TDate extends PickerValidDate,
-    TController extends PickersFieldRoot.Controller<TDate, any, any, any>,
-  > extends BaseUIComponentProps<'div', OwnerState> {
+  export interface Props<TController extends PickersFieldRoot.Controller<any, any, any, any>>
+    extends BaseUIComponentProps<'div', OwnerState> {
     controller: TController;
   }
 
