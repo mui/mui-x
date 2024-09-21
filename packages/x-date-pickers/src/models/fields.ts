@@ -226,8 +226,8 @@ export interface RangeFieldSection extends FieldSection {
 }
 
 export type InferFieldInternalProps<
-  TController extends PickersFieldRoot.Controller<any, any, any, any>,
+  TController extends PickersFieldRoot.Controller<any, any, any, any, any>,
 > =
-  TController extends PickersFieldRoot.Controller<any, any, any, infer TInternalProps>
+  TController extends PickersFieldRoot.Controller<any, any, any, infer TInternalProps, any>
     ? TInternalProps
     : never;

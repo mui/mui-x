@@ -5,26 +5,26 @@ import type { Validator } from '../../validation';
 import { FieldValueManager } from '../hooks/useField';
 import { PickerValueManager } from '../hooks/usePicker';
 
-type GetDefaultInternalProps<TInputInternalProps extends {}, TInternalProps extends {}> = (
+type GetDefaultInternalProps<TInternalProps extends {}, TDefaultizedInternalProps extends {}> = (
   adapter: MuiPickersAdapterContextValue<any>,
-  inputProps: TInputInternalProps,
-) => TInternalProps;
+  inputProps: TInternalProps,
+) => TDefaultizedInternalProps;
 
 type InferErrorFromValidator<TValidator extends Validator<any, any, any, any>> =
   TValidator extends Validator<any, any, infer TError, any> ? TError : never;
 
-type InferInputInternalPropsFromDefaultPropsGetter<
-  TDefaultPropsGetter extends GetDefaultInternalProps<any, any>,
-> =
-  TDefaultPropsGetter extends GetDefaultInternalProps<infer TInputInternalProps, any>
-    ? TInputInternalProps
-    : never;
-
 type InferInternalPropsFromDefaultPropsGetter<
   TDefaultPropsGetter extends GetDefaultInternalProps<any, any>,
 > =
-  TDefaultPropsGetter extends GetDefaultInternalProps<any, infer TInternalProps>
+  TDefaultPropsGetter extends GetDefaultInternalProps<infer TInternalProps, any>
     ? TInternalProps
+    : never;
+
+type InferDefaultizedInternalPropsFromDefaultPropsGetter<
+  TDefaultPropsGetter extends GetDefaultInternalProps<any, any>,
+> =
+  TDefaultPropsGetter extends GetDefaultInternalProps<any, infer TDefaultizedInternalProps>
+    ? TDefaultizedInternalProps
     : never;
 
 interface BuildFieldControllerGetterParams<
@@ -53,8 +53,8 @@ export function buildFieldControllerGetter<
     TDate,
     TIsRange,
     InferErrorFromValidator<TValidator>,
-    InferInputInternalPropsFromDefaultPropsGetter<TDefaultPropsGetter>,
-    InferInternalPropsFromDefaultPropsGetter<TDefaultPropsGetter>
+    InferInternalPropsFromDefaultPropsGetter<TDefaultPropsGetter>,
+    InferDefaultizedInternalPropsFromDefaultPropsGetter<TDefaultPropsGetter>
   > => ({
     valueType,
     validator,
