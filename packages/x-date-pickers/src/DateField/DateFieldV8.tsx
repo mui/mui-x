@@ -8,6 +8,8 @@ import {
 import { validateDate } from '../validation';
 import { buildFieldControllerGetter } from '../internals/utils/controller';
 import { applyDefaultDate } from '../internals/utils/date-utils';
+import { UseDateFieldProps } from './DateField.types';
+import { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
 
 const getDateFieldController = buildFieldControllerGetter({
   isRange: false,
@@ -15,7 +17,10 @@ const getDateFieldController = buildFieldControllerGetter({
   fieldValueManager: singleItemFieldValueManager,
   validator: validateDate,
   valueType: 'date',
-  getDefaultInternalProps: (adapter, inputProps: { disablePast: boolean }) => ({
+  getDefaultInternalProps: <TDate extends PickerValidDate>(
+    adapter: MuiPickersAdapterContextValue<TDate>,
+    inputProps: UseDateFieldProps<TDate, true>,
+  ) => ({
     ...inputProps,
     disablePast: inputProps.disablePast ?? false,
     disableFuture: inputProps.disableFuture ?? false,

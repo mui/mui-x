@@ -5,33 +5,33 @@ import type { Validator } from '../../validation';
 import { FieldValueManager } from '../hooks/useField';
 import { PickerValueManager } from '../hooks/usePicker';
 
-type GetDefaultInternalProps<
-  TDate extends PickerValidDate,
-  TInputInternalProps extends {},
-  TInternalProps extends {},
-> = (
-  adapter: MuiPickersAdapterContextValue<TDate>,
+type GetDefaultInternalProps<TInputInternalProps extends {}, TInternalProps extends {}> = (
+  adapter: MuiPickersAdapterContextValue<any>,
   inputProps: TInputInternalProps,
 ) => TInternalProps;
 
 type InferErrorFromValidator<TValidator extends Validator<any, any, any, any>> =
   TValidator extends Validator<any, any, infer TError, any> ? TError : never;
 
-type InferInternalPropsFromValidator<TValidator extends Validator<any, any, any, any>> =
-  TValidator extends Validator<any, any, any, infer TInternalProps> ? TInternalProps : never;
-
 type InferInputInternalPropsFromDefaultPropsGetter<
-  TDefaultPropsGetter extends GetDefaultInternalProps<any, any, any>,
+  TDefaultPropsGetter extends GetDefaultInternalProps<any, any>,
 > =
-  TDefaultPropsGetter extends GetDefaultInternalProps<any, infer TInputInternalProps, any>
+  TDefaultPropsGetter extends GetDefaultInternalProps<infer TInputInternalProps, any>
     ? TInputInternalProps
+    : never;
+
+type InferInternalPropsFromDefaultPropsGetter<
+  TDefaultPropsGetter extends GetDefaultInternalProps<any, any>,
+> =
+  TDefaultPropsGetter extends GetDefaultInternalProps<any, infer TInternalProps>
+    ? TInternalProps
     : never;
 
 interface BuildFieldControllerGetterParams<
   TValueType extends FieldValueType,
   TIsRange extends boolean,
   TValidator extends Validator<any, any, any, any>,
-  TDefaultPropsGetter extends GetDefaultInternalProps<any, any, any>,
+  TDefaultPropsGetter extends GetDefaultInternalProps<any, any>,
 > {
   isRange: TIsRange;
   valueType: TValueType;
@@ -45,7 +45,7 @@ export function buildFieldControllerGetter<
   TValueType extends FieldValueType,
   TIsRange extends boolean,
   TValidator extends Validator<any, any, any, any>,
-  TDefaultPropsGetter extends GetDefaultInternalProps<any, any, any>,
+  TDefaultPropsGetter extends GetDefaultInternalProps<any, any>,
 >(params: BuildFieldControllerGetterParams<TValueType, TIsRange, TValidator, TDefaultPropsGetter>) {
   const { valueType, validator, valueManager, fieldValueManager, getDefaultInternalProps } = params;
 
@@ -54,8 +54,7 @@ export function buildFieldControllerGetter<
     TIsRange,
     InferErrorFromValidator<TValidator>,
     InferInputInternalPropsFromDefaultPropsGetter<TDefaultPropsGetter>,
-    // TODO: Correctly type the internal props.
-    InferInternalPropsFromValidator<TValidator>
+    InferInternalPropsFromDefaultPropsGetter<TDefaultPropsGetter>
   > => ({
     valueType,
     validator,
