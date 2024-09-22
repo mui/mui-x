@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { expect } from 'chai';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
@@ -20,13 +19,11 @@ describe('<YearCalendar /> - Keyboard', () => {
     yearsOrder: 'asc' | 'desc' = 'asc',
     direction: 'ltr' | 'rtl' = 'ltr',
   ) {
-    const onChange = spy();
     const yearCalendar = (
       <YearCalendar
         value={adapterToUse.date('2000-01-01')}
         minDate={adapterToUse.date('1999-01-01')}
         maxDate={adapterToUse.date('2001-01-01')}
-        onChange={onChange}
         yearsOrder={yearsOrder}
       />
     );
