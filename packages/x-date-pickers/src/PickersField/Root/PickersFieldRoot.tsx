@@ -13,7 +13,10 @@ const PickersFieldRoot = React.forwardRef(function PickersFieldRoot<
 
   const { internalProps, forwardedProps } = useSplitFieldProps(otherProps, controller.valueType);
 
-  const { getRootProps, contextValue } = usePickersFieldRoot({ controller, internalProps });
+  const { getRootProps, getInputProps, contextValue } = usePickersFieldRoot({
+    controller,
+    internalProps,
+  });
   const ownerState: PickersFieldRoot.OwnerState = {};
 
   const { renderElement } = useComponentRenderer({
@@ -25,7 +28,12 @@ const PickersFieldRoot = React.forwardRef(function PickersFieldRoot<
     extraProps: forwardedProps,
   });
 
-  return <PickersFieldProvider value={contextValue}>{renderElement()}</PickersFieldProvider>;
+  return (
+    <PickersFieldProvider value={contextValue}>
+      {renderElement()}
+      <input {...getInputProps()} />
+    </PickersFieldProvider>
+  );
 });
 
 namespace PickersFieldRoot {

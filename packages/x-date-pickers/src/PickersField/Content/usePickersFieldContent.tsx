@@ -5,7 +5,8 @@ export function usePickersFieldContent(
   params: UsePickersFieldContent.Parameters,
 ): UsePickersFieldContent.ReturnValue {
   const { renderSection } = params;
-  const { elements, contentEditable, contentRef } = usePickersFieldContext();
+  const { elements, contentEditable, contentRef, propsForwardedToContent } =
+    usePickersFieldContext();
 
   const contentEditableValue = elements
     .map(({ content, before, after }) => `${before.children}${content.children}${after.children}`)
@@ -17,14 +18,23 @@ export function usePickersFieldContent(
         ref: contentRef,
         suppressContentEditableWarning: true,
         contentEditable,
+        role: 'group',
         children: contentEditable
           ? contentEditableValue
           : elements.map((_, elementIndex) => (
               <React.Fragment key={elementIndex}>{renderSection(elementIndex)}</React.Fragment>
             )),
+        ...propsForwardedToContent,
       };
     },
-    [contentEditableValue, contentEditable, elements, renderSection, contentRef],
+    [
+      contentEditableValue,
+      contentEditable,
+      elements,
+      renderSection,
+      contentRef,
+      propsForwardedToContent,
+    ],
   );
 
   return React.useMemo(() => ({ getContentProps }), [getContentProps]);

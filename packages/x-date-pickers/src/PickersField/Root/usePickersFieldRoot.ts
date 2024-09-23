@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { visuallyHidden } from '@base_ui/react/utils/visuallyHidden';
 import { useField } from '../../internals/hooks/useField';
 import type { PickersFieldProvider } from './PickersFieldProvider';
 import {
@@ -46,13 +47,27 @@ export function usePickersFieldRoot<TController extends PickerController<any, an
     // TODO: Rename to a more meaningful name now that it's not the props passed directly to the root `contentEditable` DOM attribute.
     contentEditable,
     enableAccessibleFieldDOMStructure,
+
     // TODO: Add support
     clearable,
     onClear,
     error,
     focused,
     areAllSectionsEmpty,
-    ...otherPropsFromUseField
+    disabled,
+
+    // Props forwarded to the hidden input
+    value,
+    onChange,
+    readOnly,
+    // id,
+    // name,
+
+    // Props forwarded to the root
+    onFocus,
+    onBlur,
+
+    ...propsForwardedToContent
   } = useField<
     InferValueFromController<TController>,
     InferDateFromController<TController>,
@@ -155,10 +170,24 @@ export function usePickersFieldRoot<TController extends PickerController<any, an
   const getRootProps: UsePickersFieldRoot.ReturnValue['getRootProps'] = (externalProps = {}) => {
     return {
       children: externalProps.children,
-      ...otherPropsFromUseField,
+      onFocus,
+      onBlur,
     };
   };
 
+  const getInputProps: UsePickersFieldRoot.ReturnValue['getInputProps'] = (externalProps = {}) => {
+    return {
+      tabIndex: -1,
+      style: visuallyHidden,
+      'aria-hidden': true,
+      value,
+      onChange,
+      readOnly,
+      disabled,
+      // id,
+      // name,
+    };
+  };
   // TODO: Memoize?
   const contextValue: PickersFieldProvider.ContextValue = {
     elements,
@@ -166,10 +195,11 @@ export function usePickersFieldRoot<TController extends PickerController<any, an
     contentRef,
     registerSectionRef,
     registerSectionContentRef,
+    propsForwardedToContent,
   };
 
   // TODO: Memoize?
-  return { getRootProps, contextValue };
+  return { getRootProps, getInputProps, contextValue };
 }
 
 export namespace UsePickersFieldRoot {
@@ -187,6 +217,16 @@ export namespace UsePickersFieldRoot {
     getRootProps: (
       externalProps?: React.ComponentPropsWithRef<'div'>,
     ) => React.ComponentPropsWithRef<'div'>;
+
+    /**
+     * Resolver for the input element's props.
+     * @param {React.ComponentPropsWithRef<'input'>} externalProps custom props for the input element
+     * @returns {React.ComponentPropsWithRef<'input'>} props that should be spread on the input element
+     */
+    getInputProps: (
+      externalProps?: React.ComponentPropsWithRef<'input'>,
+    ) => React.ComponentPropsWithRef<'input'>;
+
     contextValue: PickersFieldProvider.ContextValue;
   }
 }
