@@ -25,7 +25,7 @@ export const useGridTreeData = (
         }
 
         if (props.unstable_dataSource && !params.rowNode.childrenExpanded) {
-          apiRef.current.unstable_dataSource.fetchRows(params.id);
+          apiRef.current.unstable_dataSource.fetchRows({ parentId: params.id });
           return;
         }
 

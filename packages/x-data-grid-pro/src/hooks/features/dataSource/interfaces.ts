@@ -6,6 +6,12 @@ export interface GridDataSourceState {
   errors: Record<GridRowId, any>;
 }
 
+export interface FetchRowsOptions {
+  parentId?: GridRowId;
+  start?: number | string;
+  end?: number;
+}
+
 /**
  * The base data source API interface that is available in the grid [[apiRef]].
  */
@@ -23,11 +29,11 @@ export interface GridDataSourceApiBase {
    */
   setChildrenFetchError: (parentId: GridRowId, error: Error | null) => void;
   /**
-   * Fetches the rows from the server for a given `parentId`.
-   * If no `parentId` is provided, it fetches the root rows.
-   * @param {string} parentId The id of the group to be fetched.
+   * Fetches the rows from the server for with given options.
+   * If no `parentId` option is provided, it fetches the root rows.
+   * @param {FetchRowsOptions} options Options that allow setting the specific request params.
    */
-  fetchRows: (parentId?: GridRowId) => void;
+  fetchRows: (options?: GridRowId | FetchRowsOptions) => void;
   /**
    * The data source cache object.
    */

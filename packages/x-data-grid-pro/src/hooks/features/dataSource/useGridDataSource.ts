@@ -8,6 +8,7 @@ import {
   useGridSelector,
   GridRowId,
   gridPaginationModelSelector,
+  gridFilteredSortedRowIdsSelector,
 } from '@mui/x-data-grid';
 import {
   GridGetRowsParams,
@@ -17,7 +18,12 @@ import {
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { gridGetRowsParamsSelector, gridDataSourceErrorsSelector } from './gridDataSourceSelector';
-import { GridDataSourceApi, GridDataSourceApiBase, GridDataSourcePrivateApi } from './interfaces';
+import {
+  FetchRowsOptions,
+  GridDataSourceApi,
+  GridDataSourceApiBase,
+  GridDataSourcePrivateApi,
+} from './interfaces';
 import { NestedDataManager, RequestStatus, runIf } from './utils';
 import { GridDataSourceCache } from '../../../models';
 import { GridDataSourceCacheDefault, GridDataSourceCacheDefaultConfig } from './cache';
@@ -70,11 +76,10 @@ export const useGridDataSource = (
   ).current;
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const groupsToAutoFetch = useGridSelector(apiRef, gridRowGroupsToFetchSelector);
+  const filteredSortedRowIds = useGridSelector(apiRef, gridFilteredSortedRowIdsSelector);
   const scheduledGroups = React.useRef<number>(0);
 
   const isLazyLoaded = !!props.unstable_dataSource && props.lazyLoading;
-  const rowFetchSlice = React.useRef({});
-
   const onError = props.unstable_onDataSourceError;
 
   const cacheChunkSize = React.useMemo(() => {
@@ -108,11 +113,24 @@ export const useGridDataSource = (
   );
 
   const fetchRows = React.useCallback(
-    async (parentId?: GridRowId) => {
+    async (options?: GridRowId | FetchRowsOptions) => {
       const getRows = props.unstable_dataSource?.getRows;
       if (!getRows) {
         return;
       }
+
+      const hasDeprecatedArgument = typeof options === 'string' || typeof options === 'number';
+      if (hasDeprecatedArgument) {
+        console.warn(
+          '`fetchRows` argument should be an options object (`FetchRowsOptions`). `GridRowId` argument is deprecated.',
+        );
+      }
+
+      const parentId = hasDeprecatedArgument || !options ? options : options.parentId;
+      const fetchParamsOverride =
+        hasDeprecatedArgument || options?.start === undefined || options?.end === undefined
+          ? {}
+          : { start: options.start, end: options.end };
 
       if (parentId) {
         nestedDataManager.queue([parentId]);
@@ -129,16 +147,17 @@ export const useGridDataSource = (
       const fetchParams = {
         ...gridGetRowsParamsSelector(apiRef),
         ...apiRef.current.unstable_applyPipeProcessors('getRowsParams', {}),
-        ...rowFetchSlice.current,
+        ...fetchParamsOverride,
       };
-      const startingIndex = fetchParams.start;
+      const startingIndex =
+        typeof fetchParams.start === 'string'
+          ? Math.max(filteredSortedRowIds.indexOf(fetchParams.start), 0)
+          : fetchParams.start;
       const cachedData = apiRef.current.unstable_dataSource.cache.get(fetchParams);
 
       if (cachedData !== undefined) {
         const rows = cachedData.rows;
-        if (cachedData.rowCount && cachedData.rowCount >= 0) {
-          apiRef.current.setRowCount(cachedData.rowCount);
-        }
+        apiRef.current.setRowCount(cachedData.rowCount === undefined ? -1 : cachedData.rowCount);
         if (isLazyLoaded) {
           apiRef.current.unstable_replaceRows(startingIndex, rows);
         } else {
@@ -169,7 +188,9 @@ export const useGridDataSource = (
         apiRef.current.setLoading(false);
         apiRef.current.publishEvent('rowsFetched');
       } catch (error) {
-        apiRef.current.setRows([]);
+        if (!isLazyLoaded) {
+          apiRef.current.setRows([]);
+        }
         apiRef.current.setLoading(false);
         onError?.(error as Error, fetchParams);
       }
@@ -179,15 +200,14 @@ export const useGridDataSource = (
       apiRef,
       props.unstable_dataSource?.getRows,
       isLazyLoaded,
+      filteredSortedRowIds,
       onError,
-      rowFetchSlice,
     ],
   );
 
   const fetchRowBatch = React.useCallback(
     (fetchParams: GridGetRowsParams) => {
-      rowFetchSlice.current = adjustRowParams(fetchParams);
-      return fetchRows();
+      return fetchRows(adjustRowParams(fetchParams));
     },
     [adjustRowParams, fetchRows],
   );
@@ -223,9 +243,7 @@ export const useGridDataSource = (
         const rows = cachedData.rows;
         nestedDataManager.setRequestSettled(id);
         apiRef.current.updateServerRows(rows, rowNode.path);
-        if (cachedData.rowCount && cachedData.rowCount >= 0) {
-          apiRef.current.setRowCount(cachedData.rowCount);
-        }
+        apiRef.current.setRowCount(cachedData.rowCount === undefined ? -1 : cachedData.rowCount);
         apiRef.current.setRowChildrenExpansion(id, true);
         apiRef.current.unstable_dataSource.setChildrenLoading(id, false);
         return;
