@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useComponentRenderer } from '@base_ui/react/utils/useComponentRenderer';
 import type { BaseUIComponentProps } from '@base_ui/react/utils/types';
 import { usePickersFieldSection } from './usePickersFieldSection';
-import { PickersSectionElement } from '../../PickersSectionList';
 import { PickersFieldSectionProvider } from './PickersFieldSectionProvider';
 
 const PickersFieldSection = React.forwardRef(function PickersFieldSection(
@@ -34,7 +33,7 @@ namespace PickersFieldSection {
   export interface OwnerState {}
 
   export interface Props extends BaseUIComponentProps<'span', OwnerState> {
-    section: PickersSectionElement;
+    section: number;
   }
 }
 

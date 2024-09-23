@@ -69,8 +69,8 @@ export function usePickersFieldContent(
         suppressContentEditableWarning: true,
         children: fieldResponse.contentEditable
           ? contentEditableValue
-          : fieldResponse.elements.map((element, elementIndex) => (
-              <React.Fragment key={elementIndex}>{renderSection(element)}</React.Fragment>
+          : fieldResponse.elements.map((_, elementIndex) => (
+              <React.Fragment key={elementIndex}>{renderSection(elementIndex)}</React.Fragment>
             )),
       };
     },
@@ -82,7 +82,7 @@ export function usePickersFieldContent(
 
 export namespace UsePickersFieldContent {
   export interface Parameters {
-    renderSection: (section: PickersSectionElement) => React.ReactNode;
+    renderSection: (section: number) => React.ReactNode;
   }
 
   export interface ReturnValue {
