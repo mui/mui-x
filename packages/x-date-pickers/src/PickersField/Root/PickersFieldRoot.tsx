@@ -66,8 +66,8 @@ namespace PickersFieldRoot {
       TError,
       TDefaultizedInternalProps
     >;
-    getDefaultInternalProps: <TDateBis extends PickerValidDate>(
-      adapter: MuiPickersAdapterContextValue<TDateBis>,
+    getDefaultInternalProps: (
+      adapter: MuiPickersAdapterContextValue<TDate>,
       inputProps: TInternalProps,
     ) => TDefaultizedInternalProps;
     valueType: FieldValueType;

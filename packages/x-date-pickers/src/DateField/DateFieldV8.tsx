@@ -6,21 +6,25 @@ import {
   singleItemValueManager,
 } from '../internals/utils/valueManagers';
 import { validateDate } from '../validation';
-import { buildFieldControllerGetter } from '../internals/utils/controller';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { UseDateFieldProps } from './DateField.types';
-import { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
+import { DateValidationError } from '../models/validation';
+import { DefaultizedProps } from '../internals/models/helpers';
+import { PickersFieldRoot } from '../PickersField/index.barrel';
+import { BaseDateValidationProps } from '../internals/models/validation';
 
-const getDateFieldController = buildFieldControllerGetter({
-  isRange: false,
+const getDateFieldController = <TDate extends PickerValidDate>(): PickersFieldRoot.Controller<
+  TDate,
+  false,
+  DateValidationError,
+  UseDateFieldProps<TDate, true>,
+  DefaultizedProps<UseDateFieldProps<TDate, true>, keyof BaseDateValidationProps<TDate> | 'format'>
+> => ({
   valueManager: singleItemValueManager,
   fieldValueManager: singleItemFieldValueManager,
   validator: validateDate,
   valueType: 'date',
-  getDefaultInternalProps: <TDate extends PickerValidDate>(
-    adapter: MuiPickersAdapterContextValue<TDate>,
-    inputProps: UseDateFieldProps<TDate, true>,
-  ) => ({
+  getDefaultInternalProps: (adapter, inputProps) => ({
     ...inputProps,
     disablePast: inputProps.disablePast ?? false,
     disableFuture: inputProps.disableFuture ?? false,
