@@ -10,10 +10,10 @@ import { applyDefaultDate } from '../internals/utils/date-utils';
 import { UseDateFieldProps } from './DateField.types';
 import { DateValidationError } from '../models/validation';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { PickersFieldRoot } from '../PickersField/index.barrel';
 import { BaseDateValidationProps } from '../internals/models/validation';
+import { PickerController } from '../models/fields';
 
-const getDateFieldController = <TDate extends PickerValidDate>(): PickersFieldRoot.Controller<
+const getDateFieldController = <TDate extends PickerValidDate>(): PickerController<
   TDate,
   false,
   DateValidationError,
@@ -24,7 +24,7 @@ const getDateFieldController = <TDate extends PickerValidDate>(): PickersFieldRo
   fieldValueManager: singleItemFieldValueManager,
   validator: validateDate,
   valueType: 'date',
-  getDefaultInternalProps: (adapter, inputProps) => ({
+  applyDefaultFieldInternalProps: (adapter, inputProps) => ({
     ...inputProps,
     disablePast: inputProps.disablePast ?? false,
     disableFuture: inputProps.disableFuture ?? false,

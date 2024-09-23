@@ -1,53 +1,44 @@
 import * as React from 'react';
 import { useField } from '../../internals/hooks/useField';
 import type { PickersFieldProvider } from './PickersFieldProvider';
-import type { PickersFieldRoot } from './PickersFieldRoot';
-import { InferFieldInternalProps, InferFieldSection, InferValueFromDate } from '../../models';
+import {
+  InferFieldInternalProps,
+  InferFieldSection,
+  InferValueFromDate,
+  PickerController,
+} from '../../models';
 import { useLocalizationContext } from '../../internals/hooks/useUtils';
 
-type InferDateFromController<
-  TController extends PickersFieldRoot.Controller<any, any, any, any, any>,
-> =
-  TController extends PickersFieldRoot.Controller<infer TDate, any, any, any, any> ? TDate : never;
+type InferDateFromController<TController extends PickerController<any, any, any, any, any>> =
+  TController extends PickerController<infer TDate, any, any, any, any> ? TDate : never;
 
-type InferIsRangeFromController<
-  TController extends PickersFieldRoot.Controller<any, any, any, any, any>,
-> =
-  TController extends PickersFieldRoot.Controller<any, infer TIsRange, any, any, any>
-    ? TIsRange
-    : never;
+type InferIsRangeFromController<TController extends PickerController<any, any, any, any, any>> =
+  TController extends PickerController<any, infer TIsRange, any, any, any> ? TIsRange : never;
 
-type InferValueFromController<
-  TController extends PickersFieldRoot.Controller<any, any, any, any, any>,
-> = InferValueFromDate<
-  InferDateFromController<TController>,
-  InferIsRangeFromController<TController>
->;
+type InferValueFromController<TController extends PickerController<any, any, any, any, any>> =
+  InferValueFromDate<InferDateFromController<TController>, InferIsRangeFromController<TController>>;
 
 type InferFieldSectionFromController<
-  TController extends PickersFieldRoot.Controller<any, any, any, any, any>,
+  TController extends PickerController<any, any, any, any, any>,
 > = InferFieldSection<InferIsRangeFromController<TController>>;
 
 type InferDefaultizedInternalPropsFromController<
-  TController extends PickersFieldRoot.Controller<any, any, any, any, any>,
+  TController extends PickerController<any, any, any, any, any>,
 > =
-  TController extends PickersFieldRoot.Controller<
-    any,
-    any,
-    any,
-    any,
-    infer TDefaultizedInternalProps
-  >
+  TController extends PickerController<any, any, any, any, infer TDefaultizedInternalProps>
     ? TDefaultizedInternalProps
     : never;
 
-export function usePickersFieldRoot<
-  TController extends PickersFieldRoot.Controller<any, any, any, any, any>,
->(params: UsePickersFieldRoot.Parameters<TController>): UsePickersFieldRoot.ReturnValue {
+export function usePickersFieldRoot<TController extends PickerController<any, any, any, any, any>>(
+  params: UsePickersFieldRoot.Parameters<TController>,
+): UsePickersFieldRoot.ReturnValue {
   const { controller, internalProps } = params;
 
   const adapter = useLocalizationContext<InferDateFromController<TController>>();
-  const internalPropsWithDefault = controller.getDefaultInternalProps(adapter, internalProps);
+  const internalPropsWithDefault = controller.applyDefaultFieldInternalProps(
+    adapter,
+    internalProps,
+  );
 
   const fieldResponse = useField<
     InferValueFromController<TController>,
@@ -83,9 +74,7 @@ export function usePickersFieldRoot<
 }
 
 export namespace UsePickersFieldRoot {
-  export interface Parameters<
-    TController extends PickersFieldRoot.Controller<any, any, any, any, any>,
-  > {
+  export interface Parameters<TController extends PickerController<any, any, any, any, any>> {
     controller: TController;
     internalProps: InferFieldInternalProps<TController>;
   }
