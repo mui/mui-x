@@ -16,6 +16,7 @@ export function usePickersFieldContent(
       return {
         ref: contentRef,
         suppressContentEditableWarning: true,
+        contentEditable,
         children: contentEditable
           ? contentEditableValue
           : elements.map((_, elementIndex) => (

@@ -154,7 +154,6 @@ export function usePickersFieldRoot<TController extends PickerController<any, an
 
   const getRootProps: UsePickersFieldRoot.ReturnValue['getRootProps'] = (externalProps = {}) => {
     return {
-      contentEditable,
       children: externalProps.children,
       ...otherPropsFromUseField,
     };
