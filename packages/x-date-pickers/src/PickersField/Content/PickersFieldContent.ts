@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { useComponentRenderer } from '@base_ui/react/utils/useComponentRenderer';
 import type { BaseUIComponentProps } from '@base_ui/react/utils/types';
-import { usePickersFieldContent } from './usePickersFieldContent';
+import { UsePickersFieldContent, usePickersFieldContent } from './usePickersFieldContent';
+import { PickersSectionElement } from '../../PickersSectionList';
 
 const PickersFieldContent = React.forwardRef(function PickersFieldContent(
   props: PickersFieldContent.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { render, className, ...otherProps } = props;
-  const { getContentProps } = usePickersFieldContent({});
+  const { render, className, children, ...otherProps } = props;
+  const { getContentProps } = usePickersFieldContent({ renderSection: children });
   const ownerState: PickersFieldContent.OwnerState = {};
 
   const { renderElement } = useComponentRenderer({
@@ -24,7 +25,9 @@ const PickersFieldContent = React.forwardRef(function PickersFieldContent(
 });
 
 namespace PickersFieldContent {
-  export interface Props extends BaseUIComponentProps<'div', OwnerState> {}
+  export interface Props extends Omit<BaseUIComponentProps<'div', OwnerState>, 'children'> {
+    children: UsePickersFieldContent.Parameters['renderSection'];
+  }
 
   export interface OwnerState {}
 }

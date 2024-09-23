@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { usePickersFieldContext } from '../Root/PickersFieldProvider';
 // TODO: Stop using those classes
-import { pickersSectionListClasses } from '../../PickersSectionList';
+import { PickersSectionElement, pickersSectionListClasses } from '../../PickersSectionList';
 
 export function usePickersFieldContent(
   params: UsePickersFieldContent.Parameters,
 ): UsePickersFieldContent.ReturnValue {
+  const { renderSection } = params;
   const { fieldResponse } = usePickersFieldContext();
   const rootRef = React.useRef<HTMLDivElement>(null);
 
@@ -65,17 +66,23 @@ export function usePickersFieldContent(
     (externalProps = {}) => {
       return {
         ref: rootRef,
-        children: contentEditableValue,
+        children: fieldResponse.contentEditable
+          ? contentEditableValue
+          : fieldResponse.elements.map((element, elementIndex) => (
+              <React.Fragment key={elementIndex}>{renderSection(element)}</React.Fragment>
+            )),
       };
     },
-    [contentEditableValue],
+    [contentEditableValue, fieldResponse.contentEditable, fieldResponse.elements, renderSection],
   );
 
   return React.useMemo(() => ({ getContentProps }), [getContentProps]);
 }
 
 export namespace UsePickersFieldContent {
-  export interface Parameters {}
+  export interface Parameters {
+    renderSection: (section: PickersSectionElement) => React.ReactNode;
+  }
 
   export interface ReturnValue {
     /**
@@ -84,7 +91,7 @@ export namespace UsePickersFieldContent {
      * @returns props that should be spread on the Content element
      */
     getContentProps: (
-      externalProps?: React.ComponentPropsWithRef<'div'>,
+      externalProps?: Omit<React.ComponentPropsWithRef<'div'>, 'children'>,
     ) => React.ComponentPropsWithRef<'div'>;
   }
 }
