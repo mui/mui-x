@@ -5,23 +5,24 @@ import { usePickersFieldContext } from '../Root/PickersFieldProvider';
 export function usePickersFieldSection(
   params: UsePickersFieldSection.Parameters,
 ): UsePickersFieldSection.ReturnValue {
-  const { section } = params;
-  const { fieldResponse } = usePickersFieldContext();
+  const { index } = params;
+  const { elements, registerSectionRef } = usePickersFieldContext();
 
-  const element = fieldResponse.elements[section];
+  const element = elements[index];
 
   const getSectionProps: UsePickersFieldSection.ReturnValue['getSectionProps'] = React.useCallback(
     (externalProps = {}) => {
       return {
         ...element.container,
+        ref: (elementRef) => registerSectionRef(index, elementRef),
         children: externalProps.children,
       };
     },
-    [element.container],
+    [element.container, registerSectionRef, index],
   );
 
   // TODO: Memoize?
-  const contextValue: PickersFieldSectionProvider.ContextValue = { element };
+  const contextValue: PickersFieldSectionProvider.ContextValue = { element, index };
 
   // TODO: Memoize?
   return { getSectionProps, contextValue };
@@ -29,7 +30,7 @@ export function usePickersFieldSection(
 
 export namespace UsePickersFieldSection {
   export interface Parameters {
-    section: number;
+    index: number;
   }
 
   export interface ReturnValue {

@@ -31,6 +31,7 @@ namespace PickersFieldSectionProvider {
   }
 
   export interface ContextValue {
+    index: number;
     element: PickersSectionElement;
   }
 }

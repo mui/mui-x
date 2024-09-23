@@ -1,15 +1,21 @@
 import * as React from 'react';
 import { usePickersFieldSectionContext } from '../Section/PickersFieldSectionProvider';
+import { usePickersFieldContext } from '../Root/PickersFieldProvider';
 
 export function usePickersFieldSectionContent(
   params: UsePickersFieldSectionContent.Parameters,
 ): UsePickersFieldSectionContent.ReturnValue {
-  const { element } = usePickersFieldSectionContext();
+  const { index, element } = usePickersFieldSectionContext();
+  const { registerSectionContentRef } = usePickersFieldContext();
 
   const getSectionContentProps: UsePickersFieldSectionContent.ReturnValue['getSectionContentProps'] =
     React.useCallback(() => {
-      return { ...element.content, suppressContentEditableWarning: true };
-    }, [element.content]);
+      return {
+        ...element.content,
+        ref: (elementRef) => registerSectionContentRef(index, elementRef),
+        suppressContentEditableWarning: true,
+      };
+    }, [element.content, index, registerSectionContentRef]);
 
   // TODO: Memoize?
   return { getSectionContentProps };

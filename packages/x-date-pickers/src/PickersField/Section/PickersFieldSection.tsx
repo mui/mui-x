@@ -8,10 +8,10 @@ const PickersFieldSection = React.forwardRef(function PickersFieldSection(
   props: PickersFieldSection.Props,
   forwardedRef: React.ForwardedRef<HTMLSpanElement>,
 ) {
-  const { render, className, section, ...otherProps } = props;
+  const { render, className, index, ...otherProps } = props;
   const ownerState: PickersFieldSection.OwnerState = {};
 
-  const { getSectionProps, contextValue } = usePickersFieldSection({ section });
+  const { getSectionProps, contextValue } = usePickersFieldSection({ index });
 
   const { renderElement } = useComponentRenderer({
     propGetter: getSectionProps,
@@ -33,7 +33,7 @@ namespace PickersFieldSection {
   export interface OwnerState {}
 
   export interface Props extends BaseUIComponentProps<'span', OwnerState> {
-    section: number;
+    index: number;
   }
 }
 

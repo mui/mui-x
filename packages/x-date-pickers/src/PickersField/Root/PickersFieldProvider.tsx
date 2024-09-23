@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { UseFieldResponse } from '../../internals/hooks/useField';
+import type { PickersSectionElement } from '../../PickersSectionList';
 
 const PickersFieldContext = React.createContext<PickersFieldProvider.ContextValue | null>(null);
 
@@ -24,8 +24,11 @@ namespace PickersFieldProvider {
   }
 
   export interface ContextValue {
-    // TODO: Add forwaredProps
-    fieldResponse: UseFieldResponse<true, {}>;
+    elements: PickersSectionElement[];
+    contentEditable: boolean;
+    contentRef: React.RefObject<HTMLDivElement>;
+    registerSectionRef: (sectionIndex: number, ref: HTMLSpanElement | null) => void;
+    registerSectionContentRef: (sectionIndex: number, ref: HTMLSpanElement | null) => void;
   }
 }
 
