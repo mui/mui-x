@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useComponentRenderer } from '@base_ui/react/utils/useComponentRenderer';
 import type { BaseUIComponentProps } from '@base_ui/react/utils/types';
 import { UsePickersFieldContent, usePickersFieldContent } from './usePickersFieldContent';
-import { PickersSectionElement } from '../../PickersSectionList';
 
 const PickersFieldContent = React.forwardRef(function PickersFieldContent(
   props: PickersFieldContent.Props,

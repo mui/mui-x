@@ -66,6 +66,7 @@ export function usePickersFieldContent(
     (externalProps = {}) => {
       return {
         ref: rootRef,
+        suppressContentEditableWarning: true,
         children: fieldResponse.contentEditable
           ? contentEditableValue
           : fieldResponse.elements.map((element, elementIndex) => (

@@ -40,7 +40,13 @@ export function DateFieldV8<TDate extends PickerValidDate>(props: any) {
   return (
     <PickersField.Root controller={controller} {...props}>
       <PickersField.Content>
-        {(section) => <PickersField.Section section={section} />}
+        {(section) => (
+          <PickersField.Section section={section}>
+            <PickersField.SectionSeparator position="before" />
+            <PickersField.SectionContent />
+            <PickersField.SectionSeparator position="after" />
+          </PickersField.Section>
+        )}
       </PickersField.Content>
     </PickersField.Root>
   );

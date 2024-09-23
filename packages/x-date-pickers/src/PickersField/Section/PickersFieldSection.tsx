@@ -3,6 +3,7 @@ import { useComponentRenderer } from '@base_ui/react/utils/useComponentRenderer'
 import type { BaseUIComponentProps } from '@base_ui/react/utils/types';
 import { usePickersFieldSection } from './usePickersFieldSection';
 import { PickersSectionElement } from '../../PickersSectionList';
+import { PickersFieldSectionProvider } from './PickersFieldSectionProvider';
 
 const PickersFieldSection = React.forwardRef(function PickersFieldSection(
   props: PickersFieldSection.Props,
@@ -11,7 +12,7 @@ const PickersFieldSection = React.forwardRef(function PickersFieldSection(
   const { render, className, section, ...otherProps } = props;
   const ownerState: PickersFieldSection.OwnerState = {};
 
-  const { getSectionProps } = usePickersFieldSection({ section });
+  const { getSectionProps, contextValue } = usePickersFieldSection({ section });
 
   const { renderElement } = useComponentRenderer({
     propGetter: getSectionProps,
@@ -22,7 +23,11 @@ const PickersFieldSection = React.forwardRef(function PickersFieldSection(
     extraProps: otherProps,
   });
 
-  return renderElement();
+  return (
+    <PickersFieldSectionProvider value={contextValue}>
+      {renderElement()}
+    </PickersFieldSectionProvider>
+  );
 });
 
 namespace PickersFieldSection {
