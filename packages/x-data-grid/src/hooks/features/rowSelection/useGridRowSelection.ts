@@ -10,7 +10,6 @@ import { GridRowId } from '../../../models/gridRows';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import {
   gridRowSelectionStateSelector,
   selectedGridRowsSelector,
