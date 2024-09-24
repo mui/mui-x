@@ -76,7 +76,7 @@ export interface DateTimePickerProps<
  */
 export type DateTimePickerFieldProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
 > = DefaultizedProps<
   UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   | 'format'
