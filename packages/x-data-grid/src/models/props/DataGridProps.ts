@@ -383,6 +383,11 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * @default false
    */
   disableAutosize: boolean;
+  /**
+   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
+   * @default false
+   */
+  unstable_rowSpanning: boolean;
 }
 
 /**
