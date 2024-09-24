@@ -381,7 +381,7 @@ describe('<DataGrid /> - Row selection', () => {
       );
       const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
       fireEvent.click(selectAllCheckbox);
-      await waitFor(() => {
+      await act(() => {
         expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
       });
       expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
@@ -419,7 +419,7 @@ describe('<DataGrid /> - Row selection', () => {
         target: { value: 1 },
       });
       await waitFor(() => {
-        // Previous selection remains, but only one row is visible
+        // Previous selection is cleared and only the filtered row is selected
         expect(getSelectedRowIds()).to.deep.equal([1]);
       });
       expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
