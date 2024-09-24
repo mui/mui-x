@@ -3,8 +3,11 @@ import { Dayjs } from 'dayjs';
 import TextField from '@mui/material/TextField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
-import { DateFieldInPickerProps } from '@mui/x-date-pickers/DateField';
+import {
+  DatePicker,
+  DatePickerProps,
+  DatePickerFieldProps,
+} from '@mui/x-date-pickers/DatePicker';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 import {
   useSplitFieldProps,
@@ -12,7 +15,7 @@ import {
   usePickersFieldContext,
 } from '@mui/x-date-pickers/hooks';
 
-function ReadonlyDateField(props: DateFieldInPickerProps<Dayjs, false>) {
+function ReadonlyDateField(props: DatePickerFieldProps<Dayjs, false>) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { value, timezone, format } = internalProps;
   const { InputProps, slotProps, slots, ...other } = forwardedProps;
