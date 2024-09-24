@@ -3,8 +3,8 @@ import Box from '@mui/material/Box';
 import { DataGrid, GridToolbar, GridActionsCellItem } from '@mui/x-data-grid';
 import { unstable_joySlots } from '@mui/x-data-grid/joy';
 import {
-  experimental_extendTheme as materialExtendTheme,
-  Experimental_CssVarsProvider as MaterialCssVarsProvider,
+  createTheme,
+  ThemeProvider as MaterialThemeProvider,
   THEME_ID as MATERIAL_THEME_ID,
 } from '@mui/material/styles';
 import { CssVarsProvider as JoyCssVarsProvider } from '@mui/joy/styles';
@@ -18,7 +18,7 @@ import {
   randomArrayItem,
 } from '@mui/x-data-grid-generator';
 
-const materialTheme = materialExtendTheme({
+const materialTheme = createTheme({
   components: {
     MuiSvgIcon: {
       styleOverrides: {
@@ -97,7 +97,7 @@ export default function GridJoyUISlots() {
   }, []);
 
   return (
-    <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
+    <MaterialThemeProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
       <JoyCssVarsProvider>
         <Box sx={{ height: 400, width: '100%' }}>
           <DataGrid
@@ -133,6 +133,6 @@ export default function GridJoyUISlots() {
           />
         </Box>
       </JoyCssVarsProvider>
-    </MaterialCssVarsProvider>
+    </MaterialThemeProvider>
   );
 }

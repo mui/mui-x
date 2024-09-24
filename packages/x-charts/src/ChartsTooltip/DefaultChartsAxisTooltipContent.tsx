@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -27,7 +28,7 @@ function DefaultChartsAxisTooltipContent(props: ChartsAxisContentProps) {
       axis.scaleType === 'utc' ? utcFormatter(v) : v.toLocaleString());
 
   return (
-    <ChartsTooltipPaper sx={sx} className={classes.root}>
+    <ChartsTooltipPaper sx={sx} className={classes.paper}>
       <ChartsTooltipTable className={classes.table}>
         {axisValue != null && !axis.hideTooltip && (
           <thead>

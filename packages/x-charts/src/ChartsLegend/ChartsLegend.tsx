@@ -1,15 +1,22 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { getSeriesToDisplay } from './utils';
-import { ChartsLegendClasses, getLegendUtilityClass } from './chartsLegendClasses';
+import { getLegendUtilityClass } from './chartsLegendClasses';
 import { DefaultizedProps } from '../models/helpers';
 import { DefaultChartsLegend, LegendRendererProps } from './DefaultChartsLegend';
 import { useDrawingArea } from '../hooks';
 import { useSeries } from '../hooks/useSeries';
 import { LegendPlacement } from './legend.types';
+
+export type ChartsLegendPropsBase = Omit<
+  LegendRendererProps,
+  keyof LegendPlacement | 'series' | 'seriesToDisplay' | 'drawingArea'
+> &
+  LegendPlacement;
 
 export interface ChartsLegendSlots {
   /**
@@ -23,16 +30,7 @@ export interface ChartsLegendSlotProps {
   legend?: Partial<LegendRendererProps>;
 }
 
-export interface ChartsLegendProps extends LegendPlacement {
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<ChartsLegendClasses>;
-  /**
-   * Set to true to hide the legend.
-   * @default false
-   */
-  hidden?: boolean;
+export interface ChartsLegendProps extends ChartsLegendPropsBase {
   /**
    * Overridable component slots.
    * @default {}
@@ -54,25 +52,27 @@ const useUtilityClasses = (ownerState: DefaultizedChartsLegendProps & { theme: T
     mark: ['mark'],
     label: ['label'],
     series: ['series'],
+    itemBackground: ['itemBackground'],
   };
 
   return composeClasses(slots, getLegendUtilityClass, classes);
 };
 
-const defaultProps = {
-  position: { horizontal: 'middle', vertical: 'top' },
-  direction: 'row',
-} as const;
-
 function ChartsLegend(inProps: ChartsLegendProps) {
-  const props: DefaultizedChartsLegendProps = useThemeProps({
-    props: { ...defaultProps, ...inProps },
+  const props = useThemeProps({
+    props: inProps,
     name: 'MuiChartsLegend',
   });
 
-  const { position, direction, hidden, slots, slotProps } = props;
+  const defaultizedProps: DefaultizedChartsLegendProps = {
+    direction: 'row',
+    ...props,
+    position: { horizontal: 'middle', vertical: 'top', ...props.position },
+  };
+  const { slots, slotProps, ...other } = defaultizedProps;
+
   const theme = useTheme();
-  const classes = useUtilityClasses({ ...props, theme });
+  const classes = useUtilityClasses({ ...defaultizedProps, theme });
 
   const drawingArea = useDrawingArea();
   const series = useSeries();
@@ -84,12 +84,10 @@ function ChartsLegend(inProps: ChartsLegendProps) {
     elementType: ChartLegendRender,
     externalSlotProps: slotProps?.legend,
     additionalProps: {
-      position,
-      direction,
+      ...other,
       classes,
       drawingArea,
       series,
-      hidden,
       seriesToDisplay,
     },
     ownerState: {},
@@ -117,6 +115,52 @@ ChartsLegend.propTypes = {
    * @default false
    */
   hidden: PropTypes.bool,
+  /**
+   * Space between two legend items (in px).
+   * @default 10
+   */
+  itemGap: PropTypes.number,
+  /**
+   * Height of the item mark (in px).
+   * @default 20
+   */
+  itemMarkHeight: PropTypes.number,
+  /**
+   * Width of the item mark (in px).
+   * @default 20
+   */
+  itemMarkWidth: PropTypes.number,
+  /**
+   * Style applied to legend labels.
+   * @default theme.typography.subtitle1
+   */
+  labelStyle: PropTypes.object,
+  /**
+   * Space between the mark and the label (in px).
+   * @default 5
+   */
+  markGap: PropTypes.number,
+  /**
+   * Callback fired when a legend item is clicked.
+   * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
+   * @param {SeriesLegendItemContext} legendItem The legend item data.
+   * @param {number} index The index of the clicked legend item.
+   */
+  onItemClick: PropTypes.func,
+  /**
+   * Legend padding (in px).
+   * Can either be a single number, or an object with top, left, bottom, right properties.
+   * @default 10
+   */
+  padding: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      bottom: PropTypes.number,
+      left: PropTypes.number,
+      right: PropTypes.number,
+      top: PropTypes.number,
+    }),
+  ]),
   /**
    * The position of the legend.
    */

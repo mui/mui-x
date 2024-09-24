@@ -15,12 +15,22 @@ createTheme({
         // @ts-expect-error invalid MuiChartsXAxis prop
         someRandomProp: true,
       },
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiChartsXAxis class key
+        line: { color: 'red' },
+      },
     },
     MuiChartsYAxis: {
       defaultProps: {
         axisId: 'test',
         // @ts-expect-error invalid MuiChartsYAxis prop
         someRandomProp: true,
+      },
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiChartsYAxis class key
+        line: { color: 'red' },
       },
     },
     MuiChartsAxisHighlight: {
@@ -39,7 +49,7 @@ createTheme({
       styleOverrides: {
         root: { backgroundColor: 'red' },
         // @ts-expect-error invalid MuiChartsLegend class key
-        constent: { color: 'red' },
+        mark: { color: 'red' },
       },
     },
     MuiChartsTooltip: {

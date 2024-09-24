@@ -518,14 +518,22 @@
     "name": "gridVirtualizationColumnEnabledSelector",
     "returnType": "boolean",
     "category": "Virtualization",
-    "description": "Get the enabled state for virtualization",
+    "description": "Get the enabled state for column virtualization",
     "supportsApiRef": true
   },
   {
     "name": "gridVirtualizationEnabledSelector",
     "returnType": "boolean",
     "category": "Virtualization",
+    "deprecated": "Use `gridVirtualizationColumnEnabledSelector` and `gridVirtualizationRowEnabledSelector`",
     "description": "Get the enabled state for virtualization",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridVirtualizationRowEnabledSelector",
+    "returnType": "boolean",
+    "category": "Virtualization",
+    "description": "Get the enabled state for row virtualization",
     "supportsApiRef": true
   },
   {

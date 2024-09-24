@@ -1,3 +1,4 @@
+'use client';
 import useId from '@mui/utils/useId';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import type { LineChartProps } from './LineChart';
@@ -54,6 +55,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     highlightedItem,
     onHighlightChange,
     className,
+    experimentalMarkRendering,
     ...other
   } = props;
 
@@ -130,6 +132,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     slotProps,
     onItemClick: onMarkClick,
     skipAnimation,
+    experimentalRendering: experimentalMarkRendering,
   };
 
   const overlayProps: ChartsOverlayProps = {

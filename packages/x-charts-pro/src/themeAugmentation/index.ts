@@ -1,4 +1,4 @@
-export * from '@mui/x-charts/themeAugmentation';
-export * from './overrides';
-export * from './props';
-export * from './components';
+export type * from '@mui/x-charts/themeAugmentation';
+export type * from './overrides';
+export type * from './props';
+export type * from './components';
