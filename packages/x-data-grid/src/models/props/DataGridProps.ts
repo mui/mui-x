@@ -260,12 +260,6 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   keepNonExistentRowsSelected: boolean;
   /**
-   * If `true`, the selection model will retain the previously selected rows not part of the current filtered rows.
-   * Useful when the user wants to filter subsets of rows and keep the previously selected rows.
-   * @default false
-   */
-  keepUnfilteredRowsSelected: boolean;
-  /**
    * Pass a custom logger in the components that implements the [[Logger]] interface.
    * @default console
    */

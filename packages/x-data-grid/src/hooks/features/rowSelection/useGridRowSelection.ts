@@ -20,7 +20,7 @@ import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import {
   gridExpandedSortedRowIdsSelector,
-  gridFilteredSortedRowIdsSetSelector,
+  gridFilteredRowsLookupSelector,
 } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { GridCellModes } from '../../../models/gridEditRowModel';
@@ -82,7 +82,6 @@ export const useGridRowSelection = (
     | 'paginationMode'
     | 'classes'
     | 'keepNonExistentRowsSelected'
-    | 'keepUnfilteredRowsSelected'
     | 'rowSelection'
     | 'signature'
   >,
@@ -327,20 +326,14 @@ export const useGridRowSelection = (
   /**
    * EVENTS
    */
-  const isFirstRender = React.useRef(true);
   const removeOutdatedSelection = React.useCallback(() => {
-    let firstRender = false;
-    if (isFirstRender.current) {
-      // `filteredRows` is not available before filtering process is done
-      firstRender = true;
-      isFirstRender.current = false;
-    }
-    if (props.keepNonExistentRowsSelected && (props.keepUnfilteredRowsSelected || firstRender)) {
-      return;
-    }
     const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
     const rowsLookup = gridRowsLookupSelector(apiRef);
-    const filteredRows = gridFilteredSortedRowIdsSetSelector(apiRef);
+    const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
+
+    if (props.keepNonExistentRowsSelected && Object.keys(filteredRowsLookup).length === 0) {
+      return;
+    }
 
     // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
     const selectionLookup = { ...selectedIdsLookupSelector(apiRef) };
@@ -352,7 +345,7 @@ export const useGridRowSelection = (
         hasChanged = true;
         return;
       }
-      if (!props.keepUnfilteredRowsSelected && !filteredRows.has(id)) {
+      if (!filteredRowsLookup[id]) {
         delete selectionLookup[id];
         hasChanged = true;
       }
@@ -361,7 +354,7 @@ export const useGridRowSelection = (
     if (hasChanged) {
       apiRef.current.setRowSelectionModel(Object.values(selectionLookup));
     }
-  }, [apiRef, props.keepNonExistentRowsSelected, props.keepUnfilteredRowsSelected, isFirstRender]);
+  }, [apiRef, props.keepNonExistentRowsSelected]);
 
   const handleSingleRowSelection = React.useCallback(
     (id: GridRowId, event: React.MouseEvent | React.KeyboardEvent) => {

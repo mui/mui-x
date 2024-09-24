@@ -146,7 +146,6 @@
       }
     },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
-    "keepUnfilteredRowsSelected": { "type": { "name": "bool" }, "default": "false" },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "logger": {

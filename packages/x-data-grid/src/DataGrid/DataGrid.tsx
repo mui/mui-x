@@ -393,12 +393,6 @@ DataGridRaw.propTypes = {
    */
   keepNonExistentRowsSelected: PropTypes.bool,
   /**
-   * If `true`, the selection model will retain the previously selected rows not part of the current filtered rows.
-   * Useful when the user wants to filter subsets of rows and keep the previously selected rows.
-   * @default false
-   */
-  keepUnfilteredRowsSelected: PropTypes.bool,
-  /**
    * If `true`, a loading overlay is displayed.
    * @default false
    */
