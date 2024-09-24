@@ -57,10 +57,10 @@ describe('<DataGridPremium /> - Row selection', () => {
     );
   }
 
-  describe('prop: propagateRowSelection', () => {
+  describe('prop: rowSelectionPropagation="both"', () => {
     it('should select all the children when selecting a parent', () => {
       render(
-        <Test propagateRowSelection initialState={{ rowGrouping: { model: ['category1'] } }} />,
+        <Test rowSelectionPropagation="both" initialState={{ rowGrouping: { model: ['category1'] } }} />,
       );
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
@@ -73,7 +73,7 @@ describe('<DataGridPremium /> - Row selection', () => {
 
     it('should deselect all the children when deselecting a parent', () => {
       render(
-        <Test propagateRowSelection initialState={{ rowGrouping: { model: ['category1'] } }} />,
+        <Test rowSelectionPropagation="both" initialState={{ rowGrouping: { model: ['category1'] } }} />,
       );
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
@@ -89,7 +89,7 @@ describe('<DataGridPremium /> - Row selection', () => {
     it('should put the parent into indeterminate if some but not all the children are selected', () => {
       render(
         <Test
-          propagateRowSelection
+          rowSelectionPropagation="both"
           defaultGroupingExpansionDepth={-1}
           initialState={{ rowGrouping: { model: ['category1'] } }}
           density="compact"
@@ -103,7 +103,7 @@ describe('<DataGridPremium /> - Row selection', () => {
     it('should auto select the parent if all the children are selected', () => {
       render(
         <Test
-          propagateRowSelection
+          rowSelectionPropagation="both"
           defaultGroupingExpansionDepth={-1}
           density="compact"
           initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -124,7 +124,7 @@ describe('<DataGridPremium /> - Row selection', () => {
     it('should deselect auto selected parent if one of the children is deselected', () => {
       render(
         <Test
-          propagateRowSelection
+          rowSelectionPropagation="both"
           defaultGroupingExpansionDepth={-1}
           density="compact"
           initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -147,7 +147,7 @@ describe('<DataGridPremium /> - Row selection', () => {
     it('should deselect unfiltered rows after filtering', () => {
       render(
         <Test
-          propagateRowSelection
+          rowSelectionPropagation="both"
           defaultGroupingExpansionDepth={-1}
           density="compact"
           initialState={{ rowGrouping: { model: ['category1'] } }}
