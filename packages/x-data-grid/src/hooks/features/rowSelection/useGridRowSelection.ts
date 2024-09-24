@@ -327,24 +327,17 @@ export const useGridRowSelection = (
    * EVENTS
    */
   const removeOutdatedSelection = React.useCallback(() => {
-    const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
-    const rowsLookup = gridRowsLookupSelector(apiRef);
-    const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
-
-    if (props.keepNonExistentRowsSelected && Object.keys(filteredRowsLookup).length === 0) {
+    if (props.keepNonExistentRowsSelected) {
       return;
     }
+    const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
+    const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
 
     // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
     const selectionLookup = { ...selectedIdsLookupSelector(apiRef) };
 
     let hasChanged = false;
     currentSelection.forEach((id: GridRowId) => {
-      if (!props.keepNonExistentRowsSelected && !rowsLookup[id]) {
-        delete selectionLookup[id];
-        hasChanged = true;
-        return;
-      }
       if (!filteredRowsLookup[id]) {
         delete selectionLookup[id];
         hasChanged = true;
