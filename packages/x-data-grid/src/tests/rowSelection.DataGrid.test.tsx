@@ -367,7 +367,7 @@ describe('<DataGrid /> - Row selection', () => {
       expect(input2.checked).to.equal(true);
     });
 
-    it('should remove the unfiltered rows when filtering', async function() {
+    it('should remove the unfiltered rows when filtering', async function () {
       if (isJSDOM) {
         this.skip();
       }
