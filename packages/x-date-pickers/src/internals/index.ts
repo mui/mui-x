@@ -4,8 +4,8 @@ export type {
   PickersArrowSwitcherSlots,
   PickersArrowSwitcherSlotProps,
 } from './components/PickersArrowSwitcher';
-export { PickersFieldProvider } from './components/PickersFieldProvider';
-export type { PickersFieldContextValue } from './components/PickersFieldProvider';
+export { PickersProvider as PickersFieldProvider } from './components/PickersProvider';
+export type { PickersFieldContextValue } from './components/PickersProvider';
 export { PickersModalDialog } from './components/PickersModalDialog';
 export type {
   PickersModalDialogSlots,

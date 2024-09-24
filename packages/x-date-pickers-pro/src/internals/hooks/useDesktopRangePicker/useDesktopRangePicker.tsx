@@ -1,7 +1,6 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { useLicenseVerifier } from '@mui/x-license';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
 import {
   executeInTheNextEventLoopTick,
@@ -12,7 +11,7 @@ import {
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
   PickersFieldContextValue,
-  PickersFieldProvider,
+  PickersProvider,
 } from '@mui/x-date-pickers/internals';
 import {
   PickerValidDate,
@@ -230,33 +229,31 @@ export const useDesktopRangePicker = <
   );
 
   const renderPicker = () => (
-    <PickersFieldProvider value={contextValue}>
-      <LocalizationProvider localeText={localeText}>
-        <Field {...enrichedFieldProps} />
-        <PickersPopper
-          role="tooltip"
-          placement="bottom-start"
-          containerRef={popperRef}
-          anchorEl={anchorRef.current}
-          onBlur={handleBlur}
-          {...actions}
-          open={open}
+    <PickersProvider fieldContextValue={contextValue} localeText={localeText}>
+      <Field {...enrichedFieldProps} />
+      <PickersPopper
+        role="tooltip"
+        placement="bottom-start"
+        containerRef={popperRef}
+        anchorEl={anchorRef.current}
+        onBlur={handleBlur}
+        {...actions}
+        open={open}
+        slots={slots}
+        slotProps={slotProps}
+        shouldRestoreFocus={shouldRestoreFocus}
+        reduceAnimations={reduceAnimations}
+      >
+        <Layout
+          {...layoutProps}
+          {...slotProps?.layout}
           slots={slots}
-          slotProps={slotProps}
-          shouldRestoreFocus={shouldRestoreFocus}
-          reduceAnimations={reduceAnimations}
+          slotProps={slotPropsForLayout}
         >
-          <Layout
-            {...layoutProps}
-            {...slotProps?.layout}
-            slots={slots}
-            slotProps={slotPropsForLayout}
-          >
-            {renderCurrentView()}
-          </Layout>
-        </PickersPopper>
-      </LocalizationProvider>
-    </PickersFieldProvider>
+          {renderCurrentView()}
+        </Layout>
+      </PickersPopper>
+    </PickersProvider>
   );
 
   return {

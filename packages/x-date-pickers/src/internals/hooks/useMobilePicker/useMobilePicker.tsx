@@ -10,7 +10,6 @@ import {
 } from './useMobilePicker.types';
 import { usePicker } from '../usePicker';
 import { onSpaceOrEnter } from '../../utils/utils';
-import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import {
   FieldSection,
@@ -20,10 +19,7 @@ import {
   InferError,
 } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
-import {
-  PickersFieldContextValue,
-  PickersFieldProvider,
-} from '../../components/PickersFieldProvider';
+import { PickersFieldContextValue, PickersProvider } from '../../components/PickersProvider';
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -162,27 +158,25 @@ export const useMobilePicker = <
 
   const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
 
-  const contextValue = React.useMemo<PickersFieldContextValue>(
+  const fieldContextValue = React.useMemo<PickersFieldContextValue>(
     () => ({ onOpen: actions.onOpen }),
     [actions.onOpen],
   );
 
   const renderPicker = () => (
-    <PickersFieldProvider value={contextValue}>
-      <LocalizationProvider localeText={localeText}>
-        <Field
-          {...fieldProps}
-          slots={slotsForField}
-          slotProps={slotProps}
-          unstableFieldRef={handleFieldRef}
-        />
-        <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
-          <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
-            {renderCurrentView()}
-          </Layout>
-        </PickersModalDialog>
-      </LocalizationProvider>
-    </PickersFieldProvider>
+    <PickersProvider fieldContextValue={fieldContextValue} localeText={localeText}>
+      <Field
+        {...fieldProps}
+        slots={slotsForField}
+        slotProps={slotProps}
+        unstableFieldRef={handleFieldRef}
+      />
+      <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
+        <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+          {renderCurrentView()}
+        </Layout>
+      </PickersModalDialog>
+    </PickersProvider>
   );
 
   return { renderPicker };

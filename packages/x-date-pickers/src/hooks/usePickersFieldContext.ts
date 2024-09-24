@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PickersFieldContext } from '../internals/components/PickersFieldProvider';
+import { PickersFieldContext } from '../internals/components/PickersProvider';
 
 /**
  * Returns the context passed by the picker that wraps the current field.

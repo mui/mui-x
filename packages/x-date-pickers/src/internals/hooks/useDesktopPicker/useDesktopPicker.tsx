@@ -12,7 +12,6 @@ import {
   UseDesktopPickerSlotProps,
 } from './useDesktopPicker.types';
 import { usePicker } from '../usePicker';
-import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import {
   FieldSection,
@@ -22,10 +21,7 @@ import {
   InferError,
 } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
-import {
-  PickersFieldContextValue,
-  PickersFieldProvider,
-} from '../../components/PickersFieldProvider';
+import { PickersFieldContextValue, PickersProvider } from '../../components/PickersProvider';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -215,37 +211,35 @@ export const useDesktopPicker = <
 
   const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
 
-  const contextValue = React.useMemo<PickersFieldContextValue>(
+  const fieldContextValue = React.useMemo<PickersFieldContextValue>(
     () => ({ onOpen: actions.onOpen }),
     [actions.onOpen],
   );
 
   const renderPicker = () => (
-    <PickersFieldProvider value={contextValue}>
-      <LocalizationProvider localeText={localeText}>
-        <Field
-          {...fieldProps}
-          slots={slotsForField}
-          slotProps={slotProps}
-          unstableFieldRef={handleFieldRef}
-        />
-        <PickersPopper
-          role="dialog"
-          placement="bottom-start"
-          anchorEl={containerRef.current}
-          {...actions}
-          open={open}
-          slots={slots}
-          slotProps={slotProps}
-          shouldRestoreFocus={shouldRestoreFocus}
-          reduceAnimations={reduceAnimations}
-        >
-          <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
-            {renderCurrentView()}
-          </Layout>
-        </PickersPopper>
-      </LocalizationProvider>
-    </PickersFieldProvider>
+    <PickersProvider fieldContextValue={fieldContextValue} localeText={localeText}>
+      <Field
+        {...fieldProps}
+        slots={slotsForField}
+        slotProps={slotProps}
+        unstableFieldRef={handleFieldRef}
+      />
+      <PickersPopper
+        role="dialog"
+        placement="bottom-start"
+        anchorEl={containerRef.current}
+        {...actions}
+        open={open}
+        slots={slots}
+        slotProps={slotProps}
+        shouldRestoreFocus={shouldRestoreFocus}
+        reduceAnimations={reduceAnimations}
+      >
+        <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+          {renderCurrentView()}
+        </Layout>
+      </PickersPopper>
+    </PickersProvider>
   );
 
   return { renderPicker };
