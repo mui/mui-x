@@ -28,6 +28,11 @@ namespace PickersFieldProvider {
     elements: PickersSectionElement[];
     contentEditable: boolean;
     contentRef: React.RefObject<HTMLDivElement>;
+    propsForwardedToHiddenInput: Pick<
+      UseFieldResponse<true, {}>,
+      'value' | 'onChange' | 'readOnly' | 'disabled'
+      // TODO: Add id and name
+    >;
     propsForwardedToContent: Pick<
       UseFieldResponse<true, {}>,
       'onClick' | 'onKeyDown' | 'onInput' | 'onPaste' | 'tabIndex'

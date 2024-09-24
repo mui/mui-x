@@ -8,7 +8,7 @@ const PickersFieldContent = React.forwardRef(function PickersFieldContent(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { render, className, children, ...otherProps } = props;
-  const { getContentProps } = usePickersFieldContent({ renderSection: children });
+  const { getContentProps, getInputProps } = usePickersFieldContent({ renderSection: children });
   const ownerState: PickersFieldContent.OwnerState = {};
 
   const { renderElement } = useComponentRenderer({
@@ -20,7 +20,12 @@ const PickersFieldContent = React.forwardRef(function PickersFieldContent(
     extraProps: otherProps,
   });
 
-  return renderElement();
+  return (
+    <React.Fragment>
+      {renderElement()}
+      <input {...getInputProps()} />
+    </React.Fragment>
+  );
 });
 
 namespace PickersFieldContent {

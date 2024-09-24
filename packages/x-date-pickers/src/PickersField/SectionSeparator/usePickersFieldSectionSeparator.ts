@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { mergeReactProps } from '@base_ui/react/utils/mergeReactProps';
 import { usePickersFieldSectionContext } from '../Section/PickersFieldSectionProvider';
 
 export function usePickersFieldSectionSeparator(
@@ -8,12 +9,13 @@ export function usePickersFieldSectionSeparator(
   const { element } = usePickersFieldSectionContext();
 
   const getSectionSeparatorProps: UsePickersFieldSectionSeparator.ReturnValue['getSectionSeparatorProps'] =
-    React.useCallback(() => {
-      return position === 'before' ? element.before : element.after;
-    }, [element.before, element.after, position]);
+    React.useCallback(
+      (externalProps) =>
+        mergeReactProps(externalProps, position === 'before' ? element.before : element.after),
+      [element.before, element.after, position],
+    );
 
-  // TODO: Memoize?
-  return { getSectionSeparatorProps };
+  return React.useMemo(() => ({ getSectionSeparatorProps }), [getSectionSeparatorProps]);
 }
 
 export namespace UsePickersFieldSectionSeparator {
@@ -24,8 +26,8 @@ export namespace UsePickersFieldSectionSeparator {
   export interface ReturnValue {
     /**
      * Resolver for the section separator element's props.
-     * @param externalProps custom props for the section separator element
-     * @returns props that should be spread on the section separator element
+     * @param {React.ComponentPropsWithRef<'span'>} externalProps custom props for the section separator element
+     * @returns {React.ComponentPropsWithRef<'span'>} props that should be spread on the section separator element
      */
     getSectionSeparatorProps: (
       externalProps?: React.ComponentPropsWithRef<'span'>,

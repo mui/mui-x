@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { mergeReactProps } from '@base_ui/react/utils/mergeReactProps';
 import { PickersFieldSectionProvider } from './PickersFieldSectionProvider';
 import { usePickersFieldContext } from '../Root/PickersFieldProvider';
 
@@ -7,25 +8,23 @@ export function usePickersFieldSection(
 ): UsePickersFieldSection.ReturnValue {
   const { index } = params;
   const { elements, registerSectionRef } = usePickersFieldContext();
-
   const element = elements[index];
 
   const getSectionProps: UsePickersFieldSection.ReturnValue['getSectionProps'] = React.useCallback(
-    (externalProps = {}) => {
-      return {
+    (externalProps = {}) =>
+      mergeReactProps(externalProps, {
         ...element.container,
         ref: (elementRef) => registerSectionRef(index, elementRef),
-        children: externalProps.children,
-      };
-    },
+      }),
     [element.container, registerSectionRef, index],
   );
 
-  // TODO: Memoize?
-  const contextValue: PickersFieldSectionProvider.ContextValue = { element, index };
+  const contextValue = React.useMemo<PickersFieldSectionProvider.ContextValue>(
+    () => ({ element, index }),
+    [element, index],
+  );
 
-  // TODO: Memoize?
-  return { getSectionProps, contextValue };
+  return React.useMemo(() => ({ getSectionProps, contextValue }), [getSectionProps, contextValue]);
 }
 
 export namespace UsePickersFieldSection {
@@ -36,8 +35,8 @@ export namespace UsePickersFieldSection {
   export interface ReturnValue {
     /**
      * Resolver for the section element's props.
-     * @param externalProps custom props for the section element
-     * @returns props that should be spread on the section element
+     * @param {React.ComponentPropsWithRef<'span'>} externalProps custom props for the section element
+     * @returns {React.ComponentPropsWithRef<'span'>} props that should be spread on the section element
      */
     getSectionProps: (
       externalProps?: React.ComponentPropsWithRef<'span'>,

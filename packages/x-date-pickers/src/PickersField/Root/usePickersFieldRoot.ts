@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { visuallyHidden } from '@base_ui/react/utils/visuallyHidden';
 import { useField } from '../../internals/hooks/useField';
 import type { PickersFieldProvider } from './PickersFieldProvider';
 import {
@@ -175,19 +174,6 @@ export function usePickersFieldRoot<TController extends PickerController<any, an
     };
   };
 
-  const getInputProps: UsePickersFieldRoot.ReturnValue['getInputProps'] = (externalProps = {}) => {
-    return {
-      tabIndex: -1,
-      style: visuallyHidden,
-      'aria-hidden': true,
-      value,
-      onChange,
-      readOnly,
-      disabled,
-      // id,
-      // name,
-    };
-  };
   // TODO: Memoize?
   const contextValue: PickersFieldProvider.ContextValue = {
     elements,
@@ -196,10 +182,11 @@ export function usePickersFieldRoot<TController extends PickerController<any, an
     registerSectionRef,
     registerSectionContentRef,
     propsForwardedToContent,
+    propsForwardedToHiddenInput: { value, onChange, readOnly, disabled },
   };
 
   // TODO: Memoize?
-  return { getRootProps, getInputProps, contextValue };
+  return { getRootProps, contextValue };
 }
 
 export namespace UsePickersFieldRoot {
@@ -217,15 +204,6 @@ export namespace UsePickersFieldRoot {
     getRootProps: (
       externalProps?: React.ComponentPropsWithRef<'div'>,
     ) => React.ComponentPropsWithRef<'div'>;
-
-    /**
-     * Resolver for the input element's props.
-     * @param {React.ComponentPropsWithRef<'input'>} externalProps custom props for the input element
-     * @returns {React.ComponentPropsWithRef<'input'>} props that should be spread on the input element
-     */
-    getInputProps: (
-      externalProps?: React.ComponentPropsWithRef<'input'>,
-    ) => React.ComponentPropsWithRef<'input'>;
 
     contextValue: PickersFieldProvider.ContextValue;
   }

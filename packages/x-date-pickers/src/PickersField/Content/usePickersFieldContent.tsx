@@ -1,20 +1,27 @@
 import * as React from 'react';
+import { mergeReactProps } from '@base_ui/react/utils/mergeReactProps';
+import { visuallyHidden } from '@base_ui/react/utils/visuallyHidden';
 import { usePickersFieldContext } from '../Root/PickersFieldProvider';
 
 export function usePickersFieldContent(
   params: UsePickersFieldContent.Parameters,
 ): UsePickersFieldContent.ReturnValue {
   const { renderSection } = params;
-  const { elements, contentEditable, contentRef, propsForwardedToContent } =
-    usePickersFieldContext();
+  const {
+    elements,
+    contentEditable,
+    contentRef,
+    propsForwardedToContent,
+    propsForwardedToHiddenInput,
+  } = usePickersFieldContext();
 
   const contentEditableValue = elements
     .map(({ content, before, after }) => `${before.children}${content.children}${after.children}`)
     .join('');
 
   const getContentProps: UsePickersFieldContent.ReturnValue['getContentProps'] = React.useCallback(
-    (externalProps = {}) => {
-      return {
+    (externalProps) =>
+      mergeReactProps(externalProps, {
         ref: contentRef,
         suppressContentEditableWarning: true,
         contentEditable,
@@ -25,8 +32,7 @@ export function usePickersFieldContent(
               <React.Fragment key={elementIndex}>{renderSection(elementIndex)}</React.Fragment>
             )),
         ...propsForwardedToContent,
-      };
-    },
+      }),
     [
       contentEditableValue,
       contentEditable,
@@ -37,7 +43,21 @@ export function usePickersFieldContent(
     ],
   );
 
-  return React.useMemo(() => ({ getContentProps }), [getContentProps]);
+  const getInputProps: UsePickersFieldContent.ReturnValue['getInputProps'] = React.useCallback(
+    (externalProps) =>
+      mergeReactProps(externalProps, {
+        tabIndex: -1,
+        style: visuallyHidden,
+        'aria-hidden': true,
+        ...propsForwardedToHiddenInput,
+      }),
+    [propsForwardedToHiddenInput],
+  );
+
+  return React.useMemo(
+    () => ({ getContentProps, getInputProps }),
+    [getContentProps, getInputProps],
+  );
 }
 
 export namespace UsePickersFieldContent {
@@ -54,5 +74,14 @@ export namespace UsePickersFieldContent {
     getContentProps: (
       externalProps?: Omit<React.ComponentPropsWithRef<'div'>, 'children'>,
     ) => React.ComponentPropsWithRef<'div'>;
+
+    /**
+     * Resolver for the input element's props.
+     * @param {React.ComponentPropsWithRef<'input'>} externalProps custom props for the input element
+     * @returns {React.ComponentPropsWithRef<'input'>} props that should be spread on the input element
+     */
+    getInputProps: (
+      externalProps?: React.ComponentPropsWithRef<'input'>,
+    ) => React.ComponentPropsWithRef<'input'>;
   }
 }
