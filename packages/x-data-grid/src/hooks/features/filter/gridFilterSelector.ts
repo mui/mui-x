@@ -107,21 +107,6 @@ export const gridFilteredSortedRowIdsSelector = createSelectorMemoized(
 );
 
 /**
- * Get a `Set` containing the ids of the rows accessible after the filtering process.
- * Contains the collapsed children.
- * @category Filtering
- * @ignore - Do not document.
- */
-export const gridFilteredSortedRowIdsSetSelector = createSelectorMemoized(
-  gridFilteredSortedRowEntriesSelector,
-  (filteredSortedRowEntries) => {
-    const filteredSortedRowIdsSetSelector = new Set<GridRowId>();
-    filteredSortedRowEntries.map((row) => filteredSortedRowIdsSetSelector.add(row.id));
-    return filteredSortedRowIdsSetSelector;
-  },
-);
-
-/**
  * Get the ids to position in the current tree level lookup of the rows accessible after the filtering process.
  * Does not contain the collapsed children.
  * @category Filtering
