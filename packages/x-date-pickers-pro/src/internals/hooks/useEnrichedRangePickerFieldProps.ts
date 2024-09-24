@@ -35,7 +35,6 @@ import {
   RangePosition,
   FieldType,
   UseDateRangeFieldProps,
-  BaseMultiInputFieldPropsInPickerSlots,
 } from '../../models';
 import { UseRangePositionResponse } from './useRangePosition';
 
@@ -64,7 +63,7 @@ export interface RangePickerFieldSlotProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends UseClearableFieldSlotProps {
   field?: SlotComponentPropsFromProps<
-    BaseMultiInputFieldPropsInPickerSlots<
+    BaseMultiInputFieldProps<
       DateRange<TDate>,
       TDate,
       RangeFieldSection,

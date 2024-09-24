@@ -11,3 +11,5 @@ export { usePickersTranslations } from './usePickersTranslations';
 export { useSplitFieldProps } from './useSplitFieldProps';
 
 export { useFieldPlaceholder } from './useFieldPlaceholder';
+
+export { usePickersFieldContext } from './usePickersFieldContext';

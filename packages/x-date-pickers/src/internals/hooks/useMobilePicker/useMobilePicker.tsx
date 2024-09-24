@@ -20,6 +20,10 @@ import {
   InferError,
 } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
+import {
+  PickersFieldContextValue,
+  PickersFieldProvider,
+} from '../../components/PickersFieldProvider';
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -118,7 +122,6 @@ export const useMobilePicker = <
       timezone,
       label,
       name,
-      onOpen: actions.onOpen,
       ...(inputRef ? { inputRef } : {}),
     },
     ownerState: props,
@@ -159,20 +162,27 @@ export const useMobilePicker = <
 
   const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
 
+  const contextValue = React.useMemo<PickersFieldContextValue>(
+    () => ({ onOpen: actions.onOpen }),
+    [actions.onOpen],
+  );
+
   const renderPicker = () => (
-    <LocalizationProvider localeText={localeText}>
-      <Field
-        {...fieldProps}
-        slots={slotsForField}
-        slotProps={slotProps}
-        unstableFieldRef={handleFieldRef}
-      />
-      <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
-        <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
-          {renderCurrentView()}
-        </Layout>
-      </PickersModalDialog>
-    </LocalizationProvider>
+    <PickersFieldProvider value={contextValue}>
+      <LocalizationProvider localeText={localeText}>
+        <Field
+          {...fieldProps}
+          slots={slotsForField}
+          slotProps={slotProps}
+          unstableFieldRef={handleFieldRef}
+        />
+        <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
+          <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+            {renderCurrentView()}
+          </Layout>
+        </PickersModalDialog>
+      </LocalizationProvider>
+    </PickersFieldProvider>
   );
 
   return { renderPicker };

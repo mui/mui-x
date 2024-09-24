@@ -9,6 +9,8 @@ import {
   ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
+  PickersFieldContextValue,
+  PickersFieldProvider,
 } from '@mui/x-date-pickers/internals';
 import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate, FieldRef, InferError } from '@mui/x-date-pickers/models';
@@ -134,7 +136,6 @@ export const useMobileRangePicker = <
       selectedSections,
       onSelectedSectionsChange,
       timezone,
-      onOpen: actions.onOpen,
       ...(fieldType === 'single-input' ? { inputRef, name } : {}),
     },
     ownerState: props,
@@ -214,20 +215,27 @@ export const useMobileRangePicker = <
     },
   };
 
+  const contextValue = React.useMemo<PickersFieldContextValue>(
+    () => ({ onOpen: actions.onOpen }),
+    [actions.onOpen],
+  );
+
   const renderPicker = () => (
-    <LocalizationProvider localeText={localeText}>
-      <Field {...enrichedFieldProps} />
-      <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
-        <Layout
-          {...layoutProps}
-          {...slotProps?.layout}
-          slots={slots}
-          slotProps={slotPropsForLayout}
-        >
-          {renderCurrentView()}
-        </Layout>
-      </PickersModalDialog>
-    </LocalizationProvider>
+    <PickersFieldProvider value={contextValue}>
+      <LocalizationProvider localeText={localeText}>
+        <Field {...enrichedFieldProps} />
+        <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
+          <Layout
+            {...layoutProps}
+            {...slotProps?.layout}
+            slots={slots}
+            slotProps={slotPropsForLayout}
+          >
+            {renderCurrentView()}
+          </Layout>
+        </PickersModalDialog>
+      </LocalizationProvider>
+    </PickersFieldProvider>
   );
 
   return {

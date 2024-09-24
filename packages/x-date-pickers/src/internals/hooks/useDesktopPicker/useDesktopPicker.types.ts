@@ -10,11 +10,7 @@ import {
 } from '../../models/props/basePickerProps';
 import { PickersPopperSlots, PickersPopperSlotProps } from '../../components/PickersPopper';
 import { UsePickerParams, UsePickerProps } from '../usePicker';
-import {
-  BaseSingleInputFieldPropsInPickerSlots,
-  FieldSection,
-  PickerValidDate,
-} from '../../../models';
+import { BaseSingleInputFieldProps, FieldSection, PickerValidDate } from '../../../models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -82,7 +78,7 @@ export interface ExportedUseDesktopPickerSlotProps<
     ExportedPickersLayoutSlotProps<TDate | null, TDate, TView>,
     UseClearableFieldSlotProps {
   field?: SlotComponentPropsFromProps<
-    BaseSingleInputFieldPropsInPickerSlots<
+    BaseSingleInputFieldProps<
       TDate | null,
       TDate,
       FieldSection,
