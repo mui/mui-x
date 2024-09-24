@@ -137,6 +137,11 @@ export interface UseFieldInternalProps<
    * @default false
    */
   disabled?: boolean;
+  /**
+   * Step over minutes.
+   * @default 1
+   */
+  minutesStep?: number;
 }
 
 export interface UseFieldCommonAdditionalProps
@@ -454,9 +459,7 @@ export type UseFieldTextField<TEnableAccessibleFieldDOMStructure extends boolean
     any,
     TEnableAccessibleFieldDOMStructure,
     any
-  > & {
-    minutesStep?: number;
-  },
+  >,
 >(
   params: UseFieldTextFieldParams<
     TValue,

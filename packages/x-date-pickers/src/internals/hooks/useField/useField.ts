@@ -34,9 +34,7 @@ export const useField = <
     any,
     TEnableAccessibleFieldDOMStructure,
     any
-  > & {
-    minutesStep?: number;
-  },
+  >,
 >(
   params: UseFieldParams<
     TValue,
