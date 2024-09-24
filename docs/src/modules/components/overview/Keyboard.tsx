@@ -410,7 +410,7 @@ export default function Keyboard() {
   const brandingTheme = useTheme();
   const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
 
-  const handleKeySelection = (e: React.SyntheticEvent, key: SelectedKey | null) => {
+  const handleKeySelection = (ev: React.SyntheticEvent, key: SelectedKey | null) => {
     const sectionContent = (ref.current as any).querySelector(
       `.MuiPickersSectionList-section[data-sectionindex="${selectedSection.current || 0}"] .MuiPickersSectionList-sectionContent`,
     );
