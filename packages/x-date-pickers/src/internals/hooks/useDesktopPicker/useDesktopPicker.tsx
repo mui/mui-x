@@ -21,7 +21,7 @@ import {
   InferError,
 } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
-import { PickersFieldContextValue, PickersProvider } from '../../components/PickersProvider';
+import { PickersProvider } from '../../components/PickersProvider';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -80,6 +80,7 @@ export const useDesktopPicker = <
     renderCurrentView,
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
+    fieldContextValue,
   } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
     ...pickerParams,
     props,
@@ -210,11 +211,6 @@ export const useDesktopPicker = <
   };
 
   const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
-
-  const fieldContextValue = React.useMemo<PickersFieldContextValue>(
-    () => ({ onOpen: actions.onOpen }),
-    [actions.onOpen],
-  );
 
   const renderPicker = () => (
     <PickersProvider fieldContextValue={fieldContextValue} localeText={localeText}>

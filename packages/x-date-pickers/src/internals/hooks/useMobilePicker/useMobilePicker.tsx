@@ -19,7 +19,7 @@ import {
   InferError,
 } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
-import { PickersFieldContextValue, PickersProvider } from '../../components/PickersProvider';
+import { PickersProvider } from '../../components/PickersProvider';
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -73,6 +73,7 @@ export const useMobilePicker = <
     layoutProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
+    fieldContextValue,
   } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
     ...pickerParams,
     props,
@@ -157,11 +158,6 @@ export const useMobilePicker = <
   };
 
   const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
-
-  const fieldContextValue = React.useMemo<PickersFieldContextValue>(
-    () => ({ onOpen: actions.onOpen }),
-    [actions.onOpen],
-  );
 
   const renderPicker = () => (
     <PickersProvider fieldContextValue={fieldContextValue} localeText={localeText}>

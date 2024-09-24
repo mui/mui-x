@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import { UsePickerParams, UsePickerProps, UsePickerResponse } from './usePicker.types';
 import { usePickerValue } from './usePickerValue';
@@ -5,6 +6,7 @@ import { usePickerViews } from './usePickerViews';
 import { usePickerLayoutProps } from './usePickerLayoutProps';
 import { FieldSection, PickerValidDate, InferError } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
+import { PickersFieldContextValue } from '../../components/PickersProvider';
 
 export const usePicker = <
   TValue,
@@ -71,6 +73,11 @@ export const usePicker = <
     propsFromPickerViews: pickerViewsResponse.layoutProps,
   });
 
+  const fieldContextValue = React.useMemo<PickersFieldContextValue>(
+    () => ({ onOpen: pickerValueResponse.actions.onOpen }),
+    [pickerValueResponse.actions.onOpen],
+  );
+
   return {
     // Picker value
     open: pickerValueResponse.open,
@@ -84,5 +91,8 @@ export const usePicker = <
 
     // Picker layout
     layoutProps: pickerLayoutResponse.layoutProps,
+
+    // Picker field
+    fieldContextValue,
   };
 };

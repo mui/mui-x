@@ -10,7 +10,6 @@ import {
   ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
-  PickersFieldContextValue,
   PickersProvider,
 } from '@mui/x-date-pickers/internals';
 import {
@@ -96,6 +95,7 @@ export const useDesktopRangePicker = <
     renderCurrentView,
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
+    fieldContextValue,
   } = usePicker<
     DateRange<TDate>,
     TDate,
@@ -223,13 +223,8 @@ export const useDesktopRangePicker = <
   };
   const Layout = slots?.layout ?? PickersLayout;
 
-  const contextValue = React.useMemo<PickersFieldContextValue>(
-    () => ({ onOpen: actions.onOpen }),
-    [actions.onOpen],
-  );
-
   const renderPicker = () => (
-    <PickersProvider fieldContextValue={contextValue} localeText={localeText}>
+    <PickersProvider fieldContextValue={fieldContextValue} localeText={localeText}>
       <Field {...enrichedFieldProps} />
       <PickersPopper
         role="tooltip"

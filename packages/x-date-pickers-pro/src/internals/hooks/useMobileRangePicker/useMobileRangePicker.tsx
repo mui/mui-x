@@ -8,7 +8,6 @@ import {
   ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
-  PickersFieldContextValue,
   PickersProvider,
 } from '@mui/x-date-pickers/internals';
 import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
@@ -91,6 +90,7 @@ export const useMobileRangePicker = <
     layoutProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
+    fieldContextValue,
   } = usePicker<
     DateRange<TDate>,
     TDate,
@@ -227,11 +227,6 @@ export const useMobileRangePicker = <
       ...innerSlotProps?.mobilePaper,
     },
   };
-
-  const fieldContextValue = React.useMemo<PickersFieldContextValue>(
-    () => ({ onOpen: actions.onOpen }),
-    [actions.onOpen],
-  );
 
   const renderPicker = () => (
     <PickersProvider fieldContextValue={fieldContextValue} localeText={localeText}>
