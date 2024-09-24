@@ -14,19 +14,21 @@ import {
   PickersFieldContextValue,
   PickersFieldProvider,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate, FieldRef, InferError } from '@mui/x-date-pickers/models';
+import {
+  PickerValidDate,
+  FieldRef,
+  BaseSingleInputFieldProps,
+  InferError,
+} from '@mui/x-date-pickers/models';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
   UseDesktopRangePickerSlotProps,
 } from './useDesktopRangePicker.types';
-import {
-  RangePickerPropsForFieldSlot,
-  useEnrichedRangePickerFieldProps,
-} from '../useEnrichedRangePickerFieldProps';
+import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange, RangeFieldSection } from '../../../models';
+import { DateRange, BaseMultiInputFieldProps, RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
@@ -138,12 +140,24 @@ export const useDesktopRangePicker = <
   const fieldProps = useSlotProps<
     typeof Field,
     UseDesktopRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>['field'],
-    RangePickerPropsForFieldSlot<
-      boolean,
-      TDate,
-      TEnableAccessibleFieldDOMStructure,
-      InferError<TExternalProps>
-    >,
+    | Partial<
+        BaseSingleInputFieldProps<
+          DateRange<TDate>,
+          TDate,
+          RangeFieldSection,
+          TEnableAccessibleFieldDOMStructure,
+          InferError<TExternalProps>
+        >
+      >
+    | Partial<
+        BaseMultiInputFieldProps<
+          DateRange<TDate>,
+          TDate,
+          RangeFieldSection,
+          TEnableAccessibleFieldDOMStructure,
+          InferError<TExternalProps>
+        >
+      >,
     TExternalProps
   >({
     elementType: Field,
