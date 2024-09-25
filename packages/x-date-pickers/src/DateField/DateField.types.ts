@@ -13,32 +13,14 @@ import {
   BuiltInFieldTextFieldProps,
   BaseSingleInputFieldProps,
 } from '../models';
-import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { MakeOptional, DefaultizedProps } from '../internals/models/helpers';
-import {
-  BaseDateValidationProps,
-  DayValidationProps,
-  MonthValidationProps,
-  YearValidationProps,
-} from '../internals/models/validation';
+import { DefaultizedProps } from '../internals/models/helpers';
+import { BaseDateValidationProps } from '../internals/models/validation';
+import { DateFieldInternalProps } from '../controllers';
 
 export interface UseDateFieldProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends MakeOptional<
-      UseFieldInternalProps<
-        TDate | null,
-        TDate,
-        FieldSection,
-        TEnableAccessibleFieldDOMStructure,
-        DateValidationError
-      >,
-      'format'
-    >,
-    DayValidationProps<TDate>,
-    MonthValidationProps<TDate>,
-    YearValidationProps<TDate>,
-    BaseDateValidationProps<TDate>,
+> extends DateFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
     ExportedUseClearableFieldProps {}
 
 /**

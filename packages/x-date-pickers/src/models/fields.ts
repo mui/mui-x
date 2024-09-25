@@ -9,16 +9,10 @@ import type {
   UseClearableFieldSlots,
 } from '../hooks/useClearableField';
 import { ExportedPickersSectionListProps, PickersSectionListRef } from '../PickersSectionList';
-import type {
-  FieldValueManager,
-  UseFieldInternalProps,
-  UseFieldResponse,
-} from '../internals/hooks/useField';
+import type { UseFieldResponse } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
 import { PickerValidDate } from './pickers';
-import type { PickerValueManager } from '../internals/hooks/usePicker';
-import { Validator } from '../validation';
-import type { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
+import { PickerController } from './controllers';
 
 // Update PickersComponentAgnosticLocaleText -> viewNames when adding new entries
 export type FieldSectionType =
@@ -235,29 +229,3 @@ export type InferFieldInternalProps<TController extends PickerController<any, an
   TController extends PickerController<any, any, any, infer TInternalProps, any>
     ? TInternalProps
     : never;
-
-export interface PickerController<
-  TDate extends PickerValidDate,
-  TIsRange extends boolean,
-  TError,
-  TInternalProps extends Partial<UseFieldInternalProps<any, any, any, true, any>>,
-  TDefaultizedInternalProps extends UseFieldInternalProps<any, any, any, true, any>,
-> {
-  valueManager: PickerValueManager<InferValueFromDate<TDate, TIsRange>, TDate, TError>;
-  fieldValueManager: FieldValueManager<
-    InferValueFromDate<TDate, TIsRange>,
-    TDate,
-    InferFieldSection<TIsRange>
-  >;
-  validator: Validator<
-    InferValueFromDate<TDate, TIsRange>,
-    TDate,
-    TError,
-    TDefaultizedInternalProps
-  >;
-  applyDefaultFieldInternalProps: (
-    adapter: MuiPickersAdapterContextValue<TDate>,
-    inputProps: TInternalProps,
-  ) => TDefaultizedInternalProps;
-  valueType: FieldValueType;
-}
