@@ -20,27 +20,10 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
   instance,
   state,
   setState,
-  experimentalFeatures,
 }) => {
-  const isItemsReorderingEnabled =
-    params.itemsReordering && !!experimentalFeatures?.itemsReordering;
-
-  if (process.env.NODE_ENV !== 'production') {
-    if (
-      params.itemsReordering &&
-      (!experimentalFeatures?.indentationAtItemLevel || !experimentalFeatures?.itemsReordering)
-    ) {
-      warnOnce([
-        'MUI X: The items reordering feature requires the `indentationAtItemLevel` and `itemsReordering` experimental features to be enabled.',
-        'You can do it by passing `experimentalFeatures={{ indentationAtItemLevel: true, itemsReordering: true }}` to the `RichTreeViewPro` component.',
-        'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/',
-      ]);
-    }
-  }
-
   const canItemBeDragged = React.useCallback(
     (itemId: string) => {
-      if (!isItemsReorderingEnabled) {
+      if (!params.itemsReordering) {
         return false;
       }
 
@@ -51,7 +34,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
       return true;
     },
-    [isItemsReorderingEnabled, params.isItemReorderable],
+    [params.itemsReordering, params.isItemReorderable],
   );
 
   const getDroppingTargetValidActions = React.useCallback(
@@ -256,7 +239,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
     },
     contextValue: {
       itemsReordering: {
-        enabled: isItemsReorderingEnabled,
+        enabled: params.itemsReordering,
         currentDrag: state.itemsReordering,
       },
     },
@@ -265,10 +248,25 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
 useTreeViewItemsReordering.itemPlugin = useTreeViewItemsReorderingItemPlugin;
 
-useTreeViewItemsReordering.getDefaultizedParams = (params) => ({
-  ...params,
-  itemsReordering: params.itemsReordering ?? false,
-});
+useTreeViewItemsReordering.getDefaultizedParams = ({ params, experimentalFeatures }) => {
+  const canUseFeature =
+    experimentalFeatures?.indentationAtItemLevel && experimentalFeatures?.itemsReordering;
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (params.itemsReordering && !canUseFeature) {
+      warnOnce([
+        'MUI X: The items reordering feature requires the `indentationAtItemLevel` and `itemsReordering` experimental features to be enabled.',
+        'You can do it by passing `experimentalFeatures={{ indentationAtItemLevel: true, itemsReordering: true }}` to the `RichTreeViewPro` component.',
+        'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/',
+      ]);
+    }
+  }
+
+  return {
+    ...params,
+    itemsReordering: canUseFeature ? (params.itemsReordering ?? false) : false,
+  };
+};
 
 useTreeViewItemsReordering.getInitialState = () => ({ itemsReordering: null });
 
