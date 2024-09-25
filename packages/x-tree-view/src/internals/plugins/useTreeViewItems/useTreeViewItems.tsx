@@ -290,7 +290,7 @@ useTreeViewItems.getInitialState = (params) => ({
   }),
 });
 
-useTreeViewItems.getDefaultizedParams = (params) => ({
+useTreeViewItems.getDefaultizedParams = ({ params }) => ({
   ...params,
   disabledItemsFocusable: params.disabledItemsFocusable ?? false,
   itemChildrenIndentation: params.itemChildrenIndentation ?? '12px',

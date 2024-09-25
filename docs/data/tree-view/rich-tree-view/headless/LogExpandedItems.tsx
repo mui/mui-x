@@ -56,7 +56,7 @@ const useTreeViewLogExpanded: TreeViewPlugin<TreeViewLogExpandedSignature> = ({
 };
 
 // Sets the default value of this plugin parameters.
-useTreeViewLogExpanded.getDefaultizedParams = (params) => ({
+useTreeViewLogExpanded.getDefaultizedParams = ({ params }) => ({
   ...params,
   areLogsEnabled: params.areLogsEnabled ?? false,
 });
