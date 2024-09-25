@@ -36,7 +36,7 @@ You can either run it on a specific file, folder, or your entire codebase when c
 <!-- #default-branch-switch -->
 
 ```bash
-// Data Grid specific
+// Tree View specific
 npx @mui/x-codemod@latest v7.0.0/tree-view/preset-safe <path>
 
 // Target other MUI X components as well
