@@ -11,6 +11,7 @@ import {
 } from '../../internals/plugins/useTreeViewLabel';
 import type { UseTreeItem2Status } from '../../useTreeItem2';
 import { hasPlugin } from '../../internals/utils/plugins';
+import { TreeViewPublicAPI } from '../../internals/models';
 import { useSelector } from '../../internals/hooks/useSelector';
 import { selectorIsItemExpanded } from '../../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
 import { selectorIsItemFocused } from '../../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
@@ -30,18 +31,6 @@ export interface UseTreeItem2Interactions {
   handleCancelItemLabelEditing: (event: React.SyntheticEvent) => void;
 }
 
-interface UseTreeItem2UtilsReturnValue {
-  interactions: UseTreeItem2Interactions;
-  status: UseTreeItem2Status;
-}
-
-const isItemExpandable = (reactChildren: React.ReactNode) => {
-  if (Array.isArray(reactChildren)) {
-    return reactChildren.length > 0 && reactChildren.some(isItemExpandable);
-  }
-  return Boolean(reactChildren);
-};
-
 /**
  * Plugins that need to be present in the Tree View in order for `useTreeItem2Utils` to work correctly.
  */
@@ -58,19 +47,42 @@ type UseTreeItem2UtilsMinimalPlugins = readonly [
 
 export type UseTreeItem2UtilsOptionalPlugins = readonly [UseTreeViewLabelSignature];
 
-export const useTreeItem2Utils = ({
+interface UseTreeItem2UtilsReturnValue<
+  TSignatures extends UseTreeItem2UtilsMinimalPlugins,
+  TOptionalSignatures extends UseTreeItem2UtilsOptionalPlugins,
+> {
+  interactions: UseTreeItem2Interactions;
+  status: UseTreeItem2Status;
+  /**
+   * The object the allows Tree View manipulation.
+   */
+  publicAPI: TreeViewPublicAPI<TSignatures, TOptionalSignatures>;
+}
+
+const isItemExpandable = (reactChildren: React.ReactNode) => {
+  if (Array.isArray(reactChildren)) {
+    return reactChildren.length > 0 && reactChildren.some(isItemExpandable);
+  }
+  return Boolean(reactChildren);
+};
+
+export const useTreeItem2Utils = <
+  TSignatures extends UseTreeItem2UtilsMinimalPlugins = UseTreeItem2UtilsMinimalPlugins,
+  TOptionalSignatures extends UseTreeItem2UtilsOptionalPlugins = UseTreeItem2UtilsOptionalPlugins,
+>({
   itemId,
   children,
 }: {
   itemId: string;
   children: React.ReactNode;
-}): UseTreeItem2UtilsReturnValue => {
+}): UseTreeItem2UtilsReturnValue<TSignatures, TOptionalSignatures> => {
   const {
     instance,
     label,
     store,
     selection: { multiSelect },
-  } = useTreeViewContext<UseTreeItem2UtilsMinimalPlugins, UseTreeItem2UtilsOptionalPlugins>();
+    publicAPI,
+  } = useTreeViewContext<TSignatures, TOptionalSignatures>();
 
   const isExpanded = useSelector(store, selectorIsItemExpanded, itemId);
   const isFocused = useSelector(store, selectorIsItemFocused, itemId);
@@ -200,5 +212,5 @@ export const useTreeItem2Utils = ({
     handleCancelItemLabelEditing,
   };
 
-  return { interactions, status };
+  return { interactions, status, publicAPI };
 };
