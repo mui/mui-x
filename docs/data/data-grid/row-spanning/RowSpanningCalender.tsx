@@ -116,6 +116,8 @@ const columns: GridColDef<Row>[] = [
 ];
 
 const rootStyles = {
+  display: 'flex',
+  flexDirection: 'column',
   width: '100%',
   '& .Maths': {
     backgroundColor: 'rgba(157, 255, 118, 0.49)',
@@ -147,7 +149,6 @@ export default function RowSpanningCalender() {
         columns={columns}
         rows={rows}
         unstable_rowSpanning
-        autoHeight
         disableRowSelectionOnClick
         hideFooter
         showCellVerticalBorder
