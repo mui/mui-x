@@ -40,6 +40,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
   const rootProps = useGridRootProps();
+  const column = apiRef.current.getColumn(item.field);
 
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,12 +49,16 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
 
       setIsApplying(true);
       filterTimeout.start(rootProps.filterDebounceMs, () => {
-        const newItem = { ...item, value, fromInput: id! };
+        const newItem = {
+          ...item,
+          value: column.type === 'number' ? Number(value) : value,
+          fromInput: id!,
+        };
         applyValue(newItem);
         setIsApplying(false);
       });
     },
-    [id, applyValue, item, rootProps.filterDebounceMs, filterTimeout],
+    [filterTimeout, rootProps.filterDebounceMs, item, column.type, id, applyValue],
   );
 
   React.useEffect(() => {
