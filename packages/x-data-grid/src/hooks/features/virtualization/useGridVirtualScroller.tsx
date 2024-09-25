@@ -45,6 +45,7 @@ import {
   gridVirtualizationColumnEnabledSelector,
 } from './gridVirtualizationSelectors';
 import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
+import { gridRowSpanningHiddenCellsOriginMapSelector } from '../rows/gridRowSpanningSelectors';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -627,6 +628,7 @@ type RenderContextInputs = {
   range: ReturnType<typeof useGridVisibleRows>['range'];
   pinnedColumns: ReturnType<typeof gridVisiblePinnedColumnDefinitionsSelector>;
   visibleColumns: ReturnType<typeof gridVisibleColumnDefinitionsSelector>;
+  hiddenCellsOriginMap: ReturnType<typeof gridRowSpanningHiddenCellsOriginMapSelector>;
 };
 
 function inputsSelector(
@@ -638,6 +640,7 @@ function inputsSelector(
   const dimensions = gridDimensionsSelector(apiRef.current.state);
   const currentPage = getVisibleRows(apiRef, rootProps);
   const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
+  const hiddenCellsOriginMap = gridRowSpanningHiddenCellsOriginMapSelector(apiRef);
   const lastRowId = apiRef.current.state.rows.dataRowIds.at(-1);
   const lastColumn = visibleColumns.at(-1);
   return {
@@ -659,6 +662,7 @@ function inputsSelector(
     range: currentPage.range,
     pinnedColumns: gridVisiblePinnedColumnDefinitionsSelector(apiRef),
     visibleColumns,
+    hiddenCellsOriginMap,
   };
 }
 
@@ -680,7 +684,7 @@ function computeRenderContext(
   if (inputs.enabledForRows) {
     // Clamp the value because the search may return an index out of bounds.
     // In the last index, this is not needed because Array.slice doesn't include it.
-    const firstRowIndex = Math.min(
+    let firstRowIndex = Math.min(
       getNearestIndexToRender(inputs, top, {
         atStart: true,
         lastPosition:
@@ -688,6 +692,14 @@ function computeRenderContext(
       }),
       inputs.rowsMeta.positions.length - 1,
     );
+
+    // If any of the cells in the `firstRowIndex` is hidden due to an extended row span,
+    // Make sure the row from where the rowSpan is originated is visible.
+    const rowSpanHiddenCellOrigin = inputs.hiddenCellsOriginMap[firstRowIndex];
+    if (rowSpanHiddenCellOrigin) {
+      const minSpannedRowIndex = Math.min(...Object.values(rowSpanHiddenCellOrigin));
+      firstRowIndex = Math.min(firstRowIndex, minSpannedRowIndex);
+    }
 
     const lastRowIndex = inputs.autoHeight
       ? firstRowIndex + inputs.rows.length
