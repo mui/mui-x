@@ -1,9 +1,12 @@
 import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
 import { GridEventListener } from '../../../models/events';
-import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
+import {
+  gridVisibleColumnDefinitionsSelector,
+  gridVisibleColumnFieldsSelector,
+} from '../columns/gridColumnsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -14,8 +17,7 @@ import { gridClasses } from '../../../constants/gridClasses';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
-import { GridRowEntry, GridRowId } from '../../../models';
-import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
+import { GridRowId } from '../../../models';
 import { gridFocusColumnGroupHeaderSelector } from '../focus';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import {
@@ -24,61 +26,12 @@ import {
 } from '../headerFiltering/gridHeaderFilteringSelectors';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { isEventTargetInPortal } from '../../../utils/domUtils';
-
-function enrichPageRowsWithPinnedRows(
-  apiRef: React.MutableRefObject<GridApiCommunity>,
-  rows: GridRowEntry[],
-) {
-  const pinnedRows = gridPinnedRowsSelector(apiRef) || {};
-
-  return [...(pinnedRows.top || []), ...rows, ...(pinnedRows.bottom || [])];
-}
-
-const getLeftColumnIndex = ({
-  currentColIndex,
-  firstColIndex,
-  lastColIndex,
-  isRtl,
-}: {
-  currentColIndex: number;
-  firstColIndex: number;
-  lastColIndex: number;
-  isRtl: boolean;
-}) => {
-  if (isRtl) {
-    if (currentColIndex < lastColIndex) {
-      return currentColIndex + 1;
-    }
-  } else if (!isRtl) {
-    if (currentColIndex > firstColIndex) {
-      return currentColIndex - 1;
-    }
-  }
-  return null;
-};
-
-const getRightColumnIndex = ({
-  currentColIndex,
-  firstColIndex,
-  lastColIndex,
-  isRtl,
-}: {
-  currentColIndex: number;
-  firstColIndex: number;
-  lastColIndex: number;
-  isRtl: boolean;
-}) => {
-  if (isRtl) {
-    if (currentColIndex > firstColIndex) {
-      return currentColIndex - 1;
-    }
-  } else if (!isRtl) {
-    if (currentColIndex < lastColIndex) {
-      return currentColIndex + 1;
-    }
-  }
-  return null;
-};
+import {
+  enrichPageRowsWithPinnedRows,
+  getLeftColumnIndex,
+  getRightColumnIndex,
+  findNonRowSpannedCell,
+} from './utils';
 
 /**
  * @requires useGridSorting (method) - can be after
@@ -114,12 +67,18 @@ export const useGridKeyboardNavigation = (
 
   /**
    * @param {number} colIndex Index of the column to focus
-   * @param {number} rowIndex index of the row to focus
+   * @param {GridRowId} rowId index of the row to focus
    * @param {string} closestColumnToUse Which closest column cell to use when the cell is spanned by `colSpan`.
+   * @param {string} rowSpanScanDirection Which direction to search to find the next cell not hidden by `rowSpan`.
    * TODO replace with apiRef.current.moveFocusToRelativeCell()
    */
   const goToCell = React.useCallback(
-    (colIndex: number, rowId: GridRowId, closestColumnToUse: 'left' | 'right' = 'left') => {
+    (
+      colIndex: number,
+      rowId: GridRowId,
+      closestColumnToUse: 'left' | 'right' = 'left',
+      rowSpanScanDirection: 'up' | 'down' = 'up',
+    ) => {
       const visibleSortedRows = gridExpandedSortedRowEntriesSelector(apiRef);
       const nextCellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(rowId, colIndex);
       if (nextCellColSpanInfo && nextCellColSpanInfo.spannedByColSpan) {
@@ -129,16 +88,19 @@ export const useGridKeyboardNavigation = (
           colIndex = nextCellColSpanInfo.rightVisibleCellIndex;
         }
       }
+      const field = gridVisibleColumnFieldsSelector(apiRef)[colIndex];
+      const nonRowSpannedRowId = findNonRowSpannedCell(apiRef, rowId, field, rowSpanScanDirection);
       // `scrollToIndexes` requires a rowIndex relative to all visible rows.
       // Those rows do not include pinned rows, but pinned rows do not need scroll anyway.
-      const rowIndexRelativeToAllRows = visibleSortedRows.findIndex((row) => row.id === rowId);
+      const rowIndexRelativeToAllRows = visibleSortedRows.findIndex(
+        (row) => row.id === nonRowSpannedRowId,
+      );
       logger.debug(`Navigating to cell row ${rowIndexRelativeToAllRows}, col ${colIndex}`);
       apiRef.current.scrollToIndexes({
         colIndex,
         rowIndex: rowIndexRelativeToAllRows,
       });
-      const field = apiRef.current.getVisibleColumns()[colIndex].field;
-      apiRef.current.setCellFocus(rowId, field);
+      apiRef.current.setCellFocus(nonRowSpannedRowId, field);
     },
     [apiRef, logger],
   );
@@ -551,7 +513,12 @@ export const useGridKeyboardNavigation = (
         case 'ArrowDown': {
           // "Enter" is only triggered by the row / cell editing feature
           if (rowIndexBefore < lastRowIndexInPage) {
-            goToCell(colIndexBefore, getRowIdFromIndex(rowIndexBefore + 1));
+            goToCell(
+              colIndexBefore,
+              getRowIdFromIndex(rowIndexBefore + 1),
+              isRtl ? 'right' : 'left',
+              'down',
+            );
           }
           break;
         }

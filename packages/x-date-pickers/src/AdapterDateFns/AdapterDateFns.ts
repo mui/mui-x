@@ -90,7 +90,7 @@ export class AdapterDateFns
       if (typeof addDays !== 'function') {
         throw new Error(
           [
-            'MUI: The `date-fns` package v3.x is not compatible with this adapter.',
+            'MUI: This adapter is only compatible with `date-fns` v2.x package versions.',
             'Please, install v2.x of the package or use the `AdapterDateFnsV3` instead.',
           ].join('\n'),
         );

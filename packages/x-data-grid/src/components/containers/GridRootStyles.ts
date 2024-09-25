@@ -157,29 +157,47 @@ export const GridRootStyles = styled('div', {
   const hoverColor = (t.vars || t).palette.action.hover;
 
   const selectedOpacity = (t.vars || t).palette.action.selectedOpacity;
+  const selectedHoverOpacity = t.vars
+    ? (`calc(${hoverOpacity} + ${selectedOpacity})` as unknown as number) // TODO: Improve type
+    : hoverOpacity + selectedOpacity;
   const selectedBackground = t.vars
     ? `rgba(${t.vars.palette.primary.mainChannel} / ${selectedOpacity})`
     : alpha(t.palette.primary.main, selectedOpacity);
 
   const selectedHoverBackground = t.vars
-    ? `rgba(${t.vars.palette.primary.mainChannel} / calc(
-                ${t.vars.palette.action.selectedOpacity} +
-                ${t.vars.palette.action.hoverOpacity}
-              ))`
-    : alpha(
-        t.palette.primary.main,
-        t.palette.action.selectedOpacity + t.palette.action.hoverOpacity,
-      );
+    ? `rgba(${t.vars.palette.primary.mainChannel} / ${selectedHoverOpacity})`
+    : alpha(t.palette.primary.main, selectedHoverOpacity);
 
-  const pinnedHoverBackground = t.vars
-    ? hoverColor
-    : blend(pinnedBackground, hoverColor, hoverOpacity);
-  const pinnedSelectedBackground = t.vars
-    ? selectedBackground
-    : blend(pinnedBackground, selectedBackground, selectedOpacity);
-  const pinnedSelectedHoverBackground = t.vars
-    ? hoverColor
-    : blend(pinnedSelectedBackground, hoverColor, hoverOpacity);
+  const blendFn = t.vars ? blendCssVars : blend;
+
+  const getPinnedBackgroundStyles = (backgroundColor: string) => ({
+    [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
+      backgroundColor,
+      '&.Mui-selected': {
+        backgroundColor: blendFn(backgroundColor, selectedBackground, selectedOpacity),
+        '&:hover': {
+          backgroundColor: blendFn(backgroundColor, selectedBackground, selectedHoverOpacity),
+        },
+      },
+    },
+  });
+
+  const pinnedBackgroundColor = blendFn(pinnedBackground, hoverColor, hoverOpacity);
+  const pinnedHoverStyles = getPinnedBackgroundStyles(pinnedBackgroundColor);
+
+  const pinnedSelectedBackgroundColor = blendFn(
+    pinnedBackground,
+    selectedBackground,
+    selectedOpacity,
+  );
+  const pinnedSelectedStyles = getPinnedBackgroundStyles(pinnedSelectedBackgroundColor);
+
+  const pinnedSelectedHoverBackgroundColor = blendFn(
+    pinnedBackground,
+    selectedHoverBackground,
+    selectedHoverOpacity,
+  );
+  const pinnedSelectedHoverStyles = getPinnedBackgroundStyles(pinnedSelectedHoverBackgroundColor);
 
   const selectedStyles = {
     backgroundColor: selectedBackground,
@@ -636,23 +654,14 @@ export const GridRootStyles = styled('div', {
       position: 'sticky',
       zIndex: 3,
       background: 'var(--DataGrid-pinnedBackground)',
+      '&.Mui-selected': {
+        backgroundColor: pinnedSelectedBackgroundColor,
+      },
     },
     [`& .${c.virtualScrollerContent} .${c.row}`]: {
-      '&:hover': {
-        [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
-          backgroundColor: pinnedHoverBackground,
-        },
-      },
-      [`&.Mui-selected`]: {
-        [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
-          backgroundColor: pinnedSelectedBackground,
-        },
-        '&:hover': {
-          [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
-            backgroundColor: pinnedSelectedHoverBackground,
-          },
-        },
-      },
+      '&:hover': pinnedHoverStyles,
+      '&.Mui-selected': pinnedSelectedStyles,
+      '&.Mui-selected:hover': pinnedSelectedHoverStyles,
     },
     [`& .${c.cellOffsetLeft}`]: {
       flex: '0 0 auto',
@@ -779,4 +788,9 @@ function blend(background: string, overlay: string, opacity: number, gamma: numb
     type: 'rgb',
     values: rgb as any,
   });
+}
+
+const removeOpacity = (color: string) => `rgb(from ${color} r g b / 1)`;
+function blendCssVars(background: string, overlay: string, opacity: string | number) {
+  return `color-mix(in srgb,${background}, ${removeOpacity(overlay)} calc(${opacity} * 100%))`;
 }

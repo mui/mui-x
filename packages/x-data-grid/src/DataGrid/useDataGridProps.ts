@@ -80,6 +80,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   sortingMode: 'client',
   sortingOrder: ['asc' as const, 'desc' as const, null],
   throttleRowsMs: 0,
+  unstable_rowSpanning: false,
 };
 
 const defaultSlots = DATA_GRID_DEFAULT_SLOTS_COMPONENTS;

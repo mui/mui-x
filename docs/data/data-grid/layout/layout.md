@@ -8,6 +8,27 @@ Instead, it takes up the space given by its parent.
 The Data Grid will raise an error in the console if its container has no intrinsic dimensions.
 :::
 
+## Flex parent container
+
+The Data Grid can be placed inside a flex container with `flex-direction: column`.
+Without setting the minimum and maximum height, the Data Grid takes as much space as it needs to display all rows.
+
+:::warning
+Consider setting `maxHeight` on the flex parent container, otherwise row virtualization will not be able to improve performance by limiting the number of elements rendered in the DOM.
+:::
+
+{{"demo": "FlexGrid.js", "bg": "inline"}}
+
+:::success
+The flex parent in the demo above is effectively equivalent [`autoHeight`](/x/react-data-grid/layout/#auto-height) prop, but with the added benefit of being able to set the minimum and maximum height of the parent container.
+:::
+
+### Minimum and maximum height
+
+In the demo below, the Data Grid is placed inside a flex container with a minimum height of `200px` and a maximum height of `400px` and adapts its height when the number of rows changes.
+
+{{"demo": "MinMaxHeightGrid.js", "bg": "inline"}}
+
 ## Percentage dimensions
 
 When using percentages (%) for height or width, make sure that the Data Grid's parent container has intrinsic dimensions.
@@ -22,12 +43,12 @@ You can predefine dimensions for the parent of the data grid.
 
 ## Auto height
 
+:::error
+This prop is deprecated, use the [flex parent container](/x/react-data-grid/layout/#flex-parent-container) instead.
+:::
+
 The `autoHeight` prop enables the Data Grid to adjust its size based on its content.
 This means that the Data Grid's height will be determined by the number of rows, ensuring that all rows will be visible to the user simultaneously.
-
-:::warning
-This is not recommended for large datasets as row virtualization will not be able to improve performance by limiting the number of elements rendered in the DOM.
-:::
 
 {{"demo": "AutoHeightGrid.js", "bg": "inline"}}
 

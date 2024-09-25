@@ -23,7 +23,7 @@
     "@types/chai": "^4.3.19",
     "@types/karma": "^6.3.8",
     "@types/moment-jalaali": "^0.7.9",
-    "@types/prop-types": "^15.7.12",
+    "@types/prop-types": "^15.7.13",
     "@types/react": "^18.3.4",
     "@types/semver": "^7.5.8",
     "chai": "^4.5.0",

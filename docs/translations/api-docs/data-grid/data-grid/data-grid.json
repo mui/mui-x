@@ -476,6 +476,9 @@
     "sortModel": { "description": "Set the sort model of the Data Grid." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "unstable_rowSpanning": {
+      "description": "If <code>true</code>, the Data Grid will auto span the cells over the rows having the same value."
     }
   },
   "classDescriptions": {

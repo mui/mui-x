@@ -68,6 +68,8 @@ import {
   useGridDataSourceTreeDataPreProcessors,
   useGridDataSource,
   dataSourceStateInitializer,
+  useGridRowSpanning,
+  rowSpanningStateInitializer,
 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
@@ -131,6 +133,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(sortingStateInitializer, apiRef, props);
   useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
   useGridInitializeState(filterStateInitializer, apiRef, props);
+  useGridInitializeState(rowSpanningStateInitializer, apiRef, props);
   useGridInitializeState(densityStateInitializer, apiRef, props);
   useGridInitializeState(columnReorderStateInitializer, apiRef, props);
   useGridInitializeState(columnResizeStateInitializer, apiRef, props);
@@ -152,6 +155,7 @@ export const useDataGridPremiumComponent = (
   useGridRowPinning(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
+  useGridRowSpanning(apiRef, props);
   useGridParamsApi(apiRef);
   useGridDetailPanel(apiRef, props);
   useGridColumnSpanning(apiRef);

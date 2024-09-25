@@ -107,6 +107,11 @@ DataGridRaw.propTypes = {
   /**
    * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
    * @default false
+   * @deprecated Use flex parent container instead: https://mui.com/x/react-data-grid/layout/#flex-parent-container
+   * @example
+   * <div style={{ display: 'flex', flexDirection: 'column' }}>
+   *   <DataGrid />
+   * </div>
    */
   autoHeight: PropTypes.bool,
   /**
@@ -803,4 +808,9 @@ DataGridRaw.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
+   * @default false
+   */
+  unstable_rowSpanning: PropTypes.bool,
 } as any;
