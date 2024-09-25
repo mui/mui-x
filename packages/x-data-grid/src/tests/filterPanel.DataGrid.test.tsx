@@ -631,7 +631,7 @@ describe('<DataGrid /> - Filter panel', () => {
 
     setColumnValue('age');
     setOperatorValue('=');
-    setInputValue('true');
+    setInputValue('25');
     expect(typeof onFilterModelChange.lastCall.args[0].items[0].value).to.equal('number');
   });
 });
