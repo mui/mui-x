@@ -11,10 +11,7 @@ import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DrawOutlinedIcon from '@mui/icons-material/DrawOutlined';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import {
-  unstable_useTreeItem2 as useTreeItem2,
-  UseTreeItem2Status,
-} from '@mui/x-tree-view/useTreeItem2';
+import { useTreeItem2, UseTreeItem2Status } from '@mui/x-tree-view/useTreeItem2';
 import {
   TreeItem2Content,
   TreeItem2Root,
