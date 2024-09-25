@@ -68,8 +68,9 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ st
 useTreeViewLabel.itemPlugin = useTreeViewLabelItemPlugin;
 
 useTreeViewLabel.getDefaultizedParams = ({ params, experimentalFeatures }) => {
+  const canUseFeature = experimentalFeatures?.labelEditing;
   if (process.env.NODE_ENV !== 'production') {
-    if (params.isItemEditable && !experimentalFeatures?.labelEditing) {
+    if (params.isItemEditable && !canUseFeature) {
       warnOnce([
         'MUI X: The label editing feature requires the `labelEditing` experimental feature to be enabled.',
         'You can do it by passing `experimentalFeatures={{ labelEditing: true}}` to the `RichTreeViewPro` component.',
@@ -80,7 +81,7 @@ useTreeViewLabel.getDefaultizedParams = ({ params, experimentalFeatures }) => {
 
   return {
     ...params,
-    isItemEditable: experimentalFeatures.labelEditing ? (params.isItemEditable ?? false) : false,
+    isItemEditable: canUseFeature ? (params.isItemEditable ?? false) : false,
   };
 };
 
