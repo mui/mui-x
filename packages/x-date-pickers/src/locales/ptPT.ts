@@ -38,7 +38,7 @@ const ptPTPickers: Partial<PickersLocaleText<any>> = {
 
   // Toolbar titles
   datePickerToolbarTitle: 'Selecione a data',
-  dateTimePickerToolbarTitle: 'Selecione a data e hora',
+  dateTimePickerToolbarTitle: 'Selecione a data e a hora',
   timePickerToolbarTitle: 'Selecione a hora',
   dateRangePickerToolbarTitle: 'Selecione o intervalo de datas',
 
