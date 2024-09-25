@@ -30,6 +30,10 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   endDate: 'Date de fin',
   endTime: 'Heure de fin',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Annuler',
   clearButtonLabel: 'Vider',
@@ -41,6 +45,7 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: "Choisir la date et l'heure",
   timePickerToolbarTitle: "Choisir l'heure",
   dateRangePickerToolbarTitle: 'Choisir la plage de dates',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>

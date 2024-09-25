@@ -28,6 +28,10 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   endDate: '结束日期',
   endTime: '结束时间',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: '取消',
   clearButtonLabel: '清除',
@@ -39,6 +43,7 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: '选择日期和时间',
   timePickerToolbarTitle: '选择时间',
   dateRangePickerToolbarTitle: '选择时间范围',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>

@@ -31,6 +31,10 @@ const roROPickers: Partial<PickersLocaleText<any>> = {
   // endDate: 'End date',
   // endTime: 'End time',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Anulare',
   clearButtonLabel: 'Ștergere',
@@ -42,6 +46,7 @@ const roROPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Selectați data și ora',
   timePickerToolbarTitle: 'Selectați ora',
   dateRangePickerToolbarTitle: 'Selectați intervalul de date',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>

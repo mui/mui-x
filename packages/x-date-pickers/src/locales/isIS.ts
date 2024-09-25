@@ -30,6 +30,10 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   // endDate: 'End date',
   // endTime: 'End time',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Hætta við',
   clearButtonLabel: 'Hreinsa',
@@ -41,6 +45,7 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Velja dagsetningu og tíma',
   timePickerToolbarTitle: 'Velja tíma',
   dateRangePickerToolbarTitle: 'Velja tímabil',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>

@@ -31,6 +31,10 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   endDate: 'Enddatum',
   endTime: 'Endzeit',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Abbrechen',
   clearButtonLabel: 'Löschen',
@@ -42,6 +46,7 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Datum & Uhrzeit auswählen',
   timePickerToolbarTitle: 'Uhrzeit auswählen',
   dateRangePickerToolbarTitle: 'Datumsbereich auswählen',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>

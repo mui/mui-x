@@ -30,6 +30,10 @@ const euPickers: Partial<PickersLocaleText<any>> = {
   // endDate: 'End date',
   // endTime: 'End time',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Utxi',
   clearButtonLabel: 'Garbitu',
@@ -41,6 +45,7 @@ const euPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Data eta ordua aukeratu',
   timePickerToolbarTitle: 'Ordua aukeratu',
   dateRangePickerToolbarTitle: 'Data tartea aukeratu',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>

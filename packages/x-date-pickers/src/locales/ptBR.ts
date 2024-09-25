@@ -30,6 +30,10 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   endDate: 'Data de Término',
   endTime: 'Hora de Término',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Cancelar',
   clearButtonLabel: 'Limpar',
@@ -41,6 +45,7 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Selecione data e hora',
   timePickerToolbarTitle: 'Selecione a hora',
   dateRangePickerToolbarTitle: 'Selecione o intervalo entre datas',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>

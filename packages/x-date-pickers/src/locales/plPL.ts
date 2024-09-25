@@ -30,6 +30,10 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   // endDate: 'End date',
   // endTime: 'End time',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Anuluj',
   clearButtonLabel: 'Wyczyść',
@@ -41,6 +45,7 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Wybierz datę i czas',
   timePickerToolbarTitle: 'Wybierz czas',
   dateRangePickerToolbarTitle: 'Wybierz zakres dat',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>

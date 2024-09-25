@@ -30,6 +30,10 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
   // endDate: 'End date',
   // endTime: 'End time',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Άκυρο',
   clearButtonLabel: 'Καθαρισμός',
@@ -41,6 +45,7 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Επιλέξτε ημερομηνία και ώρα',
   timePickerToolbarTitle: 'Επιλέξτε ώρα',
   dateRangePickerToolbarTitle: 'Επιλέξτε εύρος ημερομηνιών',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>

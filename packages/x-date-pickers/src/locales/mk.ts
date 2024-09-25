@@ -24,6 +24,10 @@ const mkPickers: Partial<PickersLocaleText<any>> = {
   // endDate: 'End date',
   // endTime: 'End time',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Откажи',
   clearButtonLabel: 'Избриши',
@@ -35,6 +39,7 @@ const mkPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Избери датум и време',
   timePickerToolbarTitle: 'Избери време',
   dateRangePickerToolbarTitle: 'Избери временски опсег',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>

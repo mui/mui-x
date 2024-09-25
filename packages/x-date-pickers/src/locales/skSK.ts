@@ -31,6 +31,10 @@ const skSKPickers: Partial<PickersLocaleText<any>> = {
   // endDate: 'End date',
   // endTime: 'End time',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Zrušiť',
   clearButtonLabel: 'Vymazať',
@@ -42,6 +46,7 @@ const skSKPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Vyberte dátum a čas',
   timePickerToolbarTitle: 'Vyberte čas',
   dateRangePickerToolbarTitle: 'Vyberete rozmedzie dátumov',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>

@@ -30,6 +30,10 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   endDate: 'День закінчення',
   endTime: 'Час закінчення',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Відміна',
   clearButtonLabel: 'Очистити',
@@ -41,6 +45,7 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Вибрати дату і час',
   timePickerToolbarTitle: 'Вибрати час',
   dateRangePickerToolbarTitle: 'Вибрати календарний період',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>

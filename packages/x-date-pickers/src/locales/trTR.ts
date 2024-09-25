@@ -30,6 +30,10 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   // endDate: 'End date',
   // endTime: 'End time',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'iptal',
   clearButtonLabel: 'Temizle',
@@ -41,6 +45,7 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Tarih & Saat seç',
   timePickerToolbarTitle: 'Saat seç',
   dateRangePickerToolbarTitle: 'Tarih aralığı seçin',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>

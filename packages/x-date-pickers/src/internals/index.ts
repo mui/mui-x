@@ -24,6 +24,7 @@ export type {
   PickersToolbarButtonClassKey,
   PickersToolbarButtonClasses,
 } from './components/pickersToolbarButtonClasses';
+export { PickersToolbarText } from './components/PickersToolbarText';
 export type {
   PickersToolbarTextProps,
   ExportedPickersToolbarTextProps,
@@ -100,7 +101,11 @@ export type {
   BasePickerInputProps,
   BaseNonStaticPickerProps,
 } from './models/props/basePickerProps';
-export type { BaseClockProps, DesktopOnlyTimePickerProps } from './models/props/clock';
+export type {
+  BaseClockProps,
+  ExportedBaseClockProps,
+  DesktopOnlyTimePickerProps,
+} from './models/props/clock';
 export type { BaseTabsProps, ExportedBaseTabsProps } from './models/props/tabs';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { DefaultizedProps, MakeOptional, SlotComponentPropsFromProps } from './models/helpers';
@@ -129,8 +134,9 @@ export {
   mergeDateAndTime,
   formatMeridiem,
 } from './utils/date-utils';
-export { resolveTimeViewsResponse, resolveDateTimeFormat } from './utils/date-time-utils';
 export { getDefaultReferenceDate } from './utils/getDefaultReferenceDate';
+export { isTimeView, isInternalTimeView, resolveTimeFormat, getMeridiem } from './utils/time-utils';
+export { resolveTimeViewsResponse, resolveDateTimeFormat } from './utils/date-time-utils';
 export {
   executeInTheNextEventLoopTick,
   getActiveElement,
@@ -155,5 +161,3 @@ export type {
 
 export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar.types';
 export { useCalendarState } from '../DateCalendar/useCalendarState';
-
-export { isInternalTimeView, isTimeView } from './utils/time-utils';

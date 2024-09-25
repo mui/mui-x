@@ -30,6 +30,10 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   endDate: 'Slutdatum',
   endTime: 'Sluttid',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Avbryt',
   clearButtonLabel: 'Rensa',
@@ -41,6 +45,7 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Välj datum & tid',
   timePickerToolbarTitle: 'Välj tid',
   dateRangePickerToolbarTitle: 'Välj datumintervall',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>

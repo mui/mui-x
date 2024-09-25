@@ -30,6 +30,10 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
   // endDate: 'End date',
   // endTime: 'End time',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'کینسل',
   clearButtonLabel: 'کلئیر',
@@ -41,6 +45,7 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'تاریخ اور وقت منتخب کریں',
   timePickerToolbarTitle: 'وقت منتخب کریں',
   dateRangePickerToolbarTitle: 'تاریخوں کی رینج منتخب کریں',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>

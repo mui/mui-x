@@ -30,6 +30,10 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   // endDate: 'End date',
   // endTime: 'End time',
 
+  // Generic range placeholders
+  // from: 'From',
+  // to: 'To',
+
   // Action bar
   cancelButtonLabel: 'Avbryt',
   clearButtonLabel: 'Fjern',
@@ -41,6 +45,7 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   dateTimePickerToolbarTitle: 'Velg dato & klokkeslett',
   timePickerToolbarTitle: 'Velg klokkeslett',
   dateRangePickerToolbarTitle: 'Velg datoperiode',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>
