@@ -110,7 +110,9 @@ export default function ServerSideErrorHandling() {
         <DataGridPro
           {...props}
           unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(dataSourceError) => setError(dataSourceError.message)}
+          unstable_onDataSourceError={(dataSourceError) =>
+            setError(dataSourceError.message)
+          }
           unstable_dataSourceCache={null}
           apiRef={apiRef}
           pagination
