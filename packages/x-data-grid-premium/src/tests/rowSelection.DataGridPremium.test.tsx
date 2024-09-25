@@ -60,7 +60,10 @@ describe('<DataGridPremium /> - Row selection', () => {
   describe('prop: rowSelectionPropagation="both"', () => {
     it('should select all the children when selecting a parent', () => {
       render(
-        <Test rowSelectionPropagation="both" initialState={{ rowGrouping: { model: ['category1'] } }} />,
+        <Test
+          rowSelectionPropagation="both"
+          initialState={{ rowGrouping: { model: ['category1'] } }}
+        />,
       );
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
@@ -73,7 +76,10 @@ describe('<DataGridPremium /> - Row selection', () => {
 
     it('should deselect all the children when deselecting a parent', () => {
       render(
-        <Test rowSelectionPropagation="both" initialState={{ rowGrouping: { model: ['category1'] } }} />,
+        <Test
+          rowSelectionPropagation="both"
+          initialState={{ rowGrouping: { model: ['category1'] } }}
+        />,
       );
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
