@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, fireDiscreteEvent } from '@mui/internal-test-utils';
+import { screen, fireDiscreteEvent, fireEvent } from '@mui/internal-test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import {
   adapterToUse,
@@ -12,7 +12,6 @@ import {
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<MobileDateRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -87,7 +86,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
         openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
       }
 
-      fireUserEvent.mousePress(
+      fireEvent.click(
         screen.getAllByRole('gridcell', {
           name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
         })[0],

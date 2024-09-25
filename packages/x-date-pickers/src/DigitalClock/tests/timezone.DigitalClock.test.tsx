@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { getDateOffset, describeAdapters } from 'test/utils/pickers';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
@@ -26,7 +25,7 @@ describe('<DigitalClock /> - Timezone', () => {
       const onChange = spy();
       render(<DigitalClock onChange={onChange} />);
 
-      fireUserEvent.mousePress(screen.getByRole('option', { name: '08:00 AM' }));
+      fireEvent.click(screen.getByRole('option', { name: '08:00 AM' }));
 
       const expectedDate = adapter.setHours(adapter.date(), 8);
 
@@ -45,7 +44,7 @@ describe('<DigitalClock /> - Timezone', () => {
           const onChange = spy();
           render(<DigitalClock onChange={onChange} timezone={timezone} />);
 
-          fireUserEvent.mousePress(screen.getByRole('option', { name: '08:00 AM' }));
+          fireEvent.click(screen.getByRole('option', { name: '08:00 AM' }));
 
           const expectedDate = adapter.setHours(
             adapter.startOfDay(adapter.date(undefined, timezone)),
@@ -76,7 +75,7 @@ describe('<DigitalClock /> - Timezone', () => {
             (adapter.getHours(value) + offsetDiff / 60 + 24) % 24,
           );
 
-          fireUserEvent.mousePress(screen.getByRole('option', { name: '08:30 PM' }));
+          fireEvent.click(screen.getByRole('option', { name: '08:30 PM' }));
 
           const actualDate = onChange.lastCall.firstArg;
 

@@ -587,6 +587,19 @@ async function initializeEnvironment(
         expect(groupHeaderWidth).to.equal(groupHeaderColumnsTotalWidth);
         expect(subGroupHeaderWidth).to.equal(subGroupHeaderColumnsTotalWidth);
       });
+
+      // https://github.com/mui/mui-x/issues/3524#issuecomment-2313533915
+      it('should allow vertical scroll when inside of a flex parent with maxHeight', async () => {
+        await renderFixture('DataGrid/MaxHeight');
+        await page.mouse.move(150, 150);
+        await page.mouse.wheel(0, 50);
+        await sleep(50);
+
+        const scrollTop = await page.evaluate(() => {
+          return document.querySelector('.MuiDataGrid-virtualScroller')!.scrollTop;
+        });
+        expect(scrollTop).not.to.equal(0);
+      });
     });
 
     describe('<DatePicker />', () => {
@@ -708,7 +721,7 @@ async function initializeEnvironment(
 
           const monthSection = page.getByRole('spinbutton', { name: 'Month' });
           await monthSection.press('2');
-          await page.getByRole('button', { name: 'Clear value' }).click();
+          await page.getByRole('button', { name: 'Clear' }).click();
 
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('MM');
         });
@@ -720,7 +733,7 @@ async function initializeEnvironment(
           // locator.fill('2') does not work reliably for this case in all browsers
           await textbox.focus();
           await textbox.press('2');
-          await page.getByRole('button', { name: 'Clear value' }).click();
+          await page.getByRole('button', { name: 'Clear' }).click();
 
           // firefox does not support document.getSelection().toString() on input elements
           if (browserType.name() === 'firefox') {
