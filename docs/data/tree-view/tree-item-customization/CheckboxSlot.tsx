@@ -4,9 +4,12 @@ import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem2, TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 import { MUI_X_PRODUCTS } from './products';
 
-function CustomCheckbox(props: React.InputHTMLAttributes<HTMLInputElement>) {
-  return <input type="checkbox" {...props} />;
-}
+const CustomCheckbox = React.forwardRef(function CustomCheckbox(
+  props: React.InputHTMLAttributes<HTMLInputElement>,
+  ref: React.Ref<HTMLInputElement>,
+) {
+  return <input type="checkbox" ref={ref} {...props} />;
+});
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   props: TreeItem2Props,

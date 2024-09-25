@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/IndeterminateCheckBoxOutlined';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { unstable_useTreeItem2 as useTreeItem2 } from '@mui/x-tree-view/useTreeItem2';
+import { useTreeItem2 } from '@mui/x-tree-view/useTreeItem2';
 import {
   TreeItem2Content,
   TreeItem2Label,

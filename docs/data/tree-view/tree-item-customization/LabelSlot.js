@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
 
-import { unstable_useTreeItem2 as useTreeItem2 } from '@mui/x-tree-view/useTreeItem2';
+import { useTreeItem2 } from '@mui/x-tree-view/useTreeItem2';
 
 export const MUI_X_PRODUCTS = [
   {
