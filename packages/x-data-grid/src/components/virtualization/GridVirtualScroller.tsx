@@ -48,6 +48,7 @@ const Scroller = styled('div', {
 })<{ ownerState: OwnerState }>({
   position: 'relative',
   height: '100%',
+  flexGrow: 1,
   overflow: 'scroll',
   scrollbarWidth: 'none' /* Firefox */,
   '&::-webkit-scrollbar': {

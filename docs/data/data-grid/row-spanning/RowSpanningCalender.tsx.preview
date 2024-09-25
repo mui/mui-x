@@ -2,7 +2,6 @@
   columns={columns}
   rows={rows}
   unstable_rowSpanning
-  autoHeight
   disableRowSelectionOnClick
   hideFooter
   showCellVerticalBorder
