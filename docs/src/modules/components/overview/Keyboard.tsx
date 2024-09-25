@@ -410,20 +410,20 @@ export default function Keyboard() {
   const brandingTheme = useTheme();
   const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
 
-  const handleKeySelection = (ev: React.SyntheticEvent, key: SelectedKey | null) => {
+  const handleKeySelection = (event: React.SyntheticEvent, key: SelectedKey | null) => {
     const sectionContent = (ref.current as any).querySelector(
       `.MuiPickersSectionList-section[data-sectionindex="${selectedSection.current || 0}"] .MuiPickersSectionList-sectionContent`,
     );
     sectionContent.focus();
 
     if (key) {
-      const event = new KeyboardEvent('keydown', {
+      const dispatchedEvent = new KeyboardEvent('keydown', {
         ...key,
         bubbles: true,
         cancelable: true,
       });
 
-      sectionContent.dispatchEvent(event);
+      sectionContent.dispatchEvent(dispatchedEvent);
 
       if (key.key === 'Backspace') {
         sectionContent.textContent = '';

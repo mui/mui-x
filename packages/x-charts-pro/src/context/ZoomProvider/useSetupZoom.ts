@@ -178,7 +178,7 @@ export const useSetupZoom = () => {
 
     function pointerUpHandler(event: PointerEvent) {
       eventCacheRef.current.splice(
-        eventCacheRef.current.findIndex((upEvent) => upEvent.pointerId),
+        eventCacheRef.current.findIndex((eventIndex) => eventIndex.pointerId === event.pointerId),
         1,
       );
 
