@@ -40,7 +40,6 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
   const rootProps = useGridRootProps();
- 
 
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
