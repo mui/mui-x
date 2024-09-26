@@ -89,7 +89,7 @@ Same behavior as for the [Row grouping](/x/react-data-grid/row-grouping/#group-e
 
 ## Automatic parents and children selection
 
-Same behavior as for the [Row grouping](/x/react-data-grid/row-grouping/#propagate-row-selection).
+Same behavior as for the [Row grouping](/x/react-data-grid/row-grouping/#automatic-parents-and-children-selection).
 
 ## Gaps in the tree
 
