@@ -86,14 +86,17 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       }
     }, []);
 
+    const isSelectable = apiRef.current.isRowSelectable(id);
+
+    const checkboxPropsSelector = getCheckboxPropsSelector(
+      id,
+      rootProps.rowSelectionPropagation.parents,
+    );
+    const { isIndeterminate, isChecked } = useGridSelector(apiRef, checkboxPropsSelector);
+
     if (rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
       return null;
     }
-
-    const isSelectable = apiRef.current.isRowSelectable(id);
-
-    const checkboxPropsSelector = getCheckboxPropsSelector(id);
-    const { isIndeterminate, isChecked } = useGridSelector(apiRef, checkboxPropsSelector);
 
     const label = apiRef.current.getLocaleText(
       isChecked ? 'checkboxSelectionUnselectRow' : 'checkboxSelectionSelectRow',
