@@ -81,9 +81,9 @@ export const useSetupPan = () => {
       setZoomData(newZoomData);
     };
 
-    const handleDown = (downEvent: PointerEvent) => {
-      eventCacheRef.current.push(downEvent);
-      const point = getSVGPoint(element, downEvent);
+    const handleDown = (event: PointerEvent) => {
+      eventCacheRef.current.push(event);
+      const point = getSVGPoint(element, event);
 
       if (!drawingArea.isPointInside(point)) {
         return;
@@ -91,7 +91,7 @@ export const useSetupPan = () => {
 
       // If there is only one pointer, prevent selecting text
       if (eventCacheRef.current.length === 1) {
-        downEvent.preventDefault();
+        event.preventDefault();
       }
 
       isDraggingRef.current = true;
@@ -104,9 +104,9 @@ export const useSetupPan = () => {
       };
     };
 
-    const handleUp = (upEvent: PointerEvent) => {
+    const handleUp = (event: PointerEvent) => {
       eventCacheRef.current.splice(
-        eventCacheRef.current.findIndex((eventIndex) => eventIndex.pointerId === upEvent.pointerId),
+        eventCacheRef.current.findIndex((cachedIndex) => cachedIndex.pointerId === event.pointerId),
         1,
       );
       setIsInteracting(false);
