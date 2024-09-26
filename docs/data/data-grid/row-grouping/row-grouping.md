@@ -314,8 +314,8 @@ Here's how it's structured:
 
 ```ts
 type GridRowSelectionPropagation = {
-  descendants?: boolean;  // default: false
-  parents?: boolean;      // default: false
+  descendants?: boolean; // default: false
+  parents?: boolean; // default: false
 };
 ```
 
