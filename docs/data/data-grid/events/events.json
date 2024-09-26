@@ -129,7 +129,7 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "columnHeaderContext",
+    "name": "columnHeaderContextMenu",
     "description": "Fired when a column header is right clicked",
     "params": "GridColumnHeaderParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>",
