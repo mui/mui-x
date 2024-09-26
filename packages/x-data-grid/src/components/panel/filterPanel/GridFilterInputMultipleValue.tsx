@@ -36,7 +36,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
   const id = useId();
 
   const rootProps = useGridRootProps();
-  const column = apiRef.current.getColumn(item.field);
+
   React.useEffect(() => {
     const itemValue = item.value ?? [];
     setFilterValueState(itemValue.map(String));
@@ -52,12 +52,12 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
         ...item,
         value: [
           ...value.map((filterItemValue) =>
-            column.type === 'number' ? Number(filterItemValue) : filterItemValue,
+            type === 'number' ? Number(filterItemValue) : filterItemValue,
           ),
         ],
       });
     },
-    [applyValue, column.type, item],
+    [applyValue, item, type],
   );
 
   return (

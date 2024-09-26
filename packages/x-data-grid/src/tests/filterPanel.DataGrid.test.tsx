@@ -10,18 +10,14 @@ import {
   GridPreferencePanelsValue,
 } from '@mui/x-data-grid';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
-import { getColumnHeaderCell, getColumnValues, getSelectByName } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues, getSelectByName, sleep } from 'test/utils/helperFn';
 
 function setColumnValue(columnValue: string) {
   fireEvent.change(getSelectByName('Columns'), {
     target: { value: columnValue },
   });
 }
-function setInputValue(filterValue: unknown) {
-  fireEvent.change(getSelectByName('Value'), {
-    target: { value: filterValue },
-  });
-}
+
 function setOperatorValue(operator: string) {
   fireEvent.change(getSelectByName('Operator'), {
     target: { value: operator },
@@ -525,6 +521,68 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(getSelectByName('Operator').value).to.equal('is');
   });
 
+  it('should inject correct value type in filter model for column type:number', async ( ) => {
+   
+    const onFilterModelChange = spy();
+
+    render(
+      <TestCase
+        rows={[
+          {
+            id: 1,
+            name: 'Damien',
+            age: 25,
+            dateCreated: new Date(2023, 11, 27),
+            isAdmin: true,
+            country: 'Spain',
+            discount: '',
+          },
+          {
+            id: 2,
+            name: 'Nicolas',
+            age: 36,
+            dateCreated: new Date(2023, 11, 26),
+            isAdmin: false,
+            country: 'France',
+            discount: '',
+          },
+          {
+            id: 3,
+            name: 'Kate',
+            age: 19,
+            dateCreated: new Date(2023, 11, 25),
+            isAdmin: false,
+            country: 'Brazil',
+            discount: 'junior',
+          },
+        ]}
+        columns={[
+          { field: 'name', type: 'string' },
+          { field: 'age', type: 'number' },
+          { field: 'dateCreated', type: 'date' },
+          { field: 'isAdmin', type: 'boolean' },
+        ]}
+        onFilterModelChange={onFilterModelChange}
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+      />,
+    );
+
+    setColumnValue('age');
+    setOperatorValue('=');
+    
+    fireEvent.change(screen.getByPlaceholderText<HTMLInputElement>('Filter value'), {
+      target: { value: '25' },
+    });
+    await sleep(150);
+    expect(onFilterModelChange.callCount).to.equal(1);
+    expect(typeof onFilterModelChange.lastCall.args[0].items[0].value).to.equal('number');
+  });
+
   it('should inject correct value type in filter model for column type:boolean', () => {
     const onFilterModelChange = spy();
     render(
@@ -576,62 +634,16 @@ describe('<DataGrid /> - Filter panel', () => {
 
     setColumnValue('isAdmin');
     setOperatorValue('is');
-    setInputValue('true');
+   
+      fireEvent.change(getSelectByName('Value'), {
+        target: { value: 'true' },
+      });
+
+    expect(onFilterModelChange.callCount).to.equal(1);
     expect(typeof onFilterModelChange.lastCall.args[0].items[0].value).to.equal('boolean');
   });
 
-  it('should inject correct value type in filter model for column type:number', () => {
-    const onFilterModelChange = spy();
-    render(
-      <TestCase
-        rows={[
-          {
-            id: 1,
-            name: 'Damien',
-            age: 25,
-            dateCreated: new Date(2023, 11, 27),
-            isAdmin: true,
-            country: 'Spain',
-            discount: '',
-          },
-          {
-            id: 2,
-            name: 'Nicolas',
-            age: 36,
-            dateCreated: new Date(2023, 11, 26),
-            isAdmin: false,
-            country: 'France',
-            discount: '',
-          },
-          {
-            id: 3,
-            name: 'Kate',
-            age: 19,
-            dateCreated: new Date(2023, 11, 25),
-            isAdmin: false,
-            country: 'Brazil',
-            discount: 'junior',
-          },
-        ]}
-        columns={[
-          { field: 'name', type: 'string' },
-          { field: 'age', type: 'number' },
-          { field: 'dateCreated', type: 'date' },
-          { field: 'isAdmin', type: 'boolean' },
-        ]}
-        onFilterModelChange={onFilterModelChange}
-        initialState={{
-          preferencePanel: {
-            open: true,
-            openedPanelValue: GridPreferencePanelsValue.filters,
-          },
-        }}
-      />,
-    );
-
-    setColumnValue('age');
-    setOperatorValue('=');
-    setInputValue('25');
-    expect(typeof onFilterModelChange.lastCall.args[0].items[0].value).to.equal('number');
-  });
+  
 });
+
+
