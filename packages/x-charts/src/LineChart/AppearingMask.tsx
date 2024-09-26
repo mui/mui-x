@@ -10,6 +10,10 @@ interface AppearingMaskProps {
   skipAnimation?: boolean;
   children: React.ReactNode;
 }
+
+/**
+ * @ignore - internal component.
+ */
 export function AppearingMask(props: AppearingMaskProps) {
   const drawingArea = useDrawingArea();
   const chartId = useChartId();
