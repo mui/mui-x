@@ -106,7 +106,7 @@ export const useSetupPan = () => {
 
     const handleUp = (event: PointerEvent) => {
       eventCacheRef.current.splice(
-        eventCacheRef.current.findIndex((cachedIndex) => cachedIndex.pointerId === event.pointerId),
+        eventCacheRef.current.findIndex((cachedEvent) => cachedEvent.pointerId === event.pointerId),
         1,
       );
       setIsInteracting(false);
