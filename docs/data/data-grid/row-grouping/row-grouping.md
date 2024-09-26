@@ -314,8 +314,8 @@ Here's how it's structured:
 
 ```ts
 type GridRowSelectionPropagation = {
-  descendants: boolean;
-  parents: boolean;
+  descendants?: boolean;  // default: false
+  parents?: boolean;      // default: false
 };
 ```
 
@@ -326,20 +326,26 @@ When `rowSelectionPropagation.descendants` is set to `true`.
 
 When `rowSelectionPropagation.parents` is set to `true`.
 
-- Selecting all the filtered descendants of a parent would auto-select it.
-- Deselecting a descendant of a selected parent would deselect the parent.
+- Selecting all the filtered descendants of a parent would auto-select the parent.
+- Deselecting a descendant of a selected parent would auto-deselect the parent.
 
 The example below demonstrates the usage of the `rowSelectionPropagation` prop.
 
 {{"demo": "RowGroupingPropagateSelection.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
-The `autoSelectDescendants` and `autoSelectParents` props will only affect the filtered rows.
+The row selection propagation will also affect the "Select all" checkbox in a similar way like any other group checkbox.
+:::
+
+:::info
+The row selection propagation will only affect the filtered rows.
 If some rows were selected before filtering, auto selection will not be applied on them.
+
+The selected unfiltered rows will be auto-deselected when the filter is applied.
 :::
 
 :::warning
-If `props.disableMultipleRowSelection` is set to `true`, the row selection propagation feature will work like `'none'`.
+If `props.disableMultipleRowSelection` is set to `true`, the row selection propagation feature will not work.
 :::
 
 :::warning

@@ -138,7 +138,7 @@ const getFilteredRowNodeSiblings = (
   filteredRows: Record<GridRowId, boolean>,
   id: GridRowId,
 ) => {
-  const node = apiRef.current.getRowNode(id);
+  const node = tree[id];
   if (!node) {
     return [];
   }
@@ -199,7 +199,7 @@ export const findRowsToSelect = (
         siblings.length === 0 ||
         siblings.every((sibling) => checkAllDescendantsSelected(sibling))
       ) {
-        const rowNode = apiRef.current.getRowNode(rowId) as GridGroupNode;
+        const rowNode = tree[rowId] as GridGroupNode;
         const parent = rowNode.parent;
         if (parent && parent !== GRID_ROOT_GROUP_ID && apiRef.current.isRowSelectable(parent)) {
           rowsToSelect.add(parent);
