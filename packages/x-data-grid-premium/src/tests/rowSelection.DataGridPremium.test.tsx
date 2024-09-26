@@ -45,26 +45,30 @@ const baselineProps: BaselineProps = {
 describe('<DataGridPremium /> - Row selection', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  describe('props: rowSelectionPropagation.descendants=true & rowSelectionPropagation.parents=true', () => {
+    let apiRef: React.MutableRefObject<GridApi>;
 
-  function Test(props: Partial<DataGridPremiumProps>) {
-    apiRef = useGridApiRef();
+    function Test(props: Partial<DataGridPremiumProps>) {
+      apiRef = useGridApiRef();
 
-    return (
-      <div style={{ width: 300, height: 300 }}>
-        <DataGridPremium {...baselineProps} checkboxSelection apiRef={apiRef} {...props} />
-      </div>
-    );
-  }
-
-  describe('prop: rowSelectionPropagation="both"', () => {
-    it('should select all the children when selecting a parent', () => {
-      render(
-        <Test
-          rowSelectionPropagation="both"
-          initialState={{ rowGrouping: { model: ['category1'] } }}
-        />,
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPremium
+            {...baselineProps}
+            checkboxSelection
+            apiRef={apiRef}
+            rowSelectionPropagation={{
+              descendants: true,
+              parents: true,
+            }}
+            {...props}
+          />
+        </div>
       );
+    }
+
+    it('should select all the children when selecting a parent', () => {
+      render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
       expect(apiRef.current.getSelectedRows()).to.have.keys([
@@ -75,12 +79,7 @@ describe('<DataGridPremium /> - Row selection', () => {
     });
 
     it('should deselect all the children when deselecting a parent', () => {
-      render(
-        <Test
-          rowSelectionPropagation="both"
-          initialState={{ rowGrouping: { model: ['category1'] } }}
-        />,
-      );
+      render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
       expect(apiRef.current.getSelectedRows()).to.have.keys([
@@ -95,7 +94,6 @@ describe('<DataGridPremium /> - Row selection', () => {
     it('should put the parent into indeterminate if some but not all the children are selected', () => {
       render(
         <Test
-          rowSelectionPropagation="both"
           defaultGroupingExpansionDepth={-1}
           initialState={{ rowGrouping: { model: ['category1'] } }}
           density="compact"
@@ -109,7 +107,6 @@ describe('<DataGridPremium /> - Row selection', () => {
     it('should auto select the parent if all the children are selected', () => {
       render(
         <Test
-          rowSelectionPropagation="both"
           defaultGroupingExpansionDepth={-1}
           density="compact"
           initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -130,7 +127,6 @@ describe('<DataGridPremium /> - Row selection', () => {
     it('should deselect auto selected parent if one of the children is deselected', () => {
       render(
         <Test
-          rowSelectionPropagation="both"
           defaultGroupingExpansionDepth={-1}
           density="compact"
           initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -153,7 +149,6 @@ describe('<DataGridPremium /> - Row selection', () => {
     it('should deselect unfiltered rows after filtering', () => {
       render(
         <Test
-          rowSelectionPropagation="both"
           defaultGroupingExpansionDepth={-1}
           density="compact"
           initialState={{ rowGrouping: { model: ['category1'] } }}

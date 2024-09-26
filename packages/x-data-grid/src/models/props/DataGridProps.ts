@@ -818,16 +818,23 @@ export interface DataGridProSharedPropsWithDefaultValue {
    */
   headerFilters: boolean;
   /**
-   * The following behavior happens for each of the possible values:
-   * 1. `none` - No row selection propagation.
-   * 2. `parents` - Selecting all children will auto-select the parent(s).
-   * 3. `children` - Selecting a parent will auto-select all its descendants.
-   * 4. `both` - Both `parents` and `children` behavior.
+   * When `rowSelectionPropagation.descendants` is set to `true`.
+   * - Selecting a parent will auto-select all its filtered descendants.
+   * - Deselecting a parent will auto-deselect all its filtered descendants.
+   *
+   * When `rowSelectionPropagation.parents=true`
+   * - Selecting all descendants of a parent would auto-select it.
+   * - Deselecting a descendant of a selected parent would deselect the parent.
    *
    * Works with tree data and row grouping on the client-side only.
-   * @default 'none'
+   * @default { parents: false, descendants: false }
    */
   rowSelectionPropagation: GridRowSelectionPropagation;
+  /**
+   * If `true`, the rows will be gathered in a tree structure according to the `getTreeDataPath` prop.
+   * @default false
+   */
+  treeData: boolean;
 }
 
 export interface DataGridProSharedPropsWithoutDefaultValue {

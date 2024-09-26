@@ -524,11 +524,8 @@
       }
     },
     "rowSelectionPropagation": {
-      "type": {
-        "name": "enum",
-        "description": "'both'<br>&#124;&nbsp;'children'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'parents'"
-      },
-      "default": "'none'"
+      "type": { "name": "shape", "description": "{ descendants?: bool, parents?: bool }" },
+      "default": "{ parents: false, descendants: false }"
     },
     "rowsLoadingMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" }

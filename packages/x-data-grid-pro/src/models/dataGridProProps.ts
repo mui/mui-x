@@ -80,11 +80,6 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    */
   scrollEndThreshold: number;
   /**
-   * If `true`, the rows will be gathered in a tree structure according to the `getTreeDataPath` prop.
-   * @default false
-   */
-  treeData: boolean;
-  /**
    * If above 0, the row children will be expanded up to this depth.
    * If equal to -1, all the row children will be expanded.
    * @default 0

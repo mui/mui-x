@@ -308,23 +308,33 @@ If you are dynamically switching the `leafField` or `mainGroupingCriteria`, the 
 ## Automatic parents and children selection
 
 By default, selecting a parent row will not select its children.
-You can override this behavior by setting using the `rowSelectionPropagation` prop.
+You can override this behavior by using the `rowSelectionPropagation` prop.
 
-It has four possible values, `'none'` (current behavior), `'parents'`, `'children'`, and `'both'`. The following table shows the behavior of each value on user actions "Select" and "Deselect":
+Here's how it's structured:
 
-| Value        | Select                                                                   | Deselect                                                           |
-| :----------- | :----------------------------------------------------------------------- | :----------------------------------------------------------------- |
-| `'none'`     | Only select the clicked row                                              | Only deselect the clicked row                                      |
-| `'parents'`  | Auto select parents whose all the descendants are selected               | Auto deselect parents whose atleast one descendant is not selected |
-| `'children'` | Selecting a parent row will automatically select all the descendant rows | Deselect all the descendant rows on deselecting a parent           |
-| `'both'`     | Both `parent` and `children` behaviors                                   | Both `parent` and `children` behaviors                             |
+```ts
+type GridRowSelectionPropagation = {
+  descendants: boolean;
+  parents: boolean;
+};
+```
 
-In the following example, you can test the different values of the `rowSelectionPropagation` prop.
+When `rowSelectionPropagation.descendants` is set to `true`.
+
+- Selecting a parent will auto-select all its filtered descendants.
+- Deselecting a parent row will auto-deselect all its filtered descendants.
+
+When `rowSelectionPropagation.parents` is set to `true`.
+
+- Selecting all the filtered descendants of a parent would auto-select it.
+- Deselecting a descendant of a selected parent would deselect the parent.
+
+The example below demonstrates the usage of the `rowSelectionPropagation` prop.
 
 {{"demo": "RowGroupingPropagateSelection.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
-The row selection propagation feature will only affect the filtered rows.
+The `autoSelectDescendants` and `autoSelectParents` props will only affect the filtered rows.
 If some rows were selected before filtering, auto selection will not be applied on them.
 :::
 

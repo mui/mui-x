@@ -1,24 +1,29 @@
-import { GridRowSelectionPropagation } from '@mui/x-data-grid-pro';
 import { GridSignature } from '../../utils/useGridApiEventHandler';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
 import { selectedIdsLookupSelector } from './gridRowSelectionSelector';
 import { gridRowTreeSelector } from '../rows/gridRowsSelector';
-import { createSelectorMemoized } from '../../../utils/createSelector';
+import { createSelector } from '../../../utils/createSelector';
 import type { GridGroupNode, GridRowId, GridRowTreeConfig } from '../../../models/gridRows';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type {
   GridPrivateApiCommunity,
   GridApiCommunity,
 } from '../../../models/api/gridApiCommunity';
+import type { GridRowSelectionPropagation } from '../../../models/gridRowSelectionModel';
+
+export const ROW_SELECTION_PROPAGATION_DEFAULT: GridRowSelectionPropagation = {
+  parents: false,
+  descendants: false,
+};
 
 // TODO v8: Use `createSelectorV8`
-function getGridRowGroupSelectableChildrenSelector(
+function getGridRowGroupSelectableDescendantsSelector(
   apiRef: React.MutableRefObject<GridApiCommunity>,
   groupId: GridRowId,
 ) {
-  return createSelectorMemoized(
+  return createSelector(
     gridRowTreeSelector,
     gridSortedRowIdsSelector,
     gridFilteredRowsLookupSelector,
@@ -28,7 +33,7 @@ function getGridRowGroupSelectableChildrenSelector(
         return [];
       }
 
-      const children: GridRowId[] = [];
+      const descendants: GridRowId[] = [];
 
       const startIndex = sortedRowIds.findIndex((id) => id === groupId) + 1;
       for (
@@ -38,17 +43,17 @@ function getGridRowGroupSelectableChildrenSelector(
       ) {
         const id = sortedRowIds[index];
         if (filteredRowsLookup[id] !== false && apiRef.current.isRowSelectable(id)) {
-          children.push(id);
+          descendants.push(id);
         }
       }
-      return children;
+      return descendants;
     },
   );
 }
 
 // TODO v8: Use `createSelectorV8`
 export function getCheckboxPropsSelector(groupId: GridRowId) {
-  return createSelectorMemoized(
+  return createSelector(
     gridRowTreeSelector,
     gridSortedRowIdsSelector,
     gridFilteredRowsLookupSelector,
@@ -81,7 +86,9 @@ export function getCheckboxPropsSelector(groupId: GridRowId) {
       }
       return {
         isIndeterminate:
-          selectedDescendentsCount > 0 && selectedDescendentsCount < selectableDescendentsCount,
+          (selectedDescendentsCount > 0 && selectedDescendentsCount < selectableDescendentsCount) ||
+          (selectedDescendentsCount === selectableDescendentsCount &&
+            rowSelectionLookup[groupId] === undefined),
         isChecked: selectedDescendentsCount > 0,
       };
     },
@@ -142,16 +149,17 @@ export const findRowsToSelect = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   tree: GridRowTreeConfig,
   selectedRow: GridRowId,
-  rowSelectionPropagation: GridRowSelectionPropagation,
+  autoSelectDescendants: boolean,
+  autoSelectParents: boolean,
 ) => {
   const filteredRows = gridFilteredRowsLookupSelector(apiRef);
   const rowsToSelect: GridRowId[] = [];
 
-  if (rowSelectionPropagation === 'none') {
+  if (!autoSelectDescendants && !autoSelectParents) {
     return rowsToSelect;
   }
 
-  if (rowSelectionPropagation === 'both' || rowSelectionPropagation === 'parents') {
+  if (autoSelectParents) {
     const traverseParents = (rowId: GridRowId) => {
       const siblings: GridRowId[] = getFilteredRowNodeSiblings(apiRef, tree, filteredRows, rowId);
       if (
@@ -169,16 +177,16 @@ export const findRowsToSelect = (
     traverseParents(selectedRow);
   }
 
-  if (rowSelectionPropagation === 'both' || rowSelectionPropagation === 'children') {
+  if (autoSelectDescendants) {
     const rowNode = apiRef.current.getRowNode(selectedRow);
 
     if (rowNode?.type === 'group') {
-      const rowGroupChildrenSelector = getGridRowGroupSelectableChildrenSelector(
+      const rowGroupDescendantsSelector = getGridRowGroupSelectableDescendantsSelector(
         apiRef,
         selectedRow,
       );
-      const children = rowGroupChildrenSelector(apiRef);
-      return rowsToSelect.concat(children);
+      const descendants = rowGroupDescendantsSelector(apiRef);
+      return rowsToSelect.concat(descendants);
     }
   }
   return rowsToSelect;
@@ -188,15 +196,16 @@ export const findRowsToDeselect = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   tree: GridRowTreeConfig,
   deselectedRow: GridRowId,
-  rowSelectionPropagation: GridRowSelectionPropagation,
+  autoSelectDescendants: boolean,
+  autoSelectParents: boolean,
 ) => {
   const rowsToDeselect: GridRowId[] = [];
 
-  if (rowSelectionPropagation === 'none') {
+  if (!autoSelectParents && !autoSelectDescendants) {
     return rowsToDeselect;
   }
 
-  if (rowSelectionPropagation === 'both' || rowSelectionPropagation === 'parents') {
+  if (autoSelectParents) {
     const allParents = getRowNodeParents(tree, deselectedRow);
     allParents.forEach((parent) => {
       const isSelected = apiRef.current.isRowSelected(parent);
@@ -206,15 +215,15 @@ export const findRowsToDeselect = (
     });
   }
 
-  if (rowSelectionPropagation === 'both' || rowSelectionPropagation === 'children') {
+  if (autoSelectDescendants) {
     const rowNode = apiRef.current.getRowNode(deselectedRow);
     if (rowNode?.type === 'group') {
-      const rowGroupChildrenSelector = getGridRowGroupSelectableChildrenSelector(
+      const rowGroupDescendantsSelector = getGridRowGroupSelectableDescendantsSelector(
         apiRef,
         deselectedRow,
       );
-      const children = rowGroupChildrenSelector(apiRef);
-      return rowsToDeselect.concat(children);
+      const descendants = rowGroupDescendantsSelector(apiRef);
+      return rowsToDeselect.concat(descendants);
     }
   }
   return rowsToDeselect;

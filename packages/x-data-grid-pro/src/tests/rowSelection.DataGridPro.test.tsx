@@ -257,7 +257,7 @@ describe('<DataGridPro /> - Row selection', () => {
     });
   });
 
-  describe('prop: rowSelectionPropagation="both"', () => {
+  describe('props: rowSelectionPropagation.descendants=true & rowSelectionPropagation.parents=true', () => {
     const rows: GridRowsProp = [
       {
         hierarchy: ['Sarah'],
@@ -373,7 +373,7 @@ describe('<DataGridPro /> - Row selection', () => {
             rows={rows}
             columns={columns}
             getTreeDataPath={getTreeDataPath}
-            rowSelectionPropagation="both"
+            rowSelectionPropagation={{ descendants: true, parents: true }}
             checkboxSelection
             {...props}
           />
