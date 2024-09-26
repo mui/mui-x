@@ -148,6 +148,7 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
 
     return () => {
       unregisterChild(idAttribute);
+      unregisterChild(idAttribute);
     };
   }, [store, instance, registerChild, unregisterChild, itemId, id, treeId]);
 

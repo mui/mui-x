@@ -233,11 +233,11 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
   const pluginContextValue = React.useMemo(
     () => ({
       itemsReordering: {
-        enabled: isItemsReorderingEnabled,
+        enabled: params.itemsReordering,
         isItemReorderable: params.isItemReorderable,
       },
     }),
-    [isItemsReorderingEnabled, params.isItemReorderable],
+    [params.itemsReordering, params.isItemReorderable],
   );
 
   return {
