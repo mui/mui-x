@@ -47,6 +47,8 @@ export interface PickerController<
 
 export type PickerAnyController = PickerController<any, any, any, any, any, any>;
 
+export type PickerAnyAccessibleController = PickerController<any, any, true, any, any, any>;
+
 /**
  * Infer all the usual generic in the picker packages from a `PickerConroller` interface.
  */

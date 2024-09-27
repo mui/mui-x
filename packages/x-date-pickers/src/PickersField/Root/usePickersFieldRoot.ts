@@ -2,10 +2,10 @@ import * as React from 'react';
 import { mergeReactProps } from '@base_ui/react/utils/mergeReactProps';
 import { useField } from '../../internals/hooks/useField';
 import type { PickersFieldProvider } from './PickersFieldProvider';
-import { PickerControllerProperties, PickerAnyController } from '../../models';
+import { PickerControllerProperties, PickerAnyAccessibleController } from '../../models';
 import { useLocalizationContext } from '../../internals/hooks/useUtils';
 
-export function usePickersFieldRoot<TController extends PickerAnyController>(
+export function usePickersFieldRoot<TController extends PickerAnyAccessibleController>(
   params: UsePickersFieldRoot.Parameters<TController>,
 ): UsePickersFieldRoot.ReturnValue {
   type ControllerProperties = PickerControllerProperties<TController>;
@@ -172,7 +172,7 @@ export function usePickersFieldRoot<TController extends PickerAnyController>(
 }
 
 export namespace UsePickersFieldRoot {
-  export interface Parameters<TController extends PickerAnyController> {
+  export interface Parameters<TController extends PickerAnyAccessibleController> {
     controller: TController;
     internalProps: PickerControllerProperties<TController>['internalProps'];
   }
