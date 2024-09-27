@@ -23,6 +23,7 @@ export * from './nlNL';
 export * from './nnNO';
 export * from './plPL';
 export * from './ptBR';
+export * from './ptPT';
 export * from './roRO';
 export * from './ruRU';
 export * from './skSK';
