@@ -195,8 +195,8 @@
     "languageTag": "pt-PT",
     "importName": "ptPT",
     "localeName": "Portuguese",
-    "missingKeysCount": 6,
-    "totalKeysCount": 124,
+    "missingKeysCount": 0,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/ptPT.ts"
   },
   {

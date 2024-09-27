@@ -56,7 +56,7 @@ const useCustomPlugin = ({ params }) => {
 
 useCustomPlugin.params = { customParam: true };
 
-useCustomPlugin.getDefaultizedParams = (params) => ({
+useCustomPlugin.getDefaultizedParams = ({ params }) => ({
   ...params,
   customParam: params.customParam ?? false,
 });
@@ -76,7 +76,7 @@ useCustomPlugin.params = {
   customModel: true,
 };
 
-useCustomPlugin.getDefaultizedParams = (params) => ({
+useCustomPlugin.getDefaultizedParams = ({ params }) => ({
   ...params,
   // ... other defaultized params
   defaultCustomModel: params.defaultCustomModel ?? false,
