@@ -19,7 +19,7 @@ export const MUI_X_PRODUCTS: TreeViewBaseItem<Editable>[] = [
   },
   {
     id: 'pickers',
-    label: 'Date and time pickers',
+    label: 'Date and Time pickers',
 
     children: [
       {

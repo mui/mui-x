@@ -36,7 +36,7 @@ export const MUI_X_PRODUCTS: TreeViewBaseItem<TreeItemWithLabel>[] = [
   },
   {
     id: 'pickers',
-    label: 'Date and time pickers',
+    label: 'Date and Time pickers',
 
     children: [
       {
