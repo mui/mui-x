@@ -53,12 +53,12 @@ export const getDateController = <TDate extends PickerValidDate>(): PickerContro
   fieldValueManager: singleItemFieldValueManager,
   validator: validateDate,
   valueType: 'date',
-  applyDefaultFieldInternalProps: ({ adapter, inputProps }) => ({
-    ...inputProps,
-    disablePast: inputProps.disablePast ?? false,
-    disableFuture: inputProps.disableFuture ?? false,
-    format: inputProps.format ?? adapter.utils.formats.keyboardDate,
-    minDate: applyDefaultDate(adapter.utils, inputProps.minDate, adapter.defaultDates.minDate),
-    maxDate: applyDefaultDate(adapter.utils, inputProps.maxDate, adapter.defaultDates.maxDate),
+  applyDefaultsToFieldInternalProps: ({ adapter, internalProps }) => ({
+    ...internalProps,
+    disablePast: internalProps.disablePast ?? false,
+    disableFuture: internalProps.disableFuture ?? false,
+    format: internalProps.format ?? adapter.utils.formats.keyboardDate,
+    minDate: applyDefaultDate(adapter.utils, internalProps.minDate, adapter.defaultDates.minDate),
+    maxDate: applyDefaultDate(adapter.utils, internalProps.maxDate, adapter.defaultDates.maxDate),
   }),
 });

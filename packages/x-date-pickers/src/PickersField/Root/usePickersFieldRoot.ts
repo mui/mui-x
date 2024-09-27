@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useField } from '../../internals/hooks/useField';
+import { mergeReactProps } from '@base_ui/react/utils/mergeReactProps';
+import { FieldValueManager, useField } from '../../internals/hooks/useField';
 import type { PickersFieldProvider } from './PickersFieldProvider';
 import {
   InferFieldInternalProps,
@@ -18,9 +19,8 @@ type InferIsRangeFromController<TController extends PickerController<any, any, a
 type InferValueFromController<TController extends PickerController<any, any, any, any, any>> =
   InferValueFromDate<InferDateFromController<TController>, InferIsRangeFromController<TController>>;
 
-type InferFieldSectionFromController<
-  TController extends PickerController<any, any, any, any, any>,
-> = InferFieldSection<InferIsRangeFromController<TController>>;
+type InferSectionFromController<TController extends PickerController<any, any, any, any, any>> =
+  InferFieldSection<InferIsRangeFromController<TController>>;
 
 type InferDefaultizedInternalPropsFromController<
   TController extends PickerController<any, any, any, any, any>,
@@ -32,13 +32,18 @@ type InferDefaultizedInternalPropsFromController<
 export function usePickersFieldRoot<TController extends PickerController<any, any, any, any, any>>(
   params: UsePickersFieldRoot.Parameters<TController>,
 ): UsePickersFieldRoot.ReturnValue {
+  type TValue = InferValueFromController<TController>;
+  type TDate = InferDateFromController<TController>;
+  type TSection = InferSectionFromController<TController>;
+  type TInternalProps = InferDefaultizedInternalPropsFromController<TController>;
+
   const { controller, internalProps } = params;
 
   const adapter = useLocalizationContext<InferDateFromController<TController>>();
-  const internalPropsWithDefault = controller.applyDefaultFieldInternalProps(
+  const internalPropsWithDefault = controller.applyDefaultsToFieldInternalProps({
     adapter,
     internalProps,
-  );
+  });
 
   const {
     sectionListRef,
@@ -68,18 +73,18 @@ export function usePickersFieldRoot<TController extends PickerController<any, an
 
     ...propsForwardedToContent
   } = useField<
-    InferValueFromController<TController>,
-    InferDateFromController<TController>,
-    InferFieldSectionFromController<TController>,
+    TValue,
+    TDate,
+    TSection,
     true,
     // TODO: Add forwaredProps
     {},
-    InferDefaultizedInternalPropsFromController<TController>
+    TInternalProps
   >({
     forwardedProps: {},
     internalProps: { ...internalPropsWithDefault, enableAccessibleFieldDOMStructure: true },
     valueManager: controller.valueManager,
-    fieldValueManager: controller.fieldValueManager,
+    fieldValueManager: controller.fieldValueManager as FieldValueManager<TValue, TDate, TSection>,
     validator: controller.validator,
     valueType: controller.valueType,
   });
@@ -166,13 +171,11 @@ export function usePickersFieldRoot<TController extends PickerController<any, an
     },
   }));
 
-  const getRootProps: UsePickersFieldRoot.ReturnValue['getRootProps'] = (externalProps = {}) => {
-    return {
-      children: externalProps.children,
+  const getRootProps: UsePickersFieldRoot.ReturnValue['getRootProps'] = (externalProps) =>
+    mergeReactProps(externalProps, {
       onFocus,
       onBlur,
-    };
-  };
+    });
 
   // TODO: Memoize?
   const contextValue: PickersFieldProvider.ContextValue = {

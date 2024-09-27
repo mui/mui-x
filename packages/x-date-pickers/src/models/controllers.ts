@@ -1,10 +1,15 @@
-import { FieldValueManager, UseFieldInternalProps } from '../internals/hooks/useField';
-import { PickerValueManager } from '../internals/hooks/usePicker';
+import type { FieldValueManager, UseFieldInternalProps } from '../internals/hooks/useField';
+import type { PickerValueManager } from '../internals/hooks/usePicker';
 import type { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
-import { Validator } from '../validation';
-import { InferValueFromDate, InferFieldSection, FieldValueType } from './fields';
+import type { Validator } from '../validation';
+import type { InferValueFromDate, InferFieldSection, FieldValueType } from './fields';
 import { PickerValidDate } from './pickers';
 
+/**
+ * Object that contains all the necessary methods and properties to control a picker.
+ * You should never create your own controller.
+ * Instead, use the ones provided exported from '@mui/x-date-pickers/controllers' and '@mui/x-date-pickers-pro/controllers'.
+ */
 export interface PickerController<
   TDate extends PickerValidDate,
   TIsRange extends boolean,
@@ -24,9 +29,9 @@ export interface PickerController<
     TError,
     TDefaultizedInternalProps
   >;
-  applyDefaultFieldInternalProps: (params: {
+  applyDefaultsToFieldInternalProps: (params: {
     adapter: MuiPickersAdapterContextValue<TDate>;
-    inputProps: TInternalProps;
+    internalProps: TInternalProps;
   }) => TDefaultizedInternalProps;
   valueType: FieldValueType;
 }
