@@ -146,7 +146,7 @@ describe('<DataGrid /> - Export', () => {
 
   describe('component: GridToolbarExport', () => {
     it('should export with the default csvOptions', async () => {
-      render(<TestCase slots={{ toolbar: () => <GridToolbarExport /> }} />);
+      render(<TestCase slots={{ toolbar: GridToolbarExport }} />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
@@ -157,11 +157,10 @@ describe('<DataGrid /> - Export', () => {
     });
 
     it('should apply custom csvOptions', async () => {
-      render(
-        <TestCase
-          slots={{ toolbar: () => <GridToolbarExport csvOptions={{ delimiter: ';' }} /> }}
-        />,
-      );
+      function Toolbar() {
+        return <GridToolbarExport csvOptions={{ delimiter: ';' }} />;
+      }
+      render(<TestCase slots={{ toolbar: Toolbar }} />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
@@ -172,13 +171,10 @@ describe('<DataGrid /> - Export', () => {
     });
 
     it('should disable csv export when passing `csvOptions.disableToolbarButton`', async () => {
-      render(
-        <TestCase
-          slots={{
-            toolbar: () => <GridToolbarExport csvOptions={{ disableToolbarButton: true }} />,
-          }}
-        />,
-      );
+      function Toolbar() {
+        return <GridToolbarExport csvOptions={{ disableToolbarButton: true }} />;
+      }
+      render(<TestCase slots={{ toolbar: Toolbar }} />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
