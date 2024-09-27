@@ -18,7 +18,9 @@ export function computeSlots<SlotComponents extends object>({
     const k = key as keyof typeof overrides;
 
     if (overrides[k] !== undefined) {
-      checkSlot(key, overrides[k] as any);
+      if (process.env.NODE_ENV !== 'production') {
+        checkSlot(key, overrides[k] as any);
+      }
       result[k] = overrides[k] as any;
     }
   });
