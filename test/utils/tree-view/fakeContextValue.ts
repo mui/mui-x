@@ -10,7 +10,6 @@ export const getFakeContextValue = (
     isItemFocused: () => false,
     isItemSelected: () => false,
     isItemDisabled: (itemId: string | null): itemId is string => !!itemId,
-    getTreeItemIdAttribute: () => '',
     mapFirstCharFromJSX: () => () => {},
     canItemBeTabbed: () => false,
   } as any,
@@ -43,6 +42,7 @@ export const getFakeContextValue = (
     checkboxSelection: features.checkboxSelection ?? false,
     disableSelection: false,
   },
+  treeId: 'mui-tree-view-1',
   rootRef: {
     current: null,
   },

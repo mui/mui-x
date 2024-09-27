@@ -9,7 +9,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'meridiano',
 };
 
-const ptBRPickers: Partial<PickersLocaleText<any>> = {
+const ptPTPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Mês anterior',
   nextMonth: 'Próximo mês',
@@ -19,16 +19,16 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   openNextView: 'Abrir próxima seleção',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
-      ? 'Seleção de ano está aberta, alternando para seleção de calendário'
-      : 'Seleção de calendários está aberta, alternando para seleção de ano',
+      ? 'A seleção do ano está aberta, altere para a seleção do calendário'
+      : 'A seleção do calendários está aberta, altere para a seleção do ano',
 
   // DateRange labels
   start: 'Início',
   end: 'Fim',
   startDate: 'Data de início',
   startTime: 'Hora de início',
-  endDate: 'Data de Término',
-  endTime: 'Hora de Término',
+  endDate: 'Data de fim',
+  endTime: 'Hora de fim',
 
   // Action bar
   cancelButtonLabel: 'Cancelar',
@@ -38,9 +38,9 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
 
   // Toolbar titles
   datePickerToolbarTitle: 'Selecione a data',
-  dateTimePickerToolbarTitle: 'Selecione data e hora',
+  dateTimePickerToolbarTitle: 'Selecione a data e a hora',
   timePickerToolbarTitle: 'Selecione a hora',
-  dateRangePickerToolbarTitle: 'Selecione o intervalo entre datas',
+  dateRangePickerToolbarTitle: 'Selecione o intervalo de datas',
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>
@@ -54,18 +54,18 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Número da semana',
-  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberHeaderText: 'N.º',
   calendarWeekNumberAriaLabelText: (weekNumber) => `Semana ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils, formattedDate) =>
     formattedDate || (value !== null && utils.isValid(value))
-      ? `Escolha uma data, data selecionada ${formattedDate ?? utils.format(value, 'fullDate')}`
+      ? `Escolha uma data, a data selecionada é ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Escolha uma data',
   openTimePickerDialogue: (value, utils, formattedTime) =>
     formattedTime || (value !== null && utils.isValid(value))
-      ? `Escolha uma hora, hora selecionada ${formattedTime ?? utils.format(value, 'fullTime')}`
+      ? `Escolha uma hora, a hora selecionada é ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Escolha uma hora',
   fieldClearLabel: 'Limpar valor',
 
@@ -91,10 +91,10 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   hours: 'Horas',
   minutes: 'Minutos',
   seconds: 'Segundos',
-  meridiem: 'Meio dia',
+  meridiem: 'Meridiano',
 
   // Common
   empty: 'Vazio',
 };
 
-export const ptBR = getPickersLocalization(ptBRPickers);
+export const ptPT = getPickersLocalization(ptPTPickers);
