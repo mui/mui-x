@@ -10,18 +10,9 @@ describe('<DataGrid /> - Slots', () => {
 
   const baselineProps = {
     rows: [
-      {
-        id: 0,
-        brand: 'Nike',
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-      },
-      {
-        id: 2,
-        brand: 'Puma',
-      },
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
     ],
     columns: [{ field: 'brand' }],
   };
@@ -123,32 +114,26 @@ describe('<DataGrid /> - Slots', () => {
 
   describe('slots', () => {
     it('should render the cell with the component given in slots.Cell', () => {
+      function Cell({ colIndex }: { colIndex: number }) {
+        return <span role="gridcell" data-colindex={colIndex} />;
+      }
+
       render(
         <div style={{ width: 300, height: 500 }}>
-          <DataGrid
-            {...baselineProps}
-            hideFooter
-            disableVirtualization
-            slots={{
-              cell: ({ rowIndex, colIndex }) => (
-                <span role="gridcell" data-rowindex={rowIndex} data-colindex={colIndex} />
-              ),
-            }}
-          />
+          <DataGrid {...baselineProps} hideFooter disableVirtualization slots={{ cell: Cell }} />
         </div>,
       );
       expect(getCell(0, 0).tagName).to.equal('SPAN');
     });
 
     it('should render the row with the component given in slots.Row', () => {
+      function Row({ index }: { index: number }) {
+        return <span role="row" data-rowindex={index} />;
+      }
+
       render(
         <div style={{ width: 300, height: 500 }}>
-          <DataGrid
-            {...baselineProps}
-            hideFooter
-            disableVirtualization
-            slots={{ row: ({ index }) => <span role="row" data-rowindex={index} /> }}
-          />
+          <DataGrid {...baselineProps} hideFooter disableVirtualization slots={{ row: Row }} />
         </div>,
       );
       expect(getRow(0).tagName).to.equal('SPAN');
@@ -192,5 +177,17 @@ describe('<DataGrid /> - Slots', () => {
         </div>,
       );
     }).not.toErrorDev();
+  });
+
+  it('should warn if render function is passed as a slot', () => {
+    expect(() =>
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid columns={[]} rows={[]} slots={{ toolbar: () => <div /> }} />
+        </div>,
+      ),
+    ).toWarnDev([
+      'MUI X: Slots only accept React components, but `toolbar` slot received a render function.',
+    ]);
   });
 });
