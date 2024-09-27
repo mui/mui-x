@@ -13,7 +13,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ## Anatomy
 
-Each Tree Item component is shaped by a series of composable slots. 
+Each Tree Item component is shaped by a series of composable slots.
 Hover over them in the demo below to see each slot.
 
 <!-- TBD which option is the best: interactive or image -->
@@ -27,7 +27,7 @@ Use the content slot to customize the content of the Tree Item or replace it wit
 
 #### Slot props
 
-The `slotProps` prop lets you pass props to the content component. 
+The `slotProps` prop lets you pass props to the content component.
 The demo below shows how to pass an `sx` handler to the content of the Tree Item:
 
 {{"demo": "ContentSlotProps.js"}}
@@ -44,7 +44,7 @@ Use the label slot to customize the Tree Item label or replace it with a custom 
 
 #### Slot props
 
-The `slotProps` prop lets you pass props to the label component. 
+The `slotProps` prop lets you pass props to the label component.
 The demo below shows how to pass an `id` attribute to the Tree Item label:
 
 {{"demo": "LabelSlotProps.js"}}
@@ -139,7 +139,7 @@ You can use it to get the properties needed for all slots, the status of any giv
 
 #### Slot properties
 
-The `useTreeItem2` hook gives you granular control over an Item's layout by providing resolvers to get the appropriate props for each slot. 
+The `useTreeItem2` hook gives you granular control over an Item's layout by providing resolvers to get the appropriate props for each slot.
 This makes it possible to build a fully custom layout for your Tree Items.
 
 The demo below shows how to get the props needed for each slot, and how to pass them correctly.
@@ -163,15 +163,7 @@ The `useTreeItem2` hook also returns a `status` object that holds boolean values
 
 ```jsx
 const {
-  status: {
-    expanded, // True if he item is expanded.
-    expandable, // True if the item has children.
-    focused, // True if the item is focused.
-    selected, // True if the item is selected.
-    disabled, // True if the item is disabled.
-    editable, // True if the item is editable.
-    editing, // True if the item is being edited.
-  },
+  status: { expanded, expandable, focused, selected, disabled, editable, editing },
 } = useTreeItem2(props);
 ```
 
@@ -181,7 +173,7 @@ You can use these statuses to apply custom styling to the item or conditionally 
 
 #### Imperative API
 
-The `publicAPI` object provides a number of methods to programmatically interact with the Tree View. 
+The `publicAPI` object provides a number of methods to programmatically interact with the Tree View.
 You can use the `useTreeItem2` hook to access the `publicAPI` object from within a Tree Item.
 
 {{"demo": "useTreeItem2HookPublicAPI.js"}}
@@ -190,7 +182,7 @@ See the **Imperative API** section on each feature page to learn more about the 
 
 ### `useTreeItem2Utils`
 
-The `useTreeItem2Utils` hook provides a set of interaction methods for implementing custom behaviors for the Tree View. 
+The `useTreeItem2Utils` hook provides a set of interaction methods for implementing custom behaviors for the Tree View.
 It also returns the status of the Item.
 
 ```jsx
@@ -204,7 +196,7 @@ To override the Tree Item's default interactions, set `event.defaultMuiPrevented
 
 #### Selection
 
-You can select an Item in a Tree View by clicking its content slot. 
+You can select an Item in a Tree View by clicking its content slot.
 The demo below shows how to handle selection when the user clicks on an icon.
 
 {{"demo": "HandleSelectionDemo.js"}}
@@ -212,7 +204,7 @@ The demo below shows how to handle selection when the user clicks on an icon.
 #### Checkbox selection
 
 By default, checkbox selection is skipped if an Item is disabled or if `disableSelection` is `true` on the Tree View.
-You can create a custom handler for the `onChange` event on the checkbox slot to bypass these conditions. 
+You can create a custom handler for the `onChange` event on the checkbox slot to bypass these conditions.
 The demo below shows how to implement custom checkbox selection behavior.
 
 {{"demo": "HandleCheckboxSelectionDemo.js"}}
@@ -222,7 +214,7 @@ Visit the [Rich Tree View](/x/react-tree-view/rich-tree-view/selection/) or [Sim
 #### Expansion
 
 By default, a Tree Item is expanded when the user clicks on its contents.
-You can change the expansion trigger using the `expansionTrigger` prop on the `iconContainer`. 
+You can change the expansion trigger using the `expansionTrigger` prop on the `iconContainer`.
 For more details, see [Expansion—Limit expansion to icon container](/x/react-tree-view/rich-tree-view/expansion/#limit-expansion-to-icon-container).
 
 To achieve a deeper customization of the expansion of an item use the `handleExpansion` interaction method. The demo below demonstrates how to introduce a new element that expands or collapses the item.
