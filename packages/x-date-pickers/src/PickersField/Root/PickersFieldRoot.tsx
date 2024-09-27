@@ -2,12 +2,12 @@ import * as React from 'react';
 import { useComponentRenderer } from '@base_ui/react/utils/useComponentRenderer';
 import type { BaseUIComponentProps } from '@base_ui/react/utils/types';
 import { usePickersFieldRoot } from './usePickersFieldRoot';
-import { InferFieldInternalProps, PickerController } from '../../models';
+import { PickerAnyController, PickerControllerProperties } from '../../models';
 import { PickersFieldProvider } from './PickersFieldProvider';
 import { useSplitFieldProps } from '../../hooks';
 
 const PickersFieldRoot = React.forwardRef(function PickersFieldRoot<
-  TController extends PickerController<any, any, any, any, any>,
+  TController extends PickerAnyController,
 >(props: PickersFieldRoot.Props<TController>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
   const { render, className, controller, ...otherProps } = props;
 
@@ -34,11 +34,13 @@ const PickersFieldRoot = React.forwardRef(function PickersFieldRoot<
 namespace PickersFieldRoot {
   export interface OwnerState {}
 
-  export type Props<TController extends PickerController<any, any, any, any, any>> =
-    BaseUIComponentProps<'div', OwnerState> &
-      InferFieldInternalProps<TController> & {
-        controller: TController;
-      };
+  export type Props<TController extends PickerAnyController> = BaseUIComponentProps<
+    'div',
+    OwnerState
+  > &
+    PickerControllerProperties<TController>['internalProps'] & {
+      controller: TController;
+    };
 }
 
 export { PickersFieldRoot };

@@ -224,8 +224,3 @@ export type RangePosition = 'start' | 'end';
 export interface RangeFieldSection extends FieldSection {
   dateName: RangePosition;
 }
-
-export type InferFieldInternalProps<TController extends PickerController<any, any, any, any, any>> =
-  TController extends PickerController<any, any, any, infer TInternalProps, any>
-    ? TInternalProps
-    : never;

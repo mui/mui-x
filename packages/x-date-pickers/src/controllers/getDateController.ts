@@ -42,12 +42,16 @@ export interface DateFieldInternalPropsWithDefaults<
     keyof BaseDateValidationProps<TDate> | 'format'
   > {}
 
-export const getDateController = <TDate extends PickerValidDate>(): PickerController<
+export const getDateController = <
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(): PickerController<
   TDate,
   false,
+  TEnableAccessibleFieldDOMStructure,
   DateValidationError,
-  DateFieldInternalProps<TDate, true>,
-  DateFieldInternalPropsWithDefaults<TDate, true>
+  DateFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  DateFieldInternalPropsWithDefaults<TDate, TEnableAccessibleFieldDOMStructure>
 > => ({
   valueManager: singleItemValueManager,
   fieldValueManager: singleItemFieldValueManager,
