@@ -46,6 +46,161 @@ describe('<DataGridPro /> - Row selection', () => {
     );
   }
 
+  const rows: GridRowsProp = [
+    {
+      hierarchy: ['Sarah'],
+      jobTitle: 'Head of Human Resources',
+      recruitmentDate: new Date(2020, 8, 12),
+      id: 0,
+    },
+    {
+      hierarchy: ['Thomas'],
+      jobTitle: 'Head of Sales',
+      recruitmentDate: new Date(2017, 3, 4),
+      id: 1,
+    },
+    {
+      hierarchy: ['Thomas', 'Robert'],
+      jobTitle: 'Sales Person',
+      recruitmentDate: new Date(2020, 11, 20),
+      id: 2,
+    },
+    {
+      hierarchy: ['Thomas', 'Karen'],
+      jobTitle: 'Sales Person',
+      recruitmentDate: new Date(2020, 10, 14),
+      id: 3,
+    },
+    {
+      hierarchy: ['Thomas', 'Nancy'],
+      jobTitle: 'Sales Person',
+      recruitmentDate: new Date(2017, 10, 29),
+      id: 4,
+    },
+    {
+      hierarchy: ['Thomas', 'Daniel'],
+      jobTitle: 'Sales Person',
+      recruitmentDate: new Date(2020, 7, 21),
+      id: 5,
+    },
+    {
+      hierarchy: ['Thomas', 'Christopher'],
+      jobTitle: 'Sales Person',
+      recruitmentDate: new Date(2020, 7, 20),
+      id: 6,
+    },
+    {
+      hierarchy: ['Thomas', 'Donald'],
+      jobTitle: 'Sales Person',
+      recruitmentDate: new Date(2019, 6, 28),
+      id: 7,
+    },
+    {
+      hierarchy: ['Mary'],
+      jobTitle: 'Head of Engineering',
+      recruitmentDate: new Date(2016, 3, 14),
+      id: 8,
+    },
+    {
+      hierarchy: ['Mary', 'Jennifer'],
+      jobTitle: 'Tech lead front',
+      recruitmentDate: new Date(2016, 5, 17),
+      id: 9,
+    },
+    {
+      hierarchy: ['Mary', 'Jennifer', 'Anna'],
+      jobTitle: 'Front-end developer',
+      recruitmentDate: new Date(2019, 11, 7),
+      id: 10,
+    },
+    {
+      hierarchy: ['Mary', 'Michael'],
+      jobTitle: 'Tech lead devops',
+      recruitmentDate: new Date(2021, 7, 1),
+      id: 11,
+    },
+    {
+      hierarchy: ['Mary', 'Linda'],
+      jobTitle: 'Tech lead back',
+      recruitmentDate: new Date(2017, 0, 12),
+      id: 12,
+    },
+    {
+      hierarchy: ['Mary', 'Linda', 'Elizabeth'],
+      jobTitle: 'Back-end developer',
+      recruitmentDate: new Date(2019, 2, 22),
+      id: 13,
+    },
+    {
+      hierarchy: ['Mary', 'Linda', 'William'],
+      jobTitle: 'Back-end developer',
+      recruitmentDate: new Date(2018, 4, 19),
+      id: 14,
+    },
+  ];
+
+  const columns: GridColDef[] = [
+    { field: 'jobTitle', headerName: 'Job Title', width: 200 },
+    {
+      field: 'recruitmentDate',
+      headerName: 'Recruitment Date',
+      type: 'date',
+      width: 150,
+    },
+  ];
+
+  const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.hierarchy;
+
+  function TreeDataGrid(props: Partial<DataGridProProps>) {
+    apiRef = useGridApiRef();
+    return (
+      <div style={{ height: 800, width: '100%' }}>
+        <DataGridPro
+          apiRef={apiRef}
+          treeData
+          rows={rows}
+          columns={columns}
+          getTreeDataPath={getTreeDataPath}
+          checkboxSelection
+          {...props}
+        />
+      </div>
+    );
+  }
+
+  it('should keep the previously selected tree data parent selected if it becomes leaf after filtering', () => {
+    render(<TreeDataGrid defaultGroupingExpansionDepth={-1} density="compact" />);
+
+    fireEvent.click(
+      screen.getByRole('checkbox', {
+        name: /select all rows/i,
+      }),
+    );
+
+    expect(apiRef.current.getSelectedRows()).to.have.length(15);
+
+    act(() => {
+      apiRef.current.setFilterModel({
+        items: [
+          {
+            field: 'jobTitle',
+            value: 'Head of Sales',
+            operator: 'equals',
+          },
+        ],
+      });
+    });
+
+    expect(apiRef.current.getSelectedRows()).to.have.keys([1]);
+  });
+
+  it('should put the parent into indeterminate if some but not all the children are selected', () => {
+    render(<TreeDataGrid defaultGroupingExpansionDepth={-1} density="compact" />);
+
+    fireEvent.click(getCell(2, 0).querySelector('input')!);
+    expect(getCell(1, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
+  });
+
   describe('prop: checkboxSelectionVisibleOnly = false', () => {
     it('should select all rows of all pages if no row is selected', () => {
       render(
@@ -223,16 +378,14 @@ describe('<DataGridPro /> - Row selection', () => {
 
         const data = React.useMemo(() => getBasicGridData(rowLength, 2), [rowLength]);
 
-        const rows = data.rows.slice(
-          paginationModel.pageSize * paginationModel.page,
-          paginationModel.pageSize * (paginationModel.page + 1),
-        );
-
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
               {...data}
-              rows={rows}
+              rows={data.rows.slice(
+                paginationModel.pageSize * paginationModel.page,
+                paginationModel.pageSize * (paginationModel.page + 1),
+              )}
               checkboxSelection
               checkboxSelectionVisibleOnly
               initialState={{ pagination: { paginationModel } }}
@@ -294,139 +447,92 @@ describe('<DataGridPro /> - Row selection', () => {
     });
   });
 
-  describe('props: rowSelectionPropagation.descendants=true & rowSelectionPropagation.parents=true', () => {
-    const rows: GridRowsProp = [
-      {
-        hierarchy: ['Sarah'],
-        jobTitle: 'Head of Human Resources',
-        recruitmentDate: new Date(2020, 8, 12),
-        id: 0,
-      },
-      {
-        hierarchy: ['Thomas'],
-        jobTitle: 'Head of Sales',
-        recruitmentDate: new Date(2017, 3, 4),
-        id: 1,
-      },
-      {
-        hierarchy: ['Thomas', 'Robert'],
-        jobTitle: 'Sales Person',
-        recruitmentDate: new Date(2020, 11, 20),
-        id: 2,
-      },
-      {
-        hierarchy: ['Thomas', 'Karen'],
-        jobTitle: 'Sales Person',
-        recruitmentDate: new Date(2020, 10, 14),
-        id: 3,
-      },
-      {
-        hierarchy: ['Thomas', 'Nancy'],
-        jobTitle: 'Sales Person',
-        recruitmentDate: new Date(2017, 10, 29),
-        id: 4,
-      },
-      {
-        hierarchy: ['Thomas', 'Daniel'],
-        jobTitle: 'Sales Person',
-        recruitmentDate: new Date(2020, 7, 21),
-        id: 5,
-      },
-      {
-        hierarchy: ['Thomas', 'Christopher'],
-        jobTitle: 'Sales Person',
-        recruitmentDate: new Date(2020, 7, 20),
-        id: 6,
-      },
-      {
-        hierarchy: ['Thomas', 'Donald'],
-        jobTitle: 'Sales Person',
-        recruitmentDate: new Date(2019, 6, 28),
-        id: 7,
-      },
-      {
-        hierarchy: ['Mary'],
-        jobTitle: 'Head of Engineering',
-        recruitmentDate: new Date(2016, 3, 14),
-        id: 8,
-      },
-      {
-        hierarchy: ['Mary', 'Jennifer'],
-        jobTitle: 'Tech lead front',
-        recruitmentDate: new Date(2016, 5, 17),
-        id: 9,
-      },
-      {
-        hierarchy: ['Mary', 'Jennifer', 'Anna'],
-        jobTitle: 'Front-end developer',
-        recruitmentDate: new Date(2019, 11, 7),
-        id: 10,
-      },
-      {
-        hierarchy: ['Mary', 'Michael'],
-        jobTitle: 'Tech lead devops',
-        recruitmentDate: new Date(2021, 7, 1),
-        id: 11,
-      },
-      {
-        hierarchy: ['Mary', 'Linda'],
-        jobTitle: 'Tech lead back',
-        recruitmentDate: new Date(2017, 0, 12),
-        id: 12,
-      },
-      {
-        hierarchy: ['Mary', 'Linda', 'Elizabeth'],
-        jobTitle: 'Back-end developer',
-        recruitmentDate: new Date(2019, 2, 22),
-        id: 13,
-      },
-      {
-        hierarchy: ['Mary', 'Linda', 'William'],
-        jobTitle: 'Back-end developer',
-        recruitmentDate: new Date(2018, 4, 19),
-        id: 14,
-      },
-    ];
-
-    const columns: GridColDef[] = [
-      { field: 'jobTitle', headerName: 'Job Title', width: 200 },
-      {
-        field: 'recruitmentDate',
-        headerName: 'Recruitment Date',
-        type: 'date',
-        width: 150,
-      },
-    ];
-
-    const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.hierarchy;
-
-    function TreeDataGrid(props: Partial<DataGridProProps>) {
-      apiRef = useGridApiRef();
+  describe('prop: rowSelectionPropagation = { descendants: false, parents: false }', () => {
+    function SelectionPropagationGrid(props: Partial<DataGridProProps>) {
       return (
-        <div style={{ height: 800, width: '100%' }}>
-          <DataGridPro
-            apiRef={apiRef}
-            treeData
-            rows={rows}
-            columns={columns}
-            getTreeDataPath={getTreeDataPath}
-            rowSelectionPropagation={{ descendants: true, parents: true }}
-            checkboxSelection
-            {...props}
-          />
-        </div>
+        <TreeDataGrid rowSelectionPropagation={{ descendants: false, parents: false }} {...props} />
+      );
+    }
+
+    it('should select the parent only when selecting it', () => {
+      render(<SelectionPropagationGrid />);
+
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([1]);
+    });
+
+    it('should deselect the parent only when deselecting it', () => {
+      render(<SelectionPropagationGrid defaultGroupingExpansionDepth={-1} density="compact" />);
+
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+      fireEvent.click(getCell(2, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2]);
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([2]);
+    });
+
+    it('should not auto select the parent if all the children are selected', () => {
+      render(<SelectionPropagationGrid defaultGroupingExpansionDepth={-1} density="compact" />);
+
+      fireEvent.click(getCell(2, 0).querySelector('input')!);
+      fireEvent.click(getCell(3, 0).querySelector('input')!);
+      fireEvent.click(getCell(4, 0).querySelector('input')!);
+      fireEvent.click(getCell(5, 0).querySelector('input')!);
+      fireEvent.click(getCell(6, 0).querySelector('input')!);
+      fireEvent.click(getCell(7, 0).querySelector('input')!);
+      // The parent row (Thomas, id: 1) should not be among the selected rows
+      expect(apiRef.current.getSelectedRows()).to.have.keys([2, 3, 4, 5, 6, 7]);
+    });
+
+    it('should not deselect selected parent if one of the children is deselected', () => {
+      render(<SelectionPropagationGrid defaultGroupingExpansionDepth={-1} density="compact" />);
+
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+      fireEvent.click(getCell(2, 0).querySelector('input')!);
+      fireEvent.click(getCell(3, 0).querySelector('input')!);
+      fireEvent.click(getCell(4, 0).querySelector('input')!);
+      fireEvent.click(getCell(5, 0).querySelector('input')!);
+      fireEvent.click(getCell(6, 0).querySelector('input')!);
+      fireEvent.click(getCell(7, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+      fireEvent.click(getCell(2, 0).querySelector('input')!);
+      // The parent row (Thomas, id: 1) should still be among the selected rows
+      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 3, 4, 5, 6, 7]);
+    });
+
+    it('should select only the unwrapped rows when clicking "Select All" checkbox', () => {
+      render(<SelectionPropagationGrid />);
+
+      fireEvent.click(screen.getByRole('checkbox', { name: /select all rows/i }));
+      expect(apiRef.current.getSelectedRows()).to.have.keys([0, 1, 8]);
+    });
+
+    it('should deselect only the unwrapped rows when clicking "Select All" checkbox', () => {
+      render(<SelectionPropagationGrid />);
+
+      fireEvent.click(screen.getByRole('checkbox', { name: /select all rows/i }));
+      expect(apiRef.current.getSelectedRows()).to.have.keys([0, 1, 8]);
+      fireEvent.click(screen.getByRole('checkbox', { name: /select all rows/i }));
+      expect(apiRef.current.getSelectedRows().size).to.equal(0);
+    });
+  });
+
+  describe('prop: rowSelectionPropagation = { descendants: true, parents: false }', () => {
+    function SelectionPropagationGrid(props: Partial<DataGridProProps>) {
+      return (
+        <TreeDataGrid rowSelectionPropagation={{ descendants: true, parents: false }} {...props} />
       );
     }
 
     it('should select all the children when selecting a parent', () => {
-      render(<TreeDataGrid />);
+      render(<SelectionPropagationGrid />);
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
       expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
     });
 
     it('should deselect all the children when deselecting a parent', () => {
-      render(<TreeDataGrid />);
+      render(<SelectionPropagationGrid />);
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
       expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
@@ -434,15 +540,173 @@ describe('<DataGridPro /> - Row selection', () => {
       expect(apiRef.current.getSelectedRows().size).to.equal(0);
     });
 
-    it('should put the parent into indeterminate if some but not all the children are selected', () => {
-      render(<TreeDataGrid defaultGroupingExpansionDepth={-1} density="compact" />);
+    it('should not auto select the parent if all the children are selected', () => {
+      render(<SelectionPropagationGrid defaultGroupingExpansionDepth={-1} density="compact" />);
 
-      fireEvent.click(getCell(11, 0).querySelector('input')!);
-      expect(getCell(8, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
+      fireEvent.click(getCell(2, 0).querySelector('input')!);
+      fireEvent.click(getCell(3, 0).querySelector('input')!);
+      fireEvent.click(getCell(4, 0).querySelector('input')!);
+      fireEvent.click(getCell(5, 0).querySelector('input')!);
+      fireEvent.click(getCell(6, 0).querySelector('input')!);
+      fireEvent.click(getCell(7, 0).querySelector('input')!);
+      // The parent row (Thomas, id: 1) should not be among the selected rows
+      expect(apiRef.current.getSelectedRows()).to.have.keys([2, 3, 4, 5, 6, 7]);
+    });
+
+    it('should not deselect selected parent if one of the children is deselected', () => {
+      render(<SelectionPropagationGrid defaultGroupingExpansionDepth={-1} density="compact" />);
+
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+      fireEvent.click(getCell(2, 0).querySelector('input')!);
+      // The parent row (Thomas, id: 1) should still be among the selected rows
+      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 3, 4, 5, 6, 7]);
+    });
+
+    it('should select all the nested rows when clicking "Select All" checkbox', () => {
+      render(<SelectionPropagationGrid />);
+
+      fireEvent.click(screen.getByRole('checkbox', { name: /select all rows/i }));
+      expect(apiRef.current.getSelectedRows().size).to.equal(15);
+    });
+
+    it('should deselect all the nested rows when clicking "Select All" checkbox', () => {
+      render(<SelectionPropagationGrid />);
+
+      fireEvent.click(screen.getByRole('checkbox', { name: /select all rows/i }));
+      expect(apiRef.current.getSelectedRows().size).to.equal(15);
+      fireEvent.click(screen.getByRole('checkbox', { name: /select all rows/i }));
+      expect(apiRef.current.getSelectedRows().size).to.equal(0);
+    });
+
+    describe('prop: isRowSelectable', () => {
+      it("should not select a parent or it's descendants if not allowed", () => {
+        render(
+          <SelectionPropagationGrid
+            defaultGroupingExpansionDepth={-1}
+            density="compact"
+            isRowSelectable={(params) => params.id !== 1}
+          />,
+        );
+
+        fireEvent.click(getCell(1, 0).querySelector('input')!);
+        expect(apiRef.current.getSelectedRows().size).to.equal(0);
+      });
+
+      it('should not auto-select a descendant if not allowed', () => {
+        render(
+          <SelectionPropagationGrid
+            defaultGroupingExpansionDepth={-1}
+            density="compact"
+            isRowSelectable={(params) => params.id !== 2}
+          />,
+        );
+
+        fireEvent.click(getCell(1, 0).querySelector('input')!);
+        expect(apiRef.current.getSelectedRows()).to.have.keys([1, 3, 4, 5, 6, 7]);
+      });
+    });
+  });
+
+  describe('prop: rowSelectionPropagation = { descendants: false, parents: true }', () => {
+    function SelectionPropagationGrid(props: Partial<DataGridProProps>) {
+      return (
+        <TreeDataGrid rowSelectionPropagation={{ descendants: false, parents: true }} {...props} />
+      );
+    }
+
+    it('should select the parent only when selecting it', () => {
+      render(<SelectionPropagationGrid />);
+
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([1]);
+    });
+
+    it('should deselect the parent only when deselecting it', () => {
+      render(<SelectionPropagationGrid defaultGroupingExpansionDepth={-1} density="compact" />);
+
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+      fireEvent.click(getCell(2, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2]);
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([2]);
     });
 
     it('should auto select the parent if all the children are selected', () => {
-      render(<TreeDataGrid defaultGroupingExpansionDepth={-1} density="compact" />);
+      render(<SelectionPropagationGrid defaultGroupingExpansionDepth={-1} density="compact" />);
+
+      fireEvent.click(getCell(2, 0).querySelector('input')!);
+      fireEvent.click(getCell(3, 0).querySelector('input')!);
+      fireEvent.click(getCell(4, 0).querySelector('input')!);
+      fireEvent.click(getCell(5, 0).querySelector('input')!);
+      fireEvent.click(getCell(6, 0).querySelector('input')!);
+      fireEvent.click(getCell(7, 0).querySelector('input')!);
+      // The parent row (Thomas, id: 1) should be among the selected rows
+      expect(apiRef.current.getSelectedRows()).to.have.keys([2, 3, 4, 5, 6, 7, 1]);
+    });
+
+    it('should deselect selected parent if one of the children is deselected', () => {
+      render(<SelectionPropagationGrid defaultGroupingExpansionDepth={-1} density="compact" />);
+
+      fireEvent.click(getCell(2, 0).querySelector('input')!);
+      fireEvent.click(getCell(3, 0).querySelector('input')!);
+      fireEvent.click(getCell(4, 0).querySelector('input')!);
+      fireEvent.click(getCell(5, 0).querySelector('input')!);
+      fireEvent.click(getCell(6, 0).querySelector('input')!);
+      fireEvent.click(getCell(7, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([2, 3, 4, 5, 6, 7, 1]);
+      fireEvent.click(getCell(2, 0).querySelector('input')!);
+      // The parent row (Thomas, id: 1) should not be among the selected rows
+      expect(apiRef.current.getSelectedRows()).to.have.keys([3, 4, 5, 6, 7]);
+    });
+
+    describe('prop: isRowSelectable', () => {
+      it('should not auto select a parent if not allowed', () => {
+        render(
+          <SelectionPropagationGrid
+            defaultGroupingExpansionDepth={-1}
+            density="compact"
+            isRowSelectable={(params) => params.id !== 1}
+          />,
+        );
+
+        fireEvent.click(getCell(2, 0).querySelector('input')!);
+        fireEvent.click(getCell(3, 0).querySelector('input')!);
+        fireEvent.click(getCell(4, 0).querySelector('input')!);
+        fireEvent.click(getCell(5, 0).querySelector('input')!);
+        fireEvent.click(getCell(6, 0).querySelector('input')!);
+        fireEvent.click(getCell(7, 0).querySelector('input')!);
+        // The parent row (Thomas, id: 1) should still not be among the selected rows
+        expect(apiRef.current.getSelectedRows()).to.have.keys([2, 3, 4, 5, 6, 7]);
+      });
+    });
+  });
+
+  describe('prop: rowSelectionPropagation = { descendants: true, parents: true }', () => {
+    function SelectionPropagationGrid(props: Partial<DataGridProProps>) {
+      return (
+        <TreeDataGrid rowSelectionPropagation={{ descendants: true, parents: true }} {...props} />
+      );
+    }
+
+    it('should select all the children when selecting a parent', () => {
+      render(<SelectionPropagationGrid />);
+
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+    });
+
+    it('should deselect all the children when deselecting a parent', () => {
+      render(<SelectionPropagationGrid />);
+
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows().size).to.equal(0);
+    });
+
+    it('should auto select the parent if all the children are selected', () => {
+      render(<SelectionPropagationGrid defaultGroupingExpansionDepth={-1} density="compact" />);
 
       fireEvent.click(getCell(9, 0).querySelector('input')!);
       fireEvent.click(getCell(11, 0).querySelector('input')!);
@@ -453,7 +717,7 @@ describe('<DataGridPro /> - Row selection', () => {
     });
 
     it('should deselect auto selected parent if one of the children is deselected', () => {
-      render(<TreeDataGrid defaultGroupingExpansionDepth={-1} density="compact" />);
+      render(<SelectionPropagationGrid defaultGroupingExpansionDepth={-1} density="compact" />);
 
       fireEvent.click(getCell(9, 0).querySelector('input')!);
       fireEvent.click(getCell(11, 0).querySelector('input')!);
@@ -463,20 +727,63 @@ describe('<DataGridPro /> - Row selection', () => {
       expect(apiRef.current.getSelectedRows()).to.have.keys([11, 12, 13, 14]);
     });
 
-    it('should deselect unfiltered rows after filtering', () => {
-      render(<TreeDataGrid defaultGroupingExpansionDepth={-1} density="compact" />);
+    describe("prop: indeterminateCheckboxAction = 'select'", () => {
+      it('should select all the children when selecting an indeterminate parent', () => {
+        render(
+          <SelectionPropagationGrid
+            defaultGroupingExpansionDepth={-1}
+            density="compact"
+            indeterminateCheckboxAction="select"
+          />,
+        );
 
-      fireEvent.click(getCell(9, 0).querySelector('input')!);
-      fireEvent.click(getCell(11, 0).querySelector('input')!);
-      fireEvent.click(getCell(12, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([9, 10, 11, 12, 8, 13, 14]);
-      act(() => {
-        apiRef.current.setFilterModel({
-          items: [],
-          quickFilterValues: ['Linda'],
-        });
+        fireEvent.click(getCell(2, 0).querySelector('input')!);
+        expect(getCell(1, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
+        fireEvent.click(getCell(1, 0).querySelector('input')!);
+        expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
       });
-      expect(apiRef.current.getSelectedRows()).to.have.keys([12, 8]);
+    });
+
+    describe("prop: indeterminateCheckboxAction = 'deselect'", () => {
+      it('should deselect all the children when selecting an indeterminate parent', () => {
+        render(
+          <SelectionPropagationGrid
+            defaultGroupingExpansionDepth={-1}
+            density="compact"
+            indeterminateCheckboxAction="deselect"
+          />,
+        );
+
+        fireEvent.click(getCell(2, 0).querySelector('input')!);
+        expect(getCell(1, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
+        fireEvent.click(getCell(1, 0).querySelector('input')!);
+        expect(apiRef.current.getSelectedRows().size).to.equal(0);
+      });
+    });
+
+    describe('prop: keepNonExistentRowsSelected = true', () => {
+      it('should keep non-existent rows selected on filtering', () => {
+        render(<SelectionPropagationGrid keepNonExistentRowsSelected />);
+
+        fireEvent.click(getCell(1, 0).querySelector('input')!);
+        expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+
+        act(() => {
+          apiRef.current.setFilterModel({
+            items: [
+              {
+                field: 'jobTitle',
+                value: 'Head of Human Resources',
+                operator: 'equals',
+              },
+            ],
+          });
+        });
+
+        fireEvent.click(getCell(0, 0).querySelector('input')!);
+
+        expect(apiRef.current.getSelectedRows()).to.have.keys([0, 1, 2, 3, 4, 5, 6, 7]);
+      });
     });
   });
 

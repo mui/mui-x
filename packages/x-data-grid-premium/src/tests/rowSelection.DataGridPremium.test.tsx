@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { getCell } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import {
@@ -45,7 +45,7 @@ const baselineProps: BaselineProps = {
 describe('<DataGridPremium /> - Row selection', () => {
   const { render } = createRenderer();
 
-  describe('props: rowSelectionPropagation.descendants=true & rowSelectionPropagation.parents=true', () => {
+  describe('props: rowSelectionPropagation = { descendants: true, parents: true }', () => {
     let apiRef: React.MutableRefObject<GridApi>;
 
     function Test(props: Partial<DataGridPremiumProps>) {
@@ -61,6 +61,7 @@ describe('<DataGridPremium /> - Row selection', () => {
               descendants: true,
               parents: true,
             }}
+            initialState={{ rowGrouping: { model: ['category1'] } }}
             {...props}
           />
         </div>
@@ -68,7 +69,7 @@ describe('<DataGridPremium /> - Row selection', () => {
     }
 
     it('should select all the children when selecting a parent', () => {
-      render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
+      render(<Test />);
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
       expect(apiRef.current.getSelectedRows()).to.have.keys([
@@ -79,7 +80,7 @@ describe('<DataGridPremium /> - Row selection', () => {
     });
 
     it('should deselect all the children when deselecting a parent', () => {
-      render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
+      render(<Test />);
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
       expect(apiRef.current.getSelectedRows()).to.have.keys([
@@ -91,27 +92,8 @@ describe('<DataGridPremium /> - Row selection', () => {
       expect(apiRef.current.getSelectedRows().size).to.equal(0);
     });
 
-    it('should put the parent into indeterminate if some but not all the children are selected', () => {
-      render(
-        <Test
-          defaultGroupingExpansionDepth={-1}
-          initialState={{ rowGrouping: { model: ['category1'] } }}
-          density="compact"
-        />,
-      );
-
-      fireEvent.click(getCell(1, 0).querySelector('input')!);
-      expect(getCell(0, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
-    });
-
     it('should auto select the parent if all the children are selected', () => {
-      render(
-        <Test
-          defaultGroupingExpansionDepth={-1}
-          density="compact"
-          initialState={{ rowGrouping: { model: ['category1'] } }}
-        />,
-      );
+      render(<Test defaultGroupingExpansionDepth={-1} density="compact" />);
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
       fireEvent.click(getCell(2, 0).querySelector('input')!);
@@ -125,13 +107,7 @@ describe('<DataGridPremium /> - Row selection', () => {
     });
 
     it('should deselect auto selected parent if one of the children is deselected', () => {
-      render(
-        <Test
-          defaultGroupingExpansionDepth={-1}
-          density="compact"
-          initialState={{ rowGrouping: { model: ['category1'] } }}
-        />,
-      );
+      render(<Test defaultGroupingExpansionDepth={-1} density="compact" />);
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
       fireEvent.click(getCell(2, 0).querySelector('input')!);
@@ -146,34 +122,43 @@ describe('<DataGridPremium /> - Row selection', () => {
       expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2]);
     });
 
-    it('should deselect unfiltered rows after filtering', () => {
-      render(
-        <Test
-          defaultGroupingExpansionDepth={-1}
-          density="compact"
-          initialState={{ rowGrouping: { model: ['category1'] } }}
-        />,
-      );
+    describe("prop: indeterminateCheckboxAction = 'select'", () => {
+      it('should select all the children when selecting an indeterminate parent', () => {
+        render(
+          <Test
+            defaultGroupingExpansionDepth={-1}
+            density="compact"
+            indeterminateCheckboxAction="select"
+          />,
+        );
 
-      fireEvent.click(getCell(1, 0).querySelector('input')!);
-      fireEvent.click(getCell(2, 0).querySelector('input')!);
-      fireEvent.click(getCell(3, 0).querySelector('input')!);
-      fireEvent.click(getCell(5, 0).querySelector('input')!);
-
-      expect(apiRef.current.getSelectedRows()).to.have.keys([
-        0,
-        1,
-        2,
-        'auto-generated-row-category1/Cat A',
-        3,
-      ]);
-      act(() => {
-        apiRef.current.setFilterModel({
-          items: [],
-          quickFilterValues: ['Cat B'],
-        });
+        fireEvent.click(getCell(2, 0).querySelector('input')!);
+        expect(getCell(0, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
+        fireEvent.click(getCell(0, 0).querySelector('input')!);
+        expect(apiRef.current.getSelectedRows()).to.have.keys([
+          0,
+          1,
+          2,
+          'auto-generated-row-category1/Cat A',
+        ]);
       });
-      expect(apiRef.current.getSelectedRows()).to.have.keys([3]);
+    });
+
+    describe("prop: indeterminateCheckboxAction = 'deselect'", () => {
+      it('should deselect all the children when selecting an indeterminate parent', () => {
+        render(
+          <Test
+            defaultGroupingExpansionDepth={-1}
+            density="compact"
+            indeterminateCheckboxAction="deselect"
+          />,
+        );
+
+        fireEvent.click(getCell(2, 0).querySelector('input')!);
+        expect(getCell(0, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
+        fireEvent.click(getCell(0, 0).querySelector('input')!);
+        expect(apiRef.current.getSelectedRows().size).to.equal(0);
+      });
     });
   });
 });
