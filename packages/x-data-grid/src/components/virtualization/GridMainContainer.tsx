@@ -20,6 +20,8 @@ const Element = styled('div', {
   flexGrow: 1,
   position: 'relative',
   overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
 });
 
 export const GridMainContainer = React.forwardRef<
