@@ -74,6 +74,9 @@ export const useGridRowGrouping = (
     changeEvent: 'rowGroupingModelChange',
   });
 
+  /*
+   * API METHODS
+   */
   const setRowGroupingModel = React.useCallback<GridRowGroupingApi['setRowGroupingModel']>(
     (model) => {
       const currentModel = gridRowGroupingModelSelector(apiRef);
@@ -210,6 +213,9 @@ export const useGridRowGrouping = (
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
+  /*
+   * EVENTS
+   */
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
@@ -268,6 +274,9 @@ export const useGridRowGrouping = (
   useGridApiEventHandler(apiRef, 'columnsChange', checkGroupingColumnsModelDiff);
   useGridApiEventHandler(apiRef, 'rowGroupingModelChange', checkGroupingColumnsModelDiff);
 
+  /*
+   * EFFECTS
+   */
   React.useEffect(() => {
     if (props.rowGroupingModel !== undefined) {
       apiRef.current.setRowGroupingModel(props.rowGroupingModel);
