@@ -157,29 +157,47 @@ export const GridRootStyles = styled('div', {
   const hoverColor = (t.vars || t).palette.action.hover;
 
   const selectedOpacity = (t.vars || t).palette.action.selectedOpacity;
+  const selectedHoverOpacity = t.vars
+    ? (`calc(${hoverOpacity} + ${selectedOpacity})` as unknown as number) // TODO: Improve type
+    : hoverOpacity + selectedOpacity;
   const selectedBackground = t.vars
     ? `rgba(${t.vars.palette.primary.mainChannel} / ${selectedOpacity})`
     : alpha(t.palette.primary.main, selectedOpacity);
 
   const selectedHoverBackground = t.vars
-    ? `rgba(${t.vars.palette.primary.mainChannel} / calc(
-                ${t.vars.palette.action.selectedOpacity} +
-                ${t.vars.palette.action.hoverOpacity}
-              ))`
-    : alpha(
-        t.palette.primary.main,
-        t.palette.action.selectedOpacity + t.palette.action.hoverOpacity,
-      );
+    ? `rgba(${t.vars.palette.primary.mainChannel} / ${selectedHoverOpacity})`
+    : alpha(t.palette.primary.main, selectedHoverOpacity);
 
-  const pinnedHoverBackground = t.vars
-    ? hoverColor
-    : blend(pinnedBackground, hoverColor, hoverOpacity);
-  const pinnedSelectedBackground = t.vars
-    ? selectedBackground
-    : blend(pinnedBackground, selectedBackground, selectedOpacity);
-  const pinnedSelectedHoverBackground = t.vars
-    ? hoverColor
-    : blend(pinnedSelectedBackground, hoverColor, hoverOpacity);
+  const blendFn = t.vars ? blendCssVars : blend;
+
+  const getPinnedBackgroundStyles = (backgroundColor: string) => ({
+    [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
+      backgroundColor,
+      '&.Mui-selected': {
+        backgroundColor: blendFn(backgroundColor, selectedBackground, selectedOpacity),
+        '&:hover': {
+          backgroundColor: blendFn(backgroundColor, selectedBackground, selectedHoverOpacity),
+        },
+      },
+    },
+  });
+
+  const pinnedBackgroundColor = blendFn(pinnedBackground, hoverColor, hoverOpacity);
+  const pinnedHoverStyles = getPinnedBackgroundStyles(pinnedBackgroundColor);
+
+  const pinnedSelectedBackgroundColor = blendFn(
+    pinnedBackground,
+    selectedBackground,
+    selectedOpacity,
+  );
+  const pinnedSelectedStyles = getPinnedBackgroundStyles(pinnedSelectedBackgroundColor);
+
+  const pinnedSelectedHoverBackgroundColor = blendFn(
+    pinnedBackground,
+    selectedHoverBackground,
+    selectedHoverOpacity,
+  );
+  const pinnedSelectedHoverStyles = getPinnedBackgroundStyles(pinnedSelectedHoverBackgroundColor);
 
   const selectedStyles = {
     backgroundColor: selectedBackground,
@@ -289,22 +307,21 @@ export const GridRootStyles = styled('div', {
     // - the column has a left or right border
     // - the next column is pinned right and has a left border
     [`& .${c.columnHeader}:focus,
-      & .${c.columnHeader}:focus-within,
-      & .${c.columnHeader}:has(+ .${c.columnHeader}:focus),
-      & .${c.columnHeader}:has(+ .${c.columnHeader}:focus-within),
       & .${c['columnHeader--withLeftBorder']},
       & .${c['columnHeader--withRightBorder']},
-      & .${c.columnHeader}:has(+ .${c.filler} + .${c['columnHeader--withLeftBorder']}),
+      & .${c['columnHeader--siblingFocused']},
+      & .${c['virtualScroller--hasScrollX']} .${c['columnHeader--lastUnpinned']},
       & .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}
       `]: {
       [`& .${c.columnSeparator}`]: {
         opacity: 0,
-        '@media (hover: none)': {
+      },
+      // Show resizable separators at all times on touch devices
+      '@media (hover: none)': {
+        [`& .${c['columnSeparator--resizable']}`]: {
           opacity: 1,
-          color: (t.vars || t).palette.primary.main,
         },
       },
-      // Show resizable separators again when the column is hovered
       [`& .${c['columnSeparator--resizable']}:hover`]: {
         opacity: 1,
       },
@@ -428,6 +445,12 @@ export const GridRootStyles = styled('div', {
     },
     '@media (hover: none)': {
       [`& .${c.columnHeader}`]: columnHeaderStyles,
+      [`& .${c.columnHeader}:focus,
+        & .${c['columnHeader--siblingFocused']}`]: {
+        [`.${c['columnSeparator--resizable']}`]: {
+          color: (t.vars || t).palette.primary.main,
+        },
+      },
     },
     [`& .${c['columnSeparator--sideLeft']}`]: {
       left: columnSeparatorOffset,
@@ -444,16 +467,17 @@ export const GridRootStyles = styled('div', {
     [`& .${c['columnSeparator--resizable']}`]: {
       cursor: 'col-resize',
       touchAction: 'none',
+      [`&.${c['columnSeparator--resizing']}`]: {
+        color: (t.vars || t).palette.primary.main,
+      },
       // Always appear as draggable on touch devices
       '@media (hover: none)': {
         [`& .${c.iconSeparator} rect`]: separatorIconDragStyles,
-        color: borderColor,
       },
-      [`&:hover, &.${c['columnSeparator--resizing']}`]: {
-        color: (t.vars || t).palette.primary.main,
-        [`& .${c.iconSeparator} rect`]: separatorIconDragStyles,
-        '@media (hover: none)': {
-          color: borderColor,
+      '@media (hover: hover)': {
+        '&:hover': {
+          color: (t.vars || t).palette.primary.main,
+          [`& .${c.iconSeparator} rect`]: separatorIconDragStyles,
         },
       },
       '& svg': {
@@ -647,23 +671,14 @@ export const GridRootStyles = styled('div', {
       position: 'sticky',
       zIndex: 3,
       background: 'var(--DataGrid-pinnedBackground)',
+      '&.Mui-selected': {
+        backgroundColor: pinnedSelectedBackgroundColor,
+      },
     },
     [`& .${c.virtualScrollerContent} .${c.row}`]: {
-      '&:hover': {
-        [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
-          backgroundColor: pinnedHoverBackground,
-        },
-      },
-      [`&.Mui-selected`]: {
-        [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
-          backgroundColor: pinnedSelectedBackground,
-        },
-        '&:hover': {
-          [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
-            backgroundColor: pinnedSelectedHoverBackground,
-          },
-        },
-      },
+      '&:hover': pinnedHoverStyles,
+      '&.Mui-selected': pinnedSelectedStyles,
+      '&.Mui-selected:hover': pinnedSelectedHoverStyles,
     },
     [`& .${c.cellOffsetLeft}`]: {
       flex: '0 0 auto',
@@ -790,4 +805,9 @@ function blend(background: string, overlay: string, opacity: number, gamma: numb
     type: 'rgb',
     values: rgb as any,
   });
+}
+
+const removeOpacity = (color: string) => `rgb(from ${color} r g b / 1)`;
+function blendCssVars(background: string, overlay: string, opacity: string | number) {
+  return `color-mix(in srgb,${background}, ${removeOpacity(overlay)} calc(${opacity} * 100%))`;
 }
