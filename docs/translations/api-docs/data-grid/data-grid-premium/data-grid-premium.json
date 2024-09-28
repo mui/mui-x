@@ -39,6 +39,9 @@
     "columnBufferPx": {
       "description": "Column region in pixels to render before/after the viewport"
     },
+    "columnGroupHeaderHeight": {
+      "description": "Sets the height in pixels of the column group headers in the Data Grid. Inherits the <code>columnHeaderHeight</code> value if not set."
+    },
     "columnHeaderHeight": {
       "description": "Sets the height in pixel of the column headers in the Data Grid."
     },
@@ -649,6 +652,9 @@
     },
     "treeData": {
       "description": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop."
+    },
+    "unstable_rowSpanning": {
+      "description": "If <code>true</code>, the Data Grid will auto span the cells over the rows having the same value."
     }
   },
   "classDescriptions": {

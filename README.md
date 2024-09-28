@@ -26,14 +26,14 @@
 Each component provides best-in-class UX and DX, with sophisticated UX workflows for data-rich applications.
 Components include the Data Grid, Date and Time Pickers, Charts, and Tree View.
 
-MUI X extends the core functionality of [Material UI](https://github.com/mui/material-ui/), but the advanced components also stand on their own and can be fully customized to meet the needs of any design system.
+MUI X extends the core functionality of [Material UI](https://github.com/mui/material-ui/), but the advanced components also stand on their own and can be fully customized to meet the needs of any design system.
 
-MUI X is **open-core**: [Community](#community-plan) components are MIT-licensed and free forever, while more advanced features and components require a [Pro](#pro-plan) or [Premium](#premium-plan) commercial license.
+MUI X is **open-core**: [Community](#community-plan) components are MIT-licensed and free forever, while more advanced features and components require a [Pro](#pro-plan) or [Premium](#premium-plan) commercial license.
 See [Licensing](#licensing) for more information.
 
 ## Documentation
 
-Get started in the [MUI X documentation](https://mui.com/x/introduction/).
+Get started in the [MUI X documentation](https://mui.com/x/introduction/).
 
 - [Data Grid](https://mui.com/x/react-data-grid/)
 - [Date and Time Pickers](https://mui.com/x/react-date-pickers/)

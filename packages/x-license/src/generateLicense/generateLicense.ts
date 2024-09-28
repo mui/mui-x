@@ -6,31 +6,14 @@ import { LICENSE_MODELS, LicenseModel } from '../utils/licenseModel';
 const licenseVersion = '2';
 
 export interface LicenseDetails {
-  orderNumber: string;
   expiryDate: Date;
-  /**
-   * @deprecated Use planScope instead.
-   */
-  scope?: PlanScope;
-  planScope?: PlanScope;
-  /**
-   * @deprecated Use licenseModel instead.
-   */
-  licensingModel?: LicenseModel; // TODO deprecate
   licenseModel?: LicenseModel;
+  orderNumber: string;
+  planScope?: PlanScope;
   planVersion: PlanVersion;
 }
 
 function getClearLicenseString(details: LicenseDetails) {
-  // TODO remove
-  if (details.licensingModel) {
-    details.licenseModel = details.licensingModel;
-  }
-  // TODO remove
-  if (details.scope) {
-    details.planScope = details.scope;
-  }
-
   if (details.planScope && !PLAN_SCOPES.includes(details.planScope)) {
     throw new Error('MUI X: Invalid scope');
   }

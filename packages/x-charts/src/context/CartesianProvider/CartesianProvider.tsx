@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
+import { computeAxisValue } from '../../internals/computeAxisValue';
 import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useSeries } from '../../hooks/useSeries';
 import { CartesianContext } from './CartesianContext';
-import { computeValue } from './computeValue';
 import { useXExtremumGetter } from '../PluginProvider/useXExtremumGetter';
 import { useYExtremumGetter } from '../PluginProvider';
 import { CartesianProviderProps } from './Cartesian.types';
@@ -18,7 +18,7 @@ function CartesianProvider(props: CartesianProviderProps) {
 
   const xValues = React.useMemo(
     () =>
-      computeValue({
+      computeAxisValue({
         drawingArea,
         formattedSeries,
         axis: xAxis,
@@ -30,7 +30,7 @@ function CartesianProvider(props: CartesianProviderProps) {
 
   const yValues = React.useMemo(
     () =>
-      computeValue({
+      computeAxisValue({
         drawingArea,
         formattedSeries,
         axis: yAxis,

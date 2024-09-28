@@ -29,6 +29,9 @@
     "columnBufferPx": {
       "description": "Column region in pixels to render before/after the viewport"
     },
+    "columnGroupHeaderHeight": {
+      "description": "Sets the height in pixels of the column group headers in the Data Grid. Inherits the <code>columnHeaderHeight</code> value if not set."
+    },
     "columnHeaderHeight": {
       "description": "Sets the height in pixel of the column headers in the Data Grid."
     },
@@ -476,6 +479,9 @@
     "sortModel": { "description": "Set the sort model of the Data Grid." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "unstable_rowSpanning": {
+      "description": "If <code>true</code>, the Data Grid will auto span the cells over the rows having the same value."
     }
   },
   "classDescriptions": {

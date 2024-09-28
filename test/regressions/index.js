@@ -18,6 +18,7 @@ const blacklist = [
   'docs-data-grid-filtering/RemoveBuiltInOperators.png', // Needs interaction
   'docs-data-grid-filtering/CustomRatingOperator.png', // Needs interaction
   'docs-data-grid-filtering/CustomInputComponent.png', // Needs interaction
+  /^docs-charts-tooltip\/(.*).png/, // Needs interaction
   'docs-date-pickers-date-calendar/DateCalendarServerRequest.png', // Has random behavior (TODO: Use seeded random)
   // 'docs-system-typography',
 ];
@@ -69,6 +70,10 @@ requireDocs.keys().forEach((path) => {
   // TODO: Why does webpack include a key for the absolute and relative path?
   // We just want the relative path
   if (!path.startsWith('./')) {
+    return;
+  }
+
+  if (requireDocs(path).default === undefined) {
     return;
   }
 
