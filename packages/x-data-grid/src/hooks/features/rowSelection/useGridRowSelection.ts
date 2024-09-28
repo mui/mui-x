@@ -65,7 +65,6 @@ export const rowSelectionStateInitializer: GridStateInitializer<
 /**
  * @requires useGridRows (state, method) - can be after
  * @requires useGridParamsApi (method) - can be after
- * @requires useGridParamsApi (method) - can be after
  * @requires useGridFocus (state) - can be after
  * @requires useGridKeyboardNavigation (`cellKeyDown` event must first be consumed by it)
  */
@@ -159,6 +158,9 @@ export const useGridRowSelection = (
     [apiRef],
   );
 
+  /*
+   * API METHODS
+   */
   const setRowSelectionModel = React.useCallback<GridRowSelectionApi['setRowSelectionModel']>(
     (model) => {
       if (
@@ -429,6 +431,9 @@ export const useGridRowSelection = (
     props.signature === GridSignature.DataGrid ? 'private' : 'public',
   );
 
+  /*
+   * EVENTS
+   */
   const removeOutdatedSelection = React.useCallback(
     (sortModelUpdated = false) => {
       const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
@@ -696,6 +701,9 @@ export const useGridRowSelection = (
   );
   useGridApiEventHandler(apiRef, 'cellKeyDown', runIfRowSelectionIsEnabled(handleCellKeyDown));
 
+  /*
+   * EFFECTS
+   */
   React.useEffect(() => {
     if (propRowSelectionModel !== undefined) {
       apiRef.current.setRowSelectionModel(propRowSelectionModel);

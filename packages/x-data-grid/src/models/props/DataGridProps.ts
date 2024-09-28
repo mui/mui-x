@@ -845,11 +845,6 @@ export interface DataGridProSharedPropsWithDefaultValue {
    * @default { parents: false, descendants: false }
    */
   rowSelectionPropagation: GridRowSelectionPropagation;
-  /**
-   * If `true`, the rows will be gathered in a tree structure according to the `getTreeDataPath` prop.
-   * @default false
-   */
-  treeData: boolean;
 }
 
 export interface DataGridProSharedPropsWithoutDefaultValue {

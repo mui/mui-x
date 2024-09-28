@@ -307,7 +307,7 @@ If you are dynamically switching the `leafField` or `mainGroupingCriteria`, the 
 
 ## Automatic parents and children selection
 
-By default, selecting a parent row will not select its children.
+By default, selecting a parent row does not select its children.
 You can override this behavior by using the `rowSelectionPropagation` prop.
 
 Here's how it's structured:
@@ -321,8 +321,8 @@ type GridRowSelectionPropagation = {
 
 When `rowSelectionPropagation.descendants` is set to `true`.
 
-- Selecting a parent will auto-select all its filtered descendants.
-- Deselecting a parent row will auto-deselect all its filtered descendants.
+- Selecting a parent would auto-select all its filtered descendants.
+- Deselecting a parent row would auto-deselect all its filtered descendants.
 
 When `rowSelectionPropagation.parents` is set to `true`.
 
@@ -334,22 +334,19 @@ The example below demonstrates the usage of the `rowSelectionPropagation` prop.
 {{"demo": "RowGroupingPropagateSelection.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
-The row selection propagation will also affect the "Select all" checkbox in a similar way like any other group checkbox.
+The row selection propagation also affects the "Select all" checkbox in a similar way like any other group checkbox.
 :::
 
 :::info
-The row selection propagation will only affect the filtered rows.
-If some rows were selected before filtering, auto selection will not be applied on them.
-
-The selected unfiltered rows will be auto-deselected when the filter is applied.
+The selected unfiltered rows will be auto-deselected when the filter is applied. Row selection propagation is not applied to the unfiltered rows.
 :::
 
 :::warning
-If `props.disableMultipleRowSelection` is set to `true`, the row selection propagation feature will not work.
+If `props.disableMultipleRowSelection` is set to `true`, the row selection propagation feature would not work.
 :::
 
 :::warning
-The row selection propagation is a client-side feature and not recommended to be used with the [server-side data source](/x/react-data-grid/server-side-data/), since it will only work on the partially loaded data.
+The row selection propagation is a client-side feature and not recommended to be used with the [server-side data source](/x/react-data-grid/server-side-data/), since it would work on the partially loaded data only.
 :::
 
 ## Get the rows in a group
