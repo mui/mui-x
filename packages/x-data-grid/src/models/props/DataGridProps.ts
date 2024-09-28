@@ -397,7 +397,7 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * If `true`, the Data Grid will not reset the column width when the `columns` prop is updated.
    * @default false
    */
-  persistColumnsWidth: boolean;
+  unstable_persistColumnsWidth: boolean;
 }
 
 /**

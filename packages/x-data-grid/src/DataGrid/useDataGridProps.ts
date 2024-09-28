@@ -68,7 +68,6 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   pageSizeOptions: [25, 50, 100],
   pagination: false,
   paginationMode: 'client',
-  persistColumnsWidth: false,
   resizeThrottleMs: 60,
   rowBufferPx: 150,
   rowHeight: 52,
@@ -81,6 +80,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   sortingMode: 'client',
   sortingOrder: ['asc' as const, 'desc' as const, null],
   throttleRowsMs: 0,
+  unstable_persistColumnsWidth: false,
   unstable_rowSpanning: false,
 };
 

@@ -419,7 +419,6 @@
     "paginationModel": {
       "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
     },
-    "persistColumnsWidth": { "type": { "name": "bool" }, "default": "false" },
     "processRowUpdate": {
       "type": { "name": "func" },
       "signature": {
@@ -475,6 +474,7 @@
       },
       "additionalInfo": { "sx": true }
     },
+    "unstable_persistColumnsWidth": { "type": { "name": "bool" }, "default": "false" },
     "unstable_rowSpanning": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGrid",

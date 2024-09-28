@@ -38,7 +38,7 @@ export default function ColumnSizingPersistWidth() {
             { field: 'age', resizable: false },
           ]}
           rows={rows}
-          persistColumnsWidth={enabled}
+          unstable_persistColumnsWidth={enabled}
         />
       </div>
     </div>

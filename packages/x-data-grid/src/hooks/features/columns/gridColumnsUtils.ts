@@ -185,7 +185,10 @@ export const hydrateColumnsWidth = (
       } else {
         const previousStateColumn = prevState?.lookup[columnField];
         let widthToUse = column.width;
-        if (previousStateColumn?.width && previousStateColumn.width !== column.width) {
+        if (
+          previousStateColumn?.computedWidth &&
+          previousStateColumn.computedWidth !== column.width
+        ) {
           widthToUse = previousStateColumn.computedWidth;
         }
         computedWidth = clamp(
@@ -199,7 +202,7 @@ export const hydrateColumnsWidth = (
     }
 
     if (column.computedWidth !== computedWidth) {
-      column = { ...column, computedWidth, width: computedWidth };
+      column = { ...column, computedWidth };
     }
 
     if (isFlex) {
