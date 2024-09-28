@@ -156,7 +156,7 @@ describeTreeView<
         experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: true,
-        canMoveItemToNewPosition: () => false,
+        isItemReorderable: () => false,
       });
 
       dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
@@ -168,7 +168,7 @@ describeTreeView<
         experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: true,
-        canMoveItemToNewPosition: () => true,
+        isItemReorderable: () => true,
       });
 
       dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));

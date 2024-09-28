@@ -673,6 +673,11 @@ export const useGridRowSelection = (
     'sortedRowsSet',
     runIfRowSelectionIsEnabled(() => removeOutdatedSelection(true)),
   );
+  useGridApiEventHandler(
+    apiRef,
+    'filteredRowsSet',
+    runIfRowSelectionIsEnabled(removeOutdatedSelection),
+  );
   useGridApiEventHandler(apiRef, 'rowClick', runIfRowSelectionIsEnabled(handleRowClick));
   useGridApiEventHandler(
     apiRef,
@@ -690,11 +695,6 @@ export const useGridRowSelection = (
     runIfRowSelectionIsEnabled(preventSelectionOnShift),
   );
   useGridApiEventHandler(apiRef, 'cellKeyDown', runIfRowSelectionIsEnabled(handleCellKeyDown));
-  useGridApiEventHandler(
-    apiRef,
-    'filteredRowsSet',
-    runIfRowSelectionIsEnabled(removeOutdatedSelection),
-  );
 
   React.useEffect(() => {
     if (propRowSelectionModel !== undefined) {
