@@ -118,7 +118,7 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
     <GridPanelRoot
       ref={ref}
       placement="bottom-start"
-      className={clsx(className, classes.panel)}
+      className={clsx(classes.panel, className)}
       ownerState={rootProps}
       anchorEl={anchorEl}
       modifiers={modifiers}
