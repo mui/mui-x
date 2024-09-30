@@ -253,6 +253,43 @@ describe('<DataGridPro /> - Row selection', () => {
       fireEvent.click(selectAllCheckbox);
       expect(apiRef.current.getSelectedRows()).to.have.length(2);
     });
+
+    // https://github.com/mui/mui-x/issues/14074
+    it('should select all the rows of the current page keeping the previously selected rows when a filter is applied', () => {
+      render(
+        <TestDataGridSelection
+          rowLength={50}
+          checkboxSelection
+          checkboxSelectionVisibleOnly
+          initialState={{
+            pagination: { paginationModel: { pageSize: 2 } },
+            filter: {
+              filterModel: {
+                items: [
+                  {
+                    field: 'currencyPair',
+                    value: 'usd',
+                    operator: 'contains',
+                  },
+                ],
+              },
+            },
+          }}
+          pagination
+          pageSizeOptions={[2]}
+        />,
+      );
+
+      fireEvent.click(getCell(0, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      const selectAllCheckbox: HTMLInputElement = screen.getByRole('checkbox', {
+        name: /select all rows/i,
+      });
+      fireEvent.click(selectAllCheckbox);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([0, 3, 4]);
+      expect(selectAllCheckbox.checked).to.equal(true);
+    });
   });
 
   describe('apiRef: getSelectedRows', () => {

@@ -34,7 +34,7 @@ function GridPanelHeader(props: React.HTMLAttributes<HTMLDivElement> & { sx?: Sx
 
   return (
     <GridPanelHeaderRoot
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={rootProps}
       {...other}
     />

@@ -38,7 +38,7 @@ const DesktopDateTimePickerLayout = React.forwardRef(function DesktopDateTimePic
   return (
     <PickersLayoutRoot
       ref={ref}
-      className={clsx(className, pickersLayoutClasses.root, classes?.root)}
+      className={clsx(pickersLayoutClasses.root, classes?.root, className)}
       sx={[
         {
           [`& .${pickersLayoutClasses.tabs}`]: { gridRow: 4, gridColumn: '1 / 4' },

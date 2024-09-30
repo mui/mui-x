@@ -47,7 +47,7 @@ Row spanning works well with features like [sorting](/x/react-data-grid/sorting/
 
 The demo below recreates the calendar from the [column spanning documentation](/x/react-data-grid/column-spanning/#function-signature) using the row spanning feature:
 
-{{"demo": "RowSpanningCalender.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "RowSpanningCalendar.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## API
 

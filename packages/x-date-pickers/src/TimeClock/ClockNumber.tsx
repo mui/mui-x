@@ -88,7 +88,7 @@ export function ClockNumber(inProps: ClockNumberProps) {
 
   return (
     <ClockNumberRoot
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       aria-disabled={disabled ? true : undefined}
       aria-selected={selected ? true : undefined}
       role="option"

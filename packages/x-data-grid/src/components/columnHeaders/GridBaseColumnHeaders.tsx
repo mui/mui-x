@@ -43,7 +43,7 @@ export const GridBaseColumnHeaders = React.forwardRef<HTMLDivElement, GridBaseCo
     return (
       <GridColumnHeadersRoot
         ref={ref}
-        className={clsx(className, classes.root)}
+        className={clsx(classes.root, className)}
         ownerState={rootProps}
         {...other}
         role="presentation"

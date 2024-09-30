@@ -108,7 +108,7 @@ export function ClockPointer(inProps: ClockPointerProps) {
   return (
     <ClockPointerRoot
       style={getAngleStyle()}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
     >

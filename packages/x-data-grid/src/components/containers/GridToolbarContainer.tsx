@@ -47,7 +47,7 @@ const GridToolbarContainer = React.forwardRef<HTMLDivElement, GridToolbarContain
     return (
       <GridToolbarContainerRoot
         ref={ref}
-        className={clsx(className, classes.root)}
+        className={clsx(classes.root, className)}
         ownerState={rootProps}
         {...other}
       >

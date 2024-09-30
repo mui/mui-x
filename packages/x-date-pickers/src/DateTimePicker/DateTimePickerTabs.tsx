@@ -126,7 +126,7 @@ const DateTimePickerTabs = function DateTimePickerTabs<TDate extends PickerValid
       variant="fullWidth"
       value={viewToTab(view)}
       onChange={handleChange}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       sx={sx}
     >
       <Tab
