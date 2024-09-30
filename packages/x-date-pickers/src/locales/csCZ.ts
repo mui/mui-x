@@ -26,10 +26,10 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Začátek',
   end: 'Konec',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Datum začátku',
+  startTime: 'Čas začátku',
+  endDate: 'Datum konce',
+  endTime: 'Čas konce',
 
   // Action bar
   cancelButtonLabel: 'Zrušit',
@@ -68,7 +68,7 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
     formattedTime || (value !== null && utils.isValid(value))
       ? `Vyberte čas, vybraný čas je ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Vyberte čas',
-  // fieldClearLabel: 'Clear',
+  fieldClearLabel: 'Vymazat',
 
   // Table labels
   timeTableLabel: 'vyberte čas',
@@ -78,24 +78,24 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'DD',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'Rok',
+  month: 'Měsíc',
+  day: 'Den',
+  weekDay: 'Pracovní den',
+  hours: 'Hodiny',
+  minutes: 'Minuty',
+  seconds: 'Sekundy',
+  meridiem: 'Odpoledne',
 
   // Common
-  // empty: 'Empty',
+  empty: 'Prázdný',
 };
 
 export const csCZ = getPickersLocalization(csCZPickers);
