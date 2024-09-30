@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 const slotTimesLookup = {
   0: '09:00 - 10:00',
@@ -15,7 +15,18 @@ const slotTimesLookup = {
 
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
-const rows = [
+type Subject =
+  | 'Maths'
+  | 'English'
+  | 'Lab'
+  | 'Chemistry'
+  | 'Physics'
+  | 'Music'
+  | 'Dance';
+
+type Row = { id: number; time: string; slots: Array<Subject | ''> };
+
+const rows: Array<Row> = [
   {
     id: 0,
     time: slotTimesLookup[0],
@@ -58,7 +69,7 @@ const rows = [
   },
 ];
 
-const slotColumnCommonFields = {
+const slotColumnCommonFields: Partial<GridColDef> = {
   sortable: false,
   filterable: false,
   pinnable: false,
@@ -66,7 +77,7 @@ const slotColumnCommonFields = {
   cellClassName: (params) => params.value,
 };
 
-const columns = [
+const columns: GridColDef<Row>[] = [
   {
     field: 'time',
     headerName: 'Time',
@@ -131,7 +142,7 @@ const rootStyles = {
   },
 };
 
-export default function RowSpanningCalender() {
+export default function RowSpanningCalendar() {
   return (
     <Box sx={rootStyles}>
       <DataGrid
