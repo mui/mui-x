@@ -69,7 +69,7 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
   return (
     <GridRootStyles
       ref={handleRef}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
     />
