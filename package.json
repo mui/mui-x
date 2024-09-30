@@ -156,7 +156,7 @@
     "fast-glob": "^3.3.2",
     "format-util": "^1.0.5",
     "fs-extra": "^11.2.0",
-    "glob-gitignore": "^1.0.14",
+    "glob-gitignore": "^1.0.15",
     "globby": "^14.0.2",
     "html-webpack-plugin": "^5.6.0",
     "jsdom": "24.1.3",
