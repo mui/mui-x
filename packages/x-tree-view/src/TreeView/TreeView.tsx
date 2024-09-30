@@ -2,12 +2,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { useDefaultProps } from '@mui/material/DefaultPropsProvider';
+import { styled } from '../internals/zero-styled';
 import { getTreeViewUtilityClass } from './treeViewClasses';
 import { TreeViewProps } from './TreeView.types';
 import { SimpleTreeView, SimpleTreeViewRoot } from '../SimpleTreeView';
-
-const useThemeProps = createUseThemeProps('MuiTreeView');
 
 const useUtilityClasses = <Multiple extends boolean | undefined>(
   ownerState: TreeViewProps<Multiple>,
@@ -70,7 +69,7 @@ const TreeView = React.forwardRef(function TreeView<
     warn();
   }
 
-  const props = useThemeProps({ props: inProps, name: 'MuiTreeView' });
+  const props = useDefaultProps({ props: inProps, name: 'MuiTreeView' });
 
   const classes = useUtilityClasses(props);
 

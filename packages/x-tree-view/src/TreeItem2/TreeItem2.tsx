@@ -9,7 +9,8 @@ import MuiCheckbox, { CheckboxProps } from '@mui/material/Checkbox';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { useDefaultProps } from '@mui/material/DefaultPropsProvider';
+import { styled } from '../internals/zero-styled';
 import { TreeItem2Props, TreeItem2OwnerState } from './TreeItem2.types';
 import {
   useTreeItem2,
@@ -22,8 +23,6 @@ import { TreeItem2Icon } from '../TreeItem2Icon';
 import { TreeItem2DragAndDropOverlay } from '../TreeItem2DragAndDropOverlay';
 import { TreeItem2Provider } from '../TreeItem2Provider';
 import { TreeItem2LabelInput } from '../TreeItem2LabelInput';
-
-const useThemeProps = createUseThemeProps('MuiTreeItem2');
 
 export const TreeItem2Root = styled('li', {
   name: 'MuiTreeItem2',
@@ -229,7 +228,7 @@ export const TreeItem2 = React.forwardRef(function TreeItem2(
   inProps: TreeItem2Props,
   forwardedRef: React.Ref<HTMLLIElement>,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiTreeItem2' });
+  const props = useDefaultProps({ props: inProps, name: 'MuiTreeItem2' });
 
   const { id, itemId, label, disabled, children, slots = {}, slotProps = {}, ...other } = props;
 

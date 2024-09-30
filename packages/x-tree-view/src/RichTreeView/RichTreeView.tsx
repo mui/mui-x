@@ -3,16 +3,15 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
+import { useDefaultProps } from '@mui/material/DefaultPropsProvider';
 import { warnOnce } from '@mui/x-internals/warning';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
 import { RichTreeViewProps } from './RichTreeView.types';
-import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { styled } from '../internals/zero-styled';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { TreeItem, TreeItemProps } from '../TreeItem';
-
-const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
 const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
   ownerState: RichTreeViewProps<R, Multiple>,
@@ -76,7 +75,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   R extends {},
   Multiple extends boolean | undefined = undefined,
 >(inProps: RichTreeViewProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
-  const props = useThemeProps({ props: inProps, name: 'MuiRichTreeView' });
+  const props = useDefaultProps({ props: inProps, name: 'MuiRichTreeView' });
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {

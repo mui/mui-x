@@ -13,7 +13,8 @@ import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import useSlotProps from '@mui/utils/useSlotProps';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
-import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { useDefaultProps } from '@mui/material/DefaultPropsProvider';
+import { styled } from '../internals/zero-styled';
 import { TreeItemContent } from './TreeItemContent';
 import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
 import {
@@ -30,8 +31,6 @@ import { useTreeItemState } from './useTreeItemState';
 import { isTargetInDescendants } from '../internals/utils/tree';
 import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
 import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
-
-const useThemeProps = createUseThemeProps('MuiTreeItem');
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
@@ -205,7 +204,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   } = useTreeViewContext<TreeItemMinimalPlugins, TreeItemOptionalPlugins>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
-  const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
+  const props = useDefaultProps({ props: inProps, name: 'MuiTreeItem' });
 
   const {
     children,

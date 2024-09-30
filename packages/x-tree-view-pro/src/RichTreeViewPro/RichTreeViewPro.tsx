@@ -2,12 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import useSlotProps from '@mui/utils/useSlotProps';
+import { useDefaultProps } from '@mui/material/DefaultPropsProvider';
+import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import { useTreeView, TreeViewProvider } from '@mui/x-tree-view/internals';
 import { warnOnce } from '@mui/x-internals/warning';
-import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { styled } from '../internals/zero-styled';
 import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
 import { RichTreeViewProProps } from './RichTreeViewPro.types';
 import {
@@ -15,8 +16,6 @@ import {
   RichTreeViewProPluginSignatures,
 } from './RichTreeViewPro.plugins';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
-
-const useThemeProps = createUseThemeProps('MuiRichTreeViewPro');
 
 const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
   ownerState: RichTreeViewProProps<R, Multiple>,
@@ -108,7 +107,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   R extends {},
   Multiple extends boolean | undefined = undefined,
 >(inProps: RichTreeViewProProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
-  const props = useThemeProps({ props: inProps, name: 'MuiRichTreeViewPro' });
+  const props = useDefaultProps({ props: inProps, name: 'MuiRichTreeViewPro' });
 
   useLicenseVerifier('x-tree-view-pro', releaseInfo);
 
