@@ -15,11 +15,11 @@ export function usePickersFieldRoot<TValueManager extends PickerAnyAccessibleVal
   type TInternalProps = ValueManagerProperties['internalProps'];
   type TInternalPropsWithDefaults = ValueManagerProperties['internalProps'];
 
-  const { controller, internalProps } = params;
+  const { valueManager, internalProps } = params;
 
   const adapter = useLocalizationContext<TDate>();
   const internalPropsWithDefault: TInternalPropsWithDefaults =
-    controller.applyDefaultsToFieldInternalProps({
+    valueManager.applyDefaultsToFieldInternalProps({
       adapter,
       internalProps,
     });
@@ -62,10 +62,10 @@ export function usePickersFieldRoot<TValueManager extends PickerAnyAccessibleVal
   >({
     forwardedProps: {},
     internalProps: { ...internalPropsWithDefault, enableAccessibleFieldDOMStructure: true },
-    valueManager: controller.legacyValueManager,
-    fieldValueManager: controller.fieldValueManager,
-    validator: controller.validator,
-    valueType: controller.valueType,
+    valueManager: valueManager.legacyValueManager,
+    fieldValueManager: valueManager.fieldValueManager,
+    validator: valueManager.validator,
+    valueType: valueManager.valueType,
   });
 
   const contentRef = React.useRef<HTMLDivElement>(null);
