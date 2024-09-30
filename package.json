@@ -137,7 +137,7 @@
     "danger": "^12.3.3",
     "date-fns-jalali-v3": "npm:date-fns-jalali@3.6.0-1",
     "date-fns-v4": "npm:date-fns@4.1.0",
-    "eslint": "^8.57.0",
+    "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-prettier": "^9.1.0",
