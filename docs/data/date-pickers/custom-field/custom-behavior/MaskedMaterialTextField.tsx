@@ -5,13 +5,11 @@ import TextField from '@mui/material/TextField';
 import useControlled from '@mui/utils/useControlled';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
-import { UseDateFieldProps } from '@mui/x-date-pickers/DateField';
 import {
-  BaseSingleInputFieldProps,
-  DateValidationError,
-  FieldSection,
-} from '@mui/x-date-pickers/models';
+  DatePicker,
+  DatePickerProps,
+  DatePickerFieldProps,
+} from '@mui/x-date-pickers/DatePicker';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
@@ -112,19 +110,7 @@ function getDisplayDate(value: Dayjs | null, format: string) {
   return value.isValid() ? value.format(format) : '';
 }
 
-interface MaskedFieldProps
-  extends UseDateFieldProps<Dayjs, false>,
-    BaseSingleInputFieldProps<
-      Dayjs | null,
-      Dayjs,
-      FieldSection,
-      false,
-      DateValidationError
-    > {
-  format: string;
-}
-
-function MaskedField(props: MaskedFieldProps) {
+function MaskedField(props: DatePickerFieldProps) {
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
 
   const {
