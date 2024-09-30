@@ -1,22 +1,34 @@
 import * as React from 'react';
-import useId from '@mui/utils/useId';
 import { TreeViewPlugin } from '../../models';
 import { UseTreeViewIdSignature } from './useTreeViewId.types';
+import { createTreeViewDefaultId } from './useTreeViewId.utils';
 
-export const useTreeViewId: TreeViewPlugin<UseTreeViewIdSignature> = ({ params }) => {
-  const treeId = useId(params.id);
+export const useTreeViewId: TreeViewPlugin<UseTreeViewIdSignature> = ({
+  params,
+  state,
+  setState,
+}) => {
+  const treeId = state.id.treeId;
 
-  const getTreeItemIdAttribute = React.useCallback(
-    (itemId: string, idAttribute: string | undefined) => idAttribute ?? `${treeId}-${itemId}`,
-    [treeId],
-  );
+  React.useEffect(() => {
+    setState((prevState) => {
+      if (prevState.id.treeId === params.id) {
+        return prevState;
+      }
+
+      return {
+        ...prevState,
+        id: { ...prevState.id, treeId: params.id ?? createTreeViewDefaultId() },
+      };
+    });
+  }, [setState, params.id]);
 
   return {
     getRootProps: () => ({
       id: treeId,
     }),
-    instance: {
-      getTreeItemIdAttribute,
+    contextValue: {
+      treeId,
     },
   };
 };
@@ -24,3 +36,5 @@ export const useTreeViewId: TreeViewPlugin<UseTreeViewIdSignature> = ({ params }
 useTreeViewId.params = {
   id: true,
 };
+
+useTreeViewId.getInitialState = ({ id }) => ({ id: { treeId: id ?? createTreeViewDefaultId() } });
