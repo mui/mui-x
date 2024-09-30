@@ -34,6 +34,10 @@ import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
 import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
+import {
+  gridRowSpanningHiddenCellsSelector,
+  gridRowSpanningSpannedCellsSelector,
+} from '../../hooks/features/rows/gridRowSpanningSelectors';
 
 export enum PinnedPosition {
   NONE,
@@ -210,6 +214,9 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     }),
   );
 
+  const hiddenCells = useGridSelector(apiRef, gridRowSpanningHiddenCellsSelector);
+  const spannedCells = useGridSelector(apiRef, gridRowSpanningSpannedCellsSelector);
+
   const { cellMode, hasFocus, isEditable = false, value } = cellParams;
 
   const canManageOwnFocus =
@@ -321,6 +328,9 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     [apiRef, field, rowId],
   );
 
+  const isCellRowSpanned = hiddenCells[rowId]?.[field] ?? false;
+  const rowSpan = spannedCells[rowId]?.[field] ?? 1;
+
   const style = React.useMemo(() => {
     if (isNotVisible) {
       return {
@@ -349,8 +359,13 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       cellStyle[side] = pinnedOffset;
     }
 
+    if (rowSpan > 1) {
+      cellStyle.height = `calc(var(--height) * ${rowSpan})`;
+      cellStyle.zIndex = 5;
+    }
+
     return cellStyle;
-  }, [width, isNotVisible, styleProp, pinnedOffset, pinnedPosition, isRtl]);
+  }, [width, isNotVisible, styleProp, pinnedOffset, pinnedPosition, isRtl, rowSpan]);
 
   React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
@@ -372,6 +387,16 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       }
     }
   }, [hasFocus, cellMode, apiRef]);
+
+  if (isCellRowSpanned) {
+    return (
+      <div
+        data-colindex={colIndex}
+        role="presentation"
+        style={{ ...style, minWidth: 'var(--width)', maxWidth: 'var(--width)' }}
+      />
+    );
+  }
 
   if (cellParams === EMPTY_CELL_PARAMS) {
     return null;
@@ -462,6 +487,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}
       aria-colspan={colSpan}
+      aria-rowspan={rowSpan}
       style={style}
       title={title}
       tabIndex={tabIndex}

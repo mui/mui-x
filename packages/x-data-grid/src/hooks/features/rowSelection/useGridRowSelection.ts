@@ -10,7 +10,6 @@ import { GridRowId } from '../../../models/gridRows';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import {
   gridRowSelectionStateSelector,
   selectedGridRowsSelector,
@@ -20,7 +19,7 @@ import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import {
   gridExpandedSortedRowIdsSelector,
-  gridFilterModelSelector,
+  gridFilteredRowsLookupSelector,
 } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { GridCellModes } from '../../../models/gridEditRowModel';
@@ -331,14 +330,14 @@ export const useGridRowSelection = (
       return;
     }
     const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
-    const rowsLookup = gridRowsLookupSelector(apiRef);
+    const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
 
     // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
     const selectionLookup = { ...selectedIdsLookupSelector(apiRef) };
 
     let hasChanged = false;
     currentSelection.forEach((id: GridRowId) => {
-      if (!rowsLookup[id]) {
+      if (!filteredRowsLookup[id]) {
         delete selectionLookup[id];
         hasChanged = true;
       }
@@ -452,8 +451,7 @@ export const useGridRowSelection = (
           ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
           : gridExpandedSortedRowIdsSelector(apiRef);
 
-      const filterModel = gridFilterModelSelector(apiRef);
-      apiRef.current.selectRows(rowsToBeSelected, params.value, filterModel?.items.length > 0);
+      apiRef.current.selectRows(rowsToBeSelected, params.value);
     },
     [apiRef, props.checkboxSelectionVisibleOnly, props.pagination, props.paginationMode],
   );
@@ -537,6 +535,11 @@ export const useGridRowSelection = (
   useGridApiEventHandler(
     apiRef,
     'sortedRowsSet',
+    runIfRowSelectionIsEnabled(removeOutdatedSelection),
+  );
+  useGridApiEventHandler(
+    apiRef,
+    'filteredRowsSet',
     runIfRowSelectionIsEnabled(removeOutdatedSelection),
   );
   useGridApiEventHandler(apiRef, 'rowClick', runIfRowSelectionIsEnabled(handleRowClick));
