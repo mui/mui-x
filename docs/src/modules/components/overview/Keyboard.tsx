@@ -417,13 +417,13 @@ export default function Keyboard() {
     sectionContent.focus();
 
     if (key) {
-      const dispatchedEvent = new KeyboardEvent('keydown', {
+      const keydownEvent = new KeyboardEvent('keydown', {
         ...key,
         bubbles: true,
         cancelable: true,
       });
 
-      sectionContent.dispatchEvent(dispatchedEvent);
+      sectionContent.dispatchEvent(keydownEvent);
 
       if (key.key === 'Backspace') {
         sectionContent.textContent = '';
