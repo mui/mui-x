@@ -6,8 +6,7 @@ import useControlled from '@mui/utils/useControlled';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
-import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
+import { useSplitFieldProps, useFieldPlaceholder } from '@mui/x-date-pickers/hooks';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
 const MASK_USER_INPUT_SYMBOL = '_';
@@ -16,83 +15,7 @@ const ACCEPT_REGEX = /[\d]/gi;
 const staticDateWith2DigitTokens = dayjs('2019-11-21T22:30:00.000');
 const staticDateWith1DigitTokens = dayjs('2019-01-01T09:00:00.000');
 
-function getFormatHelpTextFromFormat(format) {
-  const localeFormats = dayjs.Ls.en?.formats;
-
-  // @see https://github.com/iamkun/dayjs/blob/dev/src/plugin/localizedFormat/index.js
-  const t = (formatBis) =>
-    formatBis.replace(
-      /(\[[^\]]+])|(MMMM|MM|DD|dddd)/g,
-      (_, a, b) => a || b.slice(1),
-    );
-
-  return format
-    .replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, (_, a, b) => {
-      const B = b && b.toUpperCase();
-      return a || localeFormats[b] || t(localeFormats[B]);
-    })
-    .replace(/a/gi, '(a|p)m')
-    .toLocaleLowerCase();
-}
-
-function getMaskFromCurrentFormat(format) {
-  const formattedDateWith1Digit = staticDateWith1DigitTokens.format(format);
-
-  const inferredFormatPatternWith1Digits = formattedDateWith1Digit.replace(
-    ACCEPT_REGEX,
-    MASK_USER_INPUT_SYMBOL,
-  );
-  const inferredFormatPatternWith2Digits = staticDateWith2DigitTokens
-    .format(format)
-    .replace(ACCEPT_REGEX, '_');
-
-  if (inferredFormatPatternWith1Digits === inferredFormatPatternWith2Digits) {
-    return inferredFormatPatternWith1Digits;
-  }
-
-  throw new Error(`Mask does not support numbers with variable length such as 'M'.`);
-}
-
-function createMaskedDateFormatter(mask) {
-  return function formatMaskedDate(value) {
-    let outputCharIndex = 0;
-    return value
-      .split('')
-      .map((char, inputCharIndex) => {
-        ACCEPT_REGEX.lastIndex = 0;
-
-        if (outputCharIndex > mask.length - 1) {
-          return '';
-        }
-
-        const maskChar = mask[outputCharIndex];
-        const nextMaskChar = mask[outputCharIndex + 1];
-
-        const acceptedChar = ACCEPT_REGEX.test(char) ? char : '';
-        const formattedChar =
-          maskChar === MASK_USER_INPUT_SYMBOL
-            ? acceptedChar
-            : maskChar + acceptedChar;
-
-        outputCharIndex += formattedChar.length;
-
-        const isLastCharacter = inputCharIndex === value.length - 1;
-        if (
-          isLastCharacter &&
-          nextMaskChar &&
-          nextMaskChar !== MASK_USER_INPUT_SYMBOL
-        ) {
-          // when cursor at the end of mask part (e.g. month) prerender next symbol "21" -> "21/"
-          return formattedChar ? formattedChar + nextMaskChar : '';
-        }
-
-        return formattedChar;
-      })
-      .join('');
-  };
-}
-
-function getDisplayDate(value, format) {
+function getValueStrFromValue(value, format) {
   if (value == null) {
     return '';
   }
@@ -101,16 +24,17 @@ function getDisplayDate(value, format) {
 }
 
 function MaskedField(props) {
-  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
+  const { slots, slotProps, ...other } = props;
+
+  const { forwardedProps, internalProps } = useSplitFieldProps(other, 'date');
 
   const {
-    // TODO: Add support for those props
-    onError,
     format,
     value: valueProp,
     defaultValue,
     onChange,
     timezone,
+    onError,
   } = internalProps;
 
   const [value, setValue] = useControlled({
@@ -120,62 +44,121 @@ function MaskedField(props) {
     state: 'value',
   });
 
-  const formatHelperText = getFormatHelpTextFromFormat(format);
-  const maskToUse = React.useMemo(() => getMaskFromCurrentFormat(format), [format]);
-
   // Control the input text
-  const [valueStr, setValueStr] = React.useState(getDisplayDate(value, format));
+  const [valueStr, setValueStr] = React.useState(() =>
+    getValueStrFromValue(value, format),
+  );
 
   React.useEffect(() => {
     if (value && value.isValid()) {
-      const newDisplayDate = getDisplayDate(value, format);
+      const newDisplayDate = getValueStrFromValue(value, format);
       setValueStr(newDisplayDate);
     }
   }, [format, value]);
 
-  const handleChange = (text) => {
-    const cleanString = text === '' || text === maskToUse ? '' : text;
-    setValueStr(cleanString);
+  const placeholder = useFieldPlaceholder(internalProps);
 
-    const date = dayjs(value, format);
-    setValue(date);
-
-    if (onChange) {
-      onChange(date, { validationError: null });
-    }
-  };
-
-  const validationError = useValidation({
+  const { hasValidationError, getValidationErrorForNewValue } = useValidation({
     value,
-    timezone: 'default',
+    timezone,
+    onError,
     props: internalProps,
     validator: validateDate,
   });
 
+  const handleValueStrChange = (newValueStr) => {
+    setValueStr(newValueStr);
+
+    const newValue = dayjs(newValueStr, format);
+    setValue(newValue);
+
+    if (onChange) {
+      onChange(newValue, {
+        validationError: getValidationErrorForNewValue(newValue),
+      });
+    }
+  };
+
+  const rifmFormat = React.useMemo(() => {
+    const formattedDateWith1Digit = staticDateWith1DigitTokens.format(format);
+    const inferredFormatPatternWith1Digits = formattedDateWith1Digit.replace(
+      ACCEPT_REGEX,
+      MASK_USER_INPUT_SYMBOL,
+    );
+    const inferredFormatPatternWith2Digits = staticDateWith2DigitTokens
+      .format(format)
+      .replace(ACCEPT_REGEX, '_');
+
+    if (inferredFormatPatternWith1Digits !== inferredFormatPatternWith2Digits) {
+      throw new Error(
+        `Mask does not support numbers with variable length such as 'M'.`,
+      );
+    }
+
+    const maskToUse = inferredFormatPatternWith1Digits;
+
+    return function formatMaskedDate(valueToFormat) {
+      let outputCharIndex = 0;
+      return valueToFormat
+        .split('')
+        .map((char, inputCharIndex) => {
+          ACCEPT_REGEX.lastIndex = 0;
+
+          if (outputCharIndex > maskToUse.length - 1) {
+            return '';
+          }
+
+          const maskChar = maskToUse[outputCharIndex];
+          const nextMaskChar = maskToUse[outputCharIndex + 1];
+
+          const acceptedChar = ACCEPT_REGEX.test(char) ? char : '';
+          const formattedChar =
+            maskChar === MASK_USER_INPUT_SYMBOL
+              ? acceptedChar
+              : maskChar + acceptedChar;
+
+          outputCharIndex += formattedChar.length;
+
+          const isLastCharacter = inputCharIndex === valueToFormat.length - 1;
+          if (
+            isLastCharacter &&
+            nextMaskChar &&
+            nextMaskChar !== MASK_USER_INPUT_SYMBOL
+          ) {
+            // when cursor at the end of mask part (e.g. month) prerender next symbol "21" -> "21/"
+            return formattedChar ? formattedChar + nextMaskChar : '';
+          }
+
+          return formattedChar;
+        })
+        .join('');
+    };
+  }, [format]);
+
   const rifmProps = useRifm({
     value: valueStr,
-    onChange: handleChange,
-    format: createMaskedDateFormatter(maskToUse),
+    onChange: handleValueStrChange,
+    format: rifmFormat,
   });
 
   return (
     <TextField
-      placeholder={formatHelperText}
-      error={!!validationError}
+      placeholder={placeholder}
+      error={!!hasValidationError}
       {...rifmProps}
       {...forwardedProps}
     />
   );
 }
 
-function MaskedDatePicker(props) {
+function MaskedFieldDatePicker(props) {
   return <DatePicker slots={{ ...props.slots, field: MaskedField }} {...props} />;
 }
 
 export default function MaskedMaterialTextField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <MaskedDatePicker />
+      <MaskedFieldDatePicker />
     </LocalizationProvider>
   );
 }

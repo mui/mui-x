@@ -158,6 +158,13 @@ you can replace the field with an `Autocomplete` listing those dates:
 
 {{"demo": "PickerWithAutocompleteField.js", "defaultCodeOpen": false}}
 
+### Using a masked TextField
+
+If you want to use a simple mask approach for the field editing instead of the built-in logic,
+you can replace the field with a masked-based `TextField` built using the [rifm](https://www.npmjs.com/package/rifm) package.
+
+{{"demo": "custom-behavior/MaskedMaterialTextField.js", "defaultCodeOpen": false}}
+
 ### Using a read-only `TextField`
 
 If you want users to select a value exclusively through the views
@@ -175,10 +182,6 @@ and you don't want the UI to look like a `TextField`, you can replace the field 
 The same can be applied to the `DateRangePicker`:
 
 {{"demo": "DateRangePickerWithButtonField.js", "defaultCodeOpen": false}}
-
-### Using a masked input
-
-{{"demo": "MaskedMaterialTextField.js", "defaultCodeOpen": false}}
 
 ## How to build a custom field
 
