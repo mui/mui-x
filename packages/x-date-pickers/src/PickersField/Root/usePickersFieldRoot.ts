@@ -2,18 +2,18 @@ import * as React from 'react';
 import { mergeReactProps } from '@base_ui/react/utils/mergeReactProps';
 import { useField } from '../../internals/hooks/useField';
 import type { PickersFieldProvider } from './PickersFieldProvider';
-import { PickerControllerProperties, PickerAnyAccessibleController } from '../../models';
+import { PickerValueManagerProperties, PickerAnyAccessibleValueManagerV8 } from '../../models';
 import { useLocalizationContext } from '../../internals/hooks/useUtils';
 
-export function usePickersFieldRoot<TController extends PickerAnyAccessibleController>(
-  params: UsePickersFieldRoot.Parameters<TController>,
+export function usePickersFieldRoot<TValueManager extends PickerAnyAccessibleValueManagerV8>(
+  params: UsePickersFieldRoot.Parameters<TValueManager>,
 ): UsePickersFieldRoot.ReturnValue {
-  type ControllerProperties = PickerControllerProperties<TController>;
-  type TValue = ControllerProperties['value'];
-  type TDate = ControllerProperties['date'];
-  type TSection = ControllerProperties['section'];
-  type TInternalProps = ControllerProperties['internalProps'];
-  type TInternalPropsWithDefaults = ControllerProperties['internalProps'];
+  type ValueManagerProperties = PickerValueManagerProperties<TValueManager>;
+  type TValue = ValueManagerProperties['value'];
+  type TDate = ValueManagerProperties['date'];
+  type TSection = ValueManagerProperties['section'];
+  type TInternalProps = ValueManagerProperties['internalProps'];
+  type TInternalPropsWithDefaults = ValueManagerProperties['internalProps'];
 
   const { controller, internalProps } = params;
 
@@ -62,7 +62,7 @@ export function usePickersFieldRoot<TController extends PickerAnyAccessibleContr
   >({
     forwardedProps: {},
     internalProps: { ...internalPropsWithDefault, enableAccessibleFieldDOMStructure: true },
-    valueManager: controller.valueManager,
+    valueManager: controller.legacyValueManager,
     fieldValueManager: controller.fieldValueManager,
     validator: controller.validator,
     valueType: controller.valueType,
@@ -172,9 +172,9 @@ export function usePickersFieldRoot<TController extends PickerAnyAccessibleContr
 }
 
 export namespace UsePickersFieldRoot {
-  export interface Parameters<TController extends PickerAnyAccessibleController> {
-    controller: TController;
-    internalProps: PickerControllerProperties<TController>['internalProps'];
+  export interface Parameters<TValueManager extends PickerAnyAccessibleValueManagerV8> {
+    valueManager: TValueManager;
+    internalProps: PickerValueManagerProperties<TValueManager>['internalProps'];
   }
 
   export interface ReturnValue {

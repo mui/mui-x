@@ -6,11 +6,11 @@ import type { InferValueFromDate, InferFieldSection, FieldValueType } from './fi
 import { PickerValidDate } from './pickers';
 
 /**
- * Object that contains all the necessary methods and properties to control a picker.
- * You should never create your own controller.
- * Instead, use the ones provided exported from '@mui/x-date-pickers/controllers' and '@mui/x-date-pickers-pro/controllers'.
+ * Object that contains all the necessary methods and properties to control the value of a picker.
+ * You should never create your own value manager.
+ * Instead, use the ones provided exported from '@mui/x-date-pickers/valueManagers' and '@mui/x-date-pickers-pro/valueManagers'.
  */
-export interface PickerController<
+export interface PickerValueManagerV8<
   TDate extends PickerValidDate,
   TIsRange extends boolean,
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -26,7 +26,9 @@ export interface PickerController<
     any
   >,
 > {
-  valueManager: PickerValueManager<InferValueFromDate<TDate, TIsRange>, TDate, TError>;
+  // The v7 value manager object.
+  // This will be inlined inside the main `PickerValueManagerV8` object once every object using it is compatible with the new API.
+  legacyValueManager: PickerValueManager<InferValueFromDate<TDate, TIsRange>, TDate, TError>;
   fieldValueManager: FieldValueManager<
     InferValueFromDate<TDate, TIsRange>,
     TDate,
@@ -45,15 +47,15 @@ export interface PickerController<
   valueType: FieldValueType;
 }
 
-export type PickerAnyController = PickerController<any, any, any, any, any, any>;
+export type PickerAnyValueManagerV8 = PickerValueManagerV8<any, any, any, any, any, any>;
 
-export type PickerAnyAccessibleController = PickerController<any, any, true, any, any, any>;
+export type PickerAnyAccessibleValueManagerV8 = PickerValueManagerV8<any, any, true, any, any, any>;
 
 /**
  * Infer all the usual generic in the picker packages from a `PickerConroller` interface.
  */
-export type PickerControllerProperties<TController extends PickerAnyController> =
-  TController extends PickerController<
+export type PickerValueManagerProperties<TValueManager extends PickerAnyValueManagerV8> =
+  TValueManager extends PickerValueManagerV8<
     infer TDate,
     infer TIsRange,
     infer TEnableAccessibleFieldDOMStructure,

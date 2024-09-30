@@ -15,7 +15,7 @@ import {
 } from '../models';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { BaseDateValidationProps } from '../internals/models/validation';
-import { DateFieldInternalProps } from '../controllers';
+import { DateFieldInternalProps } from '../valueManagers';
 
 export interface UseDateFieldProps<
   TDate extends PickerValidDate,

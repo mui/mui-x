@@ -10,7 +10,12 @@ import {
   singleItemFieldValueManager,
   singleItemValueManager,
 } from '../internals/utils/valueManagers';
-import { PickerController, PickerValidDate, DateValidationError, FieldSection } from '../models';
+import {
+  PickerValueManagerV8,
+  PickerValidDate,
+  DateValidationError,
+  FieldSection,
+} from '../models';
 import { validateDate } from '../validation';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { ExportedUseClearableFieldProps } from '../hooks/useClearableField';
@@ -42,10 +47,10 @@ export interface DateFieldInternalPropsWithDefaults<
     keyof BaseDateValidationProps<TDate> | 'format'
   > {}
 
-export const getDateController = <
+export const getDateValueManager = <
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = false,
->(): PickerController<
+>(): PickerValueManagerV8<
   TDate,
   false,
   TEnableAccessibleFieldDOMStructure,
@@ -53,7 +58,7 @@ export const getDateController = <
   DateFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
   DateFieldInternalPropsWithDefaults<TDate, TEnableAccessibleFieldDOMStructure>
 > => ({
-  valueManager: singleItemValueManager,
+  legacyValueManager: singleItemValueManager,
   fieldValueManager: singleItemFieldValueManager,
   validator: validateDate,
   valueType: 'date',

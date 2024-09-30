@@ -2,19 +2,19 @@ import * as React from 'react';
 import { useComponentRenderer } from '@base_ui/react/utils/useComponentRenderer';
 import type { BaseUIComponentProps } from '@base_ui/react/utils/types';
 import { usePickersFieldRoot } from './usePickersFieldRoot';
-import { PickerAnyAccessibleController, PickerControllerProperties } from '../../models';
+import { PickerAnyAccessibleValueManagerV8, PickerValueManagerProperties } from '../../models';
 import { PickersFieldProvider } from './PickersFieldProvider';
 import { useSplitFieldProps } from '../../hooks';
 
 const PickersFieldRoot = React.forwardRef(function PickersFieldRoot<
-  TController extends PickerAnyAccessibleController,
->(props: PickersFieldRoot.Props<TController>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
-  const { render, className, controller, ...otherProps } = props;
+  TValueManager extends PickerAnyAccessibleValueManagerV8,
+>(props: PickersFieldRoot.Props<TValueManager>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
+  const { render, className, valueManager, ...otherProps } = props;
 
-  const { internalProps, forwardedProps } = useSplitFieldProps(otherProps, controller.valueType);
+  const { internalProps, forwardedProps } = useSplitFieldProps(otherProps, valueManager.valueType);
 
   const { getRootProps, contextValue } = usePickersFieldRoot({
-    controller,
+    valueManager,
     internalProps,
   });
   const ownerState: PickersFieldRoot.OwnerState = {};
@@ -34,12 +34,12 @@ const PickersFieldRoot = React.forwardRef(function PickersFieldRoot<
 namespace PickersFieldRoot {
   export interface OwnerState {}
 
-  export type Props<TController extends PickerAnyAccessibleController> = BaseUIComponentProps<
+  export type Props<TValueManager extends PickerAnyAccessibleValueManagerV8> = BaseUIComponentProps<
     'div',
     OwnerState
   > &
-    PickerControllerProperties<TController>['internalProps'] & {
-      controller: TController;
+    PickerValueManagerProperties<TValueManager>['internalProps'] & {
+      valueManager: TValueManager;
     };
 }
 
