@@ -80,6 +80,7 @@ export const useMockServer = (
   dataSetOptions?: Partial<UseDemoDataOptions>,
   serverOptions?: ServerOptions & { verbose?: boolean },
   shouldRequestsFail?: boolean,
+  nestedPagination?: boolean,
 ): UseMockServerResponse => {
   const [data, setData] = React.useState<GridDemoData>();
   const [index, setIndex] = React.useState(0);
@@ -230,6 +231,7 @@ export const useMockServer = (
           params,
           serverOptionsWithDefault,
           columnsWithDefaultColDef,
+          nestedPagination ?? false,
         );
 
         getRowsResponse = {
@@ -262,6 +264,7 @@ export const useMockServer = (
       serverOptions?.useCursorPagination,
       isTreeData,
       columnsWithDefaultColDef,
+      nestedPagination,
     ],
   );
 
