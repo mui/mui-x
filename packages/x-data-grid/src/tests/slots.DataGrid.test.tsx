@@ -179,15 +179,174 @@ describe('<DataGrid /> - Slots', () => {
     }).not.toErrorDev();
   });
 
-  it('should warn if render function is passed as a slot', () => {
-    expect(() =>
-      render(
-        <div style={{ width: 300, height: 500 }}>
-          <DataGrid columns={[]} rows={[]} slots={{ toolbar: () => <div /> }} />
-        </div>,
-      ),
-    ).toWarnDev([
-      'MUI X: Slots only accept React components, but `toolbar` slot received a render function.',
-    ]);
+  describe('should warn if slot is not a React component', () => {
+    it('inline arrow function', () => {
+      expect(() =>
+        render(
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid columns={[]} rows={[]} slots={{ toolbar: () => <div /> }} />
+          </div>,
+        ),
+      ).toWarnDev([
+        'MUI X: Slots only accept React components, but `toolbar` slot received a render function.',
+      ]);
+    });
+
+    it('named arrow function', () => {
+      function Test() {
+        const myToolbar = () => <div />;
+
+        return (
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid columns={[]} rows={[]} slots={{ toolbar: myToolbar }} />
+          </div>
+        );
+      }
+
+      expect(() => render(<Test />)).toWarnDev([
+        'MUI X: Slots only accept React components, but `toolbar` slot received a render function.',
+      ]);
+    });
+
+    it('anonymous function', () => {
+      expect(() =>
+        render(
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid
+              columns={[]}
+              rows={[]}
+              slots={{
+                // eslint-disable-next-line object-shorthand, func-names
+                toolbar: function () {
+                  return <div />;
+                },
+              }}
+            />
+          </div>,
+        ),
+      ).toWarnDev([
+        'MUI X: Slots only accept React components, but `toolbar` slot received a render function.',
+      ]);
+    });
+
+    it('named function', () => {
+      function Test() {
+        function myToolbar() {
+          return <div />;
+        }
+
+        return (
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid columns={[]} rows={[]} slots={{ toolbar: myToolbar }} />
+          </div>
+        );
+      }
+
+      expect(() => render(<Test />)).toWarnDev([
+        'MUI X: Slots only accept React components, but `toolbar` slot received a render function.',
+      ]);
+    });
+
+    it('component factory returning anonymous function', () => {
+      function renderToolbar() {
+        // eslint-disable-next-line react/function-component-definition
+        return () => {
+          return <div />;
+        };
+      }
+
+      expect(() =>
+        render(
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid columns={[]} rows={[]} slots={{ toolbar: renderToolbar() }} />
+          </div>,
+        ),
+      ).toWarnDev([
+        'MUI X: Slots only accept React components, but `toolbar` slot received a render function.',
+      ]);
+    });
+
+    it('component factory named function', () => {
+      function renderComponent() {
+        return function Toolbar() {
+          return <div />;
+        };
+      }
+
+      expect(() =>
+        render(
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid columns={[]} rows={[]} slots={{ toolbar: renderComponent() }} />
+          </div>,
+        ),
+      ).toWarnDev([
+        'MUI X: Slots only accept React components, but `toolbar` slot received a render function.',
+      ]);
+    });
+  });
+
+  describe('should not warn if slot is a React component', () => {
+    it('function component', () => {
+      function Toolbar() {
+        return <div />;
+      }
+
+      expect(() =>
+        render(
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid columns={[]} rows={[]} slots={{ toolbar: Toolbar }} />
+          </div>,
+        ),
+      ).not.toWarnDev();
+    });
+
+    it('class component', () => {
+      // eslint-disable-next-line react/prefer-stateless-function
+      class Toolbar extends React.Component {
+        render() {
+          return <div />;
+        }
+      }
+
+      expect(() =>
+        render(
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid columns={[]} rows={[]} slots={{ toolbar: Toolbar }} />
+          </div>,
+        ),
+      ).not.toWarnDev();
+    });
+
+    it('memoized component', () => {
+      const Toolbar = React.memo(() => <div />);
+
+      expect(() =>
+        render(
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid columns={[]} rows={[]} slots={{ toolbar: Toolbar }} />
+          </div>,
+        ),
+      ).not.toWarnDev();
+    });
+
+    it('stable component factory', () => {
+      function renderToolbar() {
+        // eslint-disable-next-line react/function-component-definition
+        return () => {
+          return <div />;
+        };
+      }
+
+      // eslint-disable-next-line testing-library/render-result-naming-convention
+      const Toolbar = renderToolbar();
+
+      expect(() =>
+        render(
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid columns={[]} rows={[]} slots={{ toolbar: Toolbar }} />
+          </div>,
+        ),
+      ).not.toWarnDev();
+    });
   });
 });
