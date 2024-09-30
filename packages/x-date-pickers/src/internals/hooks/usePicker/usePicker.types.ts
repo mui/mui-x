@@ -13,6 +13,7 @@ import {
 import { UsePickerLayoutProps, UsePickerLayoutPropsResponse } from './usePickerLayoutProps';
 import { FieldSection, PickerValidDate } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
+import { PickersFieldContextValue } from '../../components/PickersProvider';
 
 /**
  * Props common to all picker headless implementations.
@@ -64,4 +65,6 @@ export interface UsePickerResponse<
   TError,
 > extends Omit<UsePickerValueResponse<TValue, TSection, TError>, 'viewProps' | 'layoutProps'>,
     Omit<UsePickerViewsResponse<TView>, 'layoutProps'>,
-    UsePickerLayoutPropsResponse<TValue, TView> {}
+    UsePickerLayoutPropsResponse<TValue, TView> {
+  fieldContextValue: PickersFieldContextValue;
+}

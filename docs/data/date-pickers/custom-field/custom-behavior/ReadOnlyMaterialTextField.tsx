@@ -1,20 +1,28 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import TextField from '@mui/material/TextField';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import {
+  DatePicker,
+  DatePickerProps,
+  DatePickerFieldProps,
+} from '@mui/x-date-pickers/DatePicker';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
-import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
-import { DateFieldInPickerProps } from '@mui/x-date-pickers/DateField';
+import {
+  useSplitFieldProps,
+  useFieldPlaceholder,
+  usePickersFieldContext,
+} from '@mui/x-date-pickers/hooks';
 
-function ReadOnlyField(props: DateFieldInPickerProps<Dayjs, false>) {
+function ReadOnlyDateField(props: DatePickerFieldProps<Dayjs, false>) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-
   const { value, timezone, format } = internalProps;
   const { InputProps, slotProps, slots, ...other } = forwardedProps;
 
+  const pickerContext = usePickersFieldContext();
+
+  const placeholder = useFieldPlaceholder(internalProps);
   const { hasValidationError } = useValidation({
     validator: validateDate,
     value,
@@ -26,23 +34,24 @@ function ReadOnlyField(props: DateFieldInPickerProps<Dayjs, false>) {
     <TextField
       {...other}
       value={value == null ? '' : value.format(format)}
+      placeholder={placeholder}
       InputProps={{ ...InputProps, readOnly: true }}
       error={hasValidationError}
+      onClick={pickerContext.onOpen}
     />
   );
 }
 
-export default function CustomField() {
+function ReadOnlyFieldDatePicker(props: DatePickerProps<Dayjs>) {
+  return (
+    <DatePicker slots={{ ...props.slots, field: ReadOnlyDateField }} {...props} />
+  );
+}
+
+export default function ReadOnlyMaterialTextField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DatePicker']}>
-        <DatePicker
-          label="Date Picker"
-          slots={{ field: ReadOnlyField }}
-          maxDate={dayjs('2022-04-17')}
-          defaultValue={dayjs('2022-04-18')}
-        />
-      </DemoContainer>
+      <ReadOnlyFieldDatePicker />
     </LocalizationProvider>
   );
 }
