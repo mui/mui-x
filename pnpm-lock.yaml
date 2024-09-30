@@ -123,8 +123,8 @@ importers:
         specifier: ^7.20.6
         version: 7.20.6
       '@types/chai':
-        specifier: ^4.3.19
-        version: 4.3.19
+        specifier: ^4.3.20
+        version: 4.3.20
       '@types/chai-dom':
         specifier: ^1.11.3
         version: 1.11.3
@@ -1565,8 +1565,8 @@ importers:
         specifier: ^9.7.4
         version: 9.7.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/chai':
-        specifier: ^4.3.19
-        version: 4.3.19
+        specifier: ^4.3.20
+        version: 4.3.20
       '@types/karma':
         specifier: ^6.3.8
         version: 6.3.8
@@ -4063,8 +4063,8 @@ packages:
   '@types/chai-dom@1.11.3':
     resolution: {integrity: sha512-EUEZI7uID4ewzxnU7DJXtyvykhQuwe+etJ1wwOiJyQRTH/ifMWKX+ghiXkxCUvNJ6IQDodf0JXhuP6zZcy2qXQ==}
 
-  '@types/chai@4.3.19':
-    resolution: {integrity: sha512-2hHHvQBVE2FiSK4eN0Br6snX9MtolHaTo/batnLjlGRhoQzlCL61iVpxoqO7SfFyOw+P/pwv+0zNHzKoGWz9Cw==}
+  '@types/chai@4.3.20':
+    resolution: {integrity: sha512-/pC9HAB5I/xMlc5FP77qjCnI16ChlJfW0tGa0IUcFn38VJrTV6DeZ60NU5KZBtaOZqjdpwTWohz5HU1RrhiYxQ==}
 
   '@types/chance@1.1.6':
     resolution: {integrity: sha512-V+pm3stv1Mvz8fSKJJod6CglNGVqEQ6OyuqitoDkWywEODM/eJd1eSuIp9xt6DrX8BWZ2eDSIzbw1tPCUTvGbQ==}
@@ -13088,9 +13088,9 @@ snapshots:
 
   '@types/chai-dom@1.11.3':
     dependencies:
-      '@types/chai': 4.3.19
+      '@types/chai': 4.3.20
 
-  '@types/chai@4.3.19': {}
+  '@types/chai@4.3.20': {}
 
   '@types/chance@1.1.6': {}
 
