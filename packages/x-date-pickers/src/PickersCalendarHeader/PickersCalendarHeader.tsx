@@ -223,7 +223,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<
     <PickersCalendarHeaderRoot
       {...other}
       ownerState={ownerState}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ref={ref}
     >
       <PickersCalendarHeaderLabelContainer

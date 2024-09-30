@@ -481,7 +481,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
   return (
     <div
       ref={handleRef}
-      className={clsx(className, classNames, classes.root)}
+      className={clsx(classes.root, classNames, className)}
       role="gridcell"
       data-field={field}
       data-colindex={colIndex}
