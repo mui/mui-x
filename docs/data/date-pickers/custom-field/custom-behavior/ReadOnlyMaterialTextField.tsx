@@ -1,9 +1,13 @@
 import * as React from 'react';
-
+import { Dayjs } from 'dayjs';
 import TextField from '@mui/material/TextField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import {
+  DatePicker,
+  DatePickerProps,
+  DatePickerFieldProps,
+} from '@mui/x-date-pickers/DatePicker';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 import {
   useSplitFieldProps,
@@ -11,7 +15,7 @@ import {
   usePickersFieldContext,
 } from '@mui/x-date-pickers/hooks';
 
-function ReadonlyDateField(props) {
+function ReadOnlyDateField(props: DatePickerFieldProps<Dayjs, false>) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { value, timezone, format } = internalProps;
   const { InputProps, slotProps, slots, ...other } = forwardedProps;
@@ -38,16 +42,16 @@ function ReadonlyDateField(props) {
   );
 }
 
-function ReadonlyFieldDatePicker(props) {
+function ReadOnlyFieldDatePicker(props: DatePickerProps<Dayjs>) {
   return (
-    <DatePicker slots={{ ...props.slots, field: ReadonlyDateField }} {...props} />
+    <DatePicker slots={{ ...props.slots, field: ReadOnlyDateField }} {...props} />
   );
 }
 
-export default function ReadonlyMaterialTextField() {
+export default function ReadOnlyMaterialTextField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <ReadonlyFieldDatePicker />
+      <ReadOnlyFieldDatePicker />
     </LocalizationProvider>
   );
 }
