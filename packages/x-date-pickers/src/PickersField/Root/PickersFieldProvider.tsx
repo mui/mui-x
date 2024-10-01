@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { PickersSectionElement } from '../../PickersSectionList';
+import type { PickersSectionElement, PickersSectionListRef } from '../../PickersSectionList';
 import { UseFieldResponse } from '../../internals/hooks/useField';
 
 const PickersFieldContext = React.createContext<PickersFieldProvider.ContextValue | null>(null);
@@ -27,16 +27,18 @@ namespace PickersFieldProvider {
   export interface ContextValue {
     elements: PickersSectionElement[];
     contentEditable: boolean;
-    contentRef: React.RefObject<HTMLDivElement>;
     propsForwardedToHiddenInput: Pick<
       UseFieldResponse<true, {}>,
       'value' | 'onChange' | 'readOnly' | 'disabled'
       // TODO: Add id and name
-    >;
+    > & { ref: React.Ref<HTMLInputElement> };
     propsForwardedToContent: Pick<
       UseFieldResponse<true, {}>,
       'onClick' | 'onKeyDown' | 'onInput' | 'onPaste' | 'tabIndex'
     >;
+    sectionListRef?: React.Ref<PickersSectionListRef>;
+    sectionsRef: React.MutableRefObject<{ [sectionIndex: string]: HTMLSpanElement }>;
+    sectionsContentRef: React.MutableRefObject<{ [sectionIndex: string]: HTMLSpanElement }>;
     registerSectionRef: (sectionIndex: number, ref: HTMLSpanElement | null) => void;
     registerSectionContentRef: (sectionIndex: number, ref: HTMLSpanElement | null) => void;
   }
