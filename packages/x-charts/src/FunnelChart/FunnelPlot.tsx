@@ -91,6 +91,7 @@ const useAggregatedData = () => {
           ...series[seriesId],
           gradientUsed,
           d: line(stackedData[0]),
+          usable: stackedData.map((d) => d.map((v) => ({ x: xScale(v.x)!, y: yScale(v.y)! }))),
           seriesId,
         };
       });
@@ -102,11 +103,33 @@ const useAggregatedData = () => {
 
 function FunnelPlot(props: FunnelPlotProps) {
   const data = useAggregatedData();
+  const [hidden, setHidden] = React.useState(true);
 
   return (
     <React.Fragment>
       {data.map((v) => {
-        return <path d={v.d} stroke={'none'} fill={v.color} key={v.id} />;
+        return (
+          <React.Fragment>
+            <text x={100} y={50} onClick={() => setHidden(!hidden)}>
+              change
+            </text>
+            <path d={v.d} stroke={'none'} fill={v.color} key={v.id} />
+            {v.usable[0].map((d, i) => {
+              return (
+                <circle
+                  cx={d.x}
+                  cy={d.y}
+                  r={10}
+                  fill={['red', 'pink', 'green', 'blue', 'orange', 'black'][i]}
+                  stroke={'white'}
+                  strokeWidth={2}
+                  key={i}
+                  visibility={hidden ? 'hidden' : 'visible'}
+                />
+              );
+            })}
+          </React.Fragment>
+        );
       })}
     </React.Fragment>
   );

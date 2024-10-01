@@ -87,32 +87,44 @@ const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
       };
     });
 
-    const allValues = ids
-      .flatMap((id) => completedSeries[id].data.flat(Infinity))
-      .filter((v): v is number => v != null);
-
-    // {max: 200, min: 50, sum: 500}
-
-    const max = Math.max(...allValues);
-    const min = Math.min(...allValues);
-    const sum = ids
-      .flatMap((id) => completedSeries[id].data.flat(Infinity))
-      .reduce((acc, value) => (acc ?? 0) + (value ?? 0), 0);
-
-    console.log({ max, min, sum });
-
     ids.forEach((id, index) => {
       completedSeries[id].stackedData = completedSeries[id].data.map((value, dataIndex) => {
         const currentMaxMain = value ?? 0;
-        const nextValues = ids[index === ids.length - 1 ? index : index + 1];
-        const nextMaxMain = completedSeries[nextValues].data[dataIndex] ?? 0;
+        const nextId = ids[index === ids.length - 1 ? index : index + 1];
+        const nextMaxMain = completedSeries[nextId].data[dataIndex] ?? 0;
         const [nextMaxOther, currentMaxOther] = stackedSeries[index][dataIndex];
 
         return [
-          { x: currentMaxMain, y: currentMaxOther },
-          { x: currentMaxMain - nextMaxMain / 2, y: nextMaxOther },
-          { x: nextMaxMain / 2, y: nextMaxOther },
-          { x: min, y: currentMaxOther },
+          // Top right
+          {
+            x: currentMaxMain,
+            y: currentMaxOther,
+          },
+          // Middle right
+          {
+            x: currentMaxMain - (currentMaxMain - nextMaxMain) / 2,
+            y: currentMaxOther - (currentMaxOther - nextMaxOther) / 2,
+          },
+          // Bottom right
+          {
+            x: nextMaxMain,
+            y: nextMaxOther,
+          },
+          // Bottom left
+          {
+            x: -nextMaxMain,
+            y: nextMaxOther,
+          },
+          // Middle left
+          {
+            x: -nextMaxMain - (currentMaxMain - nextMaxMain) / 2,
+            y: currentMaxOther - (currentMaxOther - nextMaxOther) / 2,
+          },
+          // Top left
+          {
+            x: -currentMaxMain,
+            y: currentMaxOther,
+          },
         ];
       });
     });
