@@ -168,7 +168,13 @@ function extractDemos(tagInfo: ts.JSDocTagInfo): { demos?: string } {
   }
   const demos = tagInfo.text
     .map(({ text }) => text.matchAll(/\[(.*)\]\((.*)\)/g).next().value)
-    .map(([, text, url]) => `<li><a href="${url}">${text}</a></li>`);
+    .map((match) => {
+      if (match) {
+        const [, text, url] = match;
+        return `<li><a href="${url}">${text}</a></li>`;
+      }
+      return '';
+    });
 
   if (demos.length === 0) {
     return {};

@@ -6,7 +6,7 @@ import treeViewComponentApi from './tree-view-component-api-pages';
 
 const pages: MuiPage[] = [
   {
-    pathname: '/x/whats-new',
+    pathname: 'https://mui.com/x/whats-new/',
     title: "What's new in MUI X",
   },
   {
