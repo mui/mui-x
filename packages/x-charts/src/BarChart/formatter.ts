@@ -62,11 +62,13 @@ const formatter: SeriesFormatter<'bar'> = (params, dataset) => {
           ? dataset!.map((data) => {
               const value = data[dataKey];
               if (typeof value !== 'number') {
-                if (process.env.NODE_ENV !== 'production' && value !== null) {
-                  warnOnce([
-                    `MUI X: your dataset key "${dataKey}" is used for plotting bars, but contains nonnumerical elements.`,
-                    'Bar plots only support numbers and null values.',
-                  ]);
+                if (process.env.NODE_ENV !== 'production') {
+                  if (value !== null) {
+                    warnOnce([
+                      `MUI X: your dataset key "${dataKey}" is used for plotting bars, but contains nonnumerical elements.`,
+                      'Bar plots only support numbers and null values.',
+                    ]);
+                  }
                 }
                 return 0;
               }

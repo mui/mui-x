@@ -59,11 +59,13 @@ const formatter: SeriesFormatter<'line'> = (params, dataset) => {
           ? dataset!.map((data) => {
               const value = data[dataKey];
               if (typeof value !== 'number') {
-                if (process.env.NODE_ENV !== 'production' && value !== null) {
-                  warnOnce([
-                    `MUI X: Your dataset key "${dataKey}" is used for plotting line, but contains nonnumerical elements.`,
-                    'Line plots only support numbers and null values.',
-                  ]);
+                if (process.env.NODE_ENV !== 'production') {
+                  if (value !== null) {
+                    warnOnce([
+                      `MUI X: Your dataset key "${dataKey}" is used for plotting line, but contains nonnumerical elements.`,
+                      'Line plots only support numbers and null values.',
+                    ]);
+                  }
                 }
                 return null;
               }
