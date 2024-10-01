@@ -11,7 +11,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
 
 const bgBGPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
-  previousMonth: 'Минал месец',
+  previousMonth: 'Предишен месец',
   nextMonth: 'Следващ месец',
 
   // View navigation
