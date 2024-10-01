@@ -103,13 +103,13 @@ function CustomRangeShortcuts(props) {
             pl: 0,
             pr: theme.spacing(1),
           },
-          '@media (pointer: fine)': {
-            scrollbarGutter: 'stable',
-            overflow: 'hidden',
-            '&:hover, &:focus-within': {
-              overflow: 'auto',
-            },
+          scrollbarGutter: 'stable',
+          overflow: 'auto',
+          '::-webkit-scrollbar': {
+            display: 'none',
           },
+          '-ms-overflow-style': 'none',
+          'scrollbar-width': 'none',
         })}
       >
         {resolvedItems.map((item) => {
