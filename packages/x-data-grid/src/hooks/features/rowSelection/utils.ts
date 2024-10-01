@@ -18,6 +18,9 @@ export const ROW_SELECTION_PROPAGATION_DEFAULT: GridRowSelectionPropagation = {
   descendants: false,
 };
 
+const isValidRowId = (id: GridRowId | null): id is GridRowId =>
+  id !== null && (typeof id === 'number' || typeof id === 'string');
+
 // TODO v8: Use `createSelectorV8`
 function getGridRowGroupSelectableDescendantsSelector(
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -121,7 +124,7 @@ const getRowNodeParents = (tree: GridRowTreeConfig, id: GridRowId) => {
 
   let parent: GridRowId | null = id;
 
-  while (parent && parent !== GRID_ROOT_GROUP_ID) {
+  while (isValidRowId(parent) && parent !== GRID_ROOT_GROUP_ID) {
     const node = tree[parent] as GridGroupNode;
     if (!node) {
       return parents;
@@ -133,7 +136,6 @@ const getRowNodeParents = (tree: GridRowTreeConfig, id: GridRowId) => {
 };
 
 const getFilteredRowNodeSiblings = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   tree: GridRowTreeConfig,
   filteredRows: Record<GridRowId, boolean>,
   id: GridRowId,
@@ -144,7 +146,7 @@ const getFilteredRowNodeSiblings = (
   }
 
   const parent = node.parent;
-  if (!parent) {
+  if (!isValidRowId(parent)) {
     return [];
   }
 
@@ -194,14 +196,14 @@ export const findRowsToSelect = (
     };
 
     const traverseParents = (rowId: GridRowId) => {
-      const siblings: GridRowId[] = getFilteredRowNodeSiblings(apiRef, tree, filteredRows, rowId);
+      const siblings: GridRowId[] = getFilteredRowNodeSiblings(tree, filteredRows, rowId);
       if (
         siblings.length === 0 ||
         siblings.every((sibling) => checkAllDescendantsSelected(sibling))
       ) {
         const rowNode = tree[rowId] as GridGroupNode;
         const parent = rowNode.parent;
-        if (parent && parent !== GRID_ROOT_GROUP_ID && apiRef.current.isRowSelectable(parent)) {
+        if (isValidRowId(parent) && parent !== GRID_ROOT_GROUP_ID && apiRef.current.isRowSelectable(parent)) {
           rowsToSelect.add(parent);
           traverseParents(parent);
         }
