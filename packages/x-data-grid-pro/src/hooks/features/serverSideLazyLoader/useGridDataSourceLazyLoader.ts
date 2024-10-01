@@ -65,6 +65,23 @@ export const useGridDataSourceLazyLoader = (
     [dimensions.viewportInnerSize.height, dimensions.contentSize.height],
   );
 
+  // Adjust the render context range to fit the pagination model's page size
+  // First row index should be decreased to the start of the page, end row index should be increased to the end of the page
+  const adjustRowParams = React.useCallback(
+    (params: GridGetRowsParams) => {
+      if (typeof params.start !== 'number') {
+        return params;
+      }
+
+      return {
+        ...params,
+        start: params.start - (params.start % paginationModel.pageSize),
+        end: params.end + paginationModel.pageSize - (params.end % paginationModel.pageSize) - 1,
+      };
+    },
+    [paginationModel],
+  );
+
   const resetGrid = React.useCallback(() => {
     privateApiRef.current.setRows([]);
     previousLastRowIndex.current = 0;
@@ -214,7 +231,7 @@ export const useGridDataSourceLazyLoader = (
         };
 
         privateApiRef.current.setLoading(true);
-        privateApiRef.current.publishEvent('getRows', getRowsParams);
+        privateApiRef.current.publishEvent('getRows', adjustRowParams(getRowsParams));
       }
     },
     [
@@ -226,6 +243,7 @@ export const useGridDataSourceLazyLoader = (
       heights,
       paginationModel.pageSize,
       renderContext.lastRowIndex,
+      adjustRowParams,
     ],
   );
 
@@ -277,9 +295,17 @@ export const useGridDataSourceLazyLoader = (
       getRowsParams.start = skeletonRowsSection.firstRowIndex;
       getRowsParams.end = skeletonRowsSection.lastRowIndex;
 
-      privateApiRef.current.publishEvent('getRows', getRowsParams);
+      privateApiRef.current.publishEvent('getRows', adjustRowParams(getRowsParams));
     },
-    [privateApiRef, isDisabled, props.pagination, props.paginationMode, sortModel, filterModel],
+    [
+      privateApiRef,
+      isDisabled,
+      props.pagination,
+      props.paginationMode,
+      sortModel,
+      filterModel,
+      adjustRowParams,
+    ],
   );
 
   const throttledHandleRenderedRowsIntervalChange = React.useMemo(
@@ -317,7 +343,7 @@ export const useGridDataSourceLazyLoader = (
         filterModel,
       };
 
-      privateApiRef.current.publishEvent('getRows', getRowsParams);
+      privateApiRef.current.publishEvent('getRows', adjustRowParams(getRowsParams));
     },
     [
       privateApiRef,
@@ -326,6 +352,7 @@ export const useGridDataSourceLazyLoader = (
       paginationModel.pageSize,
       renderContext,
       adjustGridRows,
+      adjustRowParams,
     ],
   );
 
