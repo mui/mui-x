@@ -2,6 +2,8 @@ import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
@@ -65,11 +67,11 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
     },
   },
   {
-    label: "International Workers' Day",
+    label: "Veterans' Day",
     getValue: () => {
       const today = dayjs();
       // (May 1)
-      return today.month(4).date(1);
+      return today.month(10).date(1);
     },
   },
   {
@@ -128,7 +130,7 @@ export default function OnChangeShortcutLabel() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={2}>
+      <Stack spacing={2} sx={{ width: '100%' }}>
         <StaticDatePicker
           value={value}
           onChange={handleChange}
@@ -138,10 +140,32 @@ export default function OnChangeShortcutLabel() {
             },
           }}
         />
-        <Typography>
-          Selected shortcut on last onChange call:{' '}
-          {lastShortcutSelected === undefined ? 'none' : lastShortcutSelected.label}
-        </Typography>
+        <Box
+          sx={{
+            px: 2,
+            pb: 4,
+            display: 'flex',
+            '@media (pointer: none), (pointer: coarse)': { flexDirection: 'column' },
+          }}
+        >
+          <Typography>Selected shortcut on last onChange call: </Typography>
+          <Chip
+            size="small"
+            label={
+              lastShortcutSelected === undefined
+                ? 'none'
+                : lastShortcutSelected.label
+            }
+            variant={lastShortcutSelected === undefined ? 'outlined' : 'filled'}
+            sx={{
+              '@media (pointer: fine)': { marginLeft: 1 },
+              '@media (pointer: none), (pointer: coarse)': {
+                marginTop: 1,
+              },
+              alignSelf: 'center',
+            }}
+          />
+        </Box>
       </Stack>
     </LocalizationProvider>
   );
