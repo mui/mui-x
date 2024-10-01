@@ -28,6 +28,7 @@ import {
   PickerValueUpdaterParams,
 } from './usePickerValue.types';
 import { useValueWithTimezone } from '../useValueWithTimezone';
+import { PickersFieldContextValue } from '../../components/PickersProvider';
 
 /**
  * Decide if the new value should be published
@@ -457,11 +458,25 @@ export const usePickerValue = <
     isValid,
   };
 
+  const fieldContextValue = React.useMemo<PickersFieldContextValue>(
+    () => ({
+      onToggleView: (event) => {
+        if (isOpen) {
+          handleClose(event);
+        } else {
+          handleOpen(event);
+        }
+      },
+    }),
+    [isOpen, handleClose, handleOpen],
+  );
+
   return {
     open: isOpen,
     fieldProps: fieldResponse,
     viewProps: viewResponse,
     layoutProps: layoutResponse,
     actions,
+    fieldContextValue,
   };
 };

@@ -65,6 +65,4 @@ export interface UsePickerResponse<
   TError,
 > extends Omit<UsePickerValueResponse<TValue, TSection, TError>, 'viewProps' | 'layoutProps'>,
     Omit<UsePickerViewsResponse<TView>, 'layoutProps'>,
-    UsePickerLayoutPropsResponse<TValue, TView> {
-  fieldContextValue: PickersFieldContextValue;
-}
+    UsePickerLayoutPropsResponse<TValue, TView> {}

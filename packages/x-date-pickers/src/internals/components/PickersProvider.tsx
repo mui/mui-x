@@ -31,5 +31,9 @@ interface PickersFieldProviderProps<TDate extends PickerValidDate> {
 }
 
 export interface PickersFieldContextValue {
-  onOpen: (event: React.UIEvent) => void;
+  /**
+   * Open the view if they are closed, close them otherwise.
+   * @param {React.UIEvent} event The DOM event that triggered the change.
+   */
+  onToggleView: (event: React.UIEvent) => void;
 }

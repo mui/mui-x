@@ -37,7 +37,7 @@ function ReadOnlyDateField(props: DatePickerFieldProps<Dayjs, false>) {
       placeholder={placeholder}
       InputProps={{ ...InputProps, readOnly: true }}
       error={hasValidationError}
-      onClick={pickerContext.onOpen}
+      onClick={pickerContext.onToggleView}
     />
   );
 }
