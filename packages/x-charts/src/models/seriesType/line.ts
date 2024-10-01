@@ -60,6 +60,12 @@ export interface LineSeriesType
    * The label to display on the tooltip or the legend. It can be a string or a function.
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
+  /**
+   * The type of curve to use for the line. Read more about curves at
+   * [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
+   *
+   * @default 'linear'
+   */
   curve?: CurveType;
   /**
    * Define which items of the series should display a mark.

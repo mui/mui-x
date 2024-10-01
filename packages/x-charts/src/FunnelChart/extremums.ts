@@ -8,9 +8,11 @@ const createResult = (data: any, direction: 'x' | 'y') => {
 };
 
 const getValueExtremum =
-  (direction: 'x' | 'y'): ExtremumGetter<'funnel'> =>
+  (direction: 'x' | 'y', isMain: boolean): ExtremumGetter<'funnel'> =>
   (params) => {
     const { series, axis, getFilters, isDefaultAxis } = params;
+
+    // Only return max value
 
     return Object.keys(series)
       .filter((seriesId) => {
@@ -19,7 +21,7 @@ const getValueExtremum =
       })
       .reduce(
         (acc, seriesId) => {
-          const { stackedData } = series[seriesId];
+          const { stackedDataMain, stackedDataOther } = series[seriesId];
 
           const filter = getFilters?.({
             currentAxisId: axis.id,
@@ -28,17 +30,22 @@ const getValueExtremum =
             seriesYAxisId: series[seriesId].yAxisId ?? series[seriesId].yAxisKey,
           });
 
-          const [seriesMin, seriesMax] = stackedData?.reduce(
+          const [seriesMin, seriesMax] = (isMain ? stackedDataMain : stackedDataOther)?.reduce(
             (seriesAcc, values, index) => {
               if (
                 filter &&
-                (!filter(createResult(values[0], direction), index) ||
-                  !filter(createResult(values[1], direction), index))
+                (!filter(createResult(values.v0, direction), index) ||
+                  !filter(createResult(values.v1, direction), index) ||
+                  !filter(createResult(values.v2, direction), index) ||
+                  !filter(createResult(values.v3, direction), index))
               ) {
                 return seriesAcc;
               }
 
-              return [Math.min(...values, seriesAcc[0]), Math.max(...values, seriesAcc[1])];
+              return [
+                Math.min(...Object.values(values), seriesAcc[0]),
+                Math.max(...Object.values(values), seriesAcc[1]),
+              ];
             },
             [Infinity, -Infinity],
           ) ?? [Infinity, -Infinity];
@@ -53,26 +60,18 @@ export const getExtremumX: ExtremumGetter<'funnel'> = (params) => {
   const isHorizontal = Object.keys(params.series).some(
     (seriesId) => params.series[seriesId].layout === 'horizontal',
   );
-  const d = (() => {
-    if (isHorizontal) {
-      return getValueExtremum('x')(params);
-    }
-    return getValueExtremum('y')(params);
-  })();
-  console.log('x', d);
-  return d;
+  if (isHorizontal) {
+    return getValueExtremum('x', false)(params);
+  }
+  return getValueExtremum('x', true)(params);
 };
 
 export const getExtremumY: ExtremumGetter<'funnel'> = (params) => {
   const isHorizontal = Object.keys(params.series).some(
     (seriesId) => params.series[seriesId].layout === 'horizontal',
   );
-  const d = (() => {
-    if (isHorizontal) {
-      return getValueExtremum('x')(params);
-    }
-    return getValueExtremum('y')(params);
-  })();
-  console.log('y', d);
-  return d;
+  if (isHorizontal) {
+    return getValueExtremum('y', true)(params);
+  }
+  return getValueExtremum('y', false)(params);
 };

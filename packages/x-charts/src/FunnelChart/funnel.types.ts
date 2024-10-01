@@ -28,7 +28,24 @@ export interface FunnelSeriesType
    * @default 'vertical'
    */
   layout?: 'horizontal' | 'vertical';
+  /**
+   * The type of curve to use for the line. Read more about curves at
+   * [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
+   *
+   * @default 'linear'
+   */
+  curve?: CurveType;
 }
+
+export type CurveType =
+  | 'catmullRom'
+  | 'linear'
+  | 'monotoneX'
+  | 'monotoneY'
+  | 'natural'
+  | 'step'
+  | 'stepBefore'
+  | 'stepAfter';
 
 /**
  * An object that allows to identify a funnel item.
