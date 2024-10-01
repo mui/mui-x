@@ -23,12 +23,15 @@ const hrHRGrid: Partial<GridLocaleText> = {
   toolbarFiltersLabel: 'Prikaži filtere',
   toolbarFiltersTooltipHide: 'Sakrij filtere',
   toolbarFiltersTooltipShow: 'Prikaži filtere',
-  toolbarFiltersTooltipActive: (count) =>
-    count > 4
-      ? `${count} aktivnih filtera`
-      : count !== 1
-        ? `${count} aktivna filtera`
-        : `${count} aktivni filter`,
+  toolbarFiltersTooltipActive: (count) => {
+    if (count === 1) {
+      return `${count} aktivan filter`;
+    }
+    if (count < 5) {
+      return `${count} aktivna filtera`;
+    }
+    return `${count} aktivnih filtera`;
+  },
 
   // Quick filter toolbar field
   toolbarQuickFilterPlaceholder: 'Traži…',
@@ -122,22 +125,28 @@ const hrHRGrid: Partial<GridLocaleText> = {
   columnMenuSortDesc: 'Poredaj silazno',
 
   // Column header text
-  columnHeaderFiltersTooltipActive: (count) =>
-    count > 4
-      ? `${count} aktivnih filtera`
-      : count !== 1
-        ? `${count} aktivna filtera`
-        : `${count} aktivni filter`,
+  columnHeaderFiltersTooltipActive: (count) => {
+    if (count === 1) {
+      return `${count} aktivan filter`;
+    }
+    if (count < 5) {
+      return `${count} aktivna filtera`;
+    }
+    return `${count} aktivnih filtera`;
+  },
   columnHeaderFiltersLabel: 'Prikaži filtere',
   columnHeaderSortIconLabel: 'Poredaj',
 
   // Rows selected footer text
-  footerRowSelected: (count) =>
-    count > 4
-      ? `Odabrano je ${count.toLocaleString()} redaka`
-      : count !== 1
-        ? `Odabrana su ${count.toLocaleString()} retka`
-        : `${count.toLocaleString()} redak odabran`,
+  footerRowSelected: (count) => {
+    if (count === 1) {
+      return `Odabran je ${count.toLocaleString()} redak`;
+    }
+    if (count < 5) {
+      return `Odabrana su ${count.toLocaleString()} retka`;
+    }
+    return `Odabrano je ${count.toLocaleString()} redaka`;
+  },
 
   // Total row amount footer text
   footerTotalRows: 'Ukupno redaka:',
