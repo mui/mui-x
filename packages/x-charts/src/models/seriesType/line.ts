@@ -61,10 +61,9 @@ export interface LineSeriesType
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
   /**
-   * The type of curve to use for the line. Read more about curves at
-   * [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
-   *
-   * @default 'linear'
+   * The type of curve to use for the line.
+   * Read more about curves at [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
+   * @default 'monotoneX'
    */
   curve?: CurveType;
   /**
