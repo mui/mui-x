@@ -1,9 +1,9 @@
+import { warnOnce } from '@mui/x-internals/warning';
 import type { GridColumnGroup, GridCsvExportOptions, GridRowId } from '../../../../models';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../../colDef';
 import type { GridCellParams } from '../../../../models/params/gridCellParams';
 import type { GridStateColDef } from '../../../../models/colDef/gridColDef';
 import type { GridApiCommunity } from '../../../../models/api/gridApiCommunity';
-import { warnOnce } from '../../../../internals/utils/warning';
 
 function sanitizeCellValue(value: unknown, csvOptions: CSVOptions): string {
   if (value === null || value === undefined) {

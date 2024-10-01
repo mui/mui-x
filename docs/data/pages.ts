@@ -6,19 +6,25 @@ import treeViewComponentApi from './tree-view-component-api-pages';
 
 const pages: MuiPage[] = [
   {
-    pathname: '/x/whats-new',
+    pathname: 'https://mui.com/x/whats-new/',
     title: "What's new in MUI X",
   },
   {
     pathname: '/x/introduction-group',
     title: 'Introduction',
-
     children: [
       { pathname: `/x/introduction`, title: 'Overview' },
       { pathname: `/x/introduction/installation` },
       { pathname: `/x/introduction/licensing` },
       { pathname: `/x/introduction/support` },
       { pathname: `/x/introduction/roadmap` },
+    ],
+  },
+  {
+    pathname: '/x/common-features-group',
+    title: 'Common concepts',
+    children: [
+      { pathname: `/x/common-concepts/custom-components`, title: 'Custom slots and subcomponents' },
     ],
   },
   {
@@ -51,7 +57,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/row-definition' },
           { pathname: '/x/react-data-grid/row-updates' },
           { pathname: '/x/react-data-grid/row-height' },
-          { pathname: '/x/react-data-grid/row-spanning', planned: true },
+          { pathname: '/x/react-data-grid/row-spanning', newFeature: true },
           { pathname: '/x/react-data-grid/master-detail', plan: 'pro' },
           { pathname: '/x/react-data-grid/row-ordering', plan: 'pro' },
           { pathname: '/x/react-data-grid/row-pinning', plan: 'pro' },
@@ -88,7 +94,7 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/export' },
       { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste', newFeature: true },
       { pathname: '/x/react-data-grid/overlays', title: 'Overlays' },
-      { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
+      { pathname: '/x/react-data-grid/components', title: 'Custom slots and subcomponents' },
       {
         pathname: '/x/react-data-grid/style-group',
         title: 'Style',

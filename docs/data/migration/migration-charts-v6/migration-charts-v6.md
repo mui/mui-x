@@ -17,7 +17,7 @@ No big breaking changes are expected.
 In `package.json`, change the version of the charts package to `^7.0.0`.
 
 ```diff
--"@mui/x-charts": "6.x.x",
+-"@mui/x-charts": "^6.0.0",
 +"@mui/x-charts": "^7.0.0",
 ```
 

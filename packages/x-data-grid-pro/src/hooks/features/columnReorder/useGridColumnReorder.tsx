@@ -311,6 +311,12 @@ export const useGridColumnReorder = (
       event.stopPropagation();
 
       clearTimeout(removeDnDStylesTimeout.current);
+
+      // For more information check here https://github.com/mui/mui-x/issues/14678
+      if (dragColNode.current!.classList.contains(classes.columnHeaderDragging)) {
+        dragColNode.current!.classList.remove(classes.columnHeaderDragging);
+      }
+
       dragColNode.current = null;
 
       // Check if the column was dropped outside the grid.
@@ -335,7 +341,13 @@ export const useGridColumnReorder = (
       }));
       apiRef.current.forceUpdate();
     },
-    [props.disableColumnReorder, props.keepColumnPositionIfDraggedOutside, logger, apiRef],
+    [
+      apiRef,
+      props.disableColumnReorder,
+      props.keepColumnPositionIfDraggedOutside,
+      logger,
+      classes.columnHeaderDragging,
+    ],
   );
 
   useGridApiEventHandler(apiRef, 'columnHeaderDragStart', handleDragStart);

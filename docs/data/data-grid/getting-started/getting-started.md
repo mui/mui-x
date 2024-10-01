@@ -138,7 +138,6 @@ In order to benefit from the [CSS overrides](/material-ui/customization/theme-co
 Internally, it uses module augmentation to extend the default theme structure.
 
 ```tsx
-// When using TypeScript 4.x and above
 import type {} from '@mui/x-data-grid/themeAugmentation';
 import type {} from '@mui/x-data-grid-pro/themeAugmentation';
 import type {} from '@mui/x-data-grid-premium/themeAugmentation';
@@ -189,7 +188,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Column pinning](/x/react-data-grid/column-pinning/)                                   |    ❌     |                                          ✅                                          |                                                  ✅                                                  |
 | **Row**                                                                                |           |                                                                                      |                                                                                                      |
 | [Row height](/x/react-data-grid/row-height/)                                           |    ✅     |                                          ✅                                          |                                                  ✅                                                  |
-| [Row spanning](/x/react-data-grid/row-spanning/)                                       |    🚧     |                                          🚧                                          |                                                  🚧                                                  |
+| [Row spanning](/x/react-data-grid/row-spanning/)                                       |    ✅     |                                          ✅                                          |                                                  ✅                                                  |
 | [Row reordering](/x/react-data-grid/row-ordering/)                                     |    ❌     |                                          ✅                                          |                                                  ✅                                                  |
 | [Row pinning](/x/react-data-grid/row-pinning/)                                         |    ❌     |                                          ✅                                          |                                                  ✅                                                  |
 | **Selection**                                                                          |           |                                                                                      |                                                                                                      |

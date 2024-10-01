@@ -89,8 +89,8 @@ module.exports = function getBabelConfig(api) {
       '@babel/plugin-transform-runtime',
       {
         useESModules,
-        // any package needs to declare 7.4.4 as a runtime dependency. default is ^7.0.0
-        version: '^7.4.4',
+        // any package needs to declare 7.25.0 as a runtime dependency. default is ^7.0.0
+        version: process.env.MUI_BABEL_RUNTIME_VERSION || '^7.25.0',
       },
     ],
     [
@@ -104,14 +104,14 @@ module.exports = function getBabelConfig(api) {
 
   if (process.env.NODE_ENV === 'test') {
     plugins.push(['@babel/plugin-transform-export-namespace-from']);
-    // We replace `date-fns` imports with an aliased `date-fns@v3` version installed as `date-fns-v3` for tests.
+    // We replace `date-fns` imports with an aliased `date-fns@v4` version installed as `date-fns-v4` for tests.
     // The plugin is patched to only run on `AdapterDateFnsV3.ts`.
-    // TODO: remove when we upgrade to date-fns v3 by default.
+    // TODO: remove when we upgrade to date-fns v4 by default.
     plugins.push([
       'babel-plugin-replace-imports',
       {
         test: /date-fns/i,
-        replacer: 'date-fns-v3',
+        replacer: 'date-fns-v4',
         // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
         filenameIncludes: 'src/AdapterDateFnsV3/',
       },
