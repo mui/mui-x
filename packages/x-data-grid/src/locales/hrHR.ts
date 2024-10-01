@@ -10,8 +10,8 @@ const hrHRGrid: Partial<GridLocaleText> = {
   // Density selector toolbar button text
   toolbarDensity: 'Gustoća',
   toolbarDensityLabel: 'Gustoća',
-  toolbarDensityCompact: 'Kompaktan',
-  toolbarDensityStandard: 'Standard',
+  toolbarDensityCompact: 'Kompaktno',
+  toolbarDensityStandard: 'Standardno',
   toolbarDensityComfortable: 'Udobno',
 
   // Columns selector toolbar button text
@@ -20,47 +20,51 @@ const hrHRGrid: Partial<GridLocaleText> = {
 
   // Filters toolbar button text
   toolbarFilters: 'Filteri',
-  toolbarFiltersLabel: 'Prikaži filtre',
-  toolbarFiltersTooltipHide: 'Sakrij filtre',
-  toolbarFiltersTooltipShow: 'Prikaži filtre',
+  toolbarFiltersLabel: 'Prikaži filtere',
+  toolbarFiltersTooltipHide: 'Sakrij filtere',
+  toolbarFiltersTooltipShow: 'Prikaži filtere',
   toolbarFiltersTooltipActive: (count) =>
-    count !== 1 ? `${count} aktivnih filtara` : `${count} aktivni filter`,
+    count > 4
+      ? `${count} aktivnih filtera`
+      : count !== 1
+        ? `${count} aktivna filtera`
+        : `${count} aktivni filter`,
 
   // Quick filter toolbar field
   toolbarQuickFilterPlaceholder: 'Traži…',
   toolbarQuickFilterLabel: 'traži',
-  toolbarQuickFilterDeleteIconLabel: 'Čisto',
+  toolbarQuickFilterDeleteIconLabel: 'Obriši',
 
   // Export selector toolbar button text
   toolbarExport: 'Izvoz',
   toolbarExportLabel: 'Izvoz',
   toolbarExportCSV: 'Preuzmi kao CSV',
-  toolbarExportPrint: 'Ispis',
-  toolbarExportExcel: 'Preuzmite kao Excel',
+  toolbarExportPrint: 'Štampaj',
+  toolbarExportExcel: 'Preuzmi kao Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: 'Traži',
+  columnsManagementNoColumns: 'Nema stupaca',
+  columnsManagementShowHideAllText: 'Prikaži/Sakrij sve',
+  columnsManagementReset: 'Ponovno namjesti',
 
   // Filter panel text
-  filterPanelAddFilter: 'Dodajte filter',
-  filterPanelRemoveAll: 'Ukloniti sve',
-  filterPanelDeleteIconLabel: 'Izbrisati',
+  filterPanelAddFilter: 'Dodaj filter',
+  filterPanelRemoveAll: 'Ukloni sve',
+  filterPanelDeleteIconLabel: 'Obriši',
   filterPanelLogicOperator: 'Logički operator',
-  filterPanelOperator: 'Operater',
+  filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'I',
   filterPanelOperatorOr: 'Ili',
-  filterPanelColumns: 'Stupci',
+  filterPanelColumns: 'Stupac',
   filterPanelInputLabel: 'Vrijednost',
-  filterPanelInputPlaceholder: 'Vrijednost filtra',
+  filterPanelInputPlaceholder: 'Vrijednost filtera',
 
   // Filter operators text
   filterOperatorContains: 'sadrži',
-  // filterOperatorDoesNotContain: 'does not contain',
-  filterOperatorEquals: 'jednaki',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotContain: 'ne sadrži',
+  filterOperatorEquals: 'je jednak',
+  filterOperatorDoesNotEqual: 'nije jednak',
   filterOperatorStartsWith: 'počinje sa',
   filterOperatorEndsWith: 'završava sa',
   filterOperatorIs: 'je',
@@ -69,8 +73,8 @@ const hrHRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'je na ili poslije',
   filterOperatorBefore: 'je prije',
   filterOperatorOnOrBefore: 'je na ili prije',
-  filterOperatorIsEmpty: 'prazno je',
-  filterOperatorIsNotEmpty: 'nije prazna',
+  filterOperatorIsEmpty: 'je prazno',
+  filterOperatorIsNotEmpty: 'nije prazno',
   filterOperatorIsAnyOf: 'je bilo koji od',
   'filterOperator=': '=',
   'filterOperator!=': '!=',
@@ -81,20 +85,20 @@ const hrHRGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Sadrži',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Ne sadrži',
   headerFilterOperatorEquals: 'Jednako',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Nije jednako',
   headerFilterOperatorStartsWith: 'Počinje sa',
-  headerFilterOperatorEndsWith: 'Završava s',
+  headerFilterOperatorEndsWith: 'Završava sa',
   headerFilterOperatorIs: 'Je',
   headerFilterOperatorNot: 'Nije',
   headerFilterOperatorAfter: 'Je poslije',
   headerFilterOperatorOnOrAfter: 'Je uključeno ili poslije',
-  headerFilterOperatorBefore: 'Je li prije',
-  headerFilterOperatorOnOrBefore: 'Uključeno je ili prije',
-  headerFilterOperatorIsEmpty: 'Prazno je',
-  headerFilterOperatorIsNotEmpty: 'Nije prazna',
-  headerFilterOperatorIsAnyOf: 'Je li bilo koji od',
+  headerFilterOperatorBefore: 'Je prije',
+  headerFilterOperatorOnOrBefore: 'Je uključeno ili prije',
+  headerFilterOperatorIsEmpty: 'Je prazno',
+  headerFilterOperatorIsNotEmpty: 'Nije prazno',
+  headerFilterOperatorIsAnyOf: 'Je bilo koji od',
   'headerFilterOperator=': 'Jednako',
   'headerFilterOperator!=': 'Nije jednako',
   'headerFilterOperator>': 'Veći od',
@@ -104,30 +108,36 @@ const hrHRGrid: Partial<GridLocaleText> = {
 
   // Filter values text
   filterValueAny: 'bilo koji',
-  filterValueTrue: 'pravi',
-  filterValueFalse: 'lažno',
+  filterValueTrue: 'tačno',
+  filterValueFalse: 'netačno',
 
   // Column menu text
-  columnMenuLabel: 'Jelovnik ',
+  columnMenuLabel: 'Izbornik',
   columnMenuShowColumns: 'Prikaži stupce',
   columnMenuManageColumns: 'Upravljanje stupcima',
-  columnMenuFilter: 'filtar',
+  columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Sakrij stupac',
   columnMenuUnsort: 'Poništi sortiranje',
   columnMenuSortAsc: 'Poredaj uzlazno',
-  columnMenuSortDesc: 'Poredaj silaznim redom',
+  columnMenuSortDesc: 'Poredaj silazno',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
-    count !== 1 ? `${count} aktivnih filtara` : `${count} aktivni filter`,
-  columnHeaderFiltersLabel: 'Prikaži filtre',
-  columnHeaderSortIconLabel: 'Vrsta',
+    count > 4
+      ? `${count} aktivnih filtera`
+      : count !== 1
+        ? `${count} aktivna filtera`
+        : `${count} aktivni filter`,
+  columnHeaderFiltersLabel: 'Prikaži filtere',
+  columnHeaderSortIconLabel: 'Poredaj',
 
   // Rows selected footer text
   footerRowSelected: (count) =>
-    count !== 1
+    count > 4
       ? `Odabrano je ${count.toLocaleString()} redaka`
-      : `${count.toLocaleString()} redak odabran`,
+      : count !== 1
+        ? `Odabrana su ${count.toLocaleString()} retka`
+        : `${count.toLocaleString()} redak odabran`,
 
   // Total row amount footer text
   footerTotalRows: 'Ukupno redaka:',
@@ -137,10 +147,10 @@ const hrHRGrid: Partial<GridLocaleText> = {
     `${visibleCount.toLocaleString()} od ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
-  checkboxSelectionHeaderName: 'Odabir potvrdnog okvira',
+  checkboxSelectionHeaderName: 'Odabir redaka',
   checkboxSelectionSelectAllRows: 'Odaberite sve retke',
   checkboxSelectionUnselectAllRows: 'Poništi odabir svih redaka',
-  checkboxSelectionSelectRow: 'Odaberite red',
+  checkboxSelectionSelectRow: 'Odaberite redak',
   checkboxSelectionUnselectRow: 'Poništi odabir retka',
 
   // Boolean cell text
@@ -156,7 +166,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
   unpin: 'Otkvači',
 
   // Tree Data
-  treeDataGroupingHeaderName: 'Group',
+  treeDataGroupingHeaderName: 'Skupina',
   treeDataExpand: 'vidjeti djecu',
   treeDataCollapse: 'sakriti djecu',
 
@@ -168,7 +178,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
   // Master/detail
   detailPanelToggle: 'Prebacivanje ploče s detaljima',
   expandDetailPanel: 'Proširiti',
-  collapseDetailPanel: 'Kolaps',
+  collapseDetailPanel: 'Skupiti',
 
   // Row reordering text
   rowReorderingHeaderName: 'Promjena redoslijeda',
