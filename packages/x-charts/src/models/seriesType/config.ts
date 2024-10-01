@@ -14,6 +14,11 @@ import {
   DefaultizedPieValueType,
 } from './pie';
 import { DefaultizedProps, MakeOptional } from '../helpers';
+import {
+  DefaultizedFunnelSeriesType,
+  FunnelItemIdentifier,
+  FunnelSeriesType,
+} from '../../FunnelChart/funnel.types';
 
 export interface ChartsSeriesConfig {
   bar: {
@@ -59,6 +64,15 @@ export interface ChartsSeriesConfig {
     seriesProp: PieSeriesType<MakeOptional<PieValueType, 'id'>>;
     itemIdentifier: PieItemIdentifier;
     valueType: DefaultizedPieValueType;
+  };
+  funnel: {
+    seriesInput: DefaultizedProps<FunnelSeriesType, 'id'> & { color: string };
+    series: DefaultizedFunnelSeriesType;
+    seriesProp: FunnelSeriesType;
+    itemIdentifier: FunnelItemIdentifier;
+    valueType: number | null;
+    canBeStacked: true;
+    cartesian: true;
   };
 }
 
