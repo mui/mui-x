@@ -109,7 +109,7 @@ function FunnelPlot(props: FunnelPlotProps) {
     <React.Fragment>
       {data.map((v) => {
         return (
-          <React.Fragment>
+          <React.Fragment key={v.id}>
             <text x={100} y={50} onClick={() => setHidden(!hidden)}>
               change
             </text>
@@ -123,7 +123,7 @@ function FunnelPlot(props: FunnelPlotProps) {
                   fill={['red', 'pink', 'green', 'blue', 'orange', 'black'][i]}
                   stroke={'white'}
                   strokeWidth={2}
-                  key={i}
+                  key={`${v.id}-${i}`}
                   visibility={hidden ? 'hidden' : 'visible'}
                 />
               );
