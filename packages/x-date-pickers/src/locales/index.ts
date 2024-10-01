@@ -11,6 +11,7 @@ export * from './faIR';
 export * from './fiFI';
 export * from './frFR';
 export * from './heIL';
+export * from './hrHR';
 export * from './huHU';
 export * from './isIS';
 export * from './itIT';
