@@ -1,11 +1,11 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
+import { warnOnce } from '@mui/x-internals/warning';
 import { getStackingGroups } from '../internals/stackSeries';
 import { ChartSeries, DatasetElementType, DatasetType } from '../models/seriesType/config';
 import { defaultizeValueFormatter } from '../internals/defaultizeValueFormatter';
 import { DefaultizedProps } from '../models/helpers';
 import { SeriesId } from '../models/seriesType/common';
 import { SeriesFormatter } from '../context/PluginProvider/SeriesFormatter.types';
-import { warnOnce } from '@mui/x-internals/warning';
 
 type FunnelDataset = DatasetType<number | null>;
 
@@ -99,16 +99,22 @@ const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
       .flatMap((id) => completedSeries[id].data.flat(Infinity))
       .reduce((acc, value) => (acc ?? 0) + (value ?? 0), 0);
 
+    let summed = 0;
     ids.forEach((id, index) => {
       completedSeries[id].stackedDataMain = completedSeries[id].data.map((value, dataIndex) => {
         const currentMax = value ?? 0;
-        const nextValues = ids[index === ids.length - 1 ? index : index + 1];
-        const nextMax = completedSeries[nextValues].data[dataIndex] ?? 0;
+        const nextId = ids[index + 1];
+        const prevId = ids[index - 1];
+        const nextMax = completedSeries[nextId]?.data[dataIndex] ?? 0;
+        const prevMax = completedSeries[prevId]?.data[dataIndex] ?? 0;
+
+        summed = nextMax + summed;
+        console.log({ currentMax, nextMax, prevMax, summed });
         return {
-          v0: min,
-          v1: currentMax,
-          v2: currentMax - nextMax / 2,
-          v3: min + nextMax / 2,
+          v0: min + (prevMax ? currentMax / 2 : 0),
+          v1: (prevMax ? min + currentMax / 2 : 0) + currentMax,
+          v2: (prevMax ? min + currentMax / 2 : 0) + currentMax - nextMax / 2,
+          v3: min + nextMax / 2 + (prevMax ? currentMax / 2 : 0),
         };
       });
 

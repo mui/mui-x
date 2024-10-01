@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { FunnelItemIdentifier } from './funnel.types';
 import { useFunnelSeries } from '../hooks/useSeries';
 import { SeriesFormatterResult } from '../context/PluginProvider';
@@ -7,7 +8,6 @@ import { useCartesianContext } from '../context/CartesianProvider';
 import { getValueToPositionMapper } from '../hooks';
 import { AxisId } from '../models/axis';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import getCurveFactory from '../internals/getCurve';
 
 export interface FunnelPlotSlots {}
