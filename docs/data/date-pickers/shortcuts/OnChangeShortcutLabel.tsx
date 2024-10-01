@@ -130,7 +130,10 @@ export default function OnChangeShortcutLabel() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={2} sx={{ width: '100%' }}>
+      <Stack
+        spacing={2}
+        sx={{ '@media (pointer: none), (pointer: coarse)': { width: '100%' } }}
+      >
         <StaticDatePicker
           value={value}
           onChange={handleChange}
