@@ -17,7 +17,7 @@ const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   '::-webkit-scrollbar': {
     display: 'none',
   },
-  '-msOverflowStyle': 'none',
+  MsOverflowStyle: 'none',
   scrollbarWidth: 'none',
 })) as unknown as typeof PickersLayout;
 
