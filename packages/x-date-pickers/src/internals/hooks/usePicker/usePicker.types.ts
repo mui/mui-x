@@ -13,7 +13,6 @@ import {
 import { UsePickerLayoutProps, UsePickerLayoutPropsResponse } from './usePickerLayoutProps';
 import { FieldSection, PickerValidDate } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
-import { PickersFieldContextValue } from '../../components/PickersProvider';
 
 /**
  * Props common to all picker headless implementations.

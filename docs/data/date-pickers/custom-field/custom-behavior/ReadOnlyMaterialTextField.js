@@ -33,7 +33,7 @@ function ReadOnlyDateField(props) {
       placeholder={placeholder}
       InputProps={{ ...InputProps, readOnly: true }}
       error={hasValidationError}
-      onClick={pickerContext.onViewToggle}
+      onClick={pickerContext.onToggleView}
     />
   );
 }
