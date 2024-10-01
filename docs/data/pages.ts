@@ -23,9 +23,7 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/common-features-group',
     title: 'Common concepts',
-    children: [
-      { pathname: `/x/common-concepts/custom-components`, title: 'Custom slots and subcomponents' },
-    ],
+    children: [{ pathname: `/x/common-concepts/custom-components`, title: 'Custom subcomponents' }],
   },
   {
     pathname: '/x/react-data-grid-group',
@@ -108,17 +106,10 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/virtualization' },
       { pathname: '/x/react-data-grid/accessibility' },
       { pathname: '/x/react-data-grid/performance' },
-      {
-        pathname: '/x/react-data-grid-group-pivot',
-        title: 'Grouping and pivoting',
-        plan: 'pro',
-        children: [
-          { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
-          { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
-          { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
-          { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
-        ],
-      },
+      { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
+      { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
+      { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
+      { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
       {
         pathname: '/x/react-data-grid/server-side-data-group',
         title: 'Server-side data',
