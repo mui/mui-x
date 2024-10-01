@@ -90,8 +90,8 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
           '::-webkit-scrollbar': {
             display: 'none',
           },
-          '-ms-overflow-style': 'none',
-          'scrollbar-width': 'none',
+          '-msOverflowStyle': 'none',
+          scrollbarWidth: 'none',
         },
         ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
       ]}

@@ -113,8 +113,8 @@ function CustomRangeShortcuts(props: PickersShortcutsProps<DateRange<Dayjs>>) {
           '::-webkit-scrollbar': {
             display: 'none',
           },
-          '-ms-overflow-style': 'none',
-          'scrollbar-width': 'none',
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none',
         })}
       >
         {resolvedItems.map((item) => {
