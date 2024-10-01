@@ -46,12 +46,26 @@ const hrHRPickers: Partial<PickersLocaleText<any>> = {
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>
     `Odaberi ${timeViews[view] ?? view}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Vrijeme nije odabrano' : `Odabrano vrijeme je ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
-  hoursClockNumberText: (hours) =>
-    `${hours} ${Number(hours) > 4 ? 'sati' : Number(hours) !== 1 ? 'sata' : 'sat'}`,
+  hoursClockNumberText: (hours) => {
+    let suffix = 'sati';
+    if (Number(hours) === 1) {
+      suffix = 'sat';
+    } else if (Number(hours) < 5) {
+      suffix = 'sata';
+    }
+    return `${hours} ${suffix}`;
+  },
   minutesClockNumberText: (minutes) =>
-    `${minutes} ${Number(minutes) > 4 ? 'minuta' : Number(minutes) !== 1 ? 'minute' : 'minuta'}`,
-  secondsClockNumberText: (seconds) =>
-    `${seconds} ${Number(seconds) > 4 ? 'sekundi' : Number(seconds) !== 1 ? 'sekunde' : 'sekunda'}`,
+    `${minutes} ${Number(minutes) > 1 && Number(minutes) < 5 ? 'minute' : 'minuta'}`,
+  secondsClockNumberText: (seconds) => {
+    let suffix = 'sekundi';
+    if (Number(seconds) === 1) {
+      suffix = 'sekunda';
+    } else if (Number(seconds) < 5) {
+      suffix = 'sekunde';
+    }
+    return `${seconds} ${suffix}`;
+  },
 
   // Digital clock labels
   selectViewText: (view) => `Odaberi ${timeViews[view]}`,
