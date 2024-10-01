@@ -200,7 +200,7 @@ If it's equal to `any`, you can fix it by manually importing the adapter in some
 import type {} from '@mui/x-date-pickers/AdapterDayjs';
 ```
 
-:::success
+:::info
 Before version 7.19.0, TypeScript was throwing an error such as `DesktopDatePickerProps<Date> error Type 'Date' does not satisfy the constraint 'never'`
 when you were not importing the adapter in the same TypeScript project as the rest of your codebase.
 
