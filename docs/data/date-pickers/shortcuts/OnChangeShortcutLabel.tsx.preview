@@ -7,3 +7,7 @@
     },
   }}
 />
+<Typography sx={{ pb: 2 }}>
+  Selected shortcut on last onChange call:{' '}
+  {lastShortcutSelected === undefined ? 'none' : lastShortcutSelected.label}
+</Typography>

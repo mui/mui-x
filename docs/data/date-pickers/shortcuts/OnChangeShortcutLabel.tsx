@@ -2,8 +2,6 @@ import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
@@ -143,32 +141,10 @@ export default function OnChangeShortcutLabel() {
             },
           }}
         />
-        <Box
-          sx={{
-            px: 2,
-            pb: 4,
-            display: 'flex',
-            '@media (pointer: none), (pointer: coarse)': { flexDirection: 'column' },
-          }}
-        >
-          <Typography>Selected shortcut on last onChange call: </Typography>
-          <Chip
-            size="small"
-            label={
-              lastShortcutSelected === undefined
-                ? 'none'
-                : lastShortcutSelected.label
-            }
-            variant={lastShortcutSelected === undefined ? 'outlined' : 'filled'}
-            sx={{
-              '@media (pointer: fine)': { marginLeft: 1 },
-              '@media (pointer: none), (pointer: coarse)': {
-                marginTop: 1,
-              },
-              alignSelf: 'center',
-            }}
-          />
-        </Box>
+        <Typography sx={{ pb: 2 }}>
+          Selected shortcut on last onChange call:{' '}
+          {lastShortcutSelected === undefined ? 'none' : lastShortcutSelected.label}
+        </Typography>
       </Stack>
     </LocalizationProvider>
   );
