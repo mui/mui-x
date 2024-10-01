@@ -83,8 +83,7 @@ const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
               return value;
             })
           : series[id].data!,
-        stackedDataMain: [],
-        stackedDataOther: [],
+        stackedData: [],
       };
     });
 
@@ -92,38 +91,30 @@ const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
       .flatMap((id) => completedSeries[id].data.flat(Infinity))
       .filter((v): v is number => v != null);
 
-    // max=120 min=20 sum=190
+    // {max: 200, min: 50, sum: 500}
+
     const max = Math.max(...allValues);
     const min = Math.min(...allValues);
     const sum = ids
       .flatMap((id) => completedSeries[id].data.flat(Infinity))
       .reduce((acc, value) => (acc ?? 0) + (value ?? 0), 0);
 
-    let summed = 0;
+    console.log({ max, min, sum });
+
     ids.forEach((id, index) => {
-      completedSeries[id].stackedDataMain = completedSeries[id].data.map((value, dataIndex) => {
-        const currentMax = value ?? 0;
-        const nextId = ids[index + 1];
-        const prevId = ids[index - 1];
-        const nextMax = completedSeries[nextId]?.data[dataIndex] ?? 0;
-        const prevMax = completedSeries[prevId]?.data[dataIndex] ?? 0;
+      completedSeries[id].stackedData = completedSeries[id].data.map((value, dataIndex) => {
+        const currentMaxMain = value ?? 0;
+        const nextValues = ids[index === ids.length - 1 ? index : index + 1];
+        const nextMaxMain = completedSeries[nextValues].data[dataIndex] ?? 0;
+        const [nextMaxOther, currentMaxOther] = stackedSeries[index][dataIndex];
 
-        summed = nextMax + summed;
-        console.log({ currentMax, nextMax, prevMax, summed });
-        return {
-          v0: min + (prevMax ? currentMax / 2 : 0),
-          v1: (prevMax ? min + currentMax / 2 : 0) + currentMax,
-          v2: (prevMax ? min + currentMax / 2 : 0) + currentMax - nextMax / 2,
-          v3: min + nextMax / 2 + (prevMax ? currentMax / 2 : 0),
-        };
+        return [
+          { x: currentMaxMain, y: currentMaxOther },
+          { x: currentMaxMain - nextMaxMain / 2, y: nextMaxOther },
+          { x: nextMaxMain / 2, y: nextMaxOther },
+          { x: min, y: currentMaxOther },
+        ];
       });
-
-      completedSeries[id].stackedDataOther = stackedSeries[index].map(([nextMax, currentMax]) => ({
-        v0: currentMax,
-        v1: currentMax,
-        v2: nextMax,
-        v3: nextMax,
-      }));
     });
   });
 

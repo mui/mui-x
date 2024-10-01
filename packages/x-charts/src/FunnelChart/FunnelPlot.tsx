@@ -65,8 +65,7 @@ const useAggregatedData = () => {
           yAxisId: yAxisIdProp,
           xAxisKey = defaultXAxisId,
           yAxisKey = defaultYAxisId,
-          stackedDataMain,
-          stackedDataOther,
+          stackedData,
         } = series[seriesId];
 
         const xAxisId = xAxisIdProp ?? xAxisKey;
@@ -80,17 +79,18 @@ const useAggregatedData = () => {
           (xAxis[xAxisId].colorScale && [xAxisId, 'x']) ||
           undefined;
 
-        const curve = getCurveFactory(series[seriesId].curve);
+        const curve = getCurveFactory(series[seriesId].curve ?? 'linear');
+        console.log(stackedData);
+
+        const line = d3Line<{ x: number; y: number }>()
+          .x((d) => xScale(d.x)!)
+          .y((d) => yScale(d.y)!)
+          .curve(curve);
 
         return {
           ...series[seriesId],
           gradientUsed,
-          points: [
-            `${xScale(stackedDataMain[0].v0)!},${yScale(stackedDataOther[0].v0)}`,
-            `${xScale(stackedDataMain[0].v1)!},${yScale(stackedDataOther[0].v1)}`,
-            `${xScale(stackedDataMain[0].v2)!},${yScale(stackedDataOther[0].v2)}`,
-            `${xScale(stackedDataMain[0].v3)!},${yScale(stackedDataOther[0].v3)}`,
-          ].join(' '),
+          d: line(stackedData[0]),
           seriesId,
         };
       });
@@ -103,19 +103,10 @@ const useAggregatedData = () => {
 function FunnelPlot(props: FunnelPlotProps) {
   const data = useAggregatedData();
 
-  console.table(
-    data.map(({ stackedDataMain, stackedDataOther }) => ({
-      m0: Object.values(stackedDataMain[0]).join(','),
-      o1: Object.values(stackedDataOther[0]).join(','),
-    })),
-  );
-
   return (
     <React.Fragment>
       {data.map((v) => {
-        return (
-          <polygon strokeWidth={10} points={v.points} stroke={'blue'} fill={v.color} key={v.id} />
-        );
+        return <path d={v.d} stroke={'none'} fill={v.color} key={v.id} />;
       })}
     </React.Fragment>
   );

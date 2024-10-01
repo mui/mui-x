@@ -97,8 +97,7 @@ export type ChartSeries<T extends ChartSeriesType> = ChartsSeriesConfig[T] exten
 }
   ? T extends 'funnel'
     ? ChartsSeriesConfig[T]['seriesInput'] & {
-        stackedDataMain: Record<'v0' | 'v1' | 'v2' | 'v3', number>[];
-        stackedDataOther: Record<'v0' | 'v1' | 'v2' | 'v3', number>[];
+        stackedData: Record<'x' | 'y', number>[][];
       }
     : ChartsSeriesConfig[T]['seriesInput'] & { stackedData: [number, number][] }
   : ChartsSeriesConfig[T]['seriesInput'];
@@ -108,8 +107,7 @@ export type ChartSeriesDefaultized<T extends ChartSeriesType> = ChartsSeriesConf
 }
   ? T extends 'funnel'
     ? ChartsSeriesConfig[T]['series'] & {
-        stackedDataMain: Record<'v0' | 'v1' | 'v2' | 'v3', number>[];
-        stackedDataOther: Record<'v0' | 'v1' | 'v2' | 'v3', number>[];
+        stackedData: Record<'x' | 'y', number>[][];
       }
     : ChartsSeriesConfig[T]['series'] & { stackedData: [number, number][] }
   : ChartsSeriesConfig[T]['series'];
