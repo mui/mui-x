@@ -40,6 +40,14 @@
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/zhCN.ts"
   },
   {
+    "languageTag": "hr-HR",
+    "importName": "hrHR",
+    "localeName": "Croatian",
+    "missingKeysCount": 0,
+    "totalKeysCount": 50,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/hrHR.ts"
+  },
+  {
     "languageTag": "cs-CZ",
     "importName": "csCZ",
     "localeName": "Czech",
