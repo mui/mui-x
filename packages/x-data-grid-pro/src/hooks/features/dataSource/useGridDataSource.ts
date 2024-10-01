@@ -10,11 +10,7 @@ import {
   gridPaginationModelSelector,
   gridFilteredSortedRowIdsSelector,
 } from '@mui/x-data-grid';
-import {
-  GridGetRowsParams,
-  gridRowGroupsToFetchSelector,
-  GridStateInitializer,
-} from '@mui/x-data-grid/internals';
+import { gridRowGroupsToFetchSelector, GridStateInitializer } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { gridGetRowsParamsSelector, gridDataSourceErrorsSelector } from './gridDataSourceSelector';
@@ -94,22 +90,6 @@ export const useGridDataSource = (
     getCache(props.unstable_dataSourceCache, {
       chunkSize: cacheChunkSize,
     }),
-  );
-
-  // Adjust the render context range to fit the pagination model's page size
-  // First row index should be decreased to the start of the page, end row index should be increased to the end of the page
-  const adjustRowParams = React.useCallback(
-    (params: Pick<GridGetRowsParams, 'start' | 'end'>) => {
-      if (typeof params.start !== 'number') {
-        return params;
-      }
-
-      return {
-        start: params.start - (params.start % paginationModel.pageSize),
-        end: params.end + paginationModel.pageSize - (params.end % paginationModel.pageSize) - 1,
-      };
-    },
-    [paginationModel],
   );
 
   const fetchRows = React.useCallback(
@@ -203,13 +183,6 @@ export const useGridDataSource = (
       filteredSortedRowIds,
       onError,
     ],
-  );
-
-  const fetchRowBatch = React.useCallback(
-    (fetchParams: GridGetRowsParams) => {
-      return fetchRows(adjustRowParams(fetchParams));
-    },
-    [adjustRowParams, fetchRows],
   );
 
   const fetchRowChildren = React.useCallback<GridDataSourcePrivateApi['fetchRowChildren']>(
@@ -370,7 +343,7 @@ export const useGridDataSource = (
     'paginationModelChange',
     runIf(props.paginationMode === 'server' && !isLazyLoaded, fetchRows),
   );
-  useGridApiEventHandler(apiRef, 'getRows', runIf(isLazyLoaded, fetchRowBatch));
+  useGridApiEventHandler(apiRef, 'getRows', runIf(isLazyLoaded, fetchRows));
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
