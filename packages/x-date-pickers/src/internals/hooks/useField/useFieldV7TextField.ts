@@ -13,10 +13,14 @@ import { getActiveElement } from '../../utils/utils';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import { usePickersTranslations } from '../../../hooks/usePickersTranslations';
 import { useUtils } from '../useUtils';
+import { useFieldHandleKeyDown } from './useFieldHandleKeyDown';
+import { useFieldClearValue } from './useFieldClearValue';
 
 export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
   const {
+    internalProps,
     internalProps: { disabled, readOnly = false },
+    forwardedProps,
     forwardedProps: {
       sectionListRef: inSectionListRef,
       onBlur,
@@ -28,18 +32,20 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       autoFocus = false,
     },
     fieldValueManager,
-    applyCharacterEditing,
-    resetCharacterQuery,
-    setSelectedSections,
-    parsedSelectedSections,
-    state,
-    clearActiveSection,
-    clearValue,
-    updateSectionValue,
-    updateValueFromValueStr,
-    sectionOrder,
     areAllSectionsEmpty,
-    sectionsValueBoundaries,
+    stateResponse,
+    stateResponse: {
+      parsedSelectedSections,
+      state,
+      updateSectionValue,
+      updateValueFromValueStr,
+      clearActiveSection,
+      clearValue,
+      setSelectedSections,
+      sectionsValueBoundaries,
+    },
+    characterEditingResponse,
+    characterEditingResponse: { applyCharacterEditing, resetCharacterQuery },
   } = params;
 
   const sectionListRef = React.useRef<PickersSectionListRef>(null);
@@ -179,7 +185,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
         const cursorPosition = document.getSelection()!.getRangeAt(0).startOffset;
 
         if (cursorPosition === 0) {
-          setSelectedSections(sectionOrder.startIndex);
+          setSelectedSections(0);
           return;
         }
 
@@ -198,12 +204,12 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       });
     } else if (!focused) {
       setFocused(true);
-      setSelectedSections(sectionOrder.startIndex);
+      setSelectedSections(0);
     } else {
       const hasClickedOnASection = sectionListRef.current.getRoot().contains(event.target as Node);
 
       if (!hasClickedOnASection) {
-        setSelectedSections(sectionOrder.startIndex);
+        setSelectedSections(0);
       }
     }
   });
@@ -265,7 +271,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     const isFocusInsideASection =
       sectionListRef.current.getSectionIndexFromDOMElement(getActiveElement(document)) != null;
     if (!isFocusInsideASection) {
-      setSelectedSections(sectionOrder.startIndex);
+      setSelectedSections(0);
     }
   });
 
@@ -505,9 +511,25 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     }
 
     if (autoFocus && sectionListRef.current) {
-      sectionListRef.current.getSectionContent(sectionOrder.startIndex).focus();
+      sectionListRef.current.getSectionContent(0).focus();
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleContainerKeyDown = useFieldHandleKeyDown({
+    fieldValueManager,
+    internalProps,
+    forwardedProps,
+    stateResponse,
+    characterEditingResponse,
+  });
+
+  const { onClear, clearable } = useFieldClearValue({
+    internalProps,
+    forwardedProps,
+    stateResponse,
+    areAllSectionsEmpty,
+    interactions,
+  });
 
   return {
     interactions,
@@ -522,6 +544,9 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       onFocus: handleContainerFocus,
       onInput: handleContainerInput,
       onPaste: handleContainerPaste,
+      onKeyDown: handleContainerKeyDown,
+      onClear,
+      clearable,
 
       // Additional
       enableAccessibleFieldDOMStructure: true,

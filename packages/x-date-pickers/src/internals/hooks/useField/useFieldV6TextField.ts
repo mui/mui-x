@@ -2,10 +2,16 @@ import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
-import { UseFieldTextFieldInteractions, UseFieldTextField } from './useField.types';
+import {
+  UseFieldTextFieldInteractions,
+  UseFieldTextField,
+  SectionOrdering,
+} from './useField.types';
 import { FieldSection } from '../../../models';
 import { getActiveElement } from '../../utils/utils';
-import { getSectionVisibleValue, isAndroid } from './useField.utils';
+import { buildDefaultSectionOrdering, getSectionVisibleValue, isAndroid } from './useField.utils';
+import { useFieldHandleKeyDown } from './useFieldHandleKeyDown';
+import { useFieldClearValue } from './useFieldClearValue';
 
 type FieldSectionWithPositions<TSection> = TSection & {
   /**
@@ -74,12 +80,74 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
   return newSections;
 };
 
+export type SectionNeighbors = {
+  [sectionIndex: number]: {
+    /**
+     * Index of the next section displayed on the left. `null` if it's the leftmost section.
+     */
+    leftIndex: number | null;
+    /**
+     * Index of the next section displayed on the right. `null` if it's the rightmost section.
+     */
+    rightIndex: number | null;
+  };
+};
+
+const getSectionOrder = (sections: FieldSection[]): SectionOrdering => {
+  const neighbors: SectionNeighbors = {};
+
+  type PositionMapping = { [from: number]: number };
+  const rtl2ltr: PositionMapping = {};
+  const ltr2rtl: PositionMapping = {};
+
+  let groupedSectionsStart = 0;
+  let groupedSectionsEnd = 0;
+  let RTLIndex = sections.length - 1;
+
+  while (RTLIndex >= 0) {
+    groupedSectionsEnd = sections.findIndex(
+      // eslint-disable-next-line @typescript-eslint/no-loop-func
+      (section, index) =>
+        index >= groupedSectionsStart &&
+        section.endSeparator?.includes(' ') &&
+        // Special case where the spaces were not there in the initial input
+        section.endSeparator !== ' / ',
+    );
+    if (groupedSectionsEnd === -1) {
+      groupedSectionsEnd = sections.length - 1;
+    }
+
+    for (let i = groupedSectionsEnd; i >= groupedSectionsStart; i -= 1) {
+      ltr2rtl[i] = RTLIndex;
+      rtl2ltr[RTLIndex] = i;
+      RTLIndex -= 1;
+    }
+    groupedSectionsStart = groupedSectionsEnd + 1;
+  }
+
+  sections.forEach((_, index) => {
+    const rtlIndex = ltr2rtl[index];
+    const leftIndex = rtlIndex === 0 ? null : rtl2ltr[rtlIndex - 1];
+    const rightIndex = rtlIndex === sections.length - 1 ? null : rtl2ltr[rtlIndex + 1];
+
+    neighbors[index] = { leftIndex, rightIndex };
+  });
+
+  return {
+    startIndex: rtl2ltr[0],
+    endIndex: rtl2ltr[sections.length - 1],
+    getSectionOnTheLeft: (index: number) => neighbors[index].leftIndex,
+    getSectionOnTheRight: (index: number) => neighbors[index].rightIndex,
+  };
+};
+
 export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   const isRtl = useRtl();
   const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
   const selectionSyncTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
 
   const {
+    forwardedProps,
     forwardedProps: {
       onFocus,
       onClick,
@@ -88,23 +156,27 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       inputRef: inputRefProp,
       placeholder: inPlaceholder,
     },
+    internalProps,
     internalProps: { readOnly = false, disabled = false },
-    parsedSelectedSections,
-    activeSectionIndex,
-    state,
     fieldValueManager,
     valueManager,
-    applyCharacterEditing,
-    resetCharacterQuery,
-    updateSectionValue,
-    updateValueFromValueStr,
-    clearActiveSection,
-    clearValue,
-    setTempAndroidValueStr,
-    setSelectedSections,
-    getSectionsFromValue,
     areAllSectionsEmpty,
-    localizedDigits,
+    stateResponse,
+    stateResponse: {
+      parsedSelectedSections,
+      activeSectionIndex,
+      state,
+      updateSectionValue,
+      updateValueFromValueStr,
+      clearActiveSection,
+      clearValue,
+      setTempAndroidValueStr,
+      setSelectedSections,
+      getSectionsFromValue,
+      localizedDigits,
+    },
+    characterEditingResponse,
+    characterEditingResponse: { applyCharacterEditing, resetCharacterQuery },
   } = params;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -113,6 +185,12 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   const sections = React.useMemo(
     () => addPositionPropertiesToSections(state.sections, localizedDigits, isRtl),
     [state.sections, localizedDigits, isRtl],
+  );
+
+  const sectionOrder = React.useMemo(
+    () =>
+      isRtl ? getSectionOrder(state.sections) : buildDefaultSectionOrdering(state.sections.length),
+    [state.sections, isRtl],
   );
 
   const interactions = React.useMemo<UseFieldTextFieldInteractions>(
@@ -452,6 +530,24 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   const inputHasFocus = inputRef.current && inputRef.current === getActiveElement(document);
   const shouldShowPlaceholder = !inputHasFocus && areAllSectionsEmpty;
 
+  const handleContainerKeyDown = useFieldHandleKeyDown({
+    fieldValueManager,
+    internalProps,
+    forwardedProps,
+    stateResponse,
+    characterEditingResponse,
+    sectionOrder,
+  });
+
+  const { onClear, clearable } = useFieldClearValue({
+    internalProps,
+    forwardedProps,
+    stateResponse,
+    areAllSectionsEmpty,
+    interactions,
+    sectionOrder,
+  });
+
   return {
     interactions,
     returnedValue: {
@@ -461,6 +557,9 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       onClick: handleInputClick,
       onFocus: handleInputFocus,
       onPaste: handleInputPaste,
+      onKeyDown: handleContainerKeyDown,
+      onClear,
+      clearable,
       inputRef: handleRef,
 
       // Additional

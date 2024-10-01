@@ -15,7 +15,7 @@ import {
 import type { PickerValueManager } from '../usePicker';
 import type { Validator } from '../../../validation';
 import type { UseFieldStateResponse } from './useFieldState';
-import type { UseFieldCharacterEditingResponse } from './useFieldCharacterEditing';
+import type { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import { ExportedUseClearableFieldProps } from '../../../hooks/useClearableField';
 
@@ -24,8 +24,7 @@ export interface UseFieldParams<
   TDate extends PickerValidDate,
   TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TForwardedProps extends UseFieldCommonForwardedProps &
-    UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
+  TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
   TInternalProps extends UseFieldInternalProps<
     any,
     any,
@@ -142,8 +141,7 @@ export interface UseFieldInternalProps<
 export interface UseFieldCommonAdditionalProps
   extends Required<Pick<UseFieldInternalProps<any, any, any, any, any>, 'disabled' | 'readOnly'>> {}
 
-export interface UseFieldCommonForwardedProps extends ExportedUseClearableFieldProps {
-  onKeyDown?: React.KeyboardEventHandler;
+export interface UseFieldCommonForwardedProps {
   error?: boolean;
 }
 
@@ -153,12 +151,13 @@ export type UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure extends bo
       ? UseFieldV6ForwardedProps
       : UseFieldV7ForwardedProps);
 
-export interface UseFieldV6ForwardedProps {
+export interface UseFieldV6ForwardedProps extends ExportedUseClearableFieldProps {
   inputRef?: React.Ref<HTMLInputElement>;
   onBlur?: () => void;
   onClick?: React.MouseEventHandler;
   onFocus?: () => void;
   onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
+  onKeyDown?: React.KeyboardEventHandler;
   placeholder?: string;
 }
 
@@ -172,7 +171,7 @@ interface UseFieldV6AdditionalProps
   enableAccessibleFieldDOMStructure: false;
 }
 
-export interface UseFieldV7ForwardedProps {
+export interface UseFieldV7ForwardedProps extends ExportedUseClearableFieldProps {
   focused?: boolean;
   autoFocus?: boolean;
   sectionListRef?: React.Ref<PickersSectionListRef>;
@@ -181,6 +180,7 @@ export interface UseFieldV7ForwardedProps {
   onFocus?: () => void;
   onInput?: React.FormEventHandler<HTMLDivElement>;
   onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
+  onKeyDown?: React.KeyboardEventHandler;
 }
 
 interface UseFieldV7AdditionalProps {
@@ -385,32 +385,19 @@ export interface UseFieldState<TValue, TSection extends FieldSection> {
   tempValueStrAndroid: string | null;
 }
 
-export type AvailableAdjustKeyCode =
-  | 'ArrowUp'
-  | 'ArrowDown'
-  | 'PageUp'
-  | 'PageDown'
-  | 'Home'
-  | 'End';
-
-export type SectionNeighbors = {
-  [sectionIndex: number]: {
-    /**
-     * Index of the next section displayed on the left. `null` if it's the leftmost section.
-     */
-    leftIndex: number | null;
-    /**
-     * Index of the next section displayed on the right. `null` if it's the rightmost section.
-     */
-    rightIndex: number | null;
-  };
-};
-
 export type SectionOrdering = {
   /**
-   * For each section index provide the index of the section displayed on the left and on the right.
+   * Returns the section on the left of provided section's index.
+   * @param {number} index The section to get the section left of.
+   * @returns {number | null} The index of the section on the left.
    */
-  neighbors: SectionNeighbors;
+  getSectionOnTheLeft: (index: number) => number | null;
+  /**
+   * Returns the section on the right of provided section's index.
+   * @param {number} index The section to get the section right of.
+   * @returns {number | null} The index of the section on the right.
+   */
+  getSectionOnTheRight: (index: number) => number | null;
   /**
    * Index of the section displayed on the far left
    */
@@ -489,15 +476,14 @@ interface UseFieldTextFieldParams<
     any
   >,
 > extends UseFieldParams<
-      TValue,
-      TDate,
-      TSection,
-      TEnableAccessibleFieldDOMStructure,
-      TForwardedProps,
-      TInternalProps
-    >,
-    UseFieldStateResponse<TValue, TDate, TSection>,
-    UseFieldCharacterEditingResponse {
+    TValue,
+    TDate,
+    TSection,
+    TEnableAccessibleFieldDOMStructure,
+    TForwardedProps,
+    TInternalProps
+  > {
   areAllSectionsEmpty: boolean;
-  sectionOrder: SectionOrdering;
+  stateResponse: UseFieldStateResponse<TValue, TDate, TSection>;
+  characterEditingResponse: UseFieldCharacterEditingReturnValue;
 }
