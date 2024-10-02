@@ -27,16 +27,6 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
     validator,
   } = params;
 
-  const [focused, setFocused] = React.useState(false);
-  const stateResponse = useFieldState(params);
-
-  const error = useFieldValidation({ internalProps, forwardedProps, validator, stateResponse });
-
-  const characterEditingResponse = useFieldCharacterEditing({
-    error,
-    stateResponse,
-  });
-
   // Management of `sectionListRef` (won't be present in `PickersField`)
   const sectionListRef = React.useRef<UseFieldAccessibleDOMGetters>(null);
   const handleSectionListRef = useForkRef(sectionListRefProp, sectionListRef);
@@ -69,6 +59,16 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
     }),
     [sectionListRef],
   );
+
+  const [focused, setFocused] = React.useState(false);
+  const stateResponse = useFieldState(params);
+
+  const error = useFieldValidation({ internalProps, forwardedProps, validator, stateResponse });
+
+  const characterEditingResponse = useFieldCharacterEditing({
+    error,
+    stateResponse,
+  });
 
   const interactions = useFieldAccessibleDOMInteractions({
     forwardedProps,
