@@ -5,7 +5,7 @@ import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
 } from '../ResponsiveChartContainer';
-import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
+import { ChartsAxisProps } from '../ChartsAxis';
 import {
   ChartsOverlay,
   ChartsOverlayProps,
@@ -24,7 +24,6 @@ import { MakeOptional } from '../models/helpers';
 import { ChartsAxisSlotProps, ChartsAxisSlots } from '../models/axis';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import { useFunnelChartProps } from './useFunnelChartProps';
-import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 
 export interface FunnelChartSlots
   extends ChartsAxisSlots,
@@ -69,14 +68,6 @@ export interface FunnelChartProps
    * @default 'vertical'
    */
   layout?: FunnelSeriesType['layout'];
-  /**
-   * The configuration of axes highlight.
-   * Default is set to 'band' in the bar direction.
-   * Depends on `layout` prop.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
-   *
-   */
-  axisHighlight?: ChartsAxisHighlightProps;
 }
 
 const FunnelChart = React.forwardRef(function FunnelChart(inProps: FunnelChartProps, ref) {
@@ -88,7 +79,6 @@ const FunnelChart = React.forwardRef(function FunnelChart(inProps: FunnelChartPr
     overlayProps,
     tooltipProps,
     legendProps,
-    axisHighlightProps,
     children,
   } = useFunnelChartProps(props);
 
@@ -96,7 +86,6 @@ const FunnelChart = React.forwardRef(function FunnelChart(inProps: FunnelChartPr
     <ResponsiveChartContainer ref={ref} {...chartContainerProps}>
       <ChartsOverlay {...overlayProps} />
       <FunnelPlot {...funnelPlotProps} />
-      <ChartsAxisHighlight {...axisHighlightProps} />
       <ChartsLegend {...legendProps} />
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       {children}
