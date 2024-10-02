@@ -21,7 +21,7 @@ function Toolbar(props) {
         aria-labelledby="demo-row-count-buttons-group-label"
         name="row-count-buttons-group"
         value={count}
-        onChange={(event) => setCount(Number(event.target.value))}
+        onChange={(event) => setCount && setCount(Number(event.target.value))}
       >
         <FormControlLabel value="-1" control={<Radio />} label="Unknown" />
         <FormControlLabel value="40" control={<Radio />} label="40" />
