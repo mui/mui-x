@@ -337,7 +337,7 @@ export const useGridRowSelection = (
           ...selectedIdsLookupSelector(apiRef),
         };
         const addRow = (rowId: GridRowId) => {
-          newSelection.push(rowId);
+          selectionLookup[rowId] = rowId;
         };
         const removeRow = (rowId: GridRowId) => {
           delete selectionLookup[rowId];
