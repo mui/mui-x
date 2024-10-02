@@ -26,7 +26,6 @@ import {
   FieldSelectedSections,
   PickersTimezone,
   PickerValidDate,
-  InferError,
 } from '../../../models';
 import { useValueWithTimezone } from '../useValueWithTimezone';
 import {
@@ -74,16 +73,15 @@ export const useFieldState = <
   TDate extends PickerValidDate,
   TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any, any>,
+  TError,
 >(
   params: UseFieldParams<
     TValue,
     TDate,
     TSection,
     TEnableAccessibleFieldDOMStructure,
-    TForwardedProps,
-    TInternalProps
+    UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
+    UseFieldInternalProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>
   >,
 ): UseFieldStateResponse<TValue, TDate, TSection> => {
   const utils = useUtils<TDate>();
@@ -224,7 +222,7 @@ export const useFieldState = <
       return;
     }
 
-    const context: FieldChangeHandlerContext<InferError<TInternalProps>> = {
+    const context: FieldChangeHandlerContext<TError> = {
       validationError: validator({
         adapter,
         value,

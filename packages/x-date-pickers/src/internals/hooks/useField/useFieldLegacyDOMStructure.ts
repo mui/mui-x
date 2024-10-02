@@ -2,16 +2,24 @@ import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   UseFieldTextFieldInteractions,
-  UseFieldTextField,
+  UseFieldWithKnownDOMStructure,
   SectionOrdering,
+  UseFieldV6ForwardedProps,
+  UseFieldInternalProps,
+  UseFieldV6AdditionalProps,
 } from './useField.types';
-import { FieldSection } from '../../../models';
+import { FieldSection, InferError, PickerValidDate } from '../../../models';
 import { getActiveElement } from '../../utils/utils';
 import { buildDefaultSectionOrdering, getSectionVisibleValue, isAndroid } from './useField.utils';
 import { useFieldHandleKeyDown } from './useFieldHandleKeyDown';
 import { useFieldClearValue } from './useFieldClearValue';
+import { useValidation } from '../../../validation';
+import { useUtils } from '../useUtils';
+import { useFieldState } from './useFieldState';
+import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 
 type FieldSectionWithPositions<TSection> = TSection & {
   /**
@@ -141,10 +149,20 @@ const getSectionOrder = (sections: FieldSection[]): SectionOrdering => {
   };
 };
 
-export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
+export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = <
+  TValue,
+  TDate extends PickerValidDate,
+  TSection extends FieldSection,
+  TInternalProps extends UseFieldInternalProps<any, any, any, false, any> & {
+    minutesStep?: number;
+  },
+>(
+  params,
+) => {
   const isRtl = useRtl();
   const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
   const selectionSyncTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
+  const utils = useUtils<TDate>();
 
   const {
     forwardedProps,
@@ -154,33 +172,41 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       onPaste,
       onBlur,
       inputRef: inputRefProp,
-      placeholder: inPlaceholder,
+      placeholder: placeholderProp,
+      error: errorProp,
     },
     internalProps,
-    internalProps: { readOnly = false, disabled = false },
+    internalProps: { unstableFieldRef, readOnly = false, disabled = false },
     fieldValueManager,
     valueManager,
-    areAllSectionsEmpty,
-    stateResponse,
-    stateResponse: {
-      parsedSelectedSections,
-      activeSectionIndex,
-      state,
-      updateSectionValue,
-      updateValueFromValueStr,
-      clearActiveSection,
-      clearValue,
-      setTempAndroidValueStr,
-      setSelectedSections,
-      getSectionsFromValue,
-      localizedDigits,
-    },
-    characterEditingResponse,
-    characterEditingResponse: { applyCharacterEditing, resetCharacterQuery },
+    validator,
   } = params;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleRef = useForkRef(inputRefProp, inputRef);
+
+  const stateResponse = useFieldState<TValue, TDate, TSection, true, InferError<TInternalProps>>(
+    params,
+  );
+  const {
+    parsedSelectedSections,
+    activeSectionIndex,
+    state,
+    updateSectionValue,
+    updateValueFromValueStr,
+    clearActiveSection,
+    clearValue,
+    setTempAndroidValueStr,
+    setSelectedSections,
+    getSectionsFromValue,
+    localizedDigits,
+    timezone,
+  } = stateResponse;
+
+  const characterEditingResponse = useFieldCharacterEditing<TValue, TDate, TSection>({
+    stateResponse,
+  });
+  const { applyCharacterEditing, resetCharacterQuery } = characterEditingResponse;
 
   const sections = React.useMemo(
     () => addPositionPropertiesToSections(state.sections, localizedDigits, isRtl),
@@ -191,6 +217,12 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
     () =>
       isRtl ? getSectionOrder(state.sections) : buildDefaultSectionOrdering(state.sections.length),
     [state.sections, isRtl],
+  );
+
+  const areAllSectionsEmpty = valueManager.areValuesEqual(
+    utils,
+    state.value,
+    valueManager.emptyValue,
   );
 
   const interactions = React.useMemo<UseFieldTextFieldInteractions>(
@@ -478,8 +510,8 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   });
 
   const placeholder = React.useMemo(() => {
-    if (inPlaceholder !== undefined) {
-      return inPlaceholder;
+    if (placeholderProp !== undefined) {
+      return placeholderProp;
     }
 
     return fieldValueManager.getV6InputValueFromSections(
@@ -488,7 +520,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       isRtl,
     );
   }, [
-    inPlaceholder,
+    placeholderProp,
     fieldValueManager,
     getSectionsFromValue,
     valueManager.emptyValue,
@@ -539,6 +571,14 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
     sectionOrder,
   });
 
+  const { hasValidationError } = useValidation({
+    props: internalProps,
+    validator,
+    timezone,
+    value: state.value,
+    onError: internalProps.onError,
+  });
+
   const { onClear, clearable } = useFieldClearValue({
     internalProps,
     forwardedProps,
@@ -548,27 +588,71 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
     sectionOrder,
   });
 
-  return {
-    interactions,
-    returnedValue: {
-      // Forwarded
-      readOnly,
-      onBlur: handleContainerBlur,
-      onClick: handleInputClick,
-      onFocus: handleInputFocus,
-      onPaste: handleInputPaste,
-      onKeyDown: handleContainerKeyDown,
-      onClear,
-      clearable,
-      inputRef: handleRef,
+  const error = React.useMemo(() => {
+    // only override when `error` is undefined.
+    // in case of multi input fields, the `error` value is provided externally and will always be defined.
+    if (errorProp !== undefined) {
+      return errorProp;
+    }
 
-      // Additional
-      enableAccessibleFieldDOMStructure: false,
-      placeholder,
-      inputMode,
-      autoComplete: 'off',
-      value: shouldShowPlaceholder ? '' : valueStr,
-      onChange: handleInputChange,
-    },
+    return hasValidationError;
+  }, [hasValidationError, errorProp]);
+
+  useEnhancedEffect(() => {
+    interactions.syncSelectionToDOM();
+  });
+
+  React.useEffect(() => {
+    if (!error && activeSectionIndex == null) {
+      resetCharacterQuery();
+    }
+  }, [state.referenceValue, activeSectionIndex, error]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // If `tempValueStrAndroid` is still defined for some section when running `useEffect`,
+  // Then `onChange` has only been called once, which means the user pressed `Backspace` to reset the section.
+  // This causes a small flickering on Android,
+  // But we can't use `useEnhancedEffect` which is always called before the second `onChange` call and then would cause false positives.
+  React.useEffect(() => {
+    if (state.tempValueStrAndroid != null && activeSectionIndex != null) {
+      resetCharacterQuery();
+      clearActiveSection();
+    }
+  }, [state.sections]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  React.useImperativeHandle(unstableFieldRef, () => ({
+    getSections: () => state.sections,
+    getActiveSectionIndex: interactions.getActiveSectionIndexFromDOM,
+    setSelectedSections: interactions.setSelectedSections,
+    focusField: interactions.focusField,
+    isFieldFocused: interactions.isFieldFocused,
+  }));
+
+  const forwardedPropsWithDefault: Required<UseFieldV6ForwardedProps> = {
+    onBlur: handleContainerBlur,
+    onClick: handleInputClick,
+    onFocus: handleInputFocus,
+    onPaste: handleInputPaste,
+    onKeyDown: handleContainerKeyDown,
+    onClear,
+    clearable,
+    error,
+    placeholder,
+    inputRef: handleRef,
+  };
+
+  const additionalProps: UseFieldV6AdditionalProps = {
+    enableAccessibleFieldDOMStructure: false,
+    inputMode,
+    autoComplete: 'off',
+    value: shouldShowPlaceholder ? '' : valueStr,
+    onChange: handleInputChange,
+    disabled,
+    readOnly,
+  };
+
+  return {
+    ...forwardedProps,
+    ...forwardedPropsWithDefault,
+    ...additionalProps,
   };
 };

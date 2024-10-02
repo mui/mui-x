@@ -14,8 +14,6 @@ import {
 } from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import type { Validator } from '../../../validation';
-import type { UseFieldStateResponse } from './useFieldState';
-import type { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import { ExportedUseClearableFieldProps } from '../../../hooks/useClearableField';
 
@@ -138,18 +136,34 @@ export interface UseFieldInternalProps<
   disabled?: boolean;
 }
 
-export interface UseFieldCommonAdditionalProps
-  extends Required<Pick<UseFieldInternalProps<any, any, any, any, any>, 'disabled' | 'readOnly'>> {}
+export interface UseFieldV6AdditionalProps
+  extends Required<
+    Pick<
+      React.InputHTMLAttributes<HTMLInputElement>,
+      'inputMode' | 'value' | 'onChange' | 'autoComplete'
+    >
+  > {
+  enableAccessibleFieldDOMStructure: false;
+  disabled: boolean;
+  readOnly: boolean;
+}
 
-export interface UseFieldCommonForwardedProps {
-  error?: boolean;
+export interface UseFieldV7AdditionalProps {
+  enableAccessibleFieldDOMStructure: true;
+  elements: PickersSectionElement[];
+  tabIndex: number | undefined;
+  contentEditable: boolean;
+  value: string;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  areAllSectionsEmpty: boolean;
+  disabled: boolean;
+  readOnly: boolean;
 }
 
 export type UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure extends boolean> =
-  UseFieldCommonForwardedProps &
-    (TEnableAccessibleFieldDOMStructure extends false
-      ? UseFieldV6ForwardedProps
-      : UseFieldV7ForwardedProps);
+  TEnableAccessibleFieldDOMStructure extends false
+    ? UseFieldV6ForwardedProps
+    : UseFieldV7ForwardedProps;
 
 export interface UseFieldV6ForwardedProps extends ExportedUseClearableFieldProps {
   inputRef?: React.Ref<HTMLInputElement>;
@@ -159,16 +173,7 @@ export interface UseFieldV6ForwardedProps extends ExportedUseClearableFieldProps
   onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
   onKeyDown?: React.KeyboardEventHandler;
   placeholder?: string;
-}
-
-interface UseFieldV6AdditionalProps
-  extends Required<
-    Pick<
-      React.InputHTMLAttributes<HTMLInputElement>,
-      'inputMode' | 'placeholder' | 'value' | 'onChange' | 'autoComplete'
-    >
-  > {
-  enableAccessibleFieldDOMStructure: false;
+  error?: boolean;
 }
 
 export interface UseFieldV7ForwardedProps extends ExportedUseClearableFieldProps {
@@ -181,27 +186,21 @@ export interface UseFieldV7ForwardedProps extends ExportedUseClearableFieldProps
   onInput?: React.FormEventHandler<HTMLDivElement>;
   onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
   onKeyDown?: React.KeyboardEventHandler;
-}
-
-interface UseFieldV7AdditionalProps {
-  enableAccessibleFieldDOMStructure: true;
-  elements: PickersSectionElement[];
-  tabIndex: number | undefined;
-  contentEditable: boolean;
-  value: string;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
-  areAllSectionsEmpty: boolean;
+  error?: boolean;
 }
 
 export type UseFieldResponse<
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TForwardedProps extends UseFieldCommonForwardedProps & { [key: string]: any },
-> = Omit<TForwardedProps, keyof UseFieldCommonForwardedProps> &
-  Required<UseFieldCommonForwardedProps> &
-  UseFieldCommonAdditionalProps &
-  (TEnableAccessibleFieldDOMStructure extends false
-    ? UseFieldV6AdditionalProps & Required<UseFieldV6ForwardedProps>
-    : UseFieldV7AdditionalProps & Required<UseFieldV7ForwardedProps>);
+  TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
+> =
+  // The forwarded props with a default value added
+  Required<UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>> &
+    // The other forwarded props
+    Omit<TForwardedProps, keyof UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>> &
+    // The additional props
+    TEnableAccessibleFieldDOMStructure extends false
+    ? UseFieldV6AdditionalProps
+    : UseFieldV7AdditionalProps;
 
 export type FieldSectionValueBoundaries<
   TDate extends PickerValidDate,
@@ -428,7 +427,35 @@ export interface UseFieldTextFieldInteractions {
   isFieldFocused: () => boolean;
 }
 
-export type UseFieldTextField<TEnableAccessibleFieldDOMStructure extends boolean> = <
+export type UseFieldWithUnknownDOMStructure = <
+  TValue,
+  TDate extends PickerValidDate,
+  TSection extends FieldSection,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
+    ? UseFieldV6ForwardedProps
+    : UseFieldV7ForwardedProps,
+  TInternalProps extends UseFieldInternalProps<
+    any,
+    any,
+    any,
+    TEnableAccessibleFieldDOMStructure,
+    any
+  > & {
+    minutesStep?: number;
+  },
+>(
+  params: UseFieldParams<
+    TValue,
+    TDate,
+    TSection,
+    TEnableAccessibleFieldDOMStructure,
+    TForwardedProps,
+    TInternalProps
+  >,
+) => UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps>;
+
+export type UseFieldWithKnownDOMStructure<TEnableAccessibleFieldDOMStructure extends boolean> = <
   TValue,
   TDate extends PickerValidDate,
   TSection extends FieldSection,
@@ -445,7 +472,7 @@ export type UseFieldTextField<TEnableAccessibleFieldDOMStructure extends boolean
     minutesStep?: number;
   },
 >(
-  params: UseFieldTextFieldParams<
+  params: UseFieldParams<
     TValue,
     TDate,
     TSection,
@@ -453,37 +480,4 @@ export type UseFieldTextField<TEnableAccessibleFieldDOMStructure extends boolean
     TForwardedProps,
     TInternalProps
   >,
-) => {
-  interactions: UseFieldTextFieldInteractions;
-  returnedValue: TEnableAccessibleFieldDOMStructure extends false
-    ? UseFieldV6AdditionalProps & Required<UseFieldV6ForwardedProps>
-    : UseFieldV7AdditionalProps & Required<UseFieldV7ForwardedProps>;
-};
-
-interface UseFieldTextFieldParams<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
-    ? UseFieldV6ForwardedProps
-    : UseFieldV7ForwardedProps,
-  TInternalProps extends UseFieldInternalProps<
-    any,
-    any,
-    any,
-    TEnableAccessibleFieldDOMStructure,
-    any
-  >,
-> extends UseFieldParams<
-    TValue,
-    TDate,
-    TSection,
-    TEnableAccessibleFieldDOMStructure,
-    TForwardedProps,
-    TInternalProps
-  > {
-  areAllSectionsEmpty: boolean;
-  stateResponse: UseFieldStateResponse<TValue, TDate, TSection>;
-  characterEditingResponse: UseFieldCharacterEditingReturnValue;
-}
+) => UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps>;
