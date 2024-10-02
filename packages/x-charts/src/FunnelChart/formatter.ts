@@ -19,7 +19,7 @@ const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
       ...params,
       defaultStrategy: {
         stackOrder: 'reverse',
-        stackOffset: 'expand',
+        stackOffset: 'none',
       },
     },
     'funnel',

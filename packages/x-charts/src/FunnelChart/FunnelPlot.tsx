@@ -53,18 +53,10 @@ const useAggregatedData = () => {
     const defaultXAxisId = xAxisIds[0];
     const defaultYAxisId = yAxisIds[0];
 
-    return stackingGroups.flatMap(({ ids: groupIds }) => {
-      return groupIds.flatMap((seriesId) => {
-        const {
-          xAxisId: xAxisIdProp,
-          yAxisId: yAxisIdProp,
-          xAxisKey = defaultXAxisId,
-          yAxisKey = defaultYAxisId,
-          stackedData,
-        } = series[seriesId];
-
-        const xAxisId = xAxisIdProp ?? xAxisKey;
-        const yAxisId = yAxisIdProp ?? yAxisKey;
+    const result = stackingGroups.map(({ ids: groupIds }) => {
+      return groupIds.map((seriesId) => {
+        const xAxisId = series[seriesId].xAxisId ?? series[seriesId].xAxisKey ?? defaultXAxisId;
+        const yAxisId = series[seriesId].yAxisId ?? series[seriesId].yAxisKey ?? defaultYAxisId;
 
         const xScale = xAxis[xAxisId].scale;
         const yScale = yAxis[yAxisId].scale;
@@ -74,6 +66,8 @@ const useAggregatedData = () => {
           (xAxis[xAxisId].colorScale && [xAxisId, 'x']) ||
           undefined;
 
+        const { stackedData } = series[seriesId];
+
         const curve = getCurveFactory(series[seriesId].curve ?? 'linear');
 
         const line = d3Line<{ x: number; y: number }>()
@@ -81,51 +75,48 @@ const useAggregatedData = () => {
           .y((d) => yScale(d.y)!)
           .curve(curve);
 
-        return {
-          ...series[seriesId],
-          gradientUsed,
-          d: line(stackedData[0])!,
-          usable: stackedData.map((d) => d.map((v) => ({ x: xScale(v.x)!, y: yScale(v.y)! }))),
-          seriesId,
-        };
+        return stackedData.map((values, dataIndex) => {
+          const color = series[seriesId].color ?? 'black';
+          const id = `${seriesId}-${dataIndex}`;
+
+          return {
+            d: line(values)!,
+            color,
+            id,
+            seriesId,
+            dataIndex,
+            gradientUsed,
+          };
+        });
       });
     });
+
+    return result.flatMap((v) => v.toReversed().flat());
   }, [seriesData, axisData]);
 
   return allData;
 };
 
 function FunnelPlot(props: FunnelPlotProps) {
-  const [hidden, setHidden] = React.useState(true);
+  const { skipAnimation, onItemClick, ...other } = props;
 
   const data = useAggregatedData();
 
   return (
     <React.Fragment>
-      {data.map((v) => {
-        return (
-          <React.Fragment key={v.id}>
-            <text x={100} y={50} onClick={() => setHidden(!hidden)}>
-              change
-            </text>
-            <path d={v.d} fill={v.color} key={v.id} />
-            {v.usable[0].map((d, i) => {
-              return (
-                <circle
-                  cx={d.x}
-                  cy={d.y}
-                  r={10}
-                  fill={['red', 'pink', 'green', 'blue', 'orange', 'black'][i]}
-                  stroke={'white'}
-                  strokeWidth={2}
-                  key={`${v.id}-${i}`}
-                  visibility={hidden ? 'hidden' : 'visible'}
-                />
-              );
-            })}
-          </React.Fragment>
-        );
-      })}
+      {data.map(({ d, color, id, seriesId, dataIndex }) => (
+        <path
+          d={d}
+          fill={color}
+          key={id}
+          onClick={
+            onItemClick &&
+            ((event) => {
+              onItemClick(event, { type: 'funnel', seriesId, dataIndex });
+            })
+          }
+        />
+      ))}
     </React.Fragment>
   );
 }
