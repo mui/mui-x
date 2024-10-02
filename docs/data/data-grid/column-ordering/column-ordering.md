@@ -7,7 +7,7 @@ title: Data Grid - Column ordering
 <p class="description">Drag and drop your columns to reorder them.</p>
 
 :::warning
-There is a known issue with Firefox v129 that impacts this feature.
+There is [a known issue with Firefox v129](https://github.com/mui/mui-x/issues/14263) that impacts this feature.
 Reordering does not work on that specific version of Firefox because the value for `event.dataTransfer` is `null` which results in an error.
 
 We would advice to update to v130 or higher if you experience this issue.
