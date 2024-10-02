@@ -6,6 +6,7 @@ import { useFunnelSeries } from '../hooks/useSeries';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { AxisId } from '../models/axis';
 import getCurveFactory from '../internals/getCurve';
+import { FunnelElement } from './FunnelElement';
 
 export interface FunnelPlotSlots {}
 
@@ -105,10 +106,13 @@ function FunnelPlot(props: FunnelPlotProps) {
   return (
     <React.Fragment>
       {data.map(({ d, color, id, seriesId, dataIndex }) => (
-        <path
+        <FunnelElement
+          {...other}
           d={d}
-          fill={color}
+          color={color}
           key={id}
+          dataIndex={dataIndex}
+          seriesId={seriesId}
           onClick={
             onItemClick &&
             ((event) => {
