@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import List, { ListProps } from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Chip from '@mui/material/Chip';
-import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { useTheme } from '@mui/material/styles';
+import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 
 interface PickersShortcutsItemGetValueParams<TValue> {
   isValid: (value: TValue) => boolean;
