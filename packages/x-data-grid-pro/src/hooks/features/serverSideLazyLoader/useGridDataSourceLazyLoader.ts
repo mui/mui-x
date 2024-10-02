@@ -84,6 +84,7 @@ export const useGridDataSourceLazyLoader = (
 
   const resetGrid = React.useCallback(() => {
     privateApiRef.current.setRows([]);
+    privateApiRef.current.unstable_dataSource.cache.clear();
     previousLastRowIndex.current = 0;
     const getRowsParams: GridGetRowsParams = {
       start: 0,
