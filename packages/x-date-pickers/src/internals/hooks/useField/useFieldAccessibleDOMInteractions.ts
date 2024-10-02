@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   UseFieldAccessibleDOMGetters,
   UseFieldDOMInteractions,
@@ -108,6 +109,25 @@ export const useFieldAccessibleDOMInteractions = <
     focusField: interactions.focusField,
     isFieldFocused: interactions.isFieldFocused,
   }));
+
+  useEnhancedEffect(() => {
+    interactions.syncSelectionToDOM();
+  });
+
+  useEnhancedEffect(() => {
+    if (!focused) {
+      return;
+    }
+
+    if (parsedSelectedSections === 'all') {
+      domGetters.getRoot().focus();
+    } else if (typeof parsedSelectedSections === 'number') {
+      const domElement = domGetters.getSectionContent(parsedSelectedSections);
+      if (domElement) {
+        domElement.focus();
+      }
+    }
+  }, [parsedSelectedSections, focused, domGetters]);
 
   return interactions;
 };

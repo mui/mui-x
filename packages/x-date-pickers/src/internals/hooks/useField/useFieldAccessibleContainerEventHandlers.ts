@@ -17,7 +17,7 @@ export const useFieldAccessibleContainerEventHandlers = <
   TDate extends PickerValidDate,
   TSection extends FieldSection,
 >(
-  parameters: UseFieldAccessibleContainerEventHandlersParameters<TValue, TDate, true, TSection>,
+  parameters: UseFieldAccessibleContainerEventHandlersParameters<TValue, TDate, TSection>,
 ) => {
   const {
     stateResponse,
@@ -179,18 +179,11 @@ export const useFieldAccessibleContainerEventHandlers = <
 interface UseFieldAccessibleContainerEventHandlersParameters<
   TValue,
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
   TSection extends FieldSection,
 > {
   fieldValueManager: FieldValueManager<TValue, TDate, TSection>;
-  forwardedProps: UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>;
-  internalProps: UseFieldInternalProps<
-    TValue,
-    TDate,
-    TSection,
-    TEnableAccessibleFieldDOMStructure,
-    any
-  > & {
+  forwardedProps: UseFieldForwardedProps<true>;
+  internalProps: UseFieldInternalProps<TValue, TDate, TSection, true, any> & {
     minutesStep?: number;
   };
   stateResponse: UseFieldStateResponse<TValue, TDate, TSection>;
