@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 function ServerSideLazyLoadingViewport() {
   const { columns, fetchRows } = useMockServer(
-    { rowLength: 120 },
+    { rowLength: 100 },
     { useCursorPagination: false, minDelay: 300, maxDelay: 800 },
   );
 
@@ -35,9 +35,8 @@ function ServerSideLazyLoadingViewport() {
       <DataGridPro
         columns={columns}
         unstable_dataSource={dataSource}
-        slots={{ toolbar: GridToolbar }}
         lazyLoading
-        paginationModel={{ page: 0, pageSize: 12 }}
+        paginationModel={{ page: 0, pageSize: 10 }}
       />
     </div>
   );
