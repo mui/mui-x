@@ -93,7 +93,7 @@ const useAggregatedData = () => {
             label: {
               x: isHorizontal ? xScale(values[0].x - (values[0].x - values[1].x) / 2) : xScale(0),
               y: isHorizontal ? yScale(0) : yScale(values[0].y - (values[0].y - values[1].y) / 2),
-              value: series[seriesId].data[dataIndex]?.toString(),
+              value: series[seriesId].data[dataIndex]?.toLocaleString(),
             },
           };
         });
