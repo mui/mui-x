@@ -28,7 +28,7 @@ export interface UseFieldParams<
     TDate,
     TSection,
     TEnableAccessibleFieldDOMStructure,
-    unknown
+    InferError<TInternalProps>
   >,
 > {
   forwardedProps: TForwardedProps;
