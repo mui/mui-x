@@ -1,0 +1,1 @@
+<FunnelChart series={data} height={300} />
