@@ -931,13 +931,7 @@ describe('<DataGridPro /> - Row editing', () => {
         fireEvent.doubleClick(cell);
         const input = cell.querySelector('input')!;
         fireEvent.change(input, { target: { value: 'あ' } });
-        fireEvent.keyDown(input, {
-          type: 'compositionstart',
-          isComposing: true,
-          charCode: 'あ'.charCodeAt(0),
-          bubbles: true,
-          cancelable: true,
-        });
+        fireEvent.keyDown(input, { key: 'Enter', keyCode: 229 });
         expect(listener.callCount).to.equal(0);
         fireEvent.keyDown(input, { key: 'Enter', keyCode: 13 });
         expect(listener.callCount).to.equal(1);
@@ -953,20 +947,7 @@ describe('<DataGridPro /> - Row editing', () => {
         fireEvent.doubleClick(cell);
         const input = cell.querySelector('input')!;
         fireEvent.change(input, { target: { value: 'ありがとう' } });
-        fireEvent.keyDown(input, {
-          type: 'compositionstart',
-          isComposing: true,
-          charCode: 'あ'.charCodeAt(0),
-          bubbles: true,
-          cancelable: true,
-        });
-        fireEvent.keyDown(input, {
-          type: 'compositionupdate',
-          isComposing: true,
-          charCode: 'う'.charCodeAt(0),
-          bubbles: true,
-          cancelable: true,
-        });
+        fireEvent.keyDown(input, { key: 'Enter', keyCode: 229 });
         expect(listener.callCount).to.equal(0);
         fireEvent.keyDown(input, { key: 'Enter', keyCode: 13 });
         expect(listener.callCount).to.equal(1);
