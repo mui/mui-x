@@ -101,10 +101,14 @@ const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
             y: currentMaxOther,
           },
           // Middle right
-          {
-            x: currentMaxMain - (currentMaxMain - nextMaxMain) / 2,
-            y: currentMaxOther - (currentMaxOther - nextMaxOther) / 2,
-          },
+          // {
+          //   x: currentMaxMain - (currentMaxMain - nextMaxMain) * 0,
+          //   y: currentMaxOther - (currentMaxOther - nextMaxOther) * 0.1,
+          // },
+          // {
+          //   x: currentMaxMain - (currentMaxMain - nextMaxMain) * 1,
+          //   y: currentMaxOther - (currentMaxOther - nextMaxOther) * 0.9,
+          // },
           // Bottom right
           {
             x: nextMaxMain,
@@ -116,10 +120,14 @@ const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
             y: nextMaxOther,
           },
           // Middle left
-          {
-            x: -nextMaxMain - (currentMaxMain - nextMaxMain) / 2,
-            y: currentMaxOther - (currentMaxOther - nextMaxOther) / 2,
-          },
+          // {
+          //   x: -nextMaxMain - (currentMaxMain - nextMaxMain) * 0,
+          //   y: currentMaxOther - (currentMaxOther - nextMaxOther) * 0.9,
+          // },
+          // {
+          //   x: -nextMaxMain - (currentMaxMain - nextMaxMain) * 1,
+          //   y: currentMaxOther - (currentMaxOther - nextMaxOther) * 0.1,
+          // },
           // Top left
           {
             x: -currentMaxMain,

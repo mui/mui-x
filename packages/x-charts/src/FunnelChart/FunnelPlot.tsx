@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
+import * as curves from '@mui/x-charts-vendor/d3-shape';
 import { FunnelItemIdentifier } from './funnel.types';
 import { useFunnelSeries } from '../hooks/useSeries';
 import { SeriesFormatterResult } from '../context/PluginProvider';
@@ -42,9 +43,7 @@ export interface FunnelPlotProps {
 }
 
 const useAggregatedData = () => {
-  const seriesData =
-    useFunnelSeries() ??
-    ({ series: {}, stackingGroups: [], seriesOrder: [] } as SeriesFormatterResult<'funnel'>);
+  const seriesData = useFunnelSeries();
   const axisData = useCartesianContext();
 
   // This memo prevents odd line chart behavior when hydrating.
@@ -80,7 +79,6 @@ const useAggregatedData = () => {
           undefined;
 
         const curve = getCurveFactory(series[seriesId].curve ?? 'linear');
-        console.log(stackedData);
 
         const line = d3Line<{ x: number; y: number }>()
           .x((d) => xScale(d.x)!)
@@ -102,8 +100,9 @@ const useAggregatedData = () => {
 };
 
 function FunnelPlot(props: FunnelPlotProps) {
-  const data = useAggregatedData();
   const [hidden, setHidden] = React.useState(true);
+
+  const data = useAggregatedData();
 
   return (
     <React.Fragment>
@@ -113,7 +112,7 @@ function FunnelPlot(props: FunnelPlotProps) {
             <text x={100} y={50} onClick={() => setHidden(!hidden)}>
               change
             </text>
-            <path d={v.d} stroke={'none'} fill={v.color} key={v.id} />
+            <path d={v.d} fill={v.color} key={v.id} />
             {v.usable[0].map((d, i) => {
               return (
                 <circle

@@ -1,3 +1,4 @@
+import { CurveType } from '../models/curve';
 import { DefaultizedProps } from '../models/helpers';
 import type {
   CommonDefaultizedProps,
@@ -36,16 +37,6 @@ export interface FunnelSeriesType
    */
   curve?: CurveType;
 }
-
-export type CurveType =
-  | 'catmullRom'
-  | 'linear'
-  | 'monotoneX'
-  | 'monotoneY'
-  | 'natural'
-  | 'step'
-  | 'stepBefore'
-  | 'stepAfter';
 
 /**
  * An object that allows to identify a funnel item.
