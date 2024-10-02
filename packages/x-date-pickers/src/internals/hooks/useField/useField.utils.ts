@@ -630,8 +630,6 @@ export const mergeDateIntoReferenceDate = <TDate extends PickerValidDate>(
       return mergedDate;
     }, referenceDate);
 
-export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
-
 export const parseSelectedSections = (
   selectedSections: FieldSelectedSections,
   sections: FieldSection[],

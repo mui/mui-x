@@ -136,7 +136,7 @@ export interface UseFieldInternalProps<
   disabled?: boolean;
 }
 
-export interface UseFieldV6AdditionalProps
+export interface UseFieldLegacyAdditionalProps
   extends Required<
     Pick<
       React.InputHTMLAttributes<HTMLInputElement>,
@@ -148,7 +148,7 @@ export interface UseFieldV6AdditionalProps
   readOnly: boolean;
 }
 
-export interface UseFieldV7AdditionalProps {
+export interface UseFieldAccessibleAdditionalProps {
   enableAccessibleFieldDOMStructure: true;
   elements: PickersSectionElement[];
   tabIndex: number | undefined;
@@ -162,10 +162,10 @@ export interface UseFieldV7AdditionalProps {
 
 export type UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure extends boolean> =
   TEnableAccessibleFieldDOMStructure extends false
-    ? UseFieldV6ForwardedProps
-    : UseFieldV7ForwardedProps;
+    ? UseFieldLegacyForwardedProps
+    : UseFieldAccessibleForwardedProps;
 
-export interface UseFieldV6ForwardedProps extends ExportedUseClearableFieldProps {
+export interface UseFieldLegacyForwardedProps extends ExportedUseClearableFieldProps {
   inputRef?: React.Ref<HTMLInputElement>;
   onBlur?: () => void;
   onClick?: React.MouseEventHandler;
@@ -176,7 +176,7 @@ export interface UseFieldV6ForwardedProps extends ExportedUseClearableFieldProps
   error?: boolean;
 }
 
-export interface UseFieldV7ForwardedProps extends ExportedUseClearableFieldProps {
+export interface UseFieldAccessibleForwardedProps extends ExportedUseClearableFieldProps {
   focused?: boolean;
   autoFocus?: boolean;
   sectionListRef?: React.Ref<PickersSectionListRef>;
@@ -199,8 +199,8 @@ export type UseFieldResponse<
     Omit<TForwardedProps, keyof UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>> &
     // The additional props
     TEnableAccessibleFieldDOMStructure extends false
-    ? UseFieldV6AdditionalProps
-    : UseFieldV7AdditionalProps;
+    ? UseFieldLegacyAdditionalProps
+    : UseFieldAccessibleAdditionalProps;
 
 export type FieldSectionValueBoundaries<
   TDate extends PickerValidDate,
@@ -380,6 +380,8 @@ export interface UseFieldState<TValue, TSection extends FieldSection> {
    * 2. A call with `month / 1day / year`.
    *
    * The property below allows us to set the first `onChange` value into state waiting for the second one.
+   *
+   * TODO v9: Remove
    */
   tempValueStrAndroid: string | null;
 }
@@ -407,7 +409,7 @@ export type SectionOrdering = {
   endIndex: number;
 };
 
-export interface UseFieldTextFieldInteractions {
+export interface UseFieldDOMInteractions {
   /**
    * Select the correct sections in the DOM according to the sections currently selected in state.
    */
@@ -427,47 +429,17 @@ export interface UseFieldTextFieldInteractions {
   isFieldFocused: () => boolean;
 }
 
-export type UseFieldWithUnknownDOMStructure = <
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
-    ? UseFieldV6ForwardedProps
-    : UseFieldV7ForwardedProps,
-  TInternalProps extends UseFieldInternalProps<
-    any,
-    any,
-    any,
-    TEnableAccessibleFieldDOMStructure,
-    any
-  > & {
-    minutesStep?: number;
-  },
->(
-  params: UseFieldParams<
-    TValue,
-    TDate,
-    TSection,
-    TEnableAccessibleFieldDOMStructure,
-    TForwardedProps,
-    TInternalProps
-  >,
-) => UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps>;
-
 export type UseFieldWithKnownDOMStructure<TEnableAccessibleFieldDOMStructure extends boolean> = <
   TValue,
   TDate extends PickerValidDate,
   TSection extends FieldSection,
-  TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
-    ? UseFieldV6ForwardedProps
-    : UseFieldV7ForwardedProps,
+  TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
   TInternalProps extends UseFieldInternalProps<
-    any,
-    any,
-    any,
+    TValue,
+    TDate,
+    TSection,
     TEnableAccessibleFieldDOMStructure,
-    any
+    unknown
   > & {
     minutesStep?: number;
   },

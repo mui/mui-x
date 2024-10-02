@@ -1,19 +1,17 @@
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useId from '@mui/utils/useId';
-import { getSectionValueNow, getSectionValueText, parseSelectedSections } from './useField.utils';
+import { getSectionValueNow, getSectionValueText } from './useField.utils';
 import {
   FieldSectionsBoundaries,
   UseFieldInternalProps,
   UseFieldWithKnownDOMStructure,
-  UseFieldTextFieldInteractions,
-  UseFieldV7ForwardedProps,
-  UseFieldV7AdditionalProps,
+  UseFieldAccessibleAdditionalProps,
+  UseFieldAccessibleForwardedProps,
 } from './useField.types';
 import { getActiveElement } from '../../utils/utils';
-import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
+import { PickersSectionElement } from '../../../PickersSectionList';
 import { usePickersTranslations } from '../../../hooks/usePickersTranslations';
 import { useUtils } from '../useUtils';
 import { useFieldHandleKeyDown } from './useFieldHandleKeyDown';
@@ -22,6 +20,7 @@ import { useValidation } from '../../../validation';
 import { FieldSection, InferError, PickerValidDate } from '../../../models';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
+import { useFieldAccessibleDOMInteractions } from './useFieldAccessibleDOMInteractions';
 
 export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true> = <
   TValue,
@@ -35,10 +34,9 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
 ) => {
   const {
     internalProps,
-    internalProps: { unstableFieldRef, disabled, readOnly = false },
+    internalProps: { disabled, readOnly = false },
     forwardedProps,
     forwardedProps: {
-      sectionListRef: inSectionListRef,
       onBlur,
       onClick,
       onFocus,
@@ -53,8 +51,6 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
     validator,
   } = params;
 
-  const sectionListRef = React.useRef<PickersSectionListRef>(null);
-  const handleSectionListRef = useForkRef(inSectionListRef, sectionListRef);
   const translations = usePickersTranslations();
   const utils = useUtils<TDate>();
   const id = useId();
@@ -82,108 +78,18 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
   });
   const { applyCharacterEditing, resetCharacterQuery } = characterEditingResponse;
 
+  const { sectionListRef, handleSectionListRef, interactions } = useFieldAccessibleDOMInteractions({
+    forwardedProps,
+    internalProps,
+    stateResponse,
+    focused,
+    setFocused,
+  });
+
   const areAllSectionsEmpty = valueManager.areValuesEqual(
     utils,
     state.value,
     valueManager.emptyValue,
-  );
-
-  const interactions = React.useMemo<UseFieldTextFieldInteractions>(
-    () => ({
-      syncSelectionToDOM: () => {
-        if (!sectionListRef.current) {
-          return;
-        }
-
-        const selection = document.getSelection();
-        if (!selection) {
-          return;
-        }
-
-        if (parsedSelectedSections == null) {
-          // If the selection contains an element inside the field, we reset it.
-          if (
-            selection.rangeCount > 0 &&
-            sectionListRef.current.getRoot().contains(selection.getRangeAt(0).startContainer)
-          ) {
-            selection.removeAllRanges();
-          }
-
-          if (focused) {
-            sectionListRef.current.getRoot().blur();
-          }
-          return;
-        }
-
-        // On multi input range pickers we want to update selection range only for the active input
-        if (!sectionListRef.current.getRoot().contains(getActiveElement(document))) {
-          return;
-        }
-
-        const range = new window.Range();
-
-        let target: HTMLElement;
-        if (parsedSelectedSections === 'all') {
-          target = sectionListRef.current.getRoot();
-        } else {
-          const section = state.sections[parsedSelectedSections];
-          if (section.type === 'empty') {
-            target = sectionListRef.current.getSectionContainer(parsedSelectedSections);
-          } else {
-            target = sectionListRef.current.getSectionContent(parsedSelectedSections);
-          }
-        }
-
-        range.selectNodeContents(target);
-        target.focus();
-        selection.removeAllRanges();
-        selection.addRange(range);
-      },
-      getActiveSectionIndexFromDOM: () => {
-        const activeElement = getActiveElement(document) as HTMLElement | undefined;
-        if (
-          !activeElement ||
-          !sectionListRef.current ||
-          !sectionListRef.current.getRoot().contains(activeElement)
-        ) {
-          return null;
-        }
-
-        return sectionListRef.current.getSectionIndexFromDOMElement(activeElement);
-      },
-      focusField: (newSelectedSections = 0) => {
-        if (!sectionListRef.current) {
-          return;
-        }
-
-        const newParsedSelectedSections = parseSelectedSections(
-          newSelectedSections,
-          state.sections,
-        ) as number;
-
-        setFocused(true);
-        sectionListRef.current.getSectionContent(newParsedSelectedSections).focus();
-      },
-      setSelectedSections: (newSelectedSections) => {
-        if (!sectionListRef.current) {
-          return;
-        }
-
-        const newParsedSelectedSections = parseSelectedSections(
-          newSelectedSections,
-          state.sections,
-        );
-        const newActiveSectionIndex =
-          newParsedSelectedSections === 'all' ? 0 : newParsedSelectedSections;
-        setFocused(newActiveSectionIndex !== null);
-        setSelectedSections(newSelectedSections);
-      },
-      isFieldFocused: () => {
-        const activeElement = getActiveElement(document);
-        return !!sectionListRef.current && sectionListRef.current.getRoot().contains(activeElement);
-      },
-    }),
-    [parsedSelectedSections, setSelectedSections, state.sections, focused],
   );
 
   /**
@@ -438,7 +344,7 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
         domElement.focus();
       }
     }
-  }, [parsedSelectedSections, focused]);
+  }, [parsedSelectedSections, focused, sectionListRef]);
 
   const sectionBoundaries = React.useMemo(() => {
     return state.sections.reduce((acc, next) => {
@@ -591,26 +497,7 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
     }
   }, [state.referenceValue, activeSectionIndex, error]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // If `tempValueStrAndroid` is still defined for some section when running `useEffect`,
-  // Then `onChange` has only been called once, which means the user pressed `Backspace` to reset the section.
-  // This causes a small flickering on Android,
-  // But we can't use `useEnhancedEffect` which is always called before the second `onChange` call and then would cause false positives.
-  React.useEffect(() => {
-    if (state.tempValueStrAndroid != null && activeSectionIndex != null) {
-      resetCharacterQuery();
-      clearActiveSection();
-    }
-  }, [state.sections]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  React.useImperativeHandle(unstableFieldRef, () => ({
-    getSections: () => state.sections,
-    getActiveSectionIndex: interactions.getActiveSectionIndexFromDOM,
-    setSelectedSections: interactions.setSelectedSections,
-    focusField: interactions.focusField,
-    isFieldFocused: interactions.isFieldFocused,
-  }));
-
-  const forwardedPropsWithDefault: Required<UseFieldV7ForwardedProps> = {
+  const forwardedPropsWithDefault: Required<UseFieldAccessibleForwardedProps> = {
     focused: focusedProp ?? focused,
     autoFocus,
     onClear,
@@ -625,7 +512,7 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
     onKeyDown: handleContainerKeyDown,
   };
 
-  const additionalProps: UseFieldV7AdditionalProps = {
+  const additionalProps: UseFieldAccessibleAdditionalProps = {
     enableAccessibleFieldDOMStructure: true,
     elements,
     // TODO v7: Try to set to undefined when there is a section selected.

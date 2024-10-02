@@ -2,8 +2,8 @@ import { FieldSection, PickerValidDate } from '../../../models';
 import {
   UseFieldInternalProps,
   UseFieldParams,
-  UseFieldV6ForwardedProps,
-  UseFieldV7ForwardedProps,
+  UseFieldLegacyForwardedProps,
+  UseFieldAccessibleForwardedProps,
   UseFieldWithKnownDOMStructure,
 } from './useField.types';
 import { useFieldAccessibleDOMStructure } from './useFieldAccessibleDOMStructure';
@@ -15,8 +15,8 @@ export const useField = <
   TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
-    ? UseFieldV6ForwardedProps
-    : UseFieldV7ForwardedProps,
+    ? UseFieldLegacyForwardedProps
+    : UseFieldAccessibleForwardedProps,
   TInternalProps extends UseFieldInternalProps<
     any,
     any,

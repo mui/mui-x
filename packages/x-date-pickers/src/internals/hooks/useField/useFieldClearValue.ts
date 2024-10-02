@@ -3,7 +3,7 @@ import {
   SectionOrdering,
   UseFieldForwardedProps,
   UseFieldInternalProps,
-  UseFieldTextFieldInteractions,
+  UseFieldDOMInteractions,
 } from './useField.types';
 import { FieldSection, PickerValidDate } from '../../../models';
 import { UseFieldStateResponse } from './useFieldState';
@@ -68,7 +68,7 @@ interface UseFieldClearValueParameters<
   >;
   stateResponse: UseFieldStateResponse<TValue, TDate, TSection>;
   areAllSectionsEmpty: boolean;
-  interactions: UseFieldTextFieldInteractions;
+  interactions: UseFieldDOMInteractions;
   /**
    * Only define when used with the legacy DOM structure.
    * TODO v9: Remove

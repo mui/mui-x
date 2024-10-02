@@ -4,16 +4,16 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
-  UseFieldTextFieldInteractions,
+  UseFieldDOMInteractions,
   UseFieldWithKnownDOMStructure,
   SectionOrdering,
-  UseFieldV6ForwardedProps,
+  UseFieldLegacyForwardedProps,
   UseFieldInternalProps,
-  UseFieldV6AdditionalProps,
+  UseFieldLegacyAdditionalProps,
 } from './useField.types';
 import { FieldSection, InferError, PickerValidDate } from '../../../models';
 import { getActiveElement } from '../../utils/utils';
-import { buildDefaultSectionOrdering, getSectionVisibleValue, isAndroid } from './useField.utils';
+import { buildDefaultSectionOrdering, getSectionVisibleValue } from './useField.utils';
 import { useFieldHandleKeyDown } from './useFieldHandleKeyDown';
 import { useFieldClearValue } from './useFieldClearValue';
 import { useValidation } from '../../../validation';
@@ -41,6 +41,8 @@ type FieldSectionWithPositions<TSection> = TSection & {
    */
   endInInput: number;
 };
+
+const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
 const cleanString = (dirtyString: string) => dirtyString.replace(/[\u2066\u2067\u2068\u2069]/g, '');
 
@@ -225,7 +227,7 @@ export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = 
     valueManager.emptyValue,
   );
 
-  const interactions = React.useMemo<UseFieldTextFieldInteractions>(
+  const interactions = React.useMemo<UseFieldDOMInteractions>(
     () => ({
       syncSelectionToDOM: () => {
         if (!inputRef.current) {
@@ -627,7 +629,7 @@ export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = 
     isFieldFocused: interactions.isFieldFocused,
   }));
 
-  const forwardedPropsWithDefault: Required<UseFieldV6ForwardedProps> = {
+  const forwardedPropsWithDefault: Required<UseFieldLegacyForwardedProps> = {
     onBlur: handleContainerBlur,
     onClick: handleInputClick,
     onFocus: handleInputFocus,
@@ -640,7 +642,7 @@ export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = 
     inputRef: handleRef,
   };
 
-  const additionalProps: UseFieldV6AdditionalProps = {
+  const additionalProps: UseFieldLegacyAdditionalProps = {
     enableAccessibleFieldDOMStructure: false,
     inputMode,
     autoComplete: 'off',
