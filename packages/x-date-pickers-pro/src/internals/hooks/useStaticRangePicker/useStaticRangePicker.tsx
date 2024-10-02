@@ -22,11 +22,6 @@ const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   minWidth: DIALOG_WIDTH,
   backgroundColor: (theme.vars || theme).palette.background.paper,
   overflowX: 'scroll',
-  '::-webkit-scrollbar': {
-    display: 'none',
-  },
-  MsOverflowStyle: 'none',
-  scrollbarWidth: 'none',
 })) as unknown as typeof PickersLayout;
 
 /**

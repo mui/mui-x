@@ -87,11 +87,6 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
           maxHeight: VIEW_HEIGHT,
           maxWidth: 200,
           overflow: 'auto',
-          '::-webkit-scrollbar': {
-            display: 'none',
-          },
-          MsOverflowStyle: 'none',
-          scrollbarWidth: 'none',
         },
         ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
       ]}
