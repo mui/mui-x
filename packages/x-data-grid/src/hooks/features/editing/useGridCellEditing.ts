@@ -127,7 +127,8 @@ export const useGridCellEditing = (
     (params, event) => {
       if (params.cellMode === GridCellModes.Edit) {
         // Wait until IME is settled for Asian languages like Japanese and Chinese
-        if (event.type === 'compositionstart' || event.type === 'compositionupdate') {
+        // TODO: to replace at one point. See https://github.com/mui/material-ui/pull/39713#discussion_r1381678957.
+        if (event.which === 229) {
           return;
         }
 
