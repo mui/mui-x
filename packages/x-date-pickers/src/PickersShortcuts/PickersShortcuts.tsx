@@ -5,6 +5,7 @@ import List, { ListProps } from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Chip from '@mui/material/Chip';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { useTheme } from '@mui/material/styles';
 
 interface PickersShortcutsItemGetValueParams<TValue> {
   isValid: (value: TValue) => boolean;
@@ -61,6 +62,35 @@ export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutPr
  */
 function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
   const { items, changeImportance = 'accept', isLandscape, onChange, isValid, ...other } = props;
+  const theme = useTheme();
+  const isLight = theme.palette.mode === 'light';
+
+  const overflowGradient = {
+    background: `
+      linear-gradient(
+        ${isLight ? 'rgba(255, 255, 255, 1)' : 'black'} 30%,
+        ${isLight ? 'rgba(255, 255, 255, 0)' : 'rgba(0, 0, 0, 0)'}
+      ) center top / 100% 40px no-repeat,
+      
+      linear-gradient(
+        ${isLight ? 'rgba(255, 255, 255, 0)' : 'rgba(0, 0, 0, 0)'}, 
+        ${isLight ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)'} 70%
+      ) center bottom / 100% 40px no-repeat,
+      
+      radial-gradient(
+        farthest-side at 50% 0,
+        ${isLight ? 'rgba(0, 0, 0, 0.2)' : 'rgba(211, 211, 211, 0.2)'},
+        ${isLight ? 'rgba(0, 0, 0, 0)' : 'rgba(211, 211, 211, 0)'}
+      ) center top / 100% 14px no-repeat,
+      
+      radial-gradient(
+        farthest-side at 50% 100%,
+        ${isLight ? 'rgba(0, 0, 0, 0.2)' : 'rgba(211, 211, 211, 0.2)'},
+        ${isLight ? 'rgba(0, 0, 0, 0)' : 'rgba(211, 211, 211, 0)'}
+      ) center bottom / 100% 14px no-repeat
+    `,
+    backgroundAttachment: 'local, local, scroll, scroll',
+  };
 
   if (items == null || items.length === 0) {
     return null;
@@ -91,6 +121,7 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
           '&:hover, &:focus-within': {
             overflow: 'auto',
           },
+          ...overflowGradient,
         },
         ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
       ]}
