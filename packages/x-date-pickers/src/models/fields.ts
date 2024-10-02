@@ -4,12 +4,11 @@ import { SxProps } from '@mui/material/styles';
 import type { BaseFieldProps } from '../internals/models/fields';
 import type {
   ExportedUseClearableFieldProps,
-  UseClearableFieldResponse,
   UseClearableFieldSlotProps,
   UseClearableFieldSlots,
 } from '../hooks/useClearableField';
-import type { ExportedPickersSectionListProps, PickersSectionListRef } from '../PickersSectionList';
-import type { UseFieldResponse } from '../internals/hooks/useField';
+import type { ExportedPickersSectionListProps } from '../PickersSectionList';
+import type { UseFieldResponse, UseFieldAccessibleDOMGetters } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
 import { PickerValidDate } from './pickers';
 
@@ -151,7 +150,7 @@ interface BaseForwardedV6SingleInputFieldProps {
 }
 
 interface BaseForwardedV7SingleInputFieldProps {
-  sectionListRef?: React.Ref<PickersSectionListRef>;
+  sectionListRef?: React.Ref<UseFieldAccessibleDOMGetters>;
 }
 
 type BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure extends boolean> =
@@ -180,11 +179,12 @@ export type BaseSingleInputFieldProps<
  */
 export type BaseSingleInputPickersTextFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> = UseClearableFieldResponse<
+> = Omit<
   UseFieldResponse<
     TEnableAccessibleFieldDOMStructure,
     BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure>
-  >
+  >,
+  'clearable' | 'onClear' | 'slots' | 'slotProps'
 >;
 
 /**

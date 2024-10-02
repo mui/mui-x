@@ -5,6 +5,7 @@ import {
   UseFieldLegacyForwardedProps,
   UseFieldAccessibleForwardedProps,
   UseFieldWithKnownDOMStructure,
+  UseFieldResponse,
 } from './useField.types';
 import { useFieldAccessibleDOMStructure } from './useFieldAccessibleDOMStructure';
 import { useFieldLegacyDOMStructure } from './useFieldLegacyDOMStructure';
@@ -35,7 +36,7 @@ export const useField = <
     TForwardedProps,
     TInternalProps
   >,
-) => {
+): UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps> => {
   const useFieldWithCorrectDOMStructure = (
     parameters.internalProps.enableAccessibleFieldDOMStructure
       ? useFieldAccessibleDOMStructure

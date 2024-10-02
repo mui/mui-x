@@ -1,6 +1,6 @@
 import * as React from 'react';
-import type { PickersSectionElement, PickersSectionListRef } from '../../PickersSectionList';
-import { UseFieldResponse } from '../../internals/hooks/useField';
+import type { PickersSectionElement } from '../../PickersSectionList';
+import { UseFieldResponse, UseFieldAccessibleDOMGetters } from '../../internals/hooks/useField';
 
 const PickersFieldContext = React.createContext<PickersFieldProvider.ContextValue | null>(null);
 
@@ -36,7 +36,7 @@ namespace PickersFieldProvider {
       UseFieldResponse<true, {}>,
       'onClick' | 'onKeyDown' | 'onInput' | 'onPaste' | 'tabIndex'
     >;
-    sectionListRef?: React.Ref<PickersSectionListRef>;
+    sectionListRef?: React.Ref<UseFieldAccessibleDOMGetters>;
     sectionsRef: React.MutableRefObject<{ [sectionIndex: string]: HTMLSpanElement }>;
     sectionsContentRef: React.MutableRefObject<{ [sectionIndex: string]: HTMLSpanElement }>;
     registerSectionRef: (sectionIndex: number, ref: HTMLSpanElement | null) => void;

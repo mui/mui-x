@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/utils';
 import { PickersSectionListClasses } from './pickersSectionListClasses';
-import { UseFieldAccessibleDOMGetters } from '../internals/hooks/useField/useFieldAccessibleDOMInteractions';
+import { UseFieldAccessibleDOMGetters } from '../internals/hooks/useField';
 
 export interface PickersSectionListSlots {
   root: React.ElementType;

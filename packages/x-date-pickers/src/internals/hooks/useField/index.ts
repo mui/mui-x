@@ -6,6 +6,7 @@ export type {
   UseFieldResponse,
   FieldChangeHandler,
   FieldChangeHandlerContext,
+  UseFieldAccessibleDOMGetters,
 } from './useField.types';
 export {
   createDateStrForV7HiddenInputFromSections,

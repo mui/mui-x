@@ -159,7 +159,7 @@ export const useMultiInputDateRangeField = <
 
   /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {
-    startDate: excludeProps(startDateResponse, ['clearable', 'onClear']),
-    endDate: excludeProps(endDateResponse, ['clearable', 'onClear']),
+    startDate: excludeProps(startDateResponse, ['clearable', 'onClear'] as any),
+    endDate: excludeProps(endDateResponse, ['clearable', 'onClear'] as any),
   };
 };
