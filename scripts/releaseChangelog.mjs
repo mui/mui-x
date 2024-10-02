@@ -281,7 +281,7 @@ async function main(argv) {
       return '';
     }
 
-    return `Special thanks go out to our community contributors in this release: ${ contributors.join(', ') }`;
+    return `Special thanks go out to our community contributors who have helped make this release possible: ${ contributors.join(', ')}.`;
   }
 
   const changelog = `
