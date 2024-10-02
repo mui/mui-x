@@ -3,7 +3,7 @@ import {
   DataGridPro,
   GridDataSource,
   GridGetRowsParams,
-  ToolbarPropsOverrides,
+  GridSlotsComponentsProps,
 } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import FormControl from '@mui/material/FormControl';
@@ -19,7 +19,7 @@ declare module '@mui/x-data-grid' {
   }
 }
 
-function Toolbar(props: ToolbarPropsOverrides) {
+function Toolbar(props: NonNullable<GridSlotsComponentsProps['toolbar']>) {
   const { count, setCount } = props;
   return (
     <FormControl
@@ -33,7 +33,7 @@ function Toolbar(props: ToolbarPropsOverrides) {
         aria-labelledby="demo-row-count-buttons-group-label"
         name="row-count-buttons-group"
         value={count}
-        onChange={(event) => setCount(Number(event.target.value))}
+        onChange={(event) => setCount && setCount(Number(event.target.value))}
       >
         <FormControlLabel value="-1" control={<Radio />} label="Unknown" />
         <FormControlLabel value="40" control={<Radio />} label="40" />
