@@ -6,6 +6,8 @@ import { FunnelPlotProps } from './FunnelPlot';
 import { ChartsOverlayProps } from '../ChartsOverlay';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsTooltipProps } from '../ChartsTooltip';
+import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsLegendProps } from '../ChartsLegend';
 
 /**
  * A helper function that extracts FunnelChartProps from the input props
@@ -40,6 +42,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     highlightedItem,
     onHighlightChange,
     className,
+    axisHighlight,
     ...rest
   } = props;
 
@@ -96,12 +99,23 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     slotProps,
   };
 
+  const axisHighlightProps: ChartsAxisHighlightProps = {
+    ...axisHighlight,
+  };
+
+  const legendProps: ChartsLegendProps = {
+    slots,
+    slotProps,
+  };
+
   return {
     chartContainerProps,
     funnelPlotProps,
     overlayProps,
     chartsAxisProps,
     tooltipProps,
+    legendProps,
+    axisHighlightProps,
     children,
   };
 };

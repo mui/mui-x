@@ -22,12 +22,14 @@ import { FunnelPlot, FunnelPlotProps, FunnelPlotSlotProps, FunnelPlotSlots } fro
 import { FunnelSeriesType } from './funnel.types';
 import { MakeOptional } from '../models/helpers';
 import { ChartsAxisSlotProps, ChartsAxisSlots } from '../models/axis';
-import { ChartsLegendSlotProps } from '../ChartsLegend';
+import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import { useFunnelChartProps } from './useFunnelChartProps';
+import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 
 export interface FunnelChartSlots
   extends ChartsAxisSlots,
     FunnelPlotSlots,
+    ChartsLegendSlots,
     ChartsTooltipSlots<'funnel'>,
     ChartsOverlaySlots {}
 export interface FunnelChartSlotProps
@@ -67,6 +69,14 @@ export interface FunnelChartProps
    * @default 'vertical'
    */
   layout?: FunnelSeriesType['layout'];
+  /**
+   * The configuration of axes highlight.
+   * Default is set to 'band' in the bar direction.
+   * Depends on `layout` prop.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   *
+   */
+  axisHighlight?: ChartsAxisHighlightProps;
 }
 
 const FunnelChart = React.forwardRef(function FunnelChart(inProps: FunnelChartProps, ref) {
@@ -76,8 +86,9 @@ const FunnelChart = React.forwardRef(function FunnelChart(inProps: FunnelChartPr
     chartContainerProps,
     funnelPlotProps,
     overlayProps,
-    chartsAxisProps,
     tooltipProps,
+    legendProps,
+    axisHighlightProps,
     children,
   } = useFunnelChartProps(props);
 
@@ -85,7 +96,8 @@ const FunnelChart = React.forwardRef(function FunnelChart(inProps: FunnelChartPr
     <ResponsiveChartContainer ref={ref} {...chartContainerProps}>
       <ChartsOverlay {...overlayProps} />
       <FunnelPlot {...funnelPlotProps} />
-      <ChartsAxis {...chartsAxisProps} />
+      <ChartsAxisHighlight {...axisHighlightProps} />
+      <ChartsLegend {...legendProps} />
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       {children}
     </ResponsiveChartContainer>
