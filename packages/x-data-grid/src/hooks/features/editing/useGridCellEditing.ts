@@ -127,7 +127,8 @@ export const useGridCellEditing = (
     (params, event) => {
       if (params.cellMode === GridCellModes.Edit) {
         // Wait until IME is settled for Asian languages like Japanese and Chinese
-        if (event.type === 'compositionstart' || event.type === 'compositionupdate') {
+        // TODO: `event.which` is deprecated but this is a temporary workaround
+        if (event.which === 229) {
           return;
         }
 
