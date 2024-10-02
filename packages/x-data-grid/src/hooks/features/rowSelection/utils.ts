@@ -153,13 +153,14 @@ export const findRowsToSelect = (
   selectedRow: GridRowId,
   autoSelectDescendants: boolean,
   autoSelectParents: boolean,
+  addRow: (rowId: GridRowId) => void,
 ) => {
   const filteredRows = gridFilteredRowsLookupSelector(apiRef);
   const selectedIdsLookup = selectedIdsLookupSelector(apiRef);
-  const rowsToSelect: Set<GridRowId> = new Set([]);
+  const selectedDescendants: Set<GridRowId> = new Set([]);
 
   if (!autoSelectDescendants && !autoSelectParents) {
-    return rowsToSelect;
+    return;
   }
 
   if (autoSelectDescendants) {
@@ -167,13 +168,16 @@ export const findRowsToSelect = (
 
     if (rowNode?.type === 'group') {
       const descendants = getGridRowGroupSelectableDescendants(apiRef, selectedRow);
-      descendants.forEach(rowsToSelect.add, rowsToSelect);
+      descendants.forEach((rowId) => {
+        addRow(rowId);
+        selectedDescendants.add(rowId);
+      });
     }
   }
 
   if (autoSelectParents) {
     const checkAllDescendantsSelected = (rowId: GridRowId): boolean => {
-      if (selectedIdsLookup[rowId] !== rowId && !rowsToSelect.has(rowId)) {
+      if (selectedIdsLookup[rowId] !== rowId && !selectedDescendants.has(rowId)) {
         return false;
       }
       const node = tree[rowId];
@@ -193,15 +197,13 @@ export const findRowsToSelect = (
           parent !== GRID_ROOT_GROUP_ID &&
           apiRef.current.isRowSelectable(parent)
         ) {
-          rowsToSelect.add(parent);
+          addRow(parent);
           traverseParents(parent);
         }
       }
     };
     traverseParents(selectedRow);
   }
-
-  return Array.from(rowsToSelect);
 };
 
 export const findRowsToDeselect = (
@@ -210,12 +212,12 @@ export const findRowsToDeselect = (
   deselectedRow: GridRowId,
   autoSelectDescendants: boolean,
   autoSelectParents: boolean,
+  removeRow: (rowId: GridRowId) => void,
 ) => {
-  const rowsToDeselect: GridRowId[] = [];
   const selectedIdsLookup = selectedIdsLookupSelector(apiRef);
 
   if (!autoSelectParents && !autoSelectDescendants) {
-    return rowsToDeselect;
+    return;
   }
 
   if (autoSelectParents) {
@@ -223,7 +225,7 @@ export const findRowsToDeselect = (
     allParents.forEach((parent) => {
       const isSelected = selectedIdsLookup[parent] === parent;
       if (isSelected) {
-        rowsToDeselect.push(parent);
+        removeRow(parent);
       }
     });
   }
@@ -233,9 +235,8 @@ export const findRowsToDeselect = (
     if (rowNode?.type === 'group') {
       const descendants = getGridRowGroupSelectableDescendants(apiRef, deselectedRow);
       descendants.forEach((descendant) => {
-        rowsToDeselect.push(descendant);
+        removeRow(descendant);
       });
     }
   }
-  return rowsToDeselect;
 };

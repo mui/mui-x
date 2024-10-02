@@ -231,19 +231,20 @@ export const useGridRowSelection = (
         logger.debug(`Setting selection for row ${id}`);
 
         const newSelection: GridRowId[] = [];
+        const addRow = (rowId: GridRowId) => {
+          newSelection.push(rowId);
+        };
         if (isSelected) {
-          newSelection.push(id);
+          addRow(id);
           if (applyAutoSelection) {
-            const rowsToSelect = findRowsToSelect(
+            findRowsToSelect(
               apiRef,
               tree,
               id,
               props.rowSelectionPropagation?.descendants ?? false,
               props.rowSelectionPropagation?.parents ?? false,
+              addRow,
             );
-            rowsToSelect.forEach((rowId) => {
-              newSelection.push(rowId);
-            });
           }
         }
 
@@ -256,29 +257,33 @@ export const useGridRowSelection = (
         const newSelection: Set<GridRowId> = new Set(selection);
         newSelection.delete(id);
 
+        const addRow = (rowId: GridRowId) => {
+          newSelection.add(rowId);
+        };
+        const removeRow = (rowId: GridRowId) => {
+          newSelection.delete(rowId);
+        };
         if (isSelected) {
-          newSelection.add(id);
+          addRow(id);
           if (applyAutoSelection) {
-            const rowsToSelect = findRowsToSelect(
+            findRowsToSelect(
               apiRef,
               tree,
               id,
               props.rowSelectionPropagation?.descendants ?? false,
               props.rowSelectionPropagation?.parents ?? false,
+              addRow,
             );
-            rowsToSelect.forEach(newSelection.add, newSelection);
           }
         } else if (applyAutoSelection) {
-          const rowsToDeselect = findRowsToDeselect(
+          findRowsToDeselect(
             apiRef,
             tree,
             id,
             props.rowSelectionPropagation?.descendants ?? false,
             props.rowSelectionPropagation?.parents ?? false,
+            removeRow,
           );
-          rowsToDeselect.forEach((parentId) => {
-            newSelection.delete(parentId);
-          });
         }
 
         const isSelectionValid = newSelection.size < 2 || canHaveMultipleSelection;
@@ -309,17 +314,18 @@ export const useGridRowSelection = (
         if (isSelected) {
           newSelection = selectableIds;
           if (applyAutoSelection) {
+            const addRow = (rowId: GridRowId) => {
+              newSelection.push(rowId);
+            };
             selectableIds.forEach((id) => {
-              const rowsToSelect = findRowsToSelect(
+              findRowsToSelect(
                 apiRef,
                 tree,
                 id,
                 props.rowSelectionPropagation?.descendants ?? false,
                 props.rowSelectionPropagation?.parents ?? false,
+                addRow,
               );
-              rowsToSelect.forEach((rowId) => {
-                newSelection.push(rowId);
-              });
             });
           }
         } else {
@@ -330,35 +336,37 @@ export const useGridRowSelection = (
         const selectionLookup = {
           ...selectedIdsLookupSelector(apiRef),
         };
+        const addRow = (rowId: GridRowId) => {
+          newSelection.push(rowId);
+        };
+        const removeRow = (rowId: GridRowId) => {
+          delete selectionLookup[rowId];
+        };
 
         selectableIds.forEach((id) => {
           if (isSelected) {
             selectionLookup[id] = id;
             if (applyAutoSelection) {
-              const rowsToSelect = findRowsToSelect(
+              findRowsToSelect(
                 apiRef,
                 tree,
                 id,
                 props.rowSelectionPropagation?.descendants ?? false,
                 props.rowSelectionPropagation?.parents ?? false,
+                addRow,
               );
-              rowsToSelect.forEach((rowId) => {
-                selectionLookup[rowId] = rowId;
-              });
             }
           } else {
-            delete selectionLookup[id];
+            removeRow(id);
             if (applyAutoSelection) {
-              const rowsToDeselect = findRowsToDeselect(
+              findRowsToDeselect(
                 apiRef,
                 tree,
                 id,
                 props.rowSelectionPropagation?.descendants ?? false,
                 props.rowSelectionPropagation?.parents ?? false,
+                removeRow,
               );
-              rowsToDeselect.forEach((parentId) => {
-                delete selectionLookup[parentId];
-              });
             }
           }
         });
