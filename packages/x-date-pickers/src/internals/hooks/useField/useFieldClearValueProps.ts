@@ -9,13 +9,13 @@ import { FieldSection, PickerValidDate } from '../../../models';
 import { UseFieldStateResponse } from './useFieldState';
 import { buildDefaultSectionOrdering } from './useField.utils';
 
-export const useFieldClearValue = <
+export const useFieldClearValueProps = <
   TValue,
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TSection extends FieldSection,
 >(
-  parameters: UseFieldClearValueParameters<
+  parameters: UseFieldClearValuePropsParameters<
     TValue,
     TDate,
     TEnableAccessibleFieldDOMStructure,
@@ -52,7 +52,7 @@ export const useFieldClearValue = <
   };
 };
 
-interface UseFieldClearValueParameters<
+interface UseFieldClearValuePropsParameters<
   TValue,
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,

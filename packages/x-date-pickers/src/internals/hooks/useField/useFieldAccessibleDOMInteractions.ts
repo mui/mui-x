@@ -20,6 +20,7 @@ export const useFieldAccessibleDOMInteractions = <
 ) => {
   const {
     internalProps: { unstableFieldRef },
+    forwardedProps: { autoFocus },
     stateResponse: { state, parsedSelectedSections, setSelectedSections },
     focused,
     setFocused,
@@ -128,6 +129,12 @@ export const useFieldAccessibleDOMInteractions = <
       }
     }
   }, [parsedSelectedSections, focused, domGetters]);
+
+  React.useEffect(() => {
+    if (autoFocus) {
+      domGetters.getSectionContent(0).focus();
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return interactions;
 };

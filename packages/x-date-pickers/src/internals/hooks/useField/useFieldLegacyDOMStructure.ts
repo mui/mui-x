@@ -15,11 +15,11 @@ import { FieldSection, InferError, PickerValidDate } from '../../../models';
 import { getActiveElement } from '../../utils/utils';
 import { buildDefaultSectionOrdering, getSectionVisibleValue } from './useField.utils';
 import { useFieldHandleKeyDown } from './useFieldHandleKeyDown';
-import { useFieldClearValue } from './useFieldClearValue';
-import { useValidation } from '../../../validation';
+import { useFieldClearValueProps } from './useFieldClearValueProps';
 import { useUtils } from '../useUtils';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
+import { useFieldValidation } from './useFieldValidation';
 
 type FieldSectionWithPositions<TSection> = TSection & {
   /**
@@ -175,7 +175,6 @@ export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = 
       onBlur,
       inputRef: inputRefProp,
       placeholder: placeholderProp,
-      error: errorProp,
     },
     internalProps,
     internalProps: { unstableFieldRef, readOnly = false, disabled = false },
@@ -202,26 +201,9 @@ export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = 
     setSelectedSections,
     getSectionsFromValue,
     localizedDigits,
-    timezone,
   } = stateResponse;
 
-  const { hasValidationError } = useValidation({
-    props: internalProps,
-    validator,
-    timezone,
-    value: state.value,
-    onError: internalProps.onError,
-  });
-
-  const error = React.useMemo(() => {
-    // only override when `error` is undefined.
-    // in case of multi input fields, the `error` value is provided externally and will always be defined.
-    if (errorProp !== undefined) {
-      return errorProp;
-    }
-
-    return hasValidationError;
-  }, [hasValidationError, errorProp]);
+  const error = useFieldValidation({ internalProps, forwardedProps, validator, stateResponse });
 
   const characterEditingResponse = useFieldCharacterEditing<TValue, TDate, TSection>({
     error,
@@ -592,7 +574,7 @@ export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = 
     sectionOrder,
   });
 
-  const { onClear, clearable } = useFieldClearValue({
+  const { onClear, clearable } = useFieldClearValueProps({
     internalProps,
     forwardedProps,
     stateResponse,
