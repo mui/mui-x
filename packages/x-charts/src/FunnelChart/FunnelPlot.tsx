@@ -1,14 +1,10 @@
 import * as React from 'react';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
-import * as curves from '@mui/x-charts-vendor/d3-shape';
 import { FunnelItemIdentifier } from './funnel.types';
 import { useFunnelSeries } from '../hooks/useSeries';
-import { SeriesFormatterResult } from '../context/PluginProvider';
 import { useCartesianContext } from '../context/CartesianProvider';
-import { getValueToPositionMapper } from '../hooks';
 import { AxisId } from '../models/axis';
-import { DEFAULT_X_AXIS_KEY } from '../constants';
 import getCurveFactory from '../internals/getCurve';
 
 export interface FunnelPlotSlots {}
@@ -88,7 +84,7 @@ const useAggregatedData = () => {
         return {
           ...series[seriesId],
           gradientUsed,
-          d: line(stackedData[0]),
+          d: line(stackedData[0])!,
           usable: stackedData.map((d) => d.map((v) => ({ x: xScale(v.x)!, y: yScale(v.y)! }))),
           seriesId,
         };

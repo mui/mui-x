@@ -9,6 +9,9 @@ import { SeriesFormatter } from '../context/PluginProvider/SeriesFormatter.types
 
 type FunnelDataset = DatasetType<number | null>;
 
+const createPoint = (main: number, other: number, inverse: boolean) =>
+  inverse ? { x: other, y: main } : { x: main, y: other };
+
 const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups(
@@ -63,10 +66,12 @@ const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
       .order(stackingOrder)
       .offset(stackingOffset)(d3Dataset);
 
+    const isHorizontal = ids.some((id) => series[id].layout === 'horizontal');
+
     ids.forEach((id) => {
       const dataKey = series[id].dataKey;
       completedSeries[id] = {
-        layout: 'vertical',
+        layout: isHorizontal ? 'horizontal' : 'vertical',
         ...series[id],
         data: dataKey
           ? dataset!.map((data) => {
@@ -96,10 +101,7 @@ const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
 
         return [
           // Top right
-          {
-            x: currentMaxMain,
-            y: currentMaxOther,
-          },
+          createPoint(currentMaxMain, currentMaxOther, isHorizontal),
           // Middle right
           // {
           //   x: currentMaxMain - (currentMaxMain - nextMaxMain) * 0,
@@ -110,15 +112,9 @@ const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
           //   y: currentMaxOther - (currentMaxOther - nextMaxOther) * 0.9,
           // },
           // Bottom right
-          {
-            x: nextMaxMain,
-            y: nextMaxOther,
-          },
+          createPoint(nextMaxMain, nextMaxOther, isHorizontal),
           // Bottom left
-          {
-            x: -nextMaxMain,
-            y: nextMaxOther,
-          },
+          createPoint(-nextMaxMain, nextMaxOther, isHorizontal),
           // Middle left
           // {
           //   x: -nextMaxMain - (currentMaxMain - nextMaxMain) * 0,
@@ -129,10 +125,7 @@ const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
           //   y: currentMaxOther - (currentMaxOther - nextMaxOther) * 0.1,
           // },
           // Top left
-          {
-            x: -currentMaxMain,
-            y: currentMaxOther,
-          },
+          createPoint(-currentMaxMain, currentMaxOther, isHorizontal),
         ];
       });
     });

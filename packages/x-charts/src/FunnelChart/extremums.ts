@@ -13,7 +13,6 @@ const getValueExtremum =
       .reduce(
         (acc, seriesId) => {
           const { stackedData } = series[seriesId];
-
           const [seriesMin, seriesMax] = stackedData
             .map((v) => v.map((t) => t[direction]))
             ?.reduce(
@@ -34,17 +33,12 @@ export const getExtremumX: ExtremumGetter<'funnel'> = (params) => {
     (seriesId) => params.series[seriesId].layout === 'horizontal',
   );
   if (isHorizontal) {
-    return getValueExtremum('x')(params);
+    const [min, max] = getValueExtremum('x')(params);
+    return [max, min];
   }
   return getValueExtremum('x')(params);
 };
 
 export const getExtremumY: ExtremumGetter<'funnel'> = (params) => {
-  const isHorizontal = Object.keys(params.series).some(
-    (seriesId) => params.series[seriesId].layout === 'horizontal',
-  );
-  if (isHorizontal) {
-    return getValueExtremum('y')(params);
-  }
   return getValueExtremum('y')(params);
 };
