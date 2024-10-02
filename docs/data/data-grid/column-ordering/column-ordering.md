@@ -8,7 +8,7 @@ title: Data Grid - Column ordering
 
 :::warning
 There is a known issue with Firefox v129 that impacts this feature.
-Reordering is not working on that specific version of Firefox, since the `event.dataTransfer` is `null` resulting in an error.
+Reordering does not work on that specific version of Firefox because the value for `event.dataTransfer` is `null` which results in an error.
 
 We would advice to update to v130 or higher if you experience this issue.
 :::
