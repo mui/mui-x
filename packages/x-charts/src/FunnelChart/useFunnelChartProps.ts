@@ -93,6 +93,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
 
   const tooltipProps: ChartsTooltipProps<'funnel'> = {
     ...tooltip,
+    trigger: tooltip?.trigger ?? 'item',
     slots,
     slotProps,
   };
