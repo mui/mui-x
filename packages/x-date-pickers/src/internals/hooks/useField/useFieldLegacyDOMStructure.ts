@@ -205,7 +205,26 @@ export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = 
     timezone,
   } = stateResponse;
 
+  const { hasValidationError } = useValidation({
+    props: internalProps,
+    validator,
+    timezone,
+    value: state.value,
+    onError: internalProps.onError,
+  });
+
+  const error = React.useMemo(() => {
+    // only override when `error` is undefined.
+    // in case of multi input fields, the `error` value is provided externally and will always be defined.
+    if (errorProp !== undefined) {
+      return errorProp;
+    }
+
+    return hasValidationError;
+  }, [hasValidationError, errorProp]);
+
   const characterEditingResponse = useFieldCharacterEditing<TValue, TDate, TSection>({
+    error,
     stateResponse,
   });
   const { applyCharacterEditing, resetCharacterQuery } = characterEditingResponse;
@@ -573,14 +592,6 @@ export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = 
     sectionOrder,
   });
 
-  const { hasValidationError } = useValidation({
-    props: internalProps,
-    validator,
-    timezone,
-    value: state.value,
-    onError: internalProps.onError,
-  });
-
   const { onClear, clearable } = useFieldClearValue({
     internalProps,
     forwardedProps,
@@ -590,25 +601,9 @@ export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = 
     sectionOrder,
   });
 
-  const error = React.useMemo(() => {
-    // only override when `error` is undefined.
-    // in case of multi input fields, the `error` value is provided externally and will always be defined.
-    if (errorProp !== undefined) {
-      return errorProp;
-    }
-
-    return hasValidationError;
-  }, [hasValidationError, errorProp]);
-
   useEnhancedEffect(() => {
     interactions.syncSelectionToDOM();
   });
-
-  React.useEffect(() => {
-    if (!error && activeSectionIndex == null) {
-      resetCharacterQuery();
-    }
-  }, [state.referenceValue, activeSectionIndex, error]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // If `tempValueStrAndroid` is still defined for some section when running `useEffect`,
   // Then `onChange` has only been called once, which means the user pressed `Backspace` to reset the section.

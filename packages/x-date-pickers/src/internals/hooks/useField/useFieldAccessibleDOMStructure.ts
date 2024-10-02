@@ -50,12 +50,30 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
   const stateResponse = useFieldState<TValue, TDate, TSection, true, InferError<TInternalProps>>(
     params,
   );
-  const { parsedSelectedSections, activeSectionIndex, state, timezone } = stateResponse;
+  const { state, timezone } = stateResponse;
+
+  const { hasValidationError } = useValidation({
+    props: internalProps,
+    validator,
+    timezone,
+    value: state.value,
+    onError: internalProps.onError,
+  });
+
+  const error = React.useMemo(() => {
+    // only override when `error` is undefined.
+    // in case of multi input fields, the `error` value is provided externally and will always be defined.
+    if (errorProp !== undefined) {
+      return errorProp;
+    }
+
+    return hasValidationError;
+  }, [hasValidationError, errorProp]);
 
   const characterEditingResponse = useFieldCharacterEditing<TValue, TDate, TSection>({
+    error,
     stateResponse,
   });
-  const { resetCharacterQuery } = characterEditingResponse;
 
   // TODO: Add methods to parameters to access those elements instead of using refs
   const sectionListRef = React.useRef<UseFieldAccessibleDOMGetters>(null);
@@ -159,30 +177,6 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
     areAllSectionsEmpty,
     interactions,
   });
-
-  const { hasValidationError } = useValidation({
-    props: internalProps,
-    validator,
-    timezone,
-    value: state.value,
-    onError: internalProps.onError,
-  });
-
-  const error = React.useMemo(() => {
-    // only override when `error` is undefined.
-    // in case of multi input fields, the `error` value is provided externally and will always be defined.
-    if (errorProp !== undefined) {
-      return errorProp;
-    }
-
-    return hasValidationError;
-  }, [hasValidationError, errorProp]);
-
-  React.useEffect(() => {
-    if (!error && activeSectionIndex == null) {
-      resetCharacterQuery();
-    }
-  }, [state.referenceValue, activeSectionIndex, error]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     ...forwardedProps,

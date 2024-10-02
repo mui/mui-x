@@ -76,6 +76,7 @@ export const useFieldCharacterEditing = <
   parameters: UseFieldCharacterEditingParameters<TValue, TDate, TSection>,
 ): UseFieldCharacterEditingReturnValue => {
   const {
+    error,
     stateResponse: {
       state,
       updateSectionValue,
@@ -83,6 +84,7 @@ export const useFieldCharacterEditing = <
       localizedDigits,
       setTempAndroidValueStr,
       timezone,
+      activeSectionIndex,
     },
   } = parameters;
 
@@ -90,17 +92,17 @@ export const useFieldCharacterEditing = <
 
   const [query, setQuery] = React.useState<CharacterEditingQuery | null>(null);
 
-  const resetQuery = useEventCallback(() => setQuery(null));
+  const resetCharacterQuery = useEventCallback(() => setQuery(null));
 
   React.useEffect(() => {
     if (query != null && state.sections[query.sectionIndex]?.type !== query.sectionType) {
-      resetQuery();
+      resetCharacterQuery();
     }
-  }, [state.sections, query, resetQuery]);
+  }, [state.sections, query, resetCharacterQuery]);
 
   React.useEffect(() => {
     if (query != null) {
-      const timeout = setTimeout(() => resetQuery(), QUERY_LIFE_DURATION_MS);
+      const timeout = setTimeout(() => resetCharacterQuery(), QUERY_LIFE_DURATION_MS);
 
       return () => {
         clearTimeout(timeout);
@@ -108,7 +110,7 @@ export const useFieldCharacterEditing = <
     }
 
     return () => {};
-  }, [query, resetQuery]);
+  }, [query, resetCharacterQuery]);
 
   const applyQuery = (
     { keyPressed, sectionIndex }: ApplyCharacterEditingParams,
@@ -143,7 +145,7 @@ export const useFieldCharacterEditing = <
 
     const queryResponse = getFirstSectionValueMatchingWithQuery(cleanKeyPressed, activeSection);
     if (isQueryResponseWithoutValue(queryResponse) && !queryResponse.saveQuery) {
-      resetQuery();
+      resetCharacterQuery();
       return null;
     }
 
@@ -408,9 +410,15 @@ export const useFieldCharacterEditing = <
     });
   });
 
+  React.useEffect(() => {
+    if (!error && activeSectionIndex == null) {
+      resetCharacterQuery();
+    }
+  }, [state.referenceValue, activeSectionIndex, error]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return {
     applyCharacterEditing,
-    resetCharacterQuery: resetQuery,
+    resetCharacterQuery,
   };
 };
 
@@ -420,6 +428,7 @@ interface UseFieldCharacterEditingParameters<
   TSection extends FieldSection,
 > {
   stateResponse: UseFieldStateResponse<TValue, TDate, TSection>;
+  error: boolean;
 }
 
 export interface UseFieldCharacterEditingReturnValue {
