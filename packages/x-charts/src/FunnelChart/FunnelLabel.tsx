@@ -34,10 +34,6 @@ FunnelLabel.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
-  dataIndex: PropTypes.number.isRequired,
-  isFaded: PropTypes.bool.isRequired,
-  isHighlighted: PropTypes.bool.isRequired,
-  seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 } as any;
 
 export { FunnelLabel };
