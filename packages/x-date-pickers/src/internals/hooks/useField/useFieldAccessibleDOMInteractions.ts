@@ -26,6 +26,7 @@ export const useFieldAccessibleDOMInteractions = <
     setFocused,
   } = parameters;
 
+  // TODO: Add methods to parameters to access those elements instead of using refs
   const sectionListRef = React.useRef<PickersSectionListRef>(null);
   const handleSectionListRef = useForkRef(sectionListRefProp, sectionListRef);
 
