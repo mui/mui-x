@@ -121,7 +121,12 @@ async function main(argv) {
       }
 
       const {
-        data: { body: bodyMessage, labels, author_association, user: { login } },
+        data: {
+          body: bodyMessage,
+          labels,
+          author_association,
+          user: { login },
+        },
       } = await octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}', {
         owner: GIT_ORGANIZATION,
         repo: GIT_REPO,
@@ -282,23 +287,26 @@ async function main(argv) {
     year: 'numeric',
   });
 
-  const sortAuthorTags = (a, b) => {
-
-  }
-
   const logCommunitySection = () => {
     // TODO: separate first timers and regular contributors
-    const contributors = [ ...Array.from(community.contributors), ...Array.from(community.firstTimers) ].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+    const contributors = [
+      ...Array.from(community.contributors),
+      ...Array.from(community.firstTimers),
+    ].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
     if (contributors.length === 0) {
       return '';
     }
 
-    return `Special thanks go out to our community contributors who have helped make this release possible:\n${ contributors.join(', ')}.`;
-  }
+    return `Special thanks go out to our community contributors who have helped make this release possible:\n${contributors.join(', ')}.`;
+  };
 
   const logTeamSection = () => {
-    return `Following are all team members who have contributed to this release:\n${ Array.from(community.team).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())).join(', ')}.`;
-  }
+    return `Following are all team members who have contributed to this release:\n${Array.from(
+      community.team,
+    )
+      .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
+      .join(', ')}.`;
+  };
 
   const changelog = `
 ## __VERSION__
