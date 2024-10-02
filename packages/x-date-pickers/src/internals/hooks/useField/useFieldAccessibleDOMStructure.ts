@@ -3,8 +3,6 @@ import useForkRef from '@mui/utils/useForkRef';
 import {
   UseFieldInternalProps,
   UseFieldWithKnownDOMStructure,
-  UseFieldAccessibleAdditionalProps,
-  UseFieldAccessibleForwardedProps,
   UseFieldAccessibleDOMGetters,
 } from './useField.types';
 import type { PickersSectionElement } from '../../../PickersSectionList';
@@ -15,7 +13,7 @@ import { FieldSection, InferError, PickerValidDate } from '../../../models';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { useFieldAccessibleDOMInteractions } from './useFieldAccessibleDOMInteractions';
-import { useFieldAccessibleContainerEventHandlers } from './useFieldAccessibleContainerEventHandlers';
+import { useFieldAccessibleContainerProps } from './useFieldAccessibleContainerProps';
 import { useFieldAccessibleSectionContentProps } from './useFieldAccessibleSectionContentProps';
 import { useFieldAccessibleSectionContainerProps } from './useFieldAccessibleSectionContainerProps';
 import { useFieldAccessibleHiddenInputProps } from './useFieldAccessibleHiddenInputProps';
@@ -136,7 +134,7 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const containerEventHandlers = useFieldAccessibleContainerEventHandlers({
+  const containerEventHandlers = useFieldAccessibleContainerProps({
     fieldValueManager,
     internalProps,
     forwardedProps,
@@ -186,31 +184,24 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
     }
   }, [state.referenceValue, activeSectionIndex, error]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const forwardedPropsWithDefault: Required<UseFieldAccessibleForwardedProps> = {
+  return {
+    ...forwardedProps,
+    ...hiddenInputProps,
+    ...containerEventHandlers,
+
+    // Forwarded props with a default value
     focused: focusedProp ?? focused,
     autoFocus,
     onClear,
     clearable,
     error,
     sectionListRef: handleSectionListRef,
-    ...containerEventHandlers,
-  };
 
-  const additionalProps: UseFieldAccessibleAdditionalProps = {
-    ...hiddenInputProps,
+    // Additional props
     enableAccessibleFieldDOMStructure: true,
     elements,
-    // TODO v7: Try to set to undefined when there is a section selected.
-    tabIndex: parsedSelectedSections === 0 ? -1 : 0,
-    contentEditable: parsedSelectedSections === 'all',
     areAllSectionsEmpty,
     disabled,
     readOnly,
-  };
-
-  return {
-    ...forwardedProps,
-    ...forwardedPropsWithDefault,
-    ...additionalProps,
   };
 };

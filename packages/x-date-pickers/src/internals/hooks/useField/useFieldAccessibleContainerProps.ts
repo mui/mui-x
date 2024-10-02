@@ -12,12 +12,12 @@ import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing'
 import { getActiveElement } from '../../utils/utils';
 import { useFieldHandleKeyDown } from './useFieldHandleKeyDown';
 
-export const useFieldAccessibleContainerEventHandlers = <
+export const useFieldAccessibleContainerProps = <
   TValue,
   TDate extends PickerValidDate,
   TSection extends FieldSection,
 >(
-  parameters: UseFieldAccessibleContainerEventHandlersParameters<TValue, TDate, TSection>,
+  parameters: UseFieldAccessibleContainerPropsParameters<TValue, TDate, TSection>,
 ) => {
   const {
     stateResponse,
@@ -167,16 +167,22 @@ export const useFieldAccessibleContainerEventHandlers = <
   });
 
   return {
+    // Event handlers
     onKeyDown: handleContainerKeyDown,
     onBlur: handleContainerBlur,
     onClick: handleContainerClick,
     onFocus: handleContainerFocus,
     onInput: handleContainerInput,
     onPaste: handleContainerPaste,
+
+    // Other
+    contentEditable: parsedSelectedSections === 'all',
+    // TODO v7: Try to set to undefined when there is a section selected.
+    tabIndex: parsedSelectedSections === 0 ? -1 : 0,
   };
 };
 
-interface UseFieldAccessibleContainerEventHandlersParameters<
+interface UseFieldAccessibleContainerPropsParameters<
   TValue,
   TDate extends PickerValidDate,
   TSection extends FieldSection,
