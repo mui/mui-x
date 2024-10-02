@@ -198,6 +198,7 @@ export const findRowsToSelect = (
           apiRef.current.isRowSelectable(parent)
         ) {
           addRow(parent);
+          selectedDescendants.add(parent);
           traverseParents(parent);
         }
       }
