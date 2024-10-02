@@ -8,15 +8,13 @@ import {
   UseFieldWithKnownDOMStructure,
   SectionOrdering,
   UseFieldLegacyForwardedProps,
-  UseFieldInternalProps,
   UseFieldLegacyAdditionalProps,
 } from './useField.types';
-import { FieldSection, InferError, PickerValidDate } from '../../../models';
+import { FieldSection } from '../../../models';
 import { getActiveElement } from '../../utils/utils';
 import { buildDefaultSectionOrdering, getSectionVisibleValue } from './useField.utils';
 import { useFieldHandleKeyDown } from './useFieldHandleKeyDown';
 import { useFieldClearValueProps } from './useFieldClearValueProps';
-import { useUtils } from '../useUtils';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { useFieldValidation } from './useFieldValidation';
@@ -152,19 +150,14 @@ const getSectionOrder = (sections: FieldSection[]): SectionOrdering => {
 };
 
 export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = <
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-  TInternalProps extends UseFieldInternalProps<any, any, any, false, any> & {
-    minutesStep?: number;
-  },
 >(
   params,
 ) => {
   const isRtl = useRtl();
   const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
   const selectionSyncTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
-  const utils = useUtils<TDate>();
 
   const {
     forwardedProps,
@@ -186,9 +179,7 @@ export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleRef = useForkRef(inputRefProp, inputRef);
 
-  const stateResponse = useFieldState<TValue, TDate, TSection, true, InferError<TInternalProps>>(
-    params,
-  );
+  const stateResponse = useFieldState(params);
   const {
     parsedSelectedSections,
     activeSectionIndex,
@@ -201,11 +192,12 @@ export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = 
     setSelectedSections,
     getSectionsFromValue,
     localizedDigits,
+    areAllSectionsEmpty,
   } = stateResponse;
 
   const error = useFieldValidation({ internalProps, forwardedProps, validator, stateResponse });
 
-  const characterEditingResponse = useFieldCharacterEditing<TValue, TDate, TSection>({
+  const characterEditingResponse = useFieldCharacterEditing({
     error,
     stateResponse,
   });
@@ -220,12 +212,6 @@ export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = 
     () =>
       isRtl ? getSectionOrder(state.sections) : buildDefaultSectionOrdering(state.sections.length),
     [state.sections, isRtl],
-  );
-
-  const areAllSectionsEmpty = valueManager.areValuesEqual(
-    utils,
-    state.value,
-    valueManager.emptyValue,
   );
 
   const interactions = React.useMemo<UseFieldDOMInteractions>(

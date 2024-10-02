@@ -25,9 +25,8 @@ export const useFieldClearValueProps = <
   const {
     forwardedProps: { clearable: inClearable, onClear },
     internalProps: { readOnly, disabled },
-    stateResponse: { setSelectedSections, clearValue, state },
+    stateResponse: { setSelectedSections, clearValue, state, areAllSectionsEmpty },
     interactions,
-    areAllSectionsEmpty,
     sectionOrder = buildDefaultSectionOrdering(state.sections.length),
   } = parameters;
 
@@ -67,7 +66,6 @@ interface UseFieldClearValuePropsParameters<
     any
   >;
   stateResponse: UseFieldStateResponse<TValue, TDate, TSection>;
-  areAllSectionsEmpty: boolean;
   interactions: UseFieldDOMInteractions;
   /**
    * Only define when used with the legacy DOM structure.

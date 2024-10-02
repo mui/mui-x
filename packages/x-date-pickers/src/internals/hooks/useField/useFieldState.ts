@@ -67,6 +67,7 @@ export interface UseFieldStateResponse<
   getSectionsFromValue: (value: TValue, fallbackSections?: TSection[] | null) => TSection[];
   localizedDigits: string[];
   timezone: PickersTimezone;
+  areAllSectionsEmpty: boolean;
 }
 
 export const useFieldState = <
@@ -74,7 +75,6 @@ export const useFieldState = <
   TDate extends PickerValidDate,
   TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TError,
 >(
   params: UseFieldParams<
     TValue,
@@ -82,7 +82,7 @@ export const useFieldState = <
     TSection,
     TEnableAccessibleFieldDOMStructure,
     UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-    UseFieldInternalProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>
+    UseFieldInternalProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, any>
   >,
 ): UseFieldStateResponse<TValue, TDate, TSection> => {
   const utils = useUtils<TDate>();
@@ -223,7 +223,7 @@ export const useFieldState = <
       return;
     }
 
-    const context: FieldChangeHandlerContext<TError> = {
+    const context: FieldChangeHandlerContext<unknown> = {
       validationError: validator({
         adapter,
         value,
@@ -411,6 +411,12 @@ export const useFieldState = <
     }
   }, [valueFromTheOutside]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const areAllSectionsEmpty = valueManager.areValuesEqual(
+    utils,
+    state.value,
+    valueManager.emptyValue,
+  );
+
   return {
     state,
     activeSectionIndex,
@@ -425,5 +431,6 @@ export const useFieldState = <
     sectionsValueBoundaries,
     localizedDigits,
     timezone,
+    areAllSectionsEmpty,
   };
 };

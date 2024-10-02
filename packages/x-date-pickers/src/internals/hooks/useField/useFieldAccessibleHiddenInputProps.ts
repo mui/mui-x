@@ -12,9 +12,8 @@ export const useFieldAccessibleHiddenInputProps = <
   parameters: UseFieldAccessibleHiddenInputParameters<TValue, TDate, TSection>,
 ) => {
   const {
-    areAllSectionsEmpty,
     fieldValueManager,
-    stateResponse: { state, updateValueFromValueStr },
+    stateResponse: { state, updateValueFromValueStr, areAllSectionsEmpty },
   } = parameters;
 
   const handleChange = useEventCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +39,6 @@ interface UseFieldAccessibleHiddenInputParameters<
   TDate extends PickerValidDate,
   TSection extends FieldSection,
 > {
-  areAllSectionsEmpty: boolean;
   fieldValueManager: FieldValueManager<TValue, TDate, TSection>;
   stateResponse: UseFieldStateResponse<TValue, TDate, TSection>;
 }

@@ -2,20 +2,19 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { UseFieldWithKnownDOMStructure, UseFieldAccessibleDOMGetters } from './useField.types';
 import type { PickersSectionElement } from '../../../PickersSectionList';
-import { useUtils } from '../useUtils';
 import { useFieldClearValueProps } from './useFieldClearValueProps';
-import { PickerValidDate } from '../../../models';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
+import { useFieldValidation } from './useFieldValidation';
 import { useFieldAccessibleDOMInteractions } from './useFieldAccessibleDOMInteractions';
 import { useFieldAccessibleContainerProps } from './useFieldAccessibleContainerProps';
 import { useFieldAccessibleSectionContentProps } from './useFieldAccessibleSectionContentProps';
 import { useFieldAccessibleSectionContainerProps } from './useFieldAccessibleSectionContainerProps';
 import { useFieldAccessibleHiddenInputProps } from './useFieldAccessibleHiddenInputProps';
-import { useFieldValidation } from './useFieldValidation';
 
 export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true> = <
-  TDate extends PickerValidDate,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  TValue,
 >(
   params,
 ) => {
@@ -24,15 +23,12 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
     internalProps: { disabled, readOnly = false },
     forwardedProps,
     forwardedProps: { sectionListRef: sectionListRefProp, focused: focusedProp, autoFocus = false },
-    valueManager,
     fieldValueManager,
     validator,
   } = params;
 
-  const utils = useUtils<TDate>();
   const [focused, setFocused] = React.useState(false);
   const stateResponse = useFieldState(params);
-  const { state } = stateResponse;
 
   const error = useFieldValidation({ internalProps, forwardedProps, validator, stateResponse });
 
@@ -83,12 +79,6 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
     domGetters,
   });
 
-  const areAllSectionsEmpty = valueManager.areValuesEqual(
-    utils,
-    state.value,
-    valueManager.emptyValue,
-  );
-
   const createSectionContainerProps = useFieldAccessibleSectionContainerProps({ stateResponse });
 
   const createSectionContentProps = useFieldAccessibleSectionContentProps({
@@ -101,7 +91,7 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
 
   const elements = React.useMemo<PickersSectionElement[]>(
     () =>
-      state.sections.map((section, sectionIndex) => ({
+      stateResponse.state.sections.map((section, sectionIndex) => ({
         container: createSectionContainerProps(sectionIndex),
         content: createSectionContentProps(section, sectionIndex),
         before: {
@@ -111,7 +101,7 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
           children: section.endSeparator,
         },
       })),
-    [state.sections, createSectionContainerProps, createSectionContentProps],
+    [stateResponse.state.sections, createSectionContainerProps, createSectionContentProps],
   );
 
   const containerEventHandlers = useFieldAccessibleContainerProps({
@@ -127,7 +117,6 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
   });
 
   const hiddenInputProps = useFieldAccessibleHiddenInputProps({
-    areAllSectionsEmpty,
     fieldValueManager,
     stateResponse,
   });
@@ -136,7 +125,6 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
     internalProps,
     forwardedProps,
     stateResponse,
-    areAllSectionsEmpty,
     interactions,
   });
 
@@ -155,7 +143,7 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
     // Additional props
     enableAccessibleFieldDOMStructure: true,
     elements,
-    areAllSectionsEmpty,
+    areAllSectionsEmpty: stateResponse.areAllSectionsEmpty,
     disabled,
     readOnly,
   };
