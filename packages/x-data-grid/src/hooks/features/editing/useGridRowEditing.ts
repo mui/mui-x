@@ -3,6 +3,7 @@ import {
   unstable_useEventCallback as useEventCallback,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/utils';
+import { warnOnce } from '@mui/x-internals/warning';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -36,7 +37,6 @@ import {
   gridVisibleColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { warnOnce } from '../../../internals/utils/warning';
 import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
@@ -46,6 +46,7 @@ import {
   GridRowEditStartReasons,
 } from '../../../models/params/gridRowParams';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
+import { getDefaultCellValue } from './utils';
 
 export const useGridRowEditing = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
@@ -185,8 +186,7 @@ export const useGridRowEditing = (
     (params, event) => {
       if (params.cellMode === GridRowModes.Edit) {
         // Wait until IME is settled for Asian languages like Japanese and Chinese
-        // TODO: `event.which` is deprecated but this is a temporary workaround
-        if (event.which === 229) {
+        if (event.type === 'compositionstart' || event.type === 'compositionupdate') {
           return;
         }
 
@@ -433,7 +433,11 @@ export const useGridRowEditing = (
 
         let newValue = apiRef.current.getCellValue(id, field);
         if (fieldToFocus === field && (deleteValue || initialValue)) {
-          newValue = deleteValue ? '' : initialValue;
+          if (deleteValue) {
+            newValue = getDefaultCellValue(apiRef.current.getColumn(field));
+          } else if (initialValue) {
+            newValue = initialValue;
+          }
         }
 
         acc[field] = {

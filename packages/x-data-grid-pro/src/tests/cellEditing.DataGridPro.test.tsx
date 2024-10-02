@@ -18,7 +18,7 @@ import { getCell, spyApi } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DataGridPro /> - Cell editing', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render, clock } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -315,6 +315,8 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       describe('with debounceMs > 0', () => {
+        clock.withFakeTimers();
+
         it('should debounce multiple changes if debounceMs > 0', () => {
           render(<TestCase />);
           act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
@@ -956,7 +958,13 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireEvent.doubleClick(cell);
         const input = cell.querySelector('input')!;
         fireEvent.change(input, { target: { value: 'あ' } });
-        fireEvent.keyDown(cell, { key: 'Enter', keyCode: 229 });
+        fireEvent.keyDown(cell, {
+          type: 'compositionstart',
+          isComposing: true,
+          charCode: 'あ'.charCodeAt(0),
+          bubbles: true,
+          cancelable: true,
+        });
         expect(listener.callCount).to.equal(0);
         fireEvent.keyDown(cell, { key: 'Enter', keyCode: 13 });
         expect(listener.callCount).to.equal(1);
@@ -972,7 +980,22 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireEvent.doubleClick(cell);
         const input = cell.querySelector('input')!;
         fireEvent.change(input, { target: { value: 'ありがとう' } });
-        fireEvent.keyDown(cell, { key: 'Enter', keyCode: 229 });
+
+        fireEvent.keyDown(cell, {
+          type: 'compositionstart',
+          isComposing: true,
+          charCode: 'あ'.charCodeAt(0),
+          bubbles: true,
+          cancelable: true,
+        });
+        fireEvent.keyDown(cell, {
+          type: 'compositionupdate',
+          isComposing: true,
+          charCode: 'う'.charCodeAt(0),
+          bubbles: true,
+          cancelable: true,
+        });
+
         expect(listener.callCount).to.equal(0);
         fireEvent.keyDown(cell, { key: 'Enter', keyCode: 13 });
         expect(listener.callCount).to.equal(1);

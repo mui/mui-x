@@ -164,6 +164,17 @@ export interface GridClasses {
    */
   'columnHeader--last': string;
   /**
+   * Styles applied to the last unpinned column header item.
+   * @ignore - do not document.
+   */
+  'columnHeader--lastUnpinned': string;
+  /**
+   * Styles applied to a column header item when its sibling with a bordering separator is focused.
+   * @ignore - do not document.
+   */
+  'columnHeader--siblingFocused': string;
+
+  /**
    * Styles applied to the header checkbox cell element.
    */
   columnHeaderCheckbox: string;
@@ -297,10 +308,10 @@ export interface GridClasses {
    */
   filler: string;
   /**
-   * Styles applied to the filler row with top border.
+   * Styles applied to the filler row with bottom border.
    * @ignore - do not document.
    */
-  'filler--borderTop': string;
+  'filler--borderBottom': string;
   /**
    * Styles applied to the filler row pinned left section.
    * @ignore - do not document.
@@ -408,6 +419,11 @@ export interface GridClasses {
    * Styles applied to the virtualization container.
    */
   virtualScroller: string;
+  /**
+   * Styles applied to the virtualization container when it is scrollable in the horizontal direction.
+   * @ignore - do not document.
+   */
+  'virtualScroller--hasScrollX': string;
   /**
    * Styles applied to the virtualization content.
    */
@@ -548,6 +564,11 @@ export interface GridClasses {
   'scrollbarFiller--borderTop': string;
   /**
    * @ignore - do not document.
+   * Styles applied to the scrollbar filler cell, with a border bottom.
+   */
+  'scrollbarFiller--borderBottom': string;
+  /**
+   * @ignore - do not document.
    * Styles applied to the scrollbar filler cell.
    */
   'scrollbarFiller--pinnedRight': string;
@@ -676,6 +697,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--pinnedLeft',
   'columnHeader--pinnedRight',
   'columnHeader--last',
+  'columnHeader--lastUnpinned',
+  'columnHeader--siblingFocused',
   'columnHeaderCheckbox',
   'columnHeaderDraggableContainer',
   'columnHeaderTitle',
@@ -709,7 +732,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'editBooleanCell',
   'editInputCell',
   'filler',
-  'filler--borderTop',
+  'filler--borderBottom',
   'filler--pinnedLeft',
   'filler--pinnedRight',
   'filterForm',
@@ -764,12 +787,14 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'scrollbarFiller',
   'scrollbarFiller--header',
   'scrollbarFiller--borderTop',
+  'scrollbarFiller--borderBottom',
   'scrollbarFiller--pinnedRight',
   'selectedRowCount',
   'sortIcon',
   'toolbarContainer',
   'toolbarFilterList',
   'virtualScroller',
+  'virtualScroller--hasScrollX',
   'virtualScrollerContent',
   'virtualScrollerContent--overflowed',
   'virtualScrollerRenderZone',

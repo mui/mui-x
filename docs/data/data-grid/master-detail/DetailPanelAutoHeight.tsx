@@ -121,14 +121,14 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
               Add Product
             </Button>
           </div>
-          <DataGridPro
-            density="compact"
-            autoHeight
-            columns={columns}
-            rows={rowProp.products}
-            sx={{ flex: 1 }}
-            hideFooter
-          />
+          <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+            <DataGridPro
+              density="compact"
+              columns={columns}
+              rows={rowProp.products}
+              hideFooter
+            />
+          </div>
         </Stack>
       </Paper>
     </Stack>

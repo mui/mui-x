@@ -1,7 +1,9 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
+import { useThemeProps } from '@mui/material/styles';
 import useId from '@mui/utils/useId';
+import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
 import { ChartsAxis, ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import {
   ChartsTooltip,
@@ -104,7 +106,8 @@ const defaultColorMap = interpolateRgbBasis([
   '#084081',
 ]);
 
-const Heatmap = React.forwardRef(function Heatmap(props: HeatmapProps, ref) {
+const Heatmap = React.forwardRef(function Heatmap(inProps: HeatmapProps, ref) {
+  const props = useThemeProps({ props: inProps, name: 'MuiHeatmap' });
   const {
     xAxis,
     yAxis,
@@ -283,6 +286,16 @@ Heatmap.propTypes = {
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * The chart will try to wait for the parent container to resolve its size
+   * before it renders for the first time.
+   *
+   * This can be useful in some scenarios where the chart appear to grow after
+   * the first render, like when used inside a grid.
+   *
+   * @default false
+   */
+  resolveSizeBeforeRender: PropTypes.bool,
   /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.

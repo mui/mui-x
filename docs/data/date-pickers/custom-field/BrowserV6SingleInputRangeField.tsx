@@ -118,7 +118,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
     textFieldProps.InputProps = {
       ...textFieldProps.InputProps,
       endAdornment: (
-        <InputAdornment position="end">
+        <InputAdornment position="end" sx={{ height: 'auto' }}>
           <IconButton onClick={onAdornmentClick}>
             <DateRangeIcon />
           </IconButton>

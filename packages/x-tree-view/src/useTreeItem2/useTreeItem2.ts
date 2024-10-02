@@ -19,10 +19,14 @@ import {
   UseTreeItem2ContentSlotPropsFromUseTreeItem,
 } from './useTreeItem2.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
-import { MuiCancellableEvent } from '../internals/models';
+import {
+  MuiCancellableEvent,
+  TreeViewItemPluginSlotPropsEnhancerParams,
+} from '../internals/models';
 import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
+import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
 
 export const useTreeItem2 = <
   TSignatures extends UseTreeItem2MinimalPlugins = UseTreeItem2MinimalPlugins,
@@ -35,6 +39,7 @@ export const useTreeItem2 = <
     items: { onItemClick, disabledItemsFocusable, indentationAtItemLevel },
     selection: { multiSelect, disableSelection, checkboxSelection },
     expansion: { expansionTrigger },
+    treeId,
     instance,
     publicAPI,
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
@@ -46,11 +51,17 @@ export const useTreeItem2 = <
   const { interactions, status } = useTreeItem2Utils({ itemId, children });
   const rootRefObject = React.useRef<HTMLLIElement>(null);
   const contentRefObject = React.useRef<HTMLDivElement>(null);
-  const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
   const handleRootRef = useForkRef(rootRef, pluginRootRef, rootRefObject)!;
   const handleContentRef = useForkRef(contentRef, contentRefObject)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
+
+  const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
   const rootTabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
+
+  const sharedPropsEnhancerParams: Omit<
+    TreeViewItemPluginSlotPropsEnhancerParams,
+    'externalEventHandlers'
+  > = { rootRefObject, contentRefObject, interactions };
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>
@@ -164,35 +175,6 @@ export const useTreeItem2 = <
       interactions.handleCheckboxSelection(event);
     };
 
-  const createInputHandleKeydown =
-    (otherHandlers: EventHandlers) =>
-    (event: React.KeyboardEvent<HTMLInputElement> & MuiCancellableEvent) => {
-      otherHandlers.onKeyDown?.(event);
-      if (event.defaultMuiPrevented) {
-        return;
-      }
-      const target = event.target as HTMLInputElement;
-
-      if (event.key === 'Enter' && target.value) {
-        interactions.handleSaveItemLabel(event, target.value);
-      } else if (event.key === 'Escape') {
-        interactions.handleCancelItemLabelEditing(event);
-      }
-    };
-
-  const createInputHandleBlur =
-    (otherHandlers: EventHandlers) =>
-    (event: React.FocusEvent<HTMLInputElement> & MuiCancellableEvent) => {
-      otherHandlers.onBlur?.(event);
-      if (event.defaultMuiPrevented) {
-        return;
-      }
-
-      if (event.target.value) {
-        interactions.handleSaveItemLabel(event, event.target.value);
-      }
-    };
-
   const createIconContainerHandleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
       otherHandlers.onClick?.(event);
@@ -248,7 +230,7 @@ export const useTreeItem2 = <
     }
 
     const enhancedRootProps =
-      propsEnhancers.root?.({ rootRefObject, contentRefObject, externalEventHandlers }) ?? {};
+      propsEnhancers.root?.({ ...sharedPropsEnhancerParams, externalEventHandlers }) ?? {};
 
     return {
       ...props,
@@ -275,7 +257,7 @@ export const useTreeItem2 = <
     }
 
     const enhancedContentProps =
-      propsEnhancers.content?.({ rootRefObject, contentRefObject, externalEventHandlers }) ?? {};
+      propsEnhancers.content?.({ ...sharedPropsEnhancerParams, externalEventHandlers }) ?? {};
 
     return {
       ...props,
@@ -326,19 +308,17 @@ export const useTreeItem2 = <
   ): UseTreeItem2LabelInputSlotProps<ExternalProps> => {
     const externalEventHandlers = extractEventHandlers(externalProps);
 
-    const props = {
-      ...externalEventHandlers,
-      ...externalProps,
-      onKeyDown: createInputHandleKeydown(externalEventHandlers),
-      onBlur: createInputHandleBlur(externalEventHandlers),
-    };
-
-    const enhancedlabelInputProps =
-      propsEnhancers.labelInput?.({ rootRefObject, contentRefObject, externalEventHandlers }) ?? {};
+    const enhancedLabelInputProps =
+      propsEnhancers.labelInput?.({
+        rootRefObject,
+        contentRefObject,
+        externalEventHandlers,
+        interactions,
+      }) ?? {};
 
     return {
-      ...props,
-      ...enhancedlabelInputProps,
+      ...externalProps,
+      ...enhancedLabelInputProps,
     } as UseTreeItem2LabelInputSlotProps<ExternalProps>;
   };
 
@@ -379,14 +359,11 @@ export const useTreeItem2 = <
   const getDragAndDropOverlayProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
   ): UseTreeItem2DragAndDropOverlaySlotProps<ExternalProps> => {
-    const externalEventHandlers = {
-      ...extractEventHandlers(externalProps),
-    };
+    const externalEventHandlers = extractEventHandlers(externalProps);
 
     const enhancedDragAndDropOverlayProps =
       propsEnhancers.dragAndDropOverlay?.({
-        rootRefObject,
-        contentRefObject,
+        ...sharedPropsEnhancerParams,
         externalEventHandlers,
       }) ?? {};
 

@@ -44,8 +44,8 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Datumsbereich auswählen',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `${timeViews[view] ?? view} auswählen. ${time === null ? 'Keine Uhrzeit ausgewählt' : `Gewählte Uhrzeit ist ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `${timeViews[view] ?? view} auswählen. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Keine Uhrzeit ausgewählt' : `Gewählte Uhrzeit ist ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds}`,
@@ -60,13 +60,13 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Datum auswählen, gewähltes Datum ist ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Datum auswählen, gewähltes Datum ist ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Datum auswählen',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Uhrzeit auswählen, gewählte Uhrzeit ist ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Uhrzeit auswählen, gewählte Uhrzeit ist ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Uhrzeit auswählen',
   fieldClearLabel: 'Wert leeren',
 

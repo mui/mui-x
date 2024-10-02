@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Watermark } from '@mui/x-license/Watermark';
@@ -92,6 +93,16 @@ ResponsiveChartContainerPro.propTypes = {
    * If not provided, the container supports line, bar, scatter and pie charts.
    */
   plugins: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * The chart will try to wait for the parent container to resolve its size
+   * before it renders for the first time.
+   *
+   * This can be useful in some scenarios where the chart appear to grow after
+   * the first render, like when used inside a grid.
+   *
+   * @default false
+   */
+  resolveSizeBeforeRender: PropTypes.bool,
   /**
    * The array of series to display.
    * Each type of series has its own specificity.
