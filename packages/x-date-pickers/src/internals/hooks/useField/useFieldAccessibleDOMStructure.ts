@@ -89,21 +89,6 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
     domGetters,
   });
 
-  const elements = React.useMemo<PickersSectionElement[]>(
-    () =>
-      stateResponse.state.sections.map((section, sectionIndex) => ({
-        container: createSectionContainerProps(sectionIndex),
-        content: createSectionContentProps(section, sectionIndex),
-        before: {
-          children: section.startSeparator,
-        },
-        after: {
-          children: section.endSeparator,
-        },
-      })),
-    [stateResponse.state.sections, createSectionContainerProps, createSectionContentProps],
-  );
-
   const containerEventHandlers = useFieldAccessibleContainerProps({
     fieldValueManager,
     internalProps,
@@ -127,6 +112,21 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
     stateResponse,
     interactions,
   });
+
+  const elements = React.useMemo<PickersSectionElement[]>(
+    () =>
+      stateResponse.state.sections.map((section, sectionIndex) => ({
+        container: createSectionContainerProps(sectionIndex),
+        content: createSectionContentProps(section, sectionIndex),
+        before: {
+          children: section.startSeparator,
+        },
+        after: {
+          children: section.endSeparator,
+        },
+      })),
+    [stateResponse.state.sections, createSectionContainerProps, createSectionContentProps],
+  );
 
   return {
     ...forwardedProps,
