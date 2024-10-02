@@ -14,7 +14,7 @@ import {
 } from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import type { Validator } from '../../../validation';
-import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
+import type { PickersSectionElement } from '../../../PickersSectionList';
 import { ExportedUseClearableFieldProps } from '../../../hooks/useClearableField';
 
 export interface UseFieldParams<
@@ -179,7 +179,7 @@ export interface UseFieldLegacyForwardedProps extends ExportedUseClearableFieldP
 export interface UseFieldAccessibleForwardedProps extends ExportedUseClearableFieldProps {
   focused?: boolean;
   autoFocus?: boolean;
-  sectionListRef?: React.Ref<PickersSectionListRef>;
+  sectionListRef?: React.Ref<UseFieldAccessibleDOMGetters>;
   onBlur?: () => void;
   onClick?: React.MouseEventHandler;
   onFocus?: () => void;
@@ -420,6 +420,13 @@ export interface UseFieldDOMInteractions {
   focusField: (newSelectedSection?: number | FieldSectionType) => void;
   setSelectedSections: (newSelectedSections: FieldSelectedSections) => void;
   isFieldFocused: () => boolean;
+}
+
+export interface UseFieldAccessibleDOMGetters {
+  getRoot: () => HTMLElement;
+  getSectionContainer: (sectionIndex: number) => HTMLElement;
+  getSectionContent: (sectionIndex: number) => HTMLElement;
+  getSectionIndexFromDOMElement: (element: Element | null | undefined) => number | null;
 }
 
 export type UseFieldWithKnownDOMStructure<TEnableAccessibleFieldDOMStructure extends boolean> = <

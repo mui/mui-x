@@ -1,6 +1,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { getSectionValueNow, getSectionValueText } from './useField.utils';
 import {
@@ -8,18 +9,18 @@ import {
   UseFieldWithKnownDOMStructure,
   UseFieldAccessibleAdditionalProps,
   UseFieldAccessibleForwardedProps,
+  UseFieldAccessibleDOMGetters,
 } from './useField.types';
-import { getActiveElement } from '../../utils/utils';
 import { PickersSectionElement } from '../../../PickersSectionList';
 import { usePickersTranslations } from '../../../hooks/usePickersTranslations';
 import { useUtils } from '../useUtils';
-import { useFieldHandleKeyDown } from './useFieldHandleKeyDown';
 import { useFieldClearValue } from './useFieldClearValue';
 import { useValidation } from '../../../validation';
 import { FieldSection, InferError, PickerValidDate } from '../../../models';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { useFieldAccessibleDOMInteractions } from './useFieldAccessibleDOMInteractions';
+import { useFieldAccessibleContainerEventHandlers } from './useFieldAccessibleContainerEventHandlers';
 
 export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true> = <
   TValue,
@@ -36,11 +37,7 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
     internalProps: { disabled, readOnly = false },
     forwardedProps,
     forwardedProps: {
-      onBlur,
-      onClick,
-      onFocus,
-      onInput,
-      onPaste,
+      sectionListRef: sectionListRefProp,
       error: errorProp,
       focused: focusedProp,
       autoFocus = false,
@@ -66,7 +63,6 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
     updateSectionValue,
     updateValueFromValueStr,
     clearActiveSection,
-    clearValue,
     setSelectedSections,
     sectionsValueBoundaries,
     timezone,
@@ -77,12 +73,26 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
   });
   const { applyCharacterEditing, resetCharacterQuery } = characterEditingResponse;
 
-  const { sectionListRef, handleSectionListRef, interactions } = useFieldAccessibleDOMInteractions({
+  // TODO: Add methods to parameters to access those elements instead of using refs
+  const sectionListRef = React.useRef<UseFieldAccessibleDOMGetters>(null);
+  const handleSectionListRef = useForkRef(sectionListRefProp, sectionListRef);
+  const domGetters: UseFieldAccessibleDOMGetters = {
+    getRoot: () => sectionListRef.current!.getRoot(),
+    getSectionContainer: (sectionIndex: number) =>
+      sectionListRef.current!.getSectionContainer(sectionIndex),
+    getSectionContent: (sectionIndex: number) =>
+      sectionListRef.current!.getSectionContent(sectionIndex),
+    getSectionIndexFromDOMElement: (element: Element | null | undefined) =>
+      sectionListRef.current!.getSectionIndexFromDOMElement(element),
+  };
+
+  const interactions = useFieldAccessibleDOMInteractions({
     forwardedProps,
     internalProps,
     stateResponse,
     focused,
     setFocused,
+    domGetters,
   });
 
   const areAllSectionsEmpty = valueManager.areValuesEqual(
@@ -105,127 +115,6 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
     sectionListRef.current.getSectionContent(sectionIndex).innerHTML =
       section.value || section.placeholder;
     interactions.syncSelectionToDOM();
-  });
-
-  const handleContainerClick = useEventCallback((event: React.MouseEvent, ...args) => {
-    // The click event on the clear button would propagate to the input, trigger this handler and result in a wrong section selection.
-    // We avoid this by checking if the call of `handleContainerClick` is actually intended, or a side effect.
-    if (event.isDefaultPrevented() || !sectionListRef.current) {
-      return;
-    }
-
-    setFocused(true);
-    onClick?.(event, ...(args as []));
-
-    if (parsedSelectedSections === 'all') {
-      setTimeout(() => {
-        const cursorPosition = document.getSelection()!.getRangeAt(0).startOffset;
-
-        if (cursorPosition === 0) {
-          setSelectedSections(0);
-          return;
-        }
-
-        let sectionIndex = 0;
-        let cursorOnStartOfSection = 0;
-
-        while (cursorOnStartOfSection < cursorPosition && sectionIndex < state.sections.length) {
-          const section = state.sections[sectionIndex];
-          sectionIndex += 1;
-          cursorOnStartOfSection += `${section.startSeparator}${
-            section.value || section.placeholder
-          }${section.endSeparator}`.length;
-        }
-
-        setSelectedSections(sectionIndex - 1);
-      });
-    } else if (!focused) {
-      setFocused(true);
-      setSelectedSections(0);
-    } else {
-      const hasClickedOnASection = sectionListRef.current.getRoot().contains(event.target as Node);
-
-      if (!hasClickedOnASection) {
-        setSelectedSections(0);
-      }
-    }
-  });
-
-  const handleContainerInput = useEventCallback((event: React.FormEvent<HTMLDivElement>) => {
-    onInput?.(event);
-
-    if (!sectionListRef.current || parsedSelectedSections !== 'all') {
-      return;
-    }
-
-    const target = event.target as HTMLSpanElement;
-    const keyPressed = target.textContent ?? '';
-
-    sectionListRef.current.getRoot().innerHTML = state.sections
-      .map(
-        (section) =>
-          `${section.startSeparator}${section.value || section.placeholder}${section.endSeparator}`,
-      )
-      .join('');
-    interactions.syncSelectionToDOM();
-
-    if (keyPressed.length === 0 || keyPressed.charCodeAt(0) === 10) {
-      resetCharacterQuery();
-      clearValue();
-      setSelectedSections('all');
-    } else if (keyPressed.length > 1) {
-      updateValueFromValueStr(keyPressed);
-    } else {
-      applyCharacterEditing({
-        keyPressed,
-        sectionIndex: 0,
-      });
-    }
-  });
-
-  const handleContainerPaste = useEventCallback((event: React.ClipboardEvent<HTMLDivElement>) => {
-    onPaste?.(event);
-    if (readOnly || parsedSelectedSections !== 'all') {
-      event.preventDefault();
-      return;
-    }
-
-    const pastedValue = event.clipboardData.getData('text');
-    event.preventDefault();
-    resetCharacterQuery();
-    updateValueFromValueStr(pastedValue);
-  });
-
-  const handleContainerFocus = useEventCallback((...args) => {
-    onFocus?.(...(args as []));
-
-    if (focused || !sectionListRef.current) {
-      return;
-    }
-
-    setFocused(true);
-
-    const isFocusInsideASection =
-      sectionListRef.current.getSectionIndexFromDOMElement(getActiveElement(document)) != null;
-    if (!isFocusInsideASection) {
-      setSelectedSections(0);
-    }
-  });
-
-  const handleContainerBlur = useEventCallback((...args) => {
-    onBlur?.(...(args as []));
-    setTimeout(() => {
-      if (!sectionListRef.current) {
-        return;
-      }
-
-      const activeElement = getActiveElement(document);
-      const shouldBlur = !sectionListRef.current.getRoot().contains(activeElement);
-      if (shouldBlur) {
-        setFocused(false);
-        setSelectedSections(null);
-      }
-    });
   });
 
   const getInputContainerClickHandler = useEventCallback(
@@ -448,12 +337,16 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleContainerKeyDown = useFieldHandleKeyDown({
+  const containerEventHandlers = useFieldAccessibleContainerEventHandlers({
     fieldValueManager,
     internalProps,
     forwardedProps,
     stateResponse,
     characterEditingResponse,
+    interactions,
+    domGetters,
+    focused,
+    setFocused,
   });
 
   const { onClear, clearable } = useFieldClearValue({
@@ -499,12 +392,7 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
     clearable,
     error,
     sectionListRef: handleSectionListRef,
-    onBlur: handleContainerBlur,
-    onClick: handleContainerClick,
-    onFocus: handleContainerFocus,
-    onInput: handleContainerInput,
-    onPaste: handleContainerPaste,
-    onKeyDown: handleContainerKeyDown,
+    ...containerEventHandlers,
   };
 
   const additionalProps: UseFieldAccessibleAdditionalProps = {

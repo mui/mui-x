@@ -1,6 +1,6 @@
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
 import {
+  UseFieldAccessibleDOMGetters,
   UseFieldDOMInteractions,
   UseFieldForwardedProps,
   UseFieldInternalProps,
@@ -9,7 +9,6 @@ import { FieldSection, PickerValidDate } from '../../../models';
 import { UseFieldStateResponse } from './useFieldState';
 import { getActiveElement } from '../../utils/utils';
 import { parseSelectedSections } from './useField.utils';
-import { PickersSectionListRef } from '../../../PickersSectionList';
 
 export const useFieldAccessibleDOMInteractions = <
   TValue,
@@ -19,23 +18,15 @@ export const useFieldAccessibleDOMInteractions = <
   parameters: UseFieldAccessibleDOMInteractionsParameters<TValue, TDate, TSection>,
 ) => {
   const {
-    forwardedProps: { sectionListRef: sectionListRefProp },
     internalProps: { unstableFieldRef },
     stateResponse: { state, parsedSelectedSections, setSelectedSections },
     focused,
     setFocused,
+    domGetters,
   } = parameters;
-
-  // TODO: Add methods to parameters to access those elements instead of using refs
-  const sectionListRef = React.useRef<PickersSectionListRef>(null);
-  const handleSectionListRef = useForkRef(sectionListRefProp, sectionListRef);
 
   const interactions: UseFieldDOMInteractions = {
     syncSelectionToDOM: () => {
-      if (!sectionListRef.current) {
-        return;
-      }
-
       const selection = document.getSelection();
       if (!selection) {
         return;
@@ -45,19 +36,19 @@ export const useFieldAccessibleDOMInteractions = <
         // If the selection contains an element inside the field, we reset it.
         if (
           selection.rangeCount > 0 &&
-          sectionListRef.current.getRoot().contains(selection.getRangeAt(0).startContainer)
+          domGetters.getRoot().contains(selection.getRangeAt(0).startContainer)
         ) {
           selection.removeAllRanges();
         }
 
         if (focused) {
-          sectionListRef.current.getRoot().blur();
+          domGetters.getRoot().blur();
         }
         return;
       }
 
       // On multi input range pickers we want to update selection range only for the active input
-      if (!sectionListRef.current.getRoot().contains(getActiveElement(document))) {
+      if (!domGetters.getRoot().contains(getActiveElement(document))) {
         return;
       }
 
@@ -65,13 +56,13 @@ export const useFieldAccessibleDOMInteractions = <
 
       let target: HTMLElement;
       if (parsedSelectedSections === 'all') {
-        target = sectionListRef.current.getRoot();
+        target = domGetters.getRoot();
       } else {
         const section = state.sections[parsedSelectedSections];
         if (section.type === 'empty') {
-          target = sectionListRef.current.getSectionContainer(parsedSelectedSections);
+          target = domGetters.getSectionContainer(parsedSelectedSections);
         } else {
-          target = sectionListRef.current.getSectionContent(parsedSelectedSections);
+          target = domGetters.getSectionContent(parsedSelectedSections);
         }
       }
 
@@ -82,34 +73,22 @@ export const useFieldAccessibleDOMInteractions = <
     },
     getActiveSectionIndexFromDOM: () => {
       const activeElement = getActiveElement(document) as HTMLElement | undefined;
-      if (
-        !activeElement ||
-        !sectionListRef.current ||
-        !sectionListRef.current.getRoot().contains(activeElement)
-      ) {
+      if (!activeElement || !domGetters.getRoot().contains(activeElement)) {
         return null;
       }
 
-      return sectionListRef.current.getSectionIndexFromDOMElement(activeElement);
+      return domGetters.getSectionIndexFromDOMElement(activeElement);
     },
     focusField: (newSelectedSections = 0) => {
-      if (!sectionListRef.current) {
-        return;
-      }
-
       const newParsedSelectedSections = parseSelectedSections(
         newSelectedSections,
         state.sections,
       ) as number;
 
       setFocused(true);
-      sectionListRef.current.getSectionContent(newParsedSelectedSections).focus();
+      domGetters.getSectionContent(newParsedSelectedSections).focus();
     },
     setSelectedSections: (newSelectedSections) => {
-      if (!sectionListRef.current) {
-        return;
-      }
-
       const newParsedSelectedSections = parseSelectedSections(newSelectedSections, state.sections);
       const newActiveSectionIndex =
         newParsedSelectedSections === 'all' ? 0 : newParsedSelectedSections;
@@ -118,7 +97,7 @@ export const useFieldAccessibleDOMInteractions = <
     },
     isFieldFocused: () => {
       const activeElement = getActiveElement(document);
-      return !!sectionListRef.current && sectionListRef.current.getRoot().contains(activeElement);
+      return domGetters.getRoot().contains(activeElement);
     },
   };
 
@@ -130,7 +109,7 @@ export const useFieldAccessibleDOMInteractions = <
     isFieldFocused: interactions.isFieldFocused,
   }));
 
-  return { sectionListRef, handleSectionListRef, interactions };
+  return interactions;
 };
 
 interface UseFieldAccessibleDOMInteractionsParameters<
@@ -143,4 +122,5 @@ interface UseFieldAccessibleDOMInteractionsParameters<
   stateResponse: UseFieldStateResponse<TValue, TDate, TSection>;
   focused: boolean;
   setFocused: (focused: boolean) => void;
+  domGetters: UseFieldAccessibleDOMGetters;
 }
