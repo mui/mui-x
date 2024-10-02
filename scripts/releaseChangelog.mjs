@@ -108,6 +108,10 @@ async function main(argv) {
 
   const changeLogMessages = [];
   const prsLabelsMap = {};
+  const community = {
+    firstTimers: new Set(),
+    contributors: new Set(),
+  };
   await Promise.all(
     commitsItems.map(async (commitsItem) => {
       const searchPullRequestId = commitsItem.commit.message.match(/\(#([0-9]+)\)/);
@@ -116,12 +120,18 @@ async function main(argv) {
       }
 
       const {
-        data: { body: bodyMessage, labels },
+        data: { body: bodyMessage, labels, author_association, user: { login } },
       } = await octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}', {
         owner: GIT_ORGANIZATION,
         repo: GIT_REPO,
         pull_number: Number(searchPullRequestId[1]),
       });
+
+      if (author_association === 'CONTRIBUTOR') {
+        community.contributors.add(`@${login}`);
+      } else if (author_association === 'FIRST_TIMER') {
+        community.firstTimers.add(`@${login}`);
+      }
 
       prsLabelsMap[commitsItem.sha] = labels;
 
@@ -264,6 +274,16 @@ async function main(argv) {
     year: 'numeric',
   });
 
+  const logCommunitySection = () => {
+    // TODO: separate first timers and regular contributors
+    const contributors = [ ...Array.from(community.contributors), ...Array.from(community.firstTimers) ].sort();
+    if (contributors.length === 0) {
+      return '';
+    }
+
+    return `Special thanks go out to our community contributors in this release: ${ contributors.join(', ') }`;
+  }
+
   const changelog = `
 ## __VERSION__
 <!-- generated comparing ${lastRelease}..${release} -->
@@ -275,6 +295,7 @@ We'd like to offer a big thanks to the ${
 
 TODO INSERT HIGHLIGHTS
 ${changeLogMessages.length > 0 ? '\n\n' : ''}${changeLogMessages.join('\n')}
+${logCommunitySection()}
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
