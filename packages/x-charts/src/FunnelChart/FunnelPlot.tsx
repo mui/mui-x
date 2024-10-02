@@ -7,6 +7,7 @@ import { useCartesianContext } from '../context/CartesianProvider';
 import { AxisId } from '../models/axis';
 import getCurveFactory from '../internals/getCurve';
 import { FunnelElement } from './FunnelElement';
+import { FunnelLabel } from './FunnelLabel';
 
 export interface FunnelPlotSlots {}
 
@@ -54,6 +55,8 @@ const useAggregatedData = () => {
     const defaultXAxisId = xAxisIds[0];
     const defaultYAxisId = yAxisIds[0];
 
+    const isHorizontal = Object.values(series).some((s) => s.layout === 'horizontal');
+
     const result = stackingGroups.map(({ ids: groupIds }) => {
       return groupIds.map((seriesId) => {
         const xAxisId = series[seriesId].xAxisId ?? series[seriesId].xAxisKey ?? defaultXAxisId;
@@ -87,6 +90,11 @@ const useAggregatedData = () => {
             seriesId,
             dataIndex,
             gradientUsed,
+            label: {
+              x: isHorizontal ? xScale(values[0].x - (values[0].x - values[1].x) / 2) : xScale(0),
+              y: isHorizontal ? yScale(0) : yScale(values[0].y - (values[0].y - values[1].y) / 2),
+              value: series[seriesId].data[dataIndex]?.toString(),
+            },
           };
         });
       });
@@ -120,6 +128,11 @@ function FunnelPlot(props: FunnelPlotProps) {
             })
           }
         />
+      ))}
+      {data.map(({ id, label }) => (
+        <FunnelLabel key={id} x={label.x} y={label.y}>
+          {label.value}
+        </FunnelLabel>
       ))}
     </React.Fragment>
   );
