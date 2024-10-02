@@ -24,11 +24,11 @@ export interface UseFieldParams<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
   TInternalProps extends UseFieldInternalProps<
-    any,
-    any,
-    any,
+    TValue,
+    TDate,
+    TSection,
     TEnableAccessibleFieldDOMStructure,
-    any
+    unknown
   >,
 > {
   forwardedProps: TForwardedProps;
@@ -216,13 +216,6 @@ export type FieldSectionsValueBoundaries<TDate extends PickerValidDate> = {
     format: string;
     contentType: FieldSectionContentType;
   }) => FieldSectionValueBoundaries<TDate, SectionType>;
-};
-
-export type FieldSectionsBoundaries = {
-  [SectionType in FieldSectionType]: {
-    minimum: number;
-    maximum: number;
-  };
 };
 
 export type FieldChangeHandler<TValue, TError> = (

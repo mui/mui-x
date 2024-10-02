@@ -1,3 +1,4 @@
+import { warnOnce } from '@mui/x-internals/warning';
 import {
   FieldSectionsValueBoundaries,
   FieldSectionValueBoundaries,
@@ -505,31 +506,26 @@ export const getSectionsBoundaries = <TDate extends PickerValidDate>(
   };
 };
 
-let warnedOnceInvalidSection = false;
-
 export const validateSections = <TSection extends FieldSection>(
   sections: TSection[],
   valueType: FieldValueType,
 ) => {
   if (process.env.NODE_ENV !== 'production') {
-    if (!warnedOnceInvalidSection) {
-      const supportedSections: FieldSectionType[] = ['empty'];
-      if (['date', 'date-time'].includes(valueType)) {
-        supportedSections.push('weekDay', 'day', 'month', 'year');
-      }
-      if (['time', 'date-time'].includes(valueType)) {
-        supportedSections.push('hours', 'minutes', 'seconds', 'meridiem');
-      }
+    const supportedSections: FieldSectionType[] = ['empty'];
+    if (['date', 'date-time'].includes(valueType)) {
+      supportedSections.push('weekDay', 'day', 'month', 'year');
+    }
+    if (['time', 'date-time'].includes(valueType)) {
+      supportedSections.push('hours', 'minutes', 'seconds', 'meridiem');
+    }
 
-      const invalidSection = sections.find((section) => !supportedSections.includes(section.type));
+    const invalidSection = sections.find((section) => !supportedSections.includes(section.type));
 
-      if (invalidSection) {
-        console.warn(
-          `MUI X: The field component you are using is not compatible with the "${invalidSection.type}" date section.`,
-          `The supported date sections are ["${supportedSections.join('", "')}"]\`.`,
-        );
-        warnedOnceInvalidSection = true;
-      }
+    if (invalidSection) {
+      warnOnce([
+        `MUI X: The field component you are using is not compatible with the "${invalidSection.type}" date section.`,
+        `The supported date sections are ["${supportedSections.join('", "')}"]\`.`,
+      ]);
     }
   }
 };
