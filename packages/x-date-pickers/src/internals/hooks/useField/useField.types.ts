@@ -418,10 +418,3 @@ export interface UseFieldAccessibleDOMGetters {
   getSectionContent: (sectionIndex: number) => HTMLElement;
   getSectionIndexFromDOMElement: (element: Element | null | undefined) => number | null;
 }
-
-export type UseFieldWithKnownDOMStructure<TEnableAccessibleFieldDOMStructure extends boolean> = <
-  TManager extends PickerAnyValueManagerV8,
-  TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
->(
-  params: UseFieldParams<TManager, TForwardedProps>,
-) => UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps>;
