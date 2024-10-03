@@ -44,7 +44,12 @@ export const useGridDataSourceLazyLoader = (
   privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'pagination' | 'paginationMode' | 'unstable_dataSource' | 'lazyLoading' | 'scrollEndThreshold'
+    | 'pagination'
+    | 'paginationMode'
+    | 'unstable_dataSource'
+    | 'lazyLoading'
+    | 'lazyLoadingRequestThrottleMs'
+    | 'scrollEndThreshold'
   >,
 ): void => {
   const sortModel = useGridSelector(privateApiRef, gridSortModelSelector);
@@ -311,8 +316,8 @@ export const useGridDataSourceLazyLoader = (
   );
 
   const throttledHandleRenderedRowsIntervalChange = React.useMemo(
-    () => throttle(handleRenderedRowsIntervalChange, 500), // TODO: make it configurable
-    [handleRenderedRowsIntervalChange],
+    () => throttle(handleRenderedRowsIntervalChange, props.lazyLoadingRequestThrottleMs),
+    [props.lazyLoadingRequestThrottleMs, handleRenderedRowsIntervalChange],
   );
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
