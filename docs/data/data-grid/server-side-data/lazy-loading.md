@@ -36,6 +36,8 @@ The viewport loading mode is enabled when the row count is known (`rowCount >= 0
 
 If the user scrolls too fast, the grid loads multiple pages with one request (by adjusting `start` and `end` param) in order to reduce the server load.
 
+In addition to this, the grid throttles new requests made to the data source after each rendering context change. This can be controlled with `lazyLoadingRequestThrottleMs` prop.
+
 The demo below shows the viewport loading mode.
 
 {{"demo": "ServerSideLazyLoadingViewport.js", "bg": "inline"}}
