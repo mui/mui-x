@@ -217,7 +217,7 @@
       "description": "If <code>true</code>, the selection model will retain selected rows that do not exist. Useful when using server side pagination and row selections need to be retained when changing pages."
     },
     "lazyLoading": {
-      "description": "Used together with <code>unstable_dataSource</code> to enable lazy loading. If enabled, the grid will stop adding <code>paginationModel</code> to the data requests (<code>getRows</code>) and start sending <code>start</code> and <code>end</code> values depending on the scroll position. A new request will be made whenever the user scrolls to the area that has skeleton rows."
+      "description": "Used together with <code>unstable_dataSource</code> to enable lazy loading. If enabled, the grid stops adding <code>paginationModel</code> to the data requests (<code>getRows</code>) and starts sending <code>start</code> and <code>end</code> values depending on the loading mode and the scroll position."
     },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": {
