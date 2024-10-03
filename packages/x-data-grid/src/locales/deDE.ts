@@ -58,9 +58,9 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'enthält',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'enthält nicht',
   filterOperatorEquals: 'ist gleich',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'ist ungleich',
   filterOperatorStartsWith: 'beginnt mit',
   filterOperatorEndsWith: 'endet mit',
   filterOperatorIs: 'ist',
@@ -81,9 +81,9 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Enthält',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Enthält nicht',
   headerFilterOperatorEquals: 'Gleich',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Ungleich',
   headerFilterOperatorStartsWith: 'Beginnt mit',
   headerFilterOperatorEndsWith: 'Endet mit',
   headerFilterOperatorIs: 'Ist',

@@ -147,14 +147,18 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     /* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions -- Key event is handled by the TreeView */
     <div
       {...other}
-      className={clsx(className, classes.root, {
-        [classes.expanded]: expanded,
-        [classes.selected]: selected,
-        [classes.focused]: focused,
-        [classes.disabled]: disabled,
-        [classes.editing]: editing,
-        [classes.editable]: editable,
-      })}
+      className={clsx(
+        classes.root,
+        {
+          [classes.expanded]: expanded,
+          [classes.selected]: selected,
+          [classes.focused]: focused,
+          [classes.disabled]: disabled,
+          [classes.editing]: editing,
+          [classes.editable]: editable,
+        },
+        className,
+      )}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
       ref={ref}
