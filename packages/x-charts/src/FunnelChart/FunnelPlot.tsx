@@ -4,7 +4,7 @@ import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { FunnelItemIdentifier } from './funnel.types';
 import { useFunnelSeries } from '../hooks/useSeries';
 import { useCartesianContext } from '../context/CartesianProvider';
-import { AxisId } from '../models/axis';
+import { AxisDefaultized, AxisId } from '../models/axis';
 import getCurveFactory from '../internals/getCurve';
 import { FunnelElement } from './FunnelElement';
 import { FunnelLabel } from './FunnelLabel';
@@ -257,11 +257,20 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
     const isHorizontal = Object.values(series).some((s) => s.layout === 'horizontal');
 
     const result = stackingGroups.map(({ ids: groupIds }) => {
-      return groupIds.map((seriesId) => {
+      return groupIds.map((seriesId, bandIndex) => {
         const xAxisId = series[seriesId].xAxisId ?? series[seriesId].xAxisKey ?? defaultXAxisId;
         const yAxisId = series[seriesId].yAxisId ?? series[seriesId].yAxisKey ?? defaultYAxisId;
 
         const valueFormatter = series[seriesId].valueFormatter;
+
+        const baseScaleConfig = (
+          isHorizontal ? xAxis[xAxisId] : yAxis[yAxisId]
+        ) as AxisDefaultized<'band'>;
+
+        const isXAxisBand = xAxis[xAxisId].scaleType === 'band';
+        const isYAxisBand = yAxis[yAxisId].scaleType === 'band';
+
+        const bandWidth = ((isXAxisBand || isYAxisBand) && baseScaleConfig.scale.bandwidth()) || 0;
 
         const xScale = xAxis[xAxisId].scale;
         const yScale = yAxis[yAxisId].scale;
@@ -275,9 +284,21 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
 
         const curve = getCurveFactory(series[seriesId].curve ?? 'linear');
 
-        const line = d3Line<{ x: number; y: number }>()
-          .x((d) => xScale(d.x)!)
-          .y((d) => yScale(d.y)!)
+        const line = d3Line<{ x: number; y: number; xBand: boolean; yBand: boolean }>()
+          .x((d) => {
+            if (isXAxisBand) {
+              const value = xScale(bandIndex);
+              return d.xBand ? value! + bandWidth : value!;
+            }
+            return xScale(d.x)!;
+          })
+          .y((d) => {
+            if (isYAxisBand) {
+              const value = yScale(bandIndex);
+              return d.yBand ? value! + bandWidth : value!;
+            }
+            return yScale(d.y)!;
+          })
           .curve(curve);
 
         return stackedData.map((values, dataIndex) => {

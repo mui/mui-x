@@ -9,8 +9,19 @@ import { SeriesFormatter } from '../context/PluginProvider/SeriesFormatter.types
 
 type FunnelDataset = DatasetType<number | null>;
 
-const createPoint = (main: number, other: number, inverse: boolean) =>
-  inverse ? { x: other, y: main } : { x: main, y: other };
+const createPoint = ({
+  main,
+  other,
+  inverse,
+  xBand,
+  yBand,
+}: {
+  main: number;
+  other: number;
+  inverse: boolean;
+  xBand: boolean;
+  yBand: boolean;
+}) => (inverse ? { x: other, y: main, xBand, yBand } : { x: main, y: other, xBand, yBand });
 
 const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
   const { seriesOrder, series } = params;
@@ -100,8 +111,14 @@ const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
         const [nextMaxOther, currentMaxOther] = stackedSeries[index][dataIndex];
 
         return [
-          // Top right
-          createPoint(currentMaxMain, currentMaxOther, isHorizontal),
+          // Top right (vertical) or Top left (horizontal)
+          createPoint({
+            main: currentMaxMain,
+            other: currentMaxOther,
+            inverse: isHorizontal,
+            xBand: false,
+            yBand: false,
+          }),
           // Middle right
           // {
           //   x: currentMaxMain - (currentMaxMain - nextMaxMain) * 0,
@@ -111,10 +128,22 @@ const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
           //   x: currentMaxMain - (currentMaxMain - nextMaxMain) * 1,
           //   y: currentMaxOther - (currentMaxOther - nextMaxOther) * 0.9,
           // },
-          // Bottom right
-          createPoint(nextMaxMain, nextMaxOther, isHorizontal),
-          // Bottom left
-          createPoint(-nextMaxMain, nextMaxOther, isHorizontal),
+          // Bottom right (vertical) or Top right (horizontal)
+          createPoint({
+            main: nextMaxMain,
+            other: nextMaxOther,
+            inverse: isHorizontal,
+            xBand: true,
+            yBand: true,
+          }),
+          // Bottom left (vertical) or Bottom right (horizontal)
+          createPoint({
+            main: -nextMaxMain,
+            other: nextMaxOther,
+            inverse: isHorizontal,
+            xBand: true,
+            yBand: true,
+          }),
           // Middle left
           // {
           //   x: -nextMaxMain - (currentMaxMain - nextMaxMain) * 0,
@@ -124,8 +153,14 @@ const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
           //   x: -nextMaxMain - (currentMaxMain - nextMaxMain) * 1,
           //   y: currentMaxOther - (currentMaxOther - nextMaxOther) * 0.1,
           // },
-          // Top left
-          createPoint(-currentMaxMain, currentMaxOther, isHorizontal),
+          // Top left (vertical) or Bottom left (horizontal)
+          createPoint({
+            main: -currentMaxMain,
+            other: currentMaxOther,
+            inverse: isHorizontal,
+            xBand: false,
+            yBand: false,
+          }),
         ];
       });
     });

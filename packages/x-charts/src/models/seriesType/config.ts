@@ -78,6 +78,8 @@ export interface ChartsSeriesConfig {
 
 export type ChartSeriesType = keyof ChartsSeriesConfig;
 
+export type FunnelStackedData = Record<'x' | 'y', number> & Record<'xBand' | 'yBand', boolean>;
+
 export type CartesianChartSeriesType = keyof Pick<
   ChartsSeriesConfig,
   {
@@ -97,7 +99,7 @@ export type ChartSeries<T extends ChartSeriesType> = ChartsSeriesConfig[T] exten
 }
   ? T extends 'funnel'
     ? ChartsSeriesConfig[T]['seriesInput'] & {
-        stackedData: Record<'x' | 'y', number>[][];
+        stackedData: FunnelStackedData[][];
       }
     : ChartsSeriesConfig[T]['seriesInput'] & { stackedData: [number, number][] }
   : ChartsSeriesConfig[T]['seriesInput'];
@@ -107,7 +109,7 @@ export type ChartSeriesDefaultized<T extends ChartSeriesType> = ChartsSeriesConf
 }
   ? T extends 'funnel'
     ? ChartsSeriesConfig[T]['series'] & {
-        stackedData: Record<'x' | 'y', number>[][];
+        stackedData: FunnelStackedData[][];
       }
     : ChartsSeriesConfig[T]['series'] & { stackedData: [number, number][] }
   : ChartsSeriesConfig[T]['series'];
