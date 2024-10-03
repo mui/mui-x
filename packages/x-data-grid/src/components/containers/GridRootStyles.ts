@@ -535,6 +535,7 @@ export const GridRootStyles = styled('div', {
 
     /* Cell styles */
     [`& .${c.cell}`]: {
+      flex: '0 0 auto',
       height: 'var(--height)',
       width: 'var(--width)',
       lineHeight: 'calc(var(--height) - 1px)', // -1px for the border
