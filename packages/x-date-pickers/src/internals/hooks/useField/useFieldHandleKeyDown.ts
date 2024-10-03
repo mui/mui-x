@@ -1,6 +1,13 @@
 import useEventCallback from '@mui/utils/useEventCallback';
 import { UseFieldStateResponse } from './useFieldState';
-import { FieldSection, MuiPickersAdapter, PickersTimezone, PickerValidDate } from '../../../models';
+import {
+  FieldSection,
+  MuiPickersAdapter,
+  PickerAnyValueManagerV8,
+  PickerManagerProperties,
+  PickersTimezone,
+  PickerValidDate,
+} from '../../../models';
 import {
   getLetterEditingOptions,
   cleanDigitSectionValue,
@@ -9,7 +16,6 @@ import {
 } from './useField.utils';
 import {
   FieldSectionsValueBoundaries,
-  FieldValueManager,
   SectionOrdering,
   UseFieldForwardedProps,
   UseFieldInternalProps,
@@ -134,23 +140,16 @@ export const adjustSectionValue = <TDate extends PickerValidDate, TSection exten
   return adjustLetterSection();
 };
 
-export const useFieldHandleKeyDown = <
-  TValue,
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TSection extends FieldSection,
->(
-  params: UseFieldHandleKeyDownParameters<
-    TValue,
-    TDate,
-    TEnableAccessibleFieldDOMStructure,
-    TSection
-  >,
+export const useFieldHandleKeyDown = <TManager extends PickerAnyValueManagerV8>(
+  params: UseFieldHandleKeyDownParameters<TManager>,
 ) => {
+  type ManagerProperties = PickerManagerProperties<TManager>;
+  type TDate = ManagerProperties['date'];
+
   const utils = useUtils<TDate>();
 
   const {
-    fieldValueManager,
+    valueManager: { fieldValueManager },
     stateResponse: {
       setSelectedSections,
       parsedSelectedSections,
@@ -277,24 +276,15 @@ export const useFieldHandleKeyDown = <
   });
 };
 
-interface UseFieldHandleKeyDownParameters<
-  TValue,
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TSection extends FieldSection,
-> {
-  fieldValueManager: FieldValueManager<TValue, TDate, TSection>;
-  forwardedProps: UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>;
-  internalProps: UseFieldInternalProps<
-    TValue,
-    TDate,
-    TSection,
-    TEnableAccessibleFieldDOMStructure,
-    any
-  > & {
+interface UseFieldHandleKeyDownParameters<TManager extends PickerAnyValueManagerV8> {
+  valueManager: TManager;
+  forwardedProps: UseFieldForwardedProps<
+    PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure']
+  >;
+  internalProps: UseFieldInternalProps<TManager> & {
     minutesStep?: number;
   };
-  stateResponse: UseFieldStateResponse<TValue, TDate, TSection>;
+  stateResponse: UseFieldStateResponse<TManager>;
   characterEditingResponse: UseFieldCharacterEditingReturnValue;
   /**
    * Only define when used with the legacy DOM structure.

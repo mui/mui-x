@@ -5,22 +5,12 @@ import {
   UseFieldInternalProps,
   UseFieldDOMInteractions,
 } from './useField.types';
-import { FieldSection, PickerValidDate } from '../../../models';
+import { PickerAnyValueManagerV8, PickerManagerProperties } from '../../../models';
 import { UseFieldStateResponse } from './useFieldState';
 import { buildDefaultSectionOrdering } from './useField.utils';
 
-export const useFieldClearValueProps = <
-  TValue,
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TSection extends FieldSection,
->(
-  parameters: UseFieldClearValuePropsParameters<
-    TValue,
-    TDate,
-    TEnableAccessibleFieldDOMStructure,
-    TSection
-  >,
+export const useFieldClearValueProps = <TManager extends PickerAnyValueManagerV8>(
+  parameters: UseFieldClearValuePropsParameters<TManager>,
 ) => {
   const {
     forwardedProps: { clearable: inClearable, onClear },
@@ -51,21 +41,12 @@ export const useFieldClearValueProps = <
   };
 };
 
-interface UseFieldClearValuePropsParameters<
-  TValue,
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TSection extends FieldSection,
-> {
-  forwardedProps: UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>;
-  internalProps: UseFieldInternalProps<
-    TValue,
-    TDate,
-    TSection,
-    TEnableAccessibleFieldDOMStructure,
-    any
+interface UseFieldClearValuePropsParameters<TManager extends PickerAnyValueManagerV8> {
+  forwardedProps: UseFieldForwardedProps<
+    PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure']
   >;
-  stateResponse: UseFieldStateResponse<TValue, TDate, TSection>;
+  internalProps: UseFieldInternalProps<TManager>;
+  stateResponse: UseFieldStateResponse<TManager>;
   interactions: UseFieldDOMInteractions;
   /**
    * Only define when used with the legacy DOM structure.

@@ -1,14 +1,12 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { FieldSection, PickerValidDate } from '../../../models';
+import { PickerAnyAccessibleValueManagerV8 } from '../../../models';
 import { UseFieldStateResponse } from './useFieldState';
 
 export const useFieldAccessibleSectionContainerProps = <
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
+  TManager extends PickerAnyAccessibleValueManagerV8,
 >(
-  parameters: UseFieldAccessibleSectionContainerPropsParameters<TValue, TDate, TSection>,
+  parameters: UseFieldAccessibleSectionContainerPropsParameters<TManager>,
 ) => {
   const {
     stateResponse: { setSelectedSections },
@@ -38,9 +36,7 @@ export const useFieldAccessibleSectionContainerProps = <
 };
 
 interface UseFieldAccessibleSectionContainerPropsParameters<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
+  TManager extends PickerAnyAccessibleValueManagerV8,
 > {
-  stateResponse: UseFieldStateResponse<TValue, TDate, TSection>;
+  stateResponse: UseFieldStateResponse<TManager>;
 }

@@ -1,47 +1,32 @@
-import { FieldSection, PickerValidDate } from '../../../models';
+import { PickerAnyValueManagerV8, PickerManagerProperties } from '../../../models';
 import {
-  UseFieldInternalProps,
   UseFieldParams,
   UseFieldLegacyForwardedProps,
   UseFieldAccessibleForwardedProps,
-  UseFieldWithKnownDOMStructure,
   UseFieldResponse,
 } from './useField.types';
 import { useFieldAccessibleDOMStructure } from './useFieldAccessibleDOMStructure';
 import { useFieldLegacyDOMStructure } from './useFieldLegacyDOMStructure';
 
 export const useField = <
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
-    ? UseFieldLegacyForwardedProps
-    : UseFieldAccessibleForwardedProps,
-  TInternalProps extends UseFieldInternalProps<
-    any,
-    any,
-    any,
-    TEnableAccessibleFieldDOMStructure,
-    any
-  > & {
-    minutesStep?: number;
-  },
+  TManager extends PickerAnyValueManagerV8,
+  TForwardedProps extends
+    PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure'] extends false
+      ? UseFieldLegacyForwardedProps
+      : UseFieldAccessibleForwardedProps,
 >(
-  parameters: UseFieldParams<
-    TValue,
-    TDate,
-    TSection,
-    TEnableAccessibleFieldDOMStructure,
-    TForwardedProps,
-    TInternalProps
-  >,
-): UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps> => {
+  parameters: UseFieldParams<TManager, TForwardedProps>,
+): UseFieldResponse<
+  PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure'],
+  TForwardedProps
+> => {
   const useFieldWithCorrectDOMStructure = (
     parameters.internalProps.enableAccessibleFieldDOMStructure
       ? useFieldAccessibleDOMStructure
       : useFieldLegacyDOMStructure
-  ) as UseFieldWithKnownDOMStructure<TEnableAccessibleFieldDOMStructure>;
+  ) as (
+    params: UseFieldParams<TManager, TForwardedProps>,
+  ) => UseFieldResponse<true, TForwardedProps>;
 
   return useFieldWithCorrectDOMStructure(parameters);
 };

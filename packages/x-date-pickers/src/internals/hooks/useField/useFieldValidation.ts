@@ -1,21 +1,17 @@
 import * as React from 'react';
 import { UseFieldForwardedProps, UseFieldInternalProps } from './useField.types';
-import { FieldSection, PickerValidDate } from '../../../models';
+import { PickerAnyValueManagerV8 } from '../../../models';
 import { UseFieldStateResponse } from './useFieldState';
-import { useValidation, Validator } from '../../../validation';
+import { useValidation } from '../../../validation';
 
-export const useFieldValidation = <
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
->(
-  parameters: UseFieldValidationParameters<TValue, TDate, TSection>,
+export const useFieldValidation = <TManager extends PickerAnyValueManagerV8>(
+  parameters: UseFieldValidationParameters<TManager>,
 ) => {
   const {
     internalProps,
     forwardedProps: { error: errorProp },
     stateResponse: { state, timezone },
-    validator,
+    valueManager: { validator },
   } = parameters;
 
   const { hasValidationError } = useValidation({
@@ -39,18 +35,9 @@ export const useFieldValidation = <
   return error;
 };
 
-interface UseFieldValidationParameters<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-> {
+interface UseFieldValidationParameters<TManager extends PickerAnyValueManagerV8> {
   forwardedProps: UseFieldForwardedProps<true>;
-  internalProps: UseFieldInternalProps<TValue, TDate, TSection, true, unknown>;
-  stateResponse: UseFieldStateResponse<TValue, TDate, TSection>;
-  validator: Validator<
-    TValue,
-    TDate,
-    unknown,
-    UseFieldInternalProps<TValue, TDate, TSection, true, unknown>
-  >;
+  internalProps: UseFieldInternalProps<TManager>;
+  stateResponse: UseFieldStateResponse<TManager>;
+  valueManager: TManager;
 }

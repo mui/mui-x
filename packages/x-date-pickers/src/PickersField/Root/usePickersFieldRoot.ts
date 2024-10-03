@@ -3,18 +3,18 @@ import { mergeReactProps } from '@base_ui/react/utils/mergeReactProps';
 import { getStyleHookProps } from '@base_ui/react/utils/getStyleHookProps';
 import { useField } from '../../internals/hooks/useField';
 import type { PickersFieldProvider } from './PickersFieldProvider';
-import { PickerValueManagerProperties, PickerAnyAccessibleValueManagerV8 } from '../../models';
+import { PickerManagerProperties, PickerAnyAccessibleValueManagerV8 } from '../../models';
 import { useLocalizationContext } from '../../internals/hooks/useUtils';
 
-export function usePickersFieldRoot<TValueManager extends PickerAnyAccessibleValueManagerV8>(
-  params: UsePickersFieldRoot.Parameters<TValueManager>,
+export function usePickersFieldRoot<TManager extends PickerAnyAccessibleValueManagerV8>(
+  params: UsePickersFieldRoot.Parameters<TManager>,
 ): UsePickersFieldRoot.ReturnValue {
-  type ValueManagerProperties = PickerValueManagerProperties<TValueManager>;
-  type TValue = ValueManagerProperties['value'];
-  type TDate = ValueManagerProperties['date'];
-  type TSection = ValueManagerProperties['section'];
-  type TInternalProps = ValueManagerProperties['internalProps'];
-  type TInternalPropsWithDefaults = ValueManagerProperties['internalProps'];
+  type ManagerProperties = PickerManagerProperties<TManager>;
+  type TValue = ManagerProperties['value'];
+  type TDate = ManagerProperties['date'];
+  type TSection = ManagerProperties['section'];
+  type TInternalProps = ManagerProperties['internalProps'];
+  type TInternalPropsWithDefaults = ManagerProperties['internalPropsWithDefaults'];
 
   const { valueManager, internalProps, inputRef } = params;
 
@@ -25,50 +25,9 @@ export function usePickersFieldRoot<TValueManager extends PickerAnyAccessibleVal
       internalProps,
     });
 
-  const {
-    sectionListRef,
-    elements,
-    // TODO: Rename to a more meaningful name now that it's not the props passed directly to the root `contentEditable` DOM attribute.
-    contentEditable,
-
-    // Ignored, always equal to `true`
-    enableAccessibleFieldDOMStructure,
-
-    // TODO: Add support
-    clearable,
-    onClear,
-    error,
-    focused,
-    areAllSectionsEmpty,
-    disabled,
-
-    // Props forwarded to the hidden input
-    value,
-    onChange,
-    readOnly,
-    // id,
-    // name,
-
-    // Props forwarded to the root
-    onFocus,
-    onBlur,
-
-    ...propsForwardedToContent
-  } = useField<
-    TValue,
-    TDate,
-    TSection,
-    true,
-    // TODO: Add forwaredProps
-    {},
-    TInternalProps
-  >({
-    forwardedProps: {},
-    internalProps: { ...internalPropsWithDefault, enableAccessibleFieldDOMStructure: true },
+  const stateResponse = useFieldState({
+    internalProps: internalPropsWithDefault,
     valueManager: valueManager.legacyValueManager,
-    fieldValueManager: valueManager.fieldValueManager,
-    validator: valueManager.validator,
-    valueType: valueManager.valueType,
   });
 
   const sectionsRef = React.useRef<{ [sectionIndex: string]: HTMLSpanElement }>({});
@@ -125,9 +84,9 @@ export function usePickersFieldRoot<TValueManager extends PickerAnyAccessibleVal
 }
 
 export namespace UsePickersFieldRoot {
-  export interface Parameters<TValueManager extends PickerAnyAccessibleValueManagerV8> {
-    valueManager: TValueManager;
-    internalProps: PickerValueManagerProperties<TValueManager>['internalProps'];
+  export interface Parameters<TManager extends PickerAnyAccessibleValueManagerV8> {
+    valueManager: TManager;
+    internalProps: PickerManagerProperties<TManager>['internalProps'];
     inputRef: React.Ref<HTMLInputElement>;
   }
 

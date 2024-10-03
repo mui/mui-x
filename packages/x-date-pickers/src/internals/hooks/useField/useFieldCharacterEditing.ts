@@ -1,6 +1,11 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { FieldSectionType, FieldSection, PickerValidDate } from '../../../models';
+import {
+  FieldSectionType,
+  FieldSection,
+  PickerAnyValueManagerV8,
+  PickerManagerProperties,
+} from '../../../models';
 import { useUtils } from '../useUtils';
 import {
   changeSectionValueFormat,
@@ -68,13 +73,13 @@ const isQueryResponseWithoutValue = <TSection extends FieldSection>(
  * 1. The numeric editing when the user presses a digit
  * 2. The letter editing when the user presses another key
  */
-export const useFieldCharacterEditing = <
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
->(
-  parameters: UseFieldCharacterEditingParameters<TValue, TDate, TSection>,
+export const useFieldCharacterEditing = <TManager extends PickerAnyValueManagerV8>(
+  parameters: UseFieldCharacterEditingParameters<TManager>,
 ): UseFieldCharacterEditingReturnValue => {
+  type ManagerProperties = PickerManagerProperties<TManager>;
+  type TDate = ManagerProperties['date'];
+  type TSection = ManagerProperties['section'];
+
   const {
     error,
     stateResponse: {
@@ -422,12 +427,8 @@ export const useFieldCharacterEditing = <
   };
 };
 
-interface UseFieldCharacterEditingParameters<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-> {
-  stateResponse: UseFieldStateResponse<TValue, TDate, TSection>;
+interface UseFieldCharacterEditingParameters<TManager extends PickerAnyValueManagerV8> {
+  stateResponse: UseFieldStateResponse<TManager>;
   error: boolean;
 }
 

@@ -1,18 +1,15 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { FieldSection, PickerValidDate } from '../../../models';
+import { PickerAnyAccessibleValueManagerV8 } from '../../../models';
 import { UseFieldStateResponse } from './useFieldState';
-import { FieldValueManager } from './useField.types';
 
 export const useFieldAccessibleHiddenInputProps = <
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
+  TManager extends PickerAnyAccessibleValueManagerV8,
 >(
-  parameters: UseFieldAccessibleHiddenInputParameters<TValue, TDate, TSection>,
+  parameters: UseFieldAccessibleHiddenInputParameters<TManager>,
 ) => {
   const {
-    fieldValueManager,
+    valueManager: { fieldValueManager },
     stateResponse: { state, updateValueFromValueStr, areAllSectionsEmpty },
   } = parameters;
 
@@ -35,10 +32,8 @@ export const useFieldAccessibleHiddenInputProps = <
 };
 
 interface UseFieldAccessibleHiddenInputParameters<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
+  TManager extends PickerAnyAccessibleValueManagerV8,
 > {
-  fieldValueManager: FieldValueManager<TValue, TDate, TSection>;
-  stateResponse: UseFieldStateResponse<TValue, TDate, TSection>;
+  valueManager: TManager;
+  stateResponse: UseFieldStateResponse<TManager>;
 }

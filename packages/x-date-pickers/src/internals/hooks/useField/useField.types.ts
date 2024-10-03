@@ -6,62 +6,47 @@ import {
   MuiPickersAdapter,
   TimezoneProps,
   FieldSectionContentType,
-  FieldValueType,
   PickerValidDate,
   FieldRef,
   OnErrorProps,
-  InferError,
+  PickerAnyValueManagerV8,
+  PickerManagerProperties,
 } from '../../../models';
-import type { PickerValueManager } from '../usePicker';
-import type { Validator } from '../../../validation';
 import type { PickersSectionElement } from '../../../PickersSectionList';
 import { ExportedUseClearableFieldProps } from '../../../hooks/useClearableField';
 
 export interface UseFieldParams<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<
-    TValue,
-    TDate,
-    TSection,
-    TEnableAccessibleFieldDOMStructure,
-    InferError<TInternalProps>
+  TManager extends PickerAnyValueManagerV8,
+  TForwardedProps extends UseFieldForwardedProps<
+    PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure']
   >,
 > {
+  valueManager: TManager;
   forwardedProps: TForwardedProps;
-  internalProps: TInternalProps;
-  valueManager: PickerValueManager<TValue, TDate, InferError<TInternalProps>>;
-  fieldValueManager: FieldValueManager<TValue, TDate, TSection>;
-  validator: Validator<TValue, TDate, InferError<TInternalProps>, TInternalProps>;
-  valueType: FieldValueType;
+  internalProps: PickerManagerProperties<TManager>['internalPropsWithDefaults'];
 }
 
-export interface UseFieldInternalProps<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TError,
-> extends TimezoneProps,
-    OnErrorProps<TValue, TError> {
+export interface UseFieldInternalProps<TManager extends PickerAnyValueManagerV8>
+  extends TimezoneProps,
+    OnErrorProps<
+      PickerManagerProperties<TManager>['value'],
+      PickerManagerProperties<TManager>['error']
+    > {
   /**
    * The selected value.
    * Used when the component is controlled.
    */
-  value?: TValue;
+  value?: PickerManagerProperties<TManager>['value'];
   /**
    * The default value. Use when the component is not controlled.
    */
-  defaultValue?: TValue;
+  defaultValue?: PickerManagerProperties<TManager>['value'];
   /**
    * The date used to generate a part of the new value that is not present in the format when both `value` and `defaultValue` are empty.
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
-  referenceDate?: TDate;
+  referenceDate?: PickerManagerProperties<TManager>['date'];
   /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
@@ -69,7 +54,10 @@ export interface UseFieldInternalProps<
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
-  onChange?: FieldChangeHandler<TValue, TError>;
+  onChange?: FieldChangeHandler<
+    PickerManagerProperties<TManager>['value'],
+    PickerManagerProperties<TManager>['error']
+  >;
   /**
    * Format of the date when rendered in the input(s).
    */
@@ -119,11 +107,11 @@ export interface UseFieldInternalProps<
   /**
    * The ref object used to imperatively interact with the field.
    */
-  unstableFieldRef?: React.Ref<FieldRef<TSection>>;
+  unstableFieldRef?: React.Ref<FieldRef<PickerManagerProperties<TManager>['section']>>;
   /**
    * @default false
    */
-  enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
+  enableAccessibleFieldDOMStructure?: PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure'];
   /**
    * If `true`, the `input` element is focused during the first mount.
    * @default false
@@ -231,26 +219,24 @@ export interface FieldChangeHandlerContext<TError> {
  * Object used to access and update the active date (i.e: the date containing the active section).
  * Mainly useful in the range fields where we need to update the date containing the active section without impacting the other one.
  */
-interface FieldActiveDateManager<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-> {
+interface FieldActiveDateManager<TManager extends PickerAnyValueManagerV8> {
   /**
    * Active date from `state.value`.
    */
-  date: TDate | null;
+  date: PickerManagerProperties<TManager>['date'] | null;
   /**
    * Active date from the `state.referenceValue`.
    */
-  referenceDate: TDate;
+  referenceDate: PickerManagerProperties<TManager>['date'];
   /**
    * @template TSection
    * @param  {TSection[]} sections The sections of the full value.
    * @returns {TSection[]} The sections of the active date.
    * Get the sections of the active date.
    */
-  getSections: (sections: TSection[]) => TSection[];
+  getSections: (
+    sections: PickerManagerProperties<TManager>['section'][],
+  ) => PickerManagerProperties<TManager>['section'][];
   /**
    * Creates the new value and reference value based on the new active date and the current state.
    * @template TValue, TDate
@@ -258,17 +244,13 @@ interface FieldActiveDateManager<
    * @returns {Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>} The new value and reference value to publish and store in the state.
    */
   getNewValuesFromNewActiveDate: (
-    newActiveDate: TDate | null,
-  ) => Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>;
+    newActiveDate: PickerManagerProperties<TManager>['date'] | null,
+  ) => Pick<UseFieldState<TManager>, 'value' | 'referenceValue'>;
 }
 
 export type FieldParsedSelectedSections = number | 'all' | null;
 
-export interface FieldValueManager<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-> {
+export interface FieldValueManager<TManager extends PickerAnyValueManagerV8> {
   /**
    * Creates the section list from the current value.
    * The `prevSections` are used on the range fields to avoid losing the sections of a partially filled date when editing the other date.
@@ -280,11 +262,11 @@ export interface FieldValueManager<
    * @returns {TSection[]}  The new section list.
    */
   getSectionsFromValue: (
-    utils: MuiPickersAdapter<TDate>,
-    value: TValue,
-    fallbackSections: TSection[] | null,
-    getSectionsFromDate: (date: TDate) => FieldSection[],
-  ) => TSection[];
+    utils: MuiPickersAdapter<PickerManagerProperties<TManager>['date']>,
+    value: PickerManagerProperties<TManager>['value'],
+    fallbackSections: PickerManagerProperties<TManager>['section'][] | null,
+    getSectionsFromDate: (date: PickerManagerProperties<TManager>['date']) => FieldSection[],
+  ) => PickerManagerProperties<TManager>['section'][];
   /**
    * Creates the string value to render in the input based on the current section list.
    * @template TSection
@@ -294,7 +276,7 @@ export interface FieldValueManager<
    * @returns {string} The string value to render in the input.
    */
   getV6InputValueFromSections: (
-    sections: TSection[],
+    sections: PickerManagerProperties<TManager>['section'][],
     localizedDigits: string[],
     isRtl: boolean,
   ) => string;
@@ -304,7 +286,9 @@ export interface FieldValueManager<
    * @param {TSection[]} sections The current section list.
    * @returns {string} The string value to render in the input.
    */
-  getV7HiddenInputValueFromSections: (sections: TSection[]) => string;
+  getV7HiddenInputValueFromSections: (
+    sections: PickerManagerProperties<TManager>['section'][],
+  ) => string;
   /**
    * Returns the manager of the active date.
    * @template TValue, TDate, TSection
@@ -314,10 +298,10 @@ export interface FieldValueManager<
    * @returns {FieldActiveDateManager<TValue, TDate, TSection>} The manager of the active date.
    */
   getActiveDateManager: (
-    utils: MuiPickersAdapter<TDate>,
-    state: UseFieldState<TValue, TSection>,
-    activeSection: TSection,
-  ) => FieldActiveDateManager<TValue, TDate, TSection>;
+    utils: MuiPickersAdapter<PickerManagerProperties<TManager>['date']>,
+    state: UseFieldState<TManager>,
+    activeSection: PickerManagerProperties<TManager>['section'],
+  ) => FieldActiveDateManager<TManager>;
   /**
    * Parses a string version (most of the time coming from the input).
    * This method should only be used when the change does not come from a single section.
@@ -329,9 +313,12 @@ export interface FieldValueManager<
    */
   parseValueStr: (
     valueStr: string,
-    referenceValue: TValue,
-    parseDate: (dateStr: string, referenceDate: TDate) => TDate | null,
-  ) => TValue;
+    referenceValue: PickerManagerProperties<TManager>['value'],
+    parseDate: (
+      dateStr: string,
+      referenceDate: PickerManagerProperties<TManager>['date'],
+    ) => PickerManagerProperties<TManager>['date'] | null,
+  ) => PickerManagerProperties<TManager>['value'];
   /**
    * Update the reference value with the new value.
    * This method must make sure that no date inside the returned `referenceValue` is invalid.
@@ -342,20 +329,20 @@ export interface FieldValueManager<
    * @returns {TValue} The new reference value with no invalid date.
    */
   updateReferenceValue: (
-    utils: MuiPickersAdapter<TDate>,
-    value: TValue,
-    prevReferenceValue: TValue,
-  ) => TValue;
+    utils: MuiPickersAdapter<PickerManagerProperties<TManager>['date']>,
+    value: PickerManagerProperties<TManager>['value'],
+    prevReferenceValue: PickerManagerProperties<TManager>['value'],
+  ) => PickerManagerProperties<TManager>['value'];
 }
 
-export interface UseFieldState<TValue, TSection extends FieldSection> {
-  value: TValue;
+export interface UseFieldState<TManager extends PickerAnyValueManagerV8> {
+  value: PickerManagerProperties<TManager>['value'];
   /**
    * Non-nullable value used to keep trace of the timezone and the date parts not present in the format.
    * It is updated whenever we have a valid date (for the range picker we update only the portion of the range that is valid).
    */
-  referenceValue: TValue;
-  sections: TSection[];
+  referenceValue: PickerManagerProperties<TManager>['value'];
+  sections: PickerManagerProperties<TManager>['section'][];
   /**
    * Android `onChange` behavior when the input selection is not empty is quite different from a desktop behavior.
    * There are two `onChange` calls:
@@ -430,26 +417,8 @@ export interface UseFieldAccessibleDOMGetters {
 }
 
 export type UseFieldWithKnownDOMStructure<TEnableAccessibleFieldDOMStructure extends boolean> = <
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
+  TManager extends PickerAnyValueManagerV8,
   TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<
-    TValue,
-    TDate,
-    TSection,
-    TEnableAccessibleFieldDOMStructure,
-    unknown
-  > & {
-    minutesStep?: number;
-  },
 >(
-  params: UseFieldParams<
-    TValue,
-    TDate,
-    TSection,
-    TEnableAccessibleFieldDOMStructure,
-    TForwardedProps,
-    TInternalProps
-  >,
+  params: UseFieldParams<TManager, TForwardedProps>,
 ) => UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps>;

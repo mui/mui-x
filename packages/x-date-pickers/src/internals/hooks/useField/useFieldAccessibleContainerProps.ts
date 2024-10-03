@@ -1,7 +1,6 @@
 import useEventCallback from '@mui/utils/useEventCallback';
-import { FieldSection, PickerValidDate } from '../../../models';
+import { PickerAnyAccessibleValueManagerV8 } from '../../../models';
 import {
-  FieldValueManager,
   UseFieldAccessibleDOMGetters,
   UseFieldDOMInteractions,
   UseFieldForwardedProps,
@@ -13,11 +12,9 @@ import { getActiveElement } from '../../utils/utils';
 import { useFieldHandleKeyDown } from './useFieldHandleKeyDown';
 
 export const useFieldAccessibleContainerProps = <
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
+  TManager extends PickerAnyAccessibleValueManagerV8,
 >(
-  parameters: UseFieldAccessibleContainerPropsParameters<TValue, TDate, TSection>,
+  parameters: UseFieldAccessibleContainerPropsParameters<TManager>,
 ) => {
   const {
     stateResponse,
@@ -34,7 +31,7 @@ export const useFieldAccessibleContainerProps = <
     forwardedProps: { onClick, onPaste, onBlur, onFocus, onInput },
     internalProps,
     internalProps: { readOnly = false },
-    fieldValueManager,
+    valueManager: { fieldValueManager },
     interactions,
     focused,
     setFocused,
@@ -183,16 +180,14 @@ export const useFieldAccessibleContainerProps = <
 };
 
 interface UseFieldAccessibleContainerPropsParameters<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
+  TManager extends PickerAnyAccessibleValueManagerV8,
 > {
-  fieldValueManager: FieldValueManager<TValue, TDate, TSection>;
+  valueManager: TManager;
   forwardedProps: UseFieldForwardedProps<true>;
-  internalProps: UseFieldInternalProps<TValue, TDate, TSection, true, any> & {
+  internalProps: UseFieldInternalProps<TManager> & {
     minutesStep?: number;
   };
-  stateResponse: UseFieldStateResponse<TValue, TDate, TSection>;
+  stateResponse: UseFieldStateResponse<TManager>;
   characterEditingResponse: UseFieldCharacterEditingReturnValue;
   interactions: UseFieldDOMInteractions;
   focused: boolean;

@@ -5,12 +5,14 @@ import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   UseFieldDOMInteractions,
-  UseFieldWithKnownDOMStructure,
   SectionOrdering,
   UseFieldLegacyForwardedProps,
   UseFieldLegacyAdditionalProps,
+  UseFieldForwardedProps,
+  UseFieldParams,
+  UseFieldResponse,
 } from './useField.types';
-import { FieldSection } from '../../../models';
+import { FieldSection, PickerAnyValueManagerV8 } from '../../../models';
 import { getActiveElement } from '../../utils/utils';
 import { buildDefaultSectionOrdering, getSectionVisibleValue } from './useField.utils';
 import { useFieldHandleKeyDown } from './useFieldHandleKeyDown';
@@ -149,12 +151,12 @@ const getSectionOrder = (sections: FieldSection[]): SectionOrdering => {
   };
 };
 
-export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = <
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  TValue,
+export const useFieldLegacyDOMStructure = <
+  TManager extends PickerAnyValueManagerV8,
+  TForwardedProps extends UseFieldForwardedProps<false>,
 >(
-  params,
-) => {
+  params: UseFieldParams<TManager, TForwardedProps>,
+): UseFieldResponse<true, TForwardedProps> => {
   const isRtl = useRtl();
   const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
   const selectionSyncTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
@@ -171,9 +173,8 @@ export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = 
     },
     internalProps,
     internalProps: { unstableFieldRef, readOnly = false, disabled = false },
-    fieldValueManager,
     valueManager,
-    validator,
+    valueManager: { fieldValueManager, legacyValueManager },
   } = params;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -195,7 +196,7 @@ export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = 
     areAllSectionsEmpty,
   } = stateResponse;
 
-  const error = useFieldValidation({ internalProps, forwardedProps, validator, stateResponse });
+  const error = useFieldValidation({ internalProps, forwardedProps, valueManager, stateResponse });
 
   const characterEditingResponse = useFieldCharacterEditing({
     error,
@@ -504,7 +505,7 @@ export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = 
     }
 
     return fieldValueManager.getV6InputValueFromSections(
-      getSectionsFromValue(valueManager.emptyValue),
+      getSectionsFromValue(legacyValueManager.emptyValue),
       localizedDigits,
       isRtl,
     );
@@ -512,7 +513,7 @@ export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = 
     placeholderProp,
     fieldValueManager,
     getSectionsFromValue,
-    valueManager.emptyValue,
+    legacyValueManager.emptyValue,
     localizedDigits,
     isRtl,
   ]);
@@ -552,7 +553,7 @@ export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = 
   const shouldShowPlaceholder = !inputHasFocus && areAllSectionsEmpty;
 
   const handleContainerKeyDown = useFieldHandleKeyDown({
-    fieldValueManager,
+    valueManager,
     internalProps,
     forwardedProps,
     stateResponse,
@@ -564,7 +565,6 @@ export const useFieldLegacyDOMStructure: UseFieldWithKnownDOMStructure<false> = 
     internalProps,
     forwardedProps,
     stateResponse,
-    areAllSectionsEmpty,
     interactions,
     sectionOrder,
   });

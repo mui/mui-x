@@ -1,6 +1,12 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import { UseFieldWithKnownDOMStructure, UseFieldAccessibleDOMGetters } from './useField.types';
+import { PickerAnyAccessibleValueManagerV8 } from '../../../models';
+import {
+  UseFieldAccessibleDOMGetters,
+  UseFieldForwardedProps,
+  UseFieldParams,
+  UseFieldResponse,
+} from './useField.types';
 import type { PickersSectionElement } from '../../../PickersSectionList';
 import { useFieldClearValueProps } from './useFieldClearValueProps';
 import { useFieldState } from './useFieldState';
@@ -12,19 +18,18 @@ import { useFieldAccessibleSectionContentProps } from './useFieldAccessibleSecti
 import { useFieldAccessibleSectionContainerProps } from './useFieldAccessibleSectionContainerProps';
 import { useFieldAccessibleHiddenInputProps } from './useFieldAccessibleHiddenInputProps';
 
-export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true> = <
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  TValue,
+export const useFieldAccessibleDOMStructure = <
+  TManager extends PickerAnyAccessibleValueManagerV8,
+  TForwardedProps extends UseFieldForwardedProps<true>,
 >(
-  params,
-) => {
+  params: UseFieldParams<TManager, TForwardedProps>,
+): UseFieldResponse<true, TForwardedProps> => {
   const {
     internalProps,
     internalProps: { disabled, readOnly = false },
     forwardedProps,
     forwardedProps: { sectionListRef: sectionListRefProp, focused: focusedProp, autoFocus = false },
-    fieldValueManager,
-    validator,
+    valueManager,
   } = params;
 
   // Management of `sectionListRef` (won't be present in `PickersField`)
@@ -63,7 +68,7 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
   const [focused, setFocused] = React.useState(false);
   const stateResponse = useFieldState(params);
 
-  const error = useFieldValidation({ internalProps, forwardedProps, validator, stateResponse });
+  const error = useFieldValidation({ internalProps, forwardedProps, valueManager, stateResponse });
 
   const characterEditingResponse = useFieldCharacterEditing({
     error,
@@ -90,7 +95,7 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
   });
 
   const containerEventHandlers = useFieldAccessibleContainerProps({
-    fieldValueManager,
+    valueManager,
     internalProps,
     forwardedProps,
     stateResponse,
@@ -102,7 +107,7 @@ export const useFieldAccessibleDOMStructure: UseFieldWithKnownDOMStructure<true>
   });
 
   const hiddenInputProps = useFieldAccessibleHiddenInputProps({
-    fieldValueManager,
+    valueManager,
     stateResponse,
   });
 

@@ -54,8 +54,8 @@ export type PickerAnyAccessibleValueManagerV8 = PickerValueManagerV8<any, any, t
 /**
  * Infer all the usual generic in the picker packages from a `PickerConroller` interface.
  */
-export type PickerValueManagerProperties<TValueManager extends PickerAnyValueManagerV8> =
-  TValueManager extends PickerValueManagerV8<
+export type PickerManagerProperties<TManager extends PickerAnyValueManagerV8> =
+  TManager extends PickerValueManagerV8<
     infer TDate,
     infer TIsRange,
     infer TEnableAccessibleFieldDOMStructure,

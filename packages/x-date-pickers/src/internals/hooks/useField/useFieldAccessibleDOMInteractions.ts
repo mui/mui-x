@@ -6,17 +6,15 @@ import {
   UseFieldForwardedProps,
   UseFieldInternalProps,
 } from './useField.types';
-import { FieldSection, PickerValidDate } from '../../../models';
+import { PickerAnyAccessibleValueManagerV8 } from '../../../models';
 import { UseFieldStateResponse } from './useFieldState';
 import { getActiveElement } from '../../utils/utils';
 import { parseSelectedSections } from './useField.utils';
 
 export const useFieldAccessibleDOMInteractions = <
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
+  TManager extends PickerAnyAccessibleValueManagerV8,
 >(
-  parameters: UseFieldAccessibleDOMInteractionsParameters<TValue, TDate, TSection>,
+  parameters: UseFieldAccessibleDOMInteractionsParameters<TManager>,
 ) => {
   const {
     internalProps: { unstableFieldRef },
@@ -140,13 +138,11 @@ export const useFieldAccessibleDOMInteractions = <
 };
 
 interface UseFieldAccessibleDOMInteractionsParameters<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
+  TManager extends PickerAnyAccessibleValueManagerV8,
 > {
   forwardedProps: UseFieldForwardedProps<true>;
-  internalProps: UseFieldInternalProps<TValue, TDate, TSection, true, unknown>;
-  stateResponse: UseFieldStateResponse<TValue, TDate, TSection>;
+  internalProps: UseFieldInternalProps<TManager>;
+  stateResponse: UseFieldStateResponse<TManager>;
   focused: boolean;
   setFocused: (focused: boolean) => void;
   domGetters: UseFieldAccessibleDOMGetters;
