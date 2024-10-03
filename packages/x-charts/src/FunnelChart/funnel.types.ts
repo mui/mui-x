@@ -8,14 +8,16 @@ import type {
 } from '../models/seriesType/common';
 
 export interface FunnelSeriesType
-  extends CommonSeriesType<number | null>,
+  extends CommonSeriesType<number>,
     CartesianSeriesType,
     StackableSeriesType {
   type: 'funnel';
   /**
    * Data associated to the funnel slice.
    */
-  data?: (number | null)[];
+  // TODO: unorthodox data type, here I'm expecting a `number[]` rather than `{label,value}` like the pie.
+  // mostly as a test to make data type more simple/flexible, thought it might not work properly with how we handle series data
+  data?: number[];
   /**
    * The key used to retrieve data from the dataset.
    */
