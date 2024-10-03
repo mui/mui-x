@@ -12,13 +12,13 @@ export const FunnelLabelComponent = styled('text', {
   stroke: 'none',
   fill: (theme.vars || theme)?.palette?.text?.primary,
   transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
-  textAnchor: 'middle',
-  dominantBaseline: 'central',
+  // textAnchor: 'middle',
+  // dominantBaseline: 'central',
   pointerEvents: 'none',
   opacity: 1,
 }));
 
-export type FunnelLabelProps = Omit<React.SVGProps<SVGTextElement>, 'ref' | 'id'>;
+export interface FunnelLabelProps extends Omit<React.SVGProps<SVGTextElement>, 'ref' | 'id'> {}
 
 function FunnelLabel(inProps: FunnelLabelProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiFunnelLabel' });

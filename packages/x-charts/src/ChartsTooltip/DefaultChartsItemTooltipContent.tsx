@@ -85,7 +85,7 @@ DefaultChartsItemTooltipContent.propTypes = {
   itemData: PropTypes.shape({
     dataIndex: PropTypes.number,
     seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
+    type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter', 'funnel']).isRequired,
   }).isRequired,
   /**
    * The series linked to the triggered axis.
