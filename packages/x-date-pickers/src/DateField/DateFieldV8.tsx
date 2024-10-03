@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as Field from '@base_ui/react/Field';
-import * as PickersField from '../PickersField';
+import { PickersField } from '../PickersField';
 import { PickerValidDate } from '../models/pickers';
 import { getDateValueManager } from '../valueManagers';
 import classes from './DateFieldV8.module.css';
