@@ -87,7 +87,7 @@ This feature isn't implemented yet. It's coming.
 Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this feature, or if you are facing a pain point with your current solution.
 :::
 
-When completed, it will be possible to use `lazyLoading` flag in combination with `treeData` and `rowGroupingModel`.
+When completed, it will be possible to use `lazyLoading` flag in combination with [Tree data](/x/react-data-grid/server-side-data/tree-data/) and [Row grouping](/x/react-data-grid/server-side-data/row-grouping/).
 
 ## Error handling
 
