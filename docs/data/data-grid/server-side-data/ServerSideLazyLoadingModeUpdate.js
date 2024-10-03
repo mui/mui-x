@@ -7,8 +7,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 
-function Toolbar(props) {
-  const { count, setCount } = props;
+function GridCustomToolbar({ count, setCount }) {
   return (
     <FormControl
       style={{
@@ -21,7 +20,7 @@ function Toolbar(props) {
         aria-labelledby="demo-row-count-buttons-group-label"
         name="row-count-buttons-group"
         value={count}
-        onChange={(event) => setCount && setCount(Number(event.target.value))}
+        onChange={(event) => setCount(Number(event.target.value))}
       >
         <FormControlLabel value="-1" control={<Radio />} label="Unknown" />
         <FormControlLabel value="40" control={<Radio />} label="40" />
@@ -68,7 +67,7 @@ function ServerSideLazyLoadingModeUpdate() {
         lazyLoading
         paginationModel={{ page: 0, pageSize: 10 }}
         rowCount={rowCount}
-        slots={{ toolbar: Toolbar }}
+        slots={{ toolbar: GridCustomToolbar }}
         slotProps={{
           toolbar: {
             count: rowCount,

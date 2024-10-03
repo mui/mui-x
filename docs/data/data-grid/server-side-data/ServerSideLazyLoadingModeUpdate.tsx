@@ -3,7 +3,7 @@ import {
   DataGridPro,
   GridDataSource,
   GridGetRowsParams,
-  GridSlotsComponentsProps,
+  GridSlots,
 } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import FormControl from '@mui/material/FormControl';
@@ -12,15 +12,12 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 
-declare module '@mui/x-data-grid' {
-  interface ToolbarPropsOverrides {
-    count: number;
-    setCount: (count: number) => void;
-  }
+interface CustomToolbarProps {
+  count: number;
+  setCount: (count: number) => void;
 }
 
-function Toolbar(props: NonNullable<GridSlotsComponentsProps['toolbar']>) {
-  const { count, setCount } = props;
+function GridCustomToolbar({ count, setCount }: CustomToolbarProps) {
   return (
     <FormControl
       style={{
@@ -33,7 +30,7 @@ function Toolbar(props: NonNullable<GridSlotsComponentsProps['toolbar']>) {
         aria-labelledby="demo-row-count-buttons-group-label"
         name="row-count-buttons-group"
         value={count}
-        onChange={(event) => setCount && setCount(Number(event.target.value))}
+        onChange={(event) => setCount(Number(event.target.value))}
       >
         <FormControlLabel value="-1" control={<Radio />} label="Unknown" />
         <FormControlLabel value="40" control={<Radio />} label="40" />
@@ -80,7 +77,7 @@ function ServerSideLazyLoadingModeUpdate() {
         lazyLoading
         paginationModel={{ page: 0, pageSize: 10 }}
         rowCount={rowCount}
-        slots={{ toolbar: Toolbar }}
+        slots={{ toolbar: GridCustomToolbar as GridSlots['toolbar'] }}
         slotProps={{
           toolbar: {
             count: rowCount,
