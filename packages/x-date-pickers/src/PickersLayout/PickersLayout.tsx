@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -112,7 +113,7 @@ const PickersLayout = React.forwardRef(function PickersLayout<
     <PickersLayoutRoot
       ref={ref}
       sx={sx}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={props}
     >
       {isLandscape ? shortcuts : toolbar}
