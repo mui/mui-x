@@ -4,9 +4,9 @@ import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { UseDateTimeRangeFieldProps } from '../internals/models/dateTimeRange';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
 import { MultiInputFieldRefs, MultiInputRangeFieldClasses, RangePosition } from '../models';
+import { DateTimeRangeFieldInternalProps } from '../valueManagers';
 
 export type UseMultiInputDateTimeRangeFieldParams<
   TDate extends PickerValidDate,
@@ -21,8 +21,8 @@ export interface UseMultiInputDateTimeRangeFieldProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends Omit<
-      UseDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-      'unstableFieldRef' | 'clearable' | 'onClear'
+      DateTimeRangeFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
+      'unstableFieldRef'
     >,
     MultiInputFieldRefs {}
 

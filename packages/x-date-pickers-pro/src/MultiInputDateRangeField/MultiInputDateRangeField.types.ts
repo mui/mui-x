@@ -6,7 +6,7 @@ import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
 import { MultiInputFieldRefs, MultiInputRangeFieldClasses, RangePosition } from '../models';
-import { UseSingleInputDateRangeFieldProps } from '../SingleInputDateRangeField';
+import { DateRangeFieldInternalProps } from '../valueManagers';
 
 export type UseMultiInputDateRangeFieldParams<
   TDate extends PickerValidDate,
@@ -21,7 +21,7 @@ export interface UseMultiInputDateRangeFieldProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends Omit<
-      UseSingleInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+      DateRangeFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
       'unstableFieldRef'
     >,
     MultiInputFieldRefs {}
