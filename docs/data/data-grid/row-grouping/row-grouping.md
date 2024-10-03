@@ -334,7 +334,7 @@ The example below demonstrates the usage of the `rowSelectionPropagation` prop.
 {{"demo": "RowGroupingPropagateSelection.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
-The row selection propagation also affects the "Select all" checkbox in a similar way like any other group checkbox.
+The row selection propagation also affects the "Select all" checkbox like any other group checkbox.
 :::
 
 :::info
@@ -342,11 +342,11 @@ The selected unfiltered rows will be auto-deselected when the filter is applied.
 :::
 
 :::warning
-If `props.disableMultipleRowSelection` is set to `true`, the row selection propagation feature would not work.
+If `props.disableMultipleRowSelection` is set to `true`, the row selection propagation doesn't apply.
 :::
 
 :::warning
-The row selection propagation is a client-side feature and not recommended to be used with the [server-side data source](/x/react-data-grid/server-side-data/), since it would work on the partially loaded data only.
+Row selection propagation is a client-side feature and is not supported with the [server-side data source](/x/react-data-grid/server-side-data/).
 :::
 
 ## Get the rows in a group
