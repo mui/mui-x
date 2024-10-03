@@ -80,14 +80,14 @@ function CellCard(props) {
   );
 }
 
-const mobileColDef = {
+const listColDef = {
   field: 'mobile',
   renderCell: (params) => <CellCard {...params} />,
   editable: true,
   display: 'flex',
 };
 
-export default function MobileView() {
+export default function ListView() {
   const { data } = useDemoData({
     dataSet: 'Employee',
     maxColumns: 20,
@@ -96,11 +96,11 @@ export default function MobileView() {
   });
 
   const [preferMediaQuery, setPreferMediaQuery] = React.useState(false);
-  const [mobileViewState, setMobileViewState] = React.useState(false);
+  const [listViewState, setlistViewState] = React.useState(false);
 
-  const mobileViewQuery = useMediaQuery('(max-width:700px)');
+  const listViewQuery = useMediaQuery('(max-width:700px)');
 
-  const mobileView = preferMediaQuery ? mobileViewQuery : mobileViewState;
+  const listView = preferMediaQuery ? listViewQuery : listViewState;
 
   const [pinnedRowsIds, setPinnedRowsIds] = React.useState({
     top: [],
@@ -213,8 +213,8 @@ export default function MobileView() {
         disabled={preferMediaQuery}
         control={
           <Checkbox
-            checked={mobileViewState}
-            onChange={(event, checked) => setMobileViewState(checked)}
+            checked={listViewState}
+            onChange={(event, checked) => setlistViewState(checked)}
           />
         }
         label="Mobile view"
@@ -226,9 +226,9 @@ export default function MobileView() {
           columns={columns}
           pinnedRows={pinnedRows}
           slots={{ toolbar: GridToolbar }}
-          mobileView={mobileView}
-          mobileColDef={mobileColDef}
-          rowHeight={mobileView ? 150 : 52}
+          listView={listView}
+          listColDef={listColDef}
+          rowHeight={listView ? 150 : 52}
           pagination
           initialState={{
             ...data.initialState,

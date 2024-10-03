@@ -391,7 +391,7 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
   /**
    * If `true`, the horizontal scroll is disabled and a single column is displayed.
    */
-  mobileView: boolean;
+  listView: boolean;
   /**
    * If `true`, the Data Grid will auto span the cells over the rows having the same value.
    * @default false
@@ -828,9 +828,9 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onColumnWidthChange?: GridEventListener<'columnWidthChange'>;
   /**
-   * Definition of the column rendered when `mobileView` is enabled.
+   * Definition of the column rendered when `listView` is enabled.
    */
-  mobileColDef?: GridColDef;
+  listColDef?: GridColDef;
 }
 
 export interface DataGridProSharedPropsWithDefaultValue {
