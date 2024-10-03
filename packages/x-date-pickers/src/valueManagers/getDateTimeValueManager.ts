@@ -16,7 +16,6 @@ import {
 import { PickerValueManagerV8, PickerValidDate, DateTimeValidationError } from '../models';
 import { validateDateTime } from '../validation';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { ExportedUseClearableFieldProps } from '../hooks/useClearableField';
 
 export type DateTimeValueManager<
   TDate extends PickerValidDate,
@@ -48,8 +47,7 @@ export interface DateTimeFieldInternalProps<
     BaseDateValidationProps<TDate>,
     TimeValidationProps<TDate>,
     BaseTimeValidationProps,
-    DateTimeValidationProps<TDate>,
-    ExportedUseClearableFieldProps {
+    DateTimeValidationProps<TDate> {
   /**
    * 12h/24h view for hour selection clock.
    * @default utils.is12HourCycleInCurrentLocale()

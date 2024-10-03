@@ -10,13 +10,18 @@ import {
   BuiltInFieldTextFieldProps,
   BaseSingleInputFieldProps,
 } from '../models';
-import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '../hooks/useClearableField';
+import {
+  UseClearableFieldSlots,
+  UseClearableFieldSlotProps,
+  ExportedUseClearableFieldProps,
+} from '../hooks/useClearableField';
 import { TimeFieldInternalProps } from '../valueManagers';
 
 export interface UseTimeFieldProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends TimeFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure> {}
+> extends TimeFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    ExportedUseClearableFieldProps {}
 
 /**
  * Props the field can receive when used inside a time picker.

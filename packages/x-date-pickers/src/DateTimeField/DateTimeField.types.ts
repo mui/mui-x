@@ -10,13 +10,18 @@ import {
 } from '../models';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { BaseDateValidationProps, BaseTimeValidationProps } from '../internals/models/validation';
-import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '../hooks/useClearableField';
+import {
+  UseClearableFieldSlots,
+  UseClearableFieldSlotProps,
+  ExportedUseClearableFieldProps,
+} from '../hooks/useClearableField';
 import { DateTimeFieldInternalProps } from '../valueManagers';
 
 export interface UseDateTimeFieldProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends DateTimeFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure> {}
+> extends DateTimeFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    ExportedUseClearableFieldProps {}
 
 /**
  * Props the field can receive when used inside a date time picker.

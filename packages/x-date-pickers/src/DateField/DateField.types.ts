@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/utils';
 import TextField from '@mui/material/TextField';
-import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '../hooks/useClearableField';
+import {
+  UseClearableFieldSlots,
+  UseClearableFieldSlotProps,
+  ExportedUseClearableFieldProps,
+} from '../hooks/useClearableField';
 import {
   DateValidationError,
   FieldSection,
@@ -16,7 +20,8 @@ import { DateFieldInternalProps } from '../valueManagers';
 export interface UseDateFieldProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends DateFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure> {}
+> extends DateFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    ExportedUseClearableFieldProps {}
 
 /**
  * Props the field can receive when used inside a date picker.

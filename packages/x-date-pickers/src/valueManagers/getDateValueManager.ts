@@ -13,7 +13,6 @@ import {
 import { PickerValueManagerV8, PickerValidDate, DateValidationError } from '../models';
 import { validateDate } from '../validation';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { ExportedUseClearableFieldProps } from '../hooks/useClearableField';
 
 export type DateValueManager<
   TDate extends PickerValidDate,
@@ -37,8 +36,7 @@ export interface DateFieldInternalProps<
     DayValidationProps<TDate>,
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
-    BaseDateValidationProps<TDate>,
-    ExportedUseClearableFieldProps {}
+    BaseDateValidationProps<TDate> {}
 
 export interface DateFieldInternalPropsWithDefaults<
   TDate extends PickerValidDate,
