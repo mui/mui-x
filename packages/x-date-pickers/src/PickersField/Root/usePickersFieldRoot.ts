@@ -19,14 +19,14 @@ export function usePickersFieldRoot<TManager extends PickerAnyAccessibleValueMan
   const { valueManager, internalProps, inputRef } = params;
 
   const adapter = useLocalizationContext<TDate>();
-  const internalPropsWithDefault: TInternalPropsWithDefaults =
+  const internalPropsWithDefaults: TInternalPropsWithDefaults =
     valueManager.applyDefaultsToFieldInternalProps({
       adapter,
       internalProps,
     });
 
   const stateResponse = useFieldState({
-    internalProps: internalPropsWithDefault,
+    internalProps: internalPropsWithDefaults,
     valueManager: valueManager.legacyValueManager,
   });
 
