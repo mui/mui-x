@@ -1,43 +1,38 @@
 'use client';
-import {
-  singleItemFieldValueManager,
-  singleItemValueManager,
-} from '../internals/utils/valueManagers';
+import * as React from 'react';
 import { useField } from '../internals/hooks/useField';
 import { UseTimeFieldProps } from './TimeField.types';
-import { validateTime } from '../validation';
 import { useSplitFieldProps } from '../hooks';
-import { PickerValidDate, FieldSection } from '../models';
-import { useDefaultizedTimeField } from '../internals/hooks/defaultizedFieldProps';
+import { PickerValidDate } from '../models';
+import { getTimeValueManager } from '../valueManagers';
+import { useLocalizationContext } from '../internals/hooks/useUtils';
 
 export const useTimeField = <
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TAllProps extends UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
 >(
-  inProps: TAllProps,
+  props: TAllProps,
 ) => {
-  const props = useDefaultizedTimeField<
-    TDate,
-    UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    TAllProps
-  >(inProps);
-
+  const localizationContext = useLocalizationContext<TDate>();
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'time');
 
-  return useField<
-    TDate | null,
-    TDate,
-    FieldSection,
-    TEnableAccessibleFieldDOMStructure,
-    typeof forwardedProps,
-    typeof internalProps
-  >({
-    forwardedProps,
+  const valueManager = React.useMemo(
+    () =>
+      getTimeValueManager<TDate, TEnableAccessibleFieldDOMStructure>(
+        props.enableAccessibleFieldDOMStructure,
+      ),
+    [props.enableAccessibleFieldDOMStructure],
+  );
+
+  const internalPropsWithDefaults = valueManager.applyDefaultsToFieldInternalProps({
+    ...localizationContext,
     internalProps,
-    valueManager: singleItemValueManager,
-    fieldValueManager: singleItemFieldValueManager,
-    validator: validateTime,
-    valueType: 'time',
+  });
+
+  return useField<typeof valueManager, typeof forwardedProps>({
+    forwardedProps,
+    internalProps: internalPropsWithDefaults,
+    valueManager,
   });
 };

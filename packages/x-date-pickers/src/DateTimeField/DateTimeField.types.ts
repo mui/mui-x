@@ -8,50 +8,15 @@ import {
   BuiltInFieldTextFieldProps,
   BaseSingleInputFieldProps,
 } from '../models';
-import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
-import {
-  BaseDateValidationProps,
-  BaseTimeValidationProps,
-  DateTimeValidationProps,
-  DayValidationProps,
-  MonthValidationProps,
-  TimeValidationProps,
-  YearValidationProps,
-} from '../internals/models/validation';
-import {
-  ExportedUseClearableFieldProps,
-  UseClearableFieldSlots,
-  UseClearableFieldSlotProps,
-} from '../hooks/useClearableField';
+import { DefaultizedProps } from '../internals/models/helpers';
+import { BaseDateValidationProps, BaseTimeValidationProps } from '../internals/models/validation';
+import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '../hooks/useClearableField';
+import { DateTimeFieldInternalProps } from '../valueManagers';
 
 export interface UseDateTimeFieldProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends MakeOptional<
-      UseFieldInternalProps<
-        TDate | null,
-        TDate,
-        FieldSection,
-        TEnableAccessibleFieldDOMStructure,
-        DateTimeValidationError
-      >,
-      'format'
-    >,
-    DayValidationProps<TDate>,
-    MonthValidationProps<TDate>,
-    YearValidationProps<TDate>,
-    BaseDateValidationProps<TDate>,
-    TimeValidationProps<TDate>,
-    BaseTimeValidationProps,
-    DateTimeValidationProps<TDate>,
-    ExportedUseClearableFieldProps {
-  /**
-   * 12h/24h view for hour selection clock.
-   * @default utils.is12HourCycleInCurrentLocale()
-   */
-  ampm?: boolean;
-}
+> extends DateTimeFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure> {}
 
 /**
  * Props the field can receive when used inside a date time picker.

@@ -28,10 +28,11 @@ export interface PickerValueManagerV8<
     TError,
     TInternalPropsWithDefaults
   >;
-  applyDefaultsToFieldInternalProps: (params: {
-    adapter: MuiPickersAdapterContextValue<TDate>;
-    internalProps: TInternalProps;
-  }) => TInternalPropsWithDefaults;
+  applyDefaultsToFieldInternalProps: (
+    params: MuiPickersAdapterContextValue<TDate> & {
+      internalProps: TInternalProps;
+    },
+  ) => TInternalPropsWithDefaults;
   valueType: FieldValueType;
   enableAccessibleFieldDOMStructure: TEnableAccessibleFieldDOMStructure;
 }

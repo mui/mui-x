@@ -58,13 +58,13 @@ export const getDateValueManager = <
   fieldValueManager: singleItemFieldValueManager,
   validator: validateDate,
   valueType: 'date',
-  applyDefaultsToFieldInternalProps: ({ adapter, internalProps }) => ({
+  applyDefaultsToFieldInternalProps: ({ internalProps, utils, defaultDates }) => ({
     ...internalProps,
     disablePast: internalProps.disablePast ?? false,
     disableFuture: internalProps.disableFuture ?? false,
-    format: internalProps.format ?? adapter.utils.formats.keyboardDate,
-    minDate: applyDefaultDate(adapter.utils, internalProps.minDate, adapter.defaultDates.minDate),
-    maxDate: applyDefaultDate(adapter.utils, internalProps.maxDate, adapter.defaultDates.maxDate),
+    format: internalProps.format ?? utils.formats.keyboardDate,
+    minDate: applyDefaultDate(utils, internalProps.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, internalProps.maxDate, defaultDates.maxDate),
   }),
   enableAccessibleFieldDOMStructure,
 });

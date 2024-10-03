@@ -14,7 +14,7 @@ export const useDateField = <
 >(
   props: TAllProps,
 ) => {
-  const adapter = useLocalizationContext<TDate>();
+  const localizationContext = useLocalizationContext<TDate>();
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
 
   const valueManager = React.useMemo(
@@ -26,7 +26,7 @@ export const useDateField = <
   );
 
   const internalPropsWithDefaults = valueManager.applyDefaultsToFieldInternalProps({
-    adapter,
+    ...localizationContext,
     internalProps,
   });
 

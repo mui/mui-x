@@ -1,43 +1,38 @@
 'use client';
-import {
-  singleItemFieldValueManager,
-  singleItemValueManager,
-} from '../internals/utils/valueManagers';
+import * as React from 'react';
 import { useField } from '../internals/hooks/useField';
 import { UseDateTimeFieldProps } from './DateTimeField.types';
-import { validateDateTime } from '../validation';
 import { useSplitFieldProps } from '../hooks';
-import { FieldSection, PickerValidDate } from '../models';
-import { useDefaultizedDateTimeField } from '../internals/hooks/defaultizedFieldProps';
+import { PickerValidDate } from '../models';
+import { getDateTimeValueManager } from '../valueManagers';
+import { useLocalizationContext } from '../internals/hooks/useUtils';
 
 export const useDateTimeField = <
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TAllProps extends UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
 >(
-  inProps: TAllProps,
+  props: TAllProps,
 ) => {
-  const props = useDefaultizedDateTimeField<
-    TDate,
-    UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    TAllProps
-  >(inProps);
+  const localizationContext = useLocalizationContext<TDate>();
+  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
 
-  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date-time');
+  const valueManager = React.useMemo(
+    () =>
+      getDateTimeValueManager<TDate, TEnableAccessibleFieldDOMStructure>(
+        props.enableAccessibleFieldDOMStructure,
+      ),
+    [props.enableAccessibleFieldDOMStructure],
+  );
 
-  return useField<
-    TDate | null,
-    TDate,
-    FieldSection,
-    TEnableAccessibleFieldDOMStructure,
-    typeof forwardedProps,
-    typeof internalProps
-  >({
-    forwardedProps,
+  const internalPropsWithDefaults = valueManager.applyDefaultsToFieldInternalProps({
+    ...localizationContext,
     internalProps,
-    valueManager: singleItemValueManager,
-    fieldValueManager: singleItemFieldValueManager,
-    validator: validateDateTime,
-    valueType: 'date-time',
+  });
+
+  return useField<typeof valueManager, typeof forwardedProps>({
+    forwardedProps,
+    internalProps: internalPropsWithDefaults,
+    valueManager,
   });
 };

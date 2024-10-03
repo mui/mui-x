@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/utils';
 import TextField from '@mui/material/TextField';
-import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
-import { BaseTimeValidationProps, TimeValidationProps } from '../internals/models/validation';
+import { DefaultizedProps } from '../internals/models/helpers';
+import { BaseTimeValidationProps } from '../internals/models/validation';
 import {
   FieldSection,
   PickerValidDate,
@@ -11,34 +10,13 @@ import {
   BuiltInFieldTextFieldProps,
   BaseSingleInputFieldProps,
 } from '../models';
-import {
-  ExportedUseClearableFieldProps,
-  UseClearableFieldSlots,
-  UseClearableFieldSlotProps,
-} from '../hooks/useClearableField';
+import { UseClearableFieldSlots, UseClearableFieldSlotProps } from '../hooks/useClearableField';
+import { TimeFieldInternalProps } from '../valueManagers';
 
 export interface UseTimeFieldProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends MakeOptional<
-      UseFieldInternalProps<
-        TDate | null,
-        TDate,
-        FieldSection,
-        TEnableAccessibleFieldDOMStructure,
-        TimeValidationError
-      >,
-      'format'
-    >,
-    TimeValidationProps<TDate>,
-    BaseTimeValidationProps,
-    ExportedUseClearableFieldProps {
-  /**
-   * 12h/24h view for hour selection clock.
-   * @default utils.is12HourCycleInCurrentLocale()
-   */
-  ampm?: boolean;
-}
+> extends TimeFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure> {}
 
 /**
  * Props the field can receive when used inside a time picker.
