@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerAnyAccessibleValueManagerV8 } from '../../../models';
-import { UseFieldStateResponse } from './useFieldState';
+import { UseFieldStateReturnValue } from './useFieldState';
 
 export const useFieldAccessibleSectionContainerProps = <
   TManager extends PickerAnyAccessibleValueManagerV8,
@@ -38,5 +38,5 @@ export const useFieldAccessibleSectionContainerProps = <
 interface UseFieldAccessibleSectionContainerPropsParameters<
   TManager extends PickerAnyAccessibleValueManagerV8,
 > {
-  stateResponse: UseFieldStateResponse<TManager>;
+  stateResponse: UseFieldStateReturnValue<TManager>;
 }

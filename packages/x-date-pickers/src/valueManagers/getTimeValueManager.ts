@@ -7,6 +7,7 @@ import {
 import { PickerValueManagerV8, PickerValidDate, TimeValidationError } from '../models';
 import { validateTime } from '../validation';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
+import { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
 
 export type TimeValueManager<
   TDate extends PickerValidDate,
@@ -44,6 +45,28 @@ export interface TimeFieldInternalPropsWithDefaults<
     keyof BaseTimeValidationProps | 'format'
   > {}
 
+export const getTimeFieldInternalPropsDefaults = <
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+>({
+  utils,
+  internalProps,
+}: Pick<MuiPickersAdapterContextValue<TDate>, 'utils'> & {
+  internalProps: Pick<
+    TimeFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    'ampm' | 'disablePast' | 'disableFuture' | 'format'
+  >;
+}) => {
+  const ampm = internalProps.ampm ?? utils.is12HourCycleInCurrentLocale();
+  const defaultFormat = ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h;
+
+  return {
+    disablePast: internalProps.disablePast ?? false,
+    disableFuture: internalProps.disableFuture ?? false,
+    format: internalProps.format ?? defaultFormat,
+  };
+};
+
 export const getTimeValueManager = <
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = false,
@@ -54,16 +77,9 @@ export const getTimeValueManager = <
   fieldValueManager: singleItemFieldValueManager,
   validator: validateTime,
   valueType: 'time',
-  applyDefaultsToFieldInternalProps: ({ internalProps, utils }) => {
-    const ampm = internalProps.ampm ?? utils.is12HourCycleInCurrentLocale();
-    const defaultFormat = ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h;
-
-    return {
-      ...internalProps,
-      disablePast: internalProps.disablePast ?? false,
-      disableFuture: internalProps.disableFuture ?? false,
-      format: internalProps.format ?? defaultFormat,
-    };
-  },
+  applyDefaultsToFieldInternalProps: ({ internalProps, utils }) => ({
+    ...internalProps,
+    ...getTimeFieldInternalPropsDefaults({ utils, internalProps }),
+  }),
   enableAccessibleFieldDOMStructure,
 });

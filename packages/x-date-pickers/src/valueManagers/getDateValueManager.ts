@@ -13,6 +13,7 @@ import {
 import { PickerValueManagerV8, PickerValidDate, DateValidationError } from '../models';
 import { validateDate } from '../validation';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
+import { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
 
 export type DateValueManager<
   TDate extends PickerValidDate,
@@ -46,6 +47,26 @@ export interface DateFieldInternalPropsWithDefaults<
     keyof BaseDateValidationProps<TDate> | 'format'
   > {}
 
+export const getDateFieldInternalPropsDefaults = <
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+>({
+  defaultDates,
+  utils,
+  internalProps,
+}: Pick<MuiPickersAdapterContextValue<TDate>, 'defaultDates' | 'utils'> & {
+  internalProps: Pick<
+    DateFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    'disablePast' | 'disableFuture' | 'format' | 'minDate' | 'maxDate'
+  >;
+}) => ({
+  disablePast: internalProps.disablePast ?? false,
+  disableFuture: internalProps.disableFuture ?? false,
+  format: internalProps.format ?? utils.formats.keyboardDate,
+  minDate: applyDefaultDate(utils, internalProps.minDate, defaultDates.minDate),
+  maxDate: applyDefaultDate(utils, internalProps.maxDate, defaultDates.maxDate),
+});
+
 export const getDateValueManager = <
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = false,
@@ -58,11 +79,7 @@ export const getDateValueManager = <
   valueType: 'date',
   applyDefaultsToFieldInternalProps: ({ internalProps, utils, defaultDates }) => ({
     ...internalProps,
-    disablePast: internalProps.disablePast ?? false,
-    disableFuture: internalProps.disableFuture ?? false,
-    format: internalProps.format ?? utils.formats.keyboardDate,
-    minDate: applyDefaultDate(utils, internalProps.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, internalProps.maxDate, defaultDates.maxDate),
+    ...getDateFieldInternalPropsDefaults({ defaultDates, utils, internalProps }),
   }),
   enableAccessibleFieldDOMStructure,
 });

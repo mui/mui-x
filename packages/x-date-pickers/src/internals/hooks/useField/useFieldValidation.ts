@@ -1,25 +1,25 @@
 import * as React from 'react';
 import { UseFieldForwardedProps, UseFieldInternalPropsFromManager } from './useField.types';
 import { PickerAnyValueManagerV8 } from '../../../models';
-import { UseFieldStateResponse } from './useFieldState';
+import { UseFieldStateReturnValue } from './useFieldState';
 import { useValidation } from '../../../validation';
 
 export const useFieldValidation = <TManager extends PickerAnyValueManagerV8>(
   parameters: UseFieldValidationParameters<TManager>,
 ) => {
   const {
-    internalProps,
+    internalPropsWithDefaults,
     forwardedProps: { error: errorProp },
     stateResponse: { state, timezone },
     valueManager: { validator },
   } = parameters;
 
   const { hasValidationError } = useValidation({
-    props: internalProps,
+    props: internalPropsWithDefaults,
     validator,
     timezone,
     value: state.value,
-    onError: internalProps.onError,
+    onError: internalPropsWithDefaults.onError,
   });
 
   const error = React.useMemo(() => {
@@ -37,7 +37,7 @@ export const useFieldValidation = <TManager extends PickerAnyValueManagerV8>(
 
 interface UseFieldValidationParameters<TManager extends PickerAnyValueManagerV8> {
   forwardedProps: UseFieldForwardedProps<true>;
-  internalProps: UseFieldInternalPropsFromManager<TManager>;
-  stateResponse: UseFieldStateResponse<TManager>;
+  internalPropsWithDefaults: UseFieldInternalPropsFromManager<TManager>;
+  stateResponse: UseFieldStateReturnValue<TManager>;
   valueManager: TManager;
 }

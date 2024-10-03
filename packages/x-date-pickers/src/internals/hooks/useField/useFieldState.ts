@@ -4,7 +4,6 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { usePickersTranslations } from '../../../hooks/usePickersTranslations';
 import { useUtils, useLocalizationContext } from '../useUtils';
 import {
-  UseFieldParams,
   UseFieldState,
   FieldParsedSelectedSections,
   FieldChangeHandlerContext,
@@ -48,35 +47,9 @@ export interface UpdateSectionValueParams<TSection extends FieldSection> {
   shouldGoToNextSection: boolean;
 }
 
-export interface UseFieldStateResponse<TManager extends PickerAnyValueManagerV8> {
-  state: UseFieldState<TManager>;
-  activeSectionIndex: number | null;
-  parsedSelectedSections: FieldParsedSelectedSections;
-  setSelectedSections: (sections: FieldSelectedSections) => void;
-  clearValue: () => void;
-  clearActiveSection: () => void;
-  updateSectionValue: (
-    params: UpdateSectionValueParams<PickerManagerProperties<TManager>['section']>,
-  ) => void;
-  updateValueFromValueStr: (valueStr: string) => void;
-  // TODO v9: Remove
-  setTempAndroidValueStr: (tempAndroidValueStr: string | null) => void;
-  sectionsValueBoundaries: FieldSectionsValueBoundaries<PickerManagerProperties<TManager>['date']>;
-  getSectionsFromValue: (
-    value: PickerManagerProperties<TManager>['value'],
-    fallbackSections?: PickerManagerProperties<TManager>['section'][] | null,
-  ) => PickerManagerProperties<TManager>['section'][];
-  localizedDigits: string[];
-  timezone: PickersTimezone;
-  areAllSectionsEmpty: boolean;
-}
-
 export const useFieldState = <TManager extends PickerAnyValueManagerV8>(
-  params: UseFieldParams<
-    TManager,
-    UseFieldForwardedProps<PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure']>
-  >,
-): UseFieldStateResponse<TManager> => {
+  parameters: UseFieldStateParameters<TManager>,
+): UseFieldStateReturnValue<TManager> => {
   type ManagerProperties = PickerManagerProperties<TManager>;
   type TDate = ManagerProperties['date'];
   type TValue = ManagerProperties['value'];
@@ -89,8 +62,8 @@ export const useFieldState = <TManager extends PickerAnyValueManagerV8>(
 
   const {
     valueManager: { legacyValueManager, fieldValueManager, valueType, validator },
-    internalProps,
-    internalProps: {
+    internalPropsWithDefaults,
+    internalPropsWithDefaults: {
       value: valueProp,
       defaultValue,
       referenceDate: referenceDateProp,
@@ -103,7 +76,7 @@ export const useFieldState = <TManager extends PickerAnyValueManagerV8>(
       timezone: timezoneProp,
       enableAccessibleFieldDOMStructure = false,
     },
-  } = params;
+  } = parameters;
 
   const {
     timezone,
@@ -170,7 +143,7 @@ export const useFieldState = <TManager extends PickerAnyValueManagerV8>(
       referenceDate: referenceDateProp,
       value: valueFromTheOutside,
       utils,
-      props: internalProps as GetDefaultReferenceDateProps<TDate>,
+      props: internalPropsWithDefaults as GetDefaultReferenceDateProps<TDate>,
       granularity,
       timezone,
     });
@@ -222,7 +195,7 @@ export const useFieldState = <TManager extends PickerAnyValueManagerV8>(
         adapter,
         value,
         timezone,
-        props: internalProps,
+        props: internalPropsWithDefaults,
       }),
     };
 
@@ -428,3 +401,34 @@ export const useFieldState = <TManager extends PickerAnyValueManagerV8>(
     areAllSectionsEmpty,
   };
 };
+
+interface UseFieldStateParameters<TManager extends PickerAnyValueManagerV8> {
+  valueManager: TManager;
+  forwardedProps: UseFieldForwardedProps<
+    PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure']
+  >;
+  internalPropsWithDefaults: PickerManagerProperties<TManager>['internalPropsWithDefaults'];
+}
+
+export interface UseFieldStateReturnValue<TManager extends PickerAnyValueManagerV8> {
+  state: UseFieldState<TManager>;
+  activeSectionIndex: number | null;
+  parsedSelectedSections: FieldParsedSelectedSections;
+  setSelectedSections: (sections: FieldSelectedSections) => void;
+  clearValue: () => void;
+  clearActiveSection: () => void;
+  updateSectionValue: (
+    params: UpdateSectionValueParams<PickerManagerProperties<TManager>['section']>,
+  ) => void;
+  updateValueFromValueStr: (valueStr: string) => void;
+  // TODO v9: Remove
+  setTempAndroidValueStr: (tempAndroidValueStr: string | null) => void;
+  sectionsValueBoundaries: FieldSectionsValueBoundaries<PickerManagerProperties<TManager>['date']>;
+  getSectionsFromValue: (
+    value: PickerManagerProperties<TManager>['value'],
+    fallbackSections?: PickerManagerProperties<TManager>['section'][] | null,
+  ) => PickerManagerProperties<TManager>['section'][];
+  localizedDigits: string[];
+  timezone: PickersTimezone;
+  areAllSectionsEmpty: boolean;
+}

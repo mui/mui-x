@@ -1,18 +1,21 @@
-export { getDateValueManager } from './getDateValueManager';
+export { getDateValueManager, getDateFieldInternalPropsDefaults } from './getDateValueManager';
 export type {
   DateFieldInternalProps,
   DateFieldInternalPropsWithDefaults,
   DateValueManager,
 } from './getDateValueManager';
 
-export { getTimeValueManager } from './getTimeValueManager';
+export { getTimeValueManager, getTimeFieldInternalPropsDefaults } from './getTimeValueManager';
 export type {
   TimeFieldInternalProps,
   TimeFieldInternalPropsWithDefaults,
   TimeValueManager,
 } from './getTimeValueManager';
 
-export { getDateTimeValueManager } from './getDateTimeValueManager';
+export {
+  getDateTimeValueManager,
+  getDateTimeFieldInternalPropsDefaults,
+} from './getDateTimeValueManager';
 export {
   DateTimeFieldInternalProps,
   DateTimeFieldInternalPropsWithDefaults,

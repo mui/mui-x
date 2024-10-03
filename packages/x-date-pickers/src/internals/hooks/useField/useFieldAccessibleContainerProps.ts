@@ -6,7 +6,7 @@ import {
   UseFieldForwardedProps,
   UseFieldInternalPropsFromManager,
 } from './useField.types';
-import { UseFieldStateResponse } from './useFieldState';
+import { UseFieldStateReturnValue } from './useFieldState';
 import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
 import { getActiveElement } from '../../utils/utils';
 import { useFieldHandleKeyDown } from './useFieldHandleKeyDown';
@@ -29,8 +29,8 @@ export const useFieldAccessibleContainerProps = <
     characterEditingResponse: { applyCharacterEditing, resetCharacterQuery },
     forwardedProps,
     forwardedProps: { onClick, onPaste, onBlur, onFocus, onInput },
-    internalProps,
-    internalProps: { readOnly = false },
+    internalPropsWithDefaults,
+    internalPropsWithDefaults: { readOnly = false },
     valueManager,
     interactions,
     focused,
@@ -157,7 +157,7 @@ export const useFieldAccessibleContainerProps = <
 
   const handleContainerKeyDown = useFieldHandleKeyDown({
     valueManager,
-    internalProps,
+    internalPropsWithDefaults,
     forwardedProps,
     stateResponse,
     characterEditingResponse,
@@ -184,10 +184,10 @@ interface UseFieldAccessibleContainerPropsParameters<
 > {
   valueManager: TManager;
   forwardedProps: UseFieldForwardedProps<true>;
-  internalProps: UseFieldInternalPropsFromManager<TManager> & {
+  internalPropsWithDefaults: UseFieldInternalPropsFromManager<TManager> & {
     minutesStep?: number;
   };
-  stateResponse: UseFieldStateResponse<TManager>;
+  stateResponse: UseFieldStateReturnValue<TManager>;
   characterEditingResponse: UseFieldCharacterEditingReturnValue;
   interactions: UseFieldDOMInteractions;
   focused: boolean;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerAnyAccessibleValueManagerV8 } from '../../../models';
-import { UseFieldStateResponse } from './useFieldState';
+import { UseFieldStateReturnValue } from './useFieldState';
 
 export const useFieldAccessibleHiddenInputProps = <
   TManager extends PickerAnyAccessibleValueManagerV8,
@@ -35,5 +35,5 @@ interface UseFieldAccessibleHiddenInputParameters<
   TManager extends PickerAnyAccessibleValueManagerV8,
 > {
   valueManager: TManager;
-  stateResponse: UseFieldStateResponse<TManager>;
+  stateResponse: UseFieldStateReturnValue<TManager>;
 }

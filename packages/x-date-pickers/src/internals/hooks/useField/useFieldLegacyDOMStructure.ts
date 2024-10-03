@@ -9,7 +9,7 @@ import {
   UseFieldLegacyForwardedProps,
   UseFieldLegacyAdditionalProps,
   UseFieldForwardedProps,
-  UseFieldParams,
+  UseFieldWithKnownDOMStructureParameters,
   UseFieldResponse,
 } from './useField.types';
 import { FieldSection, PickerAnyValueManagerV8 } from '../../../models';
@@ -155,8 +155,8 @@ export const useFieldLegacyDOMStructure = <
   TManager extends PickerAnyValueManagerV8,
   TForwardedProps extends UseFieldForwardedProps<false>,
 >(
-  params: UseFieldParams<TManager, TForwardedProps>,
-): UseFieldResponse<true, TForwardedProps> => {
+  parameters: UseFieldWithKnownDOMStructureParameters<TManager, TForwardedProps>,
+): UseFieldResponse<false, TForwardedProps> => {
   const isRtl = useRtl();
   const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
   const selectionSyncTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
@@ -171,16 +171,16 @@ export const useFieldLegacyDOMStructure = <
       inputRef: inputRefProp,
       placeholder: placeholderProp,
     },
-    internalProps,
-    internalProps: { unstableFieldRef, readOnly = false, disabled = false },
+    internalPropsWithDefaults,
+    internalPropsWithDefaults: { unstableFieldRef, readOnly = false, disabled = false },
     valueManager,
     valueManager: { fieldValueManager, legacyValueManager },
-  } = params;
+  } = parameters;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleRef = useForkRef(inputRefProp, inputRef);
 
-  const stateResponse = useFieldState(params);
+  const stateResponse = useFieldState(parameters);
   const {
     parsedSelectedSections,
     activeSectionIndex,
@@ -196,7 +196,12 @@ export const useFieldLegacyDOMStructure = <
     areAllSectionsEmpty,
   } = stateResponse;
 
-  const error = useFieldValidation({ internalProps, forwardedProps, valueManager, stateResponse });
+  const error = useFieldValidation({
+    internalPropsWithDefaults,
+    forwardedProps,
+    valueManager,
+    stateResponse,
+  });
 
   const characterEditingResponse = useFieldCharacterEditing({
     error,
@@ -554,7 +559,7 @@ export const useFieldLegacyDOMStructure = <
 
   const handleContainerKeyDown = useFieldHandleKeyDown({
     valueManager,
-    internalProps,
+    internalPropsWithDefaults,
     forwardedProps,
     stateResponse,
     characterEditingResponse,
@@ -562,7 +567,7 @@ export const useFieldLegacyDOMStructure = <
   });
 
   const { onClear, clearable } = useFieldClearValueProps({
-    internalProps,
+    internalPropsWithDefaults,
     forwardedProps,
     stateResponse,
     interactions,

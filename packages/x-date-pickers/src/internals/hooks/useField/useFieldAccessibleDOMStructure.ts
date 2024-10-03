@@ -4,7 +4,7 @@ import { PickerAnyAccessibleValueManagerV8 } from '../../../models';
 import {
   UseFieldAccessibleDOMGetters,
   UseFieldForwardedProps,
-  UseFieldParams,
+  UseFieldWithKnownDOMStructureParameters,
   UseFieldResponse,
 } from './useField.types';
 import type { PickersSectionElement } from '../../../PickersSectionList';
@@ -22,15 +22,15 @@ export const useFieldAccessibleDOMStructure = <
   TManager extends PickerAnyAccessibleValueManagerV8,
   TForwardedProps extends UseFieldForwardedProps<true>,
 >(
-  params: UseFieldParams<TManager, TForwardedProps>,
+  parameters: UseFieldWithKnownDOMStructureParameters<TManager, TForwardedProps>,
 ): UseFieldResponse<true, TForwardedProps> => {
   const {
-    internalProps,
-    internalProps: { disabled, readOnly = false },
+    internalPropsWithDefaults,
+    internalPropsWithDefaults: { disabled, readOnly = false },
     forwardedProps,
     forwardedProps: { sectionListRef: sectionListRefProp, focused: focusedProp, autoFocus = false },
     valueManager,
-  } = params;
+  } = parameters;
 
   // Management of `sectionListRef` (won't be present in `PickersField`)
   const sectionListRef = React.useRef<UseFieldAccessibleDOMGetters>(null);
@@ -66,9 +66,14 @@ export const useFieldAccessibleDOMStructure = <
   );
 
   const [focused, setFocused] = React.useState(false);
-  const stateResponse = useFieldState(params);
+  const stateResponse = useFieldState(parameters);
 
-  const error = useFieldValidation({ internalProps, forwardedProps, valueManager, stateResponse });
+  const error = useFieldValidation({
+    internalPropsWithDefaults,
+    forwardedProps,
+    valueManager,
+    stateResponse,
+  });
 
   const characterEditingResponse = useFieldCharacterEditing({
     error,
@@ -77,7 +82,7 @@ export const useFieldAccessibleDOMStructure = <
 
   const interactions = useFieldAccessibleDOMInteractions({
     forwardedProps,
-    internalProps,
+    internalPropsWithDefaults,
     stateResponse,
     focused,
     setFocused,
@@ -87,7 +92,7 @@ export const useFieldAccessibleDOMStructure = <
   const createSectionContainerProps = useFieldAccessibleSectionContainerProps({ stateResponse });
 
   const createSectionContentProps = useFieldAccessibleSectionContentProps({
-    internalProps,
+    internalPropsWithDefaults,
     stateResponse,
     characterEditingResponse,
     interactions,
@@ -96,7 +101,7 @@ export const useFieldAccessibleDOMStructure = <
 
   const containerEventHandlers = useFieldAccessibleContainerProps({
     valueManager,
-    internalProps,
+    internalPropsWithDefaults,
     forwardedProps,
     stateResponse,
     characterEditingResponse,
@@ -112,7 +117,7 @@ export const useFieldAccessibleDOMStructure = <
   });
 
   const clearValueProps = useFieldClearValueProps({
-    internalProps,
+    internalPropsWithDefaults,
     forwardedProps,
     stateResponse,
     interactions,

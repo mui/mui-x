@@ -16,6 +16,7 @@ import {
 import { PickerValueManagerV8, PickerValidDate, DateTimeValidationError } from '../models';
 import { validateDateTime } from '../validation';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
+import { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
 
 export type DateTimeValueManager<
   TDate extends PickerValidDate,
@@ -60,8 +61,57 @@ export interface DateTimeFieldInternalPropsWithDefaults<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends DefaultizedProps<
     DateTimeFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    keyof BaseDateValidationProps<TDate> | 'format'
+    keyof BaseDateValidationProps<TDate> | keyof BaseTimeValidationProps | 'format'
   > {}
+
+export const getDateTimeFieldInternalPropsDefaults = <
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+>({
+  defaultDates,
+  utils,
+  internalProps,
+}: Pick<MuiPickersAdapterContextValue<TDate>, 'defaultDates' | 'utils'> & {
+  internalProps: Pick<
+    DateTimeFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    | 'ampm'
+    | 'disablePast'
+    | 'disableFuture'
+    | 'format'
+    | 'minDateTime'
+    | 'maxDateTime'
+    | 'minDate'
+    | 'maxDate'
+    | 'minTime'
+    | 'maxTime'
+  >;
+}) => {
+  const ampm = internalProps.ampm ?? utils.is12HourCycleInCurrentLocale();
+  const defaultFormat = ampm
+    ? utils.formats.keyboardDateTime12h
+    : utils.formats.keyboardDateTime24h;
+
+  return {
+    disablePast: internalProps.disablePast ?? false,
+    disableFuture: internalProps.disableFuture ?? false,
+    format: internalProps.format ?? defaultFormat,
+    disableIgnoringDatePartForTimeValidation: Boolean(
+      internalProps.minDateTime || internalProps.maxDateTime,
+    ),
+    minDate: applyDefaultDate(
+      utils,
+      internalProps.minDateTime ?? internalProps.minDate,
+      defaultDates.minDate,
+    ),
+    maxDate: applyDefaultDate(
+      utils,
+      internalProps.maxDateTime ?? internalProps.maxDate,
+      defaultDates.maxDate,
+    ),
+    minTime: internalProps.minDateTime ?? internalProps.minTime,
+    maxTime: internalProps.maxDateTime ?? internalProps.maxTime,
+  };
+};
 
 export const getDateTimeValueManager = <
   TDate extends PickerValidDate,
@@ -73,33 +123,9 @@ export const getDateTimeValueManager = <
   fieldValueManager: singleItemFieldValueManager,
   validator: validateDateTime,
   valueType: 'date-time',
-  applyDefaultsToFieldInternalProps: ({ internalProps, utils, defaultDates }) => {
-    const ampm = internalProps.ampm ?? utils.is12HourCycleInCurrentLocale();
-    const defaultFormat = ampm
-      ? utils.formats.keyboardDateTime12h
-      : utils.formats.keyboardDateTime24h;
-
-    return {
-      ...internalProps,
-      disablePast: internalProps.disablePast ?? false,
-      disableFuture: internalProps.disableFuture ?? false,
-      format: internalProps.format ?? defaultFormat,
-      disableIgnoringDatePartForTimeValidation: Boolean(
-        internalProps.minDateTime || internalProps.maxDateTime,
-      ),
-      minDate: applyDefaultDate(
-        utils,
-        internalProps.minDateTime ?? internalProps.minDate,
-        defaultDates.minDate,
-      ),
-      maxDate: applyDefaultDate(
-        utils,
-        internalProps.maxDateTime ?? internalProps.maxDate,
-        defaultDates.maxDate,
-      ),
-      minTime: internalProps.minDateTime ?? internalProps.minTime,
-      maxTime: internalProps.maxDateTime ?? internalProps.maxTime,
-    };
-  },
+  applyDefaultsToFieldInternalProps: ({ internalProps, utils, defaultDates }) => ({
+    ...internalProps,
+    ...getDateTimeFieldInternalPropsDefaults({ internalProps, utils, defaultDates }),
+  }),
   enableAccessibleFieldDOMStructure,
 });

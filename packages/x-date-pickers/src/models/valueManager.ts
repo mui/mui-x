@@ -42,7 +42,7 @@ export type PickerAnyValueManagerV8 = PickerValueManagerV8<any, any, any, any, a
 export type PickerAnyAccessibleValueManagerV8 = PickerValueManagerV8<any, any, true, any, any, any>;
 
 /**
- * Infer all the usual generic in the picker packages from a `PickerConroller` interface.
+ * Infer all the usual generic in the picker packages from a `PickerValueManager` interface.
  */
 export type PickerManagerProperties<TManager extends PickerAnyValueManagerV8> =
   TManager extends PickerValueManagerV8<

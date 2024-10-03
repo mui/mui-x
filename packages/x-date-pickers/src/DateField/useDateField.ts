@@ -5,7 +5,6 @@ import { UseDateFieldProps } from './DateField.types';
 import { useSplitFieldProps } from '../hooks';
 import { PickerValidDate } from '../models';
 import { getDateValueManager } from '../valueManagers';
-import { useLocalizationContext } from '../internals/hooks/useUtils';
 
 export const useDateField = <
   TDate extends PickerValidDate,
@@ -14,7 +13,6 @@ export const useDateField = <
 >(
   props: TAllProps,
 ) => {
-  const localizationContext = useLocalizationContext<TDate>();
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
 
   const valueManager = React.useMemo(
@@ -25,14 +23,9 @@ export const useDateField = <
     [props.enableAccessibleFieldDOMStructure],
   );
 
-  const internalPropsWithDefaults = valueManager.applyDefaultsToFieldInternalProps({
-    ...localizationContext,
-    internalProps,
-  });
-
   return useField<typeof valueManager, typeof forwardedProps>({
     forwardedProps,
-    internalProps: internalPropsWithDefaults,
+    internalProps,
     valueManager,
   });
 };

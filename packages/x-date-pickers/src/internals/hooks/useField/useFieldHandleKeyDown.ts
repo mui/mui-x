@@ -1,5 +1,5 @@
 import useEventCallback from '@mui/utils/useEventCallback';
-import { UseFieldStateResponse } from './useFieldState';
+import { UseFieldStateReturnValue } from './useFieldState';
 import {
   FieldSection,
   MuiPickersAdapter,
@@ -141,7 +141,7 @@ export const adjustSectionValue = <TDate extends PickerValidDate, TSection exten
 };
 
 export const useFieldHandleKeyDown = <TManager extends PickerAnyValueManagerV8>(
-  params: UseFieldHandleKeyDownParameters<TManager>,
+  parameters: UseFieldHandleKeyDownParameters<TManager>,
 ) => {
   type ManagerProperties = PickerManagerProperties<TManager>;
   type TDate = ManagerProperties['date'];
@@ -162,11 +162,11 @@ export const useFieldHandleKeyDown = <TManager extends PickerAnyValueManagerV8>(
       state,
       timezone,
     },
-    internalProps: { disabled, readOnly, minutesStep },
+    internalPropsWithDefaults: { disabled, readOnly, minutesStep },
     forwardedProps: { onKeyDown },
     characterEditingResponse: { resetCharacterQuery },
     sectionOrder = buildDefaultSectionOrdering(state.sections.length),
-  } = params;
+  } = parameters;
 
   return useEventCallback((event: React.KeyboardEvent<HTMLSpanElement>) => {
     onKeyDown?.(event);
@@ -281,10 +281,10 @@ interface UseFieldHandleKeyDownParameters<TManager extends PickerAnyValueManager
   forwardedProps: UseFieldForwardedProps<
     PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure']
   >;
-  internalProps: UseFieldInternalPropsFromManager<TManager> & {
+  internalPropsWithDefaults: UseFieldInternalPropsFromManager<TManager> & {
     minutesStep?: number;
   };
-  stateResponse: UseFieldStateResponse<TManager>;
+  stateResponse: UseFieldStateReturnValue<TManager>;
   characterEditingResponse: UseFieldCharacterEditingReturnValue;
   /**
    * Only define when used with the legacy DOM structure.

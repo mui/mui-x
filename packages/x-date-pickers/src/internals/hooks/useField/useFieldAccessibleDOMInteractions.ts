@@ -7,7 +7,7 @@ import {
   UseFieldInternalPropsFromManager,
 } from './useField.types';
 import { PickerAnyAccessibleValueManagerV8 } from '../../../models';
-import { UseFieldStateResponse } from './useFieldState';
+import { UseFieldStateReturnValue } from './useFieldState';
 import { getActiveElement } from '../../utils/utils';
 import { parseSelectedSections } from './useField.utils';
 
@@ -17,7 +17,7 @@ export const useFieldAccessibleDOMInteractions = <
   parameters: UseFieldAccessibleDOMInteractionsParameters<TManager>,
 ) => {
   const {
-    internalProps: { unstableFieldRef },
+    internalPropsWithDefaults: { unstableFieldRef },
     forwardedProps: { autoFocus },
     stateResponse: { state, parsedSelectedSections, setSelectedSections },
     focused,
@@ -141,8 +141,8 @@ interface UseFieldAccessibleDOMInteractionsParameters<
   TManager extends PickerAnyAccessibleValueManagerV8,
 > {
   forwardedProps: UseFieldForwardedProps<true>;
-  internalProps: UseFieldInternalPropsFromManager<TManager>;
-  stateResponse: UseFieldStateResponse<TManager>;
+  internalPropsWithDefaults: UseFieldInternalPropsFromManager<TManager>;
+  stateResponse: UseFieldStateReturnValue<TManager>;
   focused: boolean;
   setFocused: (focused: boolean) => void;
   domGetters: UseFieldAccessibleDOMGetters;

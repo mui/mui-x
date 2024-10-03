@@ -18,7 +18,7 @@ import {
   removeLocalizedDigits,
   isStringNumber,
 } from './useField.utils';
-import { UseFieldStateResponse } from './useFieldState';
+import { UseFieldStateReturnValue } from './useFieldState';
 
 interface CharacterEditingQuery {
   value: string;
@@ -428,7 +428,7 @@ export const useFieldCharacterEditing = <TManager extends PickerAnyValueManagerV
 };
 
 interface UseFieldCharacterEditingParameters<TManager extends PickerAnyValueManagerV8> {
-  stateResponse: UseFieldStateResponse<TManager>;
+  stateResponse: UseFieldStateReturnValue<TManager>;
   error: boolean;
 }
 

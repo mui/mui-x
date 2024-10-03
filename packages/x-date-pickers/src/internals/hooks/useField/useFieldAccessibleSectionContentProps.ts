@@ -1,24 +1,31 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useId from '@mui/utils/useId';
-import { FieldSection, MuiPickersAdapter, PickerValidDate } from '../../../models';
+import {
+  FieldSection,
+  MuiPickersAdapter,
+  PickerAnyAccessibleValueManagerV8,
+  PickerManagerProperties,
+  PickerValidDate,
+} from '../../../models';
 import {
   UseFieldAccessibleDOMGetters,
   UseFieldDOMInteractions,
-  UseFieldInternalProps,
+  UseFieldInternalPropsFromManager,
 } from './useField.types';
-import { UseFieldStateResponse } from './useFieldState';
+import { UseFieldStateReturnValue } from './useFieldState';
 import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
 import { useUtils } from '../useUtils';
 import { usePickersTranslations } from '../../../hooks';
 
 export const useFieldAccessibleSectionContentProps = <
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
+  TManager extends PickerAnyAccessibleValueManagerV8,
 >(
-  parameters: UseFieldAccessibleSectionContentPropsParameters<TValue, TDate, TSection>,
+  parameters: UseFieldAccessibleSectionContentPropsParameters<TManager>,
 ) => {
+  type ManagerProperties = PickerManagerProperties<TManager>;
+  type TDate = ManagerProperties['date'];
+
   const utils = useUtils<TDate>();
   const translations = usePickersTranslations();
   const id = useId();
@@ -35,7 +42,7 @@ export const useFieldAccessibleSectionContentProps = <
     },
     characterEditingResponse: { applyCharacterEditing, resetCharacterQuery },
 
-    internalProps: { disabled = false, readOnly = false },
+    internalPropsWithDefaults: { disabled = false, readOnly = false },
     interactions,
     domGetters,
   } = parameters;
@@ -270,12 +277,10 @@ function getAriaValueTextAttribute<TDate extends PickerValidDate>(
 }
 
 interface UseFieldAccessibleSectionContentPropsParameters<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
+  TManager extends PickerAnyAccessibleValueManagerV8,
 > {
-  internalProps: UseFieldInternalProps<TValue, TDate, TSection, true, any>;
-  stateResponse: UseFieldStateResponse<TValue, TDate, TSection>;
+  internalPropsWithDefaults: UseFieldInternalPropsFromManager<TManager>;
+  stateResponse: UseFieldStateReturnValue<TManager>;
   characterEditingResponse: UseFieldCharacterEditingReturnValue;
   interactions: UseFieldDOMInteractions;
   domGetters: UseFieldAccessibleDOMGetters;

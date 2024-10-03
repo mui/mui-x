@@ -6,7 +6,7 @@ import {
   UseFieldDOMInteractions,
 } from './useField.types';
 import { PickerAnyValueManagerV8, PickerManagerProperties } from '../../../models';
-import { UseFieldStateResponse } from './useFieldState';
+import { UseFieldStateReturnValue } from './useFieldState';
 import { buildDefaultSectionOrdering } from './useField.utils';
 
 export const useFieldClearValueProps = <TManager extends PickerAnyValueManagerV8>(
@@ -45,8 +45,8 @@ interface UseFieldClearValuePropsParameters<TManager extends PickerAnyValueManag
   forwardedProps: UseFieldForwardedProps<
     PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure']
   >;
-  internalProps: UseFieldInternalPropsFromManager<TManager>;
-  stateResponse: UseFieldStateResponse<TManager>;
+  internalPropsWithDefaults: UseFieldInternalPropsFromManager<TManager>;
+  stateResponse: UseFieldStateReturnValue<TManager>;
   interactions: UseFieldDOMInteractions;
   /**
    * Only define when used with the legacy DOM structure.

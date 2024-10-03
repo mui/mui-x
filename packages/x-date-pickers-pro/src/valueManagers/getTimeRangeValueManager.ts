@@ -1,29 +1,29 @@
 import { PickerValidDate, PickerValueManagerV8 } from '@mui/x-date-pickers/models';
-import { getDateFieldInternalPropsDefaults } from '@mui/x-date-pickers/valueManagers';
+import { getTimeFieldInternalPropsDefaults } from '@mui/x-date-pickers/valueManagers';
 import {
-  BaseDateValidationProps,
+  BaseTimeValidationProps,
   DefaultizedProps,
   MakeOptional,
+  TimeValidationProps,
   UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRangeValidationError, RangeFieldSeparatorProps } from '../models';
-import { DayRangeValidationProps } from '../internals/models';
+import { TimeRangeValidationError, RangeFieldSeparatorProps } from '../models';
 import { getRangeFieldValueManager, rangeValueManager } from '../internals/utils/valueManagers';
-import { validateDateRange } from '../validation';
+import { validateTimeRange } from '../validation';
 
-export type DateRangeValueManager<
+export type TimeRangeValueManager<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > = PickerValueManagerV8<
   TDate,
   true,
   TEnableAccessibleFieldDOMStructure,
-  DateRangeValidationError,
-  DateRangeFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
-  DateRangeFieldInternalPropsWithDefaults<TDate, TEnableAccessibleFieldDOMStructure>
+  TimeRangeValidationError,
+  TimeRangeFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  TimeRangeFieldInternalPropsWithDefaults<TDate, TEnableAccessibleFieldDOMStructure>
 >;
 
-export interface DateRangeFieldInternalProps<
+export interface TimeRangeFieldInternalProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends MakeOptional<
@@ -31,23 +31,29 @@ export interface DateRangeFieldInternalProps<
         TDate,
         true,
         TEnableAccessibleFieldDOMStructure,
-        DateRangeValidationError
+        TimeRangeValidationError
       >,
       'format'
     >,
     RangeFieldSeparatorProps,
-    DayRangeValidationProps<TDate>,
-    BaseDateValidationProps<TDate> {}
+    TimeValidationProps<TDate>,
+    BaseTimeValidationProps {
+  /**
+   * 12h/24h view for hour selection clock.
+   * @default utils.is12HourCycleInCurrentLocale()
+   */
+  ampm?: boolean;
+}
 
-export interface DateRangeFieldInternalPropsWithDefaults<
+export interface TimeRangeFieldInternalPropsWithDefaults<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends DefaultizedProps<
-    DateRangeFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    keyof BaseDateValidationProps<TDate> | 'format'
+    TimeRangeFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    keyof BaseTimeValidationProps | 'format'
   > {}
 
-export const getDateRangeValueManager = <
+export const getTimeRangeValueManager = <
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = false,
 >({
@@ -55,17 +61,17 @@ export const getDateRangeValueManager = <
   dateSeparator,
 }: {
   enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
-} & RangeFieldSeparatorProps): DateRangeValueManager<
+} & RangeFieldSeparatorProps): TimeRangeValueManager<
   TDate,
   TEnableAccessibleFieldDOMStructure
 > => ({
   legacyValueManager: rangeValueManager,
   fieldValueManager: getRangeFieldValueManager({ dateSeparator }),
-  validator: validateDateRange,
-  valueType: 'date',
-  applyDefaultsToFieldInternalProps: ({ internalProps, utils, defaultDates }) => ({
+  validator: validateTimeRange,
+  valueType: 'time',
+  applyDefaultsToFieldInternalProps: ({ internalProps, utils }) => ({
     ...internalProps,
-    ...getDateFieldInternalPropsDefaults({ defaultDates, utils, internalProps }),
+    ...getTimeFieldInternalPropsDefaults({ utils, internalProps }),
   }),
   enableAccessibleFieldDOMStructure,
 });
