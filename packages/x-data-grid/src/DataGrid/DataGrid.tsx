@@ -483,6 +483,13 @@ DataGridRaw.propTypes = {
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
+  onColumnHeaderContextMenu: PropTypes.func,
+  /**
+   * Callback fired when a double click event comes from a column header element.
+   * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
+   * @param {MuiEvent<React.MouseEvent>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
   onColumnHeaderDoubleClick: PropTypes.func,
   /**
    * Callback fired when a mouse enter event comes from a column header element.
