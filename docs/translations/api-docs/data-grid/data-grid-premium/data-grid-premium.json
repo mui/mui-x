@@ -238,6 +238,9 @@
     "lazyLoading": {
       "description": "Used together with <code>unstable_dataSource</code> to enable lazy loading. If enabled, the grid stops adding <code>paginationModel</code> to the data requests (<code>getRows</code>) and starts sending <code>start</code> and <code>end</code> values depending on the loading mode and the scroll position."
     },
+    "lazyLoadingRequestThrottleMs": {
+      "description": "If positive, the Data Grid will throttle data source requests on rendered rows interval change."
+    },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": {
       "description": "Set the locale text of the Data Grid. You can find all the translation keys supported in <a href=\"https://github.com/mui/mui-x/blob/HEAD/packages/x-data-grid/src/constants/localeTextConstants.ts\">the source</a> in the GitHub repository."
@@ -631,7 +634,7 @@
       "description": "Override the height/width of the Data Grid inner scrollbar."
     },
     "scrollEndThreshold": {
-      "description": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called."
+      "description": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called. If combined with <code>lazyLoading</code>, it defines the area where the next data request is triggered."
     },
     "showCellVerticalBorder": {
       "description": "If <code>true</code>, vertical borders will be displayed between cells."

@@ -212,6 +212,7 @@
     "keepColumnPositionIfDraggedOutside": { "type": { "name": "bool" }, "default": "false" },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
     "lazyLoading": { "type": { "name": "bool" }, "default": "false" },
+    "lazyLoadingRequestThrottleMs": { "type": { "name": "number" }, "default": "500" },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "logger": {
