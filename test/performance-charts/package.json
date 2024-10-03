@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test:performance": "vitest bench"
+    "test:performance": "vitest bench",
+    "build": "pnpm --filter=\"@mui/x-charts-pro...\" build"
   },
   "devDependencies": {
     "@codspeed/vitest-plugin": "^3.1.1",
