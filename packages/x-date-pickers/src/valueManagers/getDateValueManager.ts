@@ -10,27 +10,28 @@ import {
   singleItemFieldValueManager,
   singleItemValueManager,
 } from '../internals/utils/valueManagers';
-import {
-  PickerValueManagerV8,
-  PickerValidDate,
-  DateValidationError,
-  FieldSection,
-} from '../models';
+import { PickerValueManagerV8, PickerValidDate, DateValidationError } from '../models';
 import { validateDate } from '../validation';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { ExportedUseClearableFieldProps } from '../hooks/useClearableField';
+
+export type DateValueManager<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> = PickerValueManagerV8<
+  TDate,
+  false,
+  TEnableAccessibleFieldDOMStructure,
+  DateValidationError,
+  DateFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  DateFieldInternalPropsWithDefaults<TDate, TEnableAccessibleFieldDOMStructure>
+>;
 
 export interface DateFieldInternalProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends MakeOptional<
-      UseFieldInternalProps<
-        TDate | null,
-        TDate,
-        FieldSection,
-        TEnableAccessibleFieldDOMStructure,
-        DateValidationError
-      >,
+      UseFieldInternalProps<TDate, false, TEnableAccessibleFieldDOMStructure, DateValidationError>,
       'format'
     >,
     DayValidationProps<TDate>,
@@ -50,14 +51,9 @@ export interface DateFieldInternalPropsWithDefaults<
 export const getDateValueManager = <
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = false,
->(): PickerValueManagerV8<
-  TDate,
-  false,
-  TEnableAccessibleFieldDOMStructure,
-  DateValidationError,
-  DateFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
-  DateFieldInternalPropsWithDefaults<TDate, TEnableAccessibleFieldDOMStructure>
-> => ({
+>(
+  enableAccessibleFieldDOMStructure: TEnableAccessibleFieldDOMStructure = false as TEnableAccessibleFieldDOMStructure,
+): DateValueManager<TDate, TEnableAccessibleFieldDOMStructure> => ({
   legacyValueManager: singleItemValueManager,
   fieldValueManager: singleItemFieldValueManager,
   validator: validateDate,
@@ -70,4 +66,5 @@ export const getDateValueManager = <
     minDate: applyDefaultDate(adapter.utils, internalProps.minDate, adapter.defaultDates.minDate),
     maxDate: applyDefaultDate(adapter.utils, internalProps.maxDate, adapter.defaultDates.maxDate),
   }),
+  enableAccessibleFieldDOMStructure,
 });

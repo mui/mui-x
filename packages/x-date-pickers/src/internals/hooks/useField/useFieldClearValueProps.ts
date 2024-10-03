@@ -2,7 +2,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import {
   SectionOrdering,
   UseFieldForwardedProps,
-  UseFieldInternalProps,
+  UseFieldInternalPropsFromManager,
   UseFieldDOMInteractions,
 } from './useField.types';
 import { PickerAnyValueManagerV8, PickerManagerProperties } from '../../../models';
@@ -45,7 +45,7 @@ interface UseFieldClearValuePropsParameters<TManager extends PickerAnyValueManag
   forwardedProps: UseFieldForwardedProps<
     PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure']
   >;
-  internalProps: UseFieldInternalProps<TManager>;
+  internalProps: UseFieldInternalPropsFromManager<TManager>;
   stateResponse: UseFieldStateResponse<TManager>;
   interactions: UseFieldDOMInteractions;
   /**

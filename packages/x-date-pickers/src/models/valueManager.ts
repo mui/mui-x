@@ -1,4 +1,4 @@
-import type { FieldValueManager, UseFieldInternalProps } from '../internals/hooks/useField';
+import type { FieldValueManager } from '../internals/hooks/useField';
 import type { PickerValueManager } from '../internals/hooks/usePicker';
 import type { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
 import type { Validator } from '../validation';
@@ -15,25 +15,13 @@ export interface PickerValueManagerV8<
   TIsRange extends boolean,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  TInternalProps extends Partial<
-    UseFieldInternalProps<any, any, any, TEnableAccessibleFieldDOMStructure, any>
-  >,
-  TInternalPropsWithDefaults extends UseFieldInternalProps<
-    any,
-    any,
-    any,
-    TEnableAccessibleFieldDOMStructure,
-    any
-  >,
+  TInternalProps extends {},
+  TInternalPropsWithDefaults extends {},
 > {
   // The v7 value manager object.
   // This will be inlined inside the main `PickerValueManagerV8` object once every object using it is compatible with the new API.
   legacyValueManager: PickerValueManager<InferValueFromDate<TDate, TIsRange>, TDate, TError>;
-  fieldValueManager: FieldValueManager<
-    InferValueFromDate<TDate, TIsRange>,
-    TDate,
-    InferFieldSection<TIsRange>
-  >;
+  fieldValueManager: FieldValueManager<TDate, TIsRange>;
   validator: Validator<
     InferValueFromDate<TDate, TIsRange>,
     TDate,
@@ -45,6 +33,7 @@ export interface PickerValueManagerV8<
     internalProps: TInternalProps;
   }) => TInternalPropsWithDefaults;
   valueType: FieldValueType;
+  enableAccessibleFieldDOMStructure: TEnableAccessibleFieldDOMStructure;
 }
 
 export type PickerAnyValueManagerV8 = PickerValueManagerV8<any, any, any, any, any, any>;

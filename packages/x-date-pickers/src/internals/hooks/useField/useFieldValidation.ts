@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { UseFieldForwardedProps, UseFieldInternalProps } from './useField.types';
+import { UseFieldForwardedProps, UseFieldInternalPropsFromManager } from './useField.types';
 import { PickerAnyValueManagerV8 } from '../../../models';
 import { UseFieldStateResponse } from './useFieldState';
 import { useValidation } from '../../../validation';
@@ -37,7 +37,7 @@ export const useFieldValidation = <TManager extends PickerAnyValueManagerV8>(
 
 interface UseFieldValidationParameters<TManager extends PickerAnyValueManagerV8> {
   forwardedProps: UseFieldForwardedProps<true>;
-  internalProps: UseFieldInternalProps<TManager>;
+  internalProps: UseFieldInternalPropsFromManager<TManager>;
   stateResponse: UseFieldStateResponse<TManager>;
   valueManager: TManager;
 }

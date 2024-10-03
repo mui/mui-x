@@ -17,7 +17,13 @@ export const useDateField = <
   const adapter = useLocalizationContext<TDate>();
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
 
-  const valueManager = React.useMemo(() => getDateValueManager<TDate>(), []);
+  const valueManager = React.useMemo(
+    () =>
+      getDateValueManager<TDate, TEnableAccessibleFieldDOMStructure>(
+        props.enableAccessibleFieldDOMStructure,
+      ),
+    [props.enableAccessibleFieldDOMStructure],
+  );
 
   const internalPropsWithDefaults = valueManager.applyDefaultsToFieldInternalProps({
     adapter,

@@ -18,7 +18,7 @@ import {
   FieldSectionsValueBoundaries,
   SectionOrdering,
   UseFieldForwardedProps,
-  UseFieldInternalProps,
+  UseFieldInternalPropsFromManager,
 } from './useField.types';
 import { useUtils } from '../useUtils';
 import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
@@ -281,7 +281,7 @@ interface UseFieldHandleKeyDownParameters<TManager extends PickerAnyValueManager
   forwardedProps: UseFieldForwardedProps<
     PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure']
   >;
-  internalProps: UseFieldInternalProps<TManager> & {
+  internalProps: UseFieldInternalPropsFromManager<TManager> & {
     minutesStep?: number;
   };
   stateResponse: UseFieldStateResponse<TManager>;

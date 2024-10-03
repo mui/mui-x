@@ -1,5 +1,4 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import * as Field from '@base_ui/react/Field';
 import * as PickersField from '../PickersField';
 import { PickerValidDate } from '../models/pickers';
@@ -7,7 +6,7 @@ import { getDateValueManager } from '../valueManagers';
 import classes from './DateFieldV8.module.css';
 
 export function DateFieldRaw<TDate extends PickerValidDate>(props: any) {
-  const valueManager = React.useMemo(() => getDateValueManager<TDate>(), []);
+  const valueManager = React.useMemo(() => getDateValueManager<TDate, true>(true), []);
 
   return (
     <PickersField.Root valueManager={valueManager} {...props}>
@@ -26,7 +25,7 @@ export function DateFieldRaw<TDate extends PickerValidDate>(props: any) {
 
 export function DateFieldBase<TDate extends PickerValidDate>(props: any) {
   const { label, ...other } = props;
-  const valueManager = React.useMemo(() => getDateValueManager<TDate>(), []);
+  const valueManager = React.useMemo(() => getDateValueManager<TDate, true>(true), []);
 
   return (
     <Field.Root>

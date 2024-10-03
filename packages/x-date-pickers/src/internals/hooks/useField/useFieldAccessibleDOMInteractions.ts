@@ -4,7 +4,7 @@ import {
   UseFieldAccessibleDOMGetters,
   UseFieldDOMInteractions,
   UseFieldForwardedProps,
-  UseFieldInternalProps,
+  UseFieldInternalPropsFromManager,
 } from './useField.types';
 import { PickerAnyAccessibleValueManagerV8 } from '../../../models';
 import { UseFieldStateResponse } from './useFieldState';
@@ -141,7 +141,7 @@ interface UseFieldAccessibleDOMInteractionsParameters<
   TManager extends PickerAnyAccessibleValueManagerV8,
 > {
   forwardedProps: UseFieldForwardedProps<true>;
-  internalProps: UseFieldInternalProps<TManager>;
+  internalProps: UseFieldInternalPropsFromManager<TManager>;
   stateResponse: UseFieldStateResponse<TManager>;
   focused: boolean;
   setFocused: (focused: boolean) => void;
