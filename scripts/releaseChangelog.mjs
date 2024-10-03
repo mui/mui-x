@@ -108,6 +108,11 @@ async function main(argv) {
 
   const changeLogMessages = [];
   const prsLabelsMap = {};
+  const community = {
+    firstTimers: new Set(),
+    contributors: new Set(),
+    team: new Set(),
+  };
   await Promise.all(
     commitsItems.map(async (commitsItem) => {
       const searchPullRequestId = commitsItem.commit.message.match(/\(#([0-9]+)\)/);
@@ -116,12 +121,30 @@ async function main(argv) {
       }
 
       const {
-        data: { body: bodyMessage, labels },
+        data: {
+          body: bodyMessage,
+          labels,
+          author_association,
+          user: { login },
+        },
       } = await octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}', {
         owner: GIT_ORGANIZATION,
         repo: GIT_REPO,
         pull_number: Number(searchPullRequestId[1]),
       });
+
+      switch (author_association) {
+        case 'CONTRIBUTOR':
+          community.contributors.add(`@${login}`);
+          break;
+        case 'FIRST_TIMER':
+          community.firstTimers.add(`@${login}`);
+          break;
+        case 'MEMBER':
+          community.team.add(`@${login}`);
+          break;
+        default:
+      }
 
       prsLabelsMap[commitsItem.sha] = labels;
 
@@ -264,6 +287,27 @@ async function main(argv) {
     year: 'numeric',
   });
 
+  const logCommunitySection = () => {
+    // TODO: separate first timers and regular contributors
+    const contributors = [
+      ...Array.from(community.contributors),
+      ...Array.from(community.firstTimers),
+    ].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+    if (contributors.length === 0) {
+      return '';
+    }
+
+    return `Special thanks go out to our community contributors who have helped make this release possible:\n${contributors.join(', ')}.`;
+  };
+
+  const logTeamSection = () => {
+    return `Following are all team members who have contributed to this release:\n${Array.from(
+      community.team,
+    )
+      .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
+      .join(', ')}.`;
+  };
+
   const changelog = `
 ## __VERSION__
 <!-- generated comparing ${lastRelease}..${release} -->
@@ -275,6 +319,8 @@ We'd like to offer a big thanks to the ${
 
 TODO INSERT HIGHLIGHTS
 ${changeLogMessages.length > 0 ? '\n\n' : ''}${changeLogMessages.join('\n')}
+${logCommunitySection()}
+${logTeamSection()}
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
