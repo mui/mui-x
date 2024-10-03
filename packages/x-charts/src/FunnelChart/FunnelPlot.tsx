@@ -32,27 +32,31 @@ export interface FunnelPlotProps {
    * The label configuration for the funnel plot.
    * Allows to customize the position and margin of the label.
    */
-  label?: {
-    /**
-     * The position of the label.
-     * @default { vertical: 'middle', horizontal: 'center' }
-     */
-    position?: {
-      /**
-       * The vertical position of the label.
-       */
-      vertical?: 'top' | 'middle' | 'bottom';
-      /**
-       * The horizontal position of the label.
-       */
-      horizontal?: 'left' | 'center' | 'right';
-    };
-    /**
-     * The margin of the label.
-     * @default 0
-     */
-    margin?: number | { top?: number; right?: number; bottom?: number; left?: number };
-  };
+  // TODO: unsure how to handle this prop, eg: barLabel accepts 'value' or function, but it has no configuration for position and margin
+  // Should we provide a function here as well and the positioning on another prop? Or should we provide a way for user to position stuff using hooks and custom components?
+  funnelLabel?:
+    | false
+    | {
+        /**
+         * The position of the label.
+         * @default { vertical: 'middle', horizontal: 'center' }
+         */
+        position?: {
+          /**
+           * The vertical position of the label.
+           */
+          vertical?: 'top' | 'middle' | 'bottom';
+          /**
+           * The horizontal position of the label.
+           */
+          horizontal?: 'left' | 'center' | 'right';
+        };
+        /**
+         * The margin of the label.
+         * @default 0
+         */
+        margin?: number | { top?: number; right?: number; bottom?: number; left?: number };
+      };
   /**
    * The props used for each component slot.
    * @default {}
@@ -236,7 +240,7 @@ const alignLabel = ({
   };
 };
 
-const useAggregatedData = (props: Pick<FunnelPlotProps, 'label'>) => {
+const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
   const seriesData = useFunnelSeries();
   const axisData = useCartesianContext();
 
@@ -256,6 +260,8 @@ const useAggregatedData = (props: Pick<FunnelPlotProps, 'label'>) => {
       return groupIds.map((seriesId) => {
         const xAxisId = series[seriesId].xAxisId ?? series[seriesId].xAxisKey ?? defaultXAxisId;
         const yAxisId = series[seriesId].yAxisId ?? series[seriesId].yAxisKey ?? defaultYAxisId;
+
+        const valueFormatter = series[seriesId].valueFormatter;
 
         const xScale = xAxis[xAxisId].scale;
         const yScale = yAxis[yAxisId].scale;
@@ -285,21 +291,23 @@ const useAggregatedData = (props: Pick<FunnelPlotProps, 'label'>) => {
             seriesId,
             dataIndex,
             gradientUsed,
-            label: {
+            label: funnelLabel !== false && {
               ...positionLabel({
-                vertical: props?.label?.position?.vertical,
-                horizontal: props?.label?.position?.horizontal,
-                margin: props?.label?.margin,
+                vertical: funnelLabel?.position?.vertical,
+                horizontal: funnelLabel?.position?.horizontal,
+                margin: funnelLabel?.margin,
                 xScale,
                 yScale,
                 isHorizontal,
                 values,
               }),
               ...alignLabel({
-                vertical: props?.label?.position?.vertical,
-                horizontal: props?.label?.position?.horizontal,
+                vertical: funnelLabel?.position?.vertical,
+                horizontal: funnelLabel?.position?.horizontal,
               }),
-              value: series[seriesId].data[dataIndex]?.toLocaleString(),
+              value: valueFormatter
+                ? valueFormatter(series[seriesId].data[dataIndex], { dataIndex })
+                : series[seriesId].data[dataIndex]?.toLocaleString(),
             },
           };
         });
@@ -307,15 +315,15 @@ const useAggregatedData = (props: Pick<FunnelPlotProps, 'label'>) => {
     });
 
     return result.flatMap((v) => v.toReversed().flat());
-  }, [seriesData, axisData, props]);
+  }, [seriesData, axisData, funnelLabel]);
 
   return allData;
 };
 
 function FunnelPlot(props: FunnelPlotProps) {
-  const { skipAnimation, onItemClick, ...other } = props;
+  const { skipAnimation, onItemClick, funnelLabel, ...other } = props;
 
-  const data = useAggregatedData(other);
+  const data = useAggregatedData(funnelLabel);
 
   return (
     <React.Fragment>
@@ -335,19 +343,25 @@ function FunnelPlot(props: FunnelPlotProps) {
           }
         />
       ))}
-      {data.map(({ id, label }) => (
-        <FunnelLabel
-          key={id}
-          x={label.x}
-          y={label.y}
-          sx={{
-            textAnchor: label.textAnchor,
-            dominantBaseline: label.dominantBaseline,
-          }}
-        >
-          {label.value}
-        </FunnelLabel>
-      ))}
+      {data.map(({ id, label }) => {
+        if (!label) {
+          return null;
+        }
+
+        return (
+          <FunnelLabel
+            key={id}
+            x={label.x}
+            y={label.y}
+            sx={{
+              textAnchor: label.textAnchor,
+              dominantBaseline: label.dominantBaseline,
+            }}
+          >
+            {label.value}
+          </FunnelLabel>
+        );
+      })}
     </React.Fragment>
   );
 }

@@ -41,7 +41,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     highlightedItem,
     onHighlightChange,
     className,
-    label,
+    funnelLabel,
     ...rest
   } = props;
 
@@ -72,7 +72,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
 
   const funnelPlotProps: FunnelPlotProps = {
     onItemClick,
-    label,
+    funnelLabel,
     slots,
     slotProps,
     skipAnimation,
