@@ -1,46 +1,38 @@
 'use client';
 import * as React from 'react';
-import { useField, useDefaultizedDateField } from '@mui/x-date-pickers/internals';
+import { useField, useLocalizationContext } from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { UseSingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
-import { rangeValueManager, getRangeFieldValueManager } from '../internals/utils/valueManagers';
-import { validateDateRange } from '../validation';
-import { RangeFieldSection, DateRange } from '../models';
+import { getDateRangeValueManager } from '../valueManagers';
 
 export const useSingleInputDateRangeField = <
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TAllProps extends UseSingleInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
 >(
-  inProps: TAllProps,
+  props: TAllProps,
 ) => {
-  const props = useDefaultizedDateField<
-    TDate,
-    UseSingleInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    TAllProps
-  >(inProps);
-
+  const localizationContext = useLocalizationContext<TDate>();
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
 
-  const fieldValueManager = React.useMemo(
-    () => getRangeFieldValueManager<TDate>({ dateSeparator: internalProps.dateSeparator }),
-    [internalProps.dateSeparator],
+  const valueManager = React.useMemo(
+    () =>
+      getDateRangeValueManager<TDate, TEnableAccessibleFieldDOMStructure>({
+        enableAccessibleFieldDOMStructure: props.enableAccessibleFieldDOMStructure,
+        dateSeparator: props.dateSeparator,
+      }),
+    [props.enableAccessibleFieldDOMStructure, props.dateSeparator],
   );
 
-  return useField<
-    DateRange<TDate>,
-    TDate,
-    RangeFieldSection,
-    TEnableAccessibleFieldDOMStructure,
-    typeof forwardedProps,
-    typeof internalProps
-  >({
-    forwardedProps,
+  const internalPropsWithDefaults = valueManager.applyDefaultsToFieldInternalProps({
+    ...localizationContext,
     internalProps,
-    valueManager: rangeValueManager,
-    fieldValueManager,
-    validator: validateDateRange,
-    valueType: 'date',
+  });
+
+  return useField<typeof valueManager, typeof forwardedProps>({
+    forwardedProps,
+    internalProps: internalPropsWithDefaults,
+    valueManager,
   });
 };

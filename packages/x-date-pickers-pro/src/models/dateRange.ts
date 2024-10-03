@@ -9,6 +9,7 @@ import { DateRangeValidationError } from './validation';
 import { DateRange } from './range';
 import { DayRangeValidationProps } from '../internals/models/dateRange';
 
+// TODO PR: Remove
 export interface UseDateRangeFieldProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
