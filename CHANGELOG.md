@@ -90,7 +90,7 @@ Same changes as in `@mui/x-charts@7.19.0`.
 
 - [TreeView] Apply experimental features in `getDefaultizedParams` instead of in the plugin render (#14661) @flaviendelangle
 - [TreeView] Export `publicAPI` form `useTreeItem2Utils` (#14729) @noraleonte
-- [TreeView] Fix Cursor navigation interferes with browser shortcut keys  (#14798) @sai6855
+- [TreeView] Fix cursor navigation interfering with browser shortcut keys  (#14798) @sai6855
 - [TreeView] Fix invalid test for items reordering (#14665) @flaviendelangle
 - [TreeView] Remove `instance.getTreeItemIdAttribute` (#14667) @flaviendelangle
 
