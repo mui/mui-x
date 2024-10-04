@@ -209,6 +209,8 @@ describe('<DataGridPro /> - Infnite loader', () => {
     // arbitrary number to make sure that the bottom of the grid window is reached.
     virtualScroller.scrollTop = 12345;
     virtualScroller.dispatchEvent(new Event('scroll'));
+    // wait for the next render cycle
+    await sleep(0);
     // observer was attached
     expect(observe.callCount).to.equal(1);
   });
