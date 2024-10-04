@@ -7,19 +7,112 @@ import {
   useFieldCharacterEditing,
   useFieldAccessibleDOMInteractions,
   useFieldAccessibleContainerProps,
+  UseFieldAccessibleDOMGetters,
 } from '../../internals/hooks/useField';
 import type { PickersFieldProvider } from './PickersFieldProvider';
 import { PickerManagerProperties, PickerAnyAccessibleValueManagerV8 } from '../../models';
 import { useLocalizationContext } from '../../internals/hooks/useUtils';
 
+function usePickersFieldRootDOMGetters() {
+  const contentRef = React.useRef<HTMLDivElement>(null);
+  const sectionsRef = React.useRef<{ [sectionIndex: string]: HTMLSpanElement }>({});
+  const sectionsContentRef = React.useRef<{
+    [sectionIndex: string]: HTMLSpanElement;
+  }>({});
+
+  const registerSectionRef = React.useCallback(
+    (sectionIndex: number, ref: HTMLSpanElement | null) => {
+      if (ref == null) {
+        delete sectionsRef.current[sectionIndex];
+      } else {
+        sectionsRef.current[sectionIndex] = ref;
+      }
+    },
+    [],
+  );
+
+  const registerSectionContentRef = React.useCallback(
+    (sectionIndex: number, ref: HTMLSpanElement | null) => {
+      if (ref == null) {
+        delete sectionsContentRef.current[sectionIndex];
+      } else {
+        sectionsContentRef.current[sectionIndex] = ref;
+      }
+    },
+    [],
+  );
+
+  // We should be able to drop `sectionListRef` and pass a param to `useField` instead.
+  const domGetters = React.useMemo<UseFieldAccessibleDOMGetters>(
+    () => ({
+      // TODO: Rename "getContent" to match the component name in PickersField instead of the one in PickersSectionList.
+      getRoot: () => {
+        if (!contentRef.current) {
+          throw new Error(
+            `MUI X: Cannot call sectionListRef.getRoot before the mount of the component.`,
+          );
+        }
+
+        return contentRef.current;
+      },
+      // TODO: Rename "getSection" to match the component name in PickersField instead of the one in PickersSectionList.
+      getSectionContainer: (index) => {
+        const sectionRef = sectionsRef.current[index];
+        if (!sectionRef) {
+          throw new Error(
+            `MUI X: Cannot call sectionListRef.getSectionContainer before the mount of the component.`,
+          );
+        }
+
+        return sectionRef;
+      },
+      getSectionContent: (index) => {
+        const sectionContentRef = sectionsContentRef.current[index];
+        if (!contentRef.current) {
+          throw new Error(
+            `MUI X: Cannot call sectionListRef.getSectionContent before the mount of the component.`,
+          );
+        }
+
+        return sectionContentRef;
+      },
+      getSectionIndexFromDOMElement: (element) => {
+        if (!contentRef.current) {
+          throw new Error(
+            `MUI X: Cannot call sectionListRef.getSectionIndexFromDOMElement before the mount of the component.`,
+          );
+        }
+
+        if (element == null || !contentRef.current.contains(element)) {
+          return null;
+        }
+
+        const matchingSectionIndex = Object.keys(sectionsRef.current).find((sectionIndex) =>
+          sectionsRef.current[sectionIndex].contains(element),
+        );
+        if (matchingSectionIndex == null) {
+          return null;
+        }
+
+        return Number(matchingSectionIndex);
+      },
+    }),
+    [],
+  );
+
+  return {
+    domGetters,
+    contentRef,
+    registerSectionRef,
+    registerSectionContentRef,
+  };
+}
+
 export function usePickersFieldRoot<TManager extends PickerAnyAccessibleValueManagerV8>(
   params: UsePickersFieldRoot.Parameters<TManager>,
 ): UsePickersFieldRoot.ReturnValue {
   type ManagerProperties = PickerManagerProperties<TManager>;
-  type TValue = ManagerProperties['value'];
   type TDate = ManagerProperties['date'];
-  type TSection = ManagerProperties['section'];
-  type TInternalProps = ManagerProperties['internalProps'];
   type TInternalPropsWithDefaults = ManagerProperties['internalPropsWithDefaults'];
 
   const { valueManager, internalProps, inputRef } = params;
@@ -36,7 +129,8 @@ export function usePickersFieldRoot<TManager extends PickerAnyAccessibleValueMan
 
   const forwardedProps = {};
 
-  const domGetters = {};
+  const { domGetters, contentRef, registerSectionRef, registerSectionContentRef } =
+    usePickersFieldRootDOMGetters();
 
   const stateResponse = useFieldState({
     valueManager,
@@ -77,33 +171,6 @@ export function usePickersFieldRoot<TManager extends PickerAnyAccessibleValueMan
     setFocused,
   });
 
-  const sectionsRef = React.useRef<{ [sectionIndex: string]: HTMLSpanElement }>({});
-  const sectionsContentRef = React.useRef<{
-    [sectionIndex: string]: HTMLSpanElement;
-  }>({});
-
-  const registerSectionRef = React.useCallback(
-    (sectionIndex: number, ref: HTMLSpanElement | null) => {
-      if (ref == null) {
-        delete sectionsRef.current[sectionIndex];
-      } else {
-        sectionsRef.current[sectionIndex] = ref;
-      }
-    },
-    [],
-  );
-
-  const registerSectionContentRef = React.useCallback(
-    (sectionIndex: number, ref: HTMLSpanElement | null) => {
-      if (ref == null) {
-        delete sectionsContentRef.current[sectionIndex];
-      } else {
-        sectionsContentRef.current[sectionIndex] = ref;
-      }
-    },
-    [],
-  );
-
   const status: UsePickersFieldRoot.ReturnValue['status'] = { focused };
 
   const getRootProps: UsePickersFieldRoot.ReturnValue['getRootProps'] = (externalProps) =>
@@ -116,12 +183,11 @@ export function usePickersFieldRoot<TManager extends PickerAnyAccessibleValueMan
   // TODO: Memoize?
   const contextValue: PickersFieldProvider.ContextValue = {
     elements,
+    contentRef,
     contentEditable,
     sectionListRef,
     registerSectionRef,
     registerSectionContentRef,
-    sectionsRef,
-    sectionsContentRef,
     propsForwardedToContent,
     propsForwardedToHiddenInput: { value, onChange, readOnly, disabled, ref: inputRef },
   };
