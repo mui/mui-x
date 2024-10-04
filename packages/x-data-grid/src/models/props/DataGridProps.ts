@@ -8,7 +8,7 @@ import { GridFeatureMode } from '../gridFeatureMode';
 import { Logger } from '../logger';
 import { GridSortDirection, GridSortModel } from '../gridSortModel';
 import { GridSlotsComponent } from '../gridSlotsComponent';
-import { GridRowIdGetter, GridRowsProp, GridValidRowModel } from '../gridRows';
+import { GridRowId, GridRowIdGetter, GridRowsProp, GridValidRowModel } from '../gridRows';
 import { GridEventListener } from '../events';
 import { GridCallbackDetails, GridLocaleText } from '../api';
 import { GridApiCommunity } from '../api/gridApiCommunity';
@@ -787,9 +787,10 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @template R
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.
+   * @param {GridRowId} rowId The id of the row.
    * @returns {Promise<R> | R} The final values to update the row.
    */
-  processRowUpdate?: (newRow: R, oldRow: R) => Promise<R> | R;
+  processRowUpdate?: (newRow: R, oldRow: R, rowId?: GridRowId) => Promise<R> | R;
   /**
    * Callback called when `processRowUpdate` throws an error or rejects.
    * @param {any} error The error thrown.
