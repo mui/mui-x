@@ -8,7 +8,7 @@ import {
   digitalClockHandler,
   formatFullTimeValue,
 } from 'test/utils/pickers';
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 
 describe('<DigitalClock />', () => {
   const { render } = createPickerRenderer();
@@ -89,6 +89,63 @@ describe('<DigitalClock />', () => {
       );
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
+    });
+  });
+
+  describe('Keyboard support', () => {
+    it('should move focus up by 5 on PageUp press', () => {
+      const handleChange = spy();
+      render(<DigitalClock onChange={handleChange} />);
+      const options = screen.getAllByRole('option');
+      const lastOptionIndex = options.length - 1;
+
+      options[lastOptionIndex].focus();
+      fireEvent.keyDown(options[lastOptionIndex], { key: 'PageUp' });
+      expect(handleChange.callCount).to.equal(0);
+      expect(document.activeElement).to.equal(options[lastOptionIndex - 5]);
+
+      fireEvent.keyDown(options[lastOptionIndex - 5], { key: 'PageUp' });
+      expect(handleChange.callCount).to.equal(0);
+      expect(document.activeElement).to.equal(options[lastOptionIndex - 10]);
+    });
+
+    it('should move focus to first item on PageUp press when current focused item index is among the first 5 items', () => {
+      const handleChange = spy();
+      render(<DigitalClock onChange={handleChange} />);
+      const options = screen.getAllByRole('option');
+
+      options[3].focus();
+      fireEvent.keyDown(options[3], { key: 'PageUp' });
+      expect(handleChange.callCount).to.equal(0);
+      expect(document.activeElement).to.equal(options[0]);
+    });
+
+    it('should move focus down by 5 on PageDown press', () => {
+      const handleChange = spy();
+      render(<DigitalClock autoFocus onChange={handleChange} />);
+      const options = screen.getAllByRole('option');
+
+      fireEvent.keyDown(options[0], { key: 'PageDown' });
+
+      expect(handleChange.callCount).to.equal(0);
+      expect(document.activeElement).to.equal(options[5]);
+
+      fireEvent.keyDown(options[5], { key: 'PageDown' });
+
+      expect(handleChange.callCount).to.equal(0);
+      expect(document.activeElement).to.equal(options[10]);
+    });
+
+    it('should move focus to last item on PageDown press when current focused item index is among the last 5 items', () => {
+      const handleChange = spy();
+      render(<DigitalClock onChange={handleChange} />);
+      const options = screen.getAllByRole('option');
+      const lastOptionIndex = options.length - 1;
+
+      options[lastOptionIndex - 2].focus();
+      fireEvent.keyDown(options[lastOptionIndex - 2], { key: 'PageDown' });
+      expect(handleChange.callCount).to.equal(0);
+      expect(document.activeElement).to.equal(options[lastOptionIndex]);
     });
   });
 
