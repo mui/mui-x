@@ -338,7 +338,7 @@ The row selection propagation also affects the "Select all" checkbox like any ot
 :::
 
 :::info
-The selected unfiltered rows will be auto-deselected when the filter is applied. Row selection propagation is not applied to the unfiltered rows.
+The selected rows that do not pass the filtering criteria are automatically deselected when the filter is applied. Row selection propagation is not applied to the unfiltered rows.
 :::
 
 :::warning
