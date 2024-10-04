@@ -787,10 +787,15 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @template R
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.
-   * @param {GridRowId} rowId The id of the row.
+   * @param {Object} additionalParams - Additional parameters.
+   * @param {GridRowId} additionalParams.rowId - The id of the row.
    * @returns {Promise<R> | R} The final values to update the row.
    */
-  processRowUpdate?: (newRow: R, oldRow: R, rowId: GridRowId) => Promise<R> | R;
+  processRowUpdate?: (
+    newRow: R,
+    oldRow: R,
+    additionalParams: { rowId: GridRowId },
+  ) => Promise<R> | R;
   /**
    * Callback called when `processRowUpdate` throws an error or rejects.
    * @param {any} error The error thrown.

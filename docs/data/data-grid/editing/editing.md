@@ -159,7 +159,7 @@ The callback is called with three arguments:
 
 1. The updated row with the new values returned by the [`valueSetter`](#value-parser-and-value-setter).
 2. The original values of the row before editing.
-3. The id of the row (Optional).
+3. An object with additional properties such as `rowId`.
 
 Please note that the `processRowUpdate` must return the row object to update the Data Grid internal state.
 The value returned is used later as an argument on a call to `apiRef.current.updateRows`.
