@@ -13,15 +13,13 @@ const createPoint = ({
   main,
   other,
   inverse,
-  xBand,
-  yBand,
+  useBandWidth,
 }: {
   main: number;
   other: number;
   inverse: boolean;
-  xBand: boolean;
-  yBand: boolean;
-}) => (inverse ? { x: other, y: main, xBand, yBand } : { x: main, y: other, xBand, yBand });
+  useBandWidth: boolean;
+}) => (inverse ? { x: other, y: main, useBandWidth } : { x: main, y: other, useBandWidth });
 
 const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
   const { seriesOrder, series } = params;
@@ -116,8 +114,7 @@ const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
             main: currentMaxMain,
             other: currentMaxOther,
             inverse: isHorizontal,
-            xBand: false,
-            yBand: false,
+            useBandWidth: false,
           }),
           // Middle right
           // {
@@ -133,16 +130,14 @@ const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
             main: nextMaxMain,
             other: nextMaxOther,
             inverse: isHorizontal,
-            xBand: true,
-            yBand: true,
+            useBandWidth: true,
           }),
           // Bottom left (vertical) or Bottom right (horizontal)
           createPoint({
             main: -nextMaxMain,
             other: nextMaxOther,
             inverse: isHorizontal,
-            xBand: true,
-            yBand: true,
+            useBandWidth: true,
           }),
           // Middle left
           // {
@@ -158,8 +153,7 @@ const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
             main: -currentMaxMain,
             other: currentMaxOther,
             inverse: isHorizontal,
-            xBand: false,
-            yBand: false,
+            useBandWidth: false,
           }),
         ];
       });

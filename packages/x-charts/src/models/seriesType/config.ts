@@ -78,7 +78,7 @@ export interface ChartsSeriesConfig {
 
 export type ChartSeriesType = keyof ChartsSeriesConfig;
 
-export type FunnelStackedData = Record<'x' | 'y', number> & Record<'xBand' | 'yBand', boolean>;
+export type FunnelStackedData = Record<'x' | 'y', number> & Record<'useBandWidth', boolean>;
 
 export type CartesianChartSeriesType = keyof Pick<
   ChartsSeriesConfig,
