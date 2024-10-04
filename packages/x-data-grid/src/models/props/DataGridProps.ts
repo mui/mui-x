@@ -544,10 +544,9 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onColumnHeaderClick?: GridEventListener<'columnHeaderClick'>;
   /**
-   * Callback fired when a double click event comes from a column header element.
+   * Callback fired when a contextmenu event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnHeaderContextMenu?: GridEventListener<'columnHeaderContextMenu'>;
   /**
