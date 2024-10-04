@@ -50,7 +50,7 @@ Same changes as in `@mui/x-data-grid@7.19.0`, plus:
 
 - [DataGridPro] Fix dragging styles removal in column reorder (#14680) @k-rajat19
 - [DataGridPro] Fix row pre-processing running with a stale data source (#14810) @MBilalShafi
-- [DataGridPro] `onRowsScrollEnd` not firing on very fast scrolling (#14171) @arminmeh
+- [DataGridPro] Fix `onRowsScrollEnd` not firing on very fast scrolling (#14171) @arminmeh
 
 #### `@mui/x-data-grid-premium@7.19.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
