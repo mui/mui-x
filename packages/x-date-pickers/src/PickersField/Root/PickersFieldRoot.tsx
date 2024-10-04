@@ -35,12 +35,12 @@ const PickersFieldRoot = React.forwardRef(function PickersFieldRoot<
 namespace PickersFieldRoot {
   export interface OwnerState extends UsePickersFieldRoot.Status {}
 
-  export type Props<TValueManager extends PickerAnyAccessibleValueManagerV8> = BaseUIComponentProps<
+  export type Props<TManager extends PickerAnyAccessibleValueManagerV8> = BaseUIComponentProps<
     'div',
     OwnerState
   > &
-    PickerManagerProperties<TValueManager>['internalProps'] & {
-      valueManager: TValueManager;
+    PickerManagerProperties<TManager>['internalProps'] & {
+      valueManager: TManager;
       inputRef?: React.Ref<HTMLInputElement>;
     };
 }
