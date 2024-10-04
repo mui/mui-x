@@ -439,7 +439,7 @@ DataGridPremiumRaw.propTypes = {
    */
   headerFilterHeight: PropTypes.number,
   /**
-   * If `true`, enables the data grid filtering on header feature.
+   * If `true`, the header filters feature is enabled.
    * @default false
    */
   headerFilters: PropTypes.bool,
@@ -985,6 +985,22 @@ DataGridPremiumRaw.propTypes = {
     PropTypes.number,
     PropTypes.string,
   ]),
+  /**
+   * When `rowSelectionPropagation.descendants` is set to `true`.
+   * - Selecting a parent will auto-select all its filtered descendants.
+   * - Deselecting a parent will auto-deselect all its filtered descendants.
+   *
+   * When `rowSelectionPropagation.parents=true`
+   * - Selecting all descendants of a parent would auto-select it.
+   * - Deselecting a descendant of a selected parent would deselect the parent.
+   *
+   * Works with tree data and row grouping on the client-side only.
+   * @default { parents: false, descendants: false }
+   */
+  rowSelectionPropagation: PropTypes.shape({
+    descendants: PropTypes.bool,
+    parents: PropTypes.bool,
+  }),
   /**
    * Loading rows can be processed on the server or client-side.
    * Set it to 'client' if you would like enable infnite loading.

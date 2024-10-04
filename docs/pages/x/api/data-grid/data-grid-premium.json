@@ -594,6 +594,10 @@
         "description": "Array&lt;number<br>&#124;&nbsp;string&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string"
       }
     },
+    "rowSelectionPropagation": {
+      "type": { "name": "shape", "description": "{ descendants?: bool, parents?: bool }" },
+      "default": "{ parents: false, descendants: false }"
+    },
     "rowsLoadingMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" }
     },

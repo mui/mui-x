@@ -187,7 +187,7 @@
     "groupingColDef": { "description": "The grouping column used by the tree data." },
     "headerFilterHeight": { "description": "Override the height of the header filters." },
     "headerFilters": {
-      "description": "If <code>true</code>, enables the data grid filtering on header feature."
+      "description": "If <code>true</code>, the header filters feature is enabled."
     },
     "hideFooter": { "description": "If <code>true</code>, the footer component is hidden." },
     "hideFooterPagination": {
@@ -610,6 +610,9 @@
     "rows": { "description": "Set of rows of type GridRowsProp." },
     "rowSelection": { "description": "If <code>false</code>, the row selection mode is disabled." },
     "rowSelectionModel": { "description": "Sets the row selection model of the Data Grid." },
+    "rowSelectionPropagation": {
+      "description": "When <code>rowSelectionPropagation.descendants</code> is set to <code>true</code>. - Selecting a parent will auto-select all its filtered descendants. - Deselecting a parent will auto-deselect all its filtered descendants.<br>When <code>rowSelectionPropagation.parents=true</code> - Selecting all descendants of a parent would auto-select it. - Deselecting a descendant of a selected parent would deselect the parent.<br>Works with tree data and row grouping on the client-side only."
+    },
     "rowsLoadingMode": {
       "description": "Loading rows can be processed on the server or client-side. Set it to &#39;client&#39; if you would like enable infnite loading. Set it to &#39;server&#39; if you would like to enable lazy loading. * @default &quot;client&quot;"
     },
