@@ -4,7 +4,7 @@ productId: x-charts
 components: ScatterChartPro, BarChartPro, LineChartPro
 ---
 
-# Zoom & Pan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+# Charts - Zoom & Pan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Enables zooming and panning on specific charts or axis.</p>
 
