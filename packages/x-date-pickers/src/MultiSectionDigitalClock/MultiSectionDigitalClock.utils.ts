@@ -43,10 +43,6 @@ export const getHourSectionOptions = <TDate extends PickerValidDate>({
     return resolvedCurrentHours === hour;
   };
 
-  const isFocused = (hour: number) => {
-    return isSelected(hour, utils.getHours(valueOrReferenceDate));
-  };
-
   const endHour = ampm ? 11 : 23;
   for (let hour = 0; hour <= endHour; hour += timeStep) {
     let label = utils.format(utils.setHours(now, hour), ampm ? 'hours12h' : 'hours24h');
@@ -59,7 +55,6 @@ export const getHourSectionOptions = <TDate extends PickerValidDate>({
       label,
       isSelected,
       isDisabled,
-      isFocused,
       ariaLabel,
     });
   }
@@ -93,10 +88,6 @@ export const getTimeSectionOptions = <TDate extends PickerValidDate>({
     return hasValue && value === timeValue;
   };
 
-  const isFocused = (timeValue: number) => {
-    return value === timeValue;
-  };
-
   return [
     ...Array.from({ length: Math.ceil(60 / timeStep) }, (_, index) => {
       const timeValue = timeStep * index;
@@ -105,7 +96,6 @@ export const getTimeSectionOptions = <TDate extends PickerValidDate>({
         label: utils.formatNumber(resolveLabel(timeValue)),
         isDisabled,
         isSelected,
-        isFocused,
         ariaLabel: resolveAriaLabel(timeValue.toString()),
       };
     }),

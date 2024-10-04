@@ -185,7 +185,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       containerRef.current.scrollTop = offsetTop - 4;
     });
 
-    const focusedOptionIndex = items.findIndex((item) => item.isFocused(item.value));
+    const selectedOptionIndex = items.findIndex((item) => item.isSelected(item.value));
 
     return (
       <MultiSectionDigitalClockSectionRoot
@@ -204,7 +204,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
           }
           const isSelected = option.isSelected(option.value);
           const tabIndex =
-            focusedOptionIndex === index || (focusedOptionIndex === -1 && index === 0) ? 0 : -1;
+            selectedOptionIndex === index || (selectedOptionIndex === -1 && index === 0) ? 0 : -1;
           return (
             <DigitalClockSectionItem
               key={option.label}
