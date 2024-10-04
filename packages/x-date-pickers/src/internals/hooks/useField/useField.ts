@@ -3,8 +3,6 @@ import { PickerAnyValueManagerV8, PickerManagerProperties } from '../../../model
 import { useLocalizationContext } from '../useUtils';
 import {
   UseFieldWithKnownDOMStructureParameters,
-  UseFieldLegacyForwardedProps,
-  UseFieldAccessibleForwardedProps,
   UseFieldResponse,
   UseFieldForwardedProps,
 } from './useField.types';
@@ -13,10 +11,9 @@ import { useFieldLegacyDOMStructure } from './useFieldLegacyDOMStructure';
 
 export const useField = <
   TManager extends PickerAnyValueManagerV8,
-  TForwardedProps extends
-    PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure'] extends false
-      ? UseFieldLegacyForwardedProps
-      : UseFieldAccessibleForwardedProps,
+  TForwardedProps extends UseFieldForwardedProps<
+    PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure']
+  >,
 >(
   parameters: UseFieldParameters<TManager, TForwardedProps>,
 ): UseFieldResponse<
