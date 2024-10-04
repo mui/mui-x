@@ -1,194 +1,338 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
-import { getColumnHeaderCell, getColumnValues, getRow } from 'test/utils/helperFn';
+import { useMockServer } from '@mui/x-data-grid-generator';
+import { createRenderer, waitFor } from '@mui/internal-test-utils';
+import { getRow } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import {
   DataGridPro,
   DataGridProProps,
-  GRID_ROOT_GROUP_ID,
   GridApi,
-  GridColDef,
-  GridGroupNode,
-  GridRowModel,
-  GridRowsProp,
+  GridDataSource,
+  GridGetRowsParams,
+  GridGetRowsResponse,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { spy } from 'sinon';
+import { SinonSpy, spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGridPro /> - Data source lazy loader', () => {
+describe.only('<DataGridPro /> - Data source lazy loader', () => {
   const { render } = createRenderer();
+  const defaultTransformGetRowsResponse = (response: GridGetRowsResponse) => response;
 
-  const baselineProps: { rows: GridRowsProp; columns: GridColDef[] } = {
-    rows: [
-      {
-        id: 1,
-        first: 'Mike',
-      },
-      {
-        id: 2,
-        first: 'Jack',
-      },
-      {
-        id: 3,
-        first: 'Jim',
-      },
-    ],
-    columns: [{ field: 'id' }, { field: 'first' }],
-  };
-
+  let transformGetRowsResponse: (response: GridGetRowsResponse) => GridGetRowsResponse;
   let apiRef: React.MutableRefObject<GridApi>;
+  let fetchRowsSpy: SinonSpy;
+  let mockServer: ReturnType<typeof useMockServer>;
 
-  function TestLazyLoader(props: Partial<DataGridProProps>) {
+  function TestDataSourceLazyLoader(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
+    mockServer = useMockServer(
+      { rowLength: 100, maxColumns: 1 },
+      { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false },
+    );
+    fetchRowsSpy = spy(mockServer, 'fetchRows');
+
+    const dataSource: GridDataSource = React.useMemo(
+      () => ({
+        getRows: async (params: GridGetRowsParams) => {
+          const urlParams = new URLSearchParams({
+            filterModel: JSON.stringify(params.filterModel),
+            sortModel: JSON.stringify(params.sortModel),
+            firstRowToRender: `${params.start}`,
+            lastRowToRender: `${params.end}`,
+          });
+
+          const getRowsResponse = await fetchRowsSpy(
+            `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
+          );
+
+          const response = transformGetRowsResponse(getRowsResponse);
+          return {
+            rows: response.rows,
+            rowCount: response.rowCount,
+          };
+        },
+      }),
+      [fetchRowsSpy],
+    );
+
+    const baselineProps = {
+      unstable_dataSource: dataSource,
+      columns: mockServer.columns,
+      lazyLoading: true,
+      paginationModel: { page: 0, pageSize: 10 },
+      disableVirtualization: true,
+    };
+
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro
-          apiRef={apiRef}
-          {...baselineProps}
-          {...props}
-          sortingMode="server"
-          filterMode="server"
-          rowsLoadingMode="server"
-          paginationMode="server"
-        />
+        <DataGridPro apiRef={apiRef} {...baselineProps} {...props} />
       </div>
     );
   }
 
-  it('should not call onFetchRows if the viewport is fully loaded', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-    const handleFetchRows = spy();
-    const rows = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }];
-    render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} rows={rows} />);
-    expect(handleFetchRows.callCount).to.equal(0);
-  });
-
-  it('should call onFetchRows when sorting is applied', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-    const handleFetchRows = spy();
-    render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} />);
-
-    expect(handleFetchRows.callCount).to.equal(1);
-    // Should be 1. When tested in the browser it's called only 2 time
-    fireEvent.click(getColumnHeaderCell(0));
-    expect(handleFetchRows.callCount).to.equal(2);
-  });
-
-  it('should render skeleton cell if rowCount is bigger than the number of rows', function test() {
+  beforeEach(function beforeTest() {
     if (isJSDOM) {
       this.skip(); // Needs layout
     }
 
-    render(<TestLazyLoader rowCount={10} />);
-
-    // The 4th row should be a skeleton one
-    expect(getRow(3).dataset.id).to.equal('auto-generated-skeleton-row-root-0');
+    transformGetRowsResponse = defaultTransformGetRowsResponse;
   });
 
-  it('should update all rows accordingly when `apiRef.current.unstable_replaceRows` is called', () => {
-    render(<TestLazyLoader rowCount={6} />);
-
-    const newRows: GridRowModel[] = [
-      { id: 4, name: 'John' },
-      { id: 5, name: 'Mac' },
-    ];
-
-    const initialAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
-    expect(initialAllRows.slice(3, 6)).to.deep.equal([
-      'auto-generated-skeleton-row-root-0',
-      'auto-generated-skeleton-row-root-1',
-      'auto-generated-skeleton-row-root-2',
-    ]);
-    act(() => apiRef.current.unstable_replaceRows(4, newRows));
-
-    const updatedAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
-    expect(updatedAllRows.slice(4, 6)).to.deep.equal([4, 5]);
+  it('should load the first page initially', async () => {
+    render(<TestDataSourceLazyLoader />);
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
   });
 
-  // See https://github.com/mui/mui-x/issues/6857
-  it('should update the row when `apiRef.current.updateRows` is called on lazy-loaded rows', () => {
-    render(<TestLazyLoader rowCount={5} autoHeight={isJSDOM} />);
+  describe('Viewport loading', () => {
+    it('should render skeleton rows if rowCount is bigger than the number of rows', async () => {
+      render(<TestDataSourceLazyLoader />);
+      // wait until the rows are rendered
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
-    const newRows: GridRowModel[] = [
-      { id: 4, first: 'John' },
-      { id: 5, first: 'Mac' },
-    ];
+      // The 11th row should be a skeleton
+      expect(getRow(10).dataset.id).to.equal('auto-generated-skeleton-row-root-0');
+    });
 
-    act(() => apiRef.current.unstable_replaceRows(3, newRows));
-    expect(getColumnValues(1)).to.deep.equal(['Mike', 'Jack', 'Jim', 'John', 'Mac']);
+    it('should make a new data source request once the skeleton rows are in the render context', async () => {
+      render(<TestDataSourceLazyLoader />);
+      // wait until the rows are rendered
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
-    act(() => apiRef.current.updateRows([{ id: 4, first: 'John updated' }]));
-    expect(getColumnValues(1)).to.deep.equal(['Mike', 'Jack', 'Jim', 'John updated', 'Mac']);
-  });
+      // reset the spy call count
+      fetchRowsSpy.resetHistory();
 
-  it('should update all rows accordingly when `apiRef.current.unstable_replaceRows` is called and props.getRowId is defined', () => {
-    render(
-      <TestLazyLoader
-        rowCount={6}
-        getRowId={(row) => row.clientId}
-        rows={[
+      apiRef.current.scrollToIndexes({ rowIndex: 10 });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+    });
+
+    it('should keep the scroll position when sorting is applied', async () => {
+      render(<TestDataSourceLazyLoader />);
+      // wait until the rows are rendered
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      const initialSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      expect(initialSearchParams.get('lastRowToRender')).to.equal('9');
+
+      apiRef.current.scrollToIndexes({ rowIndex: 10 });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      const beforeSortSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      expect(beforeSortSearchParams.get('lastRowToRender')).to.not.equal('9');
+
+      apiRef.current.sortColumn(mockServer.columns[0].field, 'asc');
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
+      });
+
+      const afterSortSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      expect(afterSortSearchParams.get('lastRowToRender')).to.equal(
+        beforeSortSearchParams.get('lastRowToRender'),
+      );
+    });
+
+    it('should reset the scroll position when filter is applied', async () => {
+      render(<TestDataSourceLazyLoader />);
+      // wait until the rows are rendered
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      apiRef.current.scrollToIndexes({ rowIndex: 10 });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      const beforeFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      // last row is not the first page anymore
+      expect(beforeFilteringSearchParams.get('firstRowToRender')).to.not.equal('0');
+
+      apiRef.current.setFilterModel({
+        items: [
           {
-            clientId: 1,
-            first: 'Mike',
+            field: mockServer.columns[0].field,
+            value: '0',
+            operator: 'contains',
           },
-          {
-            clientId: 2,
-            first: 'Jack',
-          },
-          {
-            clientId: 3,
-            first: 'Jim',
-          },
-        ]}
-        columns={[{ field: 'clientId' }]}
-      />,
-    );
+        ],
+      });
 
-    const newRows: GridRowModel[] = [
-      { clientId: 4, name: 'John' },
-      { clientId: 5, name: 'Mac' },
-    ];
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
+      });
 
-    const initialAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
-    expect(initialAllRows.slice(3, 6)).to.deep.equal([
-      'auto-generated-skeleton-row-root-0',
-      'auto-generated-skeleton-row-root-1',
-      'auto-generated-skeleton-row-root-2',
-    ]);
-    act(() => apiRef.current.unstable_replaceRows(4, newRows));
-
-    const updatedAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
-    expect(updatedAllRows.slice(4, 6)).to.deep.equal([4, 5]);
-
-    expect(apiRef.current.getRowNode(4)).not.to.equal(null);
-    expect(apiRef.current.getRowNode(5)).not.to.equal(null);
+      const afterFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      // last row is the end of the first page
+      expect(afterFilteringSearchParams.get('firstRowToRender')).to.equal('0');
+    });
   });
 
-  it('should update rows when `apiRef.current.updateRows` with data reversed', () => {
-    render(<TestLazyLoader rowCount={5} autoHeight={isJSDOM} />);
+  describe('Infinite loading', () => {
+    beforeEach(() => {
+      // override rowCount
+      transformGetRowsResponse = (response) => ({ ...response, rowCount: -1 });
+    });
 
-    const newRows: GridRowModel[] = [
-      {
-        id: 3,
-        first: 'Jim',
-      },
-      {
-        id: 2,
-        first: 'Jack',
-      },
-      {
-        id: 1,
-        first: 'Mike',
-      },
-    ];
+    it('should not render skeleton rows if rowCount is unknown', async () => {
+      render(<TestDataSourceLazyLoader />);
+      // wait until the rows are rendered
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
-    act(() => apiRef.current.unstable_replaceRows(0, newRows));
-    expect(getColumnValues(1)).to.deep.equal(['Jim', 'Jack', 'Mike']);
+      // The 11th row should not exist
+      expect(() => getRow(10)).to.throw();
+    });
+
+    it('should make a new data source request in infinite loading mode once the bottom row is reached', async () => {
+      render(<TestDataSourceLazyLoader />);
+      // wait until the rows are rendered
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      // reset the spy call count
+      fetchRowsSpy.resetHistory();
+
+      // make one small and one big scroll that makes sure that the bottom of the grid window is reached
+      apiRef.current.scrollToIndexes({ rowIndex: 1 });
+      apiRef.current.scrollToIndexes({ rowIndex: 9 });
+
+      // Only one additional fetch should have been made
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+    });
+
+    it('should reset the scroll position when sorting is applied', async () => {
+      render(<TestDataSourceLazyLoader />);
+      // wait until the rows are rendered
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      apiRef.current.scrollToIndexes({ rowIndex: 9 });
+
+      // wait until the rows are rendered
+      await waitFor(() => expect(getRow(10)).not.to.be.undefined);
+
+      const beforeSortingSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      // last row is not the first page anymore
+      expect(beforeSortingSearchParams.get('lastRowToRender')).to.not.equal('9');
+
+      apiRef.current.sortColumn(mockServer.columns[0].field, 'asc');
+
+      const afterSortingSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      // last row is the end of the first page
+      expect(afterSortingSearchParams.get('lastRowToRender')).to.equal('9');
+    });
+
+    it('should reset the scroll position when filter is applied', async () => {
+      render(<TestDataSourceLazyLoader />);
+      // wait until the rows are rendered
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      apiRef.current.scrollToIndexes({ rowIndex: 9 });
+
+      // wait until the rows are rendered
+      await waitFor(() => expect(getRow(10)).not.to.be.undefined);
+
+      const beforeFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      // last row is not the first page anymore
+      expect(beforeFilteringSearchParams.get('lastRowToRender')).to.not.equal('9');
+
+      apiRef.current.setFilterModel({
+        items: [
+          {
+            field: mockServer.columns[0].field,
+            value: '0',
+            operator: 'contains',
+          },
+        ],
+      });
+
+      const afterFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      // last row is the end of the first page
+      expect(afterFilteringSearchParams.get('lastRowToRender')).to.equal('9');
+    });
+  });
+
+  describe('Row count updates', () => {
+    it('should add skeleton rows once the rowCount becomes known', async () => {
+      // override rowCount
+      transformGetRowsResponse = (response) => ({ ...response, rowCount: undefined });
+      const { setProps } = render(<TestDataSourceLazyLoader />);
+      // wait until the rows are rendered
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      // The 11th row should not exist
+      expect(() => getRow(10)).to.throw();
+
+      // make the rowCount known
+      setProps({ rowCount: 100 });
+
+      // The 11th row should be a skeleton
+      expect(getRow(10).dataset.id).to.equal('auto-generated-skeleton-row-root-0');
+    });
+
+    it('should reset the grid if the rowCount becomes unknown', async () => {
+      // override rowCount
+      transformGetRowsResponse = (response) => ({ ...response, rowCount: undefined });
+      const { setProps } = render(<TestDataSourceLazyLoader rowCount={100} />);
+      // wait until the rows are rendered
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      // The 11th row should not exist
+      expect(getRow(10).dataset.id).to.equal('auto-generated-skeleton-row-root-0');
+
+      // make the rowCount unknown
+      setProps({ rowCount: -1 });
+
+      // The 11th row should not exist
+      expect(() => getRow(10)).to.throw();
+    });
+
+    it('should reset the grid if the rowCount becomes smaller than the actual row count', async () => {
+      // override rowCount
+      transformGetRowsResponse = (response) => ({ ...response, rowCount: undefined });
+      const { setProps } = render(
+        <TestDataSourceLazyLoader rowCount={100} paginationModel={{ page: 0, pageSize: 30 }} />,
+      );
+      // wait until the rows are rendered
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      const getRowsEventSpy = spy();
+      apiRef.current.subscribeEvent('getRows', getRowsEventSpy);
+
+      // reduce the rowCount to be more than the number of rows
+      setProps({ rowCount: 80 });
+      expect(getRowsEventSpy.callCount).to.equal(0);
+
+      // reduce the rowCount once more, but now to be less than the number of rows
+      setProps({ rowCount: 20 });
+      expect(getRowsEventSpy.callCount).to.equal(1);
+    });
+
+    it('should allow setting the row count via API', async () => {
+      // override rowCount
+      transformGetRowsResponse = (response) => ({ ...response, rowCount: undefined });
+      render(<TestDataSourceLazyLoader />);
+      // wait until the rows are rendered
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      // The 11th row should not exist
+      expect(() => getRow(10)).to.throw();
+
+      // set the rowCount via API
+      apiRef.current.setRowCount(100);
+
+      // wait until the rows are added
+      await waitFor(() => expect(getRow(10)).not.to.be.undefined);
+      // The 11th row should be a skeleton
+      expect(getRow(10).dataset.id).to.equal('auto-generated-skeleton-row-root-0');
+    });
   });
 });
