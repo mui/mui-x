@@ -130,7 +130,7 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "columnHeaderContextMenu",
-    "description": "Fired when a column header is double-clicked.",
+    "description": "Fired when the user attempts to open a context menu in the column header.",
     "params": "GridColumnHeaderParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>",
     "componentProp": "onColumnHeaderContextMenu"

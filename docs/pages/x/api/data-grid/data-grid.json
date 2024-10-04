@@ -224,8 +224,8 @@
     "onColumnHeaderContextMenu": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
-        "describedArgs": ["params", "event", "details"]
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void",
+        "describedArgs": ["params", "event"]
       }
     },
     "onColumnHeaderDoubleClick": {
