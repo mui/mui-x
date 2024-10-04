@@ -9,9 +9,9 @@ _Oct 4, 2024_
 
 We'd like to offer a big thanks to the 26 contributors who made this release possible. Here are some highlights ✨:
 
-- 🔁 Automatic parents and children selection for Data Grid "tree data" and "row grouping" features
+- 🔁 Automatic parents and children selection for Data Grid ["tree data"](https://mui.com/x/react-data-grid/tree-data/) and ["row grouping"](https://mui.com/x/react-data-grid/row-grouping/) features
 - 💫 Support `minHeight` and `maxHeight` on flex parent container for the Data Grid component
-- 🎁 Export `publicAPI` from the `useTreeItem2Utils` hook for the Tree View.
+- 🎁 Export `publicAPI` from the `useTreeItem2Utils` hook for the Tree View
 - 🌍 Improve Bulgarian (bg-BG), Croatian (hr-HR), French (fr-FR), German (de-DE), Japanese (ja-JP) and Vietnamese (vi-VN) locales and add Portuguese (pt-PT) locale on the Data Grid component
 - 🌏 Improve Czech (cs-CZ) and Portuguese (pt-BR) locales and add Bulgarian (bg-BG), Croatian (hr-HR) and Portuguese (pt-PT) locales on the Pickers components
 - 🐞 Bugfixes
