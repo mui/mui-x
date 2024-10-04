@@ -127,8 +127,8 @@ export namespace UsePickersFieldContent {
   export interface ReturnValue {
     /**
      * Resolver for the Content element's props.
-     * @param externalProps custom props for the Content element
-     * @returns props that should be spread on the Content element
+     * @param {Omit<React.ComponentPropsWithRef<'div'>, 'children'>} externalProps custom props for the Content element
+     * @returns {React.ComponentPropsWithRef<'div'>} props that should be spread on the Content element
      */
     getContentProps: (
       externalProps?: Omit<React.ComponentPropsWithRef<'div'>, 'children'>,

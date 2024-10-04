@@ -4,12 +4,7 @@ import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { FieldChangeHandlerContext } from '../useField';
 import { useValidation } from '../../../validation';
-import {
-  FieldSection,
-  PickerChangeHandlerContext,
-  PickerValidDate,
-  InferError,
-} from '../../../models';
+import { PickerChangeHandlerContext, PickerValidDate, InferError } from '../../../models';
 import {
   PickerShortcutChangeImportance,
   PickersShortcutsItemContext,

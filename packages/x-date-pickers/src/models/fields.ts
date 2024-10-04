@@ -206,7 +206,11 @@ export type BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure extend
       >
     : Partial<Omit<PickersTextFieldProps, keyof ExportedPickersSectionListProps>>;
 
-export type DateRange<TDate extends PickerValidDate> = [TDate | null, TDate | null];
+type DateRange<TDate extends PickerValidDate> = [TDate | null, TDate | null];
+type RangePosition = 'start' | 'end';
+interface RangeFieldSection extends FieldSection {
+  dateName: RangePosition;
+}
 
 export type InferValueFromDate<
   TDate extends PickerValidDate,
@@ -216,9 +220,3 @@ export type InferValueFromDate<
 export type InferFieldSection<TIsRange extends boolean> = TIsRange extends true
   ? RangeFieldSection
   : FieldSection;
-
-export type RangePosition = 'start' | 'end';
-
-export interface RangeFieldSection extends FieldSection {
-  dateName: RangePosition;
-}
