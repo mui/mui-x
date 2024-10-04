@@ -165,7 +165,7 @@ export interface UseFieldLegacyForwardedProps extends ExportedUseClearableFieldP
   onBlur?: React.FocusEventHandler;
   onClick?: React.MouseEventHandler;
   onFocus?: React.FocusEventHandler;
-  onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
+  onPaste?: React.ClipboardEventHandler;
   onKeyDown?: React.KeyboardEventHandler;
   placeholder?: string;
   error?: boolean;
@@ -174,14 +174,14 @@ export interface UseFieldLegacyForwardedProps extends ExportedUseClearableFieldP
 export interface UseFieldAccessibleForwardedProps extends ExportedUseClearableFieldProps {
   focused?: boolean;
   autoFocus?: boolean;
+  error?: boolean;
   sectionListRef?: React.Ref<UseFieldAccessibleDOMGetters>;
   onBlur?: React.FocusEventHandler;
   onClick?: React.MouseEventHandler;
   onFocus?: React.FocusEventHandler;
-  onInput?: React.FormEventHandler<HTMLDivElement>;
-  onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
+  onInput?: React.FormEventHandler;
+  onPaste?: React.ClipboardEventHandler;
   onKeyDown?: React.KeyboardEventHandler;
-  error?: boolean;
 }
 
 export type UseFieldResponse<
@@ -193,9 +193,9 @@ export type UseFieldResponse<
     // The other forwarded props
     Omit<TForwardedProps, keyof UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>> &
     // The additional props
-    TEnableAccessibleFieldDOMStructure extends false
-    ? UseFieldLegacyAdditionalProps
-    : UseFieldAccessibleAdditionalProps;
+    (TEnableAccessibleFieldDOMStructure extends false
+      ? UseFieldLegacyAdditionalProps
+      : UseFieldAccessibleAdditionalProps);
 
 export type FieldSectionValueBoundaries<
   TDate extends PickerValidDate,

@@ -99,7 +99,7 @@ export const useFieldAccessibleDOMStructure = <
     domGetters,
   });
 
-  const containerEventHandlers = useFieldAccessibleContainerProps({
+  const containerProps = useFieldAccessibleContainerProps({
     valueManager,
     internalPropsWithDefaults,
     forwardedProps,
@@ -141,7 +141,7 @@ export const useFieldAccessibleDOMStructure = <
   return {
     ...forwardedProps,
     ...hiddenInputProps,
-    ...containerEventHandlers,
+    ...containerProps,
     ...clearValueProps,
 
     // Forwarded props with a default value

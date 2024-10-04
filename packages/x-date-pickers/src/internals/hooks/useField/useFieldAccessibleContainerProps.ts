@@ -82,7 +82,7 @@ export const useFieldAccessibleContainerProps = <
     }
   });
 
-  const handleContainerInput = useEventCallback((event: React.FormEvent<HTMLDivElement>) => {
+  const handleContainerInput = useEventCallback((event: React.FormEvent) => {
     onInput?.(event);
 
     if (parsedSelectedSections !== 'all') {
@@ -114,7 +114,7 @@ export const useFieldAccessibleContainerProps = <
     }
   });
 
-  const handleContainerPaste = useEventCallback((event: React.ClipboardEvent<HTMLDivElement>) => {
+  const handleContainerPaste = useEventCallback((event: React.ClipboardEvent) => {
     onPaste?.(event);
     if (readOnly || parsedSelectedSections !== 'all') {
       event.preventDefault();

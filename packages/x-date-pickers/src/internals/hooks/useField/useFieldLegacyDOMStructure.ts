@@ -372,7 +372,7 @@ export const useFieldLegacyDOMStructure = <
     syncSelectionFromDOM();
   });
 
-  const handleInputPaste = useEventCallback((event: React.ClipboardEvent<HTMLInputElement>) => {
+  const handleInputPaste = useEventCallback((event: React.ClipboardEvent) => {
     onPaste?.(event);
 
     // prevent default to avoid the input `onChange` handler being called
