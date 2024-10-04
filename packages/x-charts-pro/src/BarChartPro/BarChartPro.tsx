@@ -88,7 +88,7 @@ BarChartPro.propTypes = {
    * The configuration of axes highlight.
    * Default is set to 'band' in the bar direction.
    * Depends on `layout` prop.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
    */
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),

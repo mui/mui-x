@@ -10,8 +10,8 @@
         "description": "{ x?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none', y?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none' }"
       },
       "seeMoreLink": {
-        "url": "https://mui.com/x/react-charts/tooltip/#highlights",
-        "text": "highlight docs"
+        "url": "https://mui.com/x/react-charts/highlighting",
+        "text": "highlighting docs"
       }
     },
     "barLabel": { "type": { "name": "union", "description": "'value'<br>&#124;&nbsp;func" } },
