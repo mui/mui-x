@@ -299,20 +299,26 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   const handleKeyDown = (event: React.KeyboardEvent) => {
     switch (event.key) {
       case 'PageUp': {
-        if (listRef.current) {
-          const newIndex = getFocusedListItemIndex(listRef.current) - 5;
-          const children = listRef.current?.children;
-          (children[Math.max(0, newIndex)] as HTMLElement).focus();
+        if (!listRef.current) {
+          return;
         }
+        const newIndex = getFocusedListItemIndex(listRef.current) - 5;
+        const children = listRef.current?.children;
+        const newFocusedIndex = Math.max(0, newIndex);
+
+        (children[newFocusedIndex] as HTMLElement).focus();
         event.preventDefault();
         break;
       }
       case 'PageDown': {
-        if (listRef.current) {
-          const newIndex = getFocusedListItemIndex(listRef.current) + 5;
-          const children = listRef.current?.children;
-          (children?.[Math.min(children.length - 1, newIndex)] as HTMLElement).focus();
+        if (!listRef.current) {
+          return;
         }
+        const newIndex = getFocusedListItemIndex(listRef.current) + 5;
+        const children = listRef.current?.children;
+        const newFocusedIndex = Math.min(children.length - 1, newIndex);
+
+        (children[newFocusedIndex] as HTMLElement).focus();
         event.preventDefault();
         break;
       }
