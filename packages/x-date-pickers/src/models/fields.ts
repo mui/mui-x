@@ -165,12 +165,11 @@ type BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure exten
  * not what users can pass using the `props.slotProps.field`.
  */
 export type BaseSingleInputFieldProps<
-  TValue,
   TDate extends PickerValidDate,
-  TSection extends FieldSection,
+  TIsRange extends boolean,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-> = BaseFieldProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError> &
+> = BaseFieldProps<TDate, TIsRange, TEnableAccessibleFieldDOMStructure, TError> &
   BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure>;
 
 /**

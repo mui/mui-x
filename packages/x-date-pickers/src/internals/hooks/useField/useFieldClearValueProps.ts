@@ -14,7 +14,7 @@ export const useFieldClearValueProps = <TManager extends PickerAnyValueManagerV8
 ) => {
   const {
     forwardedProps: { clearable: inClearable, onClear },
-    internalProps: { readOnly, disabled },
+    internalPropsWithDefaults: { readOnly, disabled },
     stateResponse: { setSelectedSections, clearValue, state, areAllSectionsEmpty },
     interactions,
     sectionOrder = buildDefaultSectionOrdering(state.sections.length),

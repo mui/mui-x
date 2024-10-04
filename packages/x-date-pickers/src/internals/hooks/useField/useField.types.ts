@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   FieldSectionType,
-  FieldSection,
   FieldSelectedSections,
   MuiPickersAdapter,
   TimezoneProps,
@@ -163,9 +162,9 @@ export type UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure extends bo
 
 export interface UseFieldLegacyForwardedProps extends ExportedUseClearableFieldProps {
   inputRef?: React.Ref<HTMLInputElement>;
-  onBlur?: () => void;
+  onBlur?: React.FocusEventHandler;
   onClick?: React.MouseEventHandler;
-  onFocus?: () => void;
+  onFocus?: React.FocusEventHandler;
   onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
   onKeyDown?: React.KeyboardEventHandler;
   placeholder?: string;
@@ -176,9 +175,9 @@ export interface UseFieldAccessibleForwardedProps extends ExportedUseClearableFi
   focused?: boolean;
   autoFocus?: boolean;
   sectionListRef?: React.Ref<UseFieldAccessibleDOMGetters>;
-  onBlur?: () => void;
+  onBlur?: React.FocusEventHandler;
   onClick?: React.MouseEventHandler;
-  onFocus?: () => void;
+  onFocus?: React.FocusEventHandler;
   onInput?: React.FormEventHandler<HTMLDivElement>;
   onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
   onKeyDown?: React.KeyboardEventHandler;
@@ -227,33 +226,32 @@ export interface FieldChangeHandlerContext<TError> {
  * Object used to access and update the active date (i.e: the date containing the active section).
  * Mainly useful in the range fields where we need to update the date containing the active section without impacting the other one.
  */
-interface FieldActiveDateManager<TManager extends PickerAnyValueManagerV8> {
+interface FieldActiveDateManager<TDate extends PickerValidDate, TIsRange extends boolean> {
   /**
    * Active date from `state.value`.
    */
-  date: PickerManagerProperties<TManager>['date'] | null;
+  date: TDate | null;
   /**
    * Active date from the `state.referenceValue`.
    */
-  referenceDate: PickerManagerProperties<TManager>['date'];
+  referenceDate: TDate;
   /**
    * @template TSection
    * @param  {TSection[]} sections The sections of the full value.
    * @returns {TSection[]} The sections of the active date.
    * Get the sections of the active date.
    */
-  getSections: (
-    sections: PickerManagerProperties<TManager>['section'][],
-  ) => PickerManagerProperties<TManager>['section'][];
+  getSections: (sections: InferFieldSection<TIsRange>[]) => InferFieldSection<TIsRange>[];
   /**
    * Creates the new value and reference value based on the new active date and the current state.
    * @template TValue, TDate
    * @param {TDate | null} newActiveDate The new value of the date containing the active section.
    * @returns {Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>} The new value and reference value to publish and store in the state.
    */
-  getNewValuesFromNewActiveDate: (
-    newActiveDate: PickerManagerProperties<TManager>['date'] | null,
-  ) => Pick<UseFieldState<TManager>, 'value' | 'referenceValue'>;
+  getNewValuesFromNewActiveDate: (newActiveDate: TDate | null) => {
+    value: InferValueFromDate<TDate, TIsRange>;
+    referenceValue: InferValueFromDate<TDate, TIsRange>;
+  };
 }
 
 export type FieldParsedSelectedSections = number | 'all' | null;
@@ -273,7 +271,7 @@ export interface FieldValueManager<TDate extends PickerValidDate, TIsRange exten
     utils: MuiPickersAdapter<TDate>,
     value: InferValueFromDate<TDate, TIsRange>,
     fallbackSections: InferFieldSection<TIsRange>[] | null,
-    getSectionsFromDate: (date: TDate) => FieldSection[],
+    getSectionsFromDate: (date: TDate) => InferFieldSection<TIsRange>[],
   ) => InferFieldSection<TIsRange>[];
   /**
    * Creates the string value to render in the input based on the current section list.
@@ -297,17 +295,17 @@ export interface FieldValueManager<TDate extends PickerValidDate, TIsRange exten
   getV7HiddenInputValueFromSections: (sections: InferFieldSection<TIsRange>[]) => string;
   /**
    * Returns the manager of the active date.
-   * @template TValue, TDate, TSection
+   * @template TDate, TIsRange
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @param {UseFieldState<TValue, TSection>} state The current state of the field.
    * @param {TSection} activeSection The active section.
-   * @returns {FieldActiveDateManager<TValue, TDate, TSection>} The manager of the active date.
+   * @returns {FieldActiveDateManager<TDate, TIsRange>} The manager of the active date.
    */
   getActiveDateManager: (
     utils: MuiPickersAdapter<TDate>,
     state: UseFieldState<PickerAnyValueManagerV8>,
     activeSection: InferFieldSection<TIsRange>,
-  ) => FieldActiveDateManager<PickerAnyValueManagerV8>;
+  ) => FieldActiveDateManager<TDate, TIsRange>;
   /**
    * Parses a string version (most of the time coming from the input).
    * This method should only be used when the change does not come from a single section.

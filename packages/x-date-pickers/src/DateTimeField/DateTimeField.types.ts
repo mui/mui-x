@@ -3,7 +3,6 @@ import { SlotComponentProps } from '@mui/utils';
 import TextField from '@mui/material/TextField';
 import {
   DateTimeValidationError,
-  FieldSection,
   PickerValidDate,
   BuiltInFieldTextFieldProps,
   BaseSingleInputFieldProps,
@@ -38,7 +37,12 @@ export type DateTimeFieldInPickerProps<
   | keyof BaseDateValidationProps<TDate>
   | keyof BaseTimeValidationProps
 > &
-  BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, false, DateTimeValidationError>;
+  BaseSingleInputFieldProps<
+    TDate,
+    false,
+    TEnableAccessibleFieldDOMStructure,
+    DateTimeValidationError
+  >;
 
 export type UseDateTimeFieldComponentProps<
   TDate extends PickerValidDate,

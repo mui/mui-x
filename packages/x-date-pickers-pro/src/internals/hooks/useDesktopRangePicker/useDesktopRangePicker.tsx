@@ -140,18 +140,15 @@ export const useDesktopRangePicker = <
     UseDesktopRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>['field'],
     | Partial<
         BaseSingleInputFieldProps<
-          DateRange<TDate>,
           TDate,
-          RangeFieldSection,
+          true,
           TEnableAccessibleFieldDOMStructure,
           InferError<TExternalProps>
         >
       >
     | Partial<
         BaseMultiInputFieldProps<
-          DateRange<TDate>,
           TDate,
-          RangeFieldSection,
           TEnableAccessibleFieldDOMStructure,
           InferError<TExternalProps>
         >

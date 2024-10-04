@@ -4,7 +4,6 @@ import TextField from '@mui/material/TextField';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { BaseTimeValidationProps } from '../internals/models/validation';
 import {
-  FieldSection,
   PickerValidDate,
   TimeValidationError,
   BuiltInFieldTextFieldProps,
@@ -34,7 +33,7 @@ export type TimeFieldInPickerProps<
   UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   'format' | 'timezone' | 'ampm' | keyof BaseTimeValidationProps
 > &
-  BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, false, TimeValidationError>;
+  BaseSingleInputFieldProps<TDate, false, TEnableAccessibleFieldDOMStructure, TimeValidationError>;
 
 export type UseTimeFieldComponentProps<
   TDate extends PickerValidDate,

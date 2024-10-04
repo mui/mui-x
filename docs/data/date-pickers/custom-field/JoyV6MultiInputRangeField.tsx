@@ -27,10 +27,8 @@ import {
 import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import {
   BaseMultiInputFieldProps,
-  DateRange,
   DateRangeValidationError,
   MultiInputFieldSlotTextFieldProps,
-  RangeFieldSection,
   UseDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/models';
 
@@ -133,13 +131,7 @@ const MultiInputJoyDateRangeFieldSeparator = styled(
 
 interface JoyMultiInputDateRangeFieldProps
   extends UseDateRangeFieldProps<Dayjs, false>,
-    BaseMultiInputFieldProps<
-      DateRange<Dayjs>,
-      Dayjs,
-      RangeFieldSection,
-      false,
-      DateRangeValidationError
-    > {}
+    BaseMultiInputFieldProps<Dayjs, false, DateRangeValidationError> {}
 
 type JoyMultiInputDateRangeFieldComponent = ((
   props: JoyMultiInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,

@@ -62,13 +62,11 @@ export interface RangeFieldSeparatorProps {
  * not what users can pass using the `props.slotProps.field`.
  */
 export interface BaseMultiInputFieldProps<
-  TValue,
   TDate extends PickerValidDate,
-  TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > extends Omit<
-      BaseFieldProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>,
+      BaseFieldProps<TDate, true, TEnableAccessibleFieldDOMStructure, TError>,
       'unstableFieldRef'
     >,
     RangeFieldSeparatorProps {

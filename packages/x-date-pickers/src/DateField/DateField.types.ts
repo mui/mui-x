@@ -8,7 +8,6 @@ import {
 } from '../hooks/useClearableField';
 import {
   DateValidationError,
-  FieldSection,
   PickerValidDate,
   BuiltInFieldTextFieldProps,
   BaseSingleInputFieldProps,
@@ -34,7 +33,7 @@ export type DateFieldInPickerProps<
   UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   'format' | 'timezone' | keyof BaseDateValidationProps<TDate>
 > &
-  BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, false, DateValidationError>;
+  BaseSingleInputFieldProps<TDate, false, TEnableAccessibleFieldDOMStructure, DateValidationError>;
 
 export type UseDateFieldComponentProps<
   TDate extends PickerValidDate,

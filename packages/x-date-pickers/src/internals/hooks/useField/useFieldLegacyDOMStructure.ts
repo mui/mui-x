@@ -333,8 +333,8 @@ export const useFieldLegacyDOMStructure = <
     setSelectedSections(sectionIndex);
   };
 
-  const handleInputFocus = useEventCallback((...args) => {
-    onFocus?.(...(args as []));
+  const handleInputFocus = useEventCallback((event: React.FocusEvent) => {
+    onFocus?.(event);
     // The ref is guaranteed to be resolved at this point.
     const input = inputRef.current;
 
@@ -413,8 +413,8 @@ export const useFieldLegacyDOMStructure = <
     updateValueFromValueStr(pastedValue);
   });
 
-  const handleContainerBlur = useEventCallback((...args) => {
-    onBlur?.(...(args as []));
+  const handleContainerBlur = useEventCallback((event: React.FocusEvent) => {
+    onBlur?.(event);
     setSelectedSections(null);
   });
 

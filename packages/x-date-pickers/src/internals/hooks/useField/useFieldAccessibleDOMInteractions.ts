@@ -102,7 +102,7 @@ export const useFieldAccessibleDOMInteractions = <
   };
 
   React.useImperativeHandle(unstableFieldRef, () => ({
-    getSections: () => state.sections,
+    getSections: () => state.sections as any,
     getActiveSectionIndex: interactions.getActiveSectionIndexFromDOM,
     setSelectedSections: interactions.setSelectedSections,
     focusField: interactions.focusField,

@@ -152,7 +152,6 @@ const shouldClosePicker = <TValue, TError>(
 export const usePickerValue = <
   TValue,
   TDate extends PickerValidDate,
-  TSection extends FieldSection,
   TExternalProps extends UsePickerValueProps<TValue, any>,
 >({
   props,
@@ -162,7 +161,6 @@ export const usePickerValue = <
   validator,
 }: UsePickerValueParams<TValue, TDate, TExternalProps>): UsePickerValueResponse<
   TValue,
-  TSection,
   InferError<TExternalProps>
 > => {
   type TError = InferError<TExternalProps>;
@@ -421,7 +419,7 @@ export const usePickerValue = <
     onClose: handleClose,
   };
 
-  const fieldResponse: UsePickerValueFieldResponse<TValue, TSection, TError> = {
+  const fieldResponse: UsePickerValueFieldResponse<TValue, TError> = {
     value: dateState.draft,
     onChange: handleChangeFromField,
   };

@@ -127,8 +127,8 @@ export const useFieldAccessibleContainerProps = <
     updateValueFromValueStr(pastedValue);
   });
 
-  const handleContainerFocus = useEventCallback((...args) => {
-    onFocus?.(...(args as []));
+  const handleContainerFocus = useEventCallback((event: React.FocusEvent) => {
+    onFocus?.(event);
 
     if (focused) {
       return;
@@ -143,8 +143,8 @@ export const useFieldAccessibleContainerProps = <
     }
   });
 
-  const handleContainerBlur = useEventCallback((...args) => {
-    onBlur?.(...(args as []));
+  const handleContainerBlur = useEventCallback((event: React.FocusEvent) => {
+    onBlur?.(event);
     setTimeout(() => {
       const activeElement = getActiveElement(document);
       const shouldBlur = !domGetters.getRoot().contains(activeElement);

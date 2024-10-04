@@ -13,12 +13,10 @@ import {
 import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 import {
-  RangeFieldSection,
   BaseMultiInputFieldProps,
   BasePickersTextFieldProps,
   MultiInputFieldSlotTextFieldProps,
   DateRangeValidationError,
-  DateRange,
   UseDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/models';
 
@@ -109,13 +107,7 @@ const BrowserTextField = React.forwardRef(
 
 interface BrowserMultiInputDateRangeFieldProps
   extends UseDateRangeFieldProps<Dayjs, true>,
-    BaseMultiInputFieldProps<
-      DateRange<Dayjs>,
-      Dayjs,
-      RangeFieldSection,
-      true,
-      DateRangeValidationError
-    > {}
+    BaseMultiInputFieldProps<Dayjs, true, DateRangeValidationError> {}
 
 type BrowserMultiInputDateRangeFieldComponent = ((
   props: BrowserMultiInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
