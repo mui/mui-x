@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { mergeReactProps } from '@base_ui/react/utils/mergeReactProps';
 import { getStyleHookProps } from '@base_ui/react/utils/getStyleHookProps';
-import { useField } from '../../internals/hooks/useField';
+import {
+  useFieldState,
+  useFieldValidation,
+  useFieldCharacterEditing,
+  useFieldAccessibleDOMInteractions,
+  useFieldAccessibleContainerProps,
+} from '../../internals/hooks/useField';
 import type { PickersFieldProvider } from './PickersFieldProvider';
 import { PickerManagerProperties, PickerAnyAccessibleValueManagerV8 } from '../../models';
 import { useLocalizationContext } from '../../internals/hooks/useUtils';
@@ -18,16 +24,57 @@ export function usePickersFieldRoot<TManager extends PickerAnyAccessibleValueMan
 
   const { valueManager, internalProps, inputRef } = params;
 
-  const adapter = useLocalizationContext<TDate>();
+  const [focused, setFocused] = React.useState(false);
+
+  const localizationContext = useLocalizationContext<TDate>();
+
   const internalPropsWithDefaults: TInternalPropsWithDefaults =
     valueManager.applyDefaultsToFieldInternalProps({
-      adapter,
+      ...localizationContext,
       internalProps,
     });
 
+  const forwardedProps = {};
+
+  const domGetters = {};
+
   const stateResponse = useFieldState({
-    internalProps: internalPropsWithDefaults,
-    valueManager: valueManager.legacyValueManager,
+    valueManager,
+    forwardedProps,
+    internalPropsWithDefaults,
+  });
+
+  const error = useFieldValidation({
+    internalPropsWithDefaults,
+    forwardedProps,
+    valueManager,
+    stateResponse,
+  });
+
+  const characterEditingResponse = useFieldCharacterEditing({
+    error,
+    stateResponse,
+  });
+
+  const interactions = useFieldAccessibleDOMInteractions({
+    forwardedProps,
+    internalPropsWithDefaults,
+    stateResponse,
+    focused,
+    setFocused,
+    domGetters,
+  });
+
+  const containerProps = useFieldAccessibleContainerProps({
+    valueManager,
+    internalPropsWithDefaults,
+    forwardedProps,
+    stateResponse,
+    characterEditingResponse,
+    interactions,
+    domGetters,
+    focused,
+    setFocused,
   });
 
   const sectionsRef = React.useRef<{ [sectionIndex: string]: HTMLSpanElement }>({});

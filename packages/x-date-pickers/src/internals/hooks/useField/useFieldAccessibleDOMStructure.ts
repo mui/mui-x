@@ -66,7 +66,11 @@ export const useFieldAccessibleDOMStructure = <
   );
 
   const [focused, setFocused] = React.useState(false);
-  const stateResponse = useFieldState(parameters);
+  const stateResponse = useFieldState({
+    valueManager,
+    forwardedProps,
+    internalPropsWithDefaults,
+  });
 
   const error = useFieldValidation({
     internalPropsWithDefaults,
@@ -89,16 +93,6 @@ export const useFieldAccessibleDOMStructure = <
     domGetters,
   });
 
-  const createSectionContainerProps = useFieldAccessibleSectionContainerProps({ stateResponse });
-
-  const createSectionContentProps = useFieldAccessibleSectionContentProps({
-    internalPropsWithDefaults,
-    stateResponse,
-    characterEditingResponse,
-    interactions,
-    domGetters,
-  });
-
   const containerProps = useFieldAccessibleContainerProps({
     valueManager,
     internalPropsWithDefaults,
@@ -109,6 +103,16 @@ export const useFieldAccessibleDOMStructure = <
     domGetters,
     focused,
     setFocused,
+  });
+
+  const createSectionContainerProps = useFieldAccessibleSectionContainerProps({ stateResponse });
+
+  const createSectionContentProps = useFieldAccessibleSectionContentProps({
+    internalPropsWithDefaults,
+    stateResponse,
+    characterEditingResponse,
+    interactions,
+    domGetters,
   });
 
   const hiddenInputProps = useFieldAccessibleHiddenInputProps({
