@@ -17,7 +17,7 @@ We'd like to offer a big thanks to the 26 contributors who made this release pos
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-Special thanks go out to our community contributors who have helped make this release possible:
+Special thanks goes out to our community contributors who have helped make this release possible:
 @AWAIS97, @chucamphong, @GMchris, @JakubSveda, @k-rajat19, @k725, @lhilgert9, @ruiaraujo012, @Sanderand, @thomasmoon, @vallereaugabriel.
 Following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @arthurbalduini, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @KenanYusuf, @MBilalShafi, @michelengelen, @noraleonte, @oliviertassinari, @romgrk, @sai6855, @samuelsycamore.
