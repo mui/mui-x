@@ -16,7 +16,7 @@ import { SinonSpy, spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe.only('<DataGridPro /> - Data source lazy loader', () => {
+describe('<DataGridPro /> - Data source lazy loader', () => {
   const { render } = createRenderer();
   const defaultTransformGetRowsResponse = (response: GridGetRowsResponse) => response;
 
@@ -32,6 +32,7 @@ describe.only('<DataGridPro /> - Data source lazy loader', () => {
       { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false },
     );
     fetchRowsSpy = spy(mockServer, 'fetchRows');
+    const { fetchRows } = mockServer;
 
     const dataSource: GridDataSource = React.useMemo(
       () => ({
@@ -43,7 +44,7 @@ describe.only('<DataGridPro /> - Data source lazy loader', () => {
             lastRowToRender: `${params.end}`,
           });
 
-          const getRowsResponse = await fetchRowsSpy(
+          const getRowsResponse = await fetchRows(
             `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
           );
 
@@ -54,7 +55,7 @@ describe.only('<DataGridPro /> - Data source lazy loader', () => {
           };
         },
       }),
-      [fetchRowsSpy],
+      [fetchRows],
     );
 
     const baselineProps = {
