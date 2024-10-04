@@ -78,7 +78,7 @@ Same changes as in `@mui/x-date-pickers@7.19.0`.
 
 #### `@mui/x-charts@7.19.0`
 
-- [charts] Fix area appearing (#14711) @alexfauquette
+- [charts] Fix `LineChart` area animation being stuck when resizing container (#14711) @alexfauquette
 - [charts] Type improvements & `warnOnce` usage (#14792) @JCQuintas
 
 #### `@mui/x-charts-pro@__VERSION-ALPHA__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
