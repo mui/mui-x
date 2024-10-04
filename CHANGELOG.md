@@ -34,8 +34,6 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Fix error when initializing aggregation with row spanning (#14710) @MBilalShafi
 - [DataGrid] Fix scroll to cell logic for keyboard navigating cells and drag selection with pinned columns (#14550) @KenanYusuf
 - [DataGrid] Support `minHeight` and `maxHeight` on flex parent container (#14614) @cherniavskii
-- [DataGrid] Use `event.type` for detecting IME key press (#14146) @k-rajat19
-- [DataGrid] Revert "use `event.type` for detecting IME key press" (#14803) @romgrk
 - [l10n] Add missing Portuguese (pt-PT) translations (#14707) @ruiaraujo012
 - [l10n] Improve Bulgarian (bg-BG) locale (#14451) @GMchris
 - [l10n] Improve Croatian (hr-HR) locale (#14794) @arminmeh
