@@ -1,7 +1,7 @@
 // We can't import the `.mocharc.js` of the monorepo, otherwise we trigger its `setupBabel`.
 
 module.exports = {
-  extension: ['js', 'ts', 'tsx', 'jsx'],
+  extension: ['js', 'ts', 'tsx'],
   ignore: [
     '**/build/**',
     '**/node_modules/**',
