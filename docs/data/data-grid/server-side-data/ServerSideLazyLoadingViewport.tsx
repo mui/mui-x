@@ -9,7 +9,7 @@ import { useMockServer } from '@mui/x-data-grid-generator';
 function ServerSideLazyLoadingViewport() {
   const { columns, fetchRows } = useMockServer(
     { rowLength: 100 },
-    { useCursorPagination: false },
+    { useCursorPagination: false, minDelay: 200, maxDelay: 500 },
   );
 
   const dataSource: GridDataSource = React.useMemo(
