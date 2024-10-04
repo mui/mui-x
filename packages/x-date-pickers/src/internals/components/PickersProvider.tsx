@@ -3,7 +3,7 @@ import { PickerValidDate } from '../../models';
 import { PickersInputLocaleText } from '../../locales';
 import { LocalizationProvider } from '../../LocalizationProvider';
 
-export const PickersFieldContext = React.createContext<PickersFieldContextValue | null>(null);
+export const PickersContext = React.createContext<PickersContextValue | null>(null);
 
 /**
  * Provides the context for the various parts of a picker component:
@@ -18,19 +18,19 @@ export function PickersProvider<TDate extends PickerValidDate>(
   const { fieldContextValue, localeText, children } = props;
 
   return (
-    <PickersFieldContext.Provider value={fieldContextValue}>
+    <PickersContext.Provider value={fieldContextValue}>
       <LocalizationProvider localeText={localeText}>{children}</LocalizationProvider>
-    </PickersFieldContext.Provider>
+    </PickersContext.Provider>
   );
 }
 
 interface PickersFieldProviderProps<TDate extends PickerValidDate> {
-  fieldContextValue: PickersFieldContextValue;
+  fieldContextValue: PickersContextValue;
   localeText: PickersInputLocaleText<TDate> | undefined;
   children: React.ReactNode;
 }
 
-export interface PickersFieldContextValue {
+export interface PickersContextValue {
   /**
    * Open the view if they are closed, close them otherwise.
    * @param {React.UIEvent} event The DOM event that triggered the change.

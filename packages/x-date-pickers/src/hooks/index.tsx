@@ -12,4 +12,4 @@ export { useSplitFieldProps } from './useSplitFieldProps';
 
 export { useFieldPlaceholder } from './useFieldPlaceholder';
 
-export { usePickersFieldContext } from './usePickersFieldContext';
+export { usePickersContext } from './usePickersContext';

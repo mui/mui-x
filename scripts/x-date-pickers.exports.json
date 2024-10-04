@@ -306,7 +306,7 @@
   { "name": "UseDateTimeFieldProps", "kind": "Interface" },
   { "name": "useFieldPlaceholder", "kind": "Variable" },
   { "name": "usePickerLayout", "kind": "ExportAssignment" },
-  { "name": "usePickersFieldContext", "kind": "Variable" },
+  { "name": "usePickersContext", "kind": "Variable" },
   { "name": "usePickersTranslations", "kind": "Variable" },
   { "name": "useSplitFieldProps", "kind": "Variable" },
   { "name": "UseTimeFieldComponentProps", "kind": "TypeAlias" },

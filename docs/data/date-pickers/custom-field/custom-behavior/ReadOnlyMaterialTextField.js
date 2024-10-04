@@ -8,7 +8,7 @@ import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 import {
   useSplitFieldProps,
   useFieldPlaceholder,
-  usePickersFieldContext,
+  usePickersContext,
 } from '@mui/x-date-pickers/hooks';
 
 function ReadOnlyDateField(props) {
@@ -16,7 +16,7 @@ function ReadOnlyDateField(props) {
   const { value, timezone, format } = internalProps;
   const { InputProps, slotProps, slots, ...other } = forwardedProps;
 
-  const pickerContext = usePickersFieldContext();
+  const pickersContext = usePickersContext();
 
   const placeholder = useFieldPlaceholder(internalProps);
   const { hasValidationError } = useValidation({
@@ -33,14 +33,14 @@ function ReadOnlyDateField(props) {
       placeholder={placeholder}
       InputProps={{ ...InputProps, readOnly: true }}
       error={hasValidationError}
-      onClick={pickerContext.onToggleView}
+      onClick={pickersContext.onToggleView}
     />
   );
 }
 
 function ReadOnlyFieldDatePicker(props) {
   return (
-    <DatePicker slots={{ ...props.slots, field: ReadOnlyDateField }} {...props} />
+    <DatePicker {...props} slots={{ ...props.slots, field: ReadOnlyDateField }} />
   );
 }
 
