@@ -33,7 +33,7 @@ function GridCustomToolbar({ count, setCount }) {
 function ServerSideLazyLoadingModeUpdate() {
   const { columns, fetchRows } = useMockServer(
     { rowLength: 100 },
-    { useCursorPagination: false, minDelay: 300, maxDelay: 800 },
+    { useCursorPagination: false },
   );
 
   const [rowCount, setRowCount] = React.useState(-1);
