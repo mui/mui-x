@@ -14,6 +14,7 @@ import { PickerValidDate } from '../models';
 export interface MultiSectionDigitalClockOption<TValue> {
   isDisabled?: (value: TValue) => boolean;
   isSelected: (value: TValue) => boolean;
+  isFocused: (value: TValue) => boolean;
   label: string;
   value: TValue;
   ariaLabel: string;
