@@ -226,7 +226,7 @@ useTreeViewSelection.models = {
 
 const DEFAULT_SELECTED_ITEMS: string[] = [];
 
-useTreeViewSelection.getDefaultizedParams = (params) => ({
+useTreeViewSelection.getDefaultizedParams = ({ params }) => ({
   ...params,
   disableSelection: params.disableSelection ?? false,
   multiSelect: params.multiSelect ?? false,

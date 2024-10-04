@@ -261,7 +261,7 @@ export const getAggregationFunctionLabel = ({
         aggregationRule.aggregationFunctionName,
       )}` as 'aggregationFunctionLabelSum',
     );
-  } catch (e) {
+  } catch {
     return aggregationRule.aggregationFunctionName;
   }
 };

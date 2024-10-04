@@ -1,12 +1,11 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
+import { warnOnce } from '@mui/x-internals/warning';
 import { getStackingGroups } from '../internals/stackSeries';
 import { ChartSeries, DatasetElementType, DatasetType } from '../models/seriesType/config';
 import { defaultizeValueFormatter } from '../internals/defaultizeValueFormatter';
 import { DefaultizedProps } from '../models/helpers';
 import { SeriesId } from '../models/seriesType/common';
 import { SeriesFormatter } from '../context/PluginProvider/SeriesFormatter.types';
-
-let warnedOnce = false;
 
 // For now it's a copy past of bar charts formatter, but maybe will diverge later
 const formatter: SeriesFormatter<'line'> = (params, dataset) => {
@@ -60,12 +59,13 @@ const formatter: SeriesFormatter<'line'> = (params, dataset) => {
           ? dataset!.map((data) => {
               const value = data[dataKey];
               if (typeof value !== 'number') {
-                if (process.env.NODE_ENV !== 'production' && !warnedOnce && value !== null) {
-                  warnedOnce = true;
-                  console.error([
-                    `MUI X: Your dataset key "${dataKey}" is used for plotting line, but contains nonnumerical elements.`,
-                    'Line plots only support numbers and null values.',
-                  ]);
+                if (process.env.NODE_ENV !== 'production') {
+                  if (value !== null) {
+                    warnOnce([
+                      `MUI X: Your dataset key "${dataKey}" is used for plotting line, but contains nonnumerical elements.`,
+                      'Line plots only support numbers and null values.',
+                    ]);
+                  }
                 }
                 return null;
               }
