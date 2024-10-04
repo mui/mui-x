@@ -344,6 +344,7 @@ export const useGridDataSourceLazyLoader = (
       if (loadingTrigger.current === LoadingTrigger.VIEWPORT) {
         // replace all rows with skeletons to maintain the same scroll position
         addSkeletonRows(true);
+        privateApiRef.current.setLoading(true);
       }
 
       const rangeParams =
