@@ -1,10 +1,10 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import { PickerAnyAccessibleValueManagerV8 } from '../../../models';
+import { PickerAnyAccessibleValueManagerV8, PickerManagerProperties } from '../../../models';
 import {
   UseFieldAccessibleDOMGetters,
   UseFieldForwardedProps,
-  UseFieldWithKnownDOMStructureParameters,
+  UseFieldParameters,
   UseFieldResponse,
 } from './useField.types';
 import type { PickersSectionElement } from '../../../PickersSectionList';
@@ -17,20 +17,31 @@ import { useFieldAccessibleContainerProps } from './useFieldAccessibleContainerP
 import { useFieldAccessibleSectionContentProps } from './useFieldAccessibleSectionContentProps';
 import { useFieldAccessibleSectionContainerProps } from './useFieldAccessibleSectionContainerProps';
 import { useFieldAccessibleHiddenInputProps } from './useFieldAccessibleHiddenInputProps';
+import { useLocalizationContext } from '../useUtils';
 
 export const useFieldAccessibleDOMStructure = <
   TManager extends PickerAnyAccessibleValueManagerV8,
   TForwardedProps extends UseFieldForwardedProps<true>,
 >(
-  parameters: UseFieldWithKnownDOMStructureParameters<TManager, TForwardedProps>,
+  parameters: UseFieldParameters<TManager, TForwardedProps>,
 ): UseFieldResponse<true, TForwardedProps> => {
   const {
-    internalPropsWithDefaults,
-    internalPropsWithDefaults: { disabled, readOnly = false },
+    internalProps,
     forwardedProps,
     forwardedProps: { sectionListRef: sectionListRefProp, focused: focusedProp, autoFocus = false },
     valueManager,
   } = parameters;
+
+  const localizationContext = useLocalizationContext<PickerManagerProperties<TManager>['date']>();
+
+  const internalPropsWithDefaults = React.useMemo(
+    () =>
+      valueManager.applyDefaultsToFieldInternalProps({
+        ...localizationContext,
+        internalProps,
+      }),
+    [valueManager, localizationContext, internalProps],
+  );
 
   // Management of `sectionListRef` (won't be present in `PickersField`)
   const sectionListRef = React.useRef<UseFieldAccessibleDOMGetters>(null);
@@ -158,7 +169,7 @@ export const useFieldAccessibleDOMStructure = <
     enableAccessibleFieldDOMStructure: true,
     elements,
     areAllSectionsEmpty: stateResponse.areAllSectionsEmpty,
-    disabled,
-    readOnly,
+    disabled: internalProps.disabled,
+    readOnly: internalProps.readOnly,
   };
 };

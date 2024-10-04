@@ -16,7 +16,7 @@ import {
 import type { PickersSectionElement } from '../../../PickersSectionList';
 import { ExportedUseClearableFieldProps } from '../../../hooks/useClearableField';
 
-export interface UseFieldWithKnownDOMStructureParameters<
+export interface UseFieldParameters<
   TManager extends PickerAnyValueManagerV8,
   TForwardedProps extends UseFieldForwardedProps<
     PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure']
@@ -24,7 +24,7 @@ export interface UseFieldWithKnownDOMStructureParameters<
 > {
   valueManager: TManager;
   forwardedProps: TForwardedProps;
-  internalPropsWithDefaults: PickerManagerProperties<TManager>['internalPropsWithDefaults'];
+  internalProps: PickerManagerProperties<TManager>['internalProps'];
 }
 
 export interface UseFieldInternalProps<

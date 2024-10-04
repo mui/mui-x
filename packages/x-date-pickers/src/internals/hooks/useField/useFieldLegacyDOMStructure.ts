@@ -12,7 +12,7 @@ import {
   UseFieldWithKnownDOMStructureParameters,
   UseFieldResponse,
 } from './useField.types';
-import { FieldSection, PickerAnyValueManagerV8 } from '../../../models';
+import { FieldSection, PickerAnyValueManagerV8, PickerManagerProperties } from '../../../models';
 import { getActiveElement } from '../../utils/utils';
 import { buildDefaultSectionOrdering, getSectionVisibleValue } from './useField.utils';
 import { useFieldHandleKeyDown } from './useFieldHandleKeyDown';
@@ -20,6 +20,7 @@ import { useFieldClearValueProps } from './useFieldClearValueProps';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { useFieldValidation } from './useFieldValidation';
+import { useLocalizationContext } from '../useUtils';
 
 type FieldSectionWithPositions<TSection> = TSection & {
   /**
@@ -160,6 +161,7 @@ export const useFieldLegacyDOMStructure = <
   const isRtl = useRtl();
   const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
   const selectionSyncTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
+  const localizationContext = useLocalizationContext<PickerManagerProperties<TManager>['date']>();
 
   const {
     forwardedProps,
@@ -171,11 +173,21 @@ export const useFieldLegacyDOMStructure = <
       inputRef: inputRefProp,
       placeholder: placeholderProp,
     },
-    internalPropsWithDefaults,
-    internalPropsWithDefaults: { unstableFieldRef, readOnly = false, disabled = false },
+    internalProps,
     valueManager,
     valueManager: { fieldValueManager, legacyValueManager },
   } = parameters;
+
+  const internalPropsWithDefaults = React.useMemo(
+    () =>
+      valueManager.applyDefaultsToFieldInternalProps({
+        ...localizationContext,
+        internalProps,
+      }),
+    [valueManager, localizationContext, internalProps],
+  );
+
+  const { unstableFieldRef, readOnly = false, disabled = false } = internalPropsWithDefaults;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleRef = useForkRef(inputRefProp, inputRef);
