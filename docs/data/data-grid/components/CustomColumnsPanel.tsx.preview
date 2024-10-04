@@ -1,0 +1,8 @@
+<DataGrid
+  rows={rows}
+  columns={columns}
+  checkboxSelection
+  disableRowSelectionOnClick
+  columnGroupingModel={columnGroupingModel}
+  slots={{ columnsPanel: ColumnsPanel }}
+/>
