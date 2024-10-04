@@ -9,7 +9,7 @@ _Oct 4, 2024_
 
 We'd like to offer a big thanks to the 26 contributors who made this release possible. Here are some highlights ✨:
 
-- ✅ Automatic parents and children selection in the Data Grid Premium component
+- 🔁 Automatic parents and children selection for Data Grid "tree data" and "row grouping" features
 - 💫 Support `minHeight` and `maxHeight` on flex parent container for the Data Grid component
 - 🎁 Export `publicAPI` form `useTreeItem2Utils` in the TreeView component
 - 🌍 Improve Bulgarian (bg-BG), Croatian (hr-HR), French (fr-FR), German (de-DE), Japanese (ja-JP) and Vietnamese (vi-VN) locales and add Portuguese (pt-PT) locale on the Data Grid component
