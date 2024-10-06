@@ -224,7 +224,7 @@ describe('<DataGrid /> - Row spanning', () => {
         />,
       );
       expect(Object.keys(apiRef.current.state.rowSpanning.spannedCells).length).to.equal(0);
-      await act(() => {
+      await act(async () => {
         apiRef.current.setPage(1);
       });
       expect(Object.keys(apiRef.current.state.rowSpanning.spannedCells).length).to.equal(1);
