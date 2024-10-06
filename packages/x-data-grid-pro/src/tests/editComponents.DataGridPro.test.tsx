@@ -135,10 +135,9 @@ describe('<DataGridPro /> - Edit components', () => {
 
       const input = within(cell).getByRole<HTMLInputElement>('textbox');
       fireEvent.change(input, { target: { value: 'Puma' } });
-      await act(() => Promise.resolve());
-
       expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal('Puma');
+      await act(() => Promise.resolve());
     });
   });
 
@@ -338,12 +337,12 @@ describe('<DataGridPro /> - Edit components', () => {
 
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '2022-02-10' } });
-      await act(() => Promise.resolve());
 
       expect(onValueChange.callCount).to.equal(1);
       expect((onValueChange.lastCall.args[1]! as Date).toISOString()).to.equal(
         new Date(2022, 1, 10).toISOString(),
       );
+      await act(() => Promise.resolve());
     });
   });
 
@@ -576,9 +575,8 @@ describe('<DataGridPro /> - Edit components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
       fireUserEvent.mousePress(document.getElementById('outside-grid')!);
-      await act(() => Promise.resolve());
-
       expect(onCellEditStop.callCount).to.equal(1);
+      await act(() => Promise.resolve());
     });
 
     it('should not open the suggestions when Enter is pressed', async () => {
@@ -642,7 +640,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = within(cell).getByRole<HTMLInputElement>('checkbox');
       await user.click(input);
 
-      await waitFor(() => expect(onValueChange.callCount).to.equal(1));
+      expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal(true);
     });
   });
