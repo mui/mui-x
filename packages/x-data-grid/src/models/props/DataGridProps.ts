@@ -782,20 +782,16 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures?: Partial<GridExperimentalFeatures>;
+  // eslint-disable-next-line jsdoc/require-param
   /**
    * Callback called before updating a row with new values in the row and cell editing.
    * @template R
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.
-   * @param {Object} additionalParams - Additional parameters.
-   * @param {GridRowId} additionalParams.rowId - The id of the row.
+   * @param {{ rowId: GridRowId }} params Additional parameters.
    * @returns {Promise<R> | R} The final values to update the row.
    */
-  processRowUpdate?: (
-    newRow: R,
-    oldRow: R,
-    additionalParams: { rowId: GridRowId },
-  ) => Promise<R> | R;
+  processRowUpdate?: (newRow: R, oldRow: R, params: { rowId: GridRowId }) => Promise<R> | R;
   /**
    * Callback called when `processRowUpdate` throws an error or rejects.
    * @param {any} error The error thrown.
