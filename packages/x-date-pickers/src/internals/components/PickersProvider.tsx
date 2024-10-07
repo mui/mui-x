@@ -37,7 +37,7 @@ export interface PickersContextValue {
    */
   onOpen: (event: React.UIEvent) => void;
   /**
-   * Close the picker if it is opened.
+   * Close the picker.
    * @param {React.UIEvent} event The DOM event that triggered the change.
    */
   onClose: (event: React.UIEvent) => void;
