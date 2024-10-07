@@ -81,18 +81,27 @@ function ColumnGroup({
     <div>
       <FormControlLabel
         control={
-          <Checkbox checked={isGroupChecked} indeterminate={isGroupIndeterminate} />
+          <Checkbox
+            checked={isGroupChecked}
+            indeterminate={isGroupIndeterminate}
+            size="small"
+            sx={{ p: 1 }}
+          />
         }
         label={group.headerName ?? group.groupId}
         onChange={(_, newValue) => toggleColumnGroup(newValue)}
       />
-      <Box sx={{ pl: 2 }}>
+      <Box sx={{ pl: 1 }}>
         {group.children.map((child) => {
           return isLeaf(child) ? (
             <Stack direction="row" key={child.field}>
               <FormControlLabel
                 control={
-                  <Checkbox checked={columnVisibilityModel[child.field] !== false} />
+                  <Checkbox
+                    checked={columnVisibilityModel[child.field] !== false}
+                    size="small"
+                    sx={{ p: 1 }}
+                  />
                 }
                 label={columnLookup[child.field].headerName ?? child.field}
                 onChange={(_, newValue) => toggleColumn(child.field, newValue)}
@@ -129,7 +138,7 @@ function ColumnsPanel(props: GridColumnsPanelProps) {
   }
 
   return (
-    <Box sx={{ px: 2, py: 1 }}>
+    <Box sx={{ px: 2, py: 0.5 }}>
       {columnGroupingModel.map((group) => (
         <ColumnGroup
           group={group}
