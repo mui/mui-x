@@ -8,6 +8,7 @@ import {
   unstable_capitalize as capitalize,
 } from '@mui/utils';
 import { fastMemo } from '@mui/x-internals/fastMemo';
+import { useRtl } from '@mui/system/RtlProvider';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import {
@@ -33,6 +34,10 @@ import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
 import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
+import {
+  gridRowSpanningHiddenCellsSelector,
+  gridRowSpanningSpannedCellsSelector,
+} from '../../hooks/features/rows/gridRowSpanningSelectors';
 
 export enum PinnedPosition {
   NONE,
@@ -175,6 +180,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
 
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
+  const isRtl = useRtl();
 
   const field = column.field;
 
@@ -191,11 +197,11 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
         );
         result.api = apiRef.current;
         return result;
-      } catch (e) {
-        if (e instanceof MissingRowIdError) {
+      } catch (error) {
+        if (error instanceof MissingRowIdError) {
           return EMPTY_CELL_PARAMS;
         }
-        throw e;
+        throw error;
       }
     },
     objectShallowCompare,
@@ -207,6 +213,9 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       field,
     }),
   );
+
+  const hiddenCells = useGridSelector(apiRef, gridRowSpanningHiddenCellsSelector);
+  const spannedCells = useGridSelector(apiRef, gridRowSpanningSpannedCellsSelector);
 
   const { cellMode, hasFocus, isEditable = false, value } = cellParams;
 
@@ -319,6 +328,9 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     [apiRef, field, rowId],
   );
 
+  const isCellRowSpanned = hiddenCells[rowId]?.[field] ?? false;
+  const rowSpan = spannedCells[rowId]?.[field] ?? 1;
+
   const style = React.useMemo(() => {
     if (isNotVisible) {
       return {
@@ -334,16 +346,26 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       ...styleProp,
     };
 
-    if (pinnedPosition === PinnedPosition.LEFT) {
-      cellStyle.left = pinnedOffset;
+    const isLeftPinned = pinnedPosition === PinnedPosition.LEFT;
+    const isRightPinned = pinnedPosition === PinnedPosition.RIGHT;
+
+    if (isLeftPinned || isRightPinned) {
+      let side: 'left' | 'right' = isLeftPinned ? 'left' : 'right';
+
+      if (isRtl) {
+        side = isLeftPinned ? 'right' : 'left';
+      }
+
+      cellStyle[side] = pinnedOffset;
     }
 
-    if (pinnedPosition === PinnedPosition.RIGHT) {
-      cellStyle.right = pinnedOffset;
+    if (rowSpan > 1) {
+      cellStyle.height = `calc(var(--height) * ${rowSpan})`;
+      cellStyle.zIndex = 5;
     }
 
     return cellStyle;
-  }, [width, isNotVisible, styleProp, pinnedOffset, pinnedPosition]);
+  }, [width, isNotVisible, styleProp, pinnedOffset, pinnedPosition, isRtl, rowSpan]);
 
   React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
@@ -365,6 +387,16 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       }
     }
   }, [hasFocus, cellMode, apiRef]);
+
+  if (isCellRowSpanned) {
+    return (
+      <div
+        data-colindex={colIndex}
+        role="presentation"
+        style={{ width: 'var(--width)', ...style }}
+      />
+    );
+  }
 
   if (cellParams === EMPTY_CELL_PARAMS) {
     return null;
@@ -449,12 +481,13 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
   return (
     <div
       ref={handleRef}
-      className={clsx(className, classNames, classes.root)}
+      className={clsx(classes.root, classNames, className)}
       role="gridcell"
       data-field={field}
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}
       aria-colspan={colSpan}
+      aria-rowspan={rowSpan}
       style={style}
       title={title}
       tabIndex={tabIndex}

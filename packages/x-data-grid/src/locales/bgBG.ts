@@ -38,10 +38,10 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Изтегли като Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: 'Търсене',
+  columnsManagementNoColumns: 'Няма колони',
+  columnsManagementShowHideAllText: 'Покажи/Скрий Всичко',
+  columnsManagementReset: 'Нулирай',
 
   // Filter panel text
   filterPanelAddFilter: 'Добави Филтър',
@@ -57,7 +57,9 @@ const bgBGGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'съдържа',
+  filterOperatorDoesNotContain: 'не съдържа',
   filterOperatorEquals: 'равно',
+  filterOperatorDoesNotEqual: 'не е равно',
   filterOperatorStartsWith: 'започва с',
   filterOperatorEndsWith: 'завършва с',
   filterOperatorIs: 'е',
@@ -78,7 +80,9 @@ const bgBGGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Съдържа',
+  headerFilterOperatorDoesNotContain: 'Не съдържа',
   headerFilterOperatorEquals: 'Равнo',
+  headerFilterOperatorDoesNotEqual: 'Не е равно',
   headerFilterOperatorStartsWith: 'Започва с',
   headerFilterOperatorEndsWith: 'Завършва с',
   headerFilterOperatorIs: 'Равно е на',

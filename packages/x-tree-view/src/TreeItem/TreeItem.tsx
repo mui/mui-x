@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -27,6 +28,8 @@ import { TreeItem2Provider } from '../TreeItem2Provider';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { useTreeItemState } from './useTreeItemState';
 import { isTargetInDescendants } from '../internals/utils/tree';
+import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
+import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem');
 
@@ -197,6 +200,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     items: { disabledItemsFocusable, indentationAtItemLevel },
     selection: { multiSelect },
     expansion: { expansionTrigger },
+    treeId,
     instance,
   } = useTreeViewContext<TreeItemMinimalPlugins, TreeItemOptionalPlugins>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
@@ -221,8 +225,16 @@ export const TreeItem = React.forwardRef(function TreeItem(
     ...other
   } = props;
 
-  const { expanded, focused, selected, disabled, editing, handleExpansion } =
-    useTreeItemState(itemId);
+  const {
+    expanded,
+    focused,
+    selected,
+    disabled,
+    editing,
+    handleExpansion,
+    handleCancelItemLabelEditing,
+    handleSaveItemLabel,
+  } = useTreeItemState(itemId);
 
   const { contentRef, rootRef, propsEnhancers } = runItemPlugins<TreeItemProps>(props);
   const rootRefObject = React.useRef<HTMLLIElement>(null);
@@ -372,31 +384,36 @@ export const TreeItem = React.forwardRef(function TreeItem(
     instance.handleItemKeyDown(event, itemId);
   };
 
-  const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
+  const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
   const tabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
+
+  const sharedPropsEnhancerParams: Omit<
+    TreeViewItemPluginSlotPropsEnhancerParams,
+    'externalEventHandlers'
+  > = {
+    rootRefObject,
+    contentRefObject,
+    interactions: { handleSaveItemLabel, handleCancelItemLabelEditing },
+  };
 
   const enhancedRootProps =
     propsEnhancers.root?.({
-      rootRefObject,
-      contentRefObject,
+      ...sharedPropsEnhancerParams,
       externalEventHandlers: extractEventHandlers(other),
     }) ?? {};
   const enhancedContentProps =
     propsEnhancers.content?.({
-      rootRefObject,
-      contentRefObject,
+      ...sharedPropsEnhancerParams,
       externalEventHandlers: extractEventHandlers(ContentProps),
     }) ?? {};
   const enhancedDragAndDropOverlayProps =
     propsEnhancers.dragAndDropOverlay?.({
-      rootRefObject,
-      contentRefObject,
+      ...sharedPropsEnhancerParams,
       externalEventHandlers: {},
     }) ?? {};
   const enhancedLabelInputProps =
     propsEnhancers.labelInput?.({
-      rootRefObject,
-      contentRefObject,
+      ...sharedPropsEnhancerParams,
       externalEventHandlers: {},
     }) ?? {};
 

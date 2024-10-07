@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import type { DrawingProviderProps } from '../context/DrawingProvider';

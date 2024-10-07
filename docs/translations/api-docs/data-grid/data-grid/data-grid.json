@@ -29,6 +29,9 @@
     "columnBufferPx": {
       "description": "Column region in pixels to render before/after the viewport"
     },
+    "columnGroupHeaderHeight": {
+      "description": "Sets the height in pixels of the column group headers in the Data Grid. Inherits the <code>columnHeaderHeight</code> value if not set."
+    },
     "columnHeaderHeight": {
       "description": "Sets the height in pixel of the column headers in the Data Grid."
     },
@@ -457,10 +460,10 @@
       "description": "Override the height/width of the Data Grid inner scrollbar."
     },
     "showCellVerticalBorder": {
-      "description": "If <code>true</code>, the vertical borders of the cells are displayed."
+      "description": "If <code>true</code>, vertical borders will be displayed between cells."
     },
     "showColumnVerticalBorder": {
-      "description": "If <code>true</code>, the right border of the column headers are displayed."
+      "description": "If <code>true</code>, vertical borders will be displayed between column header items."
     },
     "slotProps": {
       "description": "Overridable components props dynamically passed to the component at rendering."
@@ -473,6 +476,9 @@
     "sortModel": { "description": "Set the sort model of the Data Grid." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "unstable_rowSpanning": {
+      "description": "If <code>true</code>, the Data Grid will auto span the cells over the rows having the same value."
     }
   },
   "classDescriptions": {

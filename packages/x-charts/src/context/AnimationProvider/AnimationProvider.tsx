@@ -1,5 +1,6 @@
+'use client';
+import { Globals, useIsomorphicLayoutEffect } from '@react-spring/web';
 import * as React from 'react';
-import { useIsomorphicLayoutEffect, Globals } from '@react-spring/web';
 import { AnimationProviderProps } from './Animation.types';
 import { AnimationContext } from './AnimationContext';
 
@@ -22,9 +23,9 @@ function AnimationProvider(props: AnimationProviderProps) {
       return undefined;
     }
 
-    const handleMediaChange = (e: { matches: boolean | undefined }) => {
+    const handleMediaChange = (event: { matches: boolean | undefined }) => {
       // This hook can remove animation but never activate it.
-      const inputValue = e.matches || undefined;
+      const inputValue = event.matches || undefined;
       setSkipAnimation(inputValue);
       Globals.assign({
         skipAnimation: inputValue,

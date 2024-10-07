@@ -1,19 +1,20 @@
+'use client';
 import useId from '@mui/utils/useId';
-import { DEFAULT_X_AXIS_KEY } from '../constants';
-import type { LineChartProps } from './LineChart';
-import { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
-import { ChartsOnAxisClickHandlerProps } from '../ChartsOnAxisClickHandler';
-import { ChartsGridProps } from '../ChartsGrid';
-import { ChartsClipPathProps } from '../ChartsClipPath';
-import { AreaPlotProps } from './AreaPlot';
-import { LinePlotProps } from './LinePlot';
-import { MarkPlotProps } from './MarkPlot';
-import { ChartsOverlayProps } from '../ChartsOverlay';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { LineHighlightPlotProps } from './LineHighlightPlot';
+import { ChartsClipPathProps } from '../ChartsClipPath';
+import { ChartsGridProps } from '../ChartsGrid';
 import { ChartsLegendProps } from '../ChartsLegend';
+import { ChartsOnAxisClickHandlerProps } from '../ChartsOnAxisClickHandler';
+import { ChartsOverlayProps } from '../ChartsOverlay';
 import { ChartsTooltipProps } from '../ChartsTooltip';
+import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
+import { AreaPlotProps } from './AreaPlot';
+import type { LineChartProps } from './LineChart';
+import { LineHighlightPlotProps } from './LineHighlightPlot';
+import { LinePlotProps } from './LinePlot';
+import { MarkPlotProps } from './MarkPlot';
 
 /**
  * A helper function that extracts LineChartProps from the input props
@@ -54,6 +55,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     highlightedItem,
     onHighlightChange,
     className,
+    experimentalMarkRendering,
     ...other
   } = props;
 
@@ -128,6 +130,8 @@ export const useLineChartProps = (props: LineChartProps) => {
     slots,
     slotProps,
     onItemClick: onMarkClick,
+    skipAnimation,
+    experimentalRendering: experimentalMarkRendering,
   };
 
   const overlayProps: ChartsOverlayProps = {

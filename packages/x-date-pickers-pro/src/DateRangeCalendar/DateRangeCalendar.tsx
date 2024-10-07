@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -22,10 +23,10 @@ import {
   PickerSelectionState,
   useNow,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
-  warnOnce,
   useControlledValueWithTimezone,
   useViews,
 } from '@mui/x-date-pickers/internals';
+import { warnOnce } from '@mui/x-internals/warning';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import {
@@ -386,7 +387,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
       return;
     }
 
-    const displayingMonthRange = calendars - 1;
+    const displayingMonthRange = calendars - currentMonthCalendarPosition;
     const currentMonthNumber = utils.getMonth(calendarState.currentMonth);
     const requestedMonthNumber = utils.getMonth(date);
 
@@ -542,7 +543,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
   return (
     <DateRangeCalendarRoot
       ref={ref}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
     >
@@ -705,7 +706,7 @@ DateRangeCalendar.propTypes = {
   minDate: PropTypes.object,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TView The view type. Will be one of date or time views.
    * @param {TValue} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.

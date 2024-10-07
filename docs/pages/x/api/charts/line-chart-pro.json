@@ -26,6 +26,7 @@
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableLineItemHighlight": { "type": { "name": "bool" } },
+    "experimentalMarkRendering": { "type": { "name": "bool" } },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
@@ -72,6 +73,7 @@
         "describedArgs": ["zoomData"]
       }
     },
+    "resolveSizeBeforeRender": { "type": { "name": "bool" }, "default": "false" },
     "rightAxis": {
       "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
       "default": "null"

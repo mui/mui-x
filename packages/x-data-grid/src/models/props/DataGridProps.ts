@@ -33,6 +33,7 @@ import { GridColumnGroupingModel } from '../gridColumnGrouping';
 import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
 import type { GridAutosizeOptions } from '../../hooks/features/columnResize';
 import type { GridDataSource } from '../gridDataSource';
+import type { GridRowSelectionPropagation } from '../gridRowSelectionModel';
 
 export interface GridExperimentalFeatures {
   /**
@@ -102,6 +103,11 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
   /**
    * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
    * @default false
+   * @deprecated Use flex parent container instead: https://mui.com/x/react-data-grid/layout/#flex-parent-container
+   * @example
+   * <div style={{ display: 'flex', flexDirection: 'column' }}>
+   *   <DataGrid />
+   * </div>
    */
   autoHeight: boolean;
   /**
@@ -307,12 +313,12 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   rowSpacingType: 'margin' | 'border';
   /**
-   * If `true`, the vertical borders of the cells are displayed.
+   * If `true`, vertical borders will be displayed between cells.
    * @default false
    */
   showCellVerticalBorder: boolean;
   /**
-   * If `true`, the right border of the column headers are displayed.
+   * If `true`, vertical borders will be displayed between column header items.
    * @default false
    */
   showColumnVerticalBorder: boolean;
@@ -383,6 +389,11 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * @default false
    */
   disableAutosize: boolean;
+  /**
+   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
+   * @default false
+   */
+  unstable_rowSpanning: boolean;
 }
 
 /**
@@ -786,6 +797,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   onProcessRowUpdateError?: (error: any) => void;
   columnGroupingModel?: GridColumnGroupingModel;
   /**
+   * Sets the height in pixels of the column group headers in the Data Grid.
+   * Inherits the `columnHeaderHeight` value if not set.
+   */
+  columnGroupHeaderHeight?: number;
+  /**
    * Callback called when the data is copied to the clipboard.
    * @param {string} data The data copied to the clipboard.
    */
@@ -812,10 +828,23 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
 
 export interface DataGridProSharedPropsWithDefaultValue {
   /**
-   * If `true`, enables the data grid filtering on header feature.
+   * If `true`, the header filters feature is enabled.
    * @default false
    */
   headerFilters: boolean;
+  /**
+   * When `rowSelectionPropagation.descendants` is set to `true`.
+   * - Selecting a parent will auto-select all its filtered descendants.
+   * - Deselecting a parent will auto-deselect all its filtered descendants.
+   *
+   * When `rowSelectionPropagation.parents=true`
+   * - Selecting all descendants of a parent would auto-select it.
+   * - Deselecting a descendant of a selected parent would deselect the parent.
+   *
+   * Works with tree data and row grouping on the client-side only.
+   * @default { parents: false, descendants: false }
+   */
+  rowSelectionPropagation: GridRowSelectionPropagation;
 }
 
 export interface DataGridProSharedPropsWithoutDefaultValue {
