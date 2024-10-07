@@ -11,7 +11,7 @@ import {
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 import {
   useSplitFieldProps,
-  useFieldPlaceholder,
+  useParsedFormat,
   usePickersContext,
 } from '@mui/x-date-pickers/hooks';
 
@@ -22,7 +22,7 @@ function ReadOnlyDateField(props: DatePickerFieldProps<Dayjs, false>) {
 
   const pickersContext = usePickersContext();
 
-  const placeholder = useFieldPlaceholder(internalProps);
+  const parsedFormat = useParsedFormat(internalProps);
   const { hasValidationError } = useValidation({
     validator: validateDate,
     value,
@@ -34,7 +34,7 @@ function ReadOnlyDateField(props: DatePickerFieldProps<Dayjs, false>) {
     <TextField
       {...other}
       value={value == null ? '' : value.format(format)}
-      placeholder={placeholder}
+      placeholder={parsedFormat}
       InputProps={{ ...InputProps, readOnly: true }}
       error={hasValidationError}
       onClick={pickersContext.onToggleView}

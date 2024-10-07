@@ -73,7 +73,7 @@ export const useMobilePicker = <
     layoutProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
-    fieldContextValue,
+    contextValue,
   } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
     ...pickerParams,
     props,
@@ -160,7 +160,7 @@ export const useMobilePicker = <
   const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
 
   const renderPicker = () => (
-    <PickersProvider fieldContextValue={fieldContextValue} localeText={localeText}>
+    <PickersProvider contextValue={contextValue} localeText={localeText}>
       <Field
         {...fieldProps}
         slots={slotsForField}

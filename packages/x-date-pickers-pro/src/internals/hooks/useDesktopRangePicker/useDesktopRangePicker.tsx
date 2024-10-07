@@ -93,7 +93,7 @@ export const useDesktopRangePicker = <
     renderCurrentView,
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
-    fieldContextValue,
+    contextValue,
   } = usePicker<
     DateRange<TDate>,
     TDate,
@@ -210,7 +210,7 @@ export const useDesktopRangePicker = <
   const Layout = slots?.layout ?? PickersLayout;
 
   const renderPicker = () => (
-    <PickersProvider fieldContextValue={fieldContextValue} localeText={localeText}>
+    <PickersProvider contextValue={contextValue} localeText={localeText}>
       <Field {...enrichedFieldProps} />
       <PickersPopper
         role="tooltip"

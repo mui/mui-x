@@ -7,7 +7,7 @@ export const PickersContext = React.createContext<PickersContextValue | null>(nu
 
 /**
  * Provides the context for the various parts of a picker component:
- * - fieldContextValue: the context for the field
+ * - contextValue: the context for the picker sub-components.
  * - localizationProvider: the translations passed through the props and through a parent LocalizationProvider.
  *
  * @ignore - do not document.
@@ -15,17 +15,17 @@ export const PickersContext = React.createContext<PickersContextValue | null>(nu
 export function PickersProvider<TDate extends PickerValidDate>(
   props: PickersFieldProviderProps<TDate>,
 ) {
-  const { fieldContextValue, localeText, children } = props;
+  const { contextValue, localeText, children } = props;
 
   return (
-    <PickersContext.Provider value={fieldContextValue}>
+    <PickersContext.Provider value={contextValue}>
       <LocalizationProvider localeText={localeText}>{children}</LocalizationProvider>
     </PickersContext.Provider>
   );
 }
 
 interface PickersFieldProviderProps<TDate extends PickerValidDate> {
-  fieldContextValue: PickersContextValue;
+  contextValue: PickersContextValue;
   localeText: PickersInputLocaleText<TDate> | undefined;
   children: React.ReactNode;
 }

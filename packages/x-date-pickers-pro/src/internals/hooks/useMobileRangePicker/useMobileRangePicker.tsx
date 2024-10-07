@@ -88,7 +88,7 @@ export const useMobileRangePicker = <
     layoutProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
-    fieldContextValue,
+    contextValue,
   } = usePicker<
     DateRange<TDate>,
     TDate,
@@ -215,7 +215,7 @@ export const useMobileRangePicker = <
   };
 
   const renderPicker = () => (
-    <PickersProvider fieldContextValue={fieldContextValue} localeText={localeText}>
+    <PickersProvider contextValue={contextValue} localeText={localeText}>
       <Field {...enrichedFieldProps} />
       <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
         <Layout

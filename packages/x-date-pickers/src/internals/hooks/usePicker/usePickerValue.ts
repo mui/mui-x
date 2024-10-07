@@ -458,7 +458,7 @@ export const usePickerValue = <
     isValid,
   };
 
-  const fieldContextValue = React.useMemo<PickersContextValue>(
+  const contextValue = React.useMemo<PickersContextValue>(
     () => ({
       onToggleView: (event) => {
         if (isOpen) {
@@ -477,6 +477,6 @@ export const usePickerValue = <
     viewProps: viewResponse,
     layoutProps: layoutResponse,
     actions,
-    fieldContextValue,
+    contextValue,
   };
 };

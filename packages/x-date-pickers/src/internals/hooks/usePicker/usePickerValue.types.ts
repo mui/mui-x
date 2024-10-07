@@ -328,5 +328,5 @@ export interface UsePickerValueResponse<TValue, TSection extends FieldSection, T
   viewProps: UsePickerValueViewsResponse<TValue>;
   fieldProps: UsePickerValueFieldResponse<TValue, TSection, TError>;
   layoutProps: UsePickerValueLayoutResponse<TValue>;
-  fieldContextValue: PickersContextValue;
+  contextValue: PickersContextValue;
 }

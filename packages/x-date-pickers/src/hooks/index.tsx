@@ -10,6 +10,6 @@ export { usePickersTranslations } from './usePickersTranslations';
 
 export { useSplitFieldProps } from './useSplitFieldProps';
 
-export { useFieldPlaceholder } from './useFieldPlaceholder';
+export { useParsedFormat } from './useParsedFormat';
 
 export { usePickersContext } from './usePickersContext';
