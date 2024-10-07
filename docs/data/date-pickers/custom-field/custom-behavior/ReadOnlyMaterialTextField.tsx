@@ -11,8 +11,8 @@ import {
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 import {
   useSplitFieldProps,
-  useFieldPlaceholder,
-  usePickersFieldContext,
+  useParsedFormat,
+  usePickersContext,
 } from '@mui/x-date-pickers/hooks';
 
 function ReadOnlyDateField(props: DatePickerFieldProps<Dayjs, false>) {
@@ -20,9 +20,9 @@ function ReadOnlyDateField(props: DatePickerFieldProps<Dayjs, false>) {
   const { value, timezone, format } = internalProps;
   const { InputProps, slotProps, slots, ...other } = forwardedProps;
 
-  const pickerContext = usePickersFieldContext();
+  const pickersContext = usePickersContext();
 
-  const placeholder = useFieldPlaceholder(internalProps);
+  const parsedFormat = useParsedFormat(internalProps);
   const { hasValidationError } = useValidation({
     validator: validateDate,
     value,
@@ -30,21 +30,29 @@ function ReadOnlyDateField(props: DatePickerFieldProps<Dayjs, false>) {
     props: internalProps,
   });
 
+  const handleTogglePicker = (event: React.UIEvent) => {
+    if (pickersContext.open) {
+      pickersContext.onClose(event);
+    } else {
+      pickersContext.onOpen(event);
+    }
+  };
+
   return (
     <TextField
       {...other}
       value={value == null ? '' : value.format(format)}
-      placeholder={placeholder}
+      placeholder={parsedFormat}
       InputProps={{ ...InputProps, readOnly: true }}
       error={hasValidationError}
-      onClick={pickerContext.onOpen}
+      onClick={handleTogglePicker}
     />
   );
 }
 
 function ReadOnlyFieldDatePicker(props: DatePickerProps<Dayjs>) {
   return (
-    <DatePicker slots={{ ...props.slots, field: ReadOnlyDateField }} {...props} />
+    <DatePicker {...props} slots={{ ...props.slots, field: ReadOnlyDateField }} />
   );
 }
 

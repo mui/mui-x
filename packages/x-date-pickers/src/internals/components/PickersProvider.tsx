@@ -3,11 +3,11 @@ import { PickerValidDate } from '../../models';
 import { PickersInputLocaleText } from '../../locales';
 import { LocalizationProvider } from '../../LocalizationProvider';
 
-export const PickersFieldContext = React.createContext<PickersFieldContextValue | null>(null);
+export const PickersContext = React.createContext<PickersContextValue | null>(null);
 
 /**
  * Provides the context for the various parts of a picker component:
- * - fieldContextValue: the context for the field
+ * - contextValue: the context for the picker sub-components.
  * - localizationProvider: the translations passed through the props and through a parent LocalizationProvider.
  *
  * @ignore - do not document.
@@ -15,21 +15,34 @@ export const PickersFieldContext = React.createContext<PickersFieldContextValue 
 export function PickersProvider<TDate extends PickerValidDate>(
   props: PickersFieldProviderProps<TDate>,
 ) {
-  const { fieldContextValue, localeText, children } = props;
+  const { contextValue, localeText, children } = props;
 
   return (
-    <PickersFieldContext.Provider value={fieldContextValue}>
+    <PickersContext.Provider value={contextValue}>
       <LocalizationProvider localeText={localeText}>{children}</LocalizationProvider>
-    </PickersFieldContext.Provider>
+    </PickersContext.Provider>
   );
 }
 
 interface PickersFieldProviderProps<TDate extends PickerValidDate> {
-  fieldContextValue: PickersFieldContextValue;
+  contextValue: PickersContextValue;
   localeText: PickersInputLocaleText<TDate> | undefined;
   children: React.ReactNode;
 }
 
-export interface PickersFieldContextValue {
+export interface PickersContextValue {
+  /**
+   * Open the picker if it is closed.
+   * @param {React.UIEvent} event The DOM event that triggered the change.
+   */
   onOpen: (event: React.UIEvent) => void;
+  /**
+   * Close the picker if it is opened.
+   * @param {React.UIEvent} event The DOM event that triggered the change.
+   */
+  onClose: (event: React.UIEvent) => void;
+  /**
+   * `true` if the picker is open, `false` otherwise.
+   */
+  open: boolean;
 }

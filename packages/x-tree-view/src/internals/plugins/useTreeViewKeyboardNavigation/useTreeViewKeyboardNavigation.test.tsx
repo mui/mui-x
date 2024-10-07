@@ -178,6 +178,19 @@ describeTreeView<
         expect(view.getFocusedItemId()).to.equal('1');
       });
 
+      it('should not change focus if ctrl is pressed', () => {
+        const view = render({
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          defaultExpandedItems: ['1'],
+        });
+
+        act(() => {
+          view.getItemRoot('1').focus();
+        });
+        fireEvent.keyDown(view.getItemRoot('1'), { key: 'ArrowRight', ctrlKey: true });
+        expect(view.getFocusedItemId()).to.equal('1');
+      });
+
       it('should move the focus to the first child if the focus is on an open item', () => {
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -230,6 +243,19 @@ describeTreeView<
         });
         fireEvent.keyDown(view.getItemRoot('1'), { key: 'ArrowLeft' });
         expect(view.isItemExpanded('1')).to.equal(false);
+      });
+
+      it('should not change focus if ctrl is pressed', () => {
+        const view = render({
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          defaultExpandedItems: ['1'],
+        });
+
+        act(() => {
+          view.getItemRoot('1.1').focus();
+        });
+        fireEvent.keyDown(view.getItemRoot('1.1'), { key: 'ArrowLeft', ctrlKey: true });
+        expect(view.getFocusedItemId()).to.equal('1.1');
       });
 
       it("should move focus to the item's parent if the focus is on a child item that is a leaf", () => {
