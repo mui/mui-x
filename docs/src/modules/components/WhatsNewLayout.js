@@ -21,6 +21,7 @@ const entries = [
     title: 'MUI X v7.19',
     description: 'A roundup of all new features since v7.15.0.',
     date: new Date(2024, 9, 4),
+    url: 'https://github.com/mui/mui-x/releases/tag/v7.19.0',
     highlightList: [
       {
         title: 'Data Grid – Row spanning',
@@ -40,6 +41,7 @@ const entries = [
     title: 'MUI X v7.15',
     date: new Date(2024, 7, 29),
     description: 'A roundup of all new features since v7.13.0.',
+    url: 'https://github.com/mui/mui-x/releases/tag/v7.15.0',
     highlightList: [
       {
         title: 'Material UI v6 support',
@@ -55,6 +57,7 @@ const entries = [
     title: 'MUI X v7.13',
     date: new Date(2024, 7, 16),
     description: 'A roundup of all new features since v7.8.0.',
+    url: 'https://github.com/mui/mui-x/releases/tag/v7.13.0',
     highlightList: [
       {
         title: 'Data Grid – Loading overlay variants',
@@ -86,6 +89,7 @@ const entries = [
     title: 'MUI X v7.8',
     date: new Date(2024, 5, 28),
     description: 'A roundup of all new features since v7.0.0.',
+    url: 'https://github.com/mui/mui-x/releases/tag/v7.8.0',
     highlightList: [
       {
         title: 'Data Grid – Server-side Data Source',
