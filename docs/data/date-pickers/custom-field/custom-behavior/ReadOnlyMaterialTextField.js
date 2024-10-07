@@ -35,8 +35,6 @@ function ReadOnlyDateField(props) {
     }
   };
 
-  console.log(InputProps);
-
   return (
     <TextField
       {...other}
