@@ -85,11 +85,7 @@ export const usePicker = <
     // Picker layout
     layoutProps: pickerLayoutResponse.layoutProps,
 
-<<<<<<< HEAD
-    // Picker field
-=======
     // Picker context
->>>>>>> master
     contextValue: pickerValueResponse.contextValue,
   };
 };

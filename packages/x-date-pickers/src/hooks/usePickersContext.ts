@@ -3,11 +3,7 @@ import * as React from 'react';
 import { PickersContext } from '../internals/components/PickersProvider';
 
 /**
-<<<<<<< HEAD
- * Returns the context passed by the picker the wraps the current component.
-=======
  * Returns the context passed by the picker that wraps the current component.
->>>>>>> master
  */
 export const usePickersContext = () => {
   const value = React.useContext(PickersContext);
