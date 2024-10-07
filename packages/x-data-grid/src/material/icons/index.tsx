@@ -21,6 +21,11 @@ export const GridExpandMoreIcon = createSvgIcon(
   'ExpandMore',
 );
 
+export const GridExpandLessIcon = createSvgIcon(
+  <path d="m12 8.295-6 6 1.41 1.41 4.59-4.58 4.59 4.58 1.41-1.41-6-6Z" />,
+  'ExpandLess',
+);
+
 export const GridFilterListIcon = createSvgIcon(
   <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" />,
   'FilterList',
@@ -134,4 +139,14 @@ export const GridDeleteIcon = createSvgIcon(
 export const GridDeleteForeverIcon = createSvgIcon(
   <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z" />,
   'Delete',
+);
+
+export const GridMoveToTopIcon = createSvgIcon(
+  <path d="m7.41 18.205 4.59-4.59 4.59 4.59 1.41-1.41-6-6-6 6 1.41 1.41ZM6 7.795v-2h12v2H6Z" />,
+  'MoveToTop',
+);
+
+export const GridMoveToBottomIcon = createSvgIcon(
+  <path d="M16.59 5.795 12 10.385l-4.59-4.59L6 7.205l6 6 6-6-1.41-1.41ZM18 16.205v2H6v-2h12Z" />,
+  'MoveToBottom',
 );

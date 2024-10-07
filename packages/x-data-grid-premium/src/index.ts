@@ -40,3 +40,6 @@ export {
   GRID_COLUMN_MENU_SLOTS,
   GRID_COLUMN_MENU_SLOT_PROPS,
 } from './components/reexports';
+
+export { useGridPivoting as unstable_useGridPivoting } from './hooks/features/pivoting/useGridPivoting';
+export type { PivotModel as Unstable_GridPivotModel } from './hooks/features/pivoting/useGridPivoting';
