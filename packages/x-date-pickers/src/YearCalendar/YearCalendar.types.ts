@@ -9,7 +9,7 @@ import { SlotComponentPropsFromProps } from '../internals/models/helpers';
 
 export interface YearCalendarSlots {
   /**
-   * Button displayed to render a single year in the "year" view.
+   * Button displayed to render a single year in the `year` view.
    * @default YearCalendarButton
    */
   yearButton?: React.ElementType;
@@ -24,6 +24,12 @@ export interface YearCalendarSlotProps {
 }
 
 export interface ExportedYearCalendarProps {
+  /**
+   * Years are displayed in ascending (chronological) order by default.
+   * If `desc`, years are displayed in descending order.
+   * @default 'asc'
+   */
+  yearsOrder?: 'asc' | 'desc';
   /**
    * Years rendered per row.
    * @default 3

@@ -46,6 +46,6 @@
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": {
-    "monthButton": "Button displayed to render a single month in the &quot;month&quot; view."
+    "monthButton": "Button displayed to render a single month in the <code>month</code> view."
   }
 }

@@ -110,6 +110,11 @@ DataGridPremiumRaw.propTypes = {
   /**
    * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
    * @default false
+   * @deprecated Use flex parent container instead: https://mui.com/x/react-data-grid/layout/#flex-parent-container
+   * @example
+   * <div style={{ display: 'flex', flexDirection: 'column' }}>
+   *   <DataGrid />
+   * </div>
    */
   autoHeight: PropTypes.bool,
   /**
@@ -434,7 +439,7 @@ DataGridPremiumRaw.propTypes = {
    */
   headerFilterHeight: PropTypes.number,
   /**
-   * If `true`, enables the data grid filtering on header feature.
+   * If `true`, the header filters feature is enabled.
    * @default false
    */
   headerFilters: PropTypes.bool,
@@ -981,6 +986,22 @@ DataGridPremiumRaw.propTypes = {
     PropTypes.string,
   ]),
   /**
+   * When `rowSelectionPropagation.descendants` is set to `true`.
+   * - Selecting a parent will auto-select all its filtered descendants.
+   * - Deselecting a parent will auto-deselect all its filtered descendants.
+   *
+   * When `rowSelectionPropagation.parents=true`
+   * - Selecting all descendants of a parent would auto-select it.
+   * - Deselecting a descendant of a selected parent would deselect the parent.
+   *
+   * Works with tree data and row grouping on the client-side only.
+   * @default { parents: false, descendants: false }
+   */
+  rowSelectionPropagation: PropTypes.shape({
+    descendants: PropTypes.bool,
+    parents: PropTypes.bool,
+  }),
+  /**
    * Loading rows can be processed on the server or client-side.
    * Set it to 'client' if you would like enable infnite loading.
    * Set it to 'server' if you would like to enable lazy loading.
@@ -1078,6 +1099,11 @@ DataGridPremiumRaw.propTypes = {
     set: PropTypes.func.isRequired,
   }),
   unstable_onDataSourceError: PropTypes.func,
+  /**
+   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
+   * @default false
+   */
+  unstable_rowSpanning: PropTypes.bool,
 } as any;
 
 interface DataGridPremiumComponent {
