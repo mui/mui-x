@@ -85,7 +85,7 @@ export const usePicker = <
     // Picker layout
     layoutProps: pickerLayoutResponse.layoutProps,
 
-    // Picker field
+    // Picker context
     contextValue: pickerValueResponse.contextValue,
   };
 };
