@@ -32,7 +32,7 @@ interface PickersFieldProviderProps<TDate extends PickerValidDate> {
 
 export interface PickersContextValue {
   /**
-   * Open the picker if it is closed.
+   * Open the picker.
    * @param {React.UIEvent} event The DOM event that triggered the change.
    */
   onOpen: (event: React.UIEvent) => void;
