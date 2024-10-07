@@ -170,11 +170,7 @@ but you still want the UI to look like a `TextField`, you can replace the field 
 If you want users to select a value exclusively through the views
 and you don't want the UI to look like a `TextField`, you can replace the field with a `Button`:
 
-{{"demo": "PickerWithButtonField.js", "defaultCodeOpen": false}}
-
-The same can be applied to the `DateRangePicker`:
-
-{{"demo": "DateRangePickerWithButtonField.js", "defaultCodeOpen": false}}
+{{"demo": "custom-behavior/material-button/MaterialButtonPickers.js", "defaultCodeOpen": false}}
 
 ## How to build a custom field
 

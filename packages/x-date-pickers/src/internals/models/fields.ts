@@ -18,4 +18,5 @@ export interface BaseFieldProps<
   format?: string;
   disabled?: boolean;
   ref?: React.Ref<HTMLDivElement>;
+  ownerState?: any;
 }
