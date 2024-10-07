@@ -109,13 +109,16 @@ describe('<MultiSectionDigitalClock />', () => {
   describe('Keyboard support', () => {
     it('should move item focus up by 5 on PageUp press', () => {
       const handleChange = spy();
-      render(<MultiSectionDigitalClock onChange={handleChange} />);
+      render(<MultiSectionDigitalClock autoFocus onChange={handleChange} />);
       const hoursSectionListbox = screen.getAllByRole('listbox')[0]; // get only hour section
       const hoursOptions = within(hoursSectionListbox).getAllByRole('option');
       const lastOptionIndex = hoursOptions.length - 1;
 
-      hoursOptions[lastOptionIndex].focus();
-      fireEvent.keyDown(hoursOptions[lastOptionIndex], { key: 'PageUp' });
+      const firstElement = hoursOptions[0];
+      const lastElement = hoursOptions[lastOptionIndex];
+
+      fireEvent.keyDown(firstElement, { key: 'End' }); // moves focus to last element
+      fireEvent.keyDown(lastElement, { key: 'PageUp' });
 
       expect(handleChange.callCount).to.equal(0);
       expect(document.activeElement).to.equal(hoursOptions[lastOptionIndex - 5]);
@@ -128,11 +131,15 @@ describe('<MultiSectionDigitalClock />', () => {
 
     it('should move focus to first item on PageUp press when current focused item index is among the first 5 items', () => {
       const handleChange = spy();
-      render(<MultiSectionDigitalClock onChange={handleChange} />);
+      render(<MultiSectionDigitalClock autoFocus onChange={handleChange} />);
       const hoursSectionListbox = screen.getAllByRole('listbox')[0]; // get only hour section
       const hoursOptions = within(hoursSectionListbox).getAllByRole('option');
 
-      hoursOptions[3].focus();
+      // moves focus to 4th element using arrow down
+      [0, 1, 2].forEach((index) => {
+        fireEvent.keyDown(hoursOptions[index], { key: 'ArrowDown' });
+      });
+
       fireEvent.keyDown(hoursOptions[3], { key: 'PageUp' });
       expect(handleChange.callCount).to.equal(0);
       expect(document.activeElement).to.equal(hoursOptions[0]);
@@ -157,15 +164,23 @@ describe('<MultiSectionDigitalClock />', () => {
 
     it('should move focus to last item on PageDown press when current focused item index is among the last 5 items', () => {
       const handleChange = spy();
-      render(<MultiSectionDigitalClock onChange={handleChange} />);
+      render(<MultiSectionDigitalClock autoFocus onChange={handleChange} />);
       const hoursSectionListbox = screen.getAllByRole('listbox')[0]; // get only hour section
       const hoursOptions = within(hoursSectionListbox).getAllByRole('option');
       const lastOptionIndex = hoursOptions.length - 1;
 
-      hoursOptions[lastOptionIndex - 2].focus();
-      fireEvent.keyDown(hoursOptions[lastOptionIndex - 2], { key: 'PageDown' });
+      const firstElement = hoursOptions[0];
+      const lastElement = hoursOptions[lastOptionIndex];
+
+      fireEvent.keyDown(firstElement, { key: 'End' }); // moves focus to last element
+      // moves focus 4 steps above last item using arrow up
+      [0, 1, 2].forEach((index) => {
+        fireEvent.keyDown(hoursOptions[lastOptionIndex - index], { key: 'ArrowUp' });
+      });
+
+      fireEvent.keyDown(hoursOptions[lastOptionIndex - 3], { key: 'PageDown' });
       expect(handleChange.callCount).to.equal(0);
-      expect(document.activeElement).to.equal(hoursOptions[lastOptionIndex]);
+      expect(document.activeElement).to.equal(lastElement);
     });
   });
 });
