@@ -3,7 +3,11 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import { DataGridPro, useGridApiContext } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  useGridApiContext,
+  GRID_DETAIL_PANEL_TOGGLE_FIELD,
+} from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomPrice,
@@ -192,11 +196,21 @@ export default function FullWidthDetailPanel() {
 
   const getDetailPanelHeight = React.useCallback(() => 400, []);
 
+  const [pinnedColumns, setPinnedColumns] = React.useState({
+    left: [GRID_DETAIL_PANEL_TOGGLE_FIELD],
+  });
+
+  const handlePinnedColumnsChange = React.useCallback((updatedPinnedColumns) => {
+    setPinnedColumns(updatedPinnedColumns);
+  }, []);
+
   return (
     <Box sx={{ width: '100%', height: 400 }}>
       <DataGridPro
         columns={columns}
         rows={rows}
+        pinnedColumns={pinnedColumns}
+        onPinnedColumnsChange={handlePinnedColumnsChange}
         getDetailPanelHeight={getDetailPanelHeight}
         getDetailPanelContent={getDetailPanelContent}
         sx={{
