@@ -63,7 +63,10 @@ function buildPrintWindow(title?: string): HTMLIFrameElement {
  */
 export const useGridPrintExport = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'pagination' | 'columnHeaderHeight' | 'headerFilterHeight'>,
+  props: Pick<
+    DataGridProcessedProps,
+    'pagination' | 'columnHeaderHeight' | 'headerFilterHeight' | 'hideFooter'
+  >,
 ): void => {
   const hasRootReference = apiRef.current.rootElementRef.current !== null;
   const logger = useGridLogger(apiRef, 'useGridPrintExport');
@@ -126,9 +129,9 @@ export const useGridPrintExport = (
       const normalizeOptions = {
         copyStyles: true,
         hideToolbar: false,
-        hideFooter: false,
         includeCheckboxes: false,
         ...options,
+        hideFooter: props.hideFooter || options?.hideFooter,
       };
 
       const printDoc = printWindow.contentDocument;
