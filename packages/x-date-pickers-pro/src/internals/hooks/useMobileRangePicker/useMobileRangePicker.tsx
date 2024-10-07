@@ -1,7 +1,6 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { useLicenseVerifier } from '@mui/x-license';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
 import {
   usePicker,
@@ -9,6 +8,7 @@ import {
   ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
+  PickersProvider,
 } from '@mui/x-date-pickers/internals';
 import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate, FieldRef, InferError } from '@mui/x-date-pickers/models';
@@ -88,6 +88,7 @@ export const useMobileRangePicker = <
     layoutProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
+    contextValue,
   } = usePicker<
     DateRange<TDate>,
     TDate,
@@ -214,7 +215,7 @@ export const useMobileRangePicker = <
   };
 
   const renderPicker = () => (
-    <LocalizationProvider localeText={localeText}>
+    <PickersProvider contextValue={contextValue} localeText={localeText}>
       <Field {...enrichedFieldProps} />
       <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
         <Layout
@@ -226,7 +227,7 @@ export const useMobileRangePicker = <
           {renderCurrentView()}
         </Layout>
       </PickersModalDialog>
-    </LocalizationProvider>
+    </PickersProvider>
   );
 
   return {
