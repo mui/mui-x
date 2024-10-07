@@ -535,6 +535,7 @@
       "typeDescriptions": {
         "newRow": "Row object with the new values.",
         "oldRow": "Row object with the old values.",
+        "params": "Additional parameters.",
         "Promise<R> | R": "The final values to update the row."
       }
     },
