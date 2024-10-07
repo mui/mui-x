@@ -3,7 +3,11 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import { DataGridPro, useGridApiContext } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  useGridApiContext,
+  GRID_DETAIL_PANEL_TOGGLE_FIELD,
+} from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomPrice,
@@ -197,6 +201,7 @@ export default function FullWidthDetailPanel() {
       <DataGridPro
         columns={columns}
         rows={rows}
+        pinnedColumns={{ left: [GRID_DETAIL_PANEL_TOGGLE_FIELD] }}
         getDetailPanelHeight={getDetailPanelHeight}
         getDetailPanelContent={getDetailPanelContent}
         sx={{

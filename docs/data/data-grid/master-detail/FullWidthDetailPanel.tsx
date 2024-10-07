@@ -7,6 +7,7 @@ import {
   DataGridPro,
   GridColDef,
   useGridApiContext,
+  GRID_DETAIL_PANEL_TOGGLE_FIELD,
   GridRowParams,
 } from '@mui/x-data-grid-pro';
 import {
@@ -204,6 +205,7 @@ export default function FullWidthDetailPanel() {
       <DataGridPro
         columns={columns}
         rows={rows}
+        pinnedColumns={{ left: [GRID_DETAIL_PANEL_TOGGLE_FIELD] }}
         getDetailPanelHeight={getDetailPanelHeight}
         getDetailPanelContent={getDetailPanelContent}
         sx={{
