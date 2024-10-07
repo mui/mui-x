@@ -10,8 +10,8 @@ import {
   gridColumnVisibilityModelSelector,
   useGridApiContext,
 } from '@mui/x-data-grid';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const COLLAPSIBLE_COLUMN_GROUPS: Record<string, Array<string>> = {
   character: ['lastName', 'age'],
@@ -60,9 +60,9 @@ function CollapsibleHeaderGroup({
           }}
         >
           {isGroupCollapsed ? (
-            <ArrowRightIcon fontSize="small" />
+            <KeyboardArrowRightIcon fontSize="small" />
           ) : (
-            <ArrowLeftIcon fontSize="small" />
+            <KeyboardArrowDownIcon fontSize="small" />
           )}
         </IconButton>
       )}
