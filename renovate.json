@@ -19,7 +19,7 @@
     },
     {
       "groupName": "D3",
-      "matchPackageNames": ["/d3-*/", "/@types/d3-*/"]
+      "matchPackageNames": ["d3-*", "@types/d3-*"]
     },
     {
       "groupName": "react-spring",
