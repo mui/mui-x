@@ -30,6 +30,14 @@ function ReadOnlyDateField(props: DatePickerFieldProps<Dayjs, false>) {
     props: internalProps,
   });
 
+  const handleTogglePicker = (event: React.UIEvent) => {
+    if (pickersContext.open) {
+      pickersContext.onClose(event);
+    } else {
+      pickersContext.onOpen(event);
+    }
+  };
+
   return (
     <TextField
       {...other}
@@ -37,7 +45,7 @@ function ReadOnlyDateField(props: DatePickerFieldProps<Dayjs, false>) {
       placeholder={parsedFormat}
       InputProps={{ ...InputProps, readOnly: true }}
       error={hasValidationError}
-      onClick={pickersContext.onToggleView}
+      onClick={handleTogglePicker}
     />
   );
 }

@@ -460,13 +460,9 @@ export const usePickerValue = <
 
   const contextValue = React.useMemo<PickersContextValue>(
     () => ({
-      onToggleView: (event) => {
-        if (isOpen) {
-          handleClose(event);
-        } else {
-          handleOpen(event);
-        }
-      },
+      onOpen: handleOpen,
+      onClose: handleClose,
+      open: isOpen,
     }),
     [isOpen, handleClose, handleOpen],
   );
