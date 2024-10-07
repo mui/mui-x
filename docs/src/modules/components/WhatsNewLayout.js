@@ -284,20 +284,22 @@ function BlogCard({ entry }) {
             {entry.description}
           </Typography>
         </div>
-        <Button
-          component="a"
-          size="small"
+        {entry.url && (
+          <Button
+            component="a"
+            size="small"
           variant="outlined"
           href={entry.url}
           sx={{
             height: 'fit-content',
             flexShrink: 0,
-            width: { xs: '100%', sm: 'fit-content' },
-          }}
-        >
-          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
-          {'Read more'}
-        </Button>
+              width: { xs: '100%', sm: 'fit-content' },
+            }}
+          >
+            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
+            {'Read more'}
+          </Button>
+        )}
       </Box>
       <Divider />
       <List sx={{ p: 2, pt: 1.5 }}>
