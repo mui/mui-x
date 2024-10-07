@@ -917,7 +917,8 @@ DataGridPremiumRaw.propTypes = {
    * @template R
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.
-   * @param {GridRowId} rowId The id of the row.
+   * @param {Object} additionalParams - Additional parameters.
+   * @param {GridRowId} additionalParams.rowId - The id of the row.
    * @returns {Promise<R> | R} The final values to update the row.
    */
   processRowUpdate: PropTypes.func,
