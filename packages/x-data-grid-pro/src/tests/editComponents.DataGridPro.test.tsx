@@ -122,7 +122,7 @@ describe('<DataGridPro /> - Edit components', () => {
       });
     });
 
-    it('should call onValueChange if defined', async () => {
+    it('should call onValueChange if defined', () => {
       const onValueChange = spy();
 
       defaultData.columns[0].renderEditCell = (params) =>
@@ -137,7 +137,6 @@ describe('<DataGridPro /> - Edit components', () => {
       fireEvent.change(input, { target: { value: 'Puma' } });
       expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal('Puma');
-      await act(() => Promise.resolve());
     });
   });
 
@@ -272,7 +271,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18');
       await act(async () => {
-        await apiRef.current.setEditCellValue({
+        apiRef.current.setEditCellValue({
           id: 0,
           field: 'createdAt',
           value: new Date(2022, 1, 10),
@@ -324,7 +323,7 @@ describe('<DataGridPro /> - Edit components', () => {
       );
     });
 
-    it('should call onValueChange if defined', async () => {
+    it('should call onValueChange if defined', () => {
       const onValueChange = spy();
 
       defaultData.columns[0].renderEditCell = (params) =>
@@ -342,7 +341,6 @@ describe('<DataGridPro /> - Edit components', () => {
       expect((onValueChange.lastCall.args[1]! as Date).toISOString()).to.equal(
         new Date(2022, 1, 10).toISOString(),
       );
-      await act(() => Promise.resolve());
     });
   });
 
@@ -393,7 +391,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18T14:30');
       await act(async () => {
-        await apiRef.current.setEditCellValue({
+        apiRef.current.setEditCellValue({
           id: 0,
           field: 'createdAt',
           value: new Date(2022, 1, 10, 15, 10, 0),
@@ -541,7 +539,9 @@ describe('<DataGridPro /> - Edit components', () => {
       fireEvent.doubleClick(cell);
 
       expect(cell.textContent!.replace(/[\W]+/, '')).to.equal('Nike'); // We use .replace to remove &ZeroWidthSpace;
-      await act(() => apiRef.current.setEditCellValue({ id: 0, field: 'brand', value: 'Adidas' }));
+      await act(() => {
+        apiRef.current.setEditCellValue({ id: 0, field: 'brand', value: 'Adidas' });
+      });
       expect(cell.textContent!.replace(/[\W]+/, '')).to.equal('Adidas');
     });
 
@@ -562,7 +562,7 @@ describe('<DataGridPro /> - Edit components', () => {
       expect(onValueChange.lastCall.args[1]).to.equal('Adidas');
     });
 
-    it('should call onCellEditStop', async () => {
+    it('should call onCellEditStop', () => {
       const onCellEditStop = spy();
 
       render(
@@ -576,7 +576,6 @@ describe('<DataGridPro /> - Edit components', () => {
       fireEvent.doubleClick(cell);
       fireUserEvent.mousePress(document.getElementById('outside-grid')!);
       expect(onCellEditStop.callCount).to.equal(1);
-      await act(() => Promise.resolve());
     });
 
     it('should not open the suggestions when Enter is pressed', async () => {
