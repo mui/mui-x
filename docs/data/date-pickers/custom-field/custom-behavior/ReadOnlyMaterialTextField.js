@@ -10,10 +10,6 @@ import {
   useParsedFormat,
   usePickersContext,
 } from '@mui/x-date-pickers/hooks';
-<<<<<<< HEAD
-=======
-import { CalendarIcon } from '@mui/x-date-pickers/icons';
->>>>>>> master
 
 function ReadOnlyDateField(props) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
@@ -43,16 +39,7 @@ function ReadOnlyDateField(props) {
       {...other}
       value={value == null ? '' : value.format(format)}
       placeholder={parsedFormat}
-<<<<<<< HEAD
       InputProps={{ ...InputProps, readOnly: true }}
-=======
-      InputProps={{
-        ...InputProps,
-        readOnly: true,
-        endAdornment: <CalendarIcon color="action" />,
-        sx: { cursor: 'pointer', '& *': { cursor: 'inherit' } },
-      }}
->>>>>>> master
       error={hasValidationError}
       onClick={handleTogglePicker}
     />

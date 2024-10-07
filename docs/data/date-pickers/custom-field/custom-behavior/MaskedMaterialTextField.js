@@ -6,7 +6,7 @@ import useControlled from '@mui/utils/useControlled';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { useSplitFieldProps, useFieldPlaceholder } from '@mui/x-date-pickers/hooks';
+import { useSplitFieldProps, useParsedFormat } from '@mui/x-date-pickers/hooks';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
 const MASK_USER_INPUT_SYMBOL = '_';
@@ -56,7 +56,7 @@ function MaskedField(props) {
     }
   }, [format, value]);
 
-  const placeholder = useFieldPlaceholder(internalProps);
+  const parsedFormat = useParsedFormat(internalProps);
 
   const { hasValidationError, getValidationErrorForNewValue } = useValidation({
     value,
@@ -143,7 +143,7 @@ function MaskedField(props) {
 
   return (
     <TextField
-      placeholder={placeholder}
+      placeholder={parsedFormat}
       error={!!hasValidationError}
       {...rifmProps}
       {...forwardedProps}
