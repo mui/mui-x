@@ -15,7 +15,7 @@ interface UseParsedFormatParameters
   > {}
 
 /**
- * Returns the parsed format to be rendered in the field when their is no value or in other parts of the picker.
+ * Returns the parsed format to be rendered in the field when there is no value or in other parts of the Picker.
  * This format is localized (e.g: `AAAA` for the year with the French locale) and cannot be parsed by your date library.
  * @param {object} The parameters needed to build the placeholder.
  * @param {string} params.format Format of the date to use.
