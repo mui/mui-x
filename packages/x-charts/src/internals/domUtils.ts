@@ -156,7 +156,7 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
     }, 0);
 
     return result;
-  } catch (e) {
+  } catch {
     return { width: 0, height: 0 };
   }
 };

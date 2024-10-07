@@ -87,6 +87,10 @@ If you want to access the grouping column field, for instance, to use it with co
 
 Same behavior as for the [Row grouping](/x/react-data-grid/row-grouping/#group-expansion).
 
+## Automatic parents and children selection
+
+Same behavior as for the [Row grouping](/x/react-data-grid/row-grouping/#automatic-parents-and-children-selection).
+
 ## Gaps in the tree
 
 If some entries are missing to build the full tree, the `DataGridPro` will automatically create rows to fill those gaps.
