@@ -37,7 +37,7 @@ const entries = [
     ],
   },
   {
-    title: 'MUI X v7.15.0',
+    title: 'MUI X v7.15',
     date: new Date(2024, 7, 29),
     description: 'A roundup of all new features since v7.13.0.',
     highlightList: [
@@ -52,7 +52,7 @@ const entries = [
     ],
   },
   {
-    title: 'MUI X v7.13',
+    title: 'MUI X v7.13',
     date: new Date(2024, 7, 16),
     description: 'A roundup of all new features since v7.8.0.',
     highlightList: [
@@ -83,7 +83,7 @@ const entries = [
     ],
   },
   {
-    title: 'MUI X v7.8',
+    title: 'MUI X v7.8',
     date: new Date(2024, 5, 28),
     description: 'A roundup of all new features since v7.0.0.',
     highlightList: [
