@@ -112,6 +112,10 @@
     {
       "groupName": "GitHub Actions",
       "matchManagers": ["github-actions"]
+    },
+    {
+      "groupName": "Vite & Vitest",
+      "matchPackageNames": ["@vitejs/**", "/vitest/"]
     }
   ],
   "postUpdateOptions": ["pnpmDedupe"],
