@@ -5,4 +5,10 @@
   disableRowSelectionOnClick
   columnGroupingModel={columnGroupingModel}
   slots={{ columnsPanel: ColumnsPanel }}
+  initialState={{
+    preferencePanel: {
+      open: true,
+      openedPanelValue: GridPreferencePanelsValue.columns,
+    },
+  }}
 />

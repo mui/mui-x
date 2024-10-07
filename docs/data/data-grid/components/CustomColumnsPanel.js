@@ -9,6 +9,7 @@ import {
   gridColumnLookupSelector,
   useGridSelector,
   GridColumnsPanel,
+  GridPreferencePanelsValue,
 } from '@mui/x-data-grid';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -172,6 +173,12 @@ export default function CustomColumnsPanel() {
         disableRowSelectionOnClick
         columnGroupingModel={columnGroupingModel}
         slots={{ columnsPanel: ColumnsPanel }}
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.columns,
+          },
+        }}
       />
     </Box>
   );
