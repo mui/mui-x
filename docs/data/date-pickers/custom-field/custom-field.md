@@ -163,14 +163,18 @@ you can replace the field with an `Autocomplete` listing those dates:
 If you want users to select a value exclusively through the views
 but you still want the UI to look like a `TextField`, you can replace the field with a read-only `TextField`:
 
-{{"demo": "custom-behavior/ReadOnlyMaterialTextField.js", "defaultCodeOpen": false}}
+{{"demo": "behavior-read-only-text-field/MaterialDatePicker.js", "defaultCodeOpen": false}}
 
 ### Using a `Button`
 
 If you want users to select a value exclusively through the views
 and you don't want the UI to look like a `TextField`, you can replace the field with a `Button`:
 
-{{"demo": "custom-behavior/material-button/MaterialButtonPickers.js", "defaultCodeOpen": false}}
+{{"demo": "behavior-button/MaterialDatePicker.js", "defaultCodeOpen": false}}
+
+The same can be applied to the `DateRangePicker`:
+
+{{"demo": "behavior-button/MaterialDateRangePicker.js", "defaultCodeOpen": false}}
 
 ## How to build a custom field
 

@@ -1,4 +1,4 @@
-import { BaseDateValidationProps, DefaultizedProps } from '@mui/x-date-pickers/internals';
+import { BaseDateValidationProps, MakeRequired } from '@mui/x-date-pickers/internals';
 import { BaseSingleInputFieldProps, PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DesktopDateRangePickerProps,
@@ -56,7 +56,7 @@ export interface DateRangePickerProps<
 export type DateRangePickerFieldProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = false,
-> = DefaultizedProps<
+> = MakeRequired<
   UseDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   'format' | 'timezone' | keyof BaseDateValidationProps<TDate>
 > &

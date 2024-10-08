@@ -1,38 +1,42 @@
 import * as React from 'react';
 import { Dayjs } from 'dayjs';
 import Button from '@mui/material/Button';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
-  DatePicker,
-  DatePickerProps,
-  DatePickerFieldProps,
-} from '@mui/x-date-pickers/DatePicker';
-import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
+  DateRangePicker,
+  DateRangePickerProps,
+  DateRangePickerFieldProps,
+} from '@mui/x-date-pickers-pro/DateRangePicker';
+import { useValidation } from '@mui/x-date-pickers/validation';
+import { validateDateRange } from '@mui/x-date-pickers-pro/validation';
 import {
   useSplitFieldProps,
   useParsedFormat,
   usePickersContext,
 } from '@mui/x-date-pickers/hooks';
 
-function ButtonDateField(props: DatePickerFieldProps<Dayjs, false>) {
+function ButtonDateRangeField(props: DateRangePickerFieldProps<Dayjs, false>) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { value, timezone, format } = internalProps;
-
   const {
     InputProps,
     slotProps,
     slots,
+    ownerState,
+    label,
     focused,
     name,
-    label,
-    ownerState,
     ...other
   } = forwardedProps;
+
+  console.log(forwardedProps);
 
   const pickersContext = usePickersContext();
 
   const parsedFormat = useParsedFormat(internalProps);
   const { hasValidationError } = useValidation({
-    validator: validateDate,
+    validator: validateDateRange,
     value,
     timezone,
     props: internalProps,
@@ -46,7 +50,9 @@ function ButtonDateField(props: DatePickerFieldProps<Dayjs, false>) {
     }
   };
 
-  const valueStr = value == null ? parsedFormat : value.format(format);
+  const valueStr = (value ?? [null, null])
+    .map((date) => (date == null ? parsedFormat : date.format(format)))
+    .join(' – ');
 
   return (
     <Button
@@ -61,8 +67,21 @@ function ButtonDateField(props: DatePickerFieldProps<Dayjs, false>) {
   );
 }
 
-export function ButtonFieldDatePicker(props: DatePickerProps<Dayjs>) {
+ButtonDateRangeField.fieldType = 'single-input';
+
+function ButtonFieldDateRangePicker(props: DateRangePickerProps<Dayjs>) {
   return (
-    <DatePicker {...props} slots={{ ...props.slots, field: ButtonDateField }} />
+    <DateRangePicker
+      {...props}
+      slots={{ ...props.slots, field: ButtonDateRangeField }}
+    />
+  );
+}
+
+export default function MaterialDateRangePicker() {
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <ButtonFieldDateRangePicker />
+    </LocalizationProvider>
   );
 }
