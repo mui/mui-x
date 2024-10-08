@@ -91,7 +91,7 @@ function ColumnGroup({
         label={group.headerName ?? group.groupId}
         onChange={(_, newValue) => toggleColumnGroup(newValue)}
       />
-      <Box sx={{ pl: 1 }}>
+      <Box sx={{ pl: 3.5 }}>
         {group.children.map((child) => {
           return isLeaf(child) ? (
             <Stack direction="row" key={child.field}>
