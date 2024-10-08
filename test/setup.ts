@@ -1,4 +1,4 @@
-import { beforeAll, afterAll } from 'vitest';
+import { beforeAll, afterAll, vi } from 'vitest';
 import 'test/utils/addChaiAssertions';
 import 'test/utils/setupPickers';
 import 'test/utils/licenseRelease';
@@ -7,6 +7,9 @@ import 'test/utils/licenseRelease';
 globalThis.before = beforeAll;
 // @ts-ignore
 globalThis.after = afterAll;
+
+// @ts-ignore
+globalThis.vi = vi;
 
 const isVitestJsdom = process.env.MUI_JSDOM === 'true';
 

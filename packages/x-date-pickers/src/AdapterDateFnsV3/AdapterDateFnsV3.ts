@@ -47,7 +47,7 @@ import { isWithinInterval } from 'date-fns/isWithinInterval';
 import { enUS } from 'date-fns/locale/en-US';
 // date-fns v2 does not export types
 // @ts-ignore TODO remove when date-fns-v3 is the default
-import { Locale as DateFnsLocale } from 'date-fns/locale/types';
+import type { Locale as DateFnsLocale } from 'date-fns/locale/types';
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
 
