@@ -18,6 +18,7 @@ export function createPickerRenderer({
 }: CreatePickerRendererOptions = {}) {
   const { clock, render: clientRender } = createRenderer({
     ...createRendererOptions,
+    // @ts-ignore
     vi: globalThis.vi ?? undefined,
   });
 

@@ -3,6 +3,13 @@ import { fr } from 'date-fns-v4/locale';
 
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 
+// TODO: remove when we migrate to vitest
+declare global {
+  const vi: {
+    mock: any;
+  };
+}
+
 vi.mock('date-fns/addSeconds', () => import('date-fns-v4/addSeconds'));
 vi.mock('date-fns/addMinutes', () => import('date-fns-v4/addMinutes'));
 vi.mock('date-fns/addHours', () => import('date-fns-v4/addHours'));

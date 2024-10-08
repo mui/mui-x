@@ -2,7 +2,6 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "types": [
-      "vitest/globals",
       "@mui/internal-test-utils/initMatchers",
       "@mui/material/themeCssVarsAugmentation",
       "chai-dom",

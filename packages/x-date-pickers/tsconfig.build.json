@@ -10,7 +10,6 @@
     "outDir": "build",
     "rootDir": "./src",
     "types": [
-      "vitest/globals",
       "node",
       "@mui/material/themeCssVarsAugmentation",
       "dayjs/plugin/utc.d.ts",
