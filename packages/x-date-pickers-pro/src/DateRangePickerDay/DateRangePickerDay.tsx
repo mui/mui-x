@@ -357,13 +357,13 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<
         ownerState={ownerState}
       >
         <DateRangePickerDayDay<TDate>
+          data-testid="DateRangePickerDay"
           {...other}
           ref={ref}
           disableMargin
           day={day}
           selected={isVisuallySelected}
           outsideCurrentMonth={outsideCurrentMonth}
-          data-testid="DateRangePickerDay"
           className={classes.day}
           ownerState={ownerState}
           draggable={draggable}
