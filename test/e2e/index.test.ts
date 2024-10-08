@@ -729,8 +729,8 @@ async function initializeEnvironment(
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('MM');
         });
 
-        it('should focus the first field section after clearing a value with the legacy DOM structure', async () => {
-          await renderFixture('DatePicker/BasicDesktopDatePickerLegacyDOMStructure');
+        it('should focus the first field section after clearing a value with the non-accessible DOM structure', async () => {
+          await renderFixture('DatePicker/BasicDesktopDatePickerNonAccessibleDOMStructure');
 
           const textbox = page.getByRole('textbox');
           // locator.fill('2') does not work reliably for this case in all browsers
@@ -755,7 +755,7 @@ async function initializeEnvironment(
         });
 
         it('should submit a form when clicking "Enter" key', async () => {
-          await renderFixture('DatePicker/DesktopDatePickerFormLegacyDOMStructure');
+          await renderFixture('DatePicker/DesktopDatePickerFormNonAccessibleDOMStructure');
 
           const textbox = page.getByRole('textbox');
           await textbox.focus();
@@ -817,8 +817,10 @@ async function initializeEnvironment(
           );
         });
 
-        it('should have consistent `placeholder` and `value` behavior in the legacy DOM structure', async () => {
-          await renderFixture('DatePicker/MobileDatePickerWithClearActionLegacyDOMStructure');
+        it('should have consistent `placeholder` and `value` behavior in the non-accessible DOM structure', async () => {
+          await renderFixture(
+            'DatePicker/MobileDatePickerWithClearActionNonAccessibleDOMStructure',
+          );
 
           const input = page.getByRole('textbox');
 
@@ -993,7 +995,7 @@ async function initializeEnvironment(
         await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
       });
 
-      it('should have the same selection process when "readOnly" with single input field accessible DOM structure', async () => {
+      it('should have the same selection process when "readOnly" with single input field with an accessible DOM structure', async () => {
         // firefox in CI is not happy with this test
         if (browserType.name() === 'firefox') {
           return;
@@ -1017,13 +1019,15 @@ async function initializeEnvironment(
         );
       });
 
-      it('should have the same selection process when "readOnly" with single input field legacy DOM structure', async () => {
+      it('should have the same selection process when "readOnly" with single input field with a non-accessible DOM structure', async () => {
         // firefox in CI is not happy with this test
         if (browserType.name() === 'firefox') {
           return;
         }
 
-        await renderFixture('DatePicker/ReadonlyDesktopDateRangePickerSingleLegacyDOMStructure');
+        await renderFixture(
+          'DatePicker/ReadonlyDesktopDateRangePickerSingleNonAccessibleDOMStructure',
+        );
 
         await page.getByRole('textbox').click();
 

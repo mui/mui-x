@@ -4,7 +4,7 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
-export default function DesktopDatePickerFormLegacyDOMStructure() {
+export default function DesktopDatePickerFormNonAccessibleDOMStructure() {
   const [submittedDate, setSubmittedDate] = React.useState<string | undefined>(undefined);
   const submitHandler: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();

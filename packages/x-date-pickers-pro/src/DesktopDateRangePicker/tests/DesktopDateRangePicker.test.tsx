@@ -87,7 +87,7 @@ describe('<DesktopDateRangePicker />', () => {
 
   describe('Field slot: SingleInputDateRangeField', () => {
     it('should add focused class to the field when it is focused', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const { unmount } = render(
         <DesktopDateRangePicker slots={{ field: SingleInputDateRangeField }} />,
       );
@@ -99,7 +99,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       render(
         <DesktopDateRangePicker
           enableAccessibleFieldDOMStructure={false}
@@ -114,7 +114,7 @@ describe('<DesktopDateRangePicker />', () => {
     });
 
     it('should render the input with a given `name` when `SingleInputDateRangeField` is used', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const { unmount } = render(
         <DesktopDateRangePicker name="test" slots={{ field: SingleInputDateRangeField }} />,
       );
@@ -122,7 +122,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       render(
         <DesktopDateRangePicker
           enableAccessibleFieldDOMStructure={false}

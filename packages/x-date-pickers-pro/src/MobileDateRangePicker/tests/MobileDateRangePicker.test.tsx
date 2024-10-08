@@ -17,7 +17,7 @@ describe('<MobileDateRangePicker />', () => {
 
   describe('Field slot: SingleInputDateRangeField', () => {
     it('should render the input with a given `name` when `SingleInputDateRangeField` is used', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const { unmount } = render(
         <MobileDateRangePicker name="test" slots={{ field: SingleInputDateRangeField }} />,
       );
@@ -25,7 +25,7 @@ describe('<MobileDateRangePicker />', () => {
 
       unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       render(
         <MobileDateRangePicker
           enableAccessibleFieldDOMStructure={false}
