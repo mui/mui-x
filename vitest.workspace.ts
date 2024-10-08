@@ -1,14 +1,20 @@
 import react from '@vitejs/plugin-react';
 import { defineWorkspace } from 'vitest/config';
 
-const packages = ['x-charts', 'x-charts-pro', 'x-date-pickers', 'x-date-pickers-pro'];
+const packages = [
+  'x-charts',
+  'x-charts-pro',
+  'x-date-pickers',
+  'x-date-pickers-pro',
+  'x-internals',
+];
 
 // Ideally we move the configuration to each package.
 // Currently it doesn't work because vitest doesn't detect two different configurations in the same package.
 // We could bypass this limitation by having a folder per configuration. Eg: `packages/x-charts/browser` & `packages/x-charts/jsdom`.
 
-export default defineWorkspace(
-  packages.flatMap(
+export default defineWorkspace([
+  ...packages.flatMap(
     (name): ReturnType<typeof defineWorkspace> => [
       {
         extends: './vitest.config.mts',
@@ -46,4 +52,17 @@ export default defineWorkspace(
       },
     ],
   ),
-);
+  {
+    extends: './vitest.config.mts',
+    plugins: [react()],
+    test: {
+      include: [`packages/x-license/src/**/*.test.?(c|m)[jt]s?(x)`],
+      exclude: [`packages/x-license/src/**/*.browser.test.?(c|m)[jt]s?(x)`],
+      name: `jsdom/x-license`,
+      environment: 'jsdom',
+      env: {
+        MUI_JSDOM: 'true',
+      },
+    },
+  },
+]);
