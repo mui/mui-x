@@ -622,7 +622,7 @@ async function initializeEnvironment(
 
         // assertion for: https://github.com/mui/mui-x/issues/12652
         it('should allow field editing after opening and closing the picker', async () => {
-          await renderFixture('DatePicker/BasicClearableDesktopDatePicker');
+          await renderFixture('DatePicker/BasicDesktopDatePicker');
 
           // open picker
           await page.getByRole('button').click();
@@ -729,8 +729,8 @@ async function initializeEnvironment(
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('MM');
         });
 
-        it('should focus the first field section after clearing a value in v6 input', async () => {
-          await renderFixture('DatePicker/BasicClearableDesktopDatePicker');
+        it('should focus the first field section after clearing a value with the legacy DOM structure', async () => {
+          await renderFixture('DatePicker/BasicDesktopDatePickerLegacyDOMStructure');
 
           const textbox = page.getByRole('textbox');
           // locator.fill('2') does not work reliably for this case in all browsers
