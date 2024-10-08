@@ -631,18 +631,13 @@ async function initializeEnvironment(
           await page.getByRole('button', { name: 'Choose date' }).click();
           await page.waitForSelector('[role="dialog"]', { state: 'detached' });
 
-          // // open picker
-          // await page.getByRole('button').click();
-          // await page.waitForSelector('[role="dialog"]', { state: 'attached' });
-          // // close picker
-          // await page.getByRole('button', { name: 'Choose date' }).click();
-          // await page.waitForSelector('[role="dialog"]', { state: 'detached' });
+          await page.locator(`.${pickersSectionListClasses.root}`).click();
+          await page.getByRole(`spinbutton`, { name: 'Month' }).fill('04');
+          await page.getByRole(`spinbutton`, { name: 'Day' }).fill('11');
+          await page.getByRole(`spinbutton`, { name: 'Year' }).fill('2022');
 
-          // // click on the input to focus it
-          // await page.getByRole('textbox').click();
-
-          // // test that the input value is set after focus
-          // expect(await page.getByRole('textbox').inputValue()).to.equal('MM/DD/YYYY');
+          const input = page.getByRole('textbox', { includeHidden: true });
+          expect(await input.inputValue()).to.equal('04/11/2022');
         });
 
         it('should allow filling in a value and clearing a value', async () => {
