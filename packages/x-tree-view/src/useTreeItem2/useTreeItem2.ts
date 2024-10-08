@@ -26,6 +26,7 @@ import {
 import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
+import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
 
 export const useTreeItem2 = <
   TSignatures extends UseTreeItem2MinimalPlugins = UseTreeItem2MinimalPlugins,
@@ -38,6 +39,7 @@ export const useTreeItem2 = <
     items: { onItemClick, disabledItemsFocusable, indentationAtItemLevel },
     selection: { multiSelect, disableSelection, checkboxSelection },
     expansion: { expansionTrigger },
+    treeId,
     instance,
     publicAPI,
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
@@ -49,10 +51,11 @@ export const useTreeItem2 = <
   const { interactions, status } = useTreeItem2Utils({ itemId, children });
   const rootRefObject = React.useRef<HTMLLIElement>(null);
   const contentRefObject = React.useRef<HTMLDivElement>(null);
-  const idAttribute = instance.getTreeItemIdAttribute(itemId, id);
   const handleRootRef = useForkRef(rootRef, pluginRootRef, rootRefObject)!;
   const handleContentRef = useForkRef(contentRef, contentRefObject)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
+
+  const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
   const rootTabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
 
   const sharedPropsEnhancerParams: Omit<
