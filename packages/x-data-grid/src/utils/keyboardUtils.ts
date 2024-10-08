@@ -51,6 +51,7 @@ export function isPasteShortcut(event: React.KeyboardEvent) {
     // for example, it would be another letter on a Dvorak physical keyboard.
     // We can't use event.key === 'v' as event.key is not stable with key modifiers and keyboard layouts,
     // for example, it would be ה on a Hebrew keyboard layout.
+    // https://github.com/w3c/uievents/issues/377 could be a long-term solution
     String.fromCharCode(event.keyCode) === 'V' &&
     !event.shiftKey &&
     !event.altKey
