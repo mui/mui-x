@@ -66,12 +66,12 @@ Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for
 
 ## New DOM structure for the field
 
-Before v8, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component,
+Before version `v8.x`, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component,
 but unfortunately presents a few limitations in terms of accessibility when managing multiple section values.
 
-From v8 version, all the field and picker components come with a new DOM structure that allows the field component to set aria attributes on individual sections, providing a far better experience with screen readers.
+Starting with version `v8.x`, all the field and picker components come with a new DOM structure that allows the field component to set aria attributes on individual sections, providing a far better experience with screen readers.
 
-### Fallback to legacy DOM structure
+### Fallback to the non-accessible DOM structure
 
 ```tsx
 <DateField enableAccessibleFieldDOMStructure={false} />

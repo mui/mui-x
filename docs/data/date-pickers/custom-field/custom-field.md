@@ -82,9 +82,14 @@ If you just need to set some default props, you can use [the `slotProps` prop](/
 
 ### Using Material `TextField`
 
-Pass the `enableAccessibleFieldDOMStructure={false}` to any Field or Picker component to enable the legacy DOM structure:
+Pass the `enableAccessibleFieldDOMStructure={false}` to any Field or Picker component to use an `<input />` for the editing instead of the new accessible DOM structure:
 
 {{"demo": "MaterialV6Field.js"}}
+
+:::warning
+The non-accessible DOM structure will be deprecated in a follow up minor version and remove in `v9.x`.
+If you are unable to migrate for some reason, please open an issue to describe what is missing from the new DOM structure so that we can improve it before dropping the old one.
+:::
 
 ## With another Design System
 
@@ -114,8 +119,8 @@ You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components in
 {{"demo": "JoyV6MultiInputRangeField.js", "defaultCodeOpen": false}}
 
 :::warning
-All the Joy UI examples use the legacy DOM structure.
-The new DOM structure will become compatible with Joy UI in the future.
+All the Joy UI examples use the non-accessible DOM structure.
+The new accessible DOM structure will become compatible with Joy UI in the future.
 :::
 
 ## With a custom editing experience
