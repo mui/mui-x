@@ -440,8 +440,12 @@ export function getFirstNonSpannedColumnToRender({
 
 export function getTotalHeaderHeight(
   apiRef: React.MutableRefObject<GridApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'columnHeaderHeight' | 'headerFilterHeight'>,
+  props: Pick<DataGridProcessedProps, 'columnHeaderHeight' | 'headerFilterHeight' | 'listView'>,
 ) {
+  if (props.listView) {
+    return 0;
+  }
+
   const densityFactor = gridDensityFactorSelector(apiRef);
   const maxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
   const isHeaderFilteringEnabled = gridHeaderFilteringEnabledSelector(apiRef);
