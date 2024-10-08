@@ -352,7 +352,6 @@ export const useGridClipboardImport = (
       if (!enableClipboardPaste) {
         return;
       }
-
       if (!isPasteShortcut(event)) {
         return;
       }
