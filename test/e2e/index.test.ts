@@ -621,7 +621,7 @@ async function initializeEnvironment(
         });
 
         // assertion for: https://github.com/mui/mui-x/issues/12652
-        it.only('should allow field editing after opening and closing the picker', async () => {
+        it('should allow field editing after opening and closing the picker', async () => {
           await renderFixture('DatePicker/BasicClearableDesktopDatePicker');
 
           // open picker
