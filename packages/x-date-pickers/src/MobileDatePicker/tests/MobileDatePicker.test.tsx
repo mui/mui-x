@@ -36,7 +36,7 @@ describe('<MobileDatePicker />', () => {
     fireEvent.click(screen.getByLabelText(/switch to year view/i));
     fireEvent.click(screen.getByText('2010', { selector: 'button' }));
 
-    expect(screen.getAllByMuiTest('calendar-month-and-year-text')[0]).to.have.text('January 2010');
+    expect(screen.getAllByTestId('calendar-month-and-year-text')[0]).to.have.text('January 2010');
     expect(onChangeMock.callCount).to.equal(1);
   });
 
@@ -53,7 +53,7 @@ describe('<MobileDatePicker />', () => {
     );
 
     fireEvent.click(screen.getByText('2010', { selector: 'button' }));
-    expect(screen.getByMuiTest('datepicker-toolbar-date')).to.have.text('Fri, Jan 1');
+    expect(screen.getByTestId('datepicker-toolbar-date')).to.have.text('Fri, Jan 1');
   });
 
   it('prop `onMonthChange` – dispatches callback when months switching', () => {
@@ -69,8 +69,8 @@ describe('<MobileDatePicker />', () => {
   it('prop `loading` – displays default loading indicator', () => {
     render(<MobileDatePicker enableAccessibleFieldDOMStructure open loading />);
 
-    expect(screen.queryAllByMuiTest('day')).to.have.length(0);
-    expect(screen.getByMuiTest('loading-progress')).toBeVisible();
+    expect(screen.queryAllByTestId('day')).to.have.length(0);
+    expect(screen.getByTestId('loading-progress')).toBeVisible();
   });
 
   it('prop `renderLoading` – displays custom loading indicator', () => {
@@ -116,7 +116,7 @@ describe('<MobileDatePicker />', () => {
         />,
       );
 
-      expect(screen.getByMuiTest('datepicker-toolbar-date').textContent).to.equal('January');
+      expect(screen.getByTestId('datepicker-toolbar-date').textContent).to.equal('January');
     });
 
     it('should render the toolbar when `hidden` is `false`', () => {
@@ -128,7 +128,7 @@ describe('<MobileDatePicker />', () => {
         />,
       );
 
-      expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
+      expect(screen.getByTestId('picker-toolbar')).toBeVisible();
     });
   });
 
