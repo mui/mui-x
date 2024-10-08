@@ -15,10 +15,7 @@ export default defineWorkspace(
         plugins: [react()],
         test: {
           include: [`packages/${name}/src/**/*.test.?(c|m)[jt]s?(x)`],
-          exclude: [
-            `packages/${name}/src/**/*.jsdom.test.?(c|m)[jt]s?(x)`,
-            `packages/${name}/src/**/*V3.test.?(c|m)[jt]s?(x)`,
-          ],
+          exclude: [`packages/${name}/src/**/*.jsdom.test.?(c|m)[jt]s?(x)`],
           name: `browser/${name}`,
           env: {
             MUI_BROWSER: 'true',

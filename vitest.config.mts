@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitest/config';
+import path from 'path';
 
 export default defineConfig({
   resolve: {
@@ -23,11 +24,13 @@ export default defineConfig({
       {
         find: 'date-fns',
         replacement: 'date-fns-v3',
-        customResolver(source, importer) {
+        async customResolver(source, importer) {
           if (importer?.includes('src/AdapterDateFnsV3')) {
-            return source;
+            const file = new URL(import.meta.resolve(source)).pathname;
+            return file;
           }
-          return null;
+          const file = new URL(import.meta.resolve('date-fns')).pathname;
+          return file;
         },
       },
       {
@@ -35,9 +38,13 @@ export default defineConfig({
         replacement: 'date-fns-jalali-v3',
         customResolver(source, importer) {
           if (importer?.includes('src/AdapterDateFnsJalaliV3')) {
-            return source;
+            const file = new URL(import.meta.resolve(source)).pathname;
+            console.log(source, file);
+            return file;
           }
-          return null;
+          const file = new URL(import.meta.resolve(source.replace('-v3', ''))).pathname;
+          console.log(source, JSON.stringify(file));
+          return file;
         },
       },
       {
