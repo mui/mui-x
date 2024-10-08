@@ -459,10 +459,12 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onClose when blur the current field without prior change', function test() {
+    it('should call onClose when blur the current field without prior change', function test(t = {}) {
       // test:unit does not call `blur` when focusing another element.
       if (isJSDOM) {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       const onChange = spy();

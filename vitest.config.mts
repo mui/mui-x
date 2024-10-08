@@ -8,8 +8,16 @@ export default defineConfig({
         replacement: new URL('./packages/x-charts/src', import.meta.url).pathname,
       },
       {
+        find: '@mui/x-charts-pro',
+        replacement: new URL('./packages/x-charts-pro/src', import.meta.url).pathname,
+      },
+      {
         find: '@mui/x-date-pickers',
         replacement: new URL('./packages/x-date-pickers/src', import.meta.url).pathname,
+      },
+      {
+        find: '@mui/x-date-pickers-pro',
+        replacement: new URL('./packages/x-date-pickers-pro/src', import.meta.url).pathname,
       },
       {
         find: 'test/utils',
@@ -18,6 +26,10 @@ export default defineConfig({
       {
         find: '@mui/x-internals',
         replacement: new URL('./packages/x-internals/src', import.meta.url).pathname,
+      },
+      {
+        find: '@mui/x-license',
+        replacement: new URL('./packages/x-license/src', import.meta.url).pathname,
       },
       {
         find: 'moment/locale',

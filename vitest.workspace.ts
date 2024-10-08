@@ -1,7 +1,7 @@
 import react from '@vitejs/plugin-react';
 import { defineWorkspace } from 'vitest/config';
 
-const packages = ['x-charts', 'x-date-pickers'];
+const packages = ['x-charts', 'x-charts-pro', 'x-date-pickers', 'x-date-pickers-pro'];
 
 // Ideally we move the configuration to each package.
 // Currently it doesn't work because vitest doesn't detect two different configurations in the same package.

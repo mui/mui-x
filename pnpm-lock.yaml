@@ -9,7 +9,7 @@ overrides:
   '@types/node': ^20.16.10
   '@playwright/test': 1.44.1
   playwright: 1.44.1
-  '@mui/internal-test-utils': https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils
+  '@mui/internal-test-utils': https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils
 
 patchedDependencies:
   babel-plugin-replace-imports@1.0.2:
@@ -96,8 +96,8 @@ importers:
         specifier: ^1.0.15
         version: 1.0.15
       '@mui/internal-test-utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils
+        version: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
         specifier: ^5.16.7
         version: 5.16.7(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -780,8 +780,8 @@ importers:
         version: 18.3.1(react@18.3.1)
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils
+        version: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
         specifier: ^5.16.7
         version: 5.16.7(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1024,8 +1024,8 @@ importers:
         version: 5.1.1
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils
+        version: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/joy':
         specifier: ^5.0.0-beta.48
         version: 5.0.0-beta.48(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1136,8 +1136,8 @@ importers:
         version: 5.1.1
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils
+        version: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
         specifier: ^5.16.7
         version: 5.16.7(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1198,8 +1198,8 @@ importers:
         version: 5.1.1
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils
+        version: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
         specifier: ^5.16.7
         version: 5.16.7(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1251,8 +1251,8 @@ importers:
         version: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils
+        version: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
         specifier: ^5.16.7
         version: 5.16.7(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1346,8 +1346,8 @@ importers:
         version: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils
+        version: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
         specifier: ^5.16.7
         version: 5.16.7(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1393,8 +1393,8 @@ importers:
         version: 18.3.1
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils
+        version: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -1413,8 +1413,8 @@ importers:
         version: 18.3.1
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils
+        version: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -1457,8 +1457,8 @@ importers:
         version: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils
+        version: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
         specifier: ^5.16.7
         version: 5.16.7(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1516,8 +1516,8 @@ importers:
         version: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils
+        version: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
         specifier: ^5.16.7
         version: 5.16.7(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react@18.3.1))(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -3123,7 +3123,7 @@ packages:
     resolution: {integrity: sha512-I/lGHztkCzvwlXpjD2+SNmvNQvB4227xBXhISPjEaJUXGImOQ9f3D2Yj/T3KasSI/h0MLWy74X0J6clhPmsRbQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
-      '@types/react': ^18.3.4
+      '@types/react': ^17.0.0 || ^18.0.0
       react: ^17.0.0 || ^18.0.0
       react-dom: ^17.0.0 || ^18.0.0
     peerDependenciesMeta:
@@ -3175,8 +3175,8 @@ packages:
   '@mui/internal-scripts@1.0.22':
     resolution: {integrity: sha512-+GEmp73U9o2touhiMRNO+hv8AlYWwVpu6ZjKLnZ3OLoYq5kg0e2p8GMpHTBTmalNKXXM3kOchgs0NYoYJwsX4g==}
 
-  '@mui/internal-test-utils@https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils':
-    resolution: {tarball: https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils}
+  '@mui/internal-test-utils@https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils':
+    resolution: {tarball: https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils}
     version: 1.0.15
     peerDependencies:
       react: ^18.2.0
@@ -12167,7 +12167,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mui/internal-test-utils@https://pkg.csb.dev/mui/material-ui/commit/0648e94b/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@mui/internal-test-utils@https://pkg.csb.dev/mui/material-ui/commit/ccb3dd51/@mui/internal-test-utils(@babel/core@7.25.7)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/plugin-transform-modules-commonjs': 7.25.7(@babel/core@7.25.7)
       '@babel/preset-typescript': 7.25.7(@babel/core@7.25.7)

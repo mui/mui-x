@@ -2,6 +2,7 @@ import { beforeAll, afterAll, vi } from 'vitest';
 import 'test/utils/addChaiAssertions';
 import 'test/utils/setupPickers';
 import 'test/utils/licenseRelease';
+import { generateTestLicenseKey, setupTestLicenseKey } from 'test/utils/testLicense';
 
 // @ts-ignore
 globalThis.before = beforeAll;
@@ -12,6 +13,16 @@ globalThis.after = afterAll;
 globalThis.vi = vi;
 
 const isVitestJsdom = process.env.MUI_JSDOM === 'true';
+
+let licenseKey: string = '';
+
+beforeAll(() => {
+  licenseKey = generateTestLicenseKey();
+});
+
+beforeEach(() => {
+  setupTestLicenseKey(licenseKey);
+});
 
 // Only necessary when not in browser mode.
 if (isVitestJsdom) {
