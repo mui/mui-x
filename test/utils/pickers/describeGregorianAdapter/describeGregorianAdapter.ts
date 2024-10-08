@@ -12,7 +12,7 @@ function innerGregorianDescribeAdapter<TDate extends PickerValidDate, TLocale>(
   Adapter: new (...args: any) => MuiPickersAdapter<TDate>,
   params: DescribeGregorianAdapterParams<TDate, TLocale>,
 ) {
-  const prepareAdapter = params.prepareAdapter ?? ((e) => e);
+  const prepareAdapter = params.prepareAdapter ?? ((adapter) => adapter);
 
   const adapter = new Adapter();
   const adapterTZ = params.dateLibInstanceWithTimezoneSupport

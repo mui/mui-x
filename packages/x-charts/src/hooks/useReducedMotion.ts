@@ -1,10 +1,10 @@
 'use client';
 import { useIsomorphicLayoutEffect, Globals } from '@react-spring/web';
 
-const handleMediaChange = (e: { matches: boolean | undefined }) => {
+const handleMediaChange = (event: { matches: boolean | undefined }) => {
   Globals.assign({
     // Modification such the react-spring implementation such that this hook can remove animation but never activate animation.
-    skipAnimation: e.matches || undefined,
+    skipAnimation: event.matches || undefined,
   });
 };
 

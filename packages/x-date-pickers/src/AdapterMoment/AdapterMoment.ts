@@ -29,6 +29,7 @@ const formatTokenMap: FieldFormatTokenMap = {
 
   // Day of the week
   E: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
+  // eslint-disable-next-line id-denylist
   e: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
   d: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
   dd: { sectionType: 'weekDay', contentType: 'letter' },

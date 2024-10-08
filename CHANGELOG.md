@@ -3,6 +3,116 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.19.0
+
+_Oct 4, 2024_
+
+We'd like to offer a big thanks to the 26 contributors who made this release possible. Here are some highlights ✨:
+
+- 🔁 Automatic parents and children selection for Data Grid ["tree data"](https://mui.com/x/react-data-grid/tree-data/) and ["row grouping"](https://mui.com/x/react-data-grid/row-grouping/) features
+- 💫 Support `minHeight` and `maxHeight` on flex parent container for the Data Grid component
+- 🎁 Export `publicAPI` from the `useTreeItem2Utils` hook for the Tree View
+- 🌍 Improve Bulgarian (bg-BG), Croatian (hr-HR), French (fr-FR), German (de-DE), Japanese (ja-JP) and Vietnamese (vi-VN) locales and add Portuguese (pt-PT) locale on the Data Grid component
+- 🌏 Improve Czech (cs-CZ) and Portuguese (pt-BR) locales and add Bulgarian (bg-BG), Croatian (hr-HR) and Portuguese (pt-PT) locales on the Pickers components
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks goes out to our community contributors who have helped make this release possible:
+@AWAIS97, @chucamphong, @GMchris, @JakubSveda, @k-rajat19, @k725, @lhilgert9, @ruiaraujo012, @Sanderand, @thomasmoon, @vallereaugabriel.
+Following are all team members who have contributed to this release:
+@alexfauquette, @arminmeh, @arthurbalduini, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @KenanYusuf, @MBilalShafi, @michelengelen, @noraleonte, @oliviertassinari, @romgrk, @sai6855, @samuelsycamore.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.19.0`
+
+- [DataGrid] Fix column definition `undefined` value (#14456) @sai6855
+- [DataGrid] Fix `checkboxSelectionVisibleOnly` reset the selection on filtering (#14677) @MBilalShafi
+- [DataGrid] Fix background colors when `CSSVarsProvider` is used (#12901) @cherniavskii
+- [DataGrid] Fix error when initializing aggregation with row spanning (#14710) @MBilalShafi
+- [DataGrid] Fix scroll to cell logic for keyboard navigating cells and drag selection with pinned columns (#14550) @KenanYusuf
+- [DataGrid] Support `minHeight` and `maxHeight` on flex parent container (#14614) @cherniavskii
+- [l10n] Add missing Portuguese (pt-PT) translations (#14707) @ruiaraujo012
+- [l10n] Improve Bulgarian (bg-BG) locale (#14451) @GMchris
+- [l10n] Improve Croatian (hr-HR) locale (#14794) @arminmeh
+- [l10n] Improve French (fr-FR) locale (#14750) @vallereaugabriel
+- [l10n] Improve German (de-DE) locale (#14755) @lhilgert9
+- [l10n] Improve Japanese (ja-JP) locale (#14381) @k725
+- [l10n] Improve Vietnamese (vi-VN) locale (#14769) @chucamphong
+
+#### `@mui/x-data-grid-pro@7.19.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.19.0`, plus:
+
+- [DataGridPro] Fix dragging styles removal in column reorder (#14680) @k-rajat19
+- [DataGridPro] Fix row pre-processing running with a stale data source (#14810) @MBilalShafi
+- [DataGridPro] Fix `onRowsScrollEnd` not firing on very fast scrolling (#14171) @arminmeh
+
+#### `@mui/x-data-grid-premium@7.19.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.19.0`, plus:
+
+- [DataGridPremium] Automatic parents and children selection (#13757) @MBilalShafi
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.19.0`
+
+- [pickers] Fix left-right keyboard nav with `yearsOrder="desc"` and `direction="rtl"` (#14682) @thomasmoon
+- [pickers] Improve `PickerValidDate` type (#14771) @flaviendelangle
+- [pickers] Improve typing of the range pickers (#14716) @flaviendelangle
+- [l10n] Add Bulgarian (bg-BG) locale (#14469) @GMchris
+- [l10n] Add Croatian (hr-HR) locale (#14795) @arminmeh
+- [l10n] Add Portuguese (pt-PT) locale (#14722) @ruiaraujo012
+- [l10n] Improve Czech (cs-CZ) locale (#14732) @JakubSveda
+- [l10n] Improve Portuguese (pt-BR) locale (#14725) @arthurbalduini
+
+#### `@mui/x-date-pickers-pro@7.19.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.19.0`.
+
+### Charts
+
+#### `@mui/x-charts@7.19.0`
+
+- [charts] Fix `LineChart` area animation being stuck when resizing container (#14711) @alexfauquette
+- [charts] Improve types and start using `warnOnce` (#14792) @JCQuintas
+
+#### `@mui/x-charts-pro@7.0.0-beta.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.19.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.19.0`
+
+- [TreeView] Apply experimental features in `getDefaultizedParams` instead of in the plugin render (#14661) @flaviendelangle
+- [TreeView] Export `publicAPI` form `useTreeItem2Utils` (#14729) @noraleonte
+- [TreeView] Fix cursor navigation interfering with browser shortcut keys  (#14798) @sai6855
+- [TreeView] Fix invalid test for items reordering (#14665) @flaviendelangle
+- [TreeView] Remove `instance.getTreeItemIdAttribute` (#14667) @flaviendelangle
+
+### Docs
+
+- [docs] Added warning callout for Firefox reordering bug  (#14516) @michelengelen
+- [docs] Copyedit `pages.ts` navigation (#14782) @samuelsycamore
+- [docs] Fix typo in row spanning doc (#14770) @flaviendelangle
+- [docs] Fix typo in the Tree View migration guide to v7 (#14727) @Sanderand
+- [docs] Fix typo in usage of Moment guide for UTC and timezones (#14780) @AWAIS97
+- [docs] Fix what's new link to use absolute URL (#14543) @oliviertassinari
+
+### Core
+
+- [core] Fix class name composition order (#14775) @oliviertassinari
+- [core] Replace minWidth, maxWidth with width (#14776) @oliviertassinari
+- [code-infra] Remove custom playwright installation steps (#14728) @Janpot
+- [code-infra] Replace or remove all instances of `e` identifier (#14724) @samuelsycamore
+- [infra] Adds community contribution section to the changelog script (#14799) @michelengelen
+- [infra] Fix line break in Stack Overflow message @oliviertassinari
+- [test] Fix `Escape` event firing event (#14797) @oliviertassinari
+
 ## 7.18.0
 
 _Sep 20, 2024_

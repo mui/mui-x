@@ -2,14 +2,13 @@ import * as React from 'react';
 import { SlotComponentProps } from '@mui/utils';
 import TextField from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
+import { MakeOptional } from '../internals/models/helpers';
 import { BaseTimeValidationProps, TimeValidationProps } from '../internals/models/validation';
 import {
   FieldSection,
   PickerValidDate,
   TimeValidationError,
   BuiltInFieldTextFieldProps,
-  BaseSingleInputFieldProps,
 } from '../models';
 import {
   ExportedUseClearableFieldProps,
@@ -39,19 +38,6 @@ export interface UseTimeFieldProps<
    */
   ampm?: boolean;
 }
-
-/**
- * Props the field can receive when used inside a time picker.
- * (`TimePicker`, `DesktopTimePicker` or `MobileTimePicker` component).
- */
-export type TimeFieldInPickerProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> = DefaultizedProps<
-  UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-  'format' | 'timezone' | 'ampm' | keyof BaseTimeValidationProps
-> &
-  BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, false, TimeValidationError>;
 
 export type UseTimeFieldComponentProps<
   TDate extends PickerValidDate,

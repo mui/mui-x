@@ -134,7 +134,7 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
 
 type TabsProps = {
   value: string;
-  onChange: (e: React.SyntheticEvent, value: any) => void;
+  onChange: (event: React.SyntheticEvent, value: any) => void;
   options: Partial<CustomizationLabelType>;
 };
 

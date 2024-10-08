@@ -341,7 +341,6 @@ export const useFieldCharacterEditing = <
       if (activeSection.type === 'month') {
         const hasLeadingZerosInFormat = doesSectionFormatHaveLeadingZeros(
           utils,
-          timezone,
           'digit',
           'month',
           'MM',
@@ -381,7 +380,7 @@ export const useFieldCharacterEditing = <
           return response;
         }
 
-        const formattedValue = getDaysInWeekStr(utils, timezone, activeSection.format)[
+        const formattedValue = getDaysInWeekStr(utils, activeSection.format)[
           Number(response.sectionValue) - 1
         ];
         return {

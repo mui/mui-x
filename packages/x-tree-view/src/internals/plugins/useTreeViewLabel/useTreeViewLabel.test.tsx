@@ -133,7 +133,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
             view.getItemRoot('1').focus();
           });
           fireEvent.doubleClick(view.getItemLabel('1'));
-          fireEvent.keyDown(view.getItemLabelInput('1'), { key: 'Esc' });
+          fireEvent.keyDown(view.getItemLabelInput('1'), { key: 'Escape' });
 
           expect(view.getItemLabelInput('1')).to.equal(null);
           expect(view.getItemLabel('1')).not.to.equal(null);
@@ -215,7 +215,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
           });
           fireEvent.doubleClick(view.getItemLabel('1'));
           fireEvent.change(view.getItemLabelInput('1'), { target: { value: 'new value' } });
-          fireEvent.keyDown(view.getItemLabelInput('1'), { key: 'Esc' });
+          fireEvent.keyDown(view.getItemLabelInput('1'), { key: 'Escape' });
           expect(view.getItemLabel('1').textContent).to.equal('test');
 
           fireEvent.doubleClick(view.getItemLabel('1'));

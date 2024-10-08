@@ -197,11 +197,11 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
         );
         result.api = apiRef.current;
         return result;
-      } catch (e) {
-        if (e instanceof MissingRowIdError) {
+      } catch (error) {
+        if (error instanceof MissingRowIdError) {
           return EMPTY_CELL_PARAMS;
         }
-        throw e;
+        throw error;
       }
     },
     objectShallowCompare,

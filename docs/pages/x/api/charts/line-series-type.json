@@ -7,7 +7,7 @@
     "baseline": { "type": { "description": "number | 'min' | 'max'" }, "default": "0" },
     "color": { "type": { "description": "string" } },
     "connectNulls": { "type": { "description": "boolean" }, "default": "false" },
-    "curve": { "type": { "description": "CurveType" } },
+    "curve": { "type": { "description": "CurveType" }, "default": "'monotoneX'" },
     "data": { "type": { "description": "(number | null)[]" } },
     "dataKey": { "type": { "description": "string" } },
     "disableHighlight": { "type": { "description": "boolean" }, "default": "false" },

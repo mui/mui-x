@@ -178,9 +178,9 @@ export const useGridDataSource = (
         apiRef.current.updateServerRows(getRowsResponse.rows, rowNode.path);
         apiRef.current.setRowChildrenExpansion(id, true);
       } catch (error) {
-        const e = error as Error;
-        apiRef.current.unstable_dataSource.setChildrenFetchError(id, e);
-        onError?.(e, fetchParams);
+        const childrenFetchError = error as Error;
+        apiRef.current.unstable_dataSource.setChildrenFetchError(id, childrenFetchError);
+        onError?.(childrenFetchError, fetchParams);
       } finally {
         apiRef.current.unstable_dataSource.setChildrenLoading(id, false);
         nestedDataManager.setRequestSettled(id);

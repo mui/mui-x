@@ -7,8 +7,9 @@ import {
   DataGridPro,
   GridColDef,
   useGridApiContext,
-  GRID_DETAIL_PANEL_TOGGLE_FIELD,
   GridRowParams,
+  GRID_DETAIL_PANEL_TOGGLE_FIELD,
+  GridPinnedColumnFields,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -200,12 +201,24 @@ export default function FullWidthDetailPanel() {
 
   const getDetailPanelHeight = React.useCallback(() => 400, []);
 
+  const [pinnedColumns, setPinnedColumns] = React.useState<GridPinnedColumnFields>({
+    left: [GRID_DETAIL_PANEL_TOGGLE_FIELD],
+  });
+
+  const handlePinnedColumnsChange = React.useCallback(
+    (updatedPinnedColumns: GridPinnedColumnFields) => {
+      setPinnedColumns(updatedPinnedColumns);
+    },
+    [],
+  );
+
   return (
     <Box sx={{ width: '100%', height: 400 }}>
       <DataGridPro
         columns={columns}
         rows={rows}
-        pinnedColumns={{ left: [GRID_DETAIL_PANEL_TOGGLE_FIELD] }}
+        pinnedColumns={pinnedColumns}
+        onPinnedColumnsChange={handlePinnedColumnsChange}
         getDetailPanelHeight={getDetailPanelHeight}
         getDetailPanelContent={getDetailPanelContent}
         sx={{

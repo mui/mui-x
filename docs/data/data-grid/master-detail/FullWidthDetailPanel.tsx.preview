@@ -1,7 +1,8 @@
 <DataGridPro
   columns={columns}
   rows={rows}
-  pinnedColumns={{ left: [GRID_DETAIL_PANEL_TOGGLE_FIELD] }}
+  pinnedColumns={pinnedColumns}
+  onPinnedColumnsChange={handlePinnedColumnsChange}
   getDetailPanelHeight={getDetailPanelHeight}
   getDetailPanelContent={getDetailPanelContent}
   sx={{

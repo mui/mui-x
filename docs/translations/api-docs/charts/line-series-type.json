@@ -10,7 +10,9 @@
     "connectNulls": {
       "description": "If <code>true</code>, line and area connect points separated by <code>null</code> values."
     },
-    "curve": { "description": "" },
+    "curve": {
+      "description": "The type of curve to use for the line.<br />Read more about curves at <a href=\"https://mui.com/x/react-charts/lines/#interpolation\">line interpolation</a>."
+    },
     "data": { "description": "Data associated to the line." },
     "dataKey": { "description": "The key used to retrieve data from the dataset." },
     "disableHighlight": {

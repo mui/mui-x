@@ -136,7 +136,6 @@ export const useFieldState = <
       fieldValueManager.getSectionsFromValue(utils, value, fallbackSections, (date) =>
         buildSectionsFromFormat({
           utils,
-          timezone,
           localeText: translations,
           localizedDigits,
           format,
@@ -156,7 +155,6 @@ export const useFieldState = <
       shouldRespectLeadingZeros,
       utils,
       formatDensity,
-      timezone,
       enableAccessibleFieldDOMStructure,
     ],
   );
@@ -286,7 +284,6 @@ export const useFieldState = <
 
       const sections = buildSectionsFromFormat({
         utils,
-        timezone,
         localeText: translations,
         localizedDigits,
         format,
@@ -296,7 +293,7 @@ export const useFieldState = <
         enableAccessibleFieldDOMStructure,
         isRtl,
       });
-      return mergeDateIntoReferenceDate(utils, timezone, date, sections, referenceDate, false);
+      return mergeDateIntoReferenceDate(utils, date, sections, referenceDate, false);
     };
 
     const newValue = fieldValueManager.parseValueStr(valueStr, state.referenceValue, parseDateStr);
@@ -345,7 +342,6 @@ export const useFieldState = <
     if (newActiveDate != null && utils.isValid(newActiveDate)) {
       const mergedDate = mergeDateIntoReferenceDate(
         utils,
-        timezone,
         newActiveDate,
         newActiveDateSections,
         activeDateManager.referenceDate,

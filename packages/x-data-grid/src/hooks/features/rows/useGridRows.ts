@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useLazyRef from '@mui/utils/useLazyRef';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -73,6 +74,7 @@ export const useGridRows = (
     | 'pagination'
     | 'paginationMode'
     | 'loading'
+    | 'unstable_dataSource'
   >,
 ): void => {
   if (process.env.NODE_ENV !== 'production') {
@@ -536,15 +538,20 @@ export const useGridRows = (
     throttledRowsChange,
   ]);
 
+  const previousDataSource = useLazyRef(() => props.unstable_dataSource);
   const handleStrategyProcessorChange = React.useCallback<
     GridEventListener<'activeStrategyProcessorChange'>
   >(
     (methodName) => {
+      if (props.unstable_dataSource && props.unstable_dataSource !== previousDataSource.current) {
+        previousDataSource.current = props.unstable_dataSource;
+        return;
+      }
       if (methodName === 'rowTreeCreation') {
         groupRows();
       }
     },
-    [groupRows],
+    [groupRows, previousDataSource, props.unstable_dataSource],
   );
 
   const handleStrategyActivityChange = React.useCallback<

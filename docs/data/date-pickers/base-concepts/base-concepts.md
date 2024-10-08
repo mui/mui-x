@@ -185,14 +185,27 @@ To correctly type all the props that are date-related, the adapters override a g
 to allow the usage of their own date format.
 This allows TypeScript to throw an error if you try to pass `value={new Date()}` to a component using `AdapterDayjs` for instance.
 
-If you run into TypeScript errors such as `DesktopDatePickerProps<Date> error Type 'Date' does not satisfy the constraint 'never'`,
-it is probably because you are not importing the adapter in the same TypeScript project as the rest of your codebase.
-You can fix it by manually importing the adapter in some file of your project as follows:
+If you are not sure your adapter is set up correctly to infer the type of date-related props, you can import the `PickerValidDate` type and check its current value.
+
+If its equal to the format used by your date library, then you don't have to do anything:
+
+<img src="/static/x/date-pickers/picker-valid-date-configured.png" alt="PickerValidDate correctly configured" />
+
+If it's equal to `any`, you can fix it by manually importing the adapter in some file of your project as show below:
+
+<img src="/static/x/date-pickers/picker-valid-date-not-configured.png" alt="PickerValidDate not correctly configured" />
 
 ```ts
 // Replace `AdapterDayjs` with the adapter you are using.
 import type {} from '@mui/x-date-pickers/AdapterDayjs';
 ```
+
+:::info
+Before version 7.19.0, TypeScript was throwing an error such as `DesktopDatePickerProps<Date> error Type 'Date' does not satisfy the constraint 'never'`
+when you were not importing the adapter in the same TypeScript project as the rest of your codebase.
+
+The fix described above should also solve the problem.
+:::
 
 ## Testing caveats
 

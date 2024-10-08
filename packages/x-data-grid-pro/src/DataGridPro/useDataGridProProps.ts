@@ -5,7 +5,11 @@ import {
   DATA_GRID_PROPS_DEFAULT_VALUES,
   GridValidRowModel,
 } from '@mui/x-data-grid';
-import { computeSlots, useProps } from '@mui/x-data-grid/internals';
+import {
+  computeSlots,
+  useProps,
+  ROW_SELECTION_PROPAGATION_DEFAULT,
+} from '@mui/x-data-grid/internals';
 import {
   DataGridProProps,
   DataGridProProcessedProps,
@@ -46,6 +50,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   getDetailPanelHeight: () => 500,
   headerFilters: false,
   keepColumnPositionIfDraggedOutside: false,
+  rowSelectionPropagation: ROW_SELECTION_PROPAGATION_DEFAULT,
   rowReordering: false,
   rowsLoadingMode: 'client',
   scrollEndThreshold: 80,

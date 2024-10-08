@@ -50,7 +50,7 @@ jobs:
       - run: pnpm --filter @mui/x-charts build
       - run: pnpm --filter @mui/x-charts-pro build
       - name: Run benchmarks
-        uses: CodSpeedHQ/action@86517f4abbb50982006ed33de6c22a586c7e11a1
+        uses: CodSpeedHQ/action@016456b513677f9d4a1c509c7f8a38d8dd55b2b0
         with:
           run: pnpm --filter @mui-x-internal/performance-charts test:performance
           token: ${{ secrets.CODSPEED_TOKEN }}

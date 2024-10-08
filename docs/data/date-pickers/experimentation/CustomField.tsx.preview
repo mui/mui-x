@@ -1,6 +1,0 @@
-<DatePicker
-  label="Date Picker"
-  slots={{ field: ReadOnlyField }}
-  maxDate={dayjs('2022-04-17')}
-  defaultValue={dayjs('2022-04-18')}
-/>
