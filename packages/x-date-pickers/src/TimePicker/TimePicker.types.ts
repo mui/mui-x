@@ -61,7 +61,7 @@ export interface TimePickerProps<
  */
 export type TimePickerFieldProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > = DefaultizedProps<
   UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   'format' | 'timezone' | 'ampm' | keyof BaseTimeValidationProps
