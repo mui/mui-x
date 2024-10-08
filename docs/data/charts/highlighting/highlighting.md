@@ -6,7 +6,7 @@ components: ChartsAxisHighlight
 
 # Charts - Highlighting
 
-<p class="description">Highlighting data offers a quick visual feedback for chart users.</p>
+<p class="description">Highlighting data offers quick visual feedback for chart users.</p>
 
 It can be used to emphasize a specific data point or series, or to fade out the rest of the chart.
 And it can be controlled by the user or synchronized across multiple charts.
@@ -46,7 +46,7 @@ This kind of interaction is controlled by series properties `highlightScope` whi
 
 {{"demo": "ElementHighlights.js"}}
 
-### Controlled Highlight
+### Controlled highlight
 
 The highlight can be controlled by the user when they set `highlightedItem` and `onHighlightChange`.
 
@@ -54,9 +54,9 @@ You can set the `highlightedItem` value based on inputs, and sync it when the us
 
 {{"demo": "ControlledHighlight.js"}}
 
-#### Synchronizing Highlights
+#### Synchronizing highlights
 
 Having a controlled highlight allows you to control it in multiple charts at the same time.
-You just need to ensure that the `series` have the same `ids` and the data is in the same order.
+You need to ensure that the `series` has the same `ids` and the data is in the same order.
 
 {{"demo": "SyncHighlight.js"}}
