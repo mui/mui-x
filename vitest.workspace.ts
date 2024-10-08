@@ -52,6 +52,10 @@ export default defineWorkspace([
       },
     ],
   ),
+  // TODO: Decide on
+  // Manually changing the process.env in browser tests doesn't work.
+  // And alternative is to use `const {NODE_ENV} = process.env` in the code instead.
+  // x-license relies on `process.env.NODE_ENV` to determine the environment.
   {
     extends: './vitest.config.mts',
     plugins: [react()],
