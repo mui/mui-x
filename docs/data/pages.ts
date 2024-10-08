@@ -1,7 +1,7 @@
 import type { MuiPage } from 'docs/src/MuiPage';
+import chartsComponentApi from './charts-component-api-pages';
 import dataGridComponentApi from './data-grid-component-api-pages';
 import pickersComponentApi from './date-pickers-component-api-pages';
-import chartsComponentApi from './charts-component-api-pages';
 import treeViewComponentApi from './tree-view-component-api-pages';
 
 const pages: MuiPage[] = [
@@ -432,7 +432,7 @@ const pages: MuiPage[] = [
             subheader: 'Common features',
             children: [
               { pathname: '/x/react-charts/axis' },
-              { pathname: '/x/react-charts/components' },
+              { pathname: '/x/react-charts/components', title: 'Custom components' },
               { pathname: '/x/react-charts/composition' },
               { pathname: '/x/react-charts/label' },
               { pathname: '/x/react-charts/legend' },
@@ -442,6 +442,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/highlighting' },
               {
                 pathname: '/x/react-charts/zoom-and-pan',
+                title: 'Zooming and panning',
                 plan: 'pro',
                 unstable: true,
               },
