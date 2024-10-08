@@ -817,8 +817,8 @@ async function initializeEnvironment(
           );
         });
 
-        it('should have consistent `placeholder` and `value` behavior', async () => {
-          await renderFixture('DatePicker/MobileDatePickerV6WithClearAction');
+        it('should have consistent `placeholder` and `value` behavior in the legacy DOM structure', async () => {
+          await renderFixture('DatePicker/MobileDatePickerWithClearActionLegacyDOMStructure');
 
           const input = page.getByRole('textbox');
 
@@ -993,13 +993,13 @@ async function initializeEnvironment(
         await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
       });
 
-      it('should have the same selection process when "readOnly" with single input v7 field', async () => {
+      it('should have the same selection process when "readOnly" with single input field accessible DOM structure', async () => {
         // firefox in CI is not happy with this test
         if (browserType.name() === 'firefox') {
           return;
         }
 
-        await renderFixture('DatePicker/ReadonlyDesktopDateRangePickerSingleV7');
+        await renderFixture('DatePicker/ReadonlyDesktopDateRangePickerSingle');
 
         await page.locator(`.${pickersSectionListClasses.root}`).first().click();
 
@@ -1017,13 +1017,13 @@ async function initializeEnvironment(
         );
       });
 
-      it('should have the same selection process when "readOnly" with single input v6 field', async () => {
+      it('should have the same selection process when "readOnly" with single input field legacy DOM structure', async () => {
         // firefox in CI is not happy with this test
         if (browserType.name() === 'firefox') {
           return;
         }
 
-        await renderFixture('DatePicker/ReadonlyDesktopDateRangePickerSingleV6');
+        await renderFixture('DatePicker/ReadonlyDesktopDateRangePickerSingleLegacyDOMStructure');
 
         await page.getByRole('textbox').click();
 
