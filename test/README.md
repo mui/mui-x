@@ -43,10 +43,10 @@ curl --request POST \
   --data-raw '{"branch":"pull/24289/head","parameters":{"react-version":"next"}}'
 ```
 
-## Testing multiple versions of Material UI
+## Testing multiple versions of Material UI
 
-Currently, we use `@mui/material` v5 in the MUI X repo and all tests are run against it.
-But MUI X packages are compatible with v5 and v6.
+Currently, we use `@mui/material` v5 in the MUI X repo and all tests are run against it.
+But MUI X packages are compatible with v5 and v6.
 You can run the tests against `@mui/material` v6 by running the following command:
 
 `pnpm use-material-ui-v6`

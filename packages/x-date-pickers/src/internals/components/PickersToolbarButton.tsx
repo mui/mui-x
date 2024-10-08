@@ -53,7 +53,7 @@ export const PickersToolbarButton = React.forwardRef(function PickersToolbarButt
       data-mui-test="toolbar-button"
       variant="text"
       ref={ref}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       {...(width ? { sx: { width } } : {})}
       {...other}
     >

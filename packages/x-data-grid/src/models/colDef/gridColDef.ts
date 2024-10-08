@@ -185,6 +185,10 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    */
   valueGetter?: GridValueGetter<R, V, F>;
   /**
+   * Function that allows to provide a specific value to be used in row spanning.
+   */
+  rowSpanValueGetter?: GridValueGetter<R, V, F>;
+  /**
    * Function that allows to customize how the entered value is stored in the row.
    * It only works with cell/row editing.
    * @returns {R} The row with the updated field.

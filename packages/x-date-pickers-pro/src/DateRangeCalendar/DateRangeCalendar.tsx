@@ -543,7 +543,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
   return (
     <DateRangeCalendarRoot
       ref={ref}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
     >

@@ -5374,7 +5374,7 @@ You can find more information about the new api, including how to set those tran
 - [pickers] Clean slots on `PickersArrowSwitcher` component (#5890) @flaviendelangle
 - [pickers] Fix invalid date error when decreasing `DateField` day (#6071) @alexfauquette
 - [pickers] Fix mobile section selection (#6207) @oliviertassinari
-- [pickers] Fix usage with Typescript 4.8 (#6229) @flaviendelangle
+- [pickers] Fix usage with TypeScript 4.8 (#6229) @flaviendelangle
 - [pickers] Improve error message when no adapter context is found (#6211) @flaviendelangle
 - [pickers] Remove `valueStr` from the field state (#6142) @flaviendelangle
 - [pickers] Remove remaining deprecated locale props (#6233) @flaviendelangle

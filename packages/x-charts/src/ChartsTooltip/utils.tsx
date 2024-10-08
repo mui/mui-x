@@ -45,7 +45,9 @@ export function generateVirtualElement(mousePosition: MousePosition | null) {
   };
 }
 
-export function useMouseTracker() {
+export type UseMouseTrackerReturnValue = null | MousePosition;
+
+export function useMouseTracker(): UseMouseTrackerReturnValue {
   const svgRef = useSvgRef();
 
   // Use a ref to avoid rerendering on every mousemove event.

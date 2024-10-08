@@ -39,6 +39,7 @@ import {
   GridCellEditStartReasons,
   GridCellEditStopReasons,
 } from '../../../models/params/gridEditCellParams';
+import { getDefaultCellValue } from './utils';
 
 export const useGridCellEditing = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
@@ -126,7 +127,7 @@ export const useGridCellEditing = (
     (params, event) => {
       if (params.cellMode === GridCellModes.Edit) {
         // Wait until IME is settled for Asian languages like Japanese and Chinese
-        // TODO: `event.which` is deprecated but this is a temporary workaround
+        // TODO: to replace at one point. See https://github.com/mui/material-ui/pull/39713#discussion_r1381678957.
         if (event.which === 229) {
           return;
         }
@@ -337,24 +338,7 @@ export const useGridCellEditing = (
 
       let newValue = apiRef.current.getCellValue(id, field);
       if (deleteValue) {
-        const fieldType = apiRef.current.getColumn(field).type;
-        switch (fieldType) {
-          case 'boolean':
-            newValue = false;
-            break;
-          case 'date':
-          case 'dateTime':
-          case 'number':
-            newValue = undefined;
-            break;
-          case 'singleSelect':
-            newValue = null;
-            break;
-          case 'string':
-          default:
-            newValue = '';
-            break;
-        }
+        newValue = getDefaultCellValue(apiRef.current.getColumn(field));
       } else if (initialValue) {
         newValue = initialValue;
       }
@@ -439,7 +423,7 @@ export const useGridCellEditing = (
 
         try {
           const row = apiRef.current.getRow(id)!;
-          Promise.resolve(processRowUpdate(rowUpdate, row))
+          Promise.resolve(processRowUpdate(rowUpdate, row, { rowId: id }))
             .then((finalRowUpdate) => {
               apiRef.current.updateRows([finalRowUpdate]);
               finishCellEditMode();

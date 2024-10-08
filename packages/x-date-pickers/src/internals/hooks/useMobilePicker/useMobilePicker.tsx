@@ -10,7 +10,6 @@ import {
 } from './useMobilePicker.types';
 import { usePicker } from '../usePicker';
 import { onSpaceOrEnter } from '../../utils/utils';
-import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import {
   FieldSection,
@@ -20,6 +19,7 @@ import {
   InferError,
 } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
+import { PickersProvider } from '../../components/PickersProvider';
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -73,6 +73,7 @@ export const useMobilePicker = <
     layoutProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
+    contextValue,
   } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
     ...pickerParams,
     props,
@@ -159,7 +160,7 @@ export const useMobilePicker = <
   const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
 
   const renderPicker = () => (
-    <LocalizationProvider localeText={localeText}>
+    <PickersProvider contextValue={contextValue} localeText={localeText}>
       <Field
         {...fieldProps}
         slots={slotsForField}
@@ -171,7 +172,7 @@ export const useMobilePicker = <
           {renderCurrentView()}
         </Layout>
       </PickersModalDialog>
-    </LocalizationProvider>
+    </PickersProvider>
   );
 
   return { renderPicker };

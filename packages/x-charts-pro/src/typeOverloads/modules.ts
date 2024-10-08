@@ -3,6 +3,7 @@ import {
   HeatmapItemIdentifier,
   HeatmapSeriesType,
   DefaultizedHeatmapSeriesType,
+  HeatmapValueType,
 } from '../models/seriesType/heatmap';
 import { ZoomOptions } from '../context/ZoomProvider';
 
@@ -13,6 +14,7 @@ declare module '@mui/x-charts/internals' {
       series: DefaultizedHeatmapSeriesType;
       seriesProp: HeatmapSeriesType;
       itemIdentifier: HeatmapItemIdentifier;
+      valueType: HeatmapValueType;
       cartesian: true;
     };
   }

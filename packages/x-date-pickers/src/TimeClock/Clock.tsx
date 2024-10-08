@@ -343,7 +343,7 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
   };
 
   return (
-    <ClockRoot className={clsx(className, classes.root)}>
+    <ClockRoot className={clsx(classes.root, className)}>
       <ClockClock className={classes.clock}>
         <ClockSquareMask
           data-mui-test="clock"

@@ -46,6 +46,7 @@ import {
   GridRowEditStartReasons,
 } from '../../../models/params/gridRowParams';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
+import { getDefaultCellValue } from './utils';
 
 export const useGridRowEditing = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
@@ -185,7 +186,7 @@ export const useGridRowEditing = (
     (params, event) => {
       if (params.cellMode === GridRowModes.Edit) {
         // Wait until IME is settled for Asian languages like Japanese and Chinese
-        // TODO: `event.which` is deprecated but this is a temporary workaround
+        // TODO: to replace at one point. See https://github.com/mui/material-ui/pull/39713#discussion_r1381678957.
         if (event.which === 229) {
           return;
         }
@@ -433,7 +434,11 @@ export const useGridRowEditing = (
 
         let newValue = apiRef.current.getCellValue(id, field);
         if (fieldToFocus === field && (deleteValue || initialValue)) {
-          newValue = deleteValue ? '' : initialValue;
+          if (deleteValue) {
+            newValue = getDefaultCellValue(apiRef.current.getColumn(field));
+          } else if (initialValue) {
+            newValue = initialValue;
+          }
         }
 
         acc[field] = {
@@ -525,7 +530,7 @@ export const useGridRowEditing = (
         };
 
         try {
-          Promise.resolve(processRowUpdate(rowUpdate, row))
+          Promise.resolve(processRowUpdate(rowUpdate, row, { rowId: id }))
             .then((finalRowUpdate) => {
               apiRef.current.updateRows([finalRowUpdate]);
               finishRowEditMode();

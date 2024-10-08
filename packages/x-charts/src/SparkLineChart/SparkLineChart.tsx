@@ -17,7 +17,7 @@ import {
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
 import { MakeOptional } from '../models/helpers';
-import { LineSeriesType } from '../models/seriesType/line';
+import { LineSeriesType, BarSeriesType } from '../models/seriesType';
 import { CardinalDirections } from '../models/layout';
 import { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';
 import { LinePlotSlots, LinePlotSlotProps } from '../LineChart/LinePlot';
@@ -177,7 +177,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
           data,
           valueFormatter,
           ...(plotType === 'bar' ? {} : { area, curve, disableHighlight: !showHighlight }),
-        },
+        } as LineSeriesType | BarSeriesType,
       ]}
       width={width}
       height={height}
@@ -320,6 +320,16 @@ SparkLineChart.propTypes = {
    * @default 'line'
    */
   plotType: PropTypes.oneOf(['bar', 'line']),
+  /**
+   * The chart will try to wait for the parent container to resolve its size
+   * before it renders for the first time.
+   *
+   * This can be useful in some scenarios where the chart appear to grow after
+   * the first render, like when used inside a grid.
+   *
+   * @default false
+   */
+  resolveSizeBeforeRender: PropTypes.bool,
   /**
    * Set to `true` to highlight the value.
    * With line, it shows a point.

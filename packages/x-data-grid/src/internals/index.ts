@@ -78,6 +78,10 @@ export {
 export { useGridEditing, editingStateInitializer } from '../hooks/features/editing/useGridEditing';
 export { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
 export { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
+export {
+  useGridRowSpanning,
+  rowSpanningStateInitializer,
+} from '../hooks/features/rows/useGridRowSpanning';
 export { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 export { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
@@ -129,6 +133,7 @@ export {
   useGridColumnResize,
   columnResizeStateInitializer,
 } from '../hooks/features/columnResize/useGridColumnResize';
+export { ROW_SELECTION_PROPAGATION_DEFAULT } from '../hooks/features/rowSelection/utils';
 
 export { useTimeout } from '../hooks/utils/useTimeout';
 export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';

@@ -1,5 +1,4 @@
 <DataGrid
-  autoHeight
   disableColumnFilter
   disableRowSelectionOnClick
   hideFooter

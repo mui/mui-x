@@ -6,7 +6,6 @@
       left: ['day'],
     },
   }}
-  autoHeight
   disableRowSelectionOnClick
   hideFooter
   showCellVerticalBorder
