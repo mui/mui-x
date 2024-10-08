@@ -204,7 +204,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
 
   return (
     <DateTimeRangePickerToolbarRoot
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={ownerState}
       ref={ref}
       sx={sx}
