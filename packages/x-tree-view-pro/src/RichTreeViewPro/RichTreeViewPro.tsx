@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import { useTreeView, TreeViewProvider } from '@mui/x-tree-view/internals';
+import { useTreeView, TreeViewProvider, RichTreeViewItems } from '@mui/x-tree-view/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
@@ -45,52 +44,6 @@ export const RichTreeViewProRoot = styled('ul', {
 type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
   props: RichTreeViewProProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
-
-function WrappedTreeItem<R extends {}>({
-  slots,
-  slotProps,
-  label,
-  id,
-  itemId,
-  children,
-}: Pick<RichTreeViewProProps<R, any>, 'slots' | 'slotProps'> &
-  Pick<TreeItemProps, 'id' | 'itemId' | 'children'> & { label: string }) {
-  const Item = slots?.item ?? TreeItem;
-  const itemProps = useSlotProps({
-    elementType: Item,
-    externalSlotProps: slotProps?.item,
-    additionalProps: { itemId, id, label },
-    ownerState: { itemId, label },
-  });
-
-  return <Item {...itemProps}>{children}</Item>;
-}
-
-WrappedTreeItem.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  /**
-   * The content of the component.
-   */
-  children: PropTypes.node,
-  /**
-   * The id of the item.
-   */
-  itemId: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps: PropTypes.object,
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.object,
-} as any;
 
 const releaseInfo = getReleaseInfo();
 
@@ -143,32 +96,14 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     ownerState: props as RichTreeViewProProps<any, any>,
   });
 
-  const itemsToRender = instance.getItemsToRender();
-
-  const renderItem = ({
-    label,
-    itemId,
-    id,
-    children,
-  }: ReturnType<typeof instance.getItemsToRender>[number]) => {
-    return (
-      <WrappedTreeItem
-        slots={slots}
-        slotProps={slotProps}
-        key={itemId}
-        label={label}
-        id={id}
-        itemId={itemId}
-      >
-        {children?.map(renderItem)}
-      </WrappedTreeItem>
-    );
-  };
-
   return (
     <TreeViewProvider value={contextValue}>
       <Root {...rootProps}>
-        {itemsToRender.map(renderItem)}
+        <RichTreeViewItems
+          slots={slots}
+          slotProps={slotProps}
+          itemsToRender={instance.getItemsToRender()}
+        />
         <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
       </Root>
     </TreeViewProvider>
