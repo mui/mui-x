@@ -10,7 +10,7 @@ import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
-import { TreeItem, TreeItemProps } from '../TreeItem';
+import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -41,26 +41,6 @@ export const RichTreeViewRoot = styled('ul', {
 type RichTreeViewComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
   props: RichTreeViewProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
-
-function WrappedTreeItem<R extends {}>({
-  slots,
-  slotProps,
-  label,
-  id,
-  itemId,
-  children,
-}: Pick<RichTreeViewProps<R, any>, 'slots' | 'slotProps'> &
-  Pick<TreeItemProps, 'id' | 'itemId' | 'children'> & { label: string }) {
-  const Item = slots?.item ?? TreeItem;
-  const itemProps = useSlotProps({
-    elementType: Item,
-    externalSlotProps: slotProps?.item,
-    additionalProps: { itemId, id, label },
-    ownerState: { itemId, label },
-  });
-
-  return <Item {...itemProps}>{children}</Item>;
-}
 
 /**
  *
@@ -109,31 +89,15 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     ownerState: props as RichTreeViewProps<any, any>,
   });
 
-  const itemsToRender = instance.getItemsToRender();
-
-  const renderItem = ({
-    label,
-    itemId,
-    id,
-    children,
-  }: ReturnType<typeof instance.getItemsToRender>[number]) => {
-    return (
-      <WrappedTreeItem
-        slots={slots}
-        slotProps={slotProps}
-        key={itemId}
-        label={label}
-        id={id}
-        itemId={itemId}
-      >
-        {children?.map(renderItem)}
-      </WrappedTreeItem>
-    );
-  };
-
   return (
     <TreeViewProvider value={contextValue}>
-      <Root {...rootProps}>{itemsToRender.map(renderItem)}</Root>
+      <Root {...rootProps}>
+        <RichTreeViewItems
+          slots={slots}
+          slotProps={slotProps}
+          itemsToRender={instance.getItemsToRender()}
+        />
+      </Root>
     </TreeViewProvider>
   );
 }) as RichTreeViewComponent;
