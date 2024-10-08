@@ -442,7 +442,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/highlighting' },
               {
                 pathname: '/x/react-charts/zoom-and-pan',
-                title: 'Zooming and panning',
+                title: 'Zoom and pan',
                 plan: 'pro',
                 unstable: true,
               },
