@@ -24,7 +24,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), {
         key: 'a',
-        code: 'KeyQ',
         keyCode: 65,
         ctrlKey: true,
       });
@@ -45,7 +44,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(input, { key: 'a', code: 'KeyQ', keyCode: 65, ctrlKey: true });
+      fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
       fireEvent.keyDown(input, { key: 'Delete' });
       expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
@@ -67,7 +66,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), {
         key: 'a',
-        code: 'KeyQ',
         keyCode: 65,
         ctrlKey: true,
       });
@@ -93,7 +91,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       expectFieldValueV6(input, 'January YYYY – MMMM YYYY');
 
       // Select all sections
-      fireEvent.keyDown(input, { key: 'a', code: 'KeyQ', keyCode: 65, ctrlKey: true });
+      fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
       fireEvent.keyDown(input, { key: 'Delete' });
       expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
@@ -114,7 +112,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), {
         key: 'a',
-        code: 'KeyQ',
         keyCode: 65,
         ctrlKey: true,
       });
@@ -137,7 +134,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(input, { key: 'a', code: 'KeyQ', keyCode: 65, ctrlKey: true });
+      fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
       fireEvent.keyDown(input, { key: 'Delete' });
       expect(onChangeV6.callCount).to.equal(0);
@@ -279,7 +276,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         // Select all sections
         fireEvent.keyDown(view.getActiveSection(0), {
           key: 'a',
-          code: 'KeyQ',
           keyCode: 65,
           ctrlKey: true,
         });
@@ -300,7 +296,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         view.selectSection('month');
 
         // Select all sections
-        fireEvent.keyDown(input, { key: 'a', code: 'KeyQ', keyCode: 65, ctrlKey: true });
+        fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
         fireEvent.change(input, { target: { value: '' } });
         expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
@@ -322,7 +318,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         // Select all sections
         fireEvent.keyDown(view.getActiveSection(0), {
           key: 'a',
-          code: 'KeyQ',
           keyCode: 65,
           ctrlKey: true,
         });
@@ -348,7 +343,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expectFieldValueV6(input, 'January YYYY – MMMM YYYY');
 
         // Select all sections
-        fireEvent.keyDown(input, { key: 'a', code: 'KeyQ', keyCode: 65, ctrlKey: true });
+        fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
         fireEvent.change(input, { target: { value: '' } });
         expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
@@ -369,7 +364,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         // Select all sections
         fireEvent.keyDown(view.getActiveSection(0), {
           key: 'a',
-          code: 'KeyQ',
           keyCode: 65,
           ctrlKey: true,
         });
@@ -392,7 +386,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         view.selectSection('month');
 
         // Select all sections
-        fireEvent.keyDown(input, { key: 'a', code: 'KeyQ', keyCode: 65, ctrlKey: true });
+        fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
         fireEvent.change(input, { target: { value: 'Delete' } });
         expect(onChangeV6.callCount).to.equal(0);

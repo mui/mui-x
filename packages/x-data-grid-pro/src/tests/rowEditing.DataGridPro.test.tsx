@@ -874,7 +874,7 @@ describe('<DataGridPro /> - Row editing', () => {
           apiRef.current.subscribeEvent('rowEditStart', listener);
           const cell = getCell(0, 1);
           fireUserEvent.mousePress(cell);
-          fireEvent.keyDown(cell, { key: 'a', [key]: true });
+          fireEvent.keyDown(cell, { key: 'a', keyCode: 65, [key]: true });
           expect(listener.callCount).to.equal(0);
         });
       });
@@ -885,7 +885,7 @@ describe('<DataGridPro /> - Row editing', () => {
         apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
-        fireEvent.keyDown(cell, { key: 'a', shiftKey: true });
+        fireEvent.keyDown(cell, { key: 'a', keyCode: 65, shiftKey: true });
         expect(listener.callCount).to.equal(1);
       });
 
@@ -905,7 +905,7 @@ describe('<DataGridPro /> - Row editing', () => {
         apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
-        fireEvent.keyDown(cell, { key: 'v', code: 'KeyV', keyCode: 86, ctrlKey: true });
+        fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true });
         expect(listener.callCount).to.equal(1);
       });
 
