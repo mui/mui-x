@@ -60,7 +60,7 @@ export const useGridScroll = (
   const colRef = apiRef.current.columnHeadersContainerRef;
   const virtualScrollerRef = apiRef.current.virtualScrollerRef!;
   const virtualScrollbarHorizontalRef = apiRef.current.virtualScrollbarHorizontalRef!;
-  const virtualScrollbarVerticalRef = apiRef.current.virtualScrollbarVerticalRef!;
+  // const virtualScrollbarVerticalRef = apiRef.current.virtualScrollbarVerticalRef!;
   const visibleSortedRows = useGridSelector(apiRef, gridExpandedSortedRowEntriesSelector);
 
   const scrollToIndexes = React.useCallback<GridScrollApi['scrollToIndexes']>(
