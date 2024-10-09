@@ -43,7 +43,7 @@ module.exports = function setKarmaConfig(config) {
      * - config.LOG_INFO
      * - config.LOG_DEBUG
      */
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_DEBUG,
     port: 9876,
     preprocessors: {
       'test/karma.tests.js': ['webpack', 'sourcemap'],
