@@ -25,10 +25,10 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Początek',
   end: 'Koniec',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Data rozpoczęcia',
+  startTime: 'Czas rozpoczęcia',
+  endDate: 'Data końcowa',
+  endTime: 'Czas zakończenia',
 
   // Action bar
   cancelButtonLabel: 'Anuluj',
@@ -67,7 +67,7 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
     formattedTime || (value !== null && utils.isValid(value))
       ? `Wybierz czas, obecnie wybrany czas to ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Wybierz czas',
-  // fieldClearLabel: 'Clear',
+  fieldClearLabel: 'Wyczyść',
 
   // Table labels
   timeTableLabel: 'wybierz czas',
@@ -84,13 +84,13 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   // fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
+  rok: 'Rok',
+  miesiąc: 'Miesiąc',
+  day: 'Dzień',
+  weekDay: 'Dzień tygodnia',
+  hours: 'Godzin',
+  minutes: 'Minut',
+  seconds: 'Sekund',
   // meridiem: 'Meridiem',
 
   // Common
