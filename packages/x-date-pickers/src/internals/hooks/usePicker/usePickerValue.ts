@@ -23,6 +23,7 @@ import {
   PickerValueUpdaterParams,
 } from './usePickerValue.types';
 import { useValueWithTimezone } from '../useValueWithTimezone';
+import { PickersContextValue } from '../../components/PickersProvider';
 
 /**
  * Decide if the new value should be published
@@ -450,11 +451,21 @@ export const usePickerValue = <
     isValid,
   };
 
+  const contextValue = React.useMemo<PickersContextValue>(
+    () => ({
+      onOpen: handleOpen,
+      onClose: handleClose,
+      open: isOpen,
+    }),
+    [isOpen, handleClose, handleOpen],
+  );
+
   return {
     open: isOpen,
     fieldProps: fieldResponse,
     viewProps: viewResponse,
     layoutProps: layoutResponse,
     actions,
+    contextValue,
   };
 };

@@ -6,34 +6,21 @@ import {
   UseClearableFieldSlotProps,
   ExportedUseClearableFieldProps,
 } from '../hooks/useClearableField';
+import { DateValidationError, PickerValidDate, BuiltInFieldTextFieldProps } from '../models';
+import { UseFieldInternalProps } from '../internals/hooks/useField';
+import { MakeOptional } from '../internals/models/helpers';
 import {
-  DateValidationError,
-  PickerValidDate,
-  BuiltInFieldTextFieldProps,
-  BaseSingleInputFieldProps,
-} from '../models';
-import { DefaultizedProps } from '../internals/models/helpers';
-import { BaseDateValidationProps } from '../internals/models/validation';
-import { DateFieldInternalProps } from '../valueManagers';
+  BaseDateValidationProps,
+  DayValidationProps,
+  MonthValidationProps,
+  YearValidationProps,
+} from '../internals/models/validation';
 
 export interface UseDateFieldProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends DateFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
     ExportedUseClearableFieldProps {}
-
-/**
- * Props the field can receive when used inside a date picker.
- * (`DatePicker`, `DesktopDatePicker` or `MobileDatePicker` component).
- */
-export type DateFieldInPickerProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> = DefaultizedProps<
-  UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-  'format' | 'timezone' | keyof BaseDateValidationProps<TDate>
-> &
-  BaseSingleInputFieldProps<TDate, false, TEnableAccessibleFieldDOMStructure, DateValidationError>;
 
 export type UseDateFieldComponentProps<
   TDate extends PickerValidDate,

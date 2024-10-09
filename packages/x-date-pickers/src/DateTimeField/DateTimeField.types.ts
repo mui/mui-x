@@ -1,14 +1,7 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/utils';
 import TextField from '@mui/material/TextField';
-import {
-  DateTimeValidationError,
-  PickerValidDate,
-  BuiltInFieldTextFieldProps,
-  BaseSingleInputFieldProps,
-} from '../models';
-import { DefaultizedProps } from '../internals/models/helpers';
-import { BaseDateValidationProps, BaseTimeValidationProps } from '../internals/models/validation';
+import { PickerValidDate, BuiltInFieldTextFieldProps } from '../models';
 import {
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
@@ -21,28 +14,6 @@ export interface UseDateTimeFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends DateTimeFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
     ExportedUseClearableFieldProps {}
-
-/**
- * Props the field can receive when used inside a date time picker.
- * (`DateTimePicker`, `DesktopDateTimePicker` or `MobileDateTimePicker` component).
- */
-export type DateTimeFieldInPickerProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> = DefaultizedProps<
-  UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-  | 'format'
-  | 'timezone'
-  | 'ampm'
-  | keyof BaseDateValidationProps<TDate>
-  | keyof BaseTimeValidationProps
-> &
-  BaseSingleInputFieldProps<
-    TDate,
-    false,
-    TEnableAccessibleFieldDOMStructure,
-    DateTimeValidationError
-  >;
 
 export type UseDateTimeFieldComponentProps<
   TDate extends PickerValidDate,

@@ -1,14 +1,22 @@
+import { UseDateFieldProps } from '../DateField';
 import {
   DesktopDatePickerProps,
   DesktopDatePickerSlots,
   DesktopDatePickerSlotProps,
 } from '../DesktopDatePicker';
+import { DefaultizedProps } from '../internals/models/helpers';
+import { BaseDateValidationProps } from '../internals/models/validation';
 import {
   MobileDatePickerProps,
   MobileDatePickerSlots,
   MobileDatePickerSlotProps,
 } from '../MobileDatePicker';
-import { PickerValidDate } from '../models';
+import {
+  BaseSingleInputFieldProps,
+  DateValidationError,
+  FieldSection,
+  PickerValidDate,
+} from '../models';
 
 export interface DatePickerSlots<TDate extends PickerValidDate>
   extends DesktopDatePickerSlots<TDate>,
@@ -47,3 +55,15 @@ export interface DatePickerProps<
    */
   yearsPerRow?: 3 | 4;
 }
+
+/**
+ * Props the field can receive when used inside a `DatePicker`, `DesktopDatePicker` or `MobileDatePicker` component.
+ */
+export type DatePickerFieldProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+> = DefaultizedProps<
+  UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  'format' | 'timezone' | keyof BaseDateValidationProps<TDate>
+> &
+  BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, false, DateValidationError>;

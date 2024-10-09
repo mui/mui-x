@@ -337,7 +337,6 @@ export const useFieldCharacterEditing = <TManager extends PickerAnyValueManagerV
       if (activeSection.type === 'month') {
         const hasLeadingZerosInFormat = doesSectionFormatHaveLeadingZeros(
           utils,
-          timezone,
           'digit',
           'month',
           'MM',
@@ -377,7 +376,7 @@ export const useFieldCharacterEditing = <TManager extends PickerAnyValueManagerV
           return response;
         }
 
-        const formattedValue = getDaysInWeekStr(utils, timezone, activeSection.format)[
+        const formattedValue = getDaysInWeekStr(utils, activeSection.format)[
           Number(response.sectionValue) - 1
         ];
         return {

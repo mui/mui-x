@@ -16,6 +16,7 @@ import {
   PickerShortcutChangeImportance,
   PickersShortcutsItemContext,
 } from '../../../PickersShortcuts';
+import { PickersContextValue } from '../../components/PickersProvider';
 
 export interface PickerValueManager<TValue, TDate extends PickerValidDate, TError> {
   /**
@@ -327,4 +328,5 @@ export interface UsePickerValueResponse<TValue, TError> {
   viewProps: UsePickerValueViewsResponse<TValue>;
   fieldProps: UsePickerValueFieldResponse<TValue, TError>;
   layoutProps: UsePickerValueLayoutResponse<TValue>;
+  contextValue: PickersContextValue;
 }
