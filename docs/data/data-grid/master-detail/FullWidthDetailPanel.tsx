@@ -9,6 +9,7 @@ import {
   useGridApiContext,
   GridRowParams,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
+  GridDimensions,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -22,16 +23,22 @@ import {
   randomCommodity,
 } from '@mui/x-data-grid-generator';
 
+const getDetailPanelWidth = (gridDimensions: GridDimensions) => {
+  return (
+    gridDimensions.viewportInnerSize.width +
+    gridDimensions.leftPinnedWidth +
+    gridDimensions.rightPinnedWidth
+  );
+};
+
 function DetailPanelContent({ row: rowProp }: { row: Customer }) {
   const apiRef = useGridApiContext();
-  const [width, setWidth] = React.useState(() => {
-    const dimensions = apiRef.current.getRootDimensions();
-    return dimensions.viewportInnerSize.width;
-  });
+  const [width, setWidth] = React.useState(() =>
+    getDetailPanelWidth(apiRef.current.getRootDimensions()),
+  );
 
   const handleViewportInnerSizeChange = React.useCallback(() => {
-    const dimensions = apiRef.current.getRootDimensions();
-    setWidth(dimensions.viewportInnerSize.width);
+    setWidth(getDetailPanelWidth(apiRef.current.getRootDimensions()));
   }, [apiRef]);
 
   React.useEffect(() => {
