@@ -130,6 +130,7 @@ export default function ElementHighlights() {
             }))}
           />
         )}
+
         {chartType === 'line' && (
           <LineChart
             {...lineChartsParams}
@@ -143,6 +144,7 @@ export default function ElementHighlights() {
             }))}
           />
         )}
+
         {chartType === 'scatter' && (
           <ScatterChart
             {...scatterChartsParams}
@@ -155,6 +157,7 @@ export default function ElementHighlights() {
             }))}
           />
         )}
+
         {chartType === 'pie' && (
           <PieChart
             {...pieChartsParams}
