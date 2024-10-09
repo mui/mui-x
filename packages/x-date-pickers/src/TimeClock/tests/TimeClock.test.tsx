@@ -198,7 +198,7 @@ describe('<TimeClock />', () => {
     const onChangeMock = spy();
     render(<TimeClock value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} readOnly />);
 
-    fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchstart', selectEvent);
+    fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', selectEvent);
     expect(onChangeMock.callCount).to.equal(0);
 
     // hours are not disabled
@@ -228,7 +228,7 @@ describe('<TimeClock />', () => {
     const onChangeMock = spy();
     render(<TimeClock value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} disabled />);
 
-    fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchstart', selectEvent);
+    fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', selectEvent);
     expect(onChangeMock.callCount).to.equal(0);
 
     // hours are disabled
@@ -296,7 +296,7 @@ describe('<TimeClock />', () => {
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchstart', clockTouchEvent['13:--']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['13:--']);
 
       expect(handleChange.callCount).to.equal(1);
       const [date, selectionState] = handleChange.firstCall.args;
@@ -326,7 +326,7 @@ describe('<TimeClock />', () => {
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchstart', clockTouchEvent['--:20']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['--:20']);
 
       expect(handleChange.callCount).to.equal(1);
       const [date, selectionState] = handleChange.firstCall.args;
@@ -354,7 +354,7 @@ describe('<TimeClock />', () => {
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchstart', clockTouchEvent['--:20']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['--:20']);
 
       expect(handleChange.callCount).to.equal(0);
     });
@@ -378,7 +378,7 @@ describe('<TimeClock />', () => {
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchstart', clockTouchEvent['--:20']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['--:20']);
 
       expect(handleChange.callCount).to.equal(0);
     });
@@ -402,7 +402,7 @@ describe('<TimeClock />', () => {
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchstart', clockTouchEvent['19:--']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['19:--']);
 
       expect(handleChange.callCount).to.equal(0);
     });
@@ -426,7 +426,7 @@ describe('<TimeClock />', () => {
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchstart', clockTouchEvent['19:--']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['19:--']);
 
       expect(handleChange.callCount).to.equal(0);
     });
@@ -473,7 +473,7 @@ describe('<TimeClock />', () => {
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchstart', clockTouchEvent['--:10']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['--:10']);
 
       expect(handleChange.callCount).to.equal(1);
       const [date, selectionState] = handleChange.firstCall.args;
@@ -501,7 +501,7 @@ describe('<TimeClock />', () => {
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchstart', clockTouchEvent['--:20']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['--:20']);
 
       expect(handleChange.callCount).to.equal(0);
     });
@@ -525,7 +525,7 @@ describe('<TimeClock />', () => {
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchstart', clockTouchEvent['--:20']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['--:20']);
 
       expect(handleChange.callCount).to.equal(0);
     });
@@ -548,8 +548,8 @@ describe('<TimeClock />', () => {
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchstart', clockTouchEvent['13:--']);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', clockTouchEvent['19:--']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['13:--']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', clockTouchEvent['19:--']);
 
       expect(handleChange.callCount).to.equal(2);
       const [date, selectionState] = handleChange.lastCall.args;
@@ -576,8 +576,8 @@ describe('<TimeClock />', () => {
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchstart', clockTouchEvent['13:--']);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', clockTouchEvent['13:--']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['13:--']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', clockTouchEvent['13:--']);
 
       expect(handleChange.callCount).to.equal(2);
       const [date, selectionState] = handleChange.lastCall.args;

@@ -100,7 +100,7 @@
     },
     "renderLoading": {
       "type": { "name": "func" },
-      "default": "() => <span data-mui-test=\"loading-progress\">...</span>",
+      "default": "() => <span>...</span>",
       "signature": {
         "type": "function() => React.ReactNode",
         "describedArgs": [],
