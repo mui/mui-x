@@ -51,9 +51,6 @@ describe('<DataGridPro /> - Infnite loader', () => {
         { id: 6, brand: 'Gucci' },
         { id: 7, brand: "Levi's" },
         { id: 8, brand: 'Ray-Ban' },
-        { id: 9, brand: 'Umbro' },
-        { id: 10, brand: 'Timberland' },
-        { id: 11, brand: 'Fila' },
       ),
     });
     // Trigger a scroll again to notify the grid that we're not in the bottom area anymore
