@@ -92,10 +92,13 @@ export const gridPaginationRowRangeSelector = createSelectorMemoized(
       paginationModel.pageSize * paginationModel.page,
       visibleTopLevelRowCount - 1,
     );
-    const topLevelLastRowIndex = Math.min(
-      topLevelFirstRowIndex + paginationModel.pageSize - 1,
-      visibleTopLevelRowCount - 1,
-    );
+    const topLevelLastRowIndex =
+      paginationModel.pageSize < 0
+        ? visibleTopLevelRowCount - 1
+        : Math.min(
+            topLevelFirstRowIndex + paginationModel.pageSize - 1,
+            visibleTopLevelRowCount - 1,
+          );
 
     // The range contains no element
     if (topLevelFirstRowIndex === -1 || topLevelLastRowIndex === -1) {
