@@ -922,7 +922,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         apiRef.current.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
-        fireEvent.keyDown(cell, { key: 'v', ctrlKey: true }); // Ctrl+V
+        fireEvent.keyDown(cell, { key: 'v', code: 'KeyV', keyCode: 86, ctrlKey: true }); // Ctrl+V
         expect(listener.callCount).to.equal(1);
       });
 
