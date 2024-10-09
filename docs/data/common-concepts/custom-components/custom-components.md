@@ -7,7 +7,7 @@
 A slot is a part of a component that can be [overridden](/x/common-concepts/custom-components/#how-to-override-a-slot) and/or [customized](/x/common-concepts/custom-components/#how-to-customize-a-slot).
 
 Some of those slots allow you to provide your own UI primitives to the MUI X components.
-This is the role of all the `baseXXX` component on the `DataGrid` component (`baseButton`, `baseSelect`, ...).
+This is the role of all the `baseXXX` component on the Data Grid component (`baseButton`, `baseSelect`, ...).
 These slots receive props that should be as generic as possible so that it is easy to interface any other design system.
 
 Other slots allow you to override parts of the MUI X UI components with a custom UI built specifically for this component.

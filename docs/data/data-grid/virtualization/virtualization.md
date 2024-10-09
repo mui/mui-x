@@ -12,7 +12,7 @@ _\*unlimited: Browsers set a limit on the number of pixels a scroll container ca
 Row virtualization is the insertion and removal of rows as the Data Grid scrolls vertically.
 
 The grid renders some additional rows above and below the visible rows. You can use `rowBufferPx` prop to hint to the Data Grid the area to render, but this value may not be respected in certain situations, for example during high-speed scrolling.
-Row virtualization is limited to 100 rows in the `DataGrid` component.
+Row virtualization is limited to 100 rows in the Data Grid component.
 
 :::warning
 Row virtualization does not work with the `autoHeight` prop enabled.

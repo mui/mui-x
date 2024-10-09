@@ -1832,7 +1832,7 @@ Same changes as in `@mui/x-date-pickers@6.11.0`.
 - [core] Update monorepo (#9846) @flaviendelangle
 - [core] Update tree data API docs (#9827) @cherniavskii
 - [test] Add pickers e2e tests (#9747) @LukasTy
-- [test] Data grid e2e tests follow-up (#9822) @cherniavskii
+- [test] Data Grid e2e tests follow-up (#9822) @cherniavskii
 
 ## 6.10.2
 
@@ -2500,7 +2500,7 @@ _May 19, 2023_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
-- 💫 Introduce filtering on column headers for `DataGridPro` and `DataGridPremium`:
+- 💫 Introduce filtering on column headers for Data Grid Pro and Data Grid Premium:
 
   <img src="https://github.com/mui/mui-x/releases/download/v6.5.0/recording.gif" width="840" height="506" alt="Filtering on column headers example" />
 
@@ -2556,7 +2556,7 @@ _May 12, 2023_
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Introduce clipboard paste support for `DataGridPremium`:
+- 🎁 Introduce clipboard paste support for Data Grid Premium:
 
   https://github.com/mui/mui-x/assets/13808724/abfcb5c6-9db6-4677-9ba7-ae97de441080
 
@@ -3227,7 +3227,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 #### Changes
 
-- [codemod] Add `apiRef.current.getRowIndex` to `DataGrid` renaming codemod (#8001) @MBilalShafi
+- [codemod] Add `apiRef.current.getRowIndex` to Data Grid renaming codemod (#8001) @MBilalShafi
 
 ### Docs
 
@@ -3280,7 +3280,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [docs] Add an info callout specifying the current state of desktop time view (#7933) @LukasTy
 - [docs] Add missing param in `useGridApiEventHandler` examples (#7939) @flaviendelangle
 - [docs] Fix markdown table alignments (#7898) @oliviertassinari
-- [docs] Improve `DataGrid` migration guide (#7861) @MBilalShafi
+- [docs] Improve Data Grid migration guide (#7861) @MBilalShafi
 - [docs] Update `LocalizationProvider` `dateAdapter` with a link to the doc (#7872) @LukasTy
 
 ### Core
@@ -4063,7 +4063,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
   See [the documentation](https://mui.com/x/react-data-grid/api-object/) for more information.
 
-- 🎁 The `DataGridPremium` now supports cell selection:
+- 🎁 The Data Grid Premium now supports cell selection:
 
   ```tsx
   <DataGridPremium unstable_cellSelection />
@@ -4127,7 +4127,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 - 🚀 Add dragging support for the new Date Range Picker (`NextDateRangePicker`) (#6763) @LukasTy
 - ⚡️ Improve performance of the `day` view (#7066) @flaviendelangle
-- ✨ Fix lazy-loading feature not working in `DataGridPremium` (#7124) @m4theushw
+- ✨ Fix lazy-loading feature not working in Data Grid Premium (#7124) @m4theushw
 - 🐞 Bugfixes
 
 ### `@mui/x-data-grid@6.0.0-alpha.11` / `@mui/x-data-grid-pro@6.0.0-alpha.11` / `@mui/x-data-grid-premium@6.0.0-alpha.11`
@@ -4832,7 +4832,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   ⚠️ These components are unstable.
   They might receive breaking changes on their props to have the best components possible by the time of the stable release.
 
-- 📝 Allow to limit to one filter per column for `DataGridPro` and `DataGridPremium` (#6333) @MBilalShafi
+- 📝 Allow to limit to one filter per column for Data Grid Pro and Data Grid Premium (#6333) @MBilalShafi
 - 📚 New [page describing the validation props on each picker](https://mui.com/x/react-date-pickers/validation/) (#6064) @flaviendelangle
 - 📚 Documentation improvements
 - 🐞 Bugfixes
@@ -5048,7 +5048,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
    />
   ```
 
-  The aggregation of the columns through the column menu is now enabled by default on `DataGridPremium`. You can set `disableAggregation={true}` to disable it.
+  The aggregation of the columns through the column menu is now enabled by default on Data Grid Premium. You can set `disableAggregation={true}` to disable it.
 
 #### Changes
 

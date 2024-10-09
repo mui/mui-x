@@ -277,7 +277,7 @@ _Dec 8, 2022_
 
 We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
-- ✨ Fix lazy-loading not working in `DataGridPremium` (#7130) @m4theushw
+- ✨ Fix lazy-loading not working in Data Grid Premium (#7130) @m4theushw
 - 🐞 Bugfixes
 
 ### `@mui/x-data-grid@v5.17.15` / `@mui/x-data-grid-pro@v5.17.15` / `@mui/x-data-grid-premium@v5.17.15`
@@ -1187,7 +1187,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [DataGrid] Fix the default filter operator fallback on state initialization (#5266) @flaviendelangle
 - [DataGrid] Stop using the deprecated `api` prop in the grid components (#5205) @flaviendelangle
 - [DataGrid] Add Swedish (sv-SE) locale (#5210) @mrxdst
-- [DataGridPremium] Fix detail panel on `DataGridPremium` (#5264) @flaviendelangle
+- [DataGridPremium] Fix detail panel on Data Grid Premium (#5264) @flaviendelangle
 - [DataGridPremium] Fix Excel import with Remix / Vite (#5207) @alexfauquette
 - [DataGridPremium] Fix error with quick filter and grouping rows (#5238) @alexfauquette
 
@@ -1200,7 +1200,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 ### Docs
 
-- [docs] Add `DataGridPremium` to all API sections (#5196) @flaviendelangle
+- [docs] Add Data Grid Premium to all API sections (#5196) @flaviendelangle
 - [docs] Add plan badge next to event name in the Events page (#5200) @flaviendelangle
 - [docs] Add section for theme augmentation in the picker docs (#5276) @flaviendelangle
 - [docs] Add waiting for upvote section for row group panel (#5271) @flaviendelangle
@@ -1501,7 +1501,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
   This plan is available through the new `@mui/x-data-grid-premium` package, which contains the row grouping and the Excel export features.
 
-  If you were already using the row grouping feature, you can upgrade by [installing](https://mui.com/x/react-data-grid/getting-started/#installation) `@mui/x-data-grid-premium` and replace `DataGridPro` with `DataGridPremium`, as follows. Note that the experimental flag is not required anymore to use the row grouping.
+  If you were already using the row grouping feature, you can upgrade by [installing](https://mui.com/x/react-data-grid/getting-started/#installation) `@mui/x-data-grid-premium` and replace Data Grid Pro with Data Grid Premium, as follows. Note that the experimental flag is not required anymore to use the row grouping.
 
   ```diff
   -import { DataGridPro } from '@mui/x-data-grid-pro';
@@ -1631,7 +1631,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [core] Stop using `GridEvents` enum (#4698, #4696, #4685) @flaviendelangle
 - [core] Update monorepo (#4854) @cherniavskii
 - [license] Allow to limit some packages to a specific license plan (#4651) @flaviendelangle
-- [test] Fix path to detect `DataGrid` tests (#4752) @m4theushw
+- [test] Fix path to detect Data Grid tests (#4752) @m4theushw
 - [test] Reset cleanup tracking on Karma tests (#4679) @m4theushw
 - [test] Restore `sinon` sandbox after each `karma` test (#4689) @m4theushw
 
@@ -2722,7 +2722,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
    />
   ```
 
-  **Note**: these changes apply to both the `DataGrid` and `DataGridPro` components.
+  **Note**: these changes apply to both the Data Grid and Data Grid Pro components.
 
 #### Changes
 
@@ -2959,7 +2959,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 
 #### Breaking changes
 
-- The `DataGrid` and `DataGridPro` no longer depends on `@mui/styles`. Use `styled` to provide custom styling. (#2784) @DanailH
+- The Data Grid and Data Grid Pro no longer depends on `@mui/styles`. Use `styled` to provide custom styling. (#2784) @DanailH
 
   ```diff
   -import { createTheme } from '@mui/material/styles';
@@ -3241,7 +3241,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 ### Docs
 
 - [docs] Add link to installation page (#2778) @MostafaKMilly
-- [docs] Add redirect from docs home page to `DataGrid` home page (#2737) @flaviendelangle
+- [docs] Add redirect from docs home page to Data Grid home page (#2737) @flaviendelangle
 - [docs] Fix JSX closing tag in `getActions` example (#2847) @dstarner
 - [docs] Fix pagination in Ant Design demo (#2787) @ZeeshanTamboli
 - [docs] Update the `page` prop docs (#2812) @m4theushw
@@ -3259,7 +3259,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 - 🌎 Add Persian (fa-IR) locale (#2712) @devlifeX
 - 🎁 Allow to select range of rows with Shift + click (#2456) @flaviendelangle
-- 🚀 Allow to throttle the row updates with the `throttleRowsMs` prop on `DataGridPro` and remove the default 100ms row update delay (#2561) @flaviendelangle
+- 🚀 Allow to throttle the row updates with the `throttleRowsMs` prop on Data Grid Pro and remove the default 100ms row update delay (#2561) @flaviendelangle
 - 💡 Enhance internal code structure
 - 📚 Documentation improvements
 - 🐞 Bugfixes
@@ -3449,7 +3449,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
   +const rootProps = useGridRootProps();
   ```
 
-- [DataGrid] The module augmentation is not enabled by default. This change was done to prevent conflicts with projects using `DataGrid` and `DataGridPro` together.
+- [DataGrid] The module augmentation is not enabled by default. This change was done to prevent conflicts with projects using Data Grid and Data Grid Pro together.
 
   In order to still be able to do overrides at the theme level, add the following imports to your project:
 

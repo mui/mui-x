@@ -17,7 +17,7 @@ A big thanks to the 6 contributors who made this release possible. Here are some
 
   <img src="https://user-images.githubusercontent.com/3165635/130665023-3c0730ab-502e-4da1-8bc1-d572427ad2d6.gif" width="851" height="382" alt="Row editing example" />
 
-- ⚡️ Rename the `XGrid` component to `DataGridPro` (#2382) @m4theushw
+- ⚡️ Rename the `XGrid` component to Data Grid Pro (#2382) @m4theushw
 
   This should help clarify the products vs. plans separation. [MUI X](https://github.com/mui/mui-x) is a product line on its own. It contains MIT and Commercial software. Removing X from the name of the paid components should help remove a possible confusion: the MIT version of X is meant to be valuable enough for developers to use it, without feeling that it's crippled compared to other OSS alternatives.
   The Pro suffix should help make it clear what's MIT and what's not.
@@ -27,13 +27,13 @@ A big thanks to the 6 contributors who made this release possible. Here are some
   This is part of the ongoing rebranding of the project and company. Material UI is our current official company name, however, we are going to change it. It's too long to write, read, and pronounce; and it is too closely associated with Material Design.
   In the near future, the whole company is moving to MUI and https://mui.com/.
 
-- 💡 The `api` property was removed from the callback params. To access the API, use the `DataGridPro` (#2312) @DanailH
+- 💡 The `api` property was removed from the callback params. To access the API, use the Data Grid Pro (#2312) @DanailH
 
 ### `@mui/x-data-grid@v4.0.0` / `@mui/x-data-grid-pro@v4.0.0`
 
 #### Breaking changes
 
-- [DataGrid] Move packages to `@mui` scope and rename `XGrid` to `DataGridPro` (#2341, #2382) @m4theushw @oliviertassinari
+- [DataGrid] Move packages to `@mui` scope and rename `XGrid` to Data Grid Pro (#2341, #2382) @m4theushw @oliviertassinari
   You can find in the above highlight section why we are making these name changes. You can migrate following these steps:
 
   ```diff
@@ -49,7 +49,7 @@ A big thanks to the 6 contributors who made this release possible. Here are some
   ```
 
 - [DataGrid] The `api` property was removed from the callback params (#2312) @DanailH
-  To access the API, use the `DataGridPro` and get it from the new `details` param.
+  To access the API, use the Data Grid Pro and get it from the new `details` param.
 
   ```diff
    <DataGridPro
@@ -73,7 +73,7 @@ A big thanks to the 6 contributors who made this release possible. Here are some
 ### Docs
 
 - [docs] Add `Row & Cell editing` in features list (#2396) @ZeeshanTamboli
-- [docs] Add redirect from `XGrid` to `DataGridPro` (#2389) @m4theushw
+- [docs] Add redirect from `XGrid` to Data Grid Pro (#2389) @m4theushw
 - [docs] Fix `onCellEditCommit` param type (#2390) @ArthurPedroti
 - [docs] Fix docs for `onEditRowsModelChange` prop (#2394) @ZeeshanTamboli
 - [docs] Fix docs links and pagination sentence (#2381) @ZeeshanTamboli
@@ -227,7 +227,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 ### Core
 
-- [core] Isolate `DataGrid` and `XGrid` (#2176) @dtassone
+- [core] Isolate Data Grid Pro and `XGrid` (#2176) @dtassone
 - [core] Move `GridFilterModel` in the models directory (#2243) @flaviendelangle
 - [core] Add new column internal `computedWidth` field (#2235) @flaviendelangle
 - [core] Use `rootProps` instead of `options` in the grid components except for `classes` (#2213) @flaviendelangle
@@ -1820,9 +1820,9 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 ### Docs
 
-- [docs] Data grid depends on side effects (#666) @oliviertassinari
+- [docs] Data Grid depends on side effects (#666) @oliviertassinari
 - [docs] Clarify the purpose of x-grid-data-generator (#634) @Elius94
-- [docs] Data grid is in the lab (#612) @oliviertassinari
+- [docs] Data Grid is in the lab (#612) @oliviertassinari
 - [docs] Fix Demo app, downgrade webpack-cli, known issue in latest version (#647) @dtassone
 - [docs] Fix typo in columns.md @stojy
 - [docs] Reduce confusion on /export page (#646) @SerdarMustafa1

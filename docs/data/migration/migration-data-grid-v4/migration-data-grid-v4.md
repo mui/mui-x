@@ -126,7 +126,7 @@ To use the v5 version of MUI X, you first need to update to the new package nam
 
 ### Module augmentation
 
-- The module augmentation is no longer enabled by default. This change was done to prevent conflicts with projects using `DataGrid` and `DataGridPro` together.
+- The module augmentation is no longer enabled by default. This change was done to prevent conflicts with projects using Data Grid and Data Grid Pro together.
 
   In order to still be able to do overrides at the theme level, add the following imports to your project:
 

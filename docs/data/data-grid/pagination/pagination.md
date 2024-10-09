@@ -25,7 +25,7 @@ For the Pro and Premium Data Grid, pagination is disabled by default; use the `p
 
 ## Size of the page
 
-The `DataGrid` (MIT license) is limited to pages of up to 100 rows.
+The Data Grid (MIT license) is limited to pages of up to 100 rows.
 If you want larger pages, you will need to upgrade to [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 
 By default, each page contains 100 rows. The user can change the size of the page through the selector in the footer.

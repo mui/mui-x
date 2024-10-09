@@ -61,7 +61,7 @@ const theme = createTheme(
 
 Note that `createTheme` accepts any number of arguments.
 If you are already using the [translations of the core components](/material-ui/guides/localization/#locale-text), you can add `bgBG` as a new argument.
-The same import works for `DataGridPro` as it's an extension of `DataGrid`.
+The same import works for Data Grid Pro as it's an extension of Data Grid.
 
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';

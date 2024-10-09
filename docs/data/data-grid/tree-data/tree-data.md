@@ -93,7 +93,7 @@ Same behavior as for the [Row grouping](/x/react-data-grid/row-grouping/#automat
 
 ## Gaps in the tree
 
-If some entries are missing to build the full tree, the `DataGridPro` will automatically create rows to fill those gaps.
+If some entries are missing to build the full tree, the Data Grid Pro will automatically create rows to fill those gaps.
 
 {{"demo": "TreeDataWithGap.js", "bg": "inline", "defaultCodeOpen": false}}
 
