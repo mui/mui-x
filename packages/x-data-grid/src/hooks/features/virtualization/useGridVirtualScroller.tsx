@@ -527,7 +527,7 @@ export const useGridVirtualScroller = () => {
       height: contentHeight,
     };
 
-    if (rootProps.autoHeight && currentPage.rows.length === 0) {
+    if ((rootProps.autoHeight && currentPage.rows.length === 0) || size.height === 0) {
       size.height = getMinimalContentHeight(apiRef); // Give room to show the overlay when there no rows.
     }
 
