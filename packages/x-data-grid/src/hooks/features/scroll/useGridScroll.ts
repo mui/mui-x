@@ -160,11 +160,11 @@ export const useGridScroll = (
       }
       if (
         virtualScrollerRef.current &&
-        virtualScrollbarVerticalRef.current &&
+        // virtualScrollbarVerticalRef.current &&
         params.top !== undefined
       ) {
         virtualScrollerRef.current.scrollTop = params.top;
-        virtualScrollbarVerticalRef.current.scrollTop = params.top;
+        // virtualScrollbarVerticalRef.current.scrollTop = params.top;
         logger.debug(`Scrolling top: ${params.top}`);
       }
       logger.debug(`Scrolling, updating container, and viewport`);
@@ -172,7 +172,7 @@ export const useGridScroll = (
     [
       virtualScrollerRef,
       virtualScrollbarHorizontalRef,
-      virtualScrollbarVerticalRef,
+      // virtualScrollbarVerticalRef,
       isRtl,
       colRef,
       logger,
