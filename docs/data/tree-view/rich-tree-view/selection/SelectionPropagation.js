@@ -77,6 +77,7 @@ export default function SelectionPropagation() {
         <RichTreeView
           items={MUI_X_PRODUCTS}
           checkboxSelection
+          multiSelect
           selectionPropagation={selectionPropagation}
           defaultExpandedItems={['grid', 'pickers', 'tree-view']}
         />
