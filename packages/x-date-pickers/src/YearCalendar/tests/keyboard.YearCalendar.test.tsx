@@ -6,11 +6,7 @@ import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 describe('<YearCalendar /> - Keyboard', () => {
-  const { render } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date(2000, 0, 1),
-    clockOptions: { toFake: ['Date'] },
-  });
+  const { render } = createPickerRenderer();
 
   const RTL_THEME = createTheme({
     direction: 'rtl',
