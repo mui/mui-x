@@ -64,6 +64,7 @@
   { "name": "unstable_resetCleanupTracking", "kind": "Variable" },
   { "name": "unstable_useTreeItem2", "kind": "Variable" },
   { "name": "useTreeItem2", "kind": "Variable" },
+  { "name": "UseTreeItem2CheckboxSlotOwnProps", "kind": "Interface" },
   { "name": "UseTreeItem2ContentSlotOwnProps", "kind": "Interface" },
   { "name": "UseTreeItem2DragAndDropOverlaySlotOwnProps", "kind": "Interface" },
   { "name": "UseTreeItem2GroupTransitionSlotOwnProps", "kind": "Interface" },

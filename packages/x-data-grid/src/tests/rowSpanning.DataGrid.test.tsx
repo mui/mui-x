@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, waitFor, fireEvent, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGrid, useGridApiRef, DataGridProps, GridApi } from '@mui/x-data-grid';
 import { getCell, getActiveCell } from 'test/utils/helperFn';
@@ -224,10 +224,10 @@ describe('<DataGrid /> - Row spanning', () => {
         />,
       );
       expect(Object.keys(apiRef.current.state.rowSpanning.spannedCells).length).to.equal(0);
-      apiRef.current.setPage(1);
-      await waitFor(() =>
-        expect(Object.keys(apiRef.current.state.rowSpanning.spannedCells).length).to.equal(1),
-      );
+      await act(async () => {
+        apiRef.current.setPage(1);
+      });
+      expect(Object.keys(apiRef.current.state.rowSpanning.spannedCells).length).to.equal(1);
       expect(Object.keys(apiRef.current.state.rowSpanning.hiddenCells).length).to.equal(1);
     });
   });
