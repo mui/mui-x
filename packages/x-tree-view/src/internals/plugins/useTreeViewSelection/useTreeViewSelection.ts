@@ -12,7 +12,12 @@ import {
   UseTreeViewSelectionInstance,
   UseTreeViewSelectionSignature,
 } from './useTreeViewSelection.types';
-import { convertSelectedItemsToArray, getLookupFromArray } from './useTreeViewSelection.utils';
+import {
+  convertSelectedItemsToArray,
+  propagateSelection,
+  getAddedAndRemovedItems,
+  getLookupFromArray,
+} from './useTreeViewSelection.utils';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
   instance,
@@ -21,6 +26,9 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 }) => {
   const lastSelectedItem = React.useRef<string | null>(null);
   const lastSelectedRange = React.useRef<{ [itemId: string]: boolean }>({});
+
+  const applyAutoSelection =
+    !!params.selectionPropagation.descendants || !!params.selectionPropagation.parents;
 
   const selectedItemsMap = React.useMemo(() => {
     const temp = new Map<TreeViewItemId, boolean>();
@@ -37,39 +45,52 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
   const setSelectedItems = (
     event: React.SyntheticEvent,
-    newSelectedItems: typeof params.defaultSelectedItems,
+    newModel: typeof params.defaultSelectedItems,
   ) => {
+    let cleanModel: typeof newModel;
+    if (params.multiSelect && applyAutoSelection) {
+      cleanModel = propagateSelection({
+        instance,
+        selectionPropagation: params.selectionPropagation,
+        newModel: newModel as string[],
+        oldModel: models.selectedItems.value as string[],
+      });
+    } else {
+      cleanModel = newModel;
+    }
+
     if (params.onItemSelectionToggle) {
       if (params.multiSelect) {
-        const addedItems = (newSelectedItems as string[]).filter(
-          (itemId) => !instance.isItemSelected(itemId),
-        );
-        const removedItems = (models.selectedItems.value as string[]).filter(
-          (itemId) => !(newSelectedItems as string[]).includes(itemId),
-        );
-
-        addedItems.forEach((itemId) => {
-          params.onItemSelectionToggle!(event, itemId, true);
+        const changes = getAddedAndRemovedItems({
+          instance,
+          newModel: cleanModel as string[],
+          oldModel: models.selectedItems.value as string[],
         });
 
-        removedItems.forEach((itemId) => {
-          params.onItemSelectionToggle!(event, itemId, false);
-        });
-      } else if (newSelectedItems !== models.selectedItems.value) {
+        if (params.onItemSelectionToggle) {
+          changes.added.forEach((itemId) => {
+            params.onItemSelectionToggle!(event, itemId, true);
+          });
+
+          changes.removed.forEach((itemId) => {
+            params.onItemSelectionToggle!(event, itemId, false);
+          });
+        }
+      } else if (params.onItemSelectionToggle && cleanModel !== models.selectedItems.value) {
         if (models.selectedItems.value != null) {
           params.onItemSelectionToggle(event, models.selectedItems.value as string, false);
         }
-        if (newSelectedItems != null) {
-          params.onItemSelectionToggle(event, newSelectedItems as string, true);
+        if (cleanModel != null) {
+          params.onItemSelectionToggle(event, cleanModel as string, true);
         }
       }
     }
 
     if (params.onSelectedItemsChange) {
-      params.onSelectedItemsChange(event, newSelectedItems);
+      params.onSelectedItemsChange(event, cleanModel);
     }
 
-    models.selectedItems.setControlledValue(newSelectedItems);
+    models.selectedItems.setControlledValue(cleanModel);
   };
 
   const isItemSelected = (itemId: string) => selectedItemsMap.has(itemId);
@@ -233,6 +254,7 @@ useTreeViewSelection.getDefaultizedParams = ({ params }) => ({
   checkboxSelection: params.checkboxSelection ?? false,
   defaultSelectedItems:
     params.defaultSelectedItems ?? (params.multiSelect ? DEFAULT_SELECTED_ITEMS : null),
+  selectionPropagation: params.selectionPropagation ?? {},
 });
 
 useTreeViewSelection.params = {
@@ -243,4 +265,5 @@ useTreeViewSelection.params = {
   selectedItems: true,
   onSelectedItemsChange: true,
   onItemSelectionToggle: true,
+  selectionPropagation: true,
 };
