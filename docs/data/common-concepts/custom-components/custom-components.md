@@ -196,7 +196,7 @@ function MyApp() {
 
 ### Using module augmentation
 
-If you are using one of the data grid packages,
+If you are using one of the Data Grid packages,
 you can also use [module augmentation](/x/react-data-grid/components/#custom-slot-props-with-typescript) to let TypeScript know about your custom props:
 
 ```ts

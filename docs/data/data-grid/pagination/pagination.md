@@ -100,7 +100,7 @@ const [paginationModel, setPaginationModel] = React.useState({
 ## Server-side pagination
 
 By default, the pagination is handled on the client.
-This means you have to give the rows of all pages to the data grid.
+This means you have to give the rows of all pages to the Data Grid.
 If your dataset is too big, and you want to fetch the pages on demand, you can use server-side pagination.
 
 In general, the server-side pagination could be categorized into two types:

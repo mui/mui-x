@@ -56,7 +56,7 @@ const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) =>
 
 :::warning
 The `getTreeDataPath` prop should keep the same reference between two renders.
-If it changes, the data grid will consider that the data has changed and will recompute the tree resulting in collapsing all the rows.
+If it changes, the Data Grid will consider that the data has changed and will recompute the tree resulting in collapsing all the rows.
 :::
 
 {{"demo": "TreeDataSimple.js", "bg": "inline", "defaultCodeOpen": false}}

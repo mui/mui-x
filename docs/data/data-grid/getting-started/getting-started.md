@@ -1,6 +1,6 @@
 # Data Grid - Getting started
 
-<p class="description">Get started with the last React data grid you will need. Install the package, configure the columns, provide rows, and you are set.</p>
+<p class="description">Get started with the last React Data Grid you will need. Install the package, configure the columns, provide rows, and you are set.</p>
 
 ## Installation
 

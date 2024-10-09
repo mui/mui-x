@@ -120,7 +120,7 @@ describe('<DataGridPro /> - Infnite loader', () => {
     }
     render(<TestCase />);
 
-    // data grid should have loaded 6 rows:
+    // Data Grid should have loaded 6 rows:
     //   1 initial row
     //   5 rows loaded one by one through `onRowsScrollEnd` callback
 
