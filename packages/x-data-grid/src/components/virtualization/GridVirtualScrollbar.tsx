@@ -109,7 +109,7 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
       const value = scroller[propertyScroll] / contentSize;
       scrollbar[propertyScroll] = value * scrollbarInnerSize;
 
-      lastPosition.current = scrollbar[propertyScroll];
+      lastPosition.current = scroller[propertyScroll];
     });
 
     const onScrollbarScroll = useEventCallback(() => {
