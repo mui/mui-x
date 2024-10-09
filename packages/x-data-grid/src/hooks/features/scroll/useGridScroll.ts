@@ -59,7 +59,7 @@ export const useGridScroll = (
   const logger = useGridLogger(apiRef, 'useGridScroll');
   const colRef = apiRef.current.columnHeadersContainerRef;
   const virtualScrollerRef = apiRef.current.virtualScrollerRef!;
-  const virtualScrollbarHorizontalRef = apiRef.current.virtualScrollbarHorizontalRef!;
+  // const virtualScrollbarHorizontalRef = apiRef.current.virtualScrollbarHorizontalRef!;
   // const virtualScrollbarVerticalRef = apiRef.current.virtualScrollbarVerticalRef!;
   const visibleSortedRows = useGridSelector(apiRef, gridExpandedSortedRowEntriesSelector);
 
@@ -148,14 +148,14 @@ export const useGridScroll = (
     (params: Partial<GridScrollParams>) => {
       if (
         virtualScrollerRef.current &&
-        virtualScrollbarHorizontalRef.current &&
+        // virtualScrollbarHorizontalRef.current &&
         params.left !== undefined &&
         colRef.current
       ) {
         const direction = isRtl ? -1 : 1;
         colRef.current.scrollLeft = params.left;
         virtualScrollerRef.current.scrollLeft = direction * params.left;
-        virtualScrollbarHorizontalRef.current.scrollLeft = direction * params.left;
+        // virtualScrollbarHorizontalRef.current.scrollLeft = direction * params.left;
         logger.debug(`Scrolling left: ${params.left}`);
       }
       if (
@@ -171,7 +171,7 @@ export const useGridScroll = (
     },
     [
       virtualScrollerRef,
-      virtualScrollbarHorizontalRef,
+      // virtualScrollbarHorizontalRef,
       // virtualScrollbarVerticalRef,
       isRtl,
       colRef,
