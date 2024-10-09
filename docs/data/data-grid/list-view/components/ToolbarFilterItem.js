@@ -5,11 +5,8 @@ import {
   useGridSelector,
   gridFilterActiveItemsSelector,
   GridCheckIcon,
-  gridColumnDefinitionsSelector,
 } from '@mui/x-data-grid-premium';
 import Badge from '@mui/material/Badge';
-import { ToolbarButton } from './ToolbarButton';
-import { Drawer, DrawerHeader } from './Drawer';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
@@ -18,9 +15,11 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
-import CheckboxIcon from '@mui/icons-material/Checkbox';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
+import { Drawer, DrawerHeader } from './Drawer';
+import { ToolbarButton } from './ToolbarButton';
 
 import { FILE_TYPES } from '../constants';
 
@@ -65,7 +64,6 @@ export function ToolbarFilterItem(props) {
   const { listView, container } = props;
   const [open, setOpen] = React.useState(false);
   const apiRef = useGridApiContext();
-  const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
   const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
   const currentFileTypeFilter =
     activeFilters.filter((filter) => filter.field === 'type')?.[0]?.value ?? [];
@@ -108,7 +106,7 @@ export function ToolbarFilterItem(props) {
   };
 
   return (
-    <>
+    <React.Fragment>
       <ToolbarButton onClick={() => setOpen(true)}>
         <Badge badgeContent={activeFilters.length} color="primary" variant="dot">
           <GridFilterListIcon fontSize="small" />
@@ -187,7 +185,7 @@ export function ToolbarFilterItem(props) {
                 <ListItemButton onClick={() => applyFileTypeFilter(type, !isActive)}>
                   <ListItemIcon>
                     {isActive ? (
-                      <CheckboxIcon color="primary" />
+                      <CheckBoxIcon color="primary" />
                     ) : (
                       <CheckBoxBlankIcon />
                     )}
@@ -214,6 +212,6 @@ export function ToolbarFilterItem(props) {
           </ListItem>
         </List>
       </Drawer>
-    </>
+    </React.Fragment>
   );
 }

@@ -6,7 +6,7 @@ import {
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
 } from '@mui/x-data-grid-premium';
-import CheckboxIcon from '@mui/icons-material/Checkbox';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';
@@ -35,7 +35,7 @@ export function ToolbarColumnsItem(props) {
   };
 
   return (
-    <>
+    <React.Fragment>
       <ToolbarButton onClick={() => setOpen(true)}>
         <GridColumnIcon fontSize="small" />
       </ToolbarButton>
@@ -61,7 +61,7 @@ export function ToolbarColumnsItem(props) {
                 >
                   <ListItemIcon>
                     {isVisible ? (
-                      <CheckboxIcon color="primary" />
+                      <CheckBoxIcon color="primary" />
                     ) : (
                       <CheckBoxBlankIcon />
                     )}
@@ -73,6 +73,6 @@ export function ToolbarColumnsItem(props) {
           })}
         </List>
       </Drawer>
-    </>
+    </React.Fragment>
   );
 }

@@ -6,11 +6,8 @@ import {
   gridFilterActiveItemsSelector,
   GridCheckIcon,
   GridFilterItem,
-  gridColumnDefinitionsSelector,
 } from '@mui/x-data-grid-premium';
 import Badge from '@mui/material/Badge';
-import { ToolbarButton } from './ToolbarButton';
-import { Drawer, DrawerHeader, DrawerProps } from './Drawer';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
@@ -19,9 +16,11 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
-import CheckboxIcon from '@mui/icons-material/Checkbox';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
+import { Drawer, DrawerHeader, DrawerProps } from './Drawer';
+import { ToolbarButton } from './ToolbarButton';
 import { FileType } from '../types';
 import { FILE_TYPES } from '../constants';
 
@@ -71,11 +70,12 @@ export function ToolbarFilterItem(props: ToolbarFilterItemProps) {
   const { listView, container } = props;
   const [open, setOpen] = React.useState(false);
   const apiRef = useGridApiContext();
-  const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
   const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
   const currentFileTypeFilter =
     activeFilters.filter((filter) => filter.field === 'type')?.[0]?.value ?? [];
-  const currentDateModifiedFilter = activeFilters.find((filter) => filter.field === 'updatedAt');
+  const currentDateModifiedFilter = activeFilters.find(
+    (filter) => filter.field === 'updatedAt',
+  );
 
   const applyDateModifiedFilter = (filterItem: Omit<GridFilterItem, 'field'>) => {
     if (currentDateModifiedFilter) {
@@ -112,7 +112,7 @@ export function ToolbarFilterItem(props: ToolbarFilterItemProps) {
   };
 
   return (
-    <>
+    <React.Fragment>
       <ToolbarButton onClick={() => setOpen(true)}>
         <Badge badgeContent={activeFilters.length} color="primary" variant="dot">
           <GridFilterListIcon fontSize="small" />
@@ -191,7 +191,11 @@ export function ToolbarFilterItem(props: ToolbarFilterItemProps) {
               <ListItem disablePadding key={type}>
                 <ListItemButton onClick={() => applyFileTypeFilter(type, !isActive)}>
                   <ListItemIcon>
-                    {isActive ? <CheckboxIcon color="primary" /> : <CheckBoxBlankIcon />}
+                    {isActive ? (
+                      <CheckBoxIcon color="primary" />
+                    ) : (
+                      <CheckBoxBlankIcon />
+                    )}
                   </ListItemIcon>
                   <ListItemText>{type}</ListItemText>
                 </ListItemButton>
@@ -204,7 +208,10 @@ export function ToolbarFilterItem(props: ToolbarFilterItemProps) {
 
         <List>
           <ListItem disablePadding>
-            <ListItemButton onClick={clearFilters} disabled={activeFilters.length === 0}>
+            <ListItemButton
+              onClick={clearFilters}
+              disabled={activeFilters.length === 0}
+            >
               <ListItemIcon>
                 <FilterAltOffIcon />
               </ListItemIcon>
@@ -213,6 +220,6 @@ export function ToolbarFilterItem(props: ToolbarFilterItemProps) {
           </ListItem>
         </List>
       </Drawer>
-    </>
+    </React.Fragment>
   );
 }
