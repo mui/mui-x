@@ -11,6 +11,6 @@ export interface PickerChangeHandlerContext<TError> {
 
 export interface PickerValidDateLookup {}
 
-export type PickerValidDate = keyof PickerValidDateLookup extends number
+export type PickerValidDate = keyof PickerValidDateLookup extends never
   ? any
   : PickerValidDateLookup[keyof PickerValidDateLookup];
