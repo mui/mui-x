@@ -27,7 +27,6 @@ function CustomActionBar(props: PickersActionBarProps) {
       case 'clear':
         return (
           <MenuItem
-            data-testid="clear-action-button"
             onClick={() => {
               onClear();
               setAnchorEl(null);
@@ -64,7 +63,6 @@ function CustomActionBar(props: PickersActionBarProps) {
       case 'today':
         return (
           <MenuItem
-            data-testid="today-action-button"
             onClick={() => {
               setAnchorEl(null);
               onSetToday();

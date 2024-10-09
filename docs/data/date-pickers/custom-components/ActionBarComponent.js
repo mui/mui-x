@@ -27,7 +27,6 @@ function CustomActionBar(props) {
       case 'clear':
         return (
           <MenuItem
-            data-testid="clear-action-button"
             onClick={() => {
               onClear();
               setAnchorEl(null);
@@ -67,7 +66,6 @@ function CustomActionBar(props) {
       case 'today':
         return (
           <MenuItem
-            data-testid="today-action-button"
             onClick={() => {
               setAnchorEl(null);
               onSetToday();
