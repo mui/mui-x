@@ -2,6 +2,7 @@ import * as React from 'react';
 import moment from 'moment';
 import momentTZ from 'moment-timezone';
 import createDescribe from '@mui/internal-test-utils/createDescribe';
+import { CreateRendererOptions } from '@mui/internal-test-utils/createRenderer';
 import {
   AdapterName,
   buildFieldInteractions,
@@ -19,6 +20,7 @@ function innerDescribeAdapters<P extends {}>(
   title: string,
   FieldComponent: React.FunctionComponent<P>,
   testRunner: AdapterTestRunner<P>,
+  extraClockOptions?: CreateRendererOptions['clockOptions'],
 ) {
   ADAPTERS.forEach((adapterName) => {
     // TODO: Set locale moment before the 1st test run
@@ -32,7 +34,7 @@ function innerDescribeAdapters<P extends {}>(
         clock: 'fake',
         clockConfig: new Date(2022, 5, 15),
         instance: adapterName === 'moment' ? momentTZ : undefined,
-        clockOptions: { toFake: ['Date'] },
+        clockOptions: { toFake: ['Date'], ...extraClockOptions },
       });
 
       const fieldInteractions = buildFieldInteractions<P>({
@@ -46,7 +48,12 @@ function innerDescribeAdapters<P extends {}>(
   });
 }
 
-type Params<P extends {}> = [string, React.FunctionComponent<P>, AdapterTestRunner<P>];
+type Params<P extends {}> = [
+  string,
+  React.FunctionComponent<P>,
+  AdapterTestRunner<P>,
+  CreateRendererOptions['clockOptions']?,
+];
 
 type DescribeAdapters = {
   <P extends {}>(...args: Params<P>): void;

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
+import { act, fireEvent } from '@mui/internal-test-utils';
 import {
   expectFieldValueV7,
   getTextbox,
@@ -11,16 +11,16 @@ import {
 
 describe('<DateField /> - Editing', () => {
   describeAdapters('key: ArrowDown', DateField, ({ adapter, testFieldKeyPress }) => {
-    it("should set the year to today's value when no value is provided (ArrowDown)", async () => {
-      await testFieldKeyPress({
+    it("should set the year to today's value when no value is provided (ArrowDown)", () => {
+      testFieldKeyPress({
         format: adapter.formats.year,
         key: 'ArrowDown',
         expectedValue: '2022',
       });
     });
 
-    it('should decrement the year when a value is provided', async () => {
-      await testFieldKeyPress({
+    it('should decrement the year when a value is provided', () => {
+      testFieldKeyPress({
         format: adapter.formats.year,
         defaultValue: adapter.date(),
         key: 'ArrowDown',
@@ -28,16 +28,16 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should set the month to December when no value is provided', async () => {
-      await testFieldKeyPress({
+    it('should set the month to December when no value is provided', () => {
+      testFieldKeyPress({
         format: adapter.formats.month,
         key: 'ArrowDown',
         expectedValue: 'December',
       });
     });
 
-    it('should decrement the month when a value is provided', async () => {
-      await testFieldKeyPress({
+    it('should decrement the month when a value is provided', () => {
+      testFieldKeyPress({
         format: adapter.formats.month,
         defaultValue: adapter.date(),
         key: 'ArrowDown',
@@ -45,8 +45,8 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should go to the last month of the current year when a value in January is provided', async () => {
-      await testFieldKeyPress({
+    it('should go to the last month of the current year when a value in January is provided', () => {
+      testFieldKeyPress({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: adapter.date('2022-01-15'),
         key: 'ArrowDown',
@@ -54,16 +54,16 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should set the day to 31 when no value is provided', async () => {
-      await testFieldKeyPress({
+    it('should set the day to 31 when no value is provided', () => {
+      testFieldKeyPress({
         format: adapter.formats.dayOfMonth,
         key: 'ArrowDown',
         expectedValue: '31',
       });
     });
 
-    it('should decrement the day when a value is provided', async () => {
-      await testFieldKeyPress({
+    it('should decrement the day when a value is provided', () => {
+      testFieldKeyPress({
         format: adapter.formats.dayOfMonth,
         defaultValue: adapter.date(),
         key: 'ArrowDown',
@@ -71,8 +71,8 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should decrement the month and keep the day when the new month has fewer days', async () => {
-      await testFieldKeyPress({
+    it('should decrement the month and keep the day when the new month has fewer days', () => {
+      testFieldKeyPress({
         format: `${adapter.formats.month} ${adapter.formats.dayOfMonth}`,
         defaultValue: adapter.date('2022-05-31'),
         key: 'ArrowDown',
@@ -80,8 +80,8 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should go to the last day of the current month when a value in the first day of the month is provided', async () => {
-      await testFieldKeyPress({
+    it('should go to the last day of the current month when a value in the first day of the month is provided', () => {
+      testFieldKeyPress({
         format: `${adapter.formats.month} ${adapter.formats.dayOfMonth}`,
         defaultValue: adapter.date('2022-06-01'),
         key: 'ArrowDown',
@@ -90,8 +90,8 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should not edit the value when props.readOnly = true and no value is provided (ArrowDown)', async () => {
-      await testFieldKeyPress({
+    it('should not edit the value when props.readOnly = true and no value is provided (ArrowDown)', () => {
+      testFieldKeyPress({
         format: adapter.formats.year,
         readOnly: true,
         key: 'ArrowDown',
@@ -99,8 +99,8 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should not edit the value when props.readOnly = true and a value is provided (ArrowDown)', async () => {
-      await testFieldKeyPress({
+    it('should not edit the value when props.readOnly = true and a value is provided (ArrowDown)', () => {
+      testFieldKeyPress({
         format: adapter.formats.year,
         defaultValue: adapter.date(),
         readOnly: true,
@@ -111,16 +111,16 @@ describe('<DateField /> - Editing', () => {
   });
 
   describeAdapters('key: ArrowUp', DateField, ({ adapter, testFieldKeyPress }) => {
-    it("should set the year to today's value when no value is provided (ArrowUp)", async () => {
-      await testFieldKeyPress({
+    it("should set the year to today's value when no value is provided (ArrowUp)", () => {
+      testFieldKeyPress({
         format: adapter.formats.year,
         key: 'ArrowUp',
         expectedValue: '2022',
       });
     });
 
-    it('should increment the year when a value is provided', async () => {
-      await testFieldKeyPress({
+    it('should increment the year when a value is provided', () => {
+      testFieldKeyPress({
         format: adapter.formats.year,
         defaultValue: adapter.date(),
         key: 'ArrowUp',
@@ -128,16 +128,16 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should set the month to January when no value is provided', async () => {
-      await testFieldKeyPress({
+    it('should set the month to January when no value is provided', () => {
+      testFieldKeyPress({
         format: adapter.formats.month,
         key: 'ArrowUp',
         expectedValue: 'January',
       });
     });
 
-    it('should increment the month when a value is provided', async () => {
-      await testFieldKeyPress({
+    it('should increment the month when a value is provided', () => {
+      testFieldKeyPress({
         format: adapter.formats.month,
         defaultValue: adapter.date(),
         key: 'ArrowUp',
@@ -145,8 +145,8 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should go to the first month of the current year when a value in December is provided', async () => {
-      await testFieldKeyPress({
+    it('should go to the first month of the current year when a value in December is provided', () => {
+      testFieldKeyPress({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: adapter.date('2022-12-15'),
         key: 'ArrowUp',
@@ -154,16 +154,16 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should set the day 1 when no value is provided', async () => {
-      await testFieldKeyPress({
+    it('should set the day 1 when no value is provided', () => {
+      testFieldKeyPress({
         format: adapter.formats.dayOfMonth,
         key: 'ArrowUp',
         expectedValue: '01',
       });
     });
 
-    it('should increment the day when a value is provided', async () => {
-      await testFieldKeyPress({
+    it('should increment the day when a value is provided', () => {
+      testFieldKeyPress({
         format: adapter.formats.dayOfMonth,
         defaultValue: adapter.date(),
         key: 'ArrowUp',
@@ -171,8 +171,8 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should increment the month and keep the day when the new month has fewer days', async () => {
-      await testFieldKeyPress({
+    it('should increment the month and keep the day when the new month has fewer days', () => {
+      testFieldKeyPress({
         format: `${adapter.formats.month} ${adapter.formats.dayOfMonth}`,
         defaultValue: adapter.date('2022-05-31'),
         key: 'ArrowUp',
@@ -180,8 +180,8 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should go to the first day of the current month when a value in the last day of the month is provided', async () => {
-      await testFieldKeyPress({
+    it('should go to the first day of the current month when a value in the last day of the month is provided', () => {
+      testFieldKeyPress({
         format: `${adapter.formats.month} ${adapter.formats.dayOfMonth}`,
         defaultValue: adapter.date('2022-06-30'),
         key: 'ArrowUp',
@@ -190,8 +190,8 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should not edit the value when props.readOnly = true and no value is provided (ArrowUp)', async () => {
-      await testFieldKeyPress({
+    it('should not edit the value when props.readOnly = true and no value is provided (ArrowUp)', () => {
+      testFieldKeyPress({
         format: adapter.formats.year,
         readOnly: true,
         key: 'ArrowUp',
@@ -199,8 +199,8 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should not edit the value when props.readOnly = true and a value is provided (ArrowUp)', async () => {
-      await testFieldKeyPress({
+    it('should not edit the value when props.readOnly = true and a value is provided (ArrowUp)', () => {
+      testFieldKeyPress({
         format: adapter.formats.year,
         defaultValue: adapter.date(),
         readOnly: true,
@@ -246,8 +246,8 @@ describe('<DateField /> - Editing', () => {
       expectFieldValueV6(input, 'MMMM YYYY');
     });
 
-    it('should clear the selected section when all sections are completed', async () => {
-      await testFieldKeyPress({
+    it('should clear the selected section when all sections are completed', () => {
+      testFieldKeyPress({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: adapter.date(),
         key: 'Delete',
@@ -328,7 +328,7 @@ describe('<DateField /> - Editing', () => {
       await view.user.keyboard('{Control>}a{/Control}');
 
       await view.user.keyboard('{Delete}');
-      await waitFor(() => expectFieldValueV6(input, 'MMMM YYYY'));
+      expectFieldValueV6(input, 'MMMM YYYY');
     });
 
     it('should not keep query after typing again on a cleared section', async () => {
@@ -511,16 +511,16 @@ describe('<DateField /> - Editing', () => {
 
   describeAdapters('key: PageUp', DateField, ({ adapter, testFieldKeyPress }) => {
     describe('day section (PageUp)', () => {
-      it('should set day to minimal when no value is provided', async () => {
-        await testFieldKeyPress({
+      it('should set day to minimal when no value is provided', () => {
+        testFieldKeyPress({
           format: adapter.formats.dayOfMonth,
           key: 'PageUp',
           expectedValue: '01',
         });
       });
 
-      it('should increment day by 5 when value is provided', async () => {
-        await testFieldKeyPress({
+      it('should increment day by 5 when value is provided', () => {
+        testFieldKeyPress({
           format: adapter.formats.dayOfMonth,
           defaultValue: adapter.date('2022-01-15'),
           key: 'PageUp',
@@ -528,8 +528,8 @@ describe('<DateField /> - Editing', () => {
         });
       });
 
-      it('should flip day field when value is higher than 27', async () => {
-        await testFieldKeyPress({
+      it('should flip day field when value is higher than 27', () => {
+        testFieldKeyPress({
           format: adapter.formats.dayOfMonth,
           defaultValue: adapter.date('2022-01-28'),
           key: 'PageUp',
@@ -539,16 +539,16 @@ describe('<DateField /> - Editing', () => {
     });
 
     describe('weekday section (PageUp)', () => {
-      it('should set weekday to Sunday when no value is provided', async () => {
-        await testFieldKeyPress({
+      it('should set weekday to Sunday when no value is provided', () => {
+        testFieldKeyPress({
           format: adapter.formats.weekday,
           key: 'PageUp',
           expectedValue: 'Sunday',
         });
       });
 
-      it('should increment weekday by 5 when value is provided', async () => {
-        await testFieldKeyPress({
+      it('should increment weekday by 5 when value is provided', () => {
+        testFieldKeyPress({
           format: adapter.formats.weekday,
           defaultValue: adapter.date('2024-06-03'),
           key: 'PageUp',
@@ -556,8 +556,8 @@ describe('<DateField /> - Editing', () => {
         });
       });
 
-      it('should flip weekday field when value is higher than 3', async () => {
-        await testFieldKeyPress({
+      it('should flip weekday field when value is higher than 3', () => {
+        testFieldKeyPress({
           format: adapter.formats.weekday,
           defaultValue: adapter.date('2024-06-07'),
           key: 'PageUp',
@@ -567,16 +567,16 @@ describe('<DateField /> - Editing', () => {
     });
 
     describe('month section (PageUp)', () => {
-      it('should set month to January when no value is provided', async () => {
-        await testFieldKeyPress({
+      it('should set month to January when no value is provided', () => {
+        testFieldKeyPress({
           format: adapter.formats.month,
           key: 'PageUp',
           expectedValue: 'January',
         });
       });
 
-      it('should increment month by 5 when value is provided', async () => {
-        await testFieldKeyPress({
+      it('should increment month by 5 when value is provided', () => {
+        testFieldKeyPress({
           format: adapter.formats.month,
           defaultValue: adapter.date('2022-01-15'),
           key: 'PageUp',
@@ -584,8 +584,8 @@ describe('<DateField /> - Editing', () => {
         });
       });
 
-      it('should flip month field when value is higher than 7', async () => {
-        await testFieldKeyPress({
+      it('should flip month field when value is higher than 7', () => {
+        testFieldKeyPress({
           format: adapter.formats.month,
           defaultValue: adapter.date('2022-08-15'),
           key: 'PageUp',
@@ -595,16 +595,16 @@ describe('<DateField /> - Editing', () => {
     });
 
     describe('year section (PageUp)', () => {
-      it('should set year to current year when no value is provided', async () => {
-        await testFieldKeyPress({
+      it('should set year to current year when no value is provided', () => {
+        testFieldKeyPress({
           format: adapter.formats.year,
           key: 'PageUp',
           expectedValue: new Date().getFullYear().toString(),
         });
       });
 
-      it('should increment year by 5 when value is provided', async () => {
-        await testFieldKeyPress({
+      it('should increment year by 5 when value is provided', () => {
+        testFieldKeyPress({
           format: adapter.formats.year,
           defaultValue: adapter.date('2022-01-15'),
           key: 'PageUp',
@@ -612,8 +612,8 @@ describe('<DateField /> - Editing', () => {
         });
       });
 
-      it('should flip year field when value is higher than 9995', async () => {
-        await testFieldKeyPress({
+      it('should flip year field when value is higher than 9995', () => {
+        testFieldKeyPress({
           format: adapter.formats.year,
           defaultValue: adapter.date('9996-01-15'),
           key: 'PageUp',
@@ -625,16 +625,16 @@ describe('<DateField /> - Editing', () => {
 
   describeAdapters('key: PageDown', DateField, ({ adapter, testFieldKeyPress }) => {
     describe('day section (PageDown)', () => {
-      it('should set day to maximal when no value is provided', async () => {
-        await testFieldKeyPress({
+      it('should set day to maximal when no value is provided', () => {
+        testFieldKeyPress({
           format: adapter.formats.dayOfMonth,
           key: 'PageDown',
           expectedValue: '31',
         });
       });
 
-      it('should decrement day by 5 when value is provided', async () => {
-        await testFieldKeyPress({
+      it('should decrement day by 5 when value is provided', () => {
+        testFieldKeyPress({
           format: adapter.formats.dayOfMonth,
           defaultValue: adapter.date('2022-01-15'),
           key: 'PageDown',
@@ -642,8 +642,8 @@ describe('<DateField /> - Editing', () => {
         });
       });
 
-      it('should flip day field when value is lower than 5', async () => {
-        await testFieldKeyPress({
+      it('should flip day field when value is lower than 5', () => {
+        testFieldKeyPress({
           format: adapter.formats.dayOfMonth,
           defaultValue: adapter.date('2022-01-04'),
           key: 'PageDown',
@@ -653,16 +653,16 @@ describe('<DateField /> - Editing', () => {
     });
 
     describe('weekday section (PageDown)', () => {
-      it('should set weekday to Saturday when no value is provided', async () => {
-        await testFieldKeyPress({
+      it('should set weekday to Saturday when no value is provided', () => {
+        testFieldKeyPress({
           format: adapter.formats.weekday,
           key: 'PageDown',
           expectedValue: 'Saturday',
         });
       });
 
-      it('should decrement weekday by 5 when value is provided', async () => {
-        await testFieldKeyPress({
+      it('should decrement weekday by 5 when value is provided', () => {
+        testFieldKeyPress({
           format: adapter.formats.weekday,
           defaultValue: adapter.date('2024-06-22'),
           key: 'PageDown',
@@ -670,8 +670,8 @@ describe('<DateField /> - Editing', () => {
         });
       });
 
-      it('should flip weekday field when value is lower than 5', async () => {
-        await testFieldKeyPress({
+      it('should flip weekday field when value is lower than 5', () => {
+        testFieldKeyPress({
           format: adapter.formats.weekday,
           defaultValue: adapter.date('2024-06-23'),
           key: 'PageDown',
@@ -681,16 +681,16 @@ describe('<DateField /> - Editing', () => {
     });
 
     describe('month section (PageDown)', () => {
-      it('should set month to December when no value is provided', async () => {
-        await testFieldKeyPress({
+      it('should set month to December when no value is provided', () => {
+        testFieldKeyPress({
           format: adapter.formats.month,
           key: 'PageDown',
           expectedValue: 'December',
         });
       });
 
-      it('should decrement month by 5 when value is provided', async () => {
-        await testFieldKeyPress({
+      it('should decrement month by 5 when value is provided', () => {
+        testFieldKeyPress({
           format: adapter.formats.month,
           defaultValue: adapter.date('2022-10-15'),
           key: 'PageDown',
@@ -698,8 +698,8 @@ describe('<DateField /> - Editing', () => {
         });
       });
 
-      it('should flip month field when value is lower than 5', async () => {
-        await testFieldKeyPress({
+      it('should flip month field when value is lower than 5', () => {
+        testFieldKeyPress({
           format: adapter.formats.month,
           defaultValue: adapter.date('2022-04-15'),
           key: 'PageDown',
@@ -709,16 +709,16 @@ describe('<DateField /> - Editing', () => {
     });
 
     describe('year section (PageDown)', () => {
-      it('should set year to current year when no value is provided', async () => {
-        await testFieldKeyPress({
+      it('should set year to current year when no value is provided', () => {
+        testFieldKeyPress({
           format: adapter.formats.year,
           key: 'PageDown',
           expectedValue: new Date().getFullYear().toString(),
         });
       });
 
-      it('should decrement year by 5 when value is provided', async () => {
-        await testFieldKeyPress({
+      it('should decrement year by 5 when value is provided', () => {
+        testFieldKeyPress({
           format: adapter.formats.year,
           defaultValue: adapter.date('2022-01-15'),
           key: 'PageDown',
@@ -726,8 +726,8 @@ describe('<DateField /> - Editing', () => {
         });
       });
 
-      it('should flip year field when value is lower than 5', async () => {
-        await testFieldKeyPress({
+      it('should flip year field when value is lower than 5', () => {
+        testFieldKeyPress({
           format: adapter.formats.year,
           defaultValue: adapter.date('0003-01-15'),
           key: 'PageDown',
@@ -795,15 +795,15 @@ describe('<DateField /> - Editing', () => {
   });
 
   describeAdapters('Digit editing', DateField, ({ adapter, testFieldChange, renderWithProps }) => {
-    it('should set the day to the digit pressed when no digit no value is provided', async () => {
-      await testFieldChange({
+    it('should set the day to the digit pressed when no digit no value is provided', () => {
+      testFieldChange({
         format: adapter.formats.dayOfMonth,
         keyStrokes: [{ value: '1', expected: '01' }],
       });
     });
 
-    it('should concatenate the digit pressed to the current section value if the output is valid (digit format)', async () => {
-      await testFieldChange({
+    it('should concatenate the digit pressed to the current section value if the output is valid (digit format)', () => {
+      testFieldChange({
         format: adapter.formats.dayOfMonth,
         defaultValue: adapter.date('2022-06-01'),
         keyStrokes: [
@@ -813,16 +813,16 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should set the day to the digit pressed if the concatenated value exceeds the maximum value for the section when a value is provided (digit format)', async () => {
-      await testFieldChange({
+    it('should set the day to the digit pressed if the concatenated value exceeds the maximum value for the section when a value is provided (digit format)', () => {
+      testFieldChange({
         format: adapter.formats.dayOfMonth,
         defaultValue: adapter.date('2022-06-04'),
         keyStrokes: [{ value: '1', expected: '01' }],
       });
     });
 
-    it('should concatenate the digit pressed to the current section value if the output is valid (letter format)', async () => {
-      await testFieldChange({
+    it('should concatenate the digit pressed to the current section value if the output is valid (letter format)', () => {
+      testFieldChange({
         format: adapter.formats.month,
         defaultValue: adapter.date('2022-02-01'),
         keyStrokes: [
@@ -832,16 +832,16 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should set the day to the digit pressed if the concatenated value exceeds the maximum value for the section when a value is provided (letter format)', async () => {
-      await testFieldChange({
+    it('should set the day to the digit pressed if the concatenated value exceeds the maximum value for the section when a value is provided (letter format)', () => {
+      testFieldChange({
         format: adapter.formats.month,
         defaultValue: adapter.date('2022-06-01'),
         keyStrokes: [{ value: '1', expected: 'January' }],
       });
     });
 
-    it('should support 2-digits year format', async () => {
-      await testFieldChange({
+    it('should support 2-digits year format', () => {
+      testFieldChange({
         // This format is not present in any of the adapter formats
         format: adapter.lib.includes('moment') || adapter.lib.includes('dayjs') ? 'YY' : 'yy',
         keyStrokes: [
@@ -857,8 +857,8 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should support 2-digits year format when a value is provided', async () => {
-      await testFieldChange({
+    it('should support 2-digits year format when a value is provided', () => {
+      testFieldChange({
         // This format is not present in any of the adapter formats
         format: adapter.lib.includes('moment') || adapter.lib.includes('dayjs') ? 'YY' : 'yy',
         defaultValue: adapter.date('2022-06-04'),
@@ -870,8 +870,8 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should support 4-digits year format', async () => {
-      await testFieldChange({
+    it('should support 4-digits year format', () => {
+      testFieldChange({
         format: adapter.formats.year,
         keyStrokes: [
           { value: '2', expected: '0002' },
@@ -886,8 +886,8 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should support 4-digits year format when a value is provided', async () => {
-      await testFieldChange({
+    it('should support 4-digits year format when a value is provided', () => {
+      testFieldChange({
         format: adapter.formats.year,
         defaultValue: adapter.date('2022-06-04'),
         keyStrokes: [
@@ -903,8 +903,8 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should support month without trailing zeros format', async () => {
-      await testFieldChange({
+    it('should support month without trailing zeros format', () => {
+      testFieldChange({
         format: 'M', // This format is not present in any of the adapter formats
         keyStrokes: [
           { value: '1', expected: '1' },
@@ -915,13 +915,13 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should support day with letter suffix', async function test() {
+    it('should support day with letter suffix', function test() {
       // Luxon don't have any day format with a letter suffix
       if (adapter.lib === 'luxon') {
         this.skip();
       }
 
-      await testFieldChange({
+      testFieldChange({
         format: adapter.lib === 'date-fns' ? 'do' : 'Do',
         keyStrokes: [
           { value: '1', expected: '1st' },
@@ -931,8 +931,8 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should respect leading zeros when shouldRespectLeadingZeros = true', async () => {
-      await testFieldChange({
+    it('should respect leading zeros when shouldRespectLeadingZeros = true', () => {
+      testFieldChange({
         format: ['luxon', 'date-fns'].includes(adapter.lib) ? 'd' : 'D',
         shouldRespectLeadingZeros: true,
         keyStrokes: [
@@ -943,8 +943,8 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should not respect leading zeros when shouldRespectLeadingZeros = false', async () => {
-      await testFieldChange({
+    it('should not respect leading zeros when shouldRespectLeadingZeros = false', () => {
+      testFieldChange({
         format: ['luxon', 'date-fns'].includes(adapter.lib) ? 'd' : 'D',
         shouldRespectLeadingZeros: false,
         keyStrokes: [
@@ -1018,16 +1018,16 @@ describe('<DateField /> - Editing', () => {
       expectFieldValueV6(input, '02/29/1988');
     });
 
-    it('should not edit when props.readOnly = true and no value is provided', async () => {
-      await testFieldChange({
+    it('should not edit when props.readOnly = true and no value is provided', () => {
+      testFieldChange({
         format: adapter.formats.year,
         readOnly: true,
         keyStrokes: [{ value: '1', expected: 'YYYY' }],
       });
     });
 
-    it('should not edit value when props.readOnly = true and a value is provided', async () => {
-      await testFieldChange({
+    it('should not edit value when props.readOnly = true and a value is provided', () => {
+      testFieldChange({
         format: adapter.formats.year,
         defaultValue: adapter.date(),
         readOnly: true,
@@ -1040,23 +1040,23 @@ describe('<DateField /> - Editing', () => {
     'Letter editing',
     DateField,
     ({ adapter, testFieldChange, testFieldKeyPress }) => {
-      it('should select the first matching month with no previous query and no value is provided (letter format)', async () => {
-        await testFieldChange({
+      it('should select the first matching month with no previous query and no value is provided (letter format)', () => {
+        testFieldChange({
           format: adapter.formats.month,
           keyStrokes: [{ value: 'm', expected: 'March' }],
         });
       });
 
-      it('should select the first matching month with no previous query and a value is provided (letter format)', async () => {
-        await testFieldChange({
+      it('should select the first matching month with no previous query and a value is provided (letter format)', () => {
+        testFieldChange({
           format: adapter.formats.month,
           defaultValue: adapter.date(),
           keyStrokes: [{ value: 'm', expected: 'March' }],
         });
       });
 
-      it('should use the previously typed letters as long as it matches at least one month (letter format)', async () => {
-        await testFieldChange({
+      it('should use the previously typed letters as long as it matches at least one month (letter format)', () => {
+        testFieldChange({
           format: adapter.formats.month,
           keyStrokes: [
             // Current query: "J" => 3 matches
@@ -1071,23 +1071,23 @@ describe('<DateField /> - Editing', () => {
         });
       });
 
-      it('should select the first matching month with no previous query and no value is provided (digit format)', async () => {
-        await testFieldChange({
+      it('should select the first matching month with no previous query and no value is provided (digit format)', () => {
+        testFieldChange({
           format: 'MM', // This format is not present in any of the adapter formats
           keyStrokes: [{ value: 'm', expected: '03' }],
         });
       });
 
-      it('should select the first matching month with no previous query and a value is provided (digit format)', async () => {
-        await testFieldChange({
+      it('should select the first matching month with no previous query and a value is provided (digit format)', () => {
+        testFieldChange({
           format: 'MM', // This format is not present in any of the adapter formats
           defaultValue: adapter.date(),
           keyStrokes: [{ value: 'm', expected: '03' }],
         });
       });
 
-      it('should use the previously typed letters as long as it matches at least one month (digit format)', async () => {
-        await testFieldChange({
+      it('should use the previously typed letters as long as it matches at least one month (digit format)', () => {
+        testFieldChange({
           format: 'MM', // This format is not present in any of the adapter formats
           keyStrokes: [
             // Current query: "J" => 3 matches
@@ -1102,8 +1102,8 @@ describe('<DateField /> - Editing', () => {
         });
       });
 
-      it('should not edit when props.readOnly = true and no value is provided (letter)', async () => {
-        await testFieldKeyPress({
+      it('should not edit when props.readOnly = true and no value is provided (letter)', () => {
+        testFieldKeyPress({
           format: adapter.formats.month,
           readOnly: true,
           key: '1',
@@ -1111,8 +1111,8 @@ describe('<DateField /> - Editing', () => {
         });
       });
 
-      it('should not edit value when props.readOnly = true and a value is provided (letter)', async () => {
-        await testFieldKeyPress({
+      it('should not edit value when props.readOnly = true and a value is provided (letter)', () => {
+        testFieldKeyPress({
           format: adapter.formats.month,
           defaultValue: adapter.date(),
           readOnly: true,
@@ -1256,11 +1256,11 @@ describe('<DateField /> - Editing', () => {
         await view.user.keyboard('{Control>}a{/Control}');
 
         await view.user.keyboard('{Backspace}');
-        await waitFor(() => expectFieldValueV6(input, 'MMMM YYYY'));
+        expectFieldValueV6(input, 'MMMM YYYY');
       });
 
-      it('should not keep query after typing again on a cleared section (Backspace)', async () => {
-        await testFieldChange({
+      it('should not keep query after typing again on a cleared section (Backspace)', () => {
+        testFieldChange({
           format: adapter.formats.year,
           keyStrokes: [
             { value: '2', expected: '0002' },
@@ -1270,8 +1270,8 @@ describe('<DateField /> - Editing', () => {
         });
       });
 
-      it('should not clear the sections when props.readOnly = true (Backspace)', async () => {
-        await testFieldChange({
+      it('should not clear the sections when props.readOnly = true (Backspace)', () => {
+        testFieldChange({
           format: adapter.formats.year,
           defaultValue: adapter.date(),
           readOnly: true,
@@ -1279,16 +1279,15 @@ describe('<DateField /> - Editing', () => {
         });
       });
 
-      it('should not call `onChange` when clearing all sections and both dates are already empty (Backspace)', async () => {
+      it('should not call `onChange` when clearing all sections and both dates are already empty (Backspace)', () => {
         const onChange = spy();
 
-        await testFieldChange({
+        testFieldChange({
           format: adapter.formats.year,
           onChange,
           keyStrokes: [{ value: '', expected: 'YYYY' }],
+          finalCallback: () => expect(onChange.callCount).to.equal(0),
         });
-
-        expect(onChange.callCount).to.equal(0);
       });
 
       it('should call `onChange` when clearing the first and last section (Backspace)', async () => {
@@ -1337,10 +1336,10 @@ describe('<DateField /> - Editing', () => {
         expect(onChangeV6.lastCall.args[1].validationError).to.equal(null);
       });
 
-      it('should not call `onChange` if the section is already empty (Backspace)', async () => {
+      it('should not call `onChange` if the section is already empty (Backspace)', () => {
         const onChange = spy();
 
-        await testFieldChange({
+        testFieldChange({
           format: adapter.formats.year,
           defaultValue: adapter.date(),
           keyStrokes: [
@@ -1348,16 +1347,15 @@ describe('<DateField /> - Editing', () => {
             { value: '', expected: 'YYYY' },
           ],
           onChange,
+          // 1 for v7 and 1 for v6 input
+          finalCallback: () => expect(onChange.callCount).to.equal(2),
         });
-
-        // 1 for v7 and 1 for v7 input
-        expect(onChange.callCount).to.equal(2);
       });
     },
   );
 
   describeAdapters('Pasting', DateField, ({ adapter, renderWithProps }) => {
-    const firePasteEventV7 = (element: HTMLElement, pastedValue: string) => {
+    const firePasteEventV7 = async (element: HTMLElement, pastedValue: string) => {
       const clipboardEvent = new window.Event('paste', {
         bubbles: true,
         cancelable: true,
@@ -1369,7 +1367,7 @@ describe('<DateField /> - Editing', () => {
         getData: () => pastedValue,
       };
       let canContinue = true;
-      act(() => {
+      await act(async () => {
         // canContinue is `false` if default have been prevented
         canContinue = element.dispatchEvent(clipboardEvent);
       });
@@ -1380,7 +1378,11 @@ describe('<DateField /> - Editing', () => {
       fireEvent.input(element, { target: { textContent: pastedValue } });
     };
 
-    const firePasteEventV6 = (input: HTMLInputElement, pastedValue?: string, rawValue?: string) => {
+    const firePasteEventV6 = async (
+      input: HTMLInputElement,
+      pastedValue?: string,
+      rawValue?: string,
+    ) => {
       const clipboardEvent = new window.Event('paste', {
         bubbles: true,
         cancelable: true,
@@ -1392,7 +1394,7 @@ describe('<DateField /> - Editing', () => {
         getData: () => pastedValue ?? rawValue ?? '',
       };
       let canContinue = true;
-      act(() => {
+      await act(async () => {
         // canContinue is `false` if default have been prevented
         canContinue = input.dispatchEvent(clipboardEvent);
       });
@@ -1425,7 +1427,7 @@ describe('<DateField /> - Editing', () => {
       // Select all sections
       await view.user.keyboard('{Control>}a{/Control}');
 
-      firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
+      await firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
 
       expect(onChangeV7.callCount).to.equal(1);
       expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
@@ -1445,7 +1447,7 @@ describe('<DateField /> - Editing', () => {
       // Select all sections
       await view.user.keyboard('{Control>}a{/Control}');
 
-      firePasteEventV6(input, '09/16/2022');
+      await firePasteEventV6(input, '09/16/2022');
 
       expect(onChangeV6.callCount).to.equal(1);
       expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
@@ -1463,7 +1465,7 @@ describe('<DateField /> - Editing', () => {
       // Select all sections
       await view.user.keyboard('{Control>}a{/Control}');
 
-      firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
+      await firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
 
       expect(onChangeV7.callCount).to.equal(1);
       expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
@@ -1481,7 +1483,7 @@ describe('<DateField /> - Editing', () => {
       // Select all sections
       await view.user.keyboard('{Control>}a{/Control}');
 
-      firePasteEventV6(input, '09/16/2022');
+      await firePasteEventV6(input, '09/16/2022');
 
       expect(onChangeV6.callCount).to.equal(1);
       expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
@@ -1499,7 +1501,7 @@ describe('<DateField /> - Editing', () => {
       // Select all sections
       await view.user.keyboard('{Control>}a{/Control}');
 
-      firePasteEventV7(view.getSectionsContainer(), 'Some invalid content');
+      await firePasteEventV7(view.getSectionsContainer(), 'Some invalid content');
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
       view.unmount();
 
@@ -1515,7 +1517,7 @@ describe('<DateField /> - Editing', () => {
       // Select all sections
       await view.user.keyboard('{Control>}a{/Control}');
 
-      firePasteEventV6(input, 'Some invalid content');
+      await firePasteEventV6(input, 'Some invalid content');
       expectFieldValueV6(input, 'MM/DD/YYYY');
     });
 
@@ -1535,7 +1537,7 @@ describe('<DateField /> - Editing', () => {
       // Select all sections
       await view.user.keyboard('{Control>}a{/Control}');
 
-      firePasteEventV7(view.getSectionsContainer(), `Escaped 2014`);
+      await firePasteEventV7(view.getSectionsContainer(), `Escaped 2014`);
       expect(onChangeV7.callCount).to.equal(1);
       expect(adapter.getYear(onChangeV7.lastCall.firstArg)).to.equal(2014);
       view.unmount();
@@ -1554,7 +1556,7 @@ describe('<DateField /> - Editing', () => {
       // Select all sections
       await view.user.keyboard('{Control>}a{/Control}');
 
-      firePasteEventV6(input, `Escaped 2014`);
+      await firePasteEventV6(input, `Escaped 2014`);
       expect(onChangeV6.callCount).to.equal(1);
       expect(adapter.getYear(onChangeV6.lastCall.firstArg)).to.equal(2014);
     });
@@ -1574,7 +1576,7 @@ describe('<DateField /> - Editing', () => {
       // Select all sections
       await view.user.keyboard('{Control>}a{/Control}');
 
-      firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
+      await firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
       expect(onChangeV7.callCount).to.equal(0);
 
       view.unmount();
@@ -1594,7 +1596,7 @@ describe('<DateField /> - Editing', () => {
       // Select all sections
       await view.user.keyboard('{Control>}a{/Control}');
 
-      firePasteEventV6(input, '09/16/2022');
+      await firePasteEventV6(input, '09/16/2022');
       expect(onChangeV6.callCount).to.equal(0);
     });
 
@@ -1610,7 +1612,7 @@ describe('<DateField /> - Editing', () => {
       await view.selectSection('month');
 
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
-      firePasteEventV7(view.getActiveSection(0), '12');
+      await firePasteEventV7(view.getActiveSection(0), '12');
 
       expect(onChangeV7.callCount).to.equal(1);
       expectFieldValueV7(view.getSectionsContainer(), '12/DD/YYYY');
@@ -1629,7 +1631,7 @@ describe('<DateField /> - Editing', () => {
       await view.selectSection('month');
 
       expectFieldValueV6(input, 'MM/DD/YYYY');
-      firePasteEventV6(input, '12');
+      await firePasteEventV6(input, '12');
 
       expect(onChangeV6.callCount).to.equal(1);
       expectFieldValueV6(input, '12/DD/YYYY');
@@ -1648,7 +1650,7 @@ describe('<DateField /> - Editing', () => {
       await view.selectSection('month');
 
       expectFieldValueV7(view.getSectionsContainer(), '01/13/2018');
-      firePasteEventV7(view.getActiveSection(0), '12');
+      await firePasteEventV7(view.getActiveSection(0), '12');
       expectFieldValueV7(view.getSectionsContainer(), '12/13/2018');
       expect(onChangeV7.callCount).to.equal(1);
       expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2018, 11, 13));
@@ -1668,13 +1670,13 @@ describe('<DateField /> - Editing', () => {
       await view.selectSection('month');
 
       expectFieldValueV6(input, '01/13/2018');
-      firePasteEventV6(input, '12');
+      await firePasteEventV6(input, '12');
       expectFieldValueV6(input, '12/13/2018');
       expect(onChangeV6.callCount).to.equal(1);
       expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2018, 11, 13));
     });
 
-    it('should not update the section when one section is selected and the pasted value has incorrect type', () => {
+    it('should not update the section when one section is selected and the pasted value has incorrect type', async () => {
       // Test with v7 input
       const onChangeV7 = spy();
 
@@ -1684,10 +1686,10 @@ describe('<DateField /> - Editing', () => {
         onChange: onChangeV7,
       });
 
-      view.selectSection('month');
+      await view.selectSection('month');
 
       expectFieldValueV7(view.getSectionsContainer(), '01/13/2018');
-      firePasteEventV7(view.getActiveSection(0), 'Jun');
+      await firePasteEventV7(view.getActiveSection(0), 'Jun');
       expectFieldValueV7(view.getSectionsContainer(), '01/13/2018');
       expect(onChangeV7.callCount).to.equal(0);
 
@@ -1703,10 +1705,10 @@ describe('<DateField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      view.selectSection('month');
+      await view.selectSection('month');
 
       expectFieldValueV6(input, '01/13/2018');
-      firePasteEventV6(input, 'Jun');
+      await firePasteEventV6(input, 'Jun');
       expectFieldValueV6(input, '01/13/2018');
       expect(onChangeV6.callCount).to.equal(0);
     });
@@ -1726,7 +1728,10 @@ describe('<DateField /> - Editing', () => {
       // Select all sections
       await view.user.keyboard('{Control>}a{/Control}');
 
-      firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
+      await firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
+      // Move to the right section to drop from select all mode and render individual sections
+      await view.pressKey('ArrowRight');
+
       expectFieldValueV7(view.getSectionsContainer(), '09/16/2022');
 
       await view.selectSection('day');
@@ -1748,7 +1753,7 @@ describe('<DateField /> - Editing', () => {
       await view.user.keyboard('2');
       expectFieldValueV6(input, '12/02/2018');
 
-      firePasteEventV6(input, '09/16/2022');
+      await firePasteEventV6(input, '09/16/2022');
       expectFieldValueV6(input, '09/16/2022');
 
       await view.user.keyboard('2');
@@ -1766,10 +1771,10 @@ describe('<DateField /> - Editing', () => {
       await view.user.keyboard('1');
       expectFieldValueV7(view.getSectionsContainer(), '01/05/2018');
 
-      firePasteEventV7(view.getActiveSection(0), '05');
+      await firePasteEventV7(view.getActiveSection(0), '05');
       expectFieldValueV7(view.getSectionsContainer(), '05/05/2018');
 
-      view.selectSection('month'); // move back to month section
+      await view.selectSection('month'); // move back to month section
       await view.user.keyboard('2'); // check that the search query has been cleared after pasting
       expectFieldValueV7(view.getSectionsContainer(), '02/05/2018'); // If internal state is not reset it would be 12 instead of 02
 
@@ -1786,7 +1791,7 @@ describe('<DateField /> - Editing', () => {
       await view.user.keyboard('1'); // initiate search query on month section
       expectFieldValueV6(input, '01/05/2018');
 
-      firePasteEventV6(input, undefined, '05');
+      await firePasteEventV6(input, undefined, '05');
       expectFieldValueV6(input, '05/05/2018');
 
       await view.selectSection('month'); // move back to month section
@@ -1808,7 +1813,7 @@ describe('<DateField /> - Editing', () => {
       // Select all sections
       await view.user.keyboard('{Control>}a{/Control}');
 
-      firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
+      await firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
       expect(onChangeV7.callCount).to.equal(0);
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
 
@@ -1823,7 +1828,7 @@ describe('<DateField /> - Editing', () => {
       });
       const input = getTextbox();
       await view.selectSection('month');
-      firePasteEventV6(input, '9');
+      await firePasteEventV6(input, '9');
 
       // v6 doesn't allow focusing on sections when disabled
       expect(document.activeElement).not.to.equal(input);
@@ -1876,7 +1881,6 @@ describe('<DateField /> - Editing', () => {
         await view.user.keyboard('{Control>}a{/Control}');
         await view.user.keyboard('{Backspace}');
         expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
-        await view.selectSection('month');
 
         await view.user.keyboard('1');
         expectFieldValueV7(view.getSectionsContainer(), '01/DD/YYYY');
@@ -2169,83 +2173,91 @@ describe('<DateField /> - Editing', () => {
       await view.selectSection('month');
       expectFieldValueV6(input, 'MM/DD/YYYY');
     });
-
-    it('should reset the input query state on an unfocused field', async () => {
-      // Test with v7 input
-      let view = renderWithProps({ enableAccessibleFieldDOMStructure: true, value: null });
-
-      await view.selectSection('month');
-
-      await view.user.keyboard('1');
-      expectFieldValueV7(view.getSectionsContainer(), '01/DD/YYYY');
-
-      await view.user.keyboard('1');
-      expectFieldValueV7(view.getSectionsContainer(), '11/DD/YYYY');
-
-      await view.user.keyboard('2');
-      await view.user.keyboard('5');
-      expectFieldValueV7(view.getSectionsContainer(), '11/25/YYYY');
-
-      await view.user.keyboard('2');
-      await view.user.keyboard('0');
-      expectFieldValueV7(view.getSectionsContainer(), '11/25/0020');
-
-      await act(() => {
-        view.getSectionsContainer().blur();
-      });
-
-      view.setProps({ value: adapter.date('2022-11-23') });
-      expectFieldValueV7(view.getSectionsContainer(), '11/23/2022');
-
-      await view.selectSection('year');
-
-      await view.user.keyboard('2');
-      expectFieldValueV7(view.getSectionsContainer(), '11/23/0002');
-      await view.user.keyboard('1');
-      expectFieldValueV7(view.getSectionsContainer(), '11/23/0021');
-
-      view.unmount();
-
-      // Test with v6 input
-      view = renderWithProps({ enableAccessibleFieldDOMStructure: false, value: null });
-
-      const input = getTextbox();
-      await view.selectSection('month');
-
-      await view.user.keyboard('1');
-      expectFieldValueV6(input, '01/DD/YYYY');
-
-      await view.user.keyboard('1');
-      expectFieldValueV6(input, '11/DD/YYYY');
-
-      await view.user.keyboard('2');
-      await view.user.keyboard('5');
-      expectFieldValueV6(input, '11/25/YYYY');
-
-      await view.user.keyboard('2');
-      await view.user.keyboard('0');
-      expectFieldValueV6(input, '11/25/0020');
-
-      await act(() => {
-        input.blur();
-      });
-
-      view.setProps({ value: adapter.date('2022-11-23') });
-      expectFieldValueV6(input, '11/23/2022');
-
-      fireEvent.mouseDown(input);
-      fireEvent.mouseUp(input);
-      act(() => {
-        input.setSelectionRange(6, 9);
-      });
-      fireEvent.click(input);
-
-      await view.user.keyboard('2');
-      expectFieldValueV6(input, '11/23/0002');
-      await view.user.keyboard('1');
-      expectFieldValueV6(input, '11/23/0021');
-    });
   });
+
+  describeAdapters(
+    'Editing from the outside with fake timers',
+    DateField,
+    ({ adapter, renderWithProps, clock }) => {
+      it('should reset the input query state on an unfocused field', () => {
+        // Test with v7 input
+        let view = renderWithProps({ enableAccessibleFieldDOMStructure: true, value: null });
+
+        view.selectSectionSync('month');
+
+        fireEvent.input(document.activeElement!, { target: { textContent: '1' } });
+        expectFieldValueV7(view.getSectionsContainer(), '01/DD/YYYY');
+
+        fireEvent.input(document.activeElement!, { target: { textContent: '1' } });
+        expectFieldValueV7(view.getSectionsContainer(), '11/DD/YYYY');
+
+        fireEvent.input(document.activeElement!, { target: { textContent: '2' } });
+        fireEvent.input(document.activeElement!, { target: { textContent: '5' } });
+        expectFieldValueV7(view.getSectionsContainer(), '11/25/YYYY');
+
+        fireEvent.input(document.activeElement!, { target: { textContent: '2' } });
+        fireEvent.input(document.activeElement!, { target: { textContent: '0' } });
+        expectFieldValueV7(view.getSectionsContainer(), '11/25/0020');
+
+        act(() => {
+          view.getSectionsContainer().blur();
+        });
+        clock.runToLast();
+
+        view.setProps({ value: adapter.date('2022-11-23') });
+        expectFieldValueV7(view.getSectionsContainer(), '11/23/2022');
+
+        view.selectSectionSync('year');
+
+        fireEvent.input(document.activeElement!, { target: { textContent: '2' } });
+        expectFieldValueV7(view.getSectionsContainer(), '11/23/0002');
+        fireEvent.input(document.activeElement!, { target: { textContent: '1' } });
+        expectFieldValueV7(view.getSectionsContainer(), '11/23/0021');
+
+        view.unmount();
+
+        // Test with v6 input
+        view = renderWithProps({ enableAccessibleFieldDOMStructure: false, value: null });
+
+        const input = getTextbox();
+        view.selectSectionSync('month');
+
+        fireEvent.change(input, { target: { value: '1/DD/YYYY' } }); // Press "1"
+        expectFieldValueV6(input, '01/DD/YYYY');
+
+        fireEvent.change(input, { target: { value: '11/DD/YYYY' } }); // Press "1"
+        expectFieldValueV6(input, '11/DD/YYYY');
+
+        fireEvent.change(input, { target: { value: '11/2/YYYY' } }); // Press "2"
+        fireEvent.change(input, { target: { value: '11/5/YYYY' } }); // Press "5"
+        expectFieldValueV6(input, '11/25/YYYY');
+
+        fireEvent.change(input, { target: { value: '11/25/2' } }); // Press "2"
+        fireEvent.change(input, { target: { value: '11/25/0' } }); // Press "0"
+        expectFieldValueV6(input, '11/25/0020');
+
+        act(() => {
+          input.blur();
+        });
+
+        view.setProps({ value: adapter.date('2022-11-23') });
+        expectFieldValueV6(input, '11/23/2022');
+
+        fireEvent.mouseDown(input);
+        fireEvent.mouseUp(input);
+        act(() => {
+          input.setSelectionRange(6, 9);
+        });
+        fireEvent.click(input);
+
+        fireEvent.change(input, { target: { value: '11/23/2' } }); // Press "2"
+        expectFieldValueV6(input, '11/23/0002');
+        fireEvent.change(input, { target: { value: '11/23/1' } }); // Press "1"
+        expectFieldValueV6(input, '11/23/0021');
+      });
+    },
+    { toFake: ['Date', 'setTimeout'] },
+  );
 
   describeAdapters('Select all', DateField, ({ renderWithProps }) => {
     it('should edit the 1st section when all sections are selected', async () => {

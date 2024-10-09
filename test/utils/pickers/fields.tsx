@@ -22,6 +22,11 @@ export type FieldSectionSelector = (
   index?: 'first' | 'last',
 ) => Promise<void>;
 
+export type FieldSectionSelectorSync = (
+  selectedSection: FieldSectionType | undefined,
+  index?: 'first' | 'last',
+) => void;
+
 export type FieldPressCharacter = (character: string) => Promise<void>;
 
 export interface BuildFieldInteractionsResponse<P extends {}> {
@@ -34,6 +39,7 @@ export interface BuildFieldInteractionsResponse<P extends {}> {
     },
   ) => ReturnType<ReturnType<typeof createRenderer>['render']> & {
     selectSection: FieldSectionSelector;
+    selectSectionSync: FieldSectionSelectorSync;
     getSectionsContainer: () => HTMLDivElement;
     /**
      * Returns the contentEditable DOM node of the requested section.
@@ -67,6 +73,7 @@ export interface BuildFieldInteractionsResponse<P extends {}> {
       keyStrokes: { value: string; expected: string }[];
       selectedSection?: FieldSectionType;
       skipV7?: boolean;
+      finalCallback?: () => void;
     },
   ) => Promise<void>;
 }
@@ -159,20 +166,47 @@ export const buildFieldInteractions = <P extends {}>({
         );
       }
 
-      await act(() => {
-        fieldRef.current!.setSelectedSections(sectionIndexToSelect);
-      });
       if (!props.enableAccessibleFieldDOMStructure) {
-        await act(() => {
+        await act(async () => {
           getTextbox().focus();
         });
       }
 
       if (props.enableAccessibleFieldDOMStructure) {
-        await act(() => {
+        await act(async () => {
           getSection(sectionIndexToSelect).focus();
         });
       }
+      await act(async () => {
+        fieldRef.current!.setSelectedSections(sectionIndexToSelect);
+      });
+    };
+
+    const selectSectionSync: FieldSectionSelectorSync = (selectedSection, index = 'first') => {
+      let sectionIndexToSelect: number;
+      if (selectedSection === undefined) {
+        sectionIndexToSelect = 0;
+      } else {
+        const sections = fieldRef.current!.getSections();
+        sectionIndexToSelect = sections[index === 'first' ? 'findIndex' : 'findLastIndex'](
+          (section) => section.type === selectedSection,
+        );
+      }
+
+      if (!props.enableAccessibleFieldDOMStructure) {
+        act(() => {
+          getTextbox().focus();
+        });
+      }
+
+      if (props.enableAccessibleFieldDOMStructure) {
+        act(() => {
+          getSection(sectionIndexToSelect).focus();
+        });
+      }
+      act(() => {
+        fieldRef.current!.setSelectedSections(sectionIndexToSelect);
+      });
     };
 
     const getActiveSection = (sectionIndex: number | undefined) => {
@@ -212,6 +246,7 @@ export const buildFieldInteractions = <P extends {}>({
 
     return {
       selectSection,
+      selectSectionSync,
       getActiveSection,
       getSection,
       pressKey,
@@ -253,55 +288,58 @@ export const buildFieldInteractions = <P extends {}>({
     keyStrokes,
     selectedSection,
     skipV7,
+    finalCallback,
     ...props
   }) => {
+    let view: ReturnType<typeof renderWithProps>;
     if (!skipV7) {
       // Test with v7 input
-      const v7Response = renderWithProps({
+      view = renderWithProps({
         ...props,
         enableAccessibleFieldDOMStructure: true,
       } as any);
-      await v7Response.selectSection(selectedSection);
+      await view.selectSection(selectedSection);
       keyStrokes.forEach(async (keyStroke) => {
         if (keyStroke.value === ' ') {
-          await v7Response.user.keyboard('{Space}');
+          await view.user.keyboard('{Space}');
         } else if (keyStroke.value === '') {
-          await v7Response.user.keyboard('{Backspace}');
+          await view.user.keyboard('{Backspace}');
         } else {
-          await v7Response.user.keyboard(keyStroke.value);
+          await view.user.keyboard(keyStroke.value);
         }
         expectFieldValueV7(
-          v7Response.getSectionsContainer(),
+          view.getSectionsContainer(),
           keyStroke.expected,
           (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
         );
       });
-      v7Response.unmount();
+      view.unmount();
     }
 
     // Test with v6 input
-    const v6Response = renderWithProps({
+    view = renderWithProps({
       ...props,
       enableAccessibleFieldDOMStructure: false,
     } as any);
-    await v6Response.selectSection(selectedSection);
-    const input = getTextbox();
+    await view.selectSection(selectedSection);
 
     keyStrokes.forEach(async (keyStroke) => {
       if (keyStroke.value === ' ') {
-        await v6Response.user.keyboard('{Space}');
+        await view.user.keyboard('{Space}');
       } else if (keyStroke.value === '') {
-        await v6Response.user.keyboard('{Backspace}');
+        await view.user.keyboard('{Backspace}');
       } else {
-        await v6Response.user.keyboard(keyStroke.value);
+        await view.user.keyboard(keyStroke.value);
       }
+      const input = getTextbox();
       expectFieldValueV6(
         input,
         keyStroke.expected,
         (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
       );
     });
-    v6Response.unmount();
+    view.unmount();
+    finalCallback?.();
   };
 
   return { testFieldKeyPress, testFieldChange, renderWithProps };

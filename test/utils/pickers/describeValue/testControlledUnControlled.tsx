@@ -9,7 +9,6 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
-import { fireUserEvent } from '../../fireUserEvent';
 
 export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
   ElementToTest,
@@ -157,7 +156,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       });
     });
 
-    it('should not allow editing with keyboard in mobile pickers', () => {
+    it('should not allow editing with keyboard in mobile pickers', async () => {
       if (componentFamily !== 'picker' || params.variant !== 'mobile') {
         return;
       }
@@ -168,8 +167,8 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         enableAccessibleFieldDOMStructure: true,
         onChange: handleChange,
       });
-      v7Response.selectSection(undefined);
-      fireUserEvent.keyPress(v7Response.getActiveSection(0), { key: 'ArrowUp' });
+      await v7Response.selectSection(undefined);
+      await v7Response.user.keyboard('{ArrowUp}');
       expect(handleChange.callCount).to.equal(0);
     });
 
@@ -218,7 +217,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       );
     });
 
-    it('should have correct labelledby relationship without label and hidden toolbar but external props', () => {
+    it('should have correct labelledby relationship without label and hidden toolbar but external props', async () => {
       if (componentFamily !== 'picker' || isDesktopRange) {
         return;
       }
@@ -244,7 +243,9 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           />
         </div>,
       );
-      expect(screen.getByLabelText('external label')).to.have.attribute('role', 'dialog');
+      await waitFor(() =>
+        expect(screen.getByLabelText('external label')).to.have.attribute('role', 'dialog'),
+      );
     });
 
     describe('slots: textField', () => {

@@ -52,6 +52,9 @@ function innerDescribeValue<TValue, C extends PickerComponentFamily>(
         selectSection: () => {
           throw new Error('You can only use `selectSection` on components that render a field');
         },
+        selectSectionSync: () => {
+          throw new Error('You can only use `selectSectionSync` on components that render a field');
+        },
         getHiddenInput: () => {
           throw new Error('You can only use `getHiddenInput` on components that render a field');
         },
