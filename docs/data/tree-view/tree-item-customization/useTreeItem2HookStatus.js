@@ -104,6 +104,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
           <TreeItem2IconContainer {...getIconContainerProps()}>
             <TreeItem2Icon status={status} />
           </TreeItem2IconContainer>
+
           {status.editing ? (
             <TreeItem2LabelInput {...getLabelInputProps()} />
           ) : (

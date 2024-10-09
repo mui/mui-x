@@ -107,11 +107,13 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
           <TreeItem2IconContainer {...getIconContainerProps()}>
             <TreeItem2Icon status={status} />
           </TreeItem2IconContainer>
+
           {status.editing ? (
             <TreeItem2LabelInput {...getLabelInputProps()} />
           ) : (
             <TreeItem2Label {...getLabelProps()} />
           )}
+
           <Stack direction="row">
             {(Object.keys(STATUS_ICONS) as [keyof UseTreeItem2Status]).map(
               (iconKey, index) => {
