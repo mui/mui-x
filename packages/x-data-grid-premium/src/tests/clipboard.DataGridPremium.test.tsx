@@ -615,6 +615,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       expect(processRowUpdateSpy.args[0]).to.deep.equal([
         { id: 1, firstName: 'John', lastName: 'Doe' },
         { id: 1, firstName: 'Cersei', lastName: 'Lannister' },
+        { rowId: '1' },
       ]);
     });
 
@@ -725,14 +726,17 @@ describe('<DataGridPremium /> - Clipboard', () => {
         [
           { id: 0, currencyPair: '12', price1M: '12' }, // new row
           { id: 0, currencyPair: 'USDGBP', price1M: 1 }, // old row
+          { rowId: '0' }, // row id
         ],
         [
           { id: 1, currencyPair: '12', price1M: '12' }, // new row
           { id: 1, currencyPair: 'USDEUR', price1M: 11 }, // old row
+          { rowId: '1' }, // row id
         ],
         [
           { id: 2, currencyPair: '12', price1M: '12' }, // new row
           { id: 2, currencyPair: 'GBPEUR', price1M: 21 }, // old row
+          { rowId: '2' }, // row id
         ],
       ]);
     });

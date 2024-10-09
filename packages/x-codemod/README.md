@@ -154,9 +154,9 @@ npx @mui/x-codemod@latest v7.0.0/pickers/rename-slots-types <path>
 
 ### Data Grid codemods
 
-#### `preset-safe` for data grid v7.0.0
+#### `preset-safe` for Data Grid v7.0.0
 
-The `preset-safe` codemods for data grid.
+The `preset-safe` codemods for Data Grid.
 
 ```bash
 npx @mui/x-codemod@latest v7.0.0/data-grid/preset-safe <path|folder>
@@ -705,9 +705,9 @@ npx @mui/x-codemod@latest v6.0.0/pickers/rename-components-to-slots <path>
 
 ### Data Grid codemods
 
-#### `preset-safe` for data grid v6.0.0
+#### `preset-safe` for Data Grid v6.0.0
 
-The `preset-safe` codemods for data grid.
+The `preset-safe` codemods for Data Grid.
 
 ```bash
 npx @mui/x-codemod@latest v6.0.0/data-grid/preset-safe <path|folder>

@@ -100,7 +100,7 @@ export type UseTreeItem2LabelInputSlotProps<ExternalProps = {}> = ExternalProps 
 export interface UseTreeItem2CheckboxSlotOwnProps {
   visible: boolean;
   checked: boolean;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onChange: MuiCancellableEventHandler<React.ChangeEvent<HTMLInputElement>>;
   disabled: boolean;
   ref: React.RefObject<HTMLButtonElement>;
   tabIndex: -1;

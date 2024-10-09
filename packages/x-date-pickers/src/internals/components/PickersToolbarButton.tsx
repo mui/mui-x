@@ -50,7 +50,7 @@ export const PickersToolbarButton = React.forwardRef(function PickersToolbarButt
 
   return (
     <PickersToolbarButtonRoot
-      data-mui-test="toolbar-button"
+      data-testid="toolbar-button"
       variant="text"
       ref={ref}
       className={clsx(classes.root, className)}
