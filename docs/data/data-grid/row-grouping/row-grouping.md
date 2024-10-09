@@ -43,7 +43,7 @@ You can use the `onRowGroupingModelChange` prop to listen to changes to the grou
 
 ### Single grouping column
 
-By default, the data grid will display a single column holding all grouping columns.
+By default, the Data Grid will display a single column holding all grouping columns.
 If you have multiple grouping criteria, this column name will be set to "Group."
 
 {{"demo": "RowGroupingSingleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -226,7 +226,7 @@ If your column also has a `valueGetter` property, the value passed to the `group
 
 ## Rows with missing groups
 
-If the grouping key of a grouping criteria is `null` or `undefined` for a row, the data grid will consider that this row does not have a value for this group. and will inline it for those groups.
+If the grouping key of a grouping criteria is `null` or `undefined` for a row, the Data Grid will consider that this row does not have a value for this group. and will inline it for those groups.
 
 {{"demo": "RowGroupingRowsWithMissingGroups.js", "bg": "inline", "defaultCodeOpen": false}}
 

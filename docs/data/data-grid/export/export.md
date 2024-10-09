@@ -65,7 +65,7 @@ In the following example, the print export is disabled.
 
 ## Exported columns
 
-By default, the export will only contain the visible columns of the data grid.
+By default, the export will only contain the visible columns of the Data Grid.
 There are a few ways to include or hide other columns.
 
 - Set the `disableExport` attribute to `true` in `GridColDef` for columns you don't want to be exported.
@@ -88,7 +88,7 @@ There are a few ways to include or hide other columns.
 
 ## Exported rows
 
-By default, the data grid exports the selected rows if there are any.
+By default, the Data Grid exports the selected rows if there are any.
 If not, it exports all rows except the footers (filtered and sorted rows, according to active rules), including the collapsed ones.
 
 ### Customizing the rows to export
@@ -161,12 +161,12 @@ If you want to keep the formulas working, you can set the `escapeFormulas` optio
 
 ## Print export
 
-### Modify the data grid style
+### Modify the Data Grid style
 
-By default, the printed grid is equivalent to printing a page containing only the data grid.
+By default, the printed grid is equivalent to printing a page containing only the Data Grid.
 To modify the styles used for printing, such as colors, you can either use the `@media print` media query or the `pageStyle` property of `printOptions`.
 
-For example, if the data grid is in dark mode, the text color will be inappropriate for printing (too light).
+For example, if the Data Grid is in dark mode, the text color will be inappropriate for printing (too light).
 
 With media query, you have to start your `sx` object with `@media print` key, such that all the style inside are only applied when printing.
 
@@ -313,10 +313,10 @@ function exceljsPostProcess({ worksheet }) {
 />;
 ```
 
-Since `exceljsPreProcess` is applied before adding the content of the data grid, you can use it to add some informative rows on top of the document.
-The content of the data grid will start on the next row after those added by `exceljsPreProcess`.
+Since `exceljsPreProcess` is applied before adding the content of the Data Grid, you can use it to add some informative rows on top of the document.
+The content of the Data Grid will start on the next row after those added by `exceljsPreProcess`.
 
-To customize the rows after the data grid content, you should use `exceljsPostProcess`. As it is applied after adding the content, you can also use it to access the generated cells.
+To customize the rows after the Data Grid content, you should use `exceljsPostProcess`. As it is applied after adding the content, you can also use it to access the generated cells.
 
 In the following demo, both methods are used to set a custom header and a custom footer.
 
@@ -427,7 +427,7 @@ If you want to keep the formulas working, you can set the `escapeFormulas` optio
 
 ## Clipboard
 
-The clipboard export allows you to copy the content of the data grid to the clipboard.
+The clipboard export allows you to copy the content of the Data Grid to the clipboard.
 For more information, check the [Clipboard copy](/x/react-data-grid/clipboard/#clipboard-copy) docs.
 
 ## apiRef

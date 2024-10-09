@@ -121,7 +121,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 
 - 💫 Support [Row spanning](https://mui.com/x/react-data-grid/row-spanning/) on the Data Grid that automatically merges the consecutive cells in a column based on the cell value
 
-  <img width="600" src="https://github.com/user-attachments/assets/d32ec936-d238-4c92-9e1a-af6788d74cdf" alt="data grid row spanning" />
+  <img width="600" src="https://github.com/user-attachments/assets/d32ec936-d238-4c92-9e1a-af6788d74cdf" alt="Data Grid row spanning" />
 
 - ⏰ Support `date-fns` v4 (#14673) @LukasTy
 - 🎉 Add option for Pickers to change the order of displayed years (#11780) @thomasmoon
@@ -560,7 +560,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 #### `@mui/x-data-grid@7.13.0`
 
 - [DataGrid] Fix CSV export for `null` and `undefined` values (#14166) @k-rajat19
-- [DataGrid] Fix error logged during skeleton loading with nested data grid (#14186) @KenanYusuf
+- [DataGrid] Fix error logged during skeleton loading with nested Data Grid (#14186) @KenanYusuf
 - [DataGrid] Remove needless check in `useGridStateInitialization` (#14181) @k-rajat19
 - [DataGrid] Add recipe for persisting filters in local storage (#14208) @cherniavskii
 - [l10n] Improve Vietnamese (vi-VN) locale (#14216) @hungnd-casso
@@ -1528,7 +1528,7 @@ Same changes as in `@mui/x-date-pickers@7.6.0`.
 - [docs] Fix a small typo in property comment (#13245) @Janpot
 - [docs] Improve the Data Grid FAQ page (#13258) @MBilalShafi
 - [docs] Removes unused lines in TreeItem2 styling (#13264) @arthurbalduini
-- [docs] Small improvements on accessibility data grid doc (#13233) @arthurbalduini
+- [docs] Small improvements on accessibility Data Grid doc (#13233) @arthurbalduini
 - [docs] Update Pickers demo configurations (#13303) @LukasTy
 
 ### Core
@@ -2127,7 +2127,7 @@ Same changes as in `@mui/x-date-pickers@7.1.1`, plus:
 - [docs] Fix typo in `getItemId` prop description (#12637) @flaviendelangle
 - [docs] Make the Charts `margin` usage more visible (#12591) @alexfauquette
 - [docs] Match IE 11 spacing with Material UI @oliviertassinari
-- [docs] Move data grid interfaces to standard API page layout (#12016) @alexfauquette
+- [docs] Move Data Grid interfaces to standard API page layout (#12016) @alexfauquette
 - [docs] Remove ` around @default values (#12158) @alexfauquette
 - [docs] Remove `day` from the default `dayOfWeekFormatter` function params (#12644) @LukasTy
 - [docs] Use `TreeItem2` for icon expansion example on `RichTreeView` (#12563) @flaviendelangle
@@ -3568,7 +3568,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.9`.
 - [docs] Fix generated tree view API docs (#11737) @LukasTy
 - [docs] Generate docs for Tree View slots (#11730) @flaviendelangle
 - [docs] Improve codemod for v7 (#11650) @oliviertassinari
-- [docs] Improve data grid `pageSizeOptions` prop documentation (#11682) @oliviertassinari
+- [docs] Improve Data Grid `pageSizeOptions` prop documentation (#11682) @oliviertassinari
 - [docs] Parse markdown on API docs demo titles (#11728) @LukasTy
 - [docs] Remove the description from the `className` prop (#11693) @oliviertassinari
 - [docs] Uplift `SimpleTreeView` customization examples (#11424) @noraleonte
@@ -3656,8 +3656,8 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.8`.
 - [docs] Fix parsing of `x-date-pickers-pro` demo adapter imports (#11628) @LukasTy
 - [docs] Improve `git diff` format @oliviertassinari
 - [docs] Push up the MUI X brand (#11533) @oliviertassinari
-- [docs] Remove old data grid translation files (#11646) @cherniavskii
-- [docs] Improve Server-side data grid docs (#11589) @oliviertassinari
+- [docs] Remove old Data Grid translation files (#11646) @cherniavskii
+- [docs] Improve Server-side Data Grid docs (#11589) @oliviertassinari
 - [docs] Improve charts landing page (#11570) @oliviertassinari
 
 ### Core
@@ -4167,7 +4167,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 - The clipboard related exports `ignoreValueFormatterDuringExport` and `splitClipboardPastedText` are no longer prefixed with `unstable_`.
 
-- The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` have been removed from the `DataGrid` exports. Use the [`filterDebounceMs`](https://next.mui.com/x/api/data-grid/data-grid/#data-grid-prop-filterDebounceMs) prop to customize filter debounce time.
+- The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` have been removed from the Data Grid exports. Use the [`filterDebounceMs`](https://next.mui.com/x/api/data-grid/data-grid/#data-grid-prop-filterDebounceMs) prop to customize filter debounce time.
 
 - The `slots.preferencesPanel` slot and the `slotProps.preferencesPanel` prop were removed. Use `slots.panel` and `slotProps.panel` instead.
 
@@ -4879,7 +4879,7 @@ A special shoutout to thank the 12 contributors who made this release possible. 
 - 🚀 First v7 alpha release
 - ✨ Fix aggregation label not showing when `renderHeader` is used (#10961) @cherniavskii
 - 📘 Server side data source [early documentation](https://mui.com/x/react-data-grid/server-side-data/)
-- 💫 New recipes added for the data grid
+- 💫 New recipes added for the Data Grid
 - 📈 `<ChartsReferenceLine />` component is now available
 - 🌍 Add Basque (eu) locale, improve Czech (cs-CZ) and Spanish (es-ES) locales
 - 🐞 Bugfixes

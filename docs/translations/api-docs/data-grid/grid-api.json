@@ -67,7 +67,7 @@
     },
     "getExpandedDetailPanels": { "description": "Returns the rows whose detail panel is open." },
     "getFilterState": {
-      "description": "Returns the filter state for the given filter model without applying it to the data grid."
+      "description": "Returns the filter state for the given filter model without applying it to the Data Grid."
     },
     "getLocaleText": { "description": "Returns the translation for the <code>key</code>." },
     "getPinnedColumns": { "description": "Returns which columns are pinned." },
