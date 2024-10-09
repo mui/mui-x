@@ -42,6 +42,7 @@ type RootProps = Pick<
   | 'rowHeight'
   | 'resizeThrottleMs'
   | 'columnHeaderHeight'
+  | 'columnGroupHeaderHeight'
   | 'headerFilterHeight'
 >;
 
@@ -59,6 +60,7 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   hasScrollY: false,
   scrollbarSize: 0,
   headerHeight: 0,
+  groupHeaderHeight: 0,
   headerFilterHeight: 0,
   rowWidth: 0,
   rowHeight: 0,
@@ -92,6 +94,9 @@ export function useGridDimensions(
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const rowHeight = Math.floor(props.rowHeight * densityFactor);
   const headerHeight = Math.floor(props.columnHeaderHeight * densityFactor);
+  const groupHeaderHeight = Math.floor(
+    (props.columnGroupHeaderHeight ?? props.columnHeaderHeight) * densityFactor,
+  );
   const headerFilterHeight = Math.floor(
     (props.headerFilterHeight ?? props.columnHeaderHeight) * densityFactor,
   );
@@ -248,6 +253,7 @@ export function useGridDimensions(
       hasScrollY,
       scrollbarSize,
       headerHeight,
+      groupHeaderHeight,
       headerFilterHeight,
       rowWidth,
       rowHeight,
@@ -275,6 +281,7 @@ export function useGridDimensions(
     rowsMeta.currentPageTotalHeight,
     rowHeight,
     headerHeight,
+    groupHeaderHeight,
     headerFilterHeight,
     columnsTotalWidth,
     headersTotalHeight,
@@ -334,7 +341,7 @@ export function useGridDimensions(
       if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
         logger.error(
           [
-            'The parent DOM element of the data grid has an empty height.',
+            'The parent DOM element of the Data Grid has an empty height.',
             'Please make sure that this element has an intrinsic height.',
             'The grid displays with a height of 0px.',
             '',
@@ -346,7 +353,7 @@ export function useGridDimensions(
       if (size.width === 0 && !errorShown.current && !isJSDOM) {
         logger.error(
           [
-            'The parent DOM element of the data grid has an empty width.',
+            'The parent DOM element of the Data Grid has an empty width.',
             'Please make sure that this element has an intrinsic width.',
             'The grid displays with a width of 0px.',
             '',

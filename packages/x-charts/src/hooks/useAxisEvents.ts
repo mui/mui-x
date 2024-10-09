@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { InteractionContext } from '../context/InteractionProvider';
 import { useCartesianContext } from '../context/CartesianProvider';
@@ -39,7 +40,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
         const value = scale.invert(mouseValue);
 
         if (axisData === undefined) {
-          return { value };
+          return { value, index: -1 };
         }
 
         const valueAsNumber = getAsANumber(value);

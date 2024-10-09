@@ -29,14 +29,13 @@ const useUtilityClasses = (
   loadingOverlayVariant: GridLoadingOverlayVariant | null,
 ) => {
   const { classes } = ownerState;
-
   const slots = {
     root: [
       'main',
       dimensions.rightPinnedWidth > 0 && 'main--hasPinnedRight',
       loadingOverlayVariant === 'skeleton' && 'main--hasSkeletonLoadingOverlay',
     ],
-    scroller: ['virtualScroller'],
+    scroller: ['virtualScroller', dimensions.hasScrollX && 'virtualScroller--hasScrollX'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -49,6 +48,7 @@ const Scroller = styled('div', {
 })<{ ownerState: OwnerState }>({
   position: 'relative',
   height: '100%',
+  flexGrow: 1,
   overflow: 'scroll',
   scrollbarWidth: 'none' /* Firefox */,
   '&::-webkit-scrollbar': {

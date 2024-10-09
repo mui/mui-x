@@ -7,7 +7,12 @@
     "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
-    "autoHeight": { "type": { "name": "bool" }, "default": "false" },
+    "autoHeight": {
+      "type": { "name": "bool" },
+      "default": "false",
+      "deprecated": true,
+      "deprecationInfo": "Use flex parent container instead: <a href=\"https://mui.com/x/react-data-grid/layout/#flex-parent-container\">https://mui.com/x/react-data-grid/layout/#flex-parent-container</a>"
+    },
     "autoPageSize": { "type": { "name": "bool" }, "default": "false" },
     "autosizeOnMount": { "type": { "name": "bool" }, "default": "false" },
     "autosizeOptions": {
@@ -21,6 +26,7 @@
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
     "columnBufferPx": { "type": { "name": "number" }, "default": "150" },
+    "columnGroupHeaderHeight": { "type": { "name": "number" } },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnVisibilityModel": { "type": { "name": "object" } },
     "density": {
@@ -123,6 +129,10 @@
       },
       "default": "false"
     },
+    "indeterminateCheckboxAction": {
+      "type": { "name": "enum", "description": "'deselect'<br>&#124;&nbsp;'select'" },
+      "default": "\"deselect\""
+    },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": {
       "type": { "name": "func" },
@@ -209,6 +219,13 @@
       "signature": {
         "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onColumnHeaderContextMenu": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void",
+        "describedArgs": ["params", "event"]
       }
     },
     "onColumnHeaderDoubleClick": {
@@ -412,8 +429,8 @@
     "processRowUpdate": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(newRow: R, oldRow: R) => Promise<R> | R",
-        "describedArgs": ["newRow", "oldRow"],
+        "type": "function(newRow: R, oldRow: R, params: { rowId: GridRowId }) => Promise<R> | R",
+        "describedArgs": ["newRow", "oldRow", "params"],
         "returned": "Promise<R> | R"
       }
     },
@@ -463,7 +480,8 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
       "additionalInfo": { "sx": true }
-    }
+    },
+    "unstable_rowSpanning": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGrid",
   "imports": [

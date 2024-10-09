@@ -18,7 +18,7 @@ import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 
 const entries = [
   {
-    title: 'MUI X v7.0.0',
+    title: 'MUI X v7',
     description:
       'Featuring new components and multiple enhancements for both developers and end-users.',
     date: new Date(2024, 2, 21),
@@ -63,7 +63,7 @@ const entries = [
     ],
   },
   {
-    title: 'MUI X v6.18.0',
+    title: 'MUI X v6.18',
     description: 'New stable components, polished features, better performance, and more.',
     date: new Date(2023, 10, 13),
     url: 'https://mui.com/blog/mui-x-end-v6-features/',
@@ -95,7 +95,7 @@ const entries = [
     ],
   },
   {
-    title: 'MUI X v6.11.0',
+    title: 'MUI X v6.11',
     description: 'A roundup of all new features since v6.0.0.',
     date: new Date(2023, 7, 14),
     url: 'https://mui.com/blog/mui-x-mid-v6-features/',
@@ -127,7 +127,7 @@ const entries = [
     ],
   },
   {
-    title: 'MUI X v6.0.0',
+    title: 'MUI X v6',
     description: 'A new major is available, with many new features and improvements.',
     date: new Date(2023, 2, 6),
     url: 'https://mui.com/blog/mui-x-v6/',
@@ -163,7 +163,7 @@ const entries = [
     ],
   },
   {
-    title: 'MUI X Date Pickers v5.0.0',
+    title: 'MUI X Date Pickers v5',
     description:
       'After some months of polishing in pre-releases, the Date Pickers finally get a stable.',
     date: new Date(2022, 8, 22),
@@ -184,7 +184,7 @@ const entries = [
     ],
   },
   {
-    title: 'MUI X Data Grid v5.15.0',
+    title: 'MUI X Data Grid v5.15',
     description:
       'This version brings an amazing set of new supported use cases with the Data Grid Premium.',
     date: new Date(2022, 7, 12),
@@ -212,7 +212,7 @@ const entries = [
     ],
   },
   {
-    title: 'MUI X v5.0.0',
+    title: 'MUI X v5',
     description: 'A new Data Grid virtualization engine, and improvements in several APIs.',
     date: new Date(2021, 10, 22),
     url: 'https://mui.com/blog/mui-x-v5/',

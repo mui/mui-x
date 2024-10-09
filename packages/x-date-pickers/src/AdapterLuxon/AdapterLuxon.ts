@@ -348,7 +348,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public startOfWeek = (value: DateTime) => {
-    return value.startOf('week', { useLocaleWeeks: true });
+    return this.setLocaleToValue(value).startOf('week', { useLocaleWeeks: true });
   };
 
   public startOfDay = (value: DateTime) => {
@@ -364,7 +364,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public endOfWeek = (value: DateTime) => {
-    return value.endOf('week', { useLocaleWeeks: true });
+    return this.setLocaleToValue(value).endOf('week', { useLocaleWeeks: true });
   };
 
   public endOfDay = (value: DateTime) => {
@@ -461,9 +461,8 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public getWeekArray = (value: DateTime) => {
-    const cleanValue = this.setLocaleToValue(value);
-    const firstDay = this.startOfWeek(this.startOfMonth(cleanValue));
-    const lastDay = this.endOfWeek(this.endOfMonth(cleanValue));
+    const firstDay = this.startOfWeek(this.startOfMonth(value));
+    const lastDay = this.endOfWeek(this.endOfMonth(value));
 
     const { days } = lastDay.diff(firstDay, 'days').toObject();
 

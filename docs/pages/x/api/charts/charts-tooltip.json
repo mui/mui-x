@@ -22,7 +22,7 @@
         "name": "enum",
         "description": "'axis'<br>&#124;&nbsp;'item'<br>&#124;&nbsp;'none'"
       },
-      "default": "'item'"
+      "default": "'axis'"
     }
   },
   "name": "ChartsTooltip",
@@ -74,6 +74,12 @@
       "key": "markCell",
       "className": "MuiChartsTooltip-markCell",
       "description": "Styles applied to the markCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "paper",
+      "className": "MuiChartsTooltip-paper",
+      "description": "Styles applied to the paper element.",
       "isGlobal": false
     },
     {

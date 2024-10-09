@@ -26,6 +26,7 @@ const buildData = (
       id: 'id',
       data,
     },
+    axisIndex: 0,
     isDefaultAxis: true,
   };
 };

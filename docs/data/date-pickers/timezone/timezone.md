@@ -272,7 +272,7 @@ Please check out the documentation of the [UTC and timezones on Luxon](https://m
 :::info
 **How to create a UTC date with Moment?**
 
-To create a UTC date, use the `dayjs.utc` method
+To create a UTC date, use the `moment.utc` method
 
 ```tsx
 const date = moment.utc('2022-04-17T15:30');

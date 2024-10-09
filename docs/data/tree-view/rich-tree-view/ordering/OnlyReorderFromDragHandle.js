@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 
-import { unstable_useTreeItem2 as useTreeItem2 } from '@mui/x-tree-view/useTreeItem2';
+import { useTreeItem2 } from '@mui/x-tree-view/useTreeItem2';
 import {
   TreeItem2Content,
   TreeItem2IconContainer,

@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -11,10 +12,8 @@ import {
   unstable_generateUtilityClass as generateUtilityClass,
   unstable_generateUtilityClasses as generateUtilityClasses,
 } from '@mui/utils';
-import {
-  splitFieldInternalAndForwardedProps,
-  convertFieldResponseIntoMuiTextFieldProps,
-} from '@mui/x-date-pickers/internals';
+import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
+import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import {
@@ -22,7 +21,6 @@ import {
   MultiInputDateTimeRangeFieldSlotProps,
 } from './MultiInputDateTimeRangeField.types';
 import { useMultiInputDateTimeRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateTimeRangeField';
-import { UseDateTimeRangeFieldProps } from '../internals/models/dateTimeRange';
 import { MultiInputRangeFieldClasses, RangePosition } from '../models';
 
 export const multiInputDateTimeRangeFieldClasses: MultiInputRangeFieldClasses =
@@ -90,10 +88,7 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     name: 'MuiMultiInputDateTimeRangeField',
   });
 
-  const { internalProps, forwardedProps } = splitFieldInternalAndForwardedProps<
-    typeof themeProps,
-    keyof Omit<UseDateTimeRangeFieldProps<any, any>, 'clearable' | 'onClear'>
-  >(themeProps, 'date-time');
+  const { internalProps, forwardedProps } = useSplitFieldProps(themeProps, 'date-time');
 
   const {
     slots,
@@ -294,18 +289,20 @@ MultiInputDateTimeRangeField.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
   /**
-   * Callback fired when the error associated to the current value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
-   * @param {TError} error The new error.
-   * @param {TValue} value The value associated to the error.
+   * Callback fired when the error associated with the current value changes.
+   * When a validation error is detected, the `error` parameter contains a non-null value.
+   * This can be used to render an appropriate form error.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {TError} error The reason why the current value is not valid.
+   * @param {TValue} value The value associated with the error.
    */
   onError: PropTypes.func,
   /**

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { InfoCard } from '@mui/docs/InfoCard';
 import LineAxisRoundedIcon from '@mui/icons-material/LineAxisRounded';
 import DashboardCustomizeRoundedIcon from '@mui/icons-material/DashboardCustomizeRounded';
@@ -45,7 +45,7 @@ export default function ChartFeaturesGrid() {
   return (
     <Grid container spacing={2}>
       {content.map(({ icon, title, link }) => (
-        <Grid key={title} xs={12} sm={4}>
+        <Grid item key={title} xs={12} sm={4}>
           <InfoCard dense classNameTitle="algolia-lvl3" link={link} title={title} icon={icon} />
         </Grid>
       ))}

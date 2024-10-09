@@ -10,6 +10,10 @@ components: PickersSectionList, PickersTextField
 
 <p class="description">The Date and Time Pickers let you customize the field by passing props or custom components</p>
 
+:::success
+See [Common concepts—Custom slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
+:::
+
 ## Customize the default field
 
 ### Customize the `TextField`
@@ -154,10 +158,17 @@ you can replace the field with an `Autocomplete` listing those dates:
 
 {{"demo": "PickerWithAutocompleteField.js", "defaultCodeOpen": false}}
 
+### Using a read-only `TextField`
+
+If you want users to select a value exclusively through the views
+but you still want the UI to look like a `TextField`, you can replace the field with a read-only `TextField`:
+
+{{"demo": "custom-behavior/ReadOnlyMaterialTextField.js", "defaultCodeOpen": false}}
+
 ### Using a `Button`
 
-If you only want to allow the user to pick a value through the views,
-you can replace the field with a `Button`:
+If you want users to select a value exclusively through the views
+and you don't want the UI to look like a `TextField`, you can replace the field with a `Button`:
 
 {{"demo": "PickerWithButtonField.js", "defaultCodeOpen": false}}
 

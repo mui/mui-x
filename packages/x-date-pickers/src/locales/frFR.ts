@@ -43,8 +43,8 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Choisir la plage de dates',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Choix des ${views[view]}. ${time === null ? 'Aucune heure choisie' : `L'heure choisie est ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Choix des ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Aucune heure choisie' : `L'heure choisie est ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} heures`,
   minutesClockNumberText: (minutes) => `${minutes} minutes`,
   secondsClockNumberText: (seconds) => `${seconds} secondes`,
@@ -59,13 +59,13 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Choisir la date, la date sélectionnée est ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Choisir la date, la date sélectionnée est ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Choisir la date',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Choisir l'heure, l'heure sélectionnée est ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime
+      ? `Choisir l'heure, l'heure sélectionnée est ${formattedTime ?? utils.format(value, 'fullTime')}`
       : "Choisir l'heure",
   fieldClearLabel: 'Effacer la valeur',
 

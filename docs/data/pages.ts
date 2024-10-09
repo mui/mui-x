@@ -1,18 +1,17 @@
 import type { MuiPage } from 'docs/src/MuiPage';
+import chartsComponentApi from './charts-component-api-pages';
 import dataGridComponentApi from './data-grid-component-api-pages';
 import pickersComponentApi from './date-pickers-component-api-pages';
-import chartsComponentApi from './charts-component-api-pages';
 import treeViewComponentApi from './tree-view-component-api-pages';
 
 const pages: MuiPage[] = [
   {
-    pathname: '/x/whats-new',
+    pathname: 'https://mui.com/x/whats-new/',
     title: "What's new in MUI X",
   },
   {
     pathname: '/x/introduction-group',
     title: 'Introduction',
-
     children: [
       { pathname: `/x/introduction`, title: 'Overview' },
       { pathname: `/x/introduction/installation` },
@@ -20,6 +19,11 @@ const pages: MuiPage[] = [
       { pathname: `/x/introduction/support` },
       { pathname: `/x/introduction/roadmap` },
     ],
+  },
+  {
+    pathname: '/x/common-features-group',
+    title: 'Common concepts',
+    children: [{ pathname: `/x/common-concepts/custom-components`, title: 'Custom subcomponents' }],
   },
   {
     pathname: '/x/react-data-grid-group',
@@ -51,7 +55,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/row-definition' },
           { pathname: '/x/react-data-grid/row-updates' },
           { pathname: '/x/react-data-grid/row-height' },
-          { pathname: '/x/react-data-grid/row-spanning', planned: true },
+          { pathname: '/x/react-data-grid/row-spanning', newFeature: true },
           { pathname: '/x/react-data-grid/master-detail', plan: 'pro' },
           { pathname: '/x/react-data-grid/row-ordering', plan: 'pro' },
           { pathname: '/x/react-data-grid/row-pinning', plan: 'pro' },
@@ -102,17 +106,10 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/virtualization' },
       { pathname: '/x/react-data-grid/accessibility' },
       { pathname: '/x/react-data-grid/performance' },
-      {
-        pathname: '/x/react-data-grid-group-pivot',
-        title: 'Group & Pivot',
-        plan: 'pro',
-        children: [
-          { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
-          { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
-          { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
-          { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
-        ],
-      },
+      { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
+      { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
+      { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
+      { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
       {
         pathname: '/x/react-data-grid/server-side-data-group',
         title: 'Server-side data',
@@ -143,7 +140,7 @@ const pages: MuiPage[] = [
         ],
       },
       {
-        pathname: '/x/react-data-grid/advanced',
+        pathname: '/x/react-data-grid/custom-behavior',
         children: [
           { pathname: '/x/react-data-grid/api-object', title: 'API object' },
           { pathname: '/x/react-data-grid/events' },
@@ -163,7 +160,7 @@ const pages: MuiPage[] = [
       },
       {
         pathname: '/x/api/data-grid-group',
-        title: 'API Reference',
+        title: 'API reference',
         children: [
           { pathname: '/x/api/data-grid', title: 'Index' },
           {
@@ -326,7 +323,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/fields', title: 'Field components' },
           {
             pathname: '/x/api/date-pickers-group',
-            title: 'API Reference',
+            title: 'API reference',
             children: [{ pathname: '/x/api/date-pickers', title: 'Index' }, ...pickersComponentApi],
           },
         ],
@@ -365,7 +362,7 @@ const pages: MuiPage[] = [
         children: [
           {
             pathname: '/x/react-date-pickers/custom-components',
-            title: 'Custom slots and subcomponents',
+            title: 'Custom subcomponents',
           },
           { pathname: '/x/react-date-pickers/custom-layout' },
           { pathname: '/x/react-date-pickers/custom-field' },
@@ -441,10 +438,11 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/legend' },
               { pathname: '/x/react-charts/stacking' },
               { pathname: '/x/react-charts/styling' },
-              { pathname: '/x/react-charts/tooltip', title: 'Tooltip & Highlights' },
+              { pathname: '/x/react-charts/tooltip' },
+              { pathname: '/x/react-charts/highlighting' },
               {
                 pathname: '/x/react-charts/zoom-and-pan',
-                title: 'Zoom & Pan',
+                title: 'Zoom and pan',
                 plan: 'pro',
                 unstable: true,
               },
@@ -452,7 +450,7 @@ const pages: MuiPage[] = [
           },
           {
             pathname: '/x/api/charts-group',
-            title: 'API Reference',
+            title: 'API reference',
             children: [
               ...chartsComponentApi,
               {
@@ -524,7 +522,7 @@ const pages: MuiPage[] = [
       },
       {
         pathname: '/x/api/tree-view-group',
-        title: 'API Reference',
+        title: 'API reference',
         children: [...treeViewComponentApi],
       },
     ],

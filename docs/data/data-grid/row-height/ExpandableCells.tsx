@@ -39,7 +39,7 @@ function ExpandableCell({ value }: GridRenderCellParams) {
         <Link
           type="button"
           component="button"
-          sx={{ fontSize: 'inherit' }}
+          sx={{ fontSize: 'inherit', letterSpacing: 'inherit' }}
           onClick={() => setExpanded(!expanded)}
         >
           {expanded ? 'view less' : 'view more'}

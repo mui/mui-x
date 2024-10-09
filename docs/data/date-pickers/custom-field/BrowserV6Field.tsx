@@ -63,6 +63,9 @@ const BrowserField = React.forwardRef(
           {
             display: 'flex',
             alignItems: 'center',
+            '& .MuiInputAdornment-root': {
+              height: 'auto',
+            },
           },
           sx || {},
         ]}

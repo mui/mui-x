@@ -1,10 +1,10 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { refType } from '@mui/utils';
 import {
   DIALOG_WIDTH,
   VIEW_HEIGHT,
-  extractValidationProps,
   isInternalTimeView,
   isDatePickerView,
   PickerViewRenderer,
@@ -14,6 +14,7 @@ import {
   resolveDateTimeFormat,
   useUtils,
 } from '@mui/x-date-pickers/internals';
+import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import {
@@ -32,7 +33,7 @@ import {
   UseMobileRangePickerProps,
   useMobileRangePicker,
 } from '../internals/hooks/useMobileRangePicker';
-import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
+import { validateDateTimeRange } from '../validation';
 import { DateTimeRangePickerView } from '../internals/models';
 import { DateRange } from '../models';
 import {
@@ -172,7 +173,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    format: resolveDateTimeFormat(utils, defaultizedProps),
+    format: resolveDateTimeFormat(utils, defaultizedProps, true),
     // Force one calendar on mobile to avoid layout issues
     calendars: 1,
     // force true to correctly handle `renderTimeViewClock` as a renderer
@@ -387,16 +388,16 @@ MobileDateTimeRangePicker.propTypes = {
   name: PropTypes.string,
   /**
    * Callback fired when the value is accepted.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
@@ -407,13 +408,13 @@ MobileDateTimeRangePicker.propTypes = {
    */
   onClose: PropTypes.func,
   /**
-   * Callback fired when the error associated to the current value changes.
-   * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
-   *
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
-   * @param {TError} error The new error describing why the current value is not valid.
-   * @param {TValue} value The value associated to the error.
+   * Callback fired when the error associated with the current value changes.
+   * When a validation error is detected, the `error` parameter contains a non-null value.
+   * This can be used to render an appropriate form error.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {TError} error The reason why the current value is not valid.
+   * @param {TValue} value The value associated with the error.
    */
   onError: PropTypes.func,
   /**

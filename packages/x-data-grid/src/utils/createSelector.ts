@@ -1,9 +1,17 @@
 import * as React from 'react';
-import { createSelector as reselectCreateSelector, Selector, SelectorResultArray } from 'reselect';
+import { lruMemoize, createSelectorCreator, Selector, SelectorResultArray } from 'reselect';
+import { warnOnce } from '@mui/x-internals/warning';
 import type { GridCoreApi } from '../models/api/gridCoreApi';
-import { warnOnce } from '../internals/utils/warning';
 
 type CacheKey = { id: number };
+
+const reselectCreateSelector = createSelectorCreator({
+  memoize: lruMemoize,
+  memoizeOptions: {
+    maxSize: 1,
+    equalityCheck: Object.is,
+  },
+});
 
 // TODO v8: Remove this type
 export interface OutputSelector<State, Result> {
@@ -83,6 +91,7 @@ export const createSelector = ((
   b: Function,
   c?: Function,
   d?: Function,
+  // eslint-disable-next-line id-denylist
   e?: Function,
   f?: Function,
   ...other: any[]
@@ -93,6 +102,7 @@ export const createSelector = ((
 
   let selector: any;
 
+  // eslint-disable-next-line id-denylist
   if (a && b && c && d && e && f) {
     selector = (stateOrApiRef: any, instanceIdParam: any) => {
       const isAPIRef = checkIsAPIRef(stateOrApiRef);
@@ -106,6 +116,7 @@ export const createSelector = ((
       const ve = e(state, instanceId);
       return f(va, vb, vc, vd, ve);
     };
+    // eslint-disable-next-line id-denylist
   } else if (a && b && c && d && e) {
     selector = (stateOrApiRef: any, instanceIdParam: any) => {
       const isAPIRef = checkIsAPIRef(stateOrApiRef);
@@ -165,6 +176,7 @@ export const createSelectorV8 = ((
   b: Function,
   c?: Function,
   d?: Function,
+  // eslint-disable-next-line id-denylist
   e?: Function,
   f?: Function,
   ...other: any[]
@@ -175,6 +187,7 @@ export const createSelectorV8 = ((
 
   let selector: any;
 
+  // eslint-disable-next-line id-denylist
   if (a && b && c && d && e && f) {
     selector = (stateOrApiRef: any, args: any, instanceIdParam: any) => {
       const isAPIRef = checkIsAPIRef(stateOrApiRef);
@@ -188,6 +201,7 @@ export const createSelectorV8 = ((
       const ve = e(state, args, instanceId);
       return f(va, vb, vc, vd, ve, args);
     };
+    // eslint-disable-next-line id-denylist
   } else if (a && b && c && d && e) {
     selector = (stateOrApiRef: any, args: any, instanceIdParam: any) => {
       const isAPIRef = checkIsAPIRef(stateOrApiRef);

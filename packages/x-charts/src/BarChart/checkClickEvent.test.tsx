@@ -80,6 +80,59 @@ describe('BarChart - click event', () => {
         seriesValues: { s1: 1, s2: 1 },
       });
     });
+
+    it('should provide the right context as second argument with layout="horizontal"', function test() {
+      if (isJSDOM) {
+        // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+        this.skip();
+      }
+      const onAxisClick = spy();
+      render(
+        <div
+          style={{
+            margin: -8, // Removes the body default margins
+            width: 400,
+            height: 400,
+          }}
+        >
+          <BarChart
+            {...config}
+            layout="horizontal"
+            series={[
+              { dataKey: 'v1', id: 's1' },
+              { dataKey: 'v2', id: 's2' },
+            ]}
+            yAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+            onAxisClick={onAxisClick}
+          />
+        </div>,
+      );
+      const svg = document.querySelector<HTMLElement>('svg')!;
+
+      firePointerEvent(svg, 'pointermove', {
+        clientX: 60,
+        clientY: 198,
+      });
+      fireEvent.click(svg);
+
+      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+        dataIndex: 0,
+        axisValue: 'A',
+        seriesValues: { s1: 4, s2: 2 },
+      });
+
+      firePointerEvent(svg, 'pointermove', {
+        clientX: 60,
+        clientY: 201,
+      });
+      fireEvent.click(svg);
+
+      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+        dataIndex: 1,
+        axisValue: 'B',
+        seriesValues: { s1: 1, s2: 1 },
+      });
+    });
   });
 
   describe('onItemClick', () => {

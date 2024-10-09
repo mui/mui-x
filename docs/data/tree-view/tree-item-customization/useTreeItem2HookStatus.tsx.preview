@@ -1,0 +1,14 @@
+<Box sx={{ minHeight: 200, minWidth: 350 }}>
+  <RichTreeView
+    items={MUI_X_PRODUCTS}
+    defaultExpandedItems={['pickers']}
+    defaultSelectedItems={'pickers'}
+    slots={{ item: CustomTreeItem }}
+    isItemDisabled={(item) => Boolean(item?.disabled)}
+    isItemEditable={(item) => Boolean(item?.editable)}
+    experimentalFeatures={{
+      labelEditing: true,
+    }}
+  />
+</Box>
+<StatusLegend />

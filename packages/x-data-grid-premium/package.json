@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-premium",
-  "version": "7.13.0",
+  "version": "7.19.0",
   "description": "The Premium plan edition of the Data Grid Components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -39,13 +39,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mui/mui-x.git",
+    "url": "git+https://github.com/mui/mui-x.git",
     "directory": "packages/x-data-grid-premium"
   },
   "dependencies": {
-    "@babel/runtime": "^7.25.0",
-    "@mui/system": "^5.16.7",
-    "@mui/utils": "^5.16.6",
+    "@babel/runtime": "^7.25.7",
+    "@mui/utils": "^5.16.6 || ^6.0.0",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-data-grid-pro": "workspace:*",
     "@mui/x-internals": "workspace:*",
@@ -54,12 +53,13 @@
     "clsx": "^2.1.1",
     "exceljs": "^4.4.0",
     "prop-types": "^15.8.1",
-    "reselect": "^4.1.8"
+    "reselect": "^5.1.1"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.14",
+    "@mui/material": "^5.15.14 || ^6.0.0",
+    "@mui/system": "^5.15.14 || ^6.0.0",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },
@@ -72,10 +72,12 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.8",
-    "@types/prop-types": "^15.7.12",
+    "@mui/internal-test-utils": "^1.0.15",
+    "@mui/material": "^5.16.7",
+    "@mui/system": "^5.16.7",
+    "@types/prop-types": "^15.7.13",
     "date-fns": "^2.30.0",
-    "rimraf": "^5.0.10"
+    "rimraf": "^6.0.1"
   },
   "engines": {
     "node": ">=14.0.0"

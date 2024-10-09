@@ -261,7 +261,7 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
     handleValueChange(newSelectedValue, isFinish);
   };
 
-  const handleTouchMove = (event: React.TouchEvent) => {
+  const handleTouchSelection = (event: React.TouchEvent) => {
     isMoving.current = true;
     setTime(event, 'shallow');
   };
@@ -343,11 +343,12 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
   };
 
   return (
-    <ClockRoot className={clsx(className, classes.root)}>
+    <ClockRoot className={clsx(classes.root, className)}>
       <ClockClock className={classes.clock}>
         <ClockSquareMask
-          data-mui-test="clock"
-          onTouchMove={handleTouchMove}
+          data-testid="clock"
+          onTouchMove={handleTouchSelection}
+          onTouchStart={handleTouchSelection}
           onTouchEnd={handleTouchEnd}
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
@@ -369,7 +370,12 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
         )}
         <ClockWrapper
           aria-activedescendant={selectedId}
-          aria-label={translations.clockLabelText(type, value, utils)}
+          aria-label={translations.clockLabelText(
+            type,
+            value,
+            utils,
+            value == null ? null : utils.format(value, 'fullTime'),
+          )}
           ref={listboxRef}
           role="listbox"
           onKeyDown={handleKeyDown}
@@ -382,7 +388,7 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
       {ampm && ampmInClock && (
         <React.Fragment>
           <ClockAmButton
-            data-mui-test="in-clock-am-btn"
+            data-testid="in-clock-am-btn"
             onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
             disabled={disabled || meridiemMode === null}
             ownerState={ownerState}
@@ -395,7 +401,7 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
           </ClockAmButton>
           <ClockPmButton
             disabled={disabled || meridiemMode === null}
-            data-mui-test="in-clock-pm-btn"
+            data-testid="in-clock-pm-btn"
             onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
             ownerState={ownerState}
             className={classes.pmButton}

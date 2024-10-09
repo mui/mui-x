@@ -31,9 +31,6 @@ const Scrollbar = styled('div')({
   position: 'absolute',
   display: 'inline-block',
   zIndex: 6,
-  '& > div': {
-    display: 'inline-block',
-  },
   // In macOS Safari and Gnome Web, scrollbars are overlaid and don't affect the layout. So we consider
   // their size to be 0px throughout all the calculations, but the floating scrollbar container does need
   // to appear and have a real size. We set it to 14px because it seems like an acceptable value and we
@@ -69,16 +66,12 @@ const ScrollbarHorizontal = styled(Scrollbar)({
   bottom: '0px',
 });
 
-const Content = styled('div')({
-  display: 'inline-block',
-});
-
 const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollbarProps>(
   function GridVirtualScrollbar(props, ref) {
     const apiRef = useGridPrivateApiContext();
     const rootProps = useGridRootProps();
-    const isLocked = React.useRef(false);
-    const lastPosition = React.useRef(0);
+    const lastPositionScroller = React.useRef(0);
+    const lastPositionScrollbar = React.useRef(0);
     const scrollbarRef = React.useRef<HTMLDivElement>(null);
     const contentRef = React.useRef<HTMLDivElement>(null);
     const classes = useUtilityClasses(rootProps, props.position);
@@ -103,34 +96,28 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
       const scroller = apiRef.current.virtualScrollerRef.current!;
       const scrollbar = scrollbarRef.current!;
 
-      if (scroller[propertyScroll] === lastPosition.current) {
+      if (scroller[propertyScroll] === lastPositionScroller.current) {
         return;
       }
-
-      if (isLocked.current) {
-        isLocked.current = false;
-        return;
-      }
-      isLocked.current = true;
 
       const value = scroller[propertyScroll] / contentSize;
       scrollbar[propertyScroll] = value * scrollbarInnerSize;
 
-      lastPosition.current = scroller[propertyScroll];
+      lastPositionScrollbar.current = scrollbar[propertyScroll];
     });
 
     const onScrollbarScroll = useEventCallback(() => {
       const scroller = apiRef.current.virtualScrollerRef.current!;
       const scrollbar = scrollbarRef.current!;
 
-      if (isLocked.current) {
-        isLocked.current = false;
+      if (scrollbar[propertyScroll] === lastPositionScrollbar.current) {
         return;
       }
-      isLocked.current = true;
 
       const value = scrollbar[propertyScroll] / scrollbarInnerSize;
       scroller[propertyScroll] = value * contentSize;
+
+      lastPositionScroller.current = scroller[propertyScroll];
     });
 
     useOnMount(() => {
@@ -158,7 +145,7 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
         tabIndex={-1}
         aria-hidden="true"
       >
-        <Content ref={contentRef} className={classes.content} />
+        <div ref={contentRef} className={classes.content} />
       </Container>
     );
   },

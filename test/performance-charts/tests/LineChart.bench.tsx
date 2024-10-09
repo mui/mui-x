@@ -32,6 +32,7 @@ describe('LineChart', () => {
           ]}
           width={500}
           height={300}
+          experimentalMarkRendering
         />,
       );
 

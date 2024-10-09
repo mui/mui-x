@@ -84,3 +84,7 @@ export const dataset = [
     month: 'Dec',
   },
 ];
+
+export function valueFormatter(value: number | null) {
+  return `${value}mm`;
+}

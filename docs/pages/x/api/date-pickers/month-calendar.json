@@ -61,7 +61,7 @@
   "slots": [
     {
       "name": "monthButton",
-      "description": "Button displayed to render a single month in the \"month\" view.",
+      "description": "Button displayed to render a single month in the `month` view.",
       "default": "MonthCalendarButton",
       "class": null
     }

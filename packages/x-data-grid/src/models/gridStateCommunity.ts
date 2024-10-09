@@ -1,4 +1,3 @@
-import type { Theme } from '@mui/material/styles';
 import type {
   GridColumnMenuState,
   GridColumnsInitialState,
@@ -26,12 +25,13 @@ import { GridHeaderFilteringState } from './gridHeaderFilteringModel';
 import type { GridRowSelectionModel } from './gridRowSelectionModel';
 import type { GridVisibleRowsLookupState } from '../hooks/features/filter/gridFilterState';
 import type { GridColumnResizeState } from '../hooks/features/columnResize';
+import type { GridRowSpanningState } from '../hooks/features/rows/useGridRowSpanning';
 
 /**
- * The state of `DataGrid`.
+ * The state of Data Grid.
  */
 export interface GridStateCommunity {
-  theme: Theme;
+  isRtl: boolean;
   dimensions: GridDimensionsState;
   rows: GridRowsState;
   visibleRowsLookup: GridVisibleRowsLookupState;
@@ -52,10 +52,11 @@ export interface GridStateCommunity {
   density: GridDensityState;
   virtualization: GridVirtualizationState;
   columnResize: GridColumnResizeState;
+  rowSpanning: GridRowSpanningState;
 }
 
 /**
- * The initial state of `DataGrid`.
+ * The initial state of Data Grid.
  */
 export interface GridInitialStateCommunity {
   pagination?: GridPaginationInitialState;

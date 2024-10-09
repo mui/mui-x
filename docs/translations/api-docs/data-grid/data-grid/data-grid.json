@@ -29,6 +29,9 @@
     "columnBufferPx": {
       "description": "Column region in pixels to render before/after the viewport"
     },
+    "columnGroupHeaderHeight": {
+      "description": "Sets the height in pixels of the column group headers in the Data Grid. Inherits the <code>columnHeaderHeight</code> value if not set."
+    },
     "columnHeaderHeight": {
       "description": "Sets the height in pixel of the column headers in the Data Grid."
     },
@@ -136,6 +139,9 @@
     "ignoreValueFormatterDuringExport": {
       "description": "If <code>true</code>, the Data Grid will not use <code>valueFormatter</code> when exporting to CSV or copying to clipboard. If an object is provided, you can choose to ignore the <code>valueFormatter</code> for CSV export or clipboard export."
     },
+    "indeterminateCheckboxAction": {
+      "description": "If <code>select</code>, a group header checkbox in indeterminate state (like &quot;Select All&quot; checkbox) will select all the rows under it. If <code>deselect</code>, it will deselect all the rows under it. Works only if <code>checkboxSelection</code> is enabled."
+    },
     "initialState": {
       "description": "The initial state of the DataGrid. The data in it will be set in the state on initialization but will not be controlled. If one of the data in <code>initialState</code> is also being controlled, then the control state wins."
     },
@@ -222,6 +228,13 @@
         "params": "With all properties from GridColumnHeaderParams.",
         "event": "The event object.",
         "details": "Additional details for this callback."
+      }
+    },
+    "onColumnHeaderContextMenu": {
+      "description": "Callback fired when a contextmenu event comes from a column header element.",
+      "typeDescriptions": {
+        "params": "With all properties from GridColumnHeaderParams.",
+        "event": "The event object."
       }
     },
     "onColumnHeaderDoubleClick": {
@@ -431,6 +444,7 @@
       "typeDescriptions": {
         "newRow": "Row object with the new values.",
         "oldRow": "Row object with the old values.",
+        "params": "Additional parameters.",
         "Promise<R> | R": "The final values to update the row."
       }
     },
@@ -454,10 +468,10 @@
       "description": "Override the height/width of the Data Grid inner scrollbar."
     },
     "showCellVerticalBorder": {
-      "description": "If <code>true</code>, the vertical borders of the cells are displayed."
+      "description": "If <code>true</code>, vertical borders will be displayed between cells."
     },
     "showColumnVerticalBorder": {
-      "description": "If <code>true</code>, the right border of the column headers are displayed."
+      "description": "If <code>true</code>, vertical borders will be displayed between column header items."
     },
     "slotProps": {
       "description": "Overridable components props dynamically passed to the component at rendering."
@@ -470,6 +484,9 @@
     "sortModel": { "description": "Set the sort model of the Data Grid." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "unstable_rowSpanning": {
+      "description": "If <code>true</code>, the Data Grid will auto span the cells over the rows having the same value."
     }
   },
   "classDescriptions": {

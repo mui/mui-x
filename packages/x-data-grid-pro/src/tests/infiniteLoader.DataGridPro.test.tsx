@@ -2,12 +2,16 @@ import * as React from 'react';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGridPro } from '@mui/x-data-grid-pro';
-import { spy } from 'sinon';
+import { spy, restore } from 'sinon';
 import { getColumnValues, sleep } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Infnite loader', () => {
+  afterEach(() => {
+    restore();
+  });
+
   const { render } = createRenderer();
 
   it('should call `onRowsScrollEnd` when viewport scroll reaches the bottom', async function test() {
@@ -116,7 +120,7 @@ describe('<DataGridPro /> - Infnite loader', () => {
     }
     render(<TestCase />);
 
-    // data grid should have loaded 6 rows:
+    // Data Grid should have loaded 6 rows:
     //   1 initial row
     //   5 rows loaded one by one through `onRowsScrollEnd` callback
 
@@ -159,5 +163,55 @@ describe('<DataGridPro /> - Infnite loader', () => {
     await sleep(200);
     // should not load more rows because the threshold is not reached
     expect(getRow.callCount).to.equal(5);
+  });
+
+  it('should not observe intersections with the rows pinned to the bottom', async function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+    const baseRows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+      { id: 3, brand: 'Under Armor' },
+      { id: 4, brand: 'Jordan' },
+      { id: 5, brand: 'Reebok' },
+    ];
+    const basePinnedRows = {
+      bottom: [{ id: 6, brand: 'Unbranded' }],
+    };
+
+    const handleRowsScrollEnd = spy();
+    const observe = spy(window.IntersectionObserver.prototype, 'observe');
+
+    function TestCase({
+      rows,
+      pinnedRows,
+    }: {
+      rows: typeof baseRows;
+      pinnedRows: typeof basePinnedRows;
+    }) {
+      return (
+        <div style={{ width: 300, height: 100 }}>
+          <DataGridPro
+            columns={[{ field: 'brand', width: 100 }]}
+            rows={rows}
+            onRowsScrollEnd={handleRowsScrollEnd}
+            pinnedRows={pinnedRows}
+          />
+        </div>
+      );
+    }
+    const { container } = render(<TestCase rows={baseRows} pinnedRows={basePinnedRows} />);
+    const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
+    // on the initial render, last row is not visible and the `observe` method is not called
+    expect(observe.callCount).to.equal(0);
+    // arbitrary number to make sure that the bottom of the grid window is reached.
+    virtualScroller.scrollTop = 12345;
+    virtualScroller.dispatchEvent(new Event('scroll'));
+    // wait for the next render cycle
+    await sleep(0);
+    // observer was attached
+    expect(observe.callCount).to.equal(1);
   });
 });

@@ -12,7 +12,6 @@ import {
 } from 'test/utils/pickers';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { describeConformance } from 'test/utils/describeConformance';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<MobileDatePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -65,7 +64,7 @@ describe('<MobileDatePicker /> - Describes', () => {
       }
 
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
-      fireUserEvent.mousePress(
+      fireEvent.click(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
 

@@ -1,6 +1,8 @@
 export { useTreeView } from './useTreeView';
 export { TreeViewProvider, useTreeViewContext } from './TreeViewProvider';
 
+export { RichTreeViewItems } from './components/RichTreeViewItems';
+
 export { unstable_resetCleanupTracking } from './hooks/useInstanceEventHandler';
 
 export type {
@@ -66,4 +68,3 @@ export type {
 } from './plugins/useTreeViewJSXItems';
 
 export { isTargetInDescendants } from './utils/tree';
-export { warnOnce } from './utils/warning';
