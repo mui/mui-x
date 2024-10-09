@@ -94,7 +94,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('24');
     });
 
-    it('should not change the selection when clicking on the only already selected section', () => {
+    it('should not change the selection when clicking on the only already selected section', async () => {
       // Test with v7 input
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
@@ -102,17 +102,17 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       });
 
       // Start date
-      view.selectSection('day');
+      await view.selectSection('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
 
-      view.selectSection('day');
+      await view.selectSection('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
 
       // End date
-      view.selectSection('day', 'last');
+      await view.selectSection('day', 'last');
       expect(getCleanedSelectedContent()).to.equal('24');
 
-      view.selectSection('day', 'last');
+      await view.selectSection('day', 'last');
       expect(getCleanedSelectedContent()).to.equal('24');
 
       view.unmount();
@@ -124,17 +124,17 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       });
 
       // Start date
-      view.selectSection('day');
+      await view.selectSection('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
 
-      view.selectSection('day');
+      await view.selectSection('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
 
       // End date
-      view.selectSection('day', 'last');
+      await view.selectSection('day', 'last');
       expect(getCleanedSelectedContent()).to.equal('24');
 
-      view.selectSection('day', 'last');
+      await view.selectSection('day', 'last');
       expect(getCleanedSelectedContent()).to.equal('24');
     });
   });

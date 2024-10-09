@@ -184,13 +184,13 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         localeText: { toolbarTitle: 'Test toolbar' },
       });
 
-      await waitFor(() => {
-        if (params.variant === 'mobile' && params.type === 'date-time-range') {
-          expect(screen.getByLabelText('Start End')).to.have.attribute('role', 'dialog');
-        } else {
-          expect(screen.getByLabelText('Test toolbar')).to.have.attribute('role', 'dialog');
-        }
-      });
+      await waitFor(() => expect(screen.getByRole('dialog')).toBeVisible());
+
+      if (params.variant === 'mobile' && params.type === 'date-time-range') {
+        expect(screen.getByLabelText('Start End')).to.have.attribute('role', 'dialog');
+      } else {
+        expect(screen.getByLabelText('Test toolbar')).to.have.attribute('role', 'dialog');
+      }
     });
 
     it('should have correct labelledby relationship with provided label when toolbar is hidden', async () => {

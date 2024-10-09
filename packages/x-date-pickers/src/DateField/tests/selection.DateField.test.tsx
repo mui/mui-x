@@ -88,7 +88,7 @@ describe('<DateField /> - Selection', () => {
 
       const input = getTextbox();
       // Simulate a touch focus interaction on mobile
-      await act(() => {
+      await act(async () => {
         input.focus();
       });
       expectFieldValueV6(input, 'MM/DD/YYYY');

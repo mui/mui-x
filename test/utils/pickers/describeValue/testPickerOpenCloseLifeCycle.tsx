@@ -278,7 +278,11 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       // Dismiss the picker
       await user.keyboard('{Escape}');
-      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
+      await waitFor(() =>
+        expect(onChange.callCount).to.equal(
+          getExpectedOnChangeCount(componentFamily, pickerParams),
+        ),
+      );
       expect(onAccept.callCount).to.equal(1);
       if (isRangeType) {
         newValue.forEach((value, index) => {
