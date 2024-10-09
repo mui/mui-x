@@ -306,7 +306,10 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
         const children = listRef.current?.children;
         const newFocusedIndex = Math.max(0, newIndex);
 
-        (children[newFocusedIndex] as HTMLElement).focus();
+        const childToFocus = children[newFocusedIndex];
+        if (childToFocus) {
+          (childToFocus as HTMLElement).focus();
+        }
         event.preventDefault();
         break;
       }
@@ -318,7 +321,10 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
         const children = listRef.current?.children;
         const newFocusedIndex = Math.min(children.length - 1, newIndex);
 
-        (children[newFocusedIndex] as HTMLElement).focus();
+        const childToFocus = children[newFocusedIndex];
+        if (childToFocus) {
+          (childToFocus as HTMLElement).focus();
+        }
         event.preventDefault();
         break;
       }
