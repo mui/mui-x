@@ -351,7 +351,7 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
     onMonthSwitchingAnimationEnd,
     readOnly,
     reduceAnimations,
-    renderLoading = () => <span data-mui-test="loading-progress">...</span>,
+    renderLoading = () => <span data-testid="loading-progress">...</span>,
     slideDirection,
     TransitionProps,
     disablePast,
@@ -596,7 +596,7 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
           nodeRef={slideNodeRef}
         >
           <PickersCalendarWeekContainer
-            data-mui-test="pickers-calendar"
+            data-testid="pickers-calendar"
             ref={slideNodeRef}
             role="rowgroup"
             className={classes.monthContainer}
