@@ -90,13 +90,13 @@ Same changes as in `@mui/x-charts@7.19.0`.
 
 - [TreeView] Apply experimental features in `getDefaultizedParams` instead of in the plugin render (#14661) @flaviendelangle
 - [TreeView] Export `publicAPI` form `useTreeItem2Utils` (#14729) @noraleonte
-- [TreeView] Fix cursor navigation interfering with browser shortcut keys  (#14798) @sai6855
+- [TreeView] Fix cursor navigation interfering with browser shortcut keys (#14798) @sai6855
 - [TreeView] Fix invalid test for items reordering (#14665) @flaviendelangle
 - [TreeView] Remove `instance.getTreeItemIdAttribute` (#14667) @flaviendelangle
 
 ### Docs
 
-- [docs] Added warning callout for Firefox reordering bug  (#14516) @michelengelen
+- [docs] Added warning callout for Firefox reordering bug (#14516) @michelengelen
 - [docs] Copyedit `pages.ts` navigation (#14782) @samuelsycamore
 - [docs] Fix typo in row spanning doc (#14770) @flaviendelangle
 - [docs] Fix typo in the Tree View migration guide to v7 (#14727) @Sanderand
@@ -1542,7 +1542,7 @@ Same changes as in `@mui/x-date-pickers@7.6.0`.
 - [test] Use test-utils from npm (#12880) @michaldudak
 - [typescript] Remove duplicate `DateRangePosition` type in favor of `RangePosition` (#13288) @LukasTy
 
-## v7.5.1
+## 7.5.1
 
 _May 23, 2024_
 
@@ -1602,7 +1602,7 @@ Same changes as in `@mui/x-date-pickers@7.5.1`.
 - [code-infra] Run corepack enable on all CI jobs (#13205) @Janpot
 - [code-infra] Use `nx` for lerna tasks (#13166) @LukasTy
 
-## v7.5.0
+## 7.5.0
 
 _May 17, 2024_
 
