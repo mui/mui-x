@@ -217,7 +217,9 @@ By default, a Tree Item is expanded when the user clicks on its contents.
 You can change the expansion trigger using the `expansionTrigger` prop on the `iconContainer`.
 For more details, see [Expansion—Limit expansion to icon container](/x/react-tree-view/rich-tree-view/expansion/#limit-expansion-to-icon-container).
 
-To achieve a deeper customization of the expansion of an item use the `handleExpansion` interaction method. The demo below demonstrates how to introduce a new element that expands or collapses the item.
+Use the `handleExpansion` interaction method for deeper customization of the Item's expansion behavior.
+
+The demo below shows how to introduce a new element that expands and collapses the Item.
 
 {{"demo": "HandleExpansionDemo.js"}}
 
