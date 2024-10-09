@@ -186,7 +186,8 @@ export const useGridRowEditing = (
     (params, event) => {
       if (params.cellMode === GridRowModes.Edit) {
         // Wait until IME is settled for Asian languages like Japanese and Chinese
-        if (event.type === 'compositionstart' || event.type === 'compositionupdate') {
+        // TODO: to replace at one point. See https://github.com/mui/material-ui/pull/39713#discussion_r1381678957.
+        if (event.which === 229) {
           return;
         }
 
@@ -529,7 +530,7 @@ export const useGridRowEditing = (
         };
 
         try {
-          Promise.resolve(processRowUpdate(rowUpdate, row))
+          Promise.resolve(processRowUpdate(rowUpdate, row, { rowId: id }))
             .then((finalRowUpdate) => {
               apiRef.current.updateRows([finalRowUpdate]);
               finishRowEditMode();

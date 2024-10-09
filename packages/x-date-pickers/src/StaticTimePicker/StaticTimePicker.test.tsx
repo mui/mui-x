@@ -57,10 +57,10 @@ describe('<StaticTimePicker />', () => {
     );
 
     // Can switch between views
-    await user.click(screen.getByMuiTest('minutes'));
+    await user.click(screen.getByTestId('minutes'));
     expect(onViewChange.callCount).to.equal(1);
 
-    await user.click(screen.getByMuiTest('hours'));
+    await user.click(screen.getByTestId('hours'));
     expect(onViewChange.callCount).to.equal(2);
 
     // Can not switch between meridiem
@@ -70,7 +70,7 @@ describe('<StaticTimePicker />', () => {
     expect(onChange.callCount).to.equal(0);
 
     // Can not set value
-    fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', selectEvent);
+    fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', selectEvent);
     expect(onChange.callCount).to.equal(0);
 
     // hours are not disabled
@@ -107,10 +107,10 @@ describe('<StaticTimePicker />', () => {
     );
 
     // Can switch between views
-    await user.click(screen.getByMuiTest('minutes'));
+    await user.click(screen.getByTestId('minutes'));
     expect(onViewChange.callCount).to.equal(1);
 
-    await user.click(screen.getByMuiTest('hours'));
+    await user.click(screen.getByTestId('hours'));
     expect(onViewChange.callCount).to.equal(2);
 
     // Can not switch between meridiem
@@ -120,7 +120,7 @@ describe('<StaticTimePicker />', () => {
     expect(onChange.callCount).to.equal(0);
 
     // Can not set value
-    fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', selectEvent);
+    fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', selectEvent);
     expect(onChange.callCount).to.equal(0);
 
     // hours are disabled

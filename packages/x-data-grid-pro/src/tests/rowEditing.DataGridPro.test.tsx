@@ -729,7 +729,7 @@ describe('<DataGridPro /> - Row editing', () => {
           const processRowUpdate = spy((newRow) => newRow);
           render(<TestCase processRowUpdate={processRowUpdate} />);
           act(() => apiRef.current.startRowEditMode({ id: 0 }));
-          await act(() => {
+          await act(async () => {
             apiRef.current.setEditCellValue({
               id: 0,
               field: 'currencyPair',
@@ -931,13 +931,7 @@ describe('<DataGridPro /> - Row editing', () => {
         fireEvent.doubleClick(cell);
         const input = cell.querySelector('input')!;
         fireEvent.change(input, { target: { value: 'あ' } });
-        fireEvent.keyDown(input, {
-          type: 'compositionstart',
-          isComposing: true,
-          charCode: 'あ'.charCodeAt(0),
-          bubbles: true,
-          cancelable: true,
-        });
+        fireEvent.keyDown(input, { key: 'Enter', keyCode: 229 });
         expect(listener.callCount).to.equal(0);
         fireEvent.keyDown(input, { key: 'Enter', keyCode: 13 });
         expect(listener.callCount).to.equal(1);
@@ -953,20 +947,7 @@ describe('<DataGridPro /> - Row editing', () => {
         fireEvent.doubleClick(cell);
         const input = cell.querySelector('input')!;
         fireEvent.change(input, { target: { value: 'ありがとう' } });
-        fireEvent.keyDown(input, {
-          type: 'compositionstart',
-          isComposing: true,
-          charCode: 'あ'.charCodeAt(0),
-          bubbles: true,
-          cancelable: true,
-        });
-        fireEvent.keyDown(input, {
-          type: 'compositionupdate',
-          isComposing: true,
-          charCode: 'う'.charCodeAt(0),
-          bubbles: true,
-          cancelable: true,
-        });
+        fireEvent.keyDown(input, { key: 'Enter', keyCode: 229 });
         expect(listener.callCount).to.equal(0);
         fireEvent.keyDown(input, { key: 'Enter', keyCode: 13 });
         expect(listener.callCount).to.equal(1);
@@ -1218,7 +1199,7 @@ describe('<DataGridPro /> - Row editing', () => {
         const cell = getCell(0, 2);
         fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
-        await act(() => {
+        await act(async () => {
           apiRef.current.setEditCellValue({ id: 0, field: 'price1M', value: 'USD GBP' });
         });
         fireEvent.keyDown(cell.querySelector('input')!, { key: 'Tab' });

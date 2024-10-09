@@ -44,7 +44,7 @@ describe('<StaticDateRangePicker />', () => {
 
     expect(
       screen
-        .getAllByMuiTest('DateRangePickerDay')
+        .getAllByTestId('DateRangePickerDay')
         .filter((day) => day.getAttribute('disabled') !== undefined),
     ).to.have.length(31);
   });
