@@ -68,26 +68,26 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
   const overflowGradient = {
     background: `
       linear-gradient(
-        ${isLight ? 'rgba(255, 255, 255, 1)' : 'black'} 30%,
+        ${theme.palette.background.default} 30%,
         ${isLight ? 'rgba(255, 255, 255, 0)' : 'rgba(0, 0, 0, 0)'}
       ) center top / 100% 40px no-repeat,
       
       linear-gradient(
         ${isLight ? 'rgba(255, 255, 255, 0)' : 'rgba(0, 0, 0, 0)'}, 
-        ${isLight ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)'} 70%
+        ${theme.palette.background.default} 70%
       ) center bottom / 100% 40px no-repeat,
       
       radial-gradient(
         farthest-side at 50% 0,
         ${isLight ? 'rgba(0, 0, 0, 0.2)' : 'rgba(211, 211, 211, 0.2)'},
-        ${isLight ? 'rgba(0, 0, 0, 0)' : 'rgba(211, 211, 211, 0)'}
-      ) center top / 100% 14px no-repeat,
+        ${theme.palette.background.default}
+      ) center top / 85% 14px no-repeat,
       
       radial-gradient(
         farthest-side at 50% 100%,
         ${isLight ? 'rgba(0, 0, 0, 0.2)' : 'rgba(211, 211, 211, 0.2)'},
-        ${isLight ? 'rgba(0, 0, 0, 0)' : 'rgba(211, 211, 211, 0)'}
-      ) center bottom / 100% 14px no-repeat
+        ${theme.palette.background.default}
+      ) center bottom / 85% 14px no-repeat
     `,
     backgroundAttachment: 'local, local, scroll, scroll',
   };
