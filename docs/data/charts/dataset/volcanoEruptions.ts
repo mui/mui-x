@@ -2226,24 +2226,21 @@ export const volcanoEruptions = [
     longestEruptionInDays: 7,
   },
   {
-    name: 'Yasur',
-    timesErupted: 3,
-    lastEruption: '1270',
-    firstRecordedEruption: '434',
-    longestEruptionInDays: 275619,
-  },
-  {
     name: 'Yufu-Tsurumi',
     timesErupted: 3,
     lastEruption: '867-3-4',
     firstRecordedEruption: '-200',
     longestEruptionInDays: 61,
   },
+];
+
+export const volcanoEruptionsScatterSeries = [
   {
-    name: 'Edgecumbe',
-    timesErupted: 4,
-    lastEruption: '-2360',
-    firstRecordedEruption: '-9300',
-    longestEruptionInDays: 102267,
+    name: 'Volcanoes',
+    data: volcanoEruptions.map((d) => ({
+      y: d.timesErupted,
+      x: d.longestEruptionInDays,
+      id: d.name,
+    })),
   },
 ];
