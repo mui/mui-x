@@ -212,7 +212,7 @@ interface RangeFieldSection extends FieldSection {
   dateName: RangePosition;
 }
 
-export type InferValue<
+export type InferValueFromDate<
   TDate extends PickerValidDate,
   TISRange extends boolean,
 > = TISRange extends true ? DateRange<TDate> : TDate | null;

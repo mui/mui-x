@@ -10,7 +10,7 @@ import {
   OnErrorProps,
   PickerAnyValueManagerV8,
   PickerManagerProperties,
-  InferValue,
+  InferValueFromDate,
   InferFieldSection,
 } from '../../../models';
 import type { PickersSectionElement } from '../../../PickersSectionList';
@@ -33,16 +33,16 @@ export interface UseFieldInternalProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > extends TimezoneProps,
-    OnErrorProps<InferValue<TDate, TIsRange>, TError> {
+    OnErrorProps<InferValueFromDate<TDate, TIsRange>, TError> {
   /**
    * The selected value.
    * Used when the component is controlled.
    */
-  value?: InferValue<TDate, TIsRange>;
+  value?: InferValueFromDate<TDate, TIsRange>;
   /**
    * The default value. Use when the component is not controlled.
    */
-  defaultValue?: InferValue<TDate, TIsRange>;
+  defaultValue?: InferValueFromDate<TDate, TIsRange>;
   /**
    * The date used to generate a part of the new value that is not present in the format when both `value` and `defaultValue` are empty.
    * For example, on time fields it will be used to determine the date to set.
@@ -56,7 +56,7 @@ export interface UseFieldInternalProps<
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
-  onChange?: FieldChangeHandler<InferValue<TDate, TIsRange>, TError>;
+  onChange?: FieldChangeHandler<InferValueFromDate<TDate, TIsRange>, TError>;
   /**
    * Format of the date when rendered in the input(s).
    */
@@ -249,8 +249,8 @@ interface FieldActiveDateManager<TDate extends PickerValidDate, TIsRange extends
    * @returns {Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>} The new value and reference value to publish and store in the state.
    */
   getNewValuesFromNewActiveDate: (newActiveDate: TDate | null) => {
-    value: InferValue<TDate, TIsRange>;
-    referenceValue: InferValue<TDate, TIsRange>;
+    value: InferValueFromDate<TDate, TIsRange>;
+    referenceValue: InferValueFromDate<TDate, TIsRange>;
   };
 }
 
@@ -269,7 +269,7 @@ export interface FieldValueManager<TDate extends PickerValidDate, TIsRange exten
    */
   getSectionsFromValue: (
     utils: MuiPickersAdapter<TDate>,
-    value: InferValue<TDate, TIsRange>,
+    value: InferValueFromDate<TDate, TIsRange>,
     fallbackSections: InferFieldSection<TIsRange>[] | null,
     getSectionsFromDate: (date: TDate) => InferFieldSection<TIsRange>[],
   ) => InferFieldSection<TIsRange>[];
@@ -317,9 +317,9 @@ export interface FieldValueManager<TDate extends PickerValidDate, TIsRange exten
    */
   parseValueStr: (
     valueStr: string,
-    referenceValue: InferValue<TDate, TIsRange>,
+    referenceValue: InferValueFromDate<TDate, TIsRange>,
     parseDate: (dateStr: string, referenceDate: TDate) => TDate | null,
-  ) => InferValue<TDate, TIsRange>;
+  ) => InferValueFromDate<TDate, TIsRange>;
   /**
    * Update the reference value with the new value.
    * This method must make sure that no date inside the returned `referenceValue` is invalid.
@@ -331,9 +331,9 @@ export interface FieldValueManager<TDate extends PickerValidDate, TIsRange exten
    */
   updateReferenceValue: (
     utils: MuiPickersAdapter<TDate>,
-    value: InferValue<TDate, TIsRange>,
-    prevReferenceValue: InferValue<TDate, TIsRange>,
-  ) => InferValue<TDate, TIsRange>;
+    value: InferValueFromDate<TDate, TIsRange>,
+    prevReferenceValue: InferValueFromDate<TDate, TIsRange>,
+  ) => InferValueFromDate<TDate, TIsRange>;
 }
 
 export interface UseFieldState<TManager extends PickerAnyValueManagerV8> {
