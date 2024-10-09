@@ -73,7 +73,7 @@ DateTimeRangePicker.propTypes = {
   className: PropTypes.string,
   /**
    * If `true`, the popover or modal will close after submitting the full date.
-   * @default `false`
+   * @default false
    */
   closeOnSelect: PropTypes.bool,
   /**

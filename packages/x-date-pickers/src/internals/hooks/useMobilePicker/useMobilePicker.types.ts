@@ -72,7 +72,7 @@ export interface MobileOnlyPickerProps
     UsePickerViewsNonStaticProps {
   /**
    * If `true`, the popover or modal will close after submitting the full date.
-   * @default `false`
+   * @default false
    */
   closeOnSelect?: UsePickerValueNonStaticProps['closeOnSelect'];
 }
