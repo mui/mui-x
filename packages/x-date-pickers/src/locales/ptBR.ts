@@ -15,8 +15,8 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Próximo mês',
 
   // View navigation
-  openPreviousView: 'Abrir próxima seleção',
-  openNextView: 'Abrir seleção anterior',
+  openPreviousView: 'Abrir seleção anterior',
+  openNextView: 'Abrir próxima seleção',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'Seleção de ano está aberta, alternando para seleção de calendário'
@@ -67,7 +67,7 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
     formattedTime || (value !== null && utils.isValid(value))
       ? `Escolha uma hora, hora selecionada ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Escolha uma hora',
-  // fieldClearLabel: 'Clear',
+  fieldClearLabel: 'Limpar valor',
 
   // Table labels
   timeTableLabel: 'escolha uma hora',

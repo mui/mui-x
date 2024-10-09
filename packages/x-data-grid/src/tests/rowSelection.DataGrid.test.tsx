@@ -228,7 +228,7 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getRow(0).querySelector('input')).to.have.property('checked', false);
     });
 
-    it('should set focus on the cell when clicking the checkbox', async () => {
+    it('should set focus on the cell when clicking the checkbox', () => {
       render(<TestDataGridSelection checkboxSelection />);
       expect(getActiveCell()).to.equal(null);
 
@@ -237,9 +237,7 @@ describe('<DataGrid /> - Row selection', () => {
 
       fireUserEvent.mousePress(checkboxInput!);
 
-      await waitFor(() => {
-        expect(getActiveCell()).to.equal('0-0');
-      });
+      expect(getActiveCell()).to.equal('0-0');
     });
 
     it('should select all visible rows regardless of pagination', () => {
@@ -367,6 +365,36 @@ describe('<DataGrid /> - Row selection', () => {
       expect(input2.checked).to.equal(true);
     });
 
+    it('should remove the selection from rows that are filtered out', async function test() {
+      if (isJSDOM) {
+        this.skip();
+      }
+      render(
+        <TestDataGridSelection
+          checkboxSelection
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+      const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+      fireEvent.click(selectAllCheckbox);
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+      expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
+
+      fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
+        target: { value: 1 },
+      });
+      await waitFor(() => {
+        // Previous selection is cleaned with only the filtered rows
+        expect(getSelectedRowIds()).to.deep.equal([1]);
+      });
+      expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
+    });
+
     it('should only select filtered items when "select all" is toggled after applying a filter', async () => {
       render(
         <TestDataGridSelection
@@ -390,10 +418,10 @@ describe('<DataGrid /> - Row selection', () => {
         target: { value: 1 },
       });
       await waitFor(() => {
-        // Previous selection remains, but only one row is visible
+        // Previous selection is cleared and only the filtered row is selected
         expect(getSelectedRowIds()).to.deep.equal([1]);
       });
-      expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
+      expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
 
       fireEvent.click(selectAllCheckbox); // Unselect all
       await waitFor(() => {
@@ -575,7 +603,7 @@ describe('<DataGrid /> - Row selection', () => {
   });
 
   describe('prop: isRowSelectable', () => {
-    it('should update the selected rows when the isRowSelectable prop changes', async () => {
+    it('should update the selected rows when the isRowSelectable prop changes', () => {
       const { setProps } = render(
         <TestDataGridSelection isRowSelectable={() => true} checkboxSelection />,
       );

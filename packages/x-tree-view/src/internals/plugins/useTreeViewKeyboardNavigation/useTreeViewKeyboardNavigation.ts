@@ -182,6 +182,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // If the focused item is expanded, we move the focus to its first child
       // If the focused item is collapsed and has children, we expand it
       case (key === 'ArrowRight' && !isRtl) || (key === 'ArrowLeft' && isRtl): {
+        if (ctrlPressed) {
+          return;
+        }
         if (instance.isItemExpanded(itemId)) {
           const nextItemId = getNextNavigableItem(instance, itemId);
           if (nextItemId) {
@@ -199,6 +202,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // If the focused item is expanded, we collapse it
       // If the focused item is collapsed and has a parent, we move the focus to this parent
       case (key === 'ArrowLeft' && !isRtl) || (key === 'ArrowRight' && isRtl): {
+        if (ctrlPressed) {
+          return;
+        }
         if (canToggleItemExpansion(itemId) && instance.isItemExpanded(itemId)) {
           instance.toggleItemExpansion(event, itemId);
           event.preventDefault();

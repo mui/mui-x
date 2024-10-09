@@ -7,8 +7,8 @@ import {
   DataGridPro,
   GridColDef,
   useGridApiContext,
-  GRID_DETAIL_PANEL_TOGGLE_FIELD,
   GridRowParams,
+  GRID_DETAIL_PANEL_TOGGLE_FIELD,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -205,7 +205,11 @@ export default function FullWidthDetailPanel() {
       <DataGridPro
         columns={columns}
         rows={rows}
-        pinnedColumns={{ left: [GRID_DETAIL_PANEL_TOGGLE_FIELD] }}
+        initialState={{
+          pinnedColumns: {
+            left: [GRID_DETAIL_PANEL_TOGGLE_FIELD],
+          },
+        }}
         getDetailPanelHeight={getDetailPanelHeight}
         getDetailPanelContent={getDetailPanelContent}
         sx={{

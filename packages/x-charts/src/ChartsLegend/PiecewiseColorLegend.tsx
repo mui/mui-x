@@ -121,7 +121,7 @@ function PiecewiseColorLegend(props: PiecewiseColorLegendProps) {
       itemsToDisplay={itemsToDisplay}
       onItemClick={
         onItemClick
-          ? (e, i) => onItemClick(e, piecewiseColorContextBuilder(itemsToDisplay[i]), i)
+          ? (event, i) => onItemClick(event, piecewiseColorContextBuilder(itemsToDisplay[i]), i)
           : undefined
       }
     />

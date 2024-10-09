@@ -6,7 +6,7 @@
     "typescript": "tsc -p tsconfig.json"
   },
   "devDependencies": {
-    "@babel/runtime": "^7.25.6",
+    "@babel/runtime": "^7.25.7",
     "@emotion/cache": "^11.13.1",
     "@emotion/react": "^11.13.3",
     "@mui/material": "^5.16.7",
@@ -20,7 +20,7 @@
     "@mui/x-license": "workspace:*",
     "@playwright/test": "^1.44.1",
     "@react-spring/web": "^9.7.4",
-    "@types/chai": "^4.3.19",
+    "@types/chai": "^4.3.20",
     "@types/karma": "^6.3.8",
     "@types/moment-jalaali": "^0.7.9",
     "@types/prop-types": "^15.7.13",

@@ -102,7 +102,7 @@ function TimezonesDemo() {
   const brandingTheme = useTheme();
   const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
 
-  const handleContinentClick: ContinentClickHandler = (e, newTimezone) => {
+  const handleContinentClick: ContinentClickHandler = (event, newTimezone) => {
     if (selectedTimezone === newTimezone) {
       setSelectedTimezone(null);
     } else {

@@ -226,7 +226,8 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
   }, [selectedYear]);
 
   const verticalDirection = yearsOrder !== 'desc' ? yearsPerRow * 1 : yearsPerRow * -1;
-  const horizontalDirection = isRtl || yearsOrder === 'desc' ? -1 : 1;
+  const horizontalDirection =
+    (isRtl && yearsOrder === 'asc') || (!isRtl && yearsOrder === 'desc') ? -1 : 1;
 
   const handleKeyDown = useEventCallback((event: React.KeyboardEvent, year: number) => {
     switch (event.key) {

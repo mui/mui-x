@@ -105,7 +105,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
       {...other}
       toolbarTitle={translations.dateRangePickerToolbarTitle}
       isLandscape={false}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={ownerState}
       ref={ref}
     >
