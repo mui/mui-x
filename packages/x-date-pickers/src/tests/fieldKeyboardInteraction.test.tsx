@@ -68,134 +68,77 @@ describe(`RTL - test arrows navigation`, () => {
 
   const { renderWithProps } = buildFieldInteractions({ clock, render, Component: DateTimeField });
 
-  it('should move selected section to the next section respecting RTL order in empty field', async () => {
-    const expectedValues = ['hh', 'mm', 'YYYY', 'MM', 'DD', 'DD'];
-
-    // Test with v7 input
-    let view = renderWithProps({ enableAccessibleFieldDOMStructure: true }, { direction: 'rtl' });
+  const assertExpectedValues = async (
+    expectedValues: string[],
+    enableAccessibleFieldDOMStructure: boolean,
+    key: string,
+    defaultValue?: any,
+  ) => {
+    const view = renderWithProps({ enableAccessibleFieldDOMStructure, defaultValue });
 
     await view.selectSection('hours');
 
     expectedValues.forEach(async (expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      await view.user.keyboard('{ArrowRight}');
+      await view.user.keyboard(`{${key}}`);
     });
-
     view.unmount();
+  };
 
-    // Test with v6 input
-    view = renderWithProps({ enableAccessibleFieldDOMStructure: false }, { direction: 'rtl' });
-
-    await view.selectSection('hours');
-
-    expectedValues.forEach(async (expectedValue) => {
-      expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      await view.user.keyboard('{ArrowRight}');
-    });
+  it('should move selected section to the next section respecting RTL order in empty field', () => {
+    assertExpectedValues(['hh', 'mm', 'YYYY', 'MM', 'DD', 'DD'], true, 'ArrowRight');
   });
 
-  it('should move selected section to the previous section respecting RTL order in empty field', async () => {
-    const expectedValues = ['DD', 'MM', 'YYYY', 'mm', 'hh', 'hh'];
-
-    // Test with v7 input
-    let view = renderWithProps({ enableAccessibleFieldDOMStructure: true }, { direction: 'rtl' });
-
-    await view.selectSection('day');
-
-    expectedValues.forEach(async (expectedValue) => {
-      expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      await view.user.keyboard('{ArrowLeft}');
-    });
-
-    view.unmount();
-
-    // Test with v6 input
-    view = renderWithProps({ enableAccessibleFieldDOMStructure: false }, { direction: 'rtl' });
-
-    await view.selectSection('day');
-
-    expectedValues.forEach(async (expectedValue) => {
-      expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      await view.user.keyboard('{ArrowLeft}');
-    });
+  it('should move selected section to the next section respecting RTL order in empty v6 field', () => {
+    assertExpectedValues(['hh', 'mm', 'YYYY', 'MM', 'DD', 'DD'], false, 'ArrowRight');
   });
 
-  it('should move selected section to the next section respecting RTL order in non-empty field', async () => {
-    // 25/04/2018 => 1397/02/05
-    const expectedValues = ['11', '54', '1397', '02', '05', '05'];
-
-    // Test with v7 input
-    let view = renderWithProps(
-      {
-        enableAccessibleFieldDOMStructure: true,
-        defaultValue: adapter.date('2018-04-25T11:54:00'),
-      },
-      { direction: 'rtl' },
-    );
-
-    await view.selectSection('hours');
-
-    expectedValues.forEach(async (expectedValue) => {
-      expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      await view.user.keyboard('{ArrowRight}');
-    });
-
-    view.unmount();
-
-    // Test with v6 input
-    view = renderWithProps(
-      {
-        defaultValue: adapter.date('2018-04-25T11:54:00'),
-        enableAccessibleFieldDOMStructure: false,
-      },
-      { direction: 'rtl' },
-    );
-
-    await view.selectSection('hours');
-
-    expectedValues.forEach(async (expectedValue) => {
-      expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      await view.user.keyboard('{ArrowRight}');
-    });
+  it('should move selected section to the previous section respecting RTL order in empty field', () => {
+    assertExpectedValues(['DD', 'MM', 'YYYY', 'mm', 'hh', 'hh'], true, 'ArrowLeft');
   });
 
-  it('should move selected section to the previous section respecting RTL order in non-empty field', async () => {
-    // 25/04/2018 => 1397/02/05
-    const expectedValues = ['05', '02', '1397', '54', '11', '11'];
+  it('should move selected section to the previous section respecting RTL order in empty v6 field', () => {
+    assertExpectedValues(['DD', 'MM', 'YYYY', 'mm', 'hh', 'hh'], false, 'ArrowLeft');
+  });
 
-    // Test with v7 input
-    let view = renderWithProps(
-      {
-        enableAccessibleFieldDOMStructure: true,
-        defaultValue: adapter.date('2018-04-25T11:54:00'),
-      },
-      { direction: 'rtl' },
+  it('should move selected section to the next section respecting RTL order in non-empty field', () => {
+    assertExpectedValues(
+      // 25/04/2018 => 1397/02/05
+      ['11', '54', '1397', '02', '05', '05'],
+      true,
+      'ArrowRight',
+      adapter.date('2018-04-25T11:54:00'),
     );
+  });
 
-    await view.selectSection('day');
-
-    expectedValues.forEach(async (expectedValue) => {
-      expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      await view.user.keyboard('{ArrowLeft}');
-    });
-
-    view.unmount();
-
-    // Test with v6 input
-    view = renderWithProps(
-      {
-        defaultValue: adapter.date('2018-04-25T11:54:00'),
-        enableAccessibleFieldDOMStructure: false,
-      },
-      { direction: 'rtl' },
+  it('should move selected section to the next section respecting RTL order in non-empty v6 field', () => {
+    assertExpectedValues(
+      // 25/04/2018 => 1397/02/05
+      ['11', '54', '1397', '02', '05', '05'],
+      false,
+      'ArrowRight',
+      adapter.date('2018-04-25T11:54:00'),
     );
+  });
 
-    await view.selectSection('day');
+  it('should move selected section to the previous section respecting RTL order in non-empty field', () => {
+    assertExpectedValues(
+      // 25/04/2018 => 1397/02/05
+      ['05', '02', '1397', '54', '11', '11'],
+      true,
+      'ArrowLeft',
+      adapter.date('2018-04-25T11:54:00'),
+    );
+  });
 
-    expectedValues.forEach(async (expectedValue) => {
-      expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      await view.user.keyboard('{ArrowLeft}');
-    });
+  it('should move selected section to the previous section respecting RTL order in non-empty v6 field', () => {
+    assertExpectedValues(
+      // 25/04/2018 => 1397/02/05
+      ['05', '02', '1397', '54', '11', '11'],
+      false,
+      'ArrowLeft',
+      adapter.date('2018-04-25T11:54:00'),
+    );
   });
 });
 
@@ -262,11 +205,11 @@ adapterToTest.forEach((adapterName) => {
     const testKeyboardInteraction = (formatToken) => {
       const sectionConfig = getDateSectionConfigFromFormatToken(adapter, formatToken);
 
-      it(`should increase "${sectionConfig.type}" when pressing ArrowUp on "${formatToken}" token`, async () => {
+      it(`should increase "${sectionConfig.type}" when pressing ArrowUp on "${formatToken}" token`, () => {
         const initialValue = adapter.date(testDate);
         const expectedValue = updateDate(initialValue, adapter, sectionConfig.type, 1);
 
-        await testKeyPress({
+        testKeyPress({
           key: 'ArrowUp',
           initialValue,
           expectedValue,
@@ -275,11 +218,11 @@ adapterToTest.forEach((adapterName) => {
         });
       });
 
-      it(`should decrease "${sectionConfig.type}" when pressing ArrowDown on "${formatToken}" token`, async () => {
+      it(`should decrease "${sectionConfig.type}" when pressing ArrowDown on "${formatToken}" token`, () => {
         const initialValue = adapter.date(testDate);
         const expectedValue = updateDate(initialValue, adapter, sectionConfig.type, -1);
 
-        await testKeyPress({
+        testKeyPress({
           key: 'ArrowDown',
           initialValue,
           expectedValue,
