@@ -16,6 +16,8 @@ export default function FlexGrid() {
     maxColumns: 6,
   });
 
+  const rows = data.rows.slice(0, nbRows);
+
   return (
     <Box sx={{ width: '100%' }}>
       <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
@@ -26,8 +28,14 @@ export default function FlexGrid() {
           Add a row
         </Button>
       </Stack>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <DataGrid {...data} rows={data.rows.slice(0, nbRows)} loading={loading} />
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: rows.length === 0 ? 200 : undefined,
+        }}
+      >
+        <DataGrid {...data} rows={rows} loading={loading} />
       </div>
     </Box>
   );
