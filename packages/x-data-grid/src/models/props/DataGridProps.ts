@@ -44,7 +44,7 @@ export interface GridExperimentalFeatures {
 }
 
 /**
- * The props users can give to the `DataGrid` component.
+ * The props users can give to the Data Grid component.
  */
 export type DataGridProps<R extends GridValidRowModel = any> = Omit<
   Partial<DataGridPropsWithDefaultValues<R>> &
@@ -56,7 +56,7 @@ export type DataGridProps<R extends GridValidRowModel = any> = Omit<
 };
 
 /**
- * The props of the `DataGrid` component after the pre-processing phase that the user should not be able to override.
+ * The props of the Data Grid component after the pre-processing phase that the user should not be able to override.
  * Those are usually used in feature-hook for which the pro-plan has more advanced features (eg: multi-sorting, multi-filtering, ...).
  */
 export type DataGridForcedPropsKey =
@@ -71,7 +71,7 @@ export type DataGridForcedPropsKey =
   | 'signature';
 
 /**
- * The `DataGrid` options with a default value that must be merged with the value given through props.
+ * The Data Grid options with a default value that must be merged with the value given through props.
  */
 export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
   slots: GridSlotsComponent;
@@ -79,7 +79,7 @@ export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
 }
 
 /**
- * The `DataGrid` options with a default value that must be merged with the value given through props.
+ * The Data Grid options with a default value that must be merged with the value given through props.
  */
 export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
   /**
@@ -94,7 +94,7 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
 }
 
 /**
- * The `DataGrid` options with a default value overridable through props
+ * The Data Grid options with a default value overridable through props
  * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
  * TODO: add multiSortKey
@@ -397,7 +397,7 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
 }
 
 /**
- * The `DataGrid` props with no default value.
+ * The Data Grid props with no default value.
  */
 export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends CommonProps {
@@ -872,7 +872,7 @@ export interface DataGridPremiumSharedPropsWithDefaultValue {
 }
 
 /**
- * The props of the `DataGrid` component after the pre-processing phase.
+ * The props of the Data Grid component after the pre-processing phase.
  */
 export interface DataGridProcessedProps<R extends GridValidRowModel = any>
   extends DataGridPropsWithDefaultValues,

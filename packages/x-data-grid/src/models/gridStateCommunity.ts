@@ -28,7 +28,7 @@ import type { GridColumnResizeState } from '../hooks/features/columnResize';
 import type { GridRowSpanningState } from '../hooks/features/rows/useGridRowSpanning';
 
 /**
- * The state of `DataGrid`.
+ * The state of Data Grid.
  */
 export interface GridStateCommunity {
   isRtl: boolean;
@@ -56,7 +56,7 @@ export interface GridStateCommunity {
 }
 
 /**
- * The initial state of `DataGrid`.
+ * The initial state of Data Grid.
  */
 export interface GridInitialStateCommunity {
   pagination?: GridPaginationInitialState;
