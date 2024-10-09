@@ -9,7 +9,7 @@ import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DateCalendar />', () => {
-  const { render } = createPickerRenderer({ clockConfig: new Date(2019, 0, 2) });
+  const { render, clock } = createPickerRenderer({ clockConfig: new Date(2019, 0, 2) });
 
   it('switches between views uncontrolled', async () => {
     const handleViewChange = spy();
@@ -128,6 +128,11 @@ describe('<DateCalendar />', () => {
   });
 
   describe('with fake timers', () => {
+    // TODO: remove when migrated to vitest
+    if (process.env.MUI_VITEST !== 'true') {
+      clock.withFakeTimers();
+    }
+
     // test: https://github.com/mui/mui-x/issues/12373
     it('should not reset day to `startOfDay` if value already exists when finding the closest enabled date', async () => {
       const onChange = spy();
@@ -139,7 +144,12 @@ describe('<DateCalendar />', () => {
       );
       fireEvent.click(screen.getByRole('radio', { name: '2020' }));
 
-      await screen.findByRole('gridcell', { name: '1' });
+      if (process.env.MUI_VITEST !== 'true') {
+        // Finish the transition to the day view
+        clock.runToLast();
+      } else {
+        await screen.findByRole('gridcell', { name: '1' });
+      }
 
       fireEvent.click(screen.getByRole('gridcell', { name: '1' }));
       fireEvent.click(
