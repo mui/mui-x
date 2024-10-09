@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
 
-import { useTreeItem2 } from '@mui/x-tree-view/useTreeItem2';
+import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
 
 export const MUI_X_PRODUCTS = [
   {
@@ -30,7 +30,7 @@ export const MUI_X_PRODUCTS = [
   },
   {
     id: 'pickers',
-    label: 'Date and time pickers',
+    label: 'Date and Time pickers',
     children: [
       {
         id: 'pickers-community',
@@ -70,7 +70,10 @@ function CustomLabel({ children, className, secondaryLabel }) {
 }
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
-  const { publicAPI } = useTreeItem2(props);
+  const { publicAPI } = useTreeItem2Utils({
+    itemId: props.itemId,
+    children: props.children,
+  });
 
   const item = publicAPI.getItem(props.itemId);
 
