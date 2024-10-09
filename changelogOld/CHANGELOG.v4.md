@@ -4,7 +4,7 @@
 
 _Aug 27, 2021_
 
-🎉 This is the first stable release of the data grid component 🎉!
+🎉 This is the first stable release of the Data Grid component 🎉!
 
 We have been iterating on the component for [18 months](https://github.com/mui/mui-x/commit/705cb0f387b5f3aa056bf40c4183a2342b317447). With the introduction of the [row edit](https://mui.com/x/react-data-grid/editing/#row-editing) feature, many bug fixes, and polishing of the documentation, we believe the component is ready for a stable release.
 
@@ -130,7 +130,7 @@ This is the last alpha release. We are moving to beta in the next release, next 
 - [DataGrid] Drop support for @material-ui/core below 4.12.0 (#2281) @DanailH
 - [DataGrid] Fix when `renderCell` returns false-ish values (#2242) @siriwatknp
 - [DataGrid] Group events into a single enum (#2279) @flaviendelangle
-- [DataGrid] Improve error message if using multiple versions of data grid (#2311) @ZeeshanTamboli
+- [DataGrid] Improve error message if using multiple versions of Data Grid (#2311) @ZeeshanTamboli
 - [DataGrid] Make resized column not flexible (#2308) @flaviendelangle
 - [DataGrid] Merge `useGridVirtualColumns` into `useGridVirtualRows` (#2314) @m4theushw
 - [DataGrid] Remove dependency on x-license (#2295) @oliviertassinari
@@ -977,7 +977,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - [docs] Clean demos components (#1681) @oliviertassinari
 - [docs] Fix docs demo (#1691) @dtassone
 - [docs] Improve Filtering page (#1671) @m4theushw
-- [docs] Improve the data grid components page (#1382) @dtassone
+- [docs] Improve the Data Grid components page (#1382) @dtassone
 - [docs] Refine the descriptions to be clearer (#1589) @oliviertassinari
 - [docs] Reshuffle columns and rows styling sections (#1622) @DanailH
 
@@ -1110,14 +1110,14 @@ Big thanks to the 9 contributors who made this release possible. Here are some h
 
 - [docs] Add missing filterModel prop in /api/ (#1518) @imsuvesh
 - [docs] Better document how to disable row selection (#1510) @ZeeshanTamboli
-- [docs] Fix data grid feature comparison (#1516) @imsuvesh
+- [docs] Fix Data Grid feature comparison (#1516) @imsuvesh
 - [docs] Fix typos (#1447) @ZeeshanTamboli
 - [docs] No ads for commercial license (#1489) @oliviertassinari
 
 ### Core
 
 - [core] Label our packages as side effect free (#1466) @oliviertassinari
-- [core] Reduce work in data grid (#1520) @oliviertassinari
+- [core] Reduce work in Data Grid (#1520) @oliviertassinari
 - [core] Remove React.FC (#1436) @ZeeshanTamboli
 - [license] No need to test the location (#1488) @oliviertassinari
 - [test] Improve test coverage of roving tabindex (#1459) @oliviertassinari
@@ -1369,7 +1369,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 #### Breaking changes
 
 - [DataGrid] Prefix all public API to fit into the global Material UI namespace (#1069) @DanailH
-  This change gets the data grid one step closer to a stable release. It allows the data grid to fit into the global namespace of Material UI. All the exported modules should have a unique name. It allows the search features, in Google, in the docs, and in the codebase to work effectively and efficiently.
+  This change gets the Data Grid one step closer to a stable release. It allows the Data Grid to fit into the global namespace of Material UI. All the exported modules should have a unique name. It allows the search features, in Google, in the docs, and in the codebase to work effectively and efficiently.
 
   For the mirgration, prefixing a broken import with "grid" is often enough. In the case it's not working, head to the pull request's description. It [details all the changes](https://github.com/mui/mui-x/pull/1069).
 
@@ -1410,9 +1410,9 @@ _Feb 17, 2021_
 Big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
 - 📍 Add support for default locales (#983) @DanailH
-  We have built the infrastructure to support around 100 [default locales](https://mui.com/x/react-data-grid/localization/#supported-locales). If you have localized the data grid in your application. Please do consider contributing new translations back to Material UI by opening a pull request.
+  We have built the infrastructure to support around 100 [default locales](https://mui.com/x/react-data-grid/localization/#supported-locales). If you have localized the Data Grid in your application. Please do consider contributing new translations back to Material UI by opening a pull request.
 - 🎁 Add new `selectionModel` prop (#986) @dtassone
-  The prop can be used to control the selected rows in the data grid. [See the docs](https://v4.mui.com/components/data-grid/selection/#controlled-selection).
+  The prop can be used to control the selected rows in the Data Grid. [See the docs](https://v4.mui.com/components/data-grid/selection/#controlled-selection).
 - 💅 Add support for default props from theme (#1019) @DanailH
 - 🙌 Fix scrollbar size on windows (#1061) @dtassone
 - 🐛 Polish existing features, fix 9 issues.
@@ -1482,7 +1482,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 
 ### Docs
 
-- [docs] Add code snippet for localization docs in the data grid (#1024) @DanailH
+- [docs] Add code snippet for localization docs in the Data Grid (#1024) @DanailH
 - [docs] Fix usage of the wrong type (#1062) @oliviertassinari
 - [docs] Reduce fears around license upfront @oliviertassinari
 - [docs] Update streaming docs (#1013) @dtassone
@@ -1503,7 +1503,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - 🎁 Add getRowId prop (#972) @dtassone
 - 🚀 Add streaming delete row API (#980) @dtassone
 - 💅 Fix autoHeight (#940) @oliviertassinari
-- 🙌 Enable the data grid to work under strict mode (#933) @dtassone
+- 🙌 Enable the Data Grid to work under strict mode (#933) @dtassone
 - ⚡️ Add component slots for toolbar and preference panel (#971) @DanailH
 - 🐛 Polish existing features, fix 9 issues.
 
@@ -1544,11 +1544,11 @@ _Jan 26, 2021_
 Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Add support for Material UI v5-alpha (#855) @DanailH.
-  The data grid supports Material UI v4 and v5. We aim to retain the support for v4 as long as v5 hasn't reached the beta phase.
+  The Data Grid supports Material UI v4 and v5. We aim to retain the support for v4 as long as v5 hasn't reached the beta phase.
 - 💅 Update the customization API to be closer to Material UI v5.
-  The data grid accepts two props: `components` and `componentsProps`.
+  The Data Grid accepts two props: `components` and `componentsProps`.
   The first prop allows to swapping specific components used in slots the grid, like the checkboxes.
-  The second one allows providing extra props to each slot. It avoids the need for using the React context to access information from outside the data grid.
+  The second one allows providing extra props to each slot. It avoids the need for using the React context to access information from outside the Data Grid.
 
   See the [RFC](https://github.com/mui/material-ui/issues/21453) for more details.
 
@@ -1647,7 +1647,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 
 ### Docs
 
-- [docs] Add docs for data grid column selector (#837) @DanailH
+- [docs] Add docs for Data Grid column selector (#837) @DanailH
 - [docs] Clarify feature split between Pro and Premium (#779) @oliviertassinari
 
 ### Core
@@ -1685,7 +1685,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
 - 🌎 Add support for internationalization (#718) @DanailH
 
-  You can use the `localeText` prop to provide custom wordings in the data grid.
+  You can use the `localeText` prop to provide custom wordings in the Data Grid.
   Check the documentation for [a demo](https://mui.com/x/react-data-grid/localization/#translation-keys).
 
 - 📚 Start documenting the filtering feature 🧪 (#754) @dtassone
@@ -1703,7 +1703,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 ### Docs
 
 - [docs] Polish docs (#778) @oliviertassinari
-- [docs] Start documentation for the data grid filter features (#754) @dtassone
+- [docs] Start documentation for the Data Grid filter features (#754) @dtassone
 - [docs] Sync with docs to fix images (#776) @oliviertassinari
 
 ### Core
@@ -1718,7 +1718,7 @@ _Dec 16, 2020_
 Big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐛 Fix bugs from recently released features.
-- 🧪 Continue the iteration on the data grid filtering feature, soon to be released @dtassone.
+- 🧪 Continue the iteration on the Data Grid filtering feature, soon to be released @dtassone.
 
 ### @material-ui/x-grid@v4.0.0-alpha.13 / @material-ui/data-grid@v4.0.0-alpha.13
 
@@ -1737,7 +1737,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 - [security] Bump ini from 1.3.5 to 1.3.7 (#719) @dependabot-preview
 - [core] Update monorepository (#725) @oliviertassinari
 - [test] Polish refactor (#723) @oliviertassinari
-- [test] Split data grid tests in multiple files (#722) @dtassone
+- [test] Split Data Grid tests in multiple files (#722) @dtassone
 - [test] Add tests for DataGrid filtering feature (#715) @dtassone
 
 ## [4.0.0-alpha.12](https://github.com/mui/mui-x/compare/v4.0.0-alpha.11...v4.0.0-alpha.12)
@@ -1746,9 +1746,9 @@ _Dec 9, 2020_
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-- 🔍 Add a new data grid [density selector](https://mui.com/x/react-data-grid/accessibility/#density) feature (#606) @DanailH.
-- 💄 A first iteration on the data grid's toolbar.
-- 🧪 Continue the iteration on the data grid filtering feature, soon to be released @dtassone.
+- 🔍 Add a new Data Grid [density selector](https://mui.com/x/react-data-grid/accessibility/#density) feature (#606) @DanailH.
+- 💄 A first iteration on the Data Grid's toolbar.
+- 🧪 Continue the iteration on the Data Grid filtering feature, soon to be released @dtassone.
 
 ### @material-ui/x-grid@v4.0.0-alpha.12 / @material-ui/data-grid@v4.0.0-alpha.12
 
