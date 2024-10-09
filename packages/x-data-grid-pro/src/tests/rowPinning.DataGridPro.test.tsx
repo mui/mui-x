@@ -872,7 +872,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(getCell(0, 1).textContent).to.equal('Joe');
     expect(getCell(4, 1).textContent).to.equal('Cory');
 
-    await act(() =>
+    await act(async () =>
       apiRef.current.updateRows([
         { id: 3, name: 'Marcus' },
         { id: 4, name: 'Tom' },

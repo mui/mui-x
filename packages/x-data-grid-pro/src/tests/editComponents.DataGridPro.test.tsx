@@ -122,7 +122,7 @@ describe('<DataGridPro /> - Edit components', () => {
       });
     });
 
-    it('should call onValueChange if defined', () => {
+    it('should call onValueChange if defined', async () => {
       const onValueChange = spy();
 
       defaultData.columns[0].renderEditCell = (params) =>
@@ -135,6 +135,8 @@ describe('<DataGridPro /> - Edit components', () => {
 
       const input = within(cell).getByRole<HTMLInputElement>('textbox');
       fireEvent.change(input, { target: { value: 'Puma' } });
+      await act(() => Promise.resolve());
+
       expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal('Puma');
     });
@@ -323,7 +325,7 @@ describe('<DataGridPro /> - Edit components', () => {
       );
     });
 
-    it('should call onValueChange if defined', () => {
+    it('should call onValueChange if defined', async () => {
       const onValueChange = spy();
 
       defaultData.columns[0].renderEditCell = (params) =>
@@ -336,6 +338,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '2022-02-10' } });
+      await act(() => Promise.resolve());
 
       expect(onValueChange.callCount).to.equal(1);
       expect((onValueChange.lastCall.args[1]! as Date).toISOString()).to.equal(
@@ -539,7 +542,7 @@ describe('<DataGridPro /> - Edit components', () => {
       fireEvent.doubleClick(cell);
 
       expect(cell.textContent!.replace(/[\W]+/, '')).to.equal('Nike'); // We use .replace to remove &ZeroWidthSpace;
-      await act(() => {
+      await act(async () => {
         apiRef.current.setEditCellValue({ id: 0, field: 'brand', value: 'Adidas' });
       });
       expect(cell.textContent!.replace(/[\W]+/, '')).to.equal('Adidas');
@@ -562,7 +565,7 @@ describe('<DataGridPro /> - Edit components', () => {
       expect(onValueChange.lastCall.args[1]).to.equal('Adidas');
     });
 
-    it('should call onCellEditStop', () => {
+    it('should call onCellEditStop', async () => {
       const onCellEditStop = spy();
 
       render(
@@ -575,6 +578,8 @@ describe('<DataGridPro /> - Edit components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
       fireUserEvent.mousePress(document.getElementById('outside-grid')!);
+      await act(() => Promise.resolve());
+
       expect(onCellEditStop.callCount).to.equal(1);
     });
 
