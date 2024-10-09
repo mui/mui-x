@@ -23,8 +23,8 @@ describe('<TimeClock /> - Timezone', () => {
       render(<TimeClock onChange={onChange} />);
 
       const hourClockEvent = getClockTouchEvent(8, '12hours');
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
 
       const expectedDate = adapter.setHours(adapter.date(), 8);
 
@@ -44,8 +44,8 @@ describe('<TimeClock /> - Timezone', () => {
           render(<TimeClock onChange={onChange} timezone={timezone} />);
 
           const hourClockEvent = getClockTouchEvent(8, '12hours');
-          fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-          fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
+          fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
+          fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
 
           const expectedDate = adapter.setHours(
             adapter.startOfDay(adapter.date(undefined, timezone)),
@@ -81,8 +81,8 @@ describe('<TimeClock /> - Timezone', () => {
           );
 
           const hourClockEvent = getClockTouchEvent(8, '12hours');
-          fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-          fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
+          fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
+          fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
 
           const actualDate = onChange.lastCall.firstArg;
 

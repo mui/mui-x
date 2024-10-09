@@ -19,7 +19,7 @@ describe('<MobileTimePicker /> - Timezone', () => {
         />,
       );
 
-      expect(screen.getByMuiTest('hours')).to.have.text('11');
+      expect(screen.getByTestId('hours')).to.have.text('11');
     });
   });
 });

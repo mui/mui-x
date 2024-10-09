@@ -172,7 +172,7 @@ describe('<DateCalendar />', () => {
       render(<DateCalendar defaultValue={adapterToUse.date('2019-01-01')} />);
 
       expect(screen.getByText('January 2019')).toBeVisible();
-      expect(screen.getAllByMuiTest('day')).to.have.length(31);
+      expect(screen.getAllByTestId('day')).to.have.length(31);
       // It should follow https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
       expect(
         document.querySelector(
@@ -368,7 +368,7 @@ describe('<DateCalendar />', () => {
       await user.click(april);
 
       expect(onChange.callCount).to.equal(0);
-      expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('April 2019');
+      expect(screen.getByTestId('calendar-month-and-year-text')).to.have.text('April 2019');
     });
 
     it('should use `referenceDate` when no value defined', async () => {
@@ -435,7 +435,7 @@ describe('<DateCalendar />', () => {
     it('renders year selection standalone', () => {
       render(<DateCalendar defaultValue={adapterToUse.date('2019-01-01')} openTo="year" />);
 
-      expect(screen.getAllByMuiTest('year')).to.have.length(200);
+      expect(screen.getAllByTestId('year')).to.have.length(200);
     });
 
     it('should select the closest enabled date in the month if the current date is disabled', async () => {
@@ -517,7 +517,7 @@ describe('<DateCalendar />', () => {
       await user.click(year2022);
 
       expect(onChange.callCount).to.equal(0);
-      expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('January 2022');
+      expect(screen.getByTestId('calendar-month-and-year-text')).to.have.text('January 2022');
     });
 
     it('should scroll to show the selected year', function test() {

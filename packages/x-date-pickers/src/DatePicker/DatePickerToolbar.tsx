@@ -114,7 +114,7 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<
     >
       <DatePickerToolbarTitle
         variant="h4"
-        data-mui-test="datepicker-toolbar-date"
+        data-testid="datepicker-toolbar-date"
         align={isLandscape ? 'left' : 'center'}
         ownerState={ownerState}
         className={classes.title}

@@ -729,7 +729,7 @@ describe('<DataGridPro /> - Row editing', () => {
           const processRowUpdate = spy((newRow) => newRow);
           render(<TestCase processRowUpdate={processRowUpdate} />);
           act(() => apiRef.current.startRowEditMode({ id: 0 }));
-          await act(() => {
+          await act(async () => {
             apiRef.current.setEditCellValue({
               id: 0,
               field: 'currencyPair',
@@ -1199,7 +1199,7 @@ describe('<DataGridPro /> - Row editing', () => {
         const cell = getCell(0, 2);
         fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
-        await act(() => {
+        await act(async () => {
           apiRef.current.setEditCellValue({ id: 0, field: 'price1M', value: 'USD GBP' });
         });
         fireEvent.keyDown(cell.querySelector('input')!, { key: 'Tab' });

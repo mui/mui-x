@@ -57,9 +57,9 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: '...を含む',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: '...を含まない',
   filterOperatorEquals: '...に等しい',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: '...に等しくない',
   filterOperatorStartsWith: '...で始まる',
   filterOperatorEndsWith: '...で終わる',
   filterOperatorIs: '...である',
@@ -80,9 +80,9 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: '含む',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: '含まない',
   headerFilterOperatorEquals: '等しい',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: '等しくない',
   headerFilterOperatorStartsWith: 'で始まる',
   headerFilterOperatorEndsWith: 'で終わる',
   headerFilterOperatorIs: 'である',

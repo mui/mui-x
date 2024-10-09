@@ -116,7 +116,7 @@ function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
   return {
     ...themeProps,
     renderLoading:
-      themeProps.renderLoading ?? (() => <span data-mui-test="loading-progress">...</span>),
+      themeProps.renderLoading ?? (() => <span data-testid="loading-progress">...</span>),
     reduceAnimations: themeProps.reduceAnimations ?? defaultReduceAnimations,
     loading: props.loading ?? false,
     disablePast: props.disablePast ?? false,

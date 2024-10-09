@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
   DataGrid,
@@ -712,9 +712,7 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues(1)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
 
     setProps({ columns: [{ field: 'id' }] });
-    await waitFor(() => {
-      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-    });
+    expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
     expect(onSortModelChange.callCount).to.equal(1);
     expect(onSortModelChange.lastCall.firstArg).to.deep.equal([]);
   });
@@ -747,9 +745,7 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues(1)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
 
     setProps({ columns: [{ field: 'id' }], sortModel: [{ field: 'id', sort: 'desc' }] });
-    await waitFor(() => {
-      expect(getColumnValues(0)).to.deep.equal(['2', '1', '0']);
-    });
+    expect(getColumnValues(0)).to.deep.equal(['2', '1', '0']);
     expect(onSortModelChange.callCount).to.equal(0);
   });
 
@@ -790,9 +786,7 @@ describe('<DataGrid /> - Sorting', () => {
 
       const header = getColumnHeaderCell(0);
       fireEvent.click(header);
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['a', 'b', '', '']);
-      });
+      expect(getColumnValues(0)).to.deep.equal(['a', 'b', '', '']);
 
       fireEvent.click(header);
       expect(getColumnValues(0)).to.deep.equal(['b', 'a', '', '']);

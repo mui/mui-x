@@ -87,12 +87,12 @@ describe('<MobileDateTimePicker /> - Describes', () => {
         adapterToUse.getHours(newValue),
         hasMeridiem ? '12hours' : '24hours',
       );
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
       // change minutes
       const minutesClockEvent = getClockTouchEvent(adapterToUse.getMinutes(newValue), 'minutes');
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minutesClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minutesClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', minutesClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', minutesClockEvent);
 
       if (hasMeridiem) {
         const newHours = adapterToUse.getHours(newValue);

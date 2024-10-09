@@ -36,6 +36,12 @@ function CustomPagination() {
 
   :::
 
+### Columns panel
+
+In the following demo, the columns panel is replaced with a custom component that represents the [column groups](/x/react-data-grid/column-groups/) as a nested list.
+
+{{"demo": "CustomColumnsPanel.js", "bg": "inline"}}
+
 ### Column menu
 
 As mentioned above, the column menu is a component slot that can be recomposed easily and customized on each column as in the demo below.

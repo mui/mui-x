@@ -79,7 +79,7 @@ Arcs with angles smaller than the value (in deg) will not have labels.
 ## Highlight
 
 Pie series can get `highlightScope` property to manage element highlighting.
-Its behavior is described in the [dedicated page](/x/react-charts/tooltip/#highlighting-series).
+Its behavior is described in the [dedicated page](/x/react-charts/highlighting/#highlighting-series).
 
 When elements are highlighted or faded they can be customized with dedicated CSS classes: `.MuiPieArc-faded` and `.MuiPieArc-highlighted`.
 

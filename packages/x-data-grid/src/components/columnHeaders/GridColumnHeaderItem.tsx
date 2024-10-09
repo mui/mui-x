@@ -172,6 +172,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const mouseEventsHandlers = React.useMemo(
     () => ({
       onClick: publish('columnHeaderClick'),
+      onContextMenu: publish('columnHeaderContextMenu'),
       onDoubleClick: publish('columnHeaderDoubleClick'),
       onMouseOver: publish('columnHeaderOver'), // TODO remove as it's not used
       onMouseOut: publish('columnHeaderOut'), // TODO remove as it's not used

@@ -294,7 +294,7 @@ function DateTimePickerToolbar<TDate extends PickerValidDate>(
           <PickersToolbarButton
             tabIndex={-1}
             variant="subtitle1"
-            data-mui-test="datetimepicker-toolbar-year"
+            data-testid="datetimepicker-toolbar-year"
             onClick={() => onViewChange('year')}
             selected={view === 'year'}
             value={value ? utils.format(value, 'year') : '–'}
@@ -305,7 +305,7 @@ function DateTimePickerToolbar<TDate extends PickerValidDate>(
           <PickersToolbarButton
             tabIndex={-1}
             variant={isDesktop ? 'h5' : 'h4'}
-            data-mui-test="datetimepicker-toolbar-day"
+            data-testid="datetimepicker-toolbar-day"
             onClick={() => onViewChange('day')}
             selected={view === 'day'}
             value={dateText}
@@ -322,7 +322,7 @@ function DateTimePickerToolbar<TDate extends PickerValidDate>(
               <PickersToolbarButton
                 variant={isDesktop ? 'h5' : 'h3'}
                 width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
-                data-mui-test="hours"
+                data-testid="hours"
                 onClick={() => onViewChange('hours')}
                 selected={view === 'hours'}
                 value={value ? formatHours(value) : '--'}
@@ -336,7 +336,7 @@ function DateTimePickerToolbar<TDate extends PickerValidDate>(
               <PickersToolbarButton
                 variant={isDesktop ? 'h5' : 'h3'}
                 width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
-                data-mui-test="minutes"
+                data-testid="minutes"
                 onClick={() => onViewChange('minutes')}
                 selected={view === 'minutes' || (!views.includes('minutes') && view === 'hours')}
                 value={value ? utils.format(value, 'minutes') : '--'}
@@ -356,7 +356,7 @@ function DateTimePickerToolbar<TDate extends PickerValidDate>(
               <PickersToolbarButton
                 variant={isDesktop ? 'h5' : 'h3'}
                 width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
-                data-mui-test="seconds"
+                data-testid="seconds"
                 onClick={() => onViewChange('seconds')}
                 selected={view === 'seconds'}
                 value={value ? utils.format(value, 'seconds') : '--'}
@@ -391,7 +391,7 @@ function DateTimePickerToolbar<TDate extends PickerValidDate>(
         {ampm && isDesktop && (
           <PickersToolbarButton
             variant="h5"
-            data-mui-test="am-pm-view-button"
+            data-testid="am-pm-view-button"
             onClick={() => onViewChange('meridiem')}
             selected={view === 'meridiem'}
             value={value && meridiemMode ? formatMeridiem(utils, meridiemMode) : '--'}

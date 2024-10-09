@@ -28,8 +28,8 @@ export const timeClockHandler: ViewHandler<TimeView> = {
 
     const hourClockEvent = getClockTouchEvent(valueInt, clockView);
 
-    fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-    fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
+    fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
+    fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
   },
 };
 

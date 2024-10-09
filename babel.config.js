@@ -39,10 +39,6 @@ const defaultAlias = {
   packages: resolveAliasPath('./packages'),
 };
 
-const productionPlugins = [
-  ['babel-plugin-react-remove-properties', { properties: ['data-mui-test'] }],
-];
-
 /** @type {babel.ConfigFunction} */
 module.exports = function getBabelConfig(api) {
   const useESModules = api.env(['modern', 'stable', 'rollup']);
@@ -129,7 +125,9 @@ module.exports = function getBabelConfig(api) {
   }
 
   if (process.env.NODE_ENV === 'production') {
-    plugins.push(...productionPlugins);
+    if (!process.env.E2E_BUILD) {
+      plugins.push(['babel-plugin-react-remove-properties', { properties: ['data-testid'] }]);
+    }
 
     if (process.env.BABEL_ENV) {
       plugins.push([

@@ -63,7 +63,7 @@ function useDateCalendarDefaultizedProps<TDate extends PickerValidDate>(
     views: themeProps.views ?? ['year', 'day'],
     reduceAnimations: themeProps.reduceAnimations ?? defaultReduceAnimations,
     renderLoading:
-      themeProps.renderLoading ?? (() => <span data-mui-test="loading-progress">...</span>),
+      themeProps.renderLoading ?? (() => <span data-testid="loading-progress">...</span>),
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
@@ -546,7 +546,7 @@ DateCalendar.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span data-mui-test="loading-progress">...</span>
+   * @default () => <span>...</span>
    */
   renderLoading: PropTypes.func,
   /**

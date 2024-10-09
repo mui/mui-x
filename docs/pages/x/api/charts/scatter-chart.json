@@ -11,8 +11,8 @@
       },
       "default": "{ x: 'none', y: 'none' }",
       "seeMoreLink": {
-        "url": "https://mui.com/x/react-charts/tooltip/#highlights",
-        "text": "highlight docs"
+        "url": "https://mui.com/x/react-charts/highlighting",
+        "text": "highlighting docs"
       }
     },
     "bottomAxis": {

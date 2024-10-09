@@ -57,7 +57,7 @@ describe('<YearCalendar />', () => {
       />,
     );
 
-    const yearButttons = screen.queryAllByMuiTest('year');
+    const yearButttons = screen.queryAllByTestId('year');
     expect(yearButttons[0].children.item(0)?.textContent).to.equal('2020');
   });
 
@@ -70,7 +70,7 @@ describe('<YearCalendar />', () => {
       />,
     );
 
-    const yearButtons = screen.queryAllByMuiTest('year');
+    const yearButtons = screen.queryAllByTestId('year');
     expect(yearButtons[0].children.item(0)?.textContent).to.equal('2024');
   });
 

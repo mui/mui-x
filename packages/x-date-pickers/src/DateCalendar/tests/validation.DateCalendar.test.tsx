@@ -35,7 +35,7 @@ describe('<DateCalendar /> - Validation', () => {
       );
 
       // No date should be disabled in the month before the disabled month
-      screen.getAllByMuiTest('day').forEach((day) => {
+      screen.getAllByTestId('day').forEach((day) => {
         expect(day).not.to.have.attribute('disabled');
       });
 
@@ -43,7 +43,7 @@ describe('<DateCalendar /> - Validation', () => {
       clock.runToLast();
 
       // All dates should be disabled in disabled month
-      screen.getAllByMuiTest('day').forEach((day) => {
+      screen.getAllByTestId('day').forEach((day) => {
         expect(day).to.have.attribute('disabled');
       });
 
@@ -51,7 +51,7 @@ describe('<DateCalendar /> - Validation', () => {
       clock.runToLast();
 
       // No date should be disabled in the month after the disabled month
-      screen.getAllByMuiTest('day').forEach((day) => {
+      screen.getAllByTestId('day').forEach((day) => {
         expect(day).not.to.have.attribute('disabled');
       });
     });
@@ -70,7 +70,7 @@ describe('<DateCalendar /> - Validation', () => {
       );
 
       // No date should be disabled in the month before the disabled year
-      screen.getAllByMuiTest('day').forEach((day) => {
+      screen.getAllByTestId('day').forEach((day) => {
         expect(day).not.to.have.attribute('disabled');
       });
 
@@ -78,7 +78,7 @@ describe('<DateCalendar /> - Validation', () => {
       clock.runToLast();
 
       // All dates should be disabled in disabled year
-      screen.getAllByMuiTest('day').forEach((day) => {
+      screen.getAllByTestId('day').forEach((day) => {
         expect(day).to.have.attribute('disabled');
       });
     });

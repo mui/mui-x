@@ -43,7 +43,7 @@ function PickersActionBar(props: PickersActionBarProps) {
     switch (actionType) {
       case 'clear':
         return (
-          <Button data-mui-test="clear-action-button" onClick={onClear} key={actionType}>
+          <Button data-testid="clear-action-button" onClick={onClear} key={actionType}>
             {translations.clearButtonLabel}
           </Button>
         );
@@ -64,7 +64,7 @@ function PickersActionBar(props: PickersActionBarProps) {
 
       case 'today':
         return (
-          <Button data-mui-test="today-action-button" onClick={onSetToday} key={actionType}>
+          <Button data-testid="today-action-button" onClick={onSetToday} key={actionType}>
             {translations.todayButtonLabel}
           </Button>
         );

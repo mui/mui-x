@@ -89,6 +89,13 @@ export interface GridColumnHeaderEventLookup {
     event: React.MouseEvent<HTMLElement>;
   };
   /**
+   * Fired when the user attempts to open a context menu in the column header.
+   */
+  columnHeaderContextMenu: {
+    params: GridColumnHeaderParams;
+    event: React.MouseEvent<HTMLElement>;
+  };
+  /**
    * Fired when a column header is double-clicked.
    */
   columnHeaderDoubleClick: {

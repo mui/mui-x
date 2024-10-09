@@ -346,24 +346,24 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<
 
   return (
     <DateRangePickerDayRoot
-      data-mui-test={shouldRenderHighlight ? 'DateRangeHighlight' : undefined}
+      data-testid={shouldRenderHighlight ? 'DateRangeHighlight' : undefined}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
       sx={sx}
     >
       <DateRangePickerDayRangeIntervalPreview
-        data-mui-test={shouldRenderPreview ? 'DateRangePreview' : undefined}
+        data-testid={shouldRenderPreview ? 'DateRangePreview' : undefined}
         className={classes.rangeIntervalPreview}
         ownerState={ownerState}
       >
         <DateRangePickerDayDay<TDate>
+          data-testid="DateRangePickerDay"
           {...other}
           ref={ref}
           disableMargin
           day={day}
           selected={isVisuallySelected}
           outsideCurrentMonth={outsideCurrentMonth}
-          data-mui-test="DateRangePickerDay"
           className={classes.day}
           ownerState={ownerState}
           draggable={draggable}

@@ -85,7 +85,7 @@ describe('<DateRangeCalendar />', () => {
       fireEvent.click(getPickerDay('30', 'January 2019'));
       fireEvent.click(getPickerDay('19', 'January 2019'));
 
-      expect(screen.queryByMuiTest('DateRangeHighlight')).to.equal(null);
+      expect(screen.queryByTestId('DateRangeHighlight')).to.equal(null);
 
       fireEvent.click(getPickerDay('30', 'January 2019'));
 
@@ -102,7 +102,7 @@ describe('<DateRangeCalendar />', () => {
         />,
       );
 
-      expect(screen.getAllByMuiTest('DateRangeHighlight')).to.have.length(31);
+      expect(screen.getAllByTestId('DateRangeHighlight')).to.have.length(31);
     });
 
     it('prop: disableDragEditing - should not allow dragging range', () => {
@@ -535,7 +535,7 @@ describe('<DateRangeCalendar />', () => {
   it('prop: calendars - should render the provided amount of calendars', () => {
     render(<DateRangeCalendar calendars={3} />);
 
-    expect(screen.getAllByMuiTest('pickers-calendar')).to.have.length(3);
+    expect(screen.getAllByTestId('pickers-calendar')).to.have.length(3);
   });
 
   describe('Performance', () => {

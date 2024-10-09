@@ -719,7 +719,9 @@ describe('<DataGridPro /> - Rows', () => {
         />,
       );
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(6);
-      act(() => apiRef.current.setPage(1));
+      act(() => {
+        apiRef.current.setPage(1);
+      });
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(4);
     });
   });

@@ -11,8 +11,8 @@
       },
       "default": "{ x: 'none', y: 'none' }",
       "seeMoreLink": {
-        "url": "https://mui.com/x/react-charts/tooltip/#highlights",
-        "text": "highlight docs"
+        "url": "https://mui.com/x/react-charts/highlighting",
+        "text": "highlighting docs"
       }
     },
     "bottomAxis": {
@@ -128,6 +128,6 @@
   "muiName": "MuiScatterChartPro",
   "filename": "/packages/x-charts-pro/src/ScatterChartPro/ScatterChartPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li>\n<li><a href=\"/x/react-charts/zoom-and-pan/\">Zoom &amp; Pan <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li>\n<li><a href=\"/x/react-charts/zoom-and-pan/\">Charts - Zooming and panning <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
   "cssComponent": false
 }
