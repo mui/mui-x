@@ -439,7 +439,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       ),
     );
   }
-  if (rootProps.listView) {
+  if ((rootProps as any).listView) {
     const columnsToKeep = visibleColumns.filter((col) => {
       if (col.type === 'actions') {
         return true;
@@ -450,7 +450,14 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     const listColumnWidth =
       dimensions.viewportInnerSize.width -
       columnsToKeep.reduce((acc, col) => acc + col.computedWidth, 0);
-    cells.push(getCell({ ...rootProps.listColDef!, computedWidth: listColumnWidth }, 0, 0, 1));
+    cells.push(
+      getCell(
+        { ...((rootProps as any).listColDef as GridStateColDef), computedWidth: listColumnWidth },
+        0,
+        0,
+        1,
+      ),
+    );
     columnsToKeep.forEach((column, colIndex) => {
       cells.push(getCell(column, 1 + colIndex, 1 + colIndex, columnsCount));
     });

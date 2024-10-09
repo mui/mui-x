@@ -389,10 +389,6 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   disableAutosize: boolean;
   /**
-   * If `true`, the horizontal scroll is disabled and a single column is displayed.
-   */
-  listView: boolean;
-  /**
    * If `true`, the Data Grid will auto span the cells over the rows having the same value.
    * @default false
    */
@@ -827,10 +823,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnWidthChange?: GridEventListener<'columnWidthChange'>;
-  /**
-   * Definition of the column rendered when `listView` is enabled.
-   */
-  listColDef?: GridColDef;
 }
 
 export interface DataGridProSharedPropsWithDefaultValue {
