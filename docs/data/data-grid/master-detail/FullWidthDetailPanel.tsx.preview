@@ -3,8 +3,8 @@
   rows={rows}
   initialState={{
     pinnedColumns: {
-    left: [GRID_DETAIL_PANEL_TOGGLE_FIELD],
-    }
+      left: [GRID_DETAIL_PANEL_TOGGLE_FIELD],
+    },
   }}
   getDetailPanelHeight={getDetailPanelHeight}
   getDetailPanelContent={getDetailPanelContent}
