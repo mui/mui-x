@@ -2,32 +2,33 @@ import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
 import { afterEach, bench, describe } from 'vitest';
-import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { options } from '../utils/options';
 
-describe('ScatterChart', () => {
+describe('BarChartPro', () => {
   afterEach(() => {
     cleanup();
   });
 
-  const dataLength = 1_000;
-  const data = Array.from({ length: dataLength }).map((_, i) => ({
-    id: i,
+  const dataLength = 500;
+  const data = Array.from({ length: dataLength + 1 }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
   }));
 
   const xData = data.map((d) => d.x);
+  const yData = data.map((d) => d.y);
 
   bench(
-    'ScatterChart with big data amount',
+    'BarChartPro with big data amount',
     async () => {
       const { findByText } = render(
-        <ScatterChart
-          xAxis={[{ data: xData, valueFormatter: (v) => v.toLocaleString('en-US') }]}
+        <BarChartPro
+          xAxis={[{ id: 'x', scaleType: 'band', data: xData, zoom: { filterMode: 'discard' } }]}
+          zoom={[{ axisId: 'x', start: 0.25, end: 0.75 }]}
           series={[
             {
-              data,
+              data: yData,
             },
           ]}
           width={500}
@@ -35,7 +36,7 @@ describe('ScatterChart', () => {
         />,
       );
 
-      await findByText(dataLength.toLocaleString('en-US'), { ignore: 'span' });
+      await findByText('60', { ignore: 'span' });
     },
     options,
   );
