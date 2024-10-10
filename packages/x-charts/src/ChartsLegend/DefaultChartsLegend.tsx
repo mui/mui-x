@@ -54,7 +54,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
       itemsToDisplay={seriesToDisplay}
       onItemClick={
         onItemClick
-          ? (e, i) => onItemClick(e, seriesContextBuilder(seriesToDisplay[i]), i)
+          ? (event, i) => onItemClick(event, seriesContextBuilder(seriesToDisplay[i]), i)
           : undefined
       }
     />

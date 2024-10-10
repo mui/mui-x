@@ -1,7 +1,7 @@
 ---
 title: Charts - Tooltip
 productId: x-charts
-components: ChartsTooltip, DefaultChartsAxisTooltipContent, DefaultChartsItemTooltipContent, ChartsAxisHighlight
+components: ChartsTooltip, DefaultChartsAxisTooltipContent, DefaultChartsItemTooltipContent
 ---
 
 # Charts - Tooltip
@@ -20,56 +20,6 @@ The tooltip can be triggered by two kinds of events:
 - `'none'`—disable the tooltip.
 
 {{"demo": "Interaction.js"}}
-
-## Highlights
-
-### Highlighting axis
-
-You can highlight data based on mouse position.
-By default, those highlights are lines, but it can also be a vertical band if your x-axis use `scaleType: 'band'`.
-
-On the chart, to customize this behavior, you can use:
-
-```jsx
-axisHighlight={{
-  x: 'line', // Or 'none', or 'band'
-  y: 'line', // Or 'none'
-}}
-```
-
-{{"demo": "BandHighlight.js" }}
-
-### Highlighting series
-
-In parallel with the tooltip, you can highlight and fade elements.
-
-This kind of interaction is controlled by series properties `highlightScope` which contains two options:
-
-- `highlighted` Indicates which item to highlight. Its value can be
-  - `'none'` Do nothing (default one).
-  - `'item'` Only highlight the item itself.
-  - `'series'` Highlight all items of the series.
-- `faded` Indicates which item to fade (if they are not already highlighted). Its value can be
-  - `'none'` Do nothing (default one).
-  - `'series'` Fade all the items of the series.
-  - `'global'` Fade all the items of the chart.
-
-{{"demo": "ElementHighlights.js"}}
-
-### Controlled Highlight
-
-The highlight can be controlled by the user when they set `highlightedItem` and `onHighlightChange`.
-
-You can set the `highlightedItem` value based on inputs, and sync it when the user hover over an item themselves.
-
-{{"demo": "ControlledHighlight.js"}}
-
-#### Synchronizing Highlights
-
-Having a controlled highlight allows you to control it in multiple charts at the same time.
-You just need to ensure that the `series` have the same `ids` and the data is in the same order.
-
-{{"demo": "SyncHighlight.js"}}
 
 ## Customization
 
@@ -169,7 +119,7 @@ The second one when trigger is set to `"axis"`.
 If you're using composition, by default, the axis will be listening for mouse events to get its current x/y values.
 If you don't need it, you can disable those listeners with the `disableAxisListener` prop.
 
-You need those listeners if you are using [axes highlight](/x/react-charts/tooltip/#highlighting-axis) or you have a tooltip [triggered by axis](/x/react-charts/tooltip/#tooltip-trigger).
+You need those listeners if you are using [axes highlight](/x/react-charts/highlighting/#highlighting-axis) or you have a tooltip [triggered by axis](/x/react-charts/tooltip/#tooltip-trigger).
 
 ```jsx
 <ChartContainer {...} disableAxisListener>
