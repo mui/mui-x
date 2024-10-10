@@ -11,6 +11,8 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 
 - 📚 Updated ["What's new"](https://mui.com/x/whats-new/) page giving more detailed overview of the latest new features and other highlights
 - 📚 New [collapsible column groups demo](https://mui.com/x/react-data-grid/column-groups/#collapsible-column-groups) for the Data Grid component
+- 📚 New [Tree Item Customization](https://mui.com/x/react-tree-view/tree-item-customization/) documentation to learn how to use the new APIs to create custom Tree Items.
+- 📣 The old APIs (`props.ContentComponent` and `props.ContentProps`) have been deprecated and will be removed in the new major version of the Tree View component.
 - 🌍 Improved Japanese (ja-JP) locale on the Data Grid component
 - 🐞 Bugfixes
 - 📚 Other documentation improvements
@@ -63,7 +65,7 @@ Same changes as in `@mui/x-charts@7.20.0`.
 
 #### `@mui/x-tree-view@7.20.0`
 
-- [TreeItem] Deprecate the `ContentComponent` and `ContentProps` props (#14908) @flaviendelangle 
+- [TreeItem] Deprecate the `ContentComponent` and `ContentProps` props (#14908) @flaviendelangle
 - [TreeView] Rework how items are being rendered in Rich Tree View components (#14749) @flaviendelangle
 
 ### Docs
