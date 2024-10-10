@@ -326,8 +326,8 @@ When `rowSelectionPropagation.descendants` is set to `true`.
 
 When `rowSelectionPropagation.parents` is set to `true`.
 
-- Selecting all the filtered descendants of a parent would auto-select the parent.
-- Deselecting a descendant of a selected parent would auto-deselect the parent.
+- Selecting all the filtered descendants of a parent will auto-select the parent.
+- Deselecting a descendant of a selected parent will auto-deselect the parent.
 
 The example below demonstrates the usage of the `rowSelectionPropagation` prop.
 
