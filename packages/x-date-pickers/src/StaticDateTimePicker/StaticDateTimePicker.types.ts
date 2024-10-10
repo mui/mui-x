@@ -20,7 +20,7 @@ export interface StaticDateTimePickerSlotProps<TDate extends PickerValidDate>
     UseStaticPickerSlotProps<TDate, DateOrTimeView> {}
 
 export interface StaticDateTimePickerProps<TDate extends PickerValidDate>
-  extends BaseDateTimePickerProps<TDate, DateOrTimeView>,
+  extends Omit<BaseDateTimePickerProps<TDate, DateOrTimeView>, 'closeOnSelect'>,
     MakeOptional<StaticOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
    * Overridable component slots.

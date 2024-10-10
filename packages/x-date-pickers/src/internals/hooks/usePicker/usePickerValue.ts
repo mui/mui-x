@@ -173,7 +173,7 @@ export const usePickerValue = <
     onChange,
     value: inValueWithoutRenderTimezone,
     defaultValue: inDefaultValue,
-    closeOnSelect = wrapperVariant === 'desktop',
+    closeOnSelect = wrapperVariant === 'desktop' && !valueType.includes('time'),
     timezone: timezoneProp,
   } = props;
 
