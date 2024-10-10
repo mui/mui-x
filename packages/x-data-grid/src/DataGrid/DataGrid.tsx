@@ -54,13 +54,7 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
   }
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
-      <GridRoot
-        className={props.className}
-        style={props.style}
-        sx={props.sx}
-        ref={ref}
-        {...props.forwardedProps}
-      >
+      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridHeader />
         <GridBody />
         <GridFooterPlaceholder />
