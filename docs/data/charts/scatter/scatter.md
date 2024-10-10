@@ -15,6 +15,18 @@ Those objects require `x`, `y`, and `id` properties.
 
 {{"demo": "BasicScatter.js"}}
 
+### Using a dataset
+
+If your data is stored in an array of objects, you can use the `dataset` helper prop.
+It accepts an array of objects such as `dataset={[{a: 1, b: 32, c: 873}, {a: 2, b: 41, c: 182}, ...]}`.
+
+You can reuse this data when defining the series, the scatter series work a bit differently than in other charts though,
+you need to specify a key for the `x`, `y` and `id` properties. This is done with the `xDataKey`, `yDataKey` and `idDataKey` properties.
+
+Additionally, you can specify a `zDataKey` to provide a third dimension to the scatter points.
+
+{{"demo": "ScatterDataset.js"}}
+
 ## Interaction
 
 Since scatter elements can be small, interactions do not require hovering exactly over an element.
