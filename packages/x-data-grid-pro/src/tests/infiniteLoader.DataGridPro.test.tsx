@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, waitFor } from '@mui/internal-test-utils';
+import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { spy, restore } from 'sinon';
@@ -40,24 +40,37 @@ describe('<DataGridPro /> - Infnite loader', () => {
     }
     const { container, setProps } = render(<TestCase rows={baseRows} />);
     const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
-    // arbitrary number to make sure that the bottom of the grid window is reached.
-    virtualScroller.scrollTop = 12345;
-    virtualScroller.dispatchEvent(new Event('scroll'));
+
+    await act(async () => {
+      // arbitrary number to make sure that the bottom of the grid window is reached.
+      virtualScroller.scrollTop = 12345;
+      virtualScroller.dispatchEvent(new Event('scroll'));
+    });
+
     await waitFor(() => {
       expect(handleRowsScrollEnd.callCount).to.equal(1);
     });
-    setProps({
-      rows: baseRows.concat(
-        { id: 6, brand: 'Gucci' },
-        { id: 7, brand: "Levi's" },
-        { id: 8, brand: 'Ray-Ban' },
-      ),
+
+    await act(async () => {
+      setProps({
+        rows: baseRows.concat(
+          { id: 6, brand: 'Gucci' },
+          { id: 7, brand: "Levi's" },
+          { id: 8, brand: 'Ray-Ban' },
+        ),
+      });
+
+      // Trigger a scroll again to notify the grid that we're not in the bottom area anymore
+      virtualScroller.dispatchEvent(new Event('scroll'));
     });
-    // Trigger a scroll again to notify the grid that we're not in the bottom area anymore
-    virtualScroller.dispatchEvent(new Event('scroll'));
+
     expect(handleRowsScrollEnd.callCount).to.equal(1);
-    virtualScroller.scrollTop = 12345;
-    virtualScroller.dispatchEvent(new Event('scroll'));
+
+    await act(async () => {
+      virtualScroller.scrollTop = 12345;
+      virtualScroller.dispatchEvent(new Event('scroll'));
+    });
+
     await waitFor(() => {
       expect(handleRowsScrollEnd.callCount).to.equal(2);
     });
