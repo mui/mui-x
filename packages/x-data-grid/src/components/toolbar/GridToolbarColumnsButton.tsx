@@ -8,6 +8,7 @@ import { gridPreferencePanelStateSelector } from '../../hooks/features/preferenc
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridToolbarTooltip } from './GridToolbarTooltip';
 
 interface GridToolbarColumnsButtonProps {
   /**
@@ -54,11 +55,9 @@ const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, GridToolbar
     const isOpen = preferencePanel.open && preferencePanel.panelId === columnPanelId;
 
     return (
-      <rootProps.slots.baseTooltip
+      <GridToolbarTooltip
         title={apiRef.current.getLocaleText('toolbarColumnsLabel')}
-        enterDelay={1000}
         {...tooltipProps}
-        {...rootProps.slotProps?.baseTooltip}
       >
         <rootProps.slots.baseButton
           ref={ref}
@@ -69,13 +68,13 @@ const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, GridToolbar
           aria-expanded={isOpen}
           aria-controls={isOpen ? columnPanelId : undefined}
           startIcon={<rootProps.slots.columnSelectorIcon />}
-          {...buttonProps}
           onClick={showColumns}
           {...rootProps.slotProps?.baseButton}
+          {...buttonProps}
         >
           {apiRef.current.getLocaleText('toolbarColumns')}
         </rootProps.slots.baseButton>
-      </rootProps.slots.baseTooltip>
+      </GridToolbarTooltip>
     );
   },
 );

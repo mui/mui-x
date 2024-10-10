@@ -55,6 +55,21 @@ export const GridSeparatorIcon = createSvgIcon(
   'Separator',
 );
 
+export const GridDensityCompactIcon = createSvgIcon(
+  <path d="M3 15.4286H21V13.1429H3V15.4286ZM3 20H21V17.7143H3V20ZM3 10.8571H21V8.57143H3V10.8571ZM3 4V6.28571H21V4H3Z" />,
+  'DensityCompact',
+);
+
+export const GridDensityStandardIcon = createSvgIcon(
+  <path d="M21 8H3V4H21V8ZM21 10H3V14H21V10ZM21 16H3V20H21V16Z" />,
+  'DensityStandard',
+);
+
+export const GridDensityComfortableIcon = createSvgIcon(
+  <path d="M21 10.6667H3V4H21V10.6667ZM21 13.3333H3V20H21V13.3333Z" />,
+  'DensityComfortable',
+);
+
 export const GridViewHeadlineIcon = createSvgIcon(
   <path d="M4 15h16v-2H4v2zm0 4h16v-2H4v2zm0-8h16V9H4v2zm0-6v2h16V5H4z" />,
   'ViewHeadline',
@@ -135,3 +150,10 @@ export const GridDeleteForeverIcon = createSvgIcon(
   <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z" />,
   'Delete',
 );
+
+export const GridPrintIcon = createSvgIcon(
+  <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3m-3 11H8v-5h8zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1m-1-9H6v4h12z" />,
+  'Print',
+);
+
+export const GridArrowDropDownIcon = createSvgIcon(<path d="m7 10 5 5 5-5z" />, 'ArrowDropDown');

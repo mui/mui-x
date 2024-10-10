@@ -56,6 +56,11 @@ export interface GridBaseSlots {
    */
   basePopper: React.JSXElementConstructor<GridSlotProps['basePopper']>;
   /**
+   * The custom Popover component used in the grid.
+   * @default Popover
+   */
+  basePopover: React.JSXElementConstructor<GridSlotProps['basePopover']>;
+  /**
    * The custom InputLabel component used in the grid.
    * @default InputLabel
    */
@@ -65,6 +70,16 @@ export interface GridBaseSlots {
    * @default MenuItem
    */
   baseSelectOption: React.JSXElementConstructor<GridSlotProps['baseSelectOption']>;
+  /**
+   * The custom ToggleButton component used in the grid.
+   * @default ToggleButton
+   */
+  baseToggleButton: React.JSXElementConstructor<GridSlotProps['baseToggleButton']>;
+  /**
+   * The custom ToggleButtonGroup component used in the grid.
+   * @default ToggleButtonGroup
+   */
+  baseToggleButtonGroup: React.JSXElementConstructor<GridSlotProps['baseToggleButtonGroup']>;
 }
 
 /**
