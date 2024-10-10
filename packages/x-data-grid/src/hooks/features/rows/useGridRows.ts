@@ -359,35 +359,26 @@ export const useGridRows = (
       }
 
       apiRef.current.setState((state) => {
-        const group = gridRowTreeSelector(state, apiRef.current.instanceId)[
-          GRID_ROOT_GROUP_ID
-        ] as GridGroupNode;
-        const allRows = group.children;
-        const oldIndex = allRows.findIndex((row) => row === rowId);
+        const sortedRowIds = gridSortedRowIdsSelector(apiRef);
+
+        const oldIndex = sortedRowIds.findIndex((row) => row === rowId);
         if (oldIndex === -1 || oldIndex === targetIndex) {
           return state;
         }
 
         logger.debug(`Moving row ${rowId} to index ${targetIndex}`);
 
-        const updatedRows = [...allRows];
+        const updatedRows = [...sortedRowIds];
         updatedRows.splice(targetIndex, 0, updatedRows.splice(oldIndex, 1)[0]);
-
         return {
           ...state,
-          rows: {
-            ...state.rows,
-            tree: {
-              ...state.rows.tree,
-              [GRID_ROOT_GROUP_ID]: {
-                ...group,
-                children: updatedRows,
-              },
-            },
+          sorting: {
+            ...state.sorting,
+            sortModel: [],
+            sortedRows: updatedRows,
           },
         };
       });
-      apiRef.current.publishEvent('rowsSet');
     },
     [apiRef, logger],
   );
