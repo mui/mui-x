@@ -102,7 +102,7 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       const sectionsContainer = getFieldSectionsContainer();
-      await act(() => sectionsContainer.focus());
+      await act(async () => sectionsContainer.focus());
 
       expect(sectionsContainer.parentElement).to.have.class('Mui-focused');
 
@@ -112,7 +112,7 @@ describe('<DesktopDateRangePicker />', () => {
       render(<DesktopDateRangePicker slots={{ field: SingleInputDateRangeField }} />);
 
       const input = getTextbox();
-      await act(() => input.focus());
+      await act(async () => input.focus());
 
       expect(input.parentElement).to.have.class('Mui-focused');
     });

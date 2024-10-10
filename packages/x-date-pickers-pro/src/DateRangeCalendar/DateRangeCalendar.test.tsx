@@ -17,6 +17,8 @@ import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
 import { RangePosition } from '../models';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 const getPickerDay = (name: string, picker = 'January 2018') =>
   within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
 
@@ -528,7 +530,8 @@ describe('<DateRangeCalendar />', () => {
           'disabled',
         );
       }
-      await user.click(getPickerDay('2'));
+      // without `pointerEventsCheck` it would fail to click on browser
+      await user.setup({ pointerEventsCheck: 0 }).click(getPickerDay('2'));
       expect(handleChange.callCount).to.equal(0);
     });
   });
@@ -571,7 +574,8 @@ describe('<DateRangeCalendar />', () => {
 
       const renderCountBeforeChange = RenderCount.callCount;
       await user.click(getPickerDay('4'));
-      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(10);
+      // 10 days in unit tests, 18 days in browser
+      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(isJSDOM ? 10 : 18);
     });
   });
 });
