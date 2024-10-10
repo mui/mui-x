@@ -139,6 +139,46 @@ describe('<TimeClock />', () => {
     expect(reason).to.equal('partial');
   });
 
+  it('should increase hour selection by 5 on PageUp press', () => {
+    const handleChange = spy();
+    render(
+      <TimeClock
+        autoFocus
+        value={adapterToUse.date('2019-01-01T22:20:00')}
+        onChange={handleChange}
+      />,
+    );
+    const listbox = screen.getByRole('listbox');
+
+    fireEvent.keyDown(listbox, { key: 'PageUp' });
+
+    expect(handleChange.callCount).to.equal(1);
+    const [newDate, reason] = handleChange.firstCall.args;
+    expect(adapterToUse.getHours(newDate)).to.equal(3);
+    expect(adapterToUse.getMinutes(newDate)).to.equal(20);
+    expect(reason).to.equal('partial');
+  });
+
+  it('should decrease hour selection by 5 on PageDown press', () => {
+    const handleChange = spy();
+    render(
+      <TimeClock
+        autoFocus
+        value={adapterToUse.date('2019-01-01T02:20:00')}
+        onChange={handleChange}
+      />,
+    );
+    const listbox = screen.getByRole('listbox');
+
+    fireEvent.keyDown(listbox, { key: 'PageDown' });
+
+    expect(handleChange.callCount).to.equal(1);
+    const [newDate, reason] = handleChange.firstCall.args;
+    expect(adapterToUse.getHours(newDate)).to.equal(21);
+    expect(adapterToUse.getMinutes(newDate)).to.equal(20);
+    expect(reason).to.equal('partial');
+  });
+
   [
     {
       keyName: 'Enter',
