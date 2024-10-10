@@ -12,6 +12,7 @@ export type {
   UseTreeItem2ContentSlotOwnProps,
   UseTreeItem2LabelInputSlotOwnProps,
   UseTreeItem2LabelSlotOwnProps,
+  UseTreeItem2CheckboxSlotOwnProps,
   UseTreeItem2IconContainerSlotOwnProps,
   UseTreeItem2GroupTransitionSlotOwnProps,
   UseTreeItem2DragAndDropOverlaySlotOwnProps,

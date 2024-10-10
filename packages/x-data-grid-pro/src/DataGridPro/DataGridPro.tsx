@@ -564,6 +564,12 @@ DataGridProRaw.propTypes = {
    */
   onColumnHeaderClick: PropTypes.func,
   /**
+   * Callback fired when a contextmenu event comes from a column header element.
+   * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
+   * @param {MuiEvent<React.MouseEvent>} event The event object.
+   */
+  onColumnHeaderContextMenu: PropTypes.func,
+  /**
    * Callback fired when a double click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
@@ -894,12 +900,12 @@ DataGridProRaw.propTypes = {
   ]),
   /**
    * When `rowSelectionPropagation.descendants` is set to `true`.
-   * - Selecting a parent will auto-select all its filtered descendants.
-   * - Deselecting a parent will auto-deselect all its filtered descendants.
+   * - Selecting a parent selects all its filtered descendants automatically.
+   * - Deselecting a parent row deselects all its filtered descendants automatically.
    *
-   * When `rowSelectionPropagation.parents=true`
-   * - Selecting all descendants of a parent would auto-select it.
-   * - Deselecting a descendant of a selected parent would deselect the parent.
+   * When `rowSelectionPropagation.parents` is set to `true`
+   * - Selecting all the filtered descendants of a parent selects the parent automatically.
+   * - Deselecting a descendant of a selected parent deselects the parent automatically.
    *
    * Works with tree data and row grouping on the client-side only.
    * @default { parents: false, descendants: false }
