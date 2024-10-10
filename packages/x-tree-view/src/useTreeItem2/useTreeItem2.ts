@@ -37,7 +37,7 @@ export const useTreeItem2 = <
   const {
     runItemPlugins,
     items: { onItemClick, disabledItemsFocusable, indentationAtItemLevel },
-    selection: { multiSelect, disableSelection, checkboxSelection },
+    selection: { multiSelect, checkboxSelection },
     expansion: { expansionTrigger },
     treeId,
     instance,
