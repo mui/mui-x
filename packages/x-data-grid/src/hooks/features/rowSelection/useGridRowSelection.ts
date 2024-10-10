@@ -442,8 +442,13 @@ export const useGridRowSelection = (
   /*
    * EVENTS
    */
+  const isFirstRender = React.useRef(true);
   const removeOutdatedSelection = React.useCallback(
     (sortModelUpdated = false) => {
+      if (isFirstRender.current) {
+        isFirstRender.current = false;
+        return;
+      }
       const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
       const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
 
