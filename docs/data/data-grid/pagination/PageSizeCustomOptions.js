@@ -17,7 +17,7 @@ export default function PageSizeCustomOptions() {
           ...data.initialState,
           pagination: { paginationModel: { pageSize: 5 } },
         }}
-        pageSizeOptions={[5, 10, 25]}
+        pageSizeOptions={[5, 10, 25, { value: -1, label: 'All' }]}
       />
     </div>
   );
