@@ -21,7 +21,7 @@ import { ZoomProps } from '../context/ZoomProvider';
 function BarChartPlotZoom(props: BarPlotProps) {
   const { isInteracting } = useZoom();
 
-  return <BarPlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
+  return <BarPlot {...props} skipAnimation={isInteracting || undefined} />;
 }
 
 export interface BarChartProProps extends BarChartProps, ZoomProps {}
@@ -253,7 +253,7 @@ BarChartPro.propTypes = {
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * If `true`, animations are skipped.
-   * @default false
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */
   skipAnimation: PropTypes.bool,
   /**

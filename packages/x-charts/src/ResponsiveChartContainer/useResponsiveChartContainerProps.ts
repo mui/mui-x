@@ -27,6 +27,7 @@ export const useResponsiveChartContainerProps = (
     xAxis,
     yAxis,
     zAxis,
+    skipAnimation,
     ...other
   } = props;
 
@@ -59,6 +60,7 @@ export const useResponsiveChartContainerProps = (
     xAxis,
     yAxis,
     zAxis,
+    skipAnimation,
     width: dWidth,
     height: dHeight,
     ref,

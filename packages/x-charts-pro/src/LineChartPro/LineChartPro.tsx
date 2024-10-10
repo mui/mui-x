@@ -28,17 +28,17 @@ import { ZoomProps } from '../context/ZoomProvider';
 
 function AreaPlotZoom(props: AreaPlotProps) {
   const { isInteracting } = useZoom();
-  return <AreaPlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
+  return <AreaPlot {...props} skipAnimation={isInteracting || undefined} />;
 }
 
 function LinePlotZoom(props: LinePlotProps) {
   const { isInteracting } = useZoom();
-  return <LinePlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
+  return <LinePlot {...props} skipAnimation={isInteracting || undefined} />;
 }
 
 function MarkPlotZoom(props: MarkPlotProps) {
   const { isInteracting } = useZoom();
-  return <MarkPlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
+  return <MarkPlot {...props} skipAnimation={isInteracting || undefined} />;
 }
 
 export interface LineChartProProps extends LineChartProps, ZoomProps {}
