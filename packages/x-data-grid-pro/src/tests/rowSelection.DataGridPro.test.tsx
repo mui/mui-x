@@ -201,6 +201,22 @@ describe('<DataGridPro /> - Row selection', () => {
     expect(getCell(1, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
   });
 
+  // Context: https://github.com/mui/mui-x/issues/14859
+  it('should not throw when controlling a selection model', () => {
+    function TestDataGrid() {
+      const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>([]);
+      return (
+        <TreeDataGrid
+          rowSelectionModel={rowSelectionModel}
+          onRowSelectionModelChange={setRowSelectionModel}
+        />
+      );
+    }
+    expect(() => {
+      render(<TestDataGrid />);
+    }).not.to.throw();
+  });
+
   describe('prop: checkboxSelectionVisibleOnly = false', () => {
     it('should select all rows of all pages if no row is selected', () => {
       render(
