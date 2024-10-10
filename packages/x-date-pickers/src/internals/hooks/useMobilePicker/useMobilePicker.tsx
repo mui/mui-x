@@ -89,9 +89,8 @@ export const useMobilePicker = <
     UseMobilePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>['field'],
     Partial<
       BaseSingleInputFieldProps<
-        TDate | null,
         TDate,
-        FieldSection,
+        false,
         TEnableAccessibleFieldDOMStructure,
         InferError<TExternalProps>
       >

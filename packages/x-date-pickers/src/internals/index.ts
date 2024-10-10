@@ -58,7 +58,6 @@ export {
 } from './hooks/useField';
 export type {
   UseFieldInternalProps,
-  UseFieldParams,
   UseFieldResponse,
   FieldValueManager,
   FieldChangeHandler,
@@ -138,11 +137,6 @@ export {
   onSpaceOrEnter,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
 } from './utils/utils';
-export {
-  useDefaultizedDateField,
-  useDefaultizedTimeField,
-  useDefaultizedDateTimeField,
-} from './hooks/defaultizedFieldProps';
 export { useDefaultReduceAnimations } from './hooks/useDefaultReduceAnimations';
 export { applyDefaultViewProps } from './utils/views';
 

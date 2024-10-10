@@ -1,43 +1,31 @@
 'use client';
-import {
-  singleItemFieldValueManager,
-  singleItemValueManager,
-} from '../internals/utils/valueManagers';
+import * as React from 'react';
 import { useField } from '../internals/hooks/useField';
 import { UseDateFieldProps } from './DateField.types';
-import { validateDate } from '../validation';
 import { useSplitFieldProps } from '../hooks';
-import { FieldSection, PickerValidDate } from '../models';
-import { useDefaultizedDateField } from '../internals/hooks/defaultizedFieldProps';
+import { PickerValidDate } from '../models';
+import { getDateValueManager } from '../valueManagers';
 
 export const useDateField = <
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TAllProps extends UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
 >(
-  inProps: TAllProps,
+  props: TAllProps,
 ) => {
-  const props = useDefaultizedDateField<
-    TDate,
-    UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    TAllProps
-  >(inProps);
-
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
 
-  return useField<
-    TDate | null,
-    TDate,
-    FieldSection,
-    TEnableAccessibleFieldDOMStructure,
-    typeof forwardedProps,
-    typeof internalProps
-  >({
+  const valueManager = React.useMemo(
+    () =>
+      getDateValueManager<TDate, TEnableAccessibleFieldDOMStructure>(
+        props.enableAccessibleFieldDOMStructure,
+      ),
+    [props.enableAccessibleFieldDOMStructure],
+  );
+
+  return useField<typeof valueManager, typeof forwardedProps>({
     forwardedProps,
     internalProps,
-    valueManager: singleItemValueManager,
-    fieldValueManager: singleItemFieldValueManager,
-    validator: validateDate,
-    valueType: 'date',
+    valueManager,
   });
 };

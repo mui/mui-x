@@ -7,7 +7,6 @@ import {
   FieldSection,
   PickerValidDate,
 } from '@mui/x-date-pickers/models';
-import { UseClearableFieldResponse } from '@mui/x-date-pickers/hooks';
 import { SxProps } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import { RangePosition } from './range';
@@ -63,13 +62,11 @@ export interface RangeFieldSeparatorProps {
  * not what users can pass using the `props.slotProps.field`.
  */
 export interface BaseMultiInputFieldProps<
-  TValue,
   TDate extends PickerValidDate,
-  TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > extends Omit<
-      BaseFieldProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>,
+      BaseFieldProps<TDate, true, TEnableAccessibleFieldDOMStructure, TError>,
       'unstableFieldRef'
     >,
     RangeFieldSeparatorProps {
@@ -101,8 +98,9 @@ export interface BaseMultiInputFieldProps<
  */
 export type BaseMultiInputPickersTextFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> = UseClearableFieldResponse<
-  UseFieldResponse<TEnableAccessibleFieldDOMStructure, MultiInputFieldSlotTextFieldProps>
+> = Omit<
+  UseFieldResponse<TEnableAccessibleFieldDOMStructure, MultiInputFieldSlotTextFieldProps>,
+  'clearable' | 'onClear' | 'slots' | 'slotProps'
 >;
 
 /**

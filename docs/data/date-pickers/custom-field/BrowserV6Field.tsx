@@ -13,7 +13,6 @@ import { useClearableField } from '@mui/x-date-pickers/hooks';
 import {
   BaseSingleInputFieldProps,
   DateValidationError,
-  FieldSection,
 } from '@mui/x-date-pickers/models';
 
 interface BrowserFieldProps
@@ -82,13 +81,7 @@ const BrowserField = React.forwardRef(
 
 interface BrowserDateFieldProps
   extends UseDateFieldProps<Dayjs, false>,
-    BaseSingleInputFieldProps<
-      Dayjs | null,
-      Dayjs,
-      FieldSection,
-      false,
-      DateValidationError
-    > {}
+    BaseSingleInputFieldProps<Dayjs, false, false, DateValidationError> {}
 
 const BrowserDateField = React.forwardRef(
   (props: BrowserDateFieldProps, ref: React.Ref<HTMLDivElement>) => {

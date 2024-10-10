@@ -4,8 +4,6 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { usePickersTranslations } from '../../../hooks/usePickersTranslations';
 import { useUtils, useLocalizationContext } from '../useUtils';
 import {
-  UseFieldInternalProps,
-  UseFieldParams,
   UseFieldState,
   FieldParsedSelectedSections,
   FieldChangeHandlerContext,
@@ -24,9 +22,9 @@ import { buildSectionsFromFormat } from './buildSectionsFromFormat';
 import {
   FieldSection,
   FieldSelectedSections,
+  PickerAnyValueManagerV8,
   PickersTimezone,
-  PickerValidDate,
-  InferError,
+  PickerManagerProperties,
 } from '../../../models';
 import { useValueWithTimezone } from '../useValueWithTimezone';
 import {
@@ -49,55 +47,23 @@ export interface UpdateSectionValueParams<TSection extends FieldSection> {
   shouldGoToNextSection: boolean;
 }
 
-export interface UseFieldStateResponse<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-> {
-  state: UseFieldState<TValue, TSection>;
-  activeSectionIndex: number | null;
-  parsedSelectedSections: FieldParsedSelectedSections;
-  setSelectedSections: (sections: FieldSelectedSections) => void;
-  clearValue: () => void;
-  clearActiveSection: () => void;
-  updateSectionValue: (params: UpdateSectionValueParams<TSection>) => void;
-  updateValueFromValueStr: (valueStr: string) => void;
-  setTempAndroidValueStr: (tempAndroidValueStr: string | null) => void;
-  sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>;
-  getSectionsFromValue: (value: TValue, fallbackSections?: TSection[] | null) => TSection[];
-  localizedDigits: string[];
-  timezone: PickersTimezone;
-}
+export const useFieldState = <TManager extends PickerAnyValueManagerV8>(
+  parameters: UseFieldStateParameters<TManager>,
+): UseFieldStateReturnValue<TManager> => {
+  type ManagerProperties = PickerManagerProperties<TManager>;
+  type TDate = ManagerProperties['date'];
+  type TValue = ManagerProperties['value'];
+  type TSection = ManagerProperties['section'];
 
-export const useFieldState = <
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any, any>,
->(
-  params: UseFieldParams<
-    TValue,
-    TDate,
-    TSection,
-    TEnableAccessibleFieldDOMStructure,
-    TForwardedProps,
-    TInternalProps
-  >,
-): UseFieldStateResponse<TValue, TDate, TSection> => {
   const utils = useUtils<TDate>();
   const translations = usePickersTranslations<TDate>();
   const adapter = useLocalizationContext<TDate>();
   const isRtl = useRtl();
 
   const {
-    valueManager,
-    fieldValueManager,
-    valueType,
-    validator,
-    internalProps,
-    internalProps: {
+    valueManager: { legacyValueManager, fieldValueManager, valueType, validator },
+    internalPropsWithDefaults,
+    internalPropsWithDefaults: {
       value: valueProp,
       defaultValue,
       referenceDate: referenceDateProp,
@@ -110,7 +76,7 @@ export const useFieldState = <
       timezone: timezoneProp,
       enableAccessibleFieldDOMStructure = false,
     },
-  } = params;
+  } = parameters;
 
   const {
     timezone,
@@ -121,7 +87,7 @@ export const useFieldState = <
     value: valueProp,
     defaultValue,
     onChange,
-    valueManager,
+    valueManager: legacyValueManager,
   });
 
   const localizedDigits = React.useMemo(() => getLocalizedDigits(utils), [utils]);
@@ -159,23 +125,23 @@ export const useFieldState = <
     ],
   );
 
-  const [state, setState] = React.useState<UseFieldState<TValue, TSection>>(() => {
+  const [state, setState] = React.useState<UseFieldState<TManager>>(() => {
     const sections = getSectionsFromValue(valueFromTheOutside);
     validateSections(sections, valueType);
 
-    const stateWithoutReferenceDate: UseFieldState<TValue, TSection> = {
+    const stateWithoutReferenceDate: UseFieldState<TManager> = {
       sections,
       value: valueFromTheOutside,
-      referenceValue: valueManager.emptyValue,
+      referenceValue: legacyValueManager.emptyValue,
       tempValueStrAndroid: null,
     };
 
     const granularity = getSectionTypeGranularity(sections);
-    const referenceValue = valueManager.getInitialReferenceValue({
+    const referenceValue = legacyValueManager.getInitialReferenceValue({
       referenceDate: referenceDateProp,
       value: valueFromTheOutside,
       utils,
-      props: internalProps as GetDefaultReferenceDateProps<TDate>,
+      props: internalPropsWithDefaults as GetDefaultReferenceDateProps<TDate>,
       granularity,
       timezone,
     });
@@ -209,7 +175,7 @@ export const useFieldState = <
     value,
     referenceValue,
     sections,
-  }: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue' | 'sections'>) => {
+  }: Pick<UseFieldState<TManager>, 'value' | 'referenceValue' | 'sections'>) => {
     setState((prevState) => ({
       ...prevState,
       sections,
@@ -218,16 +184,16 @@ export const useFieldState = <
       tempValueStrAndroid: null,
     }));
 
-    if (valueManager.areValuesEqual(utils, state.value, value)) {
+    if (legacyValueManager.areValuesEqual(utils, state.value, value)) {
       return;
     }
 
-    const context: FieldChangeHandlerContext<InferError<TInternalProps>> = {
+    const context: FieldChangeHandlerContext<unknown> = {
       validationError: validator({
         adapter,
         value,
         timezone,
-        props: internalProps,
+        props: internalPropsWithDefaults,
       }),
     };
 
@@ -248,9 +214,9 @@ export const useFieldState = <
 
   const clearValue = () => {
     publishValue({
-      value: valueManager.emptyValue,
+      value: legacyValueManager.emptyValue,
       referenceValue: state.referenceValue,
-      sections: getSectionsFromValue(valueManager.emptyValue),
+      sections: getSectionsFromValue(legacyValueManager.emptyValue),
     });
   };
 
@@ -331,7 +297,7 @@ export const useFieldState = <
     const newActiveDateSections = activeDateManager.getSections(newSections);
     const newActiveDate = getDateFromDateSections(utils, newActiveDateSections, localizedDigits);
 
-    let values: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>;
+    let values: Pick<UseFieldState<TManager>, 'value' | 'referenceValue'>;
     let shouldPublish: boolean;
 
     /**
@@ -386,12 +352,12 @@ export const useFieldState = <
 
   React.useEffect(() => {
     let shouldUpdate: boolean;
-    if (!valueManager.areValuesEqual(utils, state.value, valueFromTheOutside)) {
+    if (!legacyValueManager.areValuesEqual(utils, state.value, valueFromTheOutside)) {
       shouldUpdate = true;
     } else {
       shouldUpdate =
-        valueManager.getTimezone(utils, state.value) !==
-        valueManager.getTimezone(utils, valueFromTheOutside);
+        legacyValueManager.getTimezone(utils, state.value) !==
+        legacyValueManager.getTimezone(utils, valueFromTheOutside);
     }
 
     if (shouldUpdate) {
@@ -408,6 +374,12 @@ export const useFieldState = <
     }
   }, [valueFromTheOutside]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const areAllSectionsEmpty = legacyValueManager.areValuesEqual(
+    utils,
+    state.value,
+    legacyValueManager.emptyValue,
+  );
+
   return {
     state,
     activeSectionIndex,
@@ -422,5 +394,37 @@ export const useFieldState = <
     sectionsValueBoundaries,
     localizedDigits,
     timezone,
+    areAllSectionsEmpty,
   };
 };
+
+interface UseFieldStateParameters<TManager extends PickerAnyValueManagerV8> {
+  valueManager: TManager;
+  forwardedProps: UseFieldForwardedProps<
+    PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure']
+  >;
+  internalPropsWithDefaults: PickerManagerProperties<TManager>['internalPropsWithDefaults'];
+}
+
+export interface UseFieldStateReturnValue<TManager extends PickerAnyValueManagerV8> {
+  state: UseFieldState<TManager>;
+  activeSectionIndex: number | null;
+  parsedSelectedSections: FieldParsedSelectedSections;
+  setSelectedSections: (sections: FieldSelectedSections) => void;
+  clearValue: () => void;
+  clearActiveSection: () => void;
+  updateSectionValue: (
+    params: UpdateSectionValueParams<PickerManagerProperties<TManager>['section']>,
+  ) => void;
+  updateValueFromValueStr: (valueStr: string) => void;
+  // TODO v9: Remove
+  setTempAndroidValueStr: (tempAndroidValueStr: string | null) => void;
+  sectionsValueBoundaries: FieldSectionsValueBoundaries<PickerManagerProperties<TManager>['date']>;
+  getSectionsFromValue: (
+    value: PickerManagerProperties<TManager>['value'],
+    fallbackSections?: PickerManagerProperties<TManager>['section'][] | null,
+  ) => PickerManagerProperties<TManager>['section'][];
+  localizedDigits: string[];
+  timezone: PickersTimezone;
+  areAllSectionsEmpty: boolean;
+}
