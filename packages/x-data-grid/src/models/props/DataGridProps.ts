@@ -845,9 +845,9 @@ export interface DataGridProSharedPropsWithDefaultValue {
    * - Selecting a parent will auto-select all its filtered descendants.
    * - Deselecting a parent will auto-deselect all its filtered descendants.
    *
-   * When `rowSelectionPropagation.parents=true`
-   * - Selecting all descendants of a parent would auto-select it.
-   * - Deselecting a descendant of a selected parent would deselect the parent.
+   * When `rowSelectionPropagation.parents` is set to `true`
+   * - Selecting all descendants of a parent will auto-select it.
+   * - Deselecting a descendant of a selected parent will deselect the parent.
    *
    * Works with tree data and row grouping on the client-side only.
    * @default { parents: false, descendants: false }
