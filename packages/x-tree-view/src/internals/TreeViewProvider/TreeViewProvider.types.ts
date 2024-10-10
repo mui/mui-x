@@ -8,6 +8,7 @@ import {
   TreeViewItemPluginResponse,
   TreeViewPublicAPI,
 } from '../models';
+import { TreeViewStore } from '../utils/TreeViewStore';
 import { TreeViewCorePluginSignatures } from '../corePlugins';
 
 export type TreeViewItemPluginsRunner = <TProps extends {}>(
@@ -21,6 +22,7 @@ export type TreeViewContextValue<
   Partial<MergeSignaturesProperty<TOptionalSignatures, 'contextValue'>> & {
     instance: TreeViewInstance<TSignatures, TOptionalSignatures>;
     publicAPI: TreeViewPublicAPI<TSignatures, TOptionalSignatures>;
+    store: TreeViewStore<TSignatures>;
     rootRef: React.RefObject<HTMLUListElement>;
     wrapItem: TreeItemWrapper<TSignatures>;
     wrapRoot: TreeRootWrapper<TSignatures>;

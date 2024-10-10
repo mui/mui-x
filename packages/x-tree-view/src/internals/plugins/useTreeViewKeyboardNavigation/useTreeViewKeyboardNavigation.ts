@@ -15,6 +15,13 @@ import {
 } from './useTreeViewKeyboardNavigation.types';
 import { hasPlugin } from '../../utils/plugins';
 import { useTreeViewLabel } from '../useTreeViewLabel';
+import { selectorItemMetaMap } from '../useTreeViewItems/useTreeViewItems.selectors';
+import { useSelector } from '../../hooks/useSelector';
+import { selectorIsItemSelected } from '../useTreeViewSelection/useTreeViewSelection.selectors';
+import {
+  selectorIsItemBeingEdited,
+  selectorIsItemEditable,
+} from '../useTreeViewLabel/useTreeViewLabel.selectors';
 
 function isPrintableCharacter(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
@@ -22,7 +29,7 @@ function isPrintableCharacter(string: string) {
 
 export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   UseTreeViewKeyboardNavigationSignature
-> = ({ instance, params, state }) => {
+> = ({ instance, store, params }) => {
   const isRtl = useRtl();
   const firstCharMap = React.useRef<TreeViewFirstCharMap>({});
 
@@ -32,6 +39,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     },
   );
 
+  const itemMetaMap = useSelector(store, selectorItemMetaMap);
   React.useEffect(() => {
     if (instance.areItemUpdatesPrevented()) {
       return;
@@ -43,9 +51,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       newFirstCharMap[item.id] = item.label!.substring(0, 1).toLowerCase();
     };
 
-    Object.values(state.items.itemMetaMap).forEach(processItem);
+    Object.values(itemMetaMap).forEach(processItem);
     firstCharMap.current = newFirstCharMap;
-  }, [state.items.itemMetaMap, params.getItemId, instance]);
+  }, [itemMetaMap, params.getItemId, instance]);
 
   const getFirstMatchingItem = (itemId: string, query: string) => {
     const cleanQuery = query.toLowerCase();
@@ -125,8 +133,8 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       case key === 'Enter': {
         if (
           hasPlugin(instance, useTreeViewLabel) &&
-          instance.isItemEditable(itemId) &&
-          !instance.isItemBeingEdited(itemId)
+          selectorIsItemEditable(store.value, { itemId, isItemEditable: params.isItemEditable! }) &&
+          !selectorIsItemBeingEdited(store.value, itemId)
         ) {
           instance.setEditedItemId(itemId);
         } else if (canToggleItemExpansion(itemId)) {
@@ -136,7 +144,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           if (params.multiSelect) {
             event.preventDefault();
             instance.selectItem({ event, itemId, keepExistingSelection: true });
-          } else if (!instance.isItemSelected(itemId)) {
+          } else if (!selectorIsItemSelected(store.value, itemId)) {
             instance.selectItem({ event, itemId });
             event.preventDefault();
           }

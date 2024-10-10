@@ -26,6 +26,8 @@ import {
 import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
+import { useSelector } from '../internals/hooks/useSelector';
+import { selectorDefaultFocusableItemId } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
 
 export const useTreeItem2 = <
@@ -39,9 +41,11 @@ export const useTreeItem2 = <
     items: { onItemClick, disabledItemsFocusable, indentationAtItemLevel },
     selection: { multiSelect, disableSelection, checkboxSelection },
     expansion: { expansionTrigger },
+    label: labelContext,
     treeId,
     instance,
     publicAPI,
+    store,
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
@@ -56,7 +60,9 @@ export const useTreeItem2 = <
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
   const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
-  const rootTabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
+  const rootTabIndex = useSelector(store, (state) =>
+    selectorDefaultFocusableItemId(state) === parameters.itemId ? 0 : -1,
+  );
 
   const sharedPropsEnhancerParams: Omit<
     TreeViewItemPluginSlotPropsEnhancerParams,
@@ -133,7 +139,7 @@ export const useTreeItem2 = <
   const createContentHandleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
       otherHandlers.onClick?.(event);
-      onItemClick?.(event, itemId);
+      onItemClick(event, itemId);
 
       if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;
@@ -185,6 +191,8 @@ export const useTreeItem2 = <
         interactions.handleExpansion(event);
       }
     };
+
+  const getContextProviderProps = () => ({ itemId, id });
 
   const getRootProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
@@ -296,7 +304,7 @@ export const useTreeItem2 = <
       onDoubleClick: createLabelHandleDoubleClick(externalEventHandlers),
     };
 
-    if (instance.isTreeViewEditable) {
+    if (labelContext?.isItemEditable) {
       props.editable = status.editable;
     }
 
@@ -374,6 +382,7 @@ export const useTreeItem2 = <
   };
 
   return {
+    getContextProviderProps,
     getRootProps,
     getContentProps,
     getGroupTransitionProps,

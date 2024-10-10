@@ -14,14 +14,15 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 interface TreeViewChildrenItemProviderProps {
-  itemId?: string;
+  itemId: string | null;
+  idAttribute: string | null;
   children: React.ReactNode;
 }
 
 export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProviderProps) {
-  const { children, itemId = null } = props;
+  const { children, itemId = null, idAttribute } = props;
 
-  const { instance, treeId, rootRef } =
+  const { instance, rootRef } =
     useTreeViewContext<[UseTreeViewJSXItemsSignature, UseTreeViewItemsSignature]>();
   const childrenIdAttrToIdRef = React.useRef<Map<string, string>>(new Map());
 
@@ -30,23 +31,8 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
       return;
     }
 
-    let idAttr: string | null = null;
-    if (itemId == null) {
-      idAttr = rootRef.current.id;
-    } else {
-      // Undefined during 1st render
-      const itemMeta = instance.getItemMeta(itemId);
-      if (itemMeta !== undefined) {
-        idAttr = generateTreeItemIdAttribute({ itemId, treeId, id: itemMeta.idAttribute });
-      }
-    }
-
-    if (idAttr == null) {
-      return;
-    }
-
     const previousChildrenIds = instance.getItemOrderedChildrenIds(itemId ?? null) ?? [];
-    const escapedIdAttr = escapeOperandAttributeSelector(idAttr);
+    const escapedIdAttr = escapeOperandAttributeSelector(idAttribute ?? rootRef.current.id);
     const childrenElements = rootRef.current.querySelectorAll(
       `${itemId == null ? '' : `*[id="${escapedIdAttr}"] `}[role="treeitem"]:not(*[id="${escapedIdAttr}"] [role="treeitem"] [role="treeitem"])`,
     );

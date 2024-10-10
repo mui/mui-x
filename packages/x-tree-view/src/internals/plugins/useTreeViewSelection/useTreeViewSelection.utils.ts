@@ -1,3 +1,5 @@
+import { TreeViewItemId } from '../../../models';
+
 /**
  * Transform the `selectedItems` model to be an array if it was a string or null.
  * @param {string[] | string | null} model The raw model.
@@ -21,4 +23,12 @@ export const getLookupFromArray = (array: string[]) => {
     lookup[itemId] = true;
   });
   return lookup;
+};
+
+export const getSelectedItemsMap = (selectedItems: string | string[] | null) => {
+  const selectedItemsMap = new Map<TreeViewItemId, true>();
+  convertSelectedItemsToArray(selectedItems).forEach((id) => {
+    selectedItemsMap.set(id, true);
+  });
+  return selectedItemsMap;
 };
