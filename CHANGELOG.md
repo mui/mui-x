@@ -18,7 +18,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 
 Special thanks go out to our community contributors who have helped make this release possible:
 @k-rajat19, @kalyan90, @uma-neko, @vfbiby.
-Following are all team members who have contributed to this release: @alelthomas, @arminmeh, @arthurbalduini 
+Following are all team members who have contributed to this release: @alelthomas, @arminmeh, @arthurbalduini,
 @cherniavskii, @flaviendelangle, @JCQuintas, @MBilalShafi, @noraleonte, @oliviertassinari, @samuelsycamore, @siriwatknp.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
@@ -47,7 +47,7 @@ Same changes as in `@mui/x-data-grid-pro@7.20.0`.
 
 #### `@mui/x-date-pickers@7.20.0`
 
-- [pickers] Add `PageUp` and `PageDown` support for time components (#14812) @arthurbalduini 
+- [pickers] Add `PageUp` and `PageDown` support for time components (#14812) @arthurbalduini
 - [pickers] Fix regression on `PickerValidDate` (#14896) @flaviendelangle
 - [pickers] Move the `DateFieldInPickerProps` interface to the `DatePicker` folder and rename it `DatePickerFieldProps` (same for time and date time) (#14828) @flaviendelangle
 
