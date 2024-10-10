@@ -87,7 +87,7 @@ Same changes as in `@mui/x-charts@7.20.0`.
 - [core] Support `@mui/utils` v6 (#14867) @siriwatknp
 - [code-infra] Remove deprecated `data-mui-test` in favour of `data-testid` (#14882) @JCQuintas
 - [code-infra] Update renovate config and add vitest group (#14856) @JCQuintas
-- [test] Replace waitFor() with act() (#14851) @oliviertassinari
+- [test] Replace `waitFor()` with `act()` (#14851) @oliviertassinari
 - [test] Restore "pnpm tc" CLI (#14852) @oliviertassinari
 
 ## 7.19.0
