@@ -59,6 +59,8 @@ Same changes as in `@mui/x-date-pickers@7.20.0`.
 
 #### `@mui/x-charts@7.20.0`
 
+No changes since `@mui/x-charts@v7.19.0`.
+
 #### `@mui/x-charts-pro@7.0.0-beta.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-charts@7.20.0`.
@@ -765,6 +767,8 @@ Same changes as in `@mui/x-charts@7.12.1`, plus:
 ### Tree View
 
 #### `@mui/x-tree-view@7.12.1`
+
+No changes since `@mui/x-tree-view@7.12.0`.
 
 ### Docs
 
