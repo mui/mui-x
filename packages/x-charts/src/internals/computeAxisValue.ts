@@ -142,8 +142,16 @@ export function computeAxisValue({
     const data = axis.data ?? [];
 
     if (isBandScaleConfig(axis)) {
-      const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
-      const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
+      // TODO: fix funnel bands
+      const funnelBands = Array.from({
+        length: Math.max(
+          ...(formattedSeries.funnel?.stackingGroups.flatMap((v) => v.ids.length) ?? []),
+        ),
+      }).map((_, i) => i);
+      const categoryGapRatio = funnelBands.length
+        ? 0
+        : (axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO);
+      const barGapRatio = funnelBands.length ? 0 : (axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO);
       // Reverse range because ordinal scales are presented from top to bottom on y-axis
       const scaleRange = axisDirection === 'y' ? [range[1], range[0]] : range;
       const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
@@ -153,10 +161,10 @@ export function computeAxisValue({
         barGapRatio,
         ...axis,
         data,
-        scale: scaleBand(axis.data!, zoomedRange)
+        scale: scaleBand(axis.data! ?? funnelBands, zoomedRange)
           .paddingInner(categoryGapRatio)
           .paddingOuter(categoryGapRatio / 2),
-        tickNumber: axis.data!.length,
+        tickNumber: (axis.data! ?? funnelBands).length,
         colorScale:
           axis.colorMap &&
           (axis.colorMap.type === 'ordinal'

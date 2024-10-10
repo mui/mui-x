@@ -7,8 +7,9 @@ import { plugin as barPlugin } from '../../BarChart/plugin';
 import { plugin as scatterPlugin } from '../../ScatterChart/plugin';
 import { plugin as linePlugin } from '../../LineChart/plugin';
 import { plugin as piePlugin } from '../../PieChart/plugin';
+import { plugin as funnelPlugin } from '../../FunnelChart/plugin';
 
-export const defaultPlugins = [barPlugin, scatterPlugin, linePlugin, piePlugin];
+export const defaultPlugins = [barPlugin, scatterPlugin, linePlugin, piePlugin, funnelPlugin];
 
 export function mergePlugins(plugins?: ChartsPlugin<ChartSeriesType>[]) {
   const defaultizedPlugins = plugins ?? defaultPlugins;

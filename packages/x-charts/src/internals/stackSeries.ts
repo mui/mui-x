@@ -15,8 +15,13 @@ import {
 import type { BarSeriesType, LineSeriesType } from '../models/seriesType';
 import type { StackOffsetType, StackOrderType } from '../models/stacking';
 import { SeriesId } from '../models/seriesType/common';
+import { FunnelSeriesType } from '../FunnelChart/funnel.types';
+import { ChartSeriesType } from '../models/seriesType/config';
 
-type StackableSeries = Record<SeriesId, BarSeriesType> | Record<SeriesId, LineSeriesType>;
+type StackableSeries =
+  | Record<SeriesId, BarSeriesType>
+  | Record<SeriesId, LineSeriesType>
+  | Record<SeriesId, FunnelSeriesType>;
 
 type FormatterParams = {
   series: StackableSeries;
@@ -32,6 +37,8 @@ export type StackingGroupsType = {
   stackingOrder: (series: Series<any, any>) => number[];
   stackingOffset: (series: Series<any, any>, order: Iterable<number>) => void;
 }[];
+
+const defaultStackId = 'default-stack';
 
 export const StackOrder: {
   [key in StackOrderType]: (series: Series<any, any>) => number[];
@@ -92,7 +99,7 @@ export const StackOffset: {
  * @param series the object of all bars series
  * @returns an array of groups, including the ids, the stacking order, and the stacking offset.
  */
-export const getStackingGroups = (params: FormatterParams) => {
+export const getStackingGroups = (params: FormatterParams, type?: ChartSeriesType) => {
   const { series, seriesOrder, defaultStrategy } = params;
 
   const stackingGroups: StackingGroupsType = [];
@@ -101,26 +108,29 @@ export const getStackingGroups = (params: FormatterParams) => {
   seriesOrder.forEach((id) => {
     const { stack, stackOrder, stackOffset } = series[id];
 
-    if (stack === undefined) {
+    // Funnel charts are stacked by default
+    const stackId = !stack && type === 'funnel' ? defaultStackId : stack;
+
+    if (stackId === undefined) {
       stackingGroups.push({
         ids: [id],
         stackingOrder: StackOrder.none,
         stackingOffset: StackOffset.none,
       });
-    } else if (stackIndex[stack] === undefined) {
-      stackIndex[stack] = stackingGroups.length;
+    } else if (stackIndex[stackId] === undefined) {
+      stackIndex[stackId] = stackingGroups.length;
       stackingGroups.push({
         ids: [id],
         stackingOrder: StackOrder[stackOrder ?? defaultStrategy?.stackOrder ?? 'none'],
         stackingOffset: StackOffset[stackOffset ?? defaultStrategy?.stackOffset ?? 'diverging'],
       });
     } else {
-      stackingGroups[stackIndex[stack]].ids.push(id);
+      stackingGroups[stackIndex[stackId]].ids.push(id);
       if (stackOrder !== undefined) {
-        stackingGroups[stackIndex[stack]].stackingOrder = StackOrder[stackOrder];
+        stackingGroups[stackIndex[stackId]].stackingOrder = StackOrder[stackOrder];
       }
       if (stackOffset !== undefined) {
-        stackingGroups[stackIndex[stack]].stackingOffset = StackOffset[stackOffset];
+        stackingGroups[stackIndex[stackId]].stackingOffset = StackOffset[stackOffset];
       }
     }
   });
