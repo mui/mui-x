@@ -56,6 +56,7 @@ export default apiPages;
     if (filename.includes('/context/')) {
       return true;
     }
+
     return [
       'x-charts/src/Gauge/GaugeReferenceArc.tsx',
       'x-charts/src/Gauge/GaugeValueArc.tsx',
@@ -66,6 +67,9 @@ export default apiPages;
       'x-charts/src/ChartsOverlay/ChartsNoDataOverlay.tsx',
       'x-charts/src/ChartsOverlay/ChartsLoadingOverlay.tsx',
       'x-charts/src/ChartsLegend/LegendPerItem.tsx',
+      'x-charts/src/ChartsLegend/LegendPerItem.tsx',
+      'x-charts/src/RadarChart/RadarChartContainer.tsx',
+      'x-charts/src/RadarChart/ResponsiveRadarChartContainer.tsx',
       'x-charts/src/LineChart/CircleMarkElement.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
