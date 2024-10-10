@@ -1,5 +1,9 @@
 import * as React from 'react';
-import type { DefaultizedProps, TreeViewPluginSignature } from '../../models';
+import type {
+  DefaultizedProps,
+  MuiCancellableEventHandler,
+  TreeViewPluginSignature,
+} from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 import { TreeViewSelectionPropagation } from '../../../models';
@@ -145,7 +149,7 @@ export type UseTreeViewSelectionDefaultizedParameters<Multiple extends boolean> 
 interface UseTreeViewSelectionContextValue {
   selection: Pick<
     UseTreeViewSelectionDefaultizedParameters<boolean>,
-    'multiSelect' | 'checkboxSelection' | 'disableSelection'
+    'multiSelect' | 'checkboxSelection' | 'disableSelection' | 'selectionPropagation'
   >;
 }
 
@@ -162,3 +166,15 @@ export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{
     UseTreeViewItemsSignature,
   ];
 }>;
+
+export interface UseTreeItem2CheckboxSlotPropsFromSelection {
+  visible?: boolean;
+  checked?: boolean;
+  disabled?: boolean;
+  tabIndex?: -1;
+  onChange?: MuiCancellableEventHandler<React.ChangeEvent<HTMLInputElement>>;
+}
+
+declare module '@mui/x-tree-view/useTreeItem2' {
+  interface UseTreeItem2CheckboxSlotOwnProps extends UseTreeItem2CheckboxSlotPropsFromSelection {}
+}

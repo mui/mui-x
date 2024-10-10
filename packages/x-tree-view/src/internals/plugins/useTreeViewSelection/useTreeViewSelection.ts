@@ -18,6 +18,7 @@ import {
   getAddedAndRemovedItems,
   getLookupFromArray,
 } from './useTreeViewSelection.utils';
+import { useTreeViewSelectionItemPlugin } from './useTreeViewSelection.itemPlugin';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
   instance,
@@ -26,9 +27,6 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 }) => {
   const lastSelectedItem = React.useRef<string | null>(null);
   const lastSelectedRange = React.useRef<{ [itemId: string]: boolean }>({});
-
-  const applyAutoSelection =
-    !!params.selectionPropagation.descendants || !!params.selectionPropagation.parents;
 
   const selectedItemsMap = React.useMemo(() => {
     const temp = new Map<TreeViewItemId, boolean>();
@@ -48,7 +46,11 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     newModel: typeof params.defaultSelectedItems,
   ) => {
     let cleanModel: typeof newModel;
-    if (params.multiSelect && applyAutoSelection) {
+
+    if (
+      params.multiSelect &&
+      (params.selectionPropagation.descendants || params.selectionPropagation.parents)
+    ) {
       cleanModel = propagateSelection({
         instance,
         selectionPropagation: params.selectionPropagation,
@@ -234,10 +236,13 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
         multiSelect: params.multiSelect,
         checkboxSelection: params.checkboxSelection,
         disableSelection: params.disableSelection,
+        selectionPropagation: params.selectionPropagation,
       },
     },
   };
 };
+
+useTreeViewSelection.itemPlugin = useTreeViewSelectionItemPlugin;
 
 useTreeViewSelection.models = {
   selectedItems: {

@@ -234,6 +234,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     handleExpansion,
     handleCancelItemLabelEditing,
     handleSaveItemLabel,
+    handleCheckboxSelection,
   } = useTreeItemState(itemId);
 
   const { contentRef, rootRef, propsEnhancers } = runItemPlugins<TreeItemProps>(props);
@@ -393,7 +394,8 @@ export const TreeItem = React.forwardRef(function TreeItem(
   > = {
     rootRefObject,
     contentRefObject,
-    interactions: { handleSaveItemLabel, handleCancelItemLabelEditing },
+    interactions: { handleSaveItemLabel, handleCancelItemLabelEditing, handleCheckboxSelection },
+    status: { selected, disabled },
   };
 
   const enhancedRootProps =
