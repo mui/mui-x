@@ -56,7 +56,7 @@ export default function VoronoiInteraction() {
         ]}
         xAxis={[
           {
-            // scaleType: 'log',
+            scaleType: 'log',
             label: 'times erupted',
             // max: 200_000,
             // min: 500,
