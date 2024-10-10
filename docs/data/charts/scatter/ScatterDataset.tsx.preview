@@ -1,0 +1,8 @@
+<ScatterChart
+  dataset={dataset}
+  series={[
+    { idDataKey: 'version', xDataKey: 'a1', yDataKey: 'a2', label: 'Series A' },
+    { idDataKey: 'version', xDataKey: 'b1', yDataKey: 'b2', label: 'Series B' },
+  ]}
+  {...chartSetting}
+/>

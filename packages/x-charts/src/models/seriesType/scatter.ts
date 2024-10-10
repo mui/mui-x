@@ -13,7 +13,7 @@ export type ScatterValueType = {
 
 export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, CartesianSeriesType {
   type: 'scatter';
-  data: ScatterValueType[];
+  data?: ScatterValueType[];
   markerSize?: number;
   /**
    * The label to display on the tooltip or the legend. It can be a string or a function.
@@ -33,6 +33,22 @@ export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, C
    * The id of the z-axis used to render the series.
    */
   zAxisId?: string;
+  /**
+   * The key used to retrieve data from the dataset for the X axis.
+   */
+  xDataKey?: string;
+  /**
+   * The key used to retrieve data from the dataset for the Y axis.
+   */
+  yDataKey?: string;
+  /**
+   * The key used to retrieve data from the dataset for the Z axis.
+   */
+  zDataKey?: string;
+  /**
+   * The key used to retrieve data from the dataset for the id.
+   */
+  idDataKey?: string;
 }
 
 /**
