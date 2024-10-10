@@ -9,12 +9,16 @@ _Oct 10, 2024_
 
 We'd like to offer a big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 📚 Updated ["What's new"](https://mui.com/x/whats-new/) page giving more detailed overview of the latest new features and other highlights
+- 📚 New [collapsible column groups demo](https://mui.com/x/react-data-grid/column-groups/#collapsible-column-groups) for the Data Grid component
+- 🌍 Improved Japanese (ja-JP) locale on the Data Grid component
+- 🐞 Bugfixes
+- 📚 Other documentation improvements
 
 Special thanks go out to our community contributors who have helped make this release possible:
-@alelthomas, @arminmeh, @k-rajat19, @kalyan90, @noraleonte, @uma-neko, @vfbiby.
-Following are all team members who have contributed to this release:
-@cherniavskii, @flaviendelangle, @JCQuintas, @MBilalShafi, @oliviertassinari, @samuelsycamore, @siriwatknp.
+@k-rajat19, @kalyan90, @uma-neko, @vfbiby.
+Following are all team members who have contributed to this release: @alelthomas, @arminmeh,
+@cherniavskii, @flaviendelangle, @JCQuintas, @MBilalShafi, @noraleonte, @oliviertassinari, @samuelsycamore, @siriwatknp.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -22,7 +26,6 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@7.20.0`
 
-- [DataGrid][docs] Change demo name example (#14822) @alelthomas
 - [DataGrid] Add `onColumnHeaderContextMenu` event (#14734) @vfbiby
 - [DataGrid] Avoid row spanning computation of outdated rows (#14902) @MBilalShafi
 - [DataGrid] Fix scrollbar position not being updated after `scrollToIndexes` (#14888) @arminmeh
@@ -64,16 +67,16 @@ Same changes as in `@mui/x-charts@7.20.0`.
 
 ### Docs
 
+- [docs] Update "What's new" page (#14858) @cherniavskii
 - [docs] Add collapsible column groups demo (#14818) @cherniavskii
 - [docs] Add custom columns panel demo (#14825) @cherniavskii
 - [docs] Capitalize all instances of "Data Grid" (#14884) @samuelsycamore
 - [docs] Divide charts `tooltip` and `highlighting` pages (#14824) @JCQuintas
 - [docs] Document the `TreeItem2` component and the `useTreeItem2` hook (#14551) @noraleonte
-- [docs] Fix column pinning for "Disable detail panel content scroll" section (#14854) @kalyan90
+- [docs] Fix column pinning for "Disable detail panel content scroll" section (#14854 and #14885) @kalyan90
 - [docs] Fix detail panel demo not working well with pinned columns (#14883) @cherniavskii
 - [docs] New recipe of a read-only field (#14606) @flaviendelangle
-- [docs] Update "What's new" page (#14858) @cherniavskii
-- [docs] Update default column pinning using initialState for "Disable detail panel content scroll" section (#14885) @kalyan90
+- [docs] Change demo name example (#14822) @alelthomas
 
 ### Core
 
