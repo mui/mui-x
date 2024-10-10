@@ -1,3 +1,5 @@
+import { checkSlot } from '@mui/x-internals/warning';
+
 export function computeSlots<SlotComponents extends object>({
   defaultSlots,
   slots,
@@ -16,6 +18,9 @@ export function computeSlots<SlotComponents extends object>({
     const k = key as keyof typeof overrides;
 
     if (overrides[k] !== undefined) {
+      if (process.env.NODE_ENV !== 'production') {
+        checkSlot(key, overrides[k] as any);
+      }
       result[k] = overrides[k] as any;
     }
   });
