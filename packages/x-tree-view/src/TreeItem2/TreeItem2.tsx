@@ -170,7 +170,7 @@ export const TreeItem2GroupTransition = styled(Collapse, {
 
 export const TreeItem2Checkbox = styled(
   React.forwardRef(
-    (props: CheckboxProps & { visible: boolean }, ref: React.Ref<HTMLButtonElement>) => {
+    (props: CheckboxProps & { visible?: boolean }, ref: React.Ref<HTMLButtonElement>) => {
       const { visible, ...other } = props;
       if (!visible) {
         return null;
