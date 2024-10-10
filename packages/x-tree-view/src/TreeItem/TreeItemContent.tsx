@@ -164,7 +164,9 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
       ref={ref}
     >
       <div className={classes.iconContainer}>{icon}</div>
-      {checkboxProps?.visible && <Checkbox {...checkboxProps} className={classes.checkbox} />}
+      {checkboxProps?.visible && (
+        <Checkbox {...checkboxProps} className={classes.checkbox} ref={checkboxRef} />
+      )}
       {editing ? (
         <TreeItem2LabelInput {...labelInputProps} className={classes.labelInput} />
       ) : (
