@@ -7,6 +7,8 @@ import {
   GridCheckIcon,
 } from '@mui/x-data-grid-premium';
 import Badge from '@mui/material/Badge';
+import { ToolbarButton } from './ToolbarButton';
+import { Drawer, DrawerHeader } from './Drawer';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
@@ -18,8 +20,6 @@ import ListSubheader from '@mui/material/ListSubheader';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
-import { Drawer, DrawerHeader } from './Drawer';
-import { ToolbarButton } from './ToolbarButton';
 
 import { FILE_TYPES } from '../constants';
 
@@ -106,7 +106,7 @@ export function ToolbarFilterItem(props) {
   };
 
   return (
-    <React.Fragment>
+    <>
       <ToolbarButton onClick={() => setOpen(true)}>
         <Badge badgeContent={activeFilters.length} color="primary" variant="dot">
           <GridFilterListIcon fontSize="small" />
@@ -212,6 +212,6 @@ export function ToolbarFilterItem(props) {
           </ListItem>
         </List>
       </Drawer>
-    </React.Fragment>
+    </>
   );
 }

@@ -5,6 +5,7 @@ import MUISwipeableDrawer, {
 import Box from '@mui/material/Box';
 import Stack, { StackProps } from '@mui/material/Stack';
 import { grey } from '@mui/material/colors';
+import { useMediaQuery } from '@mui/system';
 
 function SwipeIndicator() {
   return (
@@ -64,6 +65,7 @@ export interface DrawerProps extends Omit<MUISwipeableDrawerProps, 'onOpen'> {
 export function Drawer(props: DrawerProps) {
   const { children, anchor, width = 320, container, ...other } = props;
   const isBottomDrawer = anchor === 'bottom';
+  const isTouch = useMediaQuery('(hover: none)');
 
   return (
     <MUISwipeableDrawer
@@ -76,6 +78,7 @@ export function Drawer(props: DrawerProps) {
           ...(isBottomDrawer
             ? {
                 pb: 1,
+                maxHeight: 'calc(100% - 100px)',
               }
             : {
                 width,
@@ -85,7 +88,7 @@ export function Drawer(props: DrawerProps) {
       disableSwipeToOpen
       onOpen={() => {}} // required by SwipeableDrawer but not used in this demo
     >
-      {isBottomDrawer && <SwipeIndicator />}
+      {isTouch && isBottomDrawer && <SwipeIndicator />}
       {children}
     </MUISwipeableDrawer>
   );

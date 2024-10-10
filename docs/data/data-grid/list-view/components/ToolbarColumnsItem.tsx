@@ -27,20 +27,14 @@ export function ToolbarColumnsItem(props: ToolbarColumnsItemProps) {
   const [open, setOpen] = React.useState(false);
   const apiRef = useGridApiContext();
   const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
-  const columnVisibilityModel = useGridSelector(
-    apiRef,
-    gridColumnVisibilityModelSelector,
-  );
+  const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
 
   const toggleFieldVisibility = (field: string) => {
-    apiRef.current.setColumnVisibility(
-      field,
-      columnVisibilityModel[field] === false,
-    );
+    apiRef.current.setColumnVisibility(field, columnVisibilityModel[field] === false);
   };
 
   return (
-    <React.Fragment>
+    <>
       <ToolbarButton onClick={() => setOpen(true)}>
         <GridColumnIcon fontSize="small" />
       </ToolbarButton>
@@ -65,11 +59,7 @@ export function ToolbarColumnsItem(props: ToolbarColumnsItemProps) {
                   disabled={column.hideable === false}
                 >
                   <ListItemIcon>
-                    {isVisible ? (
-                      <CheckBoxIcon color="primary" />
-                    ) : (
-                      <CheckBoxBlankIcon />
-                    )}
+                    {isVisible ? <CheckBoxIcon color="primary" /> : <CheckBoxBlankIcon />}
                   </ListItemIcon>
                   <ListItemText>{column.headerName || column.field}</ListItemText>
                 </ListItemButton>
@@ -78,6 +68,6 @@ export function ToolbarColumnsItem(props: ToolbarColumnsItemProps) {
           })}
         </List>
       </Drawer>
-    </React.Fragment>
+    </>
   );
 }

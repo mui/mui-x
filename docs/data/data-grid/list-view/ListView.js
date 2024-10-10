@@ -38,7 +38,7 @@ export default function ListView(props) {
   const isMobile = useMediaQuery('(max-width: 700px)');
 
   // Always show as mobile on docs example
-  const isListView = !!container ?? isMobile;
+  const isListView = !!container || isMobile;
 
   const [rows, setRows] = React.useState(INITIAL_ROWS);
 
