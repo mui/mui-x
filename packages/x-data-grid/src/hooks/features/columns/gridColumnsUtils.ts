@@ -442,6 +442,10 @@ export function getTotalHeaderHeight(
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<DataGridProcessedProps, 'columnHeaderHeight' | 'headerFilterHeight'>,
 ) {
+  if ((props as any).listView) {
+    return 0;
+  }
+
   const densityFactor = gridDensityFactorSelector(apiRef);
   const maxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
   const isHeaderFilteringEnabled = gridHeaderFilteringEnabledSelector(apiRef);

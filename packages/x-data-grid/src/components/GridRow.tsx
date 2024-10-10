@@ -439,12 +439,37 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       ),
     );
   }
-  for (let i = renderContext.firstColumnIndex; i < renderContext.lastColumnIndex; i += 1) {
-    const column = visibleColumns[i];
-    const indexInSection = i - pinnedColumns.left.length;
+  if ((rootProps as any).listView) {
+    const columnsToKeep = visibleColumns.filter((col) => {
+      if (col.type === 'actions') {
+        return true;
+      }
+      return false;
+    });
+    const columnsCount = columnsToKeep.length + 1;
+    const listColumnWidth =
+      dimensions.viewportInnerSize.width -
+      columnsToKeep.reduce((acc, col) => acc + col.computedWidth, 0);
+    cells.push(
+      getCell(
+        { ...((rootProps as any).listColDef as GridStateColDef), computedWidth: listColumnWidth },
+        0,
+        0,
+        1,
+      ),
+    );
+    columnsToKeep.forEach((column, colIndex) => {
+      cells.push(getCell(column, 1 + colIndex, 1 + colIndex, columnsCount));
+    });
+  } else {
+    for (let i = renderContext.firstColumnIndex; i < renderContext.lastColumnIndex; i += 1) {
+      const column = visibleColumns[i];
+      const indexInSection = i - pinnedColumns.left.length;
 
-    cells.push(getCell(column, indexInSection, i, middleColumnsLength));
+      cells.push(getCell(column, indexInSection, i, middleColumnsLength));
+    }
   }
+
   if (hasVirtualFocusCellRight) {
     cells.push(
       getCell(

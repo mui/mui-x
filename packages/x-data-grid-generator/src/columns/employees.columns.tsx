@@ -170,7 +170,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
       if (!value || typeof value !== 'number') {
         return value;
       }
-      return `${value.toLocaleString()}$`;
+      return `$${value.toLocaleString()}`;
     },
   },
 ];

@@ -140,6 +140,12 @@ const pages: MuiPage[] = [
         ],
       },
       {
+        pathname: '/x/react-data-grid/list-view',
+        title: 'List view',
+        plan: 'pro',
+        unstable: true,
+      },
+      {
         pathname: '/x/react-data-grid/custom-behavior',
         children: [
           { pathname: '/x/react-data-grid/api-object', title: 'API object' },
