@@ -1,4 +1,3 @@
-/* eslint-disable id-denylist */
 import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 
