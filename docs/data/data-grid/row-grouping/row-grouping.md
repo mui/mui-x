@@ -321,13 +321,13 @@ type GridRowSelectionPropagation = {
 
 When `rowSelectionPropagation.descendants` is set to `true`.
 
-- Selecting a parent would auto-select all its filtered descendants.
-- Deselecting a parent row would auto-deselect all its filtered descendants.
+- Selecting a parent selects all its filtered descendants automatically.
+- Deselecting a parent row deselects all its filtered descendants automatically.
 
 When `rowSelectionPropagation.parents` is set to `true`.
 
-- Selecting all the filtered descendants of a parent would auto-select the parent.
-- Deselecting a descendant of a selected parent would auto-deselect the parent.
+- Selecting all the filtered descendants of a parent selects the parent automatically.
+- Deselecting a descendant of a selected parent deselects the parent automatically.
 
 The example below demonstrates the usage of the `rowSelectionPropagation` prop.
 
