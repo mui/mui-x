@@ -88,15 +88,15 @@ type TreeViewSelectionPropagation = {
 };
 ```
 
-When `selectionPropagation.descendants` is set to `true`.
+When `rowSelectionPropagation.descendants` is set to `true`.
 
-- Selecting a parent will auto-select all its descendants.
-- Deselecting a parent will auto-deselect all its descendants.
+- Selecting a parent selects all its filtered descendants automatically.
+- Deselecting a parent row deselects all its filtered descendants automatically.
 
-When `selectionPropagation.parents` is set to `true`.
+When `rowSelectionPropagation.parents` is set to `true`.
 
-- Selecting all descendants of a parent will auto-select it.
-- Deselecting a descendant of a selected parent will deselect the parent.
+- Selecting all the filtered descendants of a parent selects the parent automatically.
+- Deselecting a descendant of a selected parent deselects the parent automatically.
 
 The example below demonstrates the usage of the `selectionPropagation` prop.
 

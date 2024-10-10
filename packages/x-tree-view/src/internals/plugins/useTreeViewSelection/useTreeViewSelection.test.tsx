@@ -759,7 +759,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
-            items: [{ id: '1', children: [{ id: '1.1' }] }],
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }],
             defaultSelectedItems: ['1.2'],
             defaultExpandedItems: ['1'],
             selectionPropagation: { descendants: true },
