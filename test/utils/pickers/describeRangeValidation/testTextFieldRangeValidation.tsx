@@ -205,7 +205,8 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date();
+        // we need to make sure that the set value is later than `now` when `disablePast` validation is applied
+        now = adapterToUse.addMinutes(adapterToUse.date(), 10);
         return <ElementToTest enableAccessibleFieldDOMStructure value={[now, now]} {...props} />;
       }
 

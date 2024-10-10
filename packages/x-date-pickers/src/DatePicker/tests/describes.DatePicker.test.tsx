@@ -4,7 +4,7 @@ import { createPickerRenderer } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DatePicker /> - Describes', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeConformance(<DatePicker />, () => ({
     classes: {} as any,

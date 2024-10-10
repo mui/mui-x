@@ -11,7 +11,7 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
   ElementToTest,
   getOption,
 ) => {
-  const { componentFamily, views, render, clock, withDate, withTime, variant } = getOption();
+  const { componentFamily, views, render, withDate, withTime, variant } = getOption();
 
   if (
     !views.includes('minutes') ||
@@ -99,7 +99,6 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
       }
 
       setProps({ value: tomorrow });
-      clock.runToLast();
       expect(
         screen.getByRole('option', { name: toMinutesLabel(previousMinutesOptionValue) }),
       ).not.to.have.attribute('aria-disabled');
@@ -144,7 +143,6 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
       }
 
       setProps({ value: yesterday });
-      clock.runToLast();
       expect(
         screen.getByRole('option', { name: toMinutesLabel(previousMinutesOptionValue) }),
       ).not.to.have.attribute('aria-disabled');

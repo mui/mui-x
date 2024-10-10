@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { screen, fireEvent } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
+import { userEvent } from '@testing-library/user-event';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -14,7 +15,7 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MobileDatePicker /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer();
 
   describePicker(MobileDatePicker, { render, fieldType: 'single-input', variant: 'mobile' });
 
@@ -58,21 +59,19 @@ describe('<MobileDatePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue }) => {
+    setNewValue: async (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
-        openPicker({ type: 'date', variant: 'mobile' });
+        await openPicker({ type: 'date', variant: 'mobile' });
       }
 
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
-      fireEvent.click(
+      await userEvent.click(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
 
       // Close the picker to return to the initial state
       if (!isOpened) {
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
-        clock.runToLast();
+        await userEvent.keyboard('{Escape}');
       }
 
       return newValue;

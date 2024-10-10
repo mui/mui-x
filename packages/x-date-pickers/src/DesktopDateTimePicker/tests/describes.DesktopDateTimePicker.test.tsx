@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -12,14 +12,16 @@ import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker
 import { expect } from 'chai';
 import * as React from 'react';
 import { describeConformance } from 'test/utils/describeConformance';
+import userEvent from '@testing-library/user-event';
 
 describe('<DesktopDateTimePicker /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer();
 
   it('should respect the `localeText` prop', function test() {
     render(
       <DesktopDateTimePicker
         open
+        reduceAnimations
         localeText={{ cancelButtonLabel: 'Custom cancel' }}
         slotProps={{ actionBar: { actions: ['cancel'] } }}
       />,
@@ -78,45 +80,47 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
+    setNewValue: async (value, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue
         ? value
         : adapterToUse.addMinutes(adapterToUse.addHours(adapterToUse.addDays(value, 1), 1), 5);
 
       if (isOpened) {
-        fireEvent.click(
+        await userEvent.click(
           screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
         );
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         const hours = adapterToUse.format(newValue, hasMeridiem ? 'hours12h' : 'hours24h');
         const hoursNumber = adapterToUse.getHours(newValue);
-        fireEvent.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
-        fireEvent.click(
+        await userEvent.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
+        await userEvent.click(
           screen.getByRole('option', { name: `${adapterToUse.getMinutes(newValue)} minutes` }),
         );
         if (hasMeridiem) {
           // meridiem is an extra view on `DesktopDateTimePicker`
           // we need to click it to finish selection
-          fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
+          await userEvent.click(
+            screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }),
+          );
         }
       } else {
-        selectSection('day');
-        pressKey(undefined, 'ArrowUp');
+        await selectSection('day');
+        await pressKey('ArrowUp');
 
-        selectSection('hours');
-        pressKey(undefined, 'ArrowUp');
+        await selectSection('hours');
+        await pressKey('ArrowUp');
 
-        selectSection('minutes');
-        pressKey(undefined, 'PageUp'); // increment by 5 minutes
+        await selectSection('minutes');
+        await pressKey('PageUp'); // increment by 5 minutes
 
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         if (hasMeridiem) {
-          selectSection('meridiem');
+          await selectSection('meridiem');
           const previousHours = adapterToUse.getHours(value);
           const newHours = adapterToUse.getHours(newValue);
           // update meridiem section if it changed
           if ((previousHours < 12 && newHours >= 12) || (previousHours >= 12 && newHours < 12)) {
-            pressKey(undefined, 'ArrowUp');
+            await pressKey('ArrowUp');
           }
         }
       }

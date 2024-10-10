@@ -13,7 +13,7 @@ import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<TimeField /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer();
 
   describeValidation(TimeField, () => ({
     render,
@@ -50,10 +50,10 @@ describe('<TimeField /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { selectSection, pressKey }) => {
+    setNewValue: async (value, { selectSection, pressKey }) => {
       const newValue = adapterToUse.addHours(value, 1);
-      selectSection('hours');
-      pressKey(undefined, 'ArrowUp');
+      await selectSection('hours');
+      await pressKey('ArrowUp');
 
       return newValue;
     },

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { YearCalendar, yearCalendarClasses as classes } from '@mui/x-date-pickers/YearCalendar';
 import {
   createPickerRenderer,
@@ -9,11 +9,10 @@ import {
   describeValue,
 } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import userEvent from '@testing-library/user-event';
 
 describe('<YearCalendar /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-  });
+  const { render, clock } = createPickerRenderer();
 
   describeValidation(YearCalendar, () => ({
     render,
@@ -49,9 +48,9 @@ describe('<YearCalendar /> - Describes', () => {
         expect(activeYear).to.have.attribute('aria-checked', 'true');
       }
     },
-    setNewValue: (value) => {
+    setNewValue: async (value) => {
       const newValue = adapterToUse.addYears(value, 1);
-      fireEvent.click(
+      await userEvent.click(
         screen.getByRole('radio', { name: adapterToUse.getYear(newValue).toString() }),
       );
 

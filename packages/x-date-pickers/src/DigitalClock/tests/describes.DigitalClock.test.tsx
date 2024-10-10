@@ -13,7 +13,7 @@ import { DigitalClock, digitalClockClasses as classes } from '@mui/x-date-picker
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DigitalClock /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer();
 
   describeValidation(DigitalClock, () => ({
     render,
@@ -51,9 +51,9 @@ describe('<DigitalClock /> - Describes', () => {
         expect(selectedItem).to.have.text(formatFullTimeValue(adapterToUse, expectedValue));
       }
     },
-    setNewValue: (value) => {
+    setNewValue: async (value) => {
       const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 30);
-      digitalClockHandler.setViewValue(adapterToUse, newValue);
+      await digitalClockHandler.setViewValue(adapterToUse, newValue);
 
       return newValue;
     },

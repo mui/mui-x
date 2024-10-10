@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   getExpectedOnChangeCount,
@@ -31,12 +31,12 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
   describe('Picker action bar', () => {
     describe('clear action', () => {
-      it('should call onClose, onChange with empty value and onAccept with empty value', () => {
+      it('should call onClose, onChange with empty value and onAccept with empty value', async () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
 
-        render(
+        const { user } = render(
           <ElementToTest
             enableAccessibleFieldDOMStructure
             onChange={onChange}
@@ -49,20 +49,20 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         );
 
         // Clear the date
-        fireEvent.click(screen.getByText(/clear/i));
+        await user.click(screen.getByText(/clear/i));
         expect(onChange.callCount).to.equal(1);
-        expectPickerChangeHandlerValue(pickerParams.type, onChange, emptyValue);
+        expectPickerChangeHandlerValue(onChange.lastCall.firstArg, emptyValue);
         expect(onAccept.callCount).to.equal(1);
-        expectPickerChangeHandlerValue(pickerParams.type, onAccept, emptyValue);
+        expectPickerChangeHandlerValue(onAccept.lastCall.firstArg, emptyValue);
         expect(onClose.callCount).to.equal(1);
       });
 
-      it('should not call onChange or onAccept if the value is already empty value', () => {
+      it('should not call onChange or onAccept if the value is already empty value', async () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
 
-        render(
+        const { user } = render(
           <ElementToTest
             enableAccessibleFieldDOMStructure
             onChange={onChange}
@@ -75,7 +75,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         );
 
         // Clear the date
-        fireEvent.click(screen.getByText(/clear/i));
+        await user.click(screen.getByText(/clear/i));
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
@@ -83,12 +83,12 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     });
 
     describe('cancel action', () => {
-      it('should call onClose and onChange with the initial value', () => {
+      it('should call onClose and onChange with the initial value', async () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
 
-        const { selectSection, pressKey } = renderWithProps({
+        const { selectSection, pressKey, user } = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
@@ -100,10 +100,10 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         });
 
         // Change the value (already tested)
-        setNewValue(values[0], { isOpened: true, selectSection, pressKey });
+        await setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Cancel the modifications
-        fireEvent.click(screen.getByText(/cancel/i));
+        await user.click(screen.getByText(/cancel/i));
         expect(onChange.callCount).to.equal(
           getExpectedOnChangeCount(componentFamily, pickerParams) + 1,
         );
@@ -118,12 +118,12 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         expect(onClose.callCount).to.equal(1);
       });
 
-      it('should not call onChange if no prior value modification', () => {
+      it('should not call onChange if no prior value modification', async () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
 
-        render(
+        const { user } = render(
           <ElementToTest
             enableAccessibleFieldDOMStructure
             onChange={onChange}
@@ -137,7 +137,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         );
 
         // Cancel the modifications
-        fireEvent.click(screen.getByText(/cancel/i));
+        await user.click(screen.getByText(/cancel/i));
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
@@ -145,12 +145,12 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     });
 
     describe('confirm action', () => {
-      it('should call onClose and onAccept with the live value', () => {
+      it('should call onClose and onAccept with the live value', async () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
 
-        const { selectSection, pressKey } = renderWithProps({
+        const { selectSection, pressKey, user } = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
@@ -162,10 +162,10 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         });
 
         // Change the value (already tested)
-        setNewValue(values[0], { isOpened: true, selectSection, pressKey });
+        await setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Accept the modifications
-        fireEvent.click(screen.getByText(/ok/i));
+        await user.click(screen.getByText(/ok/i));
         expect(onChange.callCount).to.equal(
           getExpectedOnChangeCount(componentFamily, pickerParams),
         ); // The accepted value as already been committed, don't call onChange again
@@ -173,12 +173,12 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         expect(onClose.callCount).to.equal(1);
       });
 
-      it('should call onChange, onClose and onAccept when validating the default value', () => {
+      it('should call onChange, onClose and onAccept when validating the default value', async () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
 
-        render(
+        const { user } = render(
           <ElementToTest
             enableAccessibleFieldDOMStructure
             onChange={onChange}
@@ -192,18 +192,18 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         );
 
         // Accept the modifications
-        fireEvent.click(screen.getByText(/ok/i));
+        await user.click(screen.getByText(/ok/i));
         expect(onChange.callCount).to.equal(1);
         expect(onAccept.callCount).to.equal(1);
         expect(onClose.callCount).to.equal(1);
       });
 
-      it('should call onClose but not onAccept when validating an already validated value', () => {
+      it('should call onClose but not onAccept when validating an already validated value', async () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
 
-        render(
+        const { user } = render(
           <ElementToTest
             enableAccessibleFieldDOMStructure
             onChange={onChange}
@@ -217,7 +217,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         );
 
         // Accept the modifications
-        fireEvent.click(screen.getByText(/ok/i));
+        await user.click(screen.getByText(/ok/i));
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
@@ -225,12 +225,12 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     });
 
     describe('today action', () => {
-      it("should call onClose, onChange with today's value and onAccept with today's value", () => {
+      it("should call onClose, onChange with today's value and onAccept with today's value", async () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
 
-        render(
+        const { user } = render(
           <ElementToTest
             enableAccessibleFieldDOMStructure
             onChange={onChange}
@@ -242,21 +242,36 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           />,
         );
 
-        fireEvent.click(screen.getByText(/today/i));
+        await user.click(screen.getByText(/today/i));
 
-        let startOfToday: any;
-        if (pickerParams.type === 'date') {
-          startOfToday = adapterToUse.startOfDay(adapterToUse.date());
-        } else if (isRangeType) {
-          startOfToday = [adapterToUse.date(), adapterToUse.date()];
-        } else {
-          startOfToday = adapterToUse.date();
+        let startOfToday = adapterToUse.startOfDay(adapterToUse.date());
+        if (isRangeType) {
+          if (pickerParams.type === 'date-time-range') {
+            startOfToday = [
+              adapterToUse.setMilliseconds(adapterToUse.date(), 0),
+              adapterToUse.setMilliseconds(adapterToUse.date(), 0),
+            ];
+          } else {
+            startOfToday = [startOfToday, startOfToday];
+          }
+        } else if (pickerParams.type !== 'date') {
+          startOfToday = adapterToUse.setMilliseconds(adapterToUse.date(), 0);
         }
 
         expect(onChange.callCount).to.equal(1);
-        expectPickerChangeHandlerValue(pickerParams.type, onChange, startOfToday);
+        expectPickerChangeHandlerValue(
+          onChange.lastCall.firstArg,
+          startOfToday,
+          true,
+          adapterToUse,
+        );
         expect(onAccept.callCount).to.equal(1);
-        expectPickerChangeHandlerValue(pickerParams.type, onAccept, startOfToday);
+        expectPickerChangeHandlerValue(
+          onAccept.lastCall.firstArg,
+          startOfToday,
+          true,
+          adapterToUse,
+        );
         expect(onClose.callCount).to.equal(1);
       });
     });

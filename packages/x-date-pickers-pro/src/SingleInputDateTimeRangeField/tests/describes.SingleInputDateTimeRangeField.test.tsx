@@ -4,7 +4,7 @@ import { createPickerRenderer, describeRangeValidation } from 'test/utils/picker
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<SingleInputDateTimeRangeField /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer();
 
   describeConformance(<SingleInputDateTimeRangeField enableAccessibleFieldDOMStructure />, () => ({
     classes: {} as any,

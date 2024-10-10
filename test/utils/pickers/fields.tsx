@@ -5,7 +5,7 @@ import { createRenderer, screen, act, fireEvent } from '@mui/internal-test-utils
 import { FieldRef, FieldSection, FieldSectionType } from '@mui/x-date-pickers/models';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
-import { fireUserEvent } from '../fireUserEvent';
+import userEvent from '@testing-library/user-event';
 import { expectFieldValueV7, expectFieldValueV6 } from './assertions';
 
 export const getTextbox = (): HTMLInputElement => screen.getByRole('textbox');
@@ -20,12 +20,14 @@ interface BuildFieldInteractionsParams<P extends {}> {
 export type FieldSectionSelector = (
   selectedSection: FieldSectionType | undefined,
   index?: 'first' | 'last',
+) => Promise<void>;
+
+export type FieldSectionSelectorSync = (
+  selectedSection: FieldSectionType | undefined,
+  index?: 'first' | 'last',
 ) => void;
 
-export type FieldPressCharacter = (
-  sectionIndex: number | undefined | null,
-  character: string,
-) => void;
+export type FieldPressCharacter = (character: string) => Promise<void>;
 
 export interface BuildFieldInteractionsResponse<P extends {}> {
   renderWithProps: (
@@ -37,6 +39,7 @@ export interface BuildFieldInteractionsResponse<P extends {}> {
     },
   ) => ReturnType<ReturnType<typeof createRenderer>['render']> & {
     selectSection: FieldSectionSelector;
+    selectSectionSync: FieldSectionSelectorSync;
     getSectionsContainer: () => HTMLDivElement;
     /**
      * Returns the contentEditable DOM node of the requested section.
@@ -64,14 +67,15 @@ export interface BuildFieldInteractionsResponse<P extends {}> {
       expectedValue: string;
       selectedSection?: FieldSectionType;
     },
-  ) => void;
+  ) => Promise<void>;
   testFieldChange: (
     params: P & {
       keyStrokes: { value: string; expected: string }[];
       selectedSection?: FieldSectionType;
       skipV7?: boolean;
+      finalCallback?: () => void;
     },
-  ) => void;
+  ) => Promise<void>;
 }
 
 const RTL_THEME = createTheme({
@@ -151,7 +155,7 @@ export const buildFieldInteractions = <P extends {}>({
         `.${pickersSectionListClasses.section}[data-sectionindex="${sectionIndex}"] .${pickersSectionListClasses.sectionContent}`,
       )!;
 
-    const selectSection: FieldSectionSelector = (selectedSection, index = 'first') => {
+    const selectSection: FieldSectionSelector = async (selectedSection, index = 'first') => {
       let sectionIndexToSelect: number;
       if (selectedSection === undefined) {
         sectionIndexToSelect = 0;
@@ -162,17 +166,46 @@ export const buildFieldInteractions = <P extends {}>({
         );
       }
 
+      if (!props.enableAccessibleFieldDOMStructure) {
+        await act(async () => {
+          getTextbox().focus();
+        });
+      }
+
+      if (props.enableAccessibleFieldDOMStructure) {
+        await act(async () => {
+          getSection(sectionIndexToSelect).focus();
+        });
+      }
+      await act(async () => {
+        fieldRef.current!.setSelectedSections(sectionIndexToSelect);
+      });
+    };
+
+    const selectSectionSync: FieldSectionSelectorSync = (selectedSection, index = 'first') => {
+      let sectionIndexToSelect: number;
+      if (selectedSection === undefined) {
+        sectionIndexToSelect = 0;
+      } else {
+        const sections = fieldRef.current!.getSections();
+        sectionIndexToSelect = sections[index === 'first' ? 'findIndex' : 'findLastIndex'](
+          (section) => section.type === selectedSection,
+        );
+      }
+
+      if (!props.enableAccessibleFieldDOMStructure) {
+        act(() => {
+          getTextbox().focus();
+        });
+      }
+
+      if (props.enableAccessibleFieldDOMStructure) {
+        act(() => {
+          getSection(sectionIndexToSelect).focus();
+        });
+      }
       act(() => {
         fieldRef.current!.setSelectedSections(sectionIndexToSelect);
-        if (!props.enableAccessibleFieldDOMStructure) {
-          getTextbox().focus();
-        }
-      });
-
-      act(() => {
-        if (props.enableAccessibleFieldDOMStructure) {
-          getSection(sectionIndexToSelect).focus();
-        }
       });
     };
 
@@ -190,14 +223,7 @@ export const buildFieldInteractions = <P extends {}>({
       return activeElement;
     };
 
-    const pressKey: FieldPressCharacter = (sectionIndex, key) => {
-      if (!props.enableAccessibleFieldDOMStructure) {
-        throw new Error('`pressKey` is only available with v7 TextField');
-      }
-
-      const target =
-        sectionIndex === null ? getSectionsContainer() : getActiveSection(sectionIndex);
-
+    const pressKey: FieldPressCharacter = async (key) => {
       if (
         [
           'ArrowUp',
@@ -207,18 +233,20 @@ export const buildFieldInteractions = <P extends {}>({
           'Home',
           'End',
           'Delete',
+          'Backspace',
           'ArrowLeft',
           'ArrowRight',
         ].includes(key)
       ) {
-        fireUserEvent.keyPress(target, { key });
+        await userEvent.keyboard(`{${key}}`);
       } else {
-        fireEvent.input(target, { target: { textContent: key } });
+        await userEvent.keyboard(key);
       }
     };
 
     return {
       selectSection,
+      selectSectionSync,
       getActiveSection,
       getSection,
       pressKey,
@@ -228,7 +256,7 @@ export const buildFieldInteractions = <P extends {}>({
     };
   };
 
-  const testFieldKeyPress: BuildFieldInteractionsResponse<P>['testFieldKeyPress'] = ({
+  const testFieldKeyPress: BuildFieldInteractionsResponse<P>['testFieldKeyPress'] = async ({
     key,
     expectedValue,
     selectedSection,
@@ -239,8 +267,8 @@ export const buildFieldInteractions = <P extends {}>({
       ...props,
       enableAccessibleFieldDOMStructure: true,
     } as any);
-    v7Response.selectSection(selectedSection);
-    v7Response.pressKey(undefined, key);
+    await v7Response.selectSection(selectedSection);
+    await v7Response.pressKey(key);
     expectFieldValueV7(v7Response.getSectionsContainer(), expectedValue);
     v7Response.unmount();
 
@@ -249,54 +277,69 @@ export const buildFieldInteractions = <P extends {}>({
       ...props,
       enableAccessibleFieldDOMStructure: false,
     } as any);
-    v6Response.selectSection(selectedSection);
+    await v6Response.selectSection(selectedSection);
     const input = getTextbox();
-    fireUserEvent.keyPress(input, { key });
+    await v6Response.pressKey(key);
     expectFieldValueV6(input, expectedValue);
     v6Response.unmount();
   };
 
-  const testFieldChange: BuildFieldInteractionsResponse<P>['testFieldChange'] = ({
+  const testFieldChange: BuildFieldInteractionsResponse<P>['testFieldChange'] = async ({
     keyStrokes,
     selectedSection,
     skipV7,
+    finalCallback,
     ...props
   }) => {
+    let view: ReturnType<typeof renderWithProps>;
     if (!skipV7) {
       // Test with v7 input
-      const v7Response = renderWithProps({
+      view = renderWithProps({
         ...props,
         enableAccessibleFieldDOMStructure: true,
       } as any);
-      v7Response.selectSection(selectedSection);
-      keyStrokes.forEach((keyStroke) => {
-        v7Response.pressKey(undefined, keyStroke.value);
+      await view.selectSection(selectedSection);
+      keyStrokes.forEach(async (keyStroke) => {
+        if (keyStroke.value === ' ') {
+          await view.user.keyboard('{Space}');
+        } else if (keyStroke.value === '') {
+          await view.user.keyboard('{Backspace}');
+        } else {
+          await view.user.keyboard(keyStroke.value);
+        }
         expectFieldValueV7(
-          v7Response.getSectionsContainer(),
+          view.getSectionsContainer(),
           keyStroke.expected,
           (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
         );
       });
-      v7Response.unmount();
+      view.unmount();
     }
 
     // Test with v6 input
-    const v6Response = renderWithProps({
+    view = renderWithProps({
       ...props,
       enableAccessibleFieldDOMStructure: false,
     } as any);
-    v6Response.selectSection(selectedSection);
-    const input = getTextbox();
+    await view.selectSection(selectedSection);
 
-    keyStrokes.forEach((keyStroke) => {
-      fireEvent.change(input, { target: { value: keyStroke.value } });
+    keyStrokes.forEach(async (keyStroke) => {
+      if (keyStroke.value === ' ') {
+        await view.user.keyboard('{Space}');
+      } else if (keyStroke.value === '') {
+        await view.user.keyboard('{Backspace}');
+      } else {
+        await view.user.keyboard(keyStroke.value);
+      }
+      const input = getTextbox();
       expectFieldValueV6(
         input,
         keyStroke.expected,
         (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
       );
     });
-    v6Response.unmount();
+    view.unmount();
+    finalCallback?.();
   };
 
   return { testFieldKeyPress, testFieldChange, renderWithProps };

@@ -1,19 +1,22 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { act, screen } from '@mui/internal-test-utils';
 import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-/* eslint-disable material-ui/disallow-active-element-as-key-event-target */
 describe('<YearCalendar /> - Keyboard', () => {
-  const { render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date(2000, 0, 1) });
+  const { render } = createPickerRenderer({
+    clock: 'fake',
+    clockConfig: new Date(2000, 0, 1),
+    clockOptions: { toFake: ['Date'] },
+  });
 
   const RTL_THEME = createTheme({
     direction: 'rtl',
   });
 
-  function changeYear(
+  async function changeYear(
     keyPressed: string,
     expectedValue: string,
     yearsOrder: 'asc' | 'desc' = 'asc',
@@ -35,10 +38,12 @@ describe('<YearCalendar /> - Keyboard', () => {
         yearCalendar
       );
 
-    render(elementsToRender);
+    const view = render(elementsToRender);
     const startYear = screen.getByRole('radio', { checked: true });
-    fireEvent.focus(startYear);
-    fireEvent.keyDown(document.activeElement!, { key: keyPressed });
+    await act(async () => {
+      startYear.focus();
+    });
+    await view.user.keyboard(`{${keyPressed}}`);
     expect(document.activeElement?.textContent).to.equal(expectedValue);
   }
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -14,25 +14,26 @@ describe('<DesktopDateTimeRangePicker />', () => {
   const { render } = createPickerRenderer({
     clock: 'fake',
     clockConfig: new Date(2018, 0, 10, 10, 16, 0),
+    clockOptions: { toFake: ['Date'] },
   });
 
   describe('value selection', () => {
-    it('should allow to select range within the same day', () => {
-      render(<DesktopDateTimeRangePicker enableAccessibleFieldDOMStructure />);
+    it('should allow to select range within the same day', async () => {
+      const { user } = render(<DesktopDateTimeRangePicker enableAccessibleFieldDOMStructure />);
 
-      openPicker({ type: 'date-time-range', variant: 'desktop', initialFocus: 'start' });
+      await openPicker({ type: 'date-time-range', variant: 'desktop', initialFocus: 'start' });
 
       // select start date range
-      fireEvent.click(screen.getByRole('gridcell', { name: '11' }));
-      fireEvent.click(screen.getByRole('option', { name: '4 hours' }));
-      fireEvent.click(screen.getByRole('option', { name: '5 minutes' }));
-      fireEvent.click(screen.getByRole('option', { name: 'PM' }));
+      await user.click(screen.getByRole('gridcell', { name: '11' }));
+      await user.click(screen.getByRole('option', { name: '4 hours' }));
+      await user.click(screen.getByRole('option', { name: '5 minutes' }));
+      await user.click(screen.getByRole('option', { name: 'PM' }));
 
       // select end date range on the same day
-      fireEvent.click(screen.getByRole('gridcell', { name: '11' }));
-      fireEvent.click(screen.getByRole('option', { name: '5 hours' }));
-      fireEvent.click(screen.getByRole('option', { name: '10 minutes' }));
-      fireEvent.click(screen.getByRole('option', { name: 'PM' }));
+      await user.click(screen.getByRole('gridcell', { name: '11' }));
+      await user.click(screen.getByRole('option', { name: '5 hours' }));
+      await user.click(screen.getByRole('option', { name: '10 minutes' }));
+      await user.click(screen.getByRole('option', { name: 'PM' }));
 
       const startSectionsContainer = getFieldSectionsContainer(0);
       const endSectionsContainer = getFieldSectionsContainer(1);
@@ -43,7 +44,14 @@ describe('<DesktopDateTimeRangePicker />', () => {
 
   describe('disabled dates', () => {
     it('should respect the "disablePast" prop', () => {
-      render(<DesktopDateTimeRangePicker enableAccessibleFieldDOMStructure disablePast open />);
+      render(
+        <DesktopDateTimeRangePicker
+          enableAccessibleFieldDOMStructure
+          disablePast
+          open
+          reduceAnimations
+        />,
+      );
 
       expect(screen.getByRole('gridcell', { name: '8' })).to.have.attribute('disabled');
       expect(screen.getByRole('gridcell', { name: '9' })).to.have.attribute('disabled');
@@ -72,6 +80,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
           disablePast
           open
           referenceDate={adapterToUse.date('2018-01-11')}
+          reduceAnimations
         />,
       );
 
@@ -93,7 +102,14 @@ describe('<DesktopDateTimeRangePicker />', () => {
     });
 
     it('should respect the "disableFuture" prop', () => {
-      render(<DesktopDateTimeRangePicker enableAccessibleFieldDOMStructure disableFuture open />);
+      render(
+        <DesktopDateTimeRangePicker
+          enableAccessibleFieldDOMStructure
+          disableFuture
+          open
+          reduceAnimations
+        />,
+      );
 
       expect(screen.getByRole('gridcell', { name: '9' })).not.to.have.attribute('disabled');
       expect(screen.getByRole('gridcell', { name: '10' })).not.to.have.attribute('disabled');
@@ -117,6 +133,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
           disableFuture
           open
           referenceDate={adapterToUse.date('2018-01-09')}
+          reduceAnimations
         />,
       );
 
@@ -140,6 +157,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
           minDateTime={adapterToUse.date('2018-01-10T10:16:00')}
           referenceDate={adapterToUse.date('2018-01-10T10:00:00')}
           open
+          reduceAnimations
         />,
       );
 
@@ -172,6 +190,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
           maxDateTime={adapterToUse.date('2018-01-10T10:16:00')}
           referenceDate={adapterToUse.date('2018-01-10T10:00:00')}
           open
+          reduceAnimations
         />,
       );
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -9,9 +9,10 @@ import {
 } from 'test/utils/pickers';
 import { MonthCalendar, monthCalendarClasses as classes } from '@mui/x-date-pickers/MonthCalendar';
 import { describeConformance } from 'test/utils/describeConformance';
+import userEvent from '@testing-library/user-event';
 
 describe('<MonthCalendar /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer();
 
   describeValidation(MonthCalendar, () => ({
     render,
@@ -51,10 +52,12 @@ describe('<MonthCalendar /> - Describes', () => {
         expect(activeMonth).to.have.attribute('aria-checked', 'true');
       }
     },
-    setNewValue: (value) => {
+    setNewValue: async (value) => {
       const newValue = adapterToUse.addMonths(value, 1);
 
-      fireEvent.click(screen.getByRole('radio', { name: adapterToUse.format(newValue, 'month') }));
+      await userEvent.click(
+        screen.getByRole('radio', { name: adapterToUse.format(newValue, 'month') }),
+      );
 
       return newValue;
     },

@@ -136,7 +136,6 @@ describe('<AdapterDayjs />', () => {
 
       describe(`test with the ${localeName} locale`, () => {
         const { render, clock, adapter } = createPickerRenderer({
-          clock: 'fake',
           adapterName: 'dayjs',
           locale: localeObject,
         });
