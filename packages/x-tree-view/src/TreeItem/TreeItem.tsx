@@ -418,7 +418,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
       ...sharedPropsEnhancerParams,
       externalEventHandlers: {},
     }) ?? {};
-  const enhancedCheckboxProps =
+  const { visible: isCheckboxVisible, ...enhancedCheckboxProps } =
     propsEnhancers.checkbox?.({
       ...sharedPropsEnhancerParams,
       externalEventHandlers: {},
@@ -482,9 +482,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
           {...((enhancedLabelInputProps as any).value == null
             ? {}
             : { labelInputProps: enhancedLabelInputProps })}
-          {...((enhancedCheckboxProps as any).visible
-            ? { checkboxProps: enhancedCheckboxProps }
-            : {})}
+          {...(isCheckboxVisible ? { checkboxProps: enhancedCheckboxProps } : {})}
           ref={handleContentRef}
         />
         {children && (
