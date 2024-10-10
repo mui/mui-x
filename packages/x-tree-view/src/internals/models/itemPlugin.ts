@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { EventHandlers } from '@mui/utils';
 import type {
+  UseTreeItem2CheckboxSlotOwnProps,
   UseTreeItem2ContentSlotOwnProps,
   UseTreeItem2DragAndDropOverlaySlotOwnProps,
   UseTreeItem2LabelInputSlotOwnProps,
   UseTreeItem2RootSlotOwnProps,
+  UseTreeItem2Status,
 } from '../../useTreeItem2';
 import type { UseTreeItem2Interactions } from '../../hooks/useTreeItem2Utils/useTreeItem2Utils';
 
@@ -12,11 +14,13 @@ export interface TreeViewItemPluginSlotPropsEnhancerParams {
   rootRefObject: React.MutableRefObject<HTMLLIElement | null>;
   contentRefObject: React.MutableRefObject<HTMLDivElement | null>;
   externalEventHandlers: EventHandlers;
-  // TODO v9: Remove "Pick" once the old TreeItem is removed.
+  // TODO v8: Remove "Pick" once the old TreeItem is removed.
   interactions: Pick<
     UseTreeItem2Interactions,
-    'handleSaveItemLabel' | 'handleCancelItemLabelEditing'
+    'handleSaveItemLabel' | 'handleCancelItemLabelEditing' | 'handleCheckboxSelection'
   >;
+  // TODO v8: Remove "Pick" once the old TreeItem is removed.
+  status: Pick<UseTreeItem2Status, 'disabled' | 'selected'>;
 }
 
 type TreeViewItemPluginSlotPropsEnhancer<TSlotProps> = (
@@ -28,6 +32,7 @@ export interface TreeViewItemPluginSlotPropsEnhancers {
   content?: TreeViewItemPluginSlotPropsEnhancer<UseTreeItem2ContentSlotOwnProps>;
   dragAndDropOverlay?: TreeViewItemPluginSlotPropsEnhancer<UseTreeItem2DragAndDropOverlaySlotOwnProps>;
   labelInput?: TreeViewItemPluginSlotPropsEnhancer<UseTreeItem2LabelInputSlotOwnProps>;
+  checkbox?: TreeViewItemPluginSlotPropsEnhancer<UseTreeItem2CheckboxSlotOwnProps>;
 }
 
 export interface TreeViewItemPluginResponse {
