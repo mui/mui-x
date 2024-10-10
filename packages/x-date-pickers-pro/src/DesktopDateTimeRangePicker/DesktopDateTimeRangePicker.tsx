@@ -118,7 +118,7 @@ const rendererInterceptor = function rendererInterceptor<
 
 type DesktopDateRangePickerComponent = (<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   props: DesktopDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
@@ -136,7 +136,7 @@ type DesktopDateRangePickerComponent = (<
  */
 const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRangePicker<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   inProps: DesktopDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
@@ -318,7 +318,7 @@ DesktopDateTimeRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**

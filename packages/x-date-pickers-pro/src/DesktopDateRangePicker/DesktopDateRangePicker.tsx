@@ -17,7 +17,7 @@ import { DateRange } from '../models';
 
 type DesktopDateRangePickerComponent = (<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   props: DesktopDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
@@ -35,7 +35,7 @@ type DesktopDateRangePickerComponent = (<
  */
 const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   inProps: DesktopDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
@@ -176,7 +176,7 @@ DesktopDateRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**

@@ -16,7 +16,7 @@ import {
 } from '@mui/x-date-pickers/hooks';
 import { CalendarIcon } from '@mui/x-date-pickers/icons';
 
-function ReadOnlyDateField(props: DatePickerFieldProps<Dayjs, false>) {
+function ReadOnlyDateField(props: DatePickerFieldProps<Dayjs>) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { value, timezone, format } = internalProps;
   const { InputProps, slotProps, slots, ...other } = forwardedProps;

@@ -17,7 +17,7 @@ import { DateRange } from '../models';
 
 type MobileDateRangePickerComponent = (<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   props: MobileDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
@@ -35,7 +35,7 @@ type MobileDateRangePickerComponent = (<
  */
 const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   inProps: MobileDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
@@ -172,7 +172,7 @@ MobileDateRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**

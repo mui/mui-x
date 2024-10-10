@@ -487,7 +487,6 @@ export default function Keyboard() {
               onKeyUp={() => {
                 setSelectedKey(null);
               }}
-              enableAccessibleFieldDOMStructure
               onSelectedSectionsChange={(newSelectedSection) => {
                 selectedSection.current = newSelectedSection;
               }}

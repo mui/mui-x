@@ -66,30 +66,9 @@ Setting `formatDensity` to `"spacious"` will add a space before and after each `
 
 {{"demo": "FieldFormatDensity.js"}}
 
-## Usage with Material UI
+## With Material UI
 
-### Using Material `TextField`
-
-You can import the `TextField` component to create custom wrappers:
-
-{{"demo": "MaterialV6FieldWrapped.js"}}
-
-:::success
-This approach is only recommended if you need complex customizations on your `TextField`,
-or if you already have a wrapper also used outside the Date and Time Pickers.
-
-If you just need to set some default props, you can use [the `slotProps` prop](/x/react-date-pickers/custom-field/#customize-the-textfield).
-:::
-
-### Using Material `PickersTextField`
-
-Pass the `enableAccessibleFieldDOMStructure` to any Field or Picker component to enable the accessible DOM structure:
-
-{{"demo": "MaterialV7Field.js"}}
-
-:::success
-Learn more about the [accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure).
-:::
+### Wrapping `PickersTextField`
 
 You can import the `PickersTextField` component to create custom wrappers:
 
@@ -101,46 +80,26 @@ This approach is only recommended if you need complex customizations on your `Pi
 If you just need to set some default props, you can use [the `slotProps` prop](/x/react-date-pickers/custom-field/#customize-the-textfield).
 :::
 
-## Usage with Joy UI
+### Using Material `TextField`
 
-### Using Joy `Input`
+Pass the `enableAccessibleFieldDOMStructure={false}` to any Field or Picker component to use an `<input />` for the editing instead of the new accessible DOM structure:
 
-You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
-
-:::info
-A higher-level solution for _Joy UI_ will be provided in the near future for even simpler usage.
-:::
-
-{{"demo": "JoyV6Field.js", "defaultCodeOpen": false}}
-
-{{"demo": "JoyV6SingleInputRangeField.js", "defaultCodeOpen": false}}
-
-{{"demo": "JoyV6MultiInputRangeField.js", "defaultCodeOpen": false}}
-
-### Using Joy `PickersTextField`
+{{"demo": "MaterialV6Field.js"}}
 
 :::warning
-This component is not available yet.
+The non-accessible DOM structure will be deprecated in a follow up minor version and remove in `v9.x`.
+If you are unable to migrate for some reason, please open an issue to describe what is missing from the new DOM structure so that we can improve it before dropping the old one.
 :::
 
-## Usage with an unstyled input
+## With another Design System
 
-### Using the browser input
-
-{{"demo": "BrowserV6Field.js", "defaultCodeOpen": false}}
-
-{{"demo": "BrowserV6SingleInputRangeField.js", "defaultCodeOpen": false}}
-
-{{"demo": "BrowserV6MultiInputRangeField.js", "defaultCodeOpen": false}}
+### Using a custom input
 
 :::warning
-You will need to use a component that supports the `sx` prop as a wrapper for your input, in order to be able to benefit from the **hover** and **focus** behavior of the clear button. You will have access to the `clearable` and `onClear` props using native HTML elements, but the on **focus** and **hover** behavior depends on styles applied via the `sx` prop.
-:::
-
-### Using custom `PickersTextField`
-
-:::success
-Learn more about the accessible DOM structure and its difference compared to the current one on the [dedicated doc section](/x/react-date-pickers/fields/#accessible-dom-structure).
+You will need to use a component that supports the `sx` prop as a wrapper for your input
+to be able to benefit from the **hover** and **focus** behavior of the clear button.
+You will have access to the `clearable` and `onClear` props using native HTML elements,
+but the on **focus** and **hover** behavior depends on styles applied via the `sx` prop.
 :::
 
 {{"demo": "BrowserV7Field.js", "defaultCodeOpen": false}}
@@ -149,7 +108,22 @@ Learn more about the accessible DOM structure and its difference compared to the
 
 {{"demo": "BrowserV7MultiInputRangeField.js", "defaultCodeOpen": false}}
 
-## Usage with another UI
+### Using Joy UI
+
+You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
+
+{{"demo": "JoyV6Field.js", "defaultCodeOpen": false}}
+
+{{"demo": "JoyV6SingleInputRangeField.js", "defaultCodeOpen": false}}
+
+{{"demo": "JoyV6MultiInputRangeField.js", "defaultCodeOpen": false}}
+
+:::warning
+All the Joy UI examples use the non-accessible DOM structure.
+The new accessible DOM structure will become compatible with Joy UI in the future.
+:::
+
+## With a custom editing experience
 
 ### Using an `Autocomplete`
 
@@ -184,22 +158,22 @@ On the examples below, you can see that the typing of the props received by a cu
 
 ```tsx
 interface JoyDateFieldProps
-  extends UseDateFieldProps<Dayjs, false>, // The headless field props
+  extends UseDateFieldProps<Dayjs, true>, // The headless field props
     BaseSingleInputFieldProps<
       Dayjs | null,
       Dayjs,
       FieldSection,
-      false, // `true` for `enableAccessibleFieldDOMStructure`
+      true, // `false` for `enableAccessibleFieldDOMStructure={false}`
       DateValidationError
     > {} // The DOM field props
 
 interface JoyDateTimeFieldProps
-  extends UseDateTimeFieldProps<Dayjs, false>, // The headless field props
+  extends UseDateTimeFieldProps<Dayjs, true>, // The headless field props
     BaseSingleInputFieldProps<
       Dayjs | null,
       Dayjs,
       FieldSection,
-      false, // `true` for `enableAccessibleFieldDOMStructure`
+      true, // `false` for `enableAccessibleFieldDOMStructure={false}`
       DateTimeValidationError
     > {} // The DOM field props
 ```
