@@ -12,6 +12,7 @@ describe('<PickersActionBar />', () => {
     const onAccept = () => {};
     const onClear = () => {};
     const onCancel = () => {};
+    const onNext = () => {};
     const onSetToday = () => {};
     render(
       <PickersActionBar
@@ -20,6 +21,7 @@ describe('<PickersActionBar />', () => {
         onClear={onClear}
         onCancel={onCancel}
         onSetToday={onSetToday}
+        onNext={onNext}
       />,
     );
 
@@ -30,6 +32,7 @@ describe('<PickersActionBar />', () => {
     const onAccept = spy();
     const onClear = spy();
     const onCancel = spy();
+    const onNext = spy();
     const onSetToday = spy();
 
     const { user } = render(
@@ -38,6 +41,7 @@ describe('<PickersActionBar />', () => {
         onAccept={onAccept}
         onClear={onClear}
         onCancel={onCancel}
+        onNext={onNext}
         onSetToday={onSetToday}
       />,
     );
@@ -50,6 +54,7 @@ describe('<PickersActionBar />', () => {
     const onAccept = spy();
     const onClear = spy();
     const onCancel = spy();
+    const onNext = spy();
     const onSetToday = spy();
 
     const { user } = render(
@@ -58,6 +63,7 @@ describe('<PickersActionBar />', () => {
         onAccept={onAccept}
         onClear={onClear}
         onCancel={onCancel}
+        onNext={onNext}
         onSetToday={onSetToday}
       />,
     );
@@ -70,6 +76,7 @@ describe('<PickersActionBar />', () => {
     const onAccept = spy();
     const onClear = spy();
     const onCancel = spy();
+    const onNext = spy();
     const onSetToday = spy();
 
     const { user } = render(
@@ -78,6 +85,7 @@ describe('<PickersActionBar />', () => {
         onAccept={onAccept}
         onClear={onClear}
         onCancel={onCancel}
+        onNext={onNext}
         onSetToday={onSetToday}
       />,
     );
@@ -86,10 +94,33 @@ describe('<PickersActionBar />', () => {
     expect(onAccept.callCount).to.equal(1);
   });
 
+  it('should render button for "next" action calling the associated callback', async () => {
+    const onAccept = spy();
+    const onClear = spy();
+    const onCancel = spy();
+    const onNext = spy();
+    const onSetToday = spy();
+
+    const { user } = render(
+      <PickersActionBar
+        actions={['next']}
+        onAccept={onAccept}
+        onClear={onClear}
+        onCancel={onCancel}
+        onNext={onNext}
+        onSetToday={onSetToday}
+      />,
+    );
+
+    await user.click(screen.getByText(/next/i));
+    expect(onNext.callCount).to.equal(1);
+  });
+
   it('should render button for "today" action calling the associated callback', async () => {
     const onAccept = spy();
     const onClear = spy();
     const onCancel = spy();
+    const onNext = spy();
     const onSetToday = spy();
 
     const { user } = render(
@@ -98,6 +129,7 @@ describe('<PickersActionBar />', () => {
         onAccept={onAccept}
         onClear={onClear}
         onCancel={onCancel}
+        onNext={onNext}
         onSetToday={onSetToday}
       />,
     );
@@ -110,13 +142,15 @@ describe('<PickersActionBar />', () => {
     const onAccept = () => {};
     const onClear = () => {};
     const onCancel = () => {};
+    const onNext = () => {};
     const onSetToday = () => {};
     render(
       <PickersActionBar
-        actions={['today', 'accept', 'clear', 'cancel']}
+        actions={['today', 'accept', 'clear', 'next', 'cancel']}
         onAccept={onAccept}
         onClear={onClear}
         onCancel={onCancel}
+        onNext={onNext}
         onSetToday={onSetToday}
       />,
     );
@@ -126,6 +160,7 @@ describe('<PickersActionBar />', () => {
     expect(buttons[0]).to.have.text('Today');
     expect(buttons[1]).to.have.text('OK');
     expect(buttons[2]).to.have.text('Clear');
-    expect(buttons[3]).to.have.text('Cancel');
+    expect(buttons[3]).to.have.text('Next');
+    expect(buttons[4]).to.have.text('Cancel');
   });
 });

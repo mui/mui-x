@@ -36,6 +36,7 @@ const skSKPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: 'Vymazať',
   okButtonLabel: 'Potvrdiť',
   todayButtonLabel: 'Dnes',
+  // nextButtonLabel: 'Next',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Vyberte dátum',

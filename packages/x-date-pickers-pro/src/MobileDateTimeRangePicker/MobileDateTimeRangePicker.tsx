@@ -26,6 +26,7 @@ import {
   multiSectionDigitalClockSectionClasses,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
+import { PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileDateTimeRangePickerProps } from './MobileDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
@@ -35,7 +36,7 @@ import {
 } from '../internals/hooks/useMobileRangePicker';
 import { validateDateTimeRange } from '../validation';
 import { DateTimeRangePickerView } from '../internals/models';
-import { DateRange } from '../models';
+import { DateRange, RangePosition } from '../models';
 import {
   DateTimeRangePickerRenderers,
   useDateTimeRangePickerDefaultizedProps,
@@ -170,6 +171,12 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
     ...defaultizedProps.viewRenderers,
   };
 
+  const getActionBarActions: (rangePosition: RangePosition) => PickersActionBarAction[] = (
+    rangePosition,
+  ) => {
+    return rangePosition === 'start' ? ['cancel', 'next'] : ['cancel', 'accept'];
+  };
+
   const props = {
     ...defaultizedProps,
     viewRenderers,
@@ -197,6 +204,12 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
         hidden: false,
         toolbarVariant: 'mobile',
         ...defaultizedProps.slotProps?.toolbar,
+      },
+      actionBar: (ownerState: any) => {
+        return {
+          actions: getActionBarActions(ownerState.rangePosition),
+          ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
+        };
       },
     },
   };

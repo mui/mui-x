@@ -197,7 +197,7 @@ export type PickerValueUpdateAction<TValue, TError> =
   | {
       name: 'setValueFromAction';
       value: TValue;
-      pickerAction: 'accept' | 'today' | 'cancel' | 'dismiss' | 'clear';
+      pickerAction: 'accept' | 'today' | 'cancel' | 'dismiss' | 'clear' | 'next';
     }
   | {
       name: 'setValueFromShortcut';
@@ -276,11 +276,13 @@ export interface UsePickerValueParams<
   TValue,
   TDate extends PickerValidDate,
   TExternalProps extends UsePickerValueProps<TValue, any>,
+  TAdditionalProps,
 > {
   props: TExternalProps;
   valueManager: PickerValueManager<TValue, TDate, InferError<TExternalProps>>;
   valueType: FieldValueType;
   wrapperVariant: WrapperVariant;
+  additionalViewProps: TAdditionalProps;
   validator: Validator<TValue, TDate, InferError<TExternalProps>, TExternalProps>;
 }
 
@@ -290,6 +292,7 @@ export interface UsePickerValueActions {
   onDismiss: () => void;
   onCancel: () => void;
   onSetToday: () => void;
+  onNext: () => void;
   onOpen: (event: React.UIEvent) => void;
   onClose: (event?: React.UIEvent) => void;
 }

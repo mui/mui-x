@@ -35,6 +35,7 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: 'Hreinsa',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Í dag',
+  // nextButtonLabel: 'Next',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Velja dagsetningu',

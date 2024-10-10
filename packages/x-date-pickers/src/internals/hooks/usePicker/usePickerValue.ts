@@ -132,7 +132,7 @@ const shouldClosePicker = <TValue, TError>(
 ): boolean => {
   const { action, closeOnSelect } = params;
 
-  if (action.name === 'setValueFromAction') {
+  if (action.name === 'setValueFromAction' && action.pickerAction !== 'next') {
     return true;
   }
 
@@ -155,13 +155,15 @@ export const usePickerValue = <
   TDate extends PickerValidDate,
   TSection extends FieldSection,
   TExternalProps extends UsePickerValueProps<TValue, any>,
+  TAdditionalProps extends { onRangePositionChange?: (position: 'start' | 'end') => void },
 >({
   props,
   valueManager,
   valueType,
   wrapperVariant,
   validator,
-}: UsePickerValueParams<TValue, TDate, TExternalProps>): UsePickerValueResponse<
+  additionalViewProps,
+}: UsePickerValueParams<TValue, TDate, TExternalProps, TAdditionalProps>): UsePickerValueResponse<
   TValue,
   TSection,
   InferError<TExternalProps>
@@ -176,6 +178,8 @@ export const usePickerValue = <
     closeOnSelect = wrapperVariant === 'desktop',
     timezone: timezoneProp,
   } = props;
+
+  const { onRangePositionChange } = additionalViewProps;
 
   const { current: defaultValue } = React.useRef(inDefaultValue);
   const { current: isControlled } = React.useRef(inValueWithoutRenderTimezone !== undefined);
@@ -393,6 +397,15 @@ export const usePickerValue = <
       updateDate({ name: 'setValueFromView', value: newValue, selectionState }),
   );
 
+  const handleNext = useEventCallback(() => {
+    updateDate({
+      value: dateState.lastPublishedValue,
+      name: 'setValueFromAction',
+      pickerAction: 'next',
+    });
+    onRangePositionChange?.('end');
+  });
+
   const handleSelectShortcut = useEventCallback(
     (
       newValue: TValue,
@@ -418,6 +431,7 @@ export const usePickerValue = <
     onDismiss: handleDismiss,
     onCancel: handleCancel,
     onSetToday: handleSetToday,
+    onNext: handleNext,
     onOpen: handleOpen,
     onClose: handleClose,
   };

@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import DialogActions, { DialogActionsProps } from '@mui/material/DialogActions';
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
 
-export type PickersActionBarAction = 'clear' | 'cancel' | 'accept' | 'today';
+export type PickersActionBarAction = 'clear' | 'cancel' | 'accept' | 'today' | 'next';
 
 export interface PickersActionBarProps extends DialogActionsProps {
   /**
@@ -18,6 +18,7 @@ export interface PickersActionBarProps extends DialogActionsProps {
   onClear: () => void;
   onCancel: () => void;
   onSetToday: () => void;
+  onNext: () => void;
 }
 
 /**
@@ -31,8 +32,7 @@ export interface PickersActionBarProps extends DialogActionsProps {
  * - [PickersActionBar API](https://mui.com/x/api/date-pickers/pickers-action-bar/)
  */
 function PickersActionBar(props: PickersActionBarProps) {
-  const { onAccept, onClear, onCancel, onSetToday, actions, ...other } = props;
-
+  const { onAccept, onClear, onCancel, onSetToday, onNext, actions, ...other } = props;
   const translations = usePickersTranslations();
 
   if (actions == null || actions.length === 0) {
@@ -69,6 +69,13 @@ function PickersActionBar(props: PickersActionBarProps) {
           </Button>
         );
 
+      case 'next':
+        return (
+          <Button onClick={onNext} key={actionType}>
+            {translations.nextButtonLabel}
+          </Button>
+        );
+
       default:
         return null;
     }
@@ -87,7 +94,9 @@ PickersActionBar.propTypes = {
    * If empty, does not display that action bar.
    * @default `['cancel', 'accept']` for mobile and `[]` for desktop
    */
-  actions: PropTypes.arrayOf(PropTypes.oneOf(['accept', 'cancel', 'clear', 'today']).isRequired),
+  actions: PropTypes.arrayOf(
+    PropTypes.oneOf(['accept', 'cancel', 'clear', 'next', 'today']).isRequired,
+  ),
   /**
    * If `true`, the actions do not have additional margin.
    * @default false
@@ -96,6 +105,7 @@ PickersActionBar.propTypes = {
   onAccept: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   onClear: PropTypes.func.isRequired,
+  onNext: PropTypes.func.isRequired,
   onSetToday: PropTypes.func.isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
