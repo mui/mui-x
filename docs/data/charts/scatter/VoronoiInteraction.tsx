@@ -17,7 +17,11 @@ import {
 import { possibleAsteroidImpactProbabilityBySizeScatter } from '../dataset/possibleAsteroidImpact';
 import { starsScatterMagnitudeByTemperatureByType } from '../dataset/starClassification';
 import { lifeExpectancyScatterSeries } from '../dataset/lifeExpectancyVsGdp';
-import { volcanoEruptionsScatterSeries } from '../dataset/volcanoEruptions';
+import {
+  volcanoEruptionsScatterSeries,
+  volcanoEruptionsScatterSeriesByContinent,
+  volcanoEruptionsScatterSeriesByVolcanoType,
+} from '../dataset/volcanoEruptions';
 
 const formatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -52,14 +56,36 @@ export default function VoronoiInteraction() {
         ]}
         xAxis={[
           {
-            scaleType: 'log',
+            // scaleType: 'log',
             label: 'times erupted',
             // max: 200_000,
             // min: 500,
             // valueFormatter: formatter.format,
           },
         ]}
-        series={volcanoEruptionsScatterSeries}
+        series={volcanoEruptionsScatterSeriesByVolcanoType}
+      />
+      <ScatterChart
+        height={300}
+        disableVoronoi={disableVoronoi}
+        voronoiMaxRadius={undefinedRadius ? undefined : voronoiMaxRadius}
+        margin={{ left: 60 }}
+        yAxis={[
+          {
+            label: 'longest eruption duration',
+            // valueFormatter: (value) => `${value} years`,
+          },
+        ]}
+        xAxis={[
+          {
+            // scaleType: 'log',
+            label: 'times erupted',
+            // max: 200_000,
+            // min: 500,
+            // valueFormatter: formatter.format,
+          },
+        ]}
+        series={volcanoEruptionsScatterSeriesByContinent}
       />
       <ScatterChart
         height={300}

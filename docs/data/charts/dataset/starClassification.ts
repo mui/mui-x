@@ -2099,18 +2099,18 @@ export const stars = [
   },
 ];
 
-export const starsScatterMagnitudeByTemperature = stars.map((star) => ({
+export const starsScatterMagnitudeByTemperature = stars.map((star, i) => ({
   x: star.temperatureInK,
   y: star.absoluteMagnitude,
-  id: star.color + star.type + star.class,
+  id: star.color + star.type + star.class + i,
 }));
 
 export const starsScatterMagnitudeByTemperatureByType = stars.reduce(
-  (acc, star) => {
+  (acc, star, i) => {
     acc[star.type].data.push({
       x: star.temperatureInK,
       y: star.absoluteMagnitude,
-      id: star.color + star.type + star.class,
+      id: star.color + star.type + star.class + i,
     });
     return acc;
   },
