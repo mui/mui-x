@@ -1,3 +1,4 @@
+/* eslint-disable material-ui/disallow-active-element-as-key-event-target */
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
@@ -114,11 +115,8 @@ describe('<MultiSectionDigitalClock />', () => {
       const hoursOptions = within(hoursSectionListbox).getAllByRole('option');
       const lastOptionIndex = hoursOptions.length - 1;
 
-      const firstElement = hoursOptions[0];
-      const lastElement = hoursOptions[lastOptionIndex];
-
-      fireEvent.keyDown(firstElement, { key: 'End' }); // moves focus to last element
-      fireEvent.keyDown(lastElement, { key: 'PageUp' });
+      fireEvent.keyDown(document.activeElement!, { key: 'End' }); // moves focus to last element
+      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
 
       expect(handleChange.callCount).to.equal(0);
       expect(document.activeElement).to.equal(hoursOptions[lastOptionIndex - 5]);
@@ -169,10 +167,9 @@ describe('<MultiSectionDigitalClock />', () => {
       const hoursOptions = within(hoursSectionListbox).getAllByRole('option');
       const lastOptionIndex = hoursOptions.length - 1;
 
-      const firstElement = hoursOptions[0];
       const lastElement = hoursOptions[lastOptionIndex];
 
-      fireEvent.keyDown(firstElement, { key: 'End' }); // moves focus to last element
+      fireEvent.keyDown(document.activeElement!, { key: 'End' }); // moves focus to last element
       // moves focus 4 steps above last item using arrow up
       [0, 1, 2].forEach((index) => {
         fireEvent.keyDown(hoursOptions[lastOptionIndex - index], { key: 'ArrowUp' });
