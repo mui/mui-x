@@ -12,10 +12,13 @@ import { GridColumnRawLookup, isSingleSelectColDef } from '@mui/x-data-grid-pro/
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import { GridGroupingColumnFooterCell } from '../../../components/GridGroupingColumnFooterCell';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
+import { GridDataSourceGroupingCriteriaCell } from '../../../components/GridDataSourceGroupingCriteriaCell';
 import { GridGroupingColumnLeafCell } from '../../../components/GridGroupingColumnLeafCell';
 import {
   getRowGroupingFieldFromGroupingCriteria,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+  ROW_GROUPING_STRATEGY_DEFAULT,
+  ROW_GROUPING_STRATEGY_DATA_SOURCE,
 } from './gridRowGroupingUtils';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 
@@ -28,6 +31,16 @@ const GROUPING_COL_DEF_DEFAULT_PROPERTIES: Omit<GridColDef, 'field'> = {
 const GROUPING_COL_DEF_FORCED_PROPERTIES: Pick<GridColDef, 'type' | 'editable' | 'groupable'> = {
   editable: false,
   groupable: false,
+};
+
+const DATA_SOURCE_GROUPING_COL_DEF_FORCED_PROPERTIES: Pick<
+  GridColDef,
+  'type' | 'editable' | 'groupable' | 'filterable' | 'sortable' | 'aggregable'
+> = {
+  ...GROUPING_COL_DEF_FORCED_PROPERTIES,
+  // TODO: Support these features on the grouping column(s)
+  filterable: false,
+  sortable: false,
 };
 
 /**
@@ -122,6 +135,7 @@ interface CreateGroupingColDefMonoCriteriaParams {
    * This value comes `prop.groupingColDef`.
    */
   colDefOverride: GridGroupingColDefOverride | null | undefined;
+  strategy?: typeof ROW_GROUPING_STRATEGY_DEFAULT | typeof ROW_GROUPING_STRATEGY_DATA_SOURCE;
 }
 
 /**
@@ -132,10 +146,16 @@ export const createGroupingColDefForOneGroupingCriteria = ({
   groupedByColDef,
   groupingCriteria,
   colDefOverride,
+  strategy = ROW_GROUPING_STRATEGY_DEFAULT,
 }: CreateGroupingColDefMonoCriteriaParams): GridColDef => {
   const { leafField, mainGroupingCriteria, hideDescendantCount, ...colDefOverrideProperties } =
     colDefOverride ?? {};
   const leafColDef = leafField ? columnsLookup[leafField] : null;
+
+  const CriteriaCell =
+    strategy === ROW_GROUPING_STRATEGY_DEFAULT
+      ? GridGroupingCriteriaCell
+      : GridDataSourceGroupingCriteriaCell;
 
   // The properties that do not depend on the presence of a `leafColDef` and that can be overridden by `colDefOverride`
   const commonProperties: Partial<GridColDef> = {
@@ -170,7 +190,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
       // Render current grouping criteria groups
       if (params.rowNode.groupingField === groupingCriteria) {
         return (
-          <GridGroupingCriteriaCell
+          <CriteriaCell
             {...(params as GridRenderCellParams<any, any, any, GridGroupNode>)}
             hideDescendantCount={hideDescendantCount}
           />
@@ -246,6 +266,7 @@ interface CreateGroupingColDefSeveralCriteriaParams {
    * This value comes `prop.groupingColDef`.
    */
   colDefOverride: GridGroupingColDefOverride | null | undefined;
+  strategy?: typeof ROW_GROUPING_STRATEGY_DEFAULT | typeof ROW_GROUPING_STRATEGY_DATA_SOURCE;
 }
 
 /**
@@ -256,10 +277,16 @@ export const createGroupingColDefForAllGroupingCriteria = ({
   columnsLookup,
   rowGroupingModel,
   colDefOverride,
+  strategy = ROW_GROUPING_STRATEGY_DEFAULT,
 }: CreateGroupingColDefSeveralCriteriaParams): GridColDef => {
   const { leafField, mainGroupingCriteria, hideDescendantCount, ...colDefOverrideProperties } =
     colDefOverride ?? {};
   const leafColDef = leafField ? columnsLookup[leafField] : null;
+
+  const CriteriaCell =
+    strategy === ROW_GROUPING_STRATEGY_DEFAULT
+      ? GridGroupingCriteriaCell
+      : GridDataSourceGroupingCriteriaCell;
 
   // The properties that do not depend on the presence of a `leafColDef` and that can be overridden by `colDefOverride`
   const commonProperties: Partial<GridColDef> = {
@@ -296,7 +323,7 @@ export const createGroupingColDefForAllGroupingCriteria = ({
 
       // Render the groups
       return (
-        <GridGroupingCriteriaCell
+        <CriteriaCell
           {...(params as GridRenderCellParams<any, any, any, GridGroupNode>)}
           hideDescendantCount={hideDescendantCount}
         />
@@ -344,7 +371,9 @@ export const createGroupingColDefForAllGroupingCriteria = ({
   // The properties that can't be overridden with `colDefOverride`
   const forcedProperties: Pick<GridColDef, 'field' | 'editable'> = {
     field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-    ...GROUPING_COL_DEF_FORCED_PROPERTIES,
+    ...(strategy === ROW_GROUPING_STRATEGY_DEFAULT
+      ? GROUPING_COL_DEF_FORCED_PROPERTIES
+      : DATA_SOURCE_GROUPING_COL_DEF_FORCED_PROPERTIES),
   };
 
   return {
