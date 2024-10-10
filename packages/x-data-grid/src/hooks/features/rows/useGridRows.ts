@@ -464,6 +464,8 @@ export const useGridRows = (
         ...state,
         rows: {
           ...state.rows,
+          loading: props.loading,
+          totalRowCount: Math.max(props.rowCount || 0, rootGroupChildren.length),
           dataRowIdToModelLookup,
           dataRowIdToIdLookup,
           dataRowIds,
@@ -472,7 +474,7 @@ export const useGridRows = (
       }));
       apiRef.current.publishEvent('rowsSet');
     },
-    [apiRef, props.signature, props.getRowId],
+    [apiRef, props.signature, props.getRowId, props.loading, props.rowCount],
   );
 
   const rowApi: GridRowApi = {
@@ -621,8 +623,11 @@ export const useGridRows = (
       lastRowCount.current = props.rowCount;
     }
 
+    const currentRows = props.unstable_dataSource
+      ? Array.from(apiRef.current.getRowModels().values())
+      : props.rows;
     const areNewRowsAlreadyInState =
-      apiRef.current.caches.rows.rowsBeforePartialUpdates === props.rows;
+      apiRef.current.caches.rows.rowsBeforePartialUpdates === currentRows;
     const isNewLoadingAlreadyInState =
       apiRef.current.caches.rows.loadingPropBeforePartialUpdates === props.loading;
     const isNewRowCountAlreadyInState =
@@ -657,10 +662,10 @@ export const useGridRows = (
       }
     }
 
-    logger.debug(`Updating all rows, new length ${props.rows?.length}`);
+    logger.debug(`Updating all rows, new length ${currentRows?.length}`);
     throttledRowsChange({
       cache: createRowsInternalCache({
-        rows: props.rows,
+        rows: currentRows,
         getRowId: props.getRowId,
         loading: props.loading,
         rowCount: props.rowCount,
@@ -672,6 +677,7 @@ export const useGridRows = (
     props.rowCount,
     props.getRowId,
     props.loading,
+    props.unstable_dataSource,
     logger,
     throttledRowsChange,
     apiRef,

@@ -7,15 +7,22 @@ import {
   GridDataSourceGroupNode,
   useGridSelector,
   GridRowId,
+  gridPaginationModelSelector,
+  gridFilteredSortedRowIdsSelector,
 } from '@mui/x-data-grid';
 import { gridRowGroupsToFetchSelector, GridStateInitializer } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { gridGetRowsParamsSelector, gridDataSourceErrorsSelector } from './gridDataSourceSelector';
-import { GridDataSourceApi, GridDataSourceApiBase, GridDataSourcePrivateApi } from './interfaces';
-import { runIfServerMode, NestedDataManager, RequestStatus } from './utils';
+import {
+  FetchRowsOptions,
+  GridDataSourceApi,
+  GridDataSourceApiBase,
+  GridDataSourcePrivateApi,
+} from './interfaces';
+import { NestedDataManager, RequestStatus, runIf } from './utils';
 import { GridDataSourceCache } from '../../../models';
-import { GridDataSourceCacheDefault } from './cache';
+import { GridDataSourceCacheDefault, GridDataSourceCacheDefaultConfig } from './cache';
 
 const INITIAL_STATE = {
   loading: {},
@@ -28,11 +35,14 @@ const noopCache: GridDataSourceCache = {
   set: () => {},
 };
 
-function getCache(cacheProp?: GridDataSourceCache | null) {
+function getCache(
+  cacheProp?: GridDataSourceCache | null,
+  options: GridDataSourceCacheDefaultConfig = {},
+) {
   if (cacheProp === null) {
     return noopCache;
   }
-  return cacheProp ?? new GridDataSourceCacheDefault({});
+  return cacheProp ?? new GridDataSourceCacheDefault(options);
 }
 
 export const dataSourceStateInitializer: GridStateInitializer = (state) => {
@@ -52,26 +62,55 @@ export const useGridDataSource = (
     | 'sortingMode'
     | 'filterMode'
     | 'paginationMode'
+    | 'pageSizeOptions'
     | 'treeData'
+    | 'lazyLoading'
   >,
 ) => {
   const nestedDataManager = useLazyRef<NestedDataManager, void>(
     () => new NestedDataManager(apiRef),
   ).current;
+  const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const groupsToAutoFetch = useGridSelector(apiRef, gridRowGroupsToFetchSelector);
+  const filteredSortedRowIds = useGridSelector(apiRef, gridFilteredSortedRowIdsSelector);
   const scheduledGroups = React.useRef<number>(0);
+
+  const isLazyLoaded = !!props.unstable_dataSource && props.lazyLoading;
   const onError = props.unstable_onDataSourceError;
 
+  const cacheChunkSize = React.useMemo(() => {
+    const sortedPageSizeOptions = props.pageSizeOptions
+      .map((option) => (typeof option === 'number' ? option : option.value))
+      .sort((a, b) => a - b);
+
+    return Math.min(paginationModel.pageSize, sortedPageSizeOptions[0]);
+  }, [paginationModel.pageSize, props.pageSizeOptions]);
+
   const [cache, setCache] = React.useState<GridDataSourceCache>(() =>
-    getCache(props.unstable_dataSourceCache),
+    getCache(props.unstable_dataSourceCache, {
+      chunkSize: cacheChunkSize,
+    }),
   );
 
   const fetchRows = React.useCallback(
-    async (parentId?: GridRowId) => {
+    async (options?: GridRowId | FetchRowsOptions) => {
       const getRows = props.unstable_dataSource?.getRows;
       if (!getRows) {
         return;
       }
+
+      const hasDeprecatedArgument = typeof options === 'string' || typeof options === 'number';
+      if (hasDeprecatedArgument) {
+        console.warn(
+          '`fetchRows` argument should be an options object (`FetchRowsOptions`). `GridRowId` argument is deprecated.',
+        );
+      }
+
+      const parentId = hasDeprecatedArgument || !options ? options : options.parentId;
+      const fetchParamsOverride =
+        hasDeprecatedArgument || options?.start === undefined || options?.end === undefined
+          ? {}
+          : { start: options.start, end: options.end };
 
       if (parentId) {
         nestedDataManager.queue([parentId]);
@@ -85,39 +124,62 @@ export const useGridDataSource = (
         apiRef.current.resetDataSourceState();
       }
 
-      const fetchParams = gridGetRowsParamsSelector(apiRef);
+      const fetchParams = { ...gridGetRowsParamsSelector(apiRef), ...fetchParamsOverride };
+      const startingIndex =
+        typeof fetchParams.start === 'string'
+          ? Math.max(filteredSortedRowIds.indexOf(fetchParams.start), 0)
+          : fetchParams.start;
 
       const cachedData = apiRef.current.unstable_dataSource.cache.get(fetchParams);
 
       if (cachedData !== undefined) {
         const rows = cachedData.rows;
-        apiRef.current.setRows(rows);
-        if (cachedData.rowCount) {
-          apiRef.current.setRowCount(cachedData.rowCount);
+        apiRef.current.setRowCount(cachedData.rowCount === undefined ? -1 : cachedData.rowCount);
+        if (isLazyLoaded) {
+          apiRef.current.unstable_replaceRows(startingIndex, rows);
+        } else {
+          apiRef.current.setRows(rows);
         }
+        apiRef.current.publishEvent('rowsFetched');
         return;
       }
 
+      // with lazy loading, only the initial load should show the loading overlay
+      const useLoadingIndicator = !isLazyLoaded || apiRef.current.getRowsCount() === 0;
       const isLoading = gridRowsLoadingSelector(apiRef);
-      if (!isLoading) {
+      if (!isLoading && useLoadingIndicator) {
         apiRef.current.setLoading(true);
       }
 
       try {
         const getRowsResponse = await getRows(fetchParams);
         apiRef.current.unstable_dataSource.cache.set(fetchParams, getRowsResponse);
-        if (getRowsResponse.rowCount) {
-          apiRef.current.setRowCount(getRowsResponse.rowCount);
+        apiRef.current.setRowCount(
+          getRowsResponse.rowCount === undefined ? -1 : getRowsResponse.rowCount,
+        );
+        if (isLazyLoaded) {
+          apiRef.current.unstable_replaceRows(startingIndex, getRowsResponse.rows);
+        } else {
+          apiRef.current.setRows(getRowsResponse.rows);
         }
-        apiRef.current.setRows(getRowsResponse.rows);
         apiRef.current.setLoading(false);
+        apiRef.current.publishEvent('rowsFetched');
       } catch (error) {
-        apiRef.current.setRows([]);
+        if (!isLazyLoaded) {
+          apiRef.current.setRows([]);
+        }
         apiRef.current.setLoading(false);
         onError?.(error as Error, fetchParams);
       }
     },
-    [nestedDataManager, apiRef, props.unstable_dataSource?.getRows, onError],
+    [
+      nestedDataManager,
+      apiRef,
+      props.unstable_dataSource?.getRows,
+      isLazyLoaded,
+      filteredSortedRowIds,
+      onError,
+    ],
   );
 
   const fetchRowChildren = React.useCallback<GridDataSourcePrivateApi['fetchRowChildren']>(
@@ -146,9 +208,7 @@ export const useGridDataSource = (
         const rows = cachedData.rows;
         nestedDataManager.setRequestSettled(id);
         apiRef.current.updateServerRows(rows, rowNode.path);
-        if (cachedData.rowCount) {
-          apiRef.current.setRowCount(cachedData.rowCount);
-        }
+        apiRef.current.setRowCount(cachedData.rowCount === undefined ? -1 : cachedData.rowCount);
         apiRef.current.setRowChildrenExpansion(id, true);
         apiRef.current.unstable_dataSource.setChildrenLoading(id, false);
         return;
@@ -172,9 +232,9 @@ export const useGridDataSource = (
         }
         nestedDataManager.setRequestSettled(id);
         apiRef.current.unstable_dataSource.cache.set(fetchParams, getRowsResponse);
-        if (getRowsResponse.rowCount) {
-          apiRef.current.setRowCount(getRowsResponse.rowCount);
-        }
+        apiRef.current.setRowCount(
+          getRowsResponse.rowCount === undefined ? -1 : getRowsResponse.rowCount,
+        );
         apiRef.current.updateServerRows(getRowsResponse.rows, rowNode.path);
         apiRef.current.setRowChildrenExpansion(id, true);
       } catch (error) {
@@ -260,13 +320,22 @@ export const useGridDataSource = (
   useGridApiMethod(apiRef, dataSourceApi, 'public');
   useGridApiMethod(apiRef, dataSourcePrivateApi, 'private');
 
-  useGridApiEventHandler(apiRef, 'sortModelChange', runIfServerMode(props.sortingMode, fetchRows));
-  useGridApiEventHandler(apiRef, 'filterModelChange', runIfServerMode(props.filterMode, fetchRows));
+  useGridApiEventHandler(
+    apiRef,
+    'sortModelChange',
+    runIf(props.sortingMode === 'server' && !isLazyLoaded, fetchRows),
+  );
+  useGridApiEventHandler(
+    apiRef,
+    'filterModelChange',
+    runIf(props.filterMode === 'server' && !isLazyLoaded, fetchRows),
+  );
   useGridApiEventHandler(
     apiRef,
     'paginationModelChange',
-    runIfServerMode(props.paginationMode, fetchRows),
+    runIf(props.paginationMode === 'server' && !isLazyLoaded, fetchRows),
   );
+  useGridApiEventHandler(apiRef, 'getRows', runIf(isLazyLoaded, fetchRows));
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
@@ -274,9 +343,11 @@ export const useGridDataSource = (
       isFirstRender.current = false;
       return;
     }
-    const newCache = getCache(props.unstable_dataSourceCache);
+    const newCache = getCache(props.unstable_dataSourceCache, {
+      chunkSize: cacheChunkSize,
+    });
     setCache((prevCache) => (prevCache !== newCache ? newCache : prevCache));
-  }, [props.unstable_dataSourceCache]);
+  }, [props.unstable_dataSourceCache, cacheChunkSize]);
 
   React.useEffect(() => {
     if (props.unstable_dataSource) {

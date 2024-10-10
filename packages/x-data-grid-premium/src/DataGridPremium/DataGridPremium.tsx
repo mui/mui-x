@@ -529,6 +529,18 @@ DataGridPremiumRaw.propTypes = {
    */
   keepNonExistentRowsSelected: PropTypes.bool,
   /**
+   * Used together with `unstable_dataSource` to enable lazy loading.
+   * If enabled, the grid stops adding `paginationModel` to the data requests (`getRows`)
+   * and starts sending `start` and `end` values depending on the loading mode and the scroll position.
+   * @default false
+   */
+  lazyLoading: PropTypes.bool,
+  /**
+   * If positive, the Data Grid will throttle data source requests on rendered rows interval change.
+   * @default 500
+   */
+  lazyLoadingRequestThrottleMs: PropTypes.number,
+  /**
    * If `true`, a loading overlay is displayed.
    * @default false
    */
@@ -1026,6 +1038,7 @@ DataGridPremiumRaw.propTypes = {
   scrollbarSize: PropTypes.number,
   /**
    * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
+   * If combined with `lazyLoading`, it defines the area where the next data request is triggered.
    * @default 80
    */
   scrollEndThreshold: PropTypes.number,
