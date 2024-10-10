@@ -576,6 +576,7 @@
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" }, "default": "false" },
+    "unstable_persistColumnsWidth": { "type": { "name": "bool" }, "default": "false" },
     "unstable_rowSpanning": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGridPro",
