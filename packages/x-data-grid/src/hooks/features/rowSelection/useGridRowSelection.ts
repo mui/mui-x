@@ -673,7 +673,7 @@ export const useGridRowSelection = (
         return;
       }
 
-      if (event.key === 'a' && (event.ctrlKey || event.metaKey)) {
+      if (String.fromCharCode(event.keyCode) === 'A' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
         selectRows(apiRef.current.getAllRowIds(), true);
       }

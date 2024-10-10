@@ -1044,7 +1044,11 @@ describeTreeView<
           act(() => {
             view.getItemRoot('1').focus();
           });
-          fireEvent.keyDown(view.getItemRoot('1'), { key: 'a', ctrlKey: true });
+          fireEvent.keyDown(view.getItemRoot('1'), {
+            key: 'a',
+            keyCode: 65,
+            ctrlKey: true,
+          });
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '2', '3', '4']);
         });
 
@@ -1058,7 +1062,11 @@ describeTreeView<
           act(() => {
             view.getItemRoot('1').focus();
           });
-          fireEvent.keyDown(view.getItemRoot('1'), { key: 'a', ctrlKey: true });
+          fireEvent.keyDown(view.getItemRoot('1'), {
+            key: 'a',
+            keyCode: 65,
+            ctrlKey: true,
+          });
           expect(view.getSelectedTreeItems()).to.deep.equal([]);
         });
 
@@ -1076,7 +1084,11 @@ describeTreeView<
           act(() => {
             view.getItemRoot('1').focus();
           });
-          fireEvent.keyDown(view.getItemRoot('1'), { key: 'a', ctrlKey: true });
+          fireEvent.keyDown(view.getItemRoot('1'), {
+            key: 'a',
+            keyCode: 65,
+            ctrlKey: true,
+          });
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '3', '4']);
         });
       });
