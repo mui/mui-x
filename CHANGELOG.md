@@ -12,11 +12,11 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - 📚 Updated ["What's new"](https://mui.com/x/whats-new/) page giving more detailed overview of the latest new features and other highlights
 - 📚 New [collapsible column groups demo](https://mui.com/x/react-data-grid/column-groups/#collapsible-column-groups) for the Data Grid component
 - 📚 New [Tree Item Customization](https://mui.com/x/react-tree-view/tree-item-customization/) documentation to learn how to use the new APIs to create custom Tree Items. The old APIs (`props.ContentComponent` and `props.ContentProps`) have been deprecated and will be removed in the new major version of the Tree View component.
-- 🌍 Improved Japanese (ja-JP) locale on the Data Grid component
+- 🌍 Improve Japanese (ja-JP) locale on the Data Grid component
 - 🐞 Bugfixes
 - 📚 Other documentation improvements
 
-Special thanks go out to our community contributors who have helped make this release possible:
+Special thanks go out to the community contributors who have helped make this release possible:
 @k-rajat19, @kalyan90, @uma-neko, @vfbiby.
 Following are all team members who have contributed to this release: @alelthomas, @arminmeh, @arthurbalduini,
 @cherniavskii, @flaviendelangle, @JCQuintas, @MBilalShafi, @noraleonte, @oliviertassinari, @samuelsycamore, @siriwatknp.
