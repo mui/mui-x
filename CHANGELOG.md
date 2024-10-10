@@ -63,6 +63,7 @@ Same changes as in `@mui/x-charts@7.20.0`.
 
 #### `@mui/x-tree-view@7.20.0`
 
+- [TreeItem] Deprecate the `ContentComponent` and `ContentProps` props (#14908) @flaviendelangle 
 - [TreeView] Rework how items are being rendered in Rich Tree View components (#14749) @flaviendelangle
 
 ### Docs
