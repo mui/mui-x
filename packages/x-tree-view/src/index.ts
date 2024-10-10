@@ -5,10 +5,11 @@ export * from './RichTreeView';
 
 // Tree Item
 export * from './TreeItem';
-export * from './TreeItem2';
-export * from './useTreeItem2';
-export * from './TreeItem2Icon';
-export * from './TreeItem2Provider';
+export * from './useTreeItem';
+export * from './TreeItemIcon';
+export * from './TreeItemProvider';
+export * from './TreeItemDragAndDropOverlay';
+export * from './TreeItemLabelInput';
 
 export { unstable_resetCleanupTracking } from './internals/hooks/useInstanceEventHandler';
 

@@ -7,7 +7,6 @@ import {
 } from '@mui/x-tree-view/internals/models';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import { TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 
 export type DescribeTreeViewTestRunner<TSignatures extends TreeViewAnyPluginSignature[]> = (
   params: DescribeTreeViewTestRunnerParams<TSignatures>,
@@ -129,10 +128,10 @@ export type DescribeTreeViewRenderer<TSignatures extends TreeViewAnyPluginSignat
     withErrorBoundary?: boolean;
   } & Omit<MergeSignaturesProperty<TSignatures, 'params'>, 'slots' | 'slotProps'> & {
       slots?: MergeSignaturesProperty<TSignatures, 'slots'> & {
-        item?: React.ElementType<TreeItemProps | TreeItem2Props>;
+        item?: React.ElementType<TreeItemProps>;
       };
       slotProps?: MergeSignaturesProperty<TSignatures, 'slotProps'> & {
-        item?: Partial<TreeItemProps> | Partial<TreeItem2Props>;
+        item?: Partial<TreeItemProps>;
       };
       experimentalFeatures?: TreeViewExperimentalFeatures<TSignatures>;
     },
@@ -143,7 +142,6 @@ export type DescribeTreeViewJSXRenderer = (
 ) => DescribeTreeViewRendererUtils;
 
 type TreeViewComponentName = 'RichTreeView' | 'RichTreeViewPro' | 'SimpleTreeView';
-type TreeItemComponentName = 'TreeItem' | 'TreeItem2';
 
 interface DescribeTreeViewTestRunnerParams<TSignatures extends TreeViewAnyPluginSignature[]> {
   /**
@@ -178,9 +176,7 @@ interface DescribeTreeViewTestRunnerParams<TSignatures extends TreeViewAnyPlugin
    * each item should receive a `label` and a `data-testid` equal to its `id`.
    */
   renderFromJSX: DescribeTreeViewJSXRenderer;
-  setup: `${TreeViewComponentName} + ${TreeItemComponentName}`;
   treeViewComponentName: TreeViewComponentName;
-  treeItemComponentName: TreeItemComponentName;
   TreeViewComponent: React.ElementType<any>;
   TreeItemComponent: React.ElementType<any>;
 }

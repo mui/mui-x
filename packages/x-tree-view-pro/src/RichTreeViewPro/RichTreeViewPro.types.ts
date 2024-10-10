@@ -3,7 +3,6 @@ import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { SlotComponentProps } from '@mui/utils';
 import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import { TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { TreeViewPublicAPI, TreeViewExperimentalFeatures } from '@mui/x-tree-view/internals';
 import { RichTreeViewProClasses } from './richTreeViewProClasses';
@@ -29,7 +28,7 @@ export interface RichTreeViewProSlots extends RichTreeViewProPluginSlots {
    * Custom component for the item.
    * @default TreeItem.
    */
-  item?: React.JSXElementConstructor<TreeItemProps> | React.JSXElementConstructor<TreeItem2Props>;
+  item?: React.JSXElementConstructor<TreeItemProps>;
 }
 
 export interface RichTreeViewProSlotProps<R extends {}, Multiple extends boolean | undefined>

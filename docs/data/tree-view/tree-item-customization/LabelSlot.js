@@ -2,9 +2,9 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
-import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
+import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
 
 export const MUI_X_PRODUCTS = [
   {
@@ -70,7 +70,7 @@ function CustomLabel({ children, className, secondaryLabel }) {
 }
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
-  const { publicAPI } = useTreeItem2Utils({
+  const { publicAPI } = useTreeItemUtils({
     itemId: props.itemId,
     children: props.children,
   });
@@ -78,7 +78,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const item = publicAPI.getItem(props.itemId);
 
   return (
-    <TreeItem2
+    <TreeItem
       {...props}
       ref={ref}
       slots={{

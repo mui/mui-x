@@ -5,22 +5,22 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import CircleIcon from '@mui/icons-material/Circle';
-import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
+import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
 import {
-  UseTreeItem2ContentSlotOwnProps,
-  UseTreeItem2LabelSlotOwnProps,
-  UseTreeItem2Status,
-} from '@mui/x-tree-view/useTreeItem2';
+  UseTreeItemContentSlotOwnProps,
+  UseTreeItemLabelSlotOwnProps,
+  UseTreeItemStatus,
+} from '@mui/x-tree-view/useTreeItem';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import {
-  TreeItem2,
-  TreeItem2Props,
-  TreeItem2SlotProps,
-} from '@mui/x-tree-view/TreeItem2';
+  TreeItem,
+  TreeItemProps,
+  TreeItemSlotProps,
+} from '@mui/x-tree-view/TreeItem';
 import { MUI_X_PRODUCTS } from './products';
 
-interface CustomLabelProps extends UseTreeItem2LabelSlotOwnProps {
-  status: UseTreeItem2Status;
+interface CustomLabelProps extends UseTreeItemLabelSlotOwnProps {
+  status: UseTreeItemStatus;
   onClick: React.MouseEventHandler<HTMLElement>;
 }
 
@@ -46,14 +46,14 @@ function CustomLabel({ children, status, onClick, ...props }: CustomLabelProps) 
 }
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
-  props: TreeItem2Props,
+  props: TreeItemProps,
   ref: React.Ref<HTMLLIElement>,
 ) {
-  const { interactions, status } = useTreeItem2Utils({
+  const { interactions, status } = useTreeItemUtils({
     itemId: props.itemId,
     children: props.children,
   });
-  const handleContentClick: UseTreeItem2ContentSlotOwnProps['onClick'] = (event) => {
+  const handleContentClick: UseTreeItemContentSlotOwnProps['onClick'] = (event) => {
     event.defaultMuiPrevented = true;
   };
 
@@ -62,7 +62,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   };
 
   return (
-    <TreeItem2
+    <TreeItem
       {...props}
       ref={ref}
       slots={{
@@ -72,7 +72,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
         {
           label: { onClick: handleIconButtonClick, status },
           content: { onClick: handleContentClick },
-        } as TreeItem2SlotProps
+        } as TreeItemSlotProps
       }
     />
   );

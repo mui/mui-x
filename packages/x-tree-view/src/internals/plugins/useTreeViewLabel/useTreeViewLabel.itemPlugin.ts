@@ -3,21 +3,21 @@ import { useTreeViewContext } from '../../TreeViewProvider';
 import { MuiCancellableEvent, TreeViewItemPlugin } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import {
-  UseTreeItem2LabelInputSlotPropsFromLabelEditing,
+  UseTreeItemLabelInputSlotPropsFromLabelEditing,
   UseTreeViewLabelSignature,
 } from './useTreeViewLabel.types';
 
-export const useTreeViewLabelItemPlugin: TreeViewItemPlugin<any> = ({ props }) => {
+export const useTreeViewLabelItemPlugin: TreeViewItemPlugin = ({ props }) => {
   const { instance } = useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewLabelSignature]>();
   const { label, itemId } = props;
 
-  const [labelInputValue, setLabelInputValue] = React.useState(label);
+  const [labelInputValue, setLabelInputValue] = React.useState(label as string);
 
   const isItemBeingEdited = instance.isItemBeingEdited(itemId);
 
   React.useEffect(() => {
     if (!isItemBeingEdited) {
-      setLabelInputValue(label);
+      setLabelInputValue(label as string);
     }
   }, [isItemBeingEdited, label]);
 
@@ -26,7 +26,7 @@ export const useTreeViewLabelItemPlugin: TreeViewItemPlugin<any> = ({ props }) =
       labelInput: ({
         externalEventHandlers,
         interactions,
-      }): UseTreeItem2LabelInputSlotPropsFromLabelEditing => {
+      }): UseTreeItemLabelInputSlotPropsFromLabelEditing => {
         const editable = instance.isItemEditable(itemId);
 
         if (!editable) {

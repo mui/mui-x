@@ -3,18 +3,18 @@ import Box from '@mui/material/Box';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { useTreeItem2, UseTreeItem2Parameters } from '@mui/x-tree-view/useTreeItem2';
+import { useTreeItem, UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
 import {
-  TreeItem2Content,
-  TreeItem2IconContainer,
-  TreeItem2GroupTransition,
-  TreeItem2Label,
-  TreeItem2Root,
-  TreeItem2Checkbox,
-} from '@mui/x-tree-view/TreeItem2';
-import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
-import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
-import { TreeItem2DragAndDropOverlay } from '@mui/x-tree-view/TreeItem2DragAndDropOverlay';
+  TreeItemContent,
+  TreeItemIconContainer,
+  TreeItemGroupTransition,
+  TreeItemLabel,
+  TreeItemRoot,
+  TreeItemCheckbox,
+} from '@mui/x-tree-view/TreeItem';
+import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
+import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
+import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
 
 const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   {
@@ -47,7 +47,7 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
 ];
 
 interface CustomTreeItemProps
-  extends Omit<UseTreeItem2Parameters, 'rootRef'>,
+  extends Omit<UseTreeItemParameters, 'rootRef'>,
     Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {}
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
@@ -65,7 +65,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     getGroupTransitionProps,
     getDragAndDropOverlayProps,
     status,
-  } = useTreeItem2({ id, itemId, children, label, disabled, rootRef: ref });
+  } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
   const { draggable, onDragStart, onDragOver, onDragEnd, ...otherRootProps } =
     getRootProps(other);
@@ -84,27 +84,27 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   };
 
   return (
-    <TreeItem2Provider itemId={itemId}>
-      <TreeItem2Root {...otherRootProps}>
-        <TreeItem2Content {...getContentProps()}>
-          <TreeItem2IconContainer {...getIconContainerProps()}>
-            <TreeItem2Icon status={status} />
-          </TreeItem2IconContainer>
-          <TreeItem2IconContainer
+    <TreeItemProvider itemId={itemId}>
+      <TreeItemRoot {...otherRootProps}>
+        <TreeItemContent {...getContentProps()}>
+          <TreeItemIconContainer {...getIconContainerProps()}>
+            <TreeItemIcon status={status} />
+          </TreeItemIconContainer>
+          <TreeItemIconContainer
             draggable={draggable}
             onDragStart={handleDragStart}
             onDragOver={onDragOver}
             onDragEnd={onDragEnd}
           >
             <DragIndicatorIcon />
-          </TreeItem2IconContainer>
-          <TreeItem2Checkbox {...getCheckboxProps()} />
-          <TreeItem2Label {...getLabelProps()} />
-          <TreeItem2DragAndDropOverlay {...getDragAndDropOverlayProps()} />
-        </TreeItem2Content>
-        {children && <TreeItem2GroupTransition {...getGroupTransitionProps()} />}
-      </TreeItem2Root>
-    </TreeItem2Provider>
+          </TreeItemIconContainer>
+          <TreeItemCheckbox {...getCheckboxProps()} />
+          <TreeItemLabel {...getLabelProps()} />
+          <TreeItemDragAndDropOverlay {...getDragAndDropOverlayProps()} />
+        </TreeItemContent>
+        {children && <TreeItemGroupTransition {...getGroupTransitionProps()} />}
+      </TreeItemRoot>
+    </TreeItemProvider>
   );
 });
 
