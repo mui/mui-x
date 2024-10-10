@@ -204,11 +204,11 @@ describe('<DataGridPro /> - Row selection', () => {
   // Context: https://github.com/mui/mui-x/issues/14859
   it('should not throw when controlling a selection model', () => {
     function TestDataGrid() {
-      const [selectionModel, setSelectionModel] = React.useState<GridRowSelectionModel>([]);
+      const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>([]);
       return (
         <TreeDataGrid
-          selectionModel={selectionModel}
-          onRowSelectionModelChange={setSelectionModel}
+          rowSelectionModel={rowSelectionModel}
+          onRowSelectionModelChange={setRowSelectionModel}
         />
       );
     }
