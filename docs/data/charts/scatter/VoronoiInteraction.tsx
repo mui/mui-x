@@ -16,18 +16,6 @@ import {
 } from '../dataset/spaceLaunchesCost';
 import { possibleAsteroidImpactProbabilityBySizeScatter } from '../dataset/possibleAsteroidImpact';
 import { starsScatterMagnitudeByTemperatureByType } from '../dataset/starClassification';
-import { lifeExpectancyScatterSeries } from '../dataset/lifeExpectancyVsGdp';
-import {
-  volcanoEruptionsScatterSeries,
-  volcanoEruptionsScatterSeriesByContinent,
-  volcanoEruptionsScatterSeriesByVolcanoType,
-} from '../dataset/volcanoEruptions';
-
-const formatter = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-  maximumFractionDigits: 0,
-});
 
 export default function VoronoiInteraction() {
   const [voronoiMaxRadius, setVoronoiMaxRadius] = React.useState<number>(25);
@@ -43,72 +31,6 @@ export default function VoronoiInteraction() {
 
   return (
     <Stack direction="column" sx={{ width: '100%' }}>
-      <ScatterChart
-        height={300}
-        disableVoronoi={disableVoronoi}
-        voronoiMaxRadius={undefinedRadius ? undefined : voronoiMaxRadius}
-        margin={{ left: 60 }}
-        yAxis={[
-          {
-            label: 'longest eruption duration',
-            // valueFormatter: (value) => `${value} years`,
-          },
-        ]}
-        xAxis={[
-          {
-            scaleType: 'log',
-            label: 'times erupted',
-            // max: 200_000,
-            // min: 500,
-            // valueFormatter: formatter.format,
-          },
-        ]}
-        series={volcanoEruptionsScatterSeriesByVolcanoType}
-      />
-      <ScatterChart
-        height={300}
-        disableVoronoi={disableVoronoi}
-        voronoiMaxRadius={undefinedRadius ? undefined : voronoiMaxRadius}
-        margin={{ left: 60 }}
-        yAxis={[
-          {
-            label: 'longest eruption duration',
-            // valueFormatter: (value) => `${value} years`,
-          },
-        ]}
-        xAxis={[
-          {
-            // scaleType: 'log',
-            label: 'times erupted',
-            // max: 200_000,
-            // min: 500,
-            // valueFormatter: formatter.format,
-          },
-        ]}
-        series={volcanoEruptionsScatterSeriesByContinent}
-      />
-      <ScatterChart
-        height={300}
-        disableVoronoi={disableVoronoi}
-        voronoiMaxRadius={undefinedRadius ? undefined : voronoiMaxRadius}
-        margin={{ left: 60 }}
-        yAxis={[
-          {
-            label: 'Life expectancy at birth',
-            valueFormatter: (value) => `${value} years`,
-          },
-        ]}
-        xAxis={[
-          {
-            scaleType: 'log',
-            label: 'GDP per capita',
-            max: 200_000,
-            min: 500,
-            valueFormatter: formatter.format,
-          },
-        ]}
-        series={lifeExpectancyScatterSeries}
-      />
       <ScatterChart
         height={400}
         disableVoronoi={disableVoronoi}

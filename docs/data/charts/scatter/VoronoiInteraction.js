@@ -16,7 +16,6 @@ import {
 } from '../dataset/spaceLaunchesCost';
 import { possibleAsteroidImpactProbabilityBySizeScatter } from '../dataset/possibleAsteroidImpact';
 import { starsScatterMagnitudeByTemperatureByType } from '../dataset/starClassification';
-import { lifeExpectancyScatterSeries } from '../dataset/lifeExpectancyVsGdp';
 
 const formatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
