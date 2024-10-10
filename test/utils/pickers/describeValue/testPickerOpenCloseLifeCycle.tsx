@@ -182,8 +182,6 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
     });
 
     it('should not call onClose or onAccept when selecting a date and `props.closeOnSelect` is false', function test() {
-      // increase the timeout of this test as it tends to sometimes fail on CI with `DesktopDateTimeRangePicker` or `MobileDateTimeRangePicker`
-      this.timeout(10000);
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -286,10 +284,12 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose when clicking outside of the picker without prior change', function test() {
+    it('should call onClose when clicking outside of the picker without prior change', function test(t = {}) {
       // TODO: Fix this test and enable it on mobile and date-range
       if (pickerParams.variant === 'mobile' || isRangeType) {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       const onChange = spy();
@@ -315,10 +315,12 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onAccept with the live value when clicking outside of the picker', function test() {
+    it('should call onClose and onAccept with the live value when clicking outside of the picker', function test(t = {}) {
       // TODO: Fix this test and enable it on mobile and date-range
       if (pickerParams.variant === 'mobile' || isRangeType) {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       const onChange = spy();

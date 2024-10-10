@@ -39,3 +39,9 @@ export function createXMochaHooks(coreMochaHooks = {}) {
 
   return mochaHooks;
 }
+
+// So we can mock files without having to have a global override in vitest
+// eslint-disable-next-line no-undef
+globalThis.vi = {
+  mock: () => {},
+};

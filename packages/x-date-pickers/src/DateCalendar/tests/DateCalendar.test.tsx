@@ -128,10 +128,13 @@ describe('<DateCalendar />', () => {
   });
 
   describe('with fake timers', () => {
-    clock.withFakeTimers();
+    // TODO: remove when migrated to vitest
+    if (process.env.MUI_VITEST !== 'true') {
+      clock.withFakeTimers();
+    }
 
     // test: https://github.com/mui/mui-x/issues/12373
-    it('should not reset day to `startOfDay` if value already exists when finding the closest enabled date', () => {
+    it('should not reset day to `startOfDay` if value already exists when finding the closest enabled date', async () => {
       const onChange = spy();
       const defaultDate = adapterToUse.date('2019-01-02T11:12:13.550Z');
       render(<DateCalendar onChange={onChange} disablePast defaultValue={defaultDate} />);
@@ -140,8 +143,13 @@ describe('<DateCalendar />', () => {
         screen.getByRole('button', { name: 'calendar view is open, switch to year view' }),
       );
       fireEvent.click(screen.getByRole('radio', { name: '2020' }));
-      // Finish the transition to the day view
-      clock.runToLast();
+
+      if (process.env.MUI_VITEST !== 'true') {
+        // Finish the transition to the day view
+        clock.runToLast();
+      } else {
+        await screen.findByRole('gridcell', { name: '1' });
+      }
 
       fireEvent.click(screen.getByRole('gridcell', { name: '1' }));
       fireEvent.click(
@@ -520,9 +528,11 @@ describe('<DateCalendar />', () => {
       expect(screen.getByTestId('calendar-month-and-year-text')).to.have.text('January 2022');
     });
 
-    it('should scroll to show the selected year', function test() {
+    it('should scroll to show the selected year', function test(t = {}) {
       if (isJSDOM) {
-        this.skip(); // Needs layout
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       render(
         <DateCalendar
