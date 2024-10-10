@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { EventHandlers } from '@mui/utils';
+import type { TreeItemProps } from '../../TreeItem';
 import type {
-  UseTreeItem2ContentSlotOwnProps,
-  UseTreeItem2DragAndDropOverlaySlotOwnProps,
-  UseTreeItem2LabelInputSlotOwnProps,
-  UseTreeItem2RootSlotOwnProps,
-} from '../../useTreeItem2';
-import type { UseTreeItem2Interactions } from '../../hooks/useTreeItem2Utils/useTreeItem2Utils';
+  UseTreeItemContentSlotOwnProps,
+  UseTreeItemDragAndDropOverlaySlotOwnProps,
+  UseTreeItemLabelInputSlotOwnProps,
+  UseTreeItemRootSlotOwnProps,
+} from '../../useTreeItem';
+import type { UseTreeItemInteractions } from '../../hooks/useTreeItemUtils/useTreeItemUtils';
 
 export interface TreeViewItemPluginSlotPropsEnhancerParams {
   rootRefObject: React.MutableRefObject<HTMLLIElement | null>;
@@ -14,7 +15,7 @@ export interface TreeViewItemPluginSlotPropsEnhancerParams {
   externalEventHandlers: EventHandlers;
   // TODO v9: Remove "Pick" once the old TreeItem is removed.
   interactions: Pick<
-    UseTreeItem2Interactions,
+    UseTreeItemInteractions,
     'handleSaveItemLabel' | 'handleCancelItemLabelEditing'
   >;
 }
@@ -24,10 +25,10 @@ type TreeViewItemPluginSlotPropsEnhancer<TSlotProps> = (
 ) => Partial<TSlotProps>;
 
 export interface TreeViewItemPluginSlotPropsEnhancers {
-  root?: TreeViewItemPluginSlotPropsEnhancer<UseTreeItem2RootSlotOwnProps>;
-  content?: TreeViewItemPluginSlotPropsEnhancer<UseTreeItem2ContentSlotOwnProps>;
-  dragAndDropOverlay?: TreeViewItemPluginSlotPropsEnhancer<UseTreeItem2DragAndDropOverlaySlotOwnProps>;
-  labelInput?: TreeViewItemPluginSlotPropsEnhancer<UseTreeItem2LabelInputSlotOwnProps>;
+  root?: TreeViewItemPluginSlotPropsEnhancer<UseTreeItemRootSlotOwnProps>;
+  content?: TreeViewItemPluginSlotPropsEnhancer<UseTreeItemContentSlotOwnProps>;
+  dragAndDropOverlay?: TreeViewItemPluginSlotPropsEnhancer<UseTreeItemDragAndDropOverlaySlotOwnProps>;
+  labelInput?: TreeViewItemPluginSlotPropsEnhancer<UseTreeItemLabelInputSlotOwnProps>;
 }
 
 export interface TreeViewItemPluginResponse {
@@ -54,6 +55,6 @@ export interface TreeViewItemPluginOptions<TProps extends {}>
   props: TProps;
 }
 
-export type TreeViewItemPlugin<TProps extends {}> = (
-  options: TreeViewItemPluginOptions<TProps>,
+export type TreeViewItemPlugin = (
+  options: TreeViewItemPluginOptions<TreeItemProps>,
 ) => void | TreeViewItemPluginResponse;
