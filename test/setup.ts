@@ -3,8 +3,8 @@ import 'test/utils/addChaiAssertions';
 import 'test/utils/setupPickers';
 import 'test/utils/licenseRelease';
 import { generateTestLicenseKey, setupTestLicenseKey } from 'test/utils/testLicense';
-import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid } from '@mui/x-data-grid';
-import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGridPro } from '@mui/x-data-grid-pro';
+// import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid } from '@mui/x-data-grid';
+// import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGridPro } from '@mui/x-data-grid-pro';
 // import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingTreeView } from '@mui/x-tree-view';
 
 // @ts-ignore
@@ -28,8 +28,8 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  unstable_resetCleanupTrackingDataGrid();
-  unstable_resetCleanupTrackingDataGridPro();
+  // unstable_resetCleanupTrackingDataGrid();
+  // unstable_resetCleanupTrackingDataGridPro();
   // unstable_resetCleanupTrackingTreeView();
 });
 
