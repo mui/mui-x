@@ -965,7 +965,8 @@ describe('<DataGrid /> - Layout & warnings', () => {
       }).toErrorDev([
         'The data grid component requires all rows to have a unique `id` property',
         'The data grid component requires all rows to have a unique `id` property',
-        'The above error occurred in the <ForwardRef(DataGrid)> component',
+        // Cut off the end of the phrase as vitest seems to rename DataGrid into DataGrid2
+        'The above error occurred in the <ForwardRef(DataGrid',
       ]);
       expect((errorRef.current as any).errors).to.have.length(1);
       expect((errorRef.current as any).errors[0].toString()).to.include(
