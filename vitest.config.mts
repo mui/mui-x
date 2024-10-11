@@ -42,6 +42,9 @@ export default defineConfig({
     setupFiles: ['test/setup.ts'],
     // Required for some datepickers tests that contain early returns.
     passWithNoTests: true,
+    sequence: {
+      hooks: 'list',
+    },
     env: {
       MUI_VITEST: 'true',
     },
