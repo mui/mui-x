@@ -33,7 +33,6 @@ const GridFooterContainerRoot = styled('div', {
   alignItems: 'center',
   minHeight: 52,
   borderTop: '1px solid',
-  boxSizing: 'content-box',
 });
 
 const GridFooterContainer = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(
