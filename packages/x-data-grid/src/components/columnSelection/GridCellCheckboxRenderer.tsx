@@ -107,6 +107,10 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
         ? isChecked && !isIndeterminate
         : isChecked;
 
+    if (id === 'auto-generated-row-company/20th Century Fox') {
+      console.log({ isChecked, isIndeterminate, checked });
+    }
+
     return (
       <rootProps.slots.baseCheckbox
         ref={handleRef}

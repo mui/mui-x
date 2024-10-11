@@ -6,7 +6,7 @@ import type {
 } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
-import { TreeViewSelectionPropagation } from '../../../models';
+import { TreeViewItemId, TreeViewSelectionPropagation } from '../../../models';
 
 export interface UseTreeViewSelectionPublicAPI {
   /**
@@ -168,6 +168,11 @@ export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{
     UseTreeViewItemsSignature,
   ];
 }>;
+
+export interface TreeViewSelectionChanges {
+  added: TreeViewItemId[];
+  removed: TreeViewItemId[];
+}
 
 export interface UseTreeItem2CheckboxSlotPropsFromSelection {
   visible?: boolean;

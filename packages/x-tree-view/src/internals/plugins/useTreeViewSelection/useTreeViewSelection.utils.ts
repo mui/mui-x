@@ -1,7 +1,10 @@
 import { TreeViewItemId, TreeViewSelectionPropagation } from '../../../models';
 import { TreeViewInstance } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
-import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
+import {
+  TreeViewSelectionChanges,
+  UseTreeViewSelectionSignature,
+} from './useTreeViewSelection.types';
 
 /**
  * Transform the `selectedItems` model to be an array if it was a string or null.
@@ -32,18 +35,20 @@ export const getAddedAndRemovedItems = ({
   instance,
   oldModel,
   newModel,
+  explicitChanges,
 }: {
   instance: TreeViewInstance<[UseTreeViewSelectionSignature]>;
   oldModel: TreeViewItemId[];
   newModel: TreeViewItemId[];
+  explicitChanges?: TreeViewSelectionChanges;
 }) => {
   const newModelLookup = getLookupFromArray(newModel);
   const addedItems = newModel.filter((itemId) => !instance.isItemSelected(itemId));
   const removedItems = oldModel.filter((itemId) => !newModelLookup[itemId]);
 
   return {
-    added: addedItems,
-    removed: removedItems,
+    added: [...(explicitChanges?.added ?? []), ...addedItems],
+    removed: [...(explicitChanges?.removed ?? []), ...removedItems],
   };
 };
 
@@ -52,11 +57,13 @@ export const propagateSelection = ({
   selectionPropagation,
   newModel,
   oldModel,
+  additionalItemsToPropagate,
 }: {
   instance: TreeViewInstance<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>;
   selectionPropagation: TreeViewSelectionPropagation;
   newModel: TreeViewItemId[];
   oldModel: TreeViewItemId[];
+  additionalItemsToPropagate?: TreeViewItemId[];
 }): string[] => {
   if (!selectionPropagation.descendants && !selectionPropagation.parents) {
     return newModel;
@@ -69,6 +76,16 @@ export const propagateSelection = ({
     instance,
     newModel,
     oldModel,
+  });
+
+  additionalItemsToPropagate?.forEach((itemId) => {
+    if (newModelLookup[itemId]) {
+      if (!changes.added.includes(itemId)) {
+        changes.added.push(itemId);
+      }
+    } else if (!changes.removed.includes(itemId)) {
+      changes.removed.push(itemId);
+    }
   });
 
   changes.added.forEach((addedItemId) => {

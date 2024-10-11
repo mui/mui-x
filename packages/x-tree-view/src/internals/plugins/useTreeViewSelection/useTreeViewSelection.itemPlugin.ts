@@ -89,17 +89,19 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin<TreeItemProps | 
           interactions.handleCheckboxSelection(event);
         };
 
+        const checkboxStatus = getCheckboxStatus({
+          instance,
+          itemId,
+          selectionPropagation,
+          selected: status.selected,
+        });
+
         return {
           visible: checkboxSelection,
           disabled: disableSelection || status.disabled,
           tabIndex: -1,
           onChange: handleChange,
-          ...getCheckboxStatus({
-            instance,
-            itemId,
-            selectionPropagation,
-            selected: status.selected,
-          }),
+          ...checkboxStatus,
         };
       },
     },

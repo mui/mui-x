@@ -9,6 +9,7 @@ import {
   getNonDisabledItemsInRange,
 } from '../../utils/tree';
 import {
+  TreeViewSelectionChanges,
   UseTreeViewSelectionInstance,
   UseTreeViewSelectionSignature,
 } from './useTreeViewSelection.types';
@@ -44,6 +45,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   const setSelectedItems = (
     event: React.SyntheticEvent,
     newModel: typeof params.defaultSelectedItems,
+    additionalItemsToPropagate?: TreeViewItemId[],
   ) => {
     let cleanModel: typeof newModel;
 
@@ -56,6 +58,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
         selectionPropagation: params.selectionPropagation,
         newModel: newModel as string[],
         oldModel: models.selectedItems.value as string[],
+        additionalItemsToPropagate,
       });
     } else {
       cleanModel = newModel;
@@ -130,7 +133,13 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       }
     }
 
-    setSelectedItems(event, newSelected);
+    setSelectedItems(
+      event,
+      newSelected,
+      // If shouldBeSelected === instance.isItemSelect(itemId), we still want to propagate the select.
+      // This is useful when the element is in an indeterminate state.
+      [itemId],
+    );
     lastSelectedItem.current = itemId;
     lastSelectedRange.current = {};
   };
