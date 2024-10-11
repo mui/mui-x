@@ -854,6 +854,11 @@ export interface DataGridProSharedPropsWithDefaultValue {
    * @default { parents: false, descendants: false }
    */
   rowSelectionPropagation: GridRowSelectionPropagation;
+  /**
+   * If `true`, displays the data in a list view.
+   * Use in combination with `listColumn`.
+   */
+  listView: boolean;
 }
 
 export interface DataGridProSharedPropsWithoutDefaultValue {
@@ -862,7 +867,9 @@ export interface DataGridProSharedPropsWithoutDefaultValue {
    */
   headerFilterHeight?: number;
   unstable_dataSource?: GridDataSource;
-  listView?: boolean;
+  /**
+   * Definition of the column rendered when the `listView` prop is enabled.
+   */
   listColumn?: GridColDef;
 }
 
