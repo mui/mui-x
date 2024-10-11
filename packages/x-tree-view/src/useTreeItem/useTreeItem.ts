@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { EventHandlers } from '@mui/utils';
 import extractEventHandlers from '@mui/utils/extractEventHandlers';
