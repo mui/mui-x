@@ -169,11 +169,6 @@ export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{
   ];
 }>;
 
-export interface TreeViewSelectionChanges {
-  added: TreeViewItemId[];
-  removed: TreeViewItemId[];
-}
-
 export interface UseTreeItem2CheckboxSlotPropsFromSelection {
   visible?: boolean;
   checked?: boolean;

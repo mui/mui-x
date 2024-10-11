@@ -9,7 +9,6 @@ import {
   getNonDisabledItemsInRange,
 } from '../../utils/tree';
 import {
-  TreeViewSelectionChanges,
   UseTreeViewSelectionInstance,
   UseTreeViewSelectionSignature,
 } from './useTreeViewSelection.types';
