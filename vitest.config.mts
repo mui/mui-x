@@ -6,6 +6,7 @@ export default defineConfig({
       ...[
         { lib: 'charts', plans: ['pro'] },
         { lib: 'date-pickers', plans: ['pro'] },
+        { lib: 'data-grid', plans: ['pro', 'premium', 'generator'] },
         { lib: 'internals' },
         { lib: 'license' },
       ].flatMap((v) => {

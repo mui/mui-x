@@ -155,12 +155,14 @@ describe('<DataGrid /> - Slots', () => {
     });
   });
 
-  it('should throw if a component is used without providing the context', function test() {
+  it('should throw if a component is used without providing the context', function test(t = {}) {
     // TODO is this fixed?
     if (!/jsdom/.test(window.navigator.userAgent)) {
       // can't catch render errors in the browser for unknown reason
       // tried try-catch + error boundary + window onError preventDefault
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     expect(() => {

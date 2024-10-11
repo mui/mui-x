@@ -6,6 +6,7 @@ const packages = [
   'x-charts-pro',
   'x-date-pickers',
   'x-date-pickers-pro',
+  'x-data-grid',
   'x-internals',
 ];
 

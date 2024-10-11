@@ -13,14 +13,16 @@ describe('useGridApiEventHandler', () => {
   const { render } = createRenderer();
 
   describe('FinalizationRegistry-based implementation', () => {
-    it('should unsubscribe event listeners registered by uncommitted components', async function test() {
+    it('should unsubscribe event listeners registered by uncommitted components', async function test(t = {}) {
       if (
         !/jsdom/.test(window.navigator.userAgent) ||
         typeof FinalizationRegistry === 'undefined' ||
         typeof global.gc === 'undefined'
       ) {
         // Needs ability to trigger the garbage collector and support for FinalizationRegistry (added in node 14)
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       const useGridApiEventHandler = createUseGridApiEventHandler({

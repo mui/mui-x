@@ -64,10 +64,12 @@ describe('<DataGrid /> - Cells', () => {
       expect(color).not.to.equal('rgba(0, 0, 0, 0)');
     }
 
-    it('should add right border to cells', function test() {
+    it('should add right border to cells', function test(t = {}) {
       if (isJSDOM) {
         // Doesn't work with mocked window.getComputedStyle
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(
@@ -86,10 +88,12 @@ describe('<DataGrid /> - Cells', () => {
     });
 
     // See https://github.com/mui/mui-x/issues/4122
-    it('should add right border to cells in the last row', function test() {
+    it('should add right border to cells in the last row', function test(t = {}) {
       if (isJSDOM) {
         // Doesn't work with mocked window.getComputedStyle
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(
@@ -188,9 +192,11 @@ describe('<DataGrid /> - Cells', () => {
     }).toWarnDev(['MUI X: The cell with id=1 and field=brand received focus.']);
   });
 
-  it('should keep the focused cell/row rendered in the DOM if it scrolls outside the viewport', function test() {
+  it('should keep the focused cell/row rendered in the DOM if it scrolls outside the viewport', function test(t = {}) {
     if (isJSDOM) {
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     const rowHeight = 50;
     const defaultData = getBasicGridData(20, 20);
@@ -220,9 +226,12 @@ describe('<DataGrid /> - Cells', () => {
   });
 
   // See https://github.com/mui/mui-x/issues/6378
-  it('should not cause scroll jump when focused cell mounts in the render zone', async function test() {
+  it('should not cause scroll jump when focused cell mounts in the render zone', async function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // Needs layout
+      // Needs layout
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     const rowHeight = 50;

@@ -268,10 +268,12 @@ describe('<DataGrid /> - Column spanning', () => {
       expect(getActiveCell()).to.equal('0-0');
     });
 
-    it('should work with row virtualization', function test() {
+    it('should work with row virtualization', function test(t = {}) {
       if (isJSDOM) {
         // needs virtualization
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       const rows = [
@@ -333,9 +335,12 @@ describe('<DataGrid /> - Column spanning', () => {
       expect(activeCell).to.equal('3-0');
     });
 
-    it('should work with column virtualization', function test() {
+    it('should work with column virtualization', function test(t = {}) {
       if (isJSDOM) {
-        this.skip(); // needs layout
+        // needs layout
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(
@@ -439,9 +444,12 @@ describe('<DataGrid /> - Column spanning', () => {
       expect(getActiveCell()).to.equal('1-2');
     });
 
-    it('should scroll the whole cell into view when `colSpan` > 1', function test() {
+    it('should scroll the whole cell into view when `colSpan` > 1', function test(t = {}) {
       if (isJSDOM) {
-        this.skip(); // needs layout
+        // needs layout
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(
@@ -720,10 +728,12 @@ describe('<DataGrid /> - Column spanning', () => {
     checkRows(2, ['Adidas', 'Puma']);
   });
 
-  it('should work with column virtualization', function test() {
+  it('should work with column virtualization', function test(t = {}) {
     if (isJSDOM) {
       // Need layouting for column virtualization
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     render(
@@ -772,10 +782,12 @@ describe('<DataGrid /> - Column spanning', () => {
     );
   });
 
-  it('should work with both column and row virtualization', function test() {
+  it('should work with both column and row virtualization', function test(t = {}) {
     if (isJSDOM) {
       // Need layouting for column virtualization
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     const rowHeight = 50;
@@ -836,10 +848,12 @@ describe('<DataGrid /> - Column spanning', () => {
     );
   });
 
-  it('should work with pagination and column virtualization', function test() {
+  it('should work with pagination and column virtualization', function test(t = {}) {
     if (isJSDOM) {
       // Need layouting for column virtualization
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     const rowHeight = 50;

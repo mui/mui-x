@@ -158,10 +158,12 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(getActiveCell()).to.equal('1-0'); // Already on the 1st cell
     });
 
-    it('should move down by the amount of rows visible on screen when pressing "PageDown"', function test() {
+    it('should move down by the amount of rows visible on screen when pressing "PageDown"', function test(t = {}) {
       if (isJSDOM) {
         // This test is not relevant if we can't choose the actual height
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(<NavigationTestCaseNoScrollX />);
@@ -174,10 +176,12 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(getActiveCell()).to.equal(`9-1`);
     });
 
-    it('should move down by the amount of rows visible on screen when pressing Space key', function test() {
+    it('should move down by the amount of rows visible on screen when pressing Space key', function test(t = {}) {
       if (isJSDOM) {
         // This test is not relevant if we can't choose the actual height
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(<NavigationTestCaseNoScrollX />);
@@ -190,10 +194,12 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(getActiveCell()).to.equal(`9-1`);
     });
 
-    it('should move up by the amount of rows visible on screen when pressing "PageUp"', function test() {
+    it('should move up by the amount of rows visible on screen when pressing "PageUp"', function test(t = {}) {
       if (isJSDOM) {
         // This test is not relevant if we can't choose the actual height
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(<NavigationTestCaseNoScrollX />);
@@ -204,10 +210,12 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(getActiveCell()).to.equal(`3-1`);
     });
 
-    it('should move to the first row before moving to column header when pressing "PageUp"', function test() {
+    it('should move to the first row before moving to column header when pressing "PageUp"', function test(t = {}) {
       if (isJSDOM) {
         // This test is not relevant if we can't choose the actual height
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(<NavigationTestCaseNoScrollX />);
@@ -223,10 +231,12 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(getActiveColumnHeader()).to.equal(`1`);
     });
 
-    it('should move to the first row before moving to column header when pressing "PageUp" on page > 0', function test() {
+    it('should move to the first row before moving to column header when pressing "PageUp" on page > 0', function test(t = {}) {
       if (isJSDOM) {
         // This test is not relevant if we can't choose the actual height
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(<NavigationTestCaseNoScrollX hideFooter={false} />);
@@ -309,10 +319,12 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   describe('column header navigation', () => {
-    it('should scroll horizontally when navigating between column headers with arrows', function test() {
+    it('should scroll horizontally when navigating between column headers with arrows', function test(t = {}) {
       if (isJSDOM) {
         // Need layouting for column virtualization
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       render(
         <div style={{ width: 60, height: 300 }}>
@@ -326,10 +338,12 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(virtualScroller.scrollLeft).not.to.equal(0);
     });
 
-    it('should scroll horizontally when navigating between column headers with arrows even if rows are empty', function test() {
+    it('should scroll horizontally when navigating between column headers with arrows even if rows are empty', function test(t = {}) {
       if (isJSDOM) {
         // Need layouting for column virtualization
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       render(
         <div style={{ width: 60, height: 300 }}>
@@ -379,10 +393,12 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(getActiveColumnHeader()).to.equal('0');
     });
 
-    it('should move down by the amount of rows visible on screen when pressing "PageDown"', function test() {
+    it('should move down by the amount of rows visible on screen when pressing "PageDown"', function test(t = {}) {
       if (isJSDOM) {
         // This test is not relevant if we can't choose the actual height
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(<NavigationTestCaseNoScrollX />);
@@ -392,10 +408,12 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(getActiveCell()).to.equal(`5-1`);
     });
 
-    it('should move focus when the focus is on a column header button', function test() {
+    it('should move focus when the focus is on a column header button', function test(t = {}) {
       if (isJSDOM) {
         // This test is not relevant if we can't choose the actual height
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(<NavigationTestCaseNoScrollX />);
@@ -499,10 +517,12 @@ describe('<DataGrid /> - Keyboard', () => {
       );
     }
 
-    it('should scroll horizontally when navigating between column group headers with arrows', function test() {
+    it('should scroll horizontally when navigating between column group headers with arrows', function test(t = {}) {
       if (isJSDOM) {
         // Need layouting for column virtualization
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       render(
         <div style={{ width: 60, height: 300 }}>
@@ -520,10 +540,12 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(virtualScroller.scrollLeft).not.to.equal(0);
     });
 
-    it('should scroll horizontally when navigating between column headers with arrows even if rows are empty', function test() {
+    it('should scroll horizontally when navigating between column headers with arrows even if rows are empty', function test(t = {}) {
       if (isJSDOM) {
         // Need layouting for column virtualization
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       render(
         <div style={{ width: 60, height: 300 }}>
