@@ -484,21 +484,6 @@ DataGridProRaw.propTypes = {
    */
   keepNonExistentRowsSelected: PropTypes.bool,
   /**
-   * Definition of the column rendered when the `listView` prop is enabled.
-   */
-  listColumn: PropTypes.shape({
-    align: PropTypes.oneOf(['center', 'left', 'right']),
-    cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-    display: PropTypes.oneOf(['flex', 'text']),
-    field: PropTypes.string.isRequired,
-    renderCell: PropTypes.func,
-  }),
-  /**
-   * If `true`, displays the data in a list view.
-   * Use in combination with `listColumn`.
-   */
-  listView: PropTypes.bool,
-  /**
    * If `true`, a loading overlay is displayed.
    * @default false
    */
@@ -1019,6 +1004,21 @@ DataGridProRaw.propTypes = {
     get: PropTypes.func.isRequired,
     set: PropTypes.func.isRequired,
   }),
+  /**
+   * Definition of the column rendered when the `unstable_listView` prop is enabled.
+   */
+  unstable_listColumn: PropTypes.shape({
+    align: PropTypes.oneOf(['center', 'left', 'right']),
+    cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    display: PropTypes.oneOf(['flex', 'text']),
+    field: PropTypes.string.isRequired,
+    renderCell: PropTypes.func,
+  }),
+  /**
+   * If `true`, displays the data in a list view.
+   * Use in combination with `unstable_listColumn`.
+   */
+  unstable_listView: PropTypes.bool,
   unstable_onDataSourceError: PropTypes.func,
   /**
    * If `true`, the Data Grid will auto span the cells over the rows having the same value.

@@ -55,7 +55,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   rowsLoadingMode: 'client',
   scrollEndThreshold: 80,
   treeData: false,
-  listView: false,
+  unstable_listView: false,
 };
 
 const defaultSlots = DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS;

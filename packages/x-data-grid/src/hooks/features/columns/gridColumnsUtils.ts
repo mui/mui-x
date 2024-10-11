@@ -440,9 +440,12 @@ export function getFirstNonSpannedColumnToRender({
 
 export function getTotalHeaderHeight(
   apiRef: React.MutableRefObject<GridApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'columnHeaderHeight' | 'headerFilterHeight' | 'listView'>,
+  props: Pick<
+    DataGridProcessedProps,
+    'columnHeaderHeight' | 'headerFilterHeight' | 'unstable_listView'
+  >,
 ) {
-  if (props.listView) {
+  if (props.unstable_listView) {
     return 0;
   }
 

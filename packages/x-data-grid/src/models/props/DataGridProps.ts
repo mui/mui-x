@@ -69,7 +69,7 @@ export type DataGridForcedPropsKey =
   | 'hideFooterRowCount'
   | 'pagination'
   | 'signature'
-  | 'listView';
+  | 'unstable_listView';
 
 /**
  * The Data Grid options with a default value that must be merged with the value given through props.
@@ -856,9 +856,9 @@ export interface DataGridProSharedPropsWithDefaultValue {
   rowSelectionPropagation: GridRowSelectionPropagation;
   /**
    * If `true`, displays the data in a list view.
-   * Use in combination with `listColumn`.
+   * Use in combination with `unstable_listColumn`.
    */
-  listView: boolean;
+  unstable_listView: boolean;
 }
 
 export interface DataGridProSharedPropsWithoutDefaultValue<R extends GridValidRowModel = any> {
@@ -868,9 +868,9 @@ export interface DataGridProSharedPropsWithoutDefaultValue<R extends GridValidRo
   headerFilterHeight?: number;
   unstable_dataSource?: GridDataSource;
   /**
-   * Definition of the column rendered when the `listView` prop is enabled.
+   * Definition of the column rendered when the `unstable_listView` prop is enabled.
    */
-  listColumn?: GridListColDef<R>;
+  unstable_listColumn?: GridListColDef<R>;
 }
 
 export interface DataGridPremiumSharedPropsWithDefaultValue {

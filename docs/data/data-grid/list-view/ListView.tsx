@@ -69,58 +69,69 @@ export default function ListView(props: Props) {
   }, []);
 
   const handleUpdate = React.useCallback(
-    (id: GridRowId, field: GridRowParams<RowModel>['columns'][number]['field'], value: string) => {
+    (
+      id: GridRowId,
+      field: GridRowParams<RowModel>['columns'][number]['field'],
+      value: string,
+    ) => {
       setRows((prevRows) =>
         prevRows.map((row) =>
-          row.id === id ? { ...row, [field]: value, updatedAt: new Date().toISOString() } : row,
+          row.id === id
+            ? { ...row, [field]: value, updatedAt: new Date().toISOString() }
+            : row,
         ),
       );
     },
     [],
   );
 
-  const handleUpload = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) {
-      return;
-    }
+  const handleUpload = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!e.target.files) {
+        return;
+      }
 
-    const file = e.target.files[0];
-    const createdAt = new Date().toISOString();
+      const file = e.target.files[0];
+      const createdAt = new Date().toISOString();
 
-    const fileType = file.type.split('/')[1];
+      const fileType = file.type.split('/')[1];
 
-    // validate file type
-    if (!FILE_TYPES.includes(fileType as FileType)) {
-      alert('Invalid file type');
-      return;
-    }
+      // validate file type
+      if (!FILE_TYPES.includes(fileType as FileType)) {
+        alert('Invalid file type');
+        return;
+      }
 
-    const row: RowModel = {
-      id: randomId(),
-      name: file.name,
-      description: '',
-      type: fileType as FileType,
-      size: file.size,
-      createdBy: 'Kenan Yusuf',
-      createdAt,
-      updatedAt: createdAt,
-      state: 'pending',
-    };
+      const row: RowModel = {
+        id: randomId(),
+        name: file.name,
+        description: '',
+        type: fileType as FileType,
+        size: file.size,
+        createdBy: 'Kenan Yusuf',
+        createdAt,
+        updatedAt: createdAt,
+        state: 'pending',
+      };
 
-    e.target.value = '';
+      e.target.value = '';
 
-    // Add temporary row
-    setLoading(true);
-    setRows((prevRows) => [...prevRows, row]);
+      // Add temporary row
+      setLoading(true);
+      setRows((prevRows) => [...prevRows, row]);
 
-    // Simulate server response time
-    setTimeout(() => {
-      const uploadedRow: RowModel = { ...row, state: 'uploaded' };
-      setRows((prevRows) => prevRows.map((r) => (r.id === row.id ? uploadedRow : r)));
-      setDetailsState({ open: true, params: { row } });
-      setLoading(false);
-    }, 2000);
-  }, []);
+      // Simulate server response time
+      setTimeout(() => {
+        const uploadedRow: RowModel = { ...row, state: 'uploaded' };
+        setRows((prevRows) =>
+          prevRows.map((r) => (r.id === row.id ? uploadedRow : r)),
+        );
+        setDetailsState({ open: true, params: { row } });
+        setLoading(false);
+      }, 2000);
+    },
+    [],
+  );
 
   const columns: GridColDef[] = React.useMemo(
     () => [
@@ -132,7 +143,12 @@ export default function ListView(props: Props) {
         hideable: false,
         renderCell: (params) => {
           return (
-            <Stack direction="row" gap={1.5} alignItems="center" sx={{ height: '100%' }}>
+            <Stack
+              direction="row"
+              gap={1.5}
+              alignItems="center"
+              sx={{ height: '100%' }}
+            >
               <FileIcon type={params.row.type} />
               {params.value}
             </Stack>
@@ -279,8 +295,8 @@ export default function ListView(props: Props) {
             variant: 'linear-progress',
           },
         }}
-        listView={isListView}
-        listColDef={listColDef}
+        unstable_listView={isListView}
+        unstable_listColumn={listColDef}
         pagination
         initialState={{
           density: 'comfortable',

@@ -440,9 +440,11 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       ),
     );
   }
-  if (rootProps.listView && rootProps.signature !== GridSignature.DataGrid) {
-    if (!rootProps.listColumn) {
-      throw new Error('MUI X: The `listColumn` prop is required when `listView` is enabled.');
+  if (rootProps.unstable_listView && rootProps.signature !== GridSignature.DataGrid) {
+    if (!rootProps.unstable_listColumn) {
+      throw new Error(
+        'MUI X: The `unstable_listColumn` prop is required when `unstable_listView` is enabled.',
+      );
     }
 
     const columnsToKeep = visibleColumns.filter((col) => {
@@ -455,7 +457,9 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     const listColumnWidth =
       dimensions.viewportInnerSize.width -
       columnsToKeep.reduce((acc, col) => acc + col.computedWidth, 0);
-    cells.push(getCell({ ...rootProps.listColumn, computedWidth: listColumnWidth }, 0, 0, 1));
+    cells.push(
+      getCell({ ...rootProps.unstable_listColumn, computedWidth: listColumnWidth }, 0, 0, 1),
+    );
     columnsToKeep.forEach((column, colIndex) => {
       cells.push(getCell(column, 1 + colIndex, 1 + colIndex, columnsCount));
     });

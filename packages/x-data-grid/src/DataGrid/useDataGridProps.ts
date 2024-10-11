@@ -21,7 +21,7 @@ const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProces
   disableColumnReorder: true,
   keepColumnPositionIfDraggedOutside: false,
   signature: 'DataGrid',
-  listView: false,
+  unstable_listView: false,
 };
 
 /**

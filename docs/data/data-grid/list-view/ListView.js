@@ -270,8 +270,8 @@ export default function ListView(props) {
             variant: 'linear-progress',
           },
         }}
-        listView={isListView}
-        listColDef={listColDef}
+        unstable_listView={isListView}
+        unstable_listColumn={listColDef}
         pagination
         initialState={{
           density: 'comfortable',

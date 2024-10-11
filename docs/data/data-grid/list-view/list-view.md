@@ -6,10 +6,10 @@ title: Data Grid - List view
 
 <p class="description">Display data in a single-column list view. Can be used to present a more compact grid on smaller screens and mobile devices.</p>
 
-List view can be enabled by providing the `listView` prop.
+List view can be enabled by providing the `unstable_listView` prop.
 
 Unlike the default grid view, the list view makes no assumptions on how data is presented to end users.
 
-In order to display data in a list view, a `listColDef` prop must be provided with a `renderCell` function.
+In order to display data in a list view, a `unstable_listColumn` prop must be provided with a `renderCell` function.
 
 {{"demo": "ListView.js", "iframe": true, "disableLiveEdit": true, "height": 600, "maxWidth": 360}}
