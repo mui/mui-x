@@ -3,33 +3,26 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   resolve: {
     alias: [
-      {
-        find: '@mui/x-charts',
-        replacement: new URL('./packages/x-charts/src', import.meta.url).pathname,
-      },
-      {
-        find: '@mui/x-charts-pro',
-        replacement: new URL('./packages/x-charts-pro/src', import.meta.url).pathname,
-      },
-      {
-        find: '@mui/x-date-pickers',
-        replacement: new URL('./packages/x-date-pickers/src', import.meta.url).pathname,
-      },
-      {
-        find: '@mui/x-date-pickers-pro',
-        replacement: new URL('./packages/x-date-pickers-pro/src', import.meta.url).pathname,
-      },
+      ...[
+        { lib: 'charts', plans: ['pro'] },
+        { lib: 'date-pickers', plans: ['pro'] },
+        { lib: 'internals' },
+        { lib: 'license' },
+      ].flatMap((v) => {
+        return [
+          {
+            find: `@mui/x-${v.lib}`,
+            replacement: new URL(`./packages/x-${v.lib}/src`, import.meta.url).pathname,
+          },
+          ...(v.plans ?? []).map((plan) => ({
+            find: `@mui/x-${v.lib}-${plan}`,
+            replacement: new URL(`./packages/x-${v.lib}-${plan}/src`, import.meta.url).pathname,
+          })),
+        ];
+      }),
       {
         find: 'test/utils',
         replacement: new URL('./test/utils', import.meta.url).pathname,
-      },
-      {
-        find: '@mui/x-internals',
-        replacement: new URL('./packages/x-internals/src', import.meta.url).pathname,
-      },
-      {
-        find: '@mui/x-license',
-        replacement: new URL('./packages/x-license/src', import.meta.url).pathname,
       },
       {
         find: 'moment/locale',
