@@ -33,7 +33,8 @@ const customDataSource: GridDataSource = {
 };
 ```
 
-Apart from the other parameters like `filterModel`, `sortModel`, and `paginationModel`, the `getRows()` callback receives a `groupKeys` parameter. This corresponds to the keys provided for each nested level in `getGroupKey()`. Use `groupKeys` on the server to fetch the rows for each nested level.
+Like the other parameters such as `filterModel`, `sortModel`, and `paginationModel`, the `getRows()` callback receives a `groupKeys` parameter that corresponds to the keys provided for each nested level in `getGroupKey()`.
+Use `groupKeys` on the server to extract the rows for a given nested level.
 
 ```tsx
 const getRows: async (params) => {
