@@ -4,40 +4,8 @@ import Checkbox from '@mui/material/Checkbox';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import {
-  TreeViewBaseItem,
-  TreeViewSelectionPropagation,
-} from '@mui/x-tree-view/models';
-
-const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
-  {
-    id: 'grid',
-    label: 'Data Grid',
-    children: [
-      { id: 'grid-community', label: '@mui/x-data-grid' },
-      { id: 'grid-pro', label: '@mui/x-data-grid-pro' },
-      { id: 'grid-premium', label: '@mui/x-data-grid-premium' },
-    ],
-  },
-  {
-    id: 'pickers',
-    label: 'Date and Time Pickers',
-    children: [
-      { id: 'pickers-community', label: '@mui/x-date-pickers' },
-      { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
-    ],
-  },
-  {
-    id: 'charts',
-    label: 'Charts',
-    children: [{ id: 'charts-community', label: '@mui/x-charts' }],
-  },
-  {
-    id: 'tree-view',
-    label: 'Tree View',
-    children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }],
-  },
-];
+import { TreeViewSelectionPropagation } from '@mui/x-tree-view/models';
+import { EMPLOYEES_DATASET } from '../../datasets/employees';
 
 export default function SelectionPropagation() {
   const [selectionPropagation, setSelectionPropagation] =
@@ -78,13 +46,13 @@ export default function SelectionPropagation() {
           label="Auto select parents"
         />
       </Stack>
-      <Box sx={{ minHeight: 352, minWidth: 250 }}>
+      <Box sx={{ height: 256, minWidth: 250, overflowY: 'auto' }}>
         <RichTreeView
-          items={MUI_X_PRODUCTS}
+          items={EMPLOYEES_DATASET}
           checkboxSelection
           multiSelect
           selectionPropagation={selectionPropagation}
-          defaultExpandedItems={['grid', 'pickers', 'tree-view']}
+          defaultExpandedItems={['8', '12']}
         />
       </Box>
     </div>
