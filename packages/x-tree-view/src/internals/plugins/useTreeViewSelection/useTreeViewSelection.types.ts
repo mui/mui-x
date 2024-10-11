@@ -6,7 +6,7 @@ import type {
 } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
-import { TreeViewItemId, TreeViewSelectionPropagation } from '../../../models';
+import { TreeViewSelectionPropagation } from '../../../models';
 
 export interface UseTreeViewSelectionPublicAPI {
   /**
