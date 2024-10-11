@@ -14,7 +14,6 @@ import {
 } from '@mui/x-tree-view/TreeItem2';
 import {
   useTreeItem2,
-  // eslint-disable-next-line
   unstable_useTreeItem2 as useAliasedTreeItem,
   UseTreeItem2Parameters,
   UseTreeItem2ReturnValue,
