@@ -16,7 +16,7 @@
     "docs:populate:demos": "pnpm --filter docs populate:demos",
     "docs:importDocsStatic": "node scripts/importDocsStatic.mjs",
     "docs:size-why": "cross-env DOCS_STATS_ENABLED=true pnpm docs:build",
-    "docs:deploy": "pnpm --filter docs deploy",
+    "docs:deploy": "pnpm --filter docs run deploy",
     "deduplicate": "pnpm dedupe",
     "dataset:file-tree": "tsx ./scripts/treeDataFromFileTree.ts",
     "l10n": "tsx ./scripts/l10n.ts",
