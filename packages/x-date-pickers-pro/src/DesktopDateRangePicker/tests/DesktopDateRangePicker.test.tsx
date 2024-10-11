@@ -488,9 +488,10 @@ describe('<DesktopDateRangePicker />', () => {
       await openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
       expect(screen.getByRole('tooltip')).toBeVisible();
 
-      await act(() => {
+      await act(async () => {
         document.querySelector<HTMLButtonElement>('#test')!.focus();
       });
+      await waitForElementToBeRemoved(() => screen.queryByRole('tooltip'));
 
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);

@@ -7,7 +7,11 @@ import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/picke
 
 describe('<DesktopTimePicker />', () => {
   describe('rendering behavior', () => {
-    const { render } = createPickerRenderer();
+    const { render } = createPickerRenderer({
+      clock: 'fake',
+      clockConfig: new Date('2018-01-01T10:05:05.000'),
+      clockOptions: { toFake: ['Date'] },
+    });
 
     it('should render "accept" action and 3 time sections by default', () => {
       render(<DesktopTimePicker open reduceAnimations />);

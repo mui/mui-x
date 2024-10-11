@@ -16,7 +16,11 @@ import { describeConformance } from 'test/utils/describeConformance';
 import { userEvent } from '@testing-library/user-event';
 
 describe('<MobileDateTimePicker /> - Describes', () => {
-  const { render, clock } = createPickerRenderer();
+  const { render, clock } = createPickerRenderer({
+    clock: 'fake',
+    clockConfig: new Date(2018, 2, 12, 8, 16, 0),
+    clockOptions: { toFake: ['Date'] },
+  });
 
   describePicker(MobileDateTimePicker, { render, fieldType: 'single-input', variant: 'mobile' });
 

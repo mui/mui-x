@@ -130,7 +130,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, true], isSingleInput);
 
       await act(() => {
-        setValue(adapterToUse.addMinutes(now, 5));
+        setValue(adapterToUse.date(now));
       });
       expect(onErrorMock.callCount).to.equal(3);
       expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'disablePast']);

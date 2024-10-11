@@ -37,13 +37,15 @@ export function expectPickerChangeHandlerValue(
   if (Array.isArray(value)) {
     value.forEach((positionValue, index) => {
       if (ignoreMilliseconds && adapterToUse) {
-        expect(adapterToUse.setMilliseconds(positionValue, 0)).to.deep.equal(expectedValue[index]);
+        // expect(adapterToUse.setMilliseconds(positionValue, 0)).to.deep.equal(expectedValue[index]);
+        expect(positionValue).to.deep.equal(expectedValue[index]);
       } else {
         expect(positionValue).to.deep.equal(expectedValue[index]);
       }
     });
   } else if (ignoreMilliseconds && adapterToUse) {
-    expect(adapterToUse.setMilliseconds(value, 0)).to.deep.equal(expectedValue);
+    // expect(adapterToUse.setMilliseconds(value, 0)).to.deep.equal(expectedValue);
+    expect(value).to.deep.equal(expectedValue);
   } else {
     expect(value).to.deep.equal(expectedValue);
   }
