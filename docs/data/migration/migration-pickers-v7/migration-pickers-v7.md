@@ -4,12 +4,11 @@ productId: x-date-pickers
 
 # Migration from v7 to v8
 
-<p class="description">This guide describes the changes needed to migrate the Date and Time Pickers from v6 to v7.</p>
+<p class="description">This guide describes the changes needed to migrate the Date and Time Pickers from v7 to v8.</p>
 
 ## Introduction
 
-This is a reference guide for upgrading `@mui/x-date-pickers` from v6 to v7.
-To read more about the changes from the new major, check out [the blog post about the release of MUI X v7](https://mui.com/blog/mui-x-v7-beta/).
+This is a reference guide for upgrading `@mui/x-date-pickers` from v7 to v8.
 
 ## Start using the new release
 
@@ -22,7 +21,7 @@ In `package.json`, change the version of the date pickers package to `^8.0.0`.
 
 Since `v8` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
-Described below are the steps needed to migrate from v6 to v7.
+Described below are the steps needed to migrate from v7 to v8.
 
 ## Run codemods
 
