@@ -4,20 +4,20 @@ githubLabel: 'component: charts'
 packageName: '@mui/x-charts'
 ---
 
-# Charts - Getting Started
+# Charts - Getting started
 
-<p class="description">Get started with the MUI X Charts components. Install the package, configure your application, and start using the components.</p>
+<p class="description">Install the MUI X Charts package to start building.</p>
 
 ## Installation
 
-Using your favorite package manager, install `@mui/x-charts-pro` for the commercial version, or `@mui/x-charts` for the free community version.
+Run one of the following commands to add install the free Community version or the paid Pro version of the MUI X Charts:
 
 <!-- #default-branch-switch -->
 
 {{"component": "modules/components/ChartsInstallationInstructions.js"}}
 
-The Charts package has a peer dependency on `@mui/material`.
-If you are not already using it in your project, you can install it with:
+The Charts packages have has a peer dependency on `@mui/material`. 
+If you're not already using it, install it with the following command:
 
 <codeblock storageKey="package-manager">
 
@@ -37,7 +37,7 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 <!-- #react-peer-version -->
 
-Please note that [react](https://www.npmjs.com/package/react) and [react-dom](https://www.npmjs.com/package/react-dom) are peer dependencies too:
+[`react`](https://www.npmjs.com/package/react) and [`react-dom`](https://www.npmjs.com/package/react-dom) are also peer dependencies:
 
 ```json
 "peerDependencies": {
@@ -46,57 +46,42 @@ Please note that [react](https://www.npmjs.com/package/react) and [react-dom](ht
 },
 ```
 
-### Style engine
-
-Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
-
-<codeblock storageKey="package-manager">
-```bash npm
-npm install @mui/styled-engine-sc styled-components
-```
-
-```bash pnpm
-pnpm add @mui/styled-engine-sc styled-components
-```
-
-```bash yarn
-yarn add @mui/styled-engine-sc styled-components
-```
-
-</codeblock>
-
-Take a look at the [Styled engine guide](/material-ui/integrations/styled-components/) for more information about how to configure `styled-components` as the style engine.
-
 ### Usage with D3
 
 To help folks using CommonJS, the `@mui/x-charts` package uses a vendored package named `@mui/x-charts-vendor` to access D3 libraries.
+You can import D3 functions from `@mui/x-charts-vendor/d3-color`.
 
-If you need some D3 functions, you can import them with `@mui/x-charts-vendor/d3-color`.
+## Rendering Charts
 
-## Displaying charts
+A Chart can be rendered as a single, self-contained component, or it can be composed of multiple subcomponents.
+The self-contained components are simpler to get started with, and are recommended for most common use cases.
 
-A Chart can be rendered in one of two ways: as a single component, or by composing subcomponents.
+### Self-contained Charts
 
-### Single charts
-
-For common use cases, the single component is the recommended way.
-Those components' names end with "Chart", as opposed to "Plot", and only require the series prop describing the data to render.
+Self-contained Chart components are suffixed with "Chart", for example `<BarChart />`, `<LineChart />`.
+These components require a `series` prop describing the data to render, as well as a numerical value (in pixels) for the `height` prop.
+The `width` prop is optional; if no value is provided, the Charts expand to fill the available space.
 
 {{"demo": "SimpleCharts.js"}}
 
-### Composed charts
+### Composed Charts
 
-To combine different Charts, like Lines with Bars, you can use composition with the `ChartContainer` wrapper.
+To create more a complex Chart—such as a combined Line and Bar Chart—you can compose the subcomponents inside of a Chart Container wrapper.
+Options include:
 
-Inside this wrapper, render either axis components, such as `XAxis` and `YAxis`, or any plot component like `BarPlot`, `LinePlot`, `AreaPlot`, and `ScatterPlot`.
+- Axis components – to define the X and Y axes
+- Plot components – to create Bars, Lines, or any other Chart type
+- Auxillary components - to add Tooltips, Highlights, and more
+- Utilities - such as classes and types
 
-Visit the [Composition page](/x/react-charts/composition/) for more details.
+See the [Charts composition documentation](/x/react-charts/composition/) for complete details.
 
 {{"demo": "Combining.js"}}
 
 ### Positions
 
-Charts are composed of two main areas.
+The layout of a Chart is defined by the plot area
+
 The SVG defined by its `width` and `height` delimits the available space.
 
 Within this SVG, a dedicated "drawing area" (aka "plot area") serves as the canvas for data representation.
