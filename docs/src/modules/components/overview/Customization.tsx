@@ -108,11 +108,8 @@ function CustomTheme() {
                 <CustomLayoutRangePicker />
               </Card>
             ) : (
-              <Card elevation={0} variant="outlined">
-                <StaticDatePicker
-                  defaultValue={dayjs('2024-04-17')}
-                  views={['year', 'month', 'day']}
-                />
+              <Card elevation={0} sx={{ padding: 0 }}>
+                <CustomLayoutRangePicker />
               </Card>
             )}
           </ThemeProvider>

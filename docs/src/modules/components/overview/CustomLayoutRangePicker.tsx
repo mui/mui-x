@@ -96,7 +96,6 @@ export default function CustomLayoutPicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticDateRangePicker
-        // views={['year', 'month', 'day']}
         defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
         slots={{
           layout: CustomLayout,
