@@ -532,6 +532,16 @@ const pages: MuiPage[] = [
     title: 'Migration',
     children: [
       {
+        pathname: '/x/migration-v8',
+        subheader: 'Upgrade to v8',
+        children: [
+          {
+            pathname: '/x/migration/migration-tree-view-v7',
+            title: 'Breaking changes: Tree View',
+          },
+        ],
+      },
+      {
         pathname: '/x/migration-v7',
         subheader: 'Upgrade to v7',
         children: [
