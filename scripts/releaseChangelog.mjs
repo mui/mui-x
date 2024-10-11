@@ -405,7 +405,7 @@ yargs(hideBin(process.argv))
         })
         .option('nextVersion', {
           describe:
-            'The version expected to be released e.g. `5.2.0`. Used to replace `_VERSION__` placeholder in the changelog.',
+            'The version expected to be released e.g. `5.2.0`. Replaces `_VERSION__` placeholder in the changelog.',
           type: 'string',
         });
     },
