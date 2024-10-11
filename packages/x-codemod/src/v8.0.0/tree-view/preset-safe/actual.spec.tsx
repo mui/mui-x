@@ -7,5 +7,5 @@ const className = treeViewClasses.root;
 
 // prettier-ignore
 <SimpleTreeView>
-  <TreeItem2 nodeId="1"  label="Item 1" />
+  <TreeItem2 nodeId="1" label="Item 1" />
 </SimpleTreeView>;
