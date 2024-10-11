@@ -27,7 +27,7 @@ describe('<DataGrid /> - Export', () => {
   let spyCreateObjectURL: SinonSpy;
 
   beforeEach(() => {
-    spyCreateObjectURL = spy(global.URL, 'createObjectURL');
+    spyCreateObjectURL = spy(globalThis.URL, 'createObjectURL');
   });
 
   afterEach(() => {
