@@ -166,6 +166,16 @@ export const useGridRowGrouping = (
     [props.disableRowGrouping],
   );
 
+  const addGetRowsParams = React.useCallback<GridPipeProcessor<'getRowsParams'>>(
+    (params) => {
+      return {
+        ...params,
+        groupFields: gridRowGroupingModelSelector(apiRef),
+      };
+    },
+    [apiRef],
+  );
+
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState, context) => {
       const rowGroupingModelToExport = gridRowGroupingModelSelector(apiRef);
@@ -210,6 +220,7 @@ export const useGridRowGrouping = (
   );
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
+  useGridRegisterPipeProcessor(apiRef, 'getRowsParams', addGetRowsParams);
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 

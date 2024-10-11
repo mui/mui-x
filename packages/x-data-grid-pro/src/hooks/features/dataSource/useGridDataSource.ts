@@ -11,11 +11,7 @@ import {
 import { gridRowGroupsToFetchSelector, GridStateInitializer } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import {
-  gridGetRowsParamsSelector,
-  gridDataSourceErrorsSelector,
-  gridRowGroupingSanitizedModelSelector,
-} from './gridDataSourceSelector';
+import { gridGetRowsParamsSelector, gridDataSourceErrorsSelector } from './gridDataSourceSelector';
 import { GridDataSourceApi, GridDataSourceApiBase, GridDataSourcePrivateApi } from './interfaces';
 import { runIfServerMode, NestedDataManager, RequestStatus } from './utils';
 import { GridDataSourceCache } from '../../../models';
@@ -63,7 +59,6 @@ export const useGridDataSource = (
     () => new NestedDataManager(apiRef),
   ).current;
   const groupsToAutoFetch = useGridSelector(apiRef, gridRowGroupsToFetchSelector);
-  const sanitizedRowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
   const scheduledGroups = React.useRef<number>(0);
   const onError = props.unstable_onDataSourceError;
 
@@ -90,7 +85,10 @@ export const useGridDataSource = (
         apiRef.current.resetDataSourceState();
       }
 
-      const fetchParams = gridGetRowsParamsSelector(apiRef);
+      const fetchParams = {
+        ...gridGetRowsParamsSelector(apiRef),
+        ...apiRef.current.unstable_applyPipeProcessors('getRowsParams', {}),
+      };
 
       const cachedData = apiRef.current.unstable_dataSource.cache.get(fetchParams);
 
@@ -127,7 +125,8 @@ export const useGridDataSource = (
 
   const fetchRowChildren = React.useCallback<GridDataSourcePrivateApi['fetchRowChildren']>(
     async (id) => {
-      if (!props.treeData && sanitizedRowGroupingModel.length === 0) {
+      const pipedParams = apiRef.current.unstable_applyPipeProcessors('getRowsParams', {});
+      if (!props.treeData && (pipedParams.groupFields?.length ?? 0) === 0) {
         nestedDataManager.clearPendingRequest(id);
         return;
       }
@@ -143,7 +142,11 @@ export const useGridDataSource = (
         return;
       }
 
-      const fetchParams = { ...gridGetRowsParamsSelector(apiRef), groupKeys: rowNode.path };
+      const fetchParams = {
+        ...gridGetRowsParamsSelector(apiRef),
+        ...pipedParams,
+        groupKeys: rowNode.path,
+      };
 
       const cachedData = apiRef.current.unstable_dataSource.cache.get(fetchParams);
 
@@ -191,14 +194,7 @@ export const useGridDataSource = (
         nestedDataManager.setRequestSettled(id);
       }
     },
-    [
-      nestedDataManager,
-      onError,
-      apiRef,
-      props.treeData,
-      props.unstable_dataSource?.getRows,
-      sanitizedRowGroupingModel,
-    ],
+    [nestedDataManager, onError, apiRef, props.treeData, props.unstable_dataSource?.getRows],
   );
 
   const setChildrenLoading = React.useCallback<GridDataSourceApiBase['setChildrenLoading']>(
