@@ -812,8 +812,15 @@ export const parseSelectedSections = (
   }
 
   if (typeof selectedSections === 'string') {
-    return sections.findIndex((section) => section.type === selectedSections);
+    const index = sections.findIndex((section) => section.type === selectedSections);
+    return index === -1 ? null : index;
   }
+  /*
+  *
+  * if (typeof selectedSections === 'string') {
+    const index = sections.findIndex((section) => section.type === selectedSections);
+    return index === -1 ? null : index;
+  } */
 
   return selectedSections;
 };
