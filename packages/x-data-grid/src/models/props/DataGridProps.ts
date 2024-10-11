@@ -68,7 +68,8 @@ export type DataGridForcedPropsKey =
   | 'throttleRowsMs'
   | 'hideFooterRowCount'
   | 'pagination'
-  | 'signature';
+  | 'signature'
+  | 'listView';
 
 /**
  * The Data Grid options with a default value that must be merged with the value given through props.
@@ -861,6 +862,8 @@ export interface DataGridProSharedPropsWithoutDefaultValue {
    */
   headerFilterHeight?: number;
   unstable_dataSource?: GridDataSource;
+  listView?: boolean;
+  listColumn?: GridColDef;
 }
 
 export interface DataGridPremiumSharedPropsWithDefaultValue {

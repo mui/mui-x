@@ -73,7 +73,6 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const overlaysProps = useGridOverlays();
   const classes = useUtilityClasses(rootProps, dimensions, overlaysProps.loadingOverlayVariant);
-  const listView: boolean | undefined = (rootProps as any).listView;
 
   const virtualScroller = useGridVirtualScroller();
   const {
@@ -94,7 +93,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
       <GridScrollArea scrollDirection="right" />
       <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={rootProps}>
         <TopContainer>
-          {!listView && <GridHeaders />}
+          {!rootProps.listView && <GridHeaders />}
           <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
         </TopContainer>
 
@@ -114,7 +113,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
         </BottomContainer>
       </Scroller>
       {dimensions.hasScrollY && <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />}
-      {dimensions.hasScrollX && !listView && (
+      {dimensions.hasScrollX && !rootProps.listView && (
         <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />
       )}
       {props.children}

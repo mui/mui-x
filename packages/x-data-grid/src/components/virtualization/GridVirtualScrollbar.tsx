@@ -149,7 +149,7 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
         ref={useForkRef(ref, scrollbarRef)}
         className={classes.root}
         style={
-          props.position === 'vertical' && (rootProps as any).listView
+          props.position === 'vertical' && rootProps.listView
             ? { height: '100%', top: 0 }
             : undefined
         }

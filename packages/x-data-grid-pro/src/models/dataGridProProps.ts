@@ -140,7 +140,7 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
   keepColumnPositionIfDraggedOutside: boolean;
   /**
    * If `true`, displays the data in a list view.
-   * Use in combination with `listColDef`.
+   * Use in combination with `listColumn`.
    */
   listView: boolean;
 }
@@ -254,5 +254,5 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
   /**
    * Definition of the column rendered when the `listView` prop is enabled.
    */
-  listColDef?: GridColDef;
+  listColumn?: GridColDef;
 }

@@ -512,15 +512,13 @@ export const useGridVirtualScroller = () => {
 
   const needsHorizontalScrollbar = outerSize.width && columnsTotalWidth >= outerSize.width;
 
-  const listView: boolean | undefined = (rootProps as any).listView;
-
   const scrollerStyle = React.useMemo(
     () =>
       ({
-        overflowX: !needsHorizontalScrollbar || listView ? 'hidden' : undefined,
+        overflowX: !needsHorizontalScrollbar || rootProps.listView ? 'hidden' : undefined,
         overflowY: rootProps.autoHeight ? 'hidden' : undefined,
       }) as React.CSSProperties,
-    [needsHorizontalScrollbar, rootProps.autoHeight, listView],
+    [needsHorizontalScrollbar, rootProps.autoHeight, rootProps.listView],
   );
 
   const contentSize = React.useMemo(() => {
@@ -563,10 +561,10 @@ export const useGridVirtualScroller = () => {
   }, [enabledForColumns, enabledForRows, gridRootRef, scrollerRef]);
 
   useEnhancedEffect(() => {
-    if (listView) {
+    if (rootProps.listView) {
       scrollerRef.current!.scrollLeft = 0;
     }
-  }, [listView, scrollerRef]);
+  }, [rootProps.listView, scrollerRef]);
 
   useRunOnce(outerSize.width !== 0, () => {
     const inputs = inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns);
