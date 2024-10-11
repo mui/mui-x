@@ -3,6 +3,96 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.20.0
+
+_Oct 11, 2024_
+
+We'd like to offer a big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
+
+- 📚 Updated ["What's new"](https://mui.com/x/whats-new/) page giving more detailed overview of the latest new features and other highlights
+- 📚 New [collapsible column groups demo](https://mui.com/x/react-data-grid/column-groups/#collapsible-column-groups) for the Data Grid component
+- 📚 New [Tree Item Customization](https://mui.com/x/react-tree-view/tree-item-customization/) documentation to learn how to use the new APIs to create custom Tree Items. The old APIs (`props.ContentComponent` and `props.ContentProps`) have been deprecated and will be removed in the new major version of the Tree View component.
+- 🌍 Improve Japanese (ja-JP) locale on the Data Grid component
+- 🐞 Bugfixes
+- 📚 Other documentation improvements
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@k-rajat19, @kalyan90, @uma-neko, @vfbiby.
+Following are all team members who have contributed to this release: @alelthomas, @arminmeh, @arthurbalduini,
+@cherniavskii, @flaviendelangle, @JCQuintas, @MBilalShafi, @noraleonte, @oliviertassinari, @samuelsycamore, @siriwatknp.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.20.0`
+
+- [DataGrid] Add `onColumnHeaderContextMenu` event (#14734) @vfbiby
+- [DataGrid] Avoid row spanning computation of outdated rows (#14902) @MBilalShafi
+- [DataGrid] Fix scrollbar position not being updated after `scrollToIndexes` (#14888) @arminmeh
+- [DataGrid] Pass `rowId` param to `processRowUpdate` (#14821) @k-rajat19
+- [l10n] Improve Japanese (ja-JP) locale (#14870) @uma-neko
+
+#### `@mui/x-data-grid-pro@7.20.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.20.0`, plus:
+
+- [DataGridPro] Fix wording on the `rowSelectionPropagation` JSDoc and doc section (#14907) @flaviendelangle
+
+#### `@mui/x-data-grid-premium@7.20.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.20.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.20.0`
+
+- [pickers] Add `PageUp` and `PageDown` support for time components (#14812) @arthurbalduini
+- [pickers] Fix regression on `PickerValidDate` (#14896) @flaviendelangle
+- [pickers] Move the `DateFieldInPickerProps` interface to the `DatePicker` folder and rename it `DatePickerFieldProps` (same for time and date time) (#14828) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.20.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.20.0`.
+
+### Charts
+
+#### `@mui/x-charts@7.20.0`
+
+No changes since `@mui/x-charts@v7.19.0`.
+
+#### `@mui/x-charts-pro@7.0.0-beta.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.20.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.20.0`
+
+- [TreeItem] Deprecate the `ContentComponent` and `ContentProps` props (#14908) @flaviendelangle
+- [TreeView] Rework how items are being rendered in Rich Tree View components (#14749) @flaviendelangle
+
+### Docs
+
+- [docs] Update "What's new" page (#14858) @cherniavskii
+- [docs] Add collapsible column groups demo (#14818) @cherniavskii
+- [docs] Add custom columns panel demo (#14825) @cherniavskii
+- [docs] Capitalize all instances of "Data Grid" (#14884) @samuelsycamore
+- [docs] Divide charts `tooltip` and `highlighting` pages (#14824) @JCQuintas
+- [docs] Document the `TreeItem2` component and the `useTreeItem2` hook (#14551) @noraleonte
+- [docs] Fix column pinning for "Disable detail panel content scroll" section (#14854 and #14885) @kalyan90
+- [docs] Fix detail panel demo not working well with pinned columns (#14883) @cherniavskii
+- [docs] New recipe of a read-only field (#14606) @flaviendelangle
+- [docs] Change demo name example (#14822) @alelthomas
+
+### Core
+
+- [core] Support `@mui/utils` v6 (#14867) @siriwatknp
+- [code-infra] Remove deprecated `data-mui-test` in favour of `data-testid` (#14882) @JCQuintas
+- [code-infra] Update renovate config and add a `vitest` group (#14856) @JCQuintas
+- [test] Replace `waitFor()` with `act()` (#14851) @oliviertassinari
+- [test] Restore "pnpm tc" CLI (#14852) @oliviertassinari
+
 ## 7.19.0
 
 _Oct 4, 2024_
@@ -677,6 +767,8 @@ Same changes as in `@mui/x-charts@7.12.1`, plus:
 ### Tree View
 
 #### `@mui/x-tree-view@7.12.1`
+
+No changes since `@mui/x-tree-view@7.12.0`.
 
 ### Docs
 
