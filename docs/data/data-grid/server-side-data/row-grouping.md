@@ -6,7 +6,7 @@ title: React Server-side row grouping
 
 <p class="description">Lazy-loaded row grouping with server-side data source.</p>
 
-To dynamically load row grouping data from the server, including lazy-loading of children, create a data source and pass the `unstable_dataSource` prop to the Data Grid, as detailed in the [overview](/x/react-data-grid/server-side-data/).
+To dynamically load row grouping data from the server, including lazy-loading of children, create a data source and pass the `unstable_dataSource` prop to the Data Grid, as mentioned in the [overview](/x/react-data-grid/server-side-data/) section.
 
 :::info
 If you are looking for row grouping on the client-side, see [client-side row grouping](/x/react-data-grid/row-grouping/).
@@ -14,8 +14,8 @@ If you are looking for row grouping on the client-side, see [client-side row gro
 
 Similar to the [tree data](/x/react-data-grid/server-side-data/tree-data/), you need to pass some additional properties to enable the data source row grouping feature:
 
-- `getGroupKey`: Pass the group key for the row.
-- `getChildrenCount`: Pass the number of children for the row. If the children count is not available for some reason, but there are some children, return -1.
+- `getGroupKey()`: Returns the group key for the row.
+- `getChildrenCount()`: Returns the number of children for the row. If the children count is not available for some reason, but there are some children, returns `-1`.
 
 ```tsx
 const customDataSource: GridDataSource = {
@@ -33,7 +33,7 @@ const customDataSource: GridDataSource = {
 };
 ```
 
-In addition to `groupKeys`, the `getRows` callback receives a `groupFields` parameter. This corresponds to the current `rowGroupingModel`. Use `groupFields` on the server to group the data for each `getRows` call.
+In addition to `groupKeys`, the `getRows()` callback receives a `groupFields` parameter. This corresponds to the current `rowGroupingModel`. Use `groupFields` on the server to group the data for each `getRows()` call.
 
 ```tsx
 const getRows: async (params) => {

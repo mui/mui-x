@@ -28,16 +28,19 @@ const GROUPING_COL_DEF_DEFAULT_PROPERTIES: Omit<GridColDef, 'field'> = {
   disableReorder: true,
 };
 
-const GROUPING_COL_DEF_FORCED_PROPERTIES: Pick<GridColDef, 'type' | 'editable' | 'groupable'> = {
+const GROUPING_COL_DEF_FORCED_PROPERTIES_DEFAULT: Pick<
+  GridColDef,
+  'type' | 'editable' | 'groupable'
+> = {
   editable: false,
   groupable: false,
 };
 
-const DATA_SOURCE_GROUPING_COL_DEF_FORCED_PROPERTIES: Pick<
+const GROUPING_COL_DEF_FORCED_PROPERTIES_DATA_SOURCE: Pick<
   GridColDef,
   'type' | 'editable' | 'groupable' | 'filterable' | 'sortable' | 'aggregable'
 > = {
-  ...GROUPING_COL_DEF_FORCED_PROPERTIES,
+  ...GROUPING_COL_DEF_FORCED_PROPERTIES_DEFAULT,
   // TODO: Support these features on the grouping column(s)
   filterable: false,
   sortable: false,
@@ -372,8 +375,8 @@ export const createGroupingColDefForAllGroupingCriteria = ({
   const forcedProperties: Pick<GridColDef, 'field' | 'editable'> = {
     field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
     ...(strategy === ROW_GROUPING_STRATEGY_DEFAULT
-      ? GROUPING_COL_DEF_FORCED_PROPERTIES
-      : DATA_SOURCE_GROUPING_COL_DEF_FORCED_PROPERTIES),
+      ? GROUPING_COL_DEF_FORCED_PROPERTIES_DEFAULT
+      : GROUPING_COL_DEF_FORCED_PROPERTIES_DATA_SOURCE),
   };
 
   return {
