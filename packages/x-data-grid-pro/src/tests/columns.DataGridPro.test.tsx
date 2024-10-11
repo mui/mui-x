@@ -83,12 +83,10 @@ describe('<DataGridPro /> - Columns', () => {
   });
 
   describe('resizing', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
+    if (isJSDOM) {
+      // Need layouting
+      return;
+    }
 
     const columns = [{ field: 'brand', width: 100 }];
 
@@ -102,10 +100,12 @@ describe('<DataGridPro /> - Columns', () => {
       expect(getCell(1, 0).getBoundingClientRect().width).to.equal(110);
     });
 
-    it('should allow to resize columns with the touch', function test() {
+    it('should allow to resize columns with the touch', function test(t = {}) {
       // Only run in supported browsers
       if (typeof Touch === 'undefined') {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       render(<Test columns={columns} />);
       const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
@@ -238,12 +238,10 @@ describe('<DataGridPro /> - Columns', () => {
     });
 
     describe('flex resizing', () => {
-      before(function beforeHook() {
-        if (isJSDOM) {
-          // Need layouting
-          this.skip();
-        }
-      });
+      if (isJSDOM) {
+        // Need layouting
+        return;
+      }
 
       it('should resize the flex width after resizing another column with api', () => {
         const twoColumns = [
@@ -435,12 +433,10 @@ describe('<DataGridPro /> - Columns', () => {
   });
 
   describe('autosizing', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
+    if (isJSDOM) {
+      // Need layouting
+      return;
+    }
 
     const rows = [
       {

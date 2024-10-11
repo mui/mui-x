@@ -15,12 +15,10 @@ function logViolations(violations: any) {
 }
 
 describe('<DataGridPro /> - Accessibility', () => {
-  before(function beforeHook() {
-    if (!/chrome/i.test(window.navigator.userAgent)) {
-      // Only run accessibility tests in Chrome, since it should behave the same in all browsers
-      this.skip();
-    }
-  });
+  if (!/chrome/i.test(window.navigator.userAgent)) {
+    // Only run accessibility tests in Chrome, since it should behave the same in all browsers
+    return;
+  }
 
   const { render } = createRenderer();
 

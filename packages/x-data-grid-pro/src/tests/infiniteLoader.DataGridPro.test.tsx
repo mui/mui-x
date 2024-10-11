@@ -14,9 +14,12 @@ describe('<DataGridPro /> - Infnite loader', () => {
 
   const { render } = createRenderer();
 
-  it('should call `onRowsScrollEnd` when viewport scroll reaches the bottom', async function test() {
+  it('should call `onRowsScrollEnd` when viewport scroll reaches the bottom', async function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // Needs layout
+      // Needs layout
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     const baseRows = [
       { id: 0, brand: 'Nike' },
@@ -63,9 +66,12 @@ describe('<DataGridPro /> - Infnite loader', () => {
     });
   });
 
-  it('should call `onRowsScrollEnd` when there is not enough rows to cover the viewport height', async function test() {
+  it('should call `onRowsScrollEnd` when there is not enough rows to cover the viewport height', async function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // Needs layout
+      // Needs layout
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     const allRows = [
@@ -165,9 +171,12 @@ describe('<DataGridPro /> - Infnite loader', () => {
     expect(getRow.callCount).to.equal(5);
   });
 
-  it('should not observe intersections with the rows pinned to the bottom', async function test() {
+  it('should not observe intersections with the rows pinned to the bottom', async function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // Needs layout
+      // Needs layout
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     const baseRows = [
       { id: 0, brand: 'Nike' },

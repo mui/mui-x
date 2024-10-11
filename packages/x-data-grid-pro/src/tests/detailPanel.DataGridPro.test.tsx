@@ -32,9 +32,12 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
   }
 
-  it('should not allow to expand rows that do not specify a detail element', function test() {
+  it('should not allow to expand rows that do not specify a detail element', function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // Needs layout
+      // Needs layout
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     render(<TestCase getDetailPanelContent={({ id }) => (Number(id) === 0 ? null : <div />)} />);
     const cell = getCell(0, 0);
@@ -43,9 +46,11 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(getRow(0)).toHaveComputedStyle({ marginBottom: '0px' });
   });
 
-  it('should not consider the height of the detail panels when rendering new rows during scroll', function test() {
+  it('should not consider the height of the detail panels when rendering new rows during scroll', function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // Needs layout
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     const rowHeight = 50;
     render(
@@ -68,9 +73,11 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(getColumnValues(1)[0]).to.equal('2'); // If there was no expanded row, the first rendered would be 5
   });
 
-  it('should derive the height from the content if getDetailPanelHeight returns "auto"', async function test() {
+  it('should derive the height from the content if getDetailPanelHeight returns "auto"', async function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // Needs layout
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     const rowHeight = 50;
     const detailPanelHeight = 100;
@@ -97,9 +104,11 @@ describe('<DataGridPro /> - Detail panel', () => {
     });
   });
 
-  it('should update the detail panel height if the content height changes when getDetailPanelHeight returns "auto"', async function test() {
+  it('should update the detail panel height if the content height changes when getDetailPanelHeight returns "auto"', async function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // Needs layout
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     function ExpandableCell() {
       const [expanded, setExpanded] = React.useState(false);
@@ -153,9 +162,12 @@ describe('<DataGridPro /> - Detail panel', () => {
     });
   });
 
-  it('should position correctly the detail panels', function test() {
+  it('should position correctly the detail panels', function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // Doesn't work with mocked window.getComputedStyle
+      // Doesn't work with mocked window.getComputedStyle
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     const rowHeight = 50;
@@ -201,9 +213,12 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(screen.queryByText('Row 0')).to.equal(null);
   });
 
-  it('should consider the height of the detail panel when scrolling to a cell', function test() {
+  it('should consider the height of the detail panel when scrolling to a cell', function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // Needs layout
+      // Needs layout
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     const rowHeight = 50;
     const columnHeaderHeight = 50;
@@ -229,9 +244,12 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(virtualScroller.scrollTop).to.equal(50);
   });
 
-  it('should not scroll vertically when navigating expanded row cells', function test() {
+  it('should not scroll vertically when navigating expanded row cells', function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // Needs layout
+      // Needs layout
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     function Component() {
       const data = useBasicDemoData(10, 4);
@@ -365,9 +383,12 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(getDetailPanelHeight2.callCount).to.equal(2);
   });
 
-  it('should update the panel height if getDetailPanelHeight is changed while the panel is open', function test() {
+  it('should update the panel height if getDetailPanelHeight is changed while the panel is open', function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // Doesn't work with mocked window.getComputedStyle
+      // Doesn't work with mocked window.getComputedStyle
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     const getDetailPanelHeight = spy(() => 100);
@@ -437,9 +458,12 @@ describe('<DataGridPro /> - Detail panel', () => {
   });
 
   // See https://github.com/mui/mui-x/issues/4607
-  it('should make detail panel to take full width of the content', function test() {
+  it('should make detail panel to take full width of the content', function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // Needs layout
+      // Needs layout
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     render(
       <TestCase
@@ -464,9 +488,12 @@ describe('<DataGridPro /> - Detail panel', () => {
   });
 
   // See https://github.com/mui/mui-x/issues/6694
-  it('should add a bottom margin to the expanded row when using `getRowSpacing`', function test() {
+  it('should add a bottom margin to the expanded row when using `getRowSpacing`', function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // Doesn't work with mocked window.getComputedStyle
+      // Doesn't work with mocked window.getComputedStyle
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     render(
@@ -493,9 +520,12 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(screen.getByTestId(`detail-panel-content`).textContent).to.equal(`${counter}`);
   });
 
-  it("should not render detail panel for the focused row if it's outside of the viewport", function test() {
+  it("should not render detail panel for the focused row if it's outside of the viewport", function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // Needs layout
+      // Needs layout
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     render(
       <TestCase

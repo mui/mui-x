@@ -659,9 +659,12 @@ describe('<DataGridPro /> - Filter', () => {
     });
   });
 
-  it('should not scroll the page when a filter is removed from the panel', function test() {
+  it('should not scroll the page when a filter is removed from the panel', function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // Needs layout
+      // Needs layout
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     render(
       <div>
@@ -693,9 +696,12 @@ describe('<DataGridPro /> - Filter', () => {
     expect(window.scrollY).to.equal(initialScrollPosition);
   });
 
-  it('should not scroll the page when opening the filter panel and the operator=isAnyOf', function test() {
+  it('should not scroll the page when opening the filter panel and the operator=isAnyOf', function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // Needs layout
+      // Needs layout
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     render(
@@ -911,9 +917,12 @@ describe('<DataGridPro /> - Filter', () => {
     });
   });
 
-  it('should give a stable ID to the filter item used as placeholder', function test() {
+  it('should give a stable ID to the filter item used as placeholder', function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // It's not re-rendering the filter panel correctly
+      // It's not re-rendering the filter panel correctly
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     const { rerender } = render(<TestCase slots={{ toolbar: GridToolbar }} />);

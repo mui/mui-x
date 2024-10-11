@@ -27,12 +27,10 @@ describe('<DataGridPro /> - Layout', () => {
     columns: [{ field: 'brand', width: 100 }],
   };
 
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
+  if (/jsdom/.test(window.navigator.userAgent)) {
+    // Need layouting
+    return;
+  }
 
   // Adaptation of describeConformance()
   describe('MUI component API', () => {
@@ -170,9 +168,12 @@ describe('<DataGridPro /> - Layout', () => {
     expect(document.querySelector('[title="Ordenar"]')).not.to.equal(null);
   });
 
-  it('should support the sx prop', function test() {
+  it('should support the sx prop', function test(t = {}) {
     if (/jsdom/.test(window.navigator.userAgent)) {
-      this.skip(); // Doesn't work with mocked window.getComputedStyle
+      // Doesn't work with mocked window.getComputedStyle
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     const theme = createTheme({
