@@ -148,10 +148,10 @@ describe('<MobileDateTimePicker />', () => {
 
       // Change the hours
       const hourClockEvent = getClockTouchEvent(11, '12hours');
-      await act(() => {
+      await act(async () => {
         fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
       });
-      await act(() => {
+      await act(async () => {
         fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
       });
       expect(onChange.callCount).to.equal(3);
@@ -159,10 +159,10 @@ describe('<MobileDateTimePicker />', () => {
 
       // Change the minutes
       const minuteClockEvent = getClockTouchEvent(53, 'minutes');
-      await act(() => {
+      await act(async () => {
         fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', minuteClockEvent);
       });
-      await act(() => {
+      await act(async () => {
         fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', minuteClockEvent);
       });
       expect(onChange.callCount).to.equal(4);

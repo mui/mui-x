@@ -158,7 +158,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       testMonthSwitcherAreDisable([true, false]);
     });
 
-    it('should apply maxDate', async function test() {
+    it('should apply maxDate', function test() {
       const { render } = getOptions();
 
       render(
@@ -166,10 +166,9 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
           {...defaultProps}
           referenceDate={adapterToUse.date('2019-06-15')}
           maxDate={adapterToUse.date('2019-06-04')}
+          reduceAnimations
         />,
       );
-
-      await flushMicrotasks();
 
       testDisabledDate('1', [false, true], !isDesktop || includesTimeView);
       testDisabledDate('4', [false, true], !isDesktop || includesTimeView);

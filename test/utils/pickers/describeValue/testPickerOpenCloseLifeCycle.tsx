@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, waitFor } from '@mui/internal-test-utils';
+import { act, screen } from '@mui/internal-test-utils';
 import { getExpectedOnChangeCount, getFieldInputRoot, openPicker } from 'test/utils/pickers';
 import { DescribeValueTestSuite } from './describeValue.types';
 
@@ -26,8 +26,10 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
     });
 
     it('should open on mount if `prop.open` is true', async () => {
-      render(<ElementToTest enableAccessibleFieldDOMStructure open />);
-      await waitFor(() => expect(screen.queryByRole(viewWrapperRole)).toBeVisible());
+      await act(async () => {
+        render(<ElementToTest enableAccessibleFieldDOMStructure open />);
+      });
+      expect(screen.queryByRole(viewWrapperRole)).toBeVisible();
     });
 
     it('should not open when `prop.disabled` is true ', () => {
@@ -59,6 +61,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
           onClose,
           defaultValue: values[0],
           open: true,
+          reduceAnimations: true,
         },
         { componentFamily },
       );
@@ -278,12 +281,10 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       // Dismiss the picker
       await user.keyboard('{Escape}');
-      await waitFor(() =>
-        expect(onChange.callCount).to.equal(
-          getExpectedOnChangeCount(componentFamily, pickerParams),
-        ),
-      );
-      expect(onAccept.callCount).to.equal(1);
+      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
+      if (!isRangeType) {
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
+      }
       if (isRangeType) {
         newValue.forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
@@ -291,6 +292,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       } else {
         expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
       }
+      expect(onAccept.callCount).to.equal(1);
       expect(onClose.callCount).to.equal(1);
     });
 

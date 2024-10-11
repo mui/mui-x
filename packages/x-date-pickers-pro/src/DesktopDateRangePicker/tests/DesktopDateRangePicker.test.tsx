@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, act, within, waitFor } from '@mui/internal-test-utils';
+import { screen, act, within, waitFor, waitForElementToBeRemoved } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
@@ -385,7 +385,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       // Dismiss the picker
       await user.pointer({ keys: '[MouseLeft>]', target: input });
-      await act(() => {
+      await act(async () => {
         input.focus();
       });
       await user.pointer({ keys: '[/MouseLeft]', target: input });
@@ -427,7 +427,7 @@ describe('<DesktopDateRangePicker />', () => {
       const input = document.getElementById('test-id')!;
       // Dismiss the picker
       await user.pointer({ keys: '[MouseLeft>]', target: input });
-      await act(() => {
+      await act(async () => {
         input.focus();
       });
       await user.pointer({ keys: '[/MouseLeft]', target: input });
@@ -525,11 +525,11 @@ describe('<DesktopDateRangePicker />', () => {
       // Change the start date (already tested)
       await user.click(getPickerDay('3'));
 
-      await act(() => {
+      await act(async () => {
         document.querySelector<HTMLButtonElement>('#test')!.focus();
       });
 
-      await waitFor(() => expect(screen.queryByRole('tooltip')).to.equal(null));
+      await waitForElementToBeRemoved(() => screen.queryByRole('tooltip'));
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));

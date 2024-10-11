@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, waitFor } from '@mui/internal-test-utils';
+import { act, screen } from '@mui/internal-test-utils';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import {
   getAllFieldInputRoot,
@@ -177,14 +177,14 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         return;
       }
 
-      renderWithProps({
-        enableAccessibleFieldDOMStructure: true,
-        open: true,
-        slotProps: { toolbar: { hidden: false } },
-        localeText: { toolbarTitle: 'Test toolbar' },
+      await act(async () => {
+        renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          open: true,
+          slotProps: { toolbar: { hidden: false } },
+          localeText: { toolbarTitle: 'Test toolbar' },
+        });
       });
-
-      await waitFor(() => expect(screen.getByRole('dialog')).toBeVisible());
 
       if (params.variant === 'mobile' && params.type === 'date-time-range') {
         expect(screen.getByLabelText('Start End')).to.have.attribute('role', 'dialog');
@@ -198,23 +198,23 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         return;
       }
 
-      renderWithProps({
-        enableAccessibleFieldDOMStructure: true,
-        open: true,
-        slotProps: { toolbar: { hidden: true } },
-        ...(isRangeType
-          ? {
-              localeText: {
-                start: 'test',
-                end: 'relationship',
-              },
-            }
-          : { label: 'test relationship' }),
+      await act(async () => {
+        renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          open: true,
+          slotProps: { toolbar: { hidden: true } },
+          ...(isRangeType
+            ? {
+                localeText: {
+                  start: 'test',
+                  end: 'relationship',
+                },
+              }
+            : { label: 'test relationship' }),
+        });
       });
 
-      await waitFor(() =>
-        expect(screen.getByRole('dialog', { name: 'test relationship' })).not.to.equal(null),
-      );
+      expect(screen.getByRole('dialog', { name: 'test relationship' })).not.to.equal(null);
     });
 
     it('should have correct labelledby relationship without label and hidden toolbar but external props', async () => {
@@ -222,30 +222,30 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         return;
       }
 
-      render(
-        <div>
-          <div id="label-id">external label</div>
-          <ElementToTest
-            enableAccessibleFieldDOMStructure
-            open
-            {...(isRangeType && {
-              localeText: {
-                start: '',
-                end: '',
-              },
-            })}
-            slotProps={{
-              toolbar: { hidden: true },
-              [params.variant === 'desktop' ? 'popper' : 'mobilePaper']: {
-                'aria-labelledby': 'label-id',
-              },
-            }}
-          />
-        </div>,
+      await act(async () =>
+        render(
+          <div>
+            <div id="label-id">external label</div>
+            <ElementToTest
+              enableAccessibleFieldDOMStructure
+              open
+              {...(isRangeType && {
+                localeText: {
+                  start: '',
+                  end: '',
+                },
+              })}
+              slotProps={{
+                toolbar: { hidden: true },
+                [params.variant === 'desktop' ? 'popper' : 'mobilePaper']: {
+                  'aria-labelledby': 'label-id',
+                },
+              }}
+            />
+          </div>,
+        ),
       );
-      await waitFor(() =>
-        expect(screen.getByLabelText('external label')).to.have.attribute('role', 'dialog'),
-      );
+      expect(screen.getByLabelText('external label')).to.have.attribute('role', 'dialog');
     });
 
     describe('slots: textField', () => {

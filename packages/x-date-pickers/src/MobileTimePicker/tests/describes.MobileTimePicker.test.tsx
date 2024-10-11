@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, fireTouchChangedEvent } from '@mui/internal-test-utils';
+import { screen, fireTouchChangedEvent, act } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -80,12 +80,21 @@ describe('<MobileTimePicker /> - Describes', () => {
         adapterToUse.getHours(newValue),
         hasMeridiem ? '12hours' : '24hours',
       );
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
+      await act(async () => {
+        fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
+      });
+      await act(async () => {
+        fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
+      });
+
       // change minutes
       const minutesClockEvent = getClockTouchEvent(adapterToUse.getMinutes(newValue), 'minutes');
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', minutesClockEvent);
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', minutesClockEvent);
+      await act(() => {
+        fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', minutesClockEvent);
+      });
+      await act(() => {
+        fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', minutesClockEvent);
+      });
 
       if (hasMeridiem) {
         const newHours = adapterToUse.getHours(newValue);
