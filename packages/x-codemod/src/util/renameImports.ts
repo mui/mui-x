@@ -69,7 +69,7 @@ export function renameImports(parameters: RenameImportsParameters) {
   // + import { B } from '@mui/x-date-pickers/A'
   const nestedImportRegExp = new RegExp(`^(${parameters.packageNames.join('|')})/(.*)$`);
   importDeclarations
-    // Filter out the declarations that are not nested endpoint of the matching packages or that don't have any update to apply
+    // Filter out the declarations that are not nested endpoints of the matching packages or that don't have any update to apply
     .filter((path) => {
       const pathStr = getPathStrFromPath(path);
       if (!pathStr.match(nestedImportRegExp)) {
