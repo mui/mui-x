@@ -74,6 +74,12 @@ In the example below, the `Full name` column group can be divided, but not other
 
 {{"demo": "BreakingGroupDemo.js", "disableAd": true, "bg": "inline"}}
 
+## Collapsible column groups
+
+The demo below uses [`renderHeaderGroup`](/x/react-data-grid/column-groups/#customize-column-group) to add a button to collapse/expand the column group.
+
+{{"demo": "CollapsibleColumnGroups.js", "bg": "inline"}}
+
 ## Manage group visibility 🚧
 
 The column group should allow to switch between an extended/collapsed view which hide/show some columns.

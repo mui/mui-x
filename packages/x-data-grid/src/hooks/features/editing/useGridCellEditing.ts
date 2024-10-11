@@ -423,7 +423,7 @@ export const useGridCellEditing = (
 
         try {
           const row = apiRef.current.getRow(id)!;
-          Promise.resolve(processRowUpdate(rowUpdate, row))
+          Promise.resolve(processRowUpdate(rowUpdate, row, { rowId: id }))
             .then((finalRowUpdate) => {
               apiRef.current.updateRows([finalRowUpdate]);
               finishCellEditMode();

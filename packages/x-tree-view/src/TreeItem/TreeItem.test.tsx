@@ -10,44 +10,6 @@ import { getFakeContextValue } from 'test/utils/tree-view/fakeContextValue';
 
 describeTreeView<[]>('TreeItem component', ({ render, treeItemComponentName }) => {
   describe('ContentComponent / ContentProps props (TreeItem only)', () => {
-    it('should use the ContentComponent prop when defined', function test() {
-      if (treeItemComponentName === 'TreeItem2') {
-        this.skip();
-      }
-
-      const ContentComponent = React.forwardRef((props: any, ref: React.Ref<HTMLDivElement>) => (
-        <div className={props.classes.root} ref={ref}>
-          MOCK CONTENT COMPONENT
-        </div>
-      ));
-
-      const view = render({
-        items: [{ id: '1' }],
-        slotProps: { item: { ContentComponent } },
-      });
-
-      expect(view.getItemContent('1').textContent).to.equal('MOCK CONTENT COMPONENT');
-    });
-
-    it('should use the ContentProps prop when defined', function test() {
-      if (treeItemComponentName === 'TreeItem2') {
-        this.skip();
-      }
-
-      const ContentComponent = React.forwardRef((props: any, ref: React.Ref<HTMLDivElement>) => (
-        <div className={props.classes.root} ref={ref}>
-          {props.customProp}
-        </div>
-      ));
-
-      const view = render({
-        items: [{ id: '1' }],
-        slotProps: { item: { ContentComponent, ContentProps: { customProp: 'ABCDEF' } as any } },
-      });
-
-      expect(view.getItemContent('1').textContent).to.equal('ABCDEF');
-    });
-
     it('should render TreeItem when itemId prop is escaping characters without throwing an error', function test() {
       if (treeItemComponentName === 'TreeItem2') {
         this.skip();
@@ -92,17 +54,6 @@ describe('<TreeItem />', () => {
           'TreeItem',
         );
       }).toErrorDev('Failed prop type: The prop `onFocus` is not supported.');
-    });
-
-    it('should warn if an `ContentComponent` that does not hold a ref is used', () => {
-      expect(() => {
-        PropTypes.checkPropTypes(
-          TreeItem.propTypes,
-          { itemId: 'one', ContentComponent: () => {} },
-          'prop',
-          'TreeItem',
-        );
-      }).toErrorDev('Expected an element type that can hold a ref.');
     });
   });
 });
