@@ -21,6 +21,7 @@ import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
+import { getFocusedListItemIndex } from '../internals/utils/utils';
 
 const useUtilityClasses = (ownerState: DigitalClockProps<any>) => {
   const { classes } = ownerState;
@@ -115,6 +116,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
 
   const containerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, containerRef);
+  const listRef = React.useRef<HTMLUListElement>(null);
 
   const props = useThemeProps({
     props: inProps,
@@ -294,6 +296,42 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     utils.isEqual(option, valueOrReferenceDate),
   );
 
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    switch (event.key) {
+      case 'PageUp': {
+        if (!listRef.current) {
+          return;
+        }
+        const newIndex = getFocusedListItemIndex(listRef.current) - 5;
+        const children = listRef.current?.children;
+        const newFocusedIndex = Math.max(0, newIndex);
+
+        const childToFocus = children[newFocusedIndex];
+        if (childToFocus) {
+          (childToFocus as HTMLElement).focus();
+        }
+        event.preventDefault();
+        break;
+      }
+      case 'PageDown': {
+        if (!listRef.current) {
+          return;
+        }
+        const newIndex = getFocusedListItemIndex(listRef.current) + 5;
+        const children = listRef.current?.children;
+        const newFocusedIndex = Math.min(children.length - 1, newIndex);
+
+        const childToFocus = children[newFocusedIndex];
+        if (childToFocus) {
+          (childToFocus as HTMLElement).focus();
+        }
+        event.preventDefault();
+        break;
+      }
+      default:
+    }
+  };
+
   return (
     <DigitalClockRoot
       ref={handleRef}
@@ -302,9 +340,11 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       {...other}
     >
       <DigitalClockList
+        ref={listRef}
         role="listbox"
         aria-label={translations.timePickerToolbarTitle}
         className={classes.list}
+        onKeyDown={handleKeyDown}
       >
         {timeOptions.map((option, index) => {
           if (skipDisabled && isTimeDisabled(option)) {

@@ -7,7 +7,7 @@ title: Data Grid - Cell selection
 <p class="description">Cell selection allows the user to select individual cells or a range of cells.</p>
 
 The Data Grid has, by default, the ability to select rows.
-On the `DataGridPremium`, you can also enable the ability to select cells with the `cellSelection` prop.
+On the Data Grid Premium, you can also enable the ability to select cells with the `cellSelection` prop.
 
 ```tsx
 <DataGridPremium cellSelection />
