@@ -245,7 +245,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
   // The properties that can't be overridden with `colDefOverride`
   const forcedProperties: Pick<GridColDef, 'field' | 'editable'> = {
     field: getRowGroupingFieldFromGroupingCriteria(groupingCriteria),
-    ...GROUPING_COL_DEF_FORCED_PROPERTIES,
+    ...GROUPING_COL_DEF_FORCED_PROPERTIES_DEFAULT,
   };
 
   return {

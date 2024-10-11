@@ -72,7 +72,7 @@ export default function ServerSideRowGroupingErrorHandling() {
           control={
             <Checkbox
               checked={shouldRequestsFail}
-              onChange={(e) => setShouldRequestsFail(e.target.checked)}
+              onChange={(event) => setShouldRequestsFail(event.target.checked)}
             />
           }
           label="Make the requests fail"
