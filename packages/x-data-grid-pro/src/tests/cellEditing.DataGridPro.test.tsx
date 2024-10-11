@@ -24,12 +24,13 @@ describe('<DataGridPro /> - Cell editing', () => {
 
   const defaultData = getBasicGridData(4, 2);
 
-  const renderEditCell = spy((() => <input />) as (
+  const defaultRenderEditCell = (() => <input />) as (
     props: GridRenderEditCellParams,
-  ) => React.ReactNode);
+  ) => React.ReactNode;
 
   function TestCase(props: Partial<DataGridProProps> & { columnProps?: Record<string, any> }) {
     apiRef = useGridApiRef();
+    const { columnProps = {}, ...rest } = props;
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro
@@ -37,18 +38,19 @@ describe('<DataGridPro /> - Cell editing', () => {
           {...defaultData}
           columns={defaultData.columns.map((column) =>
             column.field === 'currencyPair'
-              ? { ...column, renderEditCell, editable: true, ...(props.columnProps ?? {}) }
+              ? {
+                  ...column,
+                  renderEditCell: defaultRenderEditCell,
+                  editable: true,
+                  ...columnProps,
+                }
               : column,
           )}
-          {...props}
+          {...rest}
         />
       </div>
     );
   }
-
-  afterEach(() => {
-    renderEditCell.resetHistory();
-  });
 
   describe('apiRef', () => {
     describe('startCellEditMode', () => {
@@ -68,14 +70,19 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should render the component given in renderEditCell', () => {
-        render(<TestCase />);
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ renderEditCell }} />);
         expect(renderEditCell.callCount).to.equal(0);
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(renderEditCell.callCount).not.to.equal(0);
       });
 
       it('should pass props to renderEditCell', () => {
-        render(<TestCase />);
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ renderEditCell }} />);
+
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(renderEditCell.lastCall.args[0].value).to.equal('USDGBP');
         expect(renderEditCell.lastCall.args[0].error).to.equal(false);
@@ -83,7 +90,10 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should empty the value if deleteValue is true', () => {
-        render(<TestCase />);
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ renderEditCell }} />);
+
         act(() =>
           apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair', deleteValue: true }),
         );
@@ -95,7 +105,10 @@ describe('<DataGridPro /> - Cell editing', () => {
 
     describe('setEditCellValue', () => {
       it('should update the value prop given to renderEditCell', async () => {
-        render(<TestCase />);
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ renderEditCell }} />);
+
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(renderEditCell.lastCall.args[0].value).to.equal('USDGBP');
         await act(() =>
@@ -109,7 +122,10 @@ describe('<DataGridPro /> - Cell editing', () => {
           ...row,
           currencyPair: value.trim(),
         });
-        render(<TestCase columnProps={{ valueSetter }} />);
+
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ valueSetter, renderEditCell }} />);
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(renderEditCell.lastCall.args[0].row).to.deep.equal(defaultData.rows[0]);
         await act(() =>
@@ -123,7 +139,10 @@ describe('<DataGridPro /> - Cell editing', () => {
 
       it('should pass the new value through the value parser if defined', async () => {
         const valueParser = spy((value) => value.toLowerCase());
-        render(<TestCase columnProps={{ valueParser }} />);
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ valueParser, renderEditCell }} />);
+
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(valueParser.callCount).to.equal(0);
         await act(() =>
@@ -145,7 +164,9 @@ describe('<DataGridPro /> - Cell editing', () => {
 
       it('should set isProcessingProps to true before calling preProcessEditCellProps', async () => {
         const preProcessEditCellProps = spy(({ props }: GridPreProcessEditCellProps) => props);
-        render(<TestCase columnProps={{ preProcessEditCellProps }} />);
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ preProcessEditCellProps, renderEditCell }} />);
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
         let promise: Promise<boolean> | null = null;
         // We want to flush updates before preProcessEditCellProps resolves
@@ -218,7 +239,9 @@ describe('<DataGridPro /> - Cell editing', () => {
           ...props,
           foo: 'bar',
         });
-        render(<TestCase columnProps={{ preProcessEditCellProps }} />);
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ preProcessEditCellProps, renderEditCell }} />);
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(renderEditCell.lastCall.args[0].foo).to.equal(undefined);
         await act(() =>
@@ -232,7 +255,9 @@ describe('<DataGridPro /> - Cell editing', () => {
           ...props,
           value: 'foobar',
         });
-        render(<TestCase columnProps={{ preProcessEditCellProps }} />);
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ preProcessEditCellProps, renderEditCell }} />);
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(renderEditCell.lastCall.args[0].value).to.equal('USDGBP');
         await act(() =>
@@ -243,7 +268,9 @@ describe('<DataGridPro /> - Cell editing', () => {
 
       it('should set isProcessingProps to false after calling preProcessEditCellProps', async () => {
         const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => props;
-        render(<TestCase columnProps={{ preProcessEditCellProps }} />);
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ preProcessEditCellProps, renderEditCell }} />);
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
         let promise: Promise<boolean> | null = null;
         // We want to flush updates before preProcessEditCellProps resolves
@@ -312,7 +339,11 @@ describe('<DataGridPro /> - Cell editing', () => {
         clock.withFakeTimers();
 
         it('should debounce multiple changes if debounceMs > 0', () => {
-          render(<TestCase />);
+          const renderEditCell = spy((() => <input />) as (
+            props: GridRenderEditCellParams,
+          ) => React.ReactNode);
+
+          render(<TestCase columnProps={{ renderEditCell }} />);
           act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
           expect(renderEditCell.lastCall.args[0].value).to.equal('USDGBP');
           renderEditCell.resetHistory();
@@ -669,7 +700,9 @@ describe('<DataGridPro /> - Cell editing', () => {
 
       it('should run all pending value mutations before calling processRowUpdate', async () => {
         const processRowUpdate = spy(() => new Promise(() => {}));
-        render(<TestCase processRowUpdate={processRowUpdate} />);
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase processRowUpdate={processRowUpdate} columnProps={{ renderEditCell }} />);
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(
           () =>
