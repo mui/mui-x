@@ -58,6 +58,8 @@ const getMatchingRootImport = (
 export function renameImports(parameters: RenameImportsParameters) {
   const { j, root } = parameters;
 
+  const renamedIdentifiersMap: Record<string, string> = {};
+
   const importDeclarations = root
     // Find all the import declarations (import { ... } from '...')
     .find(j.ImportDeclaration);
@@ -89,6 +91,14 @@ export function renameImports(parameters: RenameImportsParameters) {
       const newName = getMatchingNestedImport(path, parameters)!.importsMapping[
         path.node.imported.name
       ];
+
+      // If the import is alias, we keep the alias and don't rename the variable usage
+      const hasAlias = path.node.local?.name !== path.node.imported.name;
+      if (hasAlias) {
+        return j.importSpecifier(j.identifier(newName), j.identifier(path.node.local!.name));
+      }
+
+      renamedIdentifiersMap[path.node.imported.name] = newName;
       return j.importSpecifier(j.identifier(newName));
     });
 
@@ -111,6 +121,14 @@ export function renameImports(parameters: RenameImportsParameters) {
       const newName = getMatchingRootImport(path, parameters)!.importsMapping[
         path.node.imported.name
       ];
+
+      // If the import is alias, we keep the alias and don't rename the variable usage
+      const hasAlias = path.node.local?.name !== path.node.imported.name;
+      if (hasAlias) {
+        return j.importSpecifier(j.identifier(newName), j.identifier(path.node.local!.name));
+      }
+
+      renamedIdentifiersMap[path.node.imported.name] = newName;
       return j.importSpecifier(j.identifier(newName));
     });
 
@@ -147,14 +165,10 @@ export function renameImports(parameters: RenameImportsParameters) {
   root
     .find(j.Identifier)
     .filter((path) => {
-      return parameters.imports.some((importConfig) =>
-        importConfig.importsMapping.hasOwnProperty(path.node.name),
-      );
+      return renamedIdentifiersMap.hasOwnProperty(path.node.name);
     })
     .replaceWith((path) => {
-      const newName = parameters.imports.find((importConfig) =>
-        importConfig.importsMapping.hasOwnProperty(path.node.name),
-      )!.importsMapping[path.node.name];
+      const newName = renamedIdentifiersMap[path.node.name];
       return j.identifier(newName);
     });
 
