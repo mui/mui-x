@@ -355,6 +355,16 @@ export type GridColDef<R extends GridValidRowModel = any, V = any, F = V> =
   | GridActionsColDef<R, V, F>
   | GridSingleSelectColDef<R, V, F>;
 
+/**
+ * Column Definition interface used for the single column in list view.
+ * @demos
+ *   - [List view](/x/react-data-grid/list-view/)
+ */
+export type GridListColDef<R extends GridValidRowModel = any, V = any, F = V> = Pick<
+  GridColDef<R, V, F>,
+  'field' | 'renderCell' | 'align' | 'cellClassName' | 'display'
+>;
+
 export type GridColTypeDef<V = any, F = V> = Omit<GridBaseColDef<any, V, F>, 'field'>;
 
 export type GridStateColDef<R extends GridValidRowModel = any, V = any, F = V> = GridColDef<

@@ -529,6 +529,21 @@ DataGridPremiumRaw.propTypes = {
    */
   keepNonExistentRowsSelected: PropTypes.bool,
   /**
+   * Definition of the column rendered when the `listView` prop is enabled.
+   */
+  listColumn: PropTypes.shape({
+    align: PropTypes.oneOf(['center', 'left', 'right']),
+    cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    display: PropTypes.oneOf(['flex', 'text']),
+    field: PropTypes.string.isRequired,
+    renderCell: PropTypes.func,
+  }),
+  /**
+   * If `true`, displays the data in a list view.
+   * Use in combination with `listColumn`.
+   */
+  listView: PropTypes.bool,
+  /**
    * If `true`, a loading overlay is displayed.
    * @default false
    */

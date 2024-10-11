@@ -12,7 +12,7 @@ import { GridRowId, GridRowIdGetter, GridRowsProp, GridValidRowModel } from '../
 import { GridEventListener } from '../events';
 import { GridCallbackDetails, GridLocaleText } from '../api';
 import { GridApiCommunity } from '../api/gridApiCommunity';
-import type { GridColDef } from '../colDef/gridColDef';
+import type { GridColDef, GridListColDef } from '../colDef/gridColDef';
 import { GridClasses } from '../../constants/gridClasses';
 import {
   GridRowHeightParams,
@@ -861,7 +861,7 @@ export interface DataGridProSharedPropsWithDefaultValue {
   listView: boolean;
 }
 
-export interface DataGridProSharedPropsWithoutDefaultValue {
+export interface DataGridProSharedPropsWithoutDefaultValue<R extends GridValidRowModel = any> {
   /**
    * Override the height of the header filters.
    */
@@ -870,7 +870,7 @@ export interface DataGridProSharedPropsWithoutDefaultValue {
   /**
    * Definition of the column rendered when the `listView` prop is enabled.
    */
-  listColumn?: GridColDef;
+  listColumn?: GridListColDef<R>;
 }
 
 export interface DataGridPremiumSharedPropsWithDefaultValue {

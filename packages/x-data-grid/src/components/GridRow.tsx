@@ -29,6 +29,7 @@ import { PinnedPosition, gridPinnedColumnPositionLookup } from './cell/GridCell'
 import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
+import { GridSignature } from '../hooks';
 
 export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   row: GridRowModel;
@@ -439,7 +440,11 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       ),
     );
   }
-  if (rootProps.listView) {
+  if (rootProps.listView && rootProps.signature !== GridSignature.DataGrid) {
+    if (!rootProps.listColumn) {
+      throw new Error('MUI X: The `listColumn` prop is required when `listView` is enabled.');
+    }
+
     const columnsToKeep = visibleColumns.filter((col) => {
       if (col.type === 'actions') {
         return true;
@@ -450,14 +455,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     const listColumnWidth =
       dimensions.viewportInnerSize.width -
       columnsToKeep.reduce((acc, col) => acc + col.computedWidth, 0);
-    cells.push(
-      getCell(
-        { ...((rootProps as any).listColumn as GridStateColDef), computedWidth: listColumnWidth },
-        0,
-        0,
-        1,
-      ),
-    );
+    cells.push(getCell({ ...rootProps.listColumn, computedWidth: listColumnWidth }, 0, 0, 1));
     columnsToKeep.forEach((column, colIndex) => {
       cells.push(getCell(column, 1 + colIndex, 1 + colIndex, columnsCount));
     });

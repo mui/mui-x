@@ -7,7 +7,7 @@ import {
   GridValidRowModel,
   GridGroupNode,
   GridFeatureMode,
-  GridColDef,
+  GridListColDef,
 } from '@mui/x-data-grid';
 import type {
   GridExperimentalFeatures,
@@ -254,5 +254,5 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
   /**
    * Definition of the column rendered when the `listView` prop is enabled.
    */
-  listColumn?: GridColDef;
+  listColumn?: GridListColDef<R>;
 }

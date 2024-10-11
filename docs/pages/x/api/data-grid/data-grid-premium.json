@@ -218,6 +218,13 @@
     },
     "keepColumnPositionIfDraggedOutside": { "type": { "name": "bool" }, "default": "false" },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
+    "listColumn": {
+      "type": {
+        "name": "shape",
+        "description": "{ align?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', cellClassName?: func<br>&#124;&nbsp;string, display?: 'flex'<br>&#124;&nbsp;'text', field: string, renderCell?: func }"
+      }
+    },
+    "listView": { "type": { "name": "bool" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "logger": {
