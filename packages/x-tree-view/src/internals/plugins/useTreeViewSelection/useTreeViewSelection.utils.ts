@@ -1,10 +1,7 @@
 import { TreeViewItemId, TreeViewSelectionPropagation } from '../../../models';
 import { TreeViewInstance } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
-import {
-  TreeViewSelectionChanges,
-  UseTreeViewSelectionSignature,
-} from './useTreeViewSelection.types';
+import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
 
 /**
  * Transform the `selectedItems` model to be an array if it was a string or null.
@@ -35,20 +32,16 @@ export const getAddedAndRemovedItems = ({
   instance,
   oldModel,
   newModel,
-  explicitChanges,
 }: {
   instance: TreeViewInstance<[UseTreeViewSelectionSignature]>;
   oldModel: TreeViewItemId[];
   newModel: TreeViewItemId[];
-  explicitChanges?: TreeViewSelectionChanges;
 }) => {
   const newModelLookup = getLookupFromArray(newModel);
-  const addedItems = newModel.filter((itemId) => !instance.isItemSelected(itemId));
-  const removedItems = oldModel.filter((itemId) => !newModelLookup[itemId]);
 
   return {
-    added: [...(explicitChanges?.added ?? []), ...addedItems],
-    removed: [...(explicitChanges?.removed ?? []), ...removedItems],
+    added: newModel.filter((itemId) => !instance.isItemSelected(itemId)),
+    removed: oldModel.filter((itemId) => !newModelLookup[itemId]),
   };
 };
 
