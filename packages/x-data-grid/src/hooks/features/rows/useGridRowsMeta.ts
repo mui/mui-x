@@ -222,7 +222,7 @@ export const useGridRowsMeta = (
       const processedSizes = calculateRowProcessedSizes(row);
       /* eslint-disable-next-line guard-for-in */
       for (const key in processedSizes) {
-        const value = processedSizes[key];
+        const value = processedSizes[key as keyof Sizes] as number;
         if (key !== 'baseCenter') {
           otherSizes += value;
         }
