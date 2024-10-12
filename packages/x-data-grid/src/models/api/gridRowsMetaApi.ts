@@ -47,6 +47,10 @@ export interface GridRowsMetaApi {
 
 export interface GridRowsMetaPrivateApi {
   /**
+   * Observe row for 'auto' height changes.
+   */
+  observeRow: (element: Element, rowId: GridRowId) => ReturnType<React.EffectCallback>;
+  /**
    * Determines if the height of a row is "auto".
    * @param {GridRowId} id The id of the row.
    * @returns {boolean} True if the row height is "auto", false otherwise.

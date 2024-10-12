@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { unstable_debounce as debounce } from '@mui/utils';
+import useLazyRef from '@mui/utils/useLazyRef';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsMetaApi, GridRowsMetaPrivateApi } from '../../../models/api/gridRowsMetaApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -17,6 +18,16 @@ import { gridPinnedRowsSelector } from './gridRowsSelector';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../DataGrid/useDataGridProps';
 
 // TODO: I think the row heights can now be encoded as a single `size` instead of `sizes.baseXxxx`
+
+// HACK: Minimal shim to get jsdom to work.
+const ResizeObserverImpl = (
+  typeof ResizeObserver !== 'undefined'
+    ? ResizeObserver
+    : class ResizeObserver {
+        observe() {}
+        unobserve() {}
+      }
+) as typeof ResizeObserver;
 
 export const rowsMetaStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -99,6 +110,29 @@ export const useGridRowsMeta = (
     rowHeightWarning,
   );
   const rowHeight = Math.floor(validRowHeight * densityFactor);
+
+  const resizeObserver = useLazyRef(
+    () =>
+      new ResizeObserverImpl((entries) => {
+        for (let i = 0; i < entries.length; i++) {
+          const entry = entries[i];
+          const height =
+            entry.borderBoxSize && entry.borderBoxSize.length > 0
+              ? entry.borderBoxSize[0].blockSize
+              : entry.contentRect.height;
+          const rowId = (entry.target as any).__mui_id;
+          apiRef.current.unstable_storeRowHeightMeasurement(rowId, height);
+        }
+      }),
+  ).current;
+
+  const observeRow: GridRowsMetaPrivateApi['observeRow'] = (element, rowId) => {
+    (element as any).__mui_id = rowId;
+
+    resizeObserver.observe(element);
+
+    return () => resizeObserver.unobserve(element);
+  };
 
   const hydrateRowsMeta = React.useCallback(() => {
     hasRowWithAutoHeight.current = false;
@@ -257,7 +291,7 @@ export const useGridRowsMeta = (
     GridRowsMetaApi['unstable_storeRowHeightMeasurement']
   >(
     (id, height) => {
-      if (!rowsHeightLookup.current[id] || !rowsHeightLookup.current[id].autoHeight) {
+      if (!rowsHeightLookup.current[id]?.autoHeight) {
         return;
       }
 
@@ -315,8 +349,9 @@ export const useGridRowsMeta = (
   };
 
   const rowsMetaPrivateApi: GridRowsMetaPrivateApi = {
-    getLastMeasuredRowIndex,
+    observeRow,
     rowHasAutoHeight,
+    getLastMeasuredRowIndex,
   };
 
   useGridApiMethod(apiRef, rowsMetaApi, 'public');
