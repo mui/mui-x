@@ -244,16 +244,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     objectShallowCompare,
   );
 
-  let minHeight = rowHeight;
-  if (minHeight === 'auto' && sizes) {
-    const numberOfBaseSizes = 1;
-    const maximumSize = sizes.baseCenter ?? 0;
-
-    if (maximumSize > 0 && numberOfBaseSizes > 1) {
-      minHeight = maximumSize;
-    }
-  }
-
   const style = React.useMemo(() => {
     if (isNotVisible) {
       return {
@@ -266,7 +256,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     const rowStyle = {
       ...styleProp,
       maxHeight: rowHeight === 'auto' ? 'none' : rowHeight, // max-height doesn't support "auto"
-      minHeight,
+      minHeight: rowHeight,
       '--height': typeof rowHeight === 'number' ? `${rowHeight}px` : rowHeight,
     };
 
@@ -287,7 +277,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     }
 
     return rowStyle;
-  }, [isNotVisible, rowHeight, styleProp, minHeight, sizes, rootProps.rowSpacingType]);
+  }, [isNotVisible, rowHeight, styleProp, sizes, rootProps.rowSpacingType]);
 
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
   const ariaAttributes = rowNode ? getRowAriaAttributes(rowNode, index) : undefined;

@@ -17,7 +17,12 @@ import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { gridPinnedRowsSelector } from './gridRowsSelector';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../DataGrid/useDataGridProps';
 
-// TODO: I think the row heights can now be encoded as a single `size` instead of `sizes.baseXxxx`
+type Sizes = {
+  baseCenter: number;
+  spacingTop?: number;
+  spacingBottom?: number;
+  detail?: number;
+};
 
 // HACK: Minimal shim to get jsdom to work.
 const ResizeObserverImpl = (
@@ -89,7 +94,7 @@ export const useGridRowsMeta = (
   const rowsHeightLookup = React.useRef<{
     [key: GridRowId]: {
       isResized: boolean;
-      sizes: Record<string, number>;
+      sizes: Sizes;
       autoHeight: boolean; // Determines if the row has dynamic height
       needsFirstMeasurement: boolean; // Determines if the row was never measured. If true, use the estimated height as row height.
     };
@@ -201,7 +206,7 @@ export const useGridRowsMeta = (
         'rowHeight',
         initialHeights,
         row,
-      ) as Record<string, number>;
+      ) as Sizes;
 
       rowsHeightLookup.current[row.id].sizes = processedSizes;
 
