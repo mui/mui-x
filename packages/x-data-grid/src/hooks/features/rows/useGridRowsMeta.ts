@@ -153,7 +153,10 @@ export const useGridRowsMeta = (
       }
 
       const { isResized, needsFirstMeasurement, sizes } = rowsHeightLookup.current[row.id];
-      let baseRowHeight = typeof rowHeight === 'number' && rowHeight > 0 ? rowHeight : 52;
+      let baseRowHeight =
+        typeof rowHeight === 'number' && rowHeight > 0
+          ? rowHeight
+          : DATA_GRID_PROPS_DEFAULT_VALUES.rowHeight;
       const existingBaseRowHeight = sizes.baseCenter;
 
       if (isResized) {
@@ -186,7 +189,7 @@ export const useGridRowsMeta = (
         rowsHeightLookup.current[row.id].needsFirstMeasurement = false;
       }
 
-      const initialHeights = { baseCenter: baseRowHeight } as Record<string, number>;
+      const initialHeights = { baseCenter: baseRowHeight } as Sizes;
 
       if (getRowSpacing) {
         const indexRelativeToCurrentPage = apiRef.current.getRowIndexRelativeToVisibleRows(row.id);
@@ -274,7 +277,7 @@ export const useGridRowsMeta = (
     [rowHeight],
   );
 
-  const getRowInternalSizes = (rowId: GridRowId): Record<string, number> | undefined =>
+  const getRowInternalSizes = (rowId: GridRowId): Sizes | undefined =>
     rowsHeightLookup.current[rowId]?.sizes;
 
   const setRowHeight = React.useCallback<GridRowsMetaApi['unstable_setRowHeight']>(
