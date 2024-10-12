@@ -61,5 +61,6 @@
 # 2024
 /x/react-charts/heat-map/ /x/react-charts/heatmap/ 301
 /x/react-charts/tree-map/ /x/react-charts/treemap/ 301
+/x/react-data-grid/recipes-editing/ /x/react-data-grid/editing/recipes/ 301
 
 # Proxies

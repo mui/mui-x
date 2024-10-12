@@ -171,7 +171,7 @@ class CellValueUpdater {
               [
                 'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
                 'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-                'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
+                'For more detail, see https://mui.com/x/react-data-grid/editing/persistence/.',
               ],
               'error',
             );
