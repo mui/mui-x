@@ -296,10 +296,6 @@ export const useGridRowsMeta = (
     GridRowsMetaApi['unstable_storeRowHeightMeasurement']
   >(
     (id, height) => {
-      if (!rowsHeightLookup.current[id]?.autoHeight) {
-        return;
-      }
-
       // Only trigger hydration if the value is different, otherwise we trigger a loop
       const needsHydration = rowsHeightLookup.current[id].sizes.baseCenter !== height;
 
