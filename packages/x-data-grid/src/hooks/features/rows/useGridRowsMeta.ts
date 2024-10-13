@@ -235,7 +235,7 @@ export const useGridRowsMeta = (
       }),
   ).current;
 
-  const observeRow: GridRowsMetaPrivateApi['observeRow'] = (element, rowId) => {
+  const observeRowHeight: GridRowsMetaPrivateApi['observeRowHeight'] = (element, rowId) => {
     (element as any).__mui_id = rowId;
 
     resizeObserver.observe(element);
@@ -260,7 +260,7 @@ export const useGridRowsMeta = (
   };
 
   const rowsMetaPrivateApi: GridRowsMetaPrivateApi = {
-    observeRow,
+    observeRowHeight,
     rowHasAutoHeight,
     getRowHeightEntry,
     getLastMeasuredRowIndex,

@@ -165,7 +165,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     }
 
     if (ref.current && rowHeight === 'auto') {
-      return apiRef.current.observeRow(ref.current, rowId);
+      return apiRef.current.observeRowHeight(ref.current, rowId);
     }
   }, [apiRef, currentPage.range, rowHeight, rowId]);
 
