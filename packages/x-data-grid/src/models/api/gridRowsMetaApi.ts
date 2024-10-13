@@ -1,4 +1,5 @@
 import { GridRowId } from '../gridRows';
+import { HeightEntry } from '../../hooks/features/rows/gridRowsMetaInterfaces';
 
 /**
  * The Row Meta API interface that is available in the grid `apiRef`.
@@ -11,13 +12,6 @@ export interface GridRowsMetaApi {
    * @ignore - do not document.
    */
   unstable_getRowHeight: (id: GridRowId) => number;
-  /**
-   * Gets all sizes that compose the total height that the given row takes.
-   * @param {GridRowId} id The id of the row.
-   * @returns {Record<string, number>} The object containing the sizes.
-   * @ignore - do not document.
-   */
-  unstable_getRowInternalSizes: (id: GridRowId) => Record<string, number> | undefined;
   /**
    * Updates the base height of a row.
    * @param {GridRowId} id The id of the row.
@@ -62,4 +56,8 @@ export interface GridRowsMetaPrivateApi {
    * @returns {number} The index of the last measured row.
    */
   getLastMeasuredRowIndex: () => number;
+  /**
+   * Get the height entry from the cache or create one.
+   */
+  getRowHeightEntry: (id: GridRowId) => HeightEntry;
 }

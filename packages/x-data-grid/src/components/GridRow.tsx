@@ -238,9 +238,9 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   const rowReordering = (rootProps as any).rowReordering as boolean;
 
-  const sizes = useGridSelector(
+  const heightEntry = useGridSelector(
     apiRef,
-    () => ({ ...apiRef.current.unstable_getRowInternalSizes(rowId) }),
+    () => ({ ...apiRef.current.getRowHeightEntry(rowId) }),
     objectShallowCompare,
   );
 
@@ -260,24 +260,24 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       '--height': typeof rowHeight === 'number' ? `${rowHeight}px` : rowHeight,
     };
 
-    if (sizes?.spacingTop) {
+    if (heightEntry.spacingTop) {
       const property = rootProps.rowSpacingType === 'border' ? 'borderTopWidth' : 'marginTop';
-      rowStyle[property] = sizes.spacingTop;
+      rowStyle[property] = heightEntry.spacingTop;
     }
 
-    if (sizes?.spacingBottom) {
+    if (heightEntry.spacingBottom) {
       const property = rootProps.rowSpacingType === 'border' ? 'borderBottomWidth' : 'marginBottom';
       let propertyValue = rowStyle[property];
       // avoid overriding existing value
       if (typeof propertyValue !== 'number') {
         propertyValue = parseInt(propertyValue || '0', 10);
       }
-      propertyValue += sizes.spacingBottom;
+      propertyValue += heightEntry.spacingBottom;
       rowStyle[property] = propertyValue;
     }
 
     return rowStyle;
-  }, [isNotVisible, rowHeight, styleProp, sizes, rootProps.rowSpacingType]);
+  }, [isNotVisible, rowHeight, styleProp, heightEntry, rootProps.rowSpacingType]);
 
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
   const ariaAttributes = rowNode ? getRowAriaAttributes(rowNode, index) : undefined;
