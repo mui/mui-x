@@ -67,7 +67,7 @@
     "languageTag": "da-DK",
     "importName": "daDK",
     "localeName": "Danish",
-    "missingKeysCount": 5,
+    "missingKeysCount": 0,
     "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/daDK.ts"
   },
