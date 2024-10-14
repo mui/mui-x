@@ -1,24 +1,25 @@
 import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
-import { UseTreeViewItemsSignature, UseTreeViewItemsState } from './useTreeViewItems.types';
+import { UseTreeViewItemsSignature } from './useTreeViewItems.types';
 
-const selectorItems: TreeViewRootSelector<
-  [UseTreeViewItemsSignature],
-  UseTreeViewItemsState<any>['items']
-> = (state) => state.items;
+const selectorTreeViewItemsState: TreeViewRootSelector<UseTreeViewItemsSignature> = (state) =>
+  state.items;
 
-export const selectorItemMetaMap = createSelector(selectorItems, (items) => items.itemMetaMap);
+export const selectorItemMetaMap = createSelector(
+  selectorTreeViewItemsState,
+  (items) => items.itemMetaMap,
+);
 
 export const selectorItemOrderedChildrenIds = createSelector(
-  selectorItems,
+  selectorTreeViewItemsState,
   (items) => items.itemOrderedChildrenIds,
 );
 
 export const selectorItemChildrenIndexes = createSelector(
-  selectorItems,
+  selectorTreeViewItemsState,
   (items) => items.itemChildrenIndexes,
 );
 
-export const selectorItemMap = createSelector(selectorItems, (items) => items.itemMap);
+export const selectorItemMap = createSelector(selectorTreeViewItemsState, (items) => items.itemMap);
 
 export const selectorItemMeta = createSelector(
   [selectorItemMetaMap, (_, itemId: string) => itemId],

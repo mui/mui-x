@@ -1,7 +1,9 @@
-import { TreeViewRootSelector } from '../../utils/selectors';
+import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
 import { UseTreeViewIdSignature } from './useTreeViewId.types';
 
-export const selectorTreeViewId: TreeViewRootSelector<
-  [UseTreeViewIdSignature],
-  string | undefined
-> = (state) => state.id.treeId;
+const selectorTreeViewIdState: TreeViewRootSelector<UseTreeViewIdSignature> = (state) => state.id;
+
+export const selectorTreeViewId = createSelector(
+  selectorTreeViewIdState,
+  (idState) => idState.treeId,
+);

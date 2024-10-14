@@ -1,13 +1,8 @@
 import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
-import {
-  UseTreeViewExpansionSignature,
-  UseTreeViewExpansionState,
-} from './useTreeViewExpansion.types';
+import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 
-const selectorExpansion: TreeViewRootSelector<
-  [UseTreeViewExpansionSignature],
-  UseTreeViewExpansionState['expansion']
-> = (state) => state.expansion;
+const selectorExpansion: TreeViewRootSelector<UseTreeViewExpansionSignature> = (state) =>
+  state.expansion;
 
 export const selectorExpandedItemsMap = createSelector(
   selectorExpansion,

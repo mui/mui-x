@@ -1,16 +1,12 @@
 import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
-import {
-  UseTreeViewSelectionSignature,
-  UseTreeViewSelectionState,
-} from './useTreeViewSelection.types';
+import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
 
-const selectorSelection: TreeViewRootSelector<
-  [UseTreeViewSelectionSignature],
-  UseTreeViewSelectionState['selection']
-> = (state) => state.selection;
+const selectorTreeViewSelectionState: TreeViewRootSelector<UseTreeViewSelectionSignature> = (
+  state,
+) => state.selection;
 
 export const selectorSelectedItemsMap = createSelector(
-  selectorSelection,
+  selectorTreeViewSelectionState,
   (selection) => selection.selectedItemsMap,
 );
 

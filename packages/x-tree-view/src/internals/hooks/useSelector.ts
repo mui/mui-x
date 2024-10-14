@@ -1,7 +1,7 @@
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
 import { TreeViewAnyPluginSignature, TreeViewState } from '../models';
 import { TreeViewStore } from '../utils/TreeViewStore';
-import { TreeViewSelectorWithArgs } from '../utils/selectors';
+import { TreeViewSelector } from '../utils/selectors';
 
 const defaultCompare = Object.is;
 
@@ -11,7 +11,7 @@ export const useSelector = <
   TValue,
 >(
   store: TreeViewStore<TSignatures>,
-  selector: TreeViewSelectorWithArgs<TreeViewState<TSignatures>, TArgs, TValue>,
+  selector: TreeViewSelector<TreeViewState<TSignatures>, TArgs, TValue>,
   args: TArgs = undefined as TArgs,
   equals: (a: TValue, b: TValue) => boolean = defaultCompare,
 ): TValue => {

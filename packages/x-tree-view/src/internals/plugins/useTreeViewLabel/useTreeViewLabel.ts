@@ -13,7 +13,7 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ st
   const isItemBeingEditedRef = (itemId: TreeViewItemId) => editedItemRef.current === itemId;
 
   const setEditedItemId = (editedItemId: TreeViewItemId | null) => {
-    store.update((prevState) => ({ ...prevState, editedItemId }));
+    store.update((prevState) => ({ ...prevState, label: { editedItemId } }));
     editedItemRef.current = editedItemId;
   };
 
@@ -86,7 +86,7 @@ useTreeViewLabel.getDefaultizedParams = ({ params, experimentalFeatures }) => {
 };
 
 useTreeViewLabel.getInitialState = () => ({
-  editedItemId: null,
+  label: { editedItemId: null },
 });
 
 useTreeViewLabel.params = {

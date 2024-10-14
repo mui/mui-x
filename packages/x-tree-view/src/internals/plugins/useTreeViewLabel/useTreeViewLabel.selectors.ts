@@ -2,10 +2,13 @@ import { UseTreeViewLabelSignature } from './useTreeViewLabel.types';
 import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
 import { selectorItemMap } from '../useTreeViewItems/useTreeViewItems.selectors';
 
-export const selectorEditedItemId: TreeViewRootSelector<
-  [UseTreeViewLabelSignature],
-  string | null
-> = (state) => state.editedItemId;
+const selectorTreeViewLabelState: TreeViewRootSelector<UseTreeViewLabelSignature> = (state) =>
+  state.label;
+
+export const selectorEditedItemId = createSelector(
+  selectorTreeViewLabelState,
+  (labelState) => labelState.editedItemId,
+);
 
 export const selectorIsItemEditable = createSelector(
   [

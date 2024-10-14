@@ -53,7 +53,9 @@ export type UseTreeViewLabelDefaultizedParameters<R extends {}> = DefaultizedPro
 >;
 
 export interface UseTreeViewLabelState {
-  editedItemId: string | null;
+  label: {
+    editedItemId: string | null;
+  };
 }
 
 export interface UseTreeViewLabelContextValue {

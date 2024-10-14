@@ -14,18 +14,20 @@ const cache = new WeakMap<
   Map<Parameters<typeof reselectCreateSelector>, any>
 >();
 
-export type TreeViewSelectorWithArgs<TState, TArgs, TResult> = (
-  state: TState,
-  args: TArgs,
-) => TResult;
+export type TreeViewRootSelector<TSignature extends TreeViewAnyPluginSignature> = <
+  TSignatures extends [TSignature],
+>(
+  state: TreeViewState<TSignatures>,
+) => TSignature['state'][keyof TSignature['state']];
 
-export type TreeViewRootSelector<
-  TMinimalSignatures extends TreeViewAnyPluginSignature[],
-  TResult,
-> = <TSignatures extends TMinimalSignatures>(state: TreeViewState<TSignatures>) => TResult;
+export type TreeViewSelector<TState, TArgs, TResult> = (state: TState, args: TArgs) => TResult;
 
+/**
+ * Method wrapping reselect's createSelector to provide caching for tree view instances.
+ *
+ */
 export const createSelector = ((...createSelectorArgs: any) => {
-  const selector = (state: TreeViewState<any>, selectorArgs: any) => {
+  const selector: TreeViewSelector<TreeViewState<any>, any, any> = (state, selectorArgs) => {
     const cacheKey = state.cacheKey;
 
     // If there is no cache for the current tree view instance, create one.
