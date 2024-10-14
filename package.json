@@ -206,7 +206,7 @@
     "@types/node": "^20.16.10",
     "@playwright/test": "1.44.1",
     "playwright": "1.44.1",
-    "@mui/internal-test-utils": "https://pkg.csb.dev/mui/material-ui/commit/b67121a7/@mui/internal-test-utils"
+    "@mui/internal-test-utils": "https://pkg.csb.dev/mui/material-ui/commit/92c23999/@mui/internal-test-utils"
   },
   "packageManager": "pnpm@9.12.0",
   "engines": {
