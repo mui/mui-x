@@ -31,7 +31,9 @@ export const listViewStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'unstable_listColumn'>
 > = (state, props, apiRef) => ({
   ...state,
-  listColumn: { ...props.unstable_listColumn, computedWidth: getListColumnWidth(apiRef) },
+  listView: {
+    listColumn: { ...props.unstable_listColumn, computedWidth: getListColumnWidth(apiRef) },
+  },
 });
 
 export function useGridListView(
