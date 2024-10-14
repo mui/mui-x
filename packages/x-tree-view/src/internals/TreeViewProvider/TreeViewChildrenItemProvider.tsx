@@ -4,7 +4,6 @@ import { useTreeViewContext } from './useTreeViewContext';
 import { escapeOperandAttributeSelector } from '../utils/utils';
 import type { UseTreeViewJSXItemsSignature } from '../plugins/useTreeViewJSXItems';
 import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
-import { generateTreeItemIdAttribute } from '../corePlugins/useTreeViewId/useTreeViewId.utils';
 
 export const TreeViewChildrenItemContext =
   React.createContext<TreeViewChildrenItemContextValue | null>(null);
