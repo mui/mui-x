@@ -10,30 +10,24 @@ const formatter: SeriesFormatter<'scatter'> = ({ series, seriesOrder }, dataset)
       const idDataKey = seriesData?.datasetKeys?.id;
 
       const keys = [xDataKey, yDataKey, idDataKey];
-      const hasStringKeys = keys.some((key) => typeof key === 'string');
       const hasNonStringKeys = keys.some((key) => typeof key !== 'string');
-      if (hasStringKeys && hasNonStringKeys) {
+      if (seriesData?.datasetKeys && hasNonStringKeys) {
         throw new Error(
           [
-            `MUI X: scatter series with id='${seriesId}' has inconsistent data keys.`,
-            'Either provide all data keys or none.',
+            `MUI X: scatter series with id='${seriesId}' has incomplete datasetKeys.`,
+            'You should provide x, y, and id keys.',
           ].join('\n'),
         );
       }
 
-      const data = !hasStringKeys
+      const data = !seriesData?.datasetKeys
         ? (seriesData.data ?? [])
         : (dataset?.map((d) => {
-            const x = d[xDataKey!]!;
-            const y = d[yDataKey!]!;
-            const z = d[zDataKey ?? ''];
-            const id = d[idDataKey!]!;
-
             return {
-              x,
-              y,
-              z,
-              id,
+              x: d[xDataKey!],
+              y: d[yDataKey!],
+              z: zDataKey && d[zDataKey],
+              id: d[idDataKey!],
             } as ScatterValueType;
           }) ?? []);
 
