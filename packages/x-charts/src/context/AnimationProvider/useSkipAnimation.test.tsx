@@ -28,11 +28,13 @@ describe('useSkipAnimation', () => {
     window.matchMedia = oldMatchMedia;
   });
 
-  it('should throw an error when parent context not present', function test() {
+  it('should throw an error when parent context not present', function test(t = {}) {
     if (!/jsdom/.test(window.navigator.userAgent)) {
       // can't catch render errors in the browser for unknown reason
       // tried try-catch + error boundary + window onError preventDefault
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     const errorRef = React.createRef<any>();

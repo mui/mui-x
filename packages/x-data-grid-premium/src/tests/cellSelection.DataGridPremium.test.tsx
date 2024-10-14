@@ -270,7 +270,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       // fireEvent.mouseOver(getCell(3, 0), { ctrlKey: true });
       const isMac = window.navigator.platform.toUpperCase().indexOf('MAC') >= 0;
 
-      await user.keyboard(isMac ? '{Meta>}' : '{Control>');
+      await user.keyboard(isMac ? '{Meta>}' : '{Control>}');
       await user.pointer([
         // touch the screen at element1
         { keys: '[MouseLeft>]', target: getCell(2, 0) },
