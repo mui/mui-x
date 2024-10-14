@@ -85,57 +85,57 @@ export const useGridRowsMeta = (
     return entry;
   };
 
-  const hydrateRowsMeta = React.useCallback(() => {
-    hasRowWithAutoHeight.current = false;
+  const processHeightEntry = (row: GridRowEntry) => {
+    const entry = apiRef.current.getRowHeightEntry(row.id);
 
-    const processHeightEntry = (row: GridRowEntry) => {
-      const entry = apiRef.current.getRowHeightEntry(row.id);
+    if (!entry.isResized) {
+      if (!getRowHeightProp) {
+        entry.needsFirstMeasurement = false;
+      } else {
+        const rowHeightFromUser = getRowHeightProp({ ...row, densityFactor });
 
-      if (!entry.isResized) {
-        if (!getRowHeightProp) {
-          entry.needsFirstMeasurement = false;
-        } else {
-          const rowHeightFromUser = getRowHeightProp({ ...row, densityFactor });
+        if (rowHeightFromUser === 'auto') {
+          if (entry.needsFirstMeasurement) {
+            const estimatedRowHeight = getEstimatedRowHeight
+              ? getEstimatedRowHeight({ ...row, densityFactor })
+              : rowHeight;
 
-          if (rowHeightFromUser === 'auto') {
-            if (entry.needsFirstMeasurement) {
-              const estimatedRowHeight = getEstimatedRowHeight
-                ? getEstimatedRowHeight({ ...row, densityFactor })
-                : rowHeight;
-
-              // If the row was not measured yet use the estimated row height
-              entry.content = estimatedRowHeight ?? rowHeight;
-            }
-
-            hasRowWithAutoHeight.current = true;
-            entry.autoHeight = true;
-          } else {
-            // Default back to base rowHeight if getRowHeight returns invalid value.
-            entry.content = getValidRowHeight(rowHeightFromUser, rowHeight, getRowHeightWarning);
-            entry.needsFirstMeasurement = false;
-            entry.autoHeight = false;
+            // If the row was not measured yet use the estimated row height
+            entry.content = estimatedRowHeight ?? rowHeight;
           }
+
+          hasRowWithAutoHeight.current = true;
+          entry.autoHeight = true;
+        } else {
+          // Default back to base rowHeight if getRowHeight returns invalid value.
+          entry.content = getValidRowHeight(rowHeightFromUser, rowHeight, getRowHeightWarning);
+          entry.needsFirstMeasurement = false;
+          entry.autoHeight = false;
         }
       }
+    }
 
-      if (getRowSpacing) {
-        const indexRelativeToCurrentPage = apiRef.current.getRowIndexRelativeToVisibleRows(row.id);
+    if (getRowSpacing) {
+      const indexRelativeToCurrentPage = apiRef.current.getRowIndexRelativeToVisibleRows(row.id);
 
-        const spacing = getRowSpacing({
-          ...row,
-          isFirstVisible: indexRelativeToCurrentPage === 0,
-          isLastVisible: indexRelativeToCurrentPage === currentPage.rows.length - 1,
-          indexRelativeToCurrentPage,
-        });
+      const spacing = getRowSpacing({
+        ...row,
+        isFirstVisible: indexRelativeToCurrentPage === 0,
+        isLastVisible: indexRelativeToCurrentPage === currentPage.rows.length - 1,
+        indexRelativeToCurrentPage,
+      });
 
-        entry.spacingTop = spacing.top ?? 0;
-        entry.spacingBottom = spacing.bottom ?? 0;
-      }
+      entry.spacingTop = spacing.top ?? 0;
+      entry.spacingBottom = spacing.bottom ?? 0;
+    }
 
-      apiRef.current.unstable_applyPipeProcessors('rowHeight', entry, row) as HeightEntry;
+    apiRef.current.unstable_applyPipeProcessors('rowHeight', entry, row) as HeightEntry;
 
-      return entry;
-    };
+    return entry;
+  };
+
+  const hydrateRowsMeta = () => {
+    hasRowWithAutoHeight.current = false;
 
     pinnedRows?.top?.forEach((row) => {
       processHeightEntry(row);
@@ -148,26 +148,10 @@ export const useGridRowsMeta = (
     apiRef.current.setState((state) => {
       return {
         ...state,
-        rowsMeta: new RowsMeta(currentPage, processHeightEntry),
+        rowsMeta: new RowsMeta(apiRef, currentPage, processHeightEntry),
       };
     });
-
-    if (!hasRowWithAutoHeight.current) {
-      // No row has height=auto, so all rows are already measured
-      lastMeasuredRowIndex.current = Infinity;
-    }
-
-    apiRef.current.forceUpdate();
-  }, [
-    apiRef,
-    currentPage.rows,
-    rowHeight,
-    getRowHeightProp,
-    getRowSpacing,
-    getEstimatedRowHeight,
-    pinnedRows,
-    densityFactor,
-  ]);
+  };
 
   const getRowHeight: GridRowsMetaApi['unstable_getRowHeight'] = (rowId) => {
     return heightCache.get(rowId)?.content ?? rowHeight;
@@ -202,10 +186,16 @@ export const useGridRowsMeta = (
   };
 
   const rowHasAutoHeight: GridRowsMetaPrivateApi['rowHasAutoHeight'] = (id) => {
-    return heightCache.get(id)?.autoHeight || false;
+    return heightCache.get(id)?.autoHeight ?? false;
   };
 
   const getLastMeasuredRowIndex: GridRowsMetaPrivateApi['getLastMeasuredRowIndex'] = () => {
+    (apiRef.current.state.rowsMeta as RowsMeta).initialize();
+
+    if (!hasRowWithAutoHeight.current) {
+      // No row has height=auto, so all rows are already measured
+      lastMeasuredRowIndex.current = Infinity;
+    }
     return lastMeasuredRowIndex.current;
   };
 
@@ -246,8 +236,8 @@ export const useGridRowsMeta = (
   // The effect is used to build the rows meta data - currentPageTotalHeight and positions.
   // Because of variable row height this is needed for the virtualization
   React.useEffect(() => {
-    hydrateRowsMeta();
-  }, [rowHeight, filterModel, paginationState, sortModel, hydrateRowsMeta]);
+    apiRef.current.requestPipeProcessorsApplication('rowHeight');
+  }, [apiRef, rowHeight, filterModel, paginationState, sortModel]);
 
   useGridRegisterPipeApplier(apiRef, 'rowHeight', hydrateRowsMeta);
 
@@ -272,31 +262,46 @@ export const useGridRowsMeta = (
 
 /**
  * Invalidatable value holder for rows metadata.
+ * When ResizeObserver triggers, it invalidates this container.
  */
 class RowsMeta {
   static UNSET = Object.freeze([]) as unknown as number[];
 
+  private _apiRef: React.RefObject<GridPrivateApiCommunity>;
   private _currentPage: ReturnType<typeof useGridVisibleRows>;
   private _processHeightEntry: (id: GridRowEntry) => HeightEntry;
   private _currentPageTotalHeight: number;
   private _positions: number[];
+  private _timeoutId: number;
 
   constructor(
+    apiRef: React.RefObject<GridPrivateApiCommunity>,
     currentPage: ReturnType<typeof useGridVisibleRows>,
     processHeightEntry: (id: GridRowEntry) => HeightEntry,
   ) {
+    this._apiRef = apiRef;
     this._currentPage = currentPage;
     this._processHeightEntry = processHeightEntry;
     this._currentPageTotalHeight = -1;
     this._positions = RowsMeta.UNSET;
+    this._timeoutId = 0;
   }
 
   invalidate() {
     this._currentPageTotalHeight = -1;
     this._positions = RowsMeta.UNSET;
+    if (this._timeoutId === 0) {
+      this._timeoutId = setTimeout(() => {
+        this._timeoutId = 0;
+        this._apiRef.current?.requestPipeProcessorsApplication('rowHeight');
+      }, 0) as unknown as number;
+    }
   }
 
   initialize() {
+    if (this._currentPageTotalHeight !== -1) {
+      return;
+    }
     const positions: number[] = [];
     const currentPageTotalHeight = this._currentPage.rows.reduce((acc, row) => {
       positions.push(acc);
@@ -312,16 +317,12 @@ class RowsMeta {
   }
 
   get currentPageTotalHeight() {
-    if (this._currentPageTotalHeight === -1) {
-      this.initialize();
-    }
+    this.initialize();
     return this._currentPageTotalHeight;
   }
 
   get positions() {
-    if (this._currentPageTotalHeight === -1) {
-      this.initialize();
-    }
+    this.initialize();
     return this._positions;
   }
 }
