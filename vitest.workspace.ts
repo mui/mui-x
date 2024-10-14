@@ -36,12 +36,10 @@ export default defineWorkspace([
             // https://playwright.dev
             providerOptions: {
               // https://playwright.dev/docs/api/class-browsertype#browsertypelaunchoptions
-              use: {
-                launchOptions: {
-                  // Required for x-data-grid-pro tests.
-                  // packages/x-data-grid-pro/src/tests/columns.DataGridPro.test.tsx
-                  ignoreDefaultArgs: ['--hide-scrollbars'],
-                },
+              launch: {
+                // Required for x-data-grid-pro tests.
+                // packages/x-data-grid-pro/src/tests/columns.DataGridPro.test.tsx
+                ignoreDefaultArgs: ['--hide-scrollbars'],
               },
             },
             screenshotFailures: false,
