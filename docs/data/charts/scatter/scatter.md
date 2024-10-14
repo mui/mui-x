@@ -20,10 +20,10 @@ Those objects require `x`, `y`, and `id` properties.
 If your data is stored in an array of objects, you can use the `dataset` helper prop.
 It accepts an array of objects such as `dataset={[{a: 1, b: 32, c: 873}, {a: 2, b: 41, c: 182}, ...]}`.
 
-You can reuse this data when defining the series, the scatter series work a bit differently than in other charts though,
-you need to specify a key for the `x`, `y` and `id` properties. This is done with the `datasetKeys` properties.
-
-Which is an object that requires `x`, `y`, and `id` keys. With an optional `z` key.
+You can reuse this data when defining the series.
+The scatter series work a bit differently than in other charts.
+You need to specify the `datasetKeys` properties which is an object that requires `x`, `y`, and `id` keys.
+With an optional `z` key if needed.
 
 {{"demo": "ScatterDataset.js"}}
 
