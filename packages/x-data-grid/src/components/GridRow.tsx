@@ -29,7 +29,6 @@ import { PinnedPosition, gridPinnedColumnPositionLookup } from './cell/GridCell'
 import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
-import { GridSignature } from '../hooks';
 
 export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   row: GridRowModel;
@@ -440,36 +439,16 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       ),
     );
   }
-  if (rootProps.unstable_listView && rootProps.signature !== GridSignature.DataGrid) {
-    if (!rootProps.unstable_listColumn) {
-      throw new Error(
-        'MUI X: The `unstable_listColumn` prop is required when `unstable_listView` is enabled.',
-      );
+
+  for (let i = renderContext.firstColumnIndex; i < renderContext.lastColumnIndex; i += 1) {
+    const column = visibleColumns[i];
+    const indexInSection = i - pinnedColumns.left.length;
+
+    if (!column) {
+      return null;
     }
 
-    const columnsToKeep = visibleColumns.filter((col) => {
-      if (col.type === 'actions') {
-        return true;
-      }
-      return false;
-    });
-    const columnsCount = columnsToKeep.length + 1;
-    const listColumnWidth =
-      dimensions.viewportInnerSize.width -
-      columnsToKeep.reduce((acc, col) => acc + col.computedWidth, 0);
-    cells.push(
-      getCell({ ...rootProps.unstable_listColumn, computedWidth: listColumnWidth }, 0, 0, 1),
-    );
-    columnsToKeep.forEach((column, colIndex) => {
-      cells.push(getCell(column, 1 + colIndex, 1 + colIndex, columnsCount));
-    });
-  } else {
-    for (let i = renderContext.firstColumnIndex; i < renderContext.lastColumnIndex; i += 1) {
-      const column = visibleColumns[i];
-      const indexInSection = i - pinnedColumns.left.length;
-
-      cells.push(getCell(column, indexInSection, i, middleColumnsLength));
-    }
+    cells.push(getCell(column, indexInSection, i, middleColumnsLength));
   }
 
   if (hasVirtualFocusCellRight) {

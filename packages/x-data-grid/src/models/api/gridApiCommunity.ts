@@ -2,6 +2,7 @@ import type { GridInitialStateCommunity, GridStateCommunity } from '../gridState
 import type { DataGridProcessedProps } from '../props/DataGridProps';
 import type { GridApiCommon, GridPrivateOnlyApiCommon } from './gridApiCommon';
 import type { GridColumnReorderApi } from './gridColumnApi';
+import type { GridListColumnApi } from './gridListColumnApi';
 import { GridRowProApi } from './gridRowApi';
 import { GridRowMultiSelectionApi } from './gridRowSelectionApi';
 
@@ -17,4 +18,5 @@ export interface GridPrivateApiCommunity
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
     GridColumnReorderApi,
-    GridRowProApi {}
+    GridRowProApi,
+    GridListColumnApi {}

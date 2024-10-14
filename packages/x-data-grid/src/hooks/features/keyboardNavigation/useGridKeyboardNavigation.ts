@@ -32,6 +32,10 @@ import {
   getRightColumnIndex,
   findNonRowSpannedCell,
 } from './utils';
+import {
+  gridVisibleListColumnDefinitionsSelector,
+  gridVisibleListColumnFieldsSelector,
+} from '../listColumns/gridListColumnsSelector';
 
 /**
  * @requires useGridSorting (method) - can be after
@@ -52,11 +56,13 @@ export const useGridKeyboardNavigation = (
     | 'experimentalFeatures'
     | 'signature'
     | 'headerFilters'
+    | 'unstable_listView'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
   const initialCurrentPageRows = useGridVisibleRows(apiRef, props).rows;
   const isRtl = useRtl();
+  const listView = props.unstable_listView;
 
   const currentPageRows = React.useMemo(
     () => enrichPageRowsWithPinnedRows(apiRef, initialCurrentPageRows),
@@ -88,7 +94,9 @@ export const useGridKeyboardNavigation = (
           colIndex = nextCellColSpanInfo.rightVisibleCellIndex;
         }
       }
-      const field = gridVisibleColumnFieldsSelector(apiRef)[colIndex];
+      const field = listView
+        ? gridVisibleListColumnFieldsSelector(apiRef)[colIndex]
+        : gridVisibleColumnFieldsSelector(apiRef)[colIndex];
       const nonRowSpannedRowId = findNonRowSpannedCell(apiRef, rowId, field, rowSpanScanDirection);
       // `scrollToIndexes` requires a rowIndex relative to all visible rows.
       // Those rows do not include pinned rows, but pinned rows do not need scroll anyway.
@@ -102,7 +110,7 @@ export const useGridKeyboardNavigation = (
       });
       apiRef.current.setCellFocus(nonRowSpannedRowId, field);
     },
-    [apiRef, logger],
+    [apiRef, logger, listView],
   );
 
   const goToHeader = React.useCallback(
@@ -499,14 +507,20 @@ export const useGridKeyboardNavigation = (
 
       const viewportPageSize = apiRef.current.getViewportPageSize();
 
+      const getColumnIndexFn = listView
+        ? apiRef.current.getListColumnIndex
+        : apiRef.current.getColumnIndex;
       const colIndexBefore = (params as GridCellParams).field
-        ? apiRef.current.getColumnIndex((params as GridCellParams).field)
+        ? getColumnIndexFn((params as GridCellParams).field)
         : 0;
       const rowIndexBefore = currentPageRows.findIndex((row) => row.id === params.id);
       const firstRowIndexInPage = 0;
       const lastRowIndexInPage = currentPageRows.length - 1;
       const firstColIndex = 0;
-      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
+      const visibleColumns = listView
+        ? gridVisibleListColumnDefinitionsSelector(apiRef)
+        : gridVisibleColumnDefinitionsSelector(apiRef);
+      const lastColIndex = visibleColumns.length - 1;
       let shouldPreventDefault = true;
 
       switch (event.key) {
@@ -649,6 +663,7 @@ export const useGridKeyboardNavigation = (
       headerFilteringEnabled,
       goToHeaderFilter,
       goToHeader,
+      listView,
     ],
   );
 
