@@ -191,11 +191,8 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
     const handleKeyDown = (event: React.KeyboardEvent) => {
       switch (event.key) {
         case 'PageUp': {
-          if (!containerRef.current) {
-            return;
-          }
-          const newIndex = getFocusedListItemIndex(containerRef.current) - 5;
-          const children = containerRef.current?.children;
+          const newIndex = getFocusedListItemIndex(containerRef.current!) - 5;
+          const children = containerRef.current!.children;
           const newFocusedIndex = Math.max(0, newIndex);
 
           const childToFocus = children[newFocusedIndex];
@@ -206,11 +203,8 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
           break;
         }
         case 'PageDown': {
-          if (!containerRef.current) {
-            return;
-          }
-          const newIndex = getFocusedListItemIndex(containerRef.current) + 5;
-          const children = containerRef.current?.children;
+          const newIndex = getFocusedListItemIndex(containerRef.current!) + 5;
+          const children = containerRef.current!.children;
           const newFocusedIndex = Math.min(children.length - 1, newIndex);
 
           const childToFocus = children[newFocusedIndex];

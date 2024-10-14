@@ -61,7 +61,9 @@
     "series": {
       "description": "The series to display in the bar chart. An array of <a href='/x/api/charts/bar-series-type/'>BarSeriesType</a> objects."
     },
-    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
+    "skipAnimation": {
+      "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."
+    },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "tooltip": {

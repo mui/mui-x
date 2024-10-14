@@ -74,6 +74,7 @@
       "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
       "default": "null"
     },
+    "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },

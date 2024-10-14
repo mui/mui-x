@@ -302,6 +302,11 @@ ScatterChart.propTypes = {
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
+   * If `true`, animations are skipped.
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
+   */
+  skipAnimation: PropTypes.bool,
+  /**
    * The props used for each component slot.
    * @default {}
    */

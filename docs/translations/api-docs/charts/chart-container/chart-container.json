@@ -25,6 +25,9 @@
     "series": {
       "description": "The array of series to display. Each type of series has its own specificity. Please refer to the appropriate docs page to learn more about it."
     },
+    "skipAnimation": {
+      "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."
+    },
     "width": { "description": "The width of the chart in px." },
     "xAxis": {
       "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."

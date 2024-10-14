@@ -10,6 +10,7 @@ import {
   InteractionProvider,
   PluginProvider,
   SeriesProvider,
+  AnimationProvider,
 } from '@mui/x-charts/internals';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
@@ -34,6 +35,7 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
     cartesianProviderProps,
     chartsSurfaceProps,
     pluginProviderProps,
+    animationProviderProps,
     children,
   } = useChartContainerProProps(props, ref);
 
@@ -41,24 +43,26 @@ const ChartContainerPro = React.forwardRef(function ChartContainer(
 
   return (
     <DrawingProvider {...drawingProviderProps}>
-      <PluginProvider {...pluginProviderProps}>
-        <ZoomProvider {...zoomProviderProps}>
-          <SeriesProvider {...seriesProviderProps}>
-            <CartesianProviderPro {...cartesianProviderProps}>
-              <ZAxisContextProvider {...zAxisContextProps}>
-                <InteractionProvider>
-                  <HighlightedProvider {...highlightedProviderProps}>
-                    <ChartsSurface {...chartsSurfaceProps}>
-                      <ChartsAxesGradients />
-                      {children}
-                    </ChartsSurface>
-                  </HighlightedProvider>
-                </InteractionProvider>
-              </ZAxisContextProvider>
-            </CartesianProviderPro>
-          </SeriesProvider>
-        </ZoomProvider>
-      </PluginProvider>
+      <AnimationProvider {...animationProviderProps}>
+        <PluginProvider {...pluginProviderProps}>
+          <ZoomProvider {...zoomProviderProps}>
+            <SeriesProvider {...seriesProviderProps}>
+              <CartesianProviderPro {...cartesianProviderProps}>
+                <ZAxisContextProvider {...zAxisContextProps}>
+                  <InteractionProvider>
+                    <HighlightedProvider {...highlightedProviderProps}>
+                      <ChartsSurface {...chartsSurfaceProps}>
+                        <ChartsAxesGradients />
+                        {children}
+                      </ChartsSurface>
+                    </HighlightedProvider>
+                  </InteractionProvider>
+                </ZAxisContextProvider>
+              </CartesianProviderPro>
+            </SeriesProvider>
+          </ZoomProvider>
+        </PluginProvider>
+      </AnimationProvider>
     </DrawingProvider>
   );
 });
@@ -132,6 +136,11 @@ ChartContainerPro.propTypes = {
    * Please refer to the appropriate docs page to learn more about it.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If `true`, animations are skipped.
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
+   */
+  skipAnimation: PropTypes.bool,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
