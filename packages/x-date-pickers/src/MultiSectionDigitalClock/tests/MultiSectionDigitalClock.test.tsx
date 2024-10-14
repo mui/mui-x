@@ -1,3 +1,4 @@
+/* eslint-disable material-ui/disallow-active-element-as-key-event-target */
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
@@ -10,7 +11,7 @@ import {
   adapterToUse,
   multiSectionDigitalClockHandler,
 } from 'test/utils/pickers';
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen, within } from '@mui/internal-test-utils';
 
 describe('<MultiSectionDigitalClock />', () => {
   const { render } = createPickerRenderer();
@@ -103,6 +104,80 @@ describe('<MultiSectionDigitalClock />', () => {
       );
       expect(onChange.callCount).to.equal(3);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
+    });
+  });
+
+  describe('Keyboard support', () => {
+    it('should move item focus up by 5 on PageUp press', () => {
+      const handleChange = spy();
+      render(<MultiSectionDigitalClock autoFocus onChange={handleChange} />);
+      const hoursSectionListbox = screen.getAllByRole('listbox')[0]; // get only hour section
+      const hoursOptions = within(hoursSectionListbox).getAllByRole('option');
+      const lastOptionIndex = hoursOptions.length - 1;
+
+      fireEvent.keyDown(document.activeElement!, { key: 'End' }); // moves focus to last element
+      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+
+      expect(handleChange.callCount).to.equal(0);
+      expect(document.activeElement).to.equal(hoursOptions[lastOptionIndex - 5]);
+
+      fireEvent.keyDown(hoursOptions[lastOptionIndex - 5], { key: 'PageUp' });
+
+      expect(handleChange.callCount).to.equal(0);
+      expect(document.activeElement).to.equal(hoursOptions[lastOptionIndex - 10]);
+    });
+
+    it('should move focus to first item on PageUp press when current focused item index is among the first 5 items', () => {
+      const handleChange = spy();
+      render(<MultiSectionDigitalClock autoFocus onChange={handleChange} />);
+      const hoursSectionListbox = screen.getAllByRole('listbox')[0]; // get only hour section
+      const hoursOptions = within(hoursSectionListbox).getAllByRole('option');
+
+      // moves focus to 4th element using arrow down
+      [0, 1, 2].forEach((index) => {
+        fireEvent.keyDown(hoursOptions[index], { key: 'ArrowDown' });
+      });
+
+      fireEvent.keyDown(hoursOptions[3], { key: 'PageUp' });
+      expect(handleChange.callCount).to.equal(0);
+      expect(document.activeElement).to.equal(hoursOptions[0]);
+    });
+
+    it('should move item focus down by 5 on PageDown press', () => {
+      const handleChange = spy();
+      render(<MultiSectionDigitalClock autoFocus onChange={handleChange} />);
+      const hoursSectionListbox = screen.getAllByRole('listbox')[0]; // get only hour section
+      const hoursOptions = within(hoursSectionListbox).getAllByRole('option');
+
+      fireEvent.keyDown(hoursOptions[0], { key: 'PageDown' });
+
+      expect(handleChange.callCount).to.equal(0);
+      expect(document.activeElement).to.equal(hoursOptions[5]);
+
+      fireEvent.keyDown(hoursOptions[5], { key: 'PageDown' });
+
+      expect(handleChange.callCount).to.equal(0);
+      expect(document.activeElement).to.equal(hoursOptions[10]);
+    });
+
+    it('should move focus to last item on PageDown press when current focused item index is among the last 5 items', () => {
+      const handleChange = spy();
+      render(<MultiSectionDigitalClock autoFocus onChange={handleChange} />);
+      const hoursSectionListbox = screen.getAllByRole('listbox')[0]; // get only hour section
+      const hoursOptions = within(hoursSectionListbox).getAllByRole('option');
+      const lastOptionIndex = hoursOptions.length - 1;
+
+      const lastElement = hoursOptions[lastOptionIndex];
+
+      fireEvent.keyDown(document.activeElement!, { key: 'End' }); // moves focus to last element
+      // moves focus 4 steps above last item using arrow up
+      [0, 1, 2].forEach((index) => {
+        fireEvent.keyDown(hoursOptions[lastOptionIndex - index], { key: 'ArrowUp' });
+      });
+
+      fireEvent.keyDown(hoursOptions[lastOptionIndex - 3], { key: 'PageDown' });
+      expect(handleChange.callCount).to.equal(0);
+      expect(document.activeElement).to.equal(lastElement);
     });
   });
 });

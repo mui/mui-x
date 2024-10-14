@@ -39,11 +39,11 @@ export {
 export type GridApi = GridApiCommunity;
 
 /**
- * The state of `DataGrid`.
+ * The state of Data Grid.
  */
 export type GridState = GridStateCommunity;
 
 /**
- * The initial state of `DataGrid`.
+ * The initial state of Data Grid.
  */
 export type GridInitialState = GridInitialStateCommunity;

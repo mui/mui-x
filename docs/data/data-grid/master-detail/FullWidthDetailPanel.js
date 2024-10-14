@@ -20,16 +20,22 @@ import {
   randomCommodity,
 } from '@mui/x-data-grid-generator';
 
+const getDetailPanelWidth = (gridDimensions) => {
+  return (
+    gridDimensions.viewportInnerSize.width +
+    gridDimensions.leftPinnedWidth +
+    gridDimensions.rightPinnedWidth
+  );
+};
+
 function DetailPanelContent({ row: rowProp }) {
   const apiRef = useGridApiContext();
-  const [width, setWidth] = React.useState(() => {
-    const dimensions = apiRef.current.getRootDimensions();
-    return dimensions.viewportInnerSize.width;
-  });
+  const [width, setWidth] = React.useState(() =>
+    getDetailPanelWidth(apiRef.current.getRootDimensions()),
+  );
 
   const handleViewportInnerSizeChange = React.useCallback(() => {
-    const dimensions = apiRef.current.getRootDimensions();
-    setWidth(dimensions.viewportInnerSize.width);
+    setWidth(getDetailPanelWidth(apiRef.current.getRootDimensions()));
   }, [apiRef]);
 
   React.useEffect(() => {

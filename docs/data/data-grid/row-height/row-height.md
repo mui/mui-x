@@ -37,7 +37,7 @@ const getRowHeight = React.useCallback(() => { ... }, []);
 
 ## Dynamic row height
 
-Instead of a fixed row height, you can let the data grid calculate the height of each row based on its content.
+Instead of a fixed row height, you can let the Data Grid calculate the height of each row based on its content.
 To do so, return `"auto"` on the function passed to the `getRowHeight` prop.
 
 ```tsx

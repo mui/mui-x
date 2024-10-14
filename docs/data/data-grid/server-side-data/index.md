@@ -4,7 +4,7 @@ title: React Data Grid - Server-side data
 
 # Data Grid - Server-side data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">The data grid server-side data.</p>
+<p class="description">The Data Grid server-side data.</p>
 
 ## Introduction
 
@@ -80,7 +80,7 @@ Feel free to subscribe or comment on the official GitHub [umbrella issue](https:
 
 :::
 
-It has an initial set of required methods that you need to implement. The data grid will use these methods internally to fetch a subset of data when needed.
+It has an initial set of required methods that you need to implement. The Data Grid will use these methods internally to fetch a subset of data when needed.
 
 Let's take a look at the minimal `GridDataSource` interface configuration.
 
@@ -162,7 +162,7 @@ In order for them to work with server-side data, you need to set them to `server
 
 With the data source, the features `filtering`, `sorting`, `pagination` are automatically set to `server`.
 
-When the corresponding models update, the data grid calls the `getRows` method with the updated values of type `GridGetRowsParams` to get updated data.
+When the corresponding models update, the Data Grid calls the `getRows` method with the updated values of type `GridGetRowsParams` to get updated data.
 
 ```tsx
 <DataGridPro

@@ -43,7 +43,7 @@ You can use the `onRowGroupingModelChange` prop to listen to changes to the grou
 
 ### Single grouping column
 
-By default, the data grid will display a single column holding all grouping columns.
+By default, the Data Grid will display a single column holding all grouping columns.
 If you have multiple grouping criteria, this column name will be set to "Group."
 
 {{"demo": "RowGroupingSingleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -226,7 +226,7 @@ If your column also has a `valueGetter` property, the value passed to the `group
 
 ## Rows with missing groups
 
-If the grouping key of a grouping criteria is `null` or `undefined` for a row, the data grid will consider that this row does not have a value for this group. and will inline it for those groups.
+If the grouping key of a grouping criteria is `null` or `undefined` for a row, the Data Grid will consider that this row does not have a value for this group. and will inline it for those groups.
 
 {{"demo": "RowGroupingRowsWithMissingGroups.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -321,13 +321,13 @@ type GridRowSelectionPropagation = {
 
 When `rowSelectionPropagation.descendants` is set to `true`.
 
-- Selecting a parent would auto-select all its filtered descendants.
-- Deselecting a parent row would auto-deselect all its filtered descendants.
+- Selecting a parent selects all its filtered descendants automatically.
+- Deselecting a parent row deselects all its filtered descendants automatically.
 
 When `rowSelectionPropagation.parents` is set to `true`.
 
-- Selecting all the filtered descendants of a parent would auto-select the parent.
-- Deselecting a descendant of a selected parent would auto-deselect the parent.
+- Selecting all the filtered descendants of a parent selects the parent automatically.
+- Deselecting a descendant of a selected parent deselects the parent automatically.
 
 The example below demonstrates the usage of the `rowSelectionPropagation` prop.
 

@@ -6,7 +6,7 @@ import { GridRowProApi } from './gridRowApi';
 import { GridRowMultiSelectionApi } from './gridRowSelectionApi';
 
 /**
- * The api of `DataGrid`.
+ * The api of Data Grid.
  */
 export interface GridApiCommunity
   extends GridApiCommon<GridStateCommunity, GridInitialStateCommunity> {}

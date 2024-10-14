@@ -288,7 +288,7 @@ See related documentation for [Webpack](https://webpack.js.org/guides/production
 
 This error indicates that your use of MUI X is not compatible with the plan of your license key.
 The feature you are trying to use is not included in the plan of your license key.
-This happens if you try to use `DataGridPremium` with a license key for the Pro plan.
+This happens if you try to use Data Grid Premium with a license key for the Pro plan.
 
 To solve the issue, you can [upgrade your plan](https://mui.com/r/x-get-license/?scope=premium) from Pro to Premium.
 Or if you didn\'t intend to use Premium features, you can replace the import of `@mui/x-data-grid-premium` with `@mui/x-data-grid-pro`.

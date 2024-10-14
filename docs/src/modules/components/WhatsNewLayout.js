@@ -18,6 +18,94 @@ import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 
 const entries = [
   {
+    title: 'MUI X v7.19',
+    description: 'A roundup of all new features since v7.15.0.',
+    date: new Date(2024, 9, 4),
+    url: 'https://github.com/mui/mui-x/releases/tag/v7.19.0',
+    highlightList: [
+      {
+        title: 'Data Grid – Row spanning',
+        url: '/x/react-data-grid/row-spanning/',
+      },
+      {
+        title: 'Data Grid – Automatic parents and children selection',
+        url: '/x/react-data-grid/row-grouping/#automatic-parents-and-children-selection',
+      },
+      {
+        title: 'Date and Time Pickers – Support date-fns v4',
+        url: '/x/react-date-pickers/adapters-locale/#with-date-fns',
+      },
+    ],
+  },
+  {
+    title: 'MUI X v7.15',
+    date: new Date(2024, 7, 29),
+    description: 'A roundup of all new features since v7.13.0.',
+    url: 'https://github.com/mui/mui-x/releases/tag/v7.15.0',
+    highlightList: [
+      {
+        title: 'Material UI v6 support',
+        url: 'https://github.com/mui/mui-x/releases/tag/v7.15.0',
+      },
+      {
+        title: 'Charts – Zoom filtering',
+        url: '/x/react-charts/zoom-and-pan/#zoom-filtering',
+      },
+    ],
+  },
+  {
+    title: 'MUI X v7.13',
+    date: new Date(2024, 7, 16),
+    description: 'A roundup of all new features since v7.8.0.',
+    url: 'https://github.com/mui/mui-x/releases/tag/v7.13.0',
+    highlightList: [
+      {
+        title: 'Data Grid – Loading overlay variants',
+        url: '/x/react-data-grid/overlays/#loading-overlay',
+      },
+      {
+        title: 'Rich Tree View – Drag & drop re-ordering',
+        url: '/x/react-tree-view/rich-tree-view/ordering/',
+      },
+      {
+        title: 'Rich Tree View – Label editing',
+        url: '/x/react-tree-view/rich-tree-view/editing/',
+      },
+      {
+        title: 'Charts – Heatmap',
+        url: '/x/react-charts/heatmap/',
+      },
+      {
+        title: 'Charts – Zoom & Pan',
+        url: '/x/react-charts/zoom-and-pan/',
+      },
+      {
+        title: 'Charts – Color legend',
+        url: '/x/react-charts/legend/#color-legend',
+      },
+    ],
+  },
+  {
+    title: 'MUI X v7.8',
+    date: new Date(2024, 5, 28),
+    description: 'A roundup of all new features since v7.0.0.',
+    url: 'https://github.com/mui/mui-x/releases/tag/v7.8.0',
+    highlightList: [
+      {
+        title: 'Data Grid – Server-side Data Source',
+        url: '/x/react-data-grid/server-side-data/',
+      },
+      {
+        title: 'Data Grid – Support unknown and estimated row count in server-side pagination',
+        url: '/x/react-data-grid/pagination/#index-based-pagination',
+      },
+      {
+        title: 'Charts – Color scales',
+        url: '/x/react-charts/styling/#values-color',
+      },
+    ],
+  },
+  {
     title: 'MUI X v7',
     description:
       'Featuring new components and multiple enhancements for both developers and end-users.',
@@ -45,11 +133,11 @@ const entries = [
         url: 'https://mui.com/blog/mui-x-v7/#rich-tree-view',
       },
       {
-        title: 'Charts - Gauge charts',
+        title: 'Charts – Gauge charts',
         url: 'https://mui.com/blog/mui-x-v7/#gauge-charts',
       },
       {
-        title: 'Charts - Reference line',
+        title: 'Charts – Reference line',
         url: 'https://mui.com/blog/mui-x-v7/#reference-line',
       },
       {
@@ -284,20 +372,22 @@ function BlogCard({ entry }) {
             {entry.description}
           </Typography>
         </div>
-        <Button
-          component="a"
-          size="small"
-          variant="outlined"
-          href={entry.url}
-          sx={{
-            height: 'fit-content',
-            flexShrink: 0,
-            width: { xs: '100%', sm: 'fit-content' },
-          }}
-        >
-          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
-          {'Read more'}
-        </Button>
+        {entry.url && (
+          <Button
+            component="a"
+            size="small"
+            variant="outlined"
+            href={entry.url}
+            sx={{
+              height: 'fit-content',
+              flexShrink: 0,
+              width: { xs: '100%', sm: 'fit-content' },
+            }}
+          >
+            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
+            {'Read more'}
+          </Button>
+        )}
       </Box>
       <Divider />
       <List sx={{ p: 2, pt: 1.5 }}>

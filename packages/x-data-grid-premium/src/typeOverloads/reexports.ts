@@ -11,11 +11,11 @@ export { useGridRootProps } from '../hooks/utils/useGridRootProps';
 export type GridApi = GridApiPremium;
 
 /**
- * The state of `DataGridPremium`.
+ * The state of Data Grid Premium.
  */
 export type GridState = GridStatePremium;
 
 /**
- * The initial state of `DataGridPremium`.
+ * The initial state of Data Grid Premium.
  */
 export type GridInitialState = GridInitialStatePremium;

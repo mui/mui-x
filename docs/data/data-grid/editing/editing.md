@@ -1,10 +1,10 @@
 # Data Grid - Editing
 
-<p class="description">The data grid has built-in support for cell and row editing.</p>
+<p class="description">The Data Grid has built-in support for cell and row editing.</p>
 
 ## Full-featured CRUD
 
-The data grid is not only a data visualization tool. It offers built-in editing features for you to manage your data set.
+The Data Grid is not only a data visualization tool. It offers built-in editing features for you to manage your data set.
 The following demo shows a full-featured CRUD (Create, Read, Update, Delete) typically found in enterprise applications.
 
 :::info
@@ -377,7 +377,7 @@ These are the most important params to consider:
 - `error`: the error added during validation
 - `isProcessingProps`: whether `preProcessEditCellProps` is being executed or not
 
-Once a new value is entered into the input, it must be sent to the data grid.
+Once a new value is entered into the input, it must be sent to the Data Grid.
 To do this, pass the row ID, the column field, and the new cell value to a call to `apiRef.current.setEditCellValue`.
 The new value will be parsed and validated, and the `value` prop will reflect the changes in the next render.
 
@@ -414,16 +414,16 @@ The following demo implements a custom edit component, based on the [`Rating`](h
 ### With debounce
 
 By default, each call to `apiRef.current.setEditCellValue` triggers a new render.
-If the edit component requires the user to type a new value, re-rendering the data grid too often will drastically reduce performance.
+If the edit component requires the user to type a new value, re-rendering the Data Grid too often will drastically reduce performance.
 One way to avoid this is to debounce the API calls.
 You can use `apiRef.current.setEditCellValue` to handle debouncing by setting the `debounceMs` param to a positive integer that defines a set time period in milliseconds.
-No matter how many times the API method is called, the data grid will only be re-rendered after that period of time has passed.
+No matter how many times the API method is called, the Data Grid will only be re-rendered after that period of time has passed.
 
 ```tsx
 apiRef.current.setEditCellValue({ id, field, value: newValue, debounceMs: 200 });
 ```
 
-When the data grid is only set to re-render after a given period of time has passed, the `value` prop will not be updated on each `apiRef.current.setEditCellValue` call.
+When the Data Grid is only set to re-render after a given period of time has passed, the `value` prop will not be updated on each `apiRef.current.setEditCellValue` call.
 To avoid a frozen UI, the edit component can keep the current value in an internal state and sync it once `value` changes.
 Modify the edit component to enable this feature:
 

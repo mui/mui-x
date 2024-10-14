@@ -7,7 +7,6 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-
 import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
@@ -130,6 +129,7 @@ export default function ElementHighlights() {
             }))}
           />
         )}
+
         {chartType === 'line' && (
           <LineChart
             {...lineChartsParams}
@@ -143,6 +143,7 @@ export default function ElementHighlights() {
             }))}
           />
         )}
+
         {chartType === 'scatter' && (
           <ScatterChart
             {...scatterChartsParams}
@@ -155,6 +156,7 @@ export default function ElementHighlights() {
             }))}
           />
         )}
+
         {chartType === 'pie' && (
           <PieChart
             {...pieChartsParams}

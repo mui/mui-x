@@ -63,7 +63,7 @@ export interface GridFilterApi {
    */
   ignoreDiacritics: DataGridProcessedProps['ignoreDiacritics'];
   /**
-   * Returns the filter state for the given filter model without applying it to the data grid.
+   * Returns the filter state for the given filter model without applying it to the Data Grid.
    * @param {GridFilterModel} filterModel The filter model to get the state for.
    * @returns {GridStateCommunity['filter']} The filter state.
    */

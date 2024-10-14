@@ -59,6 +59,10 @@ const DateRangePickerToolbarContainer = styled('div', {
   display: 'flex',
 });
 
+type DateRangePickerToolbarComponent = (<TDate extends PickerValidDate>(
+  props: DateRangePickerToolbarProps<TDate> & React.RefAttributes<HTMLDivElement>,
+) => React.JSX.Element) & { propTypes?: any };
+
 /**
  * Demos:
  *
@@ -126,7 +130,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
       </DateRangePickerToolbarContainer>
     </DateRangePickerToolbarRoot>
   );
-});
+}) as DateRangePickerToolbarComponent;
 
 DateRangePickerToolbar.propTypes = {
   // ----------------------------- Warning --------------------------------

@@ -38,26 +38,10 @@ Use `treeItemClasses` to target internal elements of the Tree Item component and
 
 {{"demo": "CustomStyling.js"}}
 
-### Custom label
+### Custom Tree Item
 
-:::warning
-This example is built using the new `TreeItem2` component
-which adds several slots to modify the content of the Tree Item or change its behavior.
-
-You can learn more about this new component in the [Overview page](/x/react-tree-view/#tree-item-components).
-:::
-
-Use the `label` slot to customize the Tree Item label or to replace it with a custom component.
-
-The `slotProps` prop allows you to pass props to the label component.
-The demo below shows how to pass an `id` attribute to the Tree Item label:
-
-{{"demo": "LabelSlotProps.js", "defaultCodeOpen": false }}
-
-The `slots` prop allows you to replace the default label with your own component:
-The demo below shows how to add a basic edition feature on the Tree Item label:
-
-{{"demo": "LabelSlots.js", "defaultCodeOpen": false}}
+You can use the Tree Item's customization API to build new layouts and manage behaviors.
+Learn more about the anatomy of the Tree Item components and the customization utilities provided in the [Tree Item customization doc](/x/react-tree-view/tree-item-customization/).
 
 ### Headless API
 

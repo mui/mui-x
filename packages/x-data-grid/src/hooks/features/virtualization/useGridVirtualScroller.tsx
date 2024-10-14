@@ -119,8 +119,8 @@ export const useGridVirtualScroller = () => {
   const gridRootRef = apiRef.current.rootElementRef;
   const mainRef = apiRef.current.mainElementRef;
   const scrollerRef = apiRef.current.virtualScrollerRef;
-  const scrollbarVerticalRef = React.useRef<HTMLDivElement>(null);
-  const scrollbarHorizontalRef = React.useRef<HTMLDivElement>(null);
+  const scrollbarVerticalRef = apiRef.current.virtualScrollbarVerticalRef;
+  const scrollbarHorizontalRef = apiRef.current.virtualScrollbarHorizontalRef;
   const contentHeight = dimensions.contentSize.height;
   const columnsTotalWidth = dimensions.columnsTotalWidth;
   const hasColSpan = useGridSelector(apiRef, gridHasColSpanSelector);

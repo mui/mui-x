@@ -2,7 +2,7 @@
 
 <p class="description">Easily sort your rows based on one or several criteria.</p>
 
-Sorting is enabled by default to the data grid users and works out of the box without any explicit configuration.
+Sorting is enabled by default to the Data Grid users and works out of the box without any explicit configuration.
 Users can set a sorting rule simply by clicking on a column header.
 Following clicks change the column's sorting direction. You can see the applied direction on the header's arrow indicator.
 
@@ -24,7 +24,7 @@ Hold down the <kbd class="key">Ctrl</kbd> or <kbd class="key">Shift</kbd> (use <
 
 {{"demo": "BasicExampleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Pass sorting rules to the data grid
+## Pass sorting rules to the Data Grid
 
 ### Structure of the model
 

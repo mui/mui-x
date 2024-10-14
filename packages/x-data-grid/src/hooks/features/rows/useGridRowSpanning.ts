@@ -259,7 +259,7 @@ export const useGridRowSpanning = (
       const rangeToProcess = getUnprocessedRange(
         {
           firstRowIndex: renderContext.firstRowIndex,
-          lastRowIndex: renderContext.lastRowIndex - 1,
+          lastRowIndex: Math.min(renderContext.lastRowIndex - 1, range.lastRowIndex),
         },
         processedRange.current,
       );

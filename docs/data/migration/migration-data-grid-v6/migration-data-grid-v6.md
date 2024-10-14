@@ -13,7 +13,7 @@ To read more about the changes from the new major, check out [the blog post abou
 
 ## Start using the new release
 
-In `package.json`, change the version of the data grid package to `^7.0.0`.
+In `package.json`, change the version of the Data Grid package to `^7.0.0`.
 
 ```diff
 -"@mui/x-data-grid": "^6.0.0",

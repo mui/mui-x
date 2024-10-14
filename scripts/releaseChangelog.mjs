@@ -61,7 +61,7 @@ function resolvePackagesByLabels(labels) {
 }
 
 async function main(argv) {
-  const { githubToken, lastRelease: lastReleaseInput, release } = argv;
+  const { githubToken, lastRelease: lastReleaseInput, release, nextVersion } = argv;
 
   if (!githubToken) {
     throw new TypeError(
@@ -297,7 +297,7 @@ async function main(argv) {
       return '';
     }
 
-    return `Special thanks go out to our community contributors who have helped make this release possible:\n${contributors.join(', ')}.`;
+    return `Special thanks go out to the community contributors who have helped make this release possible:\n${contributors.join(', ')}.`;
   };
 
   const logTeamSection = () => {
@@ -328,15 +328,14 @@ ${logTeamSection()}
 
 #### \`@mui/x-data-grid@__VERSION__\`
 
-${logChangelogSection(dataGridCommits)}
+${logChangelogSection(dataGridCommits) || `No changes since \`@mui/x-data-grid@${lastRelease}\`.`}
 
 #### \`@mui/x-data-grid-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in \`@mui/x-data-grid@__VERSION__\`${
     dataGridProCommits.length > 0 ? ', plus:\n' : '.'
   }
-${logChangelogSection(dataGridProCommits)}
-
+${logChangelogSection(dataGridProCommits)}${dataGridProCommits.length > 0 ? '\n' : ''}
 #### \`@mui/x-data-grid-premium@__VERSION__\` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in \`@mui/x-data-grid-pro@__VERSION__\`${
@@ -347,31 +346,29 @@ ${logChangelogSection(dataGridPremiumCommits)}${dataGridPremiumCommits.length > 
 
 #### \`@mui/x-date-pickers@__VERSION__\`
 
-${logChangelogSection(pickersCommits)}
+${logChangelogSection(pickersCommits) || `No changes since \`@mui/x-date-pickers@${lastRelease}\`.`}
 
 #### \`@mui/x-date-pickers-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in \`@mui/x-date-pickers@__VERSION__\`${
     pickersProCommits.length > 0 ? ', plus:\n' : '.'
   }
-${logChangelogSection(pickersProCommits)}
-
+${logChangelogSection(pickersProCommits)}${pickersProCommits.length > 0 ? '\n' : ''}
 ### Charts
  
 #### \`@mui/x-charts@__VERSION__\`
 
-${logChangelogSection(chartsCommits)}
+${logChangelogSection(chartsCommits) || `No changes since \`@mui/x-charts@${lastRelease}\`.`}
 
 #### \`@mui/x-charts-pro@__VERSION-ALPHA__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in \`@mui/x-charts@__VERSION__\`${chartsProCommits.length > 0 ? ', plus:\n' : '.'}
-${logChangelogSection(chartsProCommits)}
-
+${logChangelogSection(chartsProCommits)}${chartsProCommits.length > 0 ? '\n' : ''}
 ### Tree View
 
 #### \`@mui/x-tree-view@__VERSION__\`
 
-${logChangelogSection(treeViewCommits)}
+${logChangelogSection(treeViewCommits) || `No changes since \`@mui/x-tree-view@${lastRelease}\`.`}
 ${logChangelogSection(codemodCommits, `### \`@mui/x-codemod@__VERSION__\``)}
 ${logChangelogSection(docsCommits, '### Docs')}
 ${logChangelogSection(coreCommits, '### Core')}
@@ -380,7 +377,7 @@ ${logChangelogSection(otherCommits, '')}
 `;
 
   // eslint-disable-next-line no-console -- output of this script
-  console.log(changelog);
+  console.log(nextVersion ? changelog.replace(/__VERSION__/g, nextVersion) : changelog);
 }
 
 yargs(hideBin(process.argv))
@@ -404,6 +401,11 @@ yargs(hideBin(process.argv))
           // #default-branch-switch
           default: 'master',
           describe: 'Ref which we want to release',
+          type: 'string',
+        })
+        .option('nextVersion', {
+          describe:
+            'The version expected to be released e.g. `5.2.0`. Replaces `_VERSION__` placeholder in the changelog.',
           type: 'string',
         });
     },

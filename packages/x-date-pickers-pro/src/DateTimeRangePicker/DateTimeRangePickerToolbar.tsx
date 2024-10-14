@@ -112,6 +112,10 @@ const DateTimeRangePickerToolbarEnd = styled(DateTimePickerToolbar, {
   ],
 }) as DateTimeRangePickerStartOrEndToolbarComponent;
 
+type DateTimeRangePickerToolbarComponent = (<TDate extends PickerValidDate>(
+  props: DateTimeRangePickerToolbarProps<TDate> & React.RefAttributes<HTMLDivElement>,
+) => React.JSX.Element) & { propTypes?: any };
+
 const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePickerToolbar<
   TDate extends PickerValidDate,
 >(inProps: DateTimeRangePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
@@ -236,7 +240,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
       />
     </DateTimeRangePickerToolbarRoot>
   );
-});
+}) as DateTimeRangePickerToolbarComponent;
 
 DateTimeRangePickerToolbar.propTypes = {
   // ----------------------------- Warning --------------------------------

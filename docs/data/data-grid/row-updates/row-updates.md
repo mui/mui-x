@@ -8,7 +8,7 @@ The simplest way to update the rows is to provide the new rows using the `rows` 
 It replaces the previous values. This approach has some drawbacks:
 
 - You need to provide all the rows.
-- You might create a performance bottleneck when preparing the rows array to provide to the data grid.
+- You might create a performance bottleneck when preparing the rows array to provide to the Data Grid.
 
 {{"demo": "UpdateRowsProp.js", "bg": "inline"}}
 
@@ -24,7 +24,7 @@ If you want to only update part of the rows, you can use the `apiRef.current.upd
 {{"demo": "UpdateRowsApiRef.js", "bg": "inline"}}
 
 The default behavior of `updateRows` API is to upsert rows.
-So if a row has an id that is not in the current list of rows then it will be added to the data grid.
+So if a row has an id that is not in the current list of rows then it will be added to the Data Grid.
 
 Alternatively, if you would like to delete a row, you would need to pass an extra `_action` property in the update object as below.
 
@@ -53,9 +53,9 @@ Otherwise, the sorting and filtering will only be applied to the subset of rows 
 ## Lazy loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 Lazy Loading works like a pagination system, but instead of loading new rows based on pages, it loads them based on the viewport.
-It loads new rows in chunks, as the user scrolls through the data grid and reveals empty rows.
+It loads new rows in chunks, as the user scrolls through the Data Grid and reveals empty rows.
 
-The data grid builds the vertical scroll as if all the rows are already there, and displays empty (skeleton) rows while loading the data. Only rows that are displayed get fetched.
+The Data Grid builds the vertical scroll as if all the rows are already there, and displays empty (skeleton) rows while loading the data. Only rows that are displayed get fetched.
 
 To enable lazy loading, there are a few steps you need to follow:
 
@@ -81,9 +81,9 @@ You can find out more information about how to do that on the [server-side filte
 
 ## High frequency [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-Whenever the rows are updated, the data grid has to apply the sorting and filters. This can be a problem if you have high frequency updates. To maintain good performances, the data grid allows to batch the updates and only apply them after a period of time. The `throttleRowsMs` prop can be used to define the frequency (in milliseconds) at which rows updates are applied.
+Whenever the rows are updated, the Data Grid has to apply the sorting and filters. This can be a problem if you have high frequency updates. To maintain good performances, the Data Grid allows to batch the updates and only apply them after a period of time. The `throttleRowsMs` prop can be used to define the frequency (in milliseconds) at which rows updates are applied.
 
-When receiving updates more frequently than this threshold, the data grid will wait before updating the rows.
+When receiving updates more frequently than this threshold, the Data Grid will wait before updating the rows.
 
 The following demo updates the rows every 10 ms, but they are only applied every 2 seconds.
 

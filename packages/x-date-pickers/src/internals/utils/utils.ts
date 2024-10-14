@@ -47,4 +47,15 @@ export const getActiveElement = (root: Document | ShadowRoot = document): Elemen
   return activeEl;
 };
 
+/**
+ * Gets the index of the focused list item in a given ul list element.
+ *
+ * @param {HTMLUListElement} listElement - The list element to search within.
+ * @returns {number} The index of the focused list item, or -1 if none is focused.
+ */
+export const getFocusedListItemIndex = (listElement: HTMLUListElement): number => {
+  const children = listElement.children;
+  return Array.from(children).findIndex((child) => child === getActiveElement(document));
+};
+
 export const DEFAULT_DESKTOP_MODE_MEDIA_QUERY = '@media (pointer: fine)';

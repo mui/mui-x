@@ -47,7 +47,7 @@ function App({ children }) {
 ```
 
 Note that `createTheme` accepts any number of arguments.
-If you are already using the [translations of the core components](/material-ui/guides/localization/#locale-text) or the [translations of the data grid](/x/react-data-grid/localization/#locale-text), you can add `deDE` as a new argument.
+If you are already using the [translations of the core components](/material-ui/guides/localization/#locale-text) or the [translations of the Data Grid](/x/react-data-grid/localization/#locale-text), you can add `deDE` as a new argument.
 
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';

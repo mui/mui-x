@@ -199,7 +199,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           // Use timeout to allow simpler tests in JSDOM.
           clock.tick(0);
         }).toErrorDev(
-          'MUI X: useResizeContainer - The parent DOM element of the data grid has an empty height.',
+          'MUI X: useResizeContainer - The parent DOM element of the Data Grid has an empty height.',
         );
       });
 
@@ -215,7 +215,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           // Use timeout to allow simpler tests in JSDOM.
           clock.tick(0);
         }).toErrorDev(
-          'MUI X: useResizeContainer - The parent DOM element of the data grid has an empty width',
+          'MUI X: useResizeContainer - The parent DOM element of the Data Grid has an empty width',
         );
       });
     });
@@ -959,13 +959,13 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </ErrorBoundary>,
         );
       }).toErrorDev([
-        'The data grid component requires all rows to have a unique `id` property',
-        'The data grid component requires all rows to have a unique `id` property',
+        'The Data Grid component requires all rows to have a unique `id` property',
+        'The Data Grid component requires all rows to have a unique `id` property',
         'The above error occurred in the <ForwardRef(DataGrid)> component',
       ]);
       expect((errorRef.current as any).errors).to.have.length(1);
       expect((errorRef.current as any).errors[0].toString()).to.include(
-        'The data grid component requires all rows to have a unique `id` property',
+        'The Data Grid component requires all rows to have a unique `id` property',
       );
     });
   });

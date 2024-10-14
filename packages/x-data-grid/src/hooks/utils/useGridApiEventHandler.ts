@@ -8,7 +8,7 @@ import type { GridApiCommon } from '../../models';
 
 /**
  * Signal to the underlying logic what version of the public component API
- * of the data grid is exposed.
+ * of the Data Grid is exposed.
  */
 enum GridSignature {
   DataGrid = 'DataGrid',

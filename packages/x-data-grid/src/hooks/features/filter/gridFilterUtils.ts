@@ -88,7 +88,7 @@ export const sanitizeFilterModel = (
       warnOnce(
         [
           'MUI X: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
-          'If you are using the community version of the `DataGrid`, this prop is always `true`.',
+          'If you are using the community version of the Data Grid, this prop is always `true`.',
         ],
         'error',
       );

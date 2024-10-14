@@ -108,7 +108,7 @@ The following demo implements this behavior.
 
 ## Bulk editing
 
-The data grid [Editing](/x/react-data-grid/editing/) API exposes [the `processRowUpdate` callback](/x/react-data-grid/editing/#the-processrowupdate-callback) which is commonly used to persist edits on per-row basis.
+The Data Grid [Editing](/x/react-data-grid/editing/) API exposes [the `processRowUpdate` callback](/x/react-data-grid/editing/#the-processrowupdate-callback) which is commonly used to persist edits on per-row basis.
 You can utilize this callback to batch edits locally and then choose to either persist or discard them in bulk.
 
 The demo below stores edited and deleted rows in the `unsavedChangesRef`.
@@ -118,6 +118,6 @@ These changes are saved or discarded when the user clicks the **Save** or **Disc
 
 ### With commercial features [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-When using [`DataGridPremium`](/x/react-data-grid/#premium-plan), bulk editing applies to row updates from [Clipboard paste](/x/react-data-grid/clipboard/#clipboard-paste) automatically, since [Clipboard paste uses Editing API for persistence](/x/react-data-grid/clipboard/#persisting-pasted-data):
+When using [Data Grid Premium](/x/react-data-grid/#premium-plan), bulk editing applies to row updates from [Clipboard paste](/x/react-data-grid/clipboard/#clipboard-paste) automatically, since [Clipboard paste uses Editing API for persistence](/x/react-data-grid/clipboard/#persisting-pasted-data):
 
 {{"demo": "BulkEditingPremiumNoSnap.js", "bg": "inline", "defaultCodeOpen": false}}
