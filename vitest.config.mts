@@ -35,7 +35,8 @@ export default defineConfig({
   test: {
     globals: true,
     setupFiles: ['test/setupVitest.ts'],
-    // Required for some datepickers tests that contain early returns.
+    // Required for some tests that contain early returns.
+    // Should be removed once we migrate to vitest.
     passWithNoTests: true,
     sequence: {
       hooks: 'list',

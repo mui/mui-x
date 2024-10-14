@@ -266,8 +266,6 @@ describe('<DataGridPremium /> - Cell selection', () => {
       );
 
       // Add a new cell range to the selection
-      // fireEvent.mouseDown(getCell(2, 0), { ctrlKey: true });
-      // fireEvent.mouseOver(getCell(3, 0), { ctrlKey: true });
       const isMac = window.navigator.platform.toUpperCase().indexOf('MAC') >= 0;
 
       await user.keyboard(isMac ? '{Meta>}' : '{Control>}');

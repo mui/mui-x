@@ -38,7 +38,6 @@ export default defineWorkspace([
             headless: true,
             // https://playwright.dev
             providerOptions: {
-              // https://playwright.dev/docs/api/class-browsertype#browsertypelaunchoptions
               launch: {
                 // Required for x-data-grid-pro tests.
                 // packages/x-data-grid-pro/src/tests/columns.DataGridPro.test.tsx
