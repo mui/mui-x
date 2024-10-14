@@ -928,7 +928,7 @@ describeTreeView<
             shiftKey: true,
             ctrlKey: true,
           });
-          // expect(view.getSelectedTreeItems()).to.deep.equal(['1', '2', '2.1', '3']);
+          expect(view.getSelectedTreeItems()).to.deep.equal(['1', '2', '2.1', '3']);
         });
 
         it('should not select any item when Home is pressed while holding Shift + Ctrl and disableSelection={true}', () => {
