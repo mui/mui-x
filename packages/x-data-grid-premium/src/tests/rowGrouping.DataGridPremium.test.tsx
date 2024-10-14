@@ -667,7 +667,9 @@ describe('<DataGridPremium /> - Row grouping', () => {
         />,
       );
       expect(isGroupExpandedByDefault.callCount).to.equal(12); // Should not be called on leaves
-      const { childrenExpanded, ...node } = apiRef.current.state.rows.tree.A as GridGroupNode;
+      const { childrenExpanded, ...node } = apiRef.current.state.rows.tree[
+        'auto-generated-row-category1/Cat A'
+      ] as GridGroupNode;
       const callForNodeA = isGroupExpandedByDefault
         .getCalls()
         .find(
