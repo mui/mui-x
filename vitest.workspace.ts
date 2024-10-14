@@ -8,6 +8,7 @@ const packages = [
   'x-date-pickers-pro',
   'x-data-grid',
   'x-data-grid-pro',
+  'x-data-grid-premium',
   'x-internals',
 ];
 

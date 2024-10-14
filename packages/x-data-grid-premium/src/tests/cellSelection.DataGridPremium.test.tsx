@@ -362,12 +362,10 @@ describe('<DataGridPremium /> - Cell selection', () => {
   });
 
   describe('Auto-scroll', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // Need layouting
-        this.skip();
-      }
-    });
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      return;
+    }
 
     it('should auto-scroll when the mouse approaches the bottom edge', () => {
       stub(window, 'requestAnimationFrame').callsFake(() => 0);
