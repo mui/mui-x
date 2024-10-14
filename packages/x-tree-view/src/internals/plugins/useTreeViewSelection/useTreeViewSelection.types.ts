@@ -90,7 +90,7 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
    */
   multiSelect?: Multiple;
   /**
-   * If `true`, the tree view renders a checkbox at the left of its label that allows selecting it.
+   * If `true`, the Tree View renders a checkbox at the left of its label that allows selecting it.
    * @default false
    */
   checkboxSelection?: boolean;

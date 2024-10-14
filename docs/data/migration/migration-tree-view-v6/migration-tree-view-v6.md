@@ -13,7 +13,7 @@ To read more about the changes from the new major, check out [the blog post abou
 
 ## Start using the new release
 
-In `package.json`, change the version of the tree view package to `^7.0.0`.
+In `package.json`, change the version of the Tree View package to `^7.0.0`.
 
 ```diff
 -"@mui/x-tree-view": "^6.0.0",

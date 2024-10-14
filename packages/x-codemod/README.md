@@ -227,9 +227,9 @@ npx @mui/x-codemod@latest v7.0.0/data-grid/remove-stabilized-experimentalFeature
 
 ### Tree View codemods
 
-#### `preset-safe` for tree view v7.0.0
+#### `preset-safe` for Tree View v7.0.0
 
-The `preset-safe` codemods for tree view.
+The `preset-safe` codemods for Tree View.
 
 ```bash
 npx @mui/x-codemod@latest v7.0.0/tree-view/preset-safe <path|folder>

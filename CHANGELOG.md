@@ -367,7 +367,7 @@ Same changes as in `@mui/x-charts@7.17.0`.
 
 ### Docs
 
-- [docs] Add missing callout on "Imperative API" tree view sections (#14503) @flaviendelangle
+- [docs] Add missing callout on "Imperative API" Tree View sections (#14503) @flaviendelangle
 - [docs] Fix broken redirection to MUI X v5 @oliviertassinari
 - [docs] Fix multiple `console.error` messages on `charts` docs (#14554) @JCQuintas
 - [docs] Fixed typo in Row Grouping recipes (#14549) @Miodini
@@ -708,7 +708,7 @@ Same changes as in `@mui/x-charts@7.13.0`.
 - [core] Fix ESLint issue (#14207) @LukasTy
 - [core] Fix Netlify build cache issue (#14182) @cherniavskii
 - [code-infra] Refactor Netlify `cache-docs` plugin setup (#14105) @LukasTy
-- [internals] Move utils needed for tree view virtualization to shared package (#14202) @flaviendelangle
+- [internals] Move utils needed for Tree View virtualization to shared package (#14202) @flaviendelangle
 
 ## 7.12.1
 
@@ -1292,7 +1292,7 @@ Same changes as in `@mui/x-date-pickers@7.8.0`.
 
 - [core] Add eslint rule to restrict import from `../internals` root (#13633) @JCQuintas
 - [docs-infra] Sync `\_app` folder with monorepo (#13582) @Janpot
-- [license] Allow usage of charts and tree view pro package for old premium licenses (#13619) @flaviendelangle
+- [license] Allow usage of charts and Tree View pro package for old premium licenses (#13619) @flaviendelangle
 
 ## 7.7.1
 
@@ -1440,7 +1440,7 @@ Same changes as in `@mui/x-date-pickers@7.7.0`.
 - [TreeView] Improve TypeScript for plugins (#13380) @flaviendelangle
 - [TreeView] Improve the typing of the cancelable events (#13152) @flaviendelangle
 - [TreeView] Prepare support for PigmentCSS (#13412) @flaviendelangle
-- [TreeView] Refactor the tree view internals to prepare for headless API (#13311) @flaviendelangle
+- [TreeView] Refactor the Tree View internals to prepare for headless API (#13311) @flaviendelangle
 
 ### Docs
 
@@ -1640,7 +1640,7 @@ _May 23, 2024_
 
 We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-- 🧰 Improve tree view testing
+- 🧰 Improve Tree View testing
 - 📊 Add `label` to be displayed in BarChart
 
 ### Data Grid
@@ -2126,7 +2126,7 @@ Same changes as in `@mui/x-date-pickers@7.2.0`, plus:
 ### Docs
 
 - [docs] Add `AxisFormatter` documentation for customizing tick/tooltip value formatting (#12700) @JCQuintas
-- [docs] Add file explorer example to rich tree view customization docs (#12707) @noraleonte
+- [docs] Add file explorer example to rich Tree View customization docs (#12707) @noraleonte
 - [docs] Do not use import of depth 3 in the doc (#12716) @flaviendelangle
 - [docs] Explain how to clip plots with composition (#12679) @alexfauquette
 - [docs] Fix typo in Data Grid v7 migration page (#12720) @bfaulk96
@@ -3323,7 +3323,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.0`, plus:
 
 ### Docs
 
-- [docs] Add `contextValue` to the headless tree view doc (#11705) @flaviendelangle
+- [docs] Add `contextValue` to the headless Tree View doc (#11705) @flaviendelangle
 - [docs] Add section for the `disableSelection` prop (#11821) @flaviendelangle
 - [docs] Fix brand name non-breaking space (#11758) @oliviertassinari
 - [docs] Fix typo in Data Grid components page (#11775) @flaviendelangle
@@ -3657,7 +3657,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.9`.
 - [docs] Cleanup and fix Pickers Playground styling (#11700) @LukasTy
 - [docs] First draft of the Tree View custom plugin doc (#11564) @flaviendelangle
 - [docs] Fix Pickers migration syntax and diffs (#11695) @LukasTy
-- [docs] Fix generated tree view API docs (#11737) @LukasTy
+- [docs] Fix generated Tree View API docs (#11737) @LukasTy
 - [docs] Generate docs for Tree View slots (#11730) @flaviendelangle
 - [docs] Improve codemod for v7 (#11650) @oliviertassinari
 - [docs] Improve Data Grid `pageSizeOptions` prop documentation (#11682) @oliviertassinari
@@ -3740,8 +3740,8 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.8`.
 
 ### Tree View / `@mui/x-tree-view@7.0.0-alpha.8`
 
-- [tree view] Cleanup `onKeyDown` handler (#11481) @flaviendelangle
-- [tree view] Define the parameters used by each plugin to avoid listing them in each component (#11473) @flaviendelangle
+- [Tree View] Cleanup `onKeyDown` handler (#11481) @flaviendelangle
+- [Tree View] Define the parameters used by each plugin to avoid listing them in each component (#11473) @flaviendelangle
 
 ### Docs
 
@@ -5099,7 +5099,7 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 
 ### Core
 
-- [core] Adds migration docs for charts, pickers and tree view (#10926) @michelengelen
+- [core] Adds migration docs for charts, pickers and Tree View (#10926) @michelengelen
 - [core] Bump monorepo (#10959) @LukasTy
 - [core] Changed prettier branch value to next (#10917) @michelengelen
 - [core] Fix GitHub title tag consistency @oliviertassinari
