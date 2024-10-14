@@ -44,7 +44,7 @@ export interface GridRowsMetaPrivateApi {
    * Observe row for 'auto' height changes.
    * @param {Element} element The row element to observe.
    * @param {GridRowId} rowId The id of the row.
-   * @returns A dispose callback
+   * @returns {ReturnType<React.EffectCallback>} A dispose callback
    */
   observeRowHeight: (element: Element, rowId: GridRowId) => ReturnType<React.EffectCallback>;
   /**
@@ -62,7 +62,7 @@ export interface GridRowsMetaPrivateApi {
   /**
    * Get the height entry from the cache or create one.
    * @param {GridRowId} id The id of the row.
-   * @returns The height cache entry
+   * @returns {HeightEntry} The height cache entry
    */
   getRowHeightEntry: (id: GridRowId) => HeightEntry;
 }
