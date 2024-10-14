@@ -40,6 +40,7 @@ export interface GridRowsMetaApi {
 }
 
 export interface GridRowsMetaPrivateApi {
+  hydrateRowsMeta: () => void;
   /**
    * Observe row for 'auto' height changes.
    * @param {Element} element The row element to observe.

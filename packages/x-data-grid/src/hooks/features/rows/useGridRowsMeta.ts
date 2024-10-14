@@ -254,7 +254,7 @@ export const useGridRowsMeta = (
   // The effect is used to build the rows meta data - currentPageTotalHeight and positions.
   // Because of variable row height this is needed for the virtualization
   React.useEffect(() => {
-    apiRef.current.requestPipeProcessorsApplication('rowHeight');
+    apiRef.current.hydrateRowsMeta();
   }, [
     apiRef,
     rowHeight,
@@ -279,6 +279,7 @@ export const useGridRowsMeta = (
   };
 
   const rowsMetaPrivateApi: GridRowsMetaPrivateApi = {
+    hydrateRowsMeta,
     observeRowHeight,
     rowHasAutoHeight,
     getRowHeightEntry,
