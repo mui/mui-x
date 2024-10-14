@@ -7,6 +7,7 @@ import { PieArcLabelPlotSlots, PieArcLabelPlotSlotProps, PieArcLabelPlot } from 
 import { getPercentageValue } from '../internals/getPercentageValue';
 import { getPieCoordinates } from './getPieCoordinates';
 import { usePieSeries } from '../hooks/useSeries';
+import { useSkipAnimation } from '../context/AnimationProvider';
 
 export interface PiePlotSlots extends PieArcPlotSlots, PieArcLabelPlotSlots {}
 
@@ -36,9 +37,10 @@ export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'o
  * - [PiePlot API](https://mui.com/x/api/charts/pie-plot/)
  */
 function PiePlot(props: PiePlotProps) {
-  const { skipAnimation, slots, slotProps, onItemClick } = props;
+  const { skipAnimation: inSkipAnimation, slots, slotProps, onItemClick } = props;
   const seriesData = usePieSeries();
   const { left, top, width, height } = React.useContext(DrawingContext);
+  const skipAnimation = useSkipAnimation(inSkipAnimation);
 
   if (seriesData === undefined) {
     return null;

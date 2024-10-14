@@ -227,13 +227,13 @@ const column = {
 Because of pagination and virtualization, cells can be unmounted when scrolling or switching pages.
 The internal state of the component returned by renderCell will be lost.
 
-If you want the cell information to persist, you should save it either in the data grid state or in the data grid parent.
+If you want the cell information to persist, you should save it either in the Data Grid state or in the Data Grid parent.
 :::
 
 ### Expand cell renderer
 
-By default, the data grid cuts the content of a cell and renders an ellipsis if the content of the cell does not fit in the cell.
-As a workaround, you can create a cell renderer that will allow seeing the full content of the cell in the data grid.
+By default, the Data Grid cuts the content of a cell and renders an ellipsis if the content of the cell does not fit in the cell.
+As a workaround, you can create a cell renderer that will allow seeing the full content of the cell in the Data Grid.
 
 {{"demo": "RenderExpandCellGrid.js", "bg": "inline"}}
 
@@ -241,7 +241,7 @@ As a workaround, you can create a cell renderer that will allow seeing the full 
 Because of pagination and virtualization, cells can be unmounted when scrolling or switching pages.
 The internal state of the component returned by `renderCell` will be lost.
 
-If you want to persist cell information, you should save it either in the data grid parent or in the row model.
+If you want to persist cell information, you should save it either in the Data Grid parent or in the row model.
 Updating the row will rerender the row and so call renderCell with updated params.
 :::
 
@@ -324,7 +324,7 @@ However, you can customize which attribute is used as value and label by using `
 #### Actions
 
 If the column type is `'actions'`, you need to provide a `getActions` function that returns an array of actions available for each row (React elements).
-You can add the `showInMenu` prop on the returned React elements to signal the data grid to group these actions inside a row menu.
+You can add the `showInMenu` prop on the returned React elements to signal the Data Grid to group these actions inside a row menu.
 
 ```tsx
 {

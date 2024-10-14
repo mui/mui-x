@@ -5,9 +5,15 @@
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "ContentComponent": {
       "type": { "name": "custom", "description": "element type" },
-      "default": "TreeItemContent"
+      "default": "TreeItemContent",
+      "deprecated": true,
+      "deprecationInfo": "Consider using the <code>TreeItem2</code> component or the <code>useTreeItem2</code> hook instead. For more detail, see <a href=\"https://mui.com/x/react-tree-view/tree-item-customization/\">https://mui.com/x/react-tree-view/tree-item-customization/</a>."
     },
-    "ContentProps": { "type": { "name": "object" } },
+    "ContentProps": {
+      "type": { "name": "object" },
+      "deprecated": true,
+      "deprecationInfo": "Consider using the <code>TreeItem2</code> component or the <code>useTreeItem2</code> hook instead. For more detail, see <a href=\"https://mui.com/x/react-tree-view/tree-item-customization/\">https://mui.com/x/react-tree-view/tree-item-customization/</a>."
+    },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "label": { "type": { "name": "node" } },
     "onFocus": { "type": { "name": "custom", "description": "unsupportedProp" } },
