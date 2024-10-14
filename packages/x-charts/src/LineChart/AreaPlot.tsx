@@ -16,6 +16,7 @@ import { LineItemIdentifier } from '../models/seriesType/line';
 import { useChartGradient } from '../internals/components/ChartsAxesGradients';
 import { useLineSeries } from '../hooks/useSeries';
 import { AxisId } from '../models/axis';
+import { useSkipAnimation } from '../context/AnimationProvider';
 
 export interface AreaPlotSlots extends AreaElementSlots {}
 
@@ -151,7 +152,8 @@ const useAggregatedData = () => {
  * - [AreaPlot API](https://mui.com/x/api/charts/area-plot/)
  */
 function AreaPlot(props: AreaPlotProps) {
-  const { slots, slotProps, onItemClick, skipAnimation, ...other } = props;
+  const { slots, slotProps, onItemClick, skipAnimation: inSkipAnimation, ...other } = props;
+  const skipAnimation = useSkipAnimation(inSkipAnimation);
 
   const getGradientId = useChartGradient();
   const completedData = useAggregatedData();
