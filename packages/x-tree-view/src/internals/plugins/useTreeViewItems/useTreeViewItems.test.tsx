@@ -32,7 +32,8 @@ describeTreeView<
           : []),
         'MUI X: The Tree View component requires all items to have a unique `id` property.',
         'MUI X: The Tree View component requires all items to have a unique `id` property.',
-        `The above error occurred in the <ForwardRef(${treeViewComponentName})> component`,
+        // Vitest error message adds a 2 at the end of the component name
+        `The above error occurred in the <ForwardRef(${treeViewComponentName}`,
       ]);
     });
 
