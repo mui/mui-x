@@ -207,12 +207,14 @@ describeTreeView<[UseTreeViewExpansionSignature]>(
         expect(view.isItemExpanded('1')).to.equal(true);
       });
 
-      it('should be able to limit the expansion to the icon', function test() {
+      it('should be able to limit the expansion to the icon', function test(t = {}) {
         // This test is not relevant for the TreeItem component.
         // We could create the equivalent test for it,
         // but it's not worth the effort given the complexity of the old behavior override.
         if (!setup.includes('TreeItem2')) {
-          this.skip();
+          // @ts-expect-error to support mocha and vitest
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          this?.skip?.() || t?.skip();
         }
 
         const CustomTreeItem = React.forwardRef(function MyTreeItem(

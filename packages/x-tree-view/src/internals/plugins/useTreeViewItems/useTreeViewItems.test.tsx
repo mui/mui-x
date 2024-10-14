@@ -14,12 +14,14 @@ describeTreeView<
 >(
   'useTreeViewItems plugin',
   ({ render, renderFromJSX, treeViewComponentName, TreeViewComponent, TreeItemComponent }) => {
-    it('should throw an error when two items have the same ID', function test() {
+    it('should throw an error when two items have the same ID', function test(t = {}) {
       // TODO is this fixed?
       if (!/jsdom/.test(window.navigator.userAgent)) {
         // can't catch render errors in the browser for unknown reason
         // tried try-catch + error boundary + window onError preventDefault
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       expect(() =>
@@ -34,10 +36,12 @@ describeTreeView<
       ]);
     });
 
-    it('should be able to use a custom id attribute', function test() {
+    it('should be able to use a custom id attribute', function test(t = {}) {
       // For now, only SimpleTreeView can use custom id attributes
       if (treeViewComponentName.startsWith('RichTreeView')) {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       const view = render({
@@ -107,9 +111,11 @@ describeTreeView<
         expect(view.getItemRoot('1')).not.to.have.attribute('aria-expanded');
       });
 
-      it('should mark an item as not expandable if it has only empty conditional arrays', function test() {
+      it('should mark an item as not expandable if it has only empty conditional arrays', function test(t = {}) {
         if (treeViewComponentName.startsWith('RichTreeView')) {
-          this.skip();
+          // @ts-expect-error to support mocha and vitest
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          this?.skip?.() || t?.skip();
         }
 
         const view = renderFromJSX(
@@ -124,9 +130,11 @@ describeTreeView<
         expect(view.isItemExpanded('1')).to.equal(false);
       });
 
-      it('should mark an item as expandable if it has two array as children, one of which is empty (SimpleTreeView only)', function test() {
+      it('should mark an item as expandable if it has two array as children, one of which is empty (SimpleTreeView only)', function test(t = {}) {
         if (treeViewComponentName.startsWith('RichTreeView')) {
-          this.skip();
+          // @ts-expect-error to support mocha and vitest
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          this?.skip?.() || t?.skip();
         }
 
         const view = renderFromJSX(
@@ -141,9 +149,11 @@ describeTreeView<
         expect(view.isItemExpanded('1')).to.equal(true);
       });
 
-      it('should mark an item as not expandable if it has one array containing an empty array as a children (SimpleTreeView only)', function test() {
+      it('should mark an item as not expandable if it has one array containing an empty array as a children (SimpleTreeView only)', function test(t = {}) {
         if (treeViewComponentName.startsWith('RichTreeView')) {
-          this.skip();
+          // @ts-expect-error to support mocha and vitest
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          this?.skip?.() || t?.skip();
         }
 
         const view = renderFromJSX(
