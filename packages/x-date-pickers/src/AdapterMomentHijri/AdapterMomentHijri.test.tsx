@@ -25,7 +25,6 @@ describe('<AdapterMomentHijri />', () => {
     it('Formatting', (t = {}) => {
       if (process.env.MUI_BROWSER === 'true') {
         // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         t?.skip();
       }
 
@@ -89,7 +88,6 @@ describe('<AdapterMomentHijri />', () => {
         it('should have well formatted value', (t = {}) => {
           if (process.env.MUI_BROWSER === 'true') {
             // @ts-expect-error to support mocha and vitest
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             t?.skip();
           }
 

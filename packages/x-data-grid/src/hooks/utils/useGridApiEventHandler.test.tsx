@@ -47,6 +47,7 @@ describe('useGridApiEventHandler', () => {
       expect(apiRef.current.subscribeEvent.callCount).to.equal(3);
 
       unmount();
+      // @ts-expect-error to support mocha and vitest
       global.gc(); // Triggers garbage collector
       await sleep(50);
 
