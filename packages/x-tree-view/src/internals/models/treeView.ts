@@ -9,11 +9,11 @@ export interface TreeViewItemMeta {
   expandable: boolean;
   disabled: boolean;
   /**
-   * Only defined for `RichTreeView` and `RichTreeViewPro`.
+   * Only defined for Rich Tree View and Rich Tree View Pro.
    */
   depth?: number;
   /**
-   * Only defined for `RichTreeView` and `RichTreeViewPro`.
+   * Only defined for Rich Tree View and Rich Tree View Pro.
    */
   label?: string;
 }

@@ -140,10 +140,10 @@ The same change has been applied to the `ContentComponent` prop:
  }
 ```
 
-### ✅ Use `SimpleTreeView` instead of `TreeView`
+### ✅ Use Simple Tree View instead of Tree View
 
-The `TreeView` component has been deprecated and will be removed in the next major.
-You can start replacing it with the new `SimpleTreeView` component which has exactly the same API:
+The Tree View component has been deprecated and will be removed in the next major.
+You can start replacing it with the new Simple Tree View component which has exactly the same API:
 
 ```diff
 -import { TreeView } from '@mui/x-tree-view';
@@ -423,7 +423,7 @@ If you were using the `onNodeToggle` prop to react to the expansion or collapse 
 you can use the new `onItemExpansionToggle` prop which is called whenever an item is expanded or collapsed with its id and expansion status
 
 ```tsx
-// It is also available on the deprecated `TreeView` component
+// It is also available on the deprecated Tree View component
 <SimpleTreeView
   onItemExpansionToggle={(event, itemId, isExpanded) =>
     console.log(itemId, isExpanded)
@@ -461,7 +461,7 @@ If you were using the `onNodeSelect` prop to react to the selection or deselecti
 you can use the new `onItemSelectionToggle` prop which is called whenever an item is selected or deselected with its id and selection status.
 
 ```tsx
-// It is also available on the deprecated `TreeView` component
+// It is also available on the deprecated Tree View component
 <SimpleTreeView
   onItemSelectionToggle={(event, itemId, isSelected) =>
     console.log(itemId, isSelected)

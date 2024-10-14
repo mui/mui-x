@@ -72,7 +72,7 @@ Take a look at the [Styled engine guide](/material-ui/integrations/styled-compon
 
 ## Render your first component
 
-To make sure that everything is set up correctly, try rendering a `SimpleTreeView` component:
+To make sure that everything is set up correctly, try rendering a Simple Tree View component:
 
 {{"demo": "FirstComponent.js"}}
 

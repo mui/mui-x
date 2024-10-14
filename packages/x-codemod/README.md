@@ -247,7 +247,7 @@ The list includes these transformers
 
 #### `rename-tree-view-simple-tree-view`
 
-Renames the `TreeView` component to `SimpleTreeView`
+Renames the Tree View component to Simple Tree View
 
 ```diff
 -import { TreeView } from '@mui/x-tree-view';

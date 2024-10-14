@@ -799,7 +799,7 @@ This expansion of the Pro plan comes with some adjustments to our pricing strate
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Introduce [item reordering using drag and drop](https://mui.com/x/react-tree-view/rich-tree-view/ordering/) on the `RichTreeViewPro` component
+- 🎁 Introduce [item reordering using drag and drop](https://mui.com/x/react-tree-view/rich-tree-view/ordering/) on the Rich Tree View Pro component
 
   <img width="287" src="https://github.com/user-attachments/assets/78bd83c5-7ce4-4ed7-acf9-be70b2dbce54" alt="Item reordering using drag and drop" />
 
@@ -1360,7 +1360,7 @@ Same changes as in `@mui/x-date-pickers@7.7.1`, plus:
 - [TreeView] Improve typing to support optional dependencies in plugins and in the item (#13523) @flaviendelangle
 - [TreeView] Move `useTreeViewId` to the core plugins (#13566) @flaviendelangle
 - [TreeView] Remove unused state from `useTreeViewId` (#13579) @flaviendelangle
-- [TreeView] Support `itemId` with escaping characters when using `SimpleTreeView` (#13487) @oukunan
+- [TreeView] Support `itemId` with escaping characters when using Simple Tree View (#13487) @oukunan
 
 ### Docs
 
@@ -2202,7 +2202,7 @@ Same changes as in `@mui/x-date-pickers@7.1.1`, plus:
 #### `@mui/x-tree-view@7.1.1`
 
 - [TreeView] Add JSDoc to all `publicAPI` methods (#12649) @flaviendelangle
-- [TreeView] Create `RichTreeViewPro` component (not released yet) (#12610) @flaviendelangle
+- [TreeView] Create Rich Tree View Pro component (not released yet) (#12610) @flaviendelangle
 - [TreeView] Create Pro package (not released yet) (#12240) @flaviendelangle
 - [TreeView] Fix typo in errors (#12623) @alissa-tung
 - [TreeView] New API method: `setItemExpansion` (#12595) @flaviendelangle
@@ -2222,13 +2222,13 @@ Same changes as in `@mui/x-date-pickers@7.1.1`, plus:
 - [docs] Move Data Grid interfaces to standard API page layout (#12016) @alexfauquette
 - [docs] Remove ` around @default values (#12158) @alexfauquette
 - [docs] Remove `day` from the default `dayOfWeekFormatter` function params (#12644) @LukasTy
-- [docs] Use `TreeItem2` for icon expansion example on `RichTreeView` (#12563) @flaviendelangle
+- [docs] Use `TreeItem2` for icon expansion example on Rich Tree View (#12563) @flaviendelangle
 
 ### Core
 
 - [core] Add cherry-pick `master` to `v6` action (#12648) @LukasTy
 - [core] Fix typo in `@mui/x-tree-view-pro/themeAugmentation` (#12674) @flaviendelangle
-- [core] Introduce `describeTreeView` to run test on `SimpleTreeView` and `RichTreeView`, using `TreeItem` and `TreeItem2` + migrate expansion tests (#12428) @flaviendelangle
+- [core] Introduce `describeTreeView` to run test on Simple Tree View and Rich Tree View, using `TreeItem` and `TreeItem2` + migrate expansion tests (#12428) @flaviendelangle
 - [core] Limit `test-types` CI step allowed memory (#12651) @LukasTy
 - [core] Remove explicit `express` package (#12602) @LukasTy
 - [core] Update to new embedded translations in the docs package (#12232) @Janpot
@@ -2293,7 +2293,7 @@ Same changes as in `@mui/x-date-pickers@7.1.0`, plus:
 
 #### `@mui/x-tree-view@7.1.0`
 
-- [TreeView] Do not use outdated version of the state to compute new label first char in `RichTreeView` (#12512) @flaviendelangle
+- [TreeView] Do not use outdated version of the state to compute new label first char in Rich Tree View (#12512) @flaviendelangle
 
 ### Docs
 
@@ -2663,14 +2663,14 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.6`.
 #### `@mui/x-tree-view@7.0.0-beta.6`
 
 - [TreeView] Fix invalid nodes state when updating `props.items` (#12359) @flaviendelangle
-- [TreeView] In the `RichTreeView`, do not use the item id as the HTML id attribute (#12319) @flaviendelangle
+- [TreeView] In the Rich Tree View, do not use the item id as the HTML id attribute (#12319) @flaviendelangle
 - [TreeView] New instance and publicAPI method: `getItem` (#12251) @flaviendelangle
 - [TreeView] Replace `TransitionComponent` and `TransitionProps` with a `groupTransition` slot (#12336) @flaviendelangle
 
 ### Docs
 
 - [docs] Add a note about `z-index` usage in SVG (#12337) @alexfauquette
-- [docs] `RichTreeView` customization docs (#12231) @noraleonte
+- [docs] Rich Tree View customization docs (#12231) @noraleonte
 
 ### Core
 
@@ -3346,7 +3346,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 - 🎁 The Data Grid headers have been refactored to bring immense improvements to scrolling, state management, and overall performance of the grid.
 - ⚙️ The Data Grid disabled column-specific features like filtering, sorting, grouping, etc. could now be accessed programmatically. See the related [docs](https://next.mui.com/x/react-data-grid/api-object/#access-the-disabled-column-features) section.
-- 🚀 Uplift the `SimpleTreeView` customization examples (#11424) @noraleonte
+- 🚀 Uplift the Simple Tree View customization examples (#11424) @noraleonte
 - 🌍 Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11668) on the Data Grid @BCaspari
 - 🐞 Bugfixes
 - 💔 Bump `@mui/material` peer dependency for all packages (#11692) @LukasTy
@@ -3663,7 +3663,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.9`.
 - [docs] Improve Data Grid `pageSizeOptions` prop documentation (#11682) @oliviertassinari
 - [docs] Parse markdown on API docs demo titles (#11728) @LukasTy
 - [docs] Remove the description from the `className` prop (#11693) @oliviertassinari
-- [docs] Uplift `SimpleTreeView` customization examples (#11424) @noraleonte
+- [docs] Uplift Simple Tree View customization examples (#11424) @noraleonte
 - [docs] Uplift the Date Pickers playground (#11555) @danilo-leal
 
 ### Core
@@ -3768,7 +3768,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 - 🎁 New component to create a Tree View from a structured data source:
 
-  You can now directly pass your data to the `RichTreeView` component instead of manually converting it into JSX `TreeItem` components:
+  You can now directly pass your data to the Rich Tree View component instead of manually converting it into JSX `TreeItem` components:
 
   ```tsx
   const ITEMS = [

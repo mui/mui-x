@@ -12,7 +12,7 @@ export interface TreeViewItemToRenderProps {
 export interface UseTreeViewItemsPublicAPI<R extends {}> {
   /**
    * Get the item with the given id.
-   * When used in the `SimpleTreeView`, it returns an object with the `id` and `label` properties.
+   * When used in the Simple Tree View, it returns an object with the `id` and `label` properties.
    * @param {string} itemId The id of the item to retrieve.
    * @returns {R} The item with the given id.
    */

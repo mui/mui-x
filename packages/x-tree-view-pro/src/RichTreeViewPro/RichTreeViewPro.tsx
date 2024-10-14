@@ -68,7 +68,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
       warnOnce([
-        'MUI X: The `RichTreeViewPro` component does not support JSX children.',
+        'MUI X: The Rich Tree View Pro component does not support JSX children.',
         'If you want to add items, you need to use the `items` prop.',
         'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/.',
       ]);
