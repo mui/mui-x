@@ -10,6 +10,7 @@ const packages = [
   'x-data-grid-pro',
   'x-data-grid-premium',
   'x-tree-view',
+  'x-tree-view-pro',
   'x-internals',
 ];
 
