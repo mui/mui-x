@@ -6,7 +6,7 @@ packageName: '@mui/x-charts'
 
 # Charts - Getting started
 
-<p class="description">Install the MUI X Charts package to start building.</p>
+<p class="description">Install the MUI X Charts package to start building React data visualization components.</p>
 
 ## Installation
 
@@ -16,7 +16,7 @@ Run one of the following commands to add install the free Community version or t
 
 {{"component": "modules/components/ChartsInstallationInstructions.js"}}
 
-The Charts packages have has a peer dependency on `@mui/material`. 
+The Charts packages have has a peer dependency on `@mui/material`.
 If you're not already using it, install it with the following command:
 
 <codeblock storageKey="package-manager">
@@ -53,21 +53,22 @@ You can import D3 functions from `@mui/x-charts-vendor/d3-color`.
 
 ## Rendering Charts
 
-A Chart can be rendered as a single, self-contained component, or it can be composed of multiple subcomponents.
-The self-contained components are simpler to get started with, and are recommended for most common use cases.
+MUI X Charts can be rendered as _closed_ (self-contained) or _open_ (composable) components.
+[Closed components](#closed-charts) are simpler to get started with and are recommended for most common use cases; more advanced use cases (such as combining Bar and Line Charts on a single plot) require custom composition with [open components](#open-charts).
 
-### Self-contained Charts
+### Closed Charts
 
-Self-contained Chart components are suffixed with "Chart", for example `<BarChart />`, `<LineChart />`.
+Closed Chart components are self-contained, meaning all of the necessary subcomponents are abstracted away inside of a single React component (such as `<BarChart />` or `<LineChart />`).
+
 These components require a `series` prop describing the data to render, as well as a numerical value (in pixels) for the `height` prop.
 The `width` prop is optional; if no value is provided, the Charts expand to fill the available space.
 
 {{"demo": "SimpleCharts.js"}}
 
-### Composed Charts
+### Open Charts
 
-To create more a complex Chart—such as a combined Line and Bar Chart—you can compose the subcomponents inside of a Chart Container wrapper.
-Options include:
+Open Chart components require composition of the necessary subcomponents inside of a Chart Container wrapper.
+Subcomponents include:
 
 - Axis components – to define the X and Y axes
 - Plot components – to create Bars, Lines, or any other Chart type
@@ -76,40 +77,35 @@ Options include:
 
 See the [Charts composition documentation](/x/react-charts/composition/) for complete details.
 
+The demo below shows how to use composition to create a custom Chart that combines a Bar and a Line Chart on a single plot:
+
 {{"demo": "Combining.js"}}
 
-### Positions
+## Chart layouts
 
-The layout of a Chart is defined by the plot area
+The layout of a Chart is defined by two main spaces: the plot area, and the outer margins.
 
-The SVG defined by its `width` and `height` delimits the available space.
+The `width` and `height` props define the dimensions of the SVG which fills the entire space.
+Within this SVG, the plot area (or drawing area) serves as the canvas for data visualization, where the lines, bars or other visual elements are rendered.
+The size of the plot area is determined by the `margin = {top, bottom, left, right}` object which defines its outer margins inside the SVG.
+The outer margin space is where information like axes, titles, and legends are displayed.
 
-Within this SVG, a dedicated "drawing area" (aka "plot area") serves as the canvas for data representation.
-Here, elements like lines, bars, and areas visually depict the information.
-It's controlled by the `margin = {top, bottom, left, right}` object defining the margin between the SVG and the drawing area.
-
-The space left by margins can display axes, titles, a legend, or any other additional information.
-
-For more information about the position configuration, visit the [styling page](/x/react-charts/styling/#styling).
+See the [Styling documentation](/x/react-charts/styling/) for complete details.
 
 ## Axis management
 
-MUI X Charts have a flexible approach to axis management, supporting multiple-axis charts with any combination of scales and ranges.
+MUI X Charts take a flexible approach to axis management, with support for multiple axes and any combination of scales and ranges.
 
-Visit the [Axis page](/x/react-charts/axis/) for more details.
-
-## Styling
-
-MUI X Charts follows the Material UI styling and features all of the customization tools you'd find there, making tweaking charts as straightforward as designing buttons.
-
-Visit the [Styling page](/x/react-charts/styling/) for more details.
+See the [Axis documentation](/x/react-charts/axis/) for complete details.
 
 ## TypeScript
 
-In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users need to import the following types.
-Internally, it uses module augmentation to extend the default theme structure.
+To benefit from [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users must import the following types.
+These types use module augmentation to extend the default theme structure.
 
 ```tsx
+// only one import is necessary,
+// from the version you're currently using.
 import type {} from '@mui/x-charts/themeAugmentation';
 import type {} from '@mui/x-charts-pro/themeAugmentation';
 
@@ -125,8 +121,3 @@ const theme = createTheme({
   },
 });
 ```
-
-:::info
-You don't have to import the theme augmentation from both `@mui/x-charts` and `@mui/x-charts-pro` when using `@mui/x-charts-pro`.
-Importing it from `@mui/x-charts-pro` is enough.
-:::
