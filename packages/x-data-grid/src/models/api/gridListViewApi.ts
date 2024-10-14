@@ -1,9 +1,9 @@
 import { GridStateColDef } from '../colDef/gridColDef';
 
 /**
- * The list column API interface that is available in the grid [[apiRef]].
+ * The list view API interface that is available in the grid [[apiRef]].
  */
-export interface GridListColumnApi {
+export interface GridListViewApi {
   /**
    * Returns the [[GridStateColDef]] for the given list column.
    * @param {string} field The column field.

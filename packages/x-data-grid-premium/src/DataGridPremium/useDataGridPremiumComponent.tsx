@@ -70,8 +70,8 @@ import {
   dataSourceStateInitializer,
   useGridRowSpanning,
   rowSpanningStateInitializer,
-  useGridListColumn,
-  listColumnStateInitializer,
+  useGridListView,
+  listViewStateInitializer,
 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
@@ -145,7 +145,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
   useGridInitializeState(virtualizationStateInitializer, apiRef, props);
   useGridInitializeState(dataSourceStateInitializer, apiRef, props);
-  useGridInitializeState(listColumnStateInitializer, apiRef, props);
+  useGridInitializeState(listViewStateInitializer, apiRef, props);
 
   useGridRowGrouping(apiRef, props);
   useGridHeaderFiltering(apiRef, props);
@@ -188,7 +188,7 @@ export const useDataGridPremiumComponent = (
   useGridStatePersistence(apiRef);
   useGridDataSource(apiRef, props);
   useGridVirtualization(apiRef, props);
-  useGridListColumn(apiRef, props);
+  useGridListView(apiRef, props);
 
   return apiRef;
 };

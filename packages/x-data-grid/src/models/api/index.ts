@@ -23,4 +23,4 @@ export type { GridApiCommon } from './gridApiCommon';
 
 export type { GridEditingApi, GridCellModesModel, GridRowModesModel } from './gridEditingApi';
 export type GridEditRowApi = GridEditingApi;
-export type { GridListColumnApi } from './gridListColumnApi';
+export type { GridListViewApi } from './gridListViewApi';

@@ -35,7 +35,7 @@ import {
 import {
   gridVisibleListColumnDefinitionsSelector,
   gridVisibleListColumnFieldsSelector,
-} from '../listColumns/gridListColumnsSelector';
+} from '../listView/gridListViewSelectors';
 
 /**
  * @requires useGridSorting (method) - can be after

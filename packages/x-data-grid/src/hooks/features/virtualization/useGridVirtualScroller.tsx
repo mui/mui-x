@@ -46,7 +46,7 @@ import {
 } from './gridVirtualizationSelectors';
 import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
 import { gridRowSpanningHiddenCellsOriginMapSelector } from '../rows/gridRowSpanningSelectors';
-import { gridVisibleListColumnDefinitionsSelector } from '../listColumns/gridListColumnsSelector';
+import { gridVisibleListColumnDefinitionsSelector } from '../listView/gridListViewSelectors';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 

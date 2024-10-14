@@ -2,7 +2,7 @@ import type { GridInitialStateCommunity, GridStateCommunity } from '../gridState
 import type { DataGridProcessedProps } from '../props/DataGridProps';
 import type { GridApiCommon, GridPrivateOnlyApiCommon } from './gridApiCommon';
 import type { GridColumnReorderApi } from './gridColumnApi';
-import type { GridListColumnApi } from './gridListColumnApi';
+import type { GridListViewApi } from './gridListViewApi';
 import { GridRowProApi } from './gridRowApi';
 import { GridRowMultiSelectionApi } from './gridRowSelectionApi';
 
@@ -19,4 +19,4 @@ export interface GridPrivateApiCommunity
     GridRowMultiSelectionApi,
     GridColumnReorderApi,
     GridRowProApi,
-    GridListColumnApi {}
+    GridListViewApi {}

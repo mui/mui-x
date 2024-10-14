@@ -49,8 +49,8 @@ import {
   columnResizeStateInitializer,
   useGridRowSpanning,
   rowSpanningStateInitializer,
-  useGridListColumn,
-  listColumnStateInitializer,
+  useGridListView,
+  listViewStateInitializer,
 } from '@mui/x-data-grid/internals';
 import { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -134,7 +134,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
   useGridInitializeState(virtualizationStateInitializer, apiRef, props);
   useGridInitializeState(dataSourceStateInitializer, apiRef, props);
-  useGridInitializeState(listColumnStateInitializer, apiRef, props);
+  useGridInitializeState(listViewStateInitializer, apiRef, props);
 
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef, props);
@@ -172,7 +172,7 @@ export const useDataGridProComponent = (
   useGridStatePersistence(apiRef);
   useGridVirtualization(apiRef, props);
   useGridDataSource(apiRef, props);
-  useGridListColumn(apiRef, props);
+  useGridListView(apiRef, props);
 
   return apiRef;
 };

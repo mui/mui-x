@@ -3,18 +3,18 @@ import type { GridStateColDef } from '../../../models/colDef/gridColDef';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridListColumnApi } from '../../../models/api/gridListColumnApi';
+import { GridListViewApi } from '../../../models/api/gridListViewApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridEventListener } from '../../../models/events';
 import {
   gridListColumnSelector,
   gridVisibleListColumnDefinitionsSelector,
-} from './gridListColumnsSelector';
+} from './gridListViewSelectors';
 import { gridColumnDefinitionsSelector, gridVisibleColumnDefinitionsSelector } from '../columns';
 import { gridDimensionsSelector } from '../dimensions';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 
-export type GridListColumnState = GridStateColDef | undefined;
+export type GridListViewState = { listColumn: GridStateColDef | undefined };
 
 const getListColumnWidth = (apiRef: React.MutableRefObject<GridPrivateApiCommunity>) => {
   const dimensions = gridDimensionsSelector(apiRef.current.state);
@@ -27,21 +27,21 @@ const getListColumnWidth = (apiRef: React.MutableRefObject<GridPrivateApiCommuni
   return listColumnWidth;
 };
 
-export const listColumnStateInitializer: GridStateInitializer<
+export const listViewStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'unstable_listColumn'>
 > = (state, props, apiRef) => ({
   ...state,
   listColumn: { ...props.unstable_listColumn, computedWidth: getListColumnWidth(apiRef) },
 });
 
-export function useGridListColumn(
+export function useGridListView(
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'unstable_listColumn'>,
 ) {
   /**
    * API METHODS
    */
-  const getListColumn = React.useCallback<GridListColumnApi['getListColumn']>(
+  const getListColumn = React.useCallback<GridListViewApi['getListColumn']>(
     (field) => {
       const listColumn = gridListColumnSelector(apiRef.current.state);
       if (listColumn?.field === field) {
@@ -54,7 +54,7 @@ export function useGridListColumn(
     [apiRef],
   );
 
-  const getListColumnIndex = React.useCallback<GridListColumnApi['getListColumnIndex']>(
+  const getListColumnIndex = React.useCallback<GridListViewApi['getListColumnIndex']>(
     (field) => {
       const columns = gridVisibleListColumnDefinitionsSelector(apiRef);
       return columns.findIndex((col) => col.field === field);
@@ -62,7 +62,7 @@ export function useGridListColumn(
     [apiRef],
   );
 
-  const listColumnApi: GridListColumnApi = {
+  const listColumnApi: GridListViewApi = {
     getListColumn,
     getListColumnIndex,
   };
@@ -81,10 +81,13 @@ export function useGridListColumn(
       apiRef.current.setState((state) => {
         return {
           ...state,
-          listColumn: {
-            ...state.listColumn,
-            computedWidth: getListColumnWidth(apiRef),
-          } as GridListColumnState,
+          listView: {
+            ...state.listView,
+            listColumn: {
+              ...state.listView.listColumn,
+              computedWidth: getListColumnWidth(apiRef),
+            },
+          } as GridListViewState,
         };
       });
     }
@@ -100,10 +103,13 @@ export function useGridListColumn(
       apiRef.current.setState((state) => {
         return {
           ...state,
-          listColumn: {
-            ...props.unstable_listColumn,
-            computedWidth: getListColumnWidth(apiRef),
-          } as GridListColumnState,
+          listView: {
+            ...state.listView,
+            listColumn: {
+              ...props.unstable_listColumn,
+              computedWidth: getListColumnWidth(apiRef),
+            } as GridStateColDef,
+          },
         };
       });
     }
