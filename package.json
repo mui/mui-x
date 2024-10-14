@@ -71,7 +71,7 @@
   "devDependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.0",
-    "@argos-ci/core": "^2.8.1",
+    "@argos-ci/core": "^2.9.0",
     "@babel/cli": "^7.25.7",
     "@babel/core": "^7.25.7",
     "@babel/node": "^7.25.7",
