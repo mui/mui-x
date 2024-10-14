@@ -119,7 +119,7 @@ export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
    */
   getItemId?: (item: R) => TreeViewItemId;
   /**
-   * Callback fired when the `content` slot of a given tree item is clicked.
+   * Callback fired when the `content` slot of a given Tree Item is clicked.
    * @param {React.MouseEvent} event The DOM event that triggered the change.
    * @param {string} itemId The id of the focused item.
    */

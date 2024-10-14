@@ -44,7 +44,7 @@
     { "name": "endIcon", "description": "The icon displayed next to an end item.", "class": null },
     {
       "name": "icon",
-      "description": "The icon to display next to the tree item's label.",
+      "description": "The icon to display next to the Tree Item's label.",
       "class": null
     },
     {
@@ -106,7 +106,7 @@
     {
       "key": "iconContainer",
       "className": "MuiTreeItem-iconContainer",
-      "description": "Styles applied to the tree item icon.",
+      "description": "Styles applied to the Tree Item icon.",
       "isGlobal": false
     },
     {

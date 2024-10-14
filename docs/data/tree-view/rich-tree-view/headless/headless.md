@@ -143,7 +143,7 @@ Once `focusedItemId` becomes a model, we could consider removing the notion of s
 
 ### Populate the Tree View instance
 
-The Tree View instance is an object accessible in all the plugins and in the `TreeItem`.
+The Tree View instance is an object accessible in all the plugins and in the Tree Item.
 It is the main way a plugin can provide features to the rest of the component.
 
 ```ts

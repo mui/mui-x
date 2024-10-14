@@ -56,7 +56,7 @@
     "endIcon": "The icon displayed next to an end item.",
     "expandIcon": "The icon used to expand the item.",
     "groupTransition": "The component that renders the children of the item.",
-    "icon": "The icon to display next to the tree item&#39;s label.",
+    "icon": "The icon to display next to the Tree Item&#39;s label.",
     "iconContainer": "The component that renders the icon.",
     "label": "The component that renders the item label.",
     "labelInput": "The component that renders the input to edit the label when the item is editable and is currently being edited.",

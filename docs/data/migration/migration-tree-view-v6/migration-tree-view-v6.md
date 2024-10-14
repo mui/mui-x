@@ -113,7 +113,7 @@ Here is an example of how you can transpile these features on Webpack 4 using th
 
 ### ✅ Rename `nodeId` to `itemId`
 
-The required `nodeId` prop used by the `TreeItem` has been renamed to `itemId` for consistency:
+The required `nodeId` prop used by the Tree Item has been renamed to `itemId` for consistency:
 
 ```diff
  <TreeView>
@@ -193,7 +193,7 @@ If you were using the `treeViewClasses` object, you can replace it with the new 
 #### Define `expandIcon`
 
 The icon used to expand the children of an item (rendered when this item is collapsed)
-is now defined as a slot both on the Tree View and the `TreeItem` components.
+is now defined as a slot both on the Tree View and the Tree Item components.
 
 If you were using the `ChevronRight` icon from `@mui/icons-material`,
 you can stop passing it to your component because it is now the default value:
@@ -224,7 +224,7 @@ you need to use the new `expandIcon` slot on this component:
 Note that the `slots` prop expects a React component, not the JSX element returned when rendering this component.
 :::
 
-If you were passing another icon to your `TreeItem` component,
+If you were passing another icon to your Tree Item component,
 you need to use the new `expandIcon` slot on this component:
 
 ```diff
@@ -241,7 +241,7 @@ you need to use the new `expandIcon` slot on this component:
 #### Define `collapseIcon`
 
 The icon used to collapse the children of an item (rendered when this item is expanded)
-is now defined as a slot both on the Tree View and the `TreeItem` components.
+is now defined as a slot both on the Tree View and the Tree Item components.
 
 If you were using the `ExpandMore` icon from `@mui/icons-material`,
 you can stop passing it to your component because it is now the default value:
@@ -272,7 +272,7 @@ you need to use the new `collapseIcon` slot on this component:
 Note that the `slots` prop expects a React component, not the JSX element returned when rendering this component.
 :::
 
-If you were passing another icon to your `TreeItem` component,
+If you were passing another icon to your Tree Item component,
 you need to use the new `collapseIcon` slot on this component:
 
 ```diff
@@ -306,7 +306,7 @@ by passing the same icon to both the `collapseIcon` and the `expandIcon` slots o
 #### Define `endIcon`
 
 The icon rendered next to an item without children
-is now defined as a slot both on the Tree View and the `TreeItem` components.
+is now defined as a slot both on the Tree View and the Tree Item components.
 
 If you were passing an icon to your Tree View component,
 you need to use the new `endIcon` slot on this component:
@@ -324,7 +324,7 @@ you need to use the new `endIcon` slot on this component:
 Note that the `slots` prop expects a React component, not the JSX element returned when rendering this component.
 :::
 
-If you were passing an icon to your `TreeItem` component,
+If you were passing an icon to your Tree Item component,
 you need to use the new `endIcon` slot on this component:
 
 ```diff
@@ -341,9 +341,9 @@ you need to use the new `endIcon` slot on this component:
 #### Define `icon`
 
 The icon rendered next to an item
-is now defined as a slot on the `TreeItem` component.
+is now defined as a slot on the Tree Item component.
 
-If you were passing an icon to your `TreeItem` component,
+If you were passing an icon to your Tree Item component,
 you need to use the new `icon` slot on this component:
 
 ```diff
@@ -364,9 +364,9 @@ Note that the `slots` prop expects a React component, not the JSX element return
 ### ✅ Use slots to define the group transition
 
 The component used to animate the item children
-is now defined as a slot on the `TreeItem` component.
+is now defined as a slot on the Tree Item component.
 
-If you were passing a `TransitionComponent` or `TransitionProps` to your `TreeItem` component,
+If you were passing a `TransitionComponent` or `TransitionProps` to your Tree Item component,
 you need to use the new `groupTransition` slot on this component:
 
 ```diff
@@ -382,9 +382,9 @@ you need to use the new `groupTransition` slot on this component:
  </SimpleTreeView>
 ```
 
-### Rename the `group` class of the `TreeItem` component
+### Rename the `group` class of the Tree Item component
 
-The `group` class of the `TreeItem` component has been renamed to `groupTransition` to match with its new slot name.
+The `group` class of the Tree Item component has been renamed to `groupTransition` to match with its new slot name.
 
 ```diff
  const StyledTreeItem = styled(TreeItem)({
@@ -512,7 +512,7 @@ For example, if you were writing a test with `react-testing-library`, here is wh
 ### ✅ Use `useTreeItemState` instead of `useTreeItem`
 
 The `useTreeItem` hook has been renamed `useTreeItemState`.
-This will help create a new headless version of the `TreeItem` component based on a future `useTreeItem` hook.
+This will help create a new headless version of the Tree Item component based on a future `useTreeItem` hook.
 
 ```diff
 -import { TreeItem, useTreeItem } from '@mui/x-tree-view/TreeItem';
