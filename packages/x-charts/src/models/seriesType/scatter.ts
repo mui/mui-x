@@ -33,22 +33,31 @@ export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, C
    * The id of the z-axis used to render the series.
    */
   zAxisId?: string;
+
   /**
-   * The key used to retrieve data from the dataset for the X axis.
+   * The keys used to retrieve data from the dataset.
+   *
+   * When this prop is provided, all of `x`, `y`, and `id` must be provided.
+   * While `z` is optional.
    */
-  xDataKey?: string;
-  /**
-   * The key used to retrieve data from the dataset for the Y axis.
-   */
-  yDataKey?: string;
-  /**
-   * The key used to retrieve data from the dataset for the Z axis.
-   */
-  zDataKey?: string;
-  /**
-   * The key used to retrieve data from the dataset for the id.
-   */
-  idDataKey?: string;
+  datasetKeys?: {
+    /**
+     * The key used to retrieve data from the dataset for the X axis.
+     */
+    x: string;
+    /**
+     * The key used to retrieve data from the dataset for the Y axis.
+     */
+    y: string;
+    /**
+     * The key used to retrieve data from the dataset for the Z axis.
+     */
+    z?: string;
+    /**
+     * The key used to retrieve data from the dataset for the id.
+     */
+    id: string;
+  };
 }
 
 /**

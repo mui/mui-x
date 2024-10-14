@@ -5,10 +5,14 @@
     "type": { "type": { "description": "'scatter'" }, "required": true },
     "color": { "type": { "description": "string" } },
     "data": { "type": { "description": "ScatterValueType[]" } },
+    "datasetKeys": {
+      "type": {
+        "description": "{<br />  /**<br />   * The key used to retrieve data from the dataset for the X axis.<br />   */<br />  x: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Y axis.<br />   */<br />  y: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Z axis.<br />   */<br />  z?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the id.<br />   */<br />  id: string<br />}"
+      }
+    },
     "disableHover": { "type": { "description": "boolean" }, "default": "false" },
     "highlightScope": { "type": { "description": "Partial&lt;HighlightScope&gt;" } },
     "id": { "type": { "description": "SeriesId" } },
-    "idDataKey": { "type": { "description": "string" } },
     "label": {
       "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
     },
@@ -16,12 +20,9 @@
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
     "xAxisId": { "type": { "description": "string" } },
     "xAxisKey": { "type": { "description": "string" } },
-    "xDataKey": { "type": { "description": "string" } },
     "yAxisId": { "type": { "description": "string" } },
     "yAxisKey": { "type": { "description": "string" } },
-    "yDataKey": { "type": { "description": "string" } },
     "zAxisId": { "type": { "description": "string" } },
-    "zAxisKey": { "type": { "description": "string" } },
-    "zDataKey": { "type": { "description": "string" } }
+    "zAxisKey": { "type": { "description": "string" } }
   }
 }

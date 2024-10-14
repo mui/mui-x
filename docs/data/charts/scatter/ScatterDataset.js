@@ -89,8 +89,8 @@ export default function ScatterDataset() {
     <ScatterChart
       dataset={dataset}
       series={[
-        { idDataKey: 'version', xDataKey: 'a1', yDataKey: 'a2', label: 'Series A' },
-        { idDataKey: 'version', xDataKey: 'b1', yDataKey: 'b2', label: 'Series B' },
+        { datasetKeys: { id: 'version', x: 'a1', y: 'a2' }, label: 'Series A' },
+        { datasetKeys: { id: 'version', x: 'b1', y: 'b2' }, label: 'Series B' },
       ]}
       {...chartSetting}
     />

@@ -4,10 +4,10 @@ import { ScatterValueType } from '../models';
 const formatter: SeriesFormatter<'scatter'> = ({ series, seriesOrder }, dataset) => {
   const completeSeries = Object.fromEntries(
     Object.entries(series).map(([seriesId, seriesData]) => {
-      const xDataKey = seriesData.xDataKey;
-      const yDataKey = seriesData.yDataKey;
-      const zDataKey = seriesData.zDataKey;
-      const idDataKey = seriesData.idDataKey;
+      const xDataKey = seriesData?.datasetKeys?.x;
+      const yDataKey = seriesData?.datasetKeys?.y;
+      const zDataKey = seriesData?.datasetKeys?.z;
+      const idDataKey = seriesData?.datasetKeys?.id;
 
       const keys = [xDataKey, yDataKey, idDataKey];
       const hasStringKeys = keys.some((key) => typeof key === 'string');
