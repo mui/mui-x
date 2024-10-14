@@ -11,8 +11,9 @@ const packages = [
   'x-data-grid-premium',
   'x-tree-view',
   'x-tree-view-pro',
-  'x-internals',
 ];
+
+const jsdomOnlyPackages = ['x-license', 'x-internals'];
 
 // Ideally we move the configuration to each package.
 // Currently it doesn't work because vitest doesn't detect two different configurations in the same package.
@@ -67,17 +68,18 @@ export default defineWorkspace([
   // Manually changing the process.env in browser tests doesn't work.
   // And alternative is to use `const {NODE_ENV} = process.env` in the code instead.
   // x-license relies on `process.env.NODE_ENV` to determine the environment.
-  {
+  // x-internals has a weird chai import issue I couldn't fix
+  ...jsdomOnlyPackages.map((name) => ({
     extends: './vitest.config.mts',
     plugins: [react()],
     test: {
-      include: [`packages/x-license/src/**/*.test.?(c|m)[jt]s?(x)`],
-      exclude: [`packages/x-license/src/**/*.browser.test.?(c|m)[jt]s?(x)`],
-      name: `jsdom/x-license`,
+      include: [`packages/${name}}/src/**/*.test.?(c|m)[jt]s?(x)`],
+      exclude: [`packages/${name}}/src/**/*.browser.test.?(c|m)[jt]s?(x)`],
+      name: `jsdom/${name}}`,
       environment: 'jsdom',
       env: {
         MUI_JSDOM: 'true',
       },
     },
-  },
+  })),
 ]);
