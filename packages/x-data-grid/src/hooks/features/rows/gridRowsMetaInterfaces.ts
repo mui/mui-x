@@ -7,8 +7,8 @@ export type HeightEntry = {
   detail: number;
 
   isResized: boolean;
-  autoHeight: boolean; // Determines if the row has dynamic height
-  needsFirstMeasurement: boolean; // Determines if the row was never measured. If true, use the estimated height as row height.
+  autoHeight: boolean;
+  needsFirstMeasurement: boolean;
 };
 
 export type HeightCache = Map<GridRowId, HeightEntry>;

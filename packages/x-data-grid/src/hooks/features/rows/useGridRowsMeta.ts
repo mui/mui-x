@@ -144,8 +144,8 @@ export const useGridRowsMeta = (
   const hydrateRowsMeta = () => {
     hasRowWithAutoHeight.current = false;
 
-    pinnedRows?.top?.forEach(processHeightEntry);
-    pinnedRows?.bottom?.forEach(processHeightEntry);
+    pinnedRows.top.forEach(processHeightEntry);
+    pinnedRows.bottom.forEach(processHeightEntry);
 
     const positions: number[] = [];
     const currentPageTotalHeight = currentPage.rows.reduce((acc, row) => {
@@ -249,13 +249,26 @@ export const useGridRowsMeta = (
     return () => resizeObserver.unobserve(element);
   };
 
+  useGridRegisterPipeApplier(apiRef, 'rowHeight', hydrateRowsMeta);
+
   // The effect is used to build the rows meta data - currentPageTotalHeight and positions.
   // Because of variable row height this is needed for the virtualization
   React.useEffect(() => {
     apiRef.current.requestPipeProcessorsApplication('rowHeight');
-  }, [apiRef, rowHeight, filterModel, paginationState, sortModel]);
-
-  useGridRegisterPipeApplier(apiRef, 'rowHeight', hydrateRowsMeta);
+  }, [
+    apiRef,
+    rowHeight,
+    filterModel,
+    paginationState,
+    sortModel,
+    currentPage.rows,
+    rowHeight,
+    getRowHeightProp,
+    getRowSpacing,
+    getEstimatedRowHeight,
+    pinnedRows,
+    densityFactor,
+  ]);
 
   const rowsMetaApi: GridRowsMetaApi = {
     unstable_setLastMeasuredRowIndex: setLastMeasuredRowIndex,
