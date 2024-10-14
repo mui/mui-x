@@ -29,7 +29,7 @@ const useDefaultFocusableItemId = (
     });
 
     if (defaultFocusableItemId == null) {
-      defaultFocusableItemId = getFirstNavigableItem(instance);
+      defaultFocusableItemId = getFirstNavigableItem(instance) ?? null;
     }
 
     store.update((prevState) => {

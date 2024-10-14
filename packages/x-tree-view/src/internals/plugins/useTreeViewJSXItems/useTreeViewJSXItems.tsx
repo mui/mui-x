@@ -152,7 +152,7 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
     };
   }, [store, instance, registerChild, unregisterChild, itemId, id, treeId]);
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     return instance.insertJSXItem({
       id: itemId,
       idAttribute: id,
