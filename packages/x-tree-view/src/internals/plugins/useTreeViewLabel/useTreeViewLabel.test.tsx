@@ -5,7 +5,7 @@ import { UseTreeViewLabelSignature } from '@mui/x-tree-view/internals';
 
 describeTreeView<[UseTreeViewLabelSignature]>(
   'useTreeViewLabel plugin',
-  ({ render, treeViewComponentName }) => {
+  ({ render, treeViewComponentName, setup }) => {
     describe('interaction', () => {
       describe('render labelInput when needed', () => {
         it('should not render labelInput when double clicked if item is not editable', function test() {
