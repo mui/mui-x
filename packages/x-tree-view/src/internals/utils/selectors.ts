@@ -9,7 +9,10 @@ const reselectCreateSelector = createSelectorCreator({
   },
 });
 
-const cache = new WeakMap<TreeViewStateCacheKey, Map<any[], any>>();
+const cache = new WeakMap<
+  TreeViewStateCacheKey,
+  Map<Parameters<typeof reselectCreateSelector>, any>
+>();
 
 export type TreeViewSelectorWithArgs<TState, TArgs, TResult> = (
   state: TState,
@@ -21,29 +24,29 @@ export type TreeViewRootSelector<
   TResult,
 > = <TSignatures extends TMinimalSignatures>(state: TreeViewState<TSignatures>) => TResult;
 
-export const createSelector = ((...args: any) => {
+export const createSelector = ((...createSelectorArgs: any) => {
   const selector = (state: TreeViewState<any>, selectorArgs: any) => {
     const cacheKey = state.cacheKey;
-    const cacheArgsInit = cache.get(cacheKey);
-    const cacheArgs = cacheArgsInit ?? new Map();
-    if (!cacheArgsInit) {
-      cache.set(cacheKey, cacheArgs);
+
+    // If there is no cache for the current tree view instance, create one.
+    let cacheForCurrentTreeViewInstance = cache.get(cacheKey);
+    if (!cacheForCurrentTreeViewInstance) {
+      cacheForCurrentTreeViewInstance = new Map();
+      cache.set(cacheKey, cacheForCurrentTreeViewInstance);
     }
 
-    const cacheFn = cacheArgs.get(args);
-    if (cacheFn) {
-      return cacheFn(state, selectorArgs);
+    // If there is a cached selector, execute it.
+    const cachedSelector = cacheForCurrentTreeViewInstance.get(createSelectorArgs);
+    if (cachedSelector) {
+      return cachedSelector(state, selectorArgs);
     }
 
-    const fn = reselectCreateSelector(...args);
-    cacheArgs.set(args, fn);
+    // Otherwise, create a new selector and cache it and execute it.
+    const fn = reselectCreateSelector(...createSelectorArgs);
+    cacheForCurrentTreeViewInstance.set(createSelectorArgs, fn);
 
     return fn(state, selectorArgs);
   };
 
   return selector;
 }) as unknown as CreateSelectorFunction;
-
-createSelector.withTypes = () => {
-  throw new Error('Not implemented');
-};
