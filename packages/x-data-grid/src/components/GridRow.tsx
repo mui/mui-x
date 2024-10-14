@@ -40,10 +40,6 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
    */
   index: number;
   rowHeight: number | 'auto';
-  /**
-   * TODO(v8): Remove unused field.
-   * @deprecated
-   */
   offsetTop: number | undefined;
   offsetLeft: number;
   dimensions: GridDimensions;
