@@ -68,11 +68,9 @@ export const useGridScroll = (
     (params: Partial<GridCellIndexCoordinates>) => {
       const dimensions = gridDimensionsSelector(apiRef.current.state);
       const totalRowCount = gridRowCountSelector(apiRef);
-      const visibleColumnDefinitions = gridVisibleColumnDefinitionsSelector(apiRef);
-      const visibleListColumnDefinitions = gridVisibleListColumnDefinitionsSelector(apiRef);
       const visibleColumns = props.unstable_listView
-        ? visibleListColumnDefinitions
-        : visibleColumnDefinitions;
+        ? gridVisibleListColumnDefinitionsSelector(apiRef)
+        : gridVisibleColumnDefinitionsSelector(apiRef);
       const scrollToHeader = params.rowIndex == null;
       if ((!scrollToHeader && totalRowCount === 0) || visibleColumns.length === 0) {
         return false;
