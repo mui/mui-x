@@ -10,6 +10,7 @@ import {
   GridRowProApi,
   GridDataSourceApi,
   GridDataSourcePrivateApi,
+  GridListColumnApi,
 } from '@mui/x-data-grid-pro';
 import { GridInitialStatePremium, GridStatePremium } from './gridStatePremium';
 import type { GridRowGroupingApi, GridExcelExportApi, GridAggregationApi } from '../hooks';
@@ -33,7 +34,8 @@ export interface GridApiPremium
     GridCellSelectionApi,
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
-    GridColumnReorderApi {}
+    GridColumnReorderApi,
+    GridListColumnApi {}
 
 export interface GridPrivateApiPremium
   extends GridApiPremium,
