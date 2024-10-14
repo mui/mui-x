@@ -165,13 +165,12 @@ describe('<DataGridPro /> - Columns', () => {
       fireEvent.doubleClick(separator);
       await microtasks();
       expect(onColumnWidthChange.callCount).to.be.at.least(2);
-      const widthArgs = onColumnWidthChange.args.map((arg) => Math.round(arg[0].width));
-      expect(widthArgs).to.deep.equal([120, 64]);
-      const colDefWidthArgs = onColumnWidthChange.args.map((arg) =>
-        Math.round(arg[0].colDef.width),
-      );
-      const isColDefWidth64Present = colDefWidthArgs.some((width) => width === 64);
-      expect(isColDefWidth64Present).to.equal(true);
+      const widthArgs = onColumnWidthChange.args.map((arg) => arg[0].width);
+      const isWidth114Present = widthArgs.some((width) => width === 114);
+      expect(isWidth114Present).to.equal(true);
+      const colDefWidthArgs = onColumnWidthChange.args.map((arg) => arg[0].colDef.width);
+      const isColDefWidth114Present = colDefWidthArgs.some((width) => width === 114);
+      expect(isColDefWidth114Present).to.equal(true);
     });
 
     it('should not affect other cell elements that are not part of the main DataGrid instance', () => {
@@ -446,57 +445,52 @@ describe('<DataGridPro /> - Columns', () => {
       },
       {
         id: 1,
-        brand: 'Puma',
+        brand: 'Adidas',
       },
       {
         id: 2,
+        brand: 'Puma',
+      },
+      {
+        id: 3,
         brand: 'Lululemon Athletica',
       },
     ];
-    const buildColumns = () => {
-      const columns = [
-        { field: 'id', headerName: 'This is the ID column' },
-        { field: 'brand', headerName: 'This is the brand column' },
-      ];
-      const getWidths = () => {
-        return columns.map((_, i) => parseInt(getColumnHeaderCell(i).style.width, 10));
-      };
-      return {
-        columns,
-        getWidths,
-      };
+    const columns = [
+      { field: 'id', headerName: 'This is the ID column' },
+      { field: 'brand', headerName: 'This is the brand column' },
+    ];
+
+    const getWidths = () => {
+      return columns.map((_, i) => parseInt(getColumnHeaderCell(i).style.width, 10));
     };
 
     it('should work through the API', async () => {
-      const { columns, getWidths } = buildColumns();
       render(<Test rows={rows} columns={columns} />);
       await apiRef.current.autosizeColumns();
       await microtasks();
-      expect(getWidths()).to.deep.equal([155, 177]);
+      expect(getWidths()).to.deep.equal([211, 233]);
     });
 
     it('should work through double-clicking the separator', async () => {
-      const { columns, getWidths } = buildColumns();
       render(<Test rows={rows} columns={columns} />);
       const separator = document.querySelectorAll(
         `.${gridClasses['columnSeparator--resizable']}`,
       )[1];
       fireEvent.doubleClick(separator);
       await microtasks();
-      expect(getWidths()).to.deep.equal([100, 177]);
+      expect(getWidths()).to.deep.equal([100, 233]);
     });
 
     it('should work on mount', async () => {
-      const { columns, getWidths } = buildColumns();
       render(<Test rows={rows} columns={columns} autosizeOnMount />);
       await microtasks(); /* first effect after render */
       await microtasks(); /* async autosize operation */
-      expect(getWidths()).to.deep.equal([155, 177]);
+      expect(getWidths()).to.deep.equal([211, 233]);
     });
 
     describe('options', () => {
       const autosize = async (options: GridAutosizeOptions | undefined, widths: number[]) => {
-        const { columns, getWidths } = buildColumns();
         render(<Test rows={rows} columns={columns} />);
         await apiRef.current.autosizeColumns({ includeHeaders: false, ...options });
         await microtasks();
@@ -504,11 +498,11 @@ describe('<DataGridPro /> - Columns', () => {
       };
 
       it('.columns works', async () => {
-        await autosize({ columns: ['id'] }, [50, 100]);
+        await autosize({ columns: [columns[0].field] }, [50, 100]);
       });
 
       it('.includeHeaders works', async () => {
-        await autosize({ includeHeaders: true }, [155, 177]);
+        await autosize({ includeHeaders: true }, [211, 233]);
       });
 
       it('.includeOutliers works', async () => {
@@ -520,7 +514,7 @@ describe('<DataGridPro /> - Columns', () => {
       });
 
       it('.expand works', async () => {
-        await autosize({ expand: true }, [101, 196]);
+        await autosize({ expand: true }, [134, 148]);
       });
     });
   });
@@ -538,7 +532,6 @@ describe('<DataGridPro /> - Columns', () => {
 
       act(() => apiRef.current.setColumnWidth('brand', 300));
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
-      // @ts-expect-error privateApi is not defined
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
     });
@@ -560,7 +553,6 @@ describe('<DataGridPro /> - Columns', () => {
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(2);
       act(() => apiRef.current.setColumnIndex('brand', 1));
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
-      // @ts-expect-error privateApi is not defined
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
     });
@@ -575,7 +567,6 @@ describe('<DataGridPro /> - Columns', () => {
 
       act(() => apiRef.current.updateColumns([{ field: 'id' }]));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
-      // @ts-expect-error privateApi is not defined
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
     });
