@@ -5,22 +5,33 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridListColumnApi } from '../../../models/api/gridListColumnApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { GridEventListener } from '../../../models/events';
 import {
   gridListColumnSelector,
   gridVisibleListColumnDefinitionsSelector,
 } from './gridListColumnsSelector';
-import { gridColumnDefinitionsSelector } from '../columns';
+import { gridColumnDefinitionsSelector, gridVisibleColumnDefinitionsSelector } from '../columns';
+import { gridDimensionsSelector } from '../dimensions';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 
 export type GridListColumnState = GridStateColDef | undefined;
 
-// TODO:
-// - Calculate `computedWidth`
+const getListColumnWidth = (apiRef: React.MutableRefObject<GridPrivateApiCommunity>) => {
+  const dimensions = gridDimensionsSelector(apiRef.current.state);
+  const columns = gridVisibleColumnDefinitionsSelector(apiRef);
+  const actionsColumn = columns.find((col) => col.type === 'actions');
+  const viewportWidth = dimensions.viewportInnerSize.width;
+  const listColumnWidth = actionsColumn
+    ? viewportWidth - actionsColumn.computedWidth
+    : viewportWidth;
+  return listColumnWidth;
+};
 
 export const listColumnStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'unstable_listColumn'>
-> = (state, props) => ({
+> = (state, props, apiRef) => ({
   ...state,
-  listColumn: { ...props.unstable_listColumn, computedWidth: 400 },
+  listColumn: { ...props.unstable_listColumn, computedWidth: getListColumnWidth(apiRef) },
 });
 
 export function useGridListColumn(
@@ -30,7 +41,6 @@ export function useGridListColumn(
   /**
    * API METHODS
    */
-
   const getListColumn = React.useCallback<GridListColumnApi['getListColumn']>(
     (field) => {
       const listColumn = gridListColumnSelector(apiRef.current.state);
@@ -59,16 +69,43 @@ export function useGridListColumn(
 
   useGridApiMethod(apiRef, listColumnApi, 'private');
 
+  /*
+   * EVENTS
+   */
+  const prevInnerWidth = React.useRef<number | null>(null);
+  const handleGridSizeChange: GridEventListener<'viewportInnerSizeChange'> = (
+    viewportInnerSize,
+  ) => {
+    if (prevInnerWidth.current !== viewportInnerSize.width) {
+      prevInnerWidth.current = viewportInnerSize.width;
+      apiRef.current.setState((state) => {
+        return {
+          ...state,
+          listColumn: {
+            ...state.listColumn,
+            computedWidth: getListColumnWidth(apiRef),
+          } as GridListColumnState,
+        };
+      });
+    }
+  };
+
+  useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleGridSizeChange);
+
   /**
    * EFFECTS
    */
   React.useEffect(() => {
     if (props.unstable_listColumn) {
-      apiRef.current.setState((state) => ({
-        ...state,
-        // TODO: Populate with computedWidth
-        listColumn: { ...props.unstable_listColumn, computedWidth: 400 } as GridListColumnState,
-      }));
+      apiRef.current.setState((state) => {
+        return {
+          ...state,
+          listColumn: {
+            ...props.unstable_listColumn,
+            computedWidth: getListColumnWidth(apiRef),
+          } as GridListColumnState,
+        };
+      });
     }
   }, [apiRef, props.unstable_listColumn]);
 }
