@@ -537,8 +537,8 @@ importers:
         specifier: ^2.30.0-0
         version: 2.30.0-0
       dayjs:
-        specifier: ^1.11.11
-        version: 1.11.11
+        specifier: ^1.11.13
+        version: 1.11.13
       doctrine:
         specifier: ^3.0.0
         version: 3.0.0
@@ -968,8 +968,8 @@ importers:
         specifier: ^0.12.0
         version: 0.12.0
       dayjs:
-        specifier: ^1.11.11
-        version: 1.11.11
+        specifier: ^1.11.13
+        version: 1.11.13
       moment-timezone:
         specifier: ^0.5.45
         version: 0.5.45
@@ -1266,8 +1266,8 @@ importers:
         specifier: ^2.30.0-0
         version: 2.30.0-0
       dayjs:
-        specifier: ^1.11.11
-        version: 1.11.11
+        specifier: ^1.11.13
+        version: 1.11.13
       luxon:
         specifier: ^3.5.0
         version: 3.5.0
@@ -1355,8 +1355,8 @@ importers:
         specifier: ^2.30.0-0
         version: 2.30.0-0
       dayjs:
-        specifier: ^1.11.11
-        version: 1.11.11
+        specifier: ^1.11.13
+        version: 1.11.13
       luxon:
         specifier: ^3.5.0
         version: 3.5.0
@@ -1586,8 +1586,8 @@ importers:
         specifier: ^4.5.0
         version: 4.5.0
       dayjs:
-        specifier: ^1.11.11
-        version: 1.11.11
+        specifier: ^1.11.13
+        version: 1.11.13
       moment:
         specifier: ^2.30.1
         version: 2.30.1
@@ -5558,8 +5558,8 @@ packages:
   dateformat@3.0.3:
     resolution: {integrity: sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==}
 
-  dayjs@1.11.11:
-    resolution: {integrity: sha512-okzr3f11N6WuqYtZSvm+F776mB41wRZMhKP+hc34YdW+KmtYYK9iqvHSwo2k9FEH3fhGXvOPV6yz2IcSrfRUDg==}
+  dayjs@1.11.13:
+    resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
 
   debounce@1.2.1:
     resolution: {integrity: sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==}
@@ -14842,7 +14842,7 @@ snapshots:
 
   dateformat@3.0.3: {}
 
-  dayjs@1.11.11: {}
+  dayjs@1.11.13: {}
 
   debounce@1.2.1: {}
 
@@ -15623,7 +15623,7 @@ snapshots:
   exceljs@4.4.0:
     dependencies:
       archiver: 5.3.2
-      dayjs: 1.11.11
+      dayjs: 1.11.13
       fast-csv: 4.3.6
       jszip: 3.10.1
       readable-stream: 3.6.2
