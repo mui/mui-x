@@ -60,7 +60,7 @@ MUI X Charts can be rendered as _closed_ (self-contained) or _open_ (composable
 
 Closed Chart components are self-contained, meaning all of the necessary subcomponents are abstracted away inside of a single React component (such as `<BarChart />` or `<LineChart />`).
 
-These components require a `series` prop describing the data to render, as well as a numerical value (in pixels) for the `height` prop.
+These components require a `series` prop describing the data to render, as well as a numerical value (rendered in pixels) for the `height` prop.
 The `width` prop is optional; if no value is provided, the Charts expand to fill the available space.
 
 {{"demo": "SimpleCharts.js"}}
