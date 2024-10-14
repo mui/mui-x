@@ -18,6 +18,8 @@ import { gridPinnedRowsSelector } from './gridRowsSelector';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../DataGrid/useDataGridProps';
 import type { HeightEntry } from './gridRowsMetaInterfaces';
 
+/* eslint-disable no-underscore-dangle */
+
 export const rowsMetaStateInitializer: GridStateInitializer = (state, props, apiRef) => {
   apiRef.current.caches.rowsMeta = {
     heights: new Map(),
@@ -65,7 +67,7 @@ export const useGridRowsMeta = (
   const validRowHeight = getValidRowHeight(
     props.rowHeight,
     DATA_GRID_PROPS_DEFAULT_VALUES.rowHeight,
-    rowHeightWarning,
+    messageRowHeightWarning,
   );
   const rowHeight = Math.floor(validRowHeight * densityFactor);
 
@@ -109,7 +111,11 @@ export const useGridRowsMeta = (
           entry.autoHeight = true;
         } else {
           // Default back to base rowHeight if getRowHeight returns invalid value.
-          entry.content = getValidRowHeight(rowHeightFromUser, rowHeight, getRowHeightWarning);
+          entry.content = getValidRowHeight(
+            rowHeightFromUser,
+            rowHeight,
+            messageGetRowHeightWarning,
+          );
           entry.needsFirstMeasurement = false;
           entry.autoHeight = false;
         }
@@ -220,7 +226,7 @@ export const useGridRowsMeta = (
   const resizeObserver = useLazyRef(
     () =>
       new ResizeObserver((entries) => {
-        for (let i = 0; i < entries.length; i++) {
+        for (let i = 0; i < entries.length; i += 1) {
           const entry = entries[i];
           const height =
             entry.borderBoxSize && entry.borderBoxSize.length > 0
@@ -271,11 +277,11 @@ export const useGridRowsMeta = (
 };
 
 let warnedOnceInvalidRowHeight = false;
-const getValidRowHeight = (
+function getValidRowHeight(
   rowHeightProp: any,
   defaultRowHeight: number,
-  warningMessage: string,
-) => {
+  warningMessage: () => string,
+) {
   if (typeof rowHeightProp === 'number' && rowHeightProp > 0) {
     return rowHeightProp;
   }
@@ -285,18 +291,22 @@ const getValidRowHeight = (
     typeof rowHeightProp !== 'undefined' &&
     rowHeightProp !== null
   ) {
-    console.warn(warningMessage);
+    console.warn(warningMessage());
     warnedOnceInvalidRowHeight = true;
   }
   return defaultRowHeight;
-};
+}
 
-const rowHeightWarning = [
-  `MUI X: The \`rowHeight\` prop should be a number greater than 0.`,
-  `The default value will be used instead.`,
-].join('\n');
+function messageRowHeightWarning() {
+  return [
+    `MUI X: The \`rowHeight\` prop should be a number greater than 0.`,
+    `The default value will be used instead.`,
+  ].join('\n');
+}
 
-const getRowHeightWarning = [
-  `MUI X: The \`getRowHeight\` prop should return a number greater than 0 or 'auto'.`,
-  `The default value will be used instead.`,
-].join('\n');
+function messageGetRowHeightWarning() {
+  return [
+    `MUI X: The \`getRowHeight\` prop should return a number greater than 0 or 'auto'.`,
+    `The default value will be used instead.`,
+  ].join('\n');
+}
