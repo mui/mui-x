@@ -123,8 +123,8 @@ importers:
         specifier: ^7.20.6
         version: 7.20.6
       '@types/chai':
-        specifier: ^4.3.20
-        version: 4.3.20
+        specifier: ^5.0.0
+        version: 5.0.0
       '@types/chai-dom':
         specifier: ^1.11.3
         version: 1.11.3
@@ -198,11 +198,11 @@ importers:
         specifier: ^0.4.24
         version: 0.4.24
       chai:
-        specifier: ^4.5.0
-        version: 4.5.0
+        specifier: ^5.1.1
+        version: 5.1.1
       chai-dom:
         specifier: ^1.12.0
-        version: 1.12.0(chai@4.5.0)
+        version: 1.12.0(chai@5.1.1)
       compression-webpack-plugin:
         specifier: ^11.1.0
         version: 11.1.0(webpack@5.95.0)
@@ -1565,8 +1565,8 @@ importers:
         specifier: ^9.7.4
         version: 9.7.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/chai':
-        specifier: ^4.3.20
-        version: 4.3.20
+        specifier: ^5.0.0
+        version: 5.0.0
       '@types/karma':
         specifier: ^6.3.8
         version: 6.3.8
@@ -1583,8 +1583,8 @@ importers:
         specifier: ^7.5.8
         version: 7.5.8
       chai:
-        specifier: ^4.5.0
-        version: 4.5.0
+        specifier: ^5.1.1
+        version: 5.1.1
       dayjs:
         specifier: ^1.11.11
         version: 1.11.11
@@ -4066,8 +4066,8 @@ packages:
   '@types/chai-dom@1.11.3':
     resolution: {integrity: sha512-EUEZI7uID4ewzxnU7DJXtyvykhQuwe+etJ1wwOiJyQRTH/ifMWKX+ghiXkxCUvNJ6IQDodf0JXhuP6zZcy2qXQ==}
 
-  '@types/chai@4.3.20':
-    resolution: {integrity: sha512-/pC9HAB5I/xMlc5FP77qjCnI16ChlJfW0tGa0IUcFn38VJrTV6DeZ60NU5KZBtaOZqjdpwTWohz5HU1RrhiYxQ==}
+  '@types/chai@5.0.0':
+    resolution: {integrity: sha512-+DwhEHAaFPPdJ2ral3kNHFQXnTfscEEFsUxzD+d7nlcLrFK23JtNjH71RGasTcHb88b4vVi4mTyfpf8u2L8bdA==}
 
   '@types/chance@1.1.6':
     resolution: {integrity: sha512-V+pm3stv1Mvz8fSKJJod6CglNGVqEQ6OyuqitoDkWywEODM/eJd1eSuIp9xt6DrX8BWZ2eDSIzbw1tPCUTvGbQ==}
@@ -13091,9 +13091,9 @@ snapshots:
 
   '@types/chai-dom@1.11.3':
     dependencies:
-      '@types/chai': 4.3.20
+      '@types/chai': 5.0.0
 
-  '@types/chai@4.3.20': {}
+  '@types/chai@5.0.0': {}
 
   '@types/chance@1.1.6': {}
 
@@ -14256,6 +14256,10 @@ snapshots:
   chai-dom@1.12.0(chai@4.5.0):
     dependencies:
       chai: 4.5.0
+
+  chai-dom@1.12.0(chai@5.1.1):
+    dependencies:
+      chai: 5.1.1
 
   chai@4.5.0:
     dependencies:
