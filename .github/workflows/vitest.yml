@@ -30,7 +30,7 @@ jobs:
       - name: Install Playwright Browsers
         run: pnpm playwright install --with-deps
       - name: Run Tests
-        run: pnpm vitest --project "jsdom/*"
+        run: pnpm vitest --project "jsdom/*" --coverage
   vitest-browser:
     name: Vitest Tests (browser)
     runs-on: ubuntu-latest
