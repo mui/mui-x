@@ -15,7 +15,8 @@ import { gridSortModelSelector } from '../sorting/gridSortingSelector';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { gridPinnedRowsSelector } from './gridRowsSelector';
-import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../DataGrid/useDataGridProps';
+import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
+import { getValidRowHeight, getRowHeightWarning } from './gridRowsUtils';
 import type { HeightEntry } from './gridRowsMetaInterfaces';
 
 /* eslint-disable no-underscore-dangle */
@@ -64,12 +65,10 @@ export const useGridRowsMeta = (
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
-  const validRowHeight = getValidRowHeight(
-    props.rowHeight,
-    DATA_GRID_PROPS_DEFAULT_VALUES.rowHeight,
-    messageRowHeightWarning,
+  const rowHeight = useGridSelector(
+    apiRef,
+    () => gridDimensionsSelector(apiRef.current.state).rowHeight,
   );
-  const rowHeight = Math.floor(validRowHeight * densityFactor);
 
   const getRowHeightEntry: GridRowsMetaPrivateApi['getRowHeightEntry'] = (rowId) => {
     let entry = heightCache.get(rowId);
@@ -116,7 +115,7 @@ export const useGridRowsMeta = (
             entry.content = getValidRowHeight(
               rowHeightFromUser,
               rowHeight,
-              messageGetRowHeightWarning,
+              getRowHeightWarning,
             );
             entry.needsFirstMeasurement = false;
             entry.autoHeight = false;
@@ -291,38 +290,3 @@ export const useGridRowsMeta = (
   useGridApiMethod(apiRef, rowsMetaApi, 'public');
   useGridApiMethod(apiRef, rowsMetaPrivateApi, 'private');
 };
-
-let warnedOnceInvalidRowHeight = false;
-function getValidRowHeight(
-  rowHeightProp: any,
-  defaultRowHeight: number,
-  warningMessage: () => string,
-) {
-  if (typeof rowHeightProp === 'number' && rowHeightProp > 0) {
-    return rowHeightProp;
-  }
-  if (
-    process.env.NODE_ENV !== 'production' &&
-    !warnedOnceInvalidRowHeight &&
-    typeof rowHeightProp !== 'undefined' &&
-    rowHeightProp !== null
-  ) {
-    console.warn(warningMessage());
-    warnedOnceInvalidRowHeight = true;
-  }
-  return defaultRowHeight;
-}
-
-function messageRowHeightWarning() {
-  return [
-    `MUI X: The \`rowHeight\` prop should be a number greater than 0.`,
-    `The default value will be used instead.`,
-  ].join('\n');
-}
-
-function messageGetRowHeightWarning() {
-  return [
-    `MUI X: The \`getRowHeight\` prop should return a number greater than 0 or 'auto'.`,
-    `The default value will be used instead.`,
-  ].join('\n');
-}
