@@ -14,7 +14,7 @@ import { gridSortModelSelector } from '../sorting/gridSortingSelector';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { gridPinnedRowsSelector } from './gridRowsSelector';
-import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../DataGrid/useDataGridProps';
+import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
 
 // TODO: I think the row heights can now be encoded as a single `size` instead of `sizes.baseXxxx`
 
@@ -27,7 +27,7 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state) => ({
 });
 
 let warnedOnceInvalidRowHeight = false;
-const getValidRowHeight = (
+export const getValidRowHeight = (
   rowHeightProp: any,
   defaultRowHeight: number,
   warningMessage: string,
@@ -47,7 +47,7 @@ const getValidRowHeight = (
   return defaultRowHeight;
 };
 
-const rowHeightWarning = [
+export const rowHeightWarning = [
   `MUI X: The \`rowHeight\` prop should be a number greater than 0.`,
   `The default value will be used instead.`,
 ].join('\n');
@@ -93,12 +93,10 @@ export const useGridRowsMeta = (
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
-  const validRowHeight = getValidRowHeight(
-    props.rowHeight,
-    DATA_GRID_PROPS_DEFAULT_VALUES.rowHeight,
-    rowHeightWarning,
-  );
-  const rowHeight = Math.floor(validRowHeight * densityFactor);
+  const rowHeight = useGridSelector(apiRef, () => {
+    const dimensions = gridDimensionsSelector(apiRef.current.state);
+    return dimensions.rowHeight;
+  });
 
   const hydrateRowsMeta = React.useCallback(() => {
     hasRowWithAutoHeight.current = false;
