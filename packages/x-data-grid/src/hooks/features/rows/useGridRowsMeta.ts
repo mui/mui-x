@@ -88,10 +88,13 @@ export const useGridRowsMeta = (
 
   const processHeightEntry = React.useCallback(
     (row: GridRowEntry) => {
+      // HACK: rowHeight trails behind the most up-to-date value just enough to
+      // mess the initial rowsMeta hydration :/
+      const baseRowHeight = gridDimensionsSelector(apiRef.current.state).rowHeight;
       const entry = apiRef.current.getRowHeightEntry(row.id);
 
       if (!getRowHeightProp) {
-        entry.content = rowHeight;
+        entry.content = baseRowHeight;
         entry.needsFirstMeasurement = false;
       } else {
         const rowHeightFromUser = getRowHeightProp({ ...row, densityFactor });
@@ -100,17 +103,17 @@ export const useGridRowsMeta = (
           if (entry.needsFirstMeasurement) {
             const estimatedRowHeight = getEstimatedRowHeight
               ? getEstimatedRowHeight({ ...row, densityFactor })
-              : rowHeight;
+              : baseRowHeight;
 
             // If the row was not measured yet use the estimated row height
-            entry.content = estimatedRowHeight ?? rowHeight;
+            entry.content = estimatedRowHeight ?? baseRowHeight;
           }
 
           hasRowWithAutoHeight.current = true;
           entry.autoHeight = true;
         } else {
           // Default back to base rowHeight if getRowHeight returns invalid value.
-          entry.content = getValidRowHeight(rowHeightFromUser, rowHeight, getRowHeightWarning);
+          entry.content = getValidRowHeight(rowHeightFromUser, baseRowHeight, getRowHeightWarning);
           entry.needsFirstMeasurement = false;
           entry.autoHeight = false;
         }
