@@ -24,16 +24,16 @@ const TreeItem2DragAndDropOverlayRoot = styled('div', {
       style: {
         marginLeft: 'calc(var(--TreeView-indentMultiplier) * var(--TreeView-itemDepth))',
         borderRadius: theme.shape.borderRadius,
-        backgroundColor: alpha((theme.vars || theme).palette.primary.dark, 0.15),
+        backgroundColor: alpha(theme.palette.primary.dark, 0.15),
       },
     },
     {
       props: { action: 'reorder-above' },
       style: {
         marginLeft: 'calc(var(--TreeView-indentMultiplier) * var(--TreeView-itemDepth))',
-        borderTop: `1px solid ${alpha((theme.vars || theme).palette.grey[900], 0.6)}`,
+        borderTop: `1px solid ${alpha(theme.palette.grey[900], 0.6)}`,
         ...theme.applyStyles('dark', {
-          borderTopColor: alpha((theme.vars || theme).palette.grey[100], 0.6),
+          borderTopColor: alpha(theme.palette.grey[100], 0.6),
         }),
       },
     },
@@ -41,9 +41,9 @@ const TreeItem2DragAndDropOverlayRoot = styled('div', {
       props: { action: 'reorder-below' },
       style: {
         marginLeft: 'calc(var(--TreeView-indentMultiplier) * var(--TreeView-itemDepth))',
-        borderBottom: `1px solid ${alpha((theme.vars || theme).palette.grey[900], 0.6)}`,
+        borderBottom: `1px solid ${alpha(theme.palette.grey[900], 0.6)}`,
         ...theme.applyStyles('dark', {
-          borderBottomColor: alpha((theme.vars || theme).palette.grey[100], 0.6),
+          borderBottomColor: alpha(theme.palette.grey[100], 0.6),
         }),
       },
     },
@@ -52,9 +52,9 @@ const TreeItem2DragAndDropOverlayRoot = styled('div', {
       style: {
         marginLeft:
           'calc(var(--TreeView-indentMultiplier) * calc(var(--TreeView-itemDepth) - 1))' as any,
-        borderBottom: `1px solid ${alpha((theme.vars || theme).palette.grey[900], 0.6)}`,
+        borderBottom: `1px solid ${alpha(theme.palette.grey[900], 0.6)}`,
         ...theme.applyStyles('dark', {
-          borderBottomColor: alpha((theme.vars || theme).palette.grey[900], 0.6),
+          borderBottomColor: alpha(theme.palette.grey[900], 0.6),
         }),
       },
     },
