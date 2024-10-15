@@ -4,7 +4,7 @@ import MUISwipeableDrawer, {
 } from '@mui/material/SwipeableDrawer';
 import Box from '@mui/material/Box';
 import Stack, { StackProps } from '@mui/material/Stack';
-import { grey } from '@mui/material/colors';
+import Paper from '@mui/material/Paper';
 import { useMediaQuery } from '@mui/system';
 
 function SwipeIndicator() {
@@ -22,7 +22,7 @@ function SwipeIndicator() {
         sx={{
           width: 32,
           height: 4,
-          backgroundColor: grey[300],
+          backgroundColor: 'grey.200',
           borderRadius: 4,
         }}
       />
@@ -36,24 +36,31 @@ export function DrawerHeader(props: DrawerHeaderProps) {
   const { children, ...other } = props;
 
   return (
-    <Stack
-      direction="row"
-      px={2}
-      py={2}
-      gap={3}
+    <Paper
       sx={{
         position: 'sticky',
         top: 0,
         zIndex: 2,
         borderBottom: '1px solid',
         borderColor: 'divider',
-        alignItems: 'center',
-        backgroundColor: 'background.paper',
+        boxShadow: 'none',
       }}
-      {...other}
+      elevation={16}
+      square
     >
-      {children}
-    </Stack>
+      <Stack
+        direction="row"
+        px={2}
+        py={2}
+        gap={3}
+        sx={{
+          alignItems: 'center',
+        }}
+        {...other}
+      >
+        {children}
+      </Stack>
+    </Paper>
   );
 }
 

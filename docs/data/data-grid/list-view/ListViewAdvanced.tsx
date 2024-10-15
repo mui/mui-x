@@ -12,7 +12,6 @@ import {
 import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import CssBaseline from '@mui/material/CssBaseline';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Avatar from '@mui/material/Avatar';
@@ -277,7 +276,6 @@ export default function ListViewAdvanced() {
         }
         label="Enable list view"
       />
-      <CssBaseline />
       <Box
         ref={containerRef}
         sx={{
@@ -354,9 +352,9 @@ export default function ListViewAdvanced() {
         <DetailsDrawer
           {...detailsState}
           listView={isListView}
+          container={container}
           onDescriptionChange={(id, value) => handleUpdate(id, 'description', value)}
           onClose={() => setDetailsState({ open: false, params: null })}
-          container={container}
         />
       </Box>
     </Box>

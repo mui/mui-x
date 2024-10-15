@@ -12,7 +12,6 @@ import {
 } from '@mui/x-data-grid-premium';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { grey } from '@mui/material/colors';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 import { iconButtonClasses } from '@mui/material/IconButton';
 import { ToolbarAddItem } from './ToolbarAddItem';
@@ -55,7 +54,8 @@ export function Toolbar(props: ToolbarProps) {
     <GridToolbarContainer
       sx={{
         position: 'relative',
-        borderBottom: `1px solid ${grey[300]}`,
+        borderBottom: '1px solid',
+        borderColor: 'divider',
         minHeight: 45,
         px: 0.5,
         py: 0.25,

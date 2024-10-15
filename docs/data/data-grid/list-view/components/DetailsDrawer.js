@@ -15,16 +15,19 @@ import { formatDate, formatSize, stringAvatar } from '../utils';
 function Thumbnail() {
   return (
     <Box
-      sx={{
+      sx={(theme) => ({
         aspectRatio: '16/9',
-        backgroundColor: 'grey.200',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         color: 'text.secondary',
         borderRadius: 2,
         gap: 1,
-      }}
+        backgroundColor: 'grey.200',
+        ...theme.applyStyles('dark', {
+          backgroundColor: 'grey.800',
+        }),
+      })}
     >
       <VisibilityOffIcon />
       <Typography variant="body2" color="text.secondary">

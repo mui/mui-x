@@ -30,14 +30,17 @@ function Thumbnail(props: { fileIcon: React.ReactNode }) {
   const { fileIcon } = props;
   return (
     <Box
-      sx={{
+      sx={(theme) => ({
         position: 'relative',
-        backgroundColor: 'grey.200',
         borderRadius: 1,
         width: 64,
         height: 64,
         overflow: 'hidden',
-      }}
+        backgroundColor: 'grey.200',
+        ...theme.applyStyles('dark', {
+          backgroundColor: 'grey.800',
+        }),
+      })}
     >
       <Box
         sx={{

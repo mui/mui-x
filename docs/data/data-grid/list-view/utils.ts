@@ -1,5 +1,7 @@
 export function formatDate(value: string | null) {
-  if (!value) return '—';
+  if (!value) {
+    return '—';
+  }
   const date = new Date(value);
   const formatter = new Intl.DateTimeFormat('en-US', {
     month: 'short',
@@ -18,7 +20,7 @@ export function formatSize(size: number) {
 
   while (formattedSize >= 1024 && unitIndex < units.length - 1) {
     formattedSize /= 1024;
-    unitIndex++;
+    unitIndex += 1;
   }
 
   return `${formattedSize.toFixed(2)} ${units[unitIndex]}`;
