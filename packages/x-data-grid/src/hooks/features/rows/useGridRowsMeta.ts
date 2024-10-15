@@ -78,7 +78,6 @@ export const useGridRowsMeta = (
         spacingTop: 0,
         spacingBottom: 0,
         detail: 0,
-        isResized: false,
         autoHeight: false,
         needsFirstMeasurement: true, // Assume all rows will need to be measured by default
       };
@@ -91,35 +90,29 @@ export const useGridRowsMeta = (
     (row: GridRowEntry) => {
       const entry = apiRef.current.getRowHeightEntry(row.id);
 
-      if (!entry.isResized) {
-        if (!getRowHeightProp) {
-          entry.content = rowHeight;
-          entry.needsFirstMeasurement = false;
-        } else {
-          const rowHeightFromUser = getRowHeightProp({ ...row, densityFactor });
+      if (!getRowHeightProp) {
+        entry.content = rowHeight;
+        entry.needsFirstMeasurement = false;
+      } else {
+        const rowHeightFromUser = getRowHeightProp({ ...row, densityFactor });
 
-          if (rowHeightFromUser === 'auto') {
-            if (entry.needsFirstMeasurement) {
-              const estimatedRowHeight = getEstimatedRowHeight
-                ? getEstimatedRowHeight({ ...row, densityFactor })
-                : rowHeight;
+        if (rowHeightFromUser === 'auto') {
+          if (entry.needsFirstMeasurement) {
+            const estimatedRowHeight = getEstimatedRowHeight
+              ? getEstimatedRowHeight({ ...row, densityFactor })
+              : rowHeight;
 
-              // If the row was not measured yet use the estimated row height
-              entry.content = estimatedRowHeight ?? rowHeight;
-            }
-
-            hasRowWithAutoHeight.current = true;
-            entry.autoHeight = true;
-          } else {
-            // Default back to base rowHeight if getRowHeight returns invalid value.
-            entry.content = getValidRowHeight(
-              rowHeightFromUser,
-              rowHeight,
-              getRowHeightWarning,
-            );
-            entry.needsFirstMeasurement = false;
-            entry.autoHeight = false;
+            // If the row was not measured yet use the estimated row height
+            entry.content = estimatedRowHeight ?? rowHeight;
           }
+
+          hasRowWithAutoHeight.current = true;
+          entry.autoHeight = true;
+        } else {
+          // Default back to base rowHeight if getRowHeight returns invalid value.
+          entry.content = getValidRowHeight(rowHeightFromUser, rowHeight, getRowHeightWarning);
+          entry.needsFirstMeasurement = false;
+          entry.autoHeight = false;
         }
       }
 
@@ -193,17 +186,6 @@ export const useGridRowsMeta = (
     return heightCache.get(rowId)?.content ?? rowHeight;
   };
 
-  const setRowHeight: GridRowsMetaApi['unstable_setRowHeight'] = (
-    id: GridRowId,
-    height: number,
-  ) => {
-    const entry = apiRef.current.getRowHeightEntry(id);
-    entry.content = height;
-    entry.isResized = true;
-    entry.needsFirstMeasurement = false;
-    hydrateRowsMeta();
-  };
-
   const storeRowHeightMeasurement: GridRowsMetaApi['unstable_storeRowHeightMeasurement'] = (
     id,
     height,
@@ -272,9 +254,8 @@ export const useGridRowsMeta = (
   }, [filterModel, paginationState, sortModel, hydrateRowsMeta]);
 
   const rowsMetaApi: GridRowsMetaApi = {
-    unstable_setLastMeasuredRowIndex: setLastMeasuredRowIndex,
     unstable_getRowHeight: getRowHeight,
-    unstable_setRowHeight: setRowHeight,
+    unstable_setLastMeasuredRowIndex: setLastMeasuredRowIndex,
     unstable_storeRowHeightMeasurement: storeRowHeightMeasurement,
     resetRowHeights,
   };

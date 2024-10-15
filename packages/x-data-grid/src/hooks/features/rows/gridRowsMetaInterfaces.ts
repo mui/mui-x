@@ -6,7 +6,6 @@ export type HeightEntry = {
   spacingBottom: number;
   detail: number;
 
-  isResized: boolean;
   autoHeight: boolean;
   needsFirstMeasurement: boolean;
 };
