@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'μεσημβρία',
 };
 
-const elGRPickers: Partial<PickersLocaleText<any>> = {
+const elGRPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Προηγούμενος μήνας',
   nextMonth: 'Επόμενος μήνας',
@@ -43,8 +43,8 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Επιλέξτε εύρος ημερομηνιών',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `Επιλέξτε ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Δεν έχει επιλεγεί ώρα' : `Η επιλεγμένη ώρα είναι ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Επιλέξτε ${views[view]}. ${!formattedTime ? 'Δεν έχει επιλεγεί ώρα' : `Η επιλεγμένη ώρα είναι ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} ώρες`,
   minutesClockNumberText: (minutes) => `${minutes} λεπτά`,
   secondsClockNumberText: (seconds) => `${seconds} δευτερόλεπτα`,
@@ -59,14 +59,12 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `Επιλέξτε ημερομηνία, η επιλεγμένη ημερομηνία είναι ${formattedDate ?? utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate
+      ? `Επιλέξτε ημερομηνία, η επιλεγμένη ημερομηνία είναι ${formattedDate}`
       : 'Επιλέξτε ημερομηνία',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `Επιλέξτε ώρα, η επιλεγμένη ώρα είναι ${formattedTime ?? utils.format(value, 'fullTime')}`
-      : 'Επιλέξτε ώρα',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Επιλέξτε ώρα, η επιλεγμένη ώρα είναι ${formattedTime}` : 'Επιλέξτε ώρα',
   // fieldClearLabel: 'Clear',
 
   // Table labels
