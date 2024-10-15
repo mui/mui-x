@@ -1,348 +1,104 @@
 import * as React from 'react';
 import {
-  GridActionsCellItem,
+  DataGridPro,
+  GridRenderCellParams,
+  GridListColDef,
   GridColDef,
-  useGridApiRef,
-  GridRowParams,
-  DataGridPremium,
-  GridRowId,
-  gridClasses,
-  GridRowModel,
-} from '@mui/x-data-grid-premium';
-import { useMediaQuery } from '@mui/system';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import Avatar from '@mui/material/Avatar';
+} from '@mui/x-data-grid-pro';
+import Box from '@mui/material/Box';
+import { useDemoData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
-import OpenIcon from '@mui/icons-material/Visibility';
-import { randomId } from '@mui/x-data-grid-generator';
-import { FileIcon } from './components/FileIcon';
-import { ActionDrawer } from './components/ActionDrawer';
-import { DetailsDrawer } from './components/DetailsDrawer';
-import { ListCell } from './components/ListCell';
-import { Toolbar } from './components/Toolbar';
-import { INITIAL_ROWS } from './data';
-import { FILE_TYPES } from './constants';
-import { RowModel, FileType } from './types';
-import { formatDate, formatSize, stringAvatar } from './utils';
+import Avatar from '@mui/material/Avatar';
+import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import IconButton from '@mui/material/IconButton';
+import MessageIcon from '@mui/icons-material/Message';
 
-interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window?: () => Window;
+function ListViewCell(params: GridRenderCellParams) {
+  return (
+    <Stack
+      direction="row"
+      sx={{
+        alignItems: 'center',
+        height: '100%',
+        gap: 2,
+      }}
+    >
+      <Avatar sx={{ width: 32, height: 32, backgroundColor: params.row.avatar }} />
+      <Stack>
+        <Typography variant="body2" fontWeight={500}>
+          {params.row.name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {params.row.position}
+        </Typography>
+      </Stack>
+    </Stack>
+  );
 }
 
-const listColDef: GridColDef = {
-  field: 'listCell',
-  renderCell: ListCell,
+const listColDef: GridListColDef = {
+  field: 'listColumn',
+  renderCell: ListViewCell,
 };
 
-export default function ListView(props: Props) {
-  const { window } = props;
+const VISIBLE_FIELDS = ['avatar', 'name', 'position'];
 
-  // This is used only for the example
-  const container = window !== undefined ? () => window().document.body : undefined;
+export default function ListView() {
+  const [isListView, setIsListView] = React.useState(true);
 
-  const apiRef = useGridApiRef();
-
-  const isMobile = useMediaQuery('(max-width: 700px)');
-
-  // Always show as mobile on docs example
-  const isListView = !!container || isMobile;
-
-  const [rows, setRows] = React.useState<GridRowModel<RowModel>[]>(INITIAL_ROWS);
-
-  const [loading, setLoading] = React.useState(false);
-
-  const [detailsState, setDetailsState] = React.useState<{
-    open: boolean;
-    params: Pick<GridRowParams<RowModel>, 'row'> | null;
-  }>({
-    open: false,
-    params: null,
+  const { data } = useDemoData({
+    dataSet: 'Employee',
+    rowLength: 20,
+    visibleFields: VISIBLE_FIELDS,
   });
 
-  const handleDelete = React.useCallback((ids: GridRowId[]) => {
-    setRows((prevRows) => prevRows.filter((row) => !ids.includes(row.id)));
-  }, []);
-
-  const handleUpdate = React.useCallback(
-    (
-      id: GridRowId,
-      field: GridRowParams<RowModel>['columns'][number]['field'],
-      value: string,
-    ) => {
-      setRows((prevRows) =>
-        prevRows.map((row) =>
-          row.id === id
-            ? { ...row, [field]: value, updatedAt: new Date().toISOString() }
-            : row,
-        ),
-      );
-    },
-    [],
-  );
-
-  const handleUpload = React.useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!e.target.files) {
-        return;
-      }
-
-      const file = e.target.files[0];
-      const createdAt = new Date().toISOString();
-
-      const fileType = file.type.split('/')[1];
-
-      // validate file type
-      if (!FILE_TYPES.includes(fileType as FileType)) {
-        alert('Invalid file type');
-        return;
-      }
-
-      const row: RowModel = {
-        id: randomId(),
-        name: file.name,
-        description: '',
-        type: fileType as FileType,
-        size: file.size,
-        createdBy: 'Kenan Yusuf',
-        createdAt,
-        updatedAt: createdAt,
-        state: 'pending',
-      };
-
-      e.target.value = '';
-
-      // Add temporary row
-      setLoading(true);
-      setRows((prevRows) => [...prevRows, row]);
-
-      // Simulate server response time
-      setTimeout(() => {
-        const uploadedRow: RowModel = { ...row, state: 'uploaded' };
-        setRows((prevRows) =>
-          prevRows.map((r) => (r.id === row.id ? uploadedRow : r)),
-        );
-        setDetailsState({ open: true, params: { row } });
-        setLoading(false);
-      }, 2000);
-    },
-    [],
-  );
-
-  const columns: GridColDef[] = React.useMemo(
-    () => [
-      {
-        field: 'name',
-        headerName: 'Name',
-        width: 350,
-        editable: true,
-        hideable: false,
-        renderCell: (params) => {
-          return (
-            <Stack
-              direction="row"
-              gap={1.5}
-              alignItems="center"
-              sx={{ height: '100%' }}
-            >
-              <FileIcon type={params.row.type} />
-              {params.value}
-            </Stack>
-          );
-        },
-      },
-      {
-        field: 'createdBy',
-        headerName: 'Owner',
-        width: 200,
-        renderCell: (params) => {
-          const avatarProps = stringAvatar(params.value);
-          return (
-            <Stack direction="row" gap={1.5} alignItems="center">
-              <Avatar
-                {...avatarProps}
-                sx={{ width: 24, height: 24, fontSize: 12, ...avatarProps.sx }}
-              />
-              {params.value}
-            </Stack>
-          );
-        },
-      },
-      {
-        field: 'createdAt',
-        headerName: 'Added',
-        type: 'date',
-        width: 200,
-        valueFormatter: formatDate,
-      },
-      {
-        field: 'updatedAt',
-        headerName: 'Modified',
-        type: 'date',
-        width: 200,
-        valueFormatter: formatDate,
-      },
-      {
-        field: 'type',
-        headerName: 'Type',
-        width: 150,
-      },
-      {
-        field: 'size',
-        headerName: 'Size',
-        width: 120,
-        valueFormatter: formatSize,
-      },
+  const columns: GridColDef[] = React.useMemo(() => {
+    return [
+      ...data.columns,
       {
         type: 'actions',
         field: 'actions',
-        resizable: false,
-        width: 50,
-        getActions: (params) =>
-          isListView
-            ? [
-                <ActionDrawer
-                  params={params}
-                  container={container}
-                  onSaveRename={(value) => handleUpdate(params.id, 'name', value)}
-                  onDelete={() => handleDelete([params.id])}
-                  onOpen={() => {
-                    setDetailsState({ open: true, params });
-                  }}
-                />,
-              ]
-            : [
-                <GridActionsCellItem
-                  label="Open"
-                  icon={<OpenIcon fontSize="small" />}
-                  onClick={() => {
-                    setDetailsState({ open: true, params });
-                  }}
-                  showInMenu
-                />,
-                <GridActionsCellItem
-                  label="Rename"
-                  icon={<EditIcon fontSize="small" />}
-                  onClick={() =>
-                    apiRef.current?.startCellEditMode({
-                      id: params.id,
-                      field: 'name',
-                    })
-                  }
-                  showInMenu
-                />,
-                <GridActionsCellItem
-                  label="Delete"
-                  icon={<DeleteIcon fontSize="small" />}
-                  onClick={() => handleDelete([params.id])}
-                  showInMenu
-                />,
-              ],
+        width: 75,
+        getActions: () => [
+          <IconButton aria-label="Message">
+            <MessageIcon />
+          </IconButton>,
+        ],
       },
-    ],
-    [isListView, handleDelete, handleUpdate],
-  );
+    ];
+  }, [data.columns]);
 
-  const getEstimatedRowHeight = () => {
-    const density = apiRef.current.state.density;
-
-    if (isListView) {
-      switch (density) {
-        case 'compact':
-          return 47;
-        case 'standard':
-          return 67;
-        case 'comfortable':
-          return 97;
-        default:
-          return 67;
-      }
-    } else {
-      switch (density) {
-        case 'compact':
-          return 47;
-        case 'standard':
-          return 55;
-        case 'comfortable':
-          return 63;
-        default:
-          return 55;
-      }
-    }
-  };
+  const rowHeight = isListView ? 64 : undefined;
 
   return (
-    <div style={{ position: 'fixed', inset: 0 }}>
-      <DataGridPremium
-        apiRef={apiRef}
-        rows={rows}
-        columns={columns}
-        loading={loading}
-        slots={{ toolbar: Toolbar }}
-        slotProps={{
-          toolbar: {
-            showQuickFilter: true,
-            listView: isListView,
-            container,
-            handleDelete,
-            handleUpload,
-          },
-          loadingOverlay: {
-            variant: 'linear-progress',
-          },
-        }}
-        unstable_listView={isListView}
-        unstable_listColumn={listColDef}
-        pagination
-        initialState={{
-          density: 'comfortable',
-          pagination: {
-            paginationModel: {
-              pageSize: 10,
-            },
-          },
-          sorting: {
-            sortModel: [{ field: 'createdAt', sort: 'desc' }],
-          },
-          columns: {
-            columnVisibilityModel: {
-              type: false,
-            },
-          },
-        }}
+    <Box sx={{ width: '100%' }}>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={isListView}
+            onChange={(event) => setIsListView(event.target.checked)}
+          />
+        }
+        label="Enable list view"
+      />
+      <Box
         sx={{
-          border: 0,
-          borderRadius: 0,
-          [`& .${gridClasses.cell}`]: { display: 'flex', alignItems: 'center' },
-          [`&.${gridClasses['root--densityCompact']} .${gridClasses.cell}`]: {
-            py: 1,
-          },
-          [`&.${gridClasses['root--densityStandard']} .${gridClasses.cell}`]: {
-            py: 1.5,
-          },
-          [`&.${gridClasses['root--densityComfortable']} .${gridClasses.cell}`]: {
-            py: 2,
-          },
+          width: '100%',
+          maxWidth: isListView ? 360 : undefined,
+          height: 600,
+          margin: '0 auto',
         }}
-        getRowHeight={() => 'auto'}
-        getEstimatedRowHeight={getEstimatedRowHeight}
-        onRowDoubleClick={(params) => {
-          setDetailsState({ open: true, params });
-        }}
-        hideFooterSelectedRowCount
-      />
-
-      <DetailsDrawer
-        {...detailsState}
-        listView={isListView}
-        onDescriptionChange={(id, value) => handleUpdate(id, 'description', value)}
-        onClose={() => setDetailsState({ open: false, params: null })}
-        container={container}
-      />
-    </div>
+      >
+        <DataGridPro
+          {...data}
+          columns={columns}
+          rowHeight={rowHeight}
+          unstable_listView={isListView}
+          unstable_listColumn={listColDef}
+        />
+      </Box>
+    </Box>
   );
 }

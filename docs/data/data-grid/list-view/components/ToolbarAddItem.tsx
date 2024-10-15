@@ -26,7 +26,7 @@ const ListItemUploadButton = React.forwardRef<HTMLLabelElement, ButtonProps>(
 export interface ToolbarAddItemProps {
   container: DrawerProps['container'];
   listView: boolean;
-  handleUpload?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleUpload?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export function ToolbarAddItem(props: ToolbarAddItemProps) {
@@ -34,13 +34,13 @@ export function ToolbarAddItem(props: ToolbarAddItemProps) {
   const [open, setOpen] = React.useState(false);
   const { handleUpload, listView } = props;
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleUpload?.(e);
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    handleUpload?.(event);
     setOpen(false);
   };
 
   return (
-    <>
+    <React.Fragment>
       <ToolbarButton onClick={() => setOpen(true)}>
         <AddIcon fontSize="small" />
       </ToolbarButton>
@@ -76,6 +76,6 @@ export function ToolbarAddItem(props: ToolbarAddItemProps) {
           </ListItem>
         </List>
       </Drawer>
-    </>
+    </React.Fragment>
   );
 }

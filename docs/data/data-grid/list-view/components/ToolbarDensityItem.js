@@ -52,7 +52,7 @@ export function ToolbarDensityItem(props) {
   const Icon = DENSITY_ICONS[density];
 
   return (
-    <>
+    <React.Fragment>
       <ToolbarButton onClick={() => setOpen(true)}>
         <Icon fontSize="small" />
       </ToolbarButton>
@@ -82,6 +82,6 @@ export function ToolbarDensityItem(props) {
           })}
         </List>
       </Drawer>
-    </>
+    </React.Fragment>
   );
 }

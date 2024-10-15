@@ -1,5 +1,10 @@
 import * as React from 'react';
-
+import {
+  gridColumnVisibilityModelSelector,
+  gridDensitySelector,
+  useGridApiContext,
+  useGridSelector,
+} from '@mui/x-data-grid-premium';
 import Box from '@mui/material/Box';
 import {
   Card,
@@ -46,10 +51,12 @@ function Thumbnail(props) {
 }
 
 export function ListCell(params) {
-  const {
-    density,
-    columns: { columnVisibilityModel },
-  } = params.api.state;
+  const apiRef = useGridApiContext();
+  const density = useGridSelector(apiRef, gridDensitySelector);
+  const columnVisibilityModel = useGridSelector(
+    apiRef,
+    gridColumnVisibilityModelSelector,
+  );
 
   const showCreatedBy = columnVisibilityModel.createdBy !== false;
   const showSize = columnVisibilityModel.size !== false;

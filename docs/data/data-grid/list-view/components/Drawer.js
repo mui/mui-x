@@ -63,17 +63,23 @@ export function Drawer(props) {
       {...other}
       anchor={anchor}
       container={container}
-      sx={{
-        '& .MuiDrawer-paper': {
+      PaperProps={{
+        sx: {
+          position: 'absolute',
           boxSizing: 'border-box',
           ...(isBottomDrawer
-            ? {
-                pb: 1,
-                maxHeight: 'calc(100% - 100px)',
-              }
-            : {
-                width,
-              }),
+            ? { pb: 1, maxHeight: 'calc(100% - 100px)' }
+            : { width }),
+        },
+      }}
+      ModalProps={{
+        sx: { position: 'absolute' },
+      }}
+      slotProps={{
+        backdrop: {
+          sx: {
+            position: 'absolute',
+          },
         },
       }}
       disableSwipeToOpen

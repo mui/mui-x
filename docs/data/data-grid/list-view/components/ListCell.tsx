@@ -1,7 +1,21 @@
 import * as React from 'react';
-import { GridDensity, GridRenderCellParams } from '@mui/x-data-grid-premium';
+import {
+  gridColumnVisibilityModelSelector,
+  GridDensity,
+  gridDensitySelector,
+  GridRenderCellParams,
+  useGridApiContext,
+  useGridSelector,
+} from '@mui/x-data-grid-premium';
 import Box from '@mui/material/Box';
-import { Card, CardContent, CardDetailList, CardDetail, CardTitle, CardMedia } from './Card';
+import {
+  Card,
+  CardContent,
+  CardDetailList,
+  CardDetail,
+  CardTitle,
+  CardMedia,
+} from './Card';
 import { FileIcon } from './FileIcon';
 import { formatDate, formatSize } from '../utils';
 import { RowModel } from '../types';
@@ -40,10 +54,12 @@ function Thumbnail(props: { fileIcon: React.ReactNode }) {
 }
 
 export function ListCell(params: GridRenderCellParams<RowModel>) {
-  const {
-    density,
-    columns: { columnVisibilityModel },
-  } = params.api.state;
+  const apiRef = useGridApiContext();
+  const density = useGridSelector(apiRef, gridDensitySelector);
+  const columnVisibilityModel = useGridSelector(
+    apiRef,
+    gridColumnVisibilityModelSelector,
+  );
 
   const showCreatedBy = columnVisibilityModel.createdBy !== false;
   const showSize = columnVisibilityModel.size !== false;
@@ -51,7 +67,12 @@ export function ListCell(params: GridRenderCellParams<RowModel>) {
   const showUpdatedAt = columnVisibilityModel.updatedAt !== false;
   const showThumbnail = density === 'comfortable';
 
-  const icon = <FileIcon type={params.row.type} sx={{ fontSize: ICON_SIZE_BY_DENSITY[density] }} />;
+  const icon = (
+    <FileIcon
+      type={params.row.type}
+      sx={{ fontSize: ICON_SIZE_BY_DENSITY[density] }}
+    />
+  );
 
   return (
     <Card>
@@ -65,7 +86,9 @@ export function ListCell(params: GridRenderCellParams<RowModel>) {
           </CardDetailList>
         )}
         {density === 'comfortable' && (showCreatedAt || showUpdatedAt) && (
-          <CardDetail>{showUpdatedAt && `Updated ${formatDate(params.row.updatedAt)}`}</CardDetail>
+          <CardDetail>
+            {showUpdatedAt && `Updated ${formatDate(params.row.updatedAt)}`}
+          </CardDetail>
         )}
       </CardContent>
     </Card>

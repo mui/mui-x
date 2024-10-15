@@ -32,12 +32,13 @@ export function Toolbar(props) {
   };
 
   const handleDeleteSelectedRows = () => {
+    handleClearSelection();
     handleDelete?.(Array.from(selectedRows.keys()));
   };
 
   const itemProps = {
     listView,
-    container: container,
+    container,
   };
 
   return (
@@ -52,7 +53,7 @@ export function Toolbar(props) {
       }}
     >
       {showSelectionOptions ? (
-        <>
+        <React.Fragment>
           <ToolbarButton sx={{ mr: 0.5 }} onClick={handleClearSelection}>
             <GridClearIcon fontSize="small" />
           </ToolbarButton>
@@ -62,9 +63,9 @@ export function Toolbar(props) {
           <ToolbarButton sx={{ ml: 'auto' }} onClick={handleDeleteSelectedRows}>
             <GridDeleteIcon fontSize="small" />
           </ToolbarButton>
-        </>
+        </React.Fragment>
       ) : (
-        <>
+        <React.Fragment>
           <Box
             sx={{ ml: 0.5, flex: 1, display: 'flex', justifyContent: 'flex-start' }}
           >
@@ -97,7 +98,7 @@ export function Toolbar(props) {
           <ToolbarSortItem {...itemProps} />
           <ToolbarDensityItem {...itemProps} />
           <ToolbarAddItem {...itemProps} handleUpload={handleUpload} />
-        </>
+        </React.Fragment>
       )}
     </GridToolbarContainer>
   );

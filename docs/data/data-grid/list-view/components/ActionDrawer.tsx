@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { GridActionsCellItem, GridMoreVertIcon, GridRowParams } from '@mui/x-data-grid-premium';
+import {
+  GridActionsCellItem,
+  GridMoreVertIcon,
+  GridRowParams,
+} from '@mui/x-data-grid-premium';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import List from '@mui/material/List';
@@ -31,14 +35,19 @@ export function ActionDrawer(props: ActionDrawerProps) {
   const [renameDialogOpen, setRenameDialogOpen] = React.useState(false);
 
   return (
-    <>
+    <React.Fragment>
       <GridActionsCellItem
         label="More options"
         icon={<GridMoreVertIcon fontSize="small" />}
         onClick={() => setOpen(true)}
       />
 
-      <Drawer anchor="bottom" open={open} container={container} onClose={() => setOpen(false)}>
+      <Drawer
+        anchor="bottom"
+        open={open}
+        container={container}
+        onClose={() => setOpen(false)}
+      >
         <DrawerHeader>
           <FileIcon type={params.row.type} sx={{ width: 32, height: 32 }} />
           <Stack gap={0.25}>
@@ -107,6 +116,6 @@ export function ActionDrawer(props: ActionDrawerProps) {
         onSaveRename={onSaveRename}
         onClose={() => setRenameDialogOpen(false)}
       />
-    </>
+    </React.Fragment>
   );
 }

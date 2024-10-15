@@ -22,7 +22,7 @@ export function ActionDrawer(props) {
   const [renameDialogOpen, setRenameDialogOpen] = React.useState(false);
 
   return (
-    <>
+    <React.Fragment>
       <GridActionsCellItem
         label="More options"
         icon={<GridMoreVertIcon fontSize="small" />}
@@ -102,6 +102,6 @@ export function ActionDrawer(props) {
         onSaveRename={onSaveRename}
         onClose={() => setRenameDialogOpen(false)}
       />
-    </>
+    </React.Fragment>
   );
 }

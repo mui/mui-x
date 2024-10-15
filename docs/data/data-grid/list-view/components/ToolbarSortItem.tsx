@@ -38,7 +38,7 @@ export function ToolbarSortItem(props: ToolbarSortItemProps) {
   };
 
   return (
-    <>
+    <React.Fragment>
       <ToolbarButton onClick={() => setOpen(true)}>
         <Badge badgeContent={activeSort ? 1 : 0} color="primary" variant="dot">
           <SwapVertIcon fontSize="small" />
@@ -66,16 +66,18 @@ export function ToolbarSortItem(props: ToolbarSortItemProps) {
 
             return (
               <ListItem key={field.field} disablePadding>
-                <ListItemButton onClick={() => handleSortChange(field.field, nextSort)}>
+                <ListItemButton
+                  onClick={() => handleSortChange(field.field, nextSort)}
+                >
                   <ListItemIcon>
                     {isActive && (
-                      <>
+                      <React.Fragment>
                         {activeSort.sort === 'asc' ? (
                           <GridArrowUpwardIcon />
                         ) : (
                           <GridArrowDownwardIcon />
                         )}
-                      </>
+                      </React.Fragment>
                     )}
                   </ListItemIcon>
                   <ListItemText>{field.headerName}</ListItemText>
@@ -85,6 +87,6 @@ export function ToolbarSortItem(props: ToolbarSortItemProps) {
           })}
         </List>
       </Drawer>
-    </>
+    </React.Fragment>
   );
 }

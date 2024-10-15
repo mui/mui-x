@@ -28,13 +28,13 @@ export function ToolbarAddItem(props) {
   const [open, setOpen] = React.useState(false);
   const { handleUpload, listView } = props;
 
-  const handleFileSelect = (e) => {
-    handleUpload?.(e);
+  const handleFileSelect = (event) => {
+    handleUpload?.(event);
     setOpen(false);
   };
 
   return (
-    <>
+    <React.Fragment>
       <ToolbarButton onClick={() => setOpen(true)}>
         <AddIcon fontSize="small" />
       </ToolbarButton>
@@ -70,6 +70,6 @@ export function ToolbarAddItem(props) {
           </ListItem>
         </List>
       </Drawer>
-    </>
+    </React.Fragment>
   );
 }

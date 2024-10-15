@@ -35,7 +35,7 @@ export function ToolbarColumnsItem(props) {
   };
 
   return (
-    <>
+    <React.Fragment>
       <ToolbarButton onClick={() => setOpen(true)}>
         <GridColumnIcon fontSize="small" />
       </ToolbarButton>
@@ -73,6 +73,6 @@ export function ToolbarColumnsItem(props) {
           })}
         </List>
       </Drawer>
-    </>
+    </React.Fragment>
   );
 }

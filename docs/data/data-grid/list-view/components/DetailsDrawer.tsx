@@ -57,7 +57,7 @@ function DrawerContent(
   };
 
   return (
-    <>
+    <React.Fragment>
       <DrawerHeader>
         <FileIcon type={params.row.type} sx={{ width: 32, height: 32 }} />
         <Typography variant="body1">{params.row.name}</Typography>
@@ -81,7 +81,7 @@ function DrawerContent(
           label="Description"
           maxRows={4}
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(event) => setDescription(event.target.value)}
           sx={{ mt: 1 }}
           multiline
         />
@@ -130,13 +130,13 @@ function DrawerContent(
           <Typography variant="body2">{params.row.createdBy}</Typography>
         </Stack>
       </Stack>
-    </>
+    </React.Fragment>
   );
 }
 
 export function DetailsDrawer(props: DetailsDrawerProps) {
-  const { params, listView, onDescriptionChange, onClose, container, ...other } = props;
-
+  const { params, listView, onDescriptionChange, onClose, container, ...other } =
+    props;
   return (
     <Drawer
       anchor={listView ? 'bottom' : 'right'}

@@ -27,7 +27,7 @@ export interface ToolbarProps extends GridToolbarProps {
   container?: DrawerProps['container'];
   listView?: boolean;
   handleDelete?: (ids: GridRowId[]) => void;
-  handleUpload?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleUpload?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export function Toolbar(props: ToolbarProps) {
@@ -42,12 +42,13 @@ export function Toolbar(props: ToolbarProps) {
   };
 
   const handleDeleteSelectedRows = () => {
+    handleClearSelection();
     handleDelete?.(Array.from(selectedRows.keys()));
   };
 
   const itemProps = {
     listView,
-    container: container,
+    container,
   };
 
   return (
@@ -62,7 +63,7 @@ export function Toolbar(props: ToolbarProps) {
       }}
     >
       {showSelectionOptions ? (
-        <>
+        <React.Fragment>
           <ToolbarButton sx={{ mr: 0.5 }} onClick={handleClearSelection}>
             <GridClearIcon fontSize="small" />
           </ToolbarButton>
@@ -72,10 +73,12 @@ export function Toolbar(props: ToolbarProps) {
           <ToolbarButton sx={{ ml: 'auto' }} onClick={handleDeleteSelectedRows}>
             <GridDeleteIcon fontSize="small" />
           </ToolbarButton>
-        </>
+        </React.Fragment>
       ) : (
-        <>
-          <Box sx={{ ml: 0.5, flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
+        <React.Fragment>
+          <Box
+            sx={{ ml: 0.5, flex: 1, display: 'flex', justifyContent: 'flex-start' }}
+          >
             <GridToolbarQuickFilter
               variant="outlined"
               size="small"
@@ -105,7 +108,7 @@ export function Toolbar(props: ToolbarProps) {
           <ToolbarSortItem {...itemProps} />
           <ToolbarDensityItem {...itemProps} />
           <ToolbarAddItem {...itemProps} handleUpload={handleUpload} />
-        </>
+        </React.Fragment>
       )}
     </GridToolbarContainer>
   );

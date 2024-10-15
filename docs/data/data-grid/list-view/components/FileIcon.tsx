@@ -28,7 +28,10 @@ const FILE_TYPE_ICONS: Record<
   },
 };
 
-const FILE_ICON: Record<string, { component: React.ElementType; color: SvgIconProps['color'] }> = {
+const FILE_ICON: Record<
+  string,
+  { component: React.ElementType; color: SvgIconProps['color'] }
+> = {
   pdf: FILE_TYPE_ICONS.document,
   docx: FILE_TYPE_ICONS.document,
   txt: FILE_TYPE_ICONS.document,

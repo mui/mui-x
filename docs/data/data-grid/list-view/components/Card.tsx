@@ -14,7 +14,10 @@ export function Card(props: StackProps) {
 export function CardMedia(props: StackProps) {
   const { children, ...other } = props;
   return (
-    <Stack sx={{ flexShrink: 0, alignItems: 'center', ...(other.sx || {}) }} {...other}>
+    <Stack
+      sx={{ flexShrink: 0, alignItems: 'center', ...(other.sx || {}) }}
+      {...other}
+    >
       {children}
     </Stack>
   );
