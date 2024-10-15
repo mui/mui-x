@@ -70,7 +70,7 @@ export default function ListView() {
     ];
   }, [data.columns]);
 
-  const rowHeight = isListView ? 64 : undefined;
+  const rowHeight = isListView ? 64 : 52;
 
   return (
     <Box sx={{ width: '100%' }}>
