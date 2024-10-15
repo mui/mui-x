@@ -137,6 +137,29 @@ jobs:
             curl -Os https://uploader.codecov.io/latest/linux/codecov
             chmod +x codecov
             ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-jsdom"
+
+  test_unit_vitest:
+    <<: *default-job
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: Tests fake browser (vitest)
+          command: pnpm vitest --project "jsdom/*" --coverage
+      - run:
+          name: Check coverage generated
+          command: |
+            if ! [[ -s coverage/lcov.info ]]
+            then
+              exit 1
+            fi
+      # - run:
+      #     name: Coverage
+      #     command: |
+      #       curl -Os https://uploader.codecov.io/latest/linux/codecov
+      #       chmod +x codecov
+      #       ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-jsdom"
+
   test_lint:
     <<: *default-job
     steps:
@@ -226,6 +249,19 @@ jobs:
           # hardcoded in karma-webpack
           path: /tmp/_karma_webpack_
           destination: artifact-file
+
+  test_browser_vitest:
+    <<: *default-job
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.44.1-focal
+    steps:
+      - checkout
+      - install_js:
+          browsers: true
+      - run:
+          name: Tests real browsers (vitest)
+          command: pnpm vitest --project "browser/*"
+
   test_types:
     <<: *default-job
     steps:
