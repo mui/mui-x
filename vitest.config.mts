@@ -31,7 +31,7 @@ export default defineConfig({
       },
       {
         find: '@mui/x-charts-vendor',
-        replacement: new URL('./packages/x-charts-vendor', import.meta.url).pathname,
+        replacement: new URL('./packages/x-charts-vendor/es', import.meta.url).pathname,
       },
       {
         find: 'moment/locale',
