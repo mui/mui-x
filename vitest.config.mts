@@ -7,27 +7,31 @@ export default defineConfig({
   resolve: {
     alias: [
       ...[
-        { lib: 'charts', plans: ['pro'] },
-        { lib: 'date-pickers', plans: ['pro'] },
-        { lib: 'tree-view', plans: ['pro'] },
-        { lib: 'data-grid', plans: ['pro', 'premium', 'generator'] },
-        { lib: 'internals' },
-        { lib: 'license' },
+        { lib: 'x-charts', plans: ['pro'] },
+        { lib: 'x-date-pickers', plans: ['pro'] },
+        { lib: 'x-tree-view', plans: ['pro'] },
+        { lib: 'x-data-grid', plans: ['pro', 'premium', 'generator'] },
+        { lib: 'x-internals' },
+        { lib: 'x-license' },
       ].flatMap((v) => {
         return [
           {
-            find: `@mui/x-${v.lib}`,
-            replacement: new URL(`./packages/x-${v.lib}/src`, import.meta.url).pathname,
+            find: `@mui/${v.lib}`,
+            replacement: new URL(`./packages/${v.lib}/src`, import.meta.url).pathname,
           },
           ...(v.plans ?? []).map((plan) => ({
-            find: `@mui/x-${v.lib}-${plan}`,
-            replacement: new URL(`./packages/x-${v.lib}-${plan}/src`, import.meta.url).pathname,
+            find: `@mui/${v.lib}-${plan}`,
+            replacement: new URL(`./packages/${v.lib}-${plan}/src`, import.meta.url).pathname,
           })),
         ];
       }),
       {
         find: 'test/utils',
         replacement: new URL('./test/utils', import.meta.url).pathname,
+      },
+      {
+        find: '@mui/x-charts-vendor',
+        replacement: new URL('./packages/x-charts-vendor', import.meta.url).pathname,
       },
       {
         find: 'moment/locale',
