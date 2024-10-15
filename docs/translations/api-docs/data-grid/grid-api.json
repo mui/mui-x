@@ -69,6 +69,8 @@
     "getFilterState": {
       "description": "Returns the filter state for the given filter model without applying it to the Data Grid."
     },
+    "getListColumn": { "description": "Returns the GridStateColDef for the given list column." },
+    "getListColumnIndex": { "description": "Returns the index position of a list column." },
     "getLocaleText": { "description": "Returns the translation for the <code>key</code>." },
     "getPinnedColumns": { "description": "Returns which columns are pinned." },
     "getRootDimensions": { "description": "Returns the dimensions of the grid" },

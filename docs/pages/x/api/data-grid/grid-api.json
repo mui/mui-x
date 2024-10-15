@@ -122,6 +122,16 @@
       },
       "required": true
     },
+    "getListColumn": {
+      "type": { "description": "(field: string) =&gt; GridStateColDef | undefined" },
+      "required": true,
+      "isProPlan": true
+    },
+    "getListColumnIndex": {
+      "type": { "description": "(field: string) =&gt; number" },
+      "required": true,
+      "isProPlan": true
+    },
     "getLocaleText": {
       "type": {
         "description": "&lt;T extends GridTranslationKeys&gt;(key: T) =&gt; GridLocaleText[T]"
