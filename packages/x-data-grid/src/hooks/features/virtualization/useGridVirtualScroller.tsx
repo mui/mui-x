@@ -214,7 +214,7 @@ export const useGridVirtualScroller = () => {
     [apiRef, dimensions.isReady],
   );
 
-  const triggerUpdateRenderContext = () => {
+  const triggerUpdateRenderContext = useEventCallback(() => {
     const newScroll = {
       top: scrollerRef.current!.scrollTop,
       left: scrollerRef.current!.scrollLeft,
@@ -283,7 +283,7 @@ export const useGridVirtualScroller = () => {
     scrollTimeout.start(1000, triggerUpdateRenderContext);
 
     return nextRenderContext;
-  };
+  });
 
   const forceUpdateRenderContext = () => {
     const inputs = inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns);
