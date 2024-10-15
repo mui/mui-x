@@ -107,6 +107,10 @@ export const getMD3Theme = (mode: PaletteMode): ThemeOptions => {
               height: '60px',
             },
           },
+          shortcuts: ({ theme }) => ({
+            borderBottom: `1px solid ${theme.palette.divider}`,
+            borderTop: `1px solid ${theme.palette.divider}`,
+          }),
         },
       },
       MuiPickersCalendarHeader: {
