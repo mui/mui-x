@@ -456,7 +456,7 @@ export const useGridRowSelection = (
 
       let hasChanged = false;
       currentSelection.forEach((id: GridRowId) => {
-        if (filteredRowsLookup[id] === false) {
+        if (filteredRowsLookup[id] !== true) {
           if (props.keepNonExistentRowsSelected) {
             return;
           }
