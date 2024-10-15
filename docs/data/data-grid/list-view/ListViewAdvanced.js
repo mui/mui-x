@@ -248,6 +248,11 @@ export default function ListViewAdvanced() {
     }
   };
 
+  const getRowHeight = React.useCallback(
+    () => (isListView ? 'auto' : undefined),
+    [isListView],
+  );
+
   return (
     <Box sx={{ width: '100%', overflow: 'hidden' }}>
       <FormControlLabel
@@ -324,7 +329,7 @@ export default function ListViewAdvanced() {
               py: 2,
             },
           }}
-          getRowHeight={() => 'auto'}
+          getRowHeight={getRowHeight}
           getEstimatedRowHeight={getEstimatedRowHeight}
           onRowDoubleClick={(params) => {
             setDetailsState({ open: true, params });
