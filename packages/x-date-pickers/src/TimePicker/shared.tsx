@@ -74,7 +74,6 @@ type UseTimePickerDefaultizedProps<
   TView extends TimeViewWithMeridiem,
   Props extends BaseTimePickerProps<TDate, TView>,
 > = LocalizedComponent<
-  TDate,
   DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | keyof BaseTimeValidationProps>
 >;
 
@@ -91,7 +90,7 @@ export function useTimePickerDefaultizedProps<
 
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
-  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+  const localeText = React.useMemo<PickersInputLocaleText | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {
       return themeProps.localeText;
     }
