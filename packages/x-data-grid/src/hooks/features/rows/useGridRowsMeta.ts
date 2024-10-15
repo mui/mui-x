@@ -6,7 +6,7 @@ import { GridRowsMetaApi, GridRowsMetaPrivateApi } from '../../../models/api/gri
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { GridRowEntry, GridRowId } from '../../../models/gridRows';
+import { GridRowEntry } from '../../../models/gridRows';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { gridDensityFactorSelector } from '../density/densitySelector';
 import { gridFilterModelSelector } from '../filter/gridFilterSelector';
