@@ -4,30 +4,29 @@ import { ScatterValueType } from '../models';
 const formatter: SeriesFormatter<'scatter'> = ({ series, seriesOrder }, dataset) => {
   const completeSeries = Object.fromEntries(
     Object.entries(series).map(([seriesId, seriesData]) => {
-      const xDataKey = seriesData?.datasetKeys?.x;
-      const yDataKey = seriesData?.datasetKeys?.y;
-      const zDataKey = seriesData?.datasetKeys?.z;
-      const idDataKey = seriesData?.datasetKeys?.id;
+      const datasetKeys = seriesData?.datasetKeys;
 
-      const keys = [xDataKey, yDataKey, idDataKey];
-      const hasNonStringKeys = keys.some((key) => typeof key !== 'string');
-      if (seriesData?.datasetKeys && hasNonStringKeys) {
+      const missingKeys = (['x', 'y', 'id'] as const).filter(
+        (key) => typeof datasetKeys?.[key] !== 'string',
+      );
+
+      if (seriesData?.datasetKeys && missingKeys.length > 0) {
         throw new Error(
           [
             `MUI X: scatter series with id='${seriesId}' has incomplete datasetKeys.`,
-            'You should provide x, y, and id keys.',
+            `Properties ${missingKeys.map((key) => `"${key}"`).join(', ')} are missing.`,
           ].join('\n'),
         );
       }
 
-      const data = !seriesData?.datasetKeys
+      const data = !datasetKeys
         ? (seriesData.data ?? [])
         : (dataset?.map((d) => {
             return {
-              x: d[xDataKey!],
-              y: d[yDataKey!],
-              z: zDataKey && d[zDataKey],
-              id: d[idDataKey!],
+              x: d[datasetKeys.x],
+              y: d[datasetKeys.y],
+              z: datasetKeys.z && d[datasetKeys.z],
+              id: d[datasetKeys.id],
             } as ScatterValueType;
           }) ?? []);
 
