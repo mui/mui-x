@@ -27,10 +27,13 @@ import { gridRenderContextSelector } from '../virtualization';
 import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
-import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
+import {
+  calculatePinnedRowsHeight,
+  getValidRowHeight,
+  rowHeightWarning,
+} from '../rows/gridRowsUtils';
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { getValidRowHeight, rowHeightWarning } from '../rows/useGridRowsMeta';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../DataGrid/useDataGridProps';
 
 type RootProps = Pick<

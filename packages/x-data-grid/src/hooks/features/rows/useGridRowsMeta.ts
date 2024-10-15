@@ -15,6 +15,7 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { gridPinnedRowsSelector } from './gridRowsSelector';
 import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
+import { getValidRowHeight } from './gridRowsUtils';
 
 // TODO: I think the row heights can now be encoded as a single `size` instead of `sizes.baseXxxx`
 
@@ -25,32 +26,6 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state) => ({
     positions: [],
   },
 });
-
-let warnedOnceInvalidRowHeight = false;
-export const getValidRowHeight = (
-  rowHeightProp: any,
-  defaultRowHeight: number,
-  warningMessage: string,
-) => {
-  if (typeof rowHeightProp === 'number' && rowHeightProp > 0) {
-    return rowHeightProp;
-  }
-  if (
-    process.env.NODE_ENV !== 'production' &&
-    !warnedOnceInvalidRowHeight &&
-    typeof rowHeightProp !== 'undefined' &&
-    rowHeightProp !== null
-  ) {
-    console.warn(warningMessage);
-    warnedOnceInvalidRowHeight = true;
-  }
-  return defaultRowHeight;
-};
-
-export const rowHeightWarning = [
-  `MUI X: The \`rowHeight\` prop should be a number greater than 0.`,
-  `The default value will be used instead.`,
-].join('\n');
 
 const getRowHeightWarning = [
   `MUI X: The \`getRowHeight\` prop should return a number greater than 0 or 'auto'.`,
