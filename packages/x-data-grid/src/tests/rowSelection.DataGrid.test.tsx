@@ -683,6 +683,27 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([0]);
     });
 
+    // Related to https://github.com/mui/mui-x/issues/14964
+    it('should call `onRowSelectionModelChange` when outdated selected rows are removed', () => {
+      const data = getBasicGridData(4, 2);
+      const onRowSelectionModelChangeSpy = spy();
+
+      const { setProps } = render(
+        <TestDataGridSelection
+          rowSelectionModel={[0, 1, 2]}
+          onRowSelectionModelChange={onRowSelectionModelChangeSpy}
+          checkboxSelection
+          {...data}
+        />,
+      );
+
+      setProps({
+        rows: data.rows.slice(0, 1),
+      });
+
+      expect(onRowSelectionModelChangeSpy.called).to.equal(true);
+    });
+
     it('should retain the outdated selected rows when the rows prop changes when keepNonExistentRowsSelected is true', () => {
       const data = getBasicGridData(10, 2);
       const onRowSelectionModelChange = spy();
