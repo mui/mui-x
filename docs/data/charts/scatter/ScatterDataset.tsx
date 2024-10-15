@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 const dataset = [
   {
@@ -80,6 +81,11 @@ const chartSetting = {
       label: 'rainfall (mm)',
     },
   ],
+  sx: {
+    [`.${axisClasses.left} .${axisClasses.label}`]: {
+      transform: 'translate(-20px, 0)',
+    },
+  },
   width: 500,
   height: 300,
 };
