@@ -96,6 +96,7 @@ export default function ListViewAdvanced() {
     setRows((prevRows) => [...prevRows, row]);
 
     // Simulate server response time
+    const timeout = Math.floor(Math.random() * 3000) + 2000;
     setTimeout(() => {
       const uploadedRow = { ...row, state: 'uploaded' };
       setRows((prevRows) =>
@@ -103,7 +104,7 @@ export default function ListViewAdvanced() {
       );
       setDetailsState({ open: true, params: { row } });
       setLoading(false);
-    }, 2000);
+    }, timeout);
   }, []);
 
   const columns = React.useMemo(
@@ -190,7 +191,7 @@ export default function ListViewAdvanced() {
               ]
             : [
                 <GridActionsCellItem
-                  label="Open"
+                  label="Preview"
                   icon={<OpenIcon fontSize="small" />}
                   onClick={() => {
                     setDetailsState({ open: true, params });

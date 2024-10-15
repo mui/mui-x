@@ -68,7 +68,7 @@ export function ActionDrawer(props) {
               <ListItemIcon>
                 <OpenIcon />
               </ListItemIcon>
-              <ListItemText>Open</ListItemText>
+              <ListItemText>Preview</ListItemText>
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
