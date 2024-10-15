@@ -68,10 +68,10 @@ export const useGridRowsMeta = (
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
-  const rowHeight = useGridSelector(apiRef, () => {
-    const dimensions = gridDimensionsSelector(apiRef.current.state);
-    return dimensions.rowHeight;
-  });
+  const rowHeight = useGridSelector(
+    apiRef,
+    () => gridDimensionsSelector(apiRef.current.state).rowHeight,
+  );
 
   const hydrateRowsMeta = React.useCallback(() => {
     hasRowWithAutoHeight.current = false;
