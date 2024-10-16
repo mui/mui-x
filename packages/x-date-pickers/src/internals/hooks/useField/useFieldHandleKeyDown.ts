@@ -178,7 +178,7 @@ export const useFieldHandleKeyDown = <TManager extends PickerAnyValueManagerV8>(
     switch (true) {
       // Select all
       case (event.ctrlKey || event.metaKey) &&
-        event.key.toLowerCase() === 'a' &&
+        String.fromCharCode(event.keyCode) === 'A' &&
         !event.shiftKey &&
         !event.altKey: {
         // prevent default to make sure that the next line "select all" while updating

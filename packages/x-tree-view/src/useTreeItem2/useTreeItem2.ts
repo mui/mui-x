@@ -37,7 +37,7 @@ export const useTreeItem2 = <
   const {
     runItemPlugins,
     items: { onItemClick, disabledItemsFocusable, indentationAtItemLevel },
-    selection: { multiSelect, disableSelection, checkboxSelection },
+    selection: { disableSelection, checkboxSelection },
     expansion: { expansionTrigger },
     treeId,
     instance,
@@ -194,17 +194,17 @@ export const useTreeItem2 = <
       ...extractEventHandlers(externalProps),
     };
 
+    // https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
     let ariaSelected: boolean | undefined;
-    if (multiSelect) {
-      ariaSelected = status.selected;
-    } else if (status.selected) {
-      /* single-selection trees unset aria-selected on un-selected items.
-       *
-       * If the tree does not support multiple selection, aria-selected
-       * is set to true for the selected item and it is not present on any other item in the tree.
-       * Source: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
-       */
+    if (status.selected) {
+      // - each selected node has aria-selected set to true.
       ariaSelected = true;
+    } else if (disableSelection || status.disabled) {
+      // - if the tree contains nodes that are not selectable, aria-selected is not present on those nodes.
+      ariaSelected = undefined;
+    } else {
+      // - all nodes that are selectable but not selected have aria-selected set to false.
+      ariaSelected = false;
     }
 
     const props: UseTreeItem2RootSlotPropsFromUseTreeItem = {

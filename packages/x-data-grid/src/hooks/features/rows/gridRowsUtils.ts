@@ -437,3 +437,30 @@ export function computeRowsUpdates(
   });
   return nonPinnedRowsUpdates;
 }
+
+let warnedOnceInvalidRowHeight = false;
+
+export const getValidRowHeight = (
+  rowHeightProp: any,
+  defaultRowHeight: number,
+  warningMessage: string,
+) => {
+  if (typeof rowHeightProp === 'number' && rowHeightProp > 0) {
+    return rowHeightProp;
+  }
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    !warnedOnceInvalidRowHeight &&
+    typeof rowHeightProp !== 'undefined' &&
+    rowHeightProp !== null
+  ) {
+    console.warn(warningMessage);
+    warnedOnceInvalidRowHeight = true;
+  }
+  return defaultRowHeight;
+};
+
+export const rowHeightWarning = [
+  `MUI X: The \`rowHeight\` prop should be a number greater than 0.`,
+  `The default value will be used instead.`,
+].join('\n');
