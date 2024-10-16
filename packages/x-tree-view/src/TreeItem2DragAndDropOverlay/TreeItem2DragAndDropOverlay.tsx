@@ -25,7 +25,7 @@ const TreeItem2DragAndDropOverlayRoot = styled('div', {
         marginLeft: 'calc(var(--TreeView-indentMultiplier) * var(--TreeView-itemDepth))',
         borderRadius: theme.shape.borderRadius,
         backgroundColor: theme.vars
-          ? `rgba(${theme.vars.palette.primary.dark} / ${0.15}`
+          ? `rgba(${theme.vars.palette.primary.dark} / ${0.15})`
           : alpha(theme.palette.primary.dark, 0.15),
       },
     },
@@ -34,10 +34,10 @@ const TreeItem2DragAndDropOverlayRoot = styled('div', {
       style: {
         marginLeft: 'calc(var(--TreeView-indentMultiplier) * var(--TreeView-itemDepth))',
         borderTop: theme.vars
-          ? `1px solid rgba(${theme.vars.palette.grey[900]} / ${0.6}`
+          ? `1px solid rgba(${theme.vars.palette.grey[900]} / ${0.6})`
           : `1px solid ${alpha(theme.palette.grey[900], 0.6)}`,
         ...theme.applyStyles('dark', {
-          borderTopColor: theme.vars ? `rgba(${theme.vars.palette.grey[100]} / ${0.6}` : alpha(theme.palette.grey[100], 0.6),
+          borderTopColor: theme.vars ? `rgba(${theme.vars.palette.grey[100]} / ${0.6})` : alpha(theme.palette.grey[100], 0.6),
         }),
       },
     },
@@ -46,10 +46,10 @@ const TreeItem2DragAndDropOverlayRoot = styled('div', {
       style: {
         marginLeft: 'calc(var(--TreeView-indentMultiplier) * var(--TreeView-itemDepth))',
         borderBottom: theme.vars
-          ? `1px solid rgba(${theme.vars.palette.grey[900]} / ${0.6}`
+          ? `1px solid rgba(${theme.vars.palette.grey[900]} / ${0.6})`
           : `1px solid ${alpha(theme.palette.grey[900], 0.6)}`,
         ...theme.applyStyles('dark', {
-          borderBottomColor: theme.vars ? `rgba(${theme.vars.palette.grey[100]} / ${0.6}` : alpha(theme.palette.grey[100], 0.6),
+          borderBottomColor: theme.vars ? `rgba(${theme.vars.palette.grey[100]} / ${0.6})` : alpha(theme.palette.grey[100], 0.6),
         }),
       },
     },
@@ -59,10 +59,10 @@ const TreeItem2DragAndDropOverlayRoot = styled('div', {
         marginLeft:
           'calc(var(--TreeView-indentMultiplier) * calc(var(--TreeView-itemDepth) - 1))' as any,
         borderBottom: theme.vars
-          ? `1px solid rgba(${theme.vars.palette.grey[900]} / ${0.6}`
+          ? `1px solid rgba(${theme.vars.palette.grey[900]} / ${0.6}))`
           : `1px solid ${alpha(theme.palette.grey[900], 0.6)}`,
         ...theme.applyStyles('dark', {
-          borderBottomColor: theme.vars ? `rgba(${theme.vars.palette.grey[900]} / ${0.6}` : alpha(theme.palette.grey[900], 0.6),
+          borderBottomColor: theme.vars ? `rgba(${theme.vars.palette.grey[900]} / ${0.6})` : alpha(theme.palette.grey[900], 0.6),
         }),
       },
     },
