@@ -6,17 +6,17 @@ packageName: '@mui/x-charts'
 
 # Charts - Getting started
 
-<p class="description">Install the MUI X Charts package to start building React data visualization components.</p>
+<p class="description">Install the MUI X Charts package to start building React data visualization components.</p>
 
 ## Installation
 
-Run one of the following commands to add install the free Community version or the paid Pro version of the MUI X Charts:
+Run one of the following commands to add install the free Community version or the paid Pro version of the MUI X Charts:
 
 <!-- #default-branch-switch -->
 
 {{"component": "modules/components/ChartsInstallationInstructions.js"}}
 
-The Charts packages have has a peer dependency on `@mui/material`.
+The Charts packages have a peer dependency on `@mui/material`.
 If you're not already using it, install it with the following command:
 
 <codeblock storageKey="package-manager">
@@ -53,21 +53,21 @@ You can import D3 functions from `@mui/x-charts-vendor/d3-color`.
 
 ## Rendering Charts
 
-MUI X Charts can be rendered as _closed_ (self-contained) or _open_ (composable) components.
-[Closed components](#closed-charts) are simpler to get started with and are recommended for most common use cases; more advanced use cases (such as combining Bar and Line Charts on a single plot) require custom composition with [open components](#open-charts).
+MUI X Charts can be rendered as _self-contained_ or _composable_ components.
+[Self-contained components](#self-contained-charts) are simpler to get started with and are recommended for most common use cases; more complex visualization (such as combining Bar and Line Charts on a single plot) requires [custom composition](#composable-charts).
 
-### Closed Charts
+### Self-contained Charts
 
-Closed Chart components are self-contained, meaning all of the necessary subcomponents are abstracted away inside of a single React component (such as `<BarChart />` or `<LineChart />`).
+Self-contained Chart components are imported and rendered as a single React component (such as `<BarChart />` or `<LineChart />`) which contains all of the necessary subcomponents.
 
 These components require a `series` prop describing the data to render, as well as a numerical value (rendered in pixels) for the `height` prop.
 The `width` prop is optional; if no value is provided, the Charts expand to fill the available space.
 
 {{"demo": "SimpleCharts.js"}}
 
-### Open Charts
+### Composable Charts
 
-Open Chart components require composition of the necessary subcomponents inside of a Chart Container wrapper.
+More complex use cases require composition of the necessary subcomponents inside of a Chart Container wrapper.
 Subcomponents include:
 
 - Axis components – to define the X and Y axes

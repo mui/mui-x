@@ -7,7 +7,7 @@ packageName: '@mui/x-charts'
 
 # MUI X Charts
 
-<p class="description">A collection of React UI chart components for data visualization.</p>
+<p class="description">A collection of React chart components for data visualization.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
