@@ -6,6 +6,7 @@ import { usePickerLayoutProps } from './usePickerLayoutProps';
 import { FieldSection, PickerValidDate, InferError } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 import { usePickerOwnerState } from './usePickerOwnerState';
+import { usePickerContextValue } from './usePickerContextValue';
 
 export const usePicker = <
   TValue,
@@ -74,6 +75,11 @@ export const usePicker = <
 
   const pickerOwnerState = usePickerOwnerState({ props, pickerValueResponse });
 
+  const pickerContextValue = usePickerContextValue({
+    pickerValueResponse,
+    ownerState: pickerOwnerState,
+  });
+
   return {
     // Picker value
     open: pickerValueResponse.open,
@@ -89,7 +95,7 @@ export const usePicker = <
     layoutProps: pickerLayoutResponse.layoutProps,
 
     // Picker context
-    contextValue: pickerValueResponse.contextValue,
+    contextValue: pickerContextValue,
 
     // Picker owner state
     ownerState: pickerOwnerState,

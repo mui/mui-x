@@ -1,13 +1,13 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
 import {
   usePicker,
   DIALOG_WIDTH,
   ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
+  PickersProvider,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
@@ -40,7 +40,7 @@ export const useStaticRangePicker = <
 
   const { rangePosition, onRangePositionChange } = useRangePosition(props);
 
-  const { layoutProps, renderCurrentView } = usePicker<
+  const { layoutProps, renderCurrentView, contextValue } = usePicker<
     DateRange<TDate>,
     TDate,
     TView,
@@ -70,7 +70,7 @@ export const useStaticRangePicker = <
   };
 
   const renderPicker = () => (
-    <LocalizationProvider localeText={localeText}>
+    <PickersProvider contextValue={contextValue} localeText={localeText}>
       <Layout
         {...layoutProps}
         {...slotProps?.layout}
@@ -87,7 +87,7 @@ export const useStaticRangePicker = <
       >
         {renderCurrentView()}
       </Layout>
-    </LocalizationProvider>
+    </PickersProvider>
   );
 
   return { renderPicker };
