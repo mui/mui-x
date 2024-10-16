@@ -239,7 +239,7 @@ export default function ListViewAdvanced() {
   );
 
   const getEstimatedRowHeight = () => {
-    const density = apiRef.current.state.density;
+    const density = apiRef.current?.state?.density;
 
     if (isListView) {
       switch (density) {
